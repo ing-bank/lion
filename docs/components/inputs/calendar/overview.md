@@ -3,7 +3,7 @@
 A reusable and accessible calendar view web component.
 
 ```js script
-import { html, css } from '@lion/core';
+import { html, css } from '@mdjs/mdjs-preview';
 import '@lion/calendar/define';
 ```
 

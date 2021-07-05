@@ -1,7 +1,7 @@
 # Node Tools >> Providence Analytics >> Overview ||10
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import { providenceFlowSvg, providenceInternalFlowSvg } from './assets/_mermaid.svg.js';
 ```
 

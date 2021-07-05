@@ -3,7 +3,7 @@
 A web component for displaying icons.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import { icons } from '@lion/icon';
 import '@lion/icon/define';
 

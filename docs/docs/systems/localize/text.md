@@ -3,7 +3,7 @@
 ## As a function
 
 ```js script
-import { html, render, LitElement } from '@lion/core';
+import { html, render, LitElement } from '@mdjs/mdjs-preview';
 import { localize, formatNumber, formatDate, LocalizeMixin } from '@lion/localize';
 import '@lion/helpers/define';
 ```

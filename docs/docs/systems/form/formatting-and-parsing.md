@@ -1,7 +1,7 @@
 # Systems >> Form >> Formatting and Parsing ||21
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/input/define';
 import { Unparseable } from '@lion/form-core';
 import './assets/h-output.js';

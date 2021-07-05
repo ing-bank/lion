@@ -1,7 +1,7 @@
 # Systems >> Form >> Validate ||30
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import { LionInput } from '@lion/input';
 import '@lion/checkbox-group/define';
 import '@lion/checkbox-group/define';

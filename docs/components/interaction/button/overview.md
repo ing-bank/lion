@@ -3,7 +3,7 @@
 A button web component that is easily stylable and accessible.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/button/define';
 ```
 

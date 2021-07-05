@@ -1,7 +1,7 @@
 # Interaction >> Tooltip >> Features ||20
 
 ```js script
-import { css, html } from '@lion/core';
+import { css, html } from '@mdjs/mdjs-preview';
 import { LionTooltip } from '@lion/tooltip';
 import '@lion/tooltip/define';
 ```

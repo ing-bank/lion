@@ -1,7 +1,7 @@
 # Content >> Progress Indicator >> Examples ||30
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import './assets/custom-progress-indicator.js';
 ```
 

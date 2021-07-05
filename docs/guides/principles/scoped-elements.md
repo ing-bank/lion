@@ -6,7 +6,7 @@ Whenever a lion component uses composition (meaning it uses another lion compone
 apply ScopedElementsMixin to make sure it uses the right version of this internal component.
 
 ```js
-import { ScopedElementsMixin, LitElement, html } from '@lion/core';
+import { ScopedElementsMixin, LitElement, html } from '@mdjs/mdjs-preview';
 
 import { LionInput } from '@lion/input';
 import { LionButton } from '@lion/button';
@@ -89,7 +89,7 @@ connectedCallback() {
 In a less complex case, we might just want to add a child node to the dom.
 
 ```js
-import { ScopedElementsMixin, LitElement, getScopedTagNamegetScopedTagName  } from '@lion/core';
+import { ScopedElementsMixin, LitElement, getScopedTagNamegetScopedTagName  } from '@mdjs/mdjs-preview';
 
 ...
 

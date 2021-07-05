@@ -5,7 +5,7 @@ A web component that enhances the functionality of the native `<input type="radi
 You should use our `radio` inside this element.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/radio-group/define';
 ```
 

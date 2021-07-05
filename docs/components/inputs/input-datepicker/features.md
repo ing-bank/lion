@@ -1,7 +1,7 @@
 # Inputs >> Input Datepicker >> Features ||20
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import { MinMaxDate, IsDateDisabled } from '@lion/form-core';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { formatDate } from '@lion/localize';

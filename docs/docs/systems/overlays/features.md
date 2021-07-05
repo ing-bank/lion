@@ -1,7 +1,7 @@
 # Systems >> Overlays >> Features ||20
 
 ```js script
-import { html, render, LitElement } from '@lion/core';
+import { html, render, LitElement } from '@mdjs/mdjs-preview';
 import { renderLitAsNode } from '@lion/helpers';
 import {
   ArrowMixin,
@@ -481,7 +481,7 @@ By default, there are only a few `OverlayMixin` methods you need to override to 
 - `_teardownOpenCloseListeners`, use this lifecycle hook to ensure that the listeners are removed when the OverlayController is tearing down. For example when the Web Component is disconnected from the DOM.
 
 ```js
-import { LitElement } from '@lion/core';
+import { LitElement } from '@mdjs/mdjs-preview';
 import { OverlayMixin } from '@lion/overlays';
 
 class MyOverlayWC extends OverlayMixin(LitElement) {

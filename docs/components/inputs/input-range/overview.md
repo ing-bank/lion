@@ -3,7 +3,7 @@
 A web component based on the native range input. Its purpose is to provide a way for users to select one value from a range of values.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/input-range/define';
 ```
 

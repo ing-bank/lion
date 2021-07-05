@@ -1,7 +1,7 @@
 # Interaction >> Tooltip >> Examples ||30
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/tooltip/define';
 ```
 

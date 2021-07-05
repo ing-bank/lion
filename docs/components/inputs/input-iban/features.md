@@ -1,7 +1,7 @@
 # Inputs >> Input Iban >> Features ||20
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { IsCountryIBAN, IsNotCountryIBAN } from '@lion/input-iban';
 import '@lion/input-iban/define';

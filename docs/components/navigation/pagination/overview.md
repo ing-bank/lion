@@ -3,7 +3,7 @@
 A web component that handles pagination.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/pagination/define';
 ```
 

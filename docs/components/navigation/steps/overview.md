@@ -3,7 +3,7 @@
 A web component that can be used to break a single goal down into dependable sub-tasks.
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/steps/define';
 ```
 

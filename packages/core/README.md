@@ -6,7 +6,7 @@ It handles the version of `lit-element` and `lit-html`.
 In order to be sure a compatible version is used import it via this package.
 
 ```js
-import { LitElement, html, render } from '@lion/core';
+import { LitElement, html, render } from '@mdjs/mdjs-preview';
 ```
 
 ## Features
@@ -27,7 +27,7 @@ npm i --save @lion/core
 ```
 
 ```js
-import { dedupeMixin, LitElement } from '@lion/core';
+import { dedupeMixin, LitElement } from '@mdjs/mdjs-preview';
 ```
 
 ### Example

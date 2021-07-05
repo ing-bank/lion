@@ -1,7 +1,7 @@
 # Interaction >> Button >> Examples ||30
 
 ```js script
-import { html } from '@lion/core';
+import { html } from '@mdjs/mdjs-preview';
 import '@lion/button/define';
 import iconSvg from './src/icon.svg.js';
 ```
