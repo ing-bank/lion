@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { transformHtmlAndCss } = require('./transformHtmlAndCss.js');
+const { transformHtmlAndCss } = require('./transform-html-and-css.js');
 
 /**
  * @typedef {import('../types/shadow-cast').CssTransformConfig} CssTransformConfig

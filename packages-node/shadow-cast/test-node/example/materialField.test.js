@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
-const { transformHtmlAndCss } = require('../../src/transformHtmlAndCss.js');
+const { transformHtmlAndCss } = require('../../src/transform-html-and-css.js');
 const { formatCss } = require('../../src/tools/formatting-utils.js');
-const { getBemSelectorParts } = require('../../src/tools/getBemSelectorParts.js');
+const { getBemSelectorParts } = require('../../src/tools/bem/get-bem-selector-parts.js');
+const { bemAdditionalHostMatcher } = require('../../src/tools/bem/bem-helpers.js');
 
 describe('mdc-text-field', () => {
   it('works', async () => {
@@ -153,8 +154,9 @@ describe('mdc-text-field', () => {
       cssSources: [mdcTextField],
       settings: {
         getCategorizedSelectorParts: getBemSelectorParts,
+        additionalHostMatcher: bemAdditionalHostMatcher,
       },
     });
-    // console.log('result\n\n', formatCss(result.shadowCss));
+    console.log('result\n\n', formatCss(result.shadowCss));
   });
 });

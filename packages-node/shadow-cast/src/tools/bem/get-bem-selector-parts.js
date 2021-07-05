@@ -1,13 +1,15 @@
 const csstree = require('css-tree');
 
 /**
- * @typedef {import('../../types/csstree').StyleSheet} StyleSheet
- * @typedef {import('../../types/csstree').CssNode} CssNode
+ * @typedef {import('../../../types/csstree').StyleSheet} StyleSheet
+ * @typedef {import('../../../types/csstree').CssNode} CssNode
+ * @typedef {import('../../../types/shadow-cast').CategorizedPreAnalysisResult} CategorizedPreAnalysisResult
  * @typedef {string} BemClassSelectorPart
  */
 
 /**
  * @param {string|StyleSheet} bemCodeOrStylesheet
+ * @returns {CategorizedPreAnalysisResult}
  */
 function getBemSelectorParts(bemCodeOrStylesheet) {
   const stylesheetNode =

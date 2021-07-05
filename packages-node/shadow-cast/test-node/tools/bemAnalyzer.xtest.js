@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { bemAnalyzer } = require('../../src/tools/getBemSelectorParts.js');
+const { bemAnalyzer } = require('../../src/tools/bem/get-bem-selector-parts.js');
 
 describe('Bem Analyzer', () => {
   it('extracts all states', async () => {

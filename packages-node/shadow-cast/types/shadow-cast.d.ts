@@ -51,6 +51,30 @@ export type CssTransformConfig = {
   host?: string;
   slots?: { [key: string]: string[] };
   states?: { [key: string]: string[] };
-  settings?: { contextSelectorHandler?: ReplaceFn; getCategorizedSelectorParts?: Function };
+  settings?: {
+    contextSelectorHandler?: ReplaceFn;
+    getCategorizedSelectorParts?: Function;
+    additionalHostMatcher: Function;
+  };
   htmlMeta?: { classesInHtml: string[] };
+};
+
+export type CategorizedPreAnalysisResult = {
+  hosts: Set<string>;
+  elements: Set<string>;
+  states: Set<string>;
+  resultsPerHost: { host: string; elements: string[]; states: string[] }[];
+};
+
+export type ActionList = { type: 'deletion' | string; action: Function; originalCode: string }[];
+export type SelectorChildNodePlain = CssNodePlain & { name: string };
+export type MatcherFn = (traversedSelector: SelectorChildNodePlain) => boolean;
+export type Transform = { matcher: MatcherFn; replaceFn: ReplaceFn };
+export type Transforms = { host?: Transform; slots?: Transform[]; states?: Transform[] };
+
+export type SCNode = CssNodePlain & { name: string; children: SCNode[] };
+export type WrappedHostMatcher = {
+  matchHost: CssNodePlain;
+  matchHostChild: CssNodePlain;
+  originalMatcher: MatcherFn;
 };

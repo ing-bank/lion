@@ -1,8 +1,10 @@
 const { expect } = require('chai');
 const csstree = require('css-tree');
-const { transformCss } = require('../src/transformCss.js');
-const { transformHtml } = require('../src/transformHtml.js');
+const { transformCss } = require('../src/transform-css/transform-css.js');
+const { transformHtml } = require('../src/transform-html.js');
 const { formatHtml } = require('../src/tools/formatting-utils.js');
+const { getSurroundingCompoundParts } = require('../src/transform-css/helpers.js');
+const { bemAdditionalHostMatcher } = require('../src/tools/bem/bem-helpers.js');
 
 /**
  * @typedef {import('../types/csstree').SelectorPlain} SelectorPlain
@@ -16,6 +18,33 @@ const normalizeCssFormat = (/** @type {string} */ stylesheetString) =>
  * Definition of SelectorPart: the individual entries of
  * Selector.children: ['.comp', ' ', '.comp__child']
  */
+
+describe('Helpers', () => {
+  describe('getSurroundingCompoundParts', () => {
+    it('gets preceeding and succeeding CssNodePlain[]', () => {
+      const selector = csstree.toPlainObject(
+        csstree.parse('.comp--x.comp.comp--y.comp--z .comp__element', { context: 'selector' }),
+      ).children;
+      const result = getSurroundingCompoundParts(selector[1], selector);
+
+      // console.log(result.preceedingParts);
+      expect(result.preceedingParts.length).to.equal(1);
+      expect(csstree.generate(result.preceedingParts[0])).to.equal('.comp--x');
+
+      expect(result.succeedingParts.length).to.equal(2);
+      expect(csstree.generate(result.succeedingParts[0])).to.equal('.comp--y');
+      expect(csstree.generate(result.succeedingParts[1])).to.equal('.comp--z');
+    });
+
+    it('gets no preceeding and succeeding CssNodePlain[] when whitespace inbetween', () => {
+      const selector = csstree.toPlainObject(
+        csstree.parse('.comp .comp__element', { context: 'selector' }),
+      ).children;
+      const result = getSurroundingCompoundParts(selector[2], selector);
+      expect(result).to.eql({ preceedingParts: [], succeedingParts: [] });
+    });
+  });
+});
 
 describe('transformCss', () => {
   describe('Host', () => {
@@ -39,44 +68,154 @@ describe('transformCss', () => {
       expect(result).to.equal(normalizeCssFormat(expectedOutput));
     });
 
-    it('converts compound SelectorParts to :host(<compound>) SelectorParts', () => {
+    it('supports all Selectors in SelectorLists', () => {
       const source = `
-      .comp.comp--invalid .comp__child {
-        color:blue;
-      }
-    `;
+        .comp.comp--state .comp__child, .comp x, .comp y, span {
+          color:blue;
+        }
+      `;
       const config = {
         cssSources: [source],
         host: '.comp',
       };
       const expectedOutput = `
-      :host(.comp--invalid) .comp__child {
-        color:blue;
-      }
-    `;
+        :host(.comp--state) .comp__child, :host x, :host y, span {
+          color:blue;
+        }
+      `;
 
       const result = transformCss(config);
       expect(result).to.equal(normalizeCssFormat(expectedOutput));
     });
 
-    it('supports all Selectors in SelectorLists', () => {
-      const source = `
-      .comp.comp--state .comp__child, .comp x, .comp y, span {
-        color:blue;
-      }
-    `;
-      const config = {
-        cssSources: [source],
-        host: '.comp',
-      };
-      const expectedOutput = `
-      :host(.comp--state) .comp__child, :host x, :host y, span {
-        color:blue;
-      }
-    `;
+    describe('Compound SelectorParts', () => {
+      it('converts compound SelectorParts to :host(<compound>) SelectorParts', () => {
+        const source = `
+          .comp.comp--invalid .comp__child {
+            color:blue;
+          }
+        `;
+        const config = {
+          cssSources: [source],
+          host: '.comp',
+        };
+        const expectedOutput = `
+          :host(.comp--invalid) .comp__child {
+            color:blue;
+          }
+        `;
 
-      const result = transformCss(config);
-      expect(result).to.equal(normalizeCssFormat(expectedOutput));
+        const result = transformCss(config);
+        expect(result).to.equal(normalizeCssFormat(expectedOutput));
+      });
+
+      it('converts multiple compound SelectorParts to :host(<compound1><compound2>) SelectorParts', () => {
+        const source = `
+          .comp.comp--invalid.comp--warning .comp__child {
+            color:blue;
+          }
+        `;
+        const config = {
+          cssSources: [source],
+          host: '.comp',
+        };
+        const expectedOutput = `
+          :host(.comp--invalid.comp--warning) .comp__child {
+            color:blue;
+          }
+        `;
+
+        const result = transformCss(config);
+        expect(result).to.equal(normalizeCssFormat(expectedOutput));
+      });
+
+      it('converts multiple compound SelectorParts to :host(<compound1><compound2>) SelectorParts with states combined', () => {
+        const source = `
+          .comp.comp--invalid.comp--warning .comp__child {
+            color:blue;
+          }
+        `;
+        const config = {
+          cssSources: [source],
+          host: '.comp',
+          states: { '[invalid]': ['.comp--invalid'] },
+        };
+        const expectedOutput = `
+          :host([invalid].comp--warning) .comp__child {
+            color:blue;
+          }
+        `;
+
+        const result = transformCss(config);
+        expect(result).to.equal(normalizeCssFormat(expectedOutput));
+      });
+
+      it('converts multiple compound SelectorParts to :host(<compound1><compound2>) SelectorParts with all states combined', () => {
+        const source = `
+          .comp.comp--invalid.comp--warning.comp--info .comp__child {
+            color:blue;
+          }
+        `;
+        const config = {
+          cssSources: [source],
+          host: '.comp',
+          states: {
+            '[invalid]': ['.comp--invalid'],
+            '[warning]': ['.comp--warning'],
+            '[info]': ['.comp--info'],
+          },
+        };
+        const expectedOutput = `
+          :host([info][warning][invalid]) .comp__child {
+            color:blue;
+          }
+        `;
+
+        const result = transformCss(config);
+        expect(result).to.equal(normalizeCssFormat(expectedOutput));
+      });
+
+      it('works when host is not the first of compound SelectorParts', () => {
+        const source = `
+          .comp--invalid.comp.comp--warning .comp__child {
+            color:blue;
+          }
+        `;
+        const config = {
+          cssSources: [source],
+          host: '.comp',
+          states: { '[warning]': ['.comp--warning'] },
+        };
+        const expectedOutput = `
+          :host([warning].comp--invalid) .comp__child {
+            color:blue;
+          }
+        `;
+
+        const result = transformCss(config);
+        expect(result).to.equal(normalizeCssFormat(expectedOutput));
+      });
+
+      it.only('works with nested PseudoSelectors', () => {
+        const source = `
+          .comp:not(.comp--warning) .comp__child {
+            color:blue;
+          }
+        `;
+        const config = {
+          cssSources: [source],
+          host: '.comp',
+          states: { '[warning]': ['.comp--warning'] },
+        };
+        const expectedOutput = `
+          :host(:not([warning])) .comp__child {
+            color:blue;
+          }
+        `;
+
+        const result = transformCss(config);
+        expect(result).to.equal(normalizeCssFormat(expectedOutput));
+      });
     });
   });
 
@@ -94,10 +233,10 @@ describe('transformCss', () => {
       };
 
       const expectedOutput = `
-      .comp ::slotted([slot="child"]) {
-        color:blue;
-      }
-    `;
+        .comp ::slotted([slot="child"]) {
+          color:blue;
+        }
+      `;
 
       const result = transformCss(config);
       expect(result).to.equal(normalizeCssFormat(expectedOutput));
@@ -283,32 +422,35 @@ describe('transformCss', () => {
       };
 
       expect(() => transformCss(config)).to.throw(
-        `Please make sure to provide an element Selector part that source state selector .comp__feedback--invalid
-part can "lean" on (a 'state target' that can work in conjunction with host selector):
+        `Please make sure to provide an element SelectorPart that source state Selector .comp__feedback--invalid
+part can "lean" on (a 'state target' that can work in conjunction with host Selector):
 - correct: '.comp .comp__feedback.comp__feedback--invalid' -> ':host([invalid]) .comp__feedback'
 - wrong: '.comp .comp__feedback--invalid' -> ':host([invalid]) <?>'`,
       );
     });
 
-    it('throws when external context is defined before host', () => {
-      const source = `
-        .some-external-context .comp.comp__feedback--invalid {
-          color: blue;
-        }
-      `;
-      const config = {
-        cssSources: [source],
-        host: '.comp',
-        states: { '[has-feedback-for~="error"]': ['.comp__feedback--invalid'] },
-      };
+    //     it.only('throws when external context is defined before host', () => {
+    //       const source = `
+    //         .some-external-context .comp.comp__feedback--invalid {
+    //           color: blue;
+    //         }
+    //       `;
+    //       const config = {
+    //         cssSources: [source],
+    //         host: '.comp',
+    //         states: { '[has-feedback-for~="error"]': ['.comp__feedback--invalid'] },
+    //       };
 
-      expect(() => transformCss(config)).to.throw(
-        `Make sure your selector starts with your host(.comp) (for selector with state selector (.comp__feedback--invalid).
-So (assumed '.comp' is the host in our source):
-- good: '.comp.comp--state' -> ':host([state])'
-- wrong: '.some-broader-context .comp.comp--state'`,
-      );
-    });
+    //       // console.log('result', transformCss(config))
+
+    //       expect(() => transformCss(config)).to.throw(
+    //         `Make sure your Selector starts with a host SelectorPart in Selector ".some-external-context .comp.comp__feedback--invalid".
+    // So:
+    // - correct: '.comp.comp--state' -> ':host([state])'
+    // - incorrect: '.some-broader-context .comp.comp--state'.
+    // Alternatively, consider configuring a helper like "bemCompoundHostHelper"`,
+    //       );
+    //     });
 
     it('throws when host is not defined', () => {
       const source = `
@@ -322,7 +464,7 @@ So (assumed '.comp' is the host in our source):
       };
 
       expect(() => transformCss(config)).to.throw(
-        'A "states" configuration requires a "host" configuration as well',
+        'A "states" configuration requires a "hostMatcher" function as well',
       );
     });
 
@@ -363,6 +505,9 @@ So (assumed '.comp' is the host in our source):
         cssSources: [source],
         host: '.comp',
         states: { '[has-feedback-for~="error"]': ['.comp--invalid'] },
+        settings: {
+          additionalHostMatcher: bemAdditionalHostMatcher,
+        },
       };
       const expectedOutput = `
         :host([has-feedback-for~="error"]) .comp__feedback {

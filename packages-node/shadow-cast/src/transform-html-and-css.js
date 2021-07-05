@@ -1,5 +1,5 @@
-const { transformHtml } = require('./transformHtml.js');
-const { transformCss } = require('./transformCss.js');
+const { transformHtml } = require('./transform-html.js');
+const { transformCss } = require('./transform-css/transform-css.js');
 
 /**
  * @typedef {import('../types/csstree').SelectorPlain} SelectorPlain

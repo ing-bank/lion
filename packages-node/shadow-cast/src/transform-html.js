@@ -1,7 +1,7 @@
 const parse5 = require('parse5');
 
 const { formatHtml } = require('./tools/formatting-utils.js');
-const { dissectCssSelectorPart, getSelectorPartNode } = require('./transformCss.js');
+const { dissectCssSelectorPart, getSelectorPartNode } = require('./transform-css/transform-css.js');
 
 /**
  * @typedef {import('../types/csstree').CssNodePlain} CssNodePlain
