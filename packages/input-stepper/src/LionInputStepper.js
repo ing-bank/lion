@@ -96,14 +96,20 @@ export class LionInputStepper extends LionInput {
   updated(changedProperties) {
     super.updated(changedProperties);
 
+    if (changedProperties.has('modelValue')) {
+      this.__toggleSpinnerButtonsState();
+    }
+
     if (changedProperties.has('min')) {
       this._inputNode.min = `${this.min}`;
       this.values.min = this.min;
+      this.__toggleSpinnerButtonsState();
     }
 
     if (changedProperties.has('max')) {
       this._inputNode.max = `${this.max}`;
       this.values.max = this.max;
+      this.__toggleSpinnerButtonsState();
     }
 
     if (changedProperties.has('step')) {
@@ -173,11 +179,6 @@ export class LionInputStepper extends LionInput {
     decrementButton[disableDecrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
     incrementButton[disableIncrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
     this.setAttribute('aria-valuenow', `${this.currentValue}`);
-    this.dispatchEvent(
-      new CustomEvent('user-input-changed', {
-        bubbles: true,
-      }),
-    );
   }
 
   /**
@@ -204,6 +205,7 @@ export class LionInputStepper extends LionInput {
     if (newValue <= max || max === Infinity) {
       this.value = `${newValue}`;
       this.__toggleSpinnerButtonsState();
+      this._proxyInputEvent();
     }
   }
 
@@ -217,6 +219,7 @@ export class LionInputStepper extends LionInput {
     if (newValue >= min || min === Infinity) {
       this.value = `${newValue}`;
       this.__toggleSpinnerButtonsState();
+      this._proxyInputEvent();
     }
   }
 

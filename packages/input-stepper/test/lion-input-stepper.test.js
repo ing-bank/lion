@@ -38,6 +38,40 @@ describe('<lion-input-stepper>', () => {
       expect(el.value).to.equal('-1');
     });
 
+    it('fires one "user-input-changed" event on + button click', async () => {
+      let counter = 0;
+      const el = await fixture(html`
+        <lion-input-stepper
+          name="year"
+          label="Years"
+          @user-input-changed="${() => {
+            counter += 1;
+          }}"
+        >
+        </lion-input-stepper>
+      `);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      incrementButton?.dispatchEvent(new Event('click'));
+      expect(counter).to.equal(1);
+    });
+
+    it('fires one "user-input-changed" event on - button click', async () => {
+      let counter = 0;
+      const el = await fixture(html`
+        <lion-input-stepper
+          name="year"
+          label="Years"
+          @user-input-changed="${() => {
+            counter += 1;
+          }}"
+        >
+        </lion-input-stepper>
+      `);
+      const decrementButton = el.querySelector('[slot=prefix]');
+      decrementButton?.dispatchEvent(new Event('click'));
+      expect(counter).to.equal(1);
+    });
+
     it('should update min and max attributes when min and max property change', async () => {
       const el = await fixture(inputStepperWithAttrs);
       el.min = 100;
@@ -45,6 +79,61 @@ describe('<lion-input-stepper>', () => {
       await nextFrame();
       expect(el._inputNode.min).to.equal(el.min.toString());
       expect(el._inputNode.max).to.equal(el.max.toString());
+    });
+
+    it('should remove the disabled attribute of the decrement button when the min property changes to below the modelvalue', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const decrementButton = el.querySelector('[slot=prefix]');
+      el.modelValue = 100;
+      await nextFrame();
+      expect(decrementButton?.getAttribute('disabled')).to.equal('true');
+      el.min = 99;
+      await nextFrame();
+      expect(decrementButton?.getAttribute('disabled')).to.equal(null);
+    });
+
+    it('should add the disabled attribute of the decrement button when the min property changes to the modelvalue', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const decrementButton = el.querySelector('[slot=prefix]');
+      el.modelValue = 101;
+      await nextFrame();
+      expect(decrementButton?.getAttribute('disabled')).to.equal(null);
+      el.min = 101;
+      await nextFrame();
+      expect(decrementButton?.getAttribute('disabled')).to.equal('true');
+    });
+
+    it('should remove the disabled attribute of the increment button when the max property changes to above the modelvalue', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      el.modelValue = 200;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal('true');
+      el.max = 201;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal(null);
+    });
+
+    it('should add the disabled attribute of the increment button when the max property changes to the modelvalue', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      el.modelValue = 199;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal(null);
+      el.max = 199;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal('true');
+    });
+
+    it('should react to changes in the modelValue by adjusting the disabled state of the button', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      el.modelValue = 199;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal(null);
+      el.modelValue = 200;
+      await nextFrame();
+      expect(incrementButton?.getAttribute('disabled')).to.equal('true');
     });
   });
 
