@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.17.2
+
+### Patch Changes
+
+- 62eb21e6: Update docs to use overview, use cases, reference
+
 ## 0.17.1
 
 ### Patch Changes
