@@ -12,54 +12,48 @@ import '@lion/helpers/define-sb-action-logger';
 
 You can disable switches.
 
-```js preview-story
-export const disabled = () => html` <lion-switch label="Label" disabled></lion-switch> `;
+```html preview-story
+<lion-switch label="Label" disabled></lion-switch>
 ```
 
 ## Validation
 
-Simple example that illustrates where validation feedback will be displayed.
+An example that illustrates how an info validation feedback can be always displayed.
 
 ```js preview-story
-export const validation = () => {
-  const IsTrue = class extends Validator {
-    static get validatorName() {
-      return 'IsTrue';
-    }
-    execute(value) {
-      return !value.checked;
-    }
-    static async getMessage() {
-      return "You won't get the latest news!";
-    }
-  };
-  const tagName = 'custom-switch';
-  if (!customElements.get(tagName)) {
-    customElements.define(
-      tagName,
-      class CustomSwitch extends LionSwitch {
-        static get validationTypes() {
-          return [...super.validationTypes, 'info'];
-        }
-
-        _showFeedbackConditionFor(type) {
-          if (type === 'info') {
-            return true;
-          }
-          return super._showFeedbackConditionFor(type);
-        }
-      },
-    );
+class IsTrue extends Validator {
+  static get validatorName() {
+    return 'IsTrue';
   }
-  return html`
-    <custom-switch
-      id="newsletterCheck"
-      name="newsletterCheck"
-      label="Subscribe to newsletter"
-      .validators="${[new IsTrue(null, { type: 'info' })]}"
-    ></custom-switch>
-  `;
-};
+  execute(value) {
+    return !value.checked;
+  }
+  static async getMessage() {
+    return "You won't get the latest news!";
+  }
+}
+
+class CustomSwitch extends LionSwitch {
+  static get validationTypes() {
+    return [...super.validationTypes, 'info'];
+  }
+
+  _showFeedbackConditionFor(type, meta) {
+    if (type === 'info') {
+      return true;
+    }
+    return super._showFeedbackConditionFor(type, meta);
+  }
+}
+customElements.define('custom-switch', CustomSwitch);
+
+export const validation = () => html`
+  <custom-switch
+    name="newsletterCheck"
+    label="Subscribe to newsletter"
+    .validators="${[new IsTrue(null, { type: 'info' })]}"
+  ></custom-switch>
+`;
 ```
 
 ## With checked-changed handler
