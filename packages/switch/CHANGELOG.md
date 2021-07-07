@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.17.4
+
+### Patch Changes
+
+- ae14f998: Improve documentation and examples
+
 ## 0.17.3
 
 ### Patch Changes
