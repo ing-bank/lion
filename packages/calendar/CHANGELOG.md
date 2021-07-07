@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.16.3
+
+### Patch Changes
+
+- 3cd0ac51: add support for using language subtag only
+
 ## 0.16.2
 
 ### Patch Changes
