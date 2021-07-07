@@ -1277,13 +1277,6 @@
   dependencies:
     vary "^1.1.2"
 
-"@lion/accordion@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@lion/accordion/-/accordion-0.4.2.tgz#efeb56360113a2b68e182ff29ef0932edd17df8c"
-  integrity sha512-xETjNmpBWYO1tYx2nBMq0I45UgydUJafZ4ft3szH3fQFjYWSBwjJjKsWxIhZSqX/IoTJzA0nNCdtbXoVEbSCLg==
-  dependencies:
-    "@lion/core" "0.16.0"
-
 "@lion/core@0.16.0":
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/@lion/core/-/core-0.16.0.tgz#c4c8ac81b8d5bece6d40d561a392382c7ae73533"
@@ -1354,11 +1347,12 @@
     unist-util-visit "^2.0.3"
 
 "@mdjs/mdjs-preview@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@mdjs/mdjs-preview/-/mdjs-preview-0.5.0.tgz#cd4177d303b5e034efe6472e424dbc91b7fbfec9"
-  integrity sha512-GjLZLYJnXjFTrG77sxWqebSpFXoJHhIvTGDh1AjnIdtEOcnOqGjwaOrLjS751xPKSlS8GTo2G/6+usGeWfrx1Q==
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@mdjs/mdjs-preview/-/mdjs-preview-0.5.1.tgz#e8a252130cd21e8accdbc175f73ca109986a3039"
+  integrity sha512-wxLR0dtku/Uv/LllEXx61r+H1S1n2pRM30Ht57aITukbFBoeh1xZoA/c9j/X+a2/paQNXzG9KsnMfUH0HKMsOQ==
   dependencies:
-    "@lion/accordion" "^0.4.2"
+    "@lion/accordion" "^0.6.1"
+    "@open-wc/scoped-elements" "^2.0.0-next.3"
     lit "^2.0.0-rc.2"
 
 "@mdjs/mdjs-story@^0.3.0":

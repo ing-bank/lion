@@ -7,5 +7,6 @@
   "first-line-h1": false,
   "no-trailing-punctuation": {
     "punctuation": ".,;。，；：！"
-  }
+  },
+  "ol-prefix": false
 }

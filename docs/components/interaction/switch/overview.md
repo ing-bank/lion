@@ -1,14 +1,27 @@
 # Interaction >> Switch >> Overview ||10
 
-<p class="paragraph--emphasis">The Switch is used to toggle a property or feature on or off.</p>
+<p class="lion-paragraph--emphasis">The Switch is used to toggle a property or feature on or off.</p>
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html as previewHtml } from '@mdjs/mdjs-preview';
 import '@lion/switch/define-switch';
 ```
 
 ```js preview-story
-export const main = () => html`<lion-switch label="Label" help-text="Help text"></lion-switch>`;
+import { html, LitElement, ScopedElementsMixin } from '@lion/core';
+import { LionSwitch } from '@lion/switch';
+
+class MyComponent extends ScopedElementsMixin(LitElement) {
+  static get scopedElements() {
+    return { 'lion-switch': LionSwitch };
+  }
+  render() {
+    return html`<lion-switch label="Label" help-text="Help text"></lion-switch>`;
+  }
+}
+customElements.define('my-component', MyComponent);
+
+export const main = () => previewHtml`<my-component></my-component>`;
 ```
 
 ## When to use
@@ -25,14 +38,36 @@ export const main = () => html`<lion-switch label="Label" help-text="Help text">
 
 ## How to use
 
-### Installation
+### Code
 
-```bash
-npm i --save @lion/switch
-```
+1. Install
 
-```js
-import { LionSwitch } from '@lion/switch';
-// or
-import '@lion/switch/define-switch';
-```
+  ```bash
+  npm i --save @lion/switch
+  ```
+
+2. Use scoped registry
+
+  ```js
+  import { html, LitElement, ScopedElementsMixin } from '@lion/core';
+  import { LionSwitch } from '@lion/switch';
+
+  class MyComponent extends ScopedElementsMixin(LitElement) {
+    static get scopedElements() {
+      return { 'lion-switch': LionSwitch };
+    }
+    render() {
+      return html`<lion-switch></lion-switch>`;
+    }
+  }
+  ```
+
+3. Use html
+
+  ```html
+  <script type="module">
+    import '@lion/switch/define-switch';
+  </script>
+
+  <lion-switch></lion-switch>
+  ```
