@@ -1,6 +1,7 @@
 import { expect, fixture, defineCE } from '@open-wc/testing';
 import { html, unsafeStatic } from 'lit/static-html.js';
 import { Required, DefaultSuccess, Validator } from '@lion/form-core';
+import { localize } from '@lion/localize';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { LionInput } from '@lion/input';
 import sinon from 'sinon';
@@ -116,6 +117,63 @@ describe('Form Validation Integrations', () => {
       await el.updateComplete;
       await el.feedbackComplete;
       expect(spy.called).to.be.false;
+    });
+
+    it('correctly renders localized fieldName (label), even on locale changes', async () => {
+      class DefaultLabelInput extends LionInput {
+        constructor() {
+          super();
+          this.setDefaultLabel();
+        }
+
+        async updateLabel() {
+          await localize.loadingComplete;
+          this.label = localize.msg('test-default-label:label');
+        }
+
+        async setDefaultLabel() {
+          localize.loadNamespace({
+            'test-default-label': /** @param {string} locale */ async locale => {
+              switch (locale) {
+                case 'nl-NL':
+                  return { label: 'Tekst' };
+                default:
+                  return { label: 'Text' };
+              }
+            },
+          });
+          this.boundUpdateLabel = this.updateLabel.bind(this);
+          this.boundUpdateLabel();
+          localize.addEventListener('localeChanged', this.boundUpdateLabel);
+        }
+      }
+      const elTagString = defineCE(DefaultLabelInput);
+      const elTag = unsafeStatic(elTagString);
+      const el = /** @type {LionInput} */ (
+        await fixture(html`
+        <${elTag}
+          .validators=${[new Required()]}
+        >${lightDom}</${elTag}>
+      `)
+      );
+      el.touched = true;
+      el.dirty = true;
+      await el.updateComplete;
+      await el.feedbackComplete;
+      const { _feedbackNode } = getFormControlMembers(el);
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Please enter a(n) Text.');
+
+      localize.locale = 'nl-NL';
+      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(el.label).to.equal('Tekst');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Vul een Tekst in.');
+
+      localize.locale = 'en-GB';
+      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(el.label).to.equal('Text');
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Please enter a(n) Text.');
     });
   });
 });
