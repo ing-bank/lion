@@ -21,6 +21,12 @@ And create a repo, we suggest to use [the generator from open-wc](https://open-w
 npm init @open-wc
 ```
 
+### Install peer dependencies lit-html and lit-element
+
+```bash
+npm i --save-dev lit-html lit-element
+```
+
 ### Install lion packages
 
 ```bash
