@@ -1,5 +1,11 @@
 # rocket-preset-extend-lion-docs
 
+## 0.1.3
+
+### Patch Changes
+
+- ea768c93: Replace tags in html stories when extending
+
 ## 0.1.2
 
 ### Patch Changes
