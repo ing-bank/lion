@@ -132,4 +132,12 @@ describe('remarkExtendLionDocsTransformJs', () => {
       ].join('\n'),
     );
   });
+
+  it('processes html stories', async () => {
+    const result = await execute(
+      ['', '```html preview-story', '<lion-accordion></lion-accordion>', '```'].join('\n'),
+    );
+
+    expect(result.html).to.include('ing-accordion');
+  });
 });
