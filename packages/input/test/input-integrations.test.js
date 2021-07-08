@@ -1,5 +1,9 @@
 import { defineCE } from '@open-wc/testing';
-import { runInteractionStateMixinSuite, runFormatMixinSuite } from '@lion/form-core/test-suites';
+import {
+  runInteractionStateMixinSuite,
+  runFormatMixinSuite,
+  runNativeTextFieldMixinSuite,
+} from '@lion/form-core/test-suites';
 
 import { LionInput } from '../src/LionInput.js';
 
@@ -21,6 +25,10 @@ describe('<lion-input> integrations', () => {
   });
 
   runFormatMixinSuite({
+    tagString: fieldTagString,
+  });
+
+  runNativeTextFieldMixinSuite({
     tagString: fieldTagString,
   });
 });
