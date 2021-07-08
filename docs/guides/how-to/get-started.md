@@ -24,7 +24,7 @@ npm init @open-wc
 ### Install peer dependencies lit-html and lit-element
 
 ```bash
-npm i --save-dev lit-html lit-element
+npm i lit-html lit-element
 ```
 
 ### Install lion packages
