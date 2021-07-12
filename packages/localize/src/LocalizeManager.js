@@ -173,10 +173,13 @@ export class LocalizeManager {
   }
 
   /**
-   * @returns {Promise.<Object>}
+   * @returns {Promise.<Object|void>}
    */
   get loadingComplete() {
-    return Promise.all(Object.values(this.__namespaceLoaderPromisesCache[this.locale]));
+    if (typeof this.__namespaceLoaderPromisesCache[this.locale] === 'object') {
+      return Promise.all(Object.values(this.__namespaceLoaderPromisesCache[this.locale]));
+    }
+    return Promise.resolve();
   }
 
   reset() {

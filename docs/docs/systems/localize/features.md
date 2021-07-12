@@ -98,7 +98,7 @@ Let's look at both cases in depth.
 ```js
 // use the dynamic import to load static assets
 localize.loadNamespace({
-  'my-hello-component': locale => {
+  'my-hello-component': async locale => {
     // resolves to a module with the module.default `{ greeting: 'Hallo {name}!' }`
     return import(`./translations/${locale}.js`);
   },
