@@ -67,16 +67,25 @@ const NativeTextFieldMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * The view value. Will be delegated to `._inputNode.value`
+     * @override FormatMixin
+     */
     get value() {
       return (this._inputNode && this._inputNode.value) || this.__value || '';
     }
 
-    // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
-    /** @param {string} value */
+    /**
+     * @param {string} value
+     * @override FormatMixin - We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
+     */
     set value(value) {
       // if not yet connected to dom can't change the value
       if (this._inputNode) {
-        this._setValueAndPreserveCaret(value);
+        // Only set if newValue is new, fix for Safari bug: https://github.com/ing-bank/lion/issues/1415
+        if (this._inputNode.value !== value) {
+          this._setValueAndPreserveCaret(value);
+        }
         /** @type {string | undefined} */
         this.__value = undefined;
       } else {

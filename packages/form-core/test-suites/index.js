@@ -5,5 +5,6 @@ export { runFormGroupMixinSuite } from './form-group/FormGroupMixin.suite.js';
 export { runFormatMixinSuite } from './FormatMixin.suite.js';
 export { runRegistrationSuite } from './FormRegistrationMixins.suite.js';
 export { runInteractionStateMixinSuite } from './InteractionStateMixin.suite.js';
+export { runNativeTextFieldMixinSuite } from './NativeTextFieldMixin.suite.js';
 export { runValidateMixinSuite } from './ValidateMixin.suite.js';
 export { runValidateMixinFeedbackPart } from './ValidateMixinFeedbackPart.suite.js';
