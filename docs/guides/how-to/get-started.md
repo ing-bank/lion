@@ -32,7 +32,7 @@ npm i @lion/<package-name>
 **This is the main use case for lion**. To import component classes, and extend them for your own design system's components.
 
 ```js
-import { css } from '@mdjs/mdjs-preview';
+import { css } from '@lion/core';
 import { LionInput } from '@lion/input';
 
 class MyInput extends LionInput {
