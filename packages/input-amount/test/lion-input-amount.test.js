@@ -77,6 +77,14 @@ describe('<lion-input-amount>', () => {
     expect(el.parser).to.equal(parseAmount);
   });
 
+  it('sets correct amount of decimals', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(html`<lion-input-amount .modelValue=${100.123}></lion-input-amount>`)
+    );
+    const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
+    expect(_inputNode.value).to.equal('100.12');
+  });
+
   it('sets inputmode attribute to decimal', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(`<lion-input-amount></lion-input-amount>`)
