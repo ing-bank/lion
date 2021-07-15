@@ -84,7 +84,7 @@ Let's convert an example page
 `lion-calendar` is a reusable and accessible calendar view. It depends on [calendar](?path=/docs/calendar--default-story).
 
 ```js script
-import { html, css } from '@mdjs/mdjs-preview';
+import { html, css } from '@lion/core';
 import './lion-calendar.js';
 
 export default {
@@ -103,7 +103,7 @@ export default {
 `lion-calendar` is a reusable and accessible calendar view. It depends on [calendar](../../path/to/calendar.md).
 
 ```js script
-import { html, css } from '@mdjs/mdjs-preview';
+import { html, css } from '@lion/core';
 import '@lion/calendar/define';
 ```
 

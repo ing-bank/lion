@@ -7,7 +7,7 @@ To be sure a compatible version is used you should import it via this package.
 
 ```js
 // DO
-import { LitElement, html, render } from '@mdjs/mdjs-preview';
+import { LitElement, html, render } from '@lion/core';
 
 // DON'T
 import { LitElement, html, render } from 'lit-element';
@@ -29,7 +29,7 @@ npm i --save @lion/core
 ```
 
 ```js
-import { dedupeMixin, LitElement } from '@mdjs/mdjs-preview';
+import { dedupeMixin, LitElement } from '@lion/core';
 ```
 
 ### Example
