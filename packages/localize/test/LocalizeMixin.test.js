@@ -29,7 +29,6 @@ describe('LocalizeMixin', () => {
     };
 
     const tagString = defineCE(
-      // @ts-ignore
       class MyElement extends LocalizeMixin(LitElement) {
         static get localizeNamespaces() {
           return [myElementNs, ...super.localizeNamespaces];
@@ -97,7 +96,6 @@ describe('LocalizeMixin', () => {
       'my-element': locale => fakeImport(`./my-element/${locale}.js`),
     };
 
-    // @ts-ignore
     class MyElement extends LocalizeMixin(LitElement) {
       static get localizeNamespaces() {
         return [myElementNs, ...super.localizeNamespaces];
@@ -128,7 +126,6 @@ describe('LocalizeMixin', () => {
       'my-element': locale => fakeImport(`./my-element/${locale}.js`),
     };
 
-    // @ts-ignore
     class MyOtherElement extends LocalizeMixin(LitElement) {
       static get localizeNamespaces() {
         return [myElementNs, ...super.localizeNamespaces];
@@ -155,8 +152,47 @@ describe('LocalizeMixin', () => {
     await localize.loadingComplete;
     expect(onLocaleChangedSpy.callCount).to.equal(1);
     // FIXME: Expected 0 arguments, but got 2. ts(2554) --> not sure why this sinon type is not working
-    // @ts-ignore
+    // @ts-expect-error
     expect(onLocaleChangedSpy.calledWithExactly('ru-RU', 'nl-NL')).to.be.true;
+  });
+
+  it('dispatches "localeChanged" after loader promises have resolved, allowing to call .msg() immediately', async () => {
+    const myElementNs = {
+      /** @param {string} locale */
+      'my-element': locale => fakeImport(`./my-element/${locale}.js`),
+    };
+
+    class MyOtherElement extends LocalizeMixin(LitElement) {
+      static get localizeNamespaces() {
+        return [myElementNs, ...super.localizeNamespaces];
+      }
+
+      onLocaleChanged() {
+        // Can call localize.msg immediately, without having to await localize.loadingComplete
+        // This is because localeChanged event is fired only after awaiting loading
+        // unless the user disables _autoLoadOnLocaleChange property
+        this.foo = localize.msg('my-element:foo');
+      }
+    }
+
+    const tagString = defineCE(MyOtherElement);
+
+    setupEmptyFakeImportsFor(['my-element'], ['en-GB', 'nl-NL', 'ru-RU']);
+
+    const el = /** @type {MyOtherElement} */ (document.createElement(tagString));
+    const wrapper = await fixture('<div></div>');
+    wrapper.appendChild(el);
+
+    await aTimeout(500);
+
+    localize.locale = 'nl-NL';
+    await localize.loadingComplete;
+    expect(el.foo).to.equal('bar-nl-NL');
+
+    localize.locale = 'ru-RU';
+    await localize.loadingComplete;
+
+    expect(el.foo).to.equal('bar-ru-RU');
   });
 
   it('calls "onLocaleUpdated()" after both "onLocaleReady()" and "onLocaleChanged()"', async () => {
@@ -165,7 +201,6 @@ describe('LocalizeMixin', () => {
       'my-element': locale => fakeImport(`./my-element/${locale}.js`),
     };
 
-    // @ts-ignore
     class MyElement extends LocalizeMixin(LitElement) {
       static get localizeNamespaces() {
         return [myElementNs, ...super.localizeNamespaces];
@@ -187,6 +222,7 @@ describe('LocalizeMixin', () => {
     expect(onLocaleUpdatedSpy.callCount).to.equal(1);
 
     localize.locale = 'nl-NL';
+    await localize.loadingComplete;
     expect(onLocaleUpdatedSpy.callCount).to.equal(2);
   });
 
@@ -206,7 +242,6 @@ describe('LocalizeMixin', () => {
       },
     });
 
-    // @ts-ignore
     class MyElement extends LocalizeMixin(LitElement) {
       static get localizeNamespaces() {
         return [myElementNs, ...super.localizeNamespaces];
@@ -214,7 +249,6 @@ describe('LocalizeMixin', () => {
 
       async onLocaleUpdated() {
         super.onLocaleUpdated();
-        await this.localizeNamespacesLoaded;
         this.label = localize.msg('my-element:label');
       }
     }
@@ -223,12 +257,11 @@ describe('LocalizeMixin', () => {
     const el = /** @type {MyElement} */ (document.createElement(tagString));
     el.connectedCallback();
 
-    await el.localizeNamespacesLoaded;
     await nextFrame(); // needed as both are added to the micro task que
     expect(el.label).to.equal('one');
 
     localize.locale = 'nl-NL';
-    await el.localizeNamespacesLoaded;
+    await localize.loadingComplete;
     expect(el.label).to.equal('two');
   });
 
@@ -238,7 +271,6 @@ describe('LocalizeMixin', () => {
       'my-element': locale => fakeImport(`./my-element/${locale}.js`),
     };
 
-    // @ts-ignore
     class MyElement extends LocalizeMixin(LitElement) {
       static get localizeNamespaces() {
         return [myElementNs, ...super.localizeNamespaces];
@@ -255,6 +287,7 @@ describe('LocalizeMixin', () => {
     await el.localizeNamespacesLoaded;
 
     localize.locale = 'nl-NL';
+    await localize.loadingComplete;
     expect(updateSpy.callCount).to.equal(1);
   });
 
@@ -269,7 +302,6 @@ describe('LocalizeMixin', () => {
       },
     });
 
-    // @ts-ignore
     class MyElement extends LocalizeMixin(LitElement) {
       static get localizeNamespaces() {
         return [myElementNs, ...super.localizeNamespaces];
@@ -311,7 +343,6 @@ describe('LocalizeMixin', () => {
       },
     });
 
-    // @ts-ignore
     class MyElement extends LocalizeMixin(LitElement) {
       static get localizeNamespaces() {
         return [myElementNs, ...super.localizeNamespaces];
@@ -338,7 +369,6 @@ describe('LocalizeMixin', () => {
       },
     });
 
-    // @ts-ignore
     class MyLocalizedClass extends LocalizeMixin(LitElement) {
       static get localizeNamespaces() {
         return [myElementNs, ...super.localizeNamespaces];
@@ -379,7 +409,6 @@ describe('LocalizeMixin', () => {
       },
     });
 
-    // @ts-ignore
     class MyLocalizedClass extends LocalizeMixin(LitElement) {
       static get localizeNamespaces() {
         return [myElementNs, ...super.localizeNamespaces];
@@ -400,6 +429,7 @@ describe('LocalizeMixin', () => {
       expect(p.innerText).to.equal('Hi!');
       localize.locale = 'en-US';
       expect(p.innerText).to.equal('Hi!');
+      await localize.loadingComplete;
       await el.updateComplete;
       expect(p.innerText).to.equal('Howdy!');
     }
@@ -416,7 +446,6 @@ describe('LocalizeMixin', () => {
       },
     });
 
-    // @ts-ignore
     class MyLocalizedClass extends LocalizeMixin(LitElement) {
       static get waitForLocalizeNamespaces() {
         return false;

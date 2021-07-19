@@ -164,12 +164,14 @@ describe('Form Validation Integrations', () => {
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Please enter a(n) Text.');
 
       localize.locale = 'nl-NL';
+      await localize.loadingComplete;
       await el.updateComplete;
       await el.feedbackComplete;
       expect(el.label).to.equal('Tekst');
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Vul een Tekst in.');
 
       localize.locale = 'en-GB';
+      await localize.loadingComplete;
       await el.updateComplete;
       await el.feedbackComplete;
       expect(el.label).to.equal('Text');

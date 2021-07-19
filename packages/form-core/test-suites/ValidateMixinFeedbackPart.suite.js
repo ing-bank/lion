@@ -332,6 +332,7 @@ export function runValidateMixinFeedbackPart() {
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Message for MinLength');
 
       localize.locale = 'de-DE';
+      await localize.loadingComplete;
       await el.feedbackComplete;
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Nachricht für MinLength');
     });
