@@ -70,6 +70,30 @@ describe('<lion-input-amount>', () => {
     expect(el.formattedValue).to.equal('123,456.78'); // should stay British
   });
 
+  it('reformats the formattedValue when locale property changes', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(html`
+        <lion-input-amount .modelValue=${123456.78} .locale="${'en-GB'}"></lion-input-amount>
+      `)
+    );
+    expect(el.formattedValue).to.equal('123,456.78');
+    el.locale = 'nl-NL';
+    await el.updateComplete;
+    expect(el.formattedValue).to.equal('123.456,78');
+  });
+
+  it('reformats the formattedValue with global locale if locale property is unset', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(html`
+        <lion-input-amount .modelValue=${123456.78} .locale="${'nl-NL'}"></lion-input-amount>
+      `)
+    );
+    expect(el.formattedValue).to.equal('123.456,78');
+    el.locale = '';
+    await el.updateComplete;
+    expect(el.formattedValue).to.equal('123,456.78');
+  });
+
   it('uses parseAmount for parsing', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(`<lion-input-amount></lion-input-amount>`)
@@ -157,7 +181,44 @@ describe('<lion-input-amount>', () => {
     ).to.equal('my-currency');
   });
 
+  it('reformats on locale changes', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(
+        html`<lion-input-amount
+          label="Price"
+          currency="EUR"
+          .modelValue=${123.45}
+        ></lion-input-amount>`,
+      )
+    );
+    expect(el.formattedValue).to.equal('123.45');
+    localize.locale = 'nl-NL';
+    await el.updateComplete;
+    expect(el.formattedValue).to.equal('123,45');
+  });
+
   describe('Accessibility', () => {
+    it('is accessible', async () => {
+      const el = await fixture(
+        `<lion-input-amount><label slot="label">Label</label></lion-input-amount>`,
+      );
+      await expect(el).to.be.accessible();
+    });
+
+    it('is accessible when readonly', async () => {
+      const el = await fixture(
+        `<lion-input-amount readonly .modelValue=${'123'}><label slot="label">Label</label></lion-input-amount>`,
+      );
+      await expect(el).to.be.accessible();
+    });
+
+    it('is accessible when disabled', async () => {
+      const el = await fixture(
+        `<lion-input-amount disabled><label slot="label">Label</label></lion-input-amount>`,
+      );
+      await expect(el).to.be.accessible();
+    });
+
     it('adds currency id to aria-labelledby of input', async () => {
       const el = /** @type {LionInputAmount} */ (
         await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
@@ -181,26 +242,5 @@ describe('<lion-input-amount>', () => {
       // We could add this to our normalize layer so other browsers also do it correctly?
       // expect(el._currencyDisplayNode?.getAttribute('aria-label')).to.equal('Philippine pisos');
     });
-  });
-
-  it('is accessible', async () => {
-    const el = await fixture(
-      `<lion-input-amount><label slot="label">Label</label></lion-input-amount>`,
-    );
-    await expect(el).to.be.accessible();
-  });
-
-  it('is accessible when readonly', async () => {
-    const el = await fixture(
-      `<lion-input-amount readonly .modelValue=${'123'}><label slot="label">Label</label></lion-input-amount>`,
-    );
-    await expect(el).to.be.accessible();
-  });
-
-  it('is accessible when disabled', async () => {
-    const el = await fixture(
-      `<lion-input-amount disabled><label slot="label">Label</label></lion-input-amount>`,
-    );
-    await expect(el).to.be.accessible();
   });
 });
