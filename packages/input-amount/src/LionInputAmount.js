@@ -26,6 +26,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
        * validators.
        */
       modelValue: Number,
+      locale: { attribute: false },
     };
   }
 
@@ -68,6 +69,8 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this.formatter = formatAmount;
     /** @type {string | undefined} */
     this.currency = undefined;
+    /** @type {string | undefined} */
+    this.locale = undefined;
     this.defaultValidators.push(new IsNumber());
   }
 
@@ -87,6 +90,28 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     super.updated(changedProperties);
     if (changedProperties.has('currency') && this.currency) {
       this._onCurrencyChanged({ currency: this.currency });
+    }
+
+    if (changedProperties.has('locale') && this.locale !== changedProperties.get('locale')) {
+      if (this.locale) {
+        this.formatOptions.locale = this.locale;
+      } else {
+        delete this.formatOptions.locale;
+      }
+      this.__reformat();
+    }
+  }
+
+  /**
+   * @param {string} newLocale
+   * @param {string} oldLocale
+   * @enhance LocalizeMixin
+   */
+  onLocaleChanged(newLocale, oldLocale) {
+    super.onLocaleChanged(newLocale, oldLocale);
+    // If locale property is used, no need to respond to global locale changes
+    if (!this.locale) {
+      this.__reformat();
     }
   }
 
@@ -125,5 +150,9 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
   get __currencyLabel() {
     return this.currency ? formatCurrencyLabel(this.currency, localize.locale) : '';
+  }
+
+  __reformat() {
+    this.formattedValue = this._callFormatter();
   }
 }

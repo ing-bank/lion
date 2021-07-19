@@ -68,7 +68,7 @@ declare class LocalizeMixinHost {
   public performUpdate(): Promise<void>;
 
   public onLocaleReady(): void;
-  public onLocaleChanged(): void;
+  public onLocaleChanged(newLocale: string, oldLocale: string): void;
   public onLocaleUpdated(): void;
   public connectedCallback(): void;
   public disconnectedCallback(): void;

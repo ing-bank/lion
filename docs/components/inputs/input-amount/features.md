@@ -35,14 +35,16 @@ export const currencySuffix = () => html`
 Locale can be forced for a specific `lion-input-amount`. It will format the amount according to this locale.
 
 ```js preview-story
-export const forceLocale = () => html`
-  <lion-input-amount
-    label="Price"
-    currency="JOD"
-    .formatOptions=${{ locale: 'nl-NL' }}
-    .modelValue=${123456.78}
-  ></lion-input-amount>
-`;
+export const forceLocale = () => {
+  return html`
+    <lion-input-amount
+      label="Price"
+      currency="JOD"
+      .locale="nl-NL"
+      .modelValue=${123456.78}
+    ></lion-input-amount>
+  `;
+};
 ```
 
 > The separators are now flipped due to Dutch locale. On top of that, due to JOD currency, the minimum amount of decimals is 3 by default for this currency.
