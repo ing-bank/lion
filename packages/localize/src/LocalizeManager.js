@@ -41,7 +41,7 @@ export class LocalizeManager {
     this.__namespaceLoadersCache = {};
 
     /**
-     * @type {Object.<string, Object.<string, Promise.<Object>>>}
+     * @type {Object.<string, Object.<string, Promise.<Object|void>>>}
      * @private
      */
     this.__namespaceLoaderPromisesCache = {};
@@ -419,7 +419,7 @@ export class LocalizeManager {
   /**
    * @param {string} locale
    * @param {string} namespace
-   * @param {Promise.<Object>} promise
+   * @param {Promise.<Object|void>} promise
    * @protected
    */
   _cacheNamespaceLoaderPromise(locale, namespace, promise) {
@@ -495,32 +495,30 @@ export class LocalizeManager {
     }
     if (this._autoLoadOnLocaleChange) {
       this._loadAllMissing(newLocale, oldLocale);
+      this.loadingComplete.then(() => {
+        this.dispatchEvent(new CustomEvent('localeChanged', { detail: { newLocale, oldLocale } }));
+      });
+    } else {
+      this.dispatchEvent(new CustomEvent('localeChanged', { detail: { newLocale, oldLocale } }));
     }
-    this.dispatchEvent(new CustomEvent('localeChanged', { detail: { newLocale, oldLocale } }));
   }
 
   /**
    * @param {string} newLocale
    * @param {string} oldLocale
-   * @returns {Promise.<Object>}
    * @protected
    */
   _loadAllMissing(newLocale, oldLocale) {
     const oldLocaleNamespaces = this.__storage[oldLocale] || {};
     const newLocaleNamespaces = this.__storage[newLocale] || {};
-    /** @type {Promise<Object|void>[]} */
-    const promises = [];
     Object.keys(oldLocaleNamespaces).forEach(namespace => {
       const newNamespaceData = newLocaleNamespaces[namespace];
       if (!newNamespaceData) {
-        promises.push(
-          this.loadNamespace(namespace, {
-            locale: newLocale,
-          }),
-        );
+        this.loadNamespace(namespace, {
+          locale: newLocale,
+        });
       }
     });
-    return Promise.all(promises);
   }
 
   /**

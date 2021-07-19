@@ -21,7 +21,7 @@ export function setupEmptyFakeImportsFor(namespaces, locales) {
   namespaces.forEach(namespace => {
     locales.forEach(locale => {
       setupFakeImport(`./${namespace}/${locale}.js`, {
-        default: {},
+        default: { foo: `bar-${locale}` },
       });
     });
   });
