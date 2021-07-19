@@ -82,10 +82,16 @@ export declare class FormGroupHost {
   /**
    * Gets a keyed be name object for requested property (like modelValue/serializedValue)
    */
-  protected _getFromAllFormElements(
-    property: string,
-    filterFn: (el: FormControlHost) => boolean,
-  ): { [name: string]: any };
+  protected _getFromAllFormElements(property: string): { [name: string]: any };
+
+  /**
+   * A filter function which will exclude a form field when returning false
+   * By default, exclude form fields which are disabled
+   *
+   * The type is be passed as well for more fine grained control, e.g.
+   * distinguish the filter when fetching modelValue versus serializedValue
+   */
+  protected _getFromAllFormElementsFilter(el: FormControlHost, type: string): boolean;
 
   /**
    * Allows to set formElements values via a keyed object structure

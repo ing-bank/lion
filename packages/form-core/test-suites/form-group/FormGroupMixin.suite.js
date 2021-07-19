@@ -323,6 +323,66 @@ export function runFormGroupMixinSuite(cfg = {}) {
       });
     });
 
+    it('allows overriding whether fields are included in when fetching modelValue/serializedValue etc.', async () => {
+      class FormGroupSubclass extends FormGroupMixin(LitElement) {
+        constructor() {
+          super();
+          /** @override from FormRegistrarMixin */
+          this._isFormOrFieldset = true;
+          /** @type {'child'|'choice-group'|'fieldset'} */
+          this._repropagationRole = 'fieldset'; // configures FormControlMixin
+        }
+
+        /**
+         *
+         * @param {import('../../types/FormControlMixinTypes').FormControlHost & {disabled: boolean}} el
+         * @param {string} type
+         */
+        _getFromAllFormElementsFilter(el, type) {
+          if (type === 'serializedValue') {
+            return !el.disabled;
+          }
+          return true;
+        }
+      }
+
+      const tagStringSubclass = defineCE(FormGroupSubclass);
+      const tagSubclass = unsafeStatic(tagStringSubclass);
+      const el = /**  @type {FormGroup} */ (
+        await fixture(html`
+          <${tagSubclass}>
+            <${childTag} name="a" disabled .modelValue="${'x'}"></${childTag}>
+            <${childTag} name="b" .modelValue="${'x'}"></${childTag}>
+            <${tagSubclass} name="newFieldset">
+              <${childTag} name="c" .modelValue="${'x'}"></${childTag}>
+              <${childTag} name="d" disabled .modelValue="${'x'}"></${childTag}>
+            </${tagSubclass}>
+            <${tagSubclass} name="disabledFieldset" disabled>
+              <${childTag} name="e" .modelValue="${'x'}"></${childTag}>
+            </${tagSubclass}>
+          </${tagSubclass}>
+        `)
+      );
+      expect(el.modelValue).to.deep.equal({
+        a: 'x',
+        b: 'x',
+        newFieldset: {
+          c: 'x',
+          d: 'x',
+        },
+        disabledFieldset: {
+          e: 'x',
+        },
+      });
+
+      expect(el.serializedValue).to.deep.equal({
+        b: 'x',
+        newFieldset: {
+          c: 'x',
+        },
+      });
+    });
+
     it('does not throw if setter data of this.modelValue can not be handled', async () => {
       const el = /**  @type {FormGroup} */ (
         await fixture(html`

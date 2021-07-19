@@ -17,7 +17,8 @@ export declare class ChoiceGroupHost {
 
   protected _oldModelValue: any;
   protected _triggerInitialModelValueChangedEvent(): void;
-  protected _getFromAllFormElements(property: string, filterCondition: Function): void;
+  protected _getFromAllFormElementsFilter(el: FormControlHost, type: string): boolean;
+  protected _getFromAllFormElements(property: string): void;
   protected _throwWhenInvalidChildModelValue(child: FormControlHost): void;
   protected _isEmpty(): void;
   protected _checkSingleChoiceElements(ev: Event): void;

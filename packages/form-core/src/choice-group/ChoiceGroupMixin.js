@@ -207,11 +207,34 @@ const ChoiceGroupMixinImplementation = superclass =>
     }
 
     /**
-     * @override
+     * A filter function which will exclude a form field when returning false
+     * By default, exclude form fields which are disabled
+     *
+     * The type is be passed as well for more fine grained control, e.g.
+     * distinguish the filter when fetching modelValue versus serializedValue
+     *
+     * @param {FormControl} el
+     * @param {string} type
+     * @returns {boolean}
+     */
+    // eslint-disable-next-line class-methods-use-this, no-unused-vars
+    _getFromAllFormElementsFilter(el, type) {
+      return true;
+    }
+
+    /**
+     * Implicit :( @override for FormGroupMixin, as choice fields "fieldsets"
+     * will always implement both mixins
+     *
+     * TODO: Consider making this explicit by extracting this method to its own mixin and
+     * using it in both FormGroupMixin and ChoiceGroupMixin, then override it here
+     * This also makes it more DRY as we have same method with similar implementation
+     * in FormGroupMixin. I (@jorenbroekema) think the abstraction is worth it here..
+     *
      * @param {string} property
      * @protected
      */
-    _getFromAllFormElements(property, filterCondition = () => true) {
+    _getFromAllFormElements(property) {
       // For modelValue, serializedValue and formattedValue, an exception should be made,
       // The reset can be requested from children
       if (
@@ -221,7 +244,9 @@ const ChoiceGroupMixinImplementation = superclass =>
       ) {
         return this[property];
       }
-      return this.formElements.filter(filterCondition).map(el => el.property);
+      return this.formElements
+        .filter(el => this._getFromAllFormElementsFilter(el, property))
+        .map(el => el.property);
     }
 
     /**

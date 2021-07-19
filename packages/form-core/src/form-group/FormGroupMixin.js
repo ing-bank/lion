@@ -318,20 +318,38 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
+     * A filter function which will exclude a form field when returning false
+     * By default, exclude form fields which are disabled
+     *
+     * The type is be passed as well for more fine grained control, e.g.
+     * distinguish the filter when fetching modelValue versus serializedValue
+     *
+     * @param {FormControl} el
+     * @param {string} type
+     * @returns {boolean}
+     */
+    // eslint-disable-next-line class-methods-use-this, no-unused-vars
+    _getFromAllFormElementsFilter(el, type) {
+      return !el.disabled;
+    }
+
+    /**
      * Gets a keyed be name object for requested property (like modelValue/serializedValue)
      * @param {string} property
      * @returns {{[name:string]: any}}
      */
-    _getFromAllFormElements(property, filterFn = (/** @type {FormControl} */ el) => !el.disabled) {
+    _getFromAllFormElements(property) {
       const result = {};
       // @ts-ignore [allow-protected]: allow Form internals to access this protected method
       this.formElements._keys().forEach(name => {
         const elem = this.formElements[name];
         if (elem instanceof FormControlsCollection) {
-          result[name] = elem.filter(el => filterFn(el)).map(el => el[property]);
-        } else if (filterFn(elem)) {
+          result[name] = elem
+            .filter(el => this._getFromAllFormElementsFilter(el, property))
+            .map(el => el[property]);
+        } else if (this._getFromAllFormElementsFilter(elem, property)) {
           if (typeof elem._getFromAllFormElements === 'function') {
-            result[name] = elem._getFromAllFormElements(property, filterFn);
+            result[name] = elem._getFromAllFormElements(property);
           } else {
             result[name] = elem[property];
           }
