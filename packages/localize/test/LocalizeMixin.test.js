@@ -111,12 +111,12 @@ describe('LocalizeMixin', () => {
     const wrapper = await fixture('<div></div>');
     const onLocaleReadySpy = sinon.spy(el, 'onLocaleReady');
 
-    await localize.loadingComplete;
+    await el.localizeNamespacesLoaded;
     expect(onLocaleReadySpy.callCount).to.equal(0);
 
     wrapper.appendChild(el);
 
-    await localize.loadingComplete;
+    await el.localizeNamespacesLoaded;
     expect(onLocaleReadySpy.callCount).to.equal(1);
   });
 
@@ -140,19 +140,17 @@ describe('LocalizeMixin', () => {
     const wrapper = await fixture('<div></div>');
     const onLocaleChangedSpy = sinon.spy(el, 'onLocaleChanged');
 
-    await localize.loadingComplete;
+    await el.localizeNamespacesLoaded;
 
     localize.locale = 'nl-NL';
-    await localize.loadingComplete;
+    await el.localizeNamespacesLoaded;
     expect(onLocaleChangedSpy.callCount).to.equal(0);
 
     wrapper.appendChild(el);
 
     localize.locale = 'ru-RU';
-    await localize.loadingComplete;
+    await el.localizeNamespacesLoaded;
     expect(onLocaleChangedSpy.callCount).to.equal(1);
-    // FIXME: Expected 0 arguments, but got 2. ts(2554) --> not sure why this sinon type is not working
-    // @ts-expect-error
     expect(onLocaleChangedSpy.calledWithExactly('ru-RU', 'nl-NL')).to.be.true;
   });
 
@@ -167,7 +165,13 @@ describe('LocalizeMixin', () => {
         return [myElementNs, ...super.localizeNamespaces];
       }
 
-      onLocaleChanged() {
+      /**
+       * @param {string} newLocale
+       * @param {string} oldLocale
+       */
+      onLocaleChanged(newLocale, oldLocale) {
+        super.onLocaleChanged(newLocale, oldLocale);
+
         // Can call localize.msg immediately, without having to await localize.loadingComplete
         // This is because localeChanged event is fired only after awaiting loading
         // unless the user disables _autoLoadOnLocaleChange property
@@ -183,15 +187,14 @@ describe('LocalizeMixin', () => {
     const wrapper = await fixture('<div></div>');
     wrapper.appendChild(el);
 
-    await aTimeout(500);
-
     localize.locale = 'nl-NL';
-    await localize.loadingComplete;
+    await el.localizeNamespacesLoaded;
+    await nextFrame();
     expect(el.foo).to.equal('bar-nl-NL');
 
     localize.locale = 'ru-RU';
-    await localize.loadingComplete;
-
+    await el.localizeNamespacesLoaded;
+    await nextFrame();
     expect(el.foo).to.equal('bar-ru-RU');
   });
 
@@ -222,7 +225,8 @@ describe('LocalizeMixin', () => {
     expect(onLocaleUpdatedSpy.callCount).to.equal(1);
 
     localize.locale = 'nl-NL';
-    await localize.loadingComplete;
+    await el.localizeNamespacesLoaded;
+    await nextFrame();
     expect(onLocaleUpdatedSpy.callCount).to.equal(2);
   });
 
@@ -261,7 +265,8 @@ describe('LocalizeMixin', () => {
     expect(el.label).to.equal('one');
 
     localize.locale = 'nl-NL';
-    await localize.loadingComplete;
+    await el.localizeNamespacesLoaded;
+    await nextFrame();
     expect(el.label).to.equal('two');
   });
 
@@ -284,10 +289,10 @@ describe('LocalizeMixin', () => {
     const updateSpy = sinon.spy(el, 'requestUpdate');
 
     el.connectedCallback();
-    await el.localizeNamespacesLoaded;
 
     localize.locale = 'nl-NL';
-    await localize.loadingComplete;
+    await el.localizeNamespacesLoaded;
+    await nextFrame();
     expect(updateSpy.callCount).to.equal(1);
   });
 
@@ -419,8 +424,9 @@ describe('LocalizeMixin', () => {
       }
     }
 
-    const tag = defineCE(MyLocalizedClass);
-    const el = /** @type {MyLocalizedClass} */ (await fixture(`<${tag}></${tag}>`));
+    const tagName = defineCE(MyLocalizedClass);
+    const tag = unsafeStatic(tagName);
+    const el = /** @type {MyLocalizedClass} */ (await fixture(html`<${tag}></${tag}>`));
     await el.updateComplete;
 
     expect(el.shadowRoot).to.exist;
@@ -429,7 +435,8 @@ describe('LocalizeMixin', () => {
       expect(p.innerText).to.equal('Hi!');
       localize.locale = 'en-US';
       expect(p.innerText).to.equal('Hi!');
-      await localize.loadingComplete;
+      await el.localizeNamespacesLoaded;
+      await aTimeout(25); // needed because msgLit relies on until directive
       await el.updateComplete;
       expect(p.innerText).to.equal('Howdy!');
     }
