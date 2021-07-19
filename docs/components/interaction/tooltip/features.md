@@ -185,7 +185,7 @@ export const customArrow = () => {
         }
         _arrowTemplate() {
           return html`
-            <svg viewBox="0 0 20 8">
+            <svg viewBox="0 0 20 8" class="arrow__graphic">
               <path d="M 0,0 h 20 L 10,8 z"></path>
             </svg>
           `;
