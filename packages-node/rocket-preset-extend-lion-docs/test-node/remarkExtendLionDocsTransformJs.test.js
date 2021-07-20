@@ -140,4 +140,24 @@ describe('remarkExtendLionDocsTransformJs', () => {
 
     expect(result.html).to.include('ing-accordion');
   });
+
+  it('keeps import assertions in tact', async () => {
+    const result = await execute(
+      [
+        '',
+        '```js script',
+        "import style from '@lion/core/style' assert { type: 'css' };",
+        "import { LionInput } from '@lion/core';",
+        '```',
+        '',
+      ].join('\n'),
+    );
+
+    expect(result.jsCode).to.equal(
+      [
+        'import style from "@lion/core/style" assert { type: \'css\' };',
+        'import { LionInput } from "@lion/core";',
+      ].join('\n'),
+    );
+  });
 });

@@ -259,6 +259,12 @@ describe('babel-plugin-extend-docs', () => {
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
+  it('supports import assertions', () => {
+    const code = `import style from '@lion/input/style' assert { type: 'css' };`;
+    const output = `import style from "@lion/input/style" assert { type: 'css' };`;
+    expect(executeBabel(code, testConfig)).to.equal(output);
+  });
+
   // nice to have
   it.skip("doesn't care about namespace imports", () => {
     const code = `import * as all from '@lion/input';`;

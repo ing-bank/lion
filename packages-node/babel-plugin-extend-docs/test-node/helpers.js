@@ -4,7 +4,7 @@ const babelPluginExtendDocs = require('../src/babelPluginExtendDocs.js');
 
 function executeBabel(input, options) {
   const result = babel.transform(input, {
-    plugins: [[babelPluginExtendDocs, options]],
+    plugins: [[babelPluginExtendDocs, options], '@babel/plugin-syntax-import-assertions'],
   });
   return result.code;
 }

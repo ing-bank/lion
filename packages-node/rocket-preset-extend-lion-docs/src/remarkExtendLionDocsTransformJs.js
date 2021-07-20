@@ -62,7 +62,10 @@ export function remarkExtendLionDocsTransformJs({ extendDocsConfig }) {
       node.value
     ) {
       const processed = transformSync(node.value, {
-        plugins: [['babel-plugin-extend-docs', extendDocsConfig]],
+        plugins: [
+          ['babel-plugin-extend-docs', extendDocsConfig],
+          '@babel/plugin-syntax-import-assertions',
+        ],
       });
       if (processed && processed.code) {
         node.value = processed.code;
