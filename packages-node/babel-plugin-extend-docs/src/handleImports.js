@@ -9,6 +9,7 @@ function getImportAs(specifier, newImportName) {
 
 function renameAndStoreImports({ path, state, opts, types: t }) {
   for (const specifier of path.node.specifiers) {
+    const { assertions } = path.node;
     let managed = false;
 
     if (t.isIdentifier(specifier.imported) && specifier.type === 'ImportSpecifier') {
@@ -26,6 +27,7 @@ function renameAndStoreImports({ path, state, opts, types: t }) {
               state.importedStorage.push({
                 action: 'change',
                 specifier,
+                assertions,
                 path: to,
               });
               managed = true;
@@ -39,6 +41,7 @@ function renameAndStoreImports({ path, state, opts, types: t }) {
       state.importedStorage.push({
         action: 'keep',
         specifier,
+        assertions,
         path: path.node.source.value,
       });
     }
@@ -50,15 +53,18 @@ function generateImportStatements({ state, types: t }) {
   const statements = {};
   for (const imp of state.importedStorage) {
     if (!statements[imp.path]) {
-      statements[imp.path] = [];
+      statements[imp.path] = { specifier: [] };
     }
-    statements[imp.path].push(imp.specifier);
+    statements[imp.path].specifier.push(imp.specifier);
+    statements[imp.path].assertions = imp.assertions;
   }
   const res = [];
   for (const path of Object.keys(statements)) {
-    const importSpecifiers = statements[path];
+    const { specifier, assertions } = statements[path];
     const source = t.stringLiteral(path);
-    res.push(t.importDeclaration(importSpecifiers, source));
+    const dec = t.importDeclaration(specifier, source);
+    dec.assertions = assertions;
+    res.push(dec);
   }
   return res;
 }
