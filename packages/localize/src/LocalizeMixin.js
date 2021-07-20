@@ -11,7 +11,6 @@ import { localize } from './localize.js';
  * @type {LocalizeMixin}
  */
 const LocalizeMixinImplementation = superclass =>
-  // eslint-disable-next-line
   class LocalizeMixin extends superclass {
     /**
      * @returns {Object.<string,function>[]}
@@ -38,6 +37,12 @@ const LocalizeMixinImplementation = superclass =>
           this.__localizeOnLocaleChanged(event);
         };
 
+      this.__boundLocalizeOnLocaleChanging =
+        /** @param {...Object} args */
+        () => {
+          this.__localizeOnLocaleChanging();
+        };
+
       // should be loaded in advance
       /** @private */
       this.__localizeStartLoadingNamespaces();
@@ -62,27 +67,23 @@ const LocalizeMixinImplementation = superclass =>
     }
 
     connectedCallback() {
-      if (super.connectedCallback) {
-        super.connectedCallback();
-      }
-
+      super.connectedCallback();
       if (this.localizeNamespacesLoaded) {
         this.localizeNamespacesLoaded.then(() => this.onLocaleReady());
       }
-      this.__localizeAddLocaleChangedListener();
+      localize.addEventListener('__localeChanging', this.__boundLocalizeOnLocaleChanging);
+      localize.addEventListener('localeChanged', this.__boundLocalizeOnLocaleChanged);
     }
 
     disconnectedCallback() {
-      if (super.disconnectedCallback) {
-        super.disconnectedCallback();
-      }
-
-      this.__localizeRemoveLocaleChangedListener();
+      super.disconnectedCallback();
+      localize.removeEventListener('__localeChanging', this.__boundLocalizeOnLocaleChanging);
+      localize.removeEventListener('localeChanged', this.__boundLocalizeOnLocaleChanged);
     }
 
     /**
      * @param {string | string[]} keys
-     * @param {Object.<string,?>} variables
+     * @param {Object.<string,?>} [variables]
      * @param {Object} [options]
      * @param {string} [options.locale]
      * @returns {string | DirectiveResult}
@@ -124,14 +125,13 @@ const LocalizeMixinImplementation = superclass =>
       this.localizeNamespacesLoaded = localize.loadNamespaces(this.__getUniqueNamespaces());
     }
 
-    /** @private */
-    __localizeAddLocaleChangedListener() {
-      localize.addEventListener('localeChanged', this.__boundLocalizeOnLocaleChanged);
-    }
-
-    /** @private */
-    __localizeRemoveLocaleChangedListener() {
-      localize.removeEventListener('localeChanged', this.__boundLocalizeOnLocaleChanged);
+    /**
+     * Start loading namespaces on the event that is sent immediately
+     * when localize.locale changes --> 'localeChanging'
+     * @private
+     */
+    __localizeOnLocaleChanging() {
+      this.__localizeStartLoadingNamespaces();
     }
 
     /**
@@ -152,7 +152,6 @@ const LocalizeMixinImplementation = superclass =>
      */
     // eslint-disable-next-line no-unused-vars
     onLocaleChanged(newLocale, oldLocale) {
-      this.__localizeStartLoadingNamespaces();
       this.onLocaleUpdated();
       this.requestUpdate();
     }

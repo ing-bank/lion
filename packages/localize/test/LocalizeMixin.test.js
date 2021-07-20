@@ -146,11 +146,13 @@ describe('LocalizeMixin', () => {
     await el.localizeNamespacesLoaded;
     expect(onLocaleChangedSpy.callCount).to.equal(0);
 
+    // Appending to DOM will result in onLocaleChanged to be invoked
     wrapper.appendChild(el);
 
+    // Changing locale will result in onLocaleChanged to be invoked
     localize.locale = 'ru-RU';
     await el.localizeNamespacesLoaded;
-    expect(onLocaleChangedSpy.callCount).to.equal(1);
+    expect(onLocaleChangedSpy.callCount).to.equal(2);
     expect(onLocaleChangedSpy.calledWithExactly('ru-RU', 'nl-NL')).to.be.true;
   });
 
@@ -189,12 +191,10 @@ describe('LocalizeMixin', () => {
 
     localize.locale = 'nl-NL';
     await el.localizeNamespacesLoaded;
-    await nextFrame();
     expect(el.foo).to.equal('bar-nl-NL');
 
     localize.locale = 'ru-RU';
     await el.localizeNamespacesLoaded;
-    await nextFrame();
     expect(el.foo).to.equal('bar-ru-RU');
   });
 
@@ -226,7 +226,6 @@ describe('LocalizeMixin', () => {
 
     localize.locale = 'nl-NL';
     await el.localizeNamespacesLoaded;
-    await nextFrame();
     expect(onLocaleUpdatedSpy.callCount).to.equal(2);
   });
 
@@ -266,7 +265,6 @@ describe('LocalizeMixin', () => {
 
     localize.locale = 'nl-NL';
     await el.localizeNamespacesLoaded;
-    await nextFrame();
     expect(el.label).to.equal('two');
   });
 
@@ -292,6 +290,8 @@ describe('LocalizeMixin', () => {
 
     localize.locale = 'nl-NL';
     await el.localizeNamespacesLoaded;
+
+    // await next frame for requestUpdate to be fired
     await nextFrame();
     expect(updateSpy.callCount).to.equal(1);
   });
@@ -436,7 +436,7 @@ describe('LocalizeMixin', () => {
       localize.locale = 'en-US';
       expect(p.innerText).to.equal('Hi!');
       await el.localizeNamespacesLoaded;
-      await aTimeout(25); // needed because msgLit relies on until directive
+      await nextFrame(); // needed because msgLit relies on until directive to re-render
       await el.updateComplete;
       expect(p.innerText).to.equal('Howdy!');
     }
