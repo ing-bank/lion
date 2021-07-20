@@ -4,12 +4,13 @@ import { FormControlsCollection } from './FormControlsCollection.js';
 import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 
 /**
+ * @typedef {import('@lion/core').LitElement} LitElement
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarMixin} FormRegistrarMixin
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
  * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
- * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
+ * @typedef {FormControlHost & LitElement & {_parentFormGroup?:LitElement, checked?:boolean}} FormControl
  */
 
 /**
@@ -140,7 +141,7 @@ const FormRegistrarMixinImplementation = superclass =>
      * @param {FormControl} child the child element (field)
      * @param {number} indexToInsertAt index to insert the form element at
      */
-    addFormElement(child, indexToInsertAt) {
+    async addFormElement(child, indexToInsertAt) {
       // This is a way to let the child element (a lion-fieldset or lion-field) know, about its parent
       // eslint-disable-next-line no-param-reassign
       child._parentFormGroup = /** @type {* & FormRegistrarHost} */ (this);
@@ -154,10 +155,16 @@ const FormRegistrarMixinImplementation = superclass =>
 
       // 2. Add children as object key
       if (this._isFormOrFieldset) {
-        const { name } = child;
+        let { name } = child;
         if (!name) {
-          console.info('Error Node:', child); // eslint-disable-line no-console
-          throw new TypeError('You need to define a name');
+          // Give child a chance to render if property bindings are done later
+          // E.g. for @lit-labs/react
+          await child.updateComplete;
+          name = child.name;
+          if (!name) {
+            console.info('Error Node:', child); // eslint-disable-line no-console
+            throw new TypeError('You need to define a name');
+          }
         }
         if (name === this.name) {
           console.info('Error Node:', child); // eslint-disable-line no-console

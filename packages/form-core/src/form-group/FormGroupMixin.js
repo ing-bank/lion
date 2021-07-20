@@ -514,8 +514,21 @@ const FormGroupMixinImplementation = superclass =>
      * @param {FormControl & {serializedValue:string|object}} child
      * @param {number} indexToInsertAt
      */
-    addFormElement(child, indexToInsertAt) {
-      super.addFormElement(child, indexToInsertAt);
+    async addFormElement(child, indexToInsertAt) {
+      // Sync pending values first
+      if (!child.modelValue) {
+        const pVals = this.__pendingValues;
+        if (pVals.modelValue && pVals.modelValue[child.name]) {
+          // eslint-disable-next-line no-param-reassign
+          child.modelValue = pVals.modelValue[child.name];
+        } else if (pVals.serializedValue && pVals.serializedValue[child.name]) {
+          // eslint-disable-next-line no-param-reassign
+          child.serializedValue = pVals.serializedValue[child.name];
+        }
+      }
+
+      await super.addFormElement(child, indexToInsertAt);
+
       if (this.disabled) {
         child.makeRequestToBeDisabled();
       }
@@ -527,16 +540,6 @@ const FormGroupMixinImplementation = superclass =>
 
       if (typeof child.addToAriaLabelledBy === 'function' && this._labelNode) {
         child.addToAriaLabelledBy(this._labelNode, { reorder: false });
-      }
-      if (!child.modelValue) {
-        const pVals = this.__pendingValues;
-        if (pVals.modelValue && pVals.modelValue[child.name]) {
-          // eslint-disable-next-line no-param-reassign
-          child.modelValue = pVals.modelValue[child.name];
-        } else if (pVals.serializedValue && pVals.serializedValue[child.name]) {
-          // eslint-disable-next-line no-param-reassign
-          child.serializedValue = pVals.serializedValue[child.name];
-        }
       }
     }
 

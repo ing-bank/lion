@@ -133,9 +133,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
       let error;
       const el = /**  @type {FormGroup} */ (await fixture(html`<${tag}></${tag}>`));
       try {
-        // we test the api directly as errors thrown from a web component are in a
-        // different context and we can not catch them here => register fake elements
-        el.addFormElement(
+        await el.addFormElement(
           /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({}),
         );
       } catch (err) {
@@ -156,7 +154,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
       try {
         // we test the api directly as errors thrown from a web component are in a
         // different context and we can not catch them here => register fake elements
-        el.addFormElement(
+        await el.addFormElement(
           /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({
             name: 'foo',
           }),
@@ -184,7 +182,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
             name: 'fooBar',
           }),
         );
-        el.addFormElement(
+        await el.addFormElement(
           /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({
             name: 'fooBar',
           }),
@@ -498,9 +496,11 @@ export function runFormGroupMixinSuite(cfg = {}) {
         expect(el.validationStates.error.HasEvenNumberOfChildren).to.be.true;
 
         el.appendChild(child2);
+        await el.validateComplete;
         expect(el.validationStates.error.HasEvenNumberOfChildren).to.equal(undefined);
 
         el.removeChild(child2);
+        await el.validateComplete;
         expect(el.validationStates.error.HasEvenNumberOfChildren).to.be.true;
 
         // Edge case: remove all children
