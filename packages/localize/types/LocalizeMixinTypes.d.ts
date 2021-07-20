@@ -60,7 +60,7 @@ declare class LocalizeMixinHost {
 
   static get waitForLocalizeNamespaces(): boolean;
 
-  public localizeNamespacesLoaded(): Promise<Object>;
+  public localizeNamespacesLoaded: Promise<Object> | undefined;
 
   /**
    * Hook into LitElement to only render once all translations are loaded
@@ -74,10 +74,13 @@ declare class LocalizeMixinHost {
   public disconnectedCallback(): void;
   public msgLit(keys: string | string[], variables?: msgVariables, options?: msgOptions): void;
 
-  private __getUniqueNamespaces(): void;
-  private __localizeAddLocaleChangedListener(): void;
-  private __localizeRemoveLocaleChangedListener(): void;
+  private __boundLocalizeOnLocaleChanged(...args: Object[]): void;
+  private __boundLocalizeOnLocaleChanging(...args: Object[]): void;
+  private __getUniqueNamespaces(): string[];
   private __localizeOnLocaleChanged(event: CustomEvent): void;
+  private __localizeMessageSync: boolean;
+  private __localizeStartLoadingNamespaces(): void;
+  private __localizeOnLocaleChanging(): void;
 }
 
 declare function LocalizeMixinImplementation<T extends Constructor<LitElement>>(

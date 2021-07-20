@@ -1393,7 +1393,7 @@ describe('<lion-calendar>', () => {
       ]);
 
       localize.locale = 'nl-NL';
-      await localize.loadingComplete;
+      await el.localizeNamespacesLoaded;
       await el.updateComplete;
       expect(elObj.nextMonthButtonEl?.getAttribute('aria-label')).to.equal(
         'Volgende maand, december 2019',

@@ -490,6 +490,8 @@ export class LocalizeManager {
    * @protected
    */
   _onLocaleChanged(newLocale, oldLocale) {
+    // Event firing immediately, does not wait for loading the translations
+    this.dispatchEvent(new CustomEvent('__localeChanging'));
     if (newLocale === oldLocale) {
       return;
     }
