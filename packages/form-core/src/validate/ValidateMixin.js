@@ -644,7 +644,6 @@ export const ValidateMixinImplementation = superclass =>
      * @private
      */
     async __getFeedbackMessages(validators) {
-      await localize.loadingComplete;
       let fieldName = await this.fieldName;
       return Promise.all(
         validators.map(async validator => {
