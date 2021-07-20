@@ -499,7 +499,9 @@ const FormatMixinImplementation = superclass =>
     }
 
     connectedCallback() {
-      super.connectedCallback();
+      // initial sync value upwards before InteractionStateMixin and
+      // other mixins have a chance to respond to the model-value-changed
+      // event that happens as a result of sync value upwards
 
       // Connect the value found in <input> to the formatting/parsing/serializing loop as a
       // fallback mechanism. Assume the user uses the value property of the
@@ -509,6 +511,7 @@ const FormatMixinImplementation = superclass =>
       if (typeof this.modelValue === 'undefined') {
         this._syncValueUpwards();
       }
+      super.connectedCallback();
       this._reflectBackFormattedValueToUser();
 
       if (this._inputNode) {
