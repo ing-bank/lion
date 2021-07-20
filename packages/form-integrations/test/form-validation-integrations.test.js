@@ -127,7 +127,6 @@ describe('Form Validation Integrations', () => {
         }
 
         async updateLabel() {
-          await localize.loadingComplete;
           this.label = localize.msg('test-default-label:label');
         }
 
@@ -143,8 +142,14 @@ describe('Form Validation Integrations', () => {
             },
           });
           this.boundUpdateLabel = this.updateLabel.bind(this);
-          this.boundUpdateLabel();
+
+          // localeChanged is fired AFTER localize has finished loading missing translations
+          // so no need to await localize.loadingComplete
           localize.addEventListener('localeChanged', this.boundUpdateLabel);
+
+          // Wait for it to complete when updating the label for the first time
+          await localize.loadingComplete;
+          this.boundUpdateLabel();
         }
       }
       const elTagString = defineCE(DefaultLabelInput);
