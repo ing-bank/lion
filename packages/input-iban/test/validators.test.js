@@ -21,6 +21,20 @@ describe('IBAN validation', () => {
     expect(deValidator.execute('NL17INGB0002822608')).to.be.true;
   });
 
+  it('accepts an array for IsCountryIBAN to enforce IBANs from multiple countries', () => {
+    const nlValidator = new IsCountryIBAN(['NL', 'FR']);
+    const deValidator = new IsCountryIBAN(['DE', 'SK']);
+    expect(nlValidator.execute('NL17INGB0002822608')).to.be.false;
+    expect(nlValidator.execute('FR1420041010050500013M02606')).to.be.false;
+    expect(nlValidator.execute('DE89370400440532013000')).to.be.true;
+    expect(nlValidator.execute('SK3112000000198742637541')).to.be.true;
+
+    expect(deValidator.execute('NL17INGB0002822608')).to.be.true;
+    expect(deValidator.execute('FR1420041010050500013M02606')).to.be.true;
+    expect(deValidator.execute('DE89370400440532013000')).to.be.false;
+    expect(deValidator.execute('SK3112000000198742637541')).to.be.false;
+  });
+
   it('provides IsNotCountryIBAN to prevent IBANs from specific countries', () => {
     const nlValidator = new IsNotCountryIBAN('NL');
     const deValidator = new IsNotCountryIBAN('DE');

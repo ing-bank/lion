@@ -128,14 +128,21 @@ export class IsCountryIBAN extends IsIBAN {
    * @returns {Boolean}
    */
   execute(modelValue) {
+    let isInvalid = false;
     const notIBAN = super.execute(modelValue);
-    if (modelValue.slice(0, 2) !== this.param.toUpperCase()) {
-      return true;
+    if (typeof this.param === 'string') {
+      if (String(modelValue.slice(0, 2)) !== this.param.toUpperCase()) {
+        isInvalid = true;
+      }
+    } else if (Array.isArray(this.param)) {
+      isInvalid = !this.param.some(
+        country => String(modelValue.slice(0, 2)) === country.toUpperCase(),
+      );
     }
     if (notIBAN) {
-      return true;
+      isInvalid = true;
     }
-    return false;
+    return isInvalid;
   }
 
   /**

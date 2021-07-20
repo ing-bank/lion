@@ -50,6 +50,30 @@ export const countryRestrictions = () => {
 };
 ```
 
+You can pass a single string value, or an array of strings.
+The latter may be useful, for example if you only want to allow BeNeLux IBANs.
+
+```js preview-story
+export const countryRestrictionsMultiple = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <lion-input-iban
+      .modelValue=${'DE89370400440532013000'}
+      .validators=${[new IsCountryIBAN(['BE', 'NL', 'LU'])]}
+      name="iban"
+      label="IBAN"
+    ></lion-input-iban>
+    <br />
+    <small>Demo instructions: you can use:</small>
+    <ul>
+      <li><small>BE68 5390 0754 7034</small></li>
+      <li><small>NL20 INGB 0001 2345 67</small></li>
+      <li><small>LU28 0019 4006 4475 0000</small></li>
+    </ul>
+  `;
+};
+```
+
 ## Blacklisted Country
 
 By default, we validate the input to ensure the IBAN is valid.
