@@ -219,8 +219,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @param {LionOption & FormControlHost} child
    * @param {Number} indexToInsertAt
    */
-  addFormElement(child, indexToInsertAt) {
-    super.addFormElement(child, indexToInsertAt);
+  async addFormElement(child, indexToInsertAt) {
     // the first elements checked by default
     if (
       !this.hasNoDefaultSelected &&
@@ -233,8 +232,10 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       /* eslint-enable no-param-reassign */
       this.__hasInitialSelectedFormElement = true;
     }
-    this._alignInvokerWidth();
 
+    await super.addFormElement(child, indexToInsertAt);
+
+    this._alignInvokerWidth();
     this._onFormElementsChanged();
   }
 

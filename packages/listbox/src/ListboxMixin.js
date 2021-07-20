@@ -453,28 +453,26 @@ const ListboxMixinImplementation = superclass =>
      * @param {FormControlHost & LionOption} child
      * @param {Number} indexToInsertAt
      */
-    addFormElement(child, indexToInsertAt) {
-      super.addFormElement(/** @type {FormControl} */ child, indexToInsertAt);
+    async addFormElement(child, indexToInsertAt) {
+      this.__proxyChildModelValueChanged(
+        /** @type {CustomEvent & { target: FormControlHost & LionOption; }} */ ({ target: child }),
+      );
+
+      await super.addFormElement(/** @type {FormControl} */ child, indexToInsertAt);
       // we need to adjust the elements being registered
       /* eslint-disable no-param-reassign */
       child.id = child.id || `${this.localName}-option-${uuid()}`;
-
+      /* eslint-enable no-param-reassign */
       if (this.disabled) {
         child.makeRequestToBeDisabled();
       }
-
       // TODO: small perf improvement could be made if logic below would be scheduled to next update,
       // so it occurs once for all options
       this.__setAttributeForAllFormElements('aria-setsize', this.formElements.length);
       this.formElements.forEach((el, idx) => {
         el.setAttribute('aria-posinset', idx + 1);
       });
-
-      this.__proxyChildModelValueChanged(
-        /** @type {CustomEvent & { target: FormControlHost & LionOption; }} */ ({ target: child }),
-      );
       this.resetInteractionState();
-      /* eslint-enable no-param-reassign */
     }
 
     resetInteractionState() {

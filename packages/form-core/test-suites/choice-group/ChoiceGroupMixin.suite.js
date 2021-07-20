@@ -93,9 +93,14 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       `)
       );
 
-      expect(() => {
-        el.addFormElement(invalidChild);
-      }).to.throw(
+      let error;
+      try {
+        await el.addFormElement(invalidChild);
+      } catch (err) {
+        error = err;
+      }
+
+      expect(error.message).to.equal(
         `The ${cfg.parentTagString} name="gender[]" does not allow to register ${cfg.childTagString} with .modelValue="Lara" - The modelValue should represent an Object { value: "foo", checked: false }`,
       );
     });

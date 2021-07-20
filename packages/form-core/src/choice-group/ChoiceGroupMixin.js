@@ -181,11 +181,11 @@ const ChoiceGroupMixinImplementation = superclass =>
      * @param {FormControl} child
      * @param {number} indexToInsertAt
      */
-    addFormElement(child, indexToInsertAt) {
+    async addFormElement(child, indexToInsertAt) {
       this._throwWhenInvalidChildModelValue(child);
       // eslint-disable-next-line no-param-reassign
       child.name = this.name;
-      super.addFormElement(child, indexToInsertAt);
+      await super.addFormElement(child, indexToInsertAt);
     }
 
     clear() {

@@ -133,9 +133,14 @@ export function runListboxMixinSuite(customConfig = {}) {
           html` <${optionTag} .modelValue=${'Lara'}></${optionTag}> `,
         );
 
-        expect(() => {
-          el.addFormElement(invalidChild);
-        }).to.throw(
+        let error;
+        try {
+          await el.addFormElement(invalidChild);
+        } catch (err) {
+          error = err;
+        }
+
+        expect(error.message).to.equal(
           `The ${cfg.tagString} name="foo" does not allow to register lion-option with .modelValue="Lara" - The modelValue should represent an Object { value: "foo", checked: false }`,
         );
       });
