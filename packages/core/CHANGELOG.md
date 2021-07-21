@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.18.2
+
+### Patch Changes
+
+- 8c06302e: fix documentation of how to import core elements
+
 ## 0.18.1
 
 ### Patch Changes

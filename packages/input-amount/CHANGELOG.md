@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.14.3
+
+### Patch Changes
+
+- 5fd9f1cd: rounds up parseAmount to correct amount of decimals based on currency
+- 5601897b: Reformat input-amount's formattedValue on locale changes, also respond to locale property.
+- Updated dependencies [9648d418]
+- Updated dependencies [8c06302e]
+- Updated dependencies [9b9d82fc]
+- Updated dependencies [8a766644]
+- Updated dependencies [e87b6293]
+- Updated dependencies [c544af4e]
+  - @lion/localize@0.21.0
+  - @lion/core@0.18.2
+  - @lion/form-core@0.15.0
+  - @lion/input@0.15.3
+  - @lion/validate-messages@0.7.3
+
 ## 0.14.2
 
 ### Patch Changes

@@ -1,5 +1,44 @@
 # Change Log
 
+## 0.9.5
+
+### Patch Changes
+
+- 09ee55cb: Set formattedValue to the text of the selected option instead of its value
+- Updated dependencies [b292509a]
+- Updated dependencies [5fd9f1cd]
+- Updated dependencies [9648d418]
+- Updated dependencies [09ee55cb]
+- Updated dependencies [5601897b]
+- Updated dependencies [8c06302e]
+- Updated dependencies [9b9d82fc]
+- Updated dependencies [8a766644]
+- Updated dependencies [e87b6293]
+- Updated dependencies [c544af4e]
+  - @lion/input-iban@0.16.3
+  - @lion/input-amount@0.14.3
+  - @lion/localize@0.21.0
+  - @lion/select@0.14.3
+  - @lion/core@0.18.2
+  - @lion/form-core@0.15.0
+  - @lion/input@0.15.3
+  - @lion/textarea@0.13.3
+  - @lion/input-date@0.12.5
+  - @lion/input-datepicker@0.23.5
+  - @lion/input-email@0.13.5
+  - @lion/input-range@0.10.4
+  - @lion/validate-messages@0.7.3
+  - @lion/button@0.14.2
+  - @lion/checkbox-group@0.18.3
+  - @lion/combobox@0.8.2
+  - @lion/fieldset@0.19.5
+  - @lion/input-stepper@0.6.3
+  - @lion/listbox@0.10.3
+  - @lion/radio-group@0.18.3
+  - @lion/select-rich@0.27.3
+  - @lion/switch@0.17.5
+  - @lion/form@0.12.3
+
 ## 0.9.4
 
 ### Patch Changes

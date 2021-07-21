@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.1
+
+### Patch Changes
+
+- 26b2f4e0: Support usage of import assertions like `import style from 'my-pkg/style' assert { type: 'css' };`
+
 ## 0.5.0
 
 ### Minor Changes

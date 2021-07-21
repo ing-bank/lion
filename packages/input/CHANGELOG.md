@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.15.3
+
+### Patch Changes
+
+- e87b6293: only preserve caret if value changed, which fixes a safari bug
+- Updated dependencies [8a766644]
+- Updated dependencies [e87b6293]
+  - @lion/form-core@0.15.0
+
 ## 0.15.2
 
 ### Patch Changes
