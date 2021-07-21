@@ -54,7 +54,7 @@ describe('Form Integrations', () => {
       favoriteFruit: 'Banana',
       favoriteMovie: 'Rocky',
       favoriteColor: 'hotpink',
-      lyrics: '1',
+      lyrics: 'Fire up that loud',
       range: 2.3,
       terms: [],
       notifications: '',
