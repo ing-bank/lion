@@ -1,5 +1,6 @@
 import { expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
+import sinon from 'sinon';
 import '@lion/input-stepper/define';
 
 /**
@@ -70,6 +71,31 @@ describe('<lion-input-stepper>', () => {
       const decrementButton = el.querySelector('[slot=prefix]');
       decrementButton?.dispatchEvent(new Event('click'));
       expect(counter).to.equal(1);
+    });
+
+    it('fires a leave event ("blur") on button clicks', async () => {
+      const blurSpy = sinon.spy();
+      const el = await fixture(html`
+        <lion-input-stepper @blur=${blurSpy} name="year" label="Years"></lion-input-stepper>
+      `);
+
+      expect(el.value).to.equal('');
+      const decrementButton = el.querySelector('[slot=prefix]');
+      decrementButton?.dispatchEvent(new Event('focus'));
+      decrementButton?.dispatchEvent(new Event('click'));
+      decrementButton?.dispatchEvent(new Event('blur'));
+      expect(el.value).to.equal('-1');
+      expect(blurSpy.calledOnce).to.be.true;
+      expect(el.touched).to.be.true;
+
+      el.touched = false;
+      const incrementButton = el.querySelector('[slot=suffix]');
+      incrementButton?.dispatchEvent(new Event('focus'));
+      incrementButton?.dispatchEvent(new Event('click'));
+      incrementButton?.dispatchEvent(new Event('blur'));
+      expect(el.value).to.equal('0');
+      expect(blurSpy.calledTwice).to.be.true;
+      expect(el.touched).to.be.true;
     });
 
     it('should update min and max attributes when min and max property change', async () => {
