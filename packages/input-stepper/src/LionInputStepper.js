@@ -67,6 +67,7 @@ export class LionInputStepper extends LionInput {
 
     this.__increment = this.__increment.bind(this);
     this.__decrement = this.__decrement.bind(this);
+    this.__boundOnLeaveButton = this._onLeaveButton.bind(this);
   }
 
   connectedCallback() {
@@ -299,6 +300,7 @@ export class LionInputStepper extends LionInput {
       <button
         ?disabled=${this.disabled || this.readOnly}
         @click=${this.__decrement}
+        @blur=${this.__boundOnLeaveButton}
         tabindex="-1"
         type="button"
         aria-label="decrement"
@@ -318,6 +320,7 @@ export class LionInputStepper extends LionInput {
       <button
         ?disabled=${this.disabled || this.readOnly}
         @click=${this.__increment}
+        @blur=${this.__boundOnLeaveButton}
         tabindex="-1"
         type="button"
         aria-label="increment"
@@ -325,5 +328,19 @@ export class LionInputStepper extends LionInput {
         ${this._incrementorSignTemplate()}
       </button>
     `;
+  }
+
+  /**
+   * Redispatch leave event on host when catching leave event
+   * on the incrementor and decrementor button.
+   *
+   * This redispatched leave event will be caught by
+   * InteractionStateMixin to set "touched" state to true.
+   *
+   * Interacting with the buttons is "user interactions"
+   * the same way as focusing + blurring the field (native input)
+   */
+  _onLeaveButton() {
+    this.dispatchEvent(new Event(this._leaveEvent));
   }
 }
