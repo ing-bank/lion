@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-extend-docs",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Babel plugin which rewrites imports and templates according to a configuration",
   "license": "MIT",
   "author": "ing-bank",

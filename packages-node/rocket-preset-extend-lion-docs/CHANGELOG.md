@@ -1,5 +1,13 @@
 # rocket-preset-extend-lion-docs
 
+## 0.1.4
+
+### Patch Changes
+
+- 26b2f4e0: Support usage of import assertions like `import style from 'my-pkg/style' assert { type: 'css' };`
+- Updated dependencies [26b2f4e0]
+  - babel-plugin-extend-docs@0.5.1
+
 ## 0.1.3
 
 ### Patch Changes

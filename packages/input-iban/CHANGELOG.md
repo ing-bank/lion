@@ -1,5 +1,22 @@
 # Change Log
 
+## 0.16.3
+
+### Patch Changes
+
+- b292509a: Allow array for IsCountryIBAN, similar to IsNotCountryIBAN. This enables for example enforcing only Dutch and Belgian IBANs, which is a common use case for Dutch/Belgian financial institutions.
+- Updated dependencies [9648d418]
+- Updated dependencies [8c06302e]
+- Updated dependencies [9b9d82fc]
+- Updated dependencies [8a766644]
+- Updated dependencies [e87b6293]
+- Updated dependencies [c544af4e]
+  - @lion/localize@0.21.0
+  - @lion/core@0.18.2
+  - @lion/form-core@0.15.0
+  - @lion/input@0.15.3
+  - @lion/validate-messages@0.7.3
+
 ## 0.16.2
 
 ### Patch Changes

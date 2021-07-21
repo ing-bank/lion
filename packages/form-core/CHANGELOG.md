@@ -1,5 +1,22 @@
 # Change Log
 
+## 0.15.0
+
+### Minor Changes
+
+- 8a766644: Make ValidateMixin feedback message wait for localize loadingComplete, to ensure getting the right fieldName if this refers to a localized label.
+
+### Patch Changes
+
+- e87b6293: only preserve caret if value changed, which fixes a safari bug
+- Updated dependencies [9648d418]
+- Updated dependencies [8c06302e]
+- Updated dependencies [9b9d82fc]
+- Updated dependencies [8a766644]
+- Updated dependencies [c544af4e]
+  - @lion/localize@0.21.0
+  - @lion/core@0.18.2
+
 ## 0.14.2
 
 ### Patch Changes
