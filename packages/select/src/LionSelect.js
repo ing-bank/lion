@@ -1,6 +1,9 @@
 /* eslint-disable max-classes-per-file */
 import { LionField } from '@lion/form-core';
 
+/**
+ * @typedef {import('@lion/localize/types/LocalizeMixinTypes').FormatNumberOptions} FormatOptions
+ */
 class LionFieldWithSelect extends LionField {
   /** @type {any} */
   static get properties() {
@@ -28,19 +31,19 @@ class LionFieldWithSelect extends LionField {
 }
 
 /**
- * LionSelectNative: wraps the native HTML element select
+ * LionSelect: wraps the native HTML element select
  *
- * <lion-select-native>
+ * <lion-select>
  *   <label slot="label">My Input</label>
  *   <select slot="input">
  *    <option value="top">top</option>
  *    <option value="bottom">bottom</option>
  *   </select>
- * </lion-select-native>
+ * </lion-select>
  *
  * You can preselect an option by setting the property modelValue.
  *   Example:
- *     <lion-select-native modelValue="${'<value of option 2>'}">
+ *     <lion-select .modelValue="${'<value of option 2>'}">
  *
  * It extends LionField so it inherits required and disabled.
  *
@@ -57,24 +60,6 @@ export class LionSelect extends LionFieldWithSelect {
   connectedCallback() {
     super.connectedCallback();
     this._inputNode.addEventListener('change', this._proxyChangeEvent);
-  }
-
-  // FIXME: For some reason we have to override this FormatMixin getter/setter pair for the tests to pass
-  get value() {
-    return (this._inputNode && this._inputNode.value) || this.__value || '';
-  }
-
-  // We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
-  /** @type {string} */
-  set value(value) {
-    // if not yet connected to dom can't change the value
-    if (this._inputNode) {
-      this._inputNode.value = value;
-      /** @type {string | undefined} */
-      this.__value = undefined;
-    } else {
-      this.__value = value;
-    }
   }
 
   /** @param {import('@lion/core').PropertyValues } changedProperties */
@@ -97,6 +82,28 @@ export class LionSelect extends LionFieldWithSelect {
   disconnectedCallback() {
     super.disconnectedCallback();
     this._inputNode.removeEventListener('change', this._proxyChangeEvent);
+  }
+
+  /**
+   * @override FormatMixin - set formattedValue to selected option text
+   * @param {*} v - modelValue: can be an Object, Number, String depending on the
+   * input type(date, number, email etc)
+   * @returns {string} formattedValue
+   */
+  formatter(v) {
+    // The selectedIndex is not yet updated
+    const found = Array.from(this._inputNode.options).find(option => option.value === v);
+    return found ? found.text : '';
+  }
+
+  /**
+   * @override FormatMixin - set value equal to modelValue instead of formattedValue
+   */
+  _reflectBackFormattedValueToUser() {
+    if (this._reflectBackOn()) {
+      // Text 'undefined' should not end up in <input>
+      this.value = typeof this.modelValue !== 'undefined' ? this.modelValue : '';
+    }
   }
 
   /** @protected */
