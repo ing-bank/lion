@@ -68,3 +68,40 @@ export const disabled = () => html`
   ></lion-input-range>
 `;
 ```
+
+## Range Styles
+
+Often, you will style your own range input by changing the pseudo-elements for the slider track and thumb.
+
+These pseudo-elements do not play nice with `::slotted`.
+
+As per [specification](https://drafts.csswg.org/css-scoping/#slotted-pseudo):
+
+> The ::slotted() pseudo-element can be followed by a tree-abiding pseudo-element,
+> like ::slotted()::before, representing the appropriate pseudo-element of the elements
+> represented by the ::slotted() pseudo-element.
+
+The pseudo-elements associated with the slider track/thumb are not tree-abiding, so you can't do:
+
+```css
+::slotted(.form-control)::-webkit-slider-runnable-track
+```
+
+This means you will need to style the slotted native input from the LightDOM,
+and for this we added a helper method to `LionInputRange` which inserts a `<style>` element
+that emulates scoping by generating a uniquely generated class on the LionInputRange component.
+This prevents the styling from conflicting with other elements on the page.
+
+To use it when extending, override `static rangeStyles(scope)`:
+
+```js
+class MyInputRange extends LionInputRange {
+  static rangeStyles(scope) {
+    return css`
+      .${scope} .form-control::-webkit-slider-runnable-track {
+        background-color: lightgreen;
+      }
+    `;
+  }
+}
+```
