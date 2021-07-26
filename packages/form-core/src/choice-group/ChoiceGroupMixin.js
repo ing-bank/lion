@@ -6,7 +6,7 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  * @typedef {import('../../types/choice-group/ChoiceGroupMixinTypes').ChoiceGroupMixin} ChoiceGroupMixin
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
- * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
+ * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormControl} FormControl
  * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
  */
 
@@ -232,9 +232,14 @@ const ChoiceGroupMixinImplementation = superclass =>
      * in FormGroupMixin. I (@jorenbroekema) think the abstraction is worth it here..
      *
      * @param {string} property
+     * @param {(el: FormControl, property?: string) => boolean} [filterFn]
+     * @returns {{[name:string]: any}}
      * @protected
      */
-    _getFromAllFormElements(property) {
+    _getFromAllFormElements(property, filterFn) {
+      // Prioritizes imperatively passed filter function over the protected method
+      const _filterFn = filterFn || this._getFromAllFormElementsFilter;
+
       // For modelValue, serializedValue and formattedValue, an exception should be made,
       // The reset can be requested from children
       if (
@@ -244,9 +249,7 @@ const ChoiceGroupMixinImplementation = superclass =>
       ) {
         return this[property];
       }
-      return this.formElements
-        .filter(el => this._getFromAllFormElementsFilter(el, property))
-        .map(el => el.property);
+      return this.formElements.filter(el => _filterFn(el, property)).map(el => el.property);
     }
 
     /**
