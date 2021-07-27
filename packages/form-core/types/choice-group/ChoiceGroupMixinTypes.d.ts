@@ -1,6 +1,7 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from '@lion/core';
 import { FormControlHost } from '../FormControlMixinTypes';
+import { FormControl } from '../form-group/FormGroupMixinTypes';
 import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes';
 import { InteractionStateHost } from '../InteractionStateMixinTypes';
 
@@ -17,7 +18,11 @@ export declare class ChoiceGroupHost {
 
   protected _oldModelValue: any;
   protected _triggerInitialModelValueChangedEvent(): void;
-  protected _getFromAllFormElements(property: string, filterCondition: Function): void;
+  protected _getFromAllFormElementsFilter(el: FormControl, type: string): boolean;
+  protected _getFromAllFormElements(
+    property: string,
+    filterFn?: (el: FormControl, property?: string) => boolean,
+  ): void;
   protected _throwWhenInvalidChildModelValue(child: FormControlHost): void;
   protected _isEmpty(): void;
   protected _checkSingleChoiceElements(ev: Event): void;

@@ -9,10 +9,10 @@ import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
 /**
  * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormGroupMixin} FormGroupMixin
  * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormGroupHost} FormGroupHost
+ * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormControl} FormControl
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
- * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?: HTMLElement, checked?: boolean, disabled: boolean, hasFeedbackFor: string[], makeRequestToBeDisabled: Function }} FormControl
  */
 
 /**
@@ -318,20 +318,41 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
+     * A filter function which will exclude a form field when returning false
+     * By default, exclude form fields which are disabled
+     *
+     * The type is be passed as well for more fine grained control, e.g.
+     * distinguish the filter when fetching modelValue versus serializedValue
+     *
+     * @param {FormControl} el
+     * @param {string} type
+     * @returns {boolean}
+     */
+    // eslint-disable-next-line class-methods-use-this, no-unused-vars
+    _getFromAllFormElementsFilter(el, type) {
+      return !el.disabled;
+    }
+
+    /**
      * Gets a keyed be name object for requested property (like modelValue/serializedValue)
      * @param {string} property
+     * @param {(el: FormControl, property?: string) => boolean} [filterFn]
      * @returns {{[name:string]: any}}
      */
-    _getFromAllFormElements(property, filterFn = (/** @type {FormControl} */ el) => !el.disabled) {
+    _getFromAllFormElements(property, filterFn) {
       const result = {};
+
+      // Prioritizes imperatively passed filter function over the protected method
+      const _filterFn = filterFn || this._getFromAllFormElementsFilter;
+
       // @ts-ignore [allow-protected]: allow Form internals to access this protected method
       this.formElements._keys().forEach(name => {
         const elem = this.formElements[name];
         if (elem instanceof FormControlsCollection) {
-          result[name] = elem.filter(el => filterFn(el)).map(el => el[property]);
-        } else if (filterFn(elem)) {
+          result[name] = elem.filter(el => _filterFn(el, property)).map(el => el[property]);
+        } else if (_filterFn(elem, property)) {
           if (typeof elem._getFromAllFormElements === 'function') {
-            result[name] = elem._getFromAllFormElements(property, filterFn);
+            result[name] = elem._getFromAllFormElements(property);
           } else {
             result[name] = elem[property];
           }

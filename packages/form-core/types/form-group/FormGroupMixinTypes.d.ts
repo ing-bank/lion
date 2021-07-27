@@ -6,6 +6,15 @@ import { FormControlHost } from '../FormControlMixinTypes';
 import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes';
 import { ValidateHost } from '../validate/ValidateMixinTypes';
 
+export declare type FormControl = FormControlHost &
+  HTMLElement & {
+    _parentFormGroup?: HTMLElement;
+    checked?: boolean;
+    disabled: boolean;
+    hasFeedbackFor: string[];
+    makeRequestToBeDisabled: Function;
+  };
+
 export declare class FormGroupHost {
   /**
    * Disables all formElements in group
@@ -84,8 +93,17 @@ export declare class FormGroupHost {
    */
   protected _getFromAllFormElements(
     property: string,
-    filterFn: (el: FormControlHost) => boolean,
+    filterFn?: (el: FormControl, property?: string) => boolean,
   ): { [name: string]: any };
+
+  /**
+   * A filter function which will exclude a form field when returning false
+   * By default, exclude form fields which are disabled
+   *
+   * The type is be passed as well for more fine grained control, e.g.
+   * distinguish the filter when fetching modelValue versus serializedValue
+   */
+  protected _getFromAllFormElementsFilter(el: FormControl, type: string): boolean;
 
   /**
    * Allows to set formElements values via a keyed object structure
