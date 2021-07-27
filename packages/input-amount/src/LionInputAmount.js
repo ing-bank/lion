@@ -30,28 +30,6 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     };
   }
 
-  get slots() {
-    return {
-      ...super.slots,
-      after: () => {
-        if (this.currency) {
-          const el = document.createElement('span');
-          // The data-label attribute will make sure that FormControl adds this to
-          // input[aria-labelledby]
-          el.setAttribute('data-label', '');
-
-          el.textContent = this.__currencyLabel;
-          return el;
-        }
-        return undefined;
-      },
-    };
-  }
-
-  get _currencyDisplayNode() {
-    return Array.from(this.children).find(child => child.slot === 'after');
-  }
-
   static get styles() {
     return [
       ...super.styles,
@@ -88,8 +66,8 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
-    if (changedProperties.has('currency') && this.currency) {
-      this._onCurrencyChanged({ currency: this.currency });
+    if (changedProperties.has('currency')) {
+      this._onCurrencyChanged({ currency: this.currency || null });
     }
 
     if (changedProperties.has('locale') && this.locale !== changedProperties.get('locale')) {
@@ -126,16 +104,54 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
   /**
    * @param {Object} opts
-   * @param {string} opts.currency
+   * @param {string?} opts.currency
    * @protected
    */
   _onCurrencyChanged({ currency }) {
-    if (this._isPrivateSlot('after') && this._currencyDisplayNode) {
+    this.formatOptions.currency = currency || undefined;
+    if (this.currency) {
+      if (!this._currencyDisplayNode) {
+        this._currencyDisplayNode = this._createCurrencyDisplayNode();
+      }
       this._currencyDisplayNode.textContent = this.__currencyLabel;
+      this._calculateValues({ source: null });
+    } else {
+      this._currencyDisplayNode = undefined;
     }
-    this.formatOptions.currency = currency;
-    this._calculateValues({ source: null });
     this.__setCurrencyDisplayLabel();
+  }
+
+  /**
+   * @returns the current currency display node
+   * @protected
+   */
+  get _currencyDisplayNode() {
+    return Array.from(this.children).find(child => child.slot === 'after');
+  }
+
+  /**
+   * @protected
+   */
+  set _currencyDisplayNode(node) {
+    if (node) {
+      this.appendChild(node);
+    } else {
+      this._currencyDisplayNode?.remove();
+    }
+  }
+
+  /**
+   * @returns a newly created node for displaying the currency
+   * @protected
+   */
+  _createCurrencyDisplayNode() {
+    const el = document.createElement('span');
+    // The data-label attribute will make sure that FormControl adds this to
+    // input[aria-labelledby]
+    el.setAttribute('data-label', '');
+    el.textContent = this.__currencyLabel;
+    el.slot = 'after';
+    return el;
   }
 
   /** @private */
@@ -143,8 +159,11 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     // TODO: (@erikkroes) for optimal a11y, abbreviations should be part of aria-label
     // example, for a language switch with text 'en', an aria-label of 'english' is not
     // sufficient, it should also contain the abbreviation.
-    if (this.currency && this._currencyDisplayNode) {
-      this._currencyDisplayNode.setAttribute('aria-label', getCurrencyName(this.currency, {}));
+    if (this._currencyDisplayNode) {
+      this._currencyDisplayNode.setAttribute(
+        'aria-label',
+        this.currency ? getCurrencyName(this.currency, {}) : '',
+      );
     }
   }
 

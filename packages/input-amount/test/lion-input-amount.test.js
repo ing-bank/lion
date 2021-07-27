@@ -134,6 +134,7 @@ describe('<lion-input-amount>', () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
     );
+
     expect(
       /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
         ?.innerText,
@@ -195,6 +196,38 @@ describe('<lion-input-amount>', () => {
     localize.locale = 'nl-NL';
     await el.updateComplete;
     expect(el.formattedValue).to.equal('123,45');
+  });
+
+  it('removes the currency label when currency switches from EUR to undefined', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
+    );
+    expect(
+      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
+        ?.innerText,
+    ).to.equal('EUR');
+    el.currency = undefined;
+    await el.updateComplete;
+    expect(
+      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after'),
+    ).to.be.undefined;
+  });
+
+  it('adds the currency label when currency switches from undefined to EUR', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount></lion-input-amount>`)
+    );
+    expect(
+      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after'),
+    ).to.be.undefined;
+
+    el.currency = 'EUR';
+    await el.updateComplete;
+    const currLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+      child => child.slot === 'after',
+    );
+    expect(currLabel?.innerText).to.equal('EUR');
+    expect(currLabel?.getAttribute('aria-label')).to.equal('euros');
   });
 
   describe('Accessibility', () => {
