@@ -329,4 +329,42 @@ describe('remarkExtend', () => {
       ].join('\n'),
     );
   });
+
+  it('can import files with a table', async () => {
+    const result = await execute(
+      [
+        //
+        '### Static Headline',
+        "```js ::importBlock('./fixtures/import-table.md', '## Currencies')",
+        '```',
+      ].join('\n'),
+    );
+
+    expect(result).to.equal(
+      [
+        //
+        '<h3>Static Headline</h3>',
+        '<h2>Currencies</h2>',
+        '<table>',
+        '<thead>',
+        '<tr>',
+        '<th>Sign</th>',
+        '<th>Name</th>',
+        '</tr>',
+        '</thead>',
+        '<tbody>',
+        '<tr>',
+        '<td>$</td>',
+        '<td>Dollar</td>',
+        '</tr>',
+        '<tr>',
+        '<td>€</td>',
+        '<td>Euro</td>',
+        '</tr>',
+        '</tbody>',
+        '</table>',
+        '',
+      ].join('\n'),
+    );
+  });
 });

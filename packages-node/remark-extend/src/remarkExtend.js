@@ -4,6 +4,7 @@ const visit = require('unist-util-visit');
 const { select } = require('unist-util-select');
 const unified = require('unified');
 const markdown = require('remark-parse');
+const gfm = require('remark-gfm');
 const is = require('unist-util-is');
 const fs = require('fs');
 const path = require('path');
@@ -172,6 +173,7 @@ function remarkExtend({ rootDir = process.cwd(), page } = {}) {
         toInsertNodes = [];
         const parser = unified()
           .use(markdown)
+          .use(gfm)
           .use(handleImportedFile, {
             startSelector,
             endSelector,
