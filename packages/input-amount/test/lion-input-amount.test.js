@@ -256,19 +256,25 @@ describe('<lion-input-amount>', () => {
       const el = /** @type {LionInputAmount} */ (
         await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
       );
-      expect(el._currencyDisplayNode?.getAttribute('data-label')).to.be.not.null;
+      const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+        child => child.slot === 'after',
+      );
+      expect(label?.getAttribute('data-label')).to.be.not.null;
       const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
-      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(el._currencyDisplayNode?.id);
+      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(label?.id);
     });
 
     it('adds an aria-label to currency slot', async () => {
       const el = /** @type {LionInputAmount} */ (
         await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
       );
-      expect(el._currencyDisplayNode?.getAttribute('aria-label')).to.equal('euros');
+      const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+        child => child.slot === 'after',
+      );
+      expect(label?.getAttribute('aria-label')).to.equal('euros');
       el.currency = 'USD';
       await el.updateComplete;
-      expect(el._currencyDisplayNode?.getAttribute('aria-label')).to.equal('US dollars');
+      expect(label?.getAttribute('aria-label')).to.equal('US dollars');
       el.currency = 'PHP';
       await el.updateComplete;
       // TODO: Chrome Intl now thinks this should be pesos instead of pisos. They're probably right.

@@ -110,34 +110,15 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   _onCurrencyChanged({ currency }) {
     this.formatOptions.currency = currency || undefined;
     if (this.currency) {
-      if (!this._currencyDisplayNode) {
-        this._currencyDisplayNode = this._createCurrencyDisplayNode();
+      if (!this.__currencyDisplayNode) {
+        this.__currencyDisplayNode = this._createCurrencyDisplayNode();
       }
-      this._currencyDisplayNode.textContent = this.__currencyLabel;
+      this.__currencyDisplayNode.textContent = this.__currencyLabel;
       this._calculateValues({ source: null });
     } else {
-      this._currencyDisplayNode = undefined;
+      this.__currencyDisplayNode = undefined;
     }
     this.__setCurrencyDisplayLabel();
-  }
-
-  /**
-   * @returns the current currency display node
-   * @protected
-   */
-  get _currencyDisplayNode() {
-    return Array.from(this.children).find(child => child.slot === 'after');
-  }
-
-  /**
-   * @protected
-   */
-  set _currencyDisplayNode(node) {
-    if (node) {
-      this.appendChild(node);
-    } else {
-      this._currencyDisplayNode?.remove();
-    }
   }
 
   /**
@@ -154,13 +135,32 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     return el;
   }
 
+  /**
+   * @returns the current currency display node
+   * @private
+   */
+  get __currencyDisplayNode() {
+    return Array.from(this.children).find(child => child.slot === 'after');
+  }
+
+  /**
+   * @private
+   */
+  set __currencyDisplayNode(node) {
+    if (node) {
+      this.appendChild(node);
+    } else {
+      this.__currencyDisplayNode?.remove();
+    }
+  }
+
   /** @private */
   __setCurrencyDisplayLabel() {
     // TODO: (@erikkroes) for optimal a11y, abbreviations should be part of aria-label
     // example, for a language switch with text 'en', an aria-label of 'english' is not
     // sufficient, it should also contain the abbreviation.
-    if (this._currencyDisplayNode) {
-      this._currencyDisplayNode.setAttribute(
+    if (this.__currencyDisplayNode) {
+      this.__currencyDisplayNode.setAttribute(
         'aria-label',
         this.currency ? getCurrencyName(this.currency, {}) : '',
       );
