@@ -23,6 +23,15 @@ function replaceTemplateElements({ path, opts }) {
   });
 }
 
+function replaceTagName(tagName, opts) {
+  for (const change of opts.changes) {
+    if (change.tag && change.tag.from === tagName) {
+      return change.tag.to;
+    }
+  }
+  return tagName;
+}
+
 function insertImportStatements({ imports, path }) {
   path.node.body = [...imports, ...path.node.body];
 }
@@ -34,6 +43,30 @@ module.exports = ({ types: t }) => ({
         renameAndStoreImports({ path, state, opts: state.opts, types: t });
       } else {
         replaceTagImports({ path, state, opts: state.opts, types: t });
+      }
+    },
+    ClassMethod(path, state) {
+      // replace keys (= tag names) in static get scopedElements()
+      if (path.node.static === true && path.node.key.name === 'scopedElements') {
+        if (
+          path.node.body.type === 'BlockStatement' &&
+          path.node.body.body[0].type === 'ReturnStatement'
+        ) {
+          const { argument } = path.node.body.body[0];
+          for (const prop of argument.properties) {
+            prop.key.value = replaceTagName(prop.key.value, state.opts);
+          }
+        }
+      }
+    },
+    ClassProperty(path, state) {
+      // replace keys (= tag names) in scopedElements =
+      if (path.node.static === true && path.node.key.name === 'scopedElements') {
+        if (path.node.value.type === 'ObjectExpression') {
+          for (const prop of path.node.value.properties) {
+            prop.key.value = replaceTagName(prop.key.value, state.opts);
+          }
+        }
       }
     },
     TaggedTemplateExpression(path, state) {

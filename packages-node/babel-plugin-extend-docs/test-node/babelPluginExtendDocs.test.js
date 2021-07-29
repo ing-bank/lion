@@ -126,6 +126,59 @@ describe('babel-plugin-extend-docs', () => {
     expect(executeBabel(code, testConfig)).to.equal(output);
   });
 
+  it('replaces tags in static get scopedElements()', () => {
+    const code = [
+      "import { html, LitElement, ScopedElementsMixin } from '@lion/core';",
+      "import { LionInput } from '@lion/input';",
+      '',
+      'class MyComponent extends ScopedElementsMixin(LitElement) {',
+      '  static get scopedElements() {',
+      '    return {',
+      '      "lion-input": LionInput',
+      '    };',
+      '  }',
+      '}',
+    ].join('\n');
+    const output = [
+      'import { html, LitElement, ScopedElementsMixin } from "@lion/core";',
+      'import { WolfInput } from "wolf-web/input";',
+      '',
+      'class MyComponent extends ScopedElementsMixin(LitElement) {',
+      '  static get scopedElements() {',
+      '    return {',
+      '      "wolf-input": WolfInput',
+      '    };',
+      '  }',
+      '',
+      '}',
+    ].join('\n');
+    expect(executeBabel(code, testConfig)).to.equal(output);
+  });
+
+  it('replaces tags in static scopedElements =', () => {
+    const code = [
+      "import { html, LitElement, ScopedElementsMixin } from '@lion/core';",
+      "import { LionInput } from '@lion/input';",
+      '',
+      'class MyComponent extends ScopedElementsMixin(LitElement) {',
+      '  static scopedElements = {',
+      '    "lion-input": LionInput',
+      '  };',
+      '}',
+    ].join('\n');
+    const output = [
+      'import { html, LitElement, ScopedElementsMixin } from "@lion/core";',
+      'import { WolfInput } from "wolf-web/input";',
+      '',
+      'class MyComponent extends ScopedElementsMixin(LitElement) {',
+      '  static scopedElements = {',
+      '    "wolf-input": WolfInput',
+      '  };',
+      '}',
+    ].join('\n');
+    expect(executeBabel(code, testConfig)).to.equal(output);
+  });
+
   it("replaces tags also if using ${{key: 'value'}}", () => {
     const code = [
       'export const forceLocale = () => html`',
