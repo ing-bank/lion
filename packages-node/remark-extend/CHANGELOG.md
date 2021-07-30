@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.3
+
+### Patch Changes
+
+- bffd6db9: Support GitHub Flavored Markdown (gfm) tables when importing markdown
+
 ## 0.4.2
 
 ### Patch Changes

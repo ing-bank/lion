@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.6.4
+
+### Patch Changes
+
+- 60862650: Redispatch leave events on input-stepper when leaving the increment/decrement buttons. This will consider entering and leaving the buttons as user interactions and result in the input-stepper "touched" property to be set to true, similar to when you would enter/leave the input field.
+- Updated dependencies [04874352]
+  - @lion/form-core@0.15.1
+  - @lion/input@0.15.4
+
 ## 0.6.3
 
 ### Patch Changes
