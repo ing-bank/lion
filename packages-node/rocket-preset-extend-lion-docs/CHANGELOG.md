@@ -1,5 +1,14 @@
 # rocket-preset-extend-lion-docs
 
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [dd3fd331]
+- Updated dependencies [bffd6db9]
+  - babel-plugin-extend-docs@0.5.2
+  - remark-extend@0.4.3
+
 ## 0.1.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.2
+
+### Patch Changes
+
+- dd3fd331: Replace `scopedElements` keys (= tag names) when extending
+
 ## 0.5.1
 
 ### Patch Changes

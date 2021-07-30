@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.23.6
+
+### Patch Changes
+
+- 79392d8e: Export LionCalendarOverlayFrame as a good starter frame for subclassers.
+- Updated dependencies [04874352]
+  - @lion/form-core@0.15.1
+  - @lion/input-date@0.12.6
+  - @lion/validate-messages@0.7.4
+
 ## 0.23.5
 
 ### Patch Changes
