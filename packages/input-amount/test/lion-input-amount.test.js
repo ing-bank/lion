@@ -230,6 +230,28 @@ describe('<lion-input-amount>', () => {
     expect(currLabel?.getAttribute('aria-label')).to.equal('euros');
   });
 
+  it('sets currency label on the after after element', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`
+        <lion-input-amount>
+          <span slot="after" id="123">Currency, please</span>
+        </lion-input-amount>`)
+    );
+    const mySlotLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+      child => child.slot === 'after',
+    );
+    expect(mySlotLabel?.id).to.equal('123');
+
+    el.currency = 'EUR';
+    await el.updateComplete;
+    const currLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+      child => child.slot === 'after',
+    );
+    expect(currLabel).to.equal(mySlotLabel);
+    expect(currLabel?.id).to.equal('123');
+    expect(currLabel?.innerText).to.equal('EUR');
+  });
+
   describe('Accessibility', () => {
     it('is accessible', async () => {
       const el = await fixture(
