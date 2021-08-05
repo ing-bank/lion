@@ -811,27 +811,44 @@ const FormControlMixinImplementation = superclass =>
     }
 
     _dispatchInitialModelValueChangedEvent() {
+      /** @type {ModelValueEventDetails} */
+      const detail = {
+        formPath: [this],
+        isTriggeredByUser: false,
+      };
+
+      // Send addition event for newly added controls: notice this will only be true when the form
+      // has already rendered
+      // TODO: look for more elegant and readable way to do this
+      const isNewlyAddedControl =
+        this.__repropagateSelfInitialized &&
+        !('choiceValue' in this) &&
+        /** @type {* & FormControlHost} */ (this._parentFormGroup)
+          ?.__repropagateChildrenInitialized;
+
+      this.__repropagateSelfInitialized = true;
+
       // When we are not a fieldset / choice-group, we don't need to wait for our children
       // to send a unified event
-      if (this._repropagationRole === 'child') {
+      if (isNewlyAddedControl) {
+        detail.mutation = 'added';
+      } else if (this._repropagationRole !== 'child') {
+        detail.initialize = true;
+        /** @type {boolean} */
+      } else {
         return;
       }
+      this.__repropagateChildrenInitialized = true;
 
       // Initially we don't repropagate model-value-changed events coming
       // from children. On firstUpdated we re-dispatch this event to maintain
       // 'count consistency' (to not confuse the application developer with a
       // large number of initial events). Initially the source field will not
       // be part of the formPath but afterwards it will.
-      /** @type {boolean} */
-      this.__repropagateChildrenInitialized = true;
       this.dispatchEvent(
         new CustomEvent('model-value-changed', {
           bubbles: true,
-          detail: /** @type {ModelValueEventDetails} */ ({
-            formPath: [this],
-            initialize: true,
-            isTriggeredByUser: false,
-          }),
+          detail,
         }),
       );
     }
@@ -854,8 +871,6 @@ const FormControlMixinImplementation = superclass =>
       this._onBeforeRepropagateChildrenValues(ev);
       // Normalize target, we also might get it from 'portals' (rich select)
       const target = (ev.detail && ev.detail.element) || ev.target;
-      const isEndpoint =
-        this._isRepropagationEndpoint || this._repropagationRole === 'choice-group';
 
       // Prevent eternal loops after we sent the event below.
       if (target === this) {
@@ -876,8 +891,10 @@ const FormControlMixinImplementation = superclass =>
       // initial model-value-change event in firstUpdated)
       const isGroup = this._repropagationRole !== 'child'; // => fieldset or choice-group
       const isSelfInitializing = isGroup && !this.__repropagateChildrenInitialized;
-      const isChildGroupInitializing = ev.detail && ev.detail.initialize;
-      if (isSelfInitializing || isChildGroupInitializing) {
+      const isChildGroupInitializing = ev.detail?.initialize;
+      const isAddedOrRemoved = Boolean(ev.detail?.mutation);
+
+      if ((isSelfInitializing || isChildGroupInitializing) && !isAddedOrRemoved) {
         return;
       }
 
@@ -896,6 +913,8 @@ const FormControlMixinImplementation = superclass =>
       //
       // Compute the formPath. Choice groups are regarded 'end points'
       let parentFormPath = [];
+      const isEndpoint =
+        this._isRepropagationEndpoint || this._repropagationRole === 'choice-group';
       if (!isEndpoint) {
         parentFormPath = (ev.detail && ev.detail.formPath) || [target];
       }
@@ -908,10 +927,11 @@ const FormControlMixinImplementation = superclass =>
       this.dispatchEvent(
         new CustomEvent('model-value-changed', {
           bubbles: true,
-          detail: /** @type {ModelValueEventDetails} */ ({
+          detail: /** @type {ModelValueEventDetails} */ {
             formPath,
             isTriggeredByUser: Boolean(ev.detail?.isTriggeredByUser),
-          }),
+            mutation: ev.detail?.mutation,
+          },
         }),
       );
     }
