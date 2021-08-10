@@ -134,7 +134,6 @@ describe('<lion-input-amount>', () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
     );
-
     expect(
       /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
         ?.innerText,
@@ -230,7 +229,7 @@ describe('<lion-input-amount>', () => {
     expect(currLabel?.getAttribute('aria-label')).to.equal('euros');
   });
 
-  it('sets currency label on the after after element', async () => {
+  it('sets currency label on the after element', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(`
         <lion-input-amount>
