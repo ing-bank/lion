@@ -1,10 +1,12 @@
+import sinon from 'sinon';
 import { defineCE, expect, fixture } from '@open-wc/testing';
 import { SlotMixin } from '../src/SlotMixin.js';
+import { LitElement, ScopedElementsMixin, html } from '../index.js';
 
 describe('SlotMixin', () => {
   it('inserts provided element into lightdom and sets slot', async () => {
     const tag = defineCE(
-      class extends SlotMixin(HTMLElement) {
+      class extends SlotMixin(LitElement) {
         get slots() {
           return {
             ...super.slots,
@@ -19,7 +21,7 @@ describe('SlotMixin', () => {
 
   it('does not override user provided slots', async () => {
     const tag = defineCE(
-      class extends SlotMixin(HTMLElement) {
+      class extends SlotMixin(LitElement) {
         get slots() {
           return {
             ...super.slots,
@@ -33,9 +35,28 @@ describe('SlotMixin', () => {
     expect(/** @type HTMLParagraphElement */ (el.children[0]).innerText).to.equal('user-content');
   });
 
+  it('does add when user provided slots are not direct children', async () => {
+    const tag = defineCE(
+      class extends SlotMixin(LitElement) {
+        get slots() {
+          return {
+            ...super.slots,
+            content: () => document.createElement('div'),
+          };
+        }
+      },
+    );
+    const el = await fixture(`<${tag}><p><span slot="content">user-content</span></p></${tag}>`);
+    const slot = /** @type HTMLDivElement */ (
+      Array.from(el.children).find(elm => elm.slot === 'content')
+    );
+    expect(slot.tagName).to.equal('DIV');
+    expect(slot.innerText).to.equal('');
+  });
+
   it('supports complex dom trees as element', async () => {
     const tag = defineCE(
-      class extends SlotMixin(HTMLElement) {
+      class extends SlotMixin(LitElement) {
         constructor() {
           super();
           this.foo = 'bar';
@@ -67,7 +88,7 @@ describe('SlotMixin', () => {
   it('supports conditional slots', async () => {
     let renderSlot = true;
     const tag = defineCE(
-      class extends SlotMixin(HTMLElement) {
+      class extends SlotMixin(LitElement) {
         get slots() {
           return {
             ...super.slots,
@@ -92,7 +113,7 @@ describe('SlotMixin', () => {
 
   it("allows to check which slots have been created via this._isPrivateSlot('slotname')", async () => {
     let renderSlot = true;
-    class SlotPrivateText extends SlotMixin(HTMLElement) {
+    class SlotPrivateText extends SlotMixin(LitElement) {
       get slots() {
         return {
           ...super.slots,
@@ -115,5 +136,72 @@ describe('SlotMixin', () => {
     renderSlot = false;
     const elNoSlot = /** @type {SlotPrivateText} */ (await fixture(`<${tag}><${tag}>`));
     expect(elNoSlot.didCreateConditionalSlot()).to.be.false;
+  });
+
+  it('supports templates', async () => {
+    const tag = defineCE(
+      class extends SlotMixin(LitElement) {
+        get slots() {
+          return {
+            ...super.slots,
+            template: () => html`<span>text</span>`,
+          };
+        }
+
+        render() {
+          return html`<slot name="template"></slot>`;
+        }
+      },
+    );
+    const el = await fixture(`<${tag}><${tag}>`);
+    const slot = /** @type HTMLSpanElement */ (
+      Array.from(el.children).find(elm => elm.slot === 'template')
+    );
+    expect(slot.slot).to.equal('template');
+    expect(slot.tagName).to.equal('SPAN');
+  });
+
+  it('supports scoped elements', async () => {
+    const scopedSpy = sinon.spy();
+    class ScopedEl extends LitElement {
+      connectedCallback() {
+        super.connectedCallback();
+        scopedSpy();
+      }
+    }
+
+    const tag = defineCE(
+      class extends ScopedElementsMixin(SlotMixin(LitElement)) {
+        static get scopedElements() {
+          return {
+            // @ts-expect-error
+            ...super.scopedElements,
+            'scoped-el': ScopedEl,
+          };
+        }
+
+        get slots() {
+          return {
+            ...super.slots,
+            template: () => html`<scoped-el></scoped-el>`,
+          };
+        }
+
+        connectedCallback() {
+          super.connectedCallback();
+
+          // Not rendered to shadowRoot, notScopedSpy should not be called
+          const notScoped = document.createElement('not-scoped');
+          this.appendChild(notScoped);
+        }
+
+        render() {
+          return html`<slot name="template"></slot>`;
+        }
+      },
+    );
+
+    await fixture(`<${tag}><${tag}>`);
+    expect(scopedSpy).to.have.been.called;
   });
 });

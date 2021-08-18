@@ -1,6 +1,7 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
+import { TemplateResult, LitElement } from '../index.js';
 
-declare function slotFunction(): HTMLElement | undefined;
+declare function slotFunction(): HTMLElement | Node[] | TemplateResult | undefined;
 
 export type SlotsMap = {
   [key: string]: typeof slotFunction;
@@ -48,11 +49,11 @@ export declare class SlotHost {
  *   };
  * }
  */
-export declare function SlotMixinImplementation<T extends Constructor<HTMLElement>>(
+export declare function SlotMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
 ): T &
   Constructor<SlotHost> &
   Pick<typeof SlotHost, keyof typeof SlotHost> &
-  Pick<typeof HTMLElement, keyof typeof HTMLElement>;
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type SlotMixin = typeof SlotMixinImplementation;
