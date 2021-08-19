@@ -80,9 +80,9 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     /** @protected */
     this._toggleChecked = this._toggleChecked.bind(this);
     /** @private */
-    this.__handleKeydown = this.__handleKeydown.bind(this);
+    this.__handleKeydown = this._handleKeydown.bind(this);
     /** @private */
-    this.__handleKeyup = this.__handleKeyup.bind(this);
+    this.__handleKeyup = this._handleKeyup.bind(this);
   }
 
   connectedCallback() {
@@ -121,23 +121,23 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
   }
 
   /**
-   * @param {KeyboardEvent} e
-   * @private
+   * @param {KeyboardEvent} ev
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
-  __handleKeydown(e) {
+  _handleKeydown(ev) {
     // prevent "space" scrolling on "macOS"
-    if (e.keyCode === 32) {
-      e.preventDefault();
+    if (ev.key === ' ') {
+      ev.preventDefault();
     }
   }
 
   /**
-   * @param {KeyboardEvent} e
-   * @private
+   * @param {KeyboardEvent} ev
+   * @protected
    */
-  __handleKeyup(e) {
-    if ([32 /* space */, 13 /* enter */].indexOf(e.keyCode) !== -1) {
+  _handleKeyup(ev) {
+    if ([' ', 'Enter'].includes(ev.key)) {
       this._toggleChecked();
     }
   }
