@@ -33,7 +33,10 @@
     "test": "cd ../../ && npm run test:browser -- --group button"
   },
   "sideEffects": [
-    "lion-button.js"
+    "lion-button.js",
+    "lion-button-reset.js",
+    "lion-button-submit.js",
+    "define.js"
   ],
   "dependencies": {
     "@lion/core": "0.18.2"
