@@ -50,6 +50,19 @@ describe('lion-switch-button', () => {
     expect(el.hasAttribute('checked')).to.be.false;
   });
 
+  it('should toggle the value of "checked" on key-up', async () => {
+    expect(el.checked).to.be.false;
+    expect(el.hasAttribute('checked')).to.be.false;
+    el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+    await el.updateComplete;
+    expect(el.checked).to.be.true;
+    expect(el.hasAttribute('checked')).to.be.true;
+    el.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+    await el.updateComplete;
+    expect(el.checked).to.be.false;
+    expect(el.hasAttribute('checked')).to.be.false;
+  });
+
   it('can be disabled', async () => {
     el.disabled = true;
     expect(el.checked).to.be.false;
