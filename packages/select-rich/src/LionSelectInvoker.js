@@ -13,7 +13,8 @@ import { css, html, SlotMixin } from '@lion/core';
 export class LionSelectInvoker extends SlotMixin(LionButton) {
   static get styles() {
     return [
-      ...super.styles,
+      // TODO switch back to ...super.styles once fixed https://github.com/lit/lit.dev/pull/535
+      ...LionButton.styles,
       css`
         :host {
           justify-content: space-between;
