@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import { LitElement, css, html } from '@lion/core';
 
 /**
@@ -11,111 +12,6 @@ import { LitElement, css, html } from '@lion/core';
  */
 
 const uuid = () => Math.random().toString(36).substr(2, 10);
-
-/**
- * @param {Object} opts
- * @param {HTMLElement} opts.element
- * @param {string} opts.uid
- * @param {number} opts.index
- */
-const setupContent = ({ element, uid, index }) => {
-  element.style.setProperty('order', `${index + 1}`);
-  element.setAttribute('id', `content-${uid}`);
-  element.setAttribute('aria-labelledby', `invoker-${uid}`);
-};
-
-/**
- * @param {Object} opts
- * @param {HTMLElement} opts.element
- * @param {string} opts.uid
- * @param {number} opts.index
- * @param {EventHandlerNonNull} opts.clickHandler
- * @param {EventHandlerNonNull} opts.keydownHandler
- */
-const setupInvoker = ({ element, uid, index, clickHandler, keydownHandler }) => {
-  element.style.setProperty('order', `${index + 1}`);
-  const firstChild = element.firstElementChild;
-  if (firstChild) {
-    firstChild.setAttribute('id', `invoker-${uid}`);
-    firstChild.setAttribute('aria-controls', `content-${uid}`);
-    firstChild.addEventListener('click', clickHandler);
-    firstChild.addEventListener('keydown', keydownHandler);
-  }
-};
-
-/**
- * @param {HTMLElement} element
- * @param {EventHandlerNonNull} clickHandler
- * @param {EventHandlerNonNull} keydownHandler
- */
-const cleanInvoker = (element, clickHandler, keydownHandler) => {
-  const firstChild = element.firstElementChild;
-  if (firstChild) {
-    firstChild.removeAttribute('id');
-    firstChild.removeAttribute('aria-controls');
-    firstChild.removeEventListener('click', clickHandler);
-    firstChild.removeEventListener('keydown', keydownHandler);
-  }
-};
-
-/**
- * @param {HTMLElement} element
- */
-const focusInvoker = element => {
-  const firstChild = /** @type {HTMLElement|null} */ (element.firstElementChild);
-  if (firstChild) {
-    firstChild.focus();
-    firstChild.setAttribute('focused', `${true}`);
-  }
-};
-
-/**
- * @param {HTMLElement} element
- */
-const unfocusInvoker = element => {
-  const firstChild = element.firstElementChild;
-  if (firstChild) {
-    firstChild.removeAttribute('focused');
-  }
-};
-
-/**
- * @param {HTMLElement} element
- */
-const expandInvoker = element => {
-  element.setAttribute('expanded', `${true}`);
-  const firstChild = element.firstElementChild;
-  if (firstChild) {
-    firstChild.setAttribute('expanded', `${true}`);
-    firstChild.setAttribute('aria-expanded', `${true}`);
-  }
-};
-
-/**
- * @param {HTMLElement} element
- */
-const collapseInvoker = element => {
-  element.removeAttribute('expanded');
-  const firstChild = element.firstElementChild;
-  if (firstChild) {
-    firstChild.removeAttribute('expanded');
-    firstChild.setAttribute('aria-expanded', `${false}`);
-  }
-};
-
-/**
- * @param {HTMLElement} element
- */
-const expandContent = element => {
-  element.setAttribute('expanded', `${true}`);
-};
-
-/**
- * @param {HTMLElement} element
- */
-const collapseContent = element => {
-  element.removeAttribute('expanded');
-};
 
 /**
  * # <lion-accordion> webcomponent
@@ -171,13 +67,34 @@ export class LionAccordion extends LitElement {
     ];
   }
 
-  render() {
-    return html`
-      <div class="accordion">
-        <slot name="invoker"></slot>
-        <slot name="content"></slot>
-      </div>
-    `;
+  /**
+   * @param {number} value
+   */
+  set focusedIndex(value) {
+    const stale = this.__focusedIndex;
+    this.__focusedIndex = value;
+    this.__updateFocused();
+    this.dispatchEvent(new Event('focused-changed'));
+    this.requestUpdate('focusedIndex', stale);
+  }
+
+  get focusedIndex() {
+    return this.__focusedIndex;
+  }
+
+  /**
+   * @param {number[]} value
+   */
+  set expanded(value) {
+    const stale = this.__expanded;
+    this.__expanded = value;
+    this.__updateExpanded();
+    this.dispatchEvent(new Event('expanded-changed'));
+    this.requestUpdate('expanded', stale);
+  }
+
+  get expanded() {
+    return this.__expanded;
   }
 
   constructor() {
@@ -196,7 +113,10 @@ export class LionAccordion extends LitElement {
      */
     this.__focusedIndex = -1;
 
-    /** @type {number[]} */
+    /**
+     * @type {number[]}
+     * @private
+     */
     this.__expanded = [];
   }
 
@@ -204,6 +124,15 @@ export class LionAccordion extends LitElement {
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__setupSlots();
+  }
+
+  render() {
+    return html`
+      <div class="accordion">
+        <slot name="invoker"></slot>
+        <slot name="content"></slot>
+      </div>
+    `;
   }
 
   /**
@@ -251,30 +180,15 @@ export class LionAccordion extends LitElement {
         clickHandler: this.__createInvokerClickHandler(index),
         keydownHandler: this.__handleInvokerKeydown.bind(this),
       };
-      setupContent({ element: entry.content, ...entry });
-      setupInvoker({ element: entry.invoker, ...entry });
-      unfocusInvoker(entry.invoker);
-      collapseContent(entry.content);
-      collapseInvoker(entry.invoker);
+      this._setupContent(entry);
+      this._setupInvoker(entry);
+      this._unfocusInvoker(entry);
+      this._collapse(entry);
       this.__store.push(entry);
     });
   }
 
   /**
-   *  @private
-   */
-  __cleanStore() {
-    if (!this.__store) {
-      return;
-    }
-    this.__store.forEach(entry => {
-      cleanInvoker(entry.invoker, entry.clickHandler, entry.keydownHandler);
-    });
-    this.__store = [];
-  }
-
-  /**
-   *
    * @param {number} index
    * @private
    */
@@ -318,18 +232,6 @@ export class LionAccordion extends LitElement {
     }
   }
 
-  set focusedIndex(value) {
-    const stale = this.__focusedIndex;
-    this.__focusedIndex = value;
-    this.__updateFocused();
-    this.dispatchEvent(new Event('focused-changed'));
-    this.requestUpdate('focusedIndex', stale);
-  }
-
-  get focusedIndex() {
-    return this.__focusedIndex;
-  }
-
   /**
    *  @private
    */
@@ -337,36 +239,116 @@ export class LionAccordion extends LitElement {
     return this.__store.length;
   }
 
-  set expanded(value) {
-    const stale = this.__expanded;
-    this.__expanded = value;
-    this.__updateExpanded();
-    this.dispatchEvent(new Event('expanded-changed'));
-    this.requestUpdate('expanded', stale);
+  /**
+   * @param {StoreEntry} entry
+   * @protected
+   */
+  _setupContent(entry) {
+    const { content, index, uid } = entry;
+    content.style.setProperty('order', `${index + 1}`);
+    content.setAttribute('id', `content-${uid}`);
+    content.setAttribute('aria-labelledby', `invoker-${uid}`);
   }
 
-  get expanded() {
-    return this.__expanded;
+  /**
+   * @param {StoreEntry} entry
+   * @protected
+   */
+  _setupInvoker(entry) {
+    const { invoker, uid, index, clickHandler, keydownHandler } = entry;
+    invoker.style.setProperty('order', `${index + 1}`);
+    const firstChild = invoker.firstElementChild;
+    if (firstChild) {
+      firstChild.setAttribute('id', `invoker-${uid}`);
+      firstChild.setAttribute('aria-controls', `content-${uid}`);
+      firstChild.addEventListener('click', clickHandler);
+      firstChild.addEventListener('keydown', keydownHandler);
+    }
+  }
+
+  /**
+   * @param {StoreEntry} entry
+   * @protected
+   */
+  _cleanInvoker(entry) {
+    const { invoker, clickHandler, keydownHandler } = entry;
+    const firstChild = invoker.firstElementChild;
+    if (firstChild) {
+      firstChild.removeAttribute('id');
+      firstChild.removeAttribute('aria-controls');
+      firstChild.removeEventListener('click', clickHandler);
+      firstChild.removeEventListener('keydown', keydownHandler);
+    }
+  }
+
+  /**
+   * @param {StoreEntry} entry
+   * @protected
+   */
+  _focusInvoker(entry) {
+    const { invoker } = entry;
+    const firstChild = /** @type {HTMLElement|null} */ (invoker.firstElementChild);
+    if (firstChild) {
+      firstChild.focus();
+      firstChild.setAttribute('focused', `${true}`);
+    }
+  }
+
+  /**
+   * @param {StoreEntry} entry
+   * @protected
+   */
+  _unfocusInvoker(entry) {
+    const { invoker } = entry;
+    const firstChild = invoker.firstElementChild;
+    if (firstChild) {
+      firstChild.removeAttribute('focused');
+    }
+  }
+
+  /**
+   * @param {StoreEntry} entry
+   * @protected
+   */
+  _collapse(entry) {
+    const { content, invoker } = entry;
+    content.removeAttribute('expanded');
+    invoker.removeAttribute('expanded');
+    const firstChild = invoker.firstElementChild;
+    if (firstChild) {
+      firstChild.removeAttribute('expanded');
+      firstChild.setAttribute('aria-expanded', `${false}`);
+    }
+  }
+
+  /**
+   * @param {StoreEntry} entry
+   * @protected
+   */
+  _expand(entry) {
+    const { content, invoker } = entry;
+    content.setAttribute('expanded', `${true}`);
+    invoker.setAttribute('expanded', `${true}`);
+    const firstChild = invoker.firstElementChild;
+    if (firstChild) {
+      firstChild.setAttribute('expanded', `${true}`);
+      firstChild.setAttribute('aria-expanded', `${true}`);
+    }
   }
 
   /**
    *  @private
    */
   __updateFocused() {
-    if (!(this.__store && this.__store[this.focusedIndex])) {
-      return;
-    }
-    const previousInvoker = /** @type {HTMLElement | undefined} */ (
-      Array.from(this.children).find(
-        child => child.slot === 'invoker' && child.firstElementChild?.hasAttribute('focused'),
-      )
+    const focusedEntry = this.__store[this.focusedIndex];
+    const previousFocusedEntry = Array.from(this.__store).find(
+      entry => entry.invoker && entry.invoker.firstElementChild?.hasAttribute('focused'),
     );
-    if (previousInvoker) {
-      unfocusInvoker(previousInvoker);
+    if (previousFocusedEntry) {
+      this._unfocusInvoker(previousFocusedEntry);
     }
-    const { invoker: currentInvoker } = this.__store[this.focusedIndex];
-    if (currentInvoker) {
-      focusInvoker(currentInvoker);
+    if (focusedEntry) {
+      this._focusInvoker(focusedEntry);
     }
   }
 
@@ -381,11 +363,9 @@ export class LionAccordion extends LitElement {
       const entryExpanded = this.expanded.indexOf(index) !== -1;
 
       if (entryExpanded) {
-        expandInvoker(entry.invoker);
-        expandContent(entry.content);
+        this._expand(entry);
       } else {
-        collapseInvoker(entry.invoker);
-        collapseContent(entry.content);
+        this._collapse(entry);
       }
     });
   }
@@ -405,5 +385,18 @@ export class LionAccordion extends LitElement {
     }
 
     this.expanded = expanded;
+  }
+
+  /**
+   *  @private
+   */
+  __cleanStore() {
+    if (!this.__store) {
+      return;
+    }
+    this.__store.forEach(entry => {
+      this._cleanInvoker(entry);
+    });
+    this.__store = [];
   }
 }
