@@ -26,6 +26,8 @@ const SlotMixinImplementation = superclass =>
       super();
       /** @private */
       this.__privateSlots = new Set(null);
+      /** @private */
+      this.__templateSlots = new Set(null);
     }
 
     connectedCallback() {
@@ -35,7 +37,7 @@ const SlotMixinImplementation = superclass =>
 
     /**
      * @private
-     * @param {import('@lion/core').TemplateResult} template
+     * @param {import('lit').TemplateResult} template
      */
     __renderAsNodes(template) {
       const tempRenderTarget = document.createElement('div');
@@ -55,25 +57,47 @@ const SlotMixinImplementation = superclass =>
             let nodes = [];
 
             if (isTemplateResult(slotContent)) {
+              this.__templateSlots.add({ name: slotName, template: slotContent });
               nodes = this.__renderAsNodes(slotContent);
             } else if (!Array.isArray(slotContent)) {
               nodes = [/** @type {Node} */ (slotContent)];
             }
 
-            nodes.forEach(node => {
-              if (!(node instanceof Node)) {
-                return;
-              }
-              if (node instanceof Element) {
-                node.setAttribute('slot', slotName);
-              }
-              this.appendChild(node);
-              this.__privateSlots.add(slotName);
-            });
+            this.__appendSlotNodes(nodes, slotName);
           }
         });
         this.__isConnectedSlotMixin = true;
       }
+    }
+
+    /**
+     * @param {Node[]} nodes
+     * @param {string} slotName
+     */
+    __appendSlotNodes(nodes, slotName) {
+      nodes.forEach(node => {
+        if (!(node instanceof Node)) {
+          return;
+        }
+        if (node instanceof Element) {
+          node.setAttribute('slot', slotName);
+        }
+        this.appendChild(node);
+        this.__privateSlots.add(slotName);
+      });
+    }
+
+    /**
+     * @param {import('lit').PropertyValues } changedProperties
+     */
+    update(changedProperties) {
+      super.update(changedProperties);
+
+      // After the parent has rendered to shadow dom, render the light dom
+      // that we 'control internally.'
+      this.__templateSlots.forEach(({ name, template }) => {
+        this.__appendSlotNodes(this.__renderAsNodes(template), name);
+      });
     }
 
     /**

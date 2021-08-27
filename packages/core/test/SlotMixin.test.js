@@ -4,7 +4,7 @@ import { SlotMixin } from '../src/SlotMixin.js';
 import { LitElement, ScopedElementsMixin, html } from '../index.js';
 
 describe('SlotMixin', () => {
-  it('inserts provided element into lightdom and sets slot', async () => {
+  it('inserts provided element into light dom and sets slot', async () => {
     const tag = defineCE(
       class extends SlotMixin(LitElement) {
         get slots() {
@@ -154,11 +154,11 @@ describe('SlotMixin', () => {
       },
     );
     const el = await fixture(`<${tag}><${tag}>`);
-    const slot = /** @type HTMLSpanElement */ (
+    const slottedEl = /** @type HTMLSpanElement */ (
       Array.from(el.children).find(elm => elm.slot === 'template')
     );
-    expect(slot.slot).to.equal('template');
-    expect(slot.tagName).to.equal('SPAN');
+    expect(slottedEl.slot).to.equal('template');
+    expect(slottedEl.tagName).to.equal('SPAN');
   });
 
   it('supports scoped elements', async () => {
@@ -203,5 +203,55 @@ describe('SlotMixin', () => {
 
     await fixture(`<${tag}><${tag}>`);
     expect(scopedSpy).to.have.been.called;
+  });
+
+  it('rerenders templates', async () => {
+    class TestEl extends SlotMixin(LitElement) {
+      static get properties() {
+        return {
+          prop: { type: Number },
+          anotherProp: { type: Number },
+        };
+      }
+
+      constructor() {
+        super();
+        this.prop = 1;
+        this.anotherProp = 10;
+      }
+
+      get slots() {
+        return {
+          ...super.slots,
+          template: () => html`<span>${this.prop}</span>`,
+          anothertemplate: () => html`<span>${this.anotherProp}</span>`,
+        };
+      }
+
+      render() {
+        return html`<slot name="template"></slot><slot name="anothertemplate"></slot>`;
+      }
+    }
+    const tag = defineCE(TestEl);
+    const el = /** @type {TestEl} */ (await fixture(`<${tag}><${tag}>`));
+    const slottedEl = /** @type HTMLSpanElement */ (
+      Array.from(el.children).find(elm => elm.slot === 'template')
+    );
+    const anotherSlottedEl = /** @type HTMLSpanElement */ (
+      Array.from(el.children).find(elm => elm.slot === 'anothertemplate')
+    );
+
+    expect(slottedEl.textContent).to.equal('1');
+    expect(anotherSlottedEl.textContent).to.equal('10');
+
+    el.prop = 2;
+    await el.updateComplete;
+    expect(slottedEl.textContent).to.equal('2');
+    expect(anotherSlottedEl.textContent).to.equal('10');
+
+    el.anotherProp = 20;
+    await el.updateComplete;
+    expect(slottedEl.textContent).to.equal('2');
+    expect(anotherSlottedEl.textContent).to.equal('20');
   });
 });
