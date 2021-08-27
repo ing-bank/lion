@@ -197,6 +197,60 @@ describe('<lion-input-amount>', () => {
     expect(el.formattedValue).to.equal('123,45');
   });
 
+  it('removes the currency label when currency switches from EUR to undefined', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
+    );
+    expect(
+      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after')
+        ?.innerText,
+    ).to.equal('EUR');
+    el.currency = undefined;
+    await el.updateComplete;
+    expect(
+      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after'),
+    ).to.be.undefined;
+  });
+
+  it('adds the currency label when currency switches from undefined to EUR', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`<lion-input-amount></lion-input-amount>`)
+    );
+    expect(
+      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'after'),
+    ).to.be.undefined;
+
+    el.currency = 'EUR';
+    await el.updateComplete;
+    const currLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+      child => child.slot === 'after',
+    );
+    expect(currLabel?.innerText).to.equal('EUR');
+    expect(currLabel?.getAttribute('aria-label')).to.equal('euros');
+  });
+
+  it('sets currency label on the after element', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(`
+        <lion-input-amount>
+          <span slot="after" id="123">Currency, please</span>
+        </lion-input-amount>`)
+    );
+    const mySlotLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+      child => child.slot === 'after',
+    );
+    expect(mySlotLabel?.id).to.equal('123');
+
+    el.currency = 'EUR';
+    await el.updateComplete;
+    const currLabel = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+      child => child.slot === 'after',
+    );
+    expect(currLabel).to.equal(mySlotLabel);
+    expect(currLabel?.id).to.equal('123');
+    expect(currLabel?.innerText).to.equal('EUR');
+  });
+
   describe('Accessibility', () => {
     it('is accessible', async () => {
       const el = await fixture(
@@ -223,19 +277,25 @@ describe('<lion-input-amount>', () => {
       const el = /** @type {LionInputAmount} */ (
         await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
       );
-      expect(el._currencyDisplayNode?.getAttribute('data-label')).to.be.not.null;
+      const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+        child => child.slot === 'after',
+      );
+      expect(label?.getAttribute('data-label')).to.be.not.null;
       const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
-      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(el._currencyDisplayNode?.id);
+      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(label?.id);
     });
 
     it('adds an aria-label to currency slot', async () => {
       const el = /** @type {LionInputAmount} */ (
         await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
       );
-      expect(el._currencyDisplayNode?.getAttribute('aria-label')).to.equal('euros');
+      const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+        child => child.slot === 'after',
+      );
+      expect(label?.getAttribute('aria-label')).to.equal('euros');
       el.currency = 'USD';
       await el.updateComplete;
-      expect(el._currencyDisplayNode?.getAttribute('aria-label')).to.equal('US dollars');
+      expect(label?.getAttribute('aria-label')).to.equal('US dollars');
       el.currency = 'PHP';
       await el.updateComplete;
       // TODO: Chrome Intl now thinks this should be pesos instead of pisos. They're probably right.

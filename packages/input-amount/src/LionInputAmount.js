@@ -34,22 +34,14 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     return {
       ...super.slots,
       after: () => {
-        if (this.currency) {
-          const el = document.createElement('span');
-          // The data-label attribute will make sure that FormControl adds this to
-          // input[aria-labelledby]
-          el.setAttribute('data-label', '');
-
-          el.textContent = this.__currencyLabel;
-          return el;
-        }
-        return undefined;
+        const el = document.createElement('span');
+        // The data-label attribute will make sure that FormControl adds this to
+        // input[aria-labelledby]
+        el.setAttribute('data-label', '');
+        el.textContent = this.__currencyLabel;
+        return el;
       },
     };
-  }
-
-  get _currencyDisplayNode() {
-    return Array.from(this.children).find(child => child.slot === 'after');
   }
 
   static get styles() {
@@ -71,6 +63,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this.currency = undefined;
     /** @type {string | undefined} */
     this.locale = undefined;
+    this.__currencyDisplayNodeIsConnected = true;
     this.defaultValidators.push(new IsNumber());
   }
 
@@ -88,8 +81,8 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
-    if (changedProperties.has('currency') && this.currency) {
-      this._onCurrencyChanged({ currency: this.currency });
+    if (changedProperties.has('currency')) {
+      this._onCurrencyChanged({ currency: this.currency || null });
     }
 
     if (changedProperties.has('locale') && this.locale !== changedProperties.get('locale')) {
@@ -99,6 +92,20 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
         delete this.formatOptions.locale;
       }
       this.__reformat();
+    }
+  }
+
+  /**
+   * Upon connecting slot mixin, we should check if
+   * the after slot was created by the slot mixin,
+   * and if so, we should execute the currency changed flow
+   * which evaluates whether the slot node should be
+   * removed for invalid currencies
+   */
+  _connectSlotMixin() {
+    super._connectSlotMixin();
+    if (this._isPrivateSlot('after')) {
+      this._onCurrencyChanged({ currency: this.currency || null });
     }
   }
 
@@ -126,16 +133,51 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
   /**
    * @param {Object} opts
-   * @param {string} opts.currency
+   * @param {string?} opts.currency
    * @protected
    */
   _onCurrencyChanged({ currency }) {
-    if (this._isPrivateSlot('after') && this._currencyDisplayNode) {
-      this._currencyDisplayNode.textContent = this.__currencyLabel;
+    if (!this.__currencyDisplayNode) {
+      return;
     }
-    this.formatOptions.currency = currency;
-    this._calculateValues({ source: null });
-    this.__setCurrencyDisplayLabel();
+
+    this.formatOptions.currency = currency || undefined;
+    if (currency) {
+      if (!this.__currencyDisplayNodeIsConnected) {
+        this.appendChild(this.__currencyDisplayNode);
+        this.__currencyDisplayNodeIsConnected = true;
+      }
+      this.__currencyDisplayNode.textContent = this.__currencyLabel;
+
+      try {
+        this._calculateValues({ source: null });
+      } catch (e) {
+        // In case Intl.NumberFormat gives error for invalid currency
+        // we should catch, remove the node, and rethrow (since it's still a user error)
+        if (e instanceof RangeError) {
+          this.__currencyDisplayNode?.remove();
+          this.__currencyDisplayNodeIsConnected = false;
+        }
+        throw e;
+      }
+      this.__setCurrencyDisplayLabel();
+    } else {
+      this.__currencyDisplayNode?.remove();
+      this.__currencyDisplayNodeIsConnected = false;
+    }
+  }
+
+  /**
+   * @returns the current currency display node
+   * @private
+   */
+  get __currencyDisplayNode() {
+    const node = Array.from(this.children).find(child => child.slot === 'after');
+    if (node) {
+      this.__storedCurrencyDisplayNode = node;
+    }
+
+    return node || this.__storedCurrencyDisplayNode;
   }
 
   /** @private */
@@ -143,8 +185,11 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     // TODO: (@erikkroes) for optimal a11y, abbreviations should be part of aria-label
     // example, for a language switch with text 'en', an aria-label of 'english' is not
     // sufficient, it should also contain the abbreviation.
-    if (this.currency && this._currencyDisplayNode) {
-      this._currencyDisplayNode.setAttribute('aria-label', getCurrencyName(this.currency, {}));
+    if (this.__currencyDisplayNode) {
+      this.__currencyDisplayNode.setAttribute(
+        'aria-label',
+        this.currency ? getCurrencyName(this.currency, {}) : '',
+      );
     }
   }
 
