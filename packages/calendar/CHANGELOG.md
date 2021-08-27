@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.16.5
+
+### Patch Changes
+
+- e729d916: fix nl & ru translation files
+- Updated dependencies [ec03d209]
+  - @lion/core@0.18.3
+  - @lion/localize@0.21.1
+
 ## 0.16.4
 
 ### Patch Changes

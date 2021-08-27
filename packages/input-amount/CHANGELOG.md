@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.14.5
+
+### Patch Changes
+
+- 55efd3c6: Empty or invalid currency now removes the currency label node, this is restored when the currency is valid again.
+- Updated dependencies [ec03d209]
+- Updated dependencies [8a50e177]
+  - @lion/core@0.18.3
+  - @lion/validate-messages@0.7.5
+  - @lion/form-core@0.15.2
+  - @lion/localize@0.21.1
+  - @lion/input@0.15.5
+
 ## 0.14.4
 
 ### Patch Changes

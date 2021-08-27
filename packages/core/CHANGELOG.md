@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.18.3
+
+### Patch Changes
+
+- ec03d209: Support scoped templates in SlotMixin
+
 ## 0.18.2
 
 ### Patch Changes

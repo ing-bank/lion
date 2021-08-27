@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.14.3
+
+### Patch Changes
+
+- 811b3294: Add files that result in customElements.define to sideEffect so build tools don't tree shake them
+- Updated dependencies [ec03d209]
+  - @lion/core@0.18.3
+
 ## 0.14.2
 
 ### Patch Changes

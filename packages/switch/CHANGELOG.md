@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.18.0
+
+### Minor Changes
+
+- 4ae3e9e2: Make keyup handlers protected, enables subclassers to switch using alternative keys.
+
+### Patch Changes
+
+- Updated dependencies [ec03d209]
+  - @lion/core@0.18.3
+  - @lion/form-core@0.15.2
+  - @lion/helpers@0.9.3
+
 ## 0.17.6
 
 ### Patch Changes
