@@ -1,6 +1,6 @@
 {
   "name": "@lion/overlays",
-  "version": "0.28.3",
+  "version": "0.28.4",
   "description": "Overlays System using lit-html for rendering",
   "license": "MIT",
   "author": "ing-bank",
@@ -37,7 +37,7 @@
     "./docs/applyDemoOverlayStyles.js"
   ],
   "dependencies": {
-    "@lion/core": "0.18.2",
+    "@lion/core": "0.18.3",
     "@popperjs/core": "^2.5.4",
     "singleton-manager": "1.4.2"
   },

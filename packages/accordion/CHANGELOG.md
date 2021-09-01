@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.7.0
+
+### Minor Changes
+
+- a0adde62: Make methods for handling invoker/content protected parts of the Accordion base class, so that they can be overridden easily. Refactor for readability.
+
+### Patch Changes
+
+- Updated dependencies [ec03d209]
+  - @lion/core@0.18.3
+
 ## 0.6.3
 
 ### Patch Changes

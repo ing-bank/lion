@@ -1,6 +1,6 @@
 {
   "name": "@lion/combobox",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "A widget made up of a single-line textbox and an associated pop-up listbox element",
   "license": "MIT",
   "author": "ing-bank",
@@ -45,10 +45,10 @@
     "docs/google-combobox/google-combobox.js"
   ],
   "dependencies": {
-    "@lion/core": "0.18.2",
-    "@lion/form-core": "0.15.1",
-    "@lion/listbox": "0.10.4",
-    "@lion/overlays": "0.28.3"
+    "@lion/core": "0.18.3",
+    "@lion/form-core": "0.15.2",
+    "@lion/listbox": "0.10.5",
+    "@lion/overlays": "0.28.4"
   },
   "keywords": [
     "combobox",

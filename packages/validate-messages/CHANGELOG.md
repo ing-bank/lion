@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.7.5
+
+### Patch Changes
+
+- 8a50e177: Fixed description of MaxNumber, MinNumber, MinDate and MaxDate validations
+  - @lion/form-core@0.15.2
+  - @lion/localize@0.21.1
+
 ## 0.7.4
 
 ### Patch Changes

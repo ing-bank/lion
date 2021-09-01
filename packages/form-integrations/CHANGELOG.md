@@ -1,5 +1,38 @@
 # Change Log
 
+## 0.9.7
+
+### Patch Changes
+
+- Updated dependencies [ec03d209]
+- Updated dependencies [55efd3c6]
+- Updated dependencies [4ae3e9e2]
+- Updated dependencies [8a50e177]
+- Updated dependencies [811b3294]
+  - @lion/core@0.18.3
+  - @lion/input-amount@0.14.5
+  - @lion/switch@0.18.0
+  - @lion/validate-messages@0.7.5
+  - @lion/button@0.14.3
+  - @lion/checkbox-group@0.18.5
+  - @lion/combobox@0.8.4
+  - @lion/fieldset@0.19.7
+  - @lion/form-core@0.15.2
+  - @lion/input-date@0.12.7
+  - @lion/input-datepicker@0.23.7
+  - @lion/input-email@0.13.7
+  - @lion/input-iban@0.16.5
+  - @lion/input-range@0.10.6
+  - @lion/input-stepper@0.6.5
+  - @lion/listbox@0.10.5
+  - @lion/localize@0.21.1
+  - @lion/radio-group@0.18.5
+  - @lion/select@0.14.5
+  - @lion/select-rich@0.27.5
+  - @lion/textarea@0.13.5
+  - @lion/form@0.12.5
+  - @lion/input@0.15.5
+
 ## 0.9.6
 
 ### Patch Changes
