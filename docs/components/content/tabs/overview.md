@@ -21,7 +21,7 @@ export const main = () => html`
 ## Installation
 
 ```bash
-npm i --save @lion/tabs;
+npm i --save @lion/tabs
 ```
 
 ```js
