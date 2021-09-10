@@ -17,6 +17,8 @@ export {
   defaultConverter,
 } from 'lit';
 
+export { html as staticHtml } from 'lit/static-html.js';
+
 export {
   customElement,
   property,
