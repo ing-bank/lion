@@ -19,6 +19,41 @@ describe('SlotMixin', () => {
     expect(el.children[0].slot).to.equal('feedback');
   });
 
+  it("supports unnamed slot with ''", async () => {
+    const tag = defineCE(
+      class extends SlotMixin(LitElement) {
+        get slots() {
+          return {
+            ...super.slots,
+            '': () => document.createElement('div'),
+          };
+        }
+      },
+    );
+    const el = await fixture(`<${tag}></${tag}>`);
+    expect(el.children[0].slot).to.equal('');
+    expect(el.children[0]).dom.to.equal('<div></div>');
+  });
+
+  it('supports unnamed slot in conjunction with named slots', async () => {
+    const tag = defineCE(
+      class extends SlotMixin(LitElement) {
+        get slots() {
+          return {
+            ...super.slots,
+            foo: () => document.createElement('a'),
+            '': () => document.createElement('div'),
+          };
+        }
+      },
+    );
+    const el = await fixture(`<${tag}></${tag}>`);
+    expect(el.children[0].slot).to.equal('foo');
+    expect(el.children[1].slot).to.equal('');
+    expect(el.children[0]).dom.to.equal('<a slot="foo"></a>');
+    expect(el.children[1]).dom.to.equal('<div></div>');
+  });
+
   it('does not override user provided slots', async () => {
     const tag = defineCE(
       class extends SlotMixin(LitElement) {
