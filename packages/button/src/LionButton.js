@@ -35,7 +35,13 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
   }
 
   render() {
-    return html` <div class="button-content" id="${this._buttonId}"><slot></slot></div> `;
+    return html`
+      <div class="button-content" id="${this._buttonId}">
+        <slot name="prefix"></slot>
+        <slot></slot>
+        <slot name="suffix"></slot>
+      </div>
+    `;
   }
 
   static get styles() {
