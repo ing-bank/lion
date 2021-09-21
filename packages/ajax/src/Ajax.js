@@ -8,9 +8,14 @@ import { AjaxFetchError } from './AjaxFetchError.js';
 import './typedef.js';
 
 /**
- * HTTP Client which acts as a small wrapper around `fetch`. Allows registering hooks which
- * intercept request and responses, for example to add authorization headers or logging. A
- * request can also be prevented from reaching the network at all by returning the Response directly.
+ * A small wrapper around `fetch`.
+- Allows globally registering request and response interceptors
+- Throws on 4xx and 5xx status codes
+- Supports caching, so a request can be prevented from reaching to network, by returning the cached response.
+- Supports JSON with `ajax.fetchJSON` by automatically serializing request body and
+  deserializing response payload as JSON, and adding the correct Content-Type and Accept headers.
+- Adds accept-language header to requests based on application language
+- Adds XSRF header to request if the cookie is present
  */
 export class Ajax {
   /**
@@ -49,18 +54,18 @@ export class Ajax {
 
     const { cacheOptions } = this.__config;
     if (cacheOptions?.useCache) {
-      const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+      const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
         cacheOptions.getCacheIdentifier,
         cacheOptions,
       );
-      this.addRequestInterceptor(/** @type {RequestInterceptor} */ (cacheRequestInterceptor));
-      this.addResponseInterceptor(/** @type {ResponseInterceptor} */ (cacheResponseInterceptor));
+      this.addRequestInterceptor(cacheRequestInterceptor);
+      this.addResponseInterceptor(cacheResponseInterceptor);
     }
   }
 
   /**
-   * Sets the config for the instance
-   * @param {Partial<AjaxConfig>} config configuration for the AjaxClass instance
+   * Configures the Ajax instance
+   * @param {Partial<AjaxConfig>} config configuration for the Ajax instance
    */
   set options(config) {
     this.__config = config;
@@ -95,8 +100,7 @@ export class Ajax {
   }
 
   /**
-   * Makes a fetch request, calling the registered fetch request and response
-   * interceptors.
+   * Fetch by calling the registered request and response interceptors.
    *
    * @param {RequestInfo} info
    * @param {RequestInit & Partial<CacheRequestExtension>} [init]
@@ -126,8 +130,11 @@ export class Ajax {
   }
 
   /**
-   * Makes a fetch request, calling the registered fetch request and response
-   * interceptors. Encodes/decodes the request and response body as JSON.
+   * Fetch by calling the registered request and response
+   * interceptors. And supports JSON by:
+   *  - Serializing request body as JSON
+   *  - Deserializing response payload as JSON
+   *  - Adding the correct Content-Type and Accept headers
    *
    * @param {RequestInfo} info
    * @param {LionRequestInit} [init]
@@ -149,7 +156,7 @@ export class Ajax {
       lionInit.body = JSON.stringify(lionInit.body);
     }
 
-    // Now that we stringified lionInit.body, we can safely typecast LionRequestInit back to RequestInit
+    // typecast LionRequestInit back to RequestInit
     const jsonInit = /** @type {RequestInit} */ (lionInit);
     const response = await this.fetch(info, jsonInit);
     let responseText = await response.text();

@@ -5,7 +5,7 @@
  * @typedef {import('../types/types').ResponseInterceptor} ResponseInterceptor
  * @typedef {import('../types/types').CacheConfig} CacheConfig
  * @typedef {import('../types/types').Params} Params
- * @typedef {import('../types/types').RequestIdentificationFn} RequestIdentificationFn
+ * @typedef {import('../types/types').RequestIdFunction} RequestIdFunction
  * @typedef {import('../types/types').CacheOptions} CacheOptions
  * @typedef {import('../types/types').ValidatedCacheOptions} ValidatedCacheOptions
  * @typedef {import('../types/types').CacheRequestExtension} CacheRequestExtension

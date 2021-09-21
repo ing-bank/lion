@@ -1,10 +1,7 @@
 # Tools >> Ajax >> Overview ||10
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
-import { renderLitAsNode } from '@lion/helpers';
 import { ajax, createCacheInterceptors } from '@lion/ajax';
-import '@lion/helpers/define';
 
 const getCacheIdentifier = () => {
   let userId = localStorage.getItem('lion-ajax-cache-demo-user-id');
@@ -15,9 +12,11 @@ const getCacheIdentifier = () => {
   return userId;
 };
 
+const TEN_MINUTES = 1000 * 60 * 10; // in milliseconds
+
 const cacheOptions = {
   useCache: true,
-  timeToLive: 1000 * 60 * 10, // 10 minutes
+  maxAge: TEN_MINUTES,
 };
 
 const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
@@ -33,8 +32,8 @@ ajax.addResponseInterceptor(cacheResponseInterceptor);
 
 - Allows globally registering request and response interceptors
 - Throws on 4xx and 5xx status codes
-- Prevents network request if a request interceptor returns a response
-- Supports a JSON request which automatically encodes/decodes body request and response payload as JSON
+- Supports caching, so a request can be prevented from reaching to network, by returning the cached response.
+- Supports JSON with `ajax.fetchJSON` by automatically serializing request body and deserializing response payload as JSON, and adding the correct Content-Type and Accept headers.
 - Adds accept-language header to requests based on application language
 - Adds XSRF header to request if the cookie is present
 

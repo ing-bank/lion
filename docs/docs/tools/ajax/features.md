@@ -15,9 +15,11 @@ const getCacheIdentifier = () => {
   return userId;
 };
 
+const TEN_MINUTES = 1000 * 60 * 10; // in milliseconds
+
 const cacheOptions = {
   useCache: true,
-  timeToLive: 1000 * 60 * 10, // 10 minutes
+  maxAge: TEN_MINUTES,
 };
 
 const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
@@ -72,9 +74,13 @@ const newUser = await response.json();
 
 ### JSON requests
 
-We usually deal with JSON requests and responses. With `fetchJson` you don't need to specifically stringify the request body or parse the response body.
+We usually deal with JSON requests and responses. `ajax.fetchJson` supports JSON by:
 
-The result will have the Response object on `.response` property, and the decoded json will be available on `.body`.
+- Serializing request body as JSON
+- Deserializing response payload as JSON
+- Adding the correct Content-Type and Accept headers
+
+> Note that, the result will have the Response object on `.response` property, and the parsed JSON will be available on `.body`.
 
 ## GET JSON request
 
@@ -133,7 +139,7 @@ export const errorHandling = () => {
         }
       } else {
         // an error happened before receiving a response,
-        // ex. an incorrect request or network error
+        // Example: an incorrect request or network error
         actionLogger.log(error);
       }
     }
@@ -157,32 +163,28 @@ For IE11 you will need a polyfill for fetch. You should add this on your top lev
 
 [This is the polyfill we recommend](https://github.com/github/fetch). It also has a [section for polyfilling AbortController](https://github.com/github/fetch#aborting-requests)
 
-## Ajax Cache
+## Ajax Caching Support
 
-A caching library that uses `@lion/ajax` and adds cache interceptors to provide caching for use in
-frontend `services`.
+Ajax package provides in-memory cache support through interceptors. And cache interceptors can be added manually or by configuring the Ajax instance.
 
-The **request interceptor**'s main goal is to determine whether or not to
-**return the cached object**. This is done based on the options that are being
-passed.
+The cache request interceptor and cache response interceptor are designed to work together to support caching of network requests/responses.
 
-The **response interceptor**'s goal is to determine **when to cache** the
-requested response, based on the options that are being passed.
+> The **request interceptor** checks whether the response for this particular request is cached, and if so returns the cached response.
+> And the **response interceptor** caches the response for this particular request.
 
 ### Getting started
 
 Consume the global `ajax` instance and add interceptors to it, using a cache configuration which is applied on application level. If a developer wants to add specifics to cache behaviour they have to provide a cache config per action (`get`, `post`, etc.) via `cacheOptions` field of local ajax config,
 see examples below.
 
-> **Note**: make sure to add the **interceptors** only **once**. This is usually
-> done on app-level
+> **Note**: make sure to add the **interceptors** only **once**. This is usually done on app-level
 
 ```js
 import { ajax, createCacheInterceptors } from '@lion-web/ajax';
 
 const globalCacheOptions = {
   useCache: true,
-  timeToLive: 1000 * 60 * 5, // 5 minutes
+  maxAge: 1000 * 60 * 5, // 5 minutes
 };
 
 // Cache is removed each time an identifier changes,
@@ -208,7 +210,7 @@ import { Ajax } from '@lion/ajax';
 export const ajax = new Ajax({
   cacheOptions: {
     useCache: true,
-    timeToLive: 1000 * 60 * 5, // 5 minutes
+    maxAge: 1000 * 60 * 5, // 5 minutes
     getCacheIdentifier: () => getActiveProfile().profileId,
   },
 });
@@ -218,8 +220,7 @@ export const ajax = new Ajax({
 
 > Let's assume that we have a user session, for this demo purposes we already created an identifier function for this and set the cache interceptors.
 
-We can see if a response is served from the cache by checking the `response.fromCache` property,
-which is either undefined for normal requests, or set to true for responses that were served from cache.
+We can see if a response is served from the cache by checking the `response.fromCache` property, which is either undefined for normal requests, or set to true for responses that were served from cache.
 
 ```js preview-story
 export const cache = () => {
@@ -284,28 +285,28 @@ export const cacheActionOptions = () => {
 
 Invalidating the cache, or cache busting, can be done in multiple ways:
 
-- Going past the `timeToLive` of the cache object
+- Going past the `maxAge` of the cache object
 - Changing cache identifier (e.g. user session or active profile changes)
 - Doing a non GET request to the cached endpoint
   - Invalidates the cache of that endpoint
   - Invalidates the cache of all other endpoints matching `invalidatesUrls` and `invalidateUrlsRegex`
 
-## Time to live
+## maxAge
 
-In this demo we pass a timeToLive of three seconds.
-Try clicking the fetch button and watch fromCache change whenever TTL expires.
+In this demo we pass a maxAge of three seconds.
+Try clicking the fetch button and watch fromCache change whenever maxAge expires.
 
-After TTL expires, the next request will set the cache again, and for the next 3 seconds you will get cached responses for subsequent requests.
+After maxAge expires, the next request will set the cache again, and for the next 3 seconds you will get cached responses for subsequent requests.
 
 ```js preview-story
-export const cacheTimeToLive = () => {
+export const cacheMaxAge = () => {
   const actionLogger = renderLitAsNode(html`<sb-action-logger></sb-action-logger>`);
 
   const fetchHandler = () => {
     ajax
       .fetchJson(`../assets/pabu.json`, {
         cacheOptions: {
-          timeToLive: 1000 * 3, // 3 seconds
+          maxAge: 1000 * 3, // 3 seconds
         },
       })
       .then(result => {
