@@ -26,7 +26,7 @@ describe('Ajax', () => {
         jsonPrefix: ")]}',",
         cacheOptions: {
           useCache: true,
-          timeToLive: 1000 * 60 * 5, // 5 minutes
+          maxAge: 1000 * 60 * 5, // 5 minutes
           getCacheIdentifier,
         },
       };
@@ -37,7 +37,7 @@ describe('Ajax', () => {
         jsonPrefix: ")]}',",
         cacheOptions: {
           useCache: true,
-          timeToLive: 300000,
+          maxAge: 300000,
           getCacheIdentifier,
         },
       };
@@ -53,7 +53,7 @@ describe('Ajax', () => {
       const config = {
         cacheOptions: {
           useCache: true,
-          timeToLive: 1000 * 60 * 5, // 5 minutes
+          maxAge: 1000 * 60 * 5, // 5 minutes
         },
       };
       // When
@@ -288,7 +288,7 @@ describe('Ajax', () => {
       const customAjax = new Ajax({
         cacheOptions: {
           useCache: true,
-          timeToLive: 100,
+          maxAge: 100,
           getCacheIdentifier,
         },
       });

@@ -27,18 +27,18 @@ export interface CacheConfig {
 
 export type Params = { [key: string]: any };
 
-export type RequestIdentificationFn = (
+export type RequestIdFunction = (
   request: Partial<CacheRequest>,
-  stringifySearchParams: (params: Params) => string,
+  serializeSearchParams?: (params: Params) => string,
 ) => string;
 
 export interface CacheOptions {
   useCache?: boolean;
   methods?: string[];
-  timeToLive?: number;
+  maxAge?: number;
   invalidateUrls?: string[];
   invalidateUrlsRegex?: RegExp;
-  requestIdentificationFn?: RequestIdentificationFn;
+  requestIdFunction?: RequestIdFunction;
 }
 
 export interface CacheOptionsWithIdentifier extends CacheOptions {
@@ -48,11 +48,12 @@ export interface CacheOptionsWithIdentifier extends CacheOptions {
 export interface ValidatedCacheOptions extends CacheOptions {
   useCache: boolean;
   methods: string[];
-  timeToLive: number;
-  requestIdentificationFn: RequestIdentificationFn;
+  maxAge: number;
+  requestIdFunction: RequestIdFunction;
 }
 
 export interface CacheRequestExtension {
+  cacheSessionId?: string;
   cacheOptions?: CacheOptions;
   adapter: any;
   status: number;
@@ -61,6 +62,7 @@ export interface CacheRequestExtension {
 }
 
 export interface CacheResponseRequest {
+  cacheSessionId?: string;
   cacheOptions?: CacheOptions;
   method: string;
 }
