@@ -156,6 +156,30 @@ export const hidesOnEsc = () => {
 };
 ```
 
+## hidesOnOutsideEsc
+
+Boolean property. When enabled allows closing the overlay on ESC key, even when contentNode has no focus.
+
+```js preview-story
+export const hidesOnOutsideEsc = () => {
+  const hidesOnEscConfig = { hidesOnOutsideEsc: true };
+  return html`
+    <demo-overlay-system .config=${hidesOnEscConfig}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </demo-overlay-system>
+  `;
+};
+```
+
 ## hidesOnOutsideClick
 
 Boolean property. Will allow closing the overlay by clicking outside the `contentNode`.
