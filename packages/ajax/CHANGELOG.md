@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 87959850: **BREAKING** public API changes:
+
+  - Changed `timeToLive` to `maxAge`
+  - Renamed `requestIdentificationFn` to `requestIdFunction`
+
+### Patch Changes
+
+- 87959850: Fix cache session race condition for in-flight requests
+
 ## 0.11.1
 
 ### Patch Changes
