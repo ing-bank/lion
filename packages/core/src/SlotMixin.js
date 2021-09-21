@@ -49,7 +49,15 @@ const SlotMixinImplementation = superclass =>
     _connectSlotMixin() {
       if (!this.__isConnectedSlotMixin) {
         Object.keys(this.slots).forEach(slotName => {
-          if (!Array.from(this.children).find(el => el.slot === slotName)) {
+          const hasSlottableFromUser =
+            slotName === ''
+              ? // for default slot (''), we can't use el.slot because polyfill for IE11
+                // will do .querySelector('[slot=]') which produces a fatal error
+                // therefore we check if there's children that do not have a slot attr
+                Array.from(this.children).find(el => !el.hasAttribute('slot'))
+              : Array.from(this.children).find(el => el.slot === slotName);
+
+          if (!hasSlottableFromUser) {
             const slotContent = this.slots[slotName]();
             /** @type {Node[]} */
             let nodes = [];
@@ -64,7 +72,7 @@ const SlotMixinImplementation = superclass =>
               if (!(node instanceof Node)) {
                 return;
               }
-              if (node instanceof Element) {
+              if (node instanceof Element && slotName !== '') {
                 node.setAttribute('slot', slotName);
               }
               this.appendChild(node);

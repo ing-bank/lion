@@ -1289,6 +1289,13 @@
   dependencies:
     vary "^1.1.2"
 
+"@lion/accordion@^0.6.1":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@lion/accordion/-/accordion-0.6.3.tgz#93addeec077efc04d7059e7892e3e4844b4ef093"
+  integrity sha512-hk0bkCo5DbRwyHRlkoAtAnfxGIV55w7A4jHRhLRtNLN+LOLn/S/+cfN93/WuugXmNd57DoeGUvrwGbb9Wbdf1g==
+  dependencies:
+    "@lion/core" "0.18.2"
+
 "@lion/core@0.16.0":
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/@lion/core/-/core-0.16.0.tgz#c4c8ac81b8d5bece6d40d561a392382c7ae73533"
@@ -1298,6 +1305,15 @@
     "@open-wc/scoped-elements" "^1.3.3"
     lit-element "~2.4.0"
     lit-html "^1.3.0"
+
+"@lion/core@0.18.2":
+  version "0.18.2"
+  resolved "https://registry.yarnpkg.com/@lion/core/-/core-0.18.2.tgz#ffac7a4a4811277cf864afdc7114dbb036a2e27a"
+  integrity sha512-wlzhAZUTTBYBUNeO+/dhMmh/bkzuwKOORhl7bh5PDMeHSLpTpubs5AKjrYLhF16qxczm0k/GautyJ9wZUfq2ZA==
+  dependencies:
+    "@open-wc/dedupe-mixin" "^1.2.18"
+    "@open-wc/scoped-elements" "^2.0.0-next.3"
+    lit "^2.0.0-rc.2"
 
 "@lion/overlays@^0.26.1":
   version "0.26.1"
