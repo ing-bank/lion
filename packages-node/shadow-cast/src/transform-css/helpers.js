@@ -21,6 +21,7 @@ const csstree = require('css-tree');
  * @typedef {import('../../types/shadow-cast').MatcherFn} MatcherFn
  * @typedef {import('../../types/shadow-cast').SelectorChildNodePlain} SelectorChildNodePlain
  * @typedef {import('../../types/shadow-cast').ActionList} ActionList
+ * @typedef {import('../../types/shadow-cast').SCNode} SCNode
  */
 
 /**
@@ -46,9 +47,9 @@ function hasLeadingWhitespace(preceedingSiblings) {
  * @param {string} originalSelectorPart
  */
 function getSelectorPartNode(originalSelectorPart) {
-  const selectorAst = /** @type {CssNodePlain & {children:any[]}} */ (csstree.toPlainObject(
-    csstree.parse(originalSelectorPart, { context: 'selector' }),
-  ));
+  const selectorAst = /** @type {CssNodePlain & {children:any[]}} */ (
+    csstree.toPlainObject(csstree.parse(originalSelectorPart, { context: 'selector' }))
+  );
 
   if (selectorAst.children.length !== 1) {
     throw new Error(
@@ -135,9 +136,10 @@ function getSerializedSelectorPartsFromArray(selectorPartNodes) {
 }
 
 /**
- *
- * @param {SelectorChildNodePlain} hostNode
- * @returns {SelectorChildNodePlain[]}
+ * For host PseudoSelectors, we need to parse the raw contents )for ':host(.comp--warning)',
+ * this would be '.comp--warning') into a Selector[]
+ * @param {SCNode} hostNode
+ * @returns {SCNode[]}
  */
 function getParsedPseudoSelectorCompoundParts(hostNode) {
   const rawNode = hostNode?.children?.find(c => c.type === 'Raw');

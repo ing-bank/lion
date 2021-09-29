@@ -5,6 +5,7 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.7
 
+// @ts-nocheck
 export interface CssLocation {
   source: string;
   start: {

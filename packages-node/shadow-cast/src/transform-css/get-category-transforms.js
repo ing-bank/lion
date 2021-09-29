@@ -29,7 +29,8 @@ const {
  * @typedef {import('../../types/shadow-cast').SelectorChildNodePlain} SelectorChildNodePlain
  * @typedef {import('../../types/shadow-cast').ActionList} ActionList
  * @typedef {import('../../types/shadow-cast').WrappedHostMatcher} WrappedHostMatcher
-
+ * @typedef {import('../../types/shadow-cast').SCNode} SCNode
+ */
 
 /**
  * @param {import("../../types/csstree").CssNodePlain} match
@@ -44,7 +45,7 @@ function isWrappedHostMatcher(match) {
  * @param {boolean} options.stateMatchIsWrappedHost
  * @param {{ (traversedSelector: import("../../types/shadow-cast").SelectorChildNodePlain): boolean; (arg0: any): any; (value: any, index: number, obj: any[]): unknown; }} options.hostMatcher
  * @param {string} [options.targetStateSelector]
- * @param {import("../../types/csstree").AnPlusB | import("../../types/csstree").AtrulePlain | import("../../types/csstree").AtrulePreludePlain | import("../../types/csstree").AttributeSelector | import("../../types/csstree").BlockPlain | import("../../types/csstree").BracketsPlain | import("../../types/csstree").CDC | import("../../types/csstree").CDO | import("../../types/csstree").ClassSelector | import("../../types/csstree").Combinator | import("../../types/csstree").Comment | import("../../types/csstree").DeclarationPlain | import("../../types/csstree").DeclarationListPlain | import("../../types/csstree").Dimension | import("../../types/csstree").FunctionNodePlain | import("../../types/csstree").Hash | import("../../types/csstree").IdSelector | import("../../types/csstree").Identifier | import("../../types/csstree").MediaFeature | import("../../types/csstree").MediaQueryPlain | import("../../types/csstree").MediaQueryListPlain | import("../../types/csstree").NthPlain | import("../../types/csstree").NumberNode | import("../../types/csstree").Operator | import("../../types/csstree").ParenthesesPlain | import("../../types/csstree").Percentage | import("../../types/csstree").PseudoClassSelectorPlain | import("../../types/csstree").PseudoElementSelectorPlain | import("../../types/csstree").Ratio | import("../../types/csstree").Raw | import("../../types/csstree").RulePlain | import("../../types/csstree").SelectorPlain | import("../../types/csstree").SelectorListPlain | import("../../types/csstree").StringNode | import("../../types/csstree").StyleSheetPlain | import("../../types/csstree").TypeSelector | import("../../types/csstree").UnicodeRange | import("../../types/csstree").Url | import("../../types/csstree").ValuePlain | import("../../types/csstree").WhiteSpace} options.matchedHost
+ * @param {SCNode} options.matchedHost
  * @param {any[]} [options.precStatePartSiblings]
  * @param {import("../../types/csstree").CssNodePlain[]} options.compounds
  */
@@ -69,9 +70,7 @@ function getReplacementStartNodesHost({
     if (firstWhitespaceIndex < -1) {
       firstCompoundInSiblings.splice(0, firstWhitespaceIndex);
     }
-    const hostIndex = /** @type {SelectorChildNodePlain} */ (firstCompoundInSiblings.findIndex(
-      hostMatcher,
-    ));
+    const hostIndex = firstCompoundInSiblings.findIndex(hostMatcher);
     if (hostIndex > -1) {
       precStatePartSiblings.splice(hostIndex, 1);
     }
@@ -120,11 +119,13 @@ function getReplacementStartNodesHost({
 
   const hostCompound = `${preceedingSerializedCompound}${targetStateSelector}${succeedingSerializedCompound}`;
 
-  return /** @type {SelectorPlain} */ (csstree.toPlainObject(
-    csstree.parse(`:host${hostCompound ? `(${hostCompound})` : ''}`, {
-      context: 'selector',
-    }),
-  )).children;
+  return /** @type {SelectorPlain} */ (
+    csstree.toPlainObject(
+      csstree.parse(`:host${hostCompound ? `(${hostCompound})` : ''}`, {
+        context: 'selector',
+      }),
+    )
+  ).children;
 }
 
 /**
@@ -190,9 +191,10 @@ function getSlotsTransform(slots) {
   }
 
   return Object.entries(slots).map(([slotName, sourceSelectors]) => {
-    const selectors = sourceSelectors.map(sourceSelector =>
-      /** @type {SelectorChildNodePlain} */
-      (getSelectorEntry(csstree.parse(sourceSelector, { context: 'selector' }))),
+    const selectors = sourceSelectors.map(
+      sourceSelector =>
+        /** @type {SelectorChildNodePlain} */
+        (getSelectorEntry(csstree.parse(sourceSelector, { context: 'selector' }))),
     );
 
     return {
@@ -208,11 +210,13 @@ function getSlotsTransform(slots) {
         const compSelectors =
           compounds.length && compounds.map(s => csstree.generate(/** @type {CssNode} */ (s)));
         const slot = slotName === '<default>' ? ':not([slot])' : `[slot="${slotName}"]`;
-        const replacementNodes = /** @type {SelectorPlain} */ (csstree.toPlainObject(
-          csstree.parse(`::slotted(${slot}${compSelectors || [].join('')})`, {
-            context: 'selector',
-          }),
-        )).children;
+        const replacementNodes = /** @type {SelectorPlain} */ (
+          csstree.toPlainObject(
+            csstree.parse(`::slotted(${slot}${compSelectors || [].join('')})`, {
+              context: 'selector',
+            }),
+          )
+        ).children;
         return { replacementNodes, replaceAfterAmount: compounds.length };
       },
     };
@@ -250,9 +254,10 @@ function getStatesTransform(states, hostMatcher) {
    * - example of sourceSelector: '.comp__feedback--invalid'
    */
   return Object.entries(states).map(([targetStateSelector, sourceSelectors]) => {
-    const selectors = sourceSelectors.map(sourceSelector =>
-      /** @type {SelectorChildNodePlain} */
-      (getSelectorEntry(csstree.parse(sourceSelector, { context: 'selector' }))),
+    const selectors = sourceSelectors.map(
+      sourceSelector =>
+        /** @type {SelectorChildNodePlain} */
+        (getSelectorEntry(csstree.parse(sourceSelector, { context: 'selector' }))),
     );
 
     return {

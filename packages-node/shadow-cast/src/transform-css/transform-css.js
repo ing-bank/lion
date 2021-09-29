@@ -56,9 +56,9 @@ function matchSelector(sourceSelector, matcherFn) {
     if (match.type === 'PseudoClassSelector' && match.name === 'host') {
       return {
         matchHost: match,
-        matchHostChild: /** @type {CssNodePlain} */ (getParsedPseudoSelectorCompoundParts(
-          match,
-        ).find(matcherFn)),
+        matchHostChild: /** @type {CssNodePlain} */ (
+          getParsedPseudoSelectorCompoundParts(match).find(matcherFn)
+        ),
         originalMatcher: matcherFn,
       };
     }
@@ -68,18 +68,21 @@ function matchSelector(sourceSelector, matcherFn) {
 }
 
 /**
- * @param {AstContext} astContext
- * @param {CssNodePlain|WrappedHostMatcher} match
- * @param {ReplaceFn} replaceFn
- * @param {ActionList} actionList
+ * @param {object} options
+ * @param {AstContext} options.astContext
+ * @param {CssNodePlain|WrappedHostMatcher} options.match
+ * @param {ReplaceFn} options.replaceFn
+ * @param {ActionList} options.actionList
  */
-function replaceSelector(astContext, match, replaceFn, actionList) {
+function replaceSelector({ astContext, match, replaceFn, actionList }) {
   // @ts-ignore
   const plainSelector = /** @type {SelectorPlain} */ (csstree.toPlainObject(astContext.selector));
-  const plainSelectorList = /** @type {SelectorListPlain} */ (csstree.toPlainObject(
-    // @ts-ignore
-    astContext.selectorList,
-  ));
+  const plainSelectorList = /** @type {SelectorListPlain} */ (
+    csstree.toPlainObject(
+      // @ts-ignore
+      astContext.selectorList,
+    )
+  );
   // @ts-ignore
   const plainRule = /** @type {RulePlain} */ (csstree.toPlainObject(astContext.rule));
   const plainAtrule =
@@ -110,6 +113,7 @@ function replaceSelector(astContext, match, replaceFn, actionList) {
     if (i < matchIndex) {
       preceedingSiblings.push(curSibling);
     } else if (!siblings.length && curSibling.type !== 'WhiteSpace') {
+      // TODO: compound should also be checked < matchIndex
       compounds.push(curSibling);
     } else {
       siblings.push(curSibling);
@@ -199,18 +203,19 @@ function interceptExternalContextSelectors(astContext, hostMatcherFn, settings, 
       return { replacementNodes: [], replaceCompleteSelector: true };
     };
 
-    replaceSelector(astContext, hostMatchBefore, replaceFn, actionList);
+    replaceSelector({ astContext, match: hostMatchBefore, replaceFn, actionList });
   }
 }
 
 /**
- * @param {Rule} ruleNode
- * @param {Transforms} transforms
- * @param {Partial<AstContext>} astContext
- * @param {CssTransformConfig["settings"]} settings
- * @param {ActionList} actionList
+ * @param {object} options
+ * @param {Rule} options.ruleNode current css Rule
+ * @param {Transforms} options.transforms Transforms for slots, states and host
+ * @param {Partial<AstContext>} options.astContext
+ * @param {CssTransformConfig["settings"]} options.settings
+ * @param {ActionList} options.actionList
  */
-function walkRule(ruleNode, transforms, astContext, settings, actionList) {
+function walkRule({ ruleNode, transforms, astContext, settings, actionList }) {
   // eslint-disable-next-line no-param-reassign
   astContext.rule = ruleNode;
   csstree.walk(ruleNode, (/** @type {CssNode} */ selectorListNode) => {
@@ -222,7 +227,6 @@ function walkRule(ruleNode, transforms, astContext, settings, actionList) {
           // eslint-disable-next-line no-param-reassign
           astContext.selector = selectorNode;
 
-          // console.log('node', csstree.generate(selectorNode));
           if (transforms.host) {
             // Intercept 'external context selectors': selectors that contain the host part and are
             // preceeded by a context selector part (like '[dir=rtl] .comp .x').
@@ -243,35 +247,38 @@ function walkRule(ruleNode, transforms, astContext, settings, actionList) {
               transforms.states.forEach(stateTransform => {
                 const stateMatch = matchSelector(selectorNode, stateTransform.matcher);
                 if (stateMatch) {
-                  replaceSelector(
-                    /** @type {AstContext} */ (astContext),
-                    stateMatch,
-                    stateTransform.replaceFn,
+                  replaceSelector({
+                    // eslint-disable-next-line object-shorthand
+                    astContext: /** @type {AstContext} */ (astContext),
+                    match: stateMatch,
+                    replaceFn: stateTransform.replaceFn,
                     actionList,
-                  );
+                  });
                 }
               });
             }
             // We replace hosts after states, as explained above
             const hostMatch = matchSelector(selectorNode, transforms.host.matcher);
             if (hostMatch) {
-              replaceSelector(
-                /** @type {AstContext} */ (astContext),
-                hostMatch,
-                transforms.host.replaceFn,
+              replaceSelector({
+                // eslint-disable-next-line object-shorthand
+                astContext: /** @type {AstContext} */ (astContext),
+                match: hostMatch,
+                replaceFn: transforms.host.replaceFn,
                 actionList,
-              );
+              });
             }
           } else if (transforms.slots) {
             transforms.slots.forEach(slotTransform => {
               const slotMatch = matchSelector(selectorNode, slotTransform.matcher);
               if (slotMatch) {
-                replaceSelector(
-                  /** @type {AstContext} */ (astContext),
-                  slotMatch,
-                  slotTransform.replaceFn,
+                replaceSelector({
+                  // eslint-disable-next-line object-shorthand
+                  astContext: /** @type {AstContext} */ (astContext),
+                  match: slotMatch,
+                  replaceFn: slotTransform.replaceFn,
                   actionList,
-                );
+                });
               }
             });
           }
@@ -363,9 +370,9 @@ function transformCss(cssTransformConfig) {
   const { cssSources, host, states, slots, settings } = cssTransformConfig;
 
   // const cssContents = cssSources.map(s => (typeof s === 'string' ? s : s.content));
-  const stylesheetNode = /** @type {StyleSheet & {children:CssNode[]}} */ (csstree.parse(
-    cssSources.join('\n'),
-  ));
+  const stylesheetNode = /** @type {StyleSheet & {children:CssNode[]}} */ (
+    csstree.parse(cssSources.join('\n'))
+  );
 
   /**
    * This stats object will help identify whether all the provided configurations are covered.
@@ -406,21 +413,21 @@ function transformCss(cssTransformConfig) {
    * Traverse and transform
    */
 
-  // @ts-expect-error
-  csstree.toPlainObject(stylesheetNode).children.forEach((
-    /** @type {Rule|import('css-tree').Atrule} */ ruleOrAtRuleNode,
-  ) => {
-    if (ruleOrAtRuleNode.type === 'Rule') {
-      walkRule(ruleOrAtRuleNode, transforms, astContext, settings, actionList);
-    } else if (ruleOrAtRuleNode.type === 'Atrule') {
-      astContext.atRule = ruleOrAtRuleNode;
-      csstree.walk(ruleOrAtRuleNode, (/** @type {CssNode} */ ruleNode) => {
-        if (ruleNode.type === 'Rule') {
-          walkRule(ruleNode, transforms, astContext, settings, actionList);
-        }
-      });
-    }
-  });
+  csstree
+    .toPlainObject(stylesheetNode)
+    // @ts-expect-error
+    .children.forEach((/** @type {Rule|import('css-tree').Atrule} */ ruleOrAtRuleNode) => {
+      if (ruleOrAtRuleNode.type === 'Rule') {
+        walkRule({ ruleNode: ruleOrAtRuleNode, transforms, astContext, settings, actionList });
+      } else if (ruleOrAtRuleNode.type === 'Atrule') {
+        astContext.atRule = ruleOrAtRuleNode;
+        csstree.walk(ruleOrAtRuleNode, (/** @type {CssNode} */ ruleNode) => {
+          if (ruleNode.type === 'Rule') {
+            walkRule({ ruleNode, transforms, astContext, settings, actionList });
+          }
+        });
+      }
+    });
 
   /**
    * ==============================================================================================

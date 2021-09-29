@@ -129,6 +129,7 @@ describe('mdc-text-field', () => {
       '[with-leading-icon]:.mdc-text-field--with-leading-icon',
       '[with-trailing-icon]:.mdc-text-field--with-trailing-icon',
       '[float-above]:.mdc-text-field--float-above',
+      '[notched-outline-upgraded]:.mdc-notched-outline--upgraded',
 
       '[no-label]:.mdc-text-field--no-label',
       '[label-floating]:.mdc-text-field--label-floating',

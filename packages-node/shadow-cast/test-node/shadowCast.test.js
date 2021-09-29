@@ -15,10 +15,15 @@ const normalizeCssFormat = (/** @type {string} */ stylesheetString) =>
   csstree.generate(csstree.parse(stylesheetString));
 
 /**
- * Definition of SelectorPart: the individual entries of
- * Selector.children: ['.comp', ' ', '.comp__child']
+ * ## Terminology
+ * All terminology is based on the AST Node names found within css-tree.
+ *
+ * On top of this, a few additional definitions are used:
+ * - SelectorPart: the individual entries of Selector.children: ['.comp', ' ', '.comp__child']
+ * - Compound SelectorPart: two or more SelectorParts on the same dom element, e.g. '.comp.comp__child'
  */
 
+// TODO: move to distinct file
 describe('Helpers', () => {
   describe('getSurroundingCompoundParts', () => {
     it('gets preceeding and succeeding CssNodePlain[]', () => {
@@ -48,10 +53,10 @@ describe('Helpers', () => {
 
 describe('transformCss', () => {
   describe('Host', () => {
-    it('converts SelectorParts to :host SelectorParts', () => {
+    it(`transforms traditional ('.comp') SelectorParts to :host SelectorParts`, () => {
       const source = `
         .comp {
-          color:blue;
+          color: blue;
         }
       `;
       const config = {
@@ -60,7 +65,7 @@ describe('transformCss', () => {
       };
       const expectedOutput = `
         :host {
-          color:blue;
+          color: blue;
         }
       `;
 
@@ -68,10 +73,10 @@ describe('transformCss', () => {
       expect(result).to.equal(normalizeCssFormat(expectedOutput));
     });
 
-    it('supports all Selectors in SelectorLists', () => {
+    it('transforms SelectorLists (all Selectors separated by commas)', () => {
       const source = `
         .comp.comp--state .comp__child, .comp x, .comp y, span {
-          color:blue;
+          color: blue;
         }
       `;
       const config = {
@@ -80,7 +85,7 @@ describe('transformCss', () => {
       };
       const expectedOutput = `
         :host(.comp--state) .comp__child, :host x, :host y, span {
-          color:blue;
+          color: blue;
         }
       `;
 
@@ -89,10 +94,10 @@ describe('transformCss', () => {
     });
 
     describe('Compound SelectorParts', () => {
-      it('converts compound SelectorParts to :host(<compound>) SelectorParts', () => {
+      it('transforms compound SelectorParts to :host(<compound>) SelectorParts', () => {
         const source = `
           .comp.comp--invalid .comp__child {
-            color:blue;
+            color: blue;
           }
         `;
         const config = {
@@ -101,7 +106,7 @@ describe('transformCss', () => {
         };
         const expectedOutput = `
           :host(.comp--invalid) .comp__child {
-            color:blue;
+            color: blue;
           }
         `;
 
@@ -109,10 +114,10 @@ describe('transformCss', () => {
         expect(result).to.equal(normalizeCssFormat(expectedOutput));
       });
 
-      it('converts multiple compound SelectorParts to :host(<compound1><compound2>) SelectorParts', () => {
+      it('transforms compound SelectorParts to :host(<compound1><compound2>) SelectorParts', () => {
         const source = `
           .comp.comp--invalid.comp--warning .comp__child {
-            color:blue;
+            color: blue;
           }
         `;
         const config = {
@@ -121,53 +126,7 @@ describe('transformCss', () => {
         };
         const expectedOutput = `
           :host(.comp--invalid.comp--warning) .comp__child {
-            color:blue;
-          }
-        `;
-
-        const result = transformCss(config);
-        expect(result).to.equal(normalizeCssFormat(expectedOutput));
-      });
-
-      it('converts multiple compound SelectorParts to :host(<compound1><compound2>) SelectorParts with states combined', () => {
-        const source = `
-          .comp.comp--invalid.comp--warning .comp__child {
-            color:blue;
-          }
-        `;
-        const config = {
-          cssSources: [source],
-          host: '.comp',
-          states: { '[invalid]': ['.comp--invalid'] },
-        };
-        const expectedOutput = `
-          :host([invalid].comp--warning) .comp__child {
-            color:blue;
-          }
-        `;
-
-        const result = transformCss(config);
-        expect(result).to.equal(normalizeCssFormat(expectedOutput));
-      });
-
-      it('converts multiple compound SelectorParts to :host(<compound1><compound2>) SelectorParts with all states combined', () => {
-        const source = `
-          .comp.comp--invalid.comp--warning.comp--info .comp__child {
-            color:blue;
-          }
-        `;
-        const config = {
-          cssSources: [source],
-          host: '.comp',
-          states: {
-            '[invalid]': ['.comp--invalid'],
-            '[warning]': ['.comp--warning'],
-            '[info]': ['.comp--info'],
-          },
-        };
-        const expectedOutput = `
-          :host([info][warning][invalid]) .comp__child {
-            color:blue;
+            color: blue;
           }
         `;
 
@@ -178,7 +137,7 @@ describe('transformCss', () => {
       it('works when host is not the first of compound SelectorParts', () => {
         const source = `
           .comp--invalid.comp.comp--warning .comp__child {
-            color:blue;
+            color: blue;
           }
         `;
         const config = {
@@ -187,10 +146,10 @@ describe('transformCss', () => {
           states: { '[warning]': ['.comp--warning'] },
         };
         const expectedOutput = `
-          :host([warning].comp--invalid) .comp__child {
-            color:blue;
-          }
-        `;
+        :host([warning].comp--invalid) .comp__child {
+          color: blue;
+        }
+      `;
 
         const result = transformCss(config);
         expect(result).to.equal(normalizeCssFormat(expectedOutput));
@@ -199,7 +158,7 @@ describe('transformCss', () => {
       it.only('works with nested PseudoSelectors', () => {
         const source = `
           .comp:not(.comp--warning) .comp__child {
-            color:blue;
+            color: blue;
           }
         `;
         const config = {
@@ -209,21 +168,71 @@ describe('transformCss', () => {
         };
         const expectedOutput = `
           :host(:not([warning])) .comp__child {
-            color:blue;
+            color: blue;
           }
         `;
 
         const result = transformCss(config);
         expect(result).to.equal(normalizeCssFormat(expectedOutput));
       });
+
+      describe('With states config', () => {
+        it(`transforms compound SelectorParts to :host(<compound1><compound2>) SelectorParts when some states provided`, () => {
+          const source = `
+            .comp.comp--invalid.comp--warning .comp__child {
+              color: blue;
+            }
+          `;
+          const config = {
+            cssSources: [source],
+            host: '.comp',
+            states: { '[invalid]': ['.comp--invalid'] },
+          };
+          const expectedOutput = `
+            :host([invalid].comp--warning) .comp__child {
+              color: blue;
+            }
+          `;
+
+          const result = transformCss(config);
+          expect(result).to.equal(normalizeCssFormat(expectedOutput));
+        });
+
+        it('transforms multiple compound SelectorParts to :host(<compound1><compound2>) SelectorParts when all states provided', () => {
+          const source = `
+          .comp.comp--invalid.comp--warning.comp--info .comp__child {
+            color: blue;
+          }
+        `;
+          const config = {
+            cssSources: [source],
+            host: '.comp',
+            states: {
+              '[invalid]': ['.comp--invalid'],
+              '[warning]': ['.comp--warning'],
+              '[info]': ['.comp--info'],
+            },
+          };
+          const expectedOutput = `
+          :host([info][warning][invalid]) .comp__child {
+            color: blue;
+          }
+        `;
+
+          const result = transformCss(config);
+          expect(result).to.equal(normalizeCssFormat(expectedOutput));
+        });
+      });
     });
   });
 
   describe('Slots', () => {
-    it('converts SelectorParts to ::slotted SelectorParts', () => {
+    // N.B. for simplicity, we focus on slots only, IRL we would combine it with host and states
+
+    it('transforms SelectorParts to ::slotted SelectorParts', () => {
       const source = `
         .comp .comp__child {
-          color:blue;
+          color: blue;
         }
       `;
 
@@ -234,7 +243,7 @@ describe('transformCss', () => {
 
       const expectedOutput = `
         .comp ::slotted([slot="child"]) {
-          color:blue;
+          color: blue;
         }
       `;
 
@@ -242,11 +251,10 @@ describe('transformCss', () => {
       expect(result).to.equal(normalizeCssFormat(expectedOutput));
     });
 
-    it('converts Selectors to default ::slotted SelectorParts', () => {
-      // N.B. for simplicity, we focus on slots only, IRL we would combine it with host and states
+    it('transforms Selectors to default ::slotted SelectorParts', () => {
       const source = `
         .comp .comp__default {
-          color:blue;
+          color: blue;
         }
       `;
 
@@ -257,7 +265,7 @@ describe('transformCss', () => {
 
       const expectedOutput = `
         .comp ::slotted(:not([slot])) {
-          color:blue;
+          color: blue;
         }
       `;
 
@@ -268,7 +276,7 @@ describe('transformCss', () => {
     it('supports compound ::slotted SelectorParts', () => {
       const source = `
         .comp .comp__child.compound {
-          color:blue;
+          color: blue;
         }
       `;
 
@@ -279,7 +287,7 @@ describe('transformCss', () => {
 
       const expectedOutput = `
         .comp ::slotted([slot="child"].compound) {
-          color:blue;
+          color: blue;
         }
       `;
 
@@ -291,7 +299,7 @@ describe('transformCss', () => {
       /**
        * Imagine following html:
        * <div class="comp">
-       *   <input class="comp__slotted-input: " :slot:="slotted-input: ">
+       *   <input class="comp__slotted-input" ::slot::="slotted-input">
        *   <input class="comp__private-input">
        * </div>
        *
@@ -299,39 +307,38 @@ describe('transformCss', () => {
        */
       const source = `
         .comp .comp__slotted-input  {
-          color:blue;
+          color: blue;
         }
         .comp .comp__private-input {
-          color:green;
+          color: green;
         }
 
         /** This reset should apply to both inputs (shadow and light dom) */
         .comp input {
-          padding:0;
+          padding: 0;
         }
       `;
 
       const config = {
         cssSources: [source],
-        slots: { child: ['.comp__slotted-input', 'input'] },
+        slots: { 'slotted-input': ['.comp__slotted-input'] },
       };
 
       /**
        * As we can see, the original selector is preserved.
        */
       const expectedOutput = `
-        .comp .comp__slotted-input,
-        .comp ::slotted([slot="input"]) {
-          color:blue;
+        .comp ::slotted([slot="slotted-input"]) {
+          color: blue;
         }
         .comp .comp__private-input {
-          color:green;
+          color: green;
         }
 
         /** This reset should apply to both inputs (shadow and light dom) */
         .comp input,
-        .comp ::slotted([slot="input"]) {
-          padding:0;
+        .comp ::slotted([slot="slotted-input"]) {
+          padding: 0;
         }
       `;
 
@@ -343,10 +350,9 @@ describe('transformCss', () => {
       /**
        * Usually, these selectors are generated from html strings fed to transformHtml (see below)
        */
-      // N.B. for simplicity, we focus on slots only, IRL we would combine it with host and states
       const source = `
         .comp .comp__default-wrapper > * {
-          color:blue;
+          color: blue;
         }
       `;
 
@@ -356,8 +362,8 @@ describe('transformCss', () => {
       };
 
       const expectedOutput = `
-        .comp ::slotted(:not([slot])) {
-          color:blue;
+        .comp .comp__default-wrapper ::slotted(:not([slot])) {
+          color: blue;
         }
       `;
 
@@ -367,7 +373,7 @@ describe('transformCss', () => {
   });
 
   describe('States', () => {
-    it('converts host state SelectorParts to attribute SelectorParts exposed on shadow dom host', () => {
+    it('transforms host state SelectorParts to attribute SelectorParts exposed on shadow dom host', () => {
       const source = `
         .comp.comp--invalid .comp__feedback {
           color: blue;
@@ -388,7 +394,7 @@ describe('transformCss', () => {
       expect(result).to.equal(normalizeCssFormat(expectedOutput));
     });
 
-    it('converts non host state SelectorParts to attribute SelectorParts exposed by shadow dom host', () => {
+    it('transforms non host state SelectorParts to attribute SelectorParts exposed by shadow dom host', () => {
       const source = `
         .comp .comp__feedback.comp__feedback--invalid {
           color: blue;
@@ -632,11 +638,13 @@ part can "lean" on (a 'state target' that can work in conjunction with host Sele
                 // @ts-expect-error
                 firstPart.value.name === 'rtl'
               ) {
-                const hostNodes = /** @type {SelectorPlain} */ (csstree.toPlainObject(
-                  csstree.parse(`:host([dir=rtl])`, {
-                    context: 'selector',
-                  }),
-                )).children;
+                const hostNodes = /** @type {SelectorPlain} */ (
+                  csstree.toPlainObject(
+                    csstree.parse(`:host([dir=rtl])`, {
+                      context: 'selector',
+                    }),
+                  )
+                ).children;
                 const replacementNodes = [...hostNodes, ...siblings];
                 return { replacementNodes, replaceCompleteSelector: true };
               }
@@ -657,7 +665,7 @@ part can "lean" on (a 'state target' that can work in conjunction with host Sele
 });
 
 describe('transformHtml', () => {
-  it('creates css selectors from annotated html markup', () => {
+  it('creates cssTransformConfig from annotated html markup', () => {
     // Note: use ':' delimiter for attributes "host", "states" and "slot"
     // Use ":" for mapping states and ',' for separaing multiple state listings
     // A state can be defined via '[<host-attr>]:.local-selector', on any level.
