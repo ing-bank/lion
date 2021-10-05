@@ -136,20 +136,32 @@ function getSerializedSelectorPartsFromArray(selectorPartNodes) {
 }
 
 /**
- * For host PseudoSelectors, we need to parse the raw contents )for ':host(.comp--warning)',
- * this would be '.comp--warning') into a Selector[]
- * @param {SCNode} hostNode
+ * For PseudoSelectors, we need to parse the raw contents into a SCNode[].
+ * For ':host(.comp--warning)', this would be ['.comp--warning'].
+ *
+ * Since the contents of :host() are not parsed, we need to do it ourselves. When the contents
+ * are already parsed (like for :not()), we can just return the parsed contents.
+ * @param {SCNode} pseudoNode, SCNode for pseudo selectors like ':host([x])
  * @returns {SCNode[]}
  */
-function getParsedPseudoSelectorCompoundParts(hostNode) {
-  const rawNode = hostNode?.children?.find(c => c.type === 'Raw');
-  return rawNode
-    ? csstree.toPlainObject(csstree.parse(rawNode.value, { context: 'selector' })).children
-    : [];
+function getPseudoSelectorChildren(pseudoNode) {
+  const rawNode = /** @type {SCNode & {value:string}} */ (
+    pseudoNode.children?.find(c => c.type === 'Raw')
+  );
+  if (rawNode) {
+    return /** @type {SCNode} */ (
+      csstree.toPlainObject(csstree.parse(rawNode.value, { context: 'selector' }))
+    ).children;
+  }
+  if (pseudoNode.children && pseudoNode.children[0]) {
+    // We already parsed the contents of the pseudo selector: return it
+    return pseudoNode.children[0].children[0].children;
+  }
+  return [];
 }
 
 module.exports = {
-  getParsedPseudoSelectorCompoundParts,
+  getPseudoSelectorChildren,
   getSerializedSelectorPartsFromArray,
   getSurroundingCompoundParts,
   dissectCssSelectorPart,

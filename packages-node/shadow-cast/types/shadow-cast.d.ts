@@ -29,20 +29,18 @@ export type AstContextPlain = {
 };
 
 export type ReplaceContext = {
-  match: CssNodePlain;
+  match: CssNodePlain | WrappedHostMatcher;
   compounds: CssNodePlain[];
   siblings: CssNodePlain[];
   preceedingSiblings: CssNodePlain[];
   astContext: AstContextPlain;
 };
 
-export type ReplaceFn = (
-  context: ReplaceContext,
-) =>
+export type ReplaceFn = (context: ReplaceContext) =>
   | {
       replacementNodes: CssNodePlain[];
       replaceCompleteSelector?: boolean;
-      replaceAfterAmount?: number;
+      startIndex?: number;
     }
   | undefined;
 
@@ -76,5 +74,20 @@ export type SCNode = CssNodePlain & { name: string; children: SCNode[] };
 export type WrappedHostMatcher = {
   matchHost: CssNodePlain;
   matchHostChild: CssNodePlain;
+  originalMatcher: MatcherFn;
+};
+
+export type MatchResult = {
+  /*
+   * When we have a SelectorPart that is a PseudoSelector like ':host(:not(.comp--a)) .comp__body',
+   * and we are looking for comp--a, we need to be aware of the fact that the original Selector has
+   * two SelectorParts (:host and .comp--a).
+   * But... we need to store the traveersal path of Selectors within the
+   * original SelectorPart.
+   * So we would get [CssNodePlain('.:host), CssNodePlain(':not')]
+   */
+  ancestorPath: CssNodePlain[];
+  matchHostChild: CssNodePlain;
+  /** The function that was used to get  */
   originalMatcher: MatcherFn;
 };
