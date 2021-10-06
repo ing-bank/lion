@@ -6,9 +6,9 @@ import { css, html, LitElement } from '@lion/core';
  * @property {string} uid Unique ID for the entry
  * @property {HTMLElement} button Button HTMLElement for the entry
  * @property {HTMLElement} panel Panel HTMLElement for the entry
- * @property {EventHandlerNonNull} clickHandler executed on click event
- * @property {EventHandlerNonNull} keydownHandler executed on keydown event
- * @property {EventHandlerNonNull} keyupHandler executed on keyup event
+ * @property {(event: Event) => unknown} clickHandler executed on click event
+ * @property {(event: Event) => unknown} keydownHandler executed on keydown event
+ * @property {(event: Event) => unknown} keyupHandler executed on keyup event
  */
 
 function uuid() {
@@ -237,7 +237,7 @@ export class LionTabs extends LitElement {
 
   /**
    * @param {number} index
-   * @returns {EventHandlerNonNull}
+   * @returns {(event: Event) => unknown}
    * @private
    */
   __createButtonClickHandler(index) {
