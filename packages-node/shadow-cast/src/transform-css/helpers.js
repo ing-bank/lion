@@ -90,7 +90,7 @@ function dissectCssSelectorPart(selectorPartNode) {
 /**
  * Imagine we have '.comp--x.comp.comp--y' =>
  * finds .comp--x and .comp--y (preceeding and succeeding respectively)
- * @param {CssNodePlain} selectorPart
+ * @param {CssNodePlain} selectorPart .comp in example above
  * @param {CssNodePlain[]} siblings
  * @returns {{preceedingParts:CssNodePlain[], succeedingParts:CssNodePlain[]}}
  */
@@ -125,10 +125,13 @@ function getSurroundingCompoundParts(selectorPart, siblings) {
 /**
  * When array of plain children given, will create ast compatible node and immediately serializes
  * it to css selector
- * @param {CssNodePlain[]} selectorPartNodes
+ * @param {CssNodePlain[]|undefined} selectorPartNodes
  * @returns {string}
  */
 function getSerializedSelectorPartsFromArray(selectorPartNodes) {
+  if (!selectorPartNodes?.length) {
+    return '';
+  }
   const dummySelector = csstree.parse('.x .y');
   // @ts-expect-error
   dummySelector.children = selectorPartNodes;
@@ -142,30 +145,105 @@ function getSerializedSelectorPartsFromArray(selectorPartNodes) {
  * Since the contents of :host() are not parsed, we need to do it ourselves. When the contents
  * are already parsed (like for :not()), we can just return the parsed contents.
  * @param {SCNode} pseudoNode, SCNode for pseudo selectors like ':host([x])
- * @returns {SCNode[]}
+ * @returns {SCNode} original pseudoNode with parsed children
  */
-function getPseudoSelectorChildren(pseudoNode) {
+function normalizePseudoSelector(pseudoNode) {
   const rawNode = /** @type {SCNode & {value:string}} */ (
     pseudoNode.children?.find(c => c.type === 'Raw')
   );
   if (rawNode) {
-    return /** @type {SCNode} */ (
+    const parsedSelector = /** @type {SCNode} */ (
       csstree.toPlainObject(csstree.parse(rawNode.value, { context: 'selector' }))
-    ).children;
+    );
+    // This is the normalization step that compensates for the fact that csstree does not parse
+    // PseudoSelectors like "host(.comp--a)"
+    // @ts-expect-error
+    // eslint-disable-next-line no-param-reassign
+    pseudoNode.children = [{ children: [parsedSelector] }];
   }
+  return pseudoNode;
+}
+
+/**
+ * For PseudoSelectors, we need to parse the raw contents into a SCNode[].
+ * For ':host(.comp--warning)', this would be ['.comp--warning'].
+ *
+ * Since the contents of :host() are not parsed, we need to do it ourselves. When the contents
+ * are already parsed (like for :not()), we can just return the parsed contents.
+ * @param {SCNode} pseudoNode, SCNode for pseudo selectors like ':host([x])
+ * @returns {SCNode[]}
+ */
+function normalizePseudoSelectorAndGetChildren(pseudoNode) {
+  normalizePseudoSelector(pseudoNode);
+  // If we already parsed the contents of the pseudo selector: return it
   if (pseudoNode.children && pseudoNode.children[0]) {
-    // We already parsed the contents of the pseudo selector: return it
     return pseudoNode.children[0].children[0].children;
   }
+  // No children, return empty array
   return [];
 }
 
+/**
+ *
+ * @param {SCNode} plainSelector
+ * @param {number} matchIndex
+ * @returns
+ */
+function getReplaceContext(plainSelector, matchIndex) {
+  /** @type {CssNodePlain[]} */
+  const compounds = [];
+  /** @type {CssNodePlain[]} */
+  const succeedingSiblings = [];
+  /** @type {CssNodePlain[]} */
+  const preceedingSiblings = [];
+
+  /**
+   * Assume selector '.comp.x.y .comp__a .comp__b'
+   * The selector will be ['.comp','.x','.y', ' ', '.comp__a', ' ', '.comp__b']
+   * '.comp' will be the matchIndex (0).
+   * We will loop over all indexes after. First, we gather all compounds: ['.x', ',y'].
+   * From there on, we gather all siblings: [' ', '.comp__a', ' ', '.comp__b']
+   */
+  let closestWhiteSpaceIndexBeforeMatch = -1;
+  plainSelector.children.some((curSibling, i) => {
+    if (i >= matchIndex) {
+      return true;
+    }
+    if (curSibling.type === 'WhiteSpace') {
+      closestWhiteSpaceIndexBeforeMatch = i;
+    }
+    return false;
+  });
+
+  plainSelector.children.forEach((curSibling, i) => {
+    if (i === matchIndex) {
+      return;
+    }
+    if (i < matchIndex) {
+      if (i <= closestWhiteSpaceIndexBeforeMatch) {
+        preceedingSiblings.push(curSibling);
+      } else {
+        compounds.push(curSibling);
+      }
+    } else if (!succeedingSiblings.length && curSibling.type !== 'WhiteSpace') {
+      // TODO: compound should also be checked < matchIndex?
+      compounds.push(curSibling);
+    } else {
+      succeedingSiblings.push(curSibling);
+    }
+  });
+
+  return { compounds, succeedingSiblings, preceedingSiblings };
+}
+
 module.exports = {
-  getPseudoSelectorChildren,
+  normalizePseudoSelectorAndGetChildren,
+  normalizePseudoSelector,
   getSerializedSelectorPartsFromArray,
   getSurroundingCompoundParts,
   dissectCssSelectorPart,
   getSelectorEntry,
   getSelectorPartNode,
   hasLeadingWhitespace,
+  getReplaceContext,
 };

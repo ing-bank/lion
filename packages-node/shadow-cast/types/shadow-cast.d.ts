@@ -13,7 +13,7 @@ import {
 } from './csstree';
 
 export type AstContext = {
-  selector: Selector | SelectorPlain;
+  selector: Selector | SelectorPlain | SCNode;
   selectorList: SelectorList | SelectorListPlain;
   rule: Rule | RulePlain;
   atRule: Atrule | AtrulePlain;
@@ -29,18 +29,31 @@ export type AstContextPlain = {
 };
 
 export type ReplaceContext = {
-  match: CssNodePlain | WrappedHostMatcher;
-  compounds: CssNodePlain[];
-  siblings: CssNodePlain[];
-  preceedingSiblings: CssNodePlain[];
+  matchResult: MatchResult;
+  compounds: SCNode[];
+  succeedingSiblings: SCNode[];
+  preceedingSiblings: SCNode[];
   astContext: AstContextPlain;
 };
 
 export type ReplaceFn = (context: ReplaceContext) =>
   | {
-      replacementNodes: CssNodePlain[];
+      /*
+       * The nodes that should be replaced. For instance
+       * '.comp.comp--a.comp--b' => ':host(.comp--a.comp--b)'
+       */
+      replacementNodes: SCNode[];
+      /*
+       * The number of nodes that needs to be deleted (0 by default).
+       * For a Selector transform like '.comp.comp--a.comp--b' => ':host(.comp--a.comp--b)',
+       * the number of nodes to delete is 2 (from a length of 3 to 1).
+       */
+      deleteAfterCount?: number;
+      /*
+       * Whether the complete Selector should be replaced.
+       * In case replacementNodes is empty, the complete Selector will be removed
+       */
       replaceCompleteSelector?: boolean;
-      startIndex?: number;
     }
   | undefined;
 
@@ -66,28 +79,44 @@ export type CategorizedPreAnalysisResult = {
 
 export type ActionList = { type: 'deletion' | string; action: Function; originalCode: string }[];
 export type SelectorChildNodePlain = CssNodePlain & { name: string };
-export type MatcherFn = (traversedSelector: SelectorChildNodePlain) => boolean;
+export type MatcherFn = (
+  traversedSelectorPart: SCNode | CssNodePlain,
+  parentSelector: SCNode | CssNodePlain,
+) => MatchResult | undefined;
 export type Transform = { matcher: MatcherFn; replaceFn: ReplaceFn };
 export type Transforms = { host?: Transform; slots?: Transform[]; states?: Transform[] };
 
 export type SCNode = CssNodePlain & { name: string; children: SCNode[] };
-export type WrappedHostMatcher = {
-  matchHost: CssNodePlain;
-  matchHostChild: CssNodePlain;
-  originalMatcher: MatcherFn;
-};
+// export type WrappedHostMatcher = {
+//   matchHost: CssNodePlain;
+//   matchHostChild: CssNodePlain;
+//   originalMatcher: MatcherFn;
+// };
 
 export type MatchResult = {
   /*
    * When we have a SelectorPart that is a PseudoSelector like ':host(:not(.comp--a)) .comp__body',
-   * and we are looking for comp--a, we need to be aware of the fact that the original Selector has
-   * two SelectorParts (:host and .comp--a).
-   * But... we need to store the traveersal path of Selectors within the
+   * and we are looking for .comp--a, we need to be aware of the fact that the original Selector has
+   * only two SelectorParts: [':host(:not(.comp--a))', '.comp__body'].
+   * In order to correctly replace, we need to store the traversal path of Selectors within the
    * original SelectorPart.
-   * So we would get [CssNodePlain('.:host), CssNodePlain(':not')]
+   * So we would get an ancestorPath of [CssNodePlain(':host), CssNodePlain(':not')]
+   *
+   * When we do not deal with PseudoSelectors (for instance when we are looking for '.comp--a' in
+   * Selector '.comp.comp--a comp__body'), ancestorPath would be empty.
    */
-  ancestorPath: CssNodePlain[];
-  matchHostChild: CssNodePlain;
-  /** The function that was used to get  */
-  originalMatcher: MatcherFn;
+  ancestorPath: SCNode[];
+  /**
+   * The matched SelectorPart. For instance, if we are looking for '.comp--a' in the following
+   * Selectors:
+   * - ':host(:not(.comp--a)) .comp__body'
+   * - '.comp.comp--a .comp__body'
+   * It would return CssNodePlain('.comp--a') in both cases.
+   * The difference: in the latter case, ancestorPath would be empty.
+   */
+  matchedSelectorPart: SCNode;
+  /** Replaces matched SelectorPart in its original context  */
+  replace: (newSelectorPart: SCNode) => void;
+  /** Removes matched SelectorPart  */
+  remove: () => void;
 };

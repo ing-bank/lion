@@ -143,10 +143,9 @@ describe('transformCss', () => {
         const config = {
           cssSources: [from],
           host: '.comp',
-          states: { '[warning]': ['.comp--warning'] },
         };
         const to = `
-        :host([warning].comp--invalid) .comp__child {
+        :host(.comp--invalid.comp--warning) .comp__child {
           color: blue;
         }
       `;
@@ -155,7 +154,7 @@ describe('transformCss', () => {
         expect(result).to.equal(normalizeCssFormat(to));
       });
 
-      it.only('works with nested PseudoSelectors', () => {
+      it('works with nested PseudoSelectors', () => {
         const from = `
           .comp:not(.comp--warning) .comp__child {
             color: blue;
@@ -164,10 +163,9 @@ describe('transformCss', () => {
         const config = {
           cssSources: [from],
           host: '.comp',
-          states: { '[warning]': ['.comp--warning'] },
         };
         const to = `
-          :host(:not([warning])) .comp__child {
+          :host(:not(.comp--warning)) .comp__child {
             color: blue;
           }
         `;
@@ -218,6 +216,27 @@ describe('transformCss', () => {
             color: blue;
           }
         `;
+
+          const result = transformCss(config);
+          expect(result).to.equal(normalizeCssFormat(to));
+        });
+
+        it.only('works with nested PseudoSelectors', () => {
+          const from = `
+            .comp:not(.comp--warning) .comp__child {
+              color: blue;
+            }
+          `;
+          const config = {
+            cssSources: [from],
+            host: '.comp',
+            states: { '[warning]': ['.comp--warning'] },
+          };
+          const to = `
+            :host(:not([warning])) .comp__child {
+              color: blue;
+            }
+          `;
 
           const result = transformCss(config);
           expect(result).to.equal(normalizeCssFormat(to));

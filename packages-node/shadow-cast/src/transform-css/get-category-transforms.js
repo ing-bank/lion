@@ -1,10 +1,13 @@
 const csstree = require('css-tree');
 
 const {
-  getPseudoSelectorChildren,
+  normalizePseudoSelector,
+  normalizePseudoSelectorAndGetChildren,
   getSerializedSelectorPartsFromArray,
   getSurroundingCompoundParts,
   getSelectorEntry,
+  getSelectorPartNode,
+  getReplaceContext,
 } = require('./helpers.js');
 
 /**
@@ -28,15 +31,92 @@ const {
  * @typedef {import('../../types/shadow-cast').MatcherFn} MatcherFn
  * @typedef {import('../../types/shadow-cast').SelectorChildNodePlain} SelectorChildNodePlain
  * @typedef {import('../../types/shadow-cast').ActionList} ActionList
- * @typedef {import('../../types/shadow-cast').WrappedHostMatcher} WrappedHostMatcher
+ * @typedef {import('../../types/shadow-cast').MatchResult} MatchResult
  * @typedef {import('../../types/shadow-cast').SCNode} SCNode
  */
 
 /**
- * @param {CssNodePlain | WrappedHostMatcher} match
+ * @param {MatchResult} matchResult
  */
-function isWrappedHostMatcher(match) {
-  return 'matchHost' in match && 'matchHostChild' in match;
+function isMatchWrappedInHost(matchResult) {
+  return matchResult.ancestorPath[0] && matchResult.ancestorPath[0].name === 'host';
+}
+
+/**
+ * @param {MatchResult} matchResult
+ */
+function isMatchWrappedInPseudoSelector(matchResult) {
+  return Boolean(matchResult.ancestorPath[0]);
+}
+
+// TODO: we stop at first found match, theoretically we could have .comp:not(.comp--a):has(> .comp--a))
+// It woould need to return an array of MatchResults, with different ancestorPaths
+/**
+ * Matches recursively (because of potential PseudeSelectors), parsing PseudoSelectors
+ * not supported by csstree (like :host) where needed.
+ * @param {SCNode[]} selectorPartsToBeSearched a Selector like '.host(:not(.comp--a)) .comp__body'
+ * @param {SCNode[]} selectorPartsToBeFound SelectorParts within PseudoSelector that should be
+ * matched, like [CssNodePlain('.comp--a')]
+ * @param {SCNode} parentSelector the parent node of the selectorPartsToBeSearched
+ * @param {( pseudoSP: SCNode, selectorPartToBeFound: SCNode) => boolean} matchCondition
+ * @param {Partial<MatchResult>} result MatchResult, shared across multiple stages of recursive
+ * traversal
+ * @param {number} depth depth of recursive traversal, used internally
+ * @returns {MatchResult|undefined}
+ */
+function findMatchResult(
+  selectorPartsToBeSearched,
+  selectorPartsToBeFound,
+  parentSelector,
+  matchCondition = (a, b) => a.type === b.type && a.name === b.name,
+  result = { ancestorPath: [] },
+  depth = 0,
+) {
+  selectorPartsToBeSearched.some((selectorPart, i) => {
+    // Are we dealing with a nested PseudoSelector like ':host(:not(.comp--a))'
+    // whose raw contents should be parsed and searched?
+    if (selectorPart.type === 'PseudoClassSelector') {
+      /**
+       * innerSelector:
+       * For :host(.comp--a.comp--b), we would get back SCNodes for ['.comp--a', '.comp--b']
+       */
+      const innerSelector = normalizePseudoSelector(selectorPart).children[0].children[0];
+      result.ancestorPath?.push(selectorPart);
+
+      findMatchResult(
+        innerSelector.children,
+        selectorPartsToBeFound,
+        innerSelector,
+        matchCondition,
+        result,
+        depth + 1,
+      );
+      return Boolean(result.matchedSelectorPart);
+    }
+
+    const hasMatch = selectorPartsToBeFound.some(toBeFound =>
+      matchCondition(selectorPart, toBeFound),
+    );
+    if (hasMatch) {
+      // eslint-disable-next-line no-param-reassign
+      result.matchedSelectorPart = selectorPart;
+      // eslint-disable-next-line no-param-reassign
+      result.replace = (/** @type {SCNode} */ newSelectorPart) => {
+        parentSelector.children.splice(i, 1, newSelectorPart);
+      };
+      // eslint-disable-next-line no-param-reassign
+      result.remove = () => {
+        parentSelector.children.splice(i, 1);
+      };
+      return true;
+    }
+    return false;
+  });
+  // Make sure to only return MatchResult in outer context when found in recursive traversal
+  if (depth === 0 && result.matchedSelectorPart) {
+    return /** @type {MatchResult} */ (result);
+  }
+  return undefined;
 }
 
 /**
@@ -47,7 +127,7 @@ function isWrappedHostMatcher(match) {
  * This function returns the Nodes for the SelectorParts that should be replaced.
  *
  * @param {object} options
- * @param {CssNodePlain|WrappedHostMatcher} options.match like '.comp' (Node) or ':host' (WrappedHostMatcher)
+ * @param {MatchResult} options.matchResult
  * @param {boolean} options.stateMatchIsWrappedHost for ':host(.comp--a)' this would be true, for '.comp.comp--a' it would be false
  * @param {MatcherFn} options.hostMatcher the matcher function for the host Selector
  * @param {string} [options.targetStateSelector] Selector for '.comp--a'
@@ -57,7 +137,7 @@ function isWrappedHostMatcher(match) {
  * @returns {SCNode[]}
  */
 function getReplacementStartNodesHost({
-  match,
+  matchResult,
   stateMatchIsWrappedHost,
   hostMatcher,
   targetStateSelector = '',
@@ -71,7 +151,7 @@ function getReplacementStartNodesHost({
     // Then, add them to precStatePartSiblings, after host.
 
     // For ':host(.comp--a)', this would be Nodes for ['.comp--a']
-    const hostCompoundSelectorParts = getPseudoSelectorChildren(matchedHost);
+    const hostCompoundSelectorParts = normalizePseudoSelectorAndGetChildren(matchedHost);
     // In the place where we generically call replaceFn, do the same, so states will be found in raw part
     console.log({ precStatePartSiblings });
 
@@ -113,28 +193,17 @@ function getReplacementStartNodesHost({
     }
   }
 
-  let preceedingSerializedCompound = '';
-  let succeedingSerializedCompound = '';
-  if (compoundHostParts?.preceedingParts?.length) {
-    preceedingSerializedCompound = getSerializedSelectorPartsFromArray(
-      compoundHostParts.preceedingParts,
-    );
-  }
-  if (compoundHostParts?.succeedingParts?.length) {
-    succeedingSerializedCompound = getSerializedSelectorPartsFromArray(
-      compoundHostParts.succeedingParts,
-    );
-  }
-
-  const hostCompound = `${preceedingSerializedCompound}${targetStateSelector}${succeedingSerializedCompound}`;
-
-  console.log({ preceedingSerializedCompound, targetStateSelector, succeedingSerializedCompound });
+  const preceedingSerialized = getSerializedSelectorPartsFromArray(
+    compoundHostParts?.preceedingParts,
+  );
+  const succeedingSerialized = getSerializedSelectorPartsFromArray(
+    compoundHostParts?.succeedingParts,
+  );
+  const hostCompound = `${preceedingSerialized}${targetStateSelector}${succeedingSerialized}`;
 
   return /** @type {SCNode} */ (
     csstree.toPlainObject(
-      csstree.parse(`:host${hostCompound ? `(${hostCompound})` : ''}`, {
-        context: 'selector',
-      }),
+      csstree.parse(`:host${hostCompound ? `(${hostCompound})` : ''}`, { context: 'selector' }),
     )
   ).children;
 }
@@ -154,43 +223,61 @@ function getHostTransform(host, settings) {
     return undefined;
   }
   const hostSelectors = [
-    /** @type {SelectorChildNodePlain} */
+    /** @type {SCNode} */
     (getSelectorEntry(csstree.parse(host, { context: 'selector' }))),
     // Also check for Selectors that already replaced host
     // (to allow multiple, order independent iterations over Selectors)
-    /** @type {SelectorChildNodePlain} */
+    /** @type {SCNode} */
     (getSelectorEntry(csstree.parse(':host', { context: 'selector' }))),
   ];
 
-  const hostMatcher = (/** @type {SelectorChildNodePlain} */ traversedSelector) =>
-    hostSelectors.some(
-      hostSelector =>
-        (traversedSelector.type === hostSelector.type &&
-          traversedSelector.name === hostSelector.name) ||
-        (settings?.additionalHostMatcher &&
-          settings.additionalHostMatcher(traversedSelector, hostSelector)),
+  // eslint-disable-next-line arrow-body-style
+  const hostMatcher = /** @type {MatcherFn} */ (traversedSelectorPart, parentSelector) => {
+    return findMatchResult(
+      [traversedSelectorPart],
+      hostSelectors,
+      parentSelector,
+      (a, b) =>
+        (a.type === b.type && a.name === b.name) ||
+        (settings?.additionalHostMatcher && settings.additionalHostMatcher(a, b)),
     );
+  };
 
   return {
     meta: {
       config: { hostName: host },
     },
     matcher: hostMatcher,
-    replaceFn: /** @type {ReplaceFn} */ ({ match, compounds }) => {
-      const stateMatchIsWrappedHost = isWrappedHostMatcher(match);
-      const matchedHost = stateMatchIsWrappedHost
-        ? /** @type {WrappedHostMatcher} */ (match).matchHost
-        : match;
+    replaceFn: /** @type {ReplaceFn} */ ({ compounds, preceedingSiblings, succeedingSiblings }) => {
+      // We assume that :host is always used as the outer PseudoSelector (so no support for
+      // ':not(:host(.comp--a)))' or similar)
+      // const matchedHost = matchResult.ancestorPath[0] || matchResult.matchedSelectorPart;
 
-      const replacementNodes = getReplacementStartNodesHost({
-        match,
-        stateMatchIsWrappedHost,
-        hostMatcher,
-        matchedHost,
-        compounds,
-      });
+      // // For a Selector like '.comp.comp--a .comp__body',
+      // // we need to go to ':host(.comp--a) .comp__body'
+      // const replacementNodes = getReplacementStartNodesHost({
+      //   matchResult,
+      //   stateMatchIsWrappedHost: Boolean(matchResult.ancestorPath[0]),
+      //   hostMatcher,
+      //   matchedHost,
+      //   compounds,
+      // });
 
-      return { replacementNodes, startIndex: compounds.length };
+      let hostCompound = '';
+      if (compounds.length) {
+        // 1. Serialize the compounds found in host
+        hostCompound = getSerializedSelectorPartsFromArray(compounds);
+      }
+
+      const hostNodes = /** @type {SCNode} */ (
+        csstree.toPlainObject(
+          csstree.parse(`:host${hostCompound ? `(${hostCompound})` : ''}`, { context: 'selector' }),
+        )
+      ).children;
+      const replacementNodes = [...preceedingSiblings, ...hostNodes, ...succeedingSiblings];
+
+      // console.log({ replacementNodes });
+      return { replacementNodes, replaceCompleteSelector: true };
     },
   };
 }
@@ -223,49 +310,19 @@ function getSlotsTransform(slots) {
         const compSelectors =
           compounds.length && compounds.map(s => csstree.generate(/** @type {CssNode} */ (s)));
         const slot = slotName === '<default>' ? ':not([slot])' : `[slot="${slotName}"]`;
-        const replacementNodes = /** @type {SelectorPlain} */ (
-          csstree.toPlainObject(
-            csstree.parse(`::slotted(${slot}${compSelectors || [].join('')})`, {
-              context: 'selector',
-            }),
-          )
-        ).children;
-        return { replacementNodes, startIndex: compounds.length };
+        const replacementNodes = /** @type {SCNode[]} */ (
+          /** @type {SelectorPlain} */ (
+            csstree.toPlainObject(
+              csstree.parse(`::slotted(${slot}${compSelectors || [].join('')})`, {
+                context: 'selector',
+              }),
+            )
+          ).children
+        );
+        return { replacementNodes, deleteAfterCount: compounds.length };
       },
     };
   });
-}
-
-/**
- *
- * @param {SCNode} pseudoSelector PseudoSelector whose raw contents should be parsed and searched
- * @param {SCNode} targetSelectorPart SelectorPart within PseudoSelector that should be matched, like Node for '.comp--b'
- * @param {SCNode[]} results
- * @returns
- */
-function searchPseudoPartsRecursively(pseudoSelector, targetSelectorPart, results = []) {
-  /**
-   * nnerSelector:
-   * For :host(.comp--a.comp--b), we would get back SCNodes for ['.comp--a', '.comp--b']
-   */
-  const innerSelector = getPseudoSelectorChildren(pseudoSelector);
-  /**
-   * Looping over the innerSelector, tells us whether a match with targetSelectorPart was found
-   */
-  innerSelector.some(hostSelectorPart => {
-    if (hostSelectorPart.type === 'PseudoClassSelector') {
-      return searchPseudoPartsRecursively(hostSelectorPart, targetSelectorPart, results);
-    }
-    if (
-      hostSelectorPart.type === targetSelectorPart.type &&
-      hostSelectorPart.name === targetSelectorPart.name
-    ) {
-      results.push(hostSelectorPart);
-      return true;
-    }
-    return false;
-  });
-  return results;
 }
 
 /**
@@ -284,8 +341,8 @@ function getStatesTransform(states, hostMatcher) {
    * - example of stateSelector: '[invalid]'
    * - example of sourceSelector: '.comp__feedback--invalid'
    */
-  return Object.entries(states).map(([targetStateSelector, sourceSelectors]) => {
-    const selectors = sourceSelectors.map(
+  return Object.entries(states).map(([targetStateSelectorPart, sourceSelectors]) => {
+    const selectorsToBeFound = sourceSelectors.map(
       sourceSelector =>
         /** @type {SCNode} */
         (getSelectorEntry(csstree.parse(sourceSelector, { context: 'selector' }))),
@@ -293,79 +350,171 @@ function getStatesTransform(states, hostMatcher) {
 
     return {
       meta: {
-        config: { targetStateSelector, sourceSelectors },
+        config: { targetStateSelectorPart, sourceSelectors },
       },
-      matcher: (/** @type {SCNode} */ traversedSelector) => {
-        const t = traversedSelector;
-        return selectors.some(selector => {
-          if (t.type === selector.type && t.name === selector.name) {
-            return true;
-          }
-          if (t.type === 'PseudoClassSelector') {
-            return Boolean(searchPseudoPartsRecursively(t, selector).length);
-            // return getPseudoSelectorChildren(t).some(
-            //   hostSelectorPart =>
-            //     hostSelectorPart.type === selector.type && hostSelectorPart.name === selector.name,
-            // );
-          }
-          return false;
-        });
+      matcher: /** @type {MatcherFn} */ (traversedSelectorPart, parentSelector) => {
+        const t = traversedSelectorPart;
+        /** @type {MatchResult|undefined} */
+        // let matchResult;
+        // selectorsToBeFound.some(selectorToBeFound => {
+        //   if (t.type === selectorToBeFound.type && t.name === selectorToBeFound.name) {
+        //     matchResult = /** @type {MatchResult} */ ({
+        //       ancestorPath: [],
+        //       matchedSelectorPart: selectorToBeFound,
+        //     });
+        //     return true;
+        //   }
+        //   if (t.type === 'PseudoClassSelector') {
+        //     const result = findMatchResult(t, selectorToBeFound);
+        //     if (result.matchedSelectorPart) {
+        //       matchResult = /** @type {MatchResult} */ (result);
+        //       return true;
+        //     }
+        //   }
+        //   return false;
+        // });
+        // return matchResult;
+
+        return findMatchResult([t], selectorsToBeFound, parentSelector);
       },
       replaceFn: (
         /** @type {ReplaceContext} */ {
-          siblings,
+          succeedingSiblings,
           preceedingSiblings: precStatePartSiblings,
-          match,
+          matchResult,
           compounds,
           astContext,
         },
       ) => {
-        console.log({ compounds, precStatePartSiblings });
+        //         const stateMatchIsWrappedHost = isMatchWrappedInHost(matchResult);
+        //         const c = getSurroundingCompoundParts(
+        //           matchResult.matchedSelectorPart,
+        //           astContext.selector.children,
+        //         );
+        //         const hasNoCompounds =
+        //           !stateMatchIsWrappedHost && !c.preceedingParts?.length && !c.succeedingParts?.length;
 
-        const stateMatchIsWrappedHost = isWrappedHostMatcher(match);
-        const c = getSurroundingCompoundParts(match, astContext.selector.children);
-        const hasNoCompounds =
-          !stateMatchIsWrappedHost && !c.preceedingParts?.length && !c.succeedingParts?.length;
+        //         const isHostMatch = stateMatchIsWrappedHost || hostMatcher(matchResult.matchedSelectorPart);
 
-        const isHostMatch = stateMatchIsWrappedHost || hostMatcher(match);
+        //         // Check if matching SelectorPart is part of compound SelectorParts
+        //         // @ts-expect-error
+        //         if (!isHostMatch && hasNoCompounds && match._action?.type !== 'deletion') {
+        //           // TODO: should not be fired when this Selector was already scheduled to be deleted in
+        //           // actionList
+        //           throw new Error(`Please make sure to provide an element SelectorPart that source state Selector ${csstree.generate(
+        //             /** @type {CssNode} */ (match),
+        //           )}
+        // part can "lean" on (a 'state target' that can work in conjunction with host Selector):
+        // - correct: '.comp .comp__feedback.comp__feedback--invalid' -> ':host([invalid]) .comp__feedback'
+        // - wrong: '.comp .comp__feedback--invalid' -> ':host([invalid]) <?>'`);
+        //         }
 
-        // Check if matching SelectorPart is part of compound SelectorParts
-        // @ts-expect-error
-        if (!isHostMatch && hasNoCompounds && match._action?.type !== 'deletion') {
-          // TODO: should not be fired when this Selector was already scheduled to be deleted in
-          // actionList
-          throw new Error(`Please make sure to provide an element SelectorPart that source state Selector ${csstree.generate(
-            /** @type {CssNode} */ (match),
-          )}
-part can "lean" on (a 'state target' that can work in conjunction with host Selector):
-- correct: '.comp .comp__feedback.comp__feedback--invalid' -> ':host([invalid]) .comp__feedback'
-- wrong: '.comp .comp__feedback--invalid' -> ':host([invalid]) <?>'`);
-        }
+        //         // @ts-ignore
+        //         const matchedHost = stateMatchIsWrappedHost
+        //           ? match.matchHost
+        //           : precStatePartSiblings.find(hostMatcher);
 
-        // @ts-ignore
-        const matchedHost = stateMatchIsWrappedHost
-          ? match.matchHost
-          : precStatePartSiblings.find(hostMatcher);
-
-        const replacementStartNodes = getReplacementStartNodesHost({
-          match,
-          stateMatchIsWrappedHost,
-          hostMatcher,
-          targetStateSelector,
-          matchedHost,
-          precStatePartSiblings,
-          compounds,
-        });
+        //         const replacementStartNodes = getReplacementStartNodesHost({
+        //           match,
+        //           stateMatchIsWrappedHost,
+        //           hostMatcher,
+        //           targetStateSelector,
+        //           matchedHost,
+        //           precStatePartSiblings,
+        //           compounds,
+        //         });
 
         /**
+         * Four scenarios possible:
+         * 1. on host: '.comp.comp--invalid'
+         * 2. inside host: ':host(.comp--invalid)'
+         * 3. inside pseudo selector: '.comp:not(.comp--invalid)'
+         * 4. on descendant of host: ':host .comp__feedback.comp__feedback--invalid'
+         *
+         * In all cases, we need to wrap the state SelectorPart in a host PseudoSelectorPart
+         */
+
+        function getHostCompound() {
+          const hostSelectorPart = /** @type {SCNode}*/ (
+            astContext.selector.children.find(sp => hostMatcher(sp, astContext.selector))
+          );
+          let compounds = [];
+          if (hostSelectorPart.type === 'PseudoSelector') {
+            compounds = hostSelectorPart.children[0].children[0].children;
+          } else {
+            compounds = getReplaceContext(
+              astContext.selector,
+              astContext.selector.children.indexOf(hostSelectorPart),
+            ).compounds;
+          }
+          return getSerializedSelectorPartsFromArray(compounds);
+        }
+
+        /** @type {SCNode[]} */
+        let hostNodes = [];
+
+        // Scenario 1 (find '.comp' when matchResult is for '.comp--invalid')
+        const isStateMatchOnHost = compounds.find(compound =>
+          hostMatcher(compound, astContext.selector),
+        );
+        if (isStateMatchOnHost && !isMatchWrappedInPseudoSelector(matchResult)) {
+          console.log(1);
+          const hostCompound = getSerializedSelectorPartsFromArray(compounds);
+          hostNodes = /** @type {SCNode} */ (
+            csstree.toPlainObject(csstree.parse(`:host(${hostCompound})`, { context: 'selector' }))
+          ).children;
+        }
+        // Scenario 2: inside host (':host(.comp--invalid)')
+        else if (isMatchWrappedInHost(matchResult)) {
+          console.log(2);
+          // Translate '.comp--invalid' into '[invalid]'
+          matchResult.replace(getSelectorPartNode(targetStateSelectorPart));
+          // get ':host([invalid].smth)'  (step above already converted ':host(.comp--invalid.smth)' into ':host([invalid].smth)')
+          const hostSelectorPart = matchResult.ancestorPath[0];
+          // get ['[invalid]','.smth'] and serialize into '[invalid].smth'
+          const hostCompound = getSerializedSelectorPartsFromArray(
+            hostSelectorPart.children[0].children[0].children,
+          );
+          // get [':host([invalid])']
+          hostNodes = /** @type {SCNode} */ (
+            csstree.toPlainObject(csstree.parse(`:host(${hostCompound})`, { context: 'selector' }))
+          ).children;
+        }
+        // Scenario 3: inside pseudo selector ('.comp:not(.comp--invalid)')
+        else if (isMatchWrappedInPseudoSelector(matchResult)) {
+          console.log(3);
+          // Apparently we are not inside a host, we just need to replace the matched Selector in
+          // the AST.
+          // Translate ':not(.comp--invalid)' into ':not([invalid])'
+          matchResult.replace(getSelectorPartNode(targetStateSelectorPart));
+          const hostCompound = getHostCompound();
+          // TODO: we should leave this '.comp' actualy
+          hostNodes = /** @type {SCNode} */ (
+            csstree.toPlainObject(csstree.parse(`:host(${hostCompound})`, { context: 'selector' }))
+          ).children;
+        }
+        // Scenario 4: on descendant of host (':host .comp__feedback.comp__feedback--invalid')
+        else {
+          console.log(4);
+          const hostCompound = getHostCompound();
+
+          // get [':host([invalid])', ' ', '.comp__feedback']
+          matchResult.remove();
+          hostNodes = /** @type {SCNode} */ (
+            csstree.toPlainObject(csstree.parse(`:host(${hostCompound})`, { context: 'selector' }))
+          ).children;
+        }
+        /**
+         * Situation 2 (on descendant of host)
          * Say we match '.comp .comp__feedback.comp__feedback--invalid' via
          * { '[invalid]' : '.comp__feedback--invalid'}...
          * We need to convert to ':host([invalid]) .comp__feedback', so we need to know about
          * preceeding siblings of match '.comp__feedback--invalid' when it's a compound selector
-         * part (i.e. we should filter be left with the part before: '.comp__feedback').
-         * So we deliberately leave out matched CssNode below
+         * part (i.e. we should be left with the part before: '.comp__feedback').
+         * So we deliberately leave out matchResult.matchedSelectorPart below.
          */
-        const replacementNodes = [...replacementStartNodes, ...precStatePartSiblings, ...siblings];
+        const replacementNodes = [...hostNodes, ...precStatePartSiblings, ...succeedingSiblings];
+        console.log(replacementNodes[0].children);
         return { replacementNodes, replaceCompleteSelector: true };
       },
     };

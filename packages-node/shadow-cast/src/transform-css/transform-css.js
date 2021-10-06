@@ -4,7 +4,8 @@ const {
   dissectCssSelectorPart,
   getSelectorPartNode,
   hasLeadingWhitespace,
-  getPseudoSelectorChildren,
+  getReplaceContext,
+  // getPseudoSelectorChildren,
 } = require('./helpers.js');
 
 const {
@@ -35,52 +36,64 @@ const {
  * @typedef {import('../../types/shadow-cast').MatcherFn} MatcherFn
  * @typedef {import('../../types/shadow-cast').SelectorChildNodePlain} SelectorChildNodePlain
  * @typedef {import('../../types/shadow-cast').ActionList} ActionList
- * @typedef {import('../../types/shadow-cast').WrappedHostMatcher} WrappedHostMatcher
+ * @typedef {import('../../types/shadow-cast').MatchResult} MatchResult
  * @typedef {import('../../types/shadow-cast').SCNode} SCNode
  */
 
 /**
- * Finds matching Selector, based on matcherFn
+ * Finds matching SelectorPart, based on matcherFn
  * @param {Selector} sourceSelector like the result of '.my-comp my-comp__part'
  * @param {MatcherFn} matcherFn like a function that searches for configured host '.my-comp'
- * @returns {CssNodePlain|WrappedHostMatcher|undefined} matchedSelector
+ * @returns {MatchResult|undefined} matchedSelector
  */
-function findMatchingSelector(sourceSelector, matcherFn) {
+function findMatchResultInSelector(sourceSelector, matcherFn) {
   /** @type {SelectorChildNodePlain[]} */
   const plainSource = /** @type {SelectorPlain} */ (csstree.toPlainObject(sourceSelector));
-  const match = /** @type {SCNode} */ (
-    plainSource.children.find(sourceNode =>
-      matcherFn(/** @type {SelectorChildNodePlain} */ (sourceNode)),
-    )
-  );
+  let result;
+  // eslint-disable-next-line array-callback-return, consistent-return
+  plainSource.children.some(sourceNode => {
+    result = matcherFn(/** @type {SCNode} */ (sourceNode), plainSource);
+    return Boolean(result);
+  });
+  return result;
 
-  // Handle :host(.x.y) differently
-  if (match) {
-    if (match.type === 'PseudoClassSelector' && match.name === 'host') {
-      return {
-        matchHost: match,
-        matchHostChild: /** @type {CssNodePlain} */ (
-          getPseudoSelectorChildren(match).find(matcherFn)
-        ),
-        originalMatcher: matcherFn,
-      };
-    }
-    return match;
-  }
-  return undefined;
+  // const match = /** @type {SCNode} */ (
+  //   plainSource.children.find(sourceNode =>
+  //     matcherFn(/** @type {SelectorChildNodePlain} */ (sourceNode)),
+  //   )
+  // );
+
+  // // Handle :host(.x.y) differently
+  // if (match) {
+  //   if (match.type === 'PseudoClassSelector' && match.name === 'host') {
+  //     return {
+  //       matchHost: match,
+  //       matchHostChild: /** @type {CssNodePlain} */ (
+  //         getPseudoSelectorChildren(match).find(matcherFn)
+  //       ),
+  //       originalMatcher: matcherFn,
+  //     };
+  //   }
+  //   return match;
+  // }
+  // return undefined;
 }
 
 /**
  * @param {object} options
  * @param {AstContext} options.astContext
- * @param {CssNodePlain|WrappedHostMatcher} options.match
- * @param {ReplaceFn} options.replaceFn
+ * @param {MatchResult} options.matchResult
+ * @param {ReplaceFn} options.replaceFn the replace function from Transform for host/slots/states
  * @param {ActionList} options.actionList
  */
-function replaceSelector({ astContext, match, replaceFn, actionList }) {
+function replaceSelector({ astContext, matchResult, replaceFn, actionList }) {
+  /**
+   * 1. Assemble Ast context
+   */
+
   // @ts-ignore
-  const plainSelector = /** @type {SelectorPlain} */ (csstree.toPlainObject(astContext.selector));
-  const plainSelectorList = /** @type {SelectorListPlain} */ (
+  const plainSelector = /** @type {SCNode} */ (csstree.toPlainObject(astContext.selector));
+  const plainSelectorList = /** @type {SCNode} */ (
     csstree.toPlainObject(
       // @ts-ignore
       astContext.selectorList,
@@ -95,45 +108,29 @@ function replaceSelector({ astContext, match, replaceFn, actionList }) {
   const plainStylesheet = /** @type {RulePlain} */ (csstree.toPlainObject(astContext.stylesheet));
 
   /**
-   * The current position of matched SelectorPart in the plainSelector
+   * 2. Assemble replace context
+   */
+  /**
+   * The current position of matched SelectorPart (or ancestor thereof) in the plainSelector
    * @type {number}
    */
-  // @ts-expect-error
-  const matchIndex = plainSelector.children.indexOf(match?.matchHost || match);
-  /** @type {CssNodePlain[]} */
-  const compounds = [];
-  /** @type {CssNodePlain[]} */
-  const siblings = [];
-  /** @type {CssNodePlain[]} */
-  const preceedingSiblings = [];
+  const matchIndex = plainSelector.children.indexOf(
+    matchResult.ancestorPath[0] || matchResult.matchedSelectorPart,
+  );
+  const { compounds, succeedingSiblings, preceedingSiblings } = getReplaceContext(
+    plainSelector,
+    matchIndex,
+  );
 
   /**
-   * Assume selector '.comp.x.y .comp__a .comp__b'
-   * The selector will be ['.comp','.x','.y', ' ', '.comp__a', ' ', '.comp__b']
-   * '.comp' will be the matchIndex (0).
-   * We will loop over all indexes after. First, we gather all compounds: ['.x', ',y'].
-   * From there on, we gather all siblings: [' ', '.comp__a', ' ', '.comp__b']
+   * 3. Gather replacement data to alter the AST
    */
-  plainSelector.children.forEach((curSibling, i) => {
-    if (i === matchIndex) {
-      return;
-    }
-    if (i < matchIndex) {
-      preceedingSiblings.push(curSibling);
-    } else if (!siblings.length && curSibling.type !== 'WhiteSpace') {
-      // TODO: compound should also be checked < matchIndex
-      compounds.push(curSibling);
-    } else {
-      siblings.push(curSibling);
-    }
-  });
-
   const result = replaceFn(
     // @ts-expect-error
     /** @type {ReplaceContext} */ ({
-      match,
+      matchResult,
       compounds,
-      siblings,
+      succeedingSiblings,
       preceedingSiblings,
       astContext: {
         selector: plainSelector,
@@ -145,8 +142,12 @@ function replaceSelector({ astContext, match, replaceFn, actionList }) {
     }),
   );
 
+  /**
+   * 4. Alter AST, based on replacement data.
+   * Also, populate actionList for later alterations
+   */
   if (result) {
-    const { replacementNodes, startIndex, replaceCompleteSelector } = result;
+    const { replacementNodes, deleteAfterCount, replaceCompleteSelector } = result;
     if (replaceCompleteSelector) {
       if (replacementNodes.length) {
         plainSelector.children = replacementNodes;
@@ -185,8 +186,8 @@ function replaceSelector({ astContext, match, replaceFn, actionList }) {
         }
       }
     } else {
-      // In this case, we use number startIndex (which contains the amount of nodes to delete)
-      plainSelector.children.splice(matchIndex, 1 + (startIndex || 0), ...replacementNodes);
+      // In this case, we use number deleteAfterCount (which contains the amount of nodes to delete)
+      plainSelector.children.splice(matchIndex, 1 + (deleteAfterCount || 0), ...replacementNodes);
     }
   }
 }
@@ -200,7 +201,7 @@ function replaceSelector({ astContext, match, replaceFn, actionList }) {
  */
 function interceptExternalContextSelectors({ astContext, hostMatcherFn, settings, actionList }) {
   // @ts-ignore
-  const hostMatchBefore = findMatchingSelector(astContext.selector, hostMatcherFn);
+  const hostMatchBefore = findMatchResultInSelector(astContext.selector, hostMatcherFn);
   if (hostMatchBefore) {
     /** @type {ReplaceFn} */
     const replaceFn = replaceContext => {
@@ -214,7 +215,7 @@ function interceptExternalContextSelectors({ astContext, hostMatcherFn, settings
       return { replacementNodes: [], replaceCompleteSelector: true };
     };
 
-    replaceSelector({ astContext, match: hostMatchBefore, replaceFn, actionList });
+    replaceSelector({ astContext, matchResult: hostMatchBefore, replaceFn, actionList });
   }
 }
 
@@ -259,12 +260,15 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
             // matchers might be affected when host replacements took place already
             if (transforms.states) {
               transforms.states.forEach(stateTransform => {
-                const stateMatch = findMatchingSelector(selectorNode, stateTransform.matcher);
-                if (stateMatch) {
+                const stateMatchResult = findMatchResultInSelector(
+                  selectorNode,
+                  stateTransform.matcher,
+                );
+                if (stateMatchResult) {
                   replaceSelector({
                     // eslint-disable-next-line object-shorthand
                     astContext: /** @type {AstContext} */ (astContext),
-                    match: stateMatch,
+                    matchResult: stateMatchResult,
                     replaceFn: stateTransform.replaceFn,
                     actionList,
                   });
@@ -272,24 +276,24 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
               });
             }
             // We replace hosts after states, as explained above
-            const hostMatch = findMatchingSelector(selectorNode, transforms.host.matcher);
+            const hostMatch = findMatchResultInSelector(selectorNode, transforms.host.matcher);
             if (hostMatch) {
               replaceSelector({
                 // eslint-disable-next-line object-shorthand
                 astContext: /** @type {AstContext} */ (astContext),
-                match: hostMatch,
+                matchResult: hostMatch,
                 replaceFn: transforms.host.replaceFn,
                 actionList,
               });
             }
           } else if (transforms.slots) {
             transforms.slots.forEach(slotTransform => {
-              const slotMatch = findMatchingSelector(selectorNode, slotTransform.matcher);
+              const slotMatch = findMatchResultInSelector(selectorNode, slotTransform.matcher);
               if (slotMatch) {
                 replaceSelector({
                   // eslint-disable-next-line object-shorthand
                   astContext: /** @type {AstContext} */ (astContext),
-                  match: slotMatch,
+                  matchResult: slotMatch,
                   replaceFn: slotTransform.replaceFn,
                   actionList,
                 });

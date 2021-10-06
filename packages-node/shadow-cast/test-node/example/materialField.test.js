@@ -139,9 +139,35 @@ describe('mdc-text-field', () => {
       '[ltr-text]:.mdc-text-field--ltr-text',
     ];
 
-    const annotatedHtml = `
-      <div class="mdc-text-field" :host:=".mdc-text-field"
-        :states:="${hostStates.join(',')}">
+    const annotatedHtml = html` <!-- shadow -->
+      <span class="mdc-notched-outline">
+        <span class="mdc-notched-outline__leading"></span>
+        <span class="mdc-notched-outline__notch">
+          <slot name="label"></slot>
+        </span>
+        <span class="mdc-notched-outline__trailing"></span>
+      </span>
+      <slot name="input"></slot>
+
+      <!-- light -->
+      <label>Your Name</label>
+      <input type="text" />
+
+      <div class="form-field__label">
+        <slot name="label"></slot>
+      </div>
+      <div class="input-group">
+        <div class="input-group__container">
+          <div class="input-group__input">
+            <slot name="input"></slot>
+          </div>
+        </div>
+      </div>
+      <div class="form-field__feedback">
+        <slot name="feedback"></slot>
+      </div>
+
+      <div class="mdc-text-field" :host:=".mdc-text-field" :states:="${hostStates.join(',')}">
         <span class="mdc-notched-outline">
           <span class="mdc-notched-outline__leading"></span>
           <span class="mdc-notched-outline__notch">
@@ -149,7 +175,7 @@ describe('mdc-text-field', () => {
           </span>
           <span class="mdc-notched-outline__trailing"></span>
         </span>
-        <input type="text" class="mdc-text-field__input" :slot:="input:.mdc-text-field__input">
+        <input type="text" class="mdc-text-field__input" :slot:="input:.mdc-text-field__input" />
       </div>`;
     const result = transformHtmlAndCss(annotatedHtml, {
       cssSources: [mdcTextField],
