@@ -7,8 +7,8 @@ import { LitElement, css, html } from '@lion/core';
  * @property {number} index index of the node
  * @property {HTMLElement} invoker invoker node
  * @property {HTMLElement} content content node
- * @property {EventHandlerNonNull} clickHandler executed on click event
- * @property {EventHandlerNonNull} keydownHandler executed on keydown event
+ * @property {(event: Event) => unknown} clickHandler executed on click event
+ * @property {(event: Event) => unknown} keydownHandler executed on keydown event
  */
 
 const uuid = () => Math.random().toString(36).substr(2, 10);

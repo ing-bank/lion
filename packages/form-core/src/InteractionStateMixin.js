@@ -104,13 +104,13 @@ const InteractionStateMixinImplementation = superclass =>
       this._valueChangedEvent = 'model-value-changed';
 
       /**
-       * @type {EventHandlerNonNull}
+       * @type {(event: Event) => unknown}
        * @protected
        */
       this._iStateOnLeave = this._iStateOnLeave.bind(this);
 
       /**
-       * @type {EventHandlerNonNull}
+       * @type {(event: Event) => unknown}
        * @protected
        */
       this._iStateOnValueChange = this._iStateOnValueChange.bind(this);

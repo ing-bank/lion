@@ -8,7 +8,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 /**
  * @typedef DelegateEvent
  * @property {string} type - Type of event
- * @property {EventHandlerNonNull} handler - Event arguments
+ * @property {(event: Event) => unknown} handler - Event arguments
  * @property {boolean | AddEventListenerOptions} [opts]
  */
 
@@ -63,7 +63,7 @@ const DelegateMixinImplementation = superclass =>
 
     /**
      * @param {string} type
-     * @param {EventHandlerNonNull} handler
+     * @param {(event: Event) => unknown} handler
      * @param {boolean | AddEventListenerOptions} [opts]
      */
     addEventListener(type, handler, opts) {
