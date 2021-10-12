@@ -66,6 +66,32 @@ export const disabledGroup = () => html`
 `;
 ```
 
+## Label
+
+You can use `slot="label"` instead of the `label` attribute for defining more complex labels, such as containing screen reader only text or an anchor.
+
+```js preview-story
+export const label = () => html`
+  <lion-radio-group name="dinos_7" label="Favourite dinosaur">
+    <lion-radio .choiceValue=${'allosaurus'}>
+      <label slot="label"
+        ><a href="https://wikipedia.org/wiki/allosaurus" target="_blank">allosaurus</a></label
+      >
+    </lion-radio>
+    <lion-radio .choiceValue=${'brontosaurus'}>
+      <label slot="label"
+        ><a href="https://wikipedia.org/wiki/brontosaurus" target="_blank">brontosaurus</a></label
+      >
+    </lion-radio>
+    <lion-radio .choiceValue=${'diplodocus'}>
+      <label slot="label"
+        ><a href="https://wikipedia.org/wiki/diplodocus" target="_blank">diplodocus</a></label
+      >
+    </lion-radio>
+  </lion-radio-group>
+`;
+```
+
 ## Help text
 
 You can add help text on each checkbox with `help-text` attribute on the `<lion-radio>`.
@@ -102,7 +128,7 @@ export const event = ({ shadowRoot }) => html`
     name="dinosTwo"
     label="Favourite dinosaur"
     @model-value-changed=${ev =>
-      (shadowRoot.getElementById('selectedDinosaur').innerText = ev.target.modelValue)}
+      (ev.target.parentElement.querySelector('#selectedDinosaur').innerText = ev.target.modelValue)}
   >
     <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
     <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>

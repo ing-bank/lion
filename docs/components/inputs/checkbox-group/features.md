@@ -73,6 +73,32 @@ export const disabled = () => html`
 `;
 ```
 
+## Label
+
+You can use `slot="label"` instead of the `label` attribute for defining more complex labels, such as containing screen reader only text or an anchor.
+
+```js preview-story
+export const label = () => html`
+  <lion-checkbox-group name="scientists[]" label="Favorite scientists">
+    <lion-checkbox .choiceValue=${'Archimedes'}>
+      <label slot="label"
+        ><a href="https://wikipedia.org/wiki/Archimedes" target="_blank">Archimedes</a></label
+      >
+    </lion-checkbox>
+    <lion-checkbox .choiceValue=${'Francis Bacon'}>
+      <label slot="label"
+        ><a href="https://wikipedia.org/wiki/Francis_Bacon" target="_blank">Francis Bacon</a></label
+      >
+    </lion-checkbox>
+    <lion-checkbox .choiceValue=${'Marie Curie'}>
+      <label slot="label"
+        ><a href="https://wikipedia.org/wiki/Marie_Curie" target="_blank">Marie Curie</a></label
+      >
+    </lion-checkbox>
+  </lion-checkbox-group>
+`;
+```
+
 ## Help text
 
 You can add help text on each checkbox with `help-text` attribute on the `<lion-checkbox>`.
@@ -109,7 +135,7 @@ export const event = ({ shadowRoot }) => html`
     name="scientists[]"
     label="Favorite scientists"
     @model-value-changed=${ev =>
-      (shadowRoot.getElementById('selectedDinosaur').innerText = JSON.stringify(
+      (ev.target.parentElement.querySelector('#selectedDinosaur').innerText = JSON.stringify(
         ev.target.modelValue,
         null,
         4,
@@ -126,17 +152,7 @@ export const event = ({ shadowRoot }) => html`
 
 ## Indeterminate
 
-```js preview-story
-export const indeterminate = () => html`
-  <lion-checkbox-group name="scientists[]">
-    <lion-checkbox-indeterminate label="Favorite scientists">
-      <lion-checkbox slot="checkbox" label="Archimedes"></lion-checkbox>
-      <lion-checkbox slot="checkbox" label="Francis Bacon"></lion-checkbox>
-      <lion-checkbox slot="checkbox" label="Marie Curie"></lion-checkbox>
-    </lion-checkbox-indeterminate>
-  </lion-checkbox-group>
-`;
-```
+A `checkbox-indeterminate`'s value is neither true nor false, but is instead indeterminate, meaning that its state cannot be determined or stated in pure binary terms, based on it's `checkbox` children.
 
 ```js preview-story
 export const indeterminateSiblings = () => html`
@@ -169,6 +185,8 @@ export const indeterminateSiblings = () => html`
   </lion-checkbox-group>
 `;
 ```
+
+The `checkbox-indeterminate` can have another `checkbox-indeterminate` as a child.
 
 ```js preview-story
 export const indeterminateChildren = () => html`
