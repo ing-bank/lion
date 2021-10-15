@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import chai from 'chai';
 import { mdjsProcess } from '@mdjs/core';
 import { addPlugin } from 'plugins-manager';
+import markdownPkg from 'remark-parse';
 
 import { remarkExtendLionDocsTransformJs } from '../src/remarkExtendLionDocsTransformJs.js';
 
@@ -49,15 +50,17 @@ async function execute(input) {
     ],
   };
 
-  // @ts-ignore
   const result = await mdjsProcess(input, {
     setupUnifiedPlugins: [
-      addPlugin({
-        name: 'remark-extend-lion-docs-transform-js',
-        plugin: remarkExtendLionDocsTransformJs,
-        location: 'markdown',
-        options: { extendDocsConfig },
-      }),
+      addPlugin(
+        remarkExtendLionDocsTransformJs,
+        // those types will need to be better specified
+        // @ts-ignore
+        { extendDocsConfig },
+        {
+          location: markdownPkg,
+        },
+      ),
     ],
   });
 

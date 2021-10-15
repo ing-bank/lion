@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url';
 import { addPlugin } from 'plugins-manager';
 // @ts-ignore
 import remarkExtendPkg from 'remark-extend';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import markdownPkg from 'remark-parse';
 import { remarkExtendLionDocsTransformJs } from '../src/remarkExtendLionDocsTransformJs.js';
 import { remarkUrlToLocal } from '../src/remarkUrlToLocal.js';
 import { generateExtendDocsConfig } from '../src/generateExtendDocsConfig.js';
@@ -51,26 +53,34 @@ export async function extendLionDocs({
   return {
     path: path.resolve(__dirname),
     setupUnifiedPlugins: [
-      addPlugin({
-        name: 'remark-extend',
-        plugin: remarkExtendPkg.remarkExtend,
-        location: 'markdown',
-      }),
-      addPlugin({
-        name: 'github-urls-to-local',
-        plugin: remarkUrlToLocal,
-        location: 'remark-extend',
-        options: {
+      addPlugin(
+        remarkExtendPkg.remarkExtend,
+        {},
+        {
+          location: markdownPkg,
+        },
+      ),
+      addPlugin(
+        remarkUrlToLocal,
+        // the page object gets injected globally
+        // @ts-ignore
+        {
           gitHubUrl: 'https://github.com/ing-bank/lion/',
           rootDir: _rootDir,
         },
-      }),
-      addPlugin({
-        name: 'remark-extend-lion-docs-transform-js',
-        plugin: remarkExtendLionDocsTransformJs,
-        location: 'remark-extend',
-        options: { extendDocsConfig },
-      }),
+        {
+          location: remarkExtendPkg.remarkExtend,
+        },
+      ),
+      addPlugin(
+        remarkExtendLionDocsTransformJs,
+        // those types will need to be better specified
+        // @ts-ignore
+        { extendDocsConfig },
+        {
+          location: remarkExtendPkg.remarkExtend,
+        },
+      ),
     ],
   };
 }
