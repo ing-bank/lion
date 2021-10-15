@@ -1,6 +1,6 @@
 ---
 title: Lion
-layout: layout-home
+layout: layout-home-background
 slogan: Fundamental white label web components for building your design system.
 callToActionItems:
   [{ text: 'Follow Guides', href: '/guides/' }, { text: 'See Components', href: '/components/' }]
