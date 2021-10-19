@@ -1,6 +1,6 @@
 {
   "name": "@lion/helpers",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Helpers that are used throughout lion and can be used outside",
   "license": "MIT",
   "author": "ing-bank",
@@ -35,7 +35,7 @@
     "sb-locale-switcher.js"
   ],
   "dependencies": {
-    "@lion/core": "0.18.3"
+    "@lion/core": "0.18.4"
   },
   "keywords": [
     "action logger",

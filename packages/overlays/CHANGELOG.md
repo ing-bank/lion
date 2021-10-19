@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.29.0
+
+### Minor Changes
+
+- 6e86fb4e: Hide local overlays on ESC
+
+### Patch Changes
+
+- Updated dependencies [bcf68ceb]
+- Updated dependencies [d963e74e]
+  - @lion/core@0.18.4
+
 ## 0.28.4
 
 ### Patch Changes

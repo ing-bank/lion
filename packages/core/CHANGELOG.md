@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.18.4
+
+### Patch Changes
+
+- bcf68ceb: Allow SlotMixin to work with default slots using empty string as key (''). Ensure that we do not add slot attribute to the slottable in this case.
+- d963e74e: Fix type error, EventHandlerNonNull got removed it seems. (event: Event) => unknown; instead is fine.
+
 ## 0.18.3
 
 ### Patch Changes

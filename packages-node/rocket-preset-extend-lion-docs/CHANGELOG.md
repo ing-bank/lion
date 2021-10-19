@@ -1,5 +1,11 @@
 # rocket-preset-extend-lion-docs
 
+## 0.2.0
+
+### Minor Changes
+
+- 1dfe915e: Updated to use plugins-manager 0.3.0 which gets used in latest rocket/mdjs.
+
 ## 0.1.5
 
 ### Patch Changes

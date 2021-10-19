@@ -1,6 +1,6 @@
 {
   "name": "@lion/button",
-  "version": "0.14.3",
+  "version": "0.14.4",
   "description": "A button that is easily styleable and accessible in all contexts",
   "license": "MIT",
   "author": "ing-bank",
@@ -39,7 +39,7 @@
     "define.js"
   ],
   "dependencies": {
-    "@lion/core": "0.18.3"
+    "@lion/core": "0.18.4"
   },
   "keywords": [
     "button",

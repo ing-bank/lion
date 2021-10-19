@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.18.6
+
+### Patch Changes
+
+- 090a92a1: Add slot="label" example to docs
+- Updated dependencies [bcf68ceb]
+- Updated dependencies [d963e74e]
+  - @lion/core@0.18.4
+  - @lion/form-core@0.15.3
+  - @lion/input@0.15.6
+
 ## 0.18.5
 
 ### Patch Changes

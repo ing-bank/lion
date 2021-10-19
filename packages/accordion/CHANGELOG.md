@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.7.1
+
+### Patch Changes
+
+- d963e74e: Fix type error, EventHandlerNonNull got removed it seems. (event: Event) => unknown; instead is fine.
+- Updated dependencies [bcf68ceb]
+- Updated dependencies [d963e74e]
+  - @lion/core@0.18.4
+
 ## 0.7.0
 
 ### Minor Changes
