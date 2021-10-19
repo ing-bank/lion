@@ -3,12 +3,19 @@ const csstree = require('css-tree');
 const { transformCss } = require('../src/transform-css/transform-css.js');
 const { transformHtml } = require('../src/transform-html.js');
 const { formatHtml } = require('../src/tools/formatting-utils.js');
-const { getSurroundingCompoundParts } = require('../src/transform-css/helpers.js');
-const { bemAdditionalHostMatcher } = require('../src/tools/bem/bem-helpers.js');
+const {
+  getReplaceContext,
+  getSurroundingCompoundParts,
+} = require('../src/transform-css/helpers.js');
+const {
+  bemAdditionalHostMatcher,
+  bemCreateCompoundFromStatePart,
+} = require('../src/tools/bem/bem-helpers.js');
 
 /**
  * @typedef {import('../types/csstree').SelectorPlain} SelectorPlain
  * @typedef {import('../types/shadow-cast').ReplaceFn} ReplaceFn
+ * @typedef {import('../types/shadow-cast').SCNode} SCNode
  */
 
 const normalizeCssFormat = (/** @type {string} */ stylesheetString) =>
@@ -47,6 +54,50 @@ describe('Helpers', () => {
       ).children;
       const result = getSurroundingCompoundParts(selector[2], selector);
       expect(result).to.eql({ preceedingParts: [], succeedingParts: [] });
+    });
+  });
+
+  describe('getReplaceContext', () => {
+    it('returns preceedingSiblings, succeedingSiblings and compounds', () => {
+      const selector = /** @type {SCNode} */ (
+        csstree.toPlainObject(
+          csstree.parse(
+            '.prec--x .prec--y.prec--z .match--compound1.match.match--compound2 .succ-x',
+            { context: 'selector' },
+          ),
+        )
+      );
+      const { preceedingSiblings, succeedingSiblings, compounds } = getReplaceContext(
+        selector,
+        6 /** .match */,
+      );
+
+      expect(preceedingSiblings.map(p => csstree.generate(p))).to.eql([
+        '.prec--x',
+        ' ',
+        '.prec--y',
+        '.prec--z',
+        ' ',
+      ]);
+      expect(compounds.map(p => csstree.generate(p))).to.eql([
+        '.match--compound1',
+        '.match--compound2',
+      ]);
+      expect(succeedingSiblings.map(p => csstree.generate(p))).to.eql([' ', '.succ-x']);
+    });
+
+    it('handles Whitespace and Combinator types', () => {
+      const selector = /** @type {SCNode} */ (
+        csstree.toPlainObject(csstree.parse('.prec .match + .succ', { context: 'selector' }))
+      );
+      const { preceedingSiblings, succeedingSiblings, compounds } = getReplaceContext(
+        selector,
+        2 /** .match */,
+      );
+
+      expect(preceedingSiblings.map(p => csstree.generate(p))).to.eql(['.prec', ' ']);
+      expect(compounds.map(p => csstree.generate(p))).to.eql([]);
+      expect(succeedingSiblings.map(p => csstree.generate(p))).to.eql(['+', '.succ']);
     });
   });
 });
@@ -212,7 +263,7 @@ describe('transformCss', () => {
             },
           };
           const to = `
-          :host([info][warning][invalid]) .comp__child {
+          :host([invalid][warning][info]) .comp__child {
             color: blue;
           }
         `;
@@ -221,7 +272,7 @@ describe('transformCss', () => {
           expect(result).to.equal(normalizeCssFormat(to));
         });
 
-        it.only('works with nested PseudoSelectors', () => {
+        it('works with nested PseudoSelectors', () => {
           const from = `
             .comp:not(.comp--warning) .comp__child {
               color: blue;
@@ -454,6 +505,30 @@ part can "lean" on (a 'state target' that can work in conjunction with host Sele
       );
     });
 
+    it('throws when source state SelectorPart is non host and not accompanied by preceeding compound SelectorPart', () => {
+      const from = `
+        .comp .comp__feedback--invalid {
+          color: blue;
+        }
+      `;
+      const config = {
+        cssSources: [from],
+        host: '.comp',
+        states: { '[has-feedback-for~="error"]': ['.comp__feedback--invalid'] },
+        settings: {
+          createCompoundFromStatePart: bemCreateCompoundFromStatePart,
+        },
+      };
+      const to = `
+        :host([has-feedback-for~="error"]) .comp__feedback {
+          color: blue;
+        }
+      `;
+
+      const result = transformCss(config);
+      expect(result).to.equal(normalizeCssFormat(to));
+    });
+
     //     it.only('throws when external context is defined before host', () => {
     //       const from = `
     //         .some-external-context .comp.comp__feedback--invalid {
@@ -634,7 +709,7 @@ part can "lean" on (a 'state target' that can work in conjunction with host Sele
           settings: {
             contextSelectorHandler: /** @type {ReplaceFn}} */ ({
               preceedingSiblings,
-              siblings,
+              succeedingSiblings,
             }) => {
               /**
                * In a traditional (without shadow dom) context, we would put [dir=rtl] on the
@@ -664,7 +739,7 @@ part can "lean" on (a 'state target' that can work in conjunction with host Sele
                     }),
                   )
                 ).children;
-                const replacementNodes = [...hostNodes, ...siblings];
+                const replacementNodes = [...hostNodes, ...succeedingSiblings];
                 return { replacementNodes, replaceCompleteSelector: true };
               }
               return undefined;

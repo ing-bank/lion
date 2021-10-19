@@ -47,7 +47,6 @@ const {
  * @returns {MatchResult|undefined} matchedSelector
  */
 function findMatchResultInSelector(sourceSelector, matcherFn) {
-  /** @type {SelectorChildNodePlain[]} */
   const plainSource = /** @type {SelectorPlain} */ (csstree.toPlainObject(sourceSelector));
   let result;
   // eslint-disable-next-line array-callback-return, consistent-return
@@ -151,6 +150,7 @@ function replaceSelector({ astContext, matchResult, replaceFn, actionList }) {
     if (replaceCompleteSelector) {
       if (replacementNodes.length) {
         plainSelector.children = replacementNodes;
+        // plainSelector.children.splice(0, plainSelector.children.length, ...replacementNodes);
       } else {
         // Delete complete selector
         // @ts-expect-error
@@ -256,8 +256,20 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
               actionList,
             });
 
-            // When states are defined, it is important to first execute them. Otherwise, host
-            // matchers might be affected when host replacements took place already
+            // We replace hosts after states, as explained above
+            const hostMatch = findMatchResultInSelector(selectorNode, transforms.host.matcher);
+            if (hostMatch) {
+              replaceSelector({
+                // eslint-disable-next-line object-shorthand
+                astContext: /** @type {AstContext} */ (astContext),
+                matchResult: hostMatch,
+                replaceFn: transforms.host.replaceFn,
+                actionList,
+              });
+            }
+
+            // States should be transformed after :host replacement took place, so compound matchers
+            // on host can be handled in a more predictable way
             if (transforms.states) {
               transforms.states.forEach(stateTransform => {
                 const stateMatchResult = findMatchResultInSelector(
@@ -275,18 +287,8 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
                 }
               });
             }
-            // We replace hosts after states, as explained above
-            const hostMatch = findMatchResultInSelector(selectorNode, transforms.host.matcher);
-            if (hostMatch) {
-              replaceSelector({
-                // eslint-disable-next-line object-shorthand
-                astContext: /** @type {AstContext} */ (astContext),
-                matchResult: hostMatch,
-                replaceFn: transforms.host.replaceFn,
-                actionList,
-              });
-            }
-          } else if (transforms.slots) {
+          }
+          if (transforms.slots) {
             transforms.slots.forEach(slotTransform => {
               const slotMatch = findMatchResultInSelector(selectorNode, slotTransform.matcher);
               if (slotMatch) {
@@ -385,7 +387,7 @@ function report({ host, htmlMeta }, { stateSelectorPartsLookedFor, selectorParts
  * @returns
  */
 function transformCss(cssTransformConfig) {
-  const { cssSources, host, states, slots, settings } = cssTransformConfig;
+  const { cssSources, host, states, slots, settings = {} } = cssTransformConfig;
 
   // const cssContents = cssSources.map(s => (typeof s === 'string' ? s : s.content));
   const stylesheetNode = /** @type {StyleSheet & {children:CssNode[]}} */ (
@@ -415,7 +417,7 @@ function transformCss(cssTransformConfig) {
   const transforms = {
     host: hostTransform,
     slots: getSlotsTransform(slots),
-    states: getStatesTransform(states, /** @type {Transform} */ (hostTransform)?.matcher),
+    states: getStatesTransform(states, settings, /** @type {Transform} */ (hostTransform)?.matcher),
   };
 
   /** @type {Partial<AstContext>} */

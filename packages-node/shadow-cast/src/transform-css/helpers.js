@@ -21,7 +21,9 @@ const csstree = require('css-tree');
  * @typedef {import('../../types/shadow-cast').MatcherFn} MatcherFn
  * @typedef {import('../../types/shadow-cast').SelectorChildNodePlain} SelectorChildNodePlain
  * @typedef {import('../../types/shadow-cast').ActionList} ActionList
+ * @typedef {import('../../types/shadow-cast').MatchResult} MatchResult
  * @typedef {import('../../types/shadow-cast').SCNode} SCNode
+ * @typedef {import('../../types/shadow-cast').MatchConditionMeta} MatchConditionMeta
  */
 
 /**
@@ -125,7 +127,7 @@ function getSurroundingCompoundParts(selectorPart, siblings) {
 /**
  * When array of plain children given, will create ast compatible node and immediately serializes
  * it to css selector
- * @param {CssNodePlain[]|undefined} selectorPartNodes
+ * @param {SCNode[]|CssNodePlain[]|undefined} selectorPartNodes
  * @returns {string}
  */
 function getSerializedSelectorPartsFromArray(selectorPartNodes) {
@@ -139,11 +141,14 @@ function getSerializedSelectorPartsFromArray(selectorPartNodes) {
 }
 
 /**
- * For PseudoSelectors, we need to parse the raw contents into a SCNode[].
- * For ':host(.comp--warning)', this would be ['.comp--warning'].
+ * Say we have :host(:not(.comp--warning)).
+ * For unparsed PseudoSelectors (like host, which is apparently not knwo by css-tree),
+ * we need to parse the raw contents:
+ * - From:
+ * `{ type: 'Raw', name: 'host', value: ':not(.comp--warning)' }`
+ * - To:
+ * `{ type: 'SelectorList', name: 'host', children: [{ type: 'Selector', children: [<parsedSelector>]}] }`
  *
- * Since the contents of :host() are not parsed, we need to do it ourselves. When the contents
- * are already parsed (like for :not()), we can just return the parsed contents.
  * @param {SCNode} pseudoNode, SCNode for pseudo selectors like ':host([x])
  * @returns {SCNode} original pseudoNode with parsed children
  */
@@ -159,7 +164,7 @@ function normalizePseudoSelector(pseudoNode) {
     // PseudoSelectors like "host(.comp--a)"
     // @ts-expect-error
     // eslint-disable-next-line no-param-reassign
-    pseudoNode.children = [{ children: [parsedSelector] }];
+    pseudoNode.children = [{ type: 'SelectorList', children: [parsedSelector] }];
   }
   return pseudoNode;
 }
@@ -184,18 +189,18 @@ function normalizePseudoSelectorAndGetChildren(pseudoNode) {
 }
 
 /**
- *
  * @param {SCNode} plainSelector
  * @param {number} matchIndex
- * @returns
  */
 function getReplaceContext(plainSelector, matchIndex) {
-  /** @type {CssNodePlain[]} */
+  /** @type {SCNode[]} */
   const compounds = [];
-  /** @type {CssNodePlain[]} */
+  /** @type {SCNode[]} */
   const succeedingSiblings = [];
-  /** @type {CssNodePlain[]} */
+  /** @type {SCNode[]} */
   const preceedingSiblings = [];
+
+  const separatorTypes = ['WhiteSpace', 'Combinator'];
 
   /**
    * Assume selector '.comp.x.y .comp__a .comp__b'
@@ -209,7 +214,7 @@ function getReplaceContext(plainSelector, matchIndex) {
     if (i >= matchIndex) {
       return true;
     }
-    if (curSibling.type === 'WhiteSpace') {
+    if (separatorTypes.includes(curSibling.type)) {
       closestWhiteSpaceIndexBeforeMatch = i;
     }
     return false;
@@ -225,8 +230,7 @@ function getReplaceContext(plainSelector, matchIndex) {
       } else {
         compounds.push(curSibling);
       }
-    } else if (!succeedingSiblings.length && curSibling.type !== 'WhiteSpace') {
-      // TODO: compound should also be checked < matchIndex?
+    } else if (!succeedingSiblings.length && !separatorTypes.includes(curSibling.type)) {
       compounds.push(curSibling);
     } else {
       succeedingSiblings.push(curSibling);
@@ -234,6 +238,96 @@ function getReplaceContext(plainSelector, matchIndex) {
   });
 
   return { compounds, succeedingSiblings, preceedingSiblings };
+}
+
+/**
+ * @param {MatchResult} matchResult
+ */
+function isMatchWrappedInHost(matchResult) {
+  return matchResult.ancestorPath[0] && matchResult.ancestorPath[0].name === 'host';
+}
+
+/**
+ * @param {MatchResult} matchResult
+ */
+function isMatchWrappedInPseudoSelector(matchResult) {
+  return Boolean(matchResult.ancestorPath[0]);
+}
+
+// TODO: we stop at first found match, theoretically we could have .comp:not(.comp--a):has(> .comp--a))
+// We would need to return an array of MatchResults, with different ancestorPaths
+/**
+ * Matches recursively (because of potential PseudoClassSelectors).
+ * @param {object} options
+ * @param {SCNode[]} options.selectorPartsToSearchIn a Selector like '.host(:not(.comp--a)) .comp__body'
+ * @param {SCNode[]} options.selectorPartsToBeFound SelectorParts within PseudoSelector that should be
+ * matched, like [CssNodePlain('.comp--a')]
+ * @param {SCNode} options.parentSelector the parent node of the selectorPartsToSearchIn
+ * @param {( pseudoSP: SCNode, selectorPartToBeFound: SCNode) => boolean} [options.matchCondition]
+ * @param {object} [options.internalOptions]
+ * @param {Partial<MatchResult>} [options.internalOptions.result] MatchResult, shared across multiple stages of recursive
+ * traversal
+ * @param {number} [options.internalOptions.depth] depth of recursive traversal, used internally
+ * @returns {MatchResult|undefined}
+ */
+function findMatchResult({
+  selectorPartsToSearchIn,
+  selectorPartsToBeFound,
+  parentSelector,
+  matchCondition = (a, b) => a.type === b.type && a.name === b.name,
+  internalOptions: { result = { ancestorPath: [] }, depth = 0 } = {},
+}) {
+  selectorPartsToSearchIn.some((selectorPart, i) => {
+    // Are we dealing with a nested PseudoSelector like ':host(:not(.comp--a))'
+    // whose raw contents should be parsed and searched?
+    if (selectorPart.type === 'PseudoClassSelector' && selectorPart.children) {
+      /**
+       * innerSelector:
+       * For :host(.comp--a.comp--b), we would get back SCNodes for ['.comp--a', '.comp--b']
+       */
+      const innerSelector = normalizePseudoSelector(selectorPart).children[0].children[0];
+      result.ancestorPath?.push(selectorPart);
+
+      findMatchResult({
+        selectorPartsToSearchIn: innerSelector.children,
+        selectorPartsToBeFound,
+        parentSelector: innerSelector,
+        matchCondition,
+        internalOptions: { result, depth: depth + 1 },
+      });
+      return Boolean(result.matchedSelectorPart);
+    }
+
+    /** @type {MatchConditionMeta|boolean} */
+    let foundMatch = false;
+    selectorPartsToBeFound.some(toBeFound => {
+      foundMatch = matchCondition(selectorPart, toBeFound);
+      return Boolean(foundMatch);
+    });
+    if (foundMatch) {
+      // eslint-disable-next-line no-param-reassign
+      result.matchedSelectorPart = selectorPart;
+      // eslint-disable-next-line no-param-reassign
+      result.replace = (/** @type {SCNode} */ newSelectorPart) => {
+        parentSelector.children.splice(i, 1, newSelectorPart);
+      };
+      // eslint-disable-next-line no-param-reassign
+      result.remove = () => {
+        parentSelector.children.splice(i, 1);
+      };
+      if (typeof foundMatch !== 'boolean') {
+        // eslint-disable-next-line no-param-reassign
+        result.matchConditionMeta = foundMatch;
+      }
+      return true;
+    }
+    return false;
+  });
+  // Make sure to only return MatchResult in outer context when found in recursive traversal
+  if (depth === 0 && result.matchedSelectorPart) {
+    return /** @type {MatchResult} */ (result);
+  }
+  return undefined;
 }
 
 module.exports = {
@@ -246,4 +340,7 @@ module.exports = {
   getSelectorPartNode,
   hasLeadingWhitespace,
   getReplaceContext,
+  findMatchResult,
+  isMatchWrappedInPseudoSelector,
+  isMatchWrappedInHost,
 };

@@ -21,7 +21,7 @@ export type AstContext = {
 };
 
 export type AstContextPlain = {
-  selector: SelectorPlain;
+  selector: SCNode;
   selectorList: SelectorListPlain;
   rule: RulePlain;
   atRule: AtrulePlain;
@@ -65,7 +65,24 @@ export type CssTransformConfig = {
   settings?: {
     contextSelectorHandler?: ReplaceFn;
     getCategorizedSelectorParts?: Function;
-    additionalHostMatcher: Function;
+    additionalHostMatcher?: Function;
+    /**
+     * If we have:
+     * - Selector ':host .comp__feedback.comp__feedback--invalid {...}'
+     * - config: {host: '.comp', states: {'[invalid]': '.comp__feedback--invalid' }
+     * Result will be ':host([invalid]) .comp__feedback {...}'.
+     *
+     * However, ':host .comp__feedback.comp__feedback--invalid' would result in
+     * ':host([invalid]) {...}' => We miss '.comp__feedback', which is needed for the CSS
+     * rule to work accurately.
+     *
+     * For BEM, we can safely deduct this SelectorPart:
+     * '.comp__feedback--invalid' minus '--{x}' is '.comp__feedback-'
+     *
+     * When this function is defined, no error will be thrown, but the deducted SelectorPart will
+     * be used instead.
+     */
+    createCompoundFromStatePart?: (serializedStatePart: string) => string;
   };
   htmlMeta?: { classesInHtml: string[] };
 };
@@ -80,8 +97,8 @@ export type CategorizedPreAnalysisResult = {
 export type ActionList = { type: 'deletion' | string; action: Function; originalCode: string }[];
 export type SelectorChildNodePlain = CssNodePlain & { name: string };
 export type MatcherFn = (
-  traversedSelectorPart: SCNode | CssNodePlain,
-  parentSelector: SCNode | CssNodePlain,
+  traversedSelectorPart: SCNode,
+  parentSelector: SCNode,
 ) => MatchResult | undefined;
 export type Transform = { matcher: MatcherFn; replaceFn: ReplaceFn };
 export type Transforms = { host?: Transform; slots?: Transform[]; states?: Transform[] };
@@ -119,4 +136,8 @@ export type MatchResult = {
   replace: (newSelectorPart: SCNode) => void;
   /** Removes matched SelectorPart  */
   remove: () => void;
+  /** Additional meta for positives of match condition functions */
+  matchConditionMeta?: MatchConditionMeta;
 };
+
+export type MatchConditionMeta = { partialHostMatchNode?: SCNode };

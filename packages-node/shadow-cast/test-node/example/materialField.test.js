@@ -4,7 +4,10 @@ const path = require('path');
 const { transformHtmlAndCss } = require('../../src/transform-html-and-css.js');
 const { formatCss } = require('../../src/tools/formatting-utils.js');
 const { getBemSelectorParts } = require('../../src/tools/bem/get-bem-selector-parts.js');
-const { bemAdditionalHostMatcher } = require('../../src/tools/bem/bem-helpers.js');
+const {
+  bemAdditionalHostMatcher,
+  bemCreateCompoundFromStatePart,
+} = require('../../src/tools/bem/bem-helpers.js');
 
 describe('mdc-text-field', () => {
   it('works', async () => {
@@ -129,7 +132,7 @@ describe('mdc-text-field', () => {
       '[with-leading-icon]:.mdc-text-field--with-leading-icon',
       '[with-trailing-icon]:.mdc-text-field--with-trailing-icon',
       '[float-above]:.mdc-text-field--float-above',
-      '[notched-outline-upgraded]:.mdc-notched-outline--upgraded',
+      // '[notched-outline-upgraded]:.mdc-notched-outline--upgraded',
 
       '[no-label]:.mdc-text-field--no-label',
       '[label-floating]:.mdc-text-field--label-floating',
@@ -139,34 +142,7 @@ describe('mdc-text-field', () => {
       '[ltr-text]:.mdc-text-field--ltr-text',
     ];
 
-    const annotatedHtml = html` <!-- shadow -->
-      <span class="mdc-notched-outline">
-        <span class="mdc-notched-outline__leading"></span>
-        <span class="mdc-notched-outline__notch">
-          <slot name="label"></slot>
-        </span>
-        <span class="mdc-notched-outline__trailing"></span>
-      </span>
-      <slot name="input"></slot>
-
-      <!-- light -->
-      <label>Your Name</label>
-      <input type="text" />
-
-      <div class="form-field__label">
-        <slot name="label"></slot>
-      </div>
-      <div class="input-group">
-        <div class="input-group__container">
-          <div class="input-group__input">
-            <slot name="input"></slot>
-          </div>
-        </div>
-      </div>
-      <div class="form-field__feedback">
-        <slot name="feedback"></slot>
-      </div>
-
+    const annotatedHtml = `
       <div class="mdc-text-field" :host:=".mdc-text-field" :states:="${hostStates.join(',')}">
         <span class="mdc-notched-outline">
           <span class="mdc-notched-outline__leading"></span>
@@ -182,6 +158,7 @@ describe('mdc-text-field', () => {
       settings: {
         getCategorizedSelectorParts: getBemSelectorParts,
         additionalHostMatcher: bemAdditionalHostMatcher,
+        createCompoundFromStatePart: bemCreateCompoundFromStatePart,
       },
     });
     console.log('result\n\n', formatCss(result.shadowCss));
