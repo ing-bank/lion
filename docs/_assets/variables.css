@@ -18,4 +18,10 @@ html {
 
   /* search colors*/
   --rocket-search-highlight-color: #2c3e50;
+
+  --text-color: black;
+  --primary-font-family: 'Open Sans', sans-serif;
+  --secondary-font-family: 'Montserrat', sans-serif;
+  --monospace-font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier',
+    monospace;
 }
