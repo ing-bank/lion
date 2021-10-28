@@ -37,7 +37,7 @@ function getBindingAndSourceReexports(astPath, identifierName) {
       if (found) {
         bindingPath = path;
         bindingType = 'ExportSpecifier';
-        source = path.parentPath.node.source.value;
+        source = path.parentPath.node.source?.value || '[current]';
         path.stop();
       }
     },
