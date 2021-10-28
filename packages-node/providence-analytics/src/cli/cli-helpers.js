@@ -102,7 +102,7 @@ function targetDefault() {
   if (name === 'providence') {
     return InputDataService.getTargetProjectPaths();
   }
-  return [process.cwd()];
+  return [toPosixPath(process.cwd())];
 }
 
 /**
