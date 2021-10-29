@@ -164,3 +164,45 @@ describe('mdc-text-field', () => {
     console.log('result\n\n', formatCss(result.shadowCss));
   });
 });
+
+describe.only('mdc-button', () => {
+  it('works', async () => {
+    const cssPath = path.resolve(
+      __dirname,
+      '../../examples/material-components-web/mdc.button.css',
+    );
+    const mdcButton = fs.readFileSync(cssPath, 'utf8');
+
+    const hostStates = [
+      '[outlined]:.mdc-button--outlined',
+      // '[disabled]::disabled',
+      // :hover state does not need to be mapped
+      // :focus state does not need to be mapped
+      '[raised]:mdc-button--raised',
+      '[unelevated]:mdc-button--unelevated',
+
+      '[touch]:.mdc-button--touch',
+      '[icon-leading]:.mdc-button--icon-leading',
+      '[icon-trailing]:.mdc-button--icon-trailing',
+    ];
+
+    const annotatedHtml = `
+      <button class="mdc-button" :host:=".mdc-button" :states:="${hostStates.join(',')}">
+        <span class="mdc-button__ripple"></span>
+        <span class="mdc-button__touch"></span>
+        <i class="mdc-button__icon" :slot:="icon-leading:.mdc-button__icon"></i>
+        <span class="mdc-button__label">
+          :slot:
+        </span>
+      </button>`;
+    const result = transformHtmlAndCss(annotatedHtml, {
+      cssSources: [mdcButton],
+      settings: {
+        getCategorizedSelectorParts: getBemSelectorParts,
+        additionalHostMatcher: bemAdditionalHostMatcher,
+        createCompoundFromStatePart: bemCreateCompoundFromStatePart,
+      },
+    });
+    console.log('result\n\n', formatCss(result.shadowCss));
+  });
+});

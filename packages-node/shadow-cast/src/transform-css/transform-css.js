@@ -149,6 +149,7 @@ function replaceSelector({ astContext, matchResult, replaceFn, actionList }) {
     const { replacementNodes, deleteAfterCount, replaceCompleteSelector } = result;
     if (replaceCompleteSelector) {
       if (replacementNodes.length) {
+        console.log('kindrn, ', replacementNodes[0].children);
         plainSelector.children = replacementNodes;
         // plainSelector.children.splice(0, plainSelector.children.length, ...replacementNodes);
       } else {
@@ -236,7 +237,10 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
     if (selectorListNode.type === 'SelectorList') {
       // eslint-disable-next-line no-param-reassign
       astContext.selectorList = selectorListNode;
+      // console.log(selectorListNode.children.length);
+
       csstree.walk(selectorListNode, (/** @type {CssNode} */ selectorNode) => {
+        // console.log({ selectorNode });
         if (selectorNode.type === 'Selector') {
           // eslint-disable-next-line no-param-reassign
           astContext.selector = selectorNode;
@@ -259,6 +263,7 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
             // We replace hosts after states, as explained above
             const hostMatch = findMatchResultInSelector(selectorNode, transforms.host.matcher);
             if (hostMatch) {
+              console.log('transform host', { selectorNode });
               replaceSelector({
                 // eslint-disable-next-line object-shorthand
                 astContext: /** @type {AstContext} */ (astContext),
@@ -271,6 +276,8 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
             // States should be transformed after :host replacement took place, so compound matchers
             // on host can be handled in a more predictable way
             if (transforms.states) {
+              console.log('transform states');
+
               transforms.states.forEach(stateTransform => {
                 const stateMatchResult = findMatchResultInSelector(
                   selectorNode,

@@ -65,7 +65,7 @@ function handleStatesAndSlots(curNode, parentNode, result) {
       // eslint-disable-next-line no-param-reassign
       result.slots['<default>'] = parentClasses.map(p => `.${p} > *`);
     }
-  } else {
+  } else if (curNode.nodeName !== '#comment') {
     const slotAttrNode = curNode.attrs.find(a => a.name === ':slot:');
     if (slotAttrNode) {
       // Cleanup

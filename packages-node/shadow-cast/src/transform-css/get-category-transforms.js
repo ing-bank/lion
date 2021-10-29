@@ -101,6 +101,7 @@ function getHostTransform(host, settings) {
         )
       ).children;
       const replacementNodes = [...preceedingSiblings, ...hostNodes, ...succeedingSiblings];
+      console.log('repl hoszt');
 
       return { replacementNodes, replaceCompleteSelector: true };
     },
@@ -204,7 +205,6 @@ function getStatesTransform(states, settings, hostMatcher) {
          *
          * In all cases, we need to wrap the state SelectorPart in a host PseudoSelectorPart
          */
-
         function getSerializedHostCompoundSelectorParts() {
           const hostSelectorPart = /** @type {SCNode} */ (
             astContext.selector.children.find(sp => hostMatcher(sp, astContext.selector))
@@ -315,6 +315,8 @@ part can "lean" on (a 'state target' that can work in conjunction with host Sele
           ...finalCompounds,
           ...succeedingSiblings,
         ];
+        console.log('repl states');
+
         return { replacementNodes, replaceCompleteSelector: true };
       },
     };

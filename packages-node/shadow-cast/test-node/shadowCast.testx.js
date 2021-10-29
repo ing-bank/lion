@@ -11,6 +11,7 @@ const {
   bemAdditionalHostMatcher,
   bemCreateCompoundFromStatePart,
 } = require('../src/tools/bem/bem-helpers.js');
+const { getBemSelectorParts } = require('../src/tools/bem/get-bem-selector-parts.js');
 
 /**
  * @typedef {import('../types/csstree').SelectorPlain} SelectorPlain
@@ -292,6 +293,33 @@ describe('transformCss', () => {
           const result = transformCss(config);
           expect(result).to.equal(normalizeCssFormat(to));
         });
+
+        it.only('works with additionalHostMatcher', () => {
+          const from = `
+            .comp--warning {
+              color: blue;
+            }
+          `;
+          const config = {
+            cssSources: [from],
+            host: '.comp',
+            states: { '[warning]': ['.comp--warning'] },
+            slots: { x: ['.y'] },
+            settings: {
+              getCategorizedSelectorParts: getBemSelectorParts,
+              additionalHostMatcher: bemAdditionalHostMatcher,
+              createCompoundFromStatePart: bemCreateCompoundFromStatePart,
+            },
+          };
+          const to = `
+            :host([warning]) {
+              color: blue;
+            }
+          `;
+
+          const result = transformCss(config);
+          expect(result).to.equal(normalizeCssFormat(to));
+        });
       });
     });
   });
@@ -505,7 +533,8 @@ part can "lean" on (a 'state target' that can work in conjunction with host Sele
       );
     });
 
-    it('throws when source state SelectorPart is non host and not accompanied by preceeding compound SelectorPart', () => {
+    it(`succeeds when "settings.createCompoundFromStatePart" is provided and source state
+      SelectorPart is non host and not accompanied by preceeding compound SelectorPart`, () => {
       const from = `
         .comp .comp__feedback--invalid {
           color: blue;
