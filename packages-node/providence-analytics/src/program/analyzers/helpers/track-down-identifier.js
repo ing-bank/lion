@@ -46,11 +46,14 @@ function getBindingAndSourceReexports(astPath, identifierName) {
 }
 
 /**
- * @desc returns source and importedIdentifierName: We might be an import that was locally renamed.
+ * Retrieves source (like '@lion/core') and importedIdentifierName (like 'lit') from ast for
+ * current file.
+ * We might be an import that was locally renamed.
  * Since we are traversing, we are interested in the imported name. Or in case of a re-export,
  * the local name.
  * @param {object} astPath Babel ast traversal path
  * @param {string} identifierName the name that should be tracked (and that exists inside scope of astPath)
+ * @returns {{ source:string, importedIdentifierName:string }}
  */
 function getImportSourceFromAst(astPath, identifierName) {
   let source;
@@ -183,7 +186,8 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
                * export { x }
                */
               newSource = getImportSourceFromAst(path, identifierName).source;
-              if (!newSource) {
+
+              if (!newSource || newSource === '[current]') {
                 /**
                  * @example
                  * const x = 12;
@@ -222,7 +226,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
     rootFilePath = resObj.file;
     rootSpecifier = resObj.specifier;
   }
-  return /** @type {RootFile } */ { file: rootFilePath, specifier: rootSpecifier };
+  return /** @type { RootFile } */ { file: rootFilePath, specifier: rootSpecifier };
 }
 
 trackDownIdentifier = memoizeAsync(trackDownIdentifierFn);
