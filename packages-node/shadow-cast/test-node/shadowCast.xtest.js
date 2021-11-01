@@ -294,7 +294,7 @@ describe('transformCss', () => {
           expect(result).to.equal(normalizeCssFormat(to));
         });
 
-        it.only('works with additionalHostMatcher', () => {
+        it('works with additionalHostMatcher', () => {
           const from = `
             .comp--warning {
               color: blue;
@@ -304,6 +304,8 @@ describe('transformCss', () => {
             cssSources: [from],
             host: '.comp',
             states: { '[warning]': ['.comp--warning'] },
+            // Slot and host matcher combined with additionalHostMatcher led to endless loops
+            // before (so do not remove slots in this test)
             slots: { x: ['.y'] },
             settings: {
               getCategorizedSelectorParts: getBemSelectorParts,

@@ -254,6 +254,8 @@ function isMatchWrappedInPseudoSelector(matchResult) {
   return Boolean(matchResult.ancestorPath[0]);
 }
 
+let callCount = 0;
+
 // TODO: we stop at first found match, theoretically we could have .comp:not(.comp--a):has(> .comp--a))
 // We would need to return an array of MatchResults, with different ancestorPaths
 /**
@@ -277,6 +279,12 @@ function findMatchResult({
   matchCondition = (a, b) => a.type === b.type && a.name === b.name,
   internalOptions: { result = { ancestorPath: [] }, depth = 0 } = {},
 }) {
+  console.log({ depth });
+
+  callCount += 1;
+  if (callCount > 1000) {
+    throw new Error('10');
+  }
   selectorPartsToSearchIn.some((selectorPart, i) => {
     // Are we dealing with a nested PseudoSelector like ':host(:not(.comp--a))'
     // whose raw contents should be parsed and searched?
@@ -288,6 +296,8 @@ function findMatchResult({
       const innerSelector = normalizePseudoSelector(selectorPart).children[0].children[0];
       result.ancestorPath?.push(selectorPart);
 
+      // console.log({ hostDepth: depth });
+
       findMatchResult({
         selectorPartsToSearchIn: innerSelector.children,
         selectorPartsToBeFound,
@@ -295,12 +305,14 @@ function findMatchResult({
         matchCondition,
         internalOptions: { result, depth: depth + 1 },
       });
+      // Stop here if we found a match 1 lvl deeper
       return Boolean(result.matchedSelectorPart);
     }
 
     /** @type {MatchConditionMeta|boolean} */
     let foundMatch = false;
     selectorPartsToBeFound.some(toBeFound => {
+      console.log('sptobe', toBeFound);
       foundMatch = matchCondition(selectorPart, toBeFound);
       return Boolean(foundMatch);
     });
@@ -316,15 +328,20 @@ function findMatchResult({
         parentSelector.children.splice(i, 1);
       };
       if (typeof foundMatch !== 'boolean') {
+        console.log('matchConditionMeta');
         // eslint-disable-next-line no-param-reassign
         result.matchConditionMeta = foundMatch;
       }
+      console.log('foundMatch');
+      // we found a match, stop searching
       return true;
     }
+    // No match found, try next in array
     return false;
   });
   // Make sure to only return MatchResult in outer context when found in recursive traversal
   if (depth === 0 && result.matchedSelectorPart) {
+    console.log('return', result);
     return /** @type {MatchResult} */ (result);
   }
   return undefined;

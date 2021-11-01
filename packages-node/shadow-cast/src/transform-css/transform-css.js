@@ -1,4 +1,6 @@
 const csstree = require('css-tree');
+const globalSettings = require('../global-settings.js');
+const { debug } = require('../tools/logging-utils.js');
 
 const {
   dissectCssSelectorPart,
@@ -47,11 +49,15 @@ const {
  * @returns {MatchResult|undefined} matchedSelector
  */
 function findMatchResultInSelector(sourceSelector, matcherFn) {
+  debug(' ==== findMatchResultInSelector');
   const plainSource = /** @type {SelectorPlain} */ (csstree.toPlainObject(sourceSelector));
   let result;
+  debug('plainSource', csstree.generate(plainSource));
+
   // eslint-disable-next-line array-callback-return, consistent-return
-  plainSource.children.some(sourceNode => {
-    result = matcherFn(/** @type {SCNode} */ (sourceNode), plainSource);
+  plainSource.children.some(sourceSelectorPart => {
+    debug('sourceSelectorPart', csstree.generate(sourceSelectorPart));
+    result = matcherFn(/** @type {SCNode} */ (sourceSelectorPart), plainSource);
     return Boolean(result);
   });
   return result;
@@ -78,6 +84,8 @@ function findMatchResultInSelector(sourceSelector, matcherFn) {
   // return undefined;
 }
 
+const replaceHistory = new Map();
+
 /**
  * @param {object} options
  * @param {AstContext} options.astContext
@@ -86,6 +94,15 @@ function findMatchResultInSelector(sourceSelector, matcherFn) {
  * @param {ActionList} options.actionList
  */
 function replaceSelector({ astContext, matchResult, replaceFn, actionList }) {
+  if (replaceHistory.get(replaceFn) !== astContext.selector) {
+    console.log('replaceHistory.get(replaceFn)', replaceHistory.get(replaceFn));
+    console.log(csstree.generate(astContext.selector));
+    replaceHistory.set(replaceFn, astContext.selector);
+  } else {
+    // Prevent that a Selector is handled by multiple replaceFns
+    return;
+  }
+
   /**
    * 1. Assemble Ast context
    */
@@ -145,12 +162,14 @@ function replaceSelector({ astContext, matchResult, replaceFn, actionList }) {
    * 4. Alter AST, based on replacement data.
    * Also, populate actionList for later alterations
    */
+  let alteredSelector = false;
   if (result) {
     const { replacementNodes, deleteAfterCount, replaceCompleteSelector } = result;
     if (replaceCompleteSelector) {
       if (replacementNodes.length) {
         console.log('kindrn, ', replacementNodes[0].children);
         plainSelector.children = replacementNodes;
+        alteredSelector = true;
         // plainSelector.children.splice(0, plainSelector.children.length, ...replacementNodes);
       } else {
         // Delete complete selector
@@ -191,6 +210,7 @@ function replaceSelector({ astContext, matchResult, replaceFn, actionList }) {
       plainSelector.children.splice(matchIndex, 1 + (deleteAfterCount || 0), ...replacementNodes);
     }
   }
+  return alteredSelector;
 }
 
 /**
@@ -231,88 +251,121 @@ function interceptExternalContextSelectors({ astContext, hostMatcherFn, settings
  * @param {ActionList} options.actionList
  */
 function processRule({ ruleNode, transforms, astContext, settings, actionList }) {
+  const rulePlain = csstree.toPlainObject(ruleNode);
+  console.log('@@@@@@ progressRule', rulePlain);
+
   // eslint-disable-next-line no-param-reassign
   astContext.rule = ruleNode;
-  csstree.walk(ruleNode, (/** @type {CssNode} */ selectorListNode) => {
-    if (selectorListNode.type === 'SelectorList') {
-      // eslint-disable-next-line no-param-reassign
-      astContext.selectorList = selectorListNode;
-      // console.log(selectorListNode.children.length);
 
-      csstree.walk(selectorListNode, (/** @type {CssNode} */ selectorNode) => {
-        // console.log({ selectorNode });
-        if (selectorNode.type === 'Selector') {
-          // eslint-disable-next-line no-param-reassign
-          astContext.selector = selectorNode;
+  const selectorListNode = ruleNode.prelude;
+  // rulePlain.children.forEach((/** @type {CssNode} */ selectorListNode) => {
+  // csstree.walk(ruleNode, (/** @type {CssNode} */ selectorListNode) => {
+  if (selectorListNode.type === 'SelectorList') {
+    // eslint-disable-next-line no-param-reassign
+    astContext.selectorList = selectorListNode;
+    // console.log(selectorListNode.children.length);
 
-          if (transforms.host) {
-            // Intercept 'external context selectors': selectors that contain the host part and are
-            // preceeded by a context selector part (like '[dir=rtl] .comp .x').
-            // These selectors would not be able to pierce a ShadowRoot and need manual
-            // 'intervention' (like defining css/js outside the ShadowRoot).
-            // By default, we filter them out, unless a 'settings.contextSelectorHandler' is
-            // provided
-            interceptExternalContextSelectors({
-              // eslint-disable-next-line object-shorthand
-              astContext: /** @type {AstContext} */ (astContext),
-              hostMatcherFn: transforms.host.matcher,
-              settings,
-              actionList,
-            });
+    debug(
+      `\n\n@@@@ selectorListNode ${csstree.generate(selectorListNode)} ${csstree.generate(
+        ruleNode,
+      )}`,
+    );
 
-            // We replace hosts after states, as explained above
-            const hostMatch = findMatchResultInSelector(selectorNode, transforms.host.matcher);
-            if (hostMatch) {
-              console.log('transform host', { selectorNode });
+    const selectorListPlain = csstree.toPlainObject(selectorListNode);
+
+    selectorListPlain.children.forEach((/** @type {CssNode} */ selectorNode) => {
+      debug(`selectorListNode.length: ${selectorListPlain.children.length}`);
+
+      // csstree.walk(selectorListNode, (/** @type {CssNode} */ selectorNode) => {
+      // console.log({ selectorNode });
+      if (selectorNode.type === 'Selector') {
+        debug(`@@ selectorNode: ${csstree.generate(selectorNode)} ${selectorListNode.children}`);
+        // eslint-disable-next-line no-param-reassign
+        astContext.selector = selectorNode;
+
+        // Notice that slots need to be traversed before the host in case an additionalHostMatcher
+        // is used (see test called "works with additionalHostMatcher")
+        if (transforms.slots) {
+          transforms.slots.forEach(slotTransform => {
+            debug(
+              `\n\n@@@66@ selectorListNode ${csstree.generate(selectorListNode)} ${csstree.generate(
+                ruleNode,
+              )}`,
+            );
+            // console.log('-- transfrom.slots');
+            debug(`\n===== genereet ${csstree.generate(selectorNode)} ${slotTransform}`);
+            const slotMatch = findMatchResultInSelector(selectorNode, slotTransform.matcher);
+            debug('=== after genereet');
+
+            if (slotMatch) {
               replaceSelector({
                 // eslint-disable-next-line object-shorthand
                 astContext: /** @type {AstContext} */ (astContext),
-                matchResult: hostMatch,
-                replaceFn: transforms.host.replaceFn,
+                matchResult: slotMatch,
+                replaceFn: slotTransform.replaceFn,
                 actionList,
               });
             }
+          });
+        }
 
-            // States should be transformed after :host replacement took place, so compound matchers
-            // on host can be handled in a more predictable way
-            if (transforms.states) {
-              console.log('transform states');
+        if (transforms.host) {
+          // Intercept 'external context selectors': selectors that contain the host part and are
+          // preceeded by a context selector part (like '[dir=rtl] .comp .x').
+          // These selectors would not be able to pierce a ShadowRoot and need manual
+          // 'intervention' (like defining css/js outside the ShadowRoot).
+          // By default, we filter them out, unless a 'settings.contextSelectorHandler' is
+          // provided
+          debug('--- transform.host intercept');
+          interceptExternalContextSelectors({
+            // eslint-disable-next-line object-shorthand
+            astContext: /** @type {AstContext} */ (astContext),
+            hostMatcherFn: transforms.host.matcher,
+            settings,
+            actionList,
+          });
 
-              transforms.states.forEach(stateTransform => {
-                const stateMatchResult = findMatchResultInSelector(
-                  selectorNode,
-                  stateTransform.matcher,
-                );
-                if (stateMatchResult) {
-                  replaceSelector({
-                    // eslint-disable-next-line object-shorthand
-                    astContext: /** @type {AstContext} */ (astContext),
-                    matchResult: stateMatchResult,
-                    replaceFn: stateTransform.replaceFn,
-                    actionList,
-                  });
-                }
-              });
-            }
+          debug('--- transform.host');
+          // We replace hosts after states, as explained above
+          const hostMatch = findMatchResultInSelector(selectorNode, transforms.host.matcher);
+          if (hostMatch) {
+            // console.log('transform host', { selectorNode });
+            replaceSelector({
+              // eslint-disable-next-line object-shorthand
+              astContext: /** @type {AstContext} */ (astContext),
+              matchResult: hostMatch,
+              replaceFn: transforms.host.replaceFn,
+              actionList,
+            });
           }
-          if (transforms.slots) {
-            transforms.slots.forEach(slotTransform => {
-              const slotMatch = findMatchResultInSelector(selectorNode, slotTransform.matcher);
-              if (slotMatch) {
+
+          // States should be transformed after :host replacement took place, so compound matchers
+          // on host can be handled in a more predictable way
+          if (transforms.states) {
+            // console.log('transform states');
+
+            transforms.states.forEach(stateTransform => {
+              debug('-- transfrom.states');
+              const stateMatchResult = findMatchResultInSelector(
+                selectorNode,
+                stateTransform.matcher,
+              );
+              if (stateMatchResult) {
                 replaceSelector({
                   // eslint-disable-next-line object-shorthand
                   astContext: /** @type {AstContext} */ (astContext),
-                  matchResult: slotMatch,
-                  replaceFn: slotTransform.replaceFn,
+                  matchResult: stateMatchResult,
+                  replaceFn: stateTransform.replaceFn,
                   actionList,
                 });
               }
             });
           }
         }
-      });
-    }
-  });
+      }
+    });
+  }
+  // });
 }
 
 /**
@@ -391,10 +444,12 @@ function report({ host, htmlMeta }, { stateSelectorPartsLookedFor, selectorParts
 
 /**
  * @param {CssTransformConfig} cssTransformConfig
+ * @param {{debug:boolean}} generalConfig
  * @returns
  */
-function transformCss(cssTransformConfig) {
+function transformCss(cssTransformConfig, generalConfig = { debug: true }) {
   const { cssSources, host, states, slots, settings = {} } = cssTransformConfig;
+  Object.assign(globalSettings, generalConfig);
 
   // const cssContents = cssSources.map(s => (typeof s === 'string' ? s : s.content));
   const stylesheetNode = /** @type {StyleSheet & {children:CssNode[]}} */ (

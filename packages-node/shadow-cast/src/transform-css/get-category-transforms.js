@@ -86,6 +86,7 @@ function getHostTransform(host, settings) {
         // 1. Serialize the compounds found in host
         hostCompound = getSerializedSelectorPartsFromArray(compounds);
       }
+      console.log(hostCompound);
 
       // '.comp--modifier' (for cases where modifiers are matched as host)
       // We need to maintain them for a proper state match in later traversal
@@ -93,15 +94,18 @@ function getHostTransform(host, settings) {
         hostCompound += getSerializedSelectorPartsFromArray([
           matchResult.matchConditionMeta.partialHostMatchNode,
         ]);
+        console.log({ hostCompound });
+        // throw new Error();
       }
 
       const hostNodes = /** @type {SCNode} */ (
         csstree.toPlainObject(
+          // csstree.parse(hostCompound, { context: 'selector' }),
           csstree.parse(`:host${hostCompound ? `(${hostCompound})` : ''}`, { context: 'selector' }),
         )
       ).children;
       const replacementNodes = [...preceedingSiblings, ...hostNodes, ...succeedingSiblings];
-      console.log('repl hoszt');
+      console.log('^^^^^^  repl hoszt', preceedingSiblings, hostNodes.length, succeedingSiblings);
 
       return { replacementNodes, replaceCompleteSelector: true };
     },
@@ -116,7 +120,7 @@ function getSlotsTransform(slots) {
     return undefined;
   }
 
-  return Object.entries(slots).map(([slotName, sourceSelectors]) => {
+  const x = Object.entries(slots).map(([slotName, sourceSelectors]) => {
     const selectorPartsToBeFound = sourceSelectors.map(
       sourceSelector =>
         /** @type {SCNode} */
@@ -135,13 +139,14 @@ function getSlotsTransform(slots) {
           })
       ),
       replaceFn: /** @type {ReplaceFn} */ ({ compounds }) => {
-        const compSelectors =
+        const compoundSelectors =
           compounds.length && compounds.map(s => csstree.generate(/** @type {CssNode} */ (s)));
+        console.log({ compoundSelectors });
         const slot = slotName === '<default>' ? ':not([slot])' : `[slot="${slotName}"]`;
         const replacementNodes = /** @type {SCNode[]} */ (
           /** @type {SelectorPlain} */ (
             csstree.toPlainObject(
-              csstree.parse(`::slotted(${slot}${compSelectors || [].join('')})`, {
+              csstree.parse(`::slotted(${slot}${compoundSelectors || [].join('')})`, {
                 context: 'selector',
               }),
             )
@@ -151,6 +156,8 @@ function getSlotsTransform(slots) {
       },
     };
   });
+  console.log({ x });
+  return x;
 }
 
 /**
@@ -210,7 +217,7 @@ function getStatesTransform(states, settings, hostMatcher) {
             astContext.selector.children.find(sp => hostMatcher(sp, astContext.selector))
           );
 
-          console.log('astContext.selector.children', astContext.selector.children);
+          // console.log('astContext.selector.children', astContext.selector.children);
 
           let compounds = [];
           if (hostSelectorPart.type === 'PseudoClassSelector') {

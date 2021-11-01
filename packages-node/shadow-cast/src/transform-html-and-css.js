@@ -15,14 +15,14 @@ const { transformCss } = require('./transform-css/transform-css.js');
  */
 function transformHtmlAndCss(annotatedHtmlString, cssTransformConfig) {
   const htmlResult = transformHtml(annotatedHtmlString);
+  console.log(htmlResult.cssTransformConfig);
+  // throw new Error('wtf');
 
   const cssResult = transformCss({
     ...htmlResult.cssTransformConfig,
     ...cssTransformConfig,
     htmlMeta: htmlResult.meta,
   });
-
-  console.log(htmlResult.cssTransformConfig);
 
   // Override for now, allow deep merge via options
   return {
