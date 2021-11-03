@@ -86,7 +86,6 @@ function getHostTransform(host, settings) {
         // 1. Serialize the compounds found in host
         hostCompound = getSerializedSelectorPartsFromArray(compounds);
       }
-      console.log(hostCompound);
 
       // '.comp--modifier' (for cases where modifiers are matched as host)
       // We need to maintain them for a proper state match in later traversal
@@ -94,8 +93,6 @@ function getHostTransform(host, settings) {
         hostCompound += getSerializedSelectorPartsFromArray([
           matchResult.matchConditionMeta.partialHostMatchNode,
         ]);
-        console.log({ hostCompound });
-        // throw new Error();
       }
 
       const hostNodes = /** @type {SCNode} */ (
@@ -178,11 +175,11 @@ function getStatesTransform(states, settings, hostMatcher) {
    * - example of sourceSelector: '.comp__feedback--invalid'
    */
   return Object.entries(states).map(([targetStateSelectorPart, sourceSelectors]) => {
-    const selectorPartsToBeFound = sourceSelectors.map(
-      sourceSelector =>
-        /** @type {SCNode} */
-        (getSelectorEntry(csstree.parse(sourceSelector, { context: 'selector' }))),
-    );
+    const selectorPartsToBeFound = sourceSelectors.map(sourceSelector => {
+      /** @type {SCNode} */
+      console.log(sourceSelector);
+      return getSelectorEntry(csstree.parse(sourceSelector, { context: 'selector' }));
+    });
 
     return {
       meta: {

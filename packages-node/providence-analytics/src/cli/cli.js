@@ -165,7 +165,7 @@ async function cli({ cwd } = {}) {
       `path(s) to project(s) on which analysis/querying should take place. Requires
     a list of comma seperated values relative to project root`,
       v => cliHelpers.pathsArrayFromCs(v, cwd),
-      targetDefault(),
+      targetDefault(cwd),
     )
     .option(
       '-r, --reference-paths [references]',

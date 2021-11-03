@@ -27,9 +27,9 @@ function getNodeclassses(node) {
  * @param {P5Node} P5Node
  */
 function handleAnnotatedHost(P5Node) {
-  const hostNode = P5Node.attrs.find(a => a.name === ':host:');
+  const hostNode = P5Node.attrs.find(a => a.name === '::host::');
   if (!hostNode) {
-    throw new Error('No :host: annotation found');
+    throw new Error('No ::host:: annotation found');
   }
   // Delete it...
   P5Node.attrs.splice(P5Node.attrs.indexOf(hostNode), 1);
@@ -53,9 +53,9 @@ function getslotsHtml(tagName, slotName) {
  */
 function handleStatesAndSlots(curNode, parentNode, result) {
   if (curNode.nodeName === '#text') {
-    if (curNode.value.includes(':slot:')) {
+    if (curNode.value.includes('::slot::"')) {
       // eslint-disable-next-line no-param-reassign
-      curNode.value = curNode.value.replace(':slot:', '');
+      curNode.value = curNode.value.replace('::slot::', '');
       // add slot node to parent
       parentNode.childNodes.push({ nodeName: 'slot', tagName: 'slot', attrs: [], childNodes: [] });
 
@@ -65,16 +65,16 @@ function handleStatesAndSlots(curNode, parentNode, result) {
       result.slots['<default>'] = parentClasses.map(p => `.${p} > *`);
     }
   } else if (curNode.nodeName !== '#comment') {
-    const slotAttrNode = curNode.attrs.find(a => a.name === ':slot:');
+    const slotAttrNode = curNode.attrs.find(a => a.name === '::slot::');
     if (slotAttrNode) {
       // Cleanup
       curNode.attrs.splice(curNode.attrs.indexOf(slotAttrNode), 1);
       // '<input class="comp__input" :slot:="input:.comp__input">' => ['input', '.comp__input']
-      const [slotName, originalSelector] = slotAttrNode.value.split(':');
+      const [slotName, originalSelector] = slotAttrNode.value.split(' : ');
       if (!originalSelector) {
         // TODO: for more flexibility and future compatibility, support
         throw new Error(
-          `Please provide both slot name and selector, like ':slot:="slotname:,selector" for <${curNode.tagName} :slot:"${slotName}">'`,
+          `Please provide both slot name and selector, like '::slot::="slotname:,selector" for <${curNode.tagName} ::slot::="${slotName}">'`,
         );
       }
       const { tagName } = curNode;
@@ -106,15 +106,18 @@ function handleStatesAndSlots(curNode, parentNode, result) {
       result.slots[slotName] = [originalSelector];
     }
 
-    const stateAttrNode = curNode.attrs.find(a => a.name === ':states:');
+    const stateAttrNode = curNode.attrs.find(a => a.name === '::states::');
     if (stateAttrNode) {
       // Cleanup
       curNode.attrs.splice(curNode.attrs.indexOf(stateAttrNode), 1);
 
-      // :states:="[invalid]:.comp--invalid, [warning]:.comp--warning"
+      // ::states::="[invalid] : .comp--invalid, [warning] : .comp--warning"
       const mappings = stateAttrNode.value.split(',').map(s => s.trim());
       mappings.forEach(m => {
-        const [state, originalSelector] = m.split(':');
+        const [state, originalSelector] = m.split(' : ');
+        if (!originalSelector) {
+          throw new Error(`Unable to parse state attr "${state}"`);
+        }
         if (state) {
           // eslint-disable-next-line no-param-reassign
           result.states[state] = [...(result.states[state] || []), originalSelector];

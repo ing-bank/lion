@@ -12,6 +12,9 @@ const fakePluginContext = {
   meta: {
     rollupVersion: nodeResolvePackageJson.peerDependencies.rollup,
   },
+  /**
+   * @param {any[]} msg
+   */
   warn(...msg) {
     LogService.warn('[resolve-import-path]: ', ...msg);
   },
@@ -23,7 +26,7 @@ const fakePluginContext = {
  * name without an extension.
  * @param {string} importee source like '@lion/core'
  * @param {string} importer importing file, like '/my/project/importing-file.js'
- * @returns {string} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
+ * @returns {Promise<string|null>} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
  */
 async function resolveImportPath(importee, importer, opts = {}) {
   const rollupResolve = createRollupResolve({

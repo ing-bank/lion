@@ -796,9 +796,9 @@ describe('transformHtml', () => {
     // A state can be defined via '[<host-attr>]:.local-selector', on any level.
     // Note that states are always mapped to a host.
     const htmlSource = `
-      <div class="comp" :host:=".comp" :states:="[invalid]:.comp--invalid, [warning]:.comp--warning">
-        <input class="comp__input" :slot:="input:.comp__input">
-        <div class="comp__body" :states:="[invalid]:.comp__body--invalid">
+      <div class="comp" ::host::=".comp" ::states::="[invalid] : .comp--invalid, [warning] : .comp--warning">
+        <input class="comp__input" ::slot::="input : .comp__input">
+        <div class="comp__body" ::states::="[invalid] : .comp__body--invalid">
           :slot:
         </div>
       </div>
@@ -814,9 +814,9 @@ describe('transformHtml', () => {
 
   it('creates new shadow- and light dom html from annotated html markup', () => {
     const htmlSource = `
-      <div class="comp" :host:=".comp" :states:="[invalid]:.comp--invalid, [warning]:.comp--warning">
-        <input class="comp__input" :slot:="input:.comp__input">
-        <div class="comp__body" :states:="[invalid]:.comp__body--invalid">
+      <div class="comp" ::host::=".comp" ::states::="[invalid] : .comp--invalid, [warning] : .comp--warning">
+        <input class="comp__input" ::slot::="input : .comp__input">
+        <div class="comp__body" ::states::="[invalid] : .comp__body--invalid">
           :slot:
         </div>
       </div>
@@ -836,7 +836,7 @@ describe('transformHtml', () => {
   describe('Host', () => {
     it('leaves out host markup', () => {
       const htmlSource = `
-        <div class="comp" :host:=".comp">
+        <div class="comp" ::host::=".comp">
           <div class="comp__body"></div>
         </div>
       `;
@@ -848,8 +848,8 @@ describe('transformHtml', () => {
   describe('Slots', () => {
     it('translates slots', () => {
       const htmlSource = `
-        <div class="comp" :host:=".comp">
-          <div class="comp__body" :slot:="body:.comp__body"></div>
+        <div class="comp" ::host::=".comp">
+          <div class="comp__body" ::slot::="body : .comp__body"></div>
         </div>
       `;
       const result = transformHtml(htmlSource);
@@ -860,9 +860,9 @@ describe('transformHtml', () => {
 
     it('translates default slots to direct selector descendants', () => {
       const htmlSource = `
-        <div class="comp" :host:=".comp">
+        <div class="comp" ::host::=".comp">
           <div class="comp__body">
-            :slot:
+            ::slot::
           </div>
         </div>
       `;
@@ -873,8 +873,8 @@ describe('transformHtml', () => {
 
     it('translates default slots to selectors', () => {
       const htmlSource = `
-        <div class="comp" :host:=".comp">
-          <div class="comp__body" :slot:="<default>:.comp__body"></div>
+        <div class="comp" ::host::=".comp">
+          <div class="comp__body" ::slot::="<default> : .comp__body"></div>
         </div>
       `;
       const result = transformHtml(htmlSource);
@@ -886,8 +886,8 @@ describe('transformHtml', () => {
   describe('States', () => {
     it('translates states', () => {
       const htmlSource = `
-        <div class="comp" :host:=".comp" :states:="[invalid]:.comp--invalid, [warning]:.comp--warning">
-          <div class="comp__body" :states:="[invalid]:.comp__body--invalid"></div>
+        <div class="comp" ::host:=".comp" ::states::="[invalid] : .comp--invalid, [warning] : .comp--warning">
+          <div class="comp__body" ::states::="[invalid] : .comp__body--invalid"></div>
         </div>
       `;
       const result = transformHtml(htmlSource);

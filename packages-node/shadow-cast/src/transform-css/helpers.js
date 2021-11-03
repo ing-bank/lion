@@ -279,10 +279,8 @@ function findMatchResult({
   matchCondition = (a, b) => a.type === b.type && a.name === b.name,
   internalOptions: { result = { ancestorPath: [] }, depth = 0 } = {},
 }) {
-  console.log({ depth });
-
   callCount += 1;
-  if (callCount > 1000) {
+  if (callCount > 100000) {
     throw new Error('10');
   }
   selectorPartsToSearchIn.some((selectorPart, i) => {
@@ -295,8 +293,6 @@ function findMatchResult({
        */
       const innerSelector = normalizePseudoSelector(selectorPart).children[0].children[0];
       result.ancestorPath?.push(selectorPart);
-
-      // console.log({ hostDepth: depth });
 
       findMatchResult({
         selectorPartsToSearchIn: innerSelector.children,
@@ -312,7 +308,6 @@ function findMatchResult({
     /** @type {MatchConditionMeta|boolean} */
     let foundMatch = false;
     selectorPartsToBeFound.some(toBeFound => {
-      console.log('sptobe', toBeFound);
       foundMatch = matchCondition(selectorPart, toBeFound);
       return Boolean(foundMatch);
     });
@@ -328,11 +323,9 @@ function findMatchResult({
         parentSelector.children.splice(i, 1);
       };
       if (typeof foundMatch !== 'boolean') {
-        console.log('matchConditionMeta');
         // eslint-disable-next-line no-param-reassign
         result.matchConditionMeta = foundMatch;
       }
-      console.log('foundMatch');
       // we found a match, stop searching
       return true;
     }
@@ -341,7 +334,6 @@ function findMatchResult({
   });
   // Make sure to only return MatchResult in outer context when found in recursive traversal
   if (depth === 0 && result.matchedSelectorPart) {
-    console.log('return', result);
     return /** @type {MatchResult} */ (result);
   }
   return undefined;

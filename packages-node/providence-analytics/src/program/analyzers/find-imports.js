@@ -9,18 +9,19 @@ const { LogService } = require('../services/LogService.js');
  * Options that allow to filter 'on a file basis'.
  * We can also filter on the total result
  */
-const /** @type {AnalyzerOptions} */ options = {
-    /**
-     * @desc Only leaves entries with external sources:
-     * - keeps: '@open-wc/testing'
-     * - drops: '../testing'
-     * @param {FindImportsAnalysisResult} result
-     * @param {string} targetSpecifier for instance 'LitElement'
-     */
-    onlyExternalSources(result) {
-      return result.filter(entry => !isRelativeSourcePath(entry.source));
-    },
-  };
+/** @type {AnalyzerOptions} */
+const options = {
+  /**
+   * @desc Only leaves entries with external sources:
+   * - keeps: '@open-wc/testing'
+   * - drops: '../testing'
+   * @param {FindImportsAnalysisResult} result
+   * @param {string} targetSpecifier for instance 'LitElement'
+   */
+  onlyExternalSources(result) {
+    return result.filter(entry => !isRelativeSourcePath(entry.source));
+  },
+};
 
 function getImportOrReexportsSpecifiers(node) {
   return node.specifiers.map(s => {

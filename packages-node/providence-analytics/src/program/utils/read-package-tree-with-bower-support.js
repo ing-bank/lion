@@ -135,7 +135,6 @@ const loadChildren = (node, cache, filterWith, rpcache, stcache, mode) => {
 
   let depFolder = 'node_modules';
   if (mode === 'bower') {
-    // TODO: if people rename their bower_components folder to smth like "lib", please handle
     depFolder = 'bower_components';
     try {
       const bowerrc = JSON.parse(fs.readFileSync(join(node.path, '.bowerrc')));

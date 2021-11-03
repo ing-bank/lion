@@ -31,7 +31,7 @@ function setQueryMethod(m) {
 }
 
 /**
- * @returns {string[]}
+ * @returns {string[]|undefined}
  */
 function pathsArrayFromCs(t, cwd = process.cwd()) {
   if (!t) {
@@ -57,19 +57,20 @@ function pathsArrayFromCs(t, cwd = process.cwd()) {
 
 /**
  * @param {string} name collection name found in eCfg
- * @param {'search-target'|'reference'} [colType='search-targets'] collection type
- * @param {object} eCfg external configuration. Usually providence.conf.js
- * @returns {string[]}
+ * @param {'search-target'|'reference'} colType='search-targets' collection type
+ * @param {{searchTargetCollections:string[],referenceCollections:string[]}} eCfg external configuration. Usually providence.conf.js
+ * @param {string} [cwd] current working directory
+ * @returns {string[]|undefined}
  */
-function pathsArrayFromCollectionName(name, colType = 'search-target', eCfg, cwd) {
-  let collection;
+function pathsArrayFromCollectionName(name, colType = 'search-target', eCfg, cwd = process.cwd()) {
+  let collections;
   if (colType === 'search-target') {
-    collection = eCfg.searchTargetCollections;
+    collections = eCfg.searchTargetCollections;
   } else if (colType === 'reference') {
-    collection = eCfg.referenceCollections;
+    collections = eCfg.referenceCollections;
   }
-  if (collection && collection[name]) {
-    return pathsArrayFromCs(collection[name].join(','), cwd);
+  if (collections && collections[name]) {
+    return pathsArrayFromCs(collections[name].join(','), cwd);
   }
   return undefined;
 }
@@ -96,32 +97,35 @@ function spawnProcess(processArgStr, opts) {
 /**
  * @returns {string[]}
  */
-function targetDefault() {
+function targetDefault(cwd = process.cwd()) {
   // eslint-disable-next-line import/no-dynamic-require, global-require
-  const { name } = require(`${process.cwd()}/package.json`);
+  const { name } = require(`${cwd}/package.json`);
   if (name === 'providence') {
     return InputDataService.getTargetProjectPaths();
   }
-  return [process.cwd()];
+  return [toPosixPath(cwd)];
 }
 
 /**
- * @desc Returns all sub projects matching condition supplied in matchFn
- * @param {string[]} searchTargetPaths all search-target project paths
+ * Returns all sub projects matching condition supplied in matchFn
+ * @param {string[]} rootPaths all search-target project paths
  * @param {string} matchPattern base for RegExp
  * @param {string[]} modes
  */
 async function appendProjectDependencyPaths(rootPaths, matchPattern, modes = ['npm', 'bower']) {
+  /** @type {undefined|function} */
   let matchFn;
   if (matchPattern) {
     if (matchPattern.startsWith('/') && matchPattern.endsWith('/')) {
-      matchFn = (_, d) => new RegExp(matchPattern.slice(1, -1)).test(d);
+      matchFn = (/** @type {string} */ _, /** @type {string} */ d) =>
+        new RegExp(matchPattern.slice(1, -1)).test(d);
     } else {
       LogService.error(
         `[appendProjectDependencyPaths] Please provide a matchPattern enclosed by '/'. Found: ${matchPattern}`,
       );
     }
   }
+  /** @type {string[]} */
   const depProjectPaths = [];
   await aForEach(rootPaths, async targetPath => {
     await aForEach(modes, async mode => {

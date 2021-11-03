@@ -28,7 +28,7 @@
     "packages-node/**/test-helpers",
     "packages-node/**/docs/**/*",
     "packages-node/babel-plugin-extend-docs/**/*.js",
-    "packages-node/providence-analytics/**/*.js",
+    // "packages-node/providence-analytics/**/*.js",
     "packages-node/remark-extend/**/*.js"
   ]
 }

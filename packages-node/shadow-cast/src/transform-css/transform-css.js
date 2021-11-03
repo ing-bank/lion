@@ -1,6 +1,5 @@
 const csstree = require('css-tree');
 const globalSettings = require('../global-settings.js');
-const { debug } = require('../tools/logging-utils.js');
 
 const {
   dissectCssSelectorPart,
@@ -49,39 +48,17 @@ const {
  * @returns {MatchResult|undefined} matchedSelector
  */
 function findMatchResultInSelector(sourceSelector, matcherFn) {
-  debug(' ==== findMatchResultInSelector');
   const plainSource = /** @type {SelectorPlain} */ (csstree.toPlainObject(sourceSelector));
   let result;
-  debug('plainSource', csstree.generate(plainSource));
-
   // eslint-disable-next-line array-callback-return, consistent-return
   plainSource.children.some(sourceSelectorPart => {
-    debug('sourceSelectorPart', csstree.generate(sourceSelectorPart));
-    result = matcherFn(/** @type {SCNode} */ (sourceSelectorPart), plainSource);
+    result = matcherFn(
+      /** @type {SCNode} */ (sourceSelectorPart),
+      /** @type {SCNode} */ (plainSource),
+    );
     return Boolean(result);
   });
   return result;
-
-  // const match = /** @type {SCNode} */ (
-  //   plainSource.children.find(sourceNode =>
-  //     matcherFn(/** @type {SelectorChildNodePlain} */ (sourceNode)),
-  //   )
-  // );
-
-  // // Handle :host(.x.y) differently
-  // if (match) {
-  //   if (match.type === 'PseudoClassSelector' && match.name === 'host') {
-  //     return {
-  //       matchHost: match,
-  //       matchHostChild: /** @type {CssNodePlain} */ (
-  //         getPseudoSelectorChildren(match).find(matcherFn)
-  //       ),
-  //       originalMatcher: matcherFn,
-  //     };
-  //   }
-  //   return match;
-  // }
-  // return undefined;
 }
 
 const replaceHistory = new Map();
@@ -95,8 +72,6 @@ const replaceHistory = new Map();
  */
 function replaceSelector({ astContext, matchResult, replaceFn, actionList }) {
   if (replaceHistory.get(replaceFn) !== astContext.selector) {
-    console.log('replaceHistory.get(replaceFn)', replaceHistory.get(replaceFn));
-    console.log(csstree.generate(astContext.selector));
     replaceHistory.set(replaceFn, astContext.selector);
   } else {
     // Prevent that a Selector is handled by multiple replaceFns
@@ -251,51 +226,22 @@ function interceptExternalContextSelectors({ astContext, hostMatcherFn, settings
  * @param {ActionList} options.actionList
  */
 function processRule({ ruleNode, transforms, astContext, settings, actionList }) {
-  const rulePlain = csstree.toPlainObject(ruleNode);
-  console.log('@@@@@@ progressRule', rulePlain);
-
   // eslint-disable-next-line no-param-reassign
   astContext.rule = ruleNode;
-
   const selectorListNode = ruleNode.prelude;
-  // rulePlain.children.forEach((/** @type {CssNode} */ selectorListNode) => {
-  // csstree.walk(ruleNode, (/** @type {CssNode} */ selectorListNode) => {
+
   if (selectorListNode.type === 'SelectorList') {
     // eslint-disable-next-line no-param-reassign
     astContext.selectorList = selectorListNode;
-    // console.log(selectorListNode.children.length);
-
-    debug(
-      `\n\n@@@@ selectorListNode ${csstree.generate(selectorListNode)} ${csstree.generate(
-        ruleNode,
-      )}`,
-    );
-
-    const selectorListPlain = csstree.toPlainObject(selectorListNode);
-
-    selectorListPlain.children.forEach((/** @type {CssNode} */ selectorNode) => {
-      debug(`selectorListNode.length: ${selectorListPlain.children.length}`);
-
-      // csstree.walk(selectorListNode, (/** @type {CssNode} */ selectorNode) => {
-      // console.log({ selectorNode });
+    const selectorListPlain = /** @type {SCNode} */ (csstree.toPlainObject(selectorListNode));
+    selectorListPlain.children.forEach(selectorNode => {
       if (selectorNode.type === 'Selector') {
-        debug(`@@ selectorNode: ${csstree.generate(selectorNode)} ${selectorListNode.children}`);
         // eslint-disable-next-line no-param-reassign
         astContext.selector = selectorNode;
 
-        // Notice that slots need to be traversed before the host in case an additionalHostMatcher
-        // is used (see test called "works with additionalHostMatcher")
         if (transforms.slots) {
           transforms.slots.forEach(slotTransform => {
-            debug(
-              `\n\n@@@66@ selectorListNode ${csstree.generate(selectorListNode)} ${csstree.generate(
-                ruleNode,
-              )}`,
-            );
-            // console.log('-- transfrom.slots');
-            debug(`\n===== genereet ${csstree.generate(selectorNode)} ${slotTransform}`);
             const slotMatch = findMatchResultInSelector(selectorNode, slotTransform.matcher);
-            debug('=== after genereet');
 
             if (slotMatch) {
               replaceSelector({
@@ -316,7 +262,6 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
           // 'intervention' (like defining css/js outside the ShadowRoot).
           // By default, we filter them out, unless a 'settings.contextSelectorHandler' is
           // provided
-          debug('--- transform.host intercept');
           interceptExternalContextSelectors({
             // eslint-disable-next-line object-shorthand
             astContext: /** @type {AstContext} */ (astContext),
@@ -325,7 +270,6 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
             actionList,
           });
 
-          debug('--- transform.host');
           // We replace hosts after states, as explained above
           const hostMatch = findMatchResultInSelector(selectorNode, transforms.host.matcher);
           if (hostMatch) {
@@ -342,10 +286,7 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
           // States should be transformed after :host replacement took place, so compound matchers
           // on host can be handled in a more predictable way
           if (transforms.states) {
-            // console.log('transform states');
-
             transforms.states.forEach(stateTransform => {
-              debug('-- transfrom.states');
               const stateMatchResult = findMatchResultInSelector(
                 selectorNode,
                 stateTransform.matcher,
@@ -365,7 +306,6 @@ function processRule({ ruleNode, transforms, astContext, settings, actionList })
       }
     });
   }
-  // });
 }
 
 /**

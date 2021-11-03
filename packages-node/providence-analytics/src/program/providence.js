@@ -5,6 +5,11 @@ const { LogService } = require('./services/LogService.js');
 const { QueryService } = require('./services/QueryService.js');
 const { aForEach } = require('./utils/async-array-utils.js');
 
+/**
+ *
+ * @typedef {import('./analyzers/types').ProvidenceConfig} ProvidenceConfig
+ */
+
 // After handling a combo, we should know which project versions we have, since
 // the analyzer internally called createDataObject(which provides us the needed meta info).
 function addToSearchTargetDepsFile({ queryResult, queryConfig, providenceConfig }) {
@@ -37,7 +42,7 @@ function report(queryResult, cfg) {
  * @desc creates unique QueryConfig for analyzer turn
  * @param {QueryConfig} queryConfig
  * @param {string} targetProjectPath
- * @param {string} referenceProjectPath
+ * @param {string} [referenceProjectPath]
  */
 function getSlicedQueryConfig(queryConfig, targetProjectPath, referenceProjectPath) {
   return {
@@ -57,7 +62,7 @@ function getSlicedQueryConfig(queryConfig, targetProjectPath, referenceProjectPa
 /**
  * @desc definition "projectCombo": referenceProject#version + searchTargetProject#version
  * @param {QueryConfig} slicedQConfig
- * @param {cfg} object
+ * @param {object} cfg
  */
 async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
   const queryResult = await QueryService.astSearch(slicedQConfig, {
@@ -92,12 +97,15 @@ async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
  * @param {ProvidenceConfig} cfg
  */
 async function handleAnalyzer(queryConfig, cfg) {
+  /** @type {QueryResult[]} */
   const queryResults = [];
   const { referenceProjectPaths, targetProjectPaths } = cfg;
 
-  await aForEach(targetProjectPaths, async searchTargetProject => {
+  for (const searchTargetProject of targetProjectPaths) {
+    // await aForEach(targetProjectPaths, async searchTargetProject => {
     if (referenceProjectPaths) {
-      await aForEach(referenceProjectPaths, async ref => {
+      for (const ref of referenceProjectPaths) {
+        // await aForEach(referenceProjectPaths, async ref => {
         // Create shallow cfg copy with just currrent reference folder
         const slicedQueryConfig = getSlicedQueryConfig(queryConfig, searchTargetProject, ref);
         const queryResult = await handleAnalyzerForProjectCombo(slicedQueryConfig, cfg);
@@ -109,7 +117,8 @@ async function handleAnalyzer(queryConfig, cfg) {
             providenceConfig: cfg,
           });
         }
-      });
+        // });
+      }
     } else {
       const slicedQueryConfig = getSlicedQueryConfig(queryConfig, searchTargetProject);
       const queryResult = await handleAnalyzerForProjectCombo(slicedQueryConfig, cfg);
@@ -122,7 +131,8 @@ async function handleAnalyzer(queryConfig, cfg) {
         });
       }
     }
-  });
+    // });
+  }
   return queryResults;
 }
 
@@ -152,19 +162,10 @@ async function handleRegexSearch(queryConfig, cfg, inputData) {
  * @desc Creates a report with usage metrics, based on a queryConfig.
  *
  * @param {QueryConfig} queryConfig a query configuration object containing analyzerOptions.
- * @param {object} customConfig
- * @param {'ast'|'grep'} customConfig.queryMethod whether analyzer should be run or a grep should
- * be performed
- * @param {string[]} customConfig.targetProjectPaths search target projects. For instance
- * ['/path/to/app-a', '/path/to/app-b', ... '/path/to/app-z']
- * @param {string[]} [customConfig.referenceProjectPaths] reference projects. Needed for 'match
- * analyzers', having `requiresReference: true`. For instance
- * ['/path/to/lib1', '/path/to/lib2']
- * @param {GatherFilesConfig} [customConfig.gatherFilesConfig]
- * @param {boolean} [customConfig.report]
- * @param {boolean} [customConfig.debugEnabled]
+ * @param {ProvidenceConfig} customConfig
  */
 async function providenceMain(queryConfig, customConfig) {
+  /** @type {ProvidenceConfig} */
   const cfg = deepmerge(
     {
       queryMethod: 'grep',

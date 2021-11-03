@@ -67,6 +67,7 @@ class AstService {
    */
   static getScriptsFromHtml(htmlCode) {
     const ast = parse5.parseFragment(htmlCode);
+    /** @type {string[]} */
     const scripts = [];
     traverseHtml(ast, {
       script(path) {
@@ -94,8 +95,10 @@ class AstService {
    * - 'typescript' (deprecated) is needed for some valuable third party tooling, like web-component-analyzer
    * - 'es-module-lexer' (deprecated) is needed for the dedicated task of finding module imports; it is way
    * quicker than a full fledged AST parser
-   * @param { 'babel' } astType
-   * @param { object } [options]
+   * @param {string} code
+   * @param {'babel'|'typescript'|'es-module-lexer'} astType Currently only babel is supported.
+   * In the future, we might traverse with Recast
+   * @param {object} [options]
    * @param { string } [options.filePath] the path of the file we're trying to parse
    */
   // eslint-disable-next-line consistent-return

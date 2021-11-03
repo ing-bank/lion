@@ -174,20 +174,27 @@ describe.only('mdc-button', () => {
     const mdcButton = fs.readFileSync(cssPath, 'utf8');
 
     const hostStates = [
-      '[outlined]:.mdc-button--outlined',
-      // '[disabled]::disabled',
+      '[outlined] : .mdc-button--outlined',
+      '[disabled] : :disabled',
+      '[active] : :active',
+
       // :hover state does not need to be mapped
       // :focus state does not need to be mapped
-      '[raised]:mdc-button--raised',
-      '[unelevated]:mdc-button--unelevated',
-      '[touch]:.mdc-button--touch',
-      '[icon-leading]:.mdc-button--icon-leading',
-      '[icon-trailing]:.mdc-button--icon-trailing',
+      '[raised] : .mdc-button--raised',
+      '[unelevated] : .mdc-button--unelevated',
+      '[touch] : .mdc-button--touch',
+      '[icon-leading] : .mdc-button--icon-leading',
+      '[icon-trailing] : .mdc-button--icon-trailing',
     ];
 
     const annotatedHtml = `
-      <button class="mdc-button" :host:=".mdc-button" :states:="${hostStates.join(',')}">
-
+      <button class="mdc-button" ::host::=".mdc-button" ::states::="${hostStates.join(',')}">
+        <span class="mdc-button__ripple"></span>
+        <span class="mdc-button__touch"></span>
+        <i class="material-icons mdc-button__icon" aria-hidden="true">bookmark</i>
+        <span class="mdc-button__label">
+          ::slot::
+        </span>
       </button>`;
     const result = transformHtmlAndCss(annotatedHtml, {
       cssSources: [mdcButton],

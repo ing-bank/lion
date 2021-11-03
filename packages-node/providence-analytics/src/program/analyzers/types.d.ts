@@ -1,5 +1,3 @@
-import { ProjectReference } from 'typescript';
-
 export interface RootFile {
   /** the file path containing declaration, for instance './target-src/direct-imports.js'. Can also contain keyword '[current]' */
   file: string;
@@ -18,7 +16,7 @@ export interface AnalyzerOutputFile {
   /** path relative from project root for which a result is generated based on AST traversal */
   file: string;
   /** result of AST traversal for file in project */
-  result: array;
+  result: object[];
 }
 
 // TODO: make sure that data structures of JSON output (generated in ReportService)
@@ -62,7 +60,7 @@ export interface MatchSubclassesAnalyzerResult extends AnalyzerResult {
   queryOutput: MatchSubclassesAnalyzerOutputEntry[];
 }
 
-export interface MatchSubclassesAnalyzerOutputEntry {
+export interface MatchSubclassesAnalyzerOutputEntry extends AnalyzerOutputFile {
   exportSpecifier: MatchedExportSpecifier;
   matchesPerProject: MatchSubclassesAnalyzerOutputEntryMatch[];
 }
@@ -261,7 +259,7 @@ interface ClassProperty {
   /** 'public', 'protected' or 'private' */
   accessType: string;
   /** can be 'get', 'set' or both */
-  kind: Array;
+  kind: ('get' | 'set')[];
   /** whether property is static */
   static: boolean;
 }
@@ -295,4 +293,28 @@ export interface AnalyzerConfig {
 export interface MatchAnalyzerConfig extends AnalyzerConfig {
   /** reference project path, used to match reference against target */
   referenceProjectPath: string;
+}
+
+export interface ProvidenceConfig {
+  queryMethod: 'grep' | 'ast';
+  /** Paths to all search target roots, optionally containg their dependent projects */
+  targetProjectPaths: string[];
+  /** pPaths to all search target roots, optionally containg their dependent projects */
+  referenceProjectPaths: string[] | null;
+  /* This will be needed to identify the parent/child relationship to write to
+  {outputFolder}/entryProjectDependencies.json, which will map
+  a project#version to [ depA#version, depB#version ] */
+  targetProjectRootPaths: string[] | null;
+  gatherFilesConfig: GatherFilesConfig;
+  /** Outputs results to the console */
+  report: boolean;
+  /** Enables extensive logging */
+  debugEnabled: boolean;
+  /** When target has a different major version than child, analysis is skipped by default */
+  writeLogFile: boolean;
+  /**
+   * When target has no semver match, analysis is skipped by default (it's recommended to upgrade
+   * the reference project and rerun analysis.)
+   */
+  skipCheckMatchCompatibility: boolean;
 }

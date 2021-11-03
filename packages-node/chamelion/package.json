@@ -1,0 +1,34 @@
+{
+  "name": "chamelion",
+  "version": "0.0.1",
+  "description": "Online showcase with all kinds of different Lion components",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "*.js",
+    "src",
+    "test-node"
+  ],
+  "scripts": {
+    "test": "npm run test:node",
+    "test:node": "npx mocha test-node/**/**/*.test.js",
+    "test:watch": "npm run test -- --watch"
+  },
+  "keywords": [
+    "style",
+    "adept"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@babel/generator": "^7.14.5",
+    "@babel/types": "^7.14.5",
+    "css-tree": "^1.1.3",
+    "parse5": "^6.0.1",
+    "prettier": "^2.3.1"
+  },
+  "devDependencies": {
+    "@types/css-tree": "^1.0.5"
+  }
+}
