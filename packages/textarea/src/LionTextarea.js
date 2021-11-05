@@ -157,6 +157,11 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
         .input-group__container > .input-group__input ::slotted(.form-control) {
           overflow-x: hidden; /* for FF adds height to the TextArea to reserve place for scroll-bars */
         }
+
+        /* Workaround https://bugzilla.mozilla.org/show_bug.cgi?id=1739079 */
+        :host([disabled]) ::slotted(textarea) {
+          user-select: none;
+        }
       `,
     ];
   }
