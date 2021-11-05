@@ -205,6 +205,7 @@ export class OverlaysManager {
       // iOS has issues with overlays with input fields. This is fixed by applying
       // position: fixed to the body. As a side effect, this will scroll the body to the top.
       document.body.classList.add('global-overlays-scroll-lock-ios-fix');
+      document.documentElement.classList.add('global-overlays-scroll-lock-ios-fix');
     }
   }
 
@@ -213,6 +214,7 @@ export class OverlaysManager {
       document.body.classList.remove('global-overlays-scroll-lock');
       if (isIOS) {
         document.body.classList.remove('global-overlays-scroll-lock-ios-fix');
+        document.documentElement.classList.remove('global-overlays-scroll-lock-ios-fix');
       }
     }
   }

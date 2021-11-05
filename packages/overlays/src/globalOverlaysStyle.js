@@ -122,4 +122,8 @@ export const globalOverlaysStyle = css`
     position: fixed;
     width: 100%;
   }
+
+  html.global-overlays-scroll-lock-ios-fix {
+    height: 100vh;
+  }
 `;
