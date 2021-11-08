@@ -5,12 +5,18 @@ import { LionListbox } from '@lion/listbox';
 const matchReverseFns = new WeakMap();
 const matchA11ySpanReverseFns = new WeakMap();
 
+/**
+ * @param {Node} root
+ * @param {string} matchingString
+ * @param {object} option
+ */
 function checkForTextMatch(root, matchingString, option) {
   Array.from(root.childNodes).forEach(childNode => {
     if (childNode.nodeName === '#text') {
       // check for match based on nodeValue
 
       const re = new RegExp(`^(.*)(${matchingString})(.*)$`, 'i');
+      // @ts-ignore
       const match = childNode.nodeValue.match(re);
 
       if (match) {
