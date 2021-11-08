@@ -2,6 +2,54 @@ import { html, css, browserDetection } from '@lion/core';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
 import { LionListbox } from '@lion/listbox';
 
+const matchReverseFns = new WeakMap();
+const matchA11ySpanReverseFns = new WeakMap();
+
+function checkForTextMatch(root, matchingString, option) {
+  Array.from(root.childNodes).forEach(childNode => {
+    if (childNode.nodeName === '#text') {
+      // check for match based on nodeValue
+
+      const re = new RegExp(`^(.*)(${matchingString})(.*)$`, 'i');
+      const match = childNode.nodeValue.match(re);
+
+      if (match) {
+        // 1. textContent before match
+
+        const textBefore = document.createTextNode(match[1]);
+        root.appendChild(textBefore);
+
+        // 2. matched part
+        const boldElement = document.createElement('b');
+        // eslint-disable-next-line prefer-destructuring
+        boldElement.textContent = match[2];
+        root.appendChild(boldElement);
+
+        // 3. textContent after match
+
+        const textAfter = document.createTextNode(match[3]);
+        root.appendChild(textAfter);
+        root.removeChild(childNode);
+
+        matchReverseFns.set(option, () => {
+          root.appendChild(childNode);
+          if (root.contains(textBefore) && textBefore.parentNode !== null) {
+            textBefore.parentNode.removeChild(textBefore);
+          }
+          if (root.contains(boldElement) && boldElement.parentNode !== null) {
+            boldElement.parentNode.removeChild(boldElement);
+          }
+          if (root.contains(textAfter) && textAfter.parentNode !== null) {
+            textAfter.parentNode.removeChild(textAfter);
+          }
+        });
+      }
+    } else {
+      checkForTextMatch(childNode, matchingString, option);
+    }
+  });
+}
+
 // TODO: make ListboxOverlayMixin that is shared between SelectRich and Combobox
 // TODO: extract option matching based on 'typed character cache' and share that logic
 // on Listbox or ListNavigationWithActiveDescendantMixin
@@ -583,11 +631,26 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line class-methods-use-this
   _onFilterMatch(option, matchingString) {
-    const { innerHTML } = option;
-    option.__originalInnerHTML = innerHTML;
-    const newInnerHTML = innerHTML.replace(new RegExp(`(${matchingString})`, 'i'), `<b>$1</b>`);
+    checkForTextMatch(option, matchingString, option);
+
     // For Safari, we need to add a label to the element
-    option.innerHTML = `<span aria-label="${option.textContent}">${newInnerHTML}</span>`;
+    if (option.textContent) {
+      const a11ySpan = document.createElement('span');
+      a11ySpan.setAttribute('aria-label', option.textContent);
+      Array.from(option.childNodes).forEach(childNode => {
+        a11ySpan.appendChild(childNode);
+      });
+      option.appendChild(a11ySpan);
+
+      matchA11ySpanReverseFns.set(option, () => {
+        Array.from(a11ySpan.childNodes).forEach(childNode => {
+          option.appendChild(childNode);
+        });
+        if (option.contains(a11ySpan)) {
+          option.removeChild(a11ySpan);
+        }
+      });
+    }
     // Alternatively, an extension can add an animation here
     option.style.display = '';
   }
@@ -601,8 +664,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line no-unused-vars, class-methods-use-this
   _onFilterUnmatch(option, curValue, prevValue) {
-    if (option.__originalInnerHTML) {
-      option.innerHTML = option.__originalInnerHTML;
+    if (matchReverseFns.has(option)) {
+      matchReverseFns.get(option)();
+    }
+    if (matchA11ySpanReverseFns.has(option)) {
+      matchA11ySpanReverseFns.get(option)();
     }
     // Alternatively, an extension can add an animation here
     option.style.display = 'none';
