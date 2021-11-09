@@ -102,11 +102,11 @@
   "bundlesize": [
     {
       "path": "./bundlesize/dist/core/*.js",
-      "maxSize": "11 kB"
+      "maxSize": "12 kB"
     },
     {
       "path": "./bundlesize/dist/all/*.js",
-      "maxSize": "46 kB"
+      "maxSize": "47 kB"
     }
   ],
   "prettier": {
