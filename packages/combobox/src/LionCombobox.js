@@ -8,9 +8,9 @@ const matchA11ySpanReverseFns = new WeakMap();
 /**
  * @param {Node} root
  * @param {string} matchingString
- * @param {object} option
+ * @param {Node} option
  */
-function checkForTextMatch(root, matchingString, option) {
+function makeMatchingTextBold(root, matchingString, option) {
   Array.from(root.childNodes).forEach(childNode => {
     if (childNode.nodeName === '#text') {
       // check for match based on nodeValue
@@ -51,7 +51,7 @@ function checkForTextMatch(root, matchingString, option) {
         });
       }
     } else {
-      checkForTextMatch(childNode, matchingString, option);
+      makeMatchingTextBold(childNode, matchingString, option);
     }
   });
 }
@@ -637,7 +637,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line class-methods-use-this
   _onFilterMatch(option, matchingString) {
-    checkForTextMatch(option, matchingString, option);
+    makeMatchingTextBold(option, matchingString, option);
 
     // For Safari, we need to add a label to the element
     if (option.textContent) {
