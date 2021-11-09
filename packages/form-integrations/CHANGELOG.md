@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.7.2
+
+### Patch Changes
+
+- Updated dependencies [818a06f9]
+  - @lion/combobox@0.6.2
+
 ## 0.7.1
 
 ### Patch Changes

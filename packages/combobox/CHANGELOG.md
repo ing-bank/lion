@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- 818a06f9: Removed use of innerHTML from LionComboBox, made Checkmarx happy
+
 ## 0.6.1
 
 ### Patch Changes
