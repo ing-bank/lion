@@ -1,3 +1,4 @@
+const pathLib = require('path');
 /* eslint-disable no-shadow, no-param-reassign */
 const FindClassesAnalyzer = require('./find-classes.js');
 const FindExportsAnalyzer = require('./find-exports.js');
@@ -69,6 +70,7 @@ function matchSubclassesPostprocess(
   refClassesAResult,
   customConfig,
 ) {
+  // eslint-disable-next-line no-unused-vars
   const cfg = {
     ...customConfig,
   };
@@ -109,6 +111,9 @@ function matchSubclassesPostprocess(
 
         // eslint-disable-next-line no-shadow
         const importProject = targetClassesAnalyzerResult.analyzerMeta.targetProject.name;
+
+        // TODO: What if this info is retrieved from cached importProject/target project?
+        const importProjectPath = cfg.targetProjectPath;
         targetClassesAnalyzerResult.queryOutput.forEach(({ result, file }) =>
           result.forEach(classEntryResult => {
             /**
@@ -148,9 +153,8 @@ function matchSubclassesPostprocess(
             const isFromSameSource =
               exportEntry.file ===
               fromImportToExportPerspective({
-                requestedExternalSource: classMatch.rootFile.file,
-                externalProjectMeta: exportsProjectObj,
-                externalRootPath: cfg.referenceProjectPath,
+                importee: classMatch.rootFile.file,
+                importer: pathLib.resolve(importProjectPath, file),
               });
 
             if (classMatch && isFromSameSource) {

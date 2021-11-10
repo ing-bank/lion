@@ -1,3 +1,4 @@
+const pathLib = require('path');
 /* eslint-disable no-shadow, no-param-reassign */
 const FindImportsAnalyzer = require('./find-imports.js');
 const FindExportsAnalyzer = require('./find-exports.js');
@@ -5,7 +6,7 @@ const { Analyzer } = require('./helpers/Analyzer.js');
 const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
 
 /**
- * @desc Helper method for matchImportsPostprocess. Modifies its resultsObj
+ * Helper method for matchImportsPostprocess. Modifies its resultsObj
  * @param {object} resultsObj
  * @param {string} exportId like 'myExport::./reference-project/my/export.js::my-project'
  * @param {Set<string>} filteredList
@@ -37,9 +38,10 @@ function compareImportAndExportPaths(exportPath, translatedImportPath) {
  * @param {FindExportsAnalyzerResult} exportsAnalyzerResult
  * @param {FindImportsAnalyzerResult} importsAnalyzerResult
  * @param {matchImportsConfig} customConfig
- * @returns {AnalyzerResult}
+ * @returns {Promise<AnalyzerResult>}
  */
-function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, customConfig) {
+async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, customConfig) {
+  // eslint-disable-next-line no-unused-vars
   const cfg = {
     ...customConfig,
   };
@@ -62,25 +64,30 @@ function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, c
    */
   const resultsObj = {};
 
-  exportsAnalyzerResult.queryOutput.forEach(exportEntry => {
+  // console.log(JSON.stringify(importsAnalyzerResult.queryOutput, null, 2));
+  const importProject = importsAnalyzerResult.analyzerMeta.targetProject.name;
+  // TODO: What if this info is retrieved from cached importProject/target project?
+  const importProjectPath = cfg.targetProjectPath;
+
+  for (const exportEntry of exportsAnalyzerResult.queryOutput) {
     const exportsProjectObj = exportsAnalyzerResult.analyzerMeta.targetProject;
 
     // Look for all specifiers that are exported, like [import {specifier} 'lion-based-ui/foo.js']
-    exportEntry.result.forEach(exportEntryResult => {
+    for (const exportEntryResult of exportEntry.result) {
       if (!exportEntryResult.exportSpecifiers) {
-        return;
+        break;
       }
 
-      exportEntryResult.exportSpecifiers.forEach(exportSpecifier => {
+      for (const exportSpecifier of exportEntryResult.exportSpecifiers) {
         // Get all unique imports (name::source::project combinations) that match current exportSpecifier
         const filteredImportsList = new Set();
         const exportId = `${exportSpecifier}::${exportEntry.file}::${exportsProjectObj.name}`;
 
-        // eslint-disable-next-line no-shadow
-        // importsAnalyzerResult.queryOutput.forEach(({ entries, project }) => {
-        const importProject = importsAnalyzerResult.analyzerMeta.targetProject.name;
-        importsAnalyzerResult.queryOutput.forEach(({ result, file }) =>
-          result.forEach(importEntryResult => {
+        for (const { result, file } of importsAnalyzerResult.queryOutput) {
+          for (const importEntryResult of result) {
+            if (exportSpecifier === '[default]') {
+              console.log('importEntryResult.importSpecifiers', importEntryResult.importSpecifiers);
+            }
             /**
              * @example
              * Example context (read by 'find-imports'/'find-exports' analyzers)
@@ -98,7 +105,14 @@ function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, c
               importEntryResult.importSpecifiers.includes('[*]');
 
             if (!hasExportSpecifierImported) {
-              return;
+              if (exportId === '[default]::./ref-src/core.js::exporting-ref-project') {
+                console.log(
+                  '--> !hasExportSpecifierImported',
+                  importEntryResult.normalizedSource,
+                  importEntryResult.importSpecifiers,
+                );
+              }
+              break;
             }
 
             /**
@@ -108,10 +122,9 @@ function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, c
              * importFile 'importing-target-project/file.js'
              * => import { z } from '@reference/foo.js'
              */
-            const fromImportToExport = fromImportToExportPerspective({
-              requestedExternalSource: importEntryResult.normalizedSource,
-              externalProjectMeta: exportsProjectObj,
-              externalRootPath: cfg.referenceProjectResult ? null : cfg.referenceProjectPath,
+            const fromImportToExport = await fromImportToExportPerspective({
+              importee: importEntryResult.normalizedSource,
+              importer: pathLib.resolve(importProjectPath, file),
             });
             const isFromSameSource = compareImportAndExportPaths(
               exportEntry.file,
@@ -119,18 +132,34 @@ function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, c
             );
 
             if (!isFromSameSource) {
-              return;
+              // if (exportId === '[default]::./ref-src/core.js::exporting-ref-project') {
+              //   console.log(
+              //     '--> !isFromSameSource',
+              //     `${exportId}`,
+              //     { 'exportEntry.file': exportEntry.file, fromImportToExport },
+              //     {
+              //       importee: importEntryResult.normalizedSource,
+              //       importer: pathLib.resolve(importProjectPath, file),
+              //     },
+              //   );
+              // }
+              if (exportId === '[default]::./ref-src/core.js::exporting-ref-project') {
+                console.log('--> !isFromSameSource', importEntryResult.normalizedSource);
+              }
+              break;
             }
-
+            if (exportId === '[default]::./ref-src/core.js::exporting-ref-project') {
+              console.log('--> add', importEntryResult.normalizedSource);
+            }
             // TODO: transitive deps recognition? Could also be distinct post processor
 
             filteredImportsList.add(`${importProject}::${file}`);
-          }),
-        );
+          }
+        }
         storeResult(resultsObj, exportId, filteredImportsList, exportEntry.meta);
-      });
-    });
-  });
+      }
+    }
+  }
 
   /**
    * Step 2: a rich data structure
@@ -138,8 +167,8 @@ function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, c
    * @example
    * [{
    *   exportSpecifier: {
-   *     // name under which it is registered in npm ("name" attr in package.json)
    *     name: 'RefClass',
+   *     // name under which it is registered in npm ("name" attr in package.json)
    *     project: 'exporting-ref-project',
    *     filePath: './ref-src/core.js',
    *     id: 'RefClass::ref-src/core.js::exporting-ref-project',
@@ -236,6 +265,7 @@ class MatchImportsAnalyzer extends Analyzer {
      * Prepare
      */
     const analyzerResult = this._prepare(cfg);
+
     if (analyzerResult) {
       return analyzerResult;
     }
@@ -263,7 +293,11 @@ class MatchImportsAnalyzer extends Analyzer {
       });
     }
 
-    const queryOutput = matchImportsPostprocess(referenceProjectResult, targetProjectResult, cfg);
+    const queryOutput = await matchImportsPostprocess(
+      referenceProjectResult,
+      targetProjectResult,
+      cfg,
+    );
 
     /**
      * Finalize
