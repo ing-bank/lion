@@ -11,7 +11,7 @@
  * @returns {boolean} Whether the configs are equivalent
  */
 export function isEqualConfig(a, b) {
-  if (typeof a !== 'object' || typeof a !== 'object') {
+  if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) {
     return a === b;
   }
   const aProps = Object.keys(a);

@@ -23,6 +23,18 @@ describe('isEqualConfig()', () => {
     expect(isEqualConfig(config, config)).eql(true);
   });
 
+  it('compares null props', () => {
+    const config = TestConfig();
+    const nullPropConfig = {
+      ...config,
+      elementToFocusAfterHide: {
+        nullProp: null,
+      },
+    };
+    // @ts-ignore
+    expect(isEqualConfig(nullPropConfig, nullPropConfig)).eql(true);
+  });
+
   it('compares shallow props', () => {
     const config = TestConfig();
     expect(isEqualConfig(config, { ...config })).eql(true);
