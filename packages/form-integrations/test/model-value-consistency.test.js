@@ -1,5 +1,4 @@
-import { expect, fixture } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
+import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';

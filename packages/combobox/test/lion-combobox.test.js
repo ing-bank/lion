@@ -1,11 +1,10 @@
-import '@lion/listbox/define-option';
-import { expect, fixture, defineCE } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-import sinon from 'sinon';
 import '@lion/combobox/define';
 import { browserDetection, LitElement } from '@lion/core';
-import { getListboxMembers } from '@lion/listbox/test-helpers';
 import { Required } from '@lion/form-core';
+import '@lion/listbox/define-option';
+import { getListboxMembers } from '@lion/listbox/test-helpers';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import sinon from 'sinon';
 import { LionCombobox } from '../src/LionCombobox.js';
 
 /**

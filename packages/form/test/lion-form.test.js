@@ -1,15 +1,20 @@
-import { expect, fixture as _fixture, oneEvent, aTimeout, defineCE } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-import { spy } from 'sinon';
-import { LionField } from '@lion/form-core';
 import { LionFieldset } from '@lion/fieldset';
-import '@lion/form-core/define';
 import '@lion/fieldset/define';
-
+import { LionField } from '@lion/form-core';
+import '@lion/form-core/define';
 import '@lion/form/define';
+import {
+  aTimeout,
+  defineCE,
+  expect,
+  fixture as _fixture,
+  html,
+  oneEvent,
+  unsafeStatic,
+} from '@open-wc/testing';
+import { spy } from 'sinon';
 
 /**
-
  * @typedef {import('../src/LionForm').LionForm} LionForm
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */

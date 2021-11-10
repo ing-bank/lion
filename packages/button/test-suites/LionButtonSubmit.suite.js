@@ -1,11 +1,9 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import { aTimeout, expect, fixture, defineCE } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-
-import { sendKeys } from '@web/test-runner-commands';
 import { LionButtonSubmit } from '@lion/button';
-import sinon from 'sinon';
 import '@lion/core/differentKeyEventNamesShimIE';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { sendKeys } from '@web/test-runner-commands';
+import sinon from 'sinon';
 
 export function LionButtonSubmitSuite({ klass = LionButtonSubmit } = {}) {
   const tagStringButton = defineCE(class extends klass {});

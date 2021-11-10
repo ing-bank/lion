@@ -1,11 +1,10 @@
-import { expect, fixture, defineCE } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-import { Required, DefaultSuccess, Validator } from '@lion/form-core';
+import { DefaultSuccess, Required, Validator } from '@lion/form-core';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
+import { LionInput } from '@lion/input';
 import { localize } from '@lion/localize';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import { LionInput } from '@lion/input';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
-import { getFormControlMembers } from '@lion/form-core/test-helpers';
 
 describe('Form Validation Integrations', () => {
   const lightDom = '';

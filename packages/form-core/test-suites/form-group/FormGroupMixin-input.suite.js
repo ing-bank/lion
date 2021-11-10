@@ -1,10 +1,9 @@
 import { LitElement } from '@lion/core';
-import { localizeTearDown } from '@lion/localize/test-helpers';
-import { html, unsafeStatic } from 'lit/static-html.js';
-import { defineCE, expect, fixture } from '@open-wc/testing';
+import '@lion/form-core/define';
 import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import { LionInput } from '@lion/input';
-import '@lion/form-core/define';
+import { localizeTearDown } from '@lion/localize/test-helpers';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { FormGroupMixin } from '../../src/form-group/FormGroupMixin.js';
 
 /**

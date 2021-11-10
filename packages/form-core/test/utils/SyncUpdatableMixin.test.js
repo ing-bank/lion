@@ -1,6 +1,5 @@
 import { LitElement } from '@lion/core';
-import { defineCE, expect, fixture, fixtureSync } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
+import { defineCE, expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { SyncUpdatableMixin } from '../../src/utils/SyncUpdatableMixin.js';
 

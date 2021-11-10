@@ -1,7 +1,6 @@
-import { aTimeout, expect, fixture } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
 import '@lion/tooltip/define';
+import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
 
 /**
  * @typedef {import('../src/LionTooltip.js').LionTooltip} LionTooltip

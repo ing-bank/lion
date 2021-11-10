@@ -1,5 +1,4 @@
-import { defineCE, expect, fixture } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LitElement } from '../index.js';
 import { DelegateMixin } from '../src/DelegateMixin.js';

@@ -1,12 +1,18 @@
 import { unsafeHTML } from '@lion/core';
+import { Required, Validator } from '@lion/form-core';
+import '@lion/form-core/define-field';
+import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers';
-import { Required, Validator } from '@lion/form-core';
-import { expect, fixture, triggerBlurFor, triggerFocusFor } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-import { getFormControlMembers } from '@lion/form-core/test-helpers';
+import {
+  expect,
+  fixture,
+  html,
+  triggerBlurFor,
+  triggerFocusFor,
+  unsafeStatic,
+} from '@open-wc/testing';
 import sinon from 'sinon';
-import '@lion/form-core/define-field';
 
 /**
  * @typedef {import('../src/LionField.js').LionField} LionField

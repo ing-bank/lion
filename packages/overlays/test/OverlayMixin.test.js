@@ -1,5 +1,4 @@
-import { defineCE } from '@open-wc/testing';
-import { unsafeStatic } from 'lit/static-html.js';
+import { defineCE, unsafeStatic } from '@open-wc/testing';
 import { LitElement, html } from '@lion/core';
 import { runOverlayMixinSuite } from '../test-suites/OverlayMixin.suite.js';
 import { OverlayMixin } from '../src/OverlayMixin.js';

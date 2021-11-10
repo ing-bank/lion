@@ -1,5 +1,4 @@
-import { expect, fixture as _fixture } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
+import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
 import '@lion/dialog/define';
 

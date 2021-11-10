@@ -1,11 +1,17 @@
+import { LitElement, repeat } from '@lion/core';
 import '@lion/core/differentKeyEventNamesShimIE';
-import { repeat, LitElement } from '@lion/core';
 import { Required } from '@lion/form-core';
 import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/define';
-import { expect, aTimeout, nextFrame, fixture as _fixture, defineCE } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-
+import {
+  aTimeout,
+  defineCE,
+  expect,
+  fixture as _fixture,
+  html,
+  nextFrame,
+  unsafeStatic,
+} from '@open-wc/testing';
 import sinon from 'sinon';
 import { getListboxMembers } from '../test-helpers/index.js';
 

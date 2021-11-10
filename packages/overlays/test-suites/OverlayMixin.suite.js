@@ -1,4 +1,5 @@
 import { expect, fixture, html, nextFrame, aTimeout } from '@open-wc/testing';
+
 import sinon from 'sinon';
 import { overlays } from '../src/overlays.js';
 import { OverlayController } from '../src/OverlayController.js';
