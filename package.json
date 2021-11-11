@@ -47,7 +47,7 @@
     "@open-wc/testing": "^3.0.0-next.1",
     "@open-wc/testing-helpers": "^2.0.0-next.0",
     "@rocket/blog": "^0.4.0",
-    "@rocket/cli": "^0.10.0",
+    "@rocket/cli": "^0.10.1",
     "@rocket/launch": "^0.6.0",
     "@rocket/search": "^0.5.0",
     "@types/chai-dom": "^0.0.8",

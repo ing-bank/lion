@@ -1,0 +1,4 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com 'sha256-W6Gq+BvrdAAMbF8E7WHA7UPQxuUOfJM8E9mpKD0oihA=' 'sha256-vFU+IJ5dUUukI5Varwy49dN2d89DmFj7UNewqQv88sw=' 'sha256-Us7Qc49/TEvprhtYl97evBOnL22N87WF59PHRkcJFLQ='; style-src 'self' 'unsafe-inline' fonts.googleapis.com; img-src 'self' https://www.google-analytics.com; font-src 'self' data: fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com;"
