@@ -1,10 +1,8 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import { aTimeout, expect, fixture, defineCE } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-
 import { LionButtonReset } from '@lion/button';
-import sinon from 'sinon';
 import '@lion/core/differentKeyEventNamesShimIE';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import sinon from 'sinon';
 
 export function LionButtonResetSuite({ klass = LionButtonReset } = {}) {
   const tagStringButtonReset = defineCE(class extends klass {});

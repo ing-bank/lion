@@ -1,12 +1,11 @@
-import { expect, defineCE, fixture } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
 import { LitElement } from '@lion/core';
 import { getFormControlMembers } from '@lion/form-core/test-helpers';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
-import { FormControlMixin } from '../src/FormControlMixin.js';
-import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 import { FocusMixin } from '../src/FocusMixin.js';
 import { FormGroupMixin } from '../src/form-group/FormGroupMixin.js';
+import { FormControlMixin } from '../src/FormControlMixin.js';
+import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
 
 /**
  * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost

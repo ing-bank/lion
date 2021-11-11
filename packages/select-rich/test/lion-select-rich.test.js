@@ -1,15 +1,22 @@
 import { LitElement } from '@lion/core';
-import { renderLitAsNode } from '@lion/helpers';
-import { OverlayController } from '@lion/overlays';
-import { LionOption } from '@lion/listbox';
-import { mimicClick } from '@lion/overlays/test-helpers';
-import { aTimeout, defineCE, expect, nextFrame, fixture as _fixture } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-import { LionSelectInvoker, LionSelectRich } from '@lion/select-rich';
 import '@lion/core/differentKeyEventNamesShimIE';
+import { renderLitAsNode } from '@lion/helpers';
+import { LionOption } from '@lion/listbox';
 import '@lion/listbox/define';
-import '@lion/select-rich/define';
 import { getListboxMembers } from '@lion/listbox/test-helpers';
+import { OverlayController } from '@lion/overlays';
+import { mimicClick } from '@lion/overlays/test-helpers';
+import { LionSelectInvoker, LionSelectRich } from '@lion/select-rich';
+import '@lion/select-rich/define';
+import {
+  aTimeout,
+  defineCE,
+  expect,
+  fixture as _fixture,
+  html,
+  nextFrame,
+  unsafeStatic,
+} from '@open-wc/testing';
 
 /**
  * @typedef {import('@lion/listbox/src/LionOptions').LionOptions} LionOptions

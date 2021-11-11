@@ -1,11 +1,9 @@
 import { LitElement } from '@lion/core';
 import { parseDate } from '@lion/localize';
-import { aTimeout, defineCE, expect, fixture } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
-import { FormatMixin } from '../src/FormatMixin.js';
 import { Unparseable, Validator } from '../index.js';
+import { FormatMixin } from '../src/FormatMixin.js';
 import { getFormControlMembers } from '../test-helpers/getFormControlMembers.js';
 
 /**

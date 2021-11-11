@@ -1,9 +1,8 @@
-import { OverlayMixin } from '@lion/overlays';
 import { LitElement } from '@lion/core';
-import { defineCE, fixture, expect } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
 import '@lion/listbox/define';
+import { OverlayMixin } from '@lion/overlays';
 import '@lion/select-rich/define';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 
 /**
  * @typedef {import('../src/LionSelectRich').LionSelectRich} LionSelectRich

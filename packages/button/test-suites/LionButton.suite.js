@@ -1,11 +1,17 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import { browserDetection } from '@lion/core';
-import { aTimeout, expect, fixture, oneEvent, defineCE } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
-
 import { LionButton } from '@lion/button';
-import sinon from 'sinon';
+import { browserDetection } from '@lion/core';
 import '@lion/core/differentKeyEventNamesShimIE';
+import {
+  aTimeout,
+  defineCE,
+  expect,
+  fixture,
+  html,
+  oneEvent,
+  unsafeStatic,
+} from '@open-wc/testing';
+import sinon from 'sinon';
 
 export function LionButtonSuite({ klass = LionButton } = {}) {
   const tagStringButton = defineCE(class extends klass {});

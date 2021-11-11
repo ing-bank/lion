@@ -1,6 +1,5 @@
 import { LitElement } from '@lion/core';
-import { defineCE, expect, fixture } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { ValidateMixin } from '../../src/validate/ValidateMixin.js';
 import { Validator } from '../../src/validate/Validator.js';

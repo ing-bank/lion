@@ -1,7 +1,6 @@
-import { expect, fixture, defineCE } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
 import { LionField } from '@lion/form-core';
 import { getFormControlMembers } from '@lion/form-core/test-helpers';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { Required } from '../../src/validate/validators/Required.js';
 
 /**

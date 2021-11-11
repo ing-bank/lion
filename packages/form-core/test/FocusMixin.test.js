@@ -1,6 +1,5 @@
 import { LitElement } from '@lion/core';
-import { defineCE, expect, fixture, oneEvent } from '@open-wc/testing';
-import { html, unsafeStatic } from 'lit/static-html.js';
+import { defineCE, expect, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { FocusMixin } from '../src/FocusMixin.js';
 
