@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.29.1
+
+### Patch Changes
+
+- c4562f7e: use html & unsafeStatic from @open-wc/testing instead of directly from lit
+- fdc5e73f: Fix: black bars on dialogs with preventsScroll enabled on ios 15.
+  See https://stackoverflow.com/questions/69589924/ios-15-minimized-address-bar-issue-with-fixed-position-full-screen-content
+- b6be7ba4: fix condition in is-equal-config util and add null guard
+- Updated dependencies [9b81b69e]
+- Updated dependencies [a2c66cd9]
+- Updated dependencies [c4562f7e]
+- Updated dependencies [c55d4566]
+  - @lion/core@0.19.0
+
 ## 0.29.0
 
 ### Minor Changes

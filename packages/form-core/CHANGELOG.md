@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.15.4
+
+### Patch Changes
+
+- c4562f7e: use html & unsafeStatic from @open-wc/testing instead of directly from lit
+- Updated dependencies [9b81b69e]
+- Updated dependencies [a2c66cd9]
+- Updated dependencies [c4562f7e]
+- Updated dependencies [c55d4566]
+  - @lion/core@0.19.0
+  - @lion/localize@0.21.3
+
 ## 0.15.3
 
 ### Patch Changes

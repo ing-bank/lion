@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.19.0
+
+### Minor Changes
+
+- a2c66cd9: Update Lit to v2
+
+### Patch Changes
+
+- 9b81b69e: Re-export latest added lit directives.
+- c4562f7e: use html & unsafeStatic from @open-wc/testing instead of directly from lit
+- c55d4566: Re-export html from lit/static-html.js as staticHtml.
+
 ## 0.18.4
 
 ### Patch Changes
