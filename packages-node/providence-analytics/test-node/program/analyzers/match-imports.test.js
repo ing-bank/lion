@@ -411,16 +411,48 @@ describe('Analyzer "match-imports"', () => {
 
   describe('Matching', () => {
     it(`produces a list of all matches, sorted by project`, async () => {
-      mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-      await providence(matchImportsQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-
-      expectedExportIdsDirect.forEach(targetId => {
-        testMatchedEntry(targetId, queryResult, ['./target-src/direct-imports.js']);
+      /**
+       * N.B. output structure could be simplified, since there is
+       * For now, we keep it, so integration with dashboard stays intact.
+       * TODO:
+       * - write tests for dashboard transform logic
+       * - simplify output for match-* analyzers
+       * - adjust dashboard transfrom logic
+       */
+      const refProject = {
+        path: '/target/node_modules/ref',
+        name: 'ref',
+        files: [{ file: './direct.js', code: `export default function x() {};` }],
+      };
+      const targetProject = {
+        path: '/target',
+        name: 'target',
+        files: [{ file: './index.js', code: `import myFn from 'ref/direct.js';` }],
+      };
+      mockTargetAndReferenceProject(targetProject, refProject);
+      await providence(matchImportsQueryConfig, {
+        targetProjectPaths: [targetProject.path],
+        referenceProjectPaths: [refProject.path],
       });
+      const queryResult = queryResults[0];
+      expect(queryResult.queryOutput[0].matchesPerProject).eql([
+        { files: ['./index.js'], project: 'target' },
+      ]);
+    });
 
-      expectedExportIdsIndirect.forEach(targetId => {
-        testMatchedEntry(targetId, queryResult, ['./target-src/indirect-imports.js']);
+    describe('Inside small example project', () => {
+      it(`produces a list of all matches, sorted by project`, async () => {
+        mockTargetAndReferenceProject(searchTargetProject, referenceProject);
+        await providence(matchImportsQueryConfig, _providenceCfg);
+        const queryResult = queryResults[0];
+
+        expectedExportIdsDirect.forEach(targetId => {
+          testMatchedEntry(targetId, queryResult, ['./target-src/direct-imports.js']);
+        });
+
+        expectedExportIdsIndirect.forEach(targetId => {
+          testMatchedEntry(targetId, queryResult, ['./target-src/indirect-imports.js']);
+        });
       });
     });
   });

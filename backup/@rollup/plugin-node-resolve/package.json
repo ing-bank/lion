@@ -1,0 +1,121 @@
+{
+  "_args": [
+    [
+      "@rollup/plugin-node-resolve@13.0.6",
+      "/Users/hu84jr/git/lion5/packages-node/providence-analytics"
+    ]
+  ],
+  "_from": "@rollup/plugin-node-resolve@13.0.6",
+  "_id": "@rollup/plugin-node-resolve@13.0.6",
+  "_inBundle": false,
+  "_integrity": "sha512-sFsPDMPd4gMqnh2gS0uIxELnoRUp5kBl5knxD2EO0778G1oOJv4G1vyT2cpWz75OU2jDVcXhjVUuTAczGyFNKA==",
+  "_location": "/@rollup/plugin-node-resolve",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "@rollup/plugin-node-resolve@13.0.6",
+    "name": "@rollup/plugin-node-resolve",
+    "escapedName": "@rollup%2fplugin-node-resolve",
+    "scope": "@rollup",
+    "rawSpec": "13.0.6",
+    "saveSpec": null,
+    "fetchSpec": "13.0.6"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/@rollup/plugin-node-resolve/-/plugin-node-resolve-13.0.6.tgz",
+  "_spec": "13.0.6",
+  "_where": "/Users/hu84jr/git/lion5/packages-node/providence-analytics",
+  "author": {
+    "name": "Rich Harris",
+    "email": "richard.a.harris@gmail.com"
+  },
+  "ava": {
+    "babel": {
+      "compileEnhancements": false
+    },
+    "files": [
+      "!**/fixtures/**",
+      "!**/helpers/**",
+      "!**/recipes/**",
+      "!**/types.ts"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/rollup/plugins/issues"
+  },
+  "dependencies": {
+    "@rollup/pluginutils": "^3.1.0",
+    "@types/resolve": "1.17.1",
+    "builtin-modules": "^3.1.0",
+    "deepmerge": "^4.2.2",
+    "is-module": "^1.0.0",
+    "resolve": "^1.19.0"
+  },
+  "description": "Locate and bundle third-party dependencies in node_modules",
+  "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/plugin-transform-typescript": "^7.10.5",
+    "@rollup/plugin-babel": "^5.1.0",
+    "@rollup/plugin-commonjs": "^16.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "es5-ext": "^0.10.53",
+    "rollup": "^2.58.0",
+    "source-map": "^0.7.3",
+    "string-capitalize": "^1.0.1"
+  },
+  "engines": {
+    "node": ">= 10.0.0"
+  },
+  "exports": {
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/es/index.js"
+  },
+  "files": [
+    "dist",
+    "types",
+    "README.md",
+    "LICENSE"
+  ],
+  "homepage": "https://github.com/rollup/plugins/tree/master/packages/node-resolve/#readme",
+  "keywords": [
+    "rollup",
+    "plugin",
+    "es2015",
+    "npm",
+    "modules"
+  ],
+  "license": "MIT",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/es/index.js",
+  "name": "@rollup/plugin-node-resolve",
+  "peerDependencies": {
+    "rollup": "^2.42.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "url": "git+https://github.com/rollup/plugins.git",
+    "directory": "packages/node-resolve"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "ci:coverage": "nyc pnpm test && nyc report --reporter=text-lcov > coverage.lcov",
+    "ci:lint": "pnpm build && pnpm lint",
+    "ci:lint:commits": "commitlint --from=${CIRCLE_BRANCH} --to=${CIRCLE_SHA1}",
+    "ci:test": "pnpm test -- --verbose && pnpm test:ts",
+    "prebuild": "del-cli dist",
+    "prepare": "if [ ! -d 'dist' ]; then pnpm build; fi",
+    "prerelease": "pnpm build",
+    "pretest": "pnpm build",
+    "release": "pnpm plugin:release --workspace-root -- --pkg $npm_package_name",
+    "test": "ava && pnpm test:ts",
+    "test:ts": "tsc types/index.d.ts test/types.ts --noEmit"
+  },
+  "type": "commonjs",
+  "types": "types/index.d.ts",
+  "version": "13.0.6"
+}
