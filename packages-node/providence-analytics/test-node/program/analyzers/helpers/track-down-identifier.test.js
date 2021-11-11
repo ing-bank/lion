@@ -137,6 +137,37 @@ describe('trackdownIdentifier', () => {
     });
   });
 
+  it(`tracks down locally declared, reexported identifiers (without a source defined)`, async () => {
+    mockProject(
+      {
+        './src/declarationOfMyNumber.js': `
+        const myNumber = 3;
+
+        export { myNumber };
+      `,
+        './currentFile.js': `
+        import { myNumber } from './src/declarationOfMyNumber.js';
+      `,
+      },
+      {
+        projectName: 'my-project',
+        projectPath: '/my/project',
+      },
+    );
+
+    // Let's say we want to track down 'MyClass' in the code above
+    const source = './src/declarationOfMyNumber.js';
+    const identifierName = 'myNumber';
+    const currentFilePath = '/my/project/currentFile.js';
+    const rootPath = '/my/project';
+
+    const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
+    expect(rootFile).to.eql({
+      file: './src/declarationOfMyNumber.js',
+      specifier: 'myNumber',
+    });
+  });
+
   // TODO: improve perf
   describe.skip('Caching', () => {});
 });
