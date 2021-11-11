@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.11.1
+
+### Patch Changes
+
+- a0b313c6: correctly handle exports like "const x=3; export {x};"
+- 2995a503: Correct default target in Windows if no -t
+
 ## 0.11.0
 
 ### Minor Changes

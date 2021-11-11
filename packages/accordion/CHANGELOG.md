@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.7.2
+
+### Patch Changes
+
+- Updated dependencies [9b81b69e]
+- Updated dependencies [a2c66cd9]
+- Updated dependencies [c4562f7e]
+- Updated dependencies [c55d4566]
+  - @lion/core@0.19.0
+
 ## 0.7.1
 
 ### Patch Changes

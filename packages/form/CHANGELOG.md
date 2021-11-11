@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.12.7
+
+### Patch Changes
+
+- c4562f7e: use html & unsafeStatic from @open-wc/testing instead of directly from lit
+  - @lion/fieldset@0.19.9
+
 ## 0.12.6
 
 ### Patch Changes

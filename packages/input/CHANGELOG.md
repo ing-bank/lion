@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.15.7
+
+### Patch Changes
+
+- c4562f7e: use html & unsafeStatic from @open-wc/testing instead of directly from lit
+- Updated dependencies [c4562f7e]
+  - @lion/form-core@0.15.4
+
 ## 0.15.6
 
 ### Patch Changes
