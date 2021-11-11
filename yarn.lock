@@ -1380,9 +1380,9 @@
     unist-util-visit "^2.0.3"
 
 "@mdjs/mdjs-preview@^0.5.3":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@mdjs/mdjs-preview/-/mdjs-preview-0.5.3.tgz#fc711717e6855d93283aee0ded6bc4e782d48fa1"
-  integrity sha512-rGt51Gmz8glUaQlu2VMEs9PlYHUdpw/YprAfOtobrpyKHOQggr9EtzmSpurmVwDUlxfBW/DGAjFENKRkR90P4g==
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/@mdjs/mdjs-preview/-/mdjs-preview-0.5.4.tgz#843b507e5881c7060b25263863a96dc3f475fe95"
+  integrity sha512-SYXjiRJHSDLYYE4LiCD+LJLEmkUjLWo8uoLmvma5T1TGMksxvft/FNzjBEjNL9YthHeNXizUUUB85KEDlQgv0Q==
   dependencies:
     "@lion/accordion" "^0.6.1"
     "@open-wc/scoped-elements" "^2.0.0-next.3"
@@ -1618,10 +1618,10 @@
     workbox-routing "^6.1.5"
     workbox-strategies "^6.1.5"
 
-"@rocket/cli@^0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@rocket/cli/-/cli-0.10.0.tgz#dfbf613ef92333bdc634c0dac79774bc94ffc31a"
-  integrity sha512-r9LRn9jBbEr2yCOE9qqQlsQwX2Nezrx/HVJ8lPoSU7vHdi3EvnlM2P23HlegtWQ4rExX2NwJFgzv1lBXisQHaA==
+"@rocket/cli@^0.10.1":
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/@rocket/cli/-/cli-0.10.1.tgz#42b9f8c844978e40a2ef124fb121a4915537dadf"
+  integrity sha512-XwVQbSipr5fGMvs62iQ//7G16Ld4feLoE97tT4KrG2gmzqnfTqL+hZF5yp81n+HvyFX2vyR6AtgjagI2wNxg8g==
   dependencies:
     "@11ty/eleventy" "^0.11.1"
     "@11ty/eleventy-img" "^0.9.0"
