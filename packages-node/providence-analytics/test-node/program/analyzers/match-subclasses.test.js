@@ -15,15 +15,9 @@ const {
   restoreSuppressNonCriticalLogs,
 } = require('../../../test-helpers/mock-log-service-helpers.js');
 
-const matchSubclassesQueryConfig = QueryService.getQueryConfigFromAnalyzer('match-subclasses');
-const _providenceCfg = {
-  targetProjectPaths: ['/importing/target/project'],
-  referenceProjectPaths: ['/exporting/ref/project'],
-};
-
 // 1. Reference input data
 const referenceProject = {
-  path: '/exporting/ref/project',
+  path: '/importing/target/project/node_modules/exporting-ref-project',
   name: 'exporting-ref-project',
   files: [
     // This file contains all 'original' exported definitions
@@ -90,6 +84,12 @@ const searchTargetProject = {
     `,
     },
   ],
+};
+
+const matchSubclassesQueryConfig = QueryService.getQueryConfigFromAnalyzer('match-subclasses');
+const _providenceCfg = {
+  targetProjectPaths: [searchTargetProject.path],
+  referenceProjectPaths: [referenceProject.path],
 };
 
 // 2. Extracted specifiers (by find-exports analyzer)

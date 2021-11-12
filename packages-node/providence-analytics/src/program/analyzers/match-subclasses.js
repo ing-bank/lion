@@ -1,3 +1,5 @@
+/* eslint-disable no-continue */
+const pathLib = require('path');
 /* eslint-disable no-shadow, no-param-reassign */
 const FindClassesAnalyzer = require('./find-classes.js');
 const FindExportsAnalyzer = require('./find-exports.js');
@@ -63,12 +65,13 @@ function storeResult(resultsObj, exportId, filteredList, meta) {
  * @param {MatchSubclassesConfig} customConfig
  * @returns {AnalyzerResult}
  */
-function matchSubclassesPostprocess(
+async function matchSubclassesPostprocess(
   exportsAnalyzerResult,
   targetClassesAnalyzerResult,
   refClassesAResult,
   customConfig,
 ) {
+  // eslint-disable-next-line no-unused-vars
   const cfg = {
     ...customConfig,
   };
@@ -91,17 +94,17 @@ function matchSubclassesPostprocess(
    */
   const resultsObj = {};
 
-  exportsAnalyzerResult.queryOutput.forEach(exportEntry => {
+  for (const exportEntry of exportsAnalyzerResult.queryOutput) {
     const exportsProjectObj = exportsAnalyzerResult.analyzerMeta.targetProject;
     const exportsProjectName = exportsProjectObj.name;
 
     // Look for all specifiers that are exported, like [import {specifier} 'lion-based-ui/foo.js']
-    exportEntry.result.forEach(exportEntryResult => {
+    for (const exportEntryResult of exportEntry.result) {
       if (!exportEntryResult.exportSpecifiers) {
-        return;
+        continue;
       }
 
-      exportEntryResult.exportSpecifiers.forEach(exportSpecifier => {
+      for (const exportSpecifier of exportEntryResult.exportSpecifiers) {
         // Get all unique imports (name::source::project combinations) that match current
         // exportSpecifier
         const filteredImportsList = new Set();
@@ -109,8 +112,13 @@ function matchSubclassesPostprocess(
 
         // eslint-disable-next-line no-shadow
         const importProject = targetClassesAnalyzerResult.analyzerMeta.targetProject.name;
-        targetClassesAnalyzerResult.queryOutput.forEach(({ result, file }) =>
-          result.forEach(classEntryResult => {
+
+        // TODO: What if this info is retrieved from cached importProject/target project?
+        const importProjectPath = cfg.targetProjectPath;
+        for (const { result, file } of targetClassesAnalyzerResult.queryOutput) {
+          // targetClassesAnalyzerResult.queryOutput.forEach(({ result, file }) =>
+          for (const classEntryResult of result) {
+            // result.forEach(classEntryResult => {
             /**
              * @example
              * Example context (read by 'find-classes'/'find-exports' analyzers)
@@ -133,7 +141,7 @@ function matchSubclassesPostprocess(
               );
 
             if (!classMatch) {
-              return;
+              continue;
             }
 
             /**
@@ -147,11 +155,10 @@ function matchSubclassesPostprocess(
              */
             const isFromSameSource =
               exportEntry.file ===
-              fromImportToExportPerspective({
-                requestedExternalSource: classMatch.rootFile.file,
-                externalProjectMeta: exportsProjectObj,
-                externalRootPath: cfg.referenceProjectPath,
-              });
+              (await fromImportToExportPerspective({
+                importee: classMatch.rootFile.file,
+                importer: pathLib.resolve(importProjectPath, file),
+              }));
 
             if (classMatch && isFromSameSource) {
               const memberOverrides = getMemberOverrides(
@@ -166,12 +173,12 @@ function matchSubclassesPostprocess(
                 memberOverrides,
               });
             }
-          }),
-        );
+          }
+        }
         storeResult(resultsObj, exportId, filteredImportsList, exportEntry.meta);
-      });
-    });
-  });
+      }
+    }
+  }
 
   /**
    * Step 2: a rich data structure
@@ -313,7 +320,7 @@ class MatchSubclassesAnalyzer extends Analyzer {
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     });
 
-    const queryOutput = matchSubclassesPostprocess(
+    const queryOutput = await matchSubclassesPostprocess(
       exportsAnalyzerResult,
       targetClassesAnalyzerResult,
       refClassesAnalyzerResult,

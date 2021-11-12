@@ -1,3 +1,5 @@
+/* eslint-disable no-continue */
+const pathLib = require('path');
 /* eslint-disable no-shadow, no-param-reassign */
 const FindImportsAnalyzer = require('./find-imports.js');
 const FindExportsAnalyzer = require('./find-exports.js');
@@ -5,19 +7,13 @@ const { Analyzer } = require('./helpers/Analyzer.js');
 const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
 
 /**
- * @desc Helper method for matchImportsPostprocess. Modifies its resultsObj
- * @param {object} resultsObj
- * @param {string} exportId like 'myExport::./reference-project/my/export.js::my-project'
- * @param {Set<string>} filteredList
+ * @typedef {import('../types/find-imports').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../types/find-exports').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../types/find-exports').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
+ * @typedef {import('../types/find-imports').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
+ * @typedef {import('../types/match-imports').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
+ * @typedef {import('../types/core').PathRelativeFromRoot} PathRelativeFromRoot
  */
-function storeResult(resultsObj, exportId, filteredList, meta) {
-  if (!resultsObj[exportId]) {
-    // eslint-disable-next-line no-param-reassign
-    resultsObj[exportId] = { meta };
-  }
-  // eslint-disable-next-line no-param-reassign
-  resultsObj[exportId].files = [...(resultsObj[exportId].files || []), ...Array.from(filteredList)];
-}
 
 /**
  * Needed in case fromImportToExportPerspective does not have a
@@ -34,165 +30,226 @@ function compareImportAndExportPaths(exportPath, translatedImportPath) {
 }
 
 /**
+ * Convert to more easily iterable object
+ *
+ * From:
+ * ```js
+ * [
+ *  "file": "./file-1.js",
+ *  "result": [{
+ *    "exportSpecifiers": [ "a", "b"],
+ *    "localMap": [{...},{...}],
+ *    "source": null,
+ *    "rootFileMap": [{"currentFileSpecifier": "a", "rootFile": { "file": "[current]", "specifier": "a" }}]
+ *  }, ...],
+ * ```
+ * To:
+ * ```js
+ * [{
+ *   "file": ""./file-1.js",
+ *   "exportSpecifier": "a",
+ *   "localMap": {...},
+ *   "source": null,
+ *   "rootFileMap": {...}
+ * },
+ * {{
+ *   "file": ""./file-1.js",
+ *   "exportSpecifier": "b",
+ *   "localMap": {...},
+ *   "source": null,
+ *   "rootFileMap": {...}
+ * }}],
+ *
+ * @param {FindExportsAnalyzerResult} exportsAnalyzerResult
+ */
+function transformIntoIterableFindExportsOutput(exportsAnalyzerResult) {
+  /** @type {IterableFindExportsAnalyzerEntry[]} */
+  const iterableEntries = [];
+
+  for (const { file, result } of exportsAnalyzerResult.queryOutput) {
+    for (const { exportSpecifiers, source, rootFileMap, localMap, meta } of result) {
+      if (!exportSpecifiers) {
+        break;
+      }
+      for (const exportSpecifier of exportSpecifiers) {
+        const i = exportSpecifiers.indexOf(exportSpecifier);
+        /** @type {IterableFindExportsAnalyzerEntry} */
+        const resultEntry = {
+          file,
+          specifier: exportSpecifier,
+          source,
+          rootFile: rootFileMap ? rootFileMap[i] : undefined,
+          localSpecifier: localMap ? localMap[i] : undefined,
+          meta,
+        };
+        iterableEntries.push(resultEntry);
+      }
+    }
+  }
+  return iterableEntries;
+}
+
+/**
+ * Convert to more easily iterable object
+ *
+ * From:
+ * ```js
+ * [
+ *  "file": "./file-1.js",
+ *  "result": [{
+ *    "importSpecifiers": [ "a", "b" ],
+ *    "source": "exporting-ref-project",
+ *    "normalizedSource": "exporting-ref-project"
+ * }], ,
+ * ```
+ * To:
+ * ```js
+ * [{
+ *   "file": ""./file-1.js",
+ *   "importSpecifier": "a",,
+ *   "source": "exporting-ref-project",
+ *   "normalizedSource": "exporting-ref-project"
+ * },
+ * {{
+ *   "file": ""./file-1.js",
+ *   "importSpecifier": "b",,
+ *   "source": "exporting-ref-project",
+ *   "normalizedSource": "exporting-ref-project"
+ * }}],
+ *
+ * @param {FindImportsAnalyzerResult} importsAnalyzerResult
+ */
+function transformIntoIterableFindImportsOutput(importsAnalyzerResult) {
+  /** @type {IterableFindImportsAnalyzerEntry[]} */
+  const iterableEntries = [];
+
+  for (const { file, result } of importsAnalyzerResult.queryOutput) {
+    for (const { importSpecifiers, source, normalizedSource } of result) {
+      if (!importSpecifiers) {
+        break;
+      }
+      for (const importSpecifier of importSpecifiers) {
+        /** @type {IterableFindImportsAnalyzerEntry} */
+        const resultEntry = {
+          file,
+          specifier: importSpecifier,
+          source,
+          normalizedSource,
+        };
+        iterableEntries.push(resultEntry);
+      }
+    }
+  }
+  return iterableEntries;
+}
+
+/**
+ * Makes a concise results array a 'compatible resultsArray' (compatible with dashbaord + tests + ...?)
+ * @param {object[]} conciseResultsArray
+ * @param {string} importProject
+ */
+function createCompatibleMatchImportsResult(conciseResultsArray, importProject) {
+  const compatibleResult = [];
+  for (const matchedExportEntry of conciseResultsArray) {
+    const [name, filePath, project] = matchedExportEntry.exportSpecifier.id.split('::');
+    const exportSpecifier = {
+      ...matchedExportEntry.exportSpecifier,
+      name,
+      filePath,
+      project,
+    };
+    compatibleResult.push({
+      exportSpecifier,
+      matchesPerProject: [{ project: importProject, files: matchedExportEntry.importProjectFiles }],
+    });
+  }
+  return compatibleResult;
+}
+
+/**
  * @param {FindExportsAnalyzerResult} exportsAnalyzerResult
  * @param {FindImportsAnalyzerResult} importsAnalyzerResult
  * @param {matchImportsConfig} customConfig
- * @returns {AnalyzerResult}
+ * @returns {Promise<AnalyzerResult>}
  */
-function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, customConfig) {
+async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, customConfig) {
   const cfg = {
     ...customConfig,
   };
 
-  /**
-   * Step 1: a 'flat' data structure
-   * @desc Create a key value storage map for exports/imports matches
-   * - key: `${exportSpecifier}::${normalizedSource}::${project}` from reference project
-   * - value: an array of import file matches like `${targetProject}::${normalizedSource}`
-   * @example
-   * {
-   *   'myExport::./reference-project/my/export.js::my-project' : {
-   *      meta: {...},
-   *      files: [
-   *        'target-project-a::./import/file.js',
-   *        'target-project-b::./another/import/file.js'
-   *      ],
-   *    ]}
-   * }
-   */
-  const resultsObj = {};
+  // TODO: What if this info is retrieved from cached importProject/target project?
+  const importProjectPath = cfg.targetProjectPath;
 
-  exportsAnalyzerResult.queryOutput.forEach(exportEntry => {
-    const exportsProjectObj = exportsAnalyzerResult.analyzerMeta.targetProject;
+  const iterableFindExportsOutput = transformIntoIterableFindExportsOutput(exportsAnalyzerResult);
+  const iterableFindImportsOutput = transformIntoIterableFindImportsOutput(importsAnalyzerResult);
 
-    // Look for all specifiers that are exported, like [import {specifier} 'lion-based-ui/foo.js']
-    exportEntry.result.forEach(exportEntryResult => {
-      if (!exportEntryResult.exportSpecifiers) {
-        return;
+  /** @type {ConciseMatchImportsAnalyzerResult} */
+  const conciseResultsArray = [];
+
+  for (const exportEntry of iterableFindExportsOutput) {
+    for (const importEntry of iterableFindImportsOutput) {
+      /**
+       * 1. Does target import ref specifier?
+       *
+       * Example context (read by 'find-imports'/'find-exports' analyzers)
+       * - export (/folder/exporting-file.js):
+       * `export const x = 'foo'`
+       * - import (target-project-a/importing-file.js):
+       * `import { x, y } from '@reference-repo/folder/exporting-file.js'`
+       * Example variables (extracted by 'find-imports'/'find-exports' analyzers)
+       * - exportSpecifier: 'x'
+       * - importSpecifiers: ['x', 'y']
+       * @type {boolean}
+       */
+      const hasExportSpecifierImported =
+        exportEntry.specifier === importEntry.specifier || importEntry.specifier === '[*]';
+      if (!hasExportSpecifierImported) {
+        continue;
       }
 
-      exportEntryResult.exportSpecifiers.forEach(exportSpecifier => {
-        // Get all unique imports (name::source::project combinations) that match current exportSpecifier
-        const filteredImportsList = new Set();
-        const exportId = `${exportSpecifier}::${exportEntry.file}::${exportsProjectObj.name}`;
-
-        // eslint-disable-next-line no-shadow
-        // importsAnalyzerResult.queryOutput.forEach(({ entries, project }) => {
-        const importProject = importsAnalyzerResult.analyzerMeta.targetProject.name;
-        importsAnalyzerResult.queryOutput.forEach(({ result, file }) =>
-          result.forEach(importEntryResult => {
-            /**
-             * @example
-             * Example context (read by 'find-imports'/'find-exports' analyzers)
-             * - export (/folder/exporting-file.js):
-             * `export const x = 'foo'`
-             * - import (target-project-a/importing-file.js):
-             * `import { x, y } from '@reference-repo/folder/exporting-file.js'`
-             * Example variables (extracted by 'find-imports'/'find-exports' analyzers)
-             * - exportSpecifier: 'x'
-             * - importSpecifiers: ['x', 'y']
-             */
-            const hasExportSpecifierImported =
-              // ['x', 'y'].includes('x')
-              importEntryResult.importSpecifiers.includes(exportSpecifier) ||
-              importEntryResult.importSpecifiers.includes('[*]');
-
-            if (!hasExportSpecifierImported) {
-              return;
-            }
-
-            /**
-             * @example
-             * exportFile './foo.js'
-             * => export const z = 'bar'
-             * importFile 'importing-target-project/file.js'
-             * => import { z } from '@reference/foo.js'
-             */
-            const fromImportToExport = fromImportToExportPerspective({
-              requestedExternalSource: importEntryResult.normalizedSource,
-              externalProjectMeta: exportsProjectObj,
-              externalRootPath: cfg.referenceProjectResult ? null : cfg.referenceProjectPath,
-            });
-            const isFromSameSource = compareImportAndExportPaths(
-              exportEntry.file,
-              fromImportToExport,
-            );
-
-            if (!isFromSameSource) {
-              return;
-            }
-
-            // TODO: transitive deps recognition? Could also be distinct post processor
-
-            filteredImportsList.add(`${importProject}::${file}`);
-          }),
-        );
-        storeResult(resultsObj, exportId, filteredImportsList, exportEntry.meta);
+      /**
+       * 2. Are we from the same source?
+       * A.k.a. is source required by target the same as the one found in target.
+       * (we know the specifier name is tha same, now we need to check the file as well.)
+       *
+       * Example:
+       * exportFile './foo.js'
+       * => export const z = 'bar'
+       * importFile 'importing-target-project/file.js'
+       * => import { z } from '@reference/foo.js'
+       * @type {PathRelativeFromRoot}
+       */
+      const fromImportToExport = await fromImportToExportPerspective({
+        importee: importEntry.normalizedSource,
+        importer: pathLib.resolve(importProjectPath, importEntry.file),
       });
-    });
-  });
+      const isFromSameSource = compareImportAndExportPaths(exportEntry.file, fromImportToExport);
+      if (!isFromSameSource) {
+        continue;
+      }
 
-  /**
-   * Step 2: a rich data structure
-   * @desc Transform resultObj from step 1 into an array of objects
-   * @example
-   * [{
-   *   exportSpecifier: {
-   *     // name under which it is registered in npm ("name" attr in package.json)
-   *     name: 'RefClass',
-   *     project: 'exporting-ref-project',
-   *     filePath: './ref-src/core.js',
-   *     id: 'RefClass::ref-src/core.js::exporting-ref-project',
-   *     meta: {...},
-   *
-   *     // most likely via post processor
-   *   },
-   *   // All the matched targets (files importing the specifier), ordered per project
-   *   matchesPerProject: [
-   *     {
-   *       project: 'importing-target-project',
-   *       files: [
-   *         './target-src/indirect-imports.js',
-   *         ...
-   *       ],
-   *     },
-   *     ...
-   *   ],
-   * }]
-   */
-  const resultsArray = Object.entries(resultsObj)
-    .map(([id, flatResult]) => {
-      const [exportSpecifierName, filePath, project] = id.split('::');
-      const { meta } = flatResult;
+      /**
+       * 3. When above checks pass, we have a match.
+       * Add it to the results array
+       */
+      const id = `${exportEntry.specifier}::${exportEntry.file}::${exportsAnalyzerResult.analyzerMeta.targetProject.name}`;
+      const resultForCurrentExport = conciseResultsArray.find(entry => entry.id === id);
+      if (resultForCurrentExport) {
+        resultForCurrentExport.importProjectFiles.push(importEntry.file);
+      } else {
+        conciseResultsArray.push({
+          exportSpecifier: { id, ...(exportEntry.meta ? { meta: exportEntry.meta } : {}) },
+          importProjectFiles: [importEntry.file],
+        });
+      }
+    }
+  }
 
-      const exportSpecifier = {
-        name: exportSpecifierName,
-        project,
-        filePath,
-        id,
-        ...(meta || {}),
-      };
-
-      const matchesPerProject = [];
-      flatResult.files.forEach(projectFile => {
-        // eslint-disable-next-line no-shadow
-        const [project, file] = projectFile.split('::');
-        let projectEntry = matchesPerProject.find(m => m.project === project);
-        if (!projectEntry) {
-          matchesPerProject.push({ project, files: [] });
-          projectEntry = matchesPerProject[matchesPerProject.length - 1];
-        }
-        projectEntry.files.push(file);
-      });
-
-      return {
-        exportSpecifier,
-        matchesPerProject,
-      };
-    })
-    .filter(r => Object.keys(r.matchesPerProject).length);
-
-  return /** @type {AnalyzerResult} */ resultsArray;
+  const importProject = importsAnalyzerResult.analyzerMeta.targetProject.name;
+  return /** @type {AnalyzerResult} */ createCompatibleMatchImportsResult(
+    conciseResultsArray,
+    importProject,
+  );
 }
 
 class MatchImportsAnalyzer extends Analyzer {
@@ -236,6 +293,7 @@ class MatchImportsAnalyzer extends Analyzer {
      * Prepare
      */
     const analyzerResult = this._prepare(cfg);
+
     if (analyzerResult) {
       return analyzerResult;
     }
@@ -263,7 +321,11 @@ class MatchImportsAnalyzer extends Analyzer {
       });
     }
 
-    const queryOutput = matchImportsPostprocess(referenceProjectResult, targetProjectResult, cfg);
+    const queryOutput = await matchImportsPostprocess(
+      referenceProjectResult,
+      targetProjectResult,
+      cfg,
+    );
 
     /**
      * Finalize

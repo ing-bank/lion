@@ -568,7 +568,7 @@ describe('CLI helpers', () => {
       };
 
       const theirProject = {
-        path: '/their-components',
+        path: '/my-components/node_modules/their-components',
         name: 'their-components',
         files: Object.entries(theirProjectFiles).map(([file, code]) => ({ file, code })),
       };
@@ -582,7 +582,7 @@ describe('CLI helpers', () => {
       mockTargetAndReferenceProject(theirProject, myProject);
 
       const result = await getExtendDocsResults({
-        referenceProjectPaths: ['/their-components'],
+        referenceProjectPaths: [theirProject.path],
         prefixCfg: { from: 'their', to: 'my' },
         extensions: ['.js'],
         cwd: '/my-components',

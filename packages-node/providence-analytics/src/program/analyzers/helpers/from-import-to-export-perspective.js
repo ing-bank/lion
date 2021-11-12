@@ -1,79 +1,51 @@
-const fs = require('fs');
-const pathLib = require('path');
 const { isRelativeSourcePath } = require('../../utils/relative-source-path.js');
 const { LogService } = require('../../services/LogService.js');
+const { resolveImportPath } = require('../../utils/resolve-import-path.js');
 
 /**
- * TODO: Use utils/resolve-import-path for  100% accuracy
- *
- * - from: 'reference-project/foo.js'
- * - to: './foo.js'
- * When we need to resolve to the main entry:
- * - from: 'reference-project'
- * - to: './index.js' (or other file specified in package.json 'main')
- * @param {object} config
- * @param {string} config.requestedExternalSource
- * @param {{name, mainEntry}} config.externalProjectMeta
- * @param {string} config.externalRootPath
- * @returns {string|null}
+ * @param {string} importee like '@lion/core/myFile.js'
+ * @returns {string} project name ('@lion/core')
  */
-function fromImportToExportPerspective({
-  requestedExternalSource,
-  externalProjectMeta,
-  externalRootPath,
-}) {
-  if (isRelativeSourcePath(requestedExternalSource)) {
-    LogService.warn('[fromImportToExportPerspective] Please only provide external import paths');
-    return null;
-  }
-
-  const scopedProject = requestedExternalSource[0] === '@';
+function getProjectFromImportee(importee) {
+  const scopedProject = importee[0] === '@';
   // 'external-project/src/file.js' -> ['external-project', 'src', file.js']
-  let splitSource = requestedExternalSource.split('/');
+  let splitSource = importee.split('/');
   if (scopedProject) {
     // '@external/project'
     splitSource = [splitSource.slice(0, 2).join('/'), ...splitSource.slice(2)];
   }
   // ['external-project', 'src', 'file.js'] -> 'external-project'
   const project = splitSource.slice(0, 1).join('/');
-  // ['external-project', 'src', 'file.js'] -> 'src/file.js'
-  const localPath = splitSource.slice(1).join('/');
 
-  if (externalProjectMeta.name !== project) {
+  return project;
+}
+
+/**
+ * Gets local path from reference project
+ *
+ * - from: 'reference-project/foo'
+ * - to: './foo.js'
+ * When we need to resolve to the main entry:
+ * - from: 'reference-project'
+ * - to: './index.js' (or other file specified in package.json 'main')
+ * @param {object} config
+ * @param {string} config.importee 'reference-project/foo.js'
+ * @param {string} config.importer '/my/project/importing-file.js'
+ * @returns {Promise<string|null>} './foo.js'
+ */
+async function fromImportToExportPerspective({ importee, importer }) {
+  if (isRelativeSourcePath(importee)) {
+    LogService.warn('[fromImportToExportPerspective] Please only provide external import paths');
     return null;
   }
 
-  if (localPath) {
-    // like '@open-wc/x/y.js'
-    // Now, we need to resolve to a file or path. Even though a path can contain '.',
-    // we still need to check if we're not dealing with a folder.
-    // - '@open-wc/x/y.js' -> '@open-wc/x/y.js' or... '@open-wc/x/y.js/index.js' ?
-    // - or 'lion-based-ui/test' -> 'lion-based-ui/test/index.js' or 'lion-based-ui/test' ?
-    if (externalRootPath) {
-      const pathToCheck = pathLib.resolve(externalRootPath, `./${localPath}`);
+  const absolutePath = await resolveImportPath(importee, importer);
+  const projectName = getProjectFromImportee(importee);
 
-      if (fs.existsSync(pathToCheck)) {
-        const stat = fs.statSync(pathToCheck);
-        if (stat && stat.isFile()) {
-          return `./${localPath}`; // '/path/to/lion-based-ui/fol.der' is a file
-        }
-        return `./${localPath}/index.js`; // '/path/to/lion-based-ui/fol.der' is a folder
-        // eslint-disable-next-line no-else-return
-      } else if (fs.existsSync(`${pathToCheck}.js`)) {
-        return `./${localPath}.js`; // '/path/to/lion-based-ui/fol.der' is file '/path/to/lion-based-ui/fol.der.js'
-      }
-    } else {
-      return `./${localPath}`;
-    }
-  } else {
-    // like '@lion/core'
-    let mainEntry = externalProjectMeta.mainEntry || 'index.js';
-    if (!mainEntry.startsWith('./')) {
-      mainEntry = `./${mainEntry}`;
-    }
-    return mainEntry;
-  }
-  return null;
+  // from /my/reference/project/packages/foo/index.js to './packages/foo/index.js'
+  return absolutePath
+    ? absolutePath.replace(new RegExp(`^.*/${projectName}/?(.*)$`), './$1')
+    : null;
 }
 
 module.exports = { fromImportToExportPerspective };
