@@ -412,8 +412,9 @@ describe('Analyzer "match-imports"', () => {
   describe('Matching', () => {
     it(`produces a list of all matches, sorted by project`, async () => {
       /**
-       * N.B. output structure could be simplified, since there is
-       * For now, we keep it, so integration with dashboard stays intact.
+       * N.B. output structure could be simplified, since there is no need to order results by
+       * target project (there's only one target project per run).
+       * For now we keep it, so integration with dashboard stays intact.
        * TODO:
        * - write tests for dashboard transform logic
        * - simplify output for match-* analyzers

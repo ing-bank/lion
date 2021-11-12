@@ -9,7 +9,8 @@ const { LogService } = require('../services/LogService.js');
 
 const fakePluginContext = {
   meta: {
-    rollupVersion: '^2.42.0', // nodeResolvePackageJson.peerDependencies.rollup,
+    // rollupVersion needed in plugin context => nodeResolvePackageJson.peerDependencies.rollup
+    rollupVersion: '^2.42.0',
   },
   resolve: () => {},
   warn(...msg) {
