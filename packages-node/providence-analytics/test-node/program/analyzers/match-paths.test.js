@@ -15,12 +15,6 @@ const {
   restoreSuppressNonCriticalLogs,
 } = require('../../../test-helpers/mock-log-service-helpers.js');
 
-const matchPathsQueryConfig = QueryService.getQueryConfigFromAnalyzer('match-paths');
-const _providenceCfg = {
-  targetProjectPaths: ['/importing/target/project'],
-  referenceProjectPaths: ['/exporting/ref/project'],
-};
-
 describe('Analyzer "match-paths"', () => {
   const originalReferenceProjectPaths = InputDataService.referenceProjectPaths;
   const queryResults = [];
@@ -48,8 +42,8 @@ describe('Analyzer "match-paths"', () => {
   });
 
   const referenceProject = {
-    path: '/exporting/ref/project',
-    name: 'exporting-ref-project',
+    path: '/importing/target/project/node_modules/reference-project',
+    name: 'reference-project',
     files: [
       {
         file: './ref-src/core.js',
@@ -90,8 +84,8 @@ describe('Analyzer "match-paths"', () => {
         file: './target-src/ExtendRefRenamedClass.js',
         code: `
       // renamed import (indirect, needs transitivity check)
-      import { RefRenamedClass } from 'exporting-ref-project/reexport.js';
-      import defaultExport from 'exporting-ref-project/reexport.js';
+      import { RefRenamedClass } from 'reference-project/reexport.js';
+      import defaultExport from 'reference-project/reexport.js';
 
       /**
        * This should result in:
@@ -110,10 +104,10 @@ describe('Analyzer "match-paths"', () => {
         file: './target-src/direct-imports.js',
         code: `
       // a direct named import
-      import { RefClass } from 'exporting-ref-project/ref-src/core.js';
+      import { RefClass } from 'reference-project/ref-src/core.js';
 
       // a direct default import
-      import RefDefault from 'exporting-ref-project/reexport.js';
+      import RefDefault from 'reference-project/reexport.js';
 
       /**
        * This should result in:
@@ -148,6 +142,12 @@ describe('Analyzer "match-paths"', () => {
     ],
   };
 
+  const matchPathsQueryConfig = QueryService.getQueryConfigFromAnalyzer('match-paths');
+  const _providenceCfg = {
+    targetProjectPaths: [searchTargetProject.path],
+    referenceProjectPaths: [referenceProject.path],
+  };
+
   describe('Variables', () => {
     const expectedMatches = [
       {
@@ -161,7 +161,7 @@ describe('Analyzer "match-paths"', () => {
               to: './target-src/ExtendRefRenamedClass.js',
             },
             {
-              from: 'exporting-ref-project/reexport.js',
+              from: 'reference-project/reexport.js',
               to: './target-src/ExtendRefRenamedClass.js',
             },
           ],
@@ -182,11 +182,11 @@ describe('Analyzer "match-paths"', () => {
               to: './index.js',
             },
             {
-              from: 'exporting-ref-project/reexport.js',
+              from: 'reference-project/reexport.js',
               to: './index.js',
             },
             {
-              from: 'exporting-ref-project/ref-src/core.js',
+              from: 'reference-project/ref-src/core.js',
               to: './index.js',
             },
           ],
@@ -203,7 +203,7 @@ describe('Analyzer "match-paths"', () => {
               to: './target-src/direct-imports.js',
             },
             {
-              from: 'exporting-ref-project/ref-src/core.js',
+              from: 'reference-project/ref-src/core.js',
               to: './target-src/direct-imports.js',
             },
           ],
@@ -220,7 +220,7 @@ describe('Analyzer "match-paths"', () => {
 
     describe('Features', () => {
       const refProj = {
-        path: '/exporting/ref/project',
+        path: '/importing/target/project/node_modules/reference-project',
         name: 'reference-project',
         files: [
           {
@@ -376,7 +376,7 @@ describe('Analyzer "match-paths"', () => {
 
     describe('Options', () => {
       const refProj = {
-        path: '/exporting/ref/project',
+        path: '/importing/target/project/node_modules/reference-project',
         name: 'reference-project',
         files: [
           {
@@ -446,8 +446,8 @@ describe('Analyzer "match-paths"', () => {
   describe('Tags', () => {
     // eslint-disable-next-line no-shadow
     const referenceProject = {
-      path: '/exporting/ref/project',
-      name: 'exporting-ref-project',
+      path: '/importing/target/project/node_modules/reference-project',
+      name: 'reference-project',
       files: [
         {
           file: './customelementDefinitions.js',
@@ -493,7 +493,7 @@ describe('Analyzer "match-paths"', () => {
         {
           file: './extendedClassDefinitions.js',
           code: `
-            export { El1, El2 } from 'exporting-ref-project/classDefinitions.js';
+            export { El1, El2 } from 'reference-project/classDefinitions.js';
 
             export class ExtendedEl1 extends El1 {}
         `,
@@ -517,7 +517,7 @@ describe('Analyzer "match-paths"', () => {
         paths: [
           { from: './customelementDefinitions.js', to: './extendedCustomelementDefinitions.js' },
           {
-            from: 'exporting-ref-project/customelementDefinitions.js',
+            from: 'reference-project/customelementDefinitions.js',
             to: './extendedCustomelementDefinitions.js',
           },
         ],
@@ -528,7 +528,7 @@ describe('Analyzer "match-paths"', () => {
         paths: [
           { from: './customelementDefinitions.js', to: './extendedCustomelementDefinitions.js' },
           {
-            from: 'exporting-ref-project/customelementDefinitions.js',
+            from: 'reference-project/customelementDefinitions.js',
             to: './extendedCustomelementDefinitions.js',
           },
         ],
@@ -642,7 +642,7 @@ describe('Analyzer "match-paths"', () => {
         await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         expect(queryResult.queryOutput[0].tag.paths[1]).to.eql({
-          from: 'exporting-ref-project/customelementDefinitions.js',
+          from: 'reference-project/customelementDefinitions.js',
           to: './extendedCustomelementDefinitions.js',
         });
       });
@@ -692,7 +692,7 @@ describe('Analyzer "match-paths"', () => {
               to: './target-src/ExtendRefRenamedClass.js',
             },
             {
-              from: 'exporting-ref-project/reexport.js',
+              from: 'reference-project/reexport.js',
               to: './target-src/ExtendRefRenamedClass.js',
             },
           ],
@@ -713,11 +713,11 @@ describe('Analyzer "match-paths"', () => {
               to: './index.js',
             },
             {
-              from: 'exporting-ref-project/reexport.js',
+              from: 'reference-project/reexport.js',
               to: './index.js',
             },
             {
-              from: 'exporting-ref-project/ref-src/core.js',
+              from: 'reference-project/ref-src/core.js',
               to: './index.js',
             },
           ],
@@ -734,7 +734,7 @@ describe('Analyzer "match-paths"', () => {
               to: './target-src/direct-imports.js',
             },
             {
-              from: 'exporting-ref-project/ref-src/core.js',
+              from: 'reference-project/ref-src/core.js',
               to: './target-src/direct-imports.js',
             },
           ],
@@ -748,7 +748,7 @@ describe('Analyzer "match-paths"', () => {
               to: './tag-extended.js',
             },
             {
-              from: 'exporting-ref-project/tag.js',
+              from: 'reference-project/tag.js',
               to: './tag-extended.js',
             },
           ],

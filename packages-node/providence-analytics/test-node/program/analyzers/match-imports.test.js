@@ -21,12 +21,12 @@ const {
 const matchImportsQueryConfig = QueryService.getQueryConfigFromAnalyzer('match-imports');
 const _providenceCfg = {
   targetProjectPaths: ['/importing/target/project'],
-  referenceProjectPaths: ['/exporting/ref/project'],
+  referenceProjectPaths: ['/importing/target/project/node_modules/exporting-ref-project'],
 };
 
 // 1. Reference input data
 const referenceProject = {
-  path: '/exporting/ref/project',
+  path: '/importing/target/project/node_modules/exporting-ref-project',
   name: 'exporting-ref-project',
   files: [
     // This file contains all 'original' exported definitions
@@ -253,58 +253,207 @@ describe('Analyzer "match-imports"', () => {
   }
 
   describe('Extracting exports', () => {
-    it(`identifies all direct export specifiers consumed by "importing-target-project"`, async () => {
-      mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-      await providence(matchImportsQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-      expectedExportIdsDirect.forEach(directId => {
-        expect(
-          queryResult.queryOutput.find(
-            exportMatchResult => exportMatchResult.exportSpecifier.id === directId,
-          ),
-        ).not.to.equal(undefined, `id '${directId}' not found`);
+    it(`identifies all direct export specifiers consumed by target`, async () => {
+      const refProject = {
+        path: '/target/node_modules/ref',
+        name: 'ref',
+        files: [{ file: './direct.js', code: `export default function x() {};` }],
+      };
+      const targetProject = {
+        path: '/target',
+        name: 'target',
+        files: [{ file: './index.js', code: `import myFn from 'ref/direct.js';` }],
+      };
+      mockTargetAndReferenceProject(targetProject, refProject);
+      await providence(matchImportsQueryConfig, {
+        targetProjectPaths: [targetProject.path],
+        referenceProjectPaths: [refProject.path],
       });
+      const queryResult = queryResults[0];
+      expect(queryResult.queryOutput).eql([
+        {
+          exportSpecifier: {
+            filePath: './direct.js',
+            id: '[default]::./direct.js::ref',
+            name: '[default]',
+            project: 'ref',
+          },
+          matchesPerProject: [{ files: ['./index.js'], project: 'target' }],
+        },
+      ]);
     });
 
-    it(`identifies all indirect export specifiers consumed by "importing-target-project"`, async () => {
-      mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-      await providence(matchImportsQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-      expectedExportIdsIndirect.forEach(indirectId => {
-        expect(
-          queryResult.queryOutput.find(
-            exportMatchResult => exportMatchResult.exportSpecifier.id === indirectId,
-          ),
-        ).not.to.equal(undefined, `id '${indirectId}' not found`);
+    it(`identifies all indirect (transitive) export specifiers consumed by target`, async () => {
+      const refProject = {
+        path: '/target/node_modules/ref',
+        name: 'ref',
+        files: [
+          { file: './direct.js', code: `export function x() {};` },
+          { file: './indirect.js', code: `export { x } from './direct.js';` },
+        ],
+      };
+      const targetProject = {
+        path: '/target',
+        name: 'target',
+        files: [{ file: './index.js', code: `import { x } from 'ref/indirect.js';` }],
+      };
+      mockTargetAndReferenceProject(targetProject, refProject);
+      await providence(matchImportsQueryConfig, {
+        targetProjectPaths: [targetProject.path],
+        referenceProjectPaths: [refProject.path],
       });
+      const queryResult = queryResults[0];
+      expect(queryResult.queryOutput).eql([
+        {
+          exportSpecifier: {
+            filePath: './indirect.js',
+            id: 'x::./indirect.js::ref',
+            name: 'x',
+            project: 'ref',
+          },
+          matchesPerProject: [{ files: ['./index.js'], project: 'target' }],
+        },
+      ]);
     });
 
-    it(`matches namespaced specifiers consumed by "importing-target-project"`, async () => {
-      mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-      await providence(matchImportsQueryConfig, _providenceCfg);
+    it(`matches namespaced specifiers consumed by target`, async () => {
+      const refProject = {
+        path: '/target/node_modules/ref',
+        name: 'ref',
+        files: [
+          { file: './namespaced.js', code: `export function x() {}; export function y() {};` },
+        ],
+      };
+      const targetProject = {
+        path: '/target',
+        name: 'target',
+        files: [{ file: './index.js', code: `import * as xy from 'ref/namespaced.js';` }],
+      };
+      mockTargetAndReferenceProject(targetProject, refProject);
+      await providence(matchImportsQueryConfig, {
+        targetProjectPaths: [targetProject.path],
+        referenceProjectPaths: [refProject.path],
+      });
       const queryResult = queryResults[0];
-      expectedExportIdsNamespaced.forEach(exportedSpecifierId => {
-        expect(
-          queryResult.queryOutput.find(
-            exportMatchResult => exportMatchResult.exportSpecifier.id === exportedSpecifierId,
-          ),
-        ).not.to.equal(undefined, `id '${exportedSpecifierId}' not found`);
+      expect(queryResult.queryOutput).eql([
+        {
+          exportSpecifier: {
+            filePath: './namespaced.js',
+            id: 'x::./namespaced.js::ref',
+            name: 'x',
+            project: 'ref',
+          },
+          matchesPerProject: [{ files: ['./index.js'], project: 'target' }],
+        },
+        {
+          exportSpecifier: {
+            filePath: './namespaced.js',
+            id: 'y::./namespaced.js::ref',
+            name: 'y',
+            project: 'ref',
+          },
+          matchesPerProject: [{ files: ['./index.js'], project: 'target' }],
+        },
+        {
+          exportSpecifier: {
+            filePath: './namespaced.js',
+            id: '[file]::./namespaced.js::ref',
+            name: '[file]',
+            project: 'ref',
+          },
+          matchesPerProject: [{ files: ['./index.js'], project: 'target' }],
+        },
+      ]);
+    });
+
+    describe('Inside small example project', () => {
+      it(`identifies all direct export specifiers consumed by "importing-target-project"`, async () => {
+        mockTargetAndReferenceProject(searchTargetProject, referenceProject);
+        await providence(matchImportsQueryConfig, _providenceCfg);
+        const queryResult = queryResults[0];
+        // console.log(JSON.stringify(queryResult.queryOutput, null, 2));
+        expectedExportIdsDirect.forEach(directId => {
+          expect(
+            queryResult.queryOutput.find(
+              exportMatchResult => exportMatchResult.exportSpecifier.id === directId,
+            ),
+          ).not.to.equal(undefined, `id '${directId}' not found`);
+        });
+      });
+
+      it(`identifies all indirect export specifiers consumed by "importing-target-project"`, async () => {
+        mockTargetAndReferenceProject(searchTargetProject, referenceProject);
+        await providence(matchImportsQueryConfig, _providenceCfg);
+        const queryResult = queryResults[0];
+        expectedExportIdsIndirect.forEach(indirectId => {
+          expect(
+            queryResult.queryOutput.find(
+              exportMatchResult => exportMatchResult.exportSpecifier.id === indirectId,
+            ),
+          ).not.to.equal(undefined, `id '${indirectId}' not found`);
+        });
+      });
+
+      it(`matches namespaced specifiers consumed by "importing-target-project"`, async () => {
+        mockTargetAndReferenceProject(searchTargetProject, referenceProject);
+        await providence(matchImportsQueryConfig, _providenceCfg);
+        const queryResult = queryResults[0];
+        expectedExportIdsNamespaced.forEach(exportedSpecifierId => {
+          expect(
+            queryResult.queryOutput.find(
+              exportMatchResult => exportMatchResult.exportSpecifier.id === exportedSpecifierId,
+            ),
+          ).not.to.equal(undefined, `id '${exportedSpecifierId}' not found`);
+        });
       });
     });
   });
 
   describe('Matching', () => {
     it(`produces a list of all matches, sorted by project`, async () => {
-      mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-      await providence(matchImportsQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-
-      expectedExportIdsDirect.forEach(targetId => {
-        testMatchedEntry(targetId, queryResult, ['./target-src/direct-imports.js']);
+      /**
+       * N.B. output structure could be simplified, since there is no need to order results by
+       * target project (there's only one target project per run).
+       * For now we keep it, so integration with dashboard stays intact.
+       * TODO:
+       * - write tests for dashboard transform logic
+       * - simplify output for match-* analyzers
+       * - adjust dashboard transfrom logic
+       */
+      const refProject = {
+        path: '/target/node_modules/ref',
+        name: 'ref',
+        files: [{ file: './direct.js', code: `export default function x() {};` }],
+      };
+      const targetProject = {
+        path: '/target',
+        name: 'target',
+        files: [{ file: './index.js', code: `import myFn from 'ref/direct.js';` }],
+      };
+      mockTargetAndReferenceProject(targetProject, refProject);
+      await providence(matchImportsQueryConfig, {
+        targetProjectPaths: [targetProject.path],
+        referenceProjectPaths: [refProject.path],
       });
+      const queryResult = queryResults[0];
+      expect(queryResult.queryOutput[0].matchesPerProject).eql([
+        { files: ['./index.js'], project: 'target' },
+      ]);
+    });
 
-      expectedExportIdsIndirect.forEach(targetId => {
-        testMatchedEntry(targetId, queryResult, ['./target-src/indirect-imports.js']);
+    describe('Inside small example project', () => {
+      it(`produces a list of all matches, sorted by project`, async () => {
+        mockTargetAndReferenceProject(searchTargetProject, referenceProject);
+        await providence(matchImportsQueryConfig, _providenceCfg);
+        const queryResult = queryResults[0];
+
+        expectedExportIdsDirect.forEach(targetId => {
+          testMatchedEntry(targetId, queryResult, ['./target-src/direct-imports.js']);
+        });
+
+        expectedExportIdsIndirect.forEach(targetId => {
+          testMatchedEntry(targetId, queryResult, ['./target-src/indirect-imports.js']);
+        });
       });
     });
   });

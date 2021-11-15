@@ -1,9 +1,27 @@
+const path = require('path');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const mockFs = require('mock-fs');
-const path = require('path');
+const mockRequire = require('mock-require');
+
+function mock(obj) {
+  mockFs(obj);
+
+  Object.entries(obj).forEach(([key, value]) => {
+    if (key.endsWith('.json')) {
+      mockRequire(key, JSON.parse(value));
+    } else {
+      mockRequire(key, value);
+    }
+  });
+}
+
+mock.restore = () => {
+  mockFs.restore();
+  mockRequire.stopAll();
+};
 
 /**
- * @desc Makes sure that, whenever the main program (providence) calls
+ * Makes sure that, whenever the main program (providence) calls
  * "InputDataService.createDataObject", it gives back a mocked response.
  * @param {string[]|object} files all the code that will be run trhough AST
  * @param {object} [cfg]
@@ -13,7 +31,7 @@ const path = require('path');
  * paths match with the indexes of the files
  * @param {object} existingMock config for mock-fs, so the previous config is not overridden
  */
-function mockProject(files, cfg = {}, existingMock = {}) {
+function getMockObjectForProject(files, cfg = {}, existingMock = {}) {
   const projName = cfg.projectName || 'fictional-project';
   const projPath = cfg.projectPath || '/fictional/project';
 
@@ -50,17 +68,32 @@ function mockProject(files, cfg = {}, existingMock = {}) {
   }
 
   const totalMock = {
-    ...existingMock, // can only add to mock-fs, not expand existing config?
     ...optionalPackageJson,
+    ...existingMock, // can only add to mock-fs, not expand existing config?
     ...createFilesObjForFolder(files),
   };
-
-  mockFs(totalMock);
   return totalMock;
 }
 
+/**
+ * Makes sure that, whenever the main program (providence) calls
+ * "InputDataService.createDataObject", it gives back a mocked response.
+ * @param {string[]|object} files all the code that will be run trhough AST
+ * @param {object} [cfg]
+ * @param {string} [cfg.projectName='fictional-project']
+ * @param {string} [cfg.projectPath='/fictional/project']
+ * @param {string[]} [cfg.filePaths=`[/fictional/project/test-file-${i}.js]`] The indexes of the file
+ * paths match with the indexes of the files
+ * @param {object} existingMock config for mock-fs, so the previous config is not overridden
+ */
+function mockProject(files, cfg = {}, existingMock = {}) {
+  const obj = getMockObjectForProject(files, cfg, existingMock);
+  mockFs(obj);
+  return obj;
+}
+
 function restoreMockedProjects() {
-  mockFs.restore();
+  mock.restore();
 }
 
 function getEntry(queryResult, index = 0) {
@@ -69,6 +102,23 @@ function getEntry(queryResult, index = 0) {
 
 function getEntries(queryResult) {
   return queryResult.queryOutput;
+}
+
+function createPackageJson({ filePaths, codeSnippets, projectName, refProjectName, refVersion }) {
+  const targetHasPackageJson = filePaths.includes('./package.json');
+  // Make target depend on ref
+  if (targetHasPackageJson) {
+    return;
+  }
+  const pkgJson = {
+    name: projectName,
+    version: '1.0.0',
+  };
+  if (refProjectName && refVersion) {
+    pkgJson.dependencies = { [refProjectName]: refVersion };
+  }
+  codeSnippets.push(JSON.stringify(pkgJson));
+  filePaths.push('./package.json');
 }
 
 /**
@@ -86,22 +136,25 @@ function mockTargetAndReferenceProject(searchTargetProject, referenceProject) {
   const targetcodeSnippets = searchTargetProject.files.map(f => f.code);
   const targetFilePaths = searchTargetProject.files.map(f => f.file);
   const refVersion = referenceProject.version || '1.0.0';
+  const refcodeSnippets = referenceProject.files.map(f => f.code);
+  const refFilePaths = referenceProject.files.map(f => f.file);
 
-  const targetHasPackageJson = targetFilePaths.includes('./package.json');
-  // Make target depend on ref
-  if (!targetHasPackageJson) {
-    targetcodeSnippets.push(`{
-      "name": "${targetProjectName}" ,
-      "version": "1.0.0",
-      "dependencies": {
-        "${refProjectName}": "${refVersion}"
-      }
-    }`);
-    targetFilePaths.push('./package.json');
-  }
+  createPackageJson({
+    filePaths: targetFilePaths,
+    codeSnippets: targetcodeSnippets,
+    projectName: targetProjectName,
+    refProjectName,
+    refVersion,
+  });
+
+  createPackageJson({
+    filePaths: refFilePaths,
+    codeSnippets: refcodeSnippets,
+    projectName: refProjectName,
+  });
 
   // Create target mock
-  const targetMock = mockProject(targetcodeSnippets, {
+  const targetMock = getMockObjectForProject(targetcodeSnippets, {
     filePaths: targetFilePaths,
     projectName: targetProjectName,
     projectPath: searchTargetProject.path || 'fictional/target/project',
