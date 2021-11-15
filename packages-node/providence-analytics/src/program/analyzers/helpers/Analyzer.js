@@ -6,31 +6,40 @@ const { LogService } = require('../../services/LogService.js');
 const { QueryService } = require('../../services/QueryService.js');
 const { ReportService } = require('../../services/ReportService.js');
 const { InputDataService } = require('../../services/InputDataService.js');
-const { aForEach } = require('../../utils/async-array-utils.js');
 const { toPosixPath } = require('../../utils/to-posix-path.js');
 const { getFilePathRelativeFromRoot } = require('../../utils/get-file-path-relative-from-root.js');
 
 /**
- * @desc analyzes one entry: the callback can traverse a given ast for each entry
- * @param {AstDataProject[]} astDataProjects
+ * @typedef {import('../../types/core').AnalyzerName} AnalyzerName
+ * @typedef {import('../../types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../types/core').QueryOutput} QueryOutput
+ * @typedef {import('../../types/core').ProjectInputData} ProjectInputData
+ * @typedef {import('../../types/core').ProjectInputDataWithMeta} ProjectInputDataWithMeta
+ * @typedef {import('../../types/core').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../types/core').MatchAnalyzerConfig} MatchAnalyzerConfig
+ */
+
+/**
+ * Analyzes one entry: the callback can traverse a given ast for each entry
+ * @param {ProjectInputDataWithMeta} projectData
  * @param {function} astAnalysis
  */
 async function analyzePerAstEntry(projectData, astAnalysis) {
   const entries = [];
-  await aForEach(projectData.entries, async ({ file, ast, context: astContext }) => {
+  for (const { file, ast, context: astContext } of projectData.entries) {
     const relativePath = getFilePathRelativeFromRoot(file, projectData.project.path);
     const context = { code: astContext.code, relativePath, projectData };
     LogService.debug(`${pathLib.resolve(projectData.project.path, file)}`);
     const { result, meta } = await astAnalysis(ast, context);
     entries.push({ file: relativePath, meta, result });
-  });
+  }
   const filteredEntries = entries.filter(({ result }) => Boolean(result.length));
   return filteredEntries;
 }
 
 /**
  * Transforms QueryResult entries to posix path notations on Windows
- * @param {array|object} data
+ * @param {object[]|object} data
  */
 function posixify(data) {
   if (!data) {
@@ -55,9 +64,9 @@ function posixify(data) {
  * @desc This method ensures that the result returned by an analyzer always has a consistent format.
  * By returning the configuration for the queryOutput, it will be possible to run later queries
  * under the same circumstances
- * @param {array} queryOutput
+ * @param {QueryOutput} queryOutput
  * @param {object} configuration
- * @param {object} analyzer
+ * @param {Analyzer} analyzer
  */
 function ensureAnalyzerResultFormat(queryOutput, configuration, analyzer) {
   const { targetProjectMeta, identifier, referenceProjectMeta } = analyzer;
@@ -71,7 +80,7 @@ function ensureAnalyzerResultFormat(queryOutput, configuration, analyzer) {
     delete optional.referenceProject.path; // get rid of machine specific info
   }
 
-  /** @type {AnalyzerResult} */
+  /** @type {AnalyzerQueryResult} */
   const aResult = {
     queryOutput,
     analyzerMeta: {
@@ -114,11 +123,11 @@ function ensureAnalyzerResultFormat(queryOutput, configuration, analyzer) {
 }
 
 /**
- * @desc Before running the analyzer, we need two conditions for a 'compatible match':
- * 1. referenceProject is imported by targetProject at all
- * 2. referenceProject and targetProject have compatible major versions
- * @param {string} referencePath
- * @param {string} targetPath
+ * Before running the analyzer, we need two conditions for a 'compatible match':
+ * - 1. referenceProject is imported by targetProject at all
+ * - 2. referenceProject and targetProject have compatible major versions
+ * @param {PathFromSystemRoot} referencePath
+ * @param {PathFromSystemRoot} targetPath
  */
 function checkForMatchCompatibility(referencePath, targetPath) {
   const refFile = pathLib.resolve(referencePath, 'package.json');
@@ -142,7 +151,7 @@ function checkForMatchCompatibility(referencePath, targetPath) {
 
 /**
  * If in json format, 'unwind' to be compatible for analysis...
- * @param {AnalyzerResult} targetOrReferenceProjectResult
+ * @param {AnalyzerQueryResult} targetOrReferenceProjectResult
  */
 function unwindJsonResult(targetOrReferenceProjectResult) {
   const { queryOutput } = targetOrReferenceProjectResult;
@@ -153,6 +162,8 @@ function unwindJsonResult(targetOrReferenceProjectResult) {
 class Analyzer {
   constructor() {
     this.requiredAst = 'babel';
+    /** @type {AnalyzerName|''} */
+    this.name = '';
   }
 
   static get requiresReference() {
@@ -262,7 +273,7 @@ class Analyzer {
   /**
    * @param {QueryOutput} queryOutput
    * @param {AnalyzerConfig} cfg
-   * @returns {AnalyzerResult}
+   * @returns {AnalyzerQueryResult}
    */
   _finalize(queryOutput, cfg) {
     LogService.debug(`Analyzer "${this.name}": started _finalize method`);
@@ -319,7 +330,7 @@ class Analyzer {
    * @param {object} config
    * @param {string} config.analyzerName
    * @param {string} config.identifier
-   * @returns {AnalyzerResult|undefined}
+   * @returns {AnalyzerQueryResult|undefined}
    */
   static _getCachedAnalyzerResult({ analyzerName, identifier }) {
     const cachedResult = ReportService.getCachedResult({ analyzerName, identifier });
@@ -328,7 +339,7 @@ class Analyzer {
     }
     LogService.success(`cached version found for ${identifier}`);
 
-    /** @type {AnalyzerResult} */
+    /** @type {AnalyzerQueryResult} */
     const result = unwindJsonResult(cachedResult);
     result.analyzerMeta.__fromCache = true;
     return result;

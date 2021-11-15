@@ -6,8 +6,16 @@ const FindExportsAnalyzer = require('./find-exports.js');
 const { Analyzer } = require('./helpers/Analyzer.js');
 const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
 
-/** @typedef {import('./types').FindClassesAnalyzerResult} FindClassesAnalyzerResult */
-/** @typedef {import('./types').FindExportsAnalyzerResult} FindExportsAnalyzerResult */
+/**
+ * @typedef {import('../types/analyzers/find-classes').FindClassesAnalyzerResult} FindClassesAnalyzerResult
+ * @typedef {import('../types/find-imports').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../types/find-exports').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../types/find-exports').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
+ * @typedef {import('../types/find-imports').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
+ * @typedef {import('../types/match-imports').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
+ * @typedef {import('../types/match-imports').MatchImportsConfig} MatchImportsConfig
+ * @typedef {import('../types/core/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ */
 
 function getMemberOverrides(
   refClassesAResult,
@@ -63,7 +71,7 @@ function storeResult(resultsObj, exportId, filteredList, meta) {
  * @param {FindClassesAnalyzerResult} targetClassesAnalyzerResult
  * @param {FindClassesAnalyzerResult} refClassesAResult
  * @param {MatchSubclassesConfig} customConfig
- * @returns {AnalyzerResult}
+ * @returns {AnalyzerQueryResult}
  */
 async function matchSubclassesPostprocess(
   exportsAnalyzerResult,
@@ -243,7 +251,7 @@ async function matchSubclassesPostprocess(
     })
     .filter(r => Object.keys(r.matchesPerProject).length);
 
-  return /** @type {AnalyzerResult} */ resultsArray;
+  return /** @type {AnalyzerQueryResult} */ resultsArray;
 }
 
 // function postProcessAnalyzerResult(aResult) {

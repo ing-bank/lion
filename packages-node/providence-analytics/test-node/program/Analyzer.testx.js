@@ -80,7 +80,7 @@ describe('Analyzer', () => {
     describe('Traverse phase', () => {});
 
     describe('Finalize phase', () => {
-      it('returns an AnalyzerResult', async () => {
+      it('returns an AnalyzerQueryResult', async () => {
         const queryResult = queryResults[0];
         const { queryOutput, meta } = queryResult;
 

@@ -1,5 +1,5 @@
 /**
- * @desc Readable way to do an async forEach
+ * Readable way to do an async forEach
  * Since predictability matters, all array items will be handled in a queue,
  * one after another
  * @param {any[]} array
@@ -12,7 +12,7 @@ async function aForEach(array, callback) {
   }
 }
 /**
- * @desc Readable way to do an async forEach
+ * Readable way to do an async forEach
  * If predictability does not matter, this method will traverse array items concurrently,
  * leading to a better performance
  * @param {any[]} array
@@ -22,11 +22,11 @@ async function aForEachNonSequential(array, callback) {
   return Promise.all(array.map(callback));
 }
 /**
- * @desc Readable way to do an async map
+ * Readable way to do an async map
  * Since predictability is crucial for a map, all array items will be handled in a queue,
  * one after anotoher
- * @param {any[]} array
- * @param {function} callback
+ * @param {Array<any>} array
+ * @param {(param:any, i:number) => any} callback
  */
 async function aMap(array, callback) {
   const mappedResults = [];

@@ -6,15 +6,22 @@ const { Analyzer } = require('./helpers/Analyzer.js');
 const { LogService } = require('../services/LogService.js');
 
 /**
+ * @typedef {import('../types/core').AnalyzerName} AnalyzerName
+ * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../types/analyzers').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
+ * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ */
+
+/**
  * Options that allow to filter 'on a file basis'.
  * We can also filter on the total result
  */
 const /** @type {AnalyzerOptions} */ options = {
     /**
-     * @desc Only leaves entries with external sources:
+     * Only leaves entries with external sources:
      * - keeps: '@open-wc/testing'
      * - drops: '../testing'
-     * @param {FindImportsAnalysisResult} result
+     * @param {FindImportsAnalyzerResult} result
      * @param {string} targetSpecifier for instance 'LitElement'
      */
     onlyExternalSources(result) {
@@ -41,14 +48,14 @@ function getImportOrReexportsSpecifiers(node) {
 }
 
 /**
- * @desc Finds import specifiers and sources
- * @param {BabelAst} ast
- * @param {string} context.relativePath the file being currently processed
+ * Finds import specifiers and sources
+ * @param {any} ast
  */
 function findImportsPerAstEntry(ast) {
   LogService.debug(`Analyzer "find-imports": started findImportsPerAstEntry method`);
 
   // Visit AST...
+  /** @type {Partial<FindImportsAnalyzerEntry>[]} */
   const transformedEntry = [];
   traverse(ast, {
     ImportDeclaration(path) {
@@ -96,11 +103,12 @@ function findImportsPerAstEntry(ast) {
 class FindImportsAnalyzer extends Analyzer {
   constructor() {
     super();
+    /** @type {AnalyzerName} */
     this.name = 'find-imports';
   }
 
   /**
-   * @desc Finds import specifiers and sources
+   * Finds import specifiers and sources
    * @param {FindImportsConfig} customConfig
    */
   async execute(customConfig = {}) {

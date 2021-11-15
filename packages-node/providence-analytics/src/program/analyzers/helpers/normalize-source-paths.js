@@ -1,13 +1,22 @@
 /* eslint-disable no-param-reassign */
 const pathLib = require('path');
-const {
-  isRelativeSourcePath,
-  // toRelativeSourcePath,
-} = require('../../utils/relative-source-path.js');
+const { isRelativeSourcePath } = require('../../utils/relative-source-path.js');
 const { resolveImportPath } = require('../../utils/resolve-import-path.js');
-const { aMap } = require('../../utils/async-array-utils.js');
 const { toPosixPath } = require('../../utils/to-posix-path.js');
+const { aMap } = require('../../utils/async-array-utils.js');
 
+/**
+ * @typedef {import('../../types/core').PathRelative} PathRelative
+ * @typedef {import('../../types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../types/core').QueryOutput} QueryOutput
+ */
+
+/**
+ *
+ * @param {PathFromSystemRoot} currentDirPath
+ * @param {PathFromSystemRoot} resolvedPath
+ * @returns {PathRelative}
+ */
 function toLocalPath(currentDirPath, resolvedPath) {
   let relativeSourcePath = pathLib.relative(currentDirPath, resolvedPath);
   if (!relativeSourcePath.startsWith('.')) {
@@ -16,29 +25,32 @@ function toLocalPath(currentDirPath, resolvedPath) {
     // so 'my-local-files.js' -> './my-local-files.js'
     relativeSourcePath = `./${relativeSourcePath}`;
   }
-  return toPosixPath(relativeSourcePath);
+  return /** @type {PathRelative} */ (toPosixPath(relativeSourcePath));
 }
 
 /**
- * @desc Resolves and converts to normalized local/absolute path, based on file-system information.
+ * Resolves and converts to normalized local/absolute path, based on file-system information.
  * - from: { source: '../../relative/file' }
  * - to: {
  *         fullPath: './absolute/path/from/root/to/relative/file.js',
  *         normalizedPath: '../../relative/file.js'
  *    }
- * @param {FindImportsAnalysisResult} result
- * @param {string} result
+ * @param {QueryOutput} queryOutput
  * @param {string} relativePath
- * @returns {string} a relative path from root (usually a project) or an external path like 'lion-based-ui/x.js'
+ * @param {string} rootPath
  */
 async function normalizeSourcePaths(queryOutput, relativePath, rootPath = process.cwd()) {
-  const currentFilePath = pathLib.resolve(rootPath, relativePath);
-  const currentDirPath = pathLib.dirname(currentFilePath);
+  const currentFilePath = /** @type {PathFromSystemRoot} */ (
+    pathLib.resolve(rootPath, relativePath)
+  );
+  const currentDirPath = /** @type {PathFromSystemRoot} */ (pathLib.dirname(currentFilePath));
   return aMap(queryOutput, async specifierResObj => {
     if (specifierResObj.source) {
       if (isRelativeSourcePath(specifierResObj.source) && relativePath) {
         // This will be a source like '../my/file.js' or './file.js'
-        const resolvedPath = await resolveImportPath(specifierResObj.source, currentFilePath);
+        const resolvedPath = /** @type {PathFromSystemRoot} */ (
+          await resolveImportPath(specifierResObj.source, currentFilePath)
+        );
         specifierResObj.normalizedSource =
           resolvedPath && toLocalPath(currentDirPath, resolvedPath);
         // specifierResObj.fullSource = resolvedPath && toRelativeSourcePath(resolvedPath, rootPath);

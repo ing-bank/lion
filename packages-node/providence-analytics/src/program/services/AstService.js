@@ -1,3 +1,4 @@
+// @ts-nocheck
 const {
   createProgram,
   getPreEmitDiagnostics,
@@ -6,17 +7,22 @@ const {
   ScriptTarget,
 } = require('typescript');
 const babelParser = require('@babel/parser');
+// @ts-expect-error
 const esModuleLexer = require('es-module-lexer');
 const parse5 = require('parse5');
 const traverseHtml = require('../utils/traverse-html.js');
 const { LogService } = require('./LogService.js');
+
+/**
+ * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
+ */
 
 class AstService {
   /**
    * @deprecated for simplicity/maintainability, only allow Babel for js
    * Compiles an array of file paths using Typescript.
    * @param {string[]} filePaths
-   * @param options
+   * @param {CompilerOptions} options
    */
   static _getTypescriptAst(filePaths, options) {
     // eslint-disable-next-line no-param-reassign
@@ -51,7 +57,6 @@ class AstService {
   /**
    * Compiles an array of file paths using Babel.
    * @param {string} code
-   * @param {object} [options]
    */
   static _getBabelAst(code) {
     const ast = babelParser.parse(code, {
@@ -62,7 +67,7 @@ class AstService {
   }
 
   /**
-   * @desc Combines all script tags as if it were one js file.
+   * Combines all script tags as if it were one js file.
    * @param {string} htmlCode
    */
   static getScriptsFromHtml(htmlCode) {
@@ -86,7 +91,7 @@ class AstService {
   }
 
   /**
-   * @desc Returns the desired AST
+   * Returns the desired AST
    * Why would we support multiple ASTs/parsers?
    * - 'babel' is our default tool for analysis. It's the most versatile and popular tool, it's
    * close to the EStree standard (other than Typescript) and a lot of plugins and resources can
@@ -95,8 +100,7 @@ class AstService {
    * - 'es-module-lexer' (deprecated) is needed for the dedicated task of finding module imports; it is way
    * quicker than a full fledged AST parser
    * @param { 'babel' } astType
-   * @param { object } [options]
-   * @param { string } [options.filePath] the path of the file we're trying to parse
+   * @param { {filePath: PathFromSystemRoot} } [options]
    */
   // eslint-disable-next-line consistent-return
   static getAst(code, astType, { filePath } = {}) {

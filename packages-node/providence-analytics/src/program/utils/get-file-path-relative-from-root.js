@@ -1,12 +1,18 @@
 /**
- * @desc relative path of analyzed file, realtive to project root of analyzed project
+ * @typedef {import('../types/core/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../types/core/core').PathFromSystemRoot} PathFromSystemRoot
+ */
+
+/**
+ * Relative path of analyzed file, realtive to project root of analyzed project
  * - from: '/my/machine/details/analyzed-project/relevant/file.js'
  * - to: './relevant/file.js'
- * @param {string} absolutePath
- * @param {string} projectRoot
+ * @param {PathFromSystemRoot} absolutePath
+ * @param {PathFromSystemRoot} projectRoot
+ * @returns {PathRelativeFromProjectRoot}
  */
 function getFilePathRelativeFromRoot(absolutePath, projectRoot) {
-  return absolutePath.replace(projectRoot, '.');
+  return /** @type {PathRelativeFromProjectRoot} */ (absolutePath.replace(projectRoot, '.'));
 }
 
 module.exports = { getFilePathRelativeFromRoot };

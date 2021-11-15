@@ -34,7 +34,7 @@ function report(queryResult, cfg) {
 }
 
 /**
- * @desc creates unique QueryConfig for analyzer turn
+ * Creates unique QueryConfig for analyzer turn
  * @param {QueryConfig} queryConfig
  * @param {string} targetProjectPath
  * @param {string} referenceProjectPath
@@ -194,7 +194,7 @@ async function providenceMain(queryConfig, customConfig) {
   }
 
   let queryResults;
-  if (queryConfig.type === 'analyzer') {
+  if (queryConfig.type === 'ast-analyzer') {
     queryResults = await handleAnalyzer(queryConfig, cfg);
   } else {
     const inputData = InputDataService.createDataObject(

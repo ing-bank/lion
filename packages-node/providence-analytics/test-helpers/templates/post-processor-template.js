@@ -6,9 +6,9 @@ const /** @type {PostProcessorOptions} */ options = {
 
 /**
  *
- * @param {AnalyzerResult} analyzerResult
+ * @param {AnalyzerQueryResult} analyzerResult
  * @param {FindImportsConfig} customConfig
- * @returns {AnalyzerResult}
+ * @returns {AnalyzerQueryResult}
  */
 function myPostProcessor(analyzerResult, customConfig) {
   const cfg = {
@@ -31,7 +31,7 @@ function myPostProcessor(analyzerResult, customConfig) {
     transformedResult = options.optionA(transformedResult);
   }
 
-  return /** @type {AnalyzerResult} */ transformedResult;
+  return /** @type {AnalyzerQueryResult} */ transformedResult;
 }
 
 module.exports = {

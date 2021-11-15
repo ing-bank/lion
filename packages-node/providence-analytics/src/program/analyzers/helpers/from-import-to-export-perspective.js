@@ -3,6 +3,10 @@ const { LogService } = require('../../services/LogService.js');
 const { resolveImportPath } = require('../../utils/resolve-import-path.js');
 
 /**
+ * @typedef {import('../../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ */
+
+/**
  * @param {string} importee like '@lion/core/myFile.js'
  * @returns {string} project name ('@lion/core')
  */
@@ -31,7 +35,7 @@ function getProjectFromImportee(importee) {
  * @param {object} config
  * @param {string} config.importee 'reference-project/foo.js'
  * @param {string} config.importer '/my/project/importing-file.js'
- * @returns {Promise<string|null>} './foo.js'
+ * @returns {Promise<PathRelativeFromProjectRoot|null>} './foo.js'
  */
 async function fromImportToExportPerspective({ importee, importer }) {
   if (isRelativeSourcePath(importee)) {
@@ -42,9 +46,14 @@ async function fromImportToExportPerspective({ importee, importer }) {
   const absolutePath = await resolveImportPath(importee, importer);
   const projectName = getProjectFromImportee(importee);
 
-  // from /my/reference/project/packages/foo/index.js to './packages/foo/index.js'
+  /**
+   * - from: '/my/reference/project/packages/foo/index.js'
+   * - to: './packages/foo/index.js'
+   */
   return absolutePath
-    ? absolutePath.replace(new RegExp(`^.*/${projectName}/?(.*)$`), './$1')
+    ? /** @type {PathRelativeFromProjectRoot} */ (
+        absolutePath.replace(new RegExp(`^.*/${projectName}/?(.*)$`), './$1')
+      )
     : null;
 }
 

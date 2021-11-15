@@ -1,35 +1,55 @@
-// @ts-ignore-next-line
-require('../types/index.js');
-
 const deepmerge = require('deepmerge');
 const child_process = require('child_process'); // eslint-disable-line camelcase
 const { AstService } = require('./AstService.js');
 const { LogService } = require('./LogService.js');
 const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
 
+/**
+ * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../types/analyzers').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
+ * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../types/core').QueryConfig} QueryConfig
+ * @typedef {import('../types/core').QueryResult} QueryResult
+ * @typedef {import('../types/core').FeatureQueryConfig} FeatureQueryConfig
+ * @typedef {import('../types/core').SearchQueryConfig} SearchQueryConfig
+ * @typedef {import('../types/core').AnalyzerQueryConfig} AnalyzerQueryConfig
+ * @typedef {import('../types/core').Feature} Feature
+ * @typedef {import('../types/core').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('../types/core').Analyzer} Analyzer
+ * @typedef {import('../types/core').AnalyzerName} AnalyzerName
+ * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../types/core').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../types/core').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../types/core').ProjectInputData} ProjectInputData
+ */
+
 const astProjectsDataCache = new Map();
 
 class QueryService {
   /**
    * @param {string} regexString string for 'free' regex searches.
-   * @returns {QueryConfig}
+   * @returns {SearchQueryConfig}
    */
   static getQueryConfigFromRegexSearchString(regexString) {
     return { type: 'search', regexString };
   }
 
   /**
-   * @desc Util function that can be used to parse cli input and feed the result object to a new
+   * Util function that can be used to parse cli input and feed the result object to a new
    * instance of QueryResult
    * @example
    * const queryConfig = QueryService.getQueryConfigFromFeatureString(”tg-icon[size=xs]”)
    * const myQueryResult = QueryService.grepSearch(inputData, queryConfig)
    * @param {string} queryString - string like ”tg-icon[size=xs]”
-   * @returns {QueryConfig}
+   * @returns {FeatureQueryConfig}
    */
   static getQueryConfigFromFeatureString(queryString) {
+    /**
+     * @param {string} candidate
+     * @returns {[string, boolean]}
+     */
     function parseContains(candidate) {
-      const hasAsterisk = candidate ? candidate.endsWith('*') : null;
+      const hasAsterisk = candidate ? candidate.endsWith('*') : false;
       const filtered = hasAsterisk ? candidate.slice(0, -1) : candidate;
       return [filtered, hasAsterisk];
     }
@@ -67,16 +87,17 @@ class QueryService {
       };
     } else {
       // Just look for tag name
-      featureObj = { tag, usesTagPartialMatch };
+      featureObj = /** @type {Feature} */ ({ tag, usesTagPartialMatch });
     }
 
     return { type: 'feature', feature: featureObj };
   }
 
   /**
-   * @desc retrieves the default export found in ./program/analyzers/findImport.js
-   * @param {string|Analyzer} analyzer
-   * @returns {QueryConfig}
+   * RSetrieves the default export found in ./program/analyzers/findImport.js
+   * @param {string|Analyzer} analyzerObjectOrString
+   * @param {AnalyzerConfig} analyzerConfig
+   * @returns {AnalyzerQueryConfig}
    */
   static getQueryConfigFromAnalyzer(analyzerObjectOrString, analyzerConfig) {
     let analyzer;
@@ -85,7 +106,7 @@ class QueryService {
       // Mainly needed when this method is called via cli
       try {
         // eslint-disable-next-line import/no-dynamic-require, global-require
-        analyzer = require(`../analyzers/${analyzerObjectOrString}`);
+        analyzer = /** @type {Analyzer} */ (require(`../analyzers/${analyzerObjectOrString}`));
       } catch (e) {
         LogService.error(e);
         process.exit(1);
@@ -95,8 +116,8 @@ class QueryService {
       analyzer = analyzerObjectOrString;
     }
     return {
-      type: 'analyzer',
-      analyzerName: analyzer.name,
+      type: 'ast-analyzer',
+      analyzerName: /** @type {AnalyzerName} */ (analyzer.name),
       analyzerConfig,
       analyzer,
     };
@@ -169,27 +190,27 @@ class QueryService {
   }
 
   /**
-   * @desc Search via ast (typescript compilation)
-   * @param {QueryConfig} queryConfig
+   * Search via ast (typescript compilation)
+   * @param {AnalyzerQueryConfig} analyzerQueryConfig
    * @param {AnalyzerConfig} [customConfig]
-   * @param {GatherFilesConfig} [customConfig.gatherFilesConfig]
-   * @returns {QueryResult}
+   * @returns {Promise<AnalyzerQueryResult>}
    */
-  static async astSearch(queryConfig, customConfig) {
+  static async astSearch(analyzerQueryConfig, customConfig) {
     LogService.debug('started astSearch method');
-    if (queryConfig.type !== 'analyzer') {
+    if (analyzerQueryConfig.type !== 'ast-analyzer') {
       LogService.error('Only analyzers supported for ast searches at the moment');
       process.exit(1);
     }
 
+    // @ts-ignore
     // eslint-disable-next-line new-cap
-    const analyzer = new queryConfig.analyzer();
+    const analyzer = new analyzerQueryConfig.analyzer();
     const analyzerResult = await analyzer.execute(customConfig);
     if (!analyzerResult) {
       return analyzerResult;
     }
     const { queryOutput, analyzerMeta } = analyzerResult;
-    const /** @type {QueryResult} */ queryResult = {
+    const /** @type {AnalyzerQueryResult} */ queryResult = {
         meta: {
           searchType: 'ast-analyzer',
           analyzerMeta,
@@ -200,7 +221,7 @@ class QueryService {
   }
 
   /**
-   * @param {ProjectData[]} projectsData
+   * @param {ProjectInputData[]} projectsData
    * @param {'babel'|'typescript'|'es-module-lexer'} requiredAst
    */
   static async addAstToProjectsData(projectsData, requiredAst) {
@@ -242,13 +263,8 @@ class QueryService {
   }
 
   /**
-   * @desc Performs a grep on given path for a certain tag name and feature
-   * @param {string} searchPath - the project path to search in
+   * Performs a grep on given path for a certain tag name and feature
    * @param {Feature} feature
-   * @param {object} [customConfig]
-   * @param {boolean} [customConfig.count] - enable wordcount in grep
-   * @param {GatherFilesConfig} [customConfig.gatherFilesConfig] - extensions, excludes
-   * @param {boolean} [customConfig.hasDebugEnabled]
    */
   static _getFeatureRegex(feature) {
     const { name, value, tag } = feature;
@@ -287,6 +303,13 @@ class QueryService {
     return regex;
   }
 
+  /**
+   *
+   * @param {PathFromSystemRoot} searchPath
+   * @param {string} regex
+   * @param {{ count:number; gatherFilesConfig:GatherFilesConfig; hasDebugEnabled:boolean }} customConfig
+   * @returns
+   */
   static _performGrep(searchPath, regex, customConfig) {
     const cfg = deepmerge(
       {

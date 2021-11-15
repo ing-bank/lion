@@ -9,14 +9,19 @@ const { AstService } = require('../../services/AstService.js');
 const { LogService } = require('../../services/LogService.js');
 const { memoizeAsync } = require('../../utils/memoize.js');
 
-/** @typedef {import('./types').RootFile} RootFile */
+/**
+ * @typedef {import('../../types/core').RootFile} RootFile
+ * @typedef {import('../../types/core').SpecifierSource} SpecifierSource
+ * @typedef {import('../../types/core').IdentifierName} IdentifierName
+ * @typedef {import('../../types/core').PathFromSystemRoot} PathFromSystemRoot
+ */
 
 /**
  * Other than with import, no binding is created for MyClass by Babel(?)
  * This means 'path.scope.getBinding('MyClass')' returns undefined
  * and we have to find a different way to retrieve this value.
  * @param {object} astPath Babel ast traversal path
- * @param {string} identifierName the name that should be tracked (and that exists inside scope of astPath)
+ * @param {IdentifierName} identifierName the name that should be tracked (and that exists inside scope of astPath)
  */
 function getBindingAndSourceReexports(astPath, identifierName) {
   // Get to root node of file and look for exports like `export { identifierName } from 'src';`
@@ -81,6 +86,7 @@ function getImportSourceFromAst(astPath, identifierName) {
   return { source, importedIdentifierName };
 }
 
+/** @type {(source:SpecifierSource,identifierName:IdentifierName,currentFilePath:PathFromSystemRoot,rootPath:PathFromSystemRoot, depth?:number) => Promise<RootFile>} */
 let trackDownIdentifier;
 /**
  * @example
@@ -98,11 +104,11 @@ let trackDownIdentifier;
  * export class RefComp extends LitElement {...}
  *```
  *
- * @param {string} source an importSpecifier source, like 'ref-proj' or '../file'
- * @param {string} identifierName imported reference/Identifier name, like 'MyComp'
- * @param {string} currentFilePath file path, like '/path/to/target-proj/my-comp-import.js'
- * @param {string} rootPath dir path, like '/path/to/target-proj'
- * @returns {object} file: path of file containing the binding (exported declaration),
+ * @param {SpecifierSource} source an importSpecifier source, like 'ref-proj' or '../file'
+ * @param {IdentifierName} identifierName imported reference/Identifier name, like 'MyComp'
+ * @param {PathFromSystemRoot} currentFilePath file path, like '/path/to/target-proj/my-comp-import.js'
+ * @param {PathFromSystemRoot} rootPath dir path, like '/path/to/target-proj'
+ * @returns {Promise<RootFile>} file: path of file containing the binding (exported declaration),
  * like '/path/to/ref-proj/src/RefComp.js'
  */
 async function trackDownIdentifierFn(source, identifierName, currentFilePath, rootPath, depth = 0) {
@@ -122,9 +128,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
   }
 
   /**
-   * @prop resolvedSourcePath
-   * @type {string}
-   * @example resolveImportPath('../file') // => '/path/to/target-proj/file.js'
+   * @type {PathFromSystemRoot}
    */
   const resolvedSourcePath = await resolveImportPath(source, currentFilePath);
   LogService.debug(`[trackDownIdentifier] ${resolvedSourcePath}`);
@@ -132,7 +136,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
   const ast = AstService.getAst(code, 'babel', { filePath: resolvedSourcePath });
   const shouldLookForDefaultExport = identifierName === '[default]';
 
-  let reexportMatch = null; // named specifier declaration
+  let reexportMatch = false; // named specifier declaration
   let pendingTrackDownPromise;
 
   traverse(ast, {

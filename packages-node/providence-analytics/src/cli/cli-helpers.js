@@ -100,7 +100,7 @@ function targetDefault() {
   // eslint-disable-next-line import/no-dynamic-require, global-require
   const { name } = require(`${process.cwd()}/package.json`);
   if (name === 'providence') {
-    return InputDataService.getTargetProjectPaths();
+    return InputDataService.targetProjectPaths;
   }
   return [toPosixPath(process.cwd())];
 }

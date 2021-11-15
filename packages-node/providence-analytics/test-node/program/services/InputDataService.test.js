@@ -27,7 +27,7 @@ describe('InputDataService', () => {
     it('allows to set targetProjectPaths', async () => {
       const newPaths = ['/my/path', '/my/other/path'];
       InputDataService.targetProjectPaths = newPaths;
-      expect(InputDataService.getTargetProjectPaths()).to.equal(newPaths);
+      expect(InputDataService.targetProjectPaths).to.equal(newPaths);
     });
   });
 
@@ -61,7 +61,7 @@ describe('InputDataService', () => {
       );
     });
 
-    it('"getTargetProjectPaths"', async () => {});
+    it('"targetProjectPaths"', async () => {});
 
     it('"getReferenceProjectPaths"', async () => {});
 

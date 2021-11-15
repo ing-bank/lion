@@ -22,7 +22,6 @@ const _providenceCfg = {
 
 describe('Analyzer "find-imports"', () => {
   const queryResults = [];
-
   const cacheDisabledInitialValue = QueryService.cacheDisabled;
 
   before(() => {
