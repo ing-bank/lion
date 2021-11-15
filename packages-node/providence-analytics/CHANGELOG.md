@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.11.2
+
+### Patch Changes
+
+- 1e8839f2: Support export maps for match-\* analyzers
+
 ## 0.11.1
 
 ### Patch Changes
