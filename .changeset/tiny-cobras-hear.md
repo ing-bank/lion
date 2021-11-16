@@ -1,5 +1,5 @@
 ---
-'providence-analytics': major
+'providence-analytics': patch
 ---
 
 fix paths for dashboard

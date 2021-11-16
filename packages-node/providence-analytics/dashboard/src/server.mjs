@@ -2,9 +2,7 @@ import fs from 'fs';
 import pathLib, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createConfig, startServer } from 'es-dev-server';
-// eslint-disable-next-line import/no-unresolved
 import { ReportService } from '../../src/program/services/ReportService.js';
-// eslint-disable-next-line import/no-unresolved
 import { getProvidenceConf } from '../../src/program/utils/get-providence-conf.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
