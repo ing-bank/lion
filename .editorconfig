@@ -12,7 +12,7 @@ trim_trailing_whitespace = true
 indent_size = unset
 trim_trailing_whitespace = false
 
-[*.{html,js,md,mdx}]
+[*.{html,js,mjs,md,mdx}]
 block_comment_start = /**
 block_comment = *
 block_comment_end = */

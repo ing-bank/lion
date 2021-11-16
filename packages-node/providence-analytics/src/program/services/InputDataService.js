@@ -153,13 +153,6 @@ function multiGlobSync(patterns, { keepDirs = false, root } = {}) {
 }
 
 /**
- * @typedef {Object} ProjectData
- * @property {string} project project name
- * @property {string} path full path to project folder
- * @property {string[]} entries all file paths within project folder
- */
-
-/**
  * To be used in main program.
  * It creates an instance on which the 'files' array is stored.
  * The files array contains all projects.
@@ -456,12 +449,9 @@ class InputDataService {
    * @desc Allows the user to provide a providence.conf.js file in its repository root
    */
   static getExternalConfig() {
-    try {
-      // eslint-disable-next-line import/no-dynamic-require, global-require
-      return require(`${process.cwd()}/providence.conf.js`);
-    } catch (e) {
-      return null;
-    }
+    throw new Error(
+      `[InputDataService.getExternalConfig]: Until fully ESM: use 'src/program/utils/get-providence=conf.mjs instead`,
+    );
   }
 
   /**

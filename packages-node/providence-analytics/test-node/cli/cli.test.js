@@ -322,13 +322,13 @@ describe('Providence CLI', () => {
         it('"-c --config"', async () => {
           await runCli(`analyze mock-analyzer -c {"a":"2"}`, rootDir);
           expect(qConfStub.args[0][0]).to.equal('mock-analyzer');
-          expect(qConfStub.args[0][1]).to.eql({ a: '2', metaConfig: undefined });
+          expect(qConfStub.args[0][1]).to.eql({ a: '2', metaConfig: {} });
 
           qConfStub.resetHistory();
 
           await runCli(`analyze mock-analyzer --config {"a":"2"}`, rootDir);
           expect(qConfStub.args[0][0]).to.equal('mock-analyzer');
-          expect(qConfStub.args[0][1]).to.eql({ a: '2', metaConfig: undefined });
+          expect(qConfStub.args[0][1]).to.eql({ a: '2', metaConfig: {} });
         });
 
         it('calls "promptAnalyzerConfigMenu" without config given', async () => {

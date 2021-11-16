@@ -1,7 +1,11 @@
 # Node Tools >> Providence Analytics >> Local configuration ||40
 
-The file `providence.conf.js` is read by providence cli and by the dashboard to get all
-default configurations.
+The Providence configuration file is read by providence cli (optional) and by the dashboard (required).
+It has a few requirements:
+
+- it must be called `providence.conf.js` or `providence.conf.mjs`
+- it must be in ESM format
+- it must be located in the root of a repository (under `process.cwd()`)
 
 ## Meta data
 
@@ -11,6 +15,7 @@ Based on the filePath of a result, a category can be added.
 For example:
 
 ```js
+export default {
   metaConfig: {
     categoryConfig: [
       {
@@ -29,6 +34,7 @@ For example:
       },
     ],
   },
+}
 ```
 
 > N.B. category info is regarded as subjective, therefore it's advised to move this away from
@@ -38,7 +44,7 @@ For example:
 
 ### referenceCollections
 
-A list of file system paths. They can be defined relative from the current project root (`process.cwd()`) or they can be full paths.
+A list of file system paths. They can be defined relative from the current project root or they can be full paths.
 When a [MatchAnalyzer](../../../docs/node-tools/providence-analytics/analyzer.md) like `match-imports` or `match-subclasses` is used, the default reference(s) can be configured here. For instance: ['/path/to/@lion/form']
 
 An example:
@@ -57,6 +63,6 @@ An example:
 ### searchTargetCollections
 
 A list of file system paths. They can be defined relative from the current project root
-(`process.cwd()`) or they can be full paths.
+or they can be full paths.
 When not defined, the current project will be the search target (this is most common when
 providence is used as a dev dependency).

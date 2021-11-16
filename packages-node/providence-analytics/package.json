@@ -12,7 +12,7 @@
   },
   "main": "./src/program/providence.js",
   "bin": {
-    "providence": "./src/cli/index.js"
+    "providence": "./src/cli/index.mjs"
   },
   "files": [
     "dashboard/src",

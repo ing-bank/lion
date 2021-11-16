@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/no-invalid-change-handler */
 /* eslint-disable max-classes-per-file */
 import { LitElement, html, css } from 'lit-element';
 import { tooltip as tooltipStyles } from './styles/tooltip.css.js';
@@ -14,6 +15,31 @@ GlobalDecorator.decorateStyles(globalStyles, { prepend: true });
 PTable.decorateStyles(tableDecoration);
 
 customElements.define('p-table', PTable);
+
+/**
+ *
+ * @param {{ project:string, filePath:string, name:string }} specifierRes
+ * @param {{ categoryConfig:object }} metaConfig
+ * @returns {string[]}
+ */
+function getCategoriesForMatchedSpecifier(specifierRes, { metaConfig }) {
+  const resultCats = [];
+
+  if (metaConfig && metaConfig.categoryConfig) {
+    const { project, filePath, name } = specifierRes.exportSpecifier;
+    // First of all, do we have a matching project?
+    // TODO: we should allow different configs for different (major) versions
+    const match = metaConfig.categoryConfig.find(cat => cat.project === project);
+    if (match) {
+      Object.entries(match.categories).forEach(([categoryName, matchFn]) => {
+        if (matchFn(filePath, name)) {
+          resultCats.push(categoryName);
+        }
+      });
+    }
+  }
+  return resultCats;
+}
 
 function checkedValues(checkboxOrNodeList) {
   if (!checkboxOrNodeList.length) {
@@ -148,12 +174,16 @@ class PBoard extends DecorateMixin(LitElement) {
 
   _activeAnalyzerSelectTemplate() {
     return html`
-      <select id="active-analyzer">
+      <select id="active-analyzer" @change="${this._onActiveAnalyzerChanged}">
         ${Object.keys(this.__resultFiles).map(
           analyzerName => html` <option value="${analyzerName}">${analyzerName}</option> `,
         )}
       </select>
     `;
+  }
+
+  _onActiveAnalyzerChanged() {
+    this._aggregateResults();
   }
 
   get _selectionMenuFormNode() {
@@ -228,7 +258,7 @@ class PBoard extends DecorateMixin(LitElement) {
   async __init() {
     await this.__fetchMenuData();
     await this.__fetchResults();
-    // await this.__fetchProvidenceConf();
+    await this.__fetchProvidenceConf();
     this._enrichMenuData();
   }
 
@@ -258,36 +288,20 @@ class PBoard extends DecorateMixin(LitElement) {
     const activeRepos = [...new Set(checkedValues(repos))];
     const activeAnalyzer = this._activeAnalyzerNode.value;
     const totalQueryOutput = this.__aggregateResultData(activeRefs, activeRepos, activeAnalyzer);
-    // function addCategories(specifierRes, metaConfig) {
-    //   const resultCats = [];
-    //   if (metaConfig.categoryConfig) {
-    //     const { project, filePath, name } = specifierRes.exportSpecifier;
-    //     // First of all, do we have a matching project?
-    //     // TODO: we should allow different configs for different (major) versions
-    //     const match = metaConfig.categoryConfig.find(cat => cat.project === project);
-    //     console.log('match', match);
-    //     if (match) {
-    //       Object.entries(match.categories, ([categoryName, matchFn]) => {
-    //         if (matchFn(filePath, name)) {
-    //           resultCats.push(categoryName);
-    //         }
-    //       });
-    //     }
-    //   }
-    //   console.log('resultCats', resultCats, metaConfig);
-
-    //   return resultCats;
-    // }
 
     // Prepare viewData
     const dataResult = [];
     // When we support more analyzers than match-imports and match-subclasses, make a switch
     // here
+
     totalQueryOutput.forEach((specifierRes, i) => {
       dataResult[i] = {};
       dataResult[i].specifier = specifierRes.exportSpecifier;
       dataResult[i].sourceProject = specifierRes.exportSpecifier.project;
-      // dataResult[i].categories = undefined; // addCategories(specifierRes, this.__providenceConf);
+      dataResult[i].categories = getCategoriesForMatchedSpecifier(
+        specifierRes,
+        this.__providenceConf,
+      );
       dataResult[i].type = specifierRes.exportSpecifier.name === '[file]' ? 'file' : 'specifier';
       dataResult[i].count = specifierRes.matchesPerProject
         .map(mpp => mpp.files)
@@ -299,6 +313,7 @@ class PBoard extends DecorateMixin(LitElement) {
 
   __aggregateResultData(activeRefs, activeRepos, activeAnalyzer) {
     const jsonResultsActiveFilter = [];
+
     activeRefs.forEach(ref => {
       const refSearch = `_${ref.replace('#', '_')}_`;
       activeRepos.forEach(dep => {
@@ -419,13 +434,15 @@ class PBoard extends DecorateMixin(LitElement) {
   }
 
   async __fetchMenuData() {
-    // Derived from providence.conf.js
+    // Derived from providence.conf.js, generated in server.mjs
     this.__initialMenuData = await fetch('/menu-data').then(response => response.json());
   }
 
   async __fetchProvidenceConf() {
-    // Gets an
-    this.__providenceConf = await fetch('/providence.conf.js').then(response => response.json());
+    // Gets the providence conf as defined by the end user in providence-conf.(m)js
+    // @ts-ignore
+    // eslint-disable-next-line import/no-absolute-path
+    this.__providenceConf = (await import('/providence-conf.js')).default;
   }
 
   async __fetchResults() {

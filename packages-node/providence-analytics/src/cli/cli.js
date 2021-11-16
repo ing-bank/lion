@@ -13,11 +13,11 @@ const cliHelpers = require('./cli-helpers.js');
 const extendDocsModule = require('./launch-providence-with-extend-docs.js');
 const { toPosixPath } = require('../program/utils/to-posix-path.js');
 
-const { extensionsFromCs, setQueryMethod, targetDefault, installDeps } = cliHelpers;
+const { extensionsFromCs, setQueryMethod, targetDefault, installDeps, spawnProcess } = cliHelpers;
 
 const { version } = require('../../package.json');
 
-async function cli({ cwd } = {}) {
+async function cli({ cwd, providenceConf } = {}) {
   let resolveCli;
   let rejectCli;
 
@@ -35,7 +35,8 @@ async function cli({ cwd } = {}) {
   /** @type {object} */
   let regexSearchOptions;
 
-  const externalConfig = InputDataService.getExternalConfig();
+  // TODO: change back to "InputDataService.getExternalConfig();" once full package ESM
+  const externalConfig = providenceConf;
 
   async function getQueryInputData(
     /* eslint-disable no-shadow */
@@ -151,6 +152,15 @@ async function cli({ cwd } = {}) {
     if (options.createVersionHistory) {
       await installDeps(commander.searchTargetPaths);
     }
+  }
+
+  async function runDashboard() {
+    const pathFromServerRootToDashboard = `${pathLib.relative(
+      process.cwd(),
+      pathLib.resolve(__dirname, '../../dashboard'),
+    )}`;
+
+    spawnProcess(`node ${pathFromServerRootToDashboard}/src/server.mjs`);
   }
 
   commander
@@ -321,6 +331,16 @@ async function cli({ cwd } = {}) {
     .option('-h, --create-version-history', 'gets latest of all search-targets and references')
     .action(options => {
       manageSearchTargets(options);
+    });
+
+  commander
+    .command('dashboard')
+    .description(
+      `Runs an interactive dashboard that shows all aggregated data from proivdence-output, configured
+      via providence.conf`,
+    )
+    .action(() => {
+      runDashboard();
     });
 
   commander.parse(process.argv);
