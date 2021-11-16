@@ -1,4 +1,3 @@
-// @ts-ignore
 const { LogService } = require('../../src/program/services/LogService.js');
 
 LogService.warn(
