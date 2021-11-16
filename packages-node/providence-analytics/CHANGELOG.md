@@ -1,5 +1,22 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- 96ae18c4: Improved dashboard:
+
+  - allows to configure categories in `providence.conf.(m)js`that show up in dashboard
+  - exposes dashboard in cli: `npx providence dashboard`
+
+  BREAKING CHANGES:
+
+  - `providence.conf.(m)js` must be in ESM format.
+
+### Patch Changes
+
+- 88babab7: add type support for (the majority of) providence-analytics
+
 ## 0.11.2
 
 ### Patch Changes
