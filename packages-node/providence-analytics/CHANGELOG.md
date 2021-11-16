@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.12.1
+
+### Patch Changes
+
+- 26b150f0: fix paths for dashboard
+
 ## 0.12.0
 
 ### Minor Changes
