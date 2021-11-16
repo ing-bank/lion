@@ -9,9 +9,9 @@ const /** @type {AnalyzerOptions} */ options = {
 
 /**
  *
- * @param {AnalyzerResult} analyzerResult
+ * @param {AnalyzerQueryResult} analyzerResult
  * @param {FindImportsConfig} customConfig
- * @returns {AnalyzerResult}
+ * @returns {AnalyzerQueryResult}
  */
 function sortBySpecifier(analyzerResult, customConfig) {
   const cfg = {
@@ -74,7 +74,7 @@ function sortBySpecifier(analyzerResult, customConfig) {
     );
   }
 
-  return /** @type {AnalyzerResult} */ resultsBySpecifier;
+  return /** @type {AnalyzerQueryResult} */ resultsBySpecifier;
 }
 
 module.exports = {

@@ -258,7 +258,7 @@ function getTagPaths(
  * @param {FindCustomelementsAnalyzerResult} targetFindCustomelementsResult
  * @param {FindCustomelementsAnalyzerResult} refFindCustomelementsResult
  * @param {FindExportsAnalyzerResult} refFindExportsResult
- * @returns {AnalyzerResult}
+ * @returns {AnalyzerQueryResult}
  */
 function matchPathsPostprocess(
   targetMatchSubclassesResult,
@@ -268,7 +268,7 @@ function matchPathsPostprocess(
   refFindExportsResult,
   refProjectName,
 ) {
-  /** @type {AnalyzerResult} */
+  /** @type {AnalyzerQueryResult} */
   const resultsArray = [];
 
   targetMatchSubclassesResult.queryOutput.forEach(matchSubclassEntry => {

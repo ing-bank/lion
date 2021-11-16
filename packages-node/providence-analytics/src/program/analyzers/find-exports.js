@@ -7,9 +7,8 @@ const { normalizeSourcePaths } = require('./helpers/normalize-source-paths.js');
 const { aForEach } = require('../utils/async-array-utils.js');
 const { LogService } = require('../services/LogService.js');
 
-/** @typedef {import('./helpers/track-down-identifier.js').RootFile} RootFile */
-
 /**
+ * @typedef {import('./helpers/track-down-identifier.js').RootFile} RootFile
  * @typedef {object} RootFileMapEntry
  * @property {string} currentFileSpecifier this is the local name in the file we track from
  * @property {RootFile} rootFile contains file(filePath) and specifier

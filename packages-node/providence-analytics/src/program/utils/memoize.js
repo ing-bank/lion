@@ -2,10 +2,9 @@ const { InputDataService } = require('../services/InputDataService.js');
 
 /**
  * @param {function} func
- * @param {{}} externalStorage
+ * @param {object} [storage]
  */
-function memoize(func, externalStorage) {
-  const storage = externalStorage || {};
+function memoize(func, storage = {}) {
   // eslint-disable-next-line func-names
   return function () {
     // eslint-disable-next-line prefer-rest-params
@@ -19,6 +18,7 @@ function memoize(func, externalStorage) {
     // @ts-ignore
     const outcome = func.apply(this, args);
     // @ts-ignore
+    // eslint-disable-next-line no-param-reassign
     storage[args] = outcome;
     return outcome;
   };
@@ -26,10 +26,9 @@ function memoize(func, externalStorage) {
 
 /**
  * @param {function} func
- * @param {{}} externalStorage
+ * @param {object} [storage]
  */
-function memoizeAsync(func, externalStorage) {
-  const storage = externalStorage || {};
+function memoizeAsync(func, storage = {}) {
   // eslint-disable-next-line func-names
   return async function () {
     // eslint-disable-next-line prefer-rest-params
@@ -43,6 +42,7 @@ function memoizeAsync(func, externalStorage) {
     // @ts-ignore
     const outcome = await func.apply(this, args);
     // @ts-ignore
+    // eslint-disable-next-line no-param-reassign
     storage[args] = outcome;
     return outcome;
   };

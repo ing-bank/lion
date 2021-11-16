@@ -6,12 +6,12 @@ const { Analyzer } = require('./helpers/Analyzer.js');
 const { trackDownIdentifierFromScope } = require('./helpers/track-down-identifier.js');
 const { aForEach } = require('../utils/async-array-utils.js');
 
-/** @typedef {import('./types').FindClassesAnalyzerOutput} FindClassesAnalyzerOutput */
-/** @typedef {import('./types').FindClassesAnalyzerOutputEntry} FindClassesAnalyzerOutputEntry */
-/** @typedef {import('./types').FindClassesConfig} FindClassesConfig */
+/** @typedef {import('../types/analyzers').FindClassesAnalyzerOutput} FindClassesAnalyzerOutput */
+/** @typedef {import('../types/analyzers').FindClassesAnalyzerOutputEntry} FindClassesAnalyzerOutputEntry */
+/** @typedef {import('../types/analyzers').FindClassesConfig} FindClassesConfig */
 
 /**
- * @desc Finds import specifiers and sources
+ * Finds import specifiers and sources
  * @param {BabelAst} ast
  * @param {string} relativePath the file being currently processed
  */
@@ -19,8 +19,9 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
   // The transformed entry
   const classesFound = [];
   /**
-   * @desc Detects private/publicness based on underscores. Checks '$' as well
-   * @returns {'public|protected|private'}
+   * Detects private/publicness based on underscores. Checks '$' as well
+   * @param {string} name
+   * @returns {'public'|'protected'|'private'}
    */
   function computeAccessType(name) {
     if (name.startsWith('_') || name.startsWith('$')) {

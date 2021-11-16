@@ -7,19 +7,22 @@ const { Analyzer } = require('./helpers/Analyzer.js');
 const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
 
 /**
- * @typedef {import('../types/find-imports').FindImportsAnalyzerResult} FindImportsAnalyzerResult
- * @typedef {import('../types/find-exports').FindExportsAnalyzerResult} FindExportsAnalyzerResult
- * @typedef {import('../types/find-exports').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
- * @typedef {import('../types/find-imports').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
- * @typedef {import('../types/match-imports').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
- * @typedef {import('../types/core').PathRelativeFromRoot} PathRelativeFromRoot
+ * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../types/analyzers').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../types/analyzers').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
+ * @typedef {import('../types/analyzers').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
+ * @typedef {import('../types/analyzers').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
+ * @typedef {import('../types/analyzers').MatchImportsConfig} MatchImportsConfig
+ * @typedef {import('../types/analyzers').MatchImportsAnalyzerResult} MatchImportsAnalyzerResult
+ * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../types/core').AnalyzerName} AnalyzerName
  */
 
 /**
  * Needed in case fromImportToExportPerspective does not have a
  * externalRootPath supplied.
  * @param {string} exportPath exportEntry.file
- * @param {string} translatedImportPath result of fromImportToExportPerspective
+ * @param {PathRelativeFromProjectRoot} translatedImportPath result of fromImportToExportPerspective
  */
 function compareImportAndExportPaths(exportPath, translatedImportPath) {
   return (
@@ -69,7 +72,7 @@ function transformIntoIterableFindExportsOutput(exportsAnalyzerResult) {
   for (const { file, result } of exportsAnalyzerResult.queryOutput) {
     for (const { exportSpecifiers, source, rootFileMap, localMap, meta } of result) {
       if (!exportSpecifiers) {
-        break;
+        continue;
       }
       for (const exportSpecifier of exportSpecifiers) {
         const i = exportSpecifiers.indexOf(exportSpecifier);
@@ -126,7 +129,7 @@ function transformIntoIterableFindImportsOutput(importsAnalyzerResult) {
   for (const { file, result } of importsAnalyzerResult.queryOutput) {
     for (const { importSpecifiers, source, normalizedSource } of result) {
       if (!importSpecifiers) {
-        break;
+        continue;
       }
       for (const importSpecifier of importSpecifiers) {
         /** @type {IterableFindImportsAnalyzerEntry} */
@@ -144,8 +147,9 @@ function transformIntoIterableFindImportsOutput(importsAnalyzerResult) {
 }
 
 /**
- * Makes a concise results array a 'compatible resultsArray' (compatible with dashbaord + tests + ...?)
- * @param {object[]} conciseResultsArray
+ * Makes a 'compatible resultsArray' (compatible with dashboard + tests + ...?) from
+ * a conciseResultsArray.
+ * @param {ConciseMatchImportsAnalyzerResult} conciseResultsArray
  * @param {string} importProject
  */
 function createCompatibleMatchImportsResult(conciseResultsArray, importProject) {
@@ -169,8 +173,8 @@ function createCompatibleMatchImportsResult(conciseResultsArray, importProject) 
 /**
  * @param {FindExportsAnalyzerResult} exportsAnalyzerResult
  * @param {FindImportsAnalyzerResult} importsAnalyzerResult
- * @param {matchImportsConfig} customConfig
- * @returns {Promise<AnalyzerResult>}
+ * @param {MatchImportsConfig} customConfig
+ * @returns {Promise<MatchImportsAnalyzerResult>}
  */
 async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerResult, customConfig) {
   const cfg = {
@@ -217,7 +221,7 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
        * => export const z = 'bar'
        * importFile 'importing-target-project/file.js'
        * => import { z } from '@reference/foo.js'
-       * @type {PathRelativeFromRoot}
+       * @type {PathRelativeFromProjectRoot|null}
        */
       const fromImportToExport = await fromImportToExportPerspective({
         importee: importEntry.normalizedSource,
@@ -246,7 +250,7 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
   }
 
   const importProject = importsAnalyzerResult.analyzerMeta.targetProject.name;
-  return /** @type {AnalyzerResult} */ createCompatibleMatchImportsResult(
+  return /** @type {AnalyzerQueryResult} */ createCompatibleMatchImportsResult(
     conciseResultsArray,
     importProject,
   );
@@ -255,6 +259,7 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
 class MatchImportsAnalyzer extends Analyzer {
   constructor() {
     super();
+    /** @type {AnalyzerName} */
     this.name = 'match-imports';
   }
 
@@ -263,7 +268,7 @@ class MatchImportsAnalyzer extends Analyzer {
   }
 
   /**
-   * @desc Based on ExportsAnalyzerResult of reference project(s) (for instance lion-based-ui)
+   * Based on ExportsAnalyzerResult of reference project(s) (for instance lion-based-ui)
    * and ImportsAnalyzerResult of search-targets (for instance my-app-using-lion-based-ui),
    * an overview is returned of all matching imports and exports.
    * @param {MatchImportsConfig} customConfig

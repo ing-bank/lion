@@ -1,20 +1,49 @@
 /* eslint-disable no-param-reassign */
-// @ts-ignore-next-line
-require('../types/index.js');
-
 const fs = require('fs');
 const pathLib = require('path');
-
 const child_process = require('child_process'); // eslint-disable-line camelcase
 const glob = require('glob');
 const anymatch = require('anymatch');
+// @ts-expect-error
 const isNegatedGlob = require('is-negated-glob');
 const { LogService } = require('./LogService.js');
 const { AstService } = require('./AstService.js');
 const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
 const { toPosixPath } = require('../utils/to-posix-path.js');
 
+/**
+ * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../types/analyzers').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
+ * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../types/core').QueryConfig} QueryConfig
+ * @typedef {import('../types/core').QueryResult} QueryResult
+ * @typedef {import('../types/core').FeatureQueryConfig} FeatureQueryConfig
+ * @typedef {import('../types/core').SearchQueryConfig} SearchQueryConfig
+ * @typedef {import('../types/core').AnalyzerQueryConfig} AnalyzerQueryConfig
+ * @typedef {import('../types/core').Feature} Feature
+ * @typedef {import('../types/core').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('../types/core').Analyzer} Analyzer
+ * @typedef {import('../types/core').AnalyzerName} AnalyzerName
+ * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../types/core').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../types/core').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../types/core').ProjectInputData} ProjectInputData
+ * @typedef {import('../types/core').ProjectInputDataWithMeta} ProjectInputDataWithMeta
+ * @typedef {import('../types/core').Project} Project
+ * @typedef {import('../types/core').ProjectName} ProjectName
+ */
+
+/**
+ * @typedef {{path:PathFromSystemRoot; name:ProjectName}} ProjectNameAndPath
+ * @typedef {{name:ProjectName;files:PathRelativeFromProjectRoot[], workspaces:string[]}} PkgJson
+ */
+
 // TODO: memoize
+
+/**
+ * @param {PathFromSystemRoot} rootPath
+ * @returns {PkgJson|undefined}
+ */
 function getPackageJson(rootPath) {
   try {
     const fileContent = fs.readFileSync(`${rootPath}/package.json`, 'utf8');
@@ -24,6 +53,9 @@ function getPackageJson(rootPath) {
   }
 }
 
+/**
+ * @param {PathFromSystemRoot} rootPath
+ */
 function getLernaJson(rootPath) {
   try {
     const fileContent = fs.readFileSync(`${rootPath}/lerna.json`, 'utf8');
@@ -35,11 +67,12 @@ function getLernaJson(rootPath) {
 
 /**
  *
- * @param {string[]} list
- * @param {string} rootPath
- * @returns {{path:string, name:string}[]}
+ * @param {PathFromSystemRoot[]|string[]} list
+ * @param {PathFromSystemRoot} rootPath
+ * @returns {ProjectNameAndPath[]}
  */
 function getPathsFromGlobList(list, rootPath) {
+  /** @type {string[]} */
   const results = [];
   list.forEach(pathOrGlob => {
     if (!pathOrGlob.endsWith('/')) {
@@ -56,15 +89,19 @@ function getPathsFromGlobList(list, rootPath) {
       results.push(pathOrGlob);
     }
   });
-  return results.map(path => {
-    const packageRoot = pathLib.resolve(rootPath, path);
-    const basename = pathLib.basename(path);
-    const pkgJson = getPackageJson(packageRoot);
-    const name = (pkgJson && pkgJson.name) || basename;
-    return { name, path };
+  return results.map(pkgPath => {
+    const packageRoot = pathLib.resolve(rootPath, pkgPath);
+    const basename = pathLib.basename(pkgPath);
+    const pkgJson = getPackageJson(/** @type {PathFromSystemRoot} */ (packageRoot));
+    const name = /** @type {ProjectName} */ ((pkgJson && pkgJson.name) || basename);
+    return { name, path: /** @type {PathFromSystemRoot} */ (pkgPath) };
   });
 }
 
+/**
+ * @param {PathFromSystemRoot} rootPath
+ * @returns {string|undefined}
+ */
 function getGitignoreFile(rootPath) {
   try {
     return fs.readFileSync(`${rootPath}/.gitignore`, 'utf8');
@@ -73,6 +110,10 @@ function getGitignoreFile(rootPath) {
   }
 }
 
+/**
+ * @param {PathFromSystemRoot} rootPath
+ * @returns {string[]}
+ */
 function getGitIgnorePaths(rootPath) {
   const fileContent = getGitignoreFile(rootPath);
   if (!fileContent) {
@@ -91,8 +132,8 @@ function getGitIgnorePaths(rootPath) {
   });
 
   // normalize entries to be compatible with anymatch
-  const normalizedEntries = entries.map(e => {
-    let entry = toPosixPath(e);
+  const normalizedEntries = entries.map(entry => {
+    entry = toPosixPath(entry);
 
     if (entry.startsWith('/')) {
       entry = entry.slice(1);
@@ -110,6 +151,8 @@ function getGitIgnorePaths(rootPath) {
 
 /**
  * Gives back all files and folders that need to be added to npm artifact
+ * @param {PathFromSystemRoot} rootPath
+ * @returns {string[]}
  */
 function getNpmPackagePaths(rootPath) {
   const pkgJson = getPackageJson(rootPath);
@@ -129,14 +172,17 @@ function getNpmPackagePaths(rootPath) {
 }
 
 /**
- *
- * @param {string|array} v
- * @returns {array}
+ * @param {any|any[]} v
+ * @returns {any[]}
  */
 function ensureArray(v) {
   return Array.isArray(v) ? v : [v];
 }
 
+/**
+ * @param {string|string[]} patterns
+ * @param {Partial<{keepDirs:boolean;root:string}>} [options]
+ */
 function multiGlobSync(patterns, { keepDirs = false, root } = {}) {
   patterns = ensureArray(patterns);
   const res = new Set();
@@ -161,43 +207,48 @@ function multiGlobSync(patterns, { keepDirs = false, root } = {}) {
  */
 class InputDataService {
   /**
-   * @desc create an array of ProjectData
-   * @param {string[]} projectPaths
-   * @param {GatherFilesConfig} gatherFilesConfig
-   * @returns {ProjectData}
+   * Create an array of ProjectData
+   * @param {PathFromSystemRoot[]} projectPaths
+   * @param {Partial<GatherFilesConfig>} gatherFilesConfig
+   * @returns {ProjectInputData[]}
    */
   static createDataObject(projectPaths, gatherFilesConfig = {}) {
+    /** @type {ProjectInputData[]} */
     const inputData = projectPaths.map(projectPath => ({
-      project: {
+      project: /** @type {Project} */ ({
         name: pathLib.basename(projectPath),
         path: projectPath,
-      },
+      }),
       entries: this.gatherFilesFromDir(projectPath, {
         ...this.defaultGatherFilesConfig,
         ...gatherFilesConfig,
       }),
     }));
+    // @ts-ignore
     return this._addMetaToProjectsData(inputData);
   }
 
   /**
    * From 'main/file.js' or '/main/file.js' to './main/file.js'
+   * @param {string} mainEntry
+   * @returns {PathRelativeFromProjectRoot}
    */
   static __normalizeMainEntry(mainEntry) {
     if (mainEntry.startsWith('/')) {
-      return `.${mainEntry}`;
+      return /** @type {PathRelativeFromProjectRoot} */ (`.${mainEntry}`);
     }
     if (!mainEntry.startsWith('.')) {
       return `./${mainEntry}`;
     }
-    return mainEntry;
+    return /** @type {PathRelativeFromProjectRoot} */ (mainEntry);
   }
 
   /**
-   * @param {string} projectPath
-   * @returns { { path:string, name?:string, mainEntry?:string, version?: string, commitHash?:string }}
+   * @param {PathFromSystemRoot} projectPath
+   * @returns {Project}
    */
   static getProjectMeta(projectPath) {
+    /** @type {Partial<Project>} */
     const project = { path: projectPath };
     // Add project meta info
     try {
@@ -212,12 +263,16 @@ class InputDataService {
       // eslint-disable-next-line no-empty
       project.version = pkgJson.version;
     } catch (e) {
-      LogService.warn(e);
+      LogService.warn(/** @type {string} */ (e));
     }
     project.commitHash = this._getCommitHash(projectPath);
-    return project;
+    return /** @type {Project} */ (project);
   }
 
+  /**
+   * @param {PathFromSystemRoot} projectPath
+   * @returns {string|'[not-a-git-root]'|undefined}
+   */
   static _getCommitHash(projectPath) {
     let commitHash;
     let isGitRepo;
@@ -237,7 +292,7 @@ class InputDataService {
         // eslint-disable-next-line no-param-reassign
         commitHash = hash;
       } catch (e) {
-        LogService.warn(e);
+        LogService.warn(/** @type {string} */ (e));
       }
     } else {
       commitHash = '[not-a-git-root]';
@@ -246,42 +301,49 @@ class InputDataService {
   }
 
   /**
-   * @desc adds context with code (c.q. file contents), project name and project 'main' entry
-   * @param {InputData} inputData
+   * Adds context with code (c.q. file contents), project name and project 'main' entry
+   * @param {ProjectInputData[]} inputData
+   * @returns {ProjectInputDataWithMeta[]}
    */
   static _addMetaToProjectsData(inputData) {
-    return inputData.map(projectObj => {
-      // Add context obj with 'code' to files
-      const newEntries = [];
-      projectObj.entries.forEach(entry => {
-        const code = fs.readFileSync(entry, 'utf8');
-        const file = getFilePathRelativeFromRoot(
-          toPosixPath(entry),
-          toPosixPath(projectObj.project.path),
-        );
-        if (pathLib.extname(file) === '.html') {
-          const extractedScripts = AstService.getScriptsFromHtml(code);
-          // eslint-disable-next-line no-shadow
-          extractedScripts.forEach((code, i) => {
-            newEntries.push({ file: `${file}#${i}`, context: { code } });
-          });
-        } else {
-          newEntries.push({ file, context: { code } });
-        }
-      });
+    return /** @type {* & ProjectInputDataWithMeta[]} */ (
+      inputData.map(projectObj => {
+        // Add context obj with 'code' to files
 
-      const project = this.getProjectMeta(toPosixPath(projectObj.project.path));
+        /** @type {ProjectInputDataWithMeta['entries'][]} */
+        const newEntries = [];
+        projectObj.entries.forEach(entry => {
+          const code = fs.readFileSync(entry, 'utf8');
+          const file = getFilePathRelativeFromRoot(
+            toPosixPath(entry),
+            toPosixPath(projectObj.project.path),
+          );
+          if (pathLib.extname(file) === '.html') {
+            const extractedScripts = AstService.getScriptsFromHtml(code);
+            // eslint-disable-next-line no-shadow
+            extractedScripts.forEach((code, i) => {
+              newEntries.push({
+                file: /** @type {PathRelativeFromProjectRoot} */ (`${file}#${i}`),
+                context: { code },
+              });
+            });
+          } else {
+            newEntries.push({ file, context: { code } });
+          }
+        });
 
-      return { project, entries: newEntries };
-    });
+        const project = this.getProjectMeta(toPosixPath(projectObj.project.path));
+
+        return { project, entries: newEntries };
+      })
+    );
   }
 
-  // TODO: rename to `get targetProjectPaths`
   /**
-   * @desc gets all project directories/paths from './submodules'
-   * @returns {string[]} a list of strings representing all entry paths for projects we want to query
+   * Gets all project directories/paths from './submodules'
+   * @type {PathFromSystemRoot[]} a list of strings representing all entry paths for projects we want to query
    */
-  static getTargetProjectPaths() {
+  static get targetProjectPaths() {
     if (this.__targetProjectPaths) {
       return this.__targetProjectPaths;
     }
@@ -296,10 +358,13 @@ class InputDataService {
       return [];
     }
     return dirs
-      .map(dir => pathLib.join(submoduleDir, dir))
+      .map(dir => /** @type {PathFromSystemRoot} */ (pathLib.join(submoduleDir, dir)))
       .filter(dirPath => fs.lstatSync(dirPath).isDirectory());
   }
 
+  /**
+   * @type {PathFromSystemRoot[]} a list of strings representing all entry paths for projects we want to query
+   */
   static get referenceProjectPaths() {
     if (this.__referenceProjectPaths) {
       return this.__referenceProjectPaths;
@@ -314,7 +379,7 @@ class InputDataService {
         .filter(dirPath => fs.lstatSync(dirPath).isDirectory());
       // eslint-disable-next-line no-empty
     } catch (_) {}
-    return dirs;
+    return /** @type {PathFromSystemRoot[]} */ (dirs);
   }
 
   static set referenceProjectPaths(v) {
@@ -325,6 +390,9 @@ class InputDataService {
     this.__targetProjectPaths = ensureArray(v);
   }
 
+  /**
+   * @type {GatherFilesConfig}
+   */
   static get defaultGatherFilesConfig() {
     return {
       extensions: ['.js'],
@@ -333,32 +401,32 @@ class InputDataService {
     };
   }
 
+  /**
+   * @param {PathFromSystemRoot} startPath
+   * @param {GatherFilesConfig} cfg
+   * @param {boolean} withoutDepth
+   */
   static getGlobPattern(startPath, cfg, withoutDepth = false) {
     // if startPath ends with '/', remove
     let globPattern = startPath.replace(/\/$/, '');
-    // let globPattern = '';
     if (process.platform === 'win32') {
-      // root = root.replace(/^.\:/, '').replace(/\\/g, '/');
       globPattern = globPattern.replace(/^.:/, '').replace(/\\/g, '/');
     }
     if (!withoutDepth) {
-      if (cfg.depth !== Infinity) {
+      if (typeof cfg.depth === 'number' && cfg.depth !== Infinity) {
         globPattern += `/*`.repeat(cfg.depth + 1);
       } else {
         globPattern += `/**/*`;
       }
     }
-    // globPattern = globPattern.slice(1)
     return { globPattern };
   }
 
   /**
-   * @desc Gets an array of files for given extension
-   * @param {string} startPath - local filesystem path
-   * @param {GatherFilesConfig} customConfig - configuration object
-   * @param {number} [customConfig.depth=Infinity] how many recursive calls should be made
-   * @param {string[]} [result] - list of file paths, for internal (recursive) calls
-   * @returns {string[]} result list of file paths
+   * Gets an array of files for given extension
+   * @param {PathFromSystemRoot} startPath - local filesystem path
+   * @param {Partial<GatherFilesConfig>} customConfig - configuration object
+   * @returns {PathFromSystemRoot[]} result list of file paths
    */
   static gatherFilesFromDir(startPath, customConfig = {}) {
     const cfg = {
@@ -380,7 +448,9 @@ class InputDataService {
       );
     }
 
+    /** @type {string[]} */
     let gitIgnorePaths = [];
+    /** @type {string[]} */
     let npmPackagePaths = [];
 
     const hasGitIgnore = getGitignoreFile(startPath);
@@ -411,15 +481,19 @@ class InputDataService {
     if (removeFilter.length || keepFilter.length) {
       filteredGlobRes = globRes.filter(filePath => {
         const localFilePath = toPosixPath(filePath).replace(`${toPosixPath(startPath)}/`, '');
+        // @ts-expect-error
         let shouldRemove = removeFilter.length && anymatch(removeFilter, localFilePath);
+        // @ts-expect-error
         let shouldKeep = keepFilter.length && anymatch(keepFilter, localFilePath);
 
         if (shouldRemove && shouldKeep) {
           // Contradicting configs: the one defined by end user takes highest precedence
           // If the match came from allowListMode, it loses.
+          // @ts-expect-error
           if (allowlistMode === 'git' && anymatch(gitIgnorePaths, localFilePath)) {
             // shouldRemove was caused by .gitignore, shouldKeep by custom allowlist
             shouldRemove = false;
+            // @ts-expect-error
           } else if (allowlistMode === 'npm' && anymatch(npmPackagePaths, localFilePath)) {
             // shouldKeep was caused by npm "files", shouldRemove by custom allowlist
             shouldKeep = false;
@@ -438,15 +512,17 @@ class InputDataService {
 
     if (!filteredGlobRes || !filteredGlobRes.length) {
       LogService.warn(`No files found for path '${startPath}'`);
+      return [];
     }
 
     // reappend startPath
     // const res = filteredGlobRes.map(f => pathLib.resolve(startPath, f));
-    return filteredGlobRes.map(toPosixPath);
+    return /** @type {PathFromSystemRoot[]} */ (filteredGlobRes.map(toPosixPath));
   }
 
+  // TODO: use modern web config helper
   /**
-   * @desc Allows the user to provide a providence.conf.js file in its repository root
+   * Allows the user to provide a providence.conf.js file in its repository root
    */
   static getExternalConfig() {
     throw new Error(
@@ -456,6 +532,8 @@ class InputDataService {
 
   /**
    * Gives back all monorepo package paths
+   * @param {PathFromSystemRoot} rootPath
+   * @returns {ProjectNameAndPath[]|undefined}
    */
   static getMonoRepoPackages(rootPath) {
     // [1] Look for npm/yarn workspaces

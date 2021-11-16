@@ -1,6 +1,3 @@
-// @ts-ignore-next-line
-require('../program/types/index.js');
-
 const child_process = require('child_process'); // eslint-disable-line camelcase
 const pathLib = require('path');
 const commander = require('commander');
