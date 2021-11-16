@@ -6,14 +6,12 @@ application.
 
 ## Run
 
-Start the dashboard via `npm run dashboard` to automatically open the browser and start the dashboard.
+Start the dashboard via `providence dashboard` to automatically open the browser and start the dashboard.
 
 ## Interface
 
 - Select all reference projects
 - Select all target projects
-
-Press `show table` to see the result based on the updated configuration.
 
 ### Generate csv
 
@@ -21,4 +19,4 @@ When `get csv` is pressed, a `.csv` will be downloaded that can be loaded into E
 
 ## Analyzer support
 
-Currently, only the `match-imports` is supported, more analyzers will be added in the future.
+Currently, `match-imports` and `match-subclasses` are supported, more analyzers will be added in the future.

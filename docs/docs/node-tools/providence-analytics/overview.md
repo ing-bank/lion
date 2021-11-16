@@ -38,11 +38,11 @@ npm i --save-dev providence-analytics
 
 ```json
 "scripts": {
-  "providence": "providence analyze match-imports -r 'node_modules/@lion/*'",
+  "providence:match-imports": "providence analyze match-imports -r 'node_modules/@lion/*'",
 }
 ```
 
-> The example above illustrates how to run the "match-imports" analyzer for reference project 'lion-based-ui'. Note that it is possible to run other analyzers and configurations supported by providence as well. For a full overview of cli options, run `providence --help`. All supported analyzers will be viewed when running `providence analyze`
+> The example above illustrates how to run the "match-imports" analyzer for reference project 'lion-based-ui'. Note that it is possible to run other analyzers and configurations supported by providence as well. For a full overview of cli options, run `npx providence --help`. All supported analyzers will be viewed when running `npx providence analyze`
 
 You are now ready to use providence in your project. All
 data will be stored in json files in the folder `./providence-output`
@@ -57,20 +57,21 @@ data will be stored in json files in the folder `./providence-output`
 ...
 "scripts": {
     ...
-    "providence:dashboard": "node node_modules/providence/dashboard/src/server.js"
+    "providence:dashboard": "providence dashboard"
 }
 ```
 
 ### Add providence.conf.js
 
 ```js
-const providenceConfig = {
+export default {
   referenceCollections: {
-    'lion-based-ui collection': ['./node_modules/lion-based-ui'],
+    'lion-based-ui-collection': [
+      './node_modules/lion-based-ui/packages/x',
+      './node_modules/lion-based-ui/packages/y',
+    ],
   },
 };
-
-module.exports = providenceConfig;
 ```
 
 Run `npm run providence:dashboard`
@@ -124,16 +125,16 @@ Providence requires a queries as input.
 Queries are defined as objects and can be of two types:
 
 - feature-query
-- analyzer
+- ast-analyzer
 
-A `queryConfig` is required as input to run the `providenceMain` function.
+A `QueryConfig` is required as input to run the `providenceMain` function.
 This object specifies the type of query and contains the relevant meta
 information that will later be outputted in the `QueryResult` (the JSON object that
 the `providenceMain` function returns.)
 
 ## Analyzer Query
 
-Analyzers queries are also created via `queryConfig`s.
+Analyzer queries are also created via `QueryConfig`s.
 
 Analyzers can be described as predefined queries that use AST traversal.
 
@@ -147,12 +148,14 @@ Now you will get a list of all predefined analyzers:
 
 - find-imports
 - find-exports
+- find-classes
 - match-imports
-- find-subclasses
+- match-subclasses
 - etc...
 
 ![Analyzer query](./assets/analyzer-query.gif 'Analyzer query')
 
+<!--
 ## Running providence from its own repo
 
 ### How to add a new search target project
@@ -186,3 +189,4 @@ Please run:
 ```bash
 sh ./rm-submodule.sh <path/to/submodule>
 ```
+-->

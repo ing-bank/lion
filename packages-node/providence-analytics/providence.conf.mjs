@@ -1,5 +1,5 @@
-const pathLib = require('path');
-const fs = require('fs');
+import pathLib from 'path';
+import fs from 'fs';
 
 // This file is read by dashboard and cli and needs to be present under process.cwd()
 // It mainly serves as an example and it allows to run the dashboard locally
@@ -30,7 +30,7 @@ function getAllLionScopedPackagePaths() {
 
 const lionScopedPackagePaths = getAllLionScopedPackagePaths();
 
-const providenceConfig = {
+export default {
   metaConfig: {
     categoryConfig: [
       {
@@ -65,5 +65,3 @@ const providenceConfig = {
     '@lion-references': lionScopedPackagePaths,
   },
 };
-
-module.exports = providenceConfig;
