@@ -1315,15 +1315,6 @@
     "@open-wc/scoped-elements" "^2.0.0-next.3"
     lit "^2.0.0-rc.2"
 
-"@lion/core@^0.18.0":
-  version "0.18.4"
-  resolved "https://registry.yarnpkg.com/@lion/core/-/core-0.18.4.tgz#1e41567251ad29be0dd45b6965644c7aa34c4654"
-  integrity sha512-iH5z9ulJA9GKVaw3pNMXoviQMh1XI51rBscFvNBlTADS6XODfNhhLWNIj+lkwGBBl8e02XY+F+J8p7QSa/Xelg==
-  dependencies:
-    "@open-wc/dedupe-mixin" "^1.2.18"
-    "@open-wc/scoped-elements" "^2.0.0-next.3"
-    lit "^2.0.0-rc.2"
-
 "@lion/overlays@^0.26.1":
   version "0.26.1"
   resolved "https://registry.yarnpkg.com/@lion/overlays/-/overlays-0.26.1.tgz#d1bfa4f5f97108982afa7b409ba4300f8b2d2ba5"
@@ -1541,6 +1532,15 @@
     "@open-wc/dedupe-mixin" "^1.3.0"
     lit-html "^1.0.0"
 
+"@open-wc/scoped-elements@^2.0.0", "@open-wc/scoped-elements@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-2.0.1.tgz#6b1c3535f809bd90710574db80093a81e3a1fc2d"
+  integrity sha512-JS6ozxUFwFX3+Er91v9yQzNIaFn7OnE0iESKTbFvkkKdNwvAPtp1fpckBKIvWk8Ae9ZcoI9DYZuT2DDbMPcadA==
+  dependencies:
+    "@lit/reactive-element" "^1.0.0"
+    "@open-wc/dedupe-mixin" "^1.3.0"
+    "@webcomponents/scoped-custom-element-registry" "^0.0.3"
+
 "@open-wc/scoped-elements@^2.0.0-next.3":
   version "2.0.0-next.4"
   resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-2.0.0-next.4.tgz#d8294358e3e8ad2ba44200ab805549fde49245f6"
@@ -1549,15 +1549,6 @@
     "@lit/reactive-element" "^1.0.0-rc.1"
     "@open-wc/dedupe-mixin" "^1.3.0"
     "@webcomponents/scoped-custom-element-registry" "0.0.2"
-
-"@open-wc/scoped-elements@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@open-wc/scoped-elements/-/scoped-elements-2.0.1.tgz#6b1c3535f809bd90710574db80093a81e3a1fc2d"
-  integrity sha512-JS6ozxUFwFX3+Er91v9yQzNIaFn7OnE0iESKTbFvkkKdNwvAPtp1fpckBKIvWk8Ae9ZcoI9DYZuT2DDbMPcadA==
-  dependencies:
-    "@lit/reactive-element" "^1.0.0"
-    "@open-wc/dedupe-mixin" "^1.3.0"
-    "@webcomponents/scoped-custom-element-registry" "^0.0.3"
 
 "@open-wc/semantic-dom-diff@^0.13.16":
   version "0.13.21"
@@ -1697,15 +1688,15 @@
   resolved "https://registry.yarnpkg.com/@rocket/navigation/-/navigation-0.2.1.tgz#ce9c22a6a3b1eafbf531880214d82dbaa9ffe192"
   integrity sha512-MNrMM8yssg39+vpqeWn3YnqwYMQ61iucAPvGBBdXRVP26Ay3xCEKL+iZvdq/sizx63i3G+BvLpvb8lrOz6542Q==
 
-"@rocket/search@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@rocket/search/-/search-0.5.0.tgz#26c5750aa4e252fb4867761e6d0dca0511e3cd87"
-  integrity sha512-M37l+ytiDHt8yy/h3PgwqDD7pm7+BrOxSjQBAaDApn+Z+XD7VOmecQIJ76CnqO7RPCIAnXjPP5ZGLm6NI703yg==
+"@rocket/search@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@rocket/search/-/search-0.5.1.tgz#5112dd52fc363d0b3ef7a64e75d6b34eb10f1fea"
+  integrity sha512-qopmhb8EqdhQgfI010zIHgtqQIK8PY16qqzDdO0XCYhKco2eOQPoTxzMmg9ADrbt/1itGfKwmYwTtXfKLzUkbw==
   dependencies:
-    "@lion/combobox" "^0.8.0"
-    "@lion/core" "^0.18.0"
-    "@lion/listbox" "^0.10.1"
-    "@open-wc/scoped-elements" "^2.0.0-next.3"
+    "@lion/combobox" "^0.8.6"
+    "@lion/core" "^0.19.0"
+    "@lion/listbox" "^0.10.7"
+    "@open-wc/scoped-elements" "^2.0.0"
     chalk "^4.0.0"
     minisearch "^3.0.2"
     plugins-manager "^0.3.0"
