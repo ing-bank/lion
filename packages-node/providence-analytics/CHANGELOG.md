@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.12.2
+
+### Patch Changes
+
+- 4aad06a1: Fixed dynamic import for providence config on windows
+
 ## 0.12.1
 
 ### Patch Changes
