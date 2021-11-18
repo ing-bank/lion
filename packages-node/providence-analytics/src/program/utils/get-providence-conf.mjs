@@ -1,5 +1,6 @@
 import pathLib from 'path';
 import fs from 'fs';
+import { pathToFileURL } from 'url';
 
 /**
  * @returns {Promise<object|null>}
@@ -21,8 +22,8 @@ export async function getProvidenceConf() {
   if (!confPathFound) {
     return null;
   }
-
-  const { default: providenceConf } = await import(confPathFound);
+  const { href: configPathUrl } = pathToFileURL(confPathFound);
+  const { default: providenceConf } = await import(configPathUrl);
 
   if (!providenceConf) {
     throw new Error(
