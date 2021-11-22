@@ -12,6 +12,7 @@
 const pathLib = require('path');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const { LogService } = require('../services/LogService.js');
+const { memoizeAsync } = require('./memoize.js');
 
 const fakePluginContext = {
   meta: {
@@ -27,15 +28,6 @@ const fakePluginContext = {
   },
 };
 
-/**
- * Based on importee (in a statement "import {x} from '@lion/core'", "@lion/core" is an
- * importee), which can be a bare module specifier, a filename without extension, or a folder
- * name without an extension.
- * @param {SpecifierSource} importee source like '@lion/core' or '../helpers/index.js'
- * @param {PathFromSystemRoot} importer importing file, like '/my/project/importing-file.js'
- * @param {{customResolveOptions?: {preserveSymlinks:boolean}}} [opts] nodeResolve options
- * @returns {Promise<PathFromSystemRoot|null>} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
- */
 async function resolveImportPath(importee, importer, opts = {}) {
   const rollupResolve = nodeResolve({
     rootDir: pathLib.dirname(importer),
@@ -62,4 +54,15 @@ async function resolveImportPath(importee, importer, opts = {}) {
   return result.id;
 }
 
-module.exports = { resolveImportPath };
+/**
+ * Based on importee (in a statement "import {x} from '@lion/core'", "@lion/core" is an
+ * importee), which can be a bare module specifier, a filename without extension, or a folder
+ * name without an extension.
+ * @param {SpecifierSource} importee source like '@lion/core' or '../helpers/index.js'
+ * @param {PathFromSystemRoot} importer importing file, like '/my/project/importing-file.js'
+ * @param {{customResolveOptions?: {preserveSymlinks:boolean}}} [opts] nodeResolve options
+ * @returns {Promise<PathFromSystemRoot|null>} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
+ */
+const resolveImportPathMemoized = memoizeAsync(resolveImportPath);
+
+module.exports = { resolveImportPath: resolveImportPathMemoized };
