@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.12.3
+
+### Patch Changes
+
+- 306d57f5: - correctly dedupe match-imports exportSpecifiers
+  - windows compatibility
+  - example conf file esm compatible
+
 ## 0.12.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "providence-analytics",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "Providence is the 'All Seeing Eye' that measures effectivity and popularity of software. Release management will become highly efficient due to an accurate impact analysis of (breaking) changes",
   "license": "MIT",
   "author": "ing-bank",
