@@ -13,14 +13,25 @@ import visit from 'unist-util-visit';
 /** @typedef {Node & UrlProperty} UrlNode */
 
 /**
+ * @param {string} pathStr C:\Example\path/like/this
+ * @returns {string} /Example/path/like/this
+ */
+function toPosixPath(pathStr) {
+  if (process.platform === 'win32') {
+    return pathStr.replace(/^.:/, '').replace(/\\/g, '/');
+  }
+  return pathStr;
+}
+
+/**
  * @param {object} opts
  * @param {string} opts.gitHubUrl
- * @param {object} opts.page
- * @param {string} opts.page.inputPath
+ * @param {{inputPath:string}} opts.page
  * @param {string} opts.rootDir
- * @returns
  */
 export function remarkUrlToLocal({ gitHubUrl, page, rootDir }) {
+  const inputPath = toPosixPath(page.inputPath);
+
   /**
    * @param {UrlNode} node
    */
@@ -34,10 +45,9 @@ export function remarkUrlToLocal({ gitHubUrl, page, rootDir }) {
           urlParts.shift();
           urlParts.shift();
           const fullUrlPath = path.join(rootDir, urlParts.join('/'));
-          const fullInputPath =
-            page.inputPath[0] === '/' ? page.inputPath : path.join(rootDir, page.inputPath);
+          const fullInputPath = inputPath[0] === '/' ? inputPath : path.join(rootDir, inputPath);
           const newPath = path.relative(path.dirname(fullInputPath), fullUrlPath);
-          node.url = newPath;
+          node.url = toPosixPath(newPath);
         }
       }
     }

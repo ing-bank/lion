@@ -21,7 +21,7 @@
   "scripts": {
     "dashboard": "node ./dashboard/src/server.js --serve-from-package-root",
     "match-lion-imports": "npm run providence analyze match-imports --search-target-collection @lion-targets --reference-collection @lion-references",
-    "providence": "node --max-old-space-size=8192 ./src/cli/index.js",
+    "providence": "node --max-old-space-size=8192 ./src/cli/index.mjs",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "prepublishOnly": "npm run publish-docs",
     "test:node": "mocha './test-node/**/*.test.js'",

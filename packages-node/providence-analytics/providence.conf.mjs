@@ -1,5 +1,8 @@
-import pathLib from 'path';
+import pathLib, { dirname } from 'path';
 import fs from 'fs';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // This file is read by dashboard and cli and needs to be present under process.cwd()
 // It mainly serves as an example and it allows to run the dashboard locally

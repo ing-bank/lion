@@ -8,10 +8,10 @@ const { LogService } = require('../program/services/LogService.js');
 const JsdocCommentParser = require('../program/utils/jsdoc-comment-parser.js');
 
 /**
- * @desc extracts name, defaultValue, optional, type, desc from JsdocCommentParser.parse method
+ * Extracts name, defaultValue, optional, type, desc from JsdocCommentParser.parse method
  * result
- * @param {array} jsdoc
- * @returns {object}
+ * @param {string[]} jsdoc
+ * @returns {{ name:string, defaultValue:string, optional:boolean, type:string, desc:string }}
  */
 function getPropsFromParsedJsDoc(jsdoc) {
   const jsdocProps = jsdoc.filter(p => p.tagName === '@property');

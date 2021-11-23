@@ -484,8 +484,18 @@ describe('CLI helpers', () => {
     });
 
     it('allows a regex filter', async () => {
-      const result = await appendProjectDependencyPaths(['/mocked/path/example-project'], '/b$/');
+      const result = await appendProjectDependencyPaths(
+        ['/mocked/path/example-project'],
+        '/^dependency-/',
+      );
       expect(result).to.eql([
+        '/mocked/path/example-project/node_modules/dependency-a',
+        '/mocked/path/example-project/bower_components/dependency-b',
+        '/mocked/path/example-project',
+      ]);
+
+      const result2 = await appendProjectDependencyPaths(['/mocked/path/example-project'], '/b$/');
+      expect(result2).to.eql([
         '/mocked/path/example-project/bower_components/dependency-b',
         '/mocked/path/example-project',
       ]);

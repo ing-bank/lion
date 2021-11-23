@@ -115,7 +115,12 @@ async function appendProjectDependencyPaths(rootPaths, matchPattern, modes = ['n
   let matchFn;
   if (matchPattern) {
     if (matchPattern.startsWith('/') && matchPattern.endsWith('/')) {
-      matchFn = (_, d) => new RegExp(matchPattern.slice(1, -1)).test(d);
+      matchFn = (_, d) => {
+        const reString = matchPattern.slice(1, -1);
+        const result = new RegExp(reString).test(d);
+        LogService.debug(`[appendProjectDependencyPaths]: /${reString}/.test(${d} => ${result})`);
+        return result;
+      };
     } else {
       LogService.error(
         `[appendProjectDependencyPaths] Please provide a matchPattern enclosed by '/'. Found: ${matchPattern}`,

@@ -92,57 +92,41 @@
               {
                 "name": "getterSetter",
                 "accessType": "public",
-                "kind": [
-                  "get",
-                  "set"
-                ]
+                "kind": ["get", "set"]
               },
               {
                 "name": "staticGetterSetter",
                 "accessType": "public",
                 "static": true,
-                "kind": [
-                  "get",
-                  "set"
-                ]
+                "kind": ["get", "set"]
               },
               {
                 "name": "attributes",
                 "accessType": "public",
                 "static": true,
-                "kind": [
-                  "get"
-                ]
+                "kind": ["get"]
               },
               {
                 "name": "styles",
                 "accessType": "public",
                 "static": true,
-                "kind": [
-                  "get"
-                ]
+                "kind": ["get"]
               },
               {
                 "name": "updateComplete",
                 "accessType": "public",
-                "kind": [
-                  "get"
-                ]
+                "kind": ["get"]
               },
               {
                 "name": "localizeNamespaces",
                 "accessType": "public",
                 "static": true,
-                "kind": [
-                  "get"
-                ]
+                "kind": ["get"]
               },
               {
                 "name": "slots",
                 "accessType": "public",
-                "kind": [
-                  "get"
-                ]
+                "kind": ["get"]
               }
             ],
             "methods": [
@@ -180,7 +164,7 @@
               },
               {
                 "name": "requestUpdate",
-                "accessType": "protected"
+                "accessType": "public"
               },
               {
                 "name": "createRenderRoot",

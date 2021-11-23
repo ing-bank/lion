@@ -441,6 +441,32 @@ describe('Analyzer "match-imports"', () => {
       ]);
     });
 
+    it(`correctly merges/dedupes double found exports`, async () => {
+      const refProject = {
+        path: '/target/node_modules/ref',
+        name: 'ref',
+        files: [{ file: './index.js', code: `export default function x() {};` }],
+      };
+      const targetProject = {
+        path: '/target',
+        name: 'target',
+        files: [
+          { file: './importDefault1.js', code: `import myFn1 from 'ref/index.js';` },
+          { file: './importDefault2.js', code: `import myFn2 from 'ref/index.js';` },
+        ],
+      };
+      mockTargetAndReferenceProject(targetProject, refProject);
+      await providence(matchImportsQueryConfig, {
+        targetProjectPaths: [targetProject.path],
+        referenceProjectPaths: [refProject.path],
+      });
+      const queryResult = queryResults[0];
+      expect(queryResult.queryOutput[0].exportSpecifier.name).to.equal('[default]');
+      expect(queryResult.queryOutput[0].matchesPerProject).to.eql([
+        { files: ['./importDefault1.js', './importDefault2.js'], project: 'target' },
+      ]);
+    });
+
     describe('Inside small example project', () => {
       it(`produces a list of all matches, sorted by project`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);

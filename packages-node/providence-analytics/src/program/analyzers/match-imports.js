@@ -237,7 +237,9 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
        * Add it to the results array
        */
       const id = `${exportEntry.specifier}::${exportEntry.file}::${exportsAnalyzerResult.analyzerMeta.targetProject.name}`;
-      const resultForCurrentExport = conciseResultsArray.find(entry => entry.id === id);
+      const resultForCurrentExport = conciseResultsArray.find(
+        entry => entry.exportSpecifier && entry.exportSpecifier.id === id,
+      );
       if (resultForCurrentExport) {
         resultForCurrentExport.importProjectFiles.push(importEntry.file);
       } else {
