@@ -2,4 +2,5 @@
 'providence-analytics': patch
 ---
 
-correctly dedupe match-imports exportSpecifiers
+- correctly dedupe match-imports exportSpecifiers
+- windows compatibility

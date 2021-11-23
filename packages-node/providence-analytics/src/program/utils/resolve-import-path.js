@@ -13,6 +13,7 @@ const pathLib = require('path');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const { LogService } = require('../services/LogService.js');
 const { memoizeAsync } = require('./memoize.js');
+const { toPosixPath } = require('./to-posix-path.js');
 
 const fakePluginContext = {
   meta: {
@@ -51,7 +52,7 @@ async function resolveImportPath(importee, importer, opts = {}) {
     return null;
   }
   // @ts-ignore
-  return result.id;
+  return toPosixPath(result.id);
 }
 
 /**
