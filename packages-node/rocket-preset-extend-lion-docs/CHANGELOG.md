@@ -1,5 +1,11 @@
 # rocket-preset-extend-lion-docs
 
+## 0.2.1
+
+### Patch Changes
+
+- f303ed68: windows compatibility
+
 ## 0.2.0
 
 ### Minor Changes
