@@ -466,6 +466,7 @@ describe('CLI helpers', () => {
           './index.js': `export { InBetweenComp as MyComp } from './src/inbetween.js'`,
           './node_modules/dependency-a/index.js': '',
           './bower_components/dependency-b/index.js': '',
+          './node_modules/my-dependency/index.js': '',
         },
         {
           projectName: 'example-project',
@@ -478,6 +479,7 @@ describe('CLI helpers', () => {
       const result = await appendProjectDependencyPaths(['/mocked/path/example-project']);
       expect(result).to.eql([
         '/mocked/path/example-project/node_modules/dependency-a',
+        '/mocked/path/example-project/node_modules/my-dependency',
         '/mocked/path/example-project/bower_components/dependency-b',
         '/mocked/path/example-project',
       ]);
@@ -490,6 +492,7 @@ describe('CLI helpers', () => {
       );
       expect(result).to.eql([
         '/mocked/path/example-project/node_modules/dependency-a',
+        // in windows, it should not add '/mocked/path/example-project/node_modules/my-dependency',
         '/mocked/path/example-project/bower_components/dependency-b',
         '/mocked/path/example-project',
       ]);
@@ -507,6 +510,7 @@ describe('CLI helpers', () => {
       ]);
       expect(result).to.eql([
         '/mocked/path/example-project/node_modules/dependency-a',
+        '/mocked/path/example-project/node_modules/my-dependency',
         '/mocked/path/example-project',
       ]);
 
