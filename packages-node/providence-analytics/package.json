@@ -24,7 +24,8 @@
     "providence": "node --max-old-space-size=8192 ./src/cli/index.mjs",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "prepublishOnly": "npm run publish-docs",
-    "test:node": "mocha './test-node/**/*.test.js'",
+    "test:node": "npm run test:node:unit && npm run test:node:e2e",
+    "test:node:unit": "mocha './test-node/**/*.test.js'",
     "test:node:e2e": "mocha './test-node/program/**/*.e2e.js' --timeout 60000",
     "test:node:watch": "npm run test:node --watch"
   },

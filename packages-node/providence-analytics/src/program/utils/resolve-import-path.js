@@ -29,13 +29,13 @@ const fakePluginContext = {
   },
 };
 
-async function resolveImportPath(importee, importer, opts = {}) {
+async function resolveImportPath(importee, importer, opts) {
   const rollupResolve = nodeResolve({
     rootDir: pathLib.dirname(importer),
     // allow resolving polyfills for nodejs libs
     preferBuiltins: false,
     // extensions: ['.mjs', '.js', '.json', '.node'],
-    ...opts,
+    ...(opts || {}),
   });
 
   const preserveSymlinks =
@@ -47,7 +47,6 @@ async function resolveImportPath(importee, importer, opts = {}) {
   const result = await rollupResolve.resolveId.call(fakePluginContext, importee, importer, {});
   // @ts-ignore
   if (!result || !result.id) {
-    // throw new Error(`importee ${importee} not found in filesystem.`);
     LogService.warn(`importee ${importee} not found in filesystem for importer '${importer}'.`);
     return null;
   }

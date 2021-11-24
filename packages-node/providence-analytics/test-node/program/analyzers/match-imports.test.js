@@ -467,6 +467,51 @@ describe('Analyzer "match-imports"', () => {
       ]);
     });
 
+    it(`correctly merges/dedupes double found file matches when imported in different ways`, async () => {
+      const refProject = {
+        path: '/target/node_modules/ref',
+        name: 'ref',
+        files: [
+          {
+            file: './src/core.js',
+            code: `
+            export default function x() {};
+            export class RefClass extends HTMLElement {}
+            `,
+          },
+        ],
+      };
+      const targetProject = {
+        path: '/target',
+        name: 'target',
+        files: [
+          {
+            file: './deep-imports.js',
+            code: `
+            import myFn1 from 'ref/src/core.js';
+            import { RefClass } from 'ref/src/core.js';
+
+            import * as all from 'ref/src/core.js';
+            `,
+          },
+        ],
+      };
+      mockTargetAndReferenceProject(targetProject, refProject);
+      await providence(matchImportsQueryConfig, {
+        targetProjectPaths: [targetProject.path],
+        referenceProjectPaths: [refProject.path],
+      });
+      const queryResult = queryResults[0];
+      expect(queryResult.queryOutput[0].exportSpecifier.name).to.equal('[default]');
+      expect(queryResult.queryOutput[0].matchesPerProject).to.eql([
+        { files: ['./deep-imports.js'], project: 'target' },
+      ]);
+      expect(queryResult.queryOutput[1].exportSpecifier.name).to.equal('RefClass');
+      expect(queryResult.queryOutput[1].matchesPerProject).to.eql([
+        { files: ['./deep-imports.js'], project: 'target' },
+      ]);
+    });
+
     describe('Inside small example project', () => {
       it(`produces a list of all matches, sorted by project`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);

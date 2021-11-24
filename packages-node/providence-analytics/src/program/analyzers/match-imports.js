@@ -241,7 +241,10 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
         entry => entry.exportSpecifier && entry.exportSpecifier.id === id,
       );
       if (resultForCurrentExport) {
-        resultForCurrentExport.importProjectFiles.push(importEntry.file);
+        // Prevent that we count double import like "import * as all from 'x'" and "import {smth} from 'x'"
+        if (!resultForCurrentExport.importProjectFiles.includes(importEntry.file)) {
+          resultForCurrentExport.importProjectFiles.push(importEntry.file);
+        }
       } else {
         conciseResultsArray.push({
           exportSpecifier: { id, ...(exportEntry.meta ? { meta: exportEntry.meta } : {}) },
