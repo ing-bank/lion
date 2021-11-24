@@ -14,13 +14,19 @@ import isLocalizeESModule from './isLocalizeESModule.js';
  */
 export class LocalizeManager {
   // eslint-disable-line no-unused-vars
-  constructor({ autoLoadOnLocaleChange = false, fallbackLocale = '' } = {}) {
+  constructor({
+    autoLoadOnLocaleChange = false,
+    fallbackLocale = '',
+    showKeyAsFallback = false,
+  } = {}) {
     /** @private */
     this.__delegationTarget = document.createDocumentFragment();
     /** @protected */
     this._autoLoadOnLocaleChange = !!autoLoadOnLocaleChange;
     /** @protected */
     this._fallbackLocale = fallbackLocale;
+    /** @protected */
+    this._showKeyAsFallback = showKeyAsFallback;
 
     /**
      * @type {Object.<string, Object.<string, Object>>}
@@ -574,7 +580,7 @@ export class LocalizeManager {
       messages,
     );
 
-    return String(result || '');
+    return String(result || (this._showKeyAsFallback ? key : ''));
   }
 
   /**

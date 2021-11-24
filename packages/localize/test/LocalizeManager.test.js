@@ -677,6 +677,20 @@ describe('LocalizeManager', () => {
       );
     });
   });
+
+  describe('show key as fallback', () => {
+    it('shows the key as a fallback when a translation cannot be found', () => {
+      manager = new LocalizeManager({ showKeyAsFallback: true });
+      manager.addData('en-GB', 'my-ns', { greeting: 'Hello!' });
+      expect(manager.msg('my-ns:unknownKey')).to.equal('my-ns:unknownKey');
+    });
+
+    it('shows nothing when a translation cannot be found by default', () => {
+      manager = new LocalizeManager();
+      manager.addData('en-GB', 'my-ns', { greeting: 'Hello!' });
+      expect(manager.msg('my-ns:unknownKey')).to.equal('');
+    });
+  });
 });
 
 describe('When supporting external translation tools like Google Translate', () => {
