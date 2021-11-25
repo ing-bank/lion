@@ -113,27 +113,25 @@ As you can see the 'validators' property expects a map (an array of arrays). So,
 All validators extend from the default `Validator` class. Below example is an example of a validator could look like:
 
 ```js
-class MyValidator extends Validator {
+class EqualsText extends Validator {
+  static validatorName = 'EqualsText';
+
+  /**
+   * Returns true when 'activated' (c.q. in error/warning/info state)
+   * @param {string} modelValue
+   */
   execute(modelValue, param) {
-    const hasFeedback = false;
-    if (modelValue === param) {
-      hasFeedback = true;
-    }
-    return hasFeedback;
+    return modelValue !== param;
   }
 
-  static get validatorName() {
-    return 'Required';
-  }
-
-  static getMessage({ fieldName }) {
-    return `Please fill in ${fieldName}`;
+  static getMessage({ fieldName, modelValue, formControl }) {
+    return `Please make sure values are equal`;
   }
 }
 ```
 
 ```html
-<validatable-el .validators="${[new MyValidator('foo')]}"></validatable-el>
+<validatable-el .validators="${[new EqualsText('foo')]}"></validatable-el>
 ```
 
 ## Installation
