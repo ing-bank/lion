@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
 module.exports = {
-  '*': ['eclint fix', 'git add'],
   '*.js': ['eslint --fix', 'prettier --write', 'git add'],
   '*.md': [
     'prettier --write',
