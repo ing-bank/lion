@@ -1,19 +1,8 @@
 const { expect } = require('chai');
 const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/services/QueryService.js');
-const { InputDataService } = require('../../../src/program/services/InputDataService.js');
-const {
-  mockTargetAndReferenceProject,
-  restoreMockedProjects,
-} = require('../../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../test-helpers/mock-log-service-helpers.js');
+const { QueryService } = require('../../../src/program/core/QueryService.js');
+const { mockTargetAndReferenceProject } = require('../../../test-helpers/mock-project-helpers.js');
+const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
 
 // 1. Reference input data
 const referenceProject = {
@@ -136,34 +125,7 @@ const expectedMatchesOutput = [
 // eslint-disable-next-line no-shadow
 
 describe('Analyzer "match-subclasses"', () => {
-  const originalReferenceProjectPaths = InputDataService.referenceProjectPaths;
-  const queryResults = [];
-  const cacheDisabledQInitialValue = QueryService.cacheDisabled;
-  const cacheDisabledIInitialValue = InputDataService.cacheDisabled;
-
-  before(() => {
-    QueryService.cacheDisabled = true;
-    InputDataService.cacheDisabled = true;
-    suppressNonCriticalLogs();
-  });
-
-  after(() => {
-    QueryService.cacheDisabled = cacheDisabledQInitialValue;
-    InputDataService.cacheDisabled = cacheDisabledIInitialValue;
-    restoreSuppressNonCriticalLogs();
-  });
-
-  beforeEach(() => {
-    InputDataService.cacheDisabled = true;
-    InputDataService.referenceProjectPaths = [];
-    mockWriteToJson(queryResults);
-  });
-
-  afterEach(() => {
-    InputDataService.referenceProjectPaths = originalReferenceProjectPaths;
-    restoreWriteToJson(queryResults);
-    restoreMockedProjects();
-  });
+  const queryResults = setupAnalyzerTest();
 
   describe('Extracting exports', () => {
     it(`identifies all indirect export specifiers consumed by "importing-target-project"`, async () => {

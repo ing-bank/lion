@@ -1,4 +1,4 @@
-const { ReportService } = require('../src/program/services/ReportService.js');
+const { ReportService } = require('../src/program/core/ReportService.js');
 
 const originalWriteToJson = ReportService.writeToJson;
 

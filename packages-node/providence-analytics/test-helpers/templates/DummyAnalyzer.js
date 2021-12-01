@@ -1,4 +1,9 @@
-const { Analyzer } = require('../../src/program/analyzers/helpers/Analyzer.js');
+const { Analyzer } = require('../../src/program/core/Analyzer.js');
+
+/**
+ * @typedef {import('@babel/types').File} File
+ * @typedef {import('../../src/program/types/core').QueryOutputEntry} QueryOutputEntry
+ */
 
 /**
  * This file outlines the minimum required functionality for an analyzer.
@@ -23,8 +28,7 @@ const options = {
  * corresponds to one file.
  * The contents of this function should be designed in such a way that they
  * can be directly pasted and edited in https://astexplorer.net/
- * @param {BabelAST} ast
- * @returns {TransformedEntry}
+ * @param {File} ast
  */
 // eslint-disable-next-line no-unused-vars
 function myAnalyzerPerAstEntry(ast) {
@@ -36,22 +40,9 @@ function myAnalyzerPerAstEntry(ast) {
   return transformedEntryResult;
 }
 
-class MyAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    /**
-     * This must match with the name in file-system (will be used for reporting)
-     */
-    this.name = 'my-analyzer';
-    /**
-     * The ast format that the execute function expects
-     * Compatible with formats supported by AstService.getAst()
-     */
-    this.requiredAst = 'babel';
-    /**
-     * Not all analyzers require a references. Those that do, (usually 'match analyzers'),
-     * must explicitly state so with `requiresReference: true`
-     */
+class DummyAnalyzer extends Analyzer {
+  static get analyzerName() {
+    return 'dummy-analyzer';
   }
 
   /**
@@ -91,7 +82,6 @@ class MyAnalyzer extends Analyzer {
 
       return { result: transformedEntryResult, meta };
     });
-
     // (optional): Post processors on TransformedQueryResult
     if (cfg.optionB) {
       // Run your QueryResult transformation based on option B
@@ -104,4 +94,4 @@ class MyAnalyzer extends Analyzer {
   }
 }
 
-module.exports = MyAnalyzer;
+module.exports = { DummyAnalyzer };

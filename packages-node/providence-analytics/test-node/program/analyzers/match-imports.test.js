@@ -1,22 +1,10 @@
 const { expect } = require('chai');
 const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/services/QueryService.js');
-const { InputDataService } = require('../../../src/program/services/InputDataService.js');
+const { QueryService } = require('../../../src/program/core/QueryService.js');
 const FindExportsAnalyzer = require('../../../src/program/analyzers/find-exports.js');
 const FindImportsAnalyzer = require('../../../src/program/analyzers/find-imports.js');
-
-const {
-  mockTargetAndReferenceProject,
-  restoreMockedProjects,
-} = require('../../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../test-helpers/mock-log-service-helpers.js');
+const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
+const { mockTargetAndReferenceProject } = require('../../../test-helpers/mock-project-helpers.js');
 
 const matchImportsQueryConfig = QueryService.getQueryConfigFromAnalyzer('match-imports');
 const _providenceCfg = {
@@ -210,31 +198,7 @@ const expectedMatchesOutput = [
 ];
 
 describe('Analyzer "match-imports"', () => {
-  const originalReferenceProjectPaths = InputDataService.referenceProjectPaths;
-  const queryResults = [];
-
-  const cacheDisabledInitialValue = QueryService.cacheDisabled;
-
-  before(() => {
-    QueryService.cacheDisabled = true;
-    suppressNonCriticalLogs();
-  });
-
-  after(() => {
-    QueryService.cacheDisabled = cacheDisabledInitialValue;
-    restoreSuppressNonCriticalLogs();
-  });
-
-  beforeEach(() => {
-    mockWriteToJson(queryResults);
-    InputDataService.referenceProjectPaths = [];
-  });
-
-  afterEach(() => {
-    InputDataService.referenceProjectPaths = originalReferenceProjectPaths;
-    restoreWriteToJson(queryResults);
-    restoreMockedProjects();
-  });
+  const queryResults = setupAnalyzerTest();
 
   function testMatchedEntry(targetExportedId, queryResult, importedByFiles = []) {
     const matchedEntry = queryResult.queryOutput.find(

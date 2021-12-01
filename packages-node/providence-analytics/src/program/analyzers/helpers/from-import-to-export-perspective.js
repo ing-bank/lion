@@ -1,5 +1,5 @@
 const { isRelativeSourcePath } = require('../../utils/relative-source-path.js');
-const { LogService } = require('../../services/LogService.js');
+const { LogService } = require('../../core/LogService.js');
 const { resolveImportPath } = require('../../utils/resolve-import-path.js');
 
 /**

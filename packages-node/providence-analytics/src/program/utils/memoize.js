@@ -1,4 +1,4 @@
-const { InputDataService } = require('../services/InputDataService.js');
+const { InputDataService } = require('../core/InputDataService.js');
 
 /**
  * @param {function} func

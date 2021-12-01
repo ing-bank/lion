@@ -1,19 +1,9 @@
 const { expect } = require('chai');
 const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/services/QueryService.js');
-const {
-  mockProject,
-  restoreMockedProjects,
-  getEntry,
-} = require('../../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../test-helpers/mock-log-service-helpers.js');
+const { QueryService } = require('../../../src/program/core/QueryService.js');
+const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
+
+const { mockProject, getEntry } = require('../../../test-helpers/mock-project-helpers.js');
 
 const findCustomelementsQueryConfig =
   QueryService.getQueryConfigFromAnalyzer('find-customelements');
@@ -22,28 +12,7 @@ const _providenceCfg = {
 };
 
 describe('Analyzer "find-customelements"', () => {
-  const queryResults = [];
-
-  const cacheDisabledInitialValue = QueryService.cacheDisabled;
-
-  before(() => {
-    QueryService.cacheDisabled = true;
-  });
-
-  after(() => {
-    QueryService.cacheDisabled = cacheDisabledInitialValue;
-  });
-
-  beforeEach(() => {
-    suppressNonCriticalLogs();
-    mockWriteToJson(queryResults);
-  });
-
-  afterEach(() => {
-    restoreSuppressNonCriticalLogs();
-    restoreMockedProjects();
-    restoreWriteToJson(queryResults);
-  });
+  const queryResults = setupAnalyzerTest();
 
   it(`stores the tagName of a custom element`, async () => {
     mockProject([`customElements.define('custom-el', class extends HTMLElement {});`]);

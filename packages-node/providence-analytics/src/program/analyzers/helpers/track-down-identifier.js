@@ -5,8 +5,8 @@ const {
   toRelativeSourcePath,
 } = require('../../utils/relative-source-path.js');
 const { resolveImportPath } = require('../../utils/resolve-import-path.js');
-const { AstService } = require('../../services/AstService.js');
-const { LogService } = require('../../services/LogService.js');
+const { AstService } = require('../../core/AstService.js');
+const { LogService } = require('../../core/LogService.js');
 const { memoizeAsync } = require('../../utils/memoize.js');
 
 /**

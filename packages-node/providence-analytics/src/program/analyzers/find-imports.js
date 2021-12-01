@@ -2,10 +2,12 @@
 const { default: traverse } = require('@babel/traverse');
 const { isRelativeSourcePath } = require('../utils/relative-source-path.js');
 const { normalizeSourcePaths } = require('./helpers/normalize-source-paths.js');
-const { Analyzer } = require('./helpers/Analyzer.js');
-const { LogService } = require('../services/LogService.js');
+const { Analyzer } = require('../core/Analyzer.js');
+const { LogService } = require('../core/LogService.js');
 
 /**
+ * @typedef {import('@babel/types').File} File
+ * @typedef {import('@babel/types').Node} Node
  * @typedef {import('../types/core').AnalyzerName} AnalyzerName
  * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../types/analyzers').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
@@ -16,12 +18,12 @@ const { LogService } = require('../services/LogService.js');
  * Options that allow to filter 'on a file basis'.
  * We can also filter on the total result
  */
-const /** @type {AnalyzerOptions} */ options = {
+const /** @type {AnalyzerConfig} */ options = {
     /**
      * Only leaves entries with external sources:
      * - keeps: '@open-wc/testing'
      * - drops: '../testing'
-     * @param {FindImportsAnalyzerResult} result
+     * @param {FindImportsAnalyzerQueryOutput} result
      * @param {string} targetSpecifier for instance 'LitElement'
      */
     onlyExternalSources(result) {
@@ -29,6 +31,9 @@ const /** @type {AnalyzerOptions} */ options = {
     },
   };
 
+/**
+ * @param {Node} node
+ */
 function getImportOrReexportsSpecifiers(node) {
   return node.specifiers.map(s => {
     if (s.type === 'ImportDefaultSpecifier' || s.type === 'ExportDefaultSpecifier') {
@@ -49,7 +54,7 @@ function getImportOrReexportsSpecifiers(node) {
 
 /**
  * Finds import specifiers and sources
- * @param {any} ast
+ * @param {File} ast
  */
 function findImportsPerAstEntry(ast) {
   LogService.debug(`Analyzer "find-imports": started findImportsPerAstEntry method`);
@@ -101,10 +106,8 @@ function findImportsPerAstEntry(ast) {
 }
 
 class FindImportsAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    /** @type {AnalyzerName} */
-    this.name = 'find-imports';
+  static get analyzerName() {
+    return 'find-imports';
   }
 
   /**

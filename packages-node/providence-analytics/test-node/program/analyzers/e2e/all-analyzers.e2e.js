@@ -1,8 +1,8 @@
 const pathLib = require('path');
 const { expect } = require('chai');
 const { providence } = require('../../../../src/program/providence.js');
-const { QueryService } = require('../../../../src/program/services/QueryService.js');
-const { ReportService } = require('../../../../src/program/services/ReportService.js');
+const { QueryService } = require('../../../../src/program/core/QueryService.js');
+const { ReportService } = require('../../../../src/program/core/ReportService.js');
 
 const {
   mockWriteToJson,

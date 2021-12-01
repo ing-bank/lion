@@ -1,7 +1,7 @@
 const pathLib = require('path');
 const t = require('@babel/types');
 const { default: traverse } = require('@babel/traverse');
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 const { trackDownIdentifierFromScope } = require('./helpers/track-down-identifier.js');
 const { aForEach } = require('../utils/async-array-utils.js');
 
@@ -85,13 +85,12 @@ function findCustomElementsPerAstEntry(ast) {
 }
 
 class FindCustomelementsAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    this.name = 'find-customelements';
+  static get analyzerName() {
+    return 'find-customelements';
   }
 
   /**
-   * @desc Finds export specifiers and sources
+   * Finds export specifiers and sources
    * @param {FindCustomelementsConfig} customConfig
    */
   async execute(customConfig = {}) {

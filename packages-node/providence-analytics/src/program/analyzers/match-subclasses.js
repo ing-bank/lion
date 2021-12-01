@@ -3,7 +3,7 @@ const pathLib = require('path');
 /* eslint-disable no-shadow, no-param-reassign */
 const FindClassesAnalyzer = require('./find-classes.js');
 const FindExportsAnalyzer = require('./find-exports.js');
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
 
 /**
@@ -52,7 +52,7 @@ function getMemberOverrides(
 }
 
 /**
- * @desc Helper method for matchImportsPostprocess. Modifies its resultsObj
+ * Helper method for matchImportsPostprocess. Modifies its resultsObj
  * @param {object} resultsObj
  * @param {string} exportId like 'myExport::./reference-project/my/export.js::my-project'
  * @param {Set<string>} filteredList
@@ -262,9 +262,8 @@ async function matchSubclassesPostprocess(
 // }
 
 class MatchSubclassesAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    this.name = 'match-subclasses';
+  static get analyzerName() {
+    return 'match-subclasses';
   }
 
   static get requiresReference() {

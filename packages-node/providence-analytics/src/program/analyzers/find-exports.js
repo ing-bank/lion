@@ -1,21 +1,19 @@
 /* eslint-disable no-shadow, no-param-reassign */
 const pathLib = require('path');
 const { default: traverse } = require('@babel/traverse');
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 const { trackDownIdentifier } = require('./helpers/track-down-identifier.js');
 const { normalizeSourcePaths } = require('./helpers/normalize-source-paths.js');
 const { aForEach } = require('../utils/async-array-utils.js');
-const { LogService } = require('../services/LogService.js');
+const { LogService } = require('../core/LogService.js');
 
 /**
- * @typedef {import('./helpers/track-down-identifier.js').RootFile} RootFile
- * @typedef {object} RootFileMapEntry
- * @property {string} currentFileSpecifier this is the local name in the file we track from
- * @property {RootFile} rootFile contains file(filePath) and specifier
- */
-
-/**
+ * @typedef {import('@babel/types').File} File
+ * @typedef {import('../types/core').RootFile} RootFile
+ * @typedef {import('../types/core').RootFileMapEntry} RootFileMapEntry
+ * @typedef {import('../types/analyzers').FindExportsConfig} FindExportsConfig
  * @typedef {RootFileMapEntry[]} RootFileMap
+ * @typedef {string} currentFileSpecifier this is the local name in the file we track from
  */
 
 async function trackdownRoot(transformedEntry, relativePath, projectPath) {
@@ -131,8 +129,8 @@ function getLocalNameSpecifiers(node) {
 }
 
 /**
- * @desc Finds import specifiers and sources for a given ast result
- * @param {BabelAst} ast
+ * Finds import specifiers and sources for a given ast result
+ * @param {File} ast
  * @param {FindExportsConfig} config
  */
 function findExportsPerAstEntry(ast, { skipFileImports }) {
@@ -170,13 +168,12 @@ function findExportsPerAstEntry(ast, { skipFileImports }) {
 }
 
 class FindExportsAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    this.name = 'find-exports';
+  static get analyzerName() {
+    return 'find-exports';
   }
 
   /**
-   * @desc Finds export specifiers and sources
+   * Finds export specifiers and sources
    * @param {FindExportsConfig} customConfig
    */
   async execute(customConfig = {}) {

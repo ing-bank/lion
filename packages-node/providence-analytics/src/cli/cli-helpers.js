@@ -3,19 +3,31 @@ const pathLib = require('path');
 const child_process = require('child_process'); // eslint-disable-line camelcase
 const glob = require('glob');
 const readPackageTree = require('../program/utils/read-package-tree-with-bower-support.js');
-const { InputDataService } = require('../program/services/InputDataService.js');
-const { LogService } = require('../program/services/LogService.js');
+const { InputDataService } = require('../program/core/InputDataService.js');
+const { LogService } = require('../program/core/LogService.js');
 const { aForEach } = require('../program/utils/async-array-utils.js');
 const { toPosixPath } = require('../program/utils/to-posix-path.js');
 
+/**
+ * @param {any[]} arr
+ * @returns {any[]}
+ */
 function flatten(arr) {
   return Array.prototype.concat.apply([], arr);
 }
 
+/**
+ * @param {string} v
+ * @returns {string[]}
+ */
 function csToArray(v) {
   return v.split(',').map(v => v.trim());
 }
 
+/**
+ * @param {string} v like 'js,html'
+ * @returns {string[]} like ['.js', '.html']
+ */
 function extensionsFromCs(v) {
   return csToArray(v).map(v => `.${v}`);
 }
@@ -25,13 +37,13 @@ function setQueryMethod(m) {
   if (allowedMehods.includes(m)) {
     return m;
   }
-  // eslint-disable-next-line no-console
   LogService.error(`Please provide one of the following methods: ${allowedMehods.join(', ')}`);
   return undefined;
 }
 
 /**
- * @returns {string[]}
+ * @param {string} t
+ * @returns {string[]|undefined}
  */
 function pathsArrayFromCs(t, cwd = process.cwd()) {
   if (!t) {
@@ -57,15 +69,21 @@ function pathsArrayFromCs(t, cwd = process.cwd()) {
 
 /**
  * @param {string} name collection name found in eCfg
- * @param {'search-target'|'reference'} [colType='search-targets'] collection type
+ * @param {'search-target'|'reference'} collectionType collection type
  * @param {object} eCfg external configuration. Usually providence.conf.js
- * @returns {string[]}
+ * @param {string} [cwd]
+ * @returns {string[]|undefined}
  */
-function pathsArrayFromCollectionName(name, colType = 'search-target', eCfg, cwd) {
+function pathsArrayFromCollectionName(
+  name,
+  collectionType = 'search-target',
+  eCfg,
+  cwd = process.cwd(),
+) {
   let collection;
-  if (colType === 'search-target') {
+  if (collectionType === 'search-target') {
     collection = eCfg.searchTargetCollections;
-  } else if (colType === 'reference') {
+  } else if (collectionType === 'reference') {
     collection = eCfg.referenceCollections;
   }
   if (collection && collection[name]) {
@@ -74,9 +92,15 @@ function pathsArrayFromCollectionName(name, colType = 'search-target', eCfg, cwd
   return undefined;
 }
 
+/**
+ * @param {string} processArgStr
+ * @param {object} [opts]
+ * @returns {Promise<{ code:string; number:string }>}
+ */
 function spawnProcess(processArgStr, opts) {
   const processArgs = processArgStr.split(' ');
   const proc = child_process.spawn(processArgs[0], processArgs.slice(1), opts);
+  /** @type {string} */
   let output;
   proc.stdout.on('data', data => {
     output += data;

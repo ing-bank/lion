@@ -1,4 +1,4 @@
-const { LogService } = require('../src/program/services/LogService.js');
+const { LogService } = require('../src/program/core/LogService.js');
 
 const originalWarn = LogService.warn;
 function suppressWarningLogs() {

@@ -3,9 +3,9 @@ const fs = require('fs');
 const pathLib = require('path');
 const { performance } = require('perf_hooks');
 const providenceModule = require('../program/providence.js');
-const { QueryService } = require('../program/services/QueryService.js');
-const { InputDataService } = require('../program/services/InputDataService.js');
-const { LogService } = require('../program/services/LogService.js');
+const { QueryService } = require('../program/core/QueryService.js');
+const { InputDataService } = require('../program/core/InputDataService.js');
+const { LogService } = require('../program/core/LogService.js');
 const { flatten } = require('./cli-helpers.js');
 
 async function getExtendDocsResults({

@@ -1,6 +1,6 @@
 import { AnalyzerName, Feature, AnalyzerConfig, PathRelativeFromProjectRoot } from './index';
-import { Analyzer } from '../../analyzers/helpers/Analyzer';
-export { Analyzer } from '../../analyzers/helpers/Analyzer';
+import { Analyzer } from '../../core/Analyzer';
+export { Analyzer } from '../../core/Analyzer';
 
 /**
  * Type of the query. Currently only "ast-analyzer" supported

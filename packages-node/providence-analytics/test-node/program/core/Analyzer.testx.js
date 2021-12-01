@@ -3,20 +3,21 @@ const {
   // mockTargetAndReferenceProject,
   mockProject,
   restoreMockedProjects,
-} = require('../../test-helpers/mock-project-helpers.js');
+} = require('../../../test-helpers/mock-project-helpers.js');
 const {
   mockWriteToJson,
   restoreWriteToJson,
-} = require('../../test-helpers/mock-report-service-helpers.js');
+} = require('../../../test-helpers/mock-report-service-helpers.js');
 const {
   suppressNonCriticalLogs,
   restoreSuppressNonCriticalLogs,
-} = require('../../test-helpers/mock-log-service-helpers.js');
+} = require('../../../test-helpers/mock-log-service-helpers.js');
 
-const { QueryService } = require('../../src/program/services/QueryService.js');
-const { providence } = require('../../src/program/providence.js');
-const dummyAnalyzer = require('../../test-helpers/templates/analyzer-template.js');
+const { QueryService } = require('../../src/program/core/QueryService.js');
+const { providence } = require('../../../src/program/providence.js');
+const { DummyAnalyzer } = require('../../../test-helpers/templates/DummyAnalyzer.js');
 
+const dummyAnalyzer = new DummyAnalyzer();
 const queryResults = [];
 
 describe('Analyzer', () => {
@@ -55,20 +56,17 @@ describe('Analyzer', () => {
       restoreMockedProjects();
     });
 
-    // Our configuration object
-    const myQueryConfigObject = QueryService.getQueryConfigFromAnalyzer(dummyAnalyzer);
-    mockProject([`const validJs = true;`, `let invalidJs = false;`], {
-      projectName: 'my-project',
-      projectPath: '/path/to/my-project',
-      filePaths: ['./test-file1.js', './test-file2.js'],
-    });
-
-    await providence(myQueryConfigObject, {
-      targetProjectPaths: ['/path/to/my-project'],
-    });
+    const myQueryConfigObject = QueryService.getQueryConfigFromAnalyzer(DummyAnalyzer);
+    const _providenceCfg = {
+      targetProjectPaths: ['/fictional/project'],
+    };
 
     describe('Prepare phase', () => {
-      it('looks for a cached result', async () => {});
+      it('looks for a cached result', async () => {
+        // Our configuration object
+        mockProject([`const validJs = true;`, `let invalidJs = false;`]);
+        await providence(myQueryConfigObject, _providenceCfg);
+      });
 
       it('exposes a ".targetMeta" object', async () => {});
 
@@ -85,7 +83,7 @@ describe('Analyzer', () => {
         const { queryOutput, meta } = queryResult;
 
         expect(queryOutput[0]).to.eql({
-          file: './test-file1.js',
+          file: './test-file-0.js',
           meta: {},
           result: [{ matched: 'entry' }],
         });

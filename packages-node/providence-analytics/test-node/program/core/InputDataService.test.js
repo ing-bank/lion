@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const pathLib = require('path');
-const { InputDataService } = require('../../../src/program/services/InputDataService.js');
+const { InputDataService } = require('../../../src/program/core/InputDataService.js');
 const {
   restoreMockedProjects,
   mockProject,

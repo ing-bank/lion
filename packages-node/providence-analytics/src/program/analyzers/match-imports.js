@@ -3,7 +3,7 @@ const pathLib = require('path');
 /* eslint-disable no-shadow, no-param-reassign */
 const FindImportsAnalyzer = require('./find-imports.js');
 const FindExportsAnalyzer = require('./find-exports.js');
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
 
 /**
@@ -262,10 +262,8 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
 }
 
 class MatchImportsAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    /** @type {AnalyzerName} */
-    this.name = 'match-imports';
+  static get analyzerName() {
+    return 'match-imports';
   }
 
   static get requiresReference() {

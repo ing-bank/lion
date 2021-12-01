@@ -11,7 +11,7 @@
 
 const pathLib = require('path');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
-const { LogService } = require('../services/LogService.js');
+const { LogService } = require('../core/LogService.js');
 const { memoizeAsync } = require('./memoize.js');
 const { toPosixPath } = require('./to-posix-path.js');
 

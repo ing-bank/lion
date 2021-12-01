@@ -15,8 +15,8 @@ const {
   suppressNonCriticalLogs,
   restoreSuppressNonCriticalLogs,
 } = require('../../test-helpers/mock-log-service-helpers.js');
-const { InputDataService } = require('../../src/program/services/InputDataService.js');
-const { QueryService } = require('../../src/program/services/QueryService.js');
+const { InputDataService } = require('../../src/program/core/InputDataService.js');
+const { QueryService } = require('../../src/program/core/QueryService.js');
 const providenceModule = require('../../src/program/providence.js');
 const extendDocsModule = require('../../src/cli/launch-providence-with-extend-docs.js');
 const cliHelpersModule = require('../../src/cli/cli-helpers.js');
@@ -49,11 +49,11 @@ const externalCfgMock = {
 };
 
 async function runCli(args, cwd) {
-  process.argv = [
+  const argv = [
     ...process.argv.slice(0, 2),
     ...args.split(' ').map(a => a.replace(/^("|')?(.*)("|')?$/, '$2')),
   ];
-  await cli({ cwd });
+  await cli({ argv, cwd });
 }
 
 describe('Providence CLI', () => {

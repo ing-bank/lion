@@ -2,7 +2,7 @@ import fs from 'fs';
 import pathLib, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createConfig, startServer } from 'es-dev-server';
-import { ReportService } from '../../src/program/services/ReportService.js';
+import { ReportService } from '../../src/program/core/ReportService.js';
 import { getProvidenceConf } from '../../src/program/utils/get-providence-conf.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

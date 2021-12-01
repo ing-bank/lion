@@ -1,5 +1,5 @@
 const pathLib = require('path');
-const { LogService } = require('../../services/LogService.js');
+const { LogService } = require('../../core/LogService.js');
 
 const /** @type {AnalyzerOptions} */ options = {
     filterSpecifier(results, targetSpecifier, specifiersKey) {

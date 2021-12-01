@@ -4,7 +4,7 @@ const {
   trackDownIdentifier,
   trackDownIdentifierFromScope,
 } = require('../../../../src/program/analyzers/helpers/track-down-identifier.js');
-const { AstService } = require('../../../../src/program/services/AstService.js');
+const { AstService } = require('../../../../src/program/core/AstService.js');
 
 const {
   mockProject,

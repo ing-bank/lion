@@ -31,6 +31,9 @@ class QueryService {
    * @returns {SearchQueryConfig}
    */
   static getQueryConfigFromRegexSearchString(regexString) {
+    if (typeof regexString !== 'string') {
+      throw new Error('[QueryService.getQueryConfigFromRegexSearchString]: provide a string');
+    }
     return { type: 'search', regexString };
   }
 
@@ -44,8 +47,13 @@ class QueryService {
    * @returns {FeatureQueryConfig}
    */
   static getQueryConfigFromFeatureString(queryString) {
+    if (typeof queryString !== 'string') {
+      throw new Error('[QueryService.getQueryConfigFromFeatureString]: provide a string');
+    }
+
     /**
-     * @param {string} candidate
+     * Each candidate (tag, attrKey or attrValue) can end with asterisk.
+     * @param {string} candidate for my-*[attr*=x*] 'my-*', 'attr*' or 'x*'
      * @returns {[string, boolean]}
      */
     function parseContains(candidate) {
@@ -59,12 +67,12 @@ class QueryService {
     let featString;
 
     // Creates tag ('tg-icon') and featString ('font-icon+size=xs')
-    const match = queryString.match(/(^.*)(\[(.+)\])+/);
-    if (match) {
+    const attrMatch = queryString.match(/(^.*)(\[(.+)\])+/);
+    if (attrMatch) {
       // eslint-disable-next-line prefer-destructuring
-      tagCandidate = match[1];
+      tagCandidate = attrMatch[1];
       // eslint-disable-next-line prefer-destructuring
-      featString = match[3];
+      featString = attrMatch[3];
     } else {
       tagCandidate = queryString;
     }
@@ -94,9 +102,9 @@ class QueryService {
   }
 
   /**
-   * RSetrieves the default export found in ./program/analyzers/findImport.js
+   * Retrieves the default export found in ./program/analyzers/find-import.js
    * @param {string|Analyzer} analyzerObjectOrString
-   * @param {AnalyzerConfig} analyzerConfig
+   * @param {AnalyzerConfig} [analyzerConfig]
    * @returns {AnalyzerQueryConfig}
    */
   static getQueryConfigFromAnalyzer(analyzerObjectOrString, analyzerConfig) {
@@ -108,28 +116,26 @@ class QueryService {
         // eslint-disable-next-line import/no-dynamic-require, global-require
         analyzer = /** @type {Analyzer} */ (require(`../analyzers/${analyzerObjectOrString}`));
       } catch (e) {
-        LogService.error(e);
+        LogService.error(e.toString());
         process.exit(1);
       }
     } else {
       // We don't need to import the analyzer, since we already have it
       analyzer = analyzerObjectOrString;
     }
-    return {
+    return /** @type {AnalyzerQueryConfig} */ ({
       type: 'ast-analyzer',
-      analyzerName: /** @type {AnalyzerName} */ (analyzer.name),
+      analyzerName: /** @type {AnalyzerName} */ (analyzer.analyzerName),
       analyzerConfig,
       analyzer,
-    };
+    });
   }
 
   /**
-   * @desc Search via unix grep
+   * Search via unix grep
    * @param {InputData} inputData
-   * @param {QueryConfig} queryConfig
-   * @param {object} [customConfig]
-   * @param {boolean} [customConfig.hasVerboseReporting]
-   * @param {object} [customConfig.gatherFilesConfig]
+   * @param {FeatureQueryConfig|SearchQueryConfig} queryConfig
+   * @param {{hasVerboseReporting:boolean;gatherFilesConfig:GatherFilesConfig}} [customConfig]
    * @returns {Promise<QueryResult>}
    */
   static async grepSearch(inputData, queryConfig, customConfig) {
@@ -190,7 +196,7 @@ class QueryService {
   }
 
   /**
-   * Search via ast (typescript compilation)
+   * Perform ast analysis
    * @param {AnalyzerQueryConfig} analyzerQueryConfig
    * @param {AnalyzerConfig} [customConfig]
    * @returns {Promise<AnalyzerQueryResult>}

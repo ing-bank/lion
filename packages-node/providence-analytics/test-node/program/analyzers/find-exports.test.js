@@ -1,49 +1,21 @@
 const { expect } = require('chai');
 const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/services/QueryService.js');
+const { QueryService } = require('../../../src/program/core/QueryService.js');
+const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
+
 const {
   mockProject,
-  restoreMockedProjects,
   getEntry,
   getEntries,
 } = require('../../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../test-helpers/mock-log-service-helpers.js');
 
 const findExportsQueryConfig = QueryService.getQueryConfigFromAnalyzer('find-exports');
 
 describe('Analyzer "find-exports"', () => {
-  const queryResults = [];
+  const queryResults = setupAnalyzerTest();
   const _providenceCfg = {
     targetProjectPaths: ['/fictional/project'], // defined in mockProject
   };
-
-  const cacheDisabledInitialValue = QueryService.cacheDisabled;
-
-  before(() => {
-    QueryService.cacheDisabled = true;
-  });
-
-  after(() => {
-    QueryService.cacheDisabled = cacheDisabledInitialValue;
-  });
-
-  beforeEach(() => {
-    suppressNonCriticalLogs();
-    mockWriteToJson(queryResults);
-  });
-
-  afterEach(() => {
-    restoreSuppressNonCriticalLogs();
-    restoreWriteToJson(queryResults);
-    restoreMockedProjects();
-  });
 
   describe('Export notations', () => {
     it(`supports [export const x = 0] (named specifier)`, async () => {

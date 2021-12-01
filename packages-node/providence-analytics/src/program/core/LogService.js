@@ -1,11 +1,6 @@
 const pathLib = require('path');
 const chalk = require('chalk');
-const ora = require('ora');
 const fs = require('fs');
-
-/**
- * @typedef {import('ora').Ora} Ora
- */
 
 const { log } = console;
 
@@ -16,9 +11,6 @@ const { log } = console;
 function printTitle(title) {
   return `${title ? `${title}\n` : ''}`;
 }
-
-/** @type {Ora} */
-let spinner;
 
 class LogService {
   /**
@@ -70,31 +62,6 @@ class LogService {
     log(chalk.bgBlue.black.bold(`   info${printTitle(title)}`), text);
     // @ts-ignore
     this._logHistory.push(`-    info -${printTitle(title)} ${text}`);
-  }
-
-  /**
-   * @param {string} text
-   */
-  static spinnerStart(text) {
-    spinner = ora(text).start();
-  }
-
-  /**
-   * @param {string} text
-   */
-  static spinnerText(text) {
-    if (!spinner) {
-      this.spinnerStart(text);
-    }
-    spinner.text = text;
-  }
-
-  static spinnerStop() {
-    spinner.stop();
-  }
-
-  static get spinner() {
-    return spinner;
   }
 
   /**

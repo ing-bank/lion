@@ -58,7 +58,9 @@ export interface FindAnalyzerOutputFile {
 export interface AnalyzerConfig {
   /** search target project path */
   targetProjectPath: PathFromSystemRoot;
-  gatherFilesConfig: GatherFilesConfig;
+  gatherFilesConfig?: GatherFilesConfig;
+  gatherFilesConfigReference?: GatherFilesConfig;
+  skipCheckMatchCompatibility?: boolean;
 }
 
 export interface MatchAnalyzerConfig extends AnalyzerConfig {

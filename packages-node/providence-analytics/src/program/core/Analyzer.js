@@ -2,21 +2,21 @@
 const fs = require('fs');
 const semver = require('semver');
 const pathLib = require('path');
-const { LogService } = require('../../services/LogService.js');
-const { QueryService } = require('../../services/QueryService.js');
-const { ReportService } = require('../../services/ReportService.js');
-const { InputDataService } = require('../../services/InputDataService.js');
-const { toPosixPath } = require('../../utils/to-posix-path.js');
-const { getFilePathRelativeFromRoot } = require('../../utils/get-file-path-relative-from-root.js');
+const { LogService } = require('./LogService.js');
+const { QueryService } = require('./QueryService.js');
+const { ReportService } = require('./ReportService.js');
+const { InputDataService } = require('./InputDataService.js');
+const { toPosixPath } = require('../utils/to-posix-path.js');
+const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
 
 /**
- * @typedef {import('../../types/core').AnalyzerName} AnalyzerName
- * @typedef {import('../../types/core').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../types/core').QueryOutput} QueryOutput
- * @typedef {import('../../types/core').ProjectInputData} ProjectInputData
- * @typedef {import('../../types/core').ProjectInputDataWithMeta} ProjectInputDataWithMeta
- * @typedef {import('../../types/core').AnalyzerQueryResult} AnalyzerQueryResult
- * @typedef {import('../../types/core').MatchAnalyzerConfig} MatchAnalyzerConfig
+ * @typedef {import('../types/core').AnalyzerName} AnalyzerName
+ * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../types/core').QueryOutput} QueryOutput
+ * @typedef {import('../types/core').ProjectInputData} ProjectInputData
+ * @typedef {import('../types/core').ProjectInputDataWithMeta} ProjectInputDataWithMeta
+ * @typedef {import('../types/core').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../types/core').MatchAnalyzerConfig} MatchAnalyzerConfig
  */
 
 /**
@@ -61,7 +61,7 @@ function posixify(data) {
 }
 
 /**
- * @desc This method ensures that the result returned by an analyzer always has a consistent format.
+ * This method ensures that the result returned by an analyzer always has a consistent format.
  * By returning the configuration for the queryOutput, it will be possible to run later queries
  * under the same circumstances
  * @param {QueryOutput} queryOutput
@@ -160,14 +160,21 @@ function unwindJsonResult(targetOrReferenceProjectResult) {
 }
 
 class Analyzer {
-  constructor() {
-    this.requiredAst = 'babel';
-    /** @type {AnalyzerName|''} */
-    this.name = '';
-  }
-
   static get requiresReference() {
     return false;
+  }
+
+  static get analyzerName() {
+    return '';
+  }
+
+  get name() {
+    return /** @type  {typeof Analyzer} */ (this.constructor).analyzerName;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  get requiredAst() {
+    return 'babel';
   }
 
   /**
@@ -195,13 +202,13 @@ class Analyzer {
     this.constructor.__unwindProvidedResults(cfg);
 
     if (!cfg.targetProjectResult) {
-      this.targetProjectMeta = InputDataService.getProjectMeta(cfg.targetProjectPath, true);
+      this.targetProjectMeta = InputDataService.getProjectMeta(cfg.targetProjectPath);
     } else {
       this.targetProjectMeta = cfg.targetProjectResult.analyzerMeta.targetProject;
     }
 
     if (cfg.referenceProjectPath && !cfg.referenceProjectResult) {
-      this.referenceProjectMeta = InputDataService.getProjectMeta(cfg.referenceProjectPath, true);
+      this.referenceProjectMeta = InputDataService.getProjectMeta(cfg.referenceProjectPath);
     } else if (cfg.referenceProjectResult) {
       this.referenceProjectMeta = cfg.referenceProjectResult.analyzerMeta.targetProject;
     }
@@ -325,7 +332,7 @@ class Analyzer {
   }
 
   /**
-   * @desc Gets a cached result from ReportService. Since ReportService slightly modifies analyzer
+   * Gets a cached result from ReportService. Since ReportService slightly modifies analyzer
    * output, we 'unwind' before we return...
    * @param {object} config
    * @param {string} config.analyzerName

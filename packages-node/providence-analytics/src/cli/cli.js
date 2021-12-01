@@ -2,9 +2,9 @@ const child_process = require('child_process'); // eslint-disable-line camelcase
 const pathLib = require('path');
 const commander = require('commander');
 const providenceModule = require('../program/providence.js');
-const { LogService } = require('../program/services/LogService.js');
-const { QueryService } = require('../program/services/QueryService.js');
-const { InputDataService } = require('../program/services/InputDataService.js');
+const { LogService } = require('../program/core/LogService.js');
+const { QueryService } = require('../program/core/QueryService.js');
+const { InputDataService } = require('../program/core/InputDataService.js');
 const promptModule = require('./prompt-analyzer-menu.js');
 const cliHelpers = require('./cli-helpers.js');
 const extendDocsModule = require('./launch-providence-with-extend-docs.js');
@@ -14,7 +14,7 @@ const { extensionsFromCs, setQueryMethod, targetDefault, installDeps, spawnProce
 
 const { version } = require('../../package.json');
 
-async function cli({ cwd, providenceConf } = {}) {
+async function cli({ cwd, providenceConf, argv = process.argv } = {}) {
   let resolveCli;
   let rejectCli;
 
@@ -35,7 +35,7 @@ async function cli({ cwd, providenceConf } = {}) {
   // TODO: change back to "InputDataService.getExternalConfig();" once full package ESM
   const externalConfig = providenceConf;
 
-  async function getQueryInputData(
+  async function getQueryConfigAndMeta(
     /* eslint-disable no-shadow */
     searchMode,
     regexSearchOptions,
@@ -80,7 +80,7 @@ async function cli({ cwd, providenceConf } = {}) {
   }
 
   async function launchProvidence() {
-    const { queryConfig, queryMethod } = await getQueryInputData(
+    const { queryConfig, queryMethod } = await getQueryConfigAndMeta(
       searchMode,
       regexSearchOptions,
       featureOptions,
@@ -156,7 +156,6 @@ async function cli({ cwd, providenceConf } = {}) {
       process.cwd(),
       pathLib.resolve(__dirname, '../../dashboard'),
     )}`;
-
     spawnProcess(`node ${pathFromServerRootToDashboard}/src/server.mjs`);
   }
 
@@ -340,7 +339,7 @@ async function cli({ cwd, providenceConf } = {}) {
       runDashboard();
     });
 
-  commander.parse(process.argv);
+  commander.parse(argv);
 
   await cliPromise;
 }

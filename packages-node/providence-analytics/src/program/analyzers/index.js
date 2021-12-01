@@ -1,5 +1,5 @@
 // A base class for writing Analyzers
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 
 // Expose analyzers that are requested to be run in external contexts
 const FindExportsAnalyzer = require('./find-exports.js');
