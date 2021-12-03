@@ -152,8 +152,8 @@ async function appendProjectDependencyPaths(rootPaths, matchPattern, modes = ['n
     }
   }
   const depProjectPaths = [];
-  await aForEach(rootPaths, async targetPath => {
-    await aForEach(modes, async mode => {
+  for (const targetPath of rootPaths) {
+    for (const mode of modes) {
       await readPackageTree(
         targetPath,
         matchFn,
@@ -166,8 +166,8 @@ async function appendProjectDependencyPaths(rootPaths, matchPattern, modes = ['n
         },
         mode,
       );
-    });
-  });
+    }
+  }
   // Write all data to {outputPath}/projectDeps.json
   // const projectDeps = {};
   // rootPaths.forEach(rootP => {

@@ -1,30 +1,13 @@
 const { isRelativeSourcePath } = require('../../utils/relative-source-path.js');
 const { LogService } = require('../../core/LogService.js');
 const { resolveImportPath } = require('../../utils/resolve-import-path.js');
+const { toPosixPath } = require('../../utils/to-posix-path.js');
 
 /**
  * @typedef {import('../../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../types/core').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../types/core').SpecifierSource} SpecifierSource
  */
-
-/**
- * @param {SpecifierSource} importee like '@lion/core/myFile.js'
- * @returns {SpecifierSource} project name ('@lion/core')
- */
-function getProjectFromImportee(importee) {
-  const scopedProject = importee[0] === '@';
-  // 'external-project/src/file.js' -> ['external-project', 'src', file.js']
-  let splitSource = importee.split('/');
-  if (scopedProject) {
-    // '@external/project'
-    splitSource = [splitSource.slice(0, 2).join('/'), ...splitSource.slice(2)];
-  }
-  // ['external-project', 'src', 'file.js'] -> 'external-project'
-  const project = splitSource.slice(0, 1).join('/');
-
-  return project;
-}
 
 /**
  * Gets local path from reference project
@@ -51,20 +34,8 @@ async function fromImportToExportPerspective({ importee, importer, importeeProje
     return null;
   }
 
-  if (importeeProjectPath) {
-    return /** @type {PathRelativeFromProjectRoot} */ (
-      absolutePath.replace(new RegExp(`^${importeeProjectPath}/?(.*)$`), './$1')
-    );
-  }
-
-  const projectName = getProjectFromImportee(importee);
-
-  /**
-   * - from: '/my/reference/project/packages/foo/index.js'
-   * - to: './packages/foo/index.js'
-   */
   return /** @type {PathRelativeFromProjectRoot} */ (
-    absolutePath.replace(new RegExp(`^.*/${projectName}/?(.*)$`), './$1')
+    absolutePath.replace(new RegExp(`^${toPosixPath(importeeProjectPath)}/?(.*)$`), './$1')
   );
 }
 
