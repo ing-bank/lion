@@ -33,6 +33,5 @@ export async function getProvidenceConf() {
   }
 
   const providenceConfRaw = fs.readFileSync(confPathFound, 'utf8');
-
   return { providenceConf, providenceConfRaw };
 }

@@ -435,7 +435,7 @@ class PBoard extends DecorateMixin(LitElement) {
 
   async __fetchMenuData() {
     // Derived from providence.conf.js, generated in server.mjs
-    this.__initialMenuData = await fetch('/menu-data').then(response => response.json());
+    this.__initialMenuData = await fetch('/menu-data.json').then(response => response.json());
   }
 
   async __fetchProvidenceConf() {
@@ -446,7 +446,7 @@ class PBoard extends DecorateMixin(LitElement) {
   }
 
   async __fetchResults() {
-    this.__resultFiles = await fetch('/results').then(response => response.json());
+    this.__resultFiles = await fetch('/results.json').then(response => response.json());
   }
 }
 customElements.define('p-board', PBoard);

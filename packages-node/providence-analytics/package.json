@@ -19,15 +19,15 @@
     "src"
   ],
   "scripts": {
-    "dashboard": "node ./dashboard/src/server.js --serve-from-package-root",
+    "dashboard": "node ./dashboard/server.mjs --run-server --serve-from-package-root",
     "match-lion-imports": "npm run providence -- analyze match-imports --search-target-collection @lion-targets --reference-collection @lion-references",
     "providence": "node --max-old-space-size=8192 ./src/cli/index.mjs",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "prepublishOnly": "npm run publish-docs",
     "test:node": "npm run test:node:unit && npm run test:node:e2e",
-    "test:node:unit": "mocha './test-node/**/*.test.js'",
+    "test:node:unit": "mocha './test-node/**/*.test.{j,mj}s'",
     "test:node:unit:watch": "npm run test:node --watch",
-    "test:node:e2e": "mocha './test-node/**/*.e2e.js' --timeout 60000"
+    "test:node:e2e": "mocha './test-node/**/*.e2e.{j,mj}s' --timeout 60000"
   },
   "dependencies": {
     "@babel/core": "^7.10.1",
@@ -35,11 +35,11 @@
     "@babel/traverse": "^7.5.5",
     "@babel/types": "^7.9.0",
     "@rollup/plugin-node-resolve": "^13.0.6",
+    "@web/dev-server": "^0.1.28",
     "anymatch": "^3.1.1",
     "chalk": "^4.1.0",
     "commander": "^2.20.0",
     "deepmerge": "^4.0.0",
-    "es-dev-server": "^1.57.1",
     "glob": "^7.1.6",
     "inquirer": "^7.0.0",
     "is-negated-glob": "^1.0.0",
@@ -49,8 +49,10 @@
     "semver": "^7.1.3"
   },
   "devDependencies": {
+    "@web/dev-server-core": "^0.3.17",
+    "mock-fs": "^5.1.2",
     "mock-require": "^3.0.3",
-    "mock-fs": "^5.1.2"
+    "node-fetch": "^2.6.1"
   },
   "keywords": [
     "analysis",

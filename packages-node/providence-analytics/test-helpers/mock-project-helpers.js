@@ -1,24 +1,8 @@
 const path = require('path');
 // eslint-disable-next-line import/no-extraneous-dependencies
-const mockFs = require('mock-fs');
-const mockRequire = require('mock-require');
+const { mockFsAndRequire: mock } = require('./mock-fs-and-require.js');
 
-function mock(obj) {
-  mockFs(obj);
 
-  Object.entries(obj).forEach(([key, value]) => {
-    if (key.endsWith('.json')) {
-      mockRequire(key, JSON.parse(value));
-    } else {
-      mockRequire(key, value);
-    }
-  });
-}
-
-mock.restore = () => {
-  mockFs.restore();
-  mockRequire.stopAll();
-};
 
 /**
  * Makes sure that, whenever the main program (providence) calls
@@ -88,7 +72,7 @@ function getMockObjectForProject(files, cfg = {}, existingMock = {}) {
  */
 function mockProject(files, cfg = {}, existingMock = {}) {
   const obj = getMockObjectForProject(files, cfg, existingMock);
-  mockFs(obj);
+  mock(obj);
   return obj;
 }
 

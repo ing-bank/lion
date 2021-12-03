@@ -4,11 +4,13 @@ const { resolveImportPath } = require('../../utils/resolve-import-path.js');
 
 /**
  * @typedef {import('../../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../types/core').SpecifierSource} SpecifierSource
  */
 
 /**
- * @param {string} importee like '@lion/core/myFile.js'
- * @returns {string} project name ('@lion/core')
+ * @param {SpecifierSource} importee like '@lion/core/myFile.js'
+ * @returns {SpecifierSource} project name ('@lion/core')
  */
 function getProjectFromImportee(importee) {
   const scopedProject = importee[0] === '@';
@@ -33,28 +35,37 @@ function getProjectFromImportee(importee) {
  * - from: 'reference-project'
  * - to: './index.js' (or other file specified in package.json 'main')
  * @param {object} config
- * @param {string} config.importee 'reference-project/foo.js'
- * @param {string} config.importer '/my/project/importing-file.js'
+ * @param {SpecifierSource} config.importee 'reference-project/foo.js'
+ * @param {PathFromSystemRoot} config.importer '/my/project/importing-file.js'
+ * @param {PathFromSystemRoot} config.importeeProjectPath '/path/to/reference/project'
  * @returns {Promise<PathRelativeFromProjectRoot|null>} './foo.js'
  */
-async function fromImportToExportPerspective({ importee, importer }) {
+async function fromImportToExportPerspective({ importee, importer, importeeProjectPath }) {
   if (isRelativeSourcePath(importee)) {
     LogService.warn('[fromImportToExportPerspective] Please only provide external import paths');
     return null;
   }
 
   const absolutePath = await resolveImportPath(importee, importer);
+  if (!absolutePath) {
+    return null;
+  }
+
+  if (importeeProjectPath) {
+    return /** @type {PathRelativeFromProjectRoot} */ (
+      absolutePath.replace(new RegExp(`^${importeeProjectPath}/?(.*)$`), './$1')
+    );
+  }
+
   const projectName = getProjectFromImportee(importee);
 
   /**
    * - from: '/my/reference/project/packages/foo/index.js'
    * - to: './packages/foo/index.js'
    */
-  return absolutePath
-    ? /** @type {PathRelativeFromProjectRoot} */ (
-        absolutePath.replace(new RegExp(`^.*/${projectName}/?(.*)$`), './$1')
-      )
-    : null;
+  return /** @type {PathRelativeFromProjectRoot} */ (
+    absolutePath.replace(new RegExp(`^.*/${projectName}/?(.*)$`), './$1')
+  );
 }
 
 module.exports = { fromImportToExportPerspective };

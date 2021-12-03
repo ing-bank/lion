@@ -1,9 +1,9 @@
 import fs from 'fs';
 import pathLib, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { createConfig, startServer } from 'es-dev-server';
-import { ReportService } from '../../src/program/core/ReportService.js';
-import { getProvidenceConf } from '../../src/program/utils/get-providence-conf.mjs';
+import { startDevServer } from '@web/dev-server';
+import { ReportService } from '../src/program/core/ReportService.js';
+import { getProvidenceConf } from '../src/program/utils/get-providence-conf.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -94,9 +94,10 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
         ctx.url = `${pathFromServerRootToHere}/index.html`;
         return next();
       }
-      if (ctx.url === '/results') {
+      if (ctx.url === '/results.json') {
+        ctx.type = 'application/json';
         ctx.body = resultFiles;
-      } else if (ctx.url === '/menu-data') {
+      } else if (ctx.url === '/menu-data.json') {
         // Gathers all data that are relevant to create a configuration menu
         // at the top of the dashboard:
         // - referenceCollections as defined in providence.conf.js
@@ -118,10 +119,11 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
           referenceCollections: transformToProjectNames(providenceConf.referenceCollections),
           searchTargetDeps,
         };
+        ctx.type = 'application/json';
         ctx.body = menuData;
       } else if (ctx.url === '/providence-conf.js') {
-        // Alloes frontend dasbboard app to find categoriesand other configs
-        ctx.type = 'text/javascript';
+        // Allows frontend dasbboard app to find categories and other configs
+        ctx.type = 'application/javascript';
         ctx.body = providenceConfRaw;
       } else {
         await next();
@@ -130,7 +132,7 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
   ];
 }
 
-(async function main() {
+export async function createDashboardServerConfig() {
   const { providenceConf, providenceConfRaw } = await getProvidenceConf();
   const { searchTargetDeps, resultFiles } = await getCachedProvidenceResults();
 
@@ -139,21 +141,37 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
   const fromPackageRoot = process.argv.includes('--serve-from-package-root');
   const moduleRoot = fromPackageRoot ? pathLib.resolve(process.cwd(), '../../') : process.cwd();
 
-  const config = createConfig({
-    port: 8080,
+  return {
     appIndex: pathLib.resolve(__dirname, 'index.html'),
     rootDir: moduleRoot,
     nodeResolve: true,
     moduleDirs: pathLib.resolve(moduleRoot, 'node_modules'),
     watch: false,
     open: true,
-    middlewares: createMiddleWares({
+    middleware: createMiddleWares({
       providenceConf,
       providenceConfRaw,
       searchTargetDeps,
       resultFiles,
     }),
-  });
+  };
+}
 
-  await startServer(config);
+let resolveLoaded;
+export const serverInstanceLoaded = new Promise(resolve => {
+  resolveLoaded = resolve;
+});
+
+// Export interface as object, so we can mock it easily inside tests
+export const dashboardServer = {
+  start: async () => {
+    await startDevServer({ config: await createDashboardServerConfig() });
+    resolveLoaded();
+  },
+};
+
+(async () => {
+  if (process.argv.includes('--run-server')) {
+    dashboardServer.start();
+  }
 })();

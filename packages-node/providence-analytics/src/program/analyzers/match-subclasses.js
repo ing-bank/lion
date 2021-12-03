@@ -7,14 +7,15 @@ const { Analyzer } = require('../core/Analyzer.js');
 const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
 
 /**
- * @typedef {import('../types/analyzers/find-classes').FindClassesAnalyzerResult} FindClassesAnalyzerResult
- * @typedef {import('../types/find-imports').FindImportsAnalyzerResult} FindImportsAnalyzerResult
- * @typedef {import('../types/find-exports').FindExportsAnalyzerResult} FindExportsAnalyzerResult
- * @typedef {import('../types/find-exports').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
- * @typedef {import('../types/find-imports').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
- * @typedef {import('../types/match-imports').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
- * @typedef {import('../types/match-imports').MatchImportsConfig} MatchImportsConfig
- * @typedef {import('../types/core/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../types/analyzers').FindClassesAnalyzerResult} FindClassesAnalyzerResult
+ * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../types/analyzers').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../types/analyzers').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
+ * @typedef {import('../types/analyzers').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
+ * @typedef {import('../types/analyzers').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
+ * @typedef {import('../types/analyzers').MatchImportsConfig} MatchImportsConfig
+ * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+  * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
  */
 
 function getMemberOverrides(
@@ -165,7 +166,8 @@ async function matchSubclassesPostprocess(
               exportEntry.file ===
               (await fromImportToExportPerspective({
                 importee: classMatch.rootFile.file,
-                importer: pathLib.resolve(importProjectPath, file),
+                importer: /** @type {PathFromSystemRoot} */ (pathLib.resolve(importProjectPath, file)),
+                importeeProjectPath: cfg.referenceProjectPath,
               }));
 
             if (classMatch && isFromSameSource) {

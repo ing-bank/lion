@@ -8,7 +8,7 @@ const { aForEach } = require('../utils/async-array-utils.js');
 
 /**
  * @typedef {import('@babel/types').File} File
- * @typedef {import('@babel/types').Node} Node
+ * @typedef {import('@babel/types').ClassMethod} ClassMethod
  * @typedef {import('../types/analyzers').FindClassesAnalyzerOutput} FindClassesAnalyzerOutput
  * @typedef {import('../types/analyzers').FindClassesAnalyzerOutputEntry} FindClassesAnalyzerOutputEntry
  * @typedef {import('../types/analyzers').FindClassesConfig} FindClassesConfig
@@ -39,7 +39,7 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
   }
 
   /**
-   * @param {{node:Node}} cfg
+   * @param {{node:ClassMethod}} cfg
    * @returns
    */
   function isStaticProperties({ node }) {
@@ -81,7 +81,12 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
   //   return false;
   // }
 
-  async function traverseClass(path, { isMixin } = {}) {
+  /**
+   *
+   * @param {*} path
+   * @param {{isMixin?:boolean}} param1
+   */
+  async function traverseClass(path, { isMixin = false } = {}) {
     const classRes = {};
     classRes.name = path.node.id && path.node.id.name;
     classRes.isMixin = Boolean(isMixin);

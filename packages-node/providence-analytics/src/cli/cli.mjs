@@ -1,20 +1,24 @@
-const child_process = require('child_process'); // eslint-disable-line camelcase
-const pathLib = require('path');
-const commander = require('commander');
-const providenceModule = require('../program/providence.js');
-const { LogService } = require('../program/core/LogService.js');
-const { QueryService } = require('../program/core/QueryService.js');
-const { InputDataService } = require('../program/core/InputDataService.js');
-const promptModule = require('./prompt-analyzer-menu.js');
-const cliHelpers = require('./cli-helpers.js');
-const extendDocsModule = require('./launch-providence-with-extend-docs.js');
-const { toPosixPath } = require('../program/utils/to-posix-path.js');
+import child_process from 'child_process'; // eslint-disable-line camelcase
+import pathLib from 'path';
+import commander from 'commander';
+import { createRequire } from 'module';
+import providenceModule from '../program/providence.js';
+import { LogService } from '../program/core/LogService.js';
+import { QueryService } from '../program/core/QueryService.js';
+import { InputDataService } from '../program/core/InputDataService.js';
+import promptModule from './prompt-analyzer-menu.js';
+import cliHelpers from './cli-helpers.js';
+import extendDocsModule from './launch-providence-with-extend-docs.js';
+import { toPosixPath } from '../program/utils/to-posix-path.js';
+import { dashboardServer } from '../../dashboard/server.mjs';
 
-const { extensionsFromCs, setQueryMethod, targetDefault, installDeps, spawnProcess } = cliHelpers;
+const require = createRequire(import.meta.url);
+
+const { extensionsFromCs, setQueryMethod, targetDefault, installDeps } = cliHelpers;
 
 const { version } = require('../../package.json');
 
-async function cli({ cwd, providenceConf, argv = process.argv } = {}) {
+export async function cli({ cwd, providenceConf, argv = process.argv } = {}) {
   let resolveCli;
   let rejectCli;
 
@@ -149,14 +153,6 @@ async function cli({ cwd, providenceConf, argv = process.argv } = {}) {
     if (options.createVersionHistory) {
       await installDeps(commander.searchTargetPaths);
     }
-  }
-
-  async function runDashboard() {
-    const pathFromServerRootToDashboard = `${pathLib.relative(
-      process.cwd(),
-      pathLib.resolve(__dirname, '../../dashboard'),
-    )}`;
-    spawnProcess(`node ${pathFromServerRootToDashboard}/src/server.mjs`);
   }
 
   commander
@@ -336,12 +332,10 @@ async function cli({ cwd, providenceConf, argv = process.argv } = {}) {
       via providence.conf`,
     )
     .action(() => {
-      runDashboard();
+      dashboardServer.start();
     });
 
   commander.parse(argv);
 
   await cliPromise;
 }
-
-module.exports = { cli };

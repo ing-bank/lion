@@ -1,37 +1,42 @@
-import pathLib, { dirname } from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// This file is read by dashboard and cli and needs to be present under process.cwd()
-// It mainly serves as an example and it allows to run the dashboard locally
-// from within this repo.
-
-/**
- * @returns {string[]}
- */
-function getAllLionScopedPackagePaths() {
-  const rootPath = pathLib.resolve(__dirname, '../../packages');
-  const filesAndDirs = fs.readdirSync(rootPath);
-  const packages = filesAndDirs.filter(f => {
-    const filePath = pathLib.join(rootPath, f);
-    if (fs.lstatSync(filePath).isDirectory()) {
-      let pkgJson;
-      try {
-        pkgJson = JSON.parse(fs.readFileSync(pathLib.resolve(filePath, './package.json')));
-        // eslint-disable-next-line no-empty
-      } catch (_) {
-        return false;
-      }
-      return pkgJson.name && pkgJson.name.startsWith('@lion/');
-    }
-    return false;
-  });
-  return packages.map(p => pathLib.join(rootPath, p));
-}
-
-const lionScopedPackagePaths = getAllLionScopedPackagePaths();
+const lionScopedPackagePaths = [
+  '../../packages/accordion',
+  '../../packages/ajax',
+  '../../packages/button',
+  '../../packages/calendar',
+  '../../packages/checkbox-group',
+  '../../packages/collapsible',
+  '../../packages/combobox',
+  '../../packages/core',
+  '../../packages/dialog',
+  '../../packages/fieldset',
+  '../../packages/form',
+  '../../packages/form-core',
+  '../../packages/form-integrations',
+  '../../packages/helpers',
+  '../../packages/icon',
+  '../../packages/input',
+  '../../packages/input-amount',
+  '../../packages/input-date',
+  '../../packages/input-datepicker',
+  '../../packages/input-email',
+  '../../packages/input-iban',
+  '../../packages/input-range',
+  '../../packages/input-stepper',
+  '../../packages/listbox',
+  '../../packages/localize',
+  '../../packages/overlays',
+  '../../packages/pagination',
+  '../../packages/progress-indicator',
+  '../../packages/radio-group',
+  '../../packages/select',
+  '../../packages/select-rich',
+  '../../packages/steps',
+  '../../packages/switch',
+  '../../packages/tabs',
+  '../../packages/textarea',
+  '../../packages/tooltip',
+  '../../packages/validate-messages',
+];
 
 export default {
   metaConfig: {
@@ -58,13 +63,13 @@ export default {
   // By predefening groups, we can do a query for programs/collections...
   // Select via " providence analyze --search-target-collection 'exampleCollection' "
   searchTargetCollections: {
-    '@lion-targets': lionScopedPackagePaths,
+    '@lion-targets': [  '../../packages/input','../../packages/listbox'],
     // ...
   },
   referenceCollections: {
     // Usually the references are different from the targets.
     // In this demo file, we test @lion usage amongst itself
     // Select via " providence analyze --reference-collection 'exampleCollection' "
-    '@lion-references': lionScopedPackagePaths,
+    '@lion-references': ['../../packages/form-core'],
   },
 };

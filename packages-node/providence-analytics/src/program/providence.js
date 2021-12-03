@@ -17,7 +17,7 @@ const { QueryService } = require('./core/QueryService.js');
 /**
  * After handling a combo, we should know which project versions we have, since
  * the analyzer internally called createDataObject(which provides us the needed meta info).
- * @param {{queryResult: QueryResult; queryConfig: QueryConfig; providenceConfig: ProvidenceConfig}} opts
+ * @param {{queryResult: QueryResult; queryConfig: QueryConfig; providenceConfig: Partial<ProvidenceConfig>}} opts
  */
 function addToSearchTargetDepsFile({ queryResult, queryConfig, providenceConfig }) {
   const currentSearchTarget = queryConfig.analyzerConfig.targetProjectPath;
@@ -107,7 +107,7 @@ async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
  * various ways.
  *
  * @param {AnalyzerQueryConfig} queryConfig
- * @param {ProvidenceConfig} cfg
+ * @param {Partial<ProvidenceConfig>} cfg
  */
 async function handleAnalyzer(queryConfig, cfg) {
   const queryResults = [];
@@ -170,7 +170,7 @@ async function handleRegexSearch(queryConfig, cfg, inputData) {
  * Creates a report with usage metrics, based on a queryConfig.
  *
  * @param {QueryConfig} queryConfig a query configuration object containing analyzerOptions.
- * @param {ProvidenceConfig} customConfig
+ * @param {Partial<ProvidenceConfig>} customConfig
  */
 async function providenceMain(queryConfig, customConfig) {
   const cfg = deepmerge(

@@ -1,0 +1,21 @@
+{
+  "searchTargetCollections": {
+      "@lion-targets": [
+          "@lion/input",
+          "@lion/listbox"
+      ]
+  },
+  "referenceCollections": {
+      "@lion-references": [
+          "@lion/form-core"
+      ]
+  },
+  "searchTargetDeps": {
+      "@lion/input#0.15.7": [
+          "@lion/input#0.15.7"
+      ],
+      "@lion/listbox#0.10.7": [
+          "@lion/listbox#0.10.7"
+      ]
+  }
+}

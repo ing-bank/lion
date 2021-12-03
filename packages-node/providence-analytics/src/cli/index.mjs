@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { cli } from './cli.js';
+import { cli } from './cli.mjs';
 import { getProvidenceConf } from '../program/utils/get-providence-conf.mjs';
 
 (async () => {

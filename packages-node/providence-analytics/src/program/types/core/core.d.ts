@@ -156,10 +156,10 @@ export type ProvidenceConfig = {
   /* Search target projects. For instance ['/path/to/app-a', '/path/to/app-b', ... '/path/to/app-z'] */
   targetProjectPaths: PathFromSystemRoot[];
   /* Reference projects. Needed for 'match analyzers', having `requiresReference: true`. For instance ['/path/to/lib1', '/path/to/lib2'] */
-  referenceProjectPaths?: PathFromSystemRoot[];
+  referenceProjectPaths: PathFromSystemRoot[];
   /* When targetProjectPaths are dependencies of other projects (their 'roots') */
-  targetProjectRootPaths?: PathFromSystemRoot[];
-  gatherFilesConfig?: GatherFilesConfig;
-  report?: boolean;
-  debugEnabled?: boolean;
+  targetProjectRootPaths: PathFromSystemRoot[];
+  gatherFilesConfig: GatherFilesConfig;
+  report: boolean;
+  debugEnabled: boolean;
 };

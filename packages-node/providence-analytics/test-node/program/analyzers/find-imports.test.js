@@ -4,7 +4,12 @@ const { QueryService } = require('../../../src/program/core/QueryService.js');
 const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
 const { mockProject, getEntry } = require('../../../test-helpers/mock-project-helpers.js');
 
+/**
+ * @typedef {import('../../../src/program/types/core').ProvidenceConfig} ProvidenceConfig
+ */
+
 const findImportsQueryConfig = QueryService.getQueryConfigFromAnalyzer('find-imports');
+/** @type {Partial<ProvidenceConfig>} */
 const _providenceCfg = {
   targetProjectPaths: ['/fictional/project'], // defined in mockProject
 };

@@ -15,6 +15,7 @@ const { fromImportToExportPerspective } = require('./helpers/from-import-to-expo
  * @typedef {import('../types/analyzers').MatchImportsConfig} MatchImportsConfig
  * @typedef {import('../types/analyzers').MatchImportsAnalyzerResult} MatchImportsAnalyzerResult
  * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../types/core').AnalyzerName} AnalyzerName
  */
 
@@ -225,9 +226,13 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
        */
       const fromImportToExport = await fromImportToExportPerspective({
         importee: importEntry.normalizedSource,
-        importer: pathLib.resolve(importProjectPath, importEntry.file),
+        importer: /** @type {PathFromSystemRoot} */ (
+          pathLib.resolve(importProjectPath, importEntry.file)
+        ),
+        importeeProjectPath: cfg.referenceProjectPath,
       });
       const isFromSameSource = compareImportAndExportPaths(exportEntry.file, fromImportToExport);
+
       if (!isFromSameSource) {
         continue;
       }

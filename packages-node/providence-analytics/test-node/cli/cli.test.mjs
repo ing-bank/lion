@@ -1,33 +1,45 @@
-const sinon = require('sinon');
-const pathLib = require('path');
-const { expect } = require('chai');
-const commander = require('commander');
-const {
+/* eslint-disable no-unused-expressions */
+/* eslint-disable import/no-extraneous-dependencies */
+import sinon from 'sinon';
+import pathLib from 'path';
+import { fileURLToPath } from 'url';
+import { expect } from 'chai';
+import commander from 'commander';
+import {
   mockProject,
   restoreMockedProjects,
   mockTargetAndReferenceProject,
-} = require('../../test-helpers/mock-project-helpers.js');
-const {
+} from '../../test-helpers/mock-project-helpers.js';
+import {
   mockWriteToJson,
   restoreWriteToJson,
-} = require('../../test-helpers/mock-report-service-helpers.js');
-const {
+} from '../../test-helpers/mock-report-service-helpers.js';
+import {
   suppressNonCriticalLogs,
   restoreSuppressNonCriticalLogs,
-} = require('../../test-helpers/mock-log-service-helpers.js');
-const { InputDataService } = require('../../src/program/core/InputDataService.js');
-const { QueryService } = require('../../src/program/core/QueryService.js');
-const providenceModule = require('../../src/program/providence.js');
-const extendDocsModule = require('../../src/cli/launch-providence-with-extend-docs.js');
-const cliHelpersModule = require('../../src/cli/cli-helpers.js');
-const { cli } = require('../../src/cli/cli.js');
-const promptAnalyzerModule = require('../../src/cli/prompt-analyzer-menu.js');
-const { toPosixPath } = require('../../src/program/utils/to-posix-path.js');
-const { getExtendDocsResults } = require('../../src/cli/launch-providence-with-extend-docs.js');
+} from '../../test-helpers/mock-log-service-helpers.js';
+import { InputDataService } from '../../src/program/core/InputDataService.js';
+import { QueryService } from '../../src/program/core/QueryService.js';
+import providenceModule from '../../src/program/providence.js';
+import cliHelpersModule from '../../src/cli/cli-helpers.js';
+import { cli } from '../../src/cli/cli.mjs';
+import promptAnalyzerModule from '../../src/cli/prompt-analyzer-menu.js';
+import { toPosixPath } from '../../src/program/utils/to-posix-path.js';
+import extendDocsModule, {
+  getExtendDocsResults,
+} from '../../src/cli/launch-providence-with-extend-docs.js';
+import { dashboardServer } from '../../dashboard/server.mjs';
+
+/**
+ * @typedef {import('../../src/program/types/core').QueryResult} QueryResult
+ */
+
+const __dirname = pathLib.dirname(fileURLToPath(import.meta.url));
 
 const { pathsArrayFromCs, pathsArrayFromCollectionName, appendProjectDependencyPaths } =
   cliHelpersModule;
 
+/** @type {QueryResult[]} */
 const queryResults = [];
 
 const rootDir = toPosixPath(pathLib.resolve(__dirname, '../../'));
@@ -57,10 +69,15 @@ async function runCli(args, cwd) {
 }
 
 describe('Providence CLI', () => {
+  /** @type {sinon.SinonStub} */
   let providenceStub;
+  /** @type {sinon.SinonStub} */
   let promptCfgStub;
+  /** @type {sinon.SinonStub} */
   let iExtConfStub;
+  /** @type {sinon.SinonStub} */
   let promptStub;
+  /** @type {sinon.SinonStub} */
   let qConfStub;
 
   before(() => {
@@ -342,6 +359,14 @@ describe('Providence CLI', () => {
     describe.skip('Search', () => {});
 
     describe('Manage', () => {});
+
+    describe('Dashboard', () => {
+      const startStub = sinon.stub(dashboardServer, 'start');
+      it('spawns a dashboard', async () => {
+        runCli(`dashboard`, rootDir);
+        expect(startStub.called).to.be.true;
+      });
+    });
 
     describe('Extend docs', () => {
       let extendDocsStub;
