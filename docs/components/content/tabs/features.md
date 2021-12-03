@@ -38,6 +38,31 @@ export const slotsOrder = () => html`
 `;
 ```
 
+## Disabled tabs
+
+You can disable specific tabs by adding the `disabled` attribute to a tab button.
+
+When using the arrow keys to switch tabs, it will skip disabled tabs, but it will not cycle from last to first or vice versa.
+
+```js preview-story
+export const tabsDisabled = () => html`
+  <lion-tabs>
+    <button slot="tab">tab 1</button>
+    <div slot="panel">panel 1</div>
+    <button slot="tab" disabled>tab 2</button>
+    <div slot="panel">panel 2</div>
+    <button slot="tab" disabled>tab 3</button>
+    <div slot="panel">panel 3</div>
+    <button slot="tab">tab 4</button>
+    <div slot="panel">panel 4</div>
+    <button slot="tab">tab 5</button>
+    <div slot="panel">panel 5</div>
+    <button slot="tab" disabled>tab 6</button>
+    <div slot="panel">panel 6</div>
+  </lion-tabs>
+`;
+```
+
 ## Nesting tabs
 
 You can include tabs within tabs

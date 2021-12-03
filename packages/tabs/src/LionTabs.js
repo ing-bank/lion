@@ -164,6 +164,21 @@ export class LionTabs extends LitElement {
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__setupSlots();
+    if (this.tabs[0].disabled) {
+      this.selectedIndex = this.tabs.findIndex(tab => !tab.disabled);
+    }
+  }
+
+  get tabs() {
+    return /** @type {HTMLButtonElement[]} */ (Array.from(this.children)).filter(
+      child => child.slot === 'tab',
+    );
+  }
+
+  get panels() {
+    return /** @type {HTMLElement[]} */ (Array.from(this.children)).filter(
+      child => child.slot === 'panel',
+    );
   }
 
   /** @private */
@@ -186,22 +201,16 @@ export class LionTabs extends LitElement {
   __setupStore() {
     /** @type {StoreEntry[]} */
     this.__store = [];
-    const buttons = /** @type {HTMLElement[]} */ (Array.from(this.children)).filter(
-      child => child.slot === 'tab',
-    );
-    const panels = /** @type {HTMLElement[]} */ (Array.from(this.children)).filter(
-      child => child.slot === 'panel',
-    );
-    if (buttons.length !== panels.length) {
+    if (this.tabs.length !== this.panels.length) {
       // eslint-disable-next-line no-console
       console.warn(
-        `The amount of tabs (${buttons.length}) doesn't match the amount of panels (${panels.length}).`,
+        `The amount of tabs (${this.tabs.length}) doesn't match the amount of panels (${this.panels.length}).`,
       );
     }
 
-    buttons.forEach((button, index) => {
+    this.tabs.forEach((button, index) => {
       const uid = uuid();
-      const panel = panels[index];
+      const panel = this.panels[index];
 
       /** @type {StoreEntry} */
       const entry = {
@@ -236,6 +245,56 @@ export class LionTabs extends LitElement {
   }
 
   /**
+   * @param {HTMLButtonElement[]} tabs
+   * @param {HTMLButtonElement} currentTab
+   * @param {'right' | 'left'} dir
+   * @returns {HTMLButtonElement|undefined}
+   * @private
+   */
+  __getNextNotDisabledTab(tabs, currentTab, dir) {
+    let orderedNotDisabledTabs = /** @type {HTMLButtonElement[]} */ ([]);
+    const nextNotDisabledTabs = tabs.filter((tab, i) => !tab.disabled && i > this.selectedIndex);
+    const prevNotDisabledTabs = tabs.filter((tab, i) => !tab.disabled && i < this.selectedIndex);
+    if (dir === 'right') {
+      orderedNotDisabledTabs = [...nextNotDisabledTabs, ...prevNotDisabledTabs];
+    } else {
+      orderedNotDisabledTabs = [...prevNotDisabledTabs.reverse(), ...nextNotDisabledTabs.reverse()];
+    }
+    return orderedNotDisabledTabs[0];
+  }
+
+  /**
+   * @param {number} newIndex
+   * @param {string} direction
+   * @returns {number}
+   * @private
+   */
+  __getNextAvailableIndex(newIndex, direction) {
+    const currentTab = this.tabs[this.selectedIndex];
+    if (this.tabs.every(tab => !tab.disabled)) {
+      return newIndex;
+    }
+    if (direction === 'ArrowRight' || direction === 'ArrowDown') {
+      const nextNotDisabledTab = this.__getNextNotDisabledTab(this.tabs, currentTab, 'right');
+      return this.tabs.findIndex(tab => nextNotDisabledTab === tab);
+    }
+    if (direction === 'ArrowLeft' || direction === 'ArrowUp') {
+      const nextNotDisabledTab = this.__getNextNotDisabledTab(this.tabs, currentTab, 'left');
+      return this.tabs.findIndex(tab => nextNotDisabledTab === tab);
+    }
+    if (direction === 'Home') {
+      return this.tabs.findIndex(tab => !tab.disabled);
+    }
+    if (direction === 'End') {
+      const notDisabledTabs = this.tabs
+        .map((tab, i) => ({ disabled: tab.disabled, index: i }))
+        .filter(tab => !tab.disabled);
+      return notDisabledTabs[notDisabledTabs.length - 1].index;
+    }
+    return -1;
+  }
+
+  /**
    * @param {number} index
    * @returns {(event: Event) => unknown}
    * @private
@@ -257,24 +316,32 @@ export class LionTabs extends LitElement {
         case 'ArrowDown':
         case 'ArrowRight':
           if (this.selectedIndex + 1 >= this._pairCount) {
-            this._setSelectedIndexWithFocus(0);
+            this._setSelectedIndexWithFocus(this.__getNextAvailableIndex(0, _ev.key));
           } else {
-            this._setSelectedIndexWithFocus(this.selectedIndex + 1);
+            this._setSelectedIndexWithFocus(
+              this.__getNextAvailableIndex(this.selectedIndex + 1, _ev.key),
+            );
           }
           break;
         case 'ArrowUp':
         case 'ArrowLeft':
           if (this.selectedIndex <= 0) {
-            this._setSelectedIndexWithFocus(this._pairCount - 1);
+            this._setSelectedIndexWithFocus(
+              this.__getNextAvailableIndex(this._pairCount - 1, _ev.key),
+            );
           } else {
-            this._setSelectedIndexWithFocus(this.selectedIndex - 1);
+            this._setSelectedIndexWithFocus(
+              this.__getNextAvailableIndex(this.selectedIndex - 1, _ev.key),
+            );
           }
           break;
         case 'Home':
-          this._setSelectedIndexWithFocus(0);
+          this._setSelectedIndexWithFocus(this.__getNextAvailableIndex(0, _ev.key));
           break;
         case 'End':
-          this._setSelectedIndexWithFocus(this._pairCount - 1);
+          this._setSelectedIndexWithFocus(
+            this.__getNextAvailableIndex(this._pairCount - 1, _ev.key),
+          );
           break;
         /* no default */
       }
@@ -297,6 +364,9 @@ export class LionTabs extends LitElement {
    * @protected
    */
   _setSelectedIndexWithFocus(value) {
+    if (value === -1) {
+      return;
+    }
     const stale = this.__selectedIndex;
     this.__selectedIndex = value;
     this.__updateSelected(true);
@@ -323,16 +393,8 @@ export class LionTabs extends LitElement {
     ) {
       return;
     }
-    const previousButton = /** @type {HTMLElement} */ (
-      Array.from(this.children).find(
-        child => child.slot === 'tab' && child.hasAttribute('selected'),
-      )
-    );
-    const previousPanel = /** @type {HTMLElement} */ (
-      Array.from(this.children).find(
-        child => child.slot === 'panel' && child.hasAttribute('selected'),
-      )
-    );
+    const previousButton = this.tabs.find(child => child.hasAttribute('selected'));
+    const previousPanel = this.panels.find(child => child.hasAttribute('selected'));
     if (previousButton) {
       deselectButton(previousButton);
     }
