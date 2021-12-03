@@ -27,7 +27,8 @@
     "test:node": "npm run test:node:unit && npm run test:node:e2e",
     "test:node:unit": "mocha './test-node/**/*.test.{j,mj}s'",
     "test:node:unit:watch": "npm run test:node --watch",
-    "test:node:e2e": "mocha './test-node/**/*.e2e.{j,mj}s' --timeout 60000"
+    "test:node:e2e": "mocha './test-node/**/*.e2e.{j,mj}s' --timeout 60000",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@babel/core": "^7.10.1",
@@ -52,7 +53,8 @@
     "@web/dev-server-core": "^0.3.17",
     "mock-fs": "^5.1.2",
     "mock-require": "^3.0.3",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "patch-package": "^6.4.7"
   },
   "keywords": [
     "analysis",
