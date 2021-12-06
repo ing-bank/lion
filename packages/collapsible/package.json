@@ -53,6 +53,6 @@
   "exports": {
     ".": "./index.js",
     "./define": "./lion-collapsible.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

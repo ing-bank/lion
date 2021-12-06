@@ -52,6 +52,6 @@
   "exports": {
     ".": "./index.js",
     "./define": "./lion-dialog.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

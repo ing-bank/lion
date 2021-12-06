@@ -52,6 +52,6 @@
     ".": "./index.js",
     "./define": "./lion-pagination.js",
     "./translations/*": "./translations/*",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

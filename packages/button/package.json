@@ -56,6 +56,6 @@
     "./define-button-reset": "./lion-button-reset.js",
     "./define-button-submit": "./lion-button-submit.js",
     "./define": "./define.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

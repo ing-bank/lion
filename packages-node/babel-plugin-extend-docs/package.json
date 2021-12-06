@@ -34,7 +34,7 @@
   },
   "exports": {
     ".": "./index.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   },
   "imports": {
     "#source/counter": "./demo/src/SourceCounter.js",

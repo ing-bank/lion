@@ -61,6 +61,6 @@
     "./define": "./lion-input-datepicker.js",
     "./test-helpers": "./test-helpers.js",
     "./translations/*": "./translations/*",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

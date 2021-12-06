@@ -54,6 +54,6 @@
     ".": "./index.js",
     "./define": "./lion-progress-indicator.js",
     "./translations/*": "./translations/*",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

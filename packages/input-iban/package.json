@@ -56,6 +56,6 @@
     ".": "./index.js",
     "./define": "./lion-input-iban.js",
     "./translations/*": "./translations/*",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

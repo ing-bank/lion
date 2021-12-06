@@ -52,6 +52,6 @@
     "./test-helpers": "./test-helpers/index.js",
     "./closestPolyfill": "./src/closestPolyfill.js",
     "./differentKeyEventNamesShimIE": "./src/differentKeyEventNamesShimIE.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

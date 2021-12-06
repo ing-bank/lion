@@ -56,6 +56,6 @@
     "./define": "./define.js",
     "./define-switch": "./lion-switch.js",
     "./define-switch-button": "./lion-switch-button.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }
