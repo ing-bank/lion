@@ -56,6 +56,6 @@
     "./define": "./define.js",
     "./define-radio": "./lion-radio.js",
     "./define-radio-group": "./lion-radio-group.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

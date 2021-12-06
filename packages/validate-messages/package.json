@@ -49,6 +49,6 @@
   "exports": {
     ".": "./index.js",
     "./translations/*": "./translations/*",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

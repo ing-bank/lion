@@ -43,6 +43,6 @@
   },
   "exports": {
     ".": "./index.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

@@ -54,6 +54,6 @@
   "exports": {
     ".": "./index.js",
     "./define": "./lion-input-email.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

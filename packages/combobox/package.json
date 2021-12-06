@@ -63,6 +63,6 @@
   "exports": {
     ".": "./index.js",
     "./define": "./lion-combobox.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

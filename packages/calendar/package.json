@@ -53,6 +53,6 @@
     "./define": "./lion-calendar.js",
     "./translations/*": "./translations/*",
     "./test-helpers": "./test-helpers/index.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

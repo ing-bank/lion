@@ -66,6 +66,6 @@
     "./define-options": "./lion-options.js",
     "./define-select-invoker": "./lion-select-invoker.js",
     "./define-select-rich": "./lion-select-rich.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

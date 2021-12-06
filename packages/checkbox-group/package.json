@@ -58,6 +58,6 @@
     "./define-checkbox-group": "./lion-checkbox-group.js",
     "./define-checkbox-indeterminate": "./lion-checkbox-indeterminate.js",
     "./define": "./define.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

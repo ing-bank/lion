@@ -54,6 +54,6 @@
     "./define": "./define.js",
     "./define-step": "./lion-step.js",
     "./define-steps": "./lion-steps.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

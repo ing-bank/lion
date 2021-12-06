@@ -60,6 +60,6 @@
     "./define-listbox": "./lion-listbox.js",
     "./define-option": "./lion-option.js",
     "./define-options": "./lion-options.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

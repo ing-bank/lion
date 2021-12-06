@@ -54,6 +54,6 @@
   "exports": {
     ".": "./index.js",
     "./define": "./lion-input-date.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }

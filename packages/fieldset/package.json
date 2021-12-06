@@ -52,6 +52,6 @@
   "exports": {
     ".": "./index.js",
     "./define": "./lion-fieldset.js",
-    "./docs/": "./docs/"
+    "./docs/*": "./docs/*"
   }
 }
