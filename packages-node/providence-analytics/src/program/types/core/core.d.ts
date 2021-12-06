@@ -1,3 +1,5 @@
+import { File } from '@babel/types';
+
 /**
  * The name of a variable in a local context. Examples:
  * - 'b': (`import {a as b } from 'c';`)
@@ -140,6 +142,11 @@ export interface ProjectInputDataWithMeta {
   project: Project;
   entries: { file: PathRelativeFromProjectRoot; context: { code: string } }[];
 }
+
+export interface ProjectInputDataWithAstMeta extends ProjectInputDataWithMeta {
+  entries: { file: PathRelativeFromProjectRoot; ast: File; context: { code: string } }[];
+}
+
 /**
  * See: https://www.npmjs.com/package/anymatch
  * Allows negations as well. See: https://www.npmjs.com/package/is-negated-glob
@@ -162,4 +169,6 @@ export type ProvidenceConfig = {
   gatherFilesConfig: GatherFilesConfig;
   report: boolean;
   debugEnabled: boolean;
+  measurePerformance: boolean;
+  writeLogFile: boolean;
 };

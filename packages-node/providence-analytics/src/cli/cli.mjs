@@ -13,10 +13,8 @@ import { toPosixPath } from '../program/utils/to-posix-path.js';
 import { dashboardServer } from '../../dashboard/server.mjs';
 
 const require = createRequire(import.meta.url);
-
-const { extensionsFromCs, setQueryMethod, targetDefault, installDeps } = cliHelpers;
-
 const { version } = require('../../package.json');
+const { extensionsFromCs, setQueryMethod, targetDefault, installDeps } = cliHelpers;
 
 export async function cli({ cwd, providenceConf, argv = process.argv } = {}) {
   let resolveCli;
@@ -133,6 +131,8 @@ export async function cli({ cwd, providenceConf, argv = process.argv } = {}) {
       referenceProjectPaths: referencePaths,
       targetProjectRootPaths: searchTargetPaths,
       writeLogFile: commander.writeLogFile,
+      measurePerformance: commander.measurePerf,
+      addSystemPathsInResult: commander.addSystemPaths,
     });
   }
 
@@ -219,7 +219,9 @@ export async function cli({ cwd, providenceConf, argv = process.argv } = {}) {
     .option(
       '--allowlist-mode-reference [allowlist-mode-reference]',
       `allowlist mode applied to refernce project`,
-    );
+    )
+    .option('--measure-perf', 'Logs the completion time in seconds')
+    .option('--add-system-paths', 'Adds system paths to results');
 
   commander
     .command('search <regex>')

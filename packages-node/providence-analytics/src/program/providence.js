@@ -1,3 +1,4 @@
+const { performance } = require('perf_hooks');
 const deepmerge = require('deepmerge');
 const { ReportService } = require('./core/ReportService.js');
 const { InputDataService } = require('./core/InputDataService.js');
@@ -17,7 +18,7 @@ const { QueryService } = require('./core/QueryService.js');
 /**
  * After handling a combo, we should know which project versions we have, since
  * the analyzer internally called createDataObject(which provides us the needed meta info).
- * @param {{queryResult: QueryResult; queryConfig: QueryConfig; providenceConfig: Partial<ProvidenceConfig>}} opts
+ * @param {{queryResult: AnalyzerQueryResult; queryConfig: AnalyzerQueryConfig; providenceConfig: ProvidenceConfig}} opts
  */
 function addToSearchTargetDepsFile({ queryResult, queryConfig, providenceConfig }) {
   const currentSearchTarget = queryConfig.analyzerConfig.targetProjectPath;
@@ -41,7 +42,7 @@ function addToSearchTargetDepsFile({ queryResult, queryConfig, providenceConfig 
 /**
  *
  * @param {AnalyzerQueryResult} queryResult
- * @param {{outputPath:PathFromSystemRoot}} cfg
+ * @param {{outputPath:PathFromSystemRoot;report:boolean}} cfg
  */
 function report(queryResult, cfg) {
   if (cfg.report && !queryResult.meta.analyzerMeta.__fromCache) {
@@ -82,6 +83,7 @@ async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
     gatherFilesConfig: cfg.gatherFilesConfig,
     gatherFilesConfigReference: cfg.gatherFilesConfigReference,
     skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+    addSystemPathsInResult: cfg.addSystemPathsInResult,
     ...slicedQConfig.analyzerConfig,
   });
   if (queryResult) {
@@ -173,24 +175,31 @@ async function handleRegexSearch(queryConfig, cfg, inputData) {
  * @param {Partial<ProvidenceConfig>} customConfig
  */
 async function providenceMain(queryConfig, customConfig) {
-  const cfg = deepmerge(
-    {
-      queryMethod: 'grep',
-      // This is a merge of all 'main entry projects'
-      // found in search-targets, including their children
-      targetProjectPaths: null,
-      referenceProjectPaths: null,
-      // This will be needed to identify the parent/child relationship to write to
-      // {outputFolder}/entryProjectDependencies.json, which will map
-      // a project#version to [ depA#version, depB#version ]
-      targetProjectRootPaths: null,
-      gatherFilesConfig: {},
-      report: true,
-      debugEnabled: false,
-      writeLogFile: false,
-      skipCheckMatchCompatibility: false,
-    },
-    customConfig,
+  const tStart = performance.now();
+
+  const cfg = /** @type {ProvidenceConfig} */ (
+    deepmerge(
+      {
+        queryMethod: 'grep',
+        // This is a merge of all 'main entry projects'
+        // found in search-targets, including their children
+        targetProjectPaths: null,
+        referenceProjectPaths: null,
+        // This will be needed to identify the parent/child relationship to write to
+        // {outputFolder}/entryProjectDependencies.json, which will map
+        // a project#version to [ depA#version, depB#version ]
+        targetProjectRootPaths: null,
+        gatherFilesConfig: {},
+        report: true,
+        debugEnabled: false,
+        writeLogFile: false,
+        skipCheckMatchCompatibility: false,
+        measurePerformance: false,
+        /** Allows to navigate to source file in code editor */
+        addSystemPathsInResult: false,
+      },
+      customConfig,
+    )
   );
 
   if (cfg.debugEnabled) {
@@ -223,6 +232,12 @@ async function providenceMain(queryConfig, customConfig) {
     LogService.writeLogFile();
   }
 
+  const tEnd = performance.now();
+
+  if (cfg.measurePerformance) {
+    // eslint-disable-next-line no-console
+    console.log(`completed in ${((tEnd - tStart) / 1000).toFixed(2)} seconds`);
+  }
   return queryResults;
 }
 

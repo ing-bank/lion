@@ -130,7 +130,7 @@ function targetDefault() {
 }
 
 /**
- * @desc Returns all sub projects matching condition supplied in matchFn
+ * Returns all sub projects matching condition supplied in matchFn
  * @param {string[]} searchTargetPaths all search-target project paths
  * @param {string} matchPattern base for RegExp
  * @param {string[]} modes

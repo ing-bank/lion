@@ -3,6 +3,8 @@ const child_process = require('child_process'); // eslint-disable-line camelcase
 const { AstService } = require('./AstService.js');
 const { LogService } = require('./LogService.js');
 const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
+const { GlobalConfig } = require('./GlobalConfig.js');
+const { memoize } = require('../utils/memoize.js');
 
 /**
  * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
@@ -103,7 +105,7 @@ class QueryService {
 
   /**
    * Retrieves the default export found in ./program/analyzers/find-import.js
-   * @param {string|Analyzer} analyzerObjectOrString
+   * @param {string|typeof Analyzer} analyzerObjectOrString
    * @param {AnalyzerConfig} [analyzerConfig]
    * @returns {AnalyzerQueryConfig}
    */
@@ -344,6 +346,8 @@ class QueryService {
     });
   }
 }
-QueryService.cacheDisabled = false;
+QueryService.cacheDisabled = GlobalConfig.cacheDisabled || false;
+
+// QueryService.addAstToProjectsData = memoize(QueryService.addAstToProjectsData);
 
 module.exports = { QueryService };

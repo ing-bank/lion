@@ -1,6 +1,8 @@
 const fs = require('fs');
 const pathLib = require('path');
 const getHash = require('../utils/get-hash.js');
+// const { memoize } = require('../utils/memoize.js');
+const memoize = fn => fn;
 
 /**
  * @typedef {import('../types/core').Project} Project
@@ -60,6 +62,7 @@ class ReportService {
     }
     const { name } = queryResult.meta.analyzerMeta;
     const filePath = this._getResultFileNameAndPath(name, identifier);
+
     fs.writeFileSync(filePath, output, { flag: 'w' });
   }
 
@@ -125,5 +128,7 @@ class ReportService {
     fs.writeFileSync(filePath, JSON.stringify(file, null, 2), { flag: 'w' });
   }
 }
+ReportService.createIdentifier = memoize(ReportService.createIdentifier);
+ReportService.getCachedResult = memoize(ReportService.getCachedResult);
 
 module.exports = { ReportService };

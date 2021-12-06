@@ -1,6 +1,7 @@
 const { expect } = require('chai');
 const pathLib = require('path');
 const { InputDataService } = require('../../../src/program/core/InputDataService.js');
+const { GlobalConfig } = require('../../../src/program/core/GlobalConfig.js');
 const {
   restoreMockedProjects,
   mockProject,
@@ -12,9 +13,14 @@ function restoreOriginalInputDataPaths() {
 }
 
 describe('InputDataService', () => {
+  beforeEach(() => {
+    GlobalConfig.cacheDisabled = true;
+  });
+
   afterEach(() => {
     restoreOriginalInputDataPaths();
     restoreMockedProjects();
+    GlobalConfig.cacheDisabled = false;
   });
 
   describe('Configuration', () => {

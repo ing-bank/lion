@@ -7,7 +7,7 @@ const { LogService } = require('../core/LogService.js');
 
 /**
  * @typedef {import('@babel/types').File} File
- * @typedef {import('@babel/types').Node} Node
+ * @typedef {import('@babel/types').Node} Node *
  * @typedef {import('../types/core').AnalyzerName} AnalyzerName
  * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../types/analyzers').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
@@ -59,6 +59,7 @@ function getImportOrReexportsSpecifiers(node) {
 function findImportsPerAstEntry(ast) {
   LogService.debug(`Analyzer "find-imports": started findImportsPerAstEntry method`);
 
+  // https://github.com/babel/babel/blob/672a58660f0b15691c44582f1f3fdcdac0fa0d2f/packages/babel-core/src/transformation/index.ts#L110
   // Visit AST...
   /** @type {Partial<FindImportsAnalyzerEntry>[]} */
   const transformedEntry = [];
@@ -106,6 +107,7 @@ function findImportsPerAstEntry(ast) {
 }
 
 class FindImportsAnalyzer extends Analyzer {
+  /** @type {AnalyzerName} */
   static get analyzerName() {
     return 'find-imports';
   }

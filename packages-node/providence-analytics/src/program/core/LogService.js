@@ -49,7 +49,7 @@ class LogService {
    * @param {string} [title]
    */
   static success(text, title) {
-    log(chalk.bgGreen.black.bold(`success${printTitle(title)}`), text);
+    // log(chalk.bgGreen.black.bold(`success${printTitle(title)}`), text);
     // @ts-ignore
     this._logHistory.push(`- success -${printTitle(title)} ${text}`);
   }
@@ -59,7 +59,7 @@ class LogService {
    * @param {string} [title]
    */
   static info(text, title) {
-    log(chalk.bgBlue.black.bold(`   info${printTitle(title)}`), text);
+    // log(chalk.bgBlue.black.bold(`   info${printTitle(title)}`), text);
     // @ts-ignore
     this._logHistory.push(`-    info -${printTitle(title)} ${text}`);
   }

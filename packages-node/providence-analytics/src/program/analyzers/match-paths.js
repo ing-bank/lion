@@ -428,6 +428,7 @@ class MatchPathsAnalyzer extends Analyzer {
       gatherFilesConfig: cfg.gatherFilesConfig,
       gatherFilesConfigReference: cfg.gatherFilesConfigReference,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
 
     // [A2]
@@ -437,6 +438,7 @@ class MatchPathsAnalyzer extends Analyzer {
       targetProjectPath: cfg.targetProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfig,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
 
     // [A3]
@@ -446,6 +448,7 @@ class MatchPathsAnalyzer extends Analyzer {
       targetProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfigReference,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
 
     /**
@@ -474,6 +477,7 @@ class MatchPathsAnalyzer extends Analyzer {
       targetProjectPath: cfg.targetProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfig,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
 
     // [B2]
@@ -483,6 +487,7 @@ class MatchPathsAnalyzer extends Analyzer {
       targetProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfigReference,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
     // refFindExportsAnalyzer was already created in A3
 

@@ -7,7 +7,10 @@ const { QueryService } = require('./QueryService.js');
 const { ReportService } = require('./ReportService.js');
 const { InputDataService } = require('./InputDataService.js');
 const { toPosixPath } = require('../utils/to-posix-path.js');
+// const { memoize } = require('../utils/memoize.js');
 const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
+
+const memoize = fn => fn;
 
 /**
  * @typedef {import('../types/core').AnalyzerName} AnalyzerName
@@ -24,7 +27,7 @@ const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative
  * @param {ProjectInputDataWithMeta} projectData
  * @param {function} astAnalysis
  */
-async function analyzePerAstEntry(projectData, astAnalysis) {
+async function analyzePerAstFile(projectData, astAnalysis) {
   const entries = [];
   for (const { file, ast, context: astContext } of projectData.entries) {
     const relativePath = getFilePathRelativeFromRoot(file, projectData.project.path);
@@ -65,18 +68,18 @@ function posixify(data) {
  * By returning the configuration for the queryOutput, it will be possible to run later queries
  * under the same circumstances
  * @param {QueryOutput} queryOutput
- * @param {object} configuration
+ * @param {object} cfg
  * @param {Analyzer} analyzer
  */
-function ensureAnalyzerResultFormat(queryOutput, configuration, analyzer) {
+function ensureAnalyzerResultFormat(queryOutput, cfg, analyzer) {
   const { targetProjectMeta, identifier, referenceProjectMeta } = analyzer;
   const optional = {};
   if (targetProjectMeta) {
-    optional.targetProject = targetProjectMeta;
+    optional.targetProject = { ...targetProjectMeta };
     delete optional.targetProject.path; // get rid of machine specific info
   }
   if (referenceProjectMeta) {
-    optional.referenceProject = referenceProjectMeta;
+    optional.referenceProject = { ...referenceProjectMeta };
     delete optional.referenceProject.path; // get rid of machine specific info
   }
 
@@ -88,7 +91,7 @@ function ensureAnalyzerResultFormat(queryOutput, configuration, analyzer) {
       requiredAst: analyzer.requiredAst,
       identifier,
       ...optional,
-      configuration,
+      configuration: cfg,
     },
   };
 
@@ -129,25 +132,30 @@ function ensureAnalyzerResultFormat(queryOutput, configuration, analyzer) {
  * @param {PathFromSystemRoot} referencePath
  * @param {PathFromSystemRoot} targetPath
  */
-function checkForMatchCompatibility(referencePath, targetPath) {
-  const refFile = pathLib.resolve(referencePath, 'package.json');
-  const referencePkg = JSON.parse(fs.readFileSync(refFile, 'utf8'));
-  const targetFile = pathLib.resolve(targetPath, 'package.json');
-  const targetPkg = JSON.parse(fs.readFileSync(targetFile, 'utf8'));
+const checkForMatchCompatibility = memoize(
+  (
+    /** @type {PathFromSystemRoot} */ referencePath,
+    /** @type {PathFromSystemRoot} */ targetPath,
+  ) => {
+    const refFile = pathLib.resolve(referencePath, 'package.json');
+    const referencePkg = JSON.parse(fs.readFileSync(refFile, 'utf8'));
+    const targetFile = pathLib.resolve(targetPath, 'package.json');
+    const targetPkg = JSON.parse(fs.readFileSync(targetFile, 'utf8'));
 
-  const allTargetDeps = [
-    ...Object.entries(targetPkg.devDependencies || {}),
-    ...Object.entries(targetPkg.dependencies || {}),
-  ];
-  const importEntry = allTargetDeps.find(([name]) => referencePkg.name === name);
-  if (!importEntry) {
-    return { compatible: false, reason: 'no-dependency' };
-  }
-  if (!semver.satisfies(referencePkg.version, importEntry[1])) {
-    return { compatible: false, reason: 'no-matched-version' };
-  }
-  return { compatible: true };
-}
+    const allTargetDeps = [
+      ...Object.entries(targetPkg.devDependencies || {}),
+      ...Object.entries(targetPkg.dependencies || {}),
+    ];
+    const importEntry = allTargetDeps.find(([name]) => referencePkg.name === name);
+    if (!importEntry) {
+      return { compatible: false, reason: 'no-dependency' };
+    }
+    if (!semver.satisfies(referencePkg.version, importEntry[1])) {
+      return { compatible: false, reason: 'no-matched-version' };
+    }
+    return { compatible: true };
+  },
+);
 
 /**
  * If in json format, 'unwind' to be compatible for analysis...
@@ -164,6 +172,9 @@ class Analyzer {
     return false;
   }
 
+  /**
+   * @type {AnalyzerName|''}
+   */
   static get analyzerName() {
     return '';
   }
@@ -231,14 +242,16 @@ class Analyzer {
       );
 
       if (!compatible) {
-        LogService.info(
-          `skipping ${LogService.pad(this.name, 16)} for ${
-            this.identifier
-          }: (${reason})\n${cfg.targetProjectPath.replace(
-            `${process.cwd()}/providence-input-data/search-targets/`,
-            '',
-          )}`,
-        );
+        if (!cfg.suppressNonCriticalLogs) {
+          LogService.info(
+            `skipping ${LogService.pad(this.name, 16)} for ${
+              this.identifier
+            }: (${reason})\n${cfg.targetProjectPath.replace(
+              `${process.cwd()}/providence-input-data/search-targets/`,
+              '',
+            )}`,
+          );
+        }
         return ensureAnalyzerResultFormat(`[${reason}]`, cfg, this);
       }
     }
@@ -249,13 +262,16 @@ class Analyzer {
     const cachedResult = Analyzer._getCachedAnalyzerResult({
       analyzerName: this.name,
       identifier: this.identifier,
+      cfg,
     });
 
     if (cachedResult) {
       return cachedResult;
     }
 
-    LogService.info(`starting ${LogService.pad(this.name, 16)} for ${this.identifier}`);
+    if (!cfg.suppressNonCriticalLogs) {
+      LogService.info(`starting ${LogService.pad(this.name, 16)} for ${this.identifier}`);
+    }
 
     /**
      * Get reference and search-target data
@@ -286,12 +302,14 @@ class Analyzer {
     LogService.debug(`Analyzer "${this.name}": started _finalize method`);
 
     const analyzerResult = ensureAnalyzerResultFormat(queryOutput, cfg, this);
-    LogService.success(`finished ${LogService.pad(this.name, 16)} for ${this.identifier}`);
+    if (!cfg.suppressNonCriticalLogs) {
+      LogService.success(`finished ${LogService.pad(this.name, 16)} for ${this.identifier}`);
+    }
     return analyzerResult;
   }
 
   /**
-   * @param {function} traverseEntry
+   * @param {Function} traverseEntry
    */
   async _traverse(traverseEntry) {
     LogService.debug(`Analyzer "${this.name}": started _traverse method`);
@@ -300,7 +318,7 @@ class Analyzer {
      * Create ASTs for our inputData
      */
     const astDataProjects = await QueryService.addAstToProjectsData(this.targetData, 'babel');
-    return analyzePerAstEntry(astDataProjects[0], traverseEntry);
+    return analyzePerAstFile(astDataProjects[0], traverseEntry);
   }
 
   async execute(customConfig = {}) {
@@ -309,6 +327,7 @@ class Analyzer {
     const cfg = {
       targetProjectPath: null,
       referenceProjectPath: null,
+      suppressNonCriticalLogs: false,
       ...customConfig,
     };
 
@@ -334,17 +353,17 @@ class Analyzer {
   /**
    * Gets a cached result from ReportService. Since ReportService slightly modifies analyzer
    * output, we 'unwind' before we return...
-   * @param {object} config
-   * @param {string} config.analyzerName
-   * @param {string} config.identifier
+   * @param {{ analyzerName:AnalyzerName, identifier:string, cfg:AnalyzerConfig}} config
    * @returns {AnalyzerQueryResult|undefined}
    */
-  static _getCachedAnalyzerResult({ analyzerName, identifier }) {
+  static _getCachedAnalyzerResult({ analyzerName, identifier, cfg }) {
     const cachedResult = ReportService.getCachedResult({ analyzerName, identifier });
     if (!cachedResult) {
       return undefined;
     }
-    LogService.success(`cached version found for ${identifier}`);
+    if (!cfg.suppressNonCriticalLogs) {
+      LogService.success(`cached version found for ${identifier}`);
+    }
 
     /** @type {AnalyzerQueryResult} */
     const result = unwindJsonResult(cachedResult);

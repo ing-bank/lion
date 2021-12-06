@@ -1,28 +1,38 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import fs from 'fs';
 import pathLib from 'path';
+import sinon from 'sinon';
 import { fileURLToPath } from 'url';
 import { expect } from 'chai';
 import fetch from 'node-fetch';
 import { createTestServer } from '@web/dev-server-core/test-helpers';
 import { createDashboardServerConfig } from '../../dashboard/server.mjs';
 import { ReportService } from '../../src/program/core/ReportService.js';
-
-const __dirname = pathLib.dirname(fileURLToPath(import.meta.url));
-
-const { outputPath: reportServiceOutputPathOriginal } = ReportService;
-const mockedResponsesPath = pathLib.join(__dirname, 'fixtures/dashboard-responses');
-const mockedOutputPath = pathLib.join(__dirname, 'fixtures/providence-output');
+import { providenceConfUtil } from '../../src/program/utils/providence-conf-util.mjs';
 
 /**
  * @typedef {import('@web/dev-server-core').DevServer} DevServer
  */
+
+const __dirname = pathLib.dirname(fileURLToPath(import.meta.url));
+const { outputPath: reportServiceOutputPathOriginal } = ReportService;
+const fixturesPath = pathLib.join(__dirname, 'fixtures');
+const mockedResponsesPath = pathLib.join(__dirname, 'fixtures/dashboard-responses');
+const mockedOutputPath = pathLib.join(__dirname, 'fixtures/providence-output');
+
+async function getConf(url) {
+  const { default: providenceConf } = await import(url);
+  const providenceConfRaw = fs.readFileSync(url, 'utf8');
+  return { providenceConf, providenceConfRaw };
+}
 
 describe('Dashboard Server', () => {
   /** @type {string} */
   let host;
   /** @type {DevServer} */
   let server;
+  /** @type {sinon.SinonStub} */
+  let providenceConfStub;
 
   before(() => {
     // N.B. don't use mock-fs, since it doesn't correctly handle dynamic imports and fs.promises
@@ -35,11 +45,13 @@ describe('Dashboard Server', () => {
 
   describe('Happy flow', () => {
     beforeEach(async () => {
-      const dashboardConfig = await createDashboardServerConfig();
-      ({ host, server } = await createTestServer(dashboardConfig));
+      const conf = await getConf(`${fixturesPath}/providence.conf.mjs`);
+      providenceConfStub = sinon.stub(providenceConfUtil, 'getConf').resolves(conf);
+      ({ host, server } = await createTestServer(await createDashboardServerConfig()));
     });
 
     afterEach(() => {
+      providenceConfStub.restore();
       server.stop();
     });
 
@@ -84,8 +96,8 @@ describe('Dashboard Server', () => {
         const response = await fetch(`${host}/providence-conf.js`);
         expect(response.status).to.equal(200);
         const responseText = await response.text();
-        const expectedResult = fs.readFileSync(`${process.cwd()}/providence.conf.mjs`, 'utf8');
-        expect(responseText).to.equal(expectedResult);
+        const { providenceConfRaw } = await getConf(`${fixturesPath}/providence.conf.mjs`);
+        expect(responseText).to.equal(providenceConfRaw);
       });
 
       // Since we cannot mock dynamic imports: skip for now...

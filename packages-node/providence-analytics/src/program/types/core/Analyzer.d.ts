@@ -8,6 +8,7 @@ import {
   Project,
   GatherFilesConfig,
   SpecifierName,
+  QueryOutput,
 } from './index';
 
 /**
@@ -27,21 +28,23 @@ export interface Meta {
 export interface AnalyzerMeta {
   name: AnalyzerName;
   requiredAst: RequiredAst;
-  /** a unique hash based on target, reference and configuration */
+  /* a unique hash based on target, reference and configuration */
   identifier: ImportOrExportId;
-  /** target project meta object */
+  /* target project meta object */
   targetProject: Project;
-  /** reference project meta object */
+  /* reference project meta object */
   referenceProject?: Project;
-  /** the configuration used for this particular analyzer run */
+  /* the configuration used for this particular analyzer run */
   configuration: object;
+  /* whether it was cached in file system or not */
+  __fromCache?: boolean;
 }
 
 export interface AnalyzerQueryResult extends QueryResult {
   /** meta info object */
   meta: Meta;
   /** array of AST traversal output, per project file */
-  queryOutput: any[];
+  queryOutput: QueryOutput;
 }
 
 export interface FindAnalyzerQueryResult extends AnalyzerQueryResult {

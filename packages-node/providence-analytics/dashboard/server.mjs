@@ -3,7 +3,7 @@ import pathLib, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { startDevServer } from '@web/dev-server';
 import { ReportService } from '../src/program/core/ReportService.js';
-import { getProvidenceConf } from '../src/program/utils/get-providence-conf.mjs';
+import { providenceConfUtil } from '../src/program/utils/providence-conf-util.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -133,7 +133,7 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
 }
 
 export async function createDashboardServerConfig() {
-  const { providenceConf, providenceConfRaw } = await getProvidenceConf();
+  const { providenceConf, providenceConfRaw } = await providenceConfUtil.getConf();
   const { searchTargetDeps, resultFiles } = await getCachedProvidenceResults();
 
   // Needed for dev purposes (we call it from ./packages-node/providence-analytics/ instead of ./)

@@ -1,35 +1,20 @@
 const { expect } = require('chai');
 const {
-  // mockTargetAndReferenceProject,
   mockProject,
   restoreMockedProjects,
 } = require('../../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../test-helpers/mock-log-service-helpers.js');
-
-const { QueryService } = require('../../src/program/core/QueryService.js');
+const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
+const { QueryService } = require('../../../src/program/core/QueryService.js');
 const { providence } = require('../../../src/program/providence.js');
 const { DummyAnalyzer } = require('../../../test-helpers/templates/DummyAnalyzer.js');
 
-const dummyAnalyzer = new DummyAnalyzer();
-const queryResults = [];
+/**
+ * @typedef {import('../../../src/program/types/core').ProvidenceConfig} ProvidenceConfig
+ */
 
 describe('Analyzer', () => {
-  before(() => {
-    suppressNonCriticalLogs();
-    mockWriteToJson(queryResults);
-  });
-
-  after(() => {
-    restoreSuppressNonCriticalLogs();
-    restoreWriteToJson(queryResults);
-  });
+  const dummyAnalyzer = new DummyAnalyzer();
+  const queryResults = setupAnalyzerTest();
 
   describe('Public api', () => {
     it('has a "name" string', async () => {
@@ -42,12 +27,12 @@ describe('Analyzer', () => {
 
     it('has a "requiredAst" string', async () => {
       expect(typeof dummyAnalyzer.requiredAst).to.equal('string');
-      const allowedAsts = ['babel', 'typescript', 'es-module-lexer'];
+      const allowedAsts = ['babel'];
       expect(allowedAsts).to.include(dummyAnalyzer.requiredAst);
     });
 
     it('has a "requiresReference" boolean', async () => {
-      expect(typeof dummyAnalyzer.requiresReference).to.equal('boolean');
+      expect(typeof DummyAnalyzer.requiresReference).to.equal('boolean');
     });
   });
 
@@ -57,6 +42,7 @@ describe('Analyzer', () => {
     });
 
     const myQueryConfigObject = QueryService.getQueryConfigFromAnalyzer(DummyAnalyzer);
+    /** @type {Partial<ProvidenceConfig>} */
     const _providenceCfg = {
       targetProjectPaths: ['/fictional/project'],
     };
@@ -75,10 +61,24 @@ describe('Analyzer', () => {
       it('exposes a ".identifier" string', async () => {});
     });
 
-    describe('Traverse phase', () => {});
+    describe('Traverse phase', () => {
+      it('schedules a Babel visitor', async () => {});
+      it('merges multiple Babel visitors for performance', async () => {});
+      it('traverses Babel visitor and stores traversal result', async () => {});
+    });
+
+    describe('Postprocess phase', () => {
+      it('optionally post processes traversal result', async () => {});
+    });
+
+    describe('Performance', () => {
+      it('memoizes execute functions', async () => {});
+    });
 
     describe('Finalize phase', () => {
       it('returns an AnalyzerQueryResult', async () => {
+        await providence(myQueryConfigObject, _providenceCfg);
+
         const queryResult = queryResults[0];
         const { queryOutput, meta } = queryResult;
 
@@ -224,3 +224,7 @@ describe('Analyzer', () => {
   //   });
   // });
 });
+
+describe('FindAnalyzer', () => {});
+
+describe('MatchAnalyzer', () => {});

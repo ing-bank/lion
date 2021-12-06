@@ -321,6 +321,7 @@ class MatchImportsAnalyzer extends Analyzer {
         metaConfig: cfg.metaConfig,
         targetProjectPath: cfg.referenceProjectPath,
         skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+        suppressNonCriticalLogs: true,
       });
     }
 
@@ -331,6 +332,7 @@ class MatchImportsAnalyzer extends Analyzer {
         metaConfig: cfg.metaConfig,
         targetProjectPath: cfg.targetProjectPath,
         skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+        suppressNonCriticalLogs: true,
       });
     }
 

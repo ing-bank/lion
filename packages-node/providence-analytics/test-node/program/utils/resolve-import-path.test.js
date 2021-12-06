@@ -5,9 +5,14 @@ const {
   mockTargetAndReferenceProject,
 } = require('../../../test-helpers/mock-project-helpers.js');
 const { resolveImportPath } = require('../../../src/program/utils/resolve-import-path.js');
+const { GlobalConfig } = require('../../../src/program/core/GlobalConfig.js');
 
 describe('resolveImportPath', () => {
+  beforeEach(() => {
+    GlobalConfig.cacheDisabled = true;
+  });
   afterEach(() => {
+    GlobalConfig.cacheDisabled = false;
     restoreMockedProjects();
   });
 

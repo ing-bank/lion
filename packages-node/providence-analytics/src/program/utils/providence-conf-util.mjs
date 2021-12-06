@@ -5,7 +5,7 @@ import { pathToFileURL } from 'url';
 /**
  * @returns {Promise<object|null>}
  */
-export async function getProvidenceConf() {
+async function getConf() {
   const confPathWithoutExtension = `${pathLib.join(process.cwd(), 'providence.conf')}`;
   let confPathFound;
   try {
@@ -35,3 +35,6 @@ export async function getProvidenceConf() {
   const providenceConfRaw = fs.readFileSync(confPathFound, 'utf8');
   return { providenceConf, providenceConfRaw };
 }
+
+// Wrapped in object for stubbing
+export const providenceConfUtil = { getConf };

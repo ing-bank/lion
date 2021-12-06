@@ -10,6 +10,8 @@ const { LogService } = require('./LogService.js');
 const { AstService } = require('./AstService.js');
 const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
 const { toPosixPath } = require('../utils/to-posix-path.js');
+const { GlobalConfig } = require('./GlobalConfig.js');
+const { memoize } = require('../utils/memoize.js');
 
 /**
  * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
@@ -31,91 +33,90 @@ const { toPosixPath } = require('../utils/to-posix-path.js');
  * @typedef {import('../types/core').ProjectInputDataWithMeta} ProjectInputDataWithMeta
  * @typedef {import('../types/core').Project} Project
  * @typedef {import('../types/core').ProjectName} ProjectName
- */
-
-/**
  * @typedef {{path:PathFromSystemRoot; name:ProjectName}} ProjectNameAndPath
  * @typedef {{name:ProjectName;files:PathRelativeFromProjectRoot[], workspaces:string[]}} PkgJson
  */
-
-// TODO: memoize
 
 /**
  * @param {PathFromSystemRoot} rootPath
  * @returns {PkgJson|undefined}
  */
-function getPackageJson(rootPath) {
+const getPackageJson = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
   try {
     const fileContent = fs.readFileSync(`${rootPath}/package.json`, 'utf8');
     return JSON.parse(fileContent);
   } catch (_) {
     return undefined;
   }
-}
+});
 
 /**
  * @param {PathFromSystemRoot} rootPath
  */
-function getLernaJson(rootPath) {
+const getLernaJson = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
   try {
     const fileContent = fs.readFileSync(`${rootPath}/lerna.json`, 'utf8');
     return JSON.parse(fileContent);
   } catch (_) {
     return undefined;
   }
-}
+});
 
 /**
- *
  * @param {PathFromSystemRoot[]|string[]} list
  * @param {PathFromSystemRoot} rootPath
  * @returns {ProjectNameAndPath[]}
  */
-function getPathsFromGlobList(list, rootPath) {
-  /** @type {string[]} */
-  const results = [];
-  list.forEach(pathOrGlob => {
-    if (!pathOrGlob.endsWith('/')) {
-      // eslint-disable-next-line no-param-reassign
-      pathOrGlob = `${pathOrGlob}/`;
-    }
+const getPathsFromGlobList = memoize(
+  (
+    /** @type {PathFromSystemRoot[]|string[]} */ list,
+    /** @type {PathFromSystemRoot} */ rootPath,
+  ) => {
+    /** @type {string[]} */
+    const results = [];
+    list.forEach(pathOrGlob => {
+      if (!pathOrGlob.endsWith('/')) {
+        // eslint-disable-next-line no-param-reassign
+        pathOrGlob = `${pathOrGlob}/`;
+      }
 
-    if (pathOrGlob.includes('*')) {
-      const globResults = glob.sync(pathOrGlob, { cwd: rootPath, absolute: false });
-      globResults.forEach(r => {
-        results.push(r);
-      });
-    } else {
-      results.push(pathOrGlob);
-    }
-  });
-  return results.map(pkgPath => {
-    const packageRoot = pathLib.resolve(rootPath, pkgPath);
-    const basename = pathLib.basename(pkgPath);
-    const pkgJson = getPackageJson(/** @type {PathFromSystemRoot} */ (packageRoot));
-    const name = /** @type {ProjectName} */ ((pkgJson && pkgJson.name) || basename);
-    return { name, path: /** @type {PathFromSystemRoot} */ (pkgPath) };
-  });
-}
+      if (pathOrGlob.includes('*')) {
+        const globResults = glob.sync(pathOrGlob, { cwd: rootPath, absolute: false });
+        globResults.forEach(r => {
+          results.push(r);
+        });
+      } else {
+        results.push(pathOrGlob);
+      }
+    });
+    return results.map(pkgPath => {
+      const packageRoot = pathLib.resolve(rootPath, pkgPath);
+      const basename = pathLib.basename(pkgPath);
+      const pkgJson = getPackageJson(/** @type {PathFromSystemRoot} */ (packageRoot));
+      const name = /** @type {ProjectName} */ ((pkgJson && pkgJson.name) || basename);
+      return { name, path: /** @type {PathFromSystemRoot} */ (pkgPath) };
+    });
+  },
+);
 
 /**
  * @param {PathFromSystemRoot} rootPath
  * @returns {string|undefined}
  */
-function getGitignoreFile(rootPath) {
+const getGitignoreFile = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
   try {
     return fs.readFileSync(`${rootPath}/.gitignore`, 'utf8');
   } catch (_) {
     return undefined;
   }
-}
+});
 
 /**
  * @param {PathFromSystemRoot} rootPath
  * @returns {string[]}
  */
-function getGitIgnorePaths(rootPath) {
-  const fileContent = getGitignoreFile(rootPath);
+const getGitIgnorePaths = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
+  const fileContent = /** @type {string} */ (getGitignoreFile(rootPath));
   if (!fileContent) {
     return [];
   }
@@ -147,14 +148,14 @@ function getGitIgnorePaths(rootPath) {
     return entry;
   });
   return normalizedEntries;
-}
+});
 
 /**
  * Gives back all files and folders that need to be added to npm artifact
  * @param {PathFromSystemRoot} rootPath
  * @returns {string[]}
  */
-function getNpmPackagePaths(rootPath) {
+const getNpmPackagePaths = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
   const pkgJson = getPackageJson(rootPath);
   if (!pkgJson) {
     return [];
@@ -169,7 +170,7 @@ function getNpmPackagePaths(rootPath) {
     });
   }
   return [];
-}
+});
 
 /**
  * @param {any|any[]} v
@@ -183,7 +184,7 @@ function ensureArray(v) {
  * @param {string|string[]} patterns
  * @param {Partial<{keepDirs:boolean;root:string}>} [options]
  */
-function multiGlobSync(patterns, { keepDirs = false, root } = {}) {
+const multiGlobSync = memoize((patterns, { keepDirs = false, root } = {}) => {
   patterns = ensureArray(patterns);
   const res = new Set();
   patterns.forEach(pattern => {
@@ -196,7 +197,7 @@ function multiGlobSync(patterns, { keepDirs = false, root } = {}) {
     });
   });
   return Array.from(res);
-}
+});
 
 /**
  * To be used in main program.
@@ -249,9 +250,10 @@ class InputDataService {
    */
   static getProjectMeta(projectPath) {
     /** @type {Partial<Project>} */
-    const project = { path: projectPath };
+    const project = {};
     // Add project meta info
     try {
+      project.path = projectPath;
       const file = pathLib.resolve(projectPath, 'package.json');
       const pkgJson = JSON.parse(fs.readFileSync(file, 'utf8'));
       // eslint-disable-next-line no-param-reassign
@@ -266,7 +268,7 @@ class InputDataService {
       LogService.warn(/** @type {string} */ (e));
     }
     project.commitHash = this._getCommitHash(projectPath);
-    return /** @type {Project} */ (project);
+    return /** @type {Project} */ (Object.freeze(project));
   }
 
   /**
@@ -550,6 +552,11 @@ class InputDataService {
     return undefined;
   }
 }
-InputDataService.cacheDisabled = false;
+InputDataService.cacheDisabled = GlobalConfig.cacheDisabled || false;
+
+InputDataService.getProjectMeta = memoize(InputDataService.getProjectMeta);
+InputDataService.gatherFilesFromDir = memoize(InputDataService.gatherFilesFromDir);
+InputDataService.getMonoRepoPackages = memoize(InputDataService.getMonoRepoPackages);
+InputDataService.createDataObject = memoize(InputDataService.createDataObject);
 
 module.exports = { InputDataService };

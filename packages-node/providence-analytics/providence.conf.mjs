@@ -63,13 +63,13 @@ export default {
   // By predefening groups, we can do a query for programs/collections...
   // Select via " providence analyze --search-target-collection 'exampleCollection' "
   searchTargetCollections: {
-    '@lion-targets': [  '../../packages/input','../../packages/listbox'],
+    '@lion-targets': lionScopedPackagePaths,
     // ...
   },
   referenceCollections: {
     // Usually the references are different from the targets.
     // In this demo file, we test @lion usage amongst itself
     // Select via " providence analyze --reference-collection 'exampleCollection' "
-    '@lion-references': ['../../packages/form-core'],
+    '@lion-references': ['../../packages/core', '../../packages/form-core'],
   },
 };
