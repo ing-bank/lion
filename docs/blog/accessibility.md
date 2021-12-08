@@ -38,7 +38,7 @@ To summarize, these are three reasons to focus on accessibility in your design s
 
 ## The accessibility of Lion
 
-Using Lion does not ensure an accessible outcome. Sorry, it doesn't work like that. What it does provide is a solid base for you to build your own design systems and/or components with. It covers things like keyboard accessibility, UX design and semantics but a bad visual design can still ruin a lot. You have the freedom to use Lion for a white-on-yellow set of components (but it probably won't be very usable for many). It's your responsibility to use what's provide, and build something that includes people.
+Using Lion does not ensure an accessible outcome. Sorry, it doesn't work like that. What it does provide is a solid base for you to build your own design systems and/or components with. It covers things like keyboard accessibility, UX design and semantics but a bad visual design can still ruin a lot. You have the freedom to use Lion for a white-on-yellow set of components (but it probably won't be very usable for many). It's your responsibility to use what's provided, and build something that includes people.
 
 ### Implementation
 
