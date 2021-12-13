@@ -15,6 +15,8 @@ const basicTabs = html`
     <div slot="panel">panel 2</div>
     <button slot="tab">tab 3</button>
     <div slot="panel">panel 3</div>
+    <button slot="tab">tab 4</button>
+    <div slot="panel">panel 4</div>
   </lion-tabs>
 `;
 
@@ -216,7 +218,7 @@ describe('<lion-tabs>', () => {
       const el = /** @type {LionTabs} */ (await fixture(basicTabs));
       const tabs = el.querySelectorAll('[slot=tab]');
       tabs[0].dispatchEvent(new KeyboardEvent('keyup', { key: 'End' }));
-      expect(el.selectedIndex).to.equal(2);
+      expect(el.selectedIndex).to.equal(3);
     });
 
     it('selects first tab on [arrow-right] if on last tab', async () => {
@@ -254,6 +256,90 @@ describe('<lion-tabs>', () => {
       tabs[0].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
       expect(el.selectedIndex).to.equal(2);
     });
+
+    it('selects next available not disabled tab if first tab is disabled', async () => {
+      const el = /** @type {LionTabs} */ (
+        await fixture(html`
+          <lion-tabs>
+            <button slot="tab" disabled>tab 1</button>
+            <div slot="panel">panel 1</div>
+            <button slot="tab">tab 2</button>
+            <div slot="panel">panel 2</div>
+            <button slot="tab">tab 3</button>
+            <div slot="panel">panel 3</div>
+          </lion-tabs>
+        `)
+      );
+      expect(el.selectedIndex).to.equal(1);
+    });
+
+    it('selects next available not disabled tab on [arrow-right] and [arrow-down]', async () => {
+      const el = /** @type {LionTabs} */ (
+        await fixture(html`
+          <lion-tabs>
+            <button slot="tab">tab 1</button>
+            <div slot="panel">panel 1</div>
+            <button slot="tab" disabled>tab 2</button>
+            <div slot="panel">panel 2</div>
+            <button slot="tab">tab 3</button>
+            <div slot="panel">panel 3</div>
+            <button slot="tab" disabled>tab 3</button>
+            <div slot="panel">panel 3</div>
+          </lion-tabs>
+        `)
+      );
+      const tabs = el.querySelectorAll('[slot=tab]');
+      tabs[0].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      expect(el.selectedIndex).to.equal(2);
+    });
+
+    it('selects next available not disabled tab on [arrow-left] and [arrow-up]', async () => {
+      const el = /** @type {LionTabs} */ (
+        await fixture(html`
+          <lion-tabs>
+            <button slot="tab">tab 1</button>
+            <div slot="panel">panel 1</div>
+            <button slot="tab" disabled>tab 2</button>
+            <div slot="panel">panel 2</div>
+            <button slot="tab">tab 3</button>
+            <div slot="panel">panel 3</div>
+            <button slot="tab" disabled>tab 3</button>
+            <div slot="panel">panel 3</div>
+          </lion-tabs>
+        `)
+      );
+      el.selectedIndex = 2;
+      const tabs = el.querySelectorAll('[slot=tab]');
+      tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+      expect(el.selectedIndex).to.equal(0);
+    });
+
+    it('cycles through tabs even if the last or first tabs are disabled', async () => {
+      const el = /** @type {LionTabs} */ (
+        await fixture(html`
+          <lion-tabs>
+            <button slot="tab" disabled>tab 0</button>
+            <div slot="panel">panel 0</div>
+            <button slot="tab">tab 1</button>
+            <div slot="panel">panel 1</div>
+            <button slot="tab">tab 2</button>
+            <div slot="panel">panel 2</div>
+            <button slot="tab" disabled>tab 3</button>
+            <div slot="panel">panel 3</div>
+          </lion-tabs>
+        `)
+      );
+      const tabs = el.querySelectorAll('[slot=tab]');
+      el.selectedIndex = 1;
+
+      // 0 is disabled, same for 3, so should go to 2
+      tabs[1].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+      expect(el.selectedIndex).to.equal(2);
+
+      // 3 is disabled, same for 0, so should go to 1
+      tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      expect(el.selectedIndex).to.equal(1);
+    });
   });
 
   describe('Content distribution', () => {
@@ -276,12 +362,12 @@ describe('<lion-tabs>', () => {
       const selectedTab = Array.from(el.children).find(
         child => child.slot === 'tab' && child.hasAttribute('selected'),
       );
-      expect(selectedTab && selectedTab.textContent).to.equal('tab 5');
+      expect(selectedTab && selectedTab.textContent).to.equal('tab 6');
 
       const selectedPanel = Array.from(el.children).find(
         child => child.slot === 'panel' && child.hasAttribute('selected'),
       );
-      expect(selectedPanel && selectedPanel.textContent).to.equal('panel 5');
+      expect(selectedPanel && selectedPanel.textContent).to.equal('panel 6');
     });
   });
 
