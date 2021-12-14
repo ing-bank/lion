@@ -247,11 +247,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this._onFormElementsChanged();
   }
 
-  // TODO: move to overlayMixin and offer open and close
-  toggle() {
-    this.opened = !this.opened;
-  }
-
   /**
    * In the select disabled options are still going to a possible value for example
    * when prefilling or programmatically setting it.
