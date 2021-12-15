@@ -278,7 +278,7 @@ class PBoard extends DecorateMixin(LitElement) {
     if (!this.__menuData) {
       return;
     }
-    await this.__fetchResults();
+    // await this.__fetchResults();
 
     const elements = Array.from(this._selectionMenuFormNode.elements);
     const repos = elements.filter(n => n.name === 'repos');
@@ -303,7 +303,8 @@ class PBoard extends DecorateMixin(LitElement) {
         this.__providenceConf,
       );
       dataResult[i].type = specifierRes.exportSpecifier.name === '[file]' ? 'file' : 'specifier';
-      dataResult[i].count = specifierRes.matchesPerProject
+      // dedupe, because outputs genarted with older versions might have dedupe problems
+      dataResult[i].count = Array.from(new Set(specifierRes.matchesPerProject))
         .map(mpp => mpp.files)
         .flat(Infinity).length;
       dataResult[i].matchedProjects = specifierRes.matchesPerProject;

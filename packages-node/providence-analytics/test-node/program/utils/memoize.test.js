@@ -17,7 +17,7 @@ describe('Memoize', () => {
     describe('Numbers', () => {
       it(`returns cached result when called with same parameters`, async () => {
         let sumCalled = 0;
-        function sum(/** @type {number} a */ a, /** @type {number} a */ b) {
+        function sum(/** @type {number} */ a, /** @type {number} */ b) {
           sumCalled += 1;
           return a + b;
         }
@@ -42,13 +42,13 @@ describe('Memoize', () => {
 
       it(`returns cached result per function for same args`, async () => {
         let sumCalled = 0;
-        function sum(/** @type {number} a */ a, /** @type {number} a */ b) {
+        function sum(/** @type {number} */ a, /** @type {number} */ b) {
           sumCalled += 1;
           return a + b;
         }
         const sumMemoized = memoize(sum);
         let sum2Called = 0;
-        function sum2(/** @type {number} a */ a, /** @type {number} a */ b) {
+        function sum2(/** @type {number} */ a, /** @type {number} */ b) {
           sum2Called += 1;
           return a + b;
         }
@@ -72,7 +72,7 @@ describe('Memoize', () => {
     describe('Strings', () => {
       it(`returns cached result when called with same parameters`, async () => {
         let sumCalled = 0;
-        function sum(/** @type {string} a */ a, /** @type {string} a */ b) {
+        function sum(/** @type {string} */ a, /** @type {string} */ b) {
           sumCalled += 1;
           return a + b;
         }
@@ -97,13 +97,13 @@ describe('Memoize', () => {
 
       it(`returns cached result per function for same args`, async () => {
         let sumCalled = 0;
-        function sum(/** @type {string} a */ a, /** @type {string} a */ b) {
+        function sum(/** @type {string} */ a, /** @type {string} */ b) {
           sumCalled += 1;
           return a + b;
         }
         const sumMemoized = memoize(sum);
         let sum2Called = 0;
-        function sum2(/** @type {string} a */ a, /** @type {string} a */ b) {
+        function sum2(/** @type {string} */ a, /** @type {string} */ b) {
           sum2Called += 1;
           return a + b;
         }
@@ -129,7 +129,7 @@ describe('Memoize', () => {
     describe('Arrays', () => {
       it(`returns cached result when called with same parameters`, async () => {
         let sumCalled = 0;
-        function sum(/** @type {number[]} a */ a, /** @type {number[]} a */ b) {
+        function sum(/** @type {number[]} */ a, /** @type {number[]} */ b) {
           sumCalled += 1;
           return [...a, ...b];
         }
@@ -150,13 +150,13 @@ describe('Memoize', () => {
 
       it(`returns cached result per function for same args`, async () => {
         let sumCalled = 0;
-        function sum(/** @type {number[]} a */ a, /** @type {number[]} a */ b) {
+        function sum(/** @type {number[]} */ a, /** @type {number[]} */ b) {
           sumCalled += 1;
           return [...a, ...b];
         }
         const sumMemoized = memoize(sum);
         let sum2Called = 0;
-        function sum2(/** @type {number[]} a */ a, /** @type {number[]} a */ b) {
+        function sum2(/** @type {number[]} */ a, /** @type {number[]} */ b) {
           sum2Called += 1;
           return [...a, ...b];
         }
@@ -181,7 +181,7 @@ describe('Memoize', () => {
     describe('Objects', () => {
       it(`returns cached result when called with same parameters`, async () => {
         let sumCalled = 0;
-        function sum(/** @type {object} a */ a, /** @type {object} a */ b) {
+        function sum(/** @type {object} */ a, /** @type {object} */ b) {
           sumCalled += 1;
           return { ...a, ...b };
         }
@@ -202,13 +202,13 @@ describe('Memoize', () => {
 
       it(`returns cached result per function for same args`, async () => {
         let sumCalled = 0;
-        function sum(/** @type {object} a */ a, /** @type {object} a */ b) {
+        function sum(/** @type {object} */ a, /** @type {object} */ b) {
           sumCalled += 1;
           return { ...a, ...b };
         }
         const sumMemoized = memoize(sum, { serializeObjects: true });
         let sum2Called = 0;
-        function sum2(/** @type {object} a */ a, /** @type {object} a */ b) {
+        function sum2(/** @type {object} */ a, /** @type {object} */ b) {
           sum2Called += 1;
           return { ...a, ...b };
         }
@@ -234,7 +234,7 @@ describe('Memoize', () => {
       // Solve this by making sure your memoized function uses Object.freeze
       it(`will be affected by edited non primitive returns`, async () => {
         let sumCalled = 0;
-        function sum(/** @type {object} a */ a, /** @type {object} a */ b) {
+        function sum(/** @type {object} */ a, /** @type {object} */ b) {
           sumCalled += 1;
           return { ...a, ...b };
         }
@@ -265,7 +265,7 @@ describe('Memoize', () => {
   describe('Asynchronous', () => {
     it(`returns cached result when called with same parameters`, async () => {
       let sumCalled = 0;
-      async function sum(/** @type {number} a */ a, /** @type {number} a */ b) {
+      async function sum(/** @type {number} */ a, /** @type {number} */ b) {
         sumCalled += 1;
         return a + b;
       }
@@ -290,13 +290,13 @@ describe('Memoize', () => {
 
     it(`returns cached result per function for same args`, async () => {
       let sumCalled = 0;
-      async function sum(/** @type {number} a */ a, /** @type {number} a */ b) {
+      async function sum(/** @type {number} */ a, /** @type {number} */ b) {
         sumCalled += 1;
         return a + b;
       }
       const sumMemoized = memoize(sum);
       let sum2Called = 0;
-      async function sum2(/** @type {number} a */ a, /** @type {number} a */ b) {
+      async function sum2(/** @type {number} */ a, /** @type {number} */ b) {
         sum2Called += 1;
         return a + b;
       }
