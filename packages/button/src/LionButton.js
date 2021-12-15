@@ -67,10 +67,9 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
           left: 50%;
           transform: translate(-50%, -50%);
 
-          /* touch area (comes into play when button height goes below this one) */
-          /* src = https://www.smashingmagazine.com/2012/02/finger-friendly-design-ideal-mobile-touchscreen-target-sizes/ */
-          min-height: 40px;
-          min-width: 40px;
+          /* Minimum click area to meet [WCAG Success Criterion 2.5.5 Target Size (Enhanced)](https://www.w3.org/TR/WCAG22/#target-size-enhanced) */
+          min-height: 44px;
+          min-width: 44px;
           width: 100%;
           height: 100%;
         }
