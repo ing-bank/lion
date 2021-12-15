@@ -23,6 +23,8 @@ export const disabled = () => html`<lion-button disabled>Disabled</lion-button>`
 
 ## Minimum click area
 
+The minimum click area needs to be at least `44px` by `44px` according to [WCAG Success Criterion 2.5.5 Target Size (Enhanced)](https://www.w3.org/TR/WCAG22/#target-size-enhanced).
+
 ```js preview-story
 export const minimumClickArea = () => html` <style>
     .small {
