@@ -1,5 +1,4 @@
-import { LitElement } from '@lion/core';
-import { ValidateMixin, InteractionStateMixin, FocusMixin } from '@lion/form-core';
+import { LionFieldBase } from '@lion/form-core';
 import { ListboxMixin } from './ListboxMixin.js';
 
 // TODO: could we extend from LionField?
@@ -8,9 +7,7 @@ import { ListboxMixin } from './ListboxMixin.js';
  * LionListbox: implements the wai-aria listbox design pattern and integrates it as a Lion
  * FormControl
  */
-export class LionListbox extends ListboxMixin(
-  FocusMixin(InteractionStateMixin(ValidateMixin(LitElement))),
-) {
+export class LionListbox extends ListboxMixin(LionFieldBase) {
   /**
    * @configure InteractionStateMixin, ValidateMixin
    */

@@ -1,6 +1,6 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { LitElement, CSSResultArray } from '@lion/core';
 import { SlotHost } from '@lion/core/types/SlotMixinTypes';
+import { LionFieldBase } from '@lion/form-core';
 
 import { FormControlHost } from '@lion/form-core/types/FormControlMixinTypes';
 import { FormRegistrarHost } from '@lion/form-core/types/registration/FormRegistrarMixinTypes';
@@ -9,7 +9,6 @@ import { LionOptions } from '../src/LionOptions.js';
 import { LionOption } from '../src/LionOption.js';
 
 export declare class ListboxHost {
-  static get styles(): CSSResultArray;
   /**
    * When true, will synchronize activedescendant and selected element on
    * arrow key navigation.
@@ -80,7 +79,7 @@ export declare class ListboxHost {
   protected _onListboxContentChanged(): void;
 }
 
-export declare function ListboxImplementation<T extends Constructor<LitElement>>(
+export declare function ListboxImplementation<T extends Constructor<LionFieldBase>>(
   superclass: T,
 ): T &
   Constructor<ListboxHost> &
@@ -93,6 +92,6 @@ export declare function ListboxImplementation<T extends Constructor<LitElement>>
   Pick<typeof FormRegistrarHost, keyof typeof FormRegistrarHost> &
   Constructor<FormControlHost> &
   Pick<typeof FormControlHost, keyof typeof FormControlHost> &
-  Pick<typeof LitElement, keyof typeof LitElement>;
+  Pick<typeof LionFieldBase, keyof typeof LionFieldBase>;
 
 export type ListboxMixin = typeof ListboxImplementation;

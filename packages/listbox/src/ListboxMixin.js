@@ -1,7 +1,7 @@
 import { css, dedupeMixin, html, ScopedElementsMixin, SlotMixin } from '@lion/core';
 import '@lion/core/closestPolyfill';
 import '@lion/core/differentKeyEventNamesShimIE';
-import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/form-core';
+import { ChoiceGroupMixin } from '@lion/form-core';
 import { LionOptions } from './LionOptions.js';
 
 // TODO: extract ListNavigationWithActiveDescendantMixin that can be reused in [role="menu"]
@@ -59,12 +59,10 @@ function uuid() {
 
 /**
  * @type {ListboxMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/form-core').LionFieldBase>} superclass
  */
 const ListboxMixinImplementation = superclass =>
-  class ListboxMixin extends FormControlMixin(
-    ScopedElementsMixin(ChoiceGroupMixin(SlotMixin(FormRegistrarMixin(superclass)))),
-  ) {
+  class ListboxMixin extends ScopedElementsMixin(ChoiceGroupMixin(SlotMixin(superclass))) {
     /** @type {any} */
     static get properties() {
       return {
