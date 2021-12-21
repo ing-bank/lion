@@ -332,6 +332,7 @@ class QueryService {
     }
 
     return new Promise(resolve => {
+      // eslint-disable-next-line camelcase
       child_process.exec(cmd, { maxBuffer: 200000000 }, (err, stdout) => {
         resolve(stdout);
       });

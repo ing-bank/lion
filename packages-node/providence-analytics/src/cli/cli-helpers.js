@@ -76,6 +76,7 @@ function pathsArrayFromCollectionName(name, colType = 'search-target', eCfg, cwd
 
 function spawnProcess(processArgStr, opts) {
   const processArgs = processArgStr.split(' ');
+  // eslint-disable-next-line camelcase
   const proc = child_process.spawn(processArgs[0], processArgs.slice(1), opts);
   let output;
   proc.stdout.on('data', data => {

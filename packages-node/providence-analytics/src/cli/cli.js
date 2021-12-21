@@ -137,6 +137,7 @@ async function cli({ cwd, providenceConf } = {}) {
     if (options.update) {
       LogService.info('git submodule update --init --recursive');
 
+      // eslint-disable-next-line camelcase
       const updateResult = child_process.execSync('git submodule update --init --recursive', {
         cwd: basePath,
       });
