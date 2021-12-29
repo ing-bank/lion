@@ -1,5 +1,4 @@
 import { html } from '@lion/core';
-import '@lion/core/test-helpers';
 import { localize } from '@lion/localize';
 import { localizeTearDown } from '@lion/localize/test-helpers';
 import { expect, fixture as _fixture } from '@open-wc/testing';

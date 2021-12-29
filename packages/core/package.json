@@ -19,7 +19,6 @@
     "docs",
     "src",
     "test",
-    "test-helpers",
     "translations",
     "types"
   ],
@@ -48,7 +47,6 @@
   },
   "exports": {
     ".": "./index.js",
-    "./test-helpers": "./test-helpers/index.js",
     "./closestPolyfill": "./src/closestPolyfill.js",
     "./docs/*": "./docs/*"
   }
