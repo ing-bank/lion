@@ -1,7 +1,6 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButton } from '@lion/button';
 import { browserDetection } from '@lion/core';
-import '@lion/core/differentKeyEventNamesShimIE';
 import {
   aTimeout,
   defineCE,

@@ -1,5 +1,4 @@
 /* eslint-disable no-new */
-import '@lion/core/differentKeyEventNamesShimIE';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { fixtureSync } from '@open-wc/testing-helpers';
 import sinon from 'sinon';

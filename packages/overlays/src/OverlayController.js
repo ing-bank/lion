@@ -1,4 +1,3 @@
-import '@lion/core/differentKeyEventNamesShimIE';
 import { EventTargetShim } from '@lion/core';
 // eslint-disable-next-line import/no-cycle
 import { overlays } from './overlays.js';

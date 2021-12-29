@@ -1,5 +1,4 @@
 import { LitElement, repeat } from '@lion/core';
-import '@lion/core/differentKeyEventNamesShimIE';
 import { Required } from '@lion/form-core';
 import { LionOptions } from '@lion/listbox';
 import '@lion/listbox/define';

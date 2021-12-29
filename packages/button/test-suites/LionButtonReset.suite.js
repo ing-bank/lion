@@ -1,6 +1,5 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButtonReset } from '@lion/button';
-import '@lion/core/differentKeyEventNamesShimIE';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 
