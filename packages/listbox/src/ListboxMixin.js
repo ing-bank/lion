@@ -1,5 +1,4 @@
 import { css, dedupeMixin, html, ScopedElementsMixin, SlotMixin } from '@lion/core';
-import '@lion/core/closestPolyfill';
 import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/form-core';
 import { LionOptions } from './LionOptions.js';
 
