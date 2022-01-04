@@ -1,5 +1,22 @@
 # Change Log
 
+## 0.15.0
+
+### Minor Changes
+
+- 2b583ee7: Remove differentKeyEventNamesShimIE, since IE11 isn't supported any more
+
+### Patch Changes
+
+- 30805edf: Replace deprecated node folder exports with wildcard exports for docs
+- be844663: Increase minimum click area to meet WCAG Success Criterion 2.5.5 Target Size (Enhanced)
+- 2bd3c521: Rename customElementsManifest to customElements in package.json
+- Updated dependencies [30805edf]
+- Updated dependencies [495cb0c5]
+- Updated dependencies [2b583ee7]
+- Updated dependencies [83011918]
+  - @lion/core@0.20.0
+
 ## 0.14.5
 
 ### Patch Changes

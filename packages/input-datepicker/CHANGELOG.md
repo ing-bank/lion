@@ -1,5 +1,26 @@
 # Change Log
 
+## 0.23.10
+
+### Patch Changes
+
+- 30805edf: Replace deprecated node folder exports with wildcard exports for docs
+- 2bd3c521: Rename customElementsManifest to customElements in package.json
+- Updated dependencies [30805edf]
+- Updated dependencies [495cb0c5]
+- Updated dependencies [fad9d8e5]
+- Updated dependencies [6e67b4a3]
+- Updated dependencies [2bd3c521]
+- Updated dependencies [2b583ee7]
+- Updated dependencies [83011918]
+  - @lion/calendar@0.17.0
+  - @lion/core@0.20.0
+  - @lion/form-core@0.15.5
+  - @lion/input-date@0.12.10
+  - @lion/localize@0.22.0
+  - @lion/overlays@0.30.0
+  - @lion/validate-messages@0.7.8
+
 ## 0.23.9
 
 ### Patch Changes

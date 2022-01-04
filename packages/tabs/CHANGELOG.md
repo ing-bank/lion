@@ -1,5 +1,22 @@
 # Change Log
 
+## 0.10.0
+
+### Minor Changes
+
+- eafa7d03: Ensures that disabled tab elements are skipped when navigating a tab list with the keyboard.
+
+### Patch Changes
+
+- 30805edf: Replace deprecated node folder exports with wildcard exports for docs
+- eafa7d03: Select first not-disabled tab if the first one is disabled.
+- 2bd3c521: Rename customElementsManifest to customElements in package.json
+- Updated dependencies [30805edf]
+- Updated dependencies [495cb0c5]
+- Updated dependencies [2b583ee7]
+- Updated dependencies [83011918]
+  - @lion/core@0.20.0
+
 ## 0.9.5
 
 ### Patch Changes
