@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.7.8
+
+### Patch Changes
+
+- 30805edf: Replace deprecated node folder exports with wildcard exports for docs
+- Updated dependencies [30805edf]
+- Updated dependencies [fad9d8e5]
+- Updated dependencies [2bd3c521]
+  - @lion/form-core@0.15.5
+  - @lion/localize@0.22.0
+
 ## 0.7.7
 
 ### Patch Changes

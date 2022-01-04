@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.7.3
+
+### Patch Changes
+
+- 30805edf: Replace deprecated node folder exports with wildcard exports for docs
+- 2bd3c521: Rename customElementsManifest to customElements in package.json
+- Updated dependencies [30805edf]
+- Updated dependencies [495cb0c5]
+- Updated dependencies [2b583ee7]
+- Updated dependencies [83011918]
+  - @lion/core@0.20.0
+
 ## 0.7.2
 
 ### Patch Changes

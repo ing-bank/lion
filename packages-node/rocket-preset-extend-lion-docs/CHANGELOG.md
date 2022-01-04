@@ -1,5 +1,15 @@
 # rocket-preset-extend-lion-docs
 
+## 0.2.2
+
+### Patch Changes
+
+- 30805edf: Replace deprecated node folder exports with wildcard exports for docs
+- 2bd3c521: Rename customElementsManifest to customElements in package.json
+- Updated dependencies [30805edf]
+  - babel-plugin-extend-docs@0.5.3
+  - remark-extend@0.4.4
+
 ## 0.2.1
 
 ### Patch Changes

@@ -1,5 +1,22 @@
 # Change Log
 
+## 0.30.0
+
+### Minor Changes
+
+- 2b583ee7: Remove differentKeyEventNamesShimIE, since IE11 isn't supported any more
+
+### Patch Changes
+
+- 30805edf: Replace deprecated node folder exports with wildcard exports for docs
+- 6e67b4a3: Fix type information for the overlayMixin and remove obsolete toggle
+- Updated dependencies [30805edf]
+- Updated dependencies [495cb0c5]
+- Updated dependencies [2b583ee7]
+- Updated dependencies [83011918]
+  - @lion/core@0.20.0
+  - singleton-manager@1.4.3
+
 ## 0.29.1
 
 ### Patch Changes

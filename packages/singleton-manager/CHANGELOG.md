@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.4.3
+
+### Patch Changes
+
+- 30805edf: Replace deprecated node folder exports with wildcard exports for docs
+
 ## 1.4.2
 
 ### Patch Changes

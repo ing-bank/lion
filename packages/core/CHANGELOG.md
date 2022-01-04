@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.20.0
+
+### Minor Changes
+
+- 495cb0c5: Remove keyboardEventShimIE test helper
+- 2b583ee7: Remove differentKeyEventNamesShimIE, since IE11 isn't supported any more
+- 83011918: Remove closestPolyfill
+
+### Patch Changes
+
+- 30805edf: Replace deprecated node folder exports with wildcard exports for docs
+
 ## 0.19.0
 
 ### Minor Changes

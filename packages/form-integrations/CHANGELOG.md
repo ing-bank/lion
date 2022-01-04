@@ -1,5 +1,42 @@
 # Change Log
 
+## 0.9.10
+
+### Patch Changes
+
+- 30805edf: Replace deprecated node folder exports with wildcard exports for docs
+- Updated dependencies [30805edf]
+- Updated dependencies [495cb0c5]
+- Updated dependencies [fad9d8e5]
+- Updated dependencies [6e67b4a3]
+- Updated dependencies [be844663]
+- Updated dependencies [2bd3c521]
+- Updated dependencies [2b583ee7]
+- Updated dependencies [83011918]
+  - @lion/button@0.15.0
+  - @lion/checkbox-group@0.18.8
+  - @lion/combobox@0.8.7
+  - @lion/core@0.20.0
+  - @lion/fieldset@0.19.10
+  - @lion/form@0.12.8
+  - @lion/form-core@0.15.5
+  - @lion/input@0.15.8
+  - @lion/input-amount@0.14.8
+  - @lion/input-date@0.12.10
+  - @lion/input-datepicker@0.23.10
+  - @lion/input-email@0.13.10
+  - @lion/input-iban@0.16.8
+  - @lion/input-range@0.10.9
+  - @lion/input-stepper@0.6.8
+  - @lion/listbox@0.11.0
+  - @lion/localize@0.22.0
+  - @lion/radio-group@0.18.8
+  - @lion/select@0.14.8
+  - @lion/select-rich@0.28.0
+  - @lion/switch@0.18.3
+  - @lion/textarea@0.13.8
+  - @lion/validate-messages@0.7.8
+
 ## 0.9.9
 
 ### Patch Changes
