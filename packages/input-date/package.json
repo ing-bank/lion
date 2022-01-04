@@ -50,7 +50,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "customElementsManifest": "custom-elements.json",
+  "customElements": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./define": "./lion-input-date.js",

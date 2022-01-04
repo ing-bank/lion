@@ -49,7 +49,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "customElementsManifest": "custom-elements.json",
+  "customElements": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./test-helpers": "./test-helpers/index.js",

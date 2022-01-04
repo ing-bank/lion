@@ -48,7 +48,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "customElementsManifest": "custom-elements.json",
+  "customElements": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./define": "./lion-icon.js",
