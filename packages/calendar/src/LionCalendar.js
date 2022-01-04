@@ -8,7 +8,6 @@ import {
   normalizeDateTime,
 } from '@lion/localize';
 
-import '@lion/core/differentKeyEventNamesShimIE';
 import { calendarStyle } from './calendarStyle.js';
 import { createDay } from './utils/createDay.js';
 import { createMultipleMonth } from './utils/createMultipleMonth.js';

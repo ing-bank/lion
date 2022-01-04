@@ -2,7 +2,6 @@ import { Required } from '@lion/form-core';
 import { expect, triggerBlurFor, triggerFocusFor, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import { browserDetection } from '@lion/core';
-import '@lion/core/differentKeyEventNamesShimIE';
 import '@lion/listbox/define';
 import '@lion/select-rich/define';
 

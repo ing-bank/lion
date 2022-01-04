@@ -1,5 +1,4 @@
 import { LitElement } from '@lion/core';
-import '@lion/core/differentKeyEventNamesShimIE';
 import { renderLitAsNode } from '@lion/helpers';
 import { LionOption } from '@lion/listbox';
 import '@lion/listbox/define';

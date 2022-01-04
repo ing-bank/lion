@@ -1,8 +1,6 @@
 import { LionListbox } from '@lion/listbox';
 import { html, ScopedElementsMixin, SlotMixin, browserDetection } from '@lion/core';
 import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
-
-import '@lion/core/differentKeyEventNamesShimIE';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
 
 /**
