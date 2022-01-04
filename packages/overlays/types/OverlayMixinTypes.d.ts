@@ -21,9 +21,9 @@ export declare class OverlayHost {
   get config(): OverlayConfig;
   set config(value: OverlayConfig);
 
-  open(): void;
-  close(): void;
-  toggle(): void;
+  open(): Promise<void>;
+  close(): Promise<void>;
+  toggle(): Promise<void>;
   /**
    * Sometimes it's needed to recompute Popper position of an overlay, for instance when we have
    * an opened combobox and the surrounding context changes (the space consumed by the textbox

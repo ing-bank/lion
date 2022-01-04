@@ -5,7 +5,6 @@ import { isEqualConfig } from './utils/is-equal-config.js';
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
  * @typedef {import('../types/OverlayMixinTypes').DefineOverlayConfig} DefineOverlayConfig
- * @typedef {import('../types/OverlayMixinTypes').OverlayHost} OverlayHost
  * @typedef {import('../types/OverlayMixinTypes').OverlayMixin} OverlayMixin
  */
 
