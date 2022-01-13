@@ -131,9 +131,9 @@ You can do so by:
 - ... every contribution counts! Even typo fixes in the docs 🤓
 
 Feel free to create a github issue for any feedback or questions you might have.
-You can also find us on the Polymer slack in the [#lion](https://polymer.slack.com/messages/CJGFWJN9J/convo/CE6D9DN05-1557486154.187100/) channel.
+You can also find us on the Lit & Friends slack in the [#lion](https://lit-and-friends.slack.com/archives/CJGFWJN9J) channel.
 
-You can join the Polymer slack by visiting [https://www.polymer-project.org/slack-invite](https://www.polymer-project.org/slack-invite).
+You can join the Lit & Friends slack by visiting [https://lit.dev/slack-invite/](https://lit.dev/slack-invite/).
 
 ## 🔨 Extend the components
 
