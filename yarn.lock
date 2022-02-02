@@ -1344,6 +1344,40 @@
     "@open-wc/scoped-elements" "^2.0.0-next.3"
     lit "^2.0.0-rc.2"
 
+"@lion/core@0.19.0", "@lion/core@^0.19.0":
+  version "0.19.0"
+  resolved "https://registry.yarnpkg.com/@lion/core/-/core-0.19.0.tgz#4bf86059acd0ef3f74e6d0689250edc4d6664836"
+  integrity sha512-SU2JzKEgGdwOVK9WdsmjKiYkgQ/hOYC05jxyHfG9qJWmOzEUsuvvULjwU8hd1u7gLy5gSxsdEO2nJ2zyWV2ihg==
+  dependencies:
+    "@open-wc/dedupe-mixin" "^1.3.0"
+    "@open-wc/scoped-elements" "^2.0.1"
+    lit "^2.0.2"
+
+"@lion/form-core@0.15.4":
+  version "0.15.4"
+  resolved "https://registry.yarnpkg.com/@lion/form-core/-/form-core-0.15.4.tgz#e5fdc49199b9a491becf70370ab6de1407bc7a66"
+  integrity sha512-QkTl0c1BS2Egd2gTHTnfIfvvv3Ywkh1+6mDfEelIQOoptf84AFGw5OdVoMPqrAk0gYUkm8YvdpTZSzh3mMANiQ==
+  dependencies:
+    "@lion/core" "0.19.0"
+    "@lion/localize" "0.21.3"
+
+"@lion/listbox@^0.10.7":
+  version "0.10.7"
+  resolved "https://registry.yarnpkg.com/@lion/listbox/-/listbox-0.10.7.tgz#9af689615ea0964e4a5613c3e5b2df9b33fc2d54"
+  integrity sha512-hCVWnYsJv/det/+o5LHPd5w3f5mXiRE1q0ZVf+Hat5lvcHiHXfKnlrKaB2DzMqqL9y9k4ZG7feyQZlNE5PLNrQ==
+  dependencies:
+    "@lion/core" "0.19.0"
+    "@lion/form-core" "0.15.4"
+
+"@lion/localize@0.21.3":
+  version "0.21.3"
+  resolved "https://registry.yarnpkg.com/@lion/localize/-/localize-0.21.3.tgz#6ed63aa79d4a6df37536d8be8d03d11b855c32b6"
+  integrity sha512-BXFuKYYM+XABlULS8tLddj1TviRHK0Bm1AR6cOrdStv8vSrTK9szV63c5Ybl+kD6QstBSQ4qNwbjd3hAIJVGhQ==
+  dependencies:
+    "@bundled-es-modules/message-format" "6.0.4"
+    "@lion/core" "0.19.0"
+    singleton-manager "1.4.2"
+
 "@lion/overlays@^0.26.1":
   version "0.26.1"
   resolved "https://registry.yarnpkg.com/@lion/overlays/-/overlays-0.26.1.tgz#d1bfa4f5f97108982afa7b409ba4300f8b2d2ba5"
@@ -8674,9 +8708,11 @@ node-environment-flags@1.0.6:
     semver "^5.7.0"
 
 node-fetch@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
-  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
+  version "2.6.7"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.7.tgz#24de9fba827e3b4ae44dc8b20256a379160052ad"
+  integrity sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ==
+  dependencies:
+    whatwg-url "^5.0.0"
 
 node-modules-regexp@^1.0.0:
   version "1.0.0"
@@ -10757,6 +10793,11 @@ singleton-manager@1.4.1:
   resolved "https://registry.yarnpkg.com/singleton-manager/-/singleton-manager-1.4.1.tgz#0a9cd1db2b26e5cbc4ecdc20d5a16f284b36aabb"
   integrity sha512-HOvKT/WcHvl2cLYGqmO6MaC2J4wAA82LntGwtLn6avnTq15UDLCnSRVXedmglVooLbQGVsQJ+dQz2sKz+2GUZA==
 
+singleton-manager@1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/singleton-manager/-/singleton-manager-1.4.2.tgz#4649acafca3eccf987d828ab16369ee59c4a22a5"
+  integrity sha512-3/K7K61TiN0+tw32HRC3AZQBacN0Ky/NmHEnhofFPEFROqZ5T6BXK45Z94OQsvuFD2euOVOU40XDNeTal63Baw==
+
 sinon@^7.2.2:
   version "7.5.0"
   resolved "https://registry.yarnpkg.com/sinon/-/sinon-7.5.0.tgz#e9488ea466070ea908fd44a3d6478fd4923c67ec"
@@ -11501,6 +11542,11 @@ tr46@^2.0.2:
   dependencies:
     punycode "^2.1.1"
 
+tr46@~0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
+  integrity sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=
+
 tree-kill@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
@@ -11993,6 +12039,11 @@ web-namespaces@^1.0.0:
   resolved "https://registry.yarnpkg.com/web-namespaces/-/web-namespaces-1.1.4.tgz#bc98a3de60dadd7faefc403d1076d529f5e030ec"
   integrity sha512-wYxSGajtmoP4WxfejAPIr4l0fVh+jeMXZb08wNc0tMg6xsfZXj3cECqIK0G7ZAqUq0PP8WlMDtaOGVBTAWztNw==
 
+webidl-conversions@^3.0.0:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
+  integrity sha1-JFNCdeKnvGvnvIZhHMFq4KVlSHE=
+
 webidl-conversions@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-4.0.2.tgz#a855980b1f0b6b359ba1d5d9fb39ae941faa63ad"
@@ -12007,6 +12058,14 @@ whatwg-fetch@^3.0.0, whatwg-fetch@^3.5.0:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz#dced24f37f2624ed0281725d51d0e2e3fe677f8c"
   integrity sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==
+
+whatwg-url@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/whatwg-url/-/whatwg-url-5.0.0.tgz#966454e8765462e37644d3626f6742ce8b70965d"
+  integrity sha1-lmRU6HZUYuN2RNNib2dCzotwll0=
+  dependencies:
+    tr46 "~0.0.3"
+    webidl-conversions "^3.0.0"
 
 whatwg-url@^7.0.0, whatwg-url@^7.1.0:
   version "7.1.0"
