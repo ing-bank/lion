@@ -36,8 +36,8 @@
     "lion-tooltip.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0",
-    "@lion/overlays": "0.30.0"
+    "@lion/core": "^0.20.0",
+    "@lion/overlays": "^0.30.0"
   },
   "keywords": [
     "lion",

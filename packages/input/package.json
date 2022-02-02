@@ -36,7 +36,7 @@
     "lion-input.js"
   ],
   "dependencies": {
-    "@lion/form-core": "0.15.5"
+    "@lion/form-core": "^0.15.5"
   },
   "keywords": [
     "input",

@@ -45,10 +45,10 @@
     "docs/google-combobox/google-combobox.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0",
-    "@lion/form-core": "0.15.5",
-    "@lion/listbox": "0.11.0",
-    "@lion/overlays": "0.30.0"
+    "@lion/core": "^0.20.0",
+    "@lion/form-core": "^0.15.5",
+    "@lion/listbox": "^0.11.0",
+    "@lion/overlays": "^0.30.0"
   },
   "keywords": [
     "combobox",

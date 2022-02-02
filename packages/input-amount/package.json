@@ -36,11 +36,11 @@
     "lion-input-amount.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0",
-    "@lion/form-core": "0.15.5",
-    "@lion/input": "0.15.8",
-    "@lion/localize": "0.22.0",
-    "@lion/validate-messages": "0.7.8"
+    "@lion/core": "^0.20.0",
+    "@lion/form-core": "^0.15.5",
+    "@lion/input": "^0.15.8",
+    "@lion/localize": "^0.22.0",
+    "@lion/validate-messages": "^0.7.8"
   },
   "keywords": [
     "input-amount",

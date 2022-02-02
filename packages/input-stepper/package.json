@@ -36,9 +36,9 @@
     "lion-input-stepper.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0",
-    "@lion/form-core": "0.15.5",
-    "@lion/input": "0.15.8"
+    "@lion/core": "^0.20.0",
+    "@lion/form-core": "^0.15.5",
+    "@lion/input": "^0.15.8"
   },
   "keywords": [
     "input",
