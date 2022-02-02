@@ -173,7 +173,7 @@ The accessibility column indicates whether the functionality is accessible in it
 
 Lion Web Components aims to be future-proof and use well-supported proven technology. The stack we have chosen should reflect this.
 
-- [lit-html](https://lit-html.polymer-project.org) and [lit-element](https://lit-element.polymer-project.org)
+- [lit](https://lit.dev/)
 - [npm](http://npmjs.com)
 - [yarn](https://yarnpkg.com)
 - [Open Web Components](https://open-wc.org)
@@ -208,9 +208,9 @@ Read our [contribution guide](https://github.com/ing-bank/lion/blob/master/CONTR
 ## Contact
 
 Feel free to create a github issue for any feedback or questions you might have.
-You can also find us on the Polymer slack in the [#lion](https://polymer.slack.com/messages/CJGFWJN9J/convo/CE6D9DN05-1557486154.187100/) channel.
+You can also find us on the Lit & Friends slack in the [#lion](https://lit-and-friends.slack.com/archives/CJGFWJN9J) channel.
 
-You can join the Polymer slack by visiting [https://www.polymer-project.org/slack-invite](https://www.polymer-project.org/slack-invite).
+You can join the Lit & Friends slack by visiting [https://lit.dev/slack-invite/](https://lit.dev/slack-invite/).
 
 [i172]: https://github.com/ing-bank/lion/issues/172
 [i173]: https://github.com/ing-bank/lion/issues/173

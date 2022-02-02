@@ -6,8 +6,7 @@ Lion Web Components aims to be future proof and use well-supported proven techno
 
 Checkout the documentation of our main stack.
 
-- [lit-html](https://lit-html.polymer-project.org) - An efficient, expressive, extensible HTML templating library for JavaScript.
-- [lit-element](https://lit-element.polymer-project.org) - A simple base class for creating fast, lightweight web components.
+- [lit](https://lit.dev/) - Building on top of the Web Components standards, Lit adds just what you need to be happy and productive: reactivity, declarative templates and a handful of thoughtful features to reduce boilerplate and make your job easier.
 - [modern-web](https://modern-web.dev) - Guides, tools and libraries for modern web development.
 - [open-wc](https://open-wc.org) - Open Web Components provides guides, tools and libraries for developing web components.
 
