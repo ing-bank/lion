@@ -43,6 +43,7 @@ export class LionCollapsible extends LitElement {
   constructor() {
     super();
     this.opened = false;
+    this.toggle = this.toggle.bind(this);
   }
 
   connectedCallback() {
@@ -51,7 +52,7 @@ export class LionCollapsible extends LitElement {
     const uid = uuid();
 
     if (this._invokerNode) {
-      this._invokerNode.addEventListener('click', this.toggle.bind(this));
+      this._invokerNode.addEventListener('click', this.toggle);
       this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
       this._invokerNode.setAttribute('id', `collapsible-invoker-${uid}`);
       this._invokerNode.setAttribute('aria-controls', `collapsible-content-${uid}`);
