@@ -100,6 +100,14 @@ describe('<lion-collapsible>', () => {
       await collapsible.updateComplete;
       expect(isCollapsibleOpen).to.equal(false);
     });
+
+    it('opens a invoker on click even if moved once', async () => {
+      const collapsible = await fixture(defaultCollapsible);
+      collapsible.remove();
+      const invoker = collapsible.querySelector('[slot=invoker]');
+      invoker?.dispatchEvent(new Event('click'));
+      expect(collapsible.opened).to.equal(true);
+    });
   });
 
   describe('Accessibility', () => {
