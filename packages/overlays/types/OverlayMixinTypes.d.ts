@@ -5,7 +5,7 @@ import { OverlayController } from '../src/OverlayController.js';
 
 export interface DefineOverlayConfig {
   /** The interactive element (usually a button) invoking the dialog or tooltip */
-  invokerNode: HTMLElement;
+  invokerNode?: HTMLElement;
   /** The element that is used to position the overlay content relative to. Usually, this is the same element as invokerNode. Should only be provided when invokerNode should not be positioned against */
   referenceNode?: HTMLElement;
   /** The most important element: the overlay itself */

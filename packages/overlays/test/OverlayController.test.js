@@ -1367,7 +1367,7 @@ describe('OverlayController', () => {
         });
         properlyInstantiated = true;
       } catch (e) {
-        throw new Error(e);
+        throw new Error(/** @type {Error} */ (e).message);
       }
       expect(properlyInstantiated).to.be.true;
     });

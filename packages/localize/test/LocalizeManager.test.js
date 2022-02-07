@@ -296,7 +296,7 @@ describe('LocalizeManager', () => {
         });
       } catch (e) {
         expect(e).to.be.instanceof(Error);
-        expect(e.message).to.equal(
+        expect(/** @type {Error} */ (e).message).to.equal(
           'Data for namespace "my-component" and locale "en-GB" could not be loaded. ' +
             'Make sure you have data for locale "en-GB" (and/or generic language "en").',
         );
@@ -356,7 +356,7 @@ describe('LocalizeManager', () => {
           });
         } catch (e) {
           expect(e).to.be.instanceof(Error);
-          expect(e.message).to.equal(
+          expect(/** @type {Error} */ (e).message).to.equal(
             'Data for namespace "my-component" and current locale "nl-NL" or fallback locale "en-GB" could not be loaded. ' +
               'Make sure you have data either for locale "nl-NL" (and/or generic language "nl") or for fallback "en-GB" (and/or "en").',
           );

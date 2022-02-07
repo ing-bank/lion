@@ -113,7 +113,7 @@ export class OverlaysManager {
       .reverse()
       .forEach((ctrl, i) => {
         // eslint-disable-next-line no-param-reassign
-        ctrl.elevation = i + 1;
+        ctrl.elevation = `${i + 1}`;
       });
   }
 

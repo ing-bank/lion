@@ -18,6 +18,7 @@ import { dedupeMixin } from '@lion/core';
  * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const FormRegisteringMixinImplementation = superclass =>
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {
     constructor() {
       super();

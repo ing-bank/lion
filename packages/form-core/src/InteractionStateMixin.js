@@ -19,6 +19,7 @@ import { FormControlMixin } from './FormControlMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const InteractionStateMixinImplementation = superclass =>
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class InteractionStateMixin extends FormControlMixin(superclass) {
     /** @type {any} */
     static get properties() {
@@ -210,6 +211,7 @@ const InteractionStateMixinImplementation = superclass =>
      * @param {string} type
      * @param {InteractionStates} meta
      */
+    // @ts-expect-error FIXME: istatemixin should implement validatemixin, then @override is valid
     // eslint-disable-next-line class-methods-use-this, no-unused-vars
     _showFeedbackConditionFor(type, meta) {
       return (meta.touched && meta.dirty) || meta.prefilled || meta.submitted;

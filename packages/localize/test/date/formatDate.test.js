@@ -39,6 +39,10 @@ const SUPPORTED_LOCALES = {
   'zh-Hant-TW': 'Chinese (Traditional Han, Taiwan)',
 };
 
+/**
+ * @typedef {import('../../types/LocalizeMixinTypes').FormatDateOptions} FormatDateOptions
+ */
+
 describe('formatDate', () => {
   beforeEach(() => {
     localizeTearDown();
@@ -64,6 +68,7 @@ describe('formatDate', () => {
 
   it('displays the date based on options', async () => {
     const testDate = new Date('2012/05/21');
+    /** @type {FormatDateOptions} */
     const options = {
       weekday: 'long',
       year: 'numeric',
@@ -83,6 +88,7 @@ describe('formatDate', () => {
   });
 
   it('displays Hungarian dates correctly', async () => {
+    /** @type {FormatDateOptions} */
     const options = {
       weekday: 'long',
       year: 'numeric',
@@ -99,6 +105,7 @@ describe('formatDate', () => {
   });
 
   it('displays Bulgarian dates correctly', async () => {
+    /** @type {FormatDateOptions} */
     const options = {
       weekday: 'long',
       year: 'numeric',
@@ -118,6 +125,7 @@ describe('formatDate', () => {
   });
 
   it('displays US dates correctly', async () => {
+    /** @type {FormatDateOptions} */
     const options = {
       weekday: 'long',
       year: 'numeric',
@@ -137,6 +145,7 @@ describe('formatDate', () => {
   });
 
   it('handles locales in options', async () => {
+    /** @type {FormatDateOptions} */
     let options = {
       weekday: 'long',
       year: 'numeric',
@@ -195,6 +204,7 @@ describe('formatDate', () => {
 
     Object.keys(SUPPORTED_LOCALES).forEach(locale => {
       it(`handles options without year for locale: ${locale}`, async () => {
+        /** @type {FormatDateOptions} */
         const options = {
           weekday: 'long',
           month: 'long',
@@ -208,6 +218,7 @@ describe('formatDate', () => {
   });
 
   it('handles options without month', async () => {
+    /** @type {FormatDateOptions} */
     const options = {
       weekday: 'long',
       year: 'numeric',
@@ -218,6 +229,7 @@ describe('formatDate', () => {
   });
 
   it('handles options without day', async () => {
+    /** @type {FormatDateOptions} */
     const options = {
       weekday: 'long',
       year: 'numeric',
@@ -256,6 +268,7 @@ describe('formatDate', () => {
       postProcessors.set('nl-NL', upperCaseProcessor);
       postProcessors.set('de-DE', lowerCaseProcessor);
 
+      /** @type {FormatDateOptions} */
       const options = {
         weekday: 'long',
         year: 'numeric',
@@ -276,6 +289,7 @@ describe('formatDate', () => {
 
     it('displays the appropriate date after post processor set in localize', async () => {
       const testDate = new Date('2012/05/21');
+      /** @type {FormatDateOptions} */
       const options = {
         weekday: 'long',
         year: 'numeric',
@@ -306,6 +320,7 @@ describe('formatDate', () => {
       postProcessors.set('nl-NL', upperCaseProcessor);
       postProcessors.set('de-DE', upperCaseProcessor);
 
+      /** @type {FormatDateOptions} */
       const options = {
         weekday: 'long',
         year: 'numeric',

@@ -14,6 +14,7 @@ import { isTemplateResult } from 'lit/directive-helpers.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const SlotMixinImplementation = superclass =>
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class SlotMixin extends superclass {
     /**
      * @return {SlotsMap}

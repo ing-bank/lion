@@ -181,7 +181,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       if (this.disabled) {
         this._invokerNode.makeRequestToBeDisabled();
       } else {
-        console.log('hello', this._invokerNode);
         this._invokerNode.retractRequestToBeDisabled();
       }
     }

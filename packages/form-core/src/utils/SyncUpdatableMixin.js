@@ -24,6 +24,7 @@ import { dedupeMixin } from '@lion/core';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const SyncUpdatableMixinImplementation = superclass =>
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {
     constructor() {
       super();

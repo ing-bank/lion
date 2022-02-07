@@ -575,14 +575,15 @@ describe('<lion-input-datepicker>', () => {
 
         const myTag = defineCE(
           class extends LionInputDatepicker {
-            /** @override */
-            _calendarOverlayTemplate() {
-              return html`
-                <my-calendar-overlay-frame id="calendar-overlay">
-                  <span slot="heading">${this.calendarHeading}</span>
-                </my-calendar-overlay-frame>
-              `;
-            }
+            // TODO: this method doesn't exist on LionInputDatepicker, so if we re-enable these tests, they should be redone
+            // /** @override */
+            // _calendarOverlayTemplate() {
+            //   return html`
+            //     <my-calendar-overlay-frame id="calendar-overlay">
+            //       <span slot="heading">${this.calendarHeading}</span>
+            //     </my-calendar-overlay-frame>
+            //   `;
+            // }
 
             /** @override */
             _onCalendarOverlayOpened() {

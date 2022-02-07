@@ -22,7 +22,9 @@ function getCachedWeekdayNames(locale) {
     narrow: [],
   };
 
-  ['long', 'short', 'narrow'].forEach(style => {
+  /** @type {Array<"long" | "short" | "narrow">} style */
+  const styles = ['long', 'short', 'narrow'];
+  styles.forEach(style => {
     weekdays = weekdayNamesCache[locale][style];
     const formatter = new Intl.DateTimeFormat(locale, {
       weekday: style,
@@ -48,7 +50,7 @@ function getCachedWeekdayNames(locale) {
  * @param {number} [options.firstDayOfWeek=0] 0 (Sunday), 1 (Monday), etc...
  * @returns {string[]} like: ['Sunday', 'Monday', 'Tuesday', ...etc].
  */
-export function getWeekdayNames({ locale, style = 'long', firstDayOfWeek = 0 } = {}) {
+export function getWeekdayNames({ locale = 'en-GB', style = 'long', firstDayOfWeek = 0 } = {}) {
   const weekdays = getCachedWeekdayNames(locale)[style];
   const orderedWeekdays = [];
   for (let i = firstDayOfWeek; i < firstDayOfWeek + 7; i += 1) {

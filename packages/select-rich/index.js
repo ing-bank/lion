@@ -1,10 +1,11 @@
 /**
- * @deprecated
+ * !deprecated
  * Import here for backwards compatibility
  */
 export { LionOptions } from '@lion/listbox';
+
 /**
- * @deprecated
+ * !deprecated
  * Import here for backwards compatibility
  */
 export { LionOption } from '@lion/listbox';
