@@ -100,6 +100,7 @@ describe('<lion-collapsible>', () => {
       await collapsible.updateComplete;
       expect(isCollapsibleOpen).to.equal(false);
     });
+  });
 
   describe('Accessibility', () => {
     it('[collapsed] is a11y AXE accessible', async () => {
