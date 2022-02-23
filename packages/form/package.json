@@ -1,6 +1,6 @@
 {
   "name": "@lion/form",
-  "version": "0.12.8",
+  "version": "0.13.0",
   "description": "It enhances the functionality of the native `form` component. It is designed to interact with (instances of) form fields",
   "license": "MIT",
   "author": "ing-bank",
@@ -36,7 +36,7 @@
     "lion-form.js"
   ],
   "dependencies": {
-    "@lion/fieldset": "^0.19.10"
+    "@lion/fieldset": "^0.20.0"
   },
   "keywords": [
     "form",

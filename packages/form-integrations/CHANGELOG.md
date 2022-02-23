@@ -1,5 +1,42 @@
 # Change Log
 
+## 0.10.0
+
+### Minor Changes
+
+- 683d5c1c: Upgrade to latest Typescript. Keep in mind, some @ts-ignores were necessary, also per TS maintainer's advice. Use skipLibCheck in your TSConfig to ignore issues coming from Lion, the types are valid.
+
+  **We also unfixed lion's dependencies (now using caret ^) on its own packages**, because it caused a lot of problems with duplicate installations for end users as well as subclassers and its end users. Both of these changes may affect subclassers in a breaking manner, hence the minor bump.
+
+  Be sure to [read our Rationale on this change](https://lion-web.netlify.app/docs/rationales/versioning/) and what this means for you as a user.
+
+### Patch Changes
+
+- Updated dependencies [683d5c1c]
+  - @lion/button@0.16.0
+  - @lion/checkbox-group@0.19.0
+  - @lion/combobox@0.9.0
+  - @lion/core@0.21.0
+  - @lion/fieldset@0.20.0
+  - @lion/form@0.13.0
+  - @lion/form-core@0.16.0
+  - @lion/input@0.16.0
+  - @lion/input-amount@0.15.0
+  - @lion/input-date@0.13.0
+  - @lion/input-datepicker@0.24.0
+  - @lion/input-email@0.14.0
+  - @lion/input-iban@0.17.0
+  - @lion/input-range@0.11.0
+  - @lion/input-stepper@0.7.0
+  - @lion/listbox@0.12.0
+  - @lion/localize@0.23.0
+  - @lion/radio-group@0.19.0
+  - @lion/select@0.15.0
+  - @lion/select-rich@0.29.0
+  - @lion/switch@0.19.0
+  - @lion/textarea@0.14.0
+  - @lion/validate-messages@0.8.0
+
 ## 0.9.10
 
 ### Patch Changes
