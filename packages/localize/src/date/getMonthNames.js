@@ -8,10 +8,10 @@ const monthsLocaleCache = {};
  * @desc Returns month names for locale
  * @param {Object} [options]
  * @param {string} [options.locale] locale
- * @param {string} [options.style=long] long, short or narrow
+ * @param {"long" | "numeric" | "2-digit" | "short" | "narrow"} [options.style=long] long, short or narrow
  * @returns {string[]} like: ['January', 'February', ...etc].
  */
-export function getMonthNames({ locale, style = 'long' } = {}) {
+export function getMonthNames({ locale = 'en-GB', style = 'long' } = {}) {
   let months = monthsLocaleCache[locale] && monthsLocaleCache[locale][style];
 
   if (months) {

@@ -18,6 +18,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  */
 const DelegateMixinImplementation = superclass =>
   // eslint-disable-next-line
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends superclass {
     constructor() {
       super();

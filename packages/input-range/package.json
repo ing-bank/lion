@@ -36,9 +36,9 @@
     "lion-input-range.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0",
-    "@lion/input": "0.15.8",
-    "@lion/localize": "0.22.0"
+    "@lion/core": "^0.20.0",
+    "@lion/input": "^0.15.8",
+    "@lion/localize": "^0.22.0"
   },
   "keywords": [
     "input-range",

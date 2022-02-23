@@ -1,4 +1,4 @@
-import { nothing } from '@lion/core';
+import { nothing, html } from '@lion/core';
 import { expect } from '@open-wc/testing';
 import { stub } from 'sinon';
 import { IconManager } from '../src/IconManager.js';
@@ -42,9 +42,9 @@ describe('IconManager', () => {
 
   it('does not allow adding a resolve for the same namespace twice', () => {
     const manager = new IconManager();
-    manager.addIconResolver('foo', () => {});
+    manager.addIconResolver('foo', () => html``);
 
-    expect(() => manager.addIconResolver('foo', () => {})).to.throw();
+    expect(() => manager.addIconResolver('foo', () => html``)).to.throw();
   });
 
   it('can resolve an icon, specifying separate parameters', async () => {

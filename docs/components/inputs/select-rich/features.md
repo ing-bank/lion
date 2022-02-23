@@ -3,7 +3,6 @@
 ```js script
 import { LitElement, html } from '@mdjs/mdjs-preview';
 import '@lion/listbox/define';
-import '@lion/listbox/define';
 import '@lion/select-rich/define';
 ```
 

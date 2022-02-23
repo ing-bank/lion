@@ -32,8 +32,8 @@
     "test": "cd ../../ && npm run test:browser -- --group validate-messages"
   },
   "dependencies": {
-    "@lion/form-core": "0.15.5",
-    "@lion/localize": "0.22.0"
+    "@lion/form-core": "^0.15.5",
+    "@lion/localize": "^0.22.0"
   },
   "keywords": [
     "feedback",

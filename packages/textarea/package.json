@@ -36,8 +36,8 @@
     "lion-textarea.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0",
-    "@lion/form-core": "0.15.5",
+    "@lion/core": "^0.20.0",
+    "@lion/form-core": "^0.15.5",
     "@types/autosize": "^3.0.7",
     "autosize": "4.0.2"
   },

@@ -416,14 +416,14 @@ export class OverlayController extends EventTargetShim {
   }
 
   /**
-   * @param {string} value
+   * @param {number} value
    */
   set elevation(value) {
     if (this.contentWrapperNode) {
-      this.contentWrapperNode.style.zIndex = value;
+      this.contentWrapperNode.style.zIndex = `${value}`;
     }
     if (this.backdropNode) {
-      this.backdropNode.style.zIndex = value;
+      this.backdropNode.style.zIndex = `${value}`;
     }
   }
 

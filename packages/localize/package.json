@@ -34,8 +34,8 @@
   "sideEffects": false,
   "dependencies": {
     "@bundled-es-modules/message-format": "6.0.4",
-    "@lion/core": "0.20.0",
-    "singleton-manager": "1.4.3"
+    "@lion/core": "^0.20.0",
+    "singleton-manager": "^1.4.3"
   },
   "keywords": [
     "lion",

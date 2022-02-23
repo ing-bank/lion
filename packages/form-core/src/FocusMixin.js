@@ -20,6 +20,7 @@ function applyFocusVisiblePolyfillWhenNeeded(node) {
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const FocusMixinImplementation = superclass =>
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FocusMixin extends superclass {
     /** @type {any} */
     static get properties() {

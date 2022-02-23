@@ -14,13 +14,18 @@ import '@lion/select-rich/define';
  * @param {LionSelectRich} lionSelectEl
  */
 function getNodes(lionSelectEl) {
-  // @ts-ignore protected members allowed in test
   const {
+    // @ts-ignore protected members allowed in test
     _invokerNode: invoker,
+    // @ts-ignore protected members allowed in test
     _feedbackNode: feedback,
+    // @ts-ignore protected members allowed in test
     _labelNode: label,
+    // @ts-ignore protected members allowed in test
     _helpTextNode: helpText,
+    // @ts-ignore protected members allowed in test
     _listboxNode: listbox,
+    // @ts-ignore protected members allowed in test
   } = lionSelectEl;
   return {
     invoker,

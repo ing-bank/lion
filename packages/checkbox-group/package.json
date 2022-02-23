@@ -39,9 +39,9 @@
     "lion-checkbox-indeterminate.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0",
-    "@lion/form-core": "0.15.5",
-    "@lion/input": "0.15.8"
+    "@lion/core": "^0.20.0",
+    "@lion/form-core": "^0.15.5",
+    "@lion/input": "^0.15.8"
   },
   "keywords": [
     "checkbox-group",

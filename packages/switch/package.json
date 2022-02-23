@@ -38,9 +38,9 @@
     "lion-switch-button.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0",
-    "@lion/form-core": "0.15.5",
-    "@lion/helpers": "0.9.6"
+    "@lion/core": "^0.20.0",
+    "@lion/form-core": "^0.15.5",
+    "@lion/helpers": "^0.9.6"
   },
   "keywords": [
     "lion",

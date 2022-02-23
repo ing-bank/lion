@@ -39,7 +39,7 @@
     "define.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0"
+    "@lion/core": "^0.20.0"
   },
   "keywords": [
     "button",

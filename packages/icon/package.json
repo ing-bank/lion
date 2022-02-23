@@ -37,8 +37,8 @@
     "./docs/icon-resolvers.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0",
-    "singleton-manager": "1.4.3"
+    "@lion/core": "^0.20.0",
+    "singleton-manager": "^1.4.3"
   },
   "keywords": [
     "icon",

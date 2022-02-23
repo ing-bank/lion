@@ -84,9 +84,11 @@ describe('Ajax', () => {
       try {
         await ajax.fetch('/foo');
       } catch (e) {
-        expect(e).to.be.an.instanceOf(AjaxFetchError);
-        expect(e.request).to.be.an.instanceOf(Request);
-        expect(e.response).to.be.an.instanceOf(Response);
+        // https://github.com/microsoft/TypeScript/issues/20024 open issue, can't type catch clause in param
+        const _e = /** @type {AjaxFetchError} */ (e);
+        expect(_e).to.be.an.instanceOf(AjaxFetchError);
+        expect(_e.request).to.be.an.instanceOf(Request);
+        expect(_e.response).to.be.an.instanceOf(Response);
         thrown = true;
       }
       expect(thrown).to.be.true;
@@ -99,9 +101,11 @@ describe('Ajax', () => {
       try {
         await ajax.fetch('/foo');
       } catch (e) {
-        expect(e).to.be.an.instanceOf(AjaxFetchError);
-        expect(e.request).to.be.an.instanceOf(Request);
-        expect(e.response).to.be.an.instanceOf(Response);
+        // https://github.com/microsoft/TypeScript/issues/20024 open issue, can't type catch clause in param
+        const _e = /** @type {AjaxFetchError} */ (e);
+        expect(_e).to.be.an.instanceOf(AjaxFetchError);
+        expect(_e.request).to.be.an.instanceOf(Request);
+        expect(_e.response).to.be.an.instanceOf(Response);
         thrown = true;
       }
       expect(thrown).to.be.true;
@@ -344,7 +348,7 @@ describe('Ajax', () => {
         'Request signal is aborted', // webkit
       ];
 
-      expect(errors.includes(err.message)).to.be.true;
+      expect(errors.includes(/** @type {Error} */ (err).message)).to.be.true;
     });
   });
 });

@@ -21,6 +21,7 @@ const hasChanged = (nw, old = {}) => nw.value !== old.value || nw.checked !== ol
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const ChoiceInputMixinImplementation = superclass =>
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ChoiceInputMixin extends FormatMixin(superclass) {
     /** @type {any} */
     static get properties() {
@@ -335,6 +336,7 @@ const ChoiceInputMixinImplementation = superclass =>
      * @override
      * Overridden from LionField, since the modelValue should not be cleared.
      */
+    // @ts-expect-error FIXME: @override gives error because LionField is not superclass type, this mixin should only allow LionField extensions
     clear() {
       this.checked = false;
     }
