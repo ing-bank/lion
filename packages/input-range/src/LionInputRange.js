@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { css, html, ScopedStylesMixin } from '@lion/core';
+import { css, html, ScopedStylesController } from '@lion/core';
 import { LionInput } from '@lion/input';
 import { formatNumber } from '@lion/localize';
 
@@ -12,7 +12,7 @@ import { formatNumber } from '@lion/localize';
  *
  * @customElement `lion-input-range`
  */
-export class LionInputRange extends ScopedStylesMixin(LionInput) {
+export class LionInputRange extends LionInput {
   /** @type {any} */
   static get properties() {
     return {
@@ -59,6 +59,8 @@ export class LionInputRange extends ScopedStylesMixin(LionInput) {
 
   constructor() {
     super();
+    /** @type {ScopedStylesController} */
+    this.scopedStylesController = new ScopedStylesController(this);
     this.min = Infinity;
     this.max = Infinity;
     this.step = 1;

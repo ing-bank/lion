@@ -1,10 +1,10 @@
 import { expect, fixture } from '@open-wc/testing';
 // import { html as _html } from 'lit/static-html.js';
 import { LitElement, css, html } from '../index.js';
-import { ScopedStylesMixin } from '../src/ScopedStylesMixin.js';
+import { ScopedStylesController } from '../src/ScopedStylesController.js';
 
 describe('ScopedStylesMixin', () => {
-  class Scoped extends ScopedStylesMixin(LitElement) {
+  class Scoped extends LitElement {
     /**
      * @param {import('lit').CSSResult} scope
      * @returns {import('lit').CSSResultGroup}
@@ -15,6 +15,11 @@ describe('ScopedStylesMixin', () => {
           color: #fff000;
         }
       `;
+    }
+
+    constructor() {
+      super();
+      this.scopedStylesController = new ScopedStylesController(this);
     }
 
     render() {
@@ -31,18 +36,24 @@ describe('ScopedStylesMixin', () => {
   });
 
   it('contains the scoped css class for the slotted input style', async () => {
-    const el = /** @type {Scoped} */ (await fixture(html`<scoped-el></scoped-el>`));
-    expect(el.classList.contains(el.scopedClass)).to.equal(true);
+    const el = /** @type {Scoped & ScopedStylesController} */ (
+      await fixture(html`<scoped-el></scoped-el>`)
+    );
+    expect(el.classList.contains(el.scopedStylesController.scopedClass)).to.equal(true);
   });
 
   it('adds a style tag as the first child which contains a class selector to the element', async () => {
-    const el = /** @type {Scoped} */ (await fixture(html` <scoped-el></scoped-el> `));
+    const el = /** @type {Scoped & ScopedStylesController} */ (
+      await fixture(html` <scoped-el></scoped-el> `)
+    );
     expect(el.children[0].tagName).to.equal('STYLE');
-    expect(el.children[0].innerHTML).to.contain(el.scopedClass);
+    expect(el.children[0].innerHTML).to.contain(el.scopedStylesController.scopedClass);
   });
 
   it('the scoped styles are applied correctly to the DOM elements', async () => {
-    const el = /** @type {Scoped} */ (await fixture(html`<scoped-el></scoped-el>`));
+    const el = /** @type {Scoped & ScopedStylesController} */ (
+      await fixture(html`<scoped-el></scoped-el>`)
+    );
     const testText = /** @type {HTMLElement} */ (el.querySelector('.test'));
     const cl = Array.from(el.classList);
     expect(cl.find(item => item.startsWith('scoped-el-'))).to.not.be.undefined;

@@ -64,8 +64,8 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
   }
 
   /**
-   * @param {PropertyKey} name
-   * @param {?} oldValue
+   * @param {PropertyKey} [name]
+   * @param {?} [oldValue]
    */
   requestUpdate(name, oldValue) {
     super.requestUpdate(name, oldValue);
