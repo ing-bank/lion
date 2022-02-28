@@ -1,4 +1,4 @@
-import { ifDefined, LitElement } from '@lion/core';
+import { LitElement } from '@lion/core';
 import { IsNumber, LionField, Validator } from '@lion/form-core';
 import '@lion/form-core/define';
 import { localizeTearDown } from '@lion/localize/test-helpers';
@@ -1387,8 +1387,8 @@ export function runFormGroupMixinSuite(cfg = {}) {
         render() {
           return html`
               <${tag}
-              .modelValue=${ifDefined(this.modelValue)}
-              .serializedValue=${ifDefined(this.serializedValue)}>
+              .modelValue=${this.modelValue}
+              .serializedValue=${this.serializedValue}>
                 ${this.fields.map(field => {
                   if (typeof field === 'object') {
                     return html`<${childTag} name="${field.name}" .modelValue="${field.value}"></${childTag}>`;
