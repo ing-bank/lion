@@ -1322,6 +1322,16 @@
   dependencies:
     "@lion/core" "0.18.2"
 
+"@lion/combobox@^0.8.6":
+  version "0.8.7"
+  resolved "https://registry.yarnpkg.com/@lion/combobox/-/combobox-0.8.7.tgz#74414fddb317f8abb27409ce0cf1a6708ecd6d9d"
+  integrity sha512-1SfaqOW1zihuX3oXlLnawwC9m9MajZoKZ5Ow4KYCKKiBkAVGifDAHTDXz/ls3hyWICFn7/oYtqRpa7qbwZ0CXQ==
+  dependencies:
+    "@lion/core" "0.20.0"
+    "@lion/form-core" "0.15.5"
+    "@lion/listbox" "0.11.0"
+    "@lion/overlays" "0.30.0"
+
 "@lion/core@0.16.0":
   version "0.16.0"
   resolved "https://registry.yarnpkg.com/@lion/core/-/core-0.16.0.tgz#c4c8ac81b8d5bece6d40d561a392382c7ae73533"
@@ -1350,6 +1360,15 @@
     "@open-wc/scoped-elements" "^2.0.1"
     lit "^2.0.2"
 
+"@lion/core@0.20.0":
+  version "0.20.0"
+  resolved "https://registry.yarnpkg.com/@lion/core/-/core-0.20.0.tgz#3982dc7a6ec5e742680b7453a684840358799759"
+  integrity sha512-CyJNGNMWkPI/kf9lhMnkZInrLLvmPQxt6qO7B60S2k7UNANd2R53zNgqTtllYp16Ej+4Mol9JoW2Ik6+1vq9ig==
+  dependencies:
+    "@open-wc/dedupe-mixin" "^1.3.0"
+    "@open-wc/scoped-elements" "^2.0.1"
+    lit "^2.0.2"
+
 "@lion/form-core@0.15.4":
   version "0.15.4"
   resolved "https://registry.yarnpkg.com/@lion/form-core/-/form-core-0.15.4.tgz#e5fdc49199b9a491becf70370ab6de1407bc7a66"
@@ -1357,6 +1376,22 @@
   dependencies:
     "@lion/core" "0.19.0"
     "@lion/localize" "0.21.3"
+
+"@lion/form-core@0.15.5":
+  version "0.15.5"
+  resolved "https://registry.yarnpkg.com/@lion/form-core/-/form-core-0.15.5.tgz#af40dab6c7ca32187322b84a6319a277fcbd4617"
+  integrity sha512-SM27hqupHZ2eq4enaaX/dbIH6fTJYrISA378zZjCBPcYSDq39EXMgnzgGXWfZzi1DPEffbl2g6VKR+UGc8xRZg==
+  dependencies:
+    "@lion/core" "0.20.0"
+    "@lion/localize" "0.22.0"
+
+"@lion/listbox@0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@lion/listbox/-/listbox-0.11.0.tgz#f730714803f14a6d001a5e0c2cdff17146eccac7"
+  integrity sha512-nLwNZuARVcdT5+TNqph56+g1CnXMcRMjM0vzvSNgezGTZJ3b6onumgQwEXLGhxIbB16qFbfpaPZP7SaALfFsBA==
+  dependencies:
+    "@lion/core" "0.20.0"
+    "@lion/form-core" "0.15.5"
 
 "@lion/listbox@^0.10.7":
   version "0.10.7"
@@ -1374,6 +1409,24 @@
     "@bundled-es-modules/message-format" "6.0.4"
     "@lion/core" "0.19.0"
     singleton-manager "1.4.2"
+
+"@lion/localize@0.22.0":
+  version "0.22.0"
+  resolved "https://registry.yarnpkg.com/@lion/localize/-/localize-0.22.0.tgz#88e0755b53c699231af0df0b4302de2197484bc0"
+  integrity sha512-75q3Xp/5A2v39mWHTaCZXc3L6nO3DD2vU5w/WPFusW6mzMJw3nzB4ot665UrjbY/HJwQV7Trjh9c/O79oh5x8Q==
+  dependencies:
+    "@bundled-es-modules/message-format" "6.0.4"
+    "@lion/core" "0.20.0"
+    singleton-manager "1.4.3"
+
+"@lion/overlays@0.30.0":
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/@lion/overlays/-/overlays-0.30.0.tgz#cd30c6ee8beda2ef977eb9b049cbac3549040c50"
+  integrity sha512-3P/VMCkzp6c0E8Nl6Mtvtqg/7J93JM3MEPi14WE9PWYQZcrtvcWSfLXCoI3Va1HoFfRuaAcN0DN0AO6Z71iFeg==
+  dependencies:
+    "@lion/core" "0.20.0"
+    "@popperjs/core" "^2.5.4"
+    singleton-manager "1.4.3"
 
 "@lion/overlays@^0.26.1":
   version "0.26.1"
