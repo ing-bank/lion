@@ -1,0 +1,57 @@
+{
+  "name": "@lion/file-uploader",
+  "version": "0.0.1",
+  "description": "A file uploader with image preview and upload progress indication",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/file-uploader"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "custom-elements.json",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
+    "debug": "cd ../../ && npm run debug -- --group file-uploader",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group file-uploader",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group file-uploader",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
+    "test": "cd ../../ && npm run test:browser -- --group file-uploader"
+  },
+  "sideEffects": [
+    "lion-file-uploader.js"
+  ],
+  "dependencies": {
+    "@lion/core": "0.20.0",
+    "@lion/localize": "0.22.0"
+  },
+  "keywords": [
+    "file-uploader",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "customElements": "custom-elements.json",
+  "exports": {
+    ".": "./index.js",
+    "./define": "./lion-file-uploader.js",
+    "./translations/*": "./translations/*",
+    "./docs/*": "./docs/*"
+  }
+}
