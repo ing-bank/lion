@@ -71,6 +71,7 @@ export { dedupeMixin } from '@open-wc/dedupe-mixin';
 export { DelegateMixin } from './src/DelegateMixin.js';
 export { DisabledMixin } from './src/DisabledMixin.js';
 export { DisabledWithTabIndexMixin } from './src/DisabledWithTabIndexMixin.js';
+export { ScopedStylesController } from './src/ScopedStylesController.js';
 export { SlotMixin } from './src/SlotMixin.js';
 export { UpdateStylesMixin } from './src/UpdateStylesMixin.js';
 export { browserDetection } from './src/browserDetection.js';

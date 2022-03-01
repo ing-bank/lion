@@ -14,35 +14,6 @@ describe('<lion-input-range>', () => {
     expect(el._inputNode.type).to.equal('range');
   });
 
-  it('contain the scoped css class for the slotted input style', async () => {
-    const el = await fixture(`
-      <lion-input-range></lion-input-range>
-    `);
-    expect(el.classList.contains(el.scopedClass)).to.equal(true);
-  });
-
-  it('adds a style tag as the first child which contains a class selector to the element', async () => {
-    const el = await fixture(`
-      <lion-input-range></lion-input-range>
-    `);
-    expect(el.children[0].tagName).to.equal('STYLE');
-    expect(el.children[0].innerHTML).to.contain(el.scopedClass);
-  });
-
-  it('does cleanup of the style tag when moving or deleting the el', async () => {
-    const wrapper = await fixture(`
-      <div></div>
-    `);
-    const wrapper2 = await fixture(`
-      <div></div>
-    `);
-    const el = document.createElement('lion-input-range');
-    wrapper.appendChild(el);
-    wrapper2.appendChild(el);
-
-    expect(el.children[1].tagName).to.not.equal('STYLE');
-  });
-
   it('displays the modelValue and unit', async () => {
     const el = await fixture(html`
       <lion-input-range .modelValue=${75} unit="${`%`}"></lion-input-range>

@@ -88,15 +88,16 @@ The pseudo-elements associated with the slider track/thumb are not tree-abiding,
 ```
 
 This means you will need to style the slotted native input from the LightDOM,
-and for this we added a helper method to `LionInputRange` which inserts a `<style>` element
+and for this we added added our ScopedStylesController as a controller to `LionInputRange`.
+This controller inserts a `<style>` element
 that emulates scoping by generating a uniquely generated class on the LionInputRange component.
 This prevents the styling from conflicting with other elements on the page.
 
-To use it when extending, override `static rangeStyles(scope)`:
+To use it when extending, override `static scopedStyles(scope)`:
 
 ```js
 class MyInputRange extends LionInputRange {
-  static rangeStyles(scope) {
+  static scopedStyles(scope) {
     return css`
       .${scope} .form-control::-webkit-slider-runnable-track {
         background-color: lightgreen;
