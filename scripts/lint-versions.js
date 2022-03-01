@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 const { readdirSync, existsSync, readFileSync } = require('fs');
+const semver = require('semver');
 
 const getDirectories = source =>
   readdirSync(source, { withFileTypes: true })
@@ -38,14 +38,19 @@ function compareVersions(versionsA, versionsB) {
   let output = '';
   const newVersions = { ...versionsA };
   Object.keys(versionsB).forEach(dep => {
-    if (
-      versionsA[dep] &&
-      versionsB[dep] &&
-      `^${versionsA[dep]}` !== versionsB[dep] && // allow carets
-      `~${versionsA[dep]}` !== versionsB[dep] && // allow tildes
-      versionsA[dep] !== versionsB[dep] // allow fixed
-    ) {
-      output += `  - "${dep}" should be "${versionsA[dep]}" but is "${versionsB[dep]}"\n`;
+    if (versionsA[dep] && versionsB[dep] && versionsA[dep] !== versionsB[dep]) {
+      if (!semver.satisfies(versionsA[dep], versionsB[dep])) {
+        // if version doesn't satisfy range, check if they are both ranges,
+        // and if so, if either of them is entirely contained by the other,
+        // if so, then they are semver compatible and will resolve to the same thing
+        const rangeA = semver.validRange(versionsA[dep]);
+        const rangeB = semver.validRange(versionsB[dep]);
+        if (
+          !(rangeA && rangeB && (semver.subset(rangeA, rangeB) || semver.subset(rangeB, rangeA)))
+        ) {
+          output += `  - "${dep}" "${versionsB[dep]}" does not seem semver compatible with "${versionsA[dep]}" and probably one of them needs a bump"\n`;
+        }
+      }
     }
     if (!newVersions[dep]) {
       newVersions[dep] = versionsB[dep];
