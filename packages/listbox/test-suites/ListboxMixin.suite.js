@@ -1380,7 +1380,7 @@ export function runListboxMixinSuite(customConfig = {}) {
           el.appendChild(optionsEl);
           properlyInstantiated = true;
         } catch (e) {
-          throw Error(e);
+          throw Error(/** @type {Error} */ (e).message);
         }
 
         expect(properlyInstantiated).to.be.true;

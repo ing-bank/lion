@@ -18,6 +18,7 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionSteps>} */ (_fix
  * @param {Object} expected
  * @param {string} expected.transitions
  * @param {string} expected.statuses
+ * @returns {Promise<void>}
  */
 async function checkWorkflow(steps, expected) {
   return new Promise(resolve => {

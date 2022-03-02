@@ -17,7 +17,7 @@ async function expectThrowsAsync(method, errorMessage) {
   }
   expect(error).to.be.an('Error', 'No error was thrown');
   if (errorMessage) {
-    expect(error.message).to.equal(errorMessage);
+    expect(/** @type {Error} */ (error).message).to.equal(errorMessage);
   }
 }
 /**

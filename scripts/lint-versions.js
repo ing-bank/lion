@@ -38,7 +38,13 @@ function compareVersions(versionsA, versionsB) {
   let output = '';
   const newVersions = { ...versionsA };
   Object.keys(versionsB).forEach(dep => {
-    if (versionsA[dep] && versionsB[dep] && versionsA[dep] !== versionsB[dep]) {
+    if (
+      versionsA[dep] &&
+      versionsB[dep] &&
+      `^${versionsA[dep]}` !== versionsB[dep] && // allow carets
+      `~${versionsA[dep]}` !== versionsB[dep] && // allow tildes
+      versionsA[dep] !== versionsB[dep] // allow fixed
+    ) {
       output += `  - "${dep}" should be "${versionsA[dep]}" but is "${versionsB[dep]}"\n`;
     }
     if (!newVersions[dep]) {

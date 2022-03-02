@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { css, html, unsafeCSS } from '@lion/core';
+import { css, html, ScopedStylesController } from '@lion/core';
 import { LionInput } from '@lion/input';
 import { formatNumber } from '@lion/localize';
 
@@ -42,7 +42,7 @@ export class LionInputRange extends LionInput {
   /**
    * @param {CSSResult} scope
    */
-  static rangeStyles(scope) {
+  static scopedStyles(scope) {
     return css`
       /* Custom input range styling comes here, be aware that this won't work for polyfilled browsers */
       .${scope} .form-control {
@@ -59,6 +59,8 @@ export class LionInputRange extends LionInput {
 
   constructor() {
     super();
+    /** @type {ScopedStylesController} */
+    this.scopedStylesController = new ScopedStylesController(this);
     this.min = Infinity;
     this.max = Infinity;
     this.step = 1;
@@ -69,22 +71,6 @@ export class LionInputRange extends LionInput {
      * @param {string} modelValue
      */
     this.parser = modelValue => parseFloat(modelValue);
-    this.scopedClass = `${this.localName}-${Math.floor(Math.random() * 10000)}`;
-    /** @private */
-    this.__styleTag = document.createElement('style');
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    /* eslint-disable-next-line wc/no-self-class */
-    this.classList.add(this.scopedClass);
-
-    this.__setupStyleTag();
-  }
-
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    this.__teardownStyleTag();
   }
 
   /** @param {import('@lion/core').PropertyValues } changedProperties */
@@ -150,18 +136,5 @@ export class LionInputRange extends LionInput {
           : ''}
       </div>
     `;
-  }
-
-  /** @private */
-  __setupStyleTag() {
-    this.__styleTag.textContent = /** @type {typeof LionInputRange} */ (this.constructor)
-      .rangeStyles(unsafeCSS(this.scopedClass))
-      .toString();
-    this.insertBefore(this.__styleTag, this.childNodes[0]);
-  }
-
-  /** @private */
-  __teardownStyleTag() {
-    this.removeChild(this.__styleTag);
   }
 }

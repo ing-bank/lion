@@ -18,7 +18,8 @@ import { LitElement, html, render } from 'lit-element';
 - [function to deduplicate mixins (dedupeMixin)](#deduping-of-mixins)
 - Mixin to handle disabled (DisabledMixin)
 - Mixin to handle disabled AND tabIndex (DisabledWithTabIndexMixin)
-- Mixin to manage auto generated needed slot elements in light dom (SlotMixin)
+- Mixin to manage auto-generated needed slot elements in light dom (SlotMixin)
+- Mixin to create scoped styles in LightDOM-using components (ScopedStylesMixin)
 
 > These features are not well documented - care to help out?
 
@@ -49,7 +50,7 @@ In other words, this may happen to the protoype chain `... -> M2 -> BaseMixin ->
 
 An example of this may be a `LocalizeMixin` used across different components and mixins. Some mixins may need it and many components need it too and can not rely on other mixins to have it by default, so must inherit from it independently.
 
-The more generic the mixin is, the higher the chance of being appliend more than once. As a mixin author you can't control how it is used, and can't always predict it. So as a safety measure it is always recommended to create deduping mixins.
+The more generic the mixin is, the higher the chance of being applied more than once. As a mixin author you can't control how it is used, and can't always predict it. So as a safety measure it is always recommended to create deduping mixins.
 
 ### Usage of dedupeMixin()
 

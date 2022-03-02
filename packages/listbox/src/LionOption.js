@@ -1,5 +1,5 @@
 import { ChoiceInputMixin, FormRegisteringMixin } from '@lion/form-core';
-import { css, DisabledMixin, html, LitElement } from '@lion/core';
+import { css, DisabledMixin, html, LitElement, SlotMixin } from '@lion/core';
 
 /**
  * @typedef {import('@lion/core').TemplateResult } TemplateResult
@@ -14,7 +14,9 @@ import { css, DisabledMixin, html, LitElement } from '@lion/core';
  * Element gets state supplied externally, reflects this to attributes,
  * enabling SubClassers to style based on those states
  */
-export class LionOption extends DisabledMixin(ChoiceInputMixin(FormRegisteringMixin(LitElement))) {
+export class LionOption extends DisabledMixin(
+  ChoiceInputMixin(FormRegisteringMixin(SlotMixin(LitElement))),
+) {
   /** @type {any} */
   static get properties() {
     return {

@@ -10,8 +10,10 @@ import { isEqualConfig } from './utils/is-equal-config.js';
 
 /**
  * @type {OverlayMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 export const OverlayMixinImplementation = superclass =>
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class OverlayMixin extends superclass {
     static get properties() {
       return {
@@ -155,7 +157,7 @@ export const OverlayMixinImplementation = superclass =>
       if (this._overlayContentNode) {
         this._overlayContentNode.removeEventListener(
           'close-overlay',
-          this.__closeEventInContentNodeHandler,
+          /** @type {EventListener} */ (this.__closeEventInContentNodeHandler),
         );
       }
     }
@@ -173,16 +175,16 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     disconnectedCallback() {
-      if (super.disconnectedCallback) {
-        super.disconnectedCallback();
-      }
+      super.disconnectedCallback();
       if (this._overlayCtrl) {
         this._teardownOverlayCtrl();
       }
     }
 
     get _overlayInvokerNode() {
-      return Array.from(this.children).find(child => child.slot === 'invoker');
+      return /** @type {HTMLElement | undefined} */ (
+        Array.from(this.children).find(child => child.slot === 'invoker')
+      );
     }
 
     /**
@@ -194,7 +196,9 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     get _overlayBackdropNode() {
-      return Array.from(this.children).find(child => child.slot === 'backdrop');
+      return /** @type {HTMLElement | undefined} */ (
+        Array.from(this.children).find(child => child.slot === 'backdrop')
+      );
     }
 
     get _overlayContentNode() {
@@ -203,11 +207,13 @@ export const OverlayMixinImplementation = superclass =>
           Array.from(this.children).find(child => child.slot === 'content') ||
           this.config.contentNode;
       }
-      return this._cachedOverlayContentNode;
+      return /** @type {HTMLElement} */ (this._cachedOverlayContentNode);
     }
 
     get _overlayContentWrapperNode() {
-      return this.shadowRoot.querySelector('#overlay-content-node-wrapper');
+      return /** @type {HTMLElement | undefined} */ (
+        this.shadowRoot?.querySelector('#overlay-content-node-wrapper')
+      );
     }
 
     /** @protected */

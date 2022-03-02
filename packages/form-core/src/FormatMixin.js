@@ -58,6 +58,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const FormatMixinImplementation = superclass =>
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormatMixin extends ValidateMixin(FormControlMixin(superclass)) {
     /** @type {any} */
     static get properties() {

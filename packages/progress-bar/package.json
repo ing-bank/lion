@@ -36,8 +36,8 @@
     "lion-progress-bar.js"
   ],
   "dependencies": {
-    "@lion/core": "0.20.0",
-    "@lion/localize": "0.22.0"
+    "@lion/core": "0.21.0",
+    "@lion/localize": "0.23.0"
   },
   "keywords": [
     "lion",

@@ -9,8 +9,10 @@ import { localize } from './localize.js';
 /**
  * # LocalizeMixin - for self managed templates
  * @type {LocalizeMixin}
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const LocalizeMixinImplementation = superclass =>
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class LocalizeMixin extends superclass {
     /**
      * @returns {Object.<string,function>[]}

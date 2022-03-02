@@ -1,4 +1,4 @@
-import { ifDefined, LitElement } from '@lion/core';
+import { LitElement } from '@lion/core';
 import { IsNumber, LionField, Validator } from '@lion/form-core';
 import '@lion/form-core/define';
 import { localizeTearDown } from '@lion/localize/test-helpers';
@@ -149,7 +149,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         error = err;
       }
       expect(error).to.be.instanceOf(TypeError);
-      expect(error.message).to.equal('You need to define a name');
+      expect(/** @type {TypeError} */ (error).message).to.equal('You need to define a name');
 
       console.info = orig; // restore original console
     });
@@ -172,7 +172,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
         error = err;
       }
       expect(error).to.be.instanceOf(TypeError);
-      expect(error.message).to.equal('You can not have the same name "foo" as your parent');
+      expect(/** @type {TypeError} */ (error).message).to.equal(
+        'You can not have the same name "foo" as your parent',
+      );
 
       console.info = orig; // restore original console
     });
@@ -200,7 +202,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         error = err;
       }
       expect(error).to.be.instanceOf(TypeError);
-      expect(error.message).to.equal(
+      expect(/** @type {TypeError} */ (error).message).to.equal(
         'Name "fooBar" is already registered - if you want an array add [] to the end',
       );
 
@@ -1385,8 +1387,8 @@ export function runFormGroupMixinSuite(cfg = {}) {
         render() {
           return html`
               <${tag}
-              .modelValue=${ifDefined(this.modelValue)}
-              .serializedValue=${ifDefined(this.serializedValue)}>
+              .modelValue=${this.modelValue}
+              .serializedValue=${this.serializedValue}>
                 ${this.fields.map(field => {
                   if (typeof field === 'object') {
                     return html`<${childTag} name="${field.name}" .modelValue="${field.value}"></${childTag}>`;
