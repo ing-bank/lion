@@ -2,7 +2,7 @@ import { expect, html, fixture } from '@open-wc/testing';
 import sinon from 'sinon';
 
 import { LionFileUploader } from '../src/LionFileUploader.js';
-import { LionProgressBar } from '../src/LionProgressBar.js';
+import { LionProgressBar } from '../../progress-bar/src/LionProgressBar.js';
 
 customElements.define('lion-progress-bar', LionProgressBar);
 customElements.define('lion-file-uploader', LionFileUploader);

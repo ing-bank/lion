@@ -327,7 +327,7 @@ export class LionFileUploader extends LitElement {
                       @keyup="${e => this.__handleKeyUp(e, index)}"
                     ></span>
                   </span>
-                  <progress value="${uploadProgress}" max="100"></progress>
+                  <lion-progress-bar value="${uploadProgress}" max="100"></lion-progress-bar>
                 </span>
               </li>
             `;
