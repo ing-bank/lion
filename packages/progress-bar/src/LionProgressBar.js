@@ -132,7 +132,7 @@ export class LionProgressBar extends LitElement {
   }
 
   set value(value) {
-    this.__value = (this.__toPositiveInt(value) / this.max) * 100;
+    this.__value = (LionProgressBar.__toPositiveInt(value) / this.max) * 100;
     this.requestUpdate();
   }
 

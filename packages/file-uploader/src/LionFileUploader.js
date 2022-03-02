@@ -195,19 +195,19 @@ export class LionFileUploader extends LitElement {
       this.__uploadComplete = false;
     }
 
-    const newFiles = await this.__processFiles([...files]);
+    const newFiles = await LionFileUploader.__processFiles([...files]);
 
     this.__fileList = [...this.__fileList, ...newFiles];
   }
 
-  async __processFiles(files) {
+  static async __processFiles(files) {
     const processedFiles = [];
 
     for (const file of files) {
       const { name, size } = file;
       const processedFile = { file, name, size: LionFileUploader.__formatFileSize(size) };
 
-      if (this.__isImage(file)) {
+      if (LionFileUploader.__isImage(file)) {
         processedFile.url = await LionFileUploader.__getDataUrl(file);
       }
 

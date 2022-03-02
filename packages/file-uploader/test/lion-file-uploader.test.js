@@ -33,7 +33,7 @@ describe('<lion-file-uploader>', () => {
 
     const spy = sinon.spy(event, 'preventDefault');
 
-    el.__handleDragEnter(event);
+    LionFileUploader.__handleDragEnter(event);
 
     expect(spy.called).to.be.true;
   });
@@ -91,27 +91,27 @@ describe('<lion-file-uploader>', () => {
   });
 
   it('should correctly determine if a file is an image', () => {
-    expect(el.__isImage(imageFile)).to.be.true;
-    expect(el.__isImage(textFile)).to.be.false;
+    expect(LionFileUploader.__isImage(imageFile)).to.be.true;
+    expect(LionFileUploader.__isImage(textFile)).to.be.false;
   });
 
   it('should correctly format bytes to a human-readable file size', () => {
-    expect(el.__formatFileSize(0)).to.equal('0 bytes');
-    expect(el.__formatFileSize(100)).to.equal('100 bytes');
-    expect(el.__formatFileSize(1023)).to.equal('1023 bytes');
-    expect(el.__formatFileSize(1024)).to.equal('1 KB');
-    expect(el.__formatFileSize(1535)).to.equal('1 KB');
-    expect(el.__formatFileSize(1536)).to.equal('2 KB');
-    expect(el.__formatFileSize(10240)).to.equal('10 KB');
-    expect(el.__formatFileSize(11264)).to.equal('11 KB');
-    expect(el.__formatFileSize(11775)).to.equal('11 KB');
-    expect(el.__formatFileSize(11776)).to.equal('12 KB');
-    expect(el.__formatFileSize(102400)).to.equal('100 KB');
-    expect(el.__formatFileSize(117760)).to.equal('115 KB');
-    expect(el.__formatFileSize(1535000)).to.equal('1 MB');
-    expect(el.__formatFileSize(1640000)).to.equal('2 MB');
-    expect(el.__formatFileSize(1535000000)).to.equal('1 GB');
-    expect(el.__formatFileSize(1640000000)).to.equal('2 GB');
+    expect(LionFileUploader.__formatFileSize(0)).to.equal('0 bytes');
+    expect(LionFileUploader.__formatFileSize(100)).to.equal('100 bytes');
+    expect(LionFileUploader.__formatFileSize(1023)).to.equal('1023 bytes');
+    expect(LionFileUploader.__formatFileSize(1024)).to.equal('1 KB');
+    expect(LionFileUploader.__formatFileSize(1535)).to.equal('1 KB');
+    expect(LionFileUploader.__formatFileSize(1536)).to.equal('2 KB');
+    expect(LionFileUploader.__formatFileSize(10240)).to.equal('10 KB');
+    expect(LionFileUploader.__formatFileSize(11264)).to.equal('11 KB');
+    expect(LionFileUploader.__formatFileSize(11775)).to.equal('11 KB');
+    expect(LionFileUploader.__formatFileSize(11776)).to.equal('12 KB');
+    expect(LionFileUploader.__formatFileSize(102400)).to.equal('100 KB');
+    expect(LionFileUploader.__formatFileSize(117760)).to.equal('115 KB');
+    expect(LionFileUploader.__formatFileSize(1535000)).to.equal('1 MB');
+    expect(LionFileUploader.__formatFileSize(1640000)).to.equal('2 MB');
+    expect(LionFileUploader.__formatFileSize(1535000000)).to.equal('1 GB');
+    expect(LionFileUploader.__formatFileSize(1640000000)).to.equal('2 GB');
   });
 
   it('should add files to __fileList', async () => {
