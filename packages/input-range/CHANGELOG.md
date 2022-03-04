@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.11.1
+
+### Patch Changes
+
+- 57d2c62b: Abstract input-range's scoped styles feature to a reactive controller for reuse. With this controller, you can scope styles on a LightDOM component.
+- Updated dependencies [57d2c62b]
+  - @lion/core@0.21.1
+
 ## 0.11.0
 
 ### Minor Changes
