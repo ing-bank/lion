@@ -1,0 +1,55 @@
+{
+  "name": "@lion/breadcrumb",
+  "version": "0.8.0",
+  "description": "A breadcrumb trail consists of a list of links to the parent pages of the current page in hierarchical order.",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/breadcrumb"
+  },
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "custom-elements.json",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
+    "debug": "cd ../../ && npm run debug -- --group breadcrumb",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group breadcrumb",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group breadcrumb",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
+    "test": "cd ../../ && npm run test:browser -- --group breadcrumb"
+  },
+  "sideEffects": [
+    "lion-breadcrumb.js"
+  ],
+  "dependencies": {
+    "@lion/core": "^0.21.0"
+  },
+  "keywords": [
+    "breadcrumb",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "customElements": "custom-elements.json",
+  "exports": {
+    ".": "./index.js",
+    "./define": "./lion-breadcrumb.js",
+    "./docs/*": "./docs/*"
+  }
+}
