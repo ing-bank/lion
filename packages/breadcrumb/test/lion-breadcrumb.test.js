@@ -42,6 +42,17 @@ const customSeparatorBreadcrumb = html`
 `;
 
 describe('LionBreadcrumb', () => {
+  it('should render the children', async () => {
+    const el = await fixture(basicBreadcrumb);
+    // @ts-ignore
+    const { children } = el.shadowRoot.querySelector('ol');
+
+    expect(children.length).to.be.equal(3);
+    expect(children[0].innerText).to.be.equal('Home');
+    expect(children[1].innerText).to.be.equal('Menu');
+    expect(children[2].innerText).to.be.equal('Current');
+  });
+
   it('should not render a separator for the first item', async () => {
     const el = await fixture(basicBreadcrumb);
     // @ts-ignore

@@ -37,11 +37,11 @@ export class LionBreadcrumb extends LitElement {
     return html`
       <nav aria-label="Breadcrumb" class="breadcrumb">
         <ol>
-          ${Array.from(this.children).map((children, i, row) => {
-            if (i + 1 === row.length && children.getAttribute('href')) {
-              children.setAttribute('aria-current', 'page');
+          ${Array.from(this.children).map((child, i, row) => {
+            if (i + 1 === row.length && child.getAttribute('href')) {
+              child.setAttribute('aria-current', 'page');
             }
-            return html`<li>${children}</li>`;
+            return html`<li>${child}</li>`;
           })}
         </ol>
       </nav>
