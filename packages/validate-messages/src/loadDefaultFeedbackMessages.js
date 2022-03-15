@@ -120,7 +120,7 @@ export function loadDefaultFeedbackMessages() {
 
   /**
    * @param {MessageData} data
-   * @returns {Promise<string|Node>}
+   * @returns {Promise<string|Element>}
    */
   const getLocalizedMessage = async data => {
     await forMessagesToBeReady();

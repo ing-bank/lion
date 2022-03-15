@@ -48,7 +48,7 @@ describe('Validator', () => {
   it('throws when executing a Validator without a name', async () => {
     class MyValidator extends Validator {}
     expect(() => {
-      new MyValidator().execute();
+      new MyValidator().execute(undefined);
     }).to.throw(
       'A validator needs to have a name! Please set it via "static get validatorName() { return \'IsCat\'; }"',
     );
@@ -61,7 +61,10 @@ describe('Validator', () => {
       }
     }
 
-    const vali = new MyValidator({}, { getMessage: 'This is the custom error message' });
+    const vali = new MyValidator(
+      {},
+      { getMessage: async () => 'This is the custom error message' },
+    );
     const { getMessage } = getProtectedMembers(vali);
 
     await expectThrowsAsync(
@@ -76,8 +79,8 @@ describe('Validator', () => {
   });
 
   it('receives a config object (optionally) as a second argument on instantiation', async () => {
-    const vali = new Validator('myParam', { my: 'config' });
-    expect(vali.config).to.eql({ my: 'config' });
+    const vali = new Validator('myParam', { fieldName: 'X' });
+    expect(vali.config).to.eql({ fieldName: 'X' });
   });
 
   it('has access to name, type, params, config in getMessage provided by config', () => {
@@ -87,7 +90,7 @@ describe('Validator', () => {
         return 'MyValidator';
       }
     }
-    const vali = new MyValidator('myParam', { my: 'config', getMessage: configSpy });
+    const vali = new MyValidator('myParam', { fieldName: 'X', getMessage: configSpy });
     const { getMessage } = getProtectedMembers(vali);
     getMessage();
 
@@ -114,7 +117,7 @@ describe('Validator', () => {
         return '';
       }
     }
-    const vali = new MyValidator('myParam', { my: 'config' });
+    const vali = new MyValidator('myParam', { fieldName: 'X' });
     const { getMessage } = getProtectedMembers(vali);
     getMessage();
 
@@ -137,12 +140,12 @@ describe('Validator', () => {
   });
 
   it('fires "config-changed" event on config change', async () => {
-    const vali = new Validator('foo', { foo: 'bar' });
+    const vali = new Validator('foo', { fieldName: 'X' });
     const cb = sinon.spy(() => {});
     if (vali.addEventListener) {
       vali.addEventListener('config-changed', cb);
     }
-    vali.config = { bar: 'foo' };
+    vali.config = { fieldName: 'Y' };
     expect(cb.callCount).to.equal(1);
   });
 

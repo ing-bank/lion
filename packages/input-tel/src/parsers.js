@@ -2,7 +2,7 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 
 /**
  * @typedef {import('../types').RegionCode} RegionCode
- * @typedef {* & import('awesome-phonenumber').default} PhoneNumber
+ * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} PhoneNumber
  */
 
 /**

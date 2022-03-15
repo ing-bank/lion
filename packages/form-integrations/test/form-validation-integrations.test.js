@@ -46,7 +46,7 @@ describe('Form Validation Integrations', () => {
         await fixture(html`
         <${elTag}
           .validators=${[
-            new Required(null, { getMessage: () => 'error' }),
+            new Required(null, { getMessage: async () => 'error' }),
             new WarnValidator(null, { getMessage: () => 'warning' }),
             new DefaultSuccess(),
           ]}

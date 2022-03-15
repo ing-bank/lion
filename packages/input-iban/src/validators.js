@@ -110,7 +110,7 @@ export class IsIBAN extends Validator {
    * @param {string} [data.type]
    * @param {Object.<string,?>} [data.config]
    * @param {string} [data.name]
-   * @returns {Promise<string|Node>}
+   * @returns {Promise<string|Element>}
    */
   static async getMessage(data) {
     await loadTranslations();
@@ -153,7 +153,7 @@ export class IsCountryIBAN extends IsIBAN {
    * @param {string} [data.type]
    * @param {Object.<string,?>} [data.config]
    * @param {string} [data.name]
-   * @returns {Promise<string|Node>}
+   * @returns {Promise<string|Element>}
    */
   static async getMessage(data) {
     await loadTranslations();
@@ -200,7 +200,7 @@ export class IsNotCountryIBAN extends IsIBAN {
    * @param {string} [data.type]
    * @param {Object.<string,?>} [data.config]
    * @param {string} [data.name]
-   * @returns {Promise<string|Node>}
+   * @returns {Promise<string|Element>}
    */
   static async getMessage(data) {
     await loadTranslations();
