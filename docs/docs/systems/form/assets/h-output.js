@@ -3,39 +3,67 @@ import { LionField } from '@lion/form-core';
 import { LionFieldset } from '@lion/fieldset';
 
 export class HelperOutput extends LitElement {
-  static get properties() {
-    return {
-      field: Object,
-      show: Array,
-    };
-  }
+  static properties = {
+    field: Object,
+    show: Array,
+    title: String,
+    readyPromise: Object,
+  };
 
-  static get styles() {
-    return [
-      css`
-        :host {
-          display: block;
-          margin-top: 16px;
-        }
+  static styles = [
+    css`
+      :host {
+        display: block;
+        margin-top: 8px;
+      }
 
-        table,
-        th,
-        td {
-          border: 1px solid #ccc;
-          padding: 4px;
-          font-size: 12px;
-        }
+      code {
+        font-size: 8px;
+        background-color: #eee;
+      }
 
-        table {
-          border-collapse: collapse;
-        }
+      caption {
+        position: absolute;
+        top: 0;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(100%);
+        clip: rect(1px, 1px, 1px, 1px);
+        white-space: nowrap;
+        border: 0;
+        margin: 0;
+        padding: 0;
+      }
 
-        caption {
-          text-align: left;
-        }
-      `,
-    ];
-  }
+      table,
+      th,
+      td {
+        border-bottom: 1px solid rgb(204, 204, 204);
+        border-image: initial;
+        padding: 4px;
+        font-size: 12px;
+        border-left: none;
+        border-right: none;
+        text-align: left;
+      }
+
+      td {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      caption {
+        text-align: left;
+      }
+    `,
+  ];
 
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
@@ -47,14 +75,24 @@ export class HelperOutput extends LitElement {
       }
     }
     this.__rerender = this.__rerender.bind(this);
-    this.field.addEventListener('model-value-changed', this.__rerender);
-    this.field.addEventListener('mousemove', this.__rerender);
-    this.field.addEventListener('blur', this.__rerender);
-    this.field.addEventListener('focusin', this.__rerender);
-    this.field.addEventListener('focusout', this.__rerender);
+
+    const storyRoot = this.field.closest('[mdjs-story-name]');
+
+    storyRoot.addEventListener('model-value-changed', this.__rerender);
+    storyRoot.addEventListener('mousemove', this.__rerender);
+    // this.field.addEventListener('blur', this.__rerender);
+    storyRoot.addEventListener('focusin', this.__rerender);
+    storyRoot.addEventListener('focusout', this.__rerender);
+    storyRoot.addEventListener('change', this.__rerender);
 
     if (this.field._inputNode.form) {
       this.field._inputNode.form.addEventListener('submit', this.__rerender);
+    }
+
+    if (this.readyPromise) {
+      this.readyPromise.then(() => {
+        this.__rerender();
+      });
     }
   }
 
@@ -67,29 +105,47 @@ export class HelperOutput extends LitElement {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  __renderProp(p) {
-    if (typeof p === 'boolean') {
-      return p === true ? '✓' : '';
+  __renderProp(prop) {
+    const field = this.field || {};
+    let resultText = '';
+
+    if (typeof prop === 'string') {
+      const p = field[prop];
+      if (typeof p === 'boolean') {
+        return p === true ? '✓' : '';
+      }
+      if (typeof p === 'undefined') {
+        return html`<code>undefined</code>`;
+      }
+      if (typeof p === 'object' && p !== null) {
+        return JSON.stringify(p);
+      }
+      resultText = p;
+    } else {
+      resultText = prop.processor(field);
     }
-    if (typeof p === 'undefined') {
-      return '?';
-    }
-    return p;
+
+    return html`<span title="${resultText}">${resultText}</span>`;
+  }
+
+  constructor() {
+    super();
+    this.title = 'States';
   }
 
   render() {
-    const field = this.field || {};
+    const computePropName = prop => (typeof prop === 'string' ? prop : prop.name);
     return html`
       <table>
         <caption>
-          Interaction States
+          ${this.title}
         </caption>
         <tr>
-          ${this.show.map(prop => html`<th>${prop}</th>`)}
+          ${this.show.map(prop => html`<th>${computePropName(prop)}</th>`)}
         </tr>
         <tr></tr>
         <tr>
-          ${this.show.map(prop => html`<td>${this.__renderProp(field[prop])}</td>`)}
+          ${this.show.map(prop => html`<td>${this.__renderProp(prop)}</td>`)}
         </tr>
       </table>
     `;
