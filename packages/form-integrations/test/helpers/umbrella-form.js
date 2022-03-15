@@ -8,6 +8,7 @@ import '@lion/input-datepicker/define';
 import '@lion/input-amount/define';
 import '@lion/input-iban/define';
 import '@lion/input-email/define';
+import '@lion/input-tel/define';
 import '@lion/checkbox-group/define';
 import '@lion/radio-group/define';
 import '@lion/select/define';
@@ -71,6 +72,7 @@ export class UmbrellaForm extends LitElement {
           <lion-input-amount name="money" label="Money"></lion-input-amount>
           <lion-input-iban name="iban" label="Iban"></lion-input-iban>
           <lion-input-email name="email" label="Email"></lion-input-email>
+          <lion-input-tel name="tel" label="Telephone Number"></lion-input-tel>
           <lion-checkbox-group
             label="What do you like?"
             name="checkers"

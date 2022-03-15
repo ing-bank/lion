@@ -32,6 +32,7 @@ describe('Form Integrations', () => {
       terms: [],
       notifications: { value: '', checked: false },
       rsvp: '',
+      tel: '',
       comments: '',
     });
   });
@@ -59,6 +60,7 @@ describe('Form Integrations', () => {
       terms: [],
       notifications: '',
       rsvp: '',
+      tel: '',
       comments: '',
     });
   });
@@ -112,6 +114,7 @@ describe('Form Integrations', () => {
       'lion-input-amount',
       'lion-input-iban',
       'lion-input-email',
+      'lion-input-tel',
       'lion-checkbox-group',
       '  lion-checkbox',
       '  lion-checkbox',
