@@ -7,7 +7,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
 
 /**
  * @typedef {import('../types/FormatMixinTypes').FormatMixin} FormatMixin
- * @typedef {import('@lion/localize/types/LocalizeMixinTypes').FormatNumberOptions} FormatOptions
+ * @typedef {import('../types/FormatMixinTypes').FormatOptions} FormatOptions
  * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
 
@@ -107,20 +107,26 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
-     * Preprocesses the viewValue before it's parsed to a modelValue. Can be used to filter
-     * invalid input amongst others.
+     * Preprocessors could be considered 'live formatters'. Their result is shown to the user
+     * on keyup instead of after blurring the field. The biggest difference between preprocessors
+     * and formatters is their moment of execution: preprocessors are run before modelValue is
+     * computed (and work based on view value), whereas formatters are run after the parser (and
+     * are based on modelValue)
+     * Automatically formats code while typing. It depends on a preprocessro that smartly
+     * updates the viewValue and caret position for best UX.
      * @example
      * ```js
      * preprocessor(viewValue) {
      *   // only use digits
      *   return viewValue.replace(/\D/g, '');
      * }
-     * ```
      * @param {string} v - the raw value from the <input> after keyUp/Down event
-     * @returns {string} preprocessedValue: the result of preprocessing for invalid input
+     * @param {FormatOptions & { prevViewValue: string; currentCaretIndex: number }} opts - the raw value from the <input> after keyUp/Down event
+     * @returns {{ viewValue:string; caretIndex:number; }|string|undefined} preprocessedValue: the result of preprocessing for invalid input
      */
-    preprocessor(v) {
-      return v;
+    // eslint-disable-next-line no-unused-vars
+    preprocessor(v, opts) {
+      return undefined;
     }
 
     /**
@@ -204,6 +210,7 @@ const FormatMixinImplementation = superclass =>
       }
       this._reflectBackFormattedValueToUser();
       this.__preventRecursiveTrigger = false;
+      this.__prevViewValue = this.value;
     }
 
     /**
@@ -218,13 +225,12 @@ const FormatMixinImplementation = superclass =>
       if (value === '') {
         // Ideally, modelValue should be undefined for empty strings.
         // For backwards compatibility we return an empty string:
-        // - it triggers validation for required validators (see ValidateMixin.validate())
         // - it can be expected by 3rd parties (for instance unit tests)
         // TODO(@tlouisse): In a breaking refactor of the Validation System, this behavior can be corrected.
         return '';
       }
 
-      // A.2) Handle edge cases We might have no view value yet, for instance because
+      // A.2) Handle edge cases. We might have no view value yet, for instance because
       // _inputNode.value was not available yet
       if (typeof value !== 'string') {
         // This means there is nothing to find inside the view that can be of
@@ -263,8 +269,7 @@ const FormatMixinImplementation = superclass =>
 
       if (
         this._isHandlingUserInput &&
-        this.hasFeedbackFor &&
-        this.hasFeedbackFor.length &&
+        this.hasFeedbackFor?.length &&
         this.hasFeedbackFor.includes('error') &&
         this._inputNode
       ) {
@@ -282,6 +287,8 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
+     * Responds to modelValue changes in the synchronous cycle (most subclassers should listen to
+     * the asynchronous cycle ('modelValue' in the .updated lifecycle))
      * @param {{ modelValue: unknown; }[]} args
      * @protected
      */
@@ -320,7 +327,7 @@ const FormatMixinImplementation = superclass =>
      */
     _syncValueUpwards() {
       if (!this.__isHandlingComposition) {
-        this.value = this.preprocessor(this.value);
+        this.__handlePreprocessor();
       }
       const prevFormatted = this.formattedValue;
       this.modelValue = this._callParser(this.value);
@@ -330,8 +337,36 @@ const FormatMixinImplementation = superclass =>
       if (prevFormatted === this.formattedValue && this.__prevViewValue !== this.value) {
         this._calculateValues();
       }
-      /** @type {string} */
-      this.__prevViewValue = this.value;
+    }
+
+    /**
+     * Handle view value and caretIndex, depending on return type of .preprocessor.
+     * @private
+     */
+    __handlePreprocessor() {
+      const unprocessedValue = this.value;
+      const preprocessedValue = this.preprocessor(this.value, {
+        ...this.formatOptions,
+        currentCaretIndex: this._inputNode?.selectionStart || this.value.length,
+        prevViewValue: this.__prevViewValue,
+      });
+
+      this.__prevViewValue = unprocessedValue;
+      if (preprocessedValue === undefined) {
+        // Make sure we do no set back original value, so we preserve
+        // caret index (== selectionStart/selectionEnd)
+        return;
+      }
+      if (typeof preprocessedValue === 'string') {
+        this.value = preprocessedValue;
+      } else if (typeof preprocessedValue === 'object') {
+        const { viewValue, caretIndex } = preprocessedValue;
+        this.value = viewValue;
+        if (caretIndex && this._inputNode && 'selectionStart' in this._inputNode) {
+          this._inputNode.selectionStart = caretIndex;
+          this._inputNode.selectionEnd = caretIndex;
+        }
+      }
     }
 
     /**
@@ -351,7 +386,7 @@ const FormatMixinImplementation = superclass =>
     /**
      * Every time .formattedValue is attempted to sync to the view value (on change/blur and on
      * modelValue change), this condition is checked. When enhancing it, it's recommended to
-     * call `super._reflectBackOn()`
+     * call via `return this._myExtraCondition && super._reflectBackOn()`
      * @overridable
      * @return {boolean}
      * @protected
@@ -490,6 +525,9 @@ const FormatMixinImplementation = superclass =>
       };
     }
 
+    /**
+     * @private
+     */
     __onPaste() {
       this._isPasting = true;
       this.formatOptions.mode = 'pasted';
@@ -510,6 +548,9 @@ const FormatMixinImplementation = superclass =>
       if (typeof this.modelValue === 'undefined') {
         this._syncValueUpwards();
       }
+      /** @type {string} */
+      this.__prevViewValue = this.value;
+
       this._reflectBackFormattedValueToUser();
 
       if (this._inputNode) {
