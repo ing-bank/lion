@@ -36,6 +36,8 @@ export type ModelValueEventDetails = {
 
 declare interface HTMLElementWithValue extends HTMLElement {
   value: string;
+  selectionStart?: number;
+  selectionEnd?: number;
 }
 
 export declare class FormControlHost {

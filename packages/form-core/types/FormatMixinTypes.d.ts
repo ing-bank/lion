@@ -4,6 +4,7 @@ import { FormatNumberOptions } from '@lion/localize/types/LocalizeMixinTypes';
 import { ValidateHost } from './validate/ValidateMixinTypes';
 import { FormControlHost } from './FormControlMixinTypes';
 
+export type FormatOptions = { mode: 'pasted' | 'auto' } & object;
 export declare class FormatHost {
   /**
    * Converts viewValue to modelValue
@@ -12,7 +13,7 @@ export declare class FormatHost {
    * @param {FormatOptions} opts
    * @returns {*} modelValue
    */
-  parser(v: string, opts: FormatNumberOptions): unknown;
+  parser(v: string, opts: FormatOptions): unknown;
 
   /**
    * Converts modelValue to formattedValue (formattedValue will be synced with
@@ -23,7 +24,7 @@ export declare class FormatHost {
    * @param {FormatOptions} opts
    * @returns {string} formattedValue
    */
-  formatter(v: unknown, opts?: FormatNumberOptions): string;
+  formatter(v: unknown, opts?: FormatOptions): string;
 
   /**
    * Converts `.modelValue` to `.serializedValue`
@@ -44,19 +45,27 @@ export declare class FormatHost {
   deserializer(v: string): unknown;
 
   /**
-   * Preprocesses the viewValue before it's parsed to a modelValue. Can be used to filter
-   * invalid input amongst others.
+   * Preprocessors could be considered 'live formatters'. Their result is shown to the user
+   * on keyup instead of after blurring the field. The biggest difference between preprocessors
+   * and formatters is their moment of execution: preprocessors are run before modelValue is
+   * computed (and work based on view value), whereas formatters are run after the parser (and
+   * are based on modelValue)
+   * Automatically formats code while typing. It depends on a preprocessro that smartly
+   * updates the viewValue and caret position for best UX.
    * @example
    * ```js
    * preprocessor(viewValue) {
    *   // only use digits
    *   return viewValue.replace(/\D/g, '');
    * }
-   * ```
    * @param {string} v - the raw value from the <input> after keyUp/Down event
-   * @returns {string} preprocessedValue: the result of preprocessing for invalid input
+   * @param {FormatOptions & { prevViewValue: string; currentCaretIndex: number }} opts - the raw value from the <input> after keyUp/Down event
+   * @returns {{ viewValue:string; caretIndex:number; }|string|undefined} preprocessedValue: the result of preprocessing for invalid input
    */
-  preprocessor(v: string): string;
+  preprocessor(
+    v: string,
+    options: FormatOptions & { prevViewValue: string; currentCaretIndex: number },
+  ): { viewValue: string; caretIndex: number } | string | undefined;
 
   /**
    * The view value is the result of the formatter function (when available).
@@ -99,7 +108,7 @@ export declare class FormatHost {
   /**
    * Configuration object that will be available inside the formatter function
    */
-  formatOptions: FormatNumberOptions;
+  formatOptions: FormatOptions;
 
   /**
    * The view value. Will be delegated to `._inputNode.value`
