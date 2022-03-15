@@ -8,6 +8,9 @@ module.exports = {
         'no-await-in-loop': 'off',
         'import/no-unresolved': 'off', // eslint not smart enough atm to understand package exports maps
       },
+      parserOptions: {
+        ecmaVersion: 'latest',
+      },
     },
     {
       files: [
