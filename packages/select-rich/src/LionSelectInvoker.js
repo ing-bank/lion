@@ -5,6 +5,7 @@ import { css, html, SlotMixin } from '@lion/core';
  * @typedef {import('@lion/core').CSSResult} CSSResult
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
  * @typedef {import('@lion/listbox').LionOption} LionOption
+ * @typedef {import('@lion/select-rich').LionSelectRich} LionSelectRich
  */
 
 /**
@@ -32,19 +33,10 @@ export class LionSelectInvoker extends SlotMixin(LionButton) {
   static get properties() {
     return {
       ...super.properties,
-      selectedElement: {
-        type: Object,
-      },
-      readOnly: {
-        type: Boolean,
-        reflect: true,
-        attribute: 'readonly',
-      },
-      singleOption: {
-        type: Boolean,
-        reflect: true,
-        attribute: 'single-option',
-      },
+      selectedElement: { type: Object },
+      hostElement: { type: Object },
+      readOnly: { type: Boolean, reflect: true, attribute: 'readonly' },
+      singleOption: { type: Boolean, reflect: true, attribute: 'single-option' },
     };
   }
 
@@ -61,6 +53,9 @@ export class LionSelectInvoker extends SlotMixin(LionButton) {
     };
   }
 
+  /**
+   * @configure OverlayMixin
+   */
   get _contentWrapperNode() {
     return /** @type {ShadowRoot} */ (this.shadowRoot).getElementById('content-wrapper');
   }
@@ -78,6 +73,13 @@ export class LionSelectInvoker extends SlotMixin(LionButton) {
      * @type {LionOption | null}
      */
     this.selectedElement = null;
+
+    /**
+     * The LionSelectRich element this invoker is part of. Will be set on connectedCallback of
+     * LionSelectRich
+     * @type {LionSelectRich | null}
+     */
+    this.hostElement = null;
     /**
      * When the connected LionSelectRich instance has only one option,
      * this should be reflected in the invoker as well

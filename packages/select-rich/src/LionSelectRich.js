@@ -140,6 +140,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     super.connectedCallback();
     this._invokerNode.selectedElement =
       this.formElements[/**  @type {number} */ (this.checkedIndex)];
+
+    this._invokerNode.hostElement = this;
+
     this.__setupInvokerNode();
     this.__toggleInvokerDisabled();
     this.addEventListener('keyup', this.__onKeyUp);
