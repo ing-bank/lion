@@ -30,7 +30,7 @@ export default {
     MinNumber: 'Please enter a(n) {fieldName} higher than or equal to {params}.',
     MaxNumber: 'Please enter a(n) {fieldName} lower than or equal to {params}.',
     MinMaxNumber: 'Please enter a(n) {fieldName} between {params.min} and {params.max}.',
-    IsDate: 'lease enter a valid date (DD/MM/YYYY).',
+    IsDate: 'Please enter a valid date (DD/MM/YYYY).',
     MinDate: 'Please enter a(n) {fieldName} after or equal to {params, date, YYYYMMDD}.',
     MaxDate: 'Please enter a(n) {fieldName} before or equal to {params, date, YYYYMMDD}.',
     MinMaxDate:
