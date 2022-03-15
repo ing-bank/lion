@@ -104,7 +104,7 @@ export declare class ValidateHost {
    * Triggered by:
    *  - modelValue change
    *  - change in the 'validators' array
-   * -  change in the config of an individual Validator
+   *  - change in the config of an individual Validator
    *
    * Three situations are handled:
    * - a1) the FormControl is empty: further execution is halted. When the Required Validator
