@@ -17,6 +17,10 @@ import { FormControlMixin } from '../FormControlMixin.js';
 /**
  * @typedef {import('../../types/validate/ValidateMixinTypes').ValidateMixin} ValidateMixin
  * @typedef {import('../../types/validate/ValidateMixinTypes').ValidationType} ValidationType
+ * @typedef {import('../../types/validate/ValidateMixinTypes').ValidateHost} ValidateHost
+ * @typedef {typeof import('../../types/validate/ValidateMixinTypes').ValidateHost} ValidateHostConstructor
+ * @typedef {{validator:Validator; outcome:boolean|string}} ValidationResultEntry
+ * @typedef {{[type:string]: {[validatorName:string]:boolean|string}}} ValidationStates
  */
 
 /**
@@ -159,7 +163,7 @@ export const ValidateMixinImplementation = superclass =>
        */
       this.showsFeedbackFor = [];
 
-      // TODO: [v1] make this fully private (preifix __)?
+      // TODO: [v1] make this fully private (prefix __)?
       /**
        * A temporary storage to transition from hasFeedbackFor to showsFeedbackFor
        * @type {ValidationType[]}
@@ -171,7 +175,7 @@ export const ValidateMixinImplementation = superclass =>
       /**
        * The outcome of a validation 'round'. Keyed by ValidationType and Validator name
        * @readOnly
-       * @type {Object.<string, Object.<string, boolean>>}
+       * @type {ValidationStates}
        */
       this.validationStates = {};
 
@@ -206,44 +210,45 @@ export const ValidateMixinImplementation = superclass =>
 
       /**
        * The amount of feedback messages that will visible in LionValidationFeedback
+       * @configurable
        * @protected
        */
       this._visibleMessagesAmount = 1;
 
       /**
-       * @type {Validator[]}
+       * @type {ValidationResultEntry[]}
        * @private
        */
       this.__syncValidationResult = [];
 
       /**
-       * @type {Validator[]}
+       * @type {ValidationResultEntry[]}
        * @private
        */
       this.__asyncValidationResult = [];
 
       /**
        * Aggregated result from sync Validators, async Validators and ResultValidators
-       * @type {Validator[]}
+       * @type {ValidationResultEntry[]}
        * @private
        */
       this.__validationResult = [];
 
       /**
-       * @type {Validator[]}
+       * @type {ValidationResultEntry[]}
        * @private
        */
       this.__prevValidationResult = [];
 
       /**
-       * @type {Validator[]}
+       * @type {ValidationResultEntry[]}
        * @private
        */
       this.__prevShownValidationResult = [];
 
       /**
        * The updated children validity affects the validity of the parent. Helper to recompute
-       * validatity of parent FormGroup
+       * validity of parent FormGroup
        * @private
        */
       this.__childModelValueChanged = false;
@@ -337,7 +342,7 @@ export const ValidateMixinImplementation = superclass =>
      * Triggered by:
      *  - modelValue change
      *  - change in the 'validators' array
-     * -  change in the config of an individual Validator
+     *  - change in the config of an individual Validator
      *
      * Three situations are handled:
      * - a1) the FormControl is empty: further execution is halted. When the Required Validator
@@ -384,6 +389,14 @@ export const ValidateMixinImplementation = superclass =>
      * @desc step a1-3 + b (as explained in `validate()`)
      */
     async __executeValidators() {
+      /**
+       * Allows Application Developer to wait for (async) validation
+       * @example
+       * ```js
+       * await el.validateComplete;
+       * ```
+       * @type {Promise<boolean>}
+       */
       this.validateComplete = new Promise(resolve => {
         this.__validateCompleteResolve = resolve;
       });
@@ -410,7 +423,7 @@ export const ValidateMixinImplementation = superclass =>
       const isEmpty = this.__isEmpty(value);
       if (isEmpty) {
         if (requiredValidator) {
-          this.__syncValidationResult = [requiredValidator];
+          this.__syncValidationResult = [{ validator: requiredValidator, outcome: true }];
         }
         this.__finishValidation({ source: 'sync' });
         return;
@@ -451,9 +464,12 @@ export const ValidateMixinImplementation = superclass =>
      */
     __executeSyncValidators(syncValidators, value, { hasAsync }) {
       if (syncValidators.length) {
-        this.__syncValidationResult = syncValidators.filter(v =>
-          v.execute(value, v.param, { node: this }),
-        );
+        this.__syncValidationResult = syncValidators
+          .map(v => ({
+            validator: v,
+            outcome: /** @type {boolean|string} */ (v.execute(value, v.param, { node: this })),
+          }))
+          .filter(v => Boolean(v.outcome));
       }
       this.__finishValidation({ source: 'sync', hasAsync });
     }
@@ -468,10 +484,15 @@ export const ValidateMixinImplementation = superclass =>
       if (asyncValidators.length) {
         this.isPending = true;
         const resultPromises = asyncValidators.map(v => v.execute(value, v.param, { node: this }));
-        const booleanResults = await Promise.all(resultPromises);
-        this.__asyncValidationResult = booleanResults
-          .map((r, i) => asyncValidators[i]) // Create an array of Validators
-          .filter((v, i) => booleanResults[i]); // Only leave the ones returning true
+        const asyncExecutionResults = await Promise.all(resultPromises);
+
+        this.__asyncValidationResult = asyncExecutionResults
+          .map((r, i) => ({
+            validator: asyncValidators[i],
+            outcome: /** @type {boolean|string} */ (asyncExecutionResults[i]),
+          }))
+          .filter(v => Boolean(v.outcome));
+
         this.__finishValidation({ source: 'async' });
         this.isPending = false;
       }
@@ -479,7 +500,7 @@ export const ValidateMixinImplementation = superclass =>
 
     /**
      * step b (as explained in `validate()`), called by __finishValidation
-     * @param {Validator[]} regularValidationResult result of steps 1-3
+     * @param {{validator:Validator; outcome: boolean|string;}[]} regularValidationResult result of steps 1-3
      * @private
      */
     __executeResultValidators(regularValidationResult) {
@@ -490,13 +511,21 @@ export const ValidateMixinImplementation = superclass =>
         })
       );
 
-      return resultValidators.filter(v =>
-        v.executeOnResults({
-          regularValidationResult,
-          prevValidationResult: this.__prevValidationResult,
-          prevShownValidationResult: this.__prevShownValidationResult,
-        }),
-      );
+      // Map everything to Validator[] for backwards compatibility
+      return resultValidators
+        .map(v => ({
+          validator: v,
+          outcome: /** @type {boolean|string} */ (
+            v.executeOnResults({
+              regularValidationResult: regularValidationResult.map(entry => entry.validator),
+              prevValidationResult: this.__prevValidationResult.map(entry => entry.validator),
+              prevShownValidationResult: this.__prevShownValidationResult.map(
+                entry => entry.validator,
+              ),
+            })
+          ),
+        }))
+        .filter(v => Boolean(v.outcome));
     }
 
     /**
@@ -512,35 +541,32 @@ export const ValidateMixinImplementation = superclass =>
       const resultOutCome = this.__executeResultValidators(syncAndAsyncOutcome);
 
       this.__validationResult = [...resultOutCome, ...syncAndAsyncOutcome];
-      // this._storeResultsOnInstance(this.__validationResult);
 
-      const ctor =
-        /** @type {typeof import('../../types/validate/ValidateMixinTypes').ValidateHost} */ (
-          this.constructor
-        );
+      const ctor = /** @type {ValidateHostConstructor} */ (this.constructor);
 
-      /** @type {Object.<string, Object.<string, boolean>>} */
+      /** @type {ValidationStates} */
       const validationStates = ctor.validationTypes.reduce(
         (acc, type) => ({ ...acc, [type]: {} }),
         {},
       );
-      this.__validationResult.forEach(v => {
-        if (!validationStates[v.type]) {
-          validationStates[v.type] = {};
+      this.__validationResult.forEach(({ validator, outcome }) => {
+        if (!validationStates[validator.type]) {
+          validationStates[validator.type] = {};
         }
-        const vCtor = /** @type {typeof Validator} */ (v.constructor);
-        validationStates[v.type][vCtor.validatorName] = true;
+        const vCtor = /** @type {typeof Validator} */ (validator.constructor);
+        validationStates[validator.type][vCtor.validatorName] = outcome;
       });
       this.validationStates = validationStates;
 
-      this.hasFeedbackFor = [...new Set(this.__validationResult.map(v => v.type))];
+      this.hasFeedbackFor = [
+        ...new Set(this.__validationResult.map(({ validator }) => validator.type)),
+      ];
 
       /** private event that should be listened to by LionFieldSet */
       this.dispatchEvent(new Event('validate-performed', { bubbles: true }));
       if (source === 'async' || !hasAsync) {
         if (this.__validateCompleteResolve) {
-          // @ts-ignore [allow-private]
-          this.__validateCompleteResolve();
+          this.__validateCompleteResolve(true);
         }
       }
     }
@@ -587,10 +613,7 @@ export const ValidateMixinImplementation = superclass =>
           console.error(errorMessage, this);
           throw new Error(errorMessage);
         }
-        const ctor =
-          /** @type {typeof import('../../types/validate/ValidateMixinTypes').ValidateHost} */ (
-            this.constructor
-          );
+        const ctor = /** @type {ValidateHostConstructor} */ (this.constructor);
         if (ctor.validationTypes.indexOf(v.type) === -1) {
           const vCtor = /** @type {typeof Validator} */ (v.constructor);
           // throws in constructor are not visible to end user so we do both
@@ -640,14 +663,14 @@ export const ValidateMixinImplementation = superclass =>
      */
 
     /**
-     * @param {Validator[]} validators list of objects having a .getMessage method
+     * @param {ValidationResultEntry[]} validationResults list of objects having a .getMessage method
      * @return {Promise.<FeedbackMessage[]>}
      * @private
      */
-    async __getFeedbackMessages(validators) {
+    async __getFeedbackMessages(validationResults) {
       let fieldName = await this.fieldName;
       return Promise.all(
-        validators.map(async validator => {
+        validationResults.map(async ({ validator, outcome }) => {
           if (validator.config.fieldName) {
             fieldName = await validator.config.fieldName;
           }
@@ -656,6 +679,7 @@ export const ValidateMixinImplementation = superclass =>
             modelValue: this.modelValue,
             formControl: this,
             fieldName,
+            outcome,
           });
           return { message, type: validator.type, validator };
         }),
@@ -690,9 +714,18 @@ export const ValidateMixinImplementation = superclass =>
       if (this.showsFeedbackFor.length > 0) {
         this.__feedbackQueue.add(async () => {
           /** @type {Validator[]} */
-          this.__prioritizedResult = this._prioritizeAndFilterFeedback({
-            validationResult: this.__validationResult,
+          const prioritizedValidators = this._prioritizeAndFilterFeedback({
+            validationResult: this.__validationResult.map(entry => entry.validator),
           });
+
+          this.__prioritizedResult = prioritizedValidators
+            .map(v => {
+              const found = /** @type {ValidationResultEntry} */ (
+                this.__validationResult.find(r => v === r.validator)
+              );
+              return found;
+            })
+            .filter(Boolean);
 
           if (this.__prioritizedResult.length > 0) {
             this.__prevShownValidationResult = this.__prioritizedResult;
@@ -732,12 +765,12 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * Allows the end user to specify when a feedback message should be shown
+     * Allows the Application Developer to specify when a feedback message should be shown
      * @example
      * ```js
      * feedbackCondition(type, meta, defaultCondition) {
      *   if (type === 'info') {
-     *     return return;
+     *     return true;
      *   } else if (type === 'prefilledOnly') {
      *     return meta.prefilled;
      *   }
@@ -775,7 +808,9 @@ export const ValidateMixinImplementation = superclass =>
       );
     }
 
-    /** @param {import('@lion/core').PropertyValues} changedProperties */
+    /**
+     * @param {import('@lion/core').PropertyValues} changedProperties
+     */
     updated(changedProperties) {
       super.updated(changedProperties);
 
@@ -783,10 +818,7 @@ export const ValidateMixinImplementation = superclass =>
         changedProperties.has('shouldShowFeedbackFor') ||
         changedProperties.has('hasFeedbackFor')
       ) {
-        const ctor =
-          /** @type {typeof import('../../types/validate/ValidateMixinTypes').ValidateHost} */ (
-            this.constructor
-          );
+        const ctor = /** @type {ValidateHostConstructor} */ (this.constructor);
         // Necessary typecast because types aren't smart enough to understand that we filter out undefined
         this.showsFeedbackFor = /** @type {string[]} */ (
           ctor.validationTypes
@@ -822,10 +854,7 @@ export const ValidateMixinImplementation = superclass =>
      * @protected
      */
     _updateShouldShowFeedbackFor() {
-      const ctor =
-        /** @type {typeof import('../../types/validate/ValidateMixinTypes').ValidateHost} */ (
-          this.constructor
-        );
+      const ctor = /** @type {ValidateHostConstructor} */ (this.constructor);
 
       // Necessary typecast because types aren't smart enough to understand that we filter out undefined
       const newShouldShowFeedbackFor = /** @type {string[]} */ (
@@ -848,18 +877,15 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * Orders all active validators in this.__validationResult. Can
-     * also filter out occurrences (based on interaction states)
+     * Orders all active validators in this.__validationResult.
+     * Can also filter out occurrences (based on interaction states)
      * @overridable
      * @param {{ validationResult: Validator[] }} opts
      * @return {Validator[]} ordered list of Validators with feedback messages visible to the end user
      * @protected
      */
     _prioritizeAndFilterFeedback({ validationResult }) {
-      const ctor =
-        /** @type {typeof import('../../types/validate/ValidateMixinTypes').ValidateHost} */ (
-          this.constructor
-        );
+      const ctor = /** @type {ValidateHostConstructor} */ (this.constructor);
       const types = ctor.validationTypes;
       // Sort all validators based on the type provided.
       const res = validationResult

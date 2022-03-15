@@ -70,7 +70,7 @@ export function runValidateMixinSuite(customConfig) {
      */
 
     describe('Validation initiation', () => {
-      it('throws and console.errors if adding not Validator instances to the validators array', async () => {
+      it('throws and console.errors if adding non Validator instances to the validators array', async () => {
         // we throw and console error as constructor throw are not visible to the end user
         const stub = sinon.stub(console, 'error');
         const el = /** @type {ValidateElement} */ (await fixture(html`<${tag}></${tag}>`));
@@ -93,7 +93,7 @@ export function runValidateMixinSuite(customConfig) {
         stub.restore();
       });
 
-      it('throws and console error if adding a not supported Validator type', async () => {
+      it('throws a console error if adding a non supported Validator type', async () => {
         // we throw and console error to improve DX
         const stub = sinon.stub(console, 'error');
         const errorMessage = `This component does not support the validator type "major error" used in "MajorValidator". You may change your validators type or add it to the components "static get validationTypes() {}".`;
@@ -720,7 +720,10 @@ export function runValidateMixinSuite(customConfig) {
 
         // @ts-ignore [allow-private] in test
         const totalValidationResult = el.__validationResult;
-        expect(totalValidationResult).to.eql([resultV, validator]);
+        expect(totalValidationResult).to.eql([
+          { validator: resultV, outcome: true },
+          { validator, outcome: true },
+        ]);
       });
     });
 
@@ -1049,7 +1052,7 @@ export function runValidateMixinSuite(customConfig) {
           await fixture(html`
           <${tag}
             .modelValue=${'123'}
-            .validators=${[new MinLength(3, { message: 'foo' })]}>
+            .validators=${[new MinLength(3, { getMessage: async () => 'foo' })]}>
             <input slot="input">
           </${tag}>`)
         );
@@ -1352,14 +1355,14 @@ export function runValidateMixinSuite(customConfig) {
                 };
               }
 
-              // @ts-ignore
+              /**
+               * @param {string} type
+               */
               _showFeedbackConditionFor(type) {
                 switch (type) {
                   case 'error':
-                    // @ts-ignore
                     return ['A', 'B'].includes(this.modelValue);
                   default:
-                    // @ts-ignore
                     return ['B', 'C'].includes(this.modelValue);
                 }
               }
@@ -1384,12 +1387,10 @@ export function runValidateMixinSuite(customConfig) {
             ['D', []],
           ]) {
             el.modelValue = modelValue;
-            // eslint-disable-next-line no-await-in-loop
             await el.updateComplete;
-            // eslint-disable-next-line no-await-in-loop
             await el.feedbackComplete;
 
-            // @ts-ignore
+            // @ts-expect-error [allow-protected]
             const resultOrder = el._feedbackNode.feedbackData.map(v => v.type);
             expect(resultOrder).to.deep.equal(expected);
           }
