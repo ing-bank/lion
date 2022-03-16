@@ -1,44 +1,65 @@
 /**
- * @typedef {object} MessageData
- * @property {*} [MessageData.modelValue]
- * @property {string} [MessageData.fieldName]
- * @property {HTMLElement} [MessageData.formControl]
- * @property {string} [MessageData.type]
- * @property {Object.<string,?>} [MessageData.config]
- * @property {string} [MessageData.name]
+ * @typedef {import('./types').FeedbackMessageData} FeedbackMessageData
+ * @typedef {import('./types').ValidatorParam} ValidatorParam
+ * @typedef {import('./types').ValidatorConfig} ValidatorConfig
+ * @typedef {import('./types').ValidatorOutcome} ValidatorOutcome
+ * @typedef {import('./types').ValidatorName} ValidatorName
+ * @typedef {import('./types').ValidationType} ValidationType
+ * @typedef {import('../FormControlMixin').FormControlHost} FormControlHost
  */
 
-export class Validator {
+// TODO: support attribute validators like <my-el my-validator=${dynamicParam}></my-el> =>
+// register in a ValidateService that is read by Validator and adds these attrs in properties
+// object.
+// They would become like configurable
+// [global attributes](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes)
+// for FormControls.
+
+export class Validator extends EventTarget {
   /**
-   *
-   * @param {?} [param]
-   * @param {Object.<string,?>} [config]
+   * @param {ValidatorParam} [param]
+   * @param {ValidatorConfig} [config]
    */
   constructor(param, config) {
-    this.__fakeExtendsEventTarget();
+    super();
 
-    /** @type {?} */
+    /** @type {ValidatorParam} */
     this.__param = param;
-
-    /** @type {Object.<string,?>} */
+    /** @type {ValidatorConfig} */
     this.__config = config || {};
-    this.type = (config && config.type) || 'error'; // Default type supported by ValidateMixin
-  }
-
-  static get validatorName() {
-    return '';
-  }
-
-  static get async() {
-    return false;
+    /** @type {ValidationType} */
+    this.type = config?.type || 'error'; // Default type supported by ValidateMixin
   }
 
   /**
-   * @desc The function that returns a Boolean
-   * @param {?} [modelValue]
-   * @param {?} [param]
-   * @param {{}} [config]
-   * @returns {Boolean|Promise<Boolean>}
+   * The name under which validation results get registered. For convience and predictability, this
+   * should always be the same as the constructor name (since it will be obfuscated in js builds,
+   * we need to provide it separately).
+   * @type {ValidatorName}
+   */
+  static validatorName = '';
+
+  /**
+   * Whether the validator is asynchronous or not. When true., this means execute function returns
+   * a Promise. This can be handy for:
+   * - server side calls
+   * - validations that are dependent on lazy loaded resources (they can be async until the dependency
+   * is loaded)
+   * @type {boolean}
+   */
+  static async = false;
+
+  /**
+   * The function that returns a validity outcome. When we need to shpw feedback,
+   * it should return true, otherwise false. So when an error\info|warning|success message
+   * needs to be shown, return true. For async Validators, the function canretun  a Promise.
+   * It's also possible to return an enum. Let's say that a phone number can have multiple
+   * states: 'invalid-country-code' | 'too-long' | 'too-short'
+   * Those states can be retrieved in the getMessage
+   * @param {any} modelValue
+   * @param {ValidatorParam} [param]
+   * @param {ValidatorConfig} [config]
+   * @returns {ValidatorOutcome|Promise<ValidatorOutcome>}
    */
   // eslint-disable-next-line no-unused-vars, class-methods-use-this
   execute(modelValue, param, config) {
@@ -51,22 +72,55 @@ export class Validator {
     return true;
   }
 
+  /**
+   * The first argument of the constructor, for instance 3 in `new MinLength(3)`. Will
+   * be stored on Validator instance and passed to `execute` function
+   * @example
+   * ```js
+   *  // Store reference to Validator instance
+   *  const myValidatorInstance = new MyValidator(1);
+   *  // Use this instance initially on a FormControl (that uses ValidateMixin)
+   *  render(html`<validatable-element .validators="${[myValidatorInstance]}"></validatable-element>`, document.body);
+   *  // Based on some event, we need to change the param
+   *  myValidatorInstance.param = 2;
+   * ```
+   * @property {ValidatorParam}
+   */
   set param(p) {
     this.__param = p;
-    if (this.dispatchEvent) {
-      this.dispatchEvent(new Event('param-changed'));
-    }
+    /**
+     * This event is listened for by ValidateMixin. Whenever the validation parameter has
+     * changed, the FormControl will revalidate itself
+     */
+    this.dispatchEvent(new Event('param-changed'));
   }
 
   get param() {
     return this.__param;
   }
 
+  /**
+   * The second argument of the constructor, for instance
+   * `new MinLength(3, {getFeedMessage: async () => 'too long'})`.
+   * Will be stored on Validator instance and passed to `execute` function.
+   * @example
+   * ```js
+   *  // Store reference to Validator instance
+   *  const myValidatorInstance = new MyValidator(1, {getMessage() => 'x'});
+   *  // Use this instance initially on a FormControl (that uses ValidateMixin)
+   *  render(html`<validatable-element .validators="${[myValidatorInstance]}"></validatable-element>`, document.body);
+   *  // Based on some event, we need to change the param
+   *  myValidatorInstance.config = {getMessage() => 'y'};
+   * ```
+   * @property {ValidatorConfig}
+   */
   set config(c) {
     this.__config = c;
-    if (this.dispatchEvent) {
-      this.dispatchEvent(new Event('config-changed'));
-    }
+    /**
+     * This event is listened for by ValidateMixin. Whenever the validation config has
+     * changed, the FormControl will revalidate itself
+     */
+    this.dispatchEvent(new Event('config-changed'));
   }
 
   get config() {
@@ -74,9 +128,29 @@ export class Validator {
   }
 
   /**
-   * @overridable
-   * @param {MessageData} [data]
-   * @returns {Promise<string|Node>}
+   * This is a protected method that usually should not be overridden. It is called by ValidateMixin
+   * and it gathers data to be passed to getMessage functions found:
+   * - `this.config.getMessage`, locally provided by consumers of the Validator (overrides global getMessage)
+   * - `MyValidator.getMessage`, globally provided by creators or consumers of the Validator
+   *
+   * Confusion can arise because of similarities with former mentioned methods. In that regard, a
+   * better name for this function would have been _pepareDataAndCallHighestPrioGetMessage.
+   * @example
+   * ```js
+   * class MyValidator extends Validator {
+   *   // ...
+   *   // 1. globally defined
+   *   static async getMessage() {
+   *     return 'lowest prio, defined globally by Validator author'
+   *   }
+   * }
+   * // 2. globally overridden
+   * MyValidator.getMessage = async() => 'overrides already configured message';
+   * // 3. locally overridden
+   * new MyValidator(myParam, { getMessage: async() => 'locally defined, always wins' });
+   * ```
+   * @param {Partial<FeedbackMessageData>} [data]
+   * @returns {Promise<string|Element>}
    * @protected
    */
   async _getMessage(data) {
@@ -101,9 +175,20 @@ export class Validator {
   }
 
   /**
+   * Called inside Validator.prototype._getMessage (see explanation).
+   * @example
+   * ```js
+   * class MyValidator extends Validator {
+   *   static async getMessage() {
+   *     return 'lowest prio, defined globally by Validator author'
+   *   }
+   * }
+   * // globally overridden
+   * MyValidator.getMessage = async() => 'overrides already configured message';
+   * ```
    * @overridable
-   * @param {MessageData} [data]
-   * @returns {Promise<string|Node>}
+   * @param {Partial<FeedbackMessageData>} [data]
+   * @returns {Promise<string|Element>}
    */
   // eslint-disable-next-line no-unused-vars
   static async getMessage(data) {
@@ -111,12 +196,38 @@ export class Validator {
   }
 
   /**
-   * @param {HTMLElement} formControl
+   * Validators are allowed to have knowledge about FormControls.
+   * In some cases (in case of the Required Validator) we wanted to enhance accessibility by
+   * adding [aria-required]. Also, it would be possible to write an advanced MinLength
+   * Validator that adds a .preprocessor that restricts from typing too many characters
+   * (like the native [minlength] validator).
+   * Will be called when Validator is added to FormControl.validators.
+   * @example
+   * ```js
+   * onFormControlConnect(formControl) {
+   *   if(formControl.inputNode) {
+   *     inputNode.setAttribute('aria-required', 'true');
+   *   }
+   * }
+   *
+   * ```
+   * @configurable
+   * @param {FormControlHost} formControl
    */
   onFormControlConnect(formControl) {} // eslint-disable-line
 
   /**
-   * @param {HTMLElement} formControl
+   * Also see `onFormControlConnect`.
+   * Will be called when Validator is removed from FormControl.validators.
+   * @example
+   * ```js
+   * onFormControlDisconnect(formControl) {
+   *   if(formControl.inputNode) {
+   *     inputNode.removeAttribute('aria-required');
+   *   }
+   * }
+   * @configurable
+   * @param {FormControlHost} formControl
    */
   onFormControlDisconnect(formControl) {} // eslint-disable-line
 
@@ -130,41 +241,6 @@ export class Validator {
    * - Or, when a webworker was started, its process could be aborted and then restarted.
    */
   abortExecution() {} // eslint-disable-line
-
-  /**
-   * @private
-   */
-  __fakeExtendsEventTarget() {
-    const delegate = document.createDocumentFragment();
-
-    /**
-     *
-     * @param {string} type
-     * @param {EventListener} listener
-     * @param {Object} [opts]
-     */
-    const delegatedAddEventListener = (type, listener, opts) =>
-      delegate.addEventListener(type, listener, opts);
-
-    /**
-     * @param {string} type
-     * @param {EventListener} listener
-     * @param {Object} [opts]
-     */
-    const delegatedRemoveEventListener = (type, listener, opts) =>
-      delegate.removeEventListener(type, listener, opts);
-
-    /**
-     * @param {Event|CustomEvent} event
-     */
-    const delegatedDispatchEvent = event => delegate.dispatchEvent(event);
-
-    this.addEventListener = delegatedAddEventListener;
-
-    this.removeEventListener = delegatedRemoveEventListener;
-
-    this.dispatchEvent = delegatedDispatchEvent;
-  }
 }
 
 // For simplicity, a default validator only handles one state:

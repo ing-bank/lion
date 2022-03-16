@@ -7,6 +7,10 @@ import sinon from 'sinon';
 import { DefaultSuccess, MinLength, Required, ValidateMixin, Validator } from '../index.js';
 import { AlwaysInvalid } from '../test-helpers/index.js';
 
+/**
+ * @typedef {import('../src/validate/types').FeedbackMessageData} FeedbackMessageData
+ */
+
 export function runValidateMixinFeedbackPart() {
   describe('Validity Feedback', () => {
     beforeEach(() => {
@@ -303,7 +307,7 @@ export function runValidateMixinFeedbackPart() {
         await fixture(html`
         <${tag}
           .submitted=${true}
-          .validators=${[new MinLength(3, { getMessage: () => 'custom via config' })]}
+          .validators=${[new MinLength(3, { getMessage: async () => 'custom via config' })]}
         >${lightDom}</${tag}>
       `)
       );
@@ -397,7 +401,7 @@ export function runValidateMixinFeedbackPart() {
       });
     });
 
-    describe('Meta data', () => {
+    describe('FeedbackMessageData', () => {
       it('".getMessage()" gets a reference to formControl, params, modelValue and type', async () => {
         class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
           static get validationTypes() {
@@ -431,6 +435,7 @@ export function runValidateMixinFeedbackPart() {
           fieldName: '',
           type: 'x',
           name: 'MinLength',
+          outcome: true,
         });
 
         const instanceMessageSpy = sinon.spy();
@@ -457,6 +462,7 @@ export function runValidateMixinFeedbackPart() {
           fieldName: '',
           type: 'error',
           name: 'MinLength',
+          outcome: true,
         });
       });
 
@@ -485,41 +491,85 @@ export function runValidateMixinFeedbackPart() {
           fieldName: 'myField',
           type: 'error',
           name: 'MinLength',
+          outcome: true,
         });
       });
-    });
 
-    it('".getMessage()" gets .fieldName defined on Validator config', async () => {
-      const constructorValidator = new MinLength(4, {
-        fieldName: new Promise(resolve => resolve('myFieldViaCfg')),
+      it('".getMessage()" gets .fieldName defined on Validator config', async () => {
+        const constructorValidator = new MinLength(4, {
+          fieldName: new Promise(resolve => resolve('myFieldViaCfg')),
+        });
+        const ctorValidator = /** @type {typeof MinLength} */ (constructorValidator.constructor);
+        const spy = sinon.spy(ctorValidator, 'getMessage');
+
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag}
+            .submitted=${true}
+            .validators=${[constructorValidator]}
+            .modelValue=${'cat'}
+            .fieldName=${new Promise(resolve => resolve('myField'))}
+          >${lightDom}</${tag}>
+        `)
+        );
+        await el.updateComplete;
+        await el.feedbackComplete;
+
+        // ignore fieldName Promise as it will always be unique
+        const compare = spy.args[0][0];
+        delete compare?.config?.fieldName;
+        expect(compare).to.eql({
+          config: {},
+          params: 4,
+          modelValue: 'cat',
+          formControl: el,
+          fieldName: 'myFieldViaCfg',
+          type: 'error',
+          name: 'MinLength',
+          outcome: true,
+        });
       });
-      const ctorValidator = /** @type {typeof MinLength} */ (constructorValidator.constructor);
-      const spy = sinon.spy(ctorValidator, 'getMessage');
 
-      const el = /** @type {ValidateElement} */ (
-        await fixture(html`
-        <${tag}
-          .submitted=${true}
-          .validators=${[constructorValidator]}
-          .modelValue=${'cat'}
-          .fieldName=${new Promise(resolve => resolve('myField'))}
-        >${lightDom}</${tag}>
-      `)
-      );
-      await el.updateComplete;
-      await el.feedbackComplete;
+      it('".getMessage()" gets .outcome, which can be "true" or an enum', async () => {
+        class EnumOutComeValidator extends Validator {
+          static validatorName = 'EnumOutCome';
 
-      // ignore fieldName Promise as it will always be unique
-      const compare = spy.args[0][0];
-      delete compare?.config?.fieldName;
-      expect(compare).to.eql({
-        config: {},
-        params: 4,
-        modelValue: 'cat',
-        formControl: el,
-        fieldName: 'myFieldViaCfg',
-        type: 'error',
-        name: 'MinLength',
+          execute() {
+            return 'a-string-instead-of-bool';
+          }
+
+          /**
+           * @param {FeedbackMessageData} meta
+           * @returns
+           */
+          static async getMessage({ outcome }) {
+            const results = {
+              'a-string-instead-of-bool': 'Msg based on enum output',
+            };
+            return results[/** @type {string} */ (outcome)];
+          }
+        }
+
+        const enumOutComeValidator = new EnumOutComeValidator();
+        const spy = sinon.spy(
+          /** @type {typeof EnumOutComeValidator} */ (enumOutComeValidator.constructor),
+          'getMessage',
+        );
+
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag}
+            .submitted=${true}
+            .validators=${[enumOutComeValidator]}
+            .modelValue=${'cat'}
+          >${lightDom}</${tag}>
+        `)
+        );
+        await el.updateComplete;
+        await el.feedbackComplete;
+
+        const getMessageArs = spy.args[0][0];
+        expect(getMessageArs.outcome).to.equal('a-string-instead-of-bool');
       });
     });
 
