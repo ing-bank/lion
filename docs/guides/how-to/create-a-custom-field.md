@@ -141,6 +141,12 @@ Then we follow the steps below:
   the glue to integrate all other functionality like parsing/formatting/serializing, validating,
   tracking interaction states etc.
 
+> N.B. Make sure you never override other property getters than the one mentioned in this tutorial,
+> because those properties will loose their reactivity (they won't be considered anymore in the
+> update loop of LitElement).
+> Whenever a .modelValue/.formattedValue/.serializedValue needs to be computed, use
+> [parser/formatter/serializer](../../docs/systems/form/formatting-and-parsing.md)
+
 Implement with the following code:
 
 ```js preview-story
@@ -165,6 +171,7 @@ export const createAField = () => {
     }
 
     get value() {
+      // Remember we should always return type 'string' here
       return this._inputNode.value;
     }
 
@@ -183,6 +190,9 @@ export const createAField = () => {
 ```
 
 That was all!
+Now that your .modelValue is connected your component is fully compatible with our form system
+
+> Is your `.modelValue` still undefined? Please make sure you're `.value` is of type 'string'.
 
 Now you can enhance your slider by writing custom Validators for it or by
 writing a parser to get a custom modelValue type.
