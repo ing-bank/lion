@@ -61,10 +61,8 @@ describe('Validator', () => {
       }
     }
 
-    const vali = new MyValidator(
-      {},
-      { getMessage: async () => 'This is the custom error message' },
-    );
+    // @ts-ignore needed for test
+    const vali = new MyValidator({}, { getMessage: 'This is the custom error message' });
     const { getMessage } = getProtectedMembers(vali);
 
     await expectThrowsAsync(
@@ -98,7 +96,7 @@ describe('Validator', () => {
       name: 'MyValidator',
       type: 'error',
       params: 'myParam',
-      config: { my: 'config', getMessage: configSpy },
+      config: { fieldName: 'X', getMessage: configSpy },
     });
   });
 
@@ -125,7 +123,7 @@ describe('Validator', () => {
       name: 'MyValidator',
       type: 'error',
       params: 'myParam',
-      config: { my: 'config' },
+      config: { fieldName: 'X' },
     });
   });
 

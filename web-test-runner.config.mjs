@@ -6,6 +6,7 @@ const packages = fs
   .filter(
     dir => fs.statSync(`packages/${dir}`).isDirectory() && fs.existsSync(`packages/${dir}/test`),
   )
+  // .filter(x => x.endsWith('-dropdown'))
   .concat(
     fs
       .readdirSync('packages/helpers')

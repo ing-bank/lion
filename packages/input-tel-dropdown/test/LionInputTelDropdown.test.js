@@ -44,6 +44,9 @@ class WithFormControlInputTelDropdown extends LionInputTelDropdown {
 // @ts-expect-error
 runInputTelSuite({ klass: LionInputTelDropdown });
 runInputTelDropdownSuite();
-// @ts-expect-error
-// Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
-runInputTelDropdownSuite({ klass: WithFormControlInputTelDropdown });
+
+describe('WithFormControlInputTelDropdown', () => {
+  // @ts-expect-error
+  // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
+  runInputTelDropdownSuite({ klass: WithFormControlInputTelDropdown });
+});

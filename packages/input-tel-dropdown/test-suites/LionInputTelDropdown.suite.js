@@ -209,18 +209,5 @@ export function runInputTelDropdownSuite({ klass = LionInputTelDropdown } = {}) 
         );
       });
     });
-
-    describe('When refs.dropdown is a FormControl (LionSelectRich/LionCombobox)', () => {
-      it('updates dropdown value ', async () => {
-        const el = await fixture(html` <${tag} .modelValue="${'+31612345678'}"></${tag}> `);
-        expect(el.activeRegion).to.equal('NL');
-        // @ts-expect-error [allow protected]
-        el._setActiveRegion('BE');
-        await el.updateComplete;
-        expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
-          'BE',
-        );
-      });
-    });
   });
 }

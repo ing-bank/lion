@@ -345,9 +345,18 @@ const FormatMixinImplementation = superclass =>
      */
     __handlePreprocessor() {
       const unprocessedValue = this.value;
+      let currentCaretIndex = this.value.length;
+      // Be gentle with Safari
+      if (
+        this._inputNode &&
+        'selectionStart' in this._inputNode &&
+        /** @type {HTMLInputElement} */ (this._inputNode)?.type !== 'range'
+      ) {
+        currentCaretIndex = /** @type {number} */ (this._inputNode.selectionStart);
+      }
       const preprocessedValue = this.preprocessor(this.value, {
         ...this.formatOptions,
-        currentCaretIndex: this._inputNode?.selectionStart || this.value.length,
+        currentCaretIndex,
         prevViewValue: this.__prevViewValue,
       });
 
