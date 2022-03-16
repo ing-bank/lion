@@ -24,7 +24,7 @@ async function preloadPopper() {
 const GLOBAL_OVERLAYS_CONTAINER_CLASS = 'global-overlays__overlay-container';
 const GLOBAL_OVERLAYS_CLASS = 'global-overlays__overlay';
 // @ts-expect-error [external]: CSS not yet typed
-const supportsCSSTypedObject = window.CSS && CSS.number;
+const supportsCSSTypedObject = window.CSS?.number && document.body.attributeStyleMap?.set;
 
 /**
  * @desc OverlayController is the fundament for every single type of overlay. With the right
