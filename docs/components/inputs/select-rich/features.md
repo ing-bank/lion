@@ -11,7 +11,7 @@ import '@lion/select-rich/define';
 You can set the full `modelValue` for each option, which includes the checked property for whether it is checked or not.
 
 ```html
-<lion-option .modelValue=${{ value: 'red', checked: false }}>Red</lion-option>
+<lion-option .modelValue="${{ value: 'red', checked: false }}">Red</lion-option>
 ```
 
 ## Options with HTML
@@ -21,15 +21,15 @@ The main feature of this rich select that makes it rich, is that your options ca
 ```js preview-story
 export const optionsWithHTML = () => html`
   <lion-select-rich label="Favorite color" name="color">
-    <lion-option .modelValue=${{ value: 'red', checked: false }}>
+    <lion-option .choiceValue="${'red'}">
       <p style="color: red;">I am red</p>
       <p>and multi Line</p>
     </lion-option>
-    <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>
+    <lion-option .choiceValue="${'hotpink'}" checked>
       <p style="color: hotpink;">I am hotpink</p>
       <p>and multi Line</p>
     </lion-option>
-    <lion-option .modelValue=${{ value: 'teal', checked: false }}>
+    <lion-option .choiceValue="${'teal'}">
       <p style="color: teal;">I am teal</p>
       <p>and multi Line</p>
     </lion-option>
@@ -49,19 +49,19 @@ export const manyOptionsWithScrolling = () => html`
     }
   </style>
   <lion-select-rich id="scrollSelectRich" label="Favorite color" name="color">
-    <lion-option .modelValue=${{ value: 'red', checked: false }}>
+    <lion-option .modelValue="${{ value: 'red', checked: false }}">
       <p style="color: red;">I am red</p>
     </lion-option>
-    <lion-option .modelValue=${{ value: 'hotpink', checked: true }}>
+    <lion-option .modelValue="${{ value: 'hotpink', checked: true }}">
       <p style="color: hotpink;">I am hotpink</p>
     </lion-option>
-    <lion-option .modelValue=${{ value: 'teal', checked: false }}>
+    <lion-option .modelValue="${{ value: 'teal', checked: false }}">
       <p style="color: teal;">I am teal</p>
     </lion-option>
-    <lion-option .modelValue=${{ value: 'green', checked: false }}>
+    <lion-option .modelValue="${{ value: 'green', checked: false }}">
       <p style="color: green;">I am green</p>
     </lion-option>
-    <lion-option .modelValue=${{ value: 'blue', checked: false }}>
+    <lion-option .modelValue"=${{ value: 'blue', checked: false }}">
       <p style="color: blue;">I am blue</p>
     </lion-option>
   </lion-select-rich>
@@ -126,7 +126,7 @@ export const renderOptions = ({ shadowRoot }) => {
     { type: 'visacard', label: 'Visa Card', amount: 0, active: false },
   ];
   function showOutput(ev) {
-    shadowRoot.getElementById('demoRenderOutput').innerHTML = JSON.stringify(
+    shadowRoot.querySelector('#demoRenderOutput').innerHTML = JSON.stringify(
       ev.target.modelValue,
       null,
       2,
@@ -305,49 +305,63 @@ export const singleOptionRemoveAdd = () => {
 ## Custom Invoker
 
 You can provide a custom invoker using the invoker slot.
-This means it will get the selected value(s) as an input property `.selectedElement`.
+LionSelectRich will give it acces to:
 
-You can use this `selectedElement` to then render the content to your own invoker.
+- the currently selected option via `.selectedElement`
+- LionSelectRich itself, via `.hostElement`
+
+Code of an advanced custom invoker is shown below (this is the code for the
+invoker used in [IntlSelectRich](./examples.md)).
+The invoker is usually added in the invoker slot of the LionSelectRich subclass.
+However, it would also be possible for an application developer to provide the invoker
+by putting it in light dom:
 
 ```html
 <lion-select-rich>
-  <my-invoker-button slot="invoker"></my-invoker-button>
+  <intl-select-invoker slot="invoker"></intl-select-invoker>
   ...
 </lion-select-rich>
 ```
 
-An example of how such a custom invoker class could look like:
-
 ```js
-class MyInvokerButton extends LitElement() {
-  static get properties() {
-    return {
-      selectedElement: {
-        type: Object,
-      };
-    }
+import { LionSelectInvoker } from '@lion/select-rich';
+
+class IntlSelectInvoker extends LionSelectInvoker {
+  /**
+   * 1. Add your own styles
+   * @configure LitElement
+   * @enhance LionSelectInvoker
+   */
+  static styles = [
+    /** <your custom styles> see IntlSelectRich listed above */
+  ];
+
+  /**
+   * 2. Take back control of slots (LionSelectInvoker adds slots you most likely don't want)
+   * @configure SlotMixin
+   * @override LionSelectInvoker
+   */
+  get slots() {
+    return {};
   }
 
-  _contentTemplate() {
-    if (this.selectedElement) {
-      const labelNodes = Array.from(this.selectedElement.childNodes);
-      // Nested html in the selected option
-      if (labelNodes.length > 0) {
-        // Cloning is important if you plan on passing nodes straight to a lit template
-        return labelNodes.map(node => node.cloneNode(true));
-      }
-      // Or if it is just text inside the selected option, no html
-      return this.selectedElement.textContent;
-    }
-    return ``;
-  }
-
+  /**
+   * 3. Add you custom render function
+   * @override LionSelectInvoker
+   */
   render() {
-    return html`
-      <div>
-        ${this._contentTemplate()}
-      </div>
-    `;
+    const ctor = /** @type {typeof LionSelectInvoker} */ (this.constructor);
+    return ctor._mainTemplate(this._templateData);
+  }
+
+  get _templateData() {
+    return {
+      data: { selectedElement: this.selectedElement, hostElement: this.hostElement },
+    };
+  }
+
+  static _mainTemplate(templateData) {
+    /** <your custom template> see IntlSelectRich listed above */
   }
 }
 ```

@@ -4,6 +4,8 @@
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/input/define';
 import { Unparseable } from '@lion/form-core';
+import { liveFormatPhoneNumber } from '@lion/input-tel';
+import { Unparseable } from '@lion/form-core';
 import './assets/h-output.js';
 ```
 
@@ -170,6 +172,56 @@ export const preprocessors = () => {
   `;
 };
 ```
+
+### Live formatters
+
+Live formatters are a specific type of preprocessor, that format a view value during typing.
+Examples:
+
+- a phone number that, during typing formats `+316` as `+31 6`
+- a date that follows a date mask and automatically inserts '-' characters
+
+Type '6' in the example below and see that a space will be added and the caret in the text box
+will be automatically moved along.
+
+```js preview-story
+export const liveFormatters = () => {
+  return html`
+    <lion-input
+      label="Live Format"
+      .modelValue="${new Unparseable('+31')}"
+      help-text="Uses .preprocessor to format during typing"
+      .preprocessor=${(viewValue, { currentCaretIndex, prevViewValue }) => {
+        return liveFormatPhoneNumber(viewValue, {
+          regionCode: 'NL',
+          formatStrategy: 'international',
+          currentCaretIndex,
+          prevViewValue,
+        });
+      }}
+    ></lion-input>
+    <h-output .show="${['modelValue']}"></h-output>
+  `;
+};
+```
+
+Note that these live formatters need to make an educated guess based on the current (incomplete) view
+value what the users intentions are. When implemented correctly, they can create a huge improvement
+in user experience.
+Next to a changed viewValue, they are also responsible for taking care of the
+caretIndex. For instance, if `+316` is changed to `+31 6`, the caret needs to be moved one position
+to the right (to compensate for the extra inserted space).
+
+#### When to use a live formatter and when a regular formatter?
+
+Although it might feel more logical to configure live formatters inside the `.formatter` function,
+it should be configured inside the `.preprocessor` function. The table below shows differences
+between the two mentioned methods
+
+| Function      | Value type recieved | Reflected back to user on | Supports incomplete values | Supports caret index |
+| :------------ | :------------------ | :------------------------ | :------------------------- | :------------------- |
+| .formatter    | modelValue          | blur (leave)              | No                         | No                   |
+| .preprocessor | viewValue           | keyup (live)              | Yes                        | Yes                  |
 
 ## Flow Diagrams
 

@@ -6,6 +6,11 @@ import { formatAmount, formatCurrencyLabel } from './formatters.js';
 import { parseAmount } from './parsers.js';
 
 /**
+ * @typedef {import('@lion/form-core/types/FormatMixinTypes').FormatOptions} FormatOptions
+ * @typedef {FormatOptions & {locale?:string;currency:string|undefined}} AmountFormatOptions
+ */
+
+/**
  * `LionInputAmount` is a class for an amount custom form element (`<lion-input-amount>`).
  *
  * @customElement lion-input-amount
@@ -87,9 +92,10 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
     if (changedProperties.has('locale') && this.locale !== changedProperties.get('locale')) {
       if (this.locale) {
-        this.formatOptions.locale = this.locale;
+        /** @type {AmountFormatOptions} */
+        (this.formatOptions).locale = this.locale;
       } else {
-        delete this.formatOptions.locale;
+        delete (/** @type {AmountFormatOptions} */ (this.formatOptions).locale);
       }
       this.__reformat();
     }
@@ -141,7 +147,8 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
       return;
     }
 
-    this.formatOptions.currency = currency || undefined;
+    /** @type {AmountFormatOptions} */
+    (this.formatOptions).currency = currency || undefined;
     if (currency) {
       if (!this.__currencyDisplayNodeIsConnected) {
         this.appendChild(this.__currencyDisplayNode);

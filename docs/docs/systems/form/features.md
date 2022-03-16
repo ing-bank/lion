@@ -14,6 +14,7 @@ import '@lion/input-amount/define';
 import '@lion/input-date/define';
 import '@lion/input-datepicker/define';
 import '@lion/input-email/define';
+import '@lion/input-tel/define';
 import '@lion/input-iban/define';
 import '@lion/input-range/define';
 import '@lion/input-stepper/define';
@@ -70,6 +71,7 @@ export const main = () => {
         <lion-input-amount name="money" label="Money"></lion-input-amount>
         <lion-input-iban name="iban" label="Iban"></lion-input-iban>
         <lion-input-email name="email" label="Email"></lion-input-email>
+        <lion-input-tel name="tel" label="Telephone number"></lion-input-tel>
         <lion-checkbox-group
           label="What do you like?"
           name="checkers"

@@ -43,6 +43,7 @@ const FormControlMixinImplementation = superclass =>
         name: { type: String, reflect: true },
         readOnly: { type: Boolean, attribute: 'readonly', reflect: true },
         label: String, // FIXME: { attribute: false } breaks a bunch of tests, but shouldn't...
+        labelSrOnly: { type: Boolean, attribute: 'label-sr-only', reflect: true },
         helpText: { type: String, attribute: 'help-text' },
         modelValue: { attribute: false },
         _ariaLabelledNodes: { attribute: false },
@@ -185,6 +186,12 @@ const FormControlMixinImplementation = superclass =>
        * @type {string}
        */
       this.label = '';
+
+      /**
+       * The label will only be visible for srceen readers when true
+       * @type {boolean}
+       */
+      this.labelSrOnly = false;
 
       /**
        * The helpt text for the input node.
@@ -697,6 +704,20 @@ const FormControlMixinImplementation = superclass =>
           :host([disabled]) .form-field__label ::slotted(*),
           :host([disabled]) .form-field__help-text ::slotted(*) {
             color: var(--disabled-text-color, #767676);
+          }
+
+          :host([label-sr-only]) .form-field__label {
+            position: absolute;
+            top: 0;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip-path: inset(100%);
+            clip: rect(1px, 1px, 1px, 1px);
+            white-space: nowrap;
+            border: 0;
+            margin: 0;
+            padding: 0;
           }
 
           /***********************

@@ -80,6 +80,43 @@ describe('FormControlMixin', () => {
       expect(el.label).to.equal('');
     });
 
+    /**
+     * N.B. For platform controls, the same would be achieved with <input aria-label="My label">
+     * However, since FormControl is usually not the activeElement (_inputNode is), this
+     * will not have the desired effect on for instance lion-input
+     */
+    it('supports "label-sr-only" to make label visually hidden, but accessible for screen reader users', async () => {
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
+        <${tag} label-sr-only>
+          <label slot="label">Email <span>address</span></label>
+          ${inputSlot}
+        </${tag}>`)
+      );
+
+      const expectedValues = {
+        position: 'absolute',
+        top: '0px',
+        width: '1px',
+        height: '1px',
+        overflow: 'hidden',
+        clipPath: 'inset(100%)',
+        clip: 'rect(1px, 1px, 1px, 1px)',
+        whiteSpace: 'nowrap',
+        borderWidth: '0px',
+        margin: '0px',
+        padding: '0px',
+      };
+
+      const labelStyle = window.getComputedStyle(
+        // @ts-ignore
+        el.shadowRoot?.querySelector('.form-field__label'),
+      );
+      Object.entries(expectedValues).forEach(([key, val]) => {
+        expect(labelStyle[key]).to.equal(val);
+      });
+    });
+
     it('can have a help-text', async () => {
       const elAttr = /** @type {FormControlMixinClass} */ (
         await fixture(html`

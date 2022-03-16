@@ -40,6 +40,7 @@ describe('Form inside dialog Integrations', () => {
       'lion-input-amount',
       'lion-input-iban',
       'lion-input-email',
+      'lion-input-tel',
       'lion-checkbox-group',
       '  lion-checkbox',
       '  lion-checkbox',

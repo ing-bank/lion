@@ -4,7 +4,7 @@ import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-w
 import sinon from 'sinon';
 import { Unparseable, Validator } from '../index.js';
 import { FormatMixin } from '../src/FormatMixin.js';
-import { getFormControlMembers } from '../test-helpers/getFormControlMembers.js';
+import { getFormControlMembers, mimicUserInput } from '../test-helpers/index.js';
 
 /**
  * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
@@ -35,28 +35,13 @@ class FormatClass extends FormatMixin(LitElement) {
 }
 
 /**
- * @param {FormatClass} formControl
- * @param {?} newViewValue
- * @param {{caretIndex?:number}} config
- */
-function mimicUserInput(formControl, newViewValue, { caretIndex } = {}) {
-  formControl.value = newViewValue; // eslint-disable-line no-param-reassign
-  if (caretIndex) {
-    // eslint-disable-next-line no-param-reassign
-    formControl._inputNode.selectionStart = caretIndex;
-    // eslint-disable-next-line no-param-reassign
-    formControl._inputNode.selectionEnd = caretIndex;
-  }
-  formControl._inputNode.dispatchEvent(new Event('input', { bubbles: true }));
-}
-
-/**
  * @param {{tagString?: string, modelValueType?: modelValueType}} [customConfig]
  */
 export function runFormatMixinSuite(customConfig) {
   const cfg = {
     tagString: null,
     childTagString: null,
+    modelValueType: String,
     ...customConfig,
   };
 
@@ -632,6 +617,58 @@ export function runFormatMixinSuite(customConfig) {
           mimicUserInput(el, 'à');
           _inputNode.dispatchEvent(new Event('compositionend', { bubbles: true }));
           expect(preprocessorSpy.callCount).to.equal(1);
+        });
+
+        describe('Live Formatters', () => {
+          it('receives meta object with { prevViewValue: string; currentCaretIndex: number; }', async () => {
+            const spy = sinon.spy();
+
+            const valInitial = generateValueBasedOnType();
+            const el = /** @type {FormatClass} */ (
+              await fixture(
+                html`<${tag} .modelValue="${valInitial}"  .preprocessor=${spy}><input slot="input"></${tag}>`,
+              )
+            );
+            const viewValInitial = el.value;
+            const valToggled = generateValueBasedOnType({ toggleValue: true });
+
+            mimicUserInput(el, valToggled, { caretIndex: 1 });
+            expect(spy.args[0][0]).to.equal(el.value);
+            const formatOptions = spy.args[0][1];
+            expect(formatOptions.prevViewValue).to.equal(viewValInitial);
+            expect(formatOptions.currentCaretIndex).to.equal(1);
+          });
+
+          it('updates return viewValue and caretIndex', async () => {
+            /**
+             * @param {string} viewValue
+             * @param {{ prevViewValue: string; currentCaretIndex: number; }} meta
+             */
+            function myPreprocessor(viewValue, { currentCaretIndex }) {
+              return { viewValue: `${viewValue}q`, caretIndex: currentCaretIndex + 1 };
+            }
+            const el = /** @type {FormatClass} */ (
+              await fixture(
+                html`<${tag} .modelValue="${'xyz'}" .preprocessor=${myPreprocessor}><input slot="input"></${tag}>`,
+              )
+            );
+            mimicUserInput(el, 'wxyz', { caretIndex: 1 });
+            expect(el._inputNode.value).to.equal('wxyzq');
+            expect(el._inputNode.selectionStart).to.equal(2);
+          });
+
+          it('does not update when undefined is returned', async () => {
+            const el = /** @type {FormatClass} */ (
+              await fixture(
+                html`<${tag} .modelValue="${'xyz'}" live-format .liveFormatter=${() =>
+                  undefined}><input slot="input"></${tag}>`,
+              )
+            );
+            mimicUserInput(el, 'wxyz', { caretIndex: 1 });
+            expect(el._inputNode.value).to.equal('wxyz');
+            // Make sure we do not put our already existing value back, because caret index would be lost
+            expect(el._inputNode.selectionStart).to.equal(1);
+          });
         });
       });
     });
