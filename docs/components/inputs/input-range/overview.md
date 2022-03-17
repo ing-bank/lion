@@ -9,7 +9,13 @@ import '@lion/input-range/define';
 
 ```js preview-story
 export const main = () => html`
-  <lion-input-range min="200" max="500" .modelValue="${300}" label="Input range"></lion-input-range>
+    <lion-input-range-group
+    style="max-width: 400px;"
+    min="10"
+    max="300"
+    .modelValue="${{ low: 40, high: 200 }}"
+    label="Input range multi-thumb"
+  ></lion-input-range-group>
 `;
 ```
 
