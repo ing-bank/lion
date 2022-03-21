@@ -59,8 +59,8 @@ function mimicUserChangingDropdown(dropdownEl, value) {
 /**
  * @param {{ klass:LionInputTelDropdown }} config
  */
-// @ts-ignore
-export function runInputTelDropdownSuite({ klass = LionInputTelDropdown } = {}) {
+// @ts-expect-error
+export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdown }) {
   // @ts-ignore
   const tagName = defineCE(/** @type {* & HTMLElement} */ (class extends klass {}));
   const tag = unsafeStatic(tagName);
@@ -187,7 +187,7 @@ export function runInputTelDropdownSuite({ klass = LionInputTelDropdown } = {}) 
         expect(el._inputNode).to.equal(document.activeElement);
       });
 
-      it('prefills country code when text box is empty', async () => {
+      it('prefills country code when textbox is empty', async () => {
         const el = await fixture(html` <${tag} .allowedRegions="${['NL', 'BE']}"></${tag}> `);
         // @ts-ignore
         mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');

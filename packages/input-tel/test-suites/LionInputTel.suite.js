@@ -26,12 +26,110 @@ import {
 const fixture = /** @type {(arg: string | TemplateResult) => Promise<LionInputTel>} */ (_fixture);
 const fixtureSync = /** @type {(arg: string | TemplateResult) => LionInputTel} */ (_fixtureSync);
 
-// const isPhoneNumberUtilLoadComplete = el => el._phoneUtilLoadComplete;
-
 const getRegionCodeBasedOnLocale = () => {
   const localeSplitted = localize.locale.split('-');
   return /** @type {RegionCode} */ (localeSplitted[localeSplitted.length - 1]).toUpperCase();
 };
+
+/**
+ *
+ * @param {{tag:{ '_$litStatic$': string;}; phoneUtilLoadedAfterInit?: boolean ;}} opts
+ */
+function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
+  describe('Computation of readonly accessor `.activeRegion`', () => {
+    /** @type {(v:any) => void|undefined} */
+    let resolvePhoneUtilLoaded;
+    if (phoneUtilLoadedAfterInit) {
+      beforeEach(() => {
+        ({ resolveLoaded: resolvePhoneUtilLoaded } = mockPhoneUtilManager());
+      });
+
+      afterEach(() => {
+        restorePhoneUtilManager();
+      });
+    }
+    // 1. **allowed regions**: try to get the region from preconfigured allowed region (first entry)
+    it('takes .allowedRegions[0] when only one allowed region configured', async () => {
+      const el = await fixture(
+        html` <${tag} .allowedRegions="${['DE']}" .modelValue="${'+31612345678'}" ></${tag}> `,
+      );
+      if (resolvePhoneUtilLoaded) {
+        resolvePhoneUtilLoaded(undefined);
+        await el.updateComplete;
+      }
+      await el.updateComplete;
+      expect(el.activeRegion).to.equal('DE');
+    });
+
+    it('returns undefined when multiple .allowedRegions, but no modelValue match', async () => {
+      // involve locale, so we are sure it does not fall back on locale
+      const currentCode = getRegionCodeBasedOnLocale();
+      const allowedRegions = ['BE', 'DE', 'CN'];
+      const el = await fixture(
+        html` <${tag} .modelValue="${'+31612345678'}" .allowedRegions="${allowedRegions.filter(
+          ar => ar !== currentCode,
+        )}"></${tag}> `,
+      );
+      if (resolvePhoneUtilLoaded) {
+        resolvePhoneUtilLoaded(undefined);
+        await el.updateComplete;
+      }
+      expect(el.activeRegion).to.equal(undefined);
+    });
+
+    // 2. **user input**: try to derive active region from user input
+    it('deducts it from modelValue when provided', async () => {
+      const el = await fixture(html` <${tag} .modelValue="${'+31612345678'}"></${tag}> `);
+      if (resolvePhoneUtilLoaded) {
+        resolvePhoneUtilLoaded(undefined);
+        await el.updateComplete;
+      }
+      // Region code for country code '31' is 'NL'
+      expect(el.activeRegion).to.equal('NL');
+    });
+
+    it('.modelValue takes precedence over .allowedRegions when both preconfigured and .modelValue updated', async () => {
+      const el = await fixture(
+        html` <${tag} .allowedRegions="${[
+          'DE',
+          'BE',
+          'NL',
+        ]}" .modelValue="${'+31612345678'}" ></${tag}> `,
+      );
+      if (resolvePhoneUtilLoaded) {
+        resolvePhoneUtilLoaded();
+        await el.updateComplete;
+      }
+      expect(el.activeRegion).to.equal('NL');
+    });
+
+    // 3. **locale**: try to get the region from locale (`html[lang]` attribute)
+    it('automatically bases it on current locale when nothing preconfigured', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      if (resolvePhoneUtilLoaded) {
+        resolvePhoneUtilLoaded(undefined);
+        await el.updateComplete;
+      }
+      const currentCode = getRegionCodeBasedOnLocale();
+      expect(el.activeRegion).to.equal(currentCode);
+    });
+
+    it('returns undefined when locale not within allowed regions', async () => {
+      const currentCode = getRegionCodeBasedOnLocale();
+      const allowedRegions = ['NL', 'BE', 'DE'];
+      const el = await fixture(
+        html` <${tag} .allowedRegions="${allowedRegions.filter(
+          ar => ar !== currentCode,
+        )}"></${tag}> `,
+      );
+      if (resolvePhoneUtilLoaded) {
+        resolvePhoneUtilLoaded(undefined);
+        await el.updateComplete;
+      }
+      expect(el.activeRegion).to.equal(undefined);
+    });
+  });
+}
 
 /**
  * @param {{ klass:LionInputTel }} config
@@ -46,85 +144,6 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
     beforeEach(async () => {
       // Wait till PhoneUtilManager has been loaded
       await PhoneUtilManager.loadComplete;
-    });
-
-    describe('Region codes', () => {
-      describe('Readonly accessor `.activeRegion`', () => {
-        // 1. **allowed regions**: try to get the region from preconfigured allowed region (first entry)
-        it('takes .allowedRegions[0] when only one allowed region configured', async () => {
-          const el = await fixture(
-            html` <${tag} .allowedRegions="${['DE']}" .modelValue="${'+31612345678'}" ></${tag}> `,
-          );
-          await el.updateComplete;
-          expect(el.activeRegion).to.equal('DE');
-        });
-
-        it('returns undefined when multiple .allowedRegions, but no modelValue match', async () => {
-          // involve locale, so we are sure it does not fall back on locale
-          const currentCode = getRegionCodeBasedOnLocale();
-          const allowedRegions = ['BE', 'DE', 'CN'];
-          const el = await fixture(
-            html` <${tag} .modelValue="${'+31612345678'}" .allowedRegions="${allowedRegions.filter(
-              ar => ar !== currentCode,
-            )}"></${tag}> `,
-          );
-          expect(el.activeRegion).to.equal(undefined);
-        });
-
-        // 2. **user input**: try to derive active region from user input
-        it('deducts it from modelValue when provided', async () => {
-          const el = await fixture(html` <${tag} .modelValue="${'+31612345678'}"></${tag}> `);
-          // Region code for country code '31' is 'NL'
-          expect(el.activeRegion).to.equal('NL');
-        });
-
-        it('.modelValue takes precedence over .allowedRegions when both preconfigured and .modelValue updated', async () => {
-          const el = await fixture(
-            html` <${tag} .allowedRegions="${[
-              'DE',
-              'BE',
-              'NL',
-            ]}" .modelValue="${'+31612345678'}" ></${tag}> `,
-          );
-          expect(el.activeRegion).to.equal('NL');
-        });
-
-        // 3. **locale**: try to get the region from locale (`html[lang]` attribute)
-        it('automatically bases it on current locale when nothing preconfigured', async () => {
-          const el = await fixture(html` <${tag}></${tag}> `);
-          const currentCode = getRegionCodeBasedOnLocale();
-          expect(el.activeRegion).to.equal(currentCode);
-        });
-
-        it('returns undefined when locale not within allowed regions', async () => {
-          const currentCode = getRegionCodeBasedOnLocale();
-          const allowedRegions = ['NL', 'BE', 'DE'];
-          const el = await fixture(
-            html` <${tag} .allowedRegions="${allowedRegions.filter(
-              ar => ar !== currentCode,
-            )}"></${tag}> `,
-          );
-          expect(el.activeRegion).to.equal(undefined);
-        });
-      });
-
-      it('can preconfigure the region code via prop', async () => {
-        const currentCode = getRegionCodeBasedOnLocale();
-        const newCode = currentCode === 'DE' ? 'NL' : 'DE';
-        const el = await fixture(html` <${tag} .allowedRegions="${[newCode]}"></${tag}> `);
-        expect(el.activeRegion).to.equal(newCode);
-      });
-
-      it.skip('reformats when region code is changed on the fly', async () => {
-        const el = await fixture(
-          html` <${tag} .allowedRegions="${['NL']}" .modelValue="${'+31612345678'}"></${tag}> `,
-        );
-        await el.updateComplete;
-        expect(el.formattedValue).to.equal('+31 6 12345678');
-        el.allowedRegions = ['NL'];
-        await el.updateComplete;
-        expect(el.formattedValue).to.equal('612345678');
-      });
     });
 
     describe('Readonly accessor `.activePhoneNumberType`', () => {
@@ -378,6 +397,34 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
         resolveLoaded(undefined);
         await aTimeout(0);
         expect(el.hasFeedbackFor).to.eql(['error']);
+      });
+    });
+
+    describe('Region codes', () => {
+      describe('When PhoneUtilManager has loaded before init', () => {
+        runActiveRegionTests({ tag });
+      });
+
+      describe('When PhoneUtilManager is resolved after init', () => {
+        runActiveRegionTests({ tag, phoneUtilLoadedAfterInit: true });
+      });
+
+      it('can preconfigure the region code via prop', async () => {
+        const currentCode = getRegionCodeBasedOnLocale();
+        const newCode = currentCode === 'DE' ? 'NL' : 'DE';
+        const el = await fixture(html` <${tag} .allowedRegions="${[newCode]}"></${tag}> `);
+        expect(el.activeRegion).to.equal(newCode);
+      });
+
+      it.skip('reformats when region code is changed on the fly', async () => {
+        const el = await fixture(
+          html` <${tag} .allowedRegions="${['NL']}" .modelValue="${'+31612345678'}"></${tag}> `,
+        );
+        await el.updateComplete;
+        expect(el.formattedValue).to.equal('+31 6 12345678');
+        el.allowedRegions = ['NL'];
+        await el.updateComplete;
+        expect(el.formattedValue).to.equal('612345678');
       });
     });
   });
