@@ -57,6 +57,7 @@
     "./define": "./define.js",
     "./test-suites": "./test-suites/index.js",
     "./test-helpers": "./test-helpers/index.js",
+    "./translations/*": "./translations/*",
     "./docs/*": "./docs/*"
   }
 }
