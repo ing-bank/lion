@@ -9,17 +9,17 @@ let resolveLoaded;
  */
 export class PhoneUtilManager {
   static async loadLibPhoneNumber() {
-    const PhoneNumber = (await import('../lib/awesome-phonenumber-esm.js')).default;
-    this.PhoneNumber = PhoneNumber;
+    const PhoneUtil = (await import('../lib/awesome-phonenumber-esm.js')).default;
+    this.PhoneUtil = PhoneUtil;
     resolveLoaded(undefined);
-    return PhoneNumber;
+    return PhoneUtil;
   }
 
   /**
    * Check if google-libphonenumber has been loaded
    */
   static get isLoaded() {
-    return Boolean(this.PhoneNumber);
+    return Boolean(this.PhoneUtil);
   }
 }
 

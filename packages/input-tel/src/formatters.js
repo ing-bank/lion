@@ -3,7 +3,7 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 /**
  * @typedef {import('../types').FormatStrategy} FormatStrategy
  * @typedef {import('../types').RegionCode} RegionCode
- * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} PhoneNumber
+ * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
  */
 
 /**
@@ -20,11 +20,11 @@ export function formatPhoneNumber(modelValue, { regionCode, formatStrategy = 'in
   }
 
   // eslint-disable-next-line prefer-destructuring
-  const PhoneNumber = /** @type {PhoneNumber} */ (PhoneUtilManager.PhoneNumber);
+  const PhoneUtil = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
 
   let pn;
   try {
-    pn = new PhoneNumber(modelValue, regionCode); // phoneNumberUtil.parse(modelValue, regionCode);
+    pn = new PhoneUtil(modelValue, regionCode);
     // eslint-disable-next-line no-empty
   } catch (_) {}
 

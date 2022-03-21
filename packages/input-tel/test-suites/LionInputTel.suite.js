@@ -11,7 +11,7 @@ import sinon from 'sinon';
 import { mimicUserInput } from '@lion/form-core/test-helpers';
 import { localize } from '@lion/localize';
 import { LionInputTel } from '../src/LionInputTel.js';
-import { IsPhoneNumber } from '../src/validators.js';
+import { PhoneNumber } from '../src/validators.js';
 import { PhoneUtilManager } from '../src/PhoneUtilManager.js';
 import {
   mockPhoneUtilManager,
@@ -97,7 +97,7 @@ function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
         ]}" .modelValue="${'+31612345678'}" ></${tag}> `,
       );
       if (resolvePhoneUtilLoaded) {
-        resolvePhoneUtilLoaded();
+        resolvePhoneUtilLoaded(undefined);
         await el.updateComplete;
       }
       expect(el.activeRegion).to.equal('NL');
@@ -287,18 +287,18 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
     });
 
     describe('Validation', () => {
-      it('applies IsPhoneNumber as default validator', async () => {
+      it('applies PhoneNumber as default validator', async () => {
         const el = await fixture(html` <${tag}></${tag}> `);
-        expect(el.defaultValidators.find(v => v instanceof IsPhoneNumber)).to.be.not.undefined;
+        expect(el.defaultValidators.find(v => v instanceof PhoneNumber)).to.be.not.undefined;
       });
 
-      it('configures IsPhoneNumber with regionCode before first validation', async () => {
+      it('configures PhoneNumber with regionCode before first validation', async () => {
         const el = fixtureSync(
           html` <${tag} .allowedRegions="${['NL']}" .modelValue="${'612345678'}"></${tag}> `,
         );
         const spy = sinon.spy(el, 'validate');
-        const validatorInstance = /** @type {IsPhoneNumber} */ (
-          el.defaultValidators.find(v => v instanceof IsPhoneNumber)
+        const validatorInstance = /** @type {PhoneNumber} */ (
+          el.defaultValidators.find(v => v instanceof PhoneNumber)
         );
         await el.updateComplete;
         expect(validatorInstance.param).to.equal('NL');
@@ -306,12 +306,12 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
         spy.restore();
       });
 
-      it('updates IsPhoneNumber param on regionCode change', async () => {
+      it('updates PhoneNumber param on regionCode change', async () => {
         const el = await fixture(
           html` <${tag} .allowedRegions="${['NL']}" .modelValue="${'612345678'}"></${tag}> `,
         );
-        const validatorInstance = /** @type {IsPhoneNumber} */ (
-          el.defaultValidators.find(v => v instanceof IsPhoneNumber)
+        const validatorInstance = /** @type {PhoneNumber} */ (
+          el.defaultValidators.find(v => v instanceof PhoneNumber)
         );
         // @ts-expect-error allow protected in tests
         el._setActiveRegion('DE');

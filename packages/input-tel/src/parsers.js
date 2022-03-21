@@ -2,7 +2,7 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 
 /**
  * @typedef {import('../types').RegionCode} RegionCode
- * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} PhoneNumber
+ * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
  */
 
 /**
@@ -17,7 +17,7 @@ export function parsePhoneNumber(viewValue, { regionCode }) {
   }
 
   // eslint-disable-next-line prefer-destructuring
-  const PhoneNumber = /** @type {PhoneNumber} */ (PhoneUtilManager.PhoneNumber);
+  const PhoneNumber = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
 
   let pn;
   try {

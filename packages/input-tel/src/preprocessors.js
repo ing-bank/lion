@@ -4,7 +4,7 @@ import { formatPhoneNumber } from './formatters.js';
 /**
  * @typedef {import('../types').FormatStrategy} FormatStrategy
  * @typedef {import('../types').RegionCode} RegionCode
- * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} PhoneNumber
+ * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
  */
 
 /**
@@ -27,7 +27,7 @@ export function liveFormatPhoneNumber(
   }
 
   // eslint-disable-next-line prefer-destructuring
-  const PhoneNumber = /** @type {PhoneNumber} */ (PhoneUtilManager.PhoneNumber);
+  const PhoneNumber = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
   const ayt = PhoneNumber.getAsYouType(regionCode);
 
   for (const char of viewValue) {
