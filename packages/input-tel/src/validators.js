@@ -3,7 +3,7 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 
 /**
  * @typedef {import('../types').RegionCode} RegionCode
- * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} PhoneNumber
+ * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
  */
 
 /**
@@ -13,7 +13,7 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
  */
 function hasFeedback(modelValue, regionCode) {
   // eslint-disable-next-line prefer-destructuring
-  const PhoneNumber = /** @type {PhoneNumber} */ (PhoneUtilManager.PhoneNumber);
+  const PhoneNumber = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
   let invalidCountryCode = false;
 
   if (regionCode && modelValue?.length >= 4 && modelValue?.length <= 16) {
@@ -37,8 +37,8 @@ function hasFeedback(modelValue, regionCode) {
   return 'unknown';
 }
 
-export class IsPhoneNumber extends Validator {
-  static validatorName = 'IsPhoneNumber';
+export class PhoneNumber extends Validator {
+  static validatorName = 'PhoneNumber';
 
   static get async() {
     // Will be run as async the first time if PhoneUtilManager hasn't loaded yet, sync afterwards

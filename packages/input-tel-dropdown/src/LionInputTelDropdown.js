@@ -25,7 +25,7 @@ import { LionInputTel } from '@lion/input-tel';
  * @typedef {import('../types').OnDropdownChangeEvent} OnDropdownChangeEvent
  * @typedef {import('../types').DropdownRef} DropdownRef
  * @typedef {import('../types').RegionMeta} RegionMeta
- * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} PhoneNumber
+ * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
  * @typedef {import('@lion/select-rich').LionSelectRich} LionSelectRich
  * @typedef {import('@lion/overlays').OverlayController} OverlayController
  * @typedef {TemplateDataForDropdownInputTel & {data: {regionMetaList:RegionMeta[]}}} TemplateDataForIntlInputTel
