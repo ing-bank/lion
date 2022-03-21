@@ -1,6 +1,7 @@
 // @ts-expect-error ref, createRef are exported (?)
 import { render, html, css, ref, createRef } from '@lion/core';
 import { LionInputTel } from '@lion/input-tel';
+import { localize } from '@lion/localize';
 
 /**
  * Note: one could consider to implement LionInputTelDropdown as a
@@ -96,8 +97,7 @@ export class LionInputTelDropdown extends LionInputTel {
           'model-value-changed': this._onDropdownValueChange,
         },
         labels: {
-          // TODO: localize this
-          selectCountry: 'Select country',
+          selectCountry: localize.msg('lion-input-tel:selectCountry'),
         },
       },
     };

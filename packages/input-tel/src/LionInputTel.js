@@ -6,6 +6,7 @@ import { liveFormatPhoneNumber } from './preprocessors.js';
 import { formatPhoneNumber } from './formatters.js';
 import { parsePhoneNumber } from './parsers.js';
 import { PhoneNumber } from './validators.js';
+import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('../types').FormatStrategy} FormatStrategy
@@ -26,8 +27,12 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     activeRegion: { type: String },
     _phoneUtil: { type: Object, state: true },
     _needsLightDomRender: { type: Number, state: true },
-    _derivedRegionCode: { type: String, state: true },
   };
+
+  static localizeNamespaces = [
+    { 'lion-input-tel': localizeNamespaceLoader },
+    ...super.localizeNamespaces,
+  ];
 
   /**
    * Currently active region based on:
