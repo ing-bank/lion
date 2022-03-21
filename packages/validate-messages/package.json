@@ -33,7 +33,8 @@
   },
   "dependencies": {
     "@lion/form-core": "^0.16.0",
-    "@lion/localize": "^0.23.0"
+    "@lion/localize": "^0.23.0",
+    "@lion/input-tel": "^0.0.0"
   },
   "keywords": [
     "feedback",
