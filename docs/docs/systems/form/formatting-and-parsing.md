@@ -5,7 +5,6 @@ import { html } from '@mdjs/mdjs-preview';
 import '@lion/input/define';
 import { Unparseable } from '@lion/form-core';
 import { liveFormatPhoneNumber } from '@lion/input-tel';
-import { Unparseable } from '@lion/form-core';
 import './assets/h-output.js';
 ```
 
