@@ -19,15 +19,10 @@ import {
   MinMaxLength,
   Pattern,
 } from '@lion/form-core';
+import { PhoneNumber } from '@lion/input-tel';
 
 /**
- * @typedef {object} MessageData
- * @property {*} [MessageData.modelValue]
- * @property {string} [MessageData.fieldName]
- * @property {*} [MessageData.formControl]
- * @property {string} [MessageData.type]
- * @property {Object.<string,?>} [MessageData.config]
- * @property {string} [MessageData.name]
+ * @typedef {import('@lion/form-core/types').FeedbackMessageData} FeedbackMessageData
  */
 
 let loaded = false;
@@ -119,7 +114,7 @@ export function loadDefaultFeedbackMessages() {
     );
 
   /**
-   * @param {MessageData} data
+   * @param {FeedbackMessageData} data
    * @returns {Promise<string|Element>}
    */
   const getLocalizedMessage = async data => {
@@ -130,37 +125,37 @@ export function loadDefaultFeedbackMessages() {
     return '';
   };
 
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   Required.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   EqualsLength.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   MinLength.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   MaxLength.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   MinMaxLength.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   Pattern.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   IsEmail.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   IsNumber.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   MinNumber.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   MaxNumber.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   MinMaxNumber.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   IsDate.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   MinDate.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   MaxDate.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   MinMaxDate.getMessage = async data => getLocalizedMessage(data);
-  /** @param {MessageData} data */
+  /** @param {FeedbackMessageData} data */
   IsDateDisabled.getMessage = async data => getLocalizedMessage(data);
 
   DefaultSuccess.getMessage = async data => {
@@ -168,6 +163,24 @@ export function loadDefaultFeedbackMessages() {
     const randomKeys = localize.msg('lion-validate:success.RandomOk').split(',');
     const key = randomKeys[Math.floor(Math.random() * randomKeys.length)].trim();
     return localize.msg(`lion-validate:${key}`, data);
+  };
+
+  /** @param {FeedbackMessageData} data */
+  // @ts-ignore
+  PhoneNumber.getMessage = async data => {
+    await forMessagesToBeReady();
+    const { type, outcome } = data;
+    if (outcome === 'too-long') {
+      return localize.msg(`lion-validate:${type}.MaxLength`, data);
+    }
+    if (outcome === 'too-short') {
+      return localize.msg(`lion-validate:${type}.MinLength`, data);
+    }
+    // TODO: add a more specific message here
+    if (outcome === 'invalid-country-code') {
+      return localize.msg(`lion-validate:${type}.Pattern`, data);
+    }
+    return localize.msg(`lion-validate:${type}.Pattern`, data);
   };
 
   loaded = true;
