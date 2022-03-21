@@ -8,7 +8,7 @@ import { DefaultSuccess, MinLength, Required, ValidateMixin, Validator } from '.
 import { AlwaysInvalid } from '../test-helpers/index.js';
 
 /**
- * @typedef {import('../src/validate/types').FeedbackMessageData} FeedbackMessageData
+ * @typedef {import('../types').FeedbackMessageData} FeedbackMessageData
  */
 
 export function runValidateMixinFeedbackPart() {

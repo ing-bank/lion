@@ -1,4 +1,4 @@
-import { FormControlHost } from '../../FormControlMixin';
+import { FormControlHost } from '../../src/FormControlMixin';
 export { ValidationType } from '../../types/ValidateMixinTypes';
 
 /**
