@@ -1,10 +1,10 @@
 /**
- * @typedef {import('./types').FeedbackMessageData} FeedbackMessageData
- * @typedef {import('./types').ValidatorParam} ValidatorParam
- * @typedef {import('./types').ValidatorConfig} ValidatorConfig
- * @typedef {import('./types').ValidatorOutcome} ValidatorOutcome
- * @typedef {import('./types').ValidatorName} ValidatorName
- * @typedef {import('./types').ValidationType} ValidationType
+ * @typedef {import('../../types/validate/validate').FeedbackMessageData} FeedbackMessageData
+ * @typedef {import('../../types/validate/validate').ValidatorParam} ValidatorParam
+ * @typedef {import('../../types/validate/validate').ValidatorConfig} ValidatorConfig
+ * @typedef {import('../../types/validate/validate').ValidatorOutcome} ValidatorOutcome
+ * @typedef {import('../../types/validate/validate').ValidatorName} ValidatorName
+ * @typedef {import('../../types/validate/validate').ValidationType} ValidationType
  * @typedef {import('../FormControlMixin').FormControlHost} FormControlHost
  */
 
