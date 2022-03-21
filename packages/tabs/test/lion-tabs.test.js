@@ -112,6 +112,11 @@ describe('<lion-tabs>', () => {
       );
       expect(selectedTab.textContent).to.equal('tab 2');
     });
+
+    it('can initially be instantiated without children', async () => {
+      const el = /** @type {LionTabs} */ (await fixture(html` <lion-tabs> </lion-tabs> `));
+      expect(el.tabs).to.eql([]);
+    });
   });
 
   describe('Tabs ([slot=tab])', () => {
