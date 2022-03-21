@@ -164,7 +164,7 @@ export class LionTabs extends LitElement {
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__setupSlots();
-    if (this.tabs[0].disabled) {
+    if (this.tabs[0]?.disabled) {
       this.selectedIndex = this.tabs.findIndex(tab => !tab.disabled);
     }
   }
