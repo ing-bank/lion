@@ -106,7 +106,7 @@
     },
     {
       "path": "./bundlesize/dist/all/*.js",
-      "maxSize": "47 kB"
+      "maxSize": "56 kB"
     }
   ],
   "prettier": {
