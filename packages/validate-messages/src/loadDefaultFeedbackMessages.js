@@ -56,6 +56,7 @@ export function loadDefaultFeedbackMessages() {
             case 'en-US':
               return import('@lion/validate-messages/translations/en-US.js');
             case 'en-PH':
+              return import('@lion/validate-messages/translations/en-PH.js');
             case 'en':
               return import('@lion/validate-messages/translations/en.js');
             case 'es-ES':
