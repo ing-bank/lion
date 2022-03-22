@@ -115,6 +115,17 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
   }
 
   /**
+   * Set a default name for this field, so that validation feedback will be always
+   * accessible and linguistically correct
+   * @configure FormControlMixin
+   */
+  // @ts-expect-error
+  // eslint-disable-next-line class-methods-use-this
+  get fieldName() {
+    return localize.msg('lion-input-tel:phoneNumber');
+  }
+
+  /**
    * @lifecycle platform
    */
   constructor() {
