@@ -1,10 +1,15 @@
-const { expect } = require('chai');
+/* eslint-disable import/no-extraneous-dependencies */
+import { expect } from 'chai';
+import unified from 'unified';
+import markdown from 'remark-parse';
+import mdStringify from 'remark-html';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { remarkExtend } from '../src/remarkExtend.js';
+import { unifiedToMarkdown } from './unifiedToMarkdown.mjs';
 
-const unified = require('unified');
-const markdown = require('remark-parse');
-const mdStringify = require('remark-html');
-
-const { remarkExtend } = require('../src/remarkExtend.js');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /**
  * @param {function} method
@@ -34,6 +39,16 @@ async function execute(input) {
     .use(markdown)
     .use(remarkExtend, { rootDir: __dirname, page: { inputPath: 'test-file.md' } })
     .use(mdStringify);
+  const result = await parser.process(input);
+  return result.contents;
+}
+
+async function executeMd(input) {
+  const parser = unified()
+    //
+    .use(markdown)
+    .use(remarkExtend, { rootDir: __dirname, page: { inputPath: 'test-file.md' } })
+    .use(unifiedToMarkdown);
   const result = await parser.process(input);
   return result.contents;
 }
@@ -366,5 +381,89 @@ describe('remarkExtend', () => {
         '',
       ].join('\n'),
     );
+  });
+
+  describe('With js content', () => {
+    it('supports js content', async () => {
+      const result = await executeMd(
+        [
+          //
+          "```js ::importBlockContent('./fixtures/js-simple.md', '## Simple')",
+          '```',
+        ].join('\n'),
+      );
+
+      expect(result).to.equal(
+        [
+          //
+          '```js',
+          "const x = 'My Example';",
+          '```',
+          '',
+        ].join('\n'),
+      );
+    });
+
+    it('considers variables outside imported block', async () => {
+      const result = await executeMd(
+        [
+          //
+          "```js ::importBlockContent('./fixtures/js-advanced-1.md', '## Consuming shared var')",
+          '```',
+        ].join('\n'),
+      );
+
+      expect(result).to.equal(
+        [
+          //
+          '```js',
+          "import { sharedVar } from 'some-global-lib';",
+          // This file is needed for its side effect
+          // Note its location changed from '../some-local-file.js' to './some-local-file.js'
+          "import './some-local-file.js';",
+          '```',
+          '',
+          '```js',
+          'export const x = sharedVar`My Example`;',
+          '```',
+          '',
+        ].join('\n'),
+      );
+    });
+
+    // N.B. if the goal of remark-extend is only to extend lion docs, we can limit the
+    // functionality to 1:1 mappings of page names and leave this a nice to have
+    it.skip('considers name clashes in variables outside imported blocks of multiple files', async () => {
+      const result = await executeMd(
+        [
+          //
+          "```js ::importBlockContent('./fixtures/js-advanced-1.md', '## Consuming shared var')",
+          '```',
+          '',
+          "```js ::importBlockContent('./fixtures/js-advanced-2.md', '## Consuming conflicting shared var')",
+          '```',
+        ].join('\n'),
+      );
+
+      expect(result).to.equal(
+        [
+          //
+          '```js',
+          "import { sharedVar } from 'some-global-lib';",
+          "import { sharedVar as sharedVar_2 } from 'some-other-global-lib';",
+          "import '../some-local-file.js';",
+          '```',
+          '',
+          '```js',
+          'export const x = sharedVar`My Example`;',
+          '```',
+          '',
+          '```js',
+          'export const y = sharedVar_2`My Example`;',
+          '```',
+          '',
+        ].join('\n'),
+      );
+    });
   });
 });
