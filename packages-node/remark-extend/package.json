@@ -32,6 +32,12 @@
     "unist-util-select": "^3.0.1",
     "unist-util-visit": "^2.0.2"
   },
+  "devDependencies": {
+    "hast-util-sanitize": "^4.0.0",
+    "hast-util-to-mdast": "^8.3.1",
+    "mdast-util-to-hast": "^12.1.1",
+    "mdast-util-to-markdown": "^1.3.0"
+  },
   "keywords": [
     "remark"
   ],
