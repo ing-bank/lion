@@ -299,6 +299,11 @@ describe('Providence CLI', () => {
       await runCli(`${analyzeCmd} --target-dependencies /^mock-/`, rootDir);
       expect(appendProjectDependencyPathsStub.args[0][1]).to.equal('/^mock-/');
     });
+
+    it('"--skip-check-match-compatibility"', async () => {
+      await runCli(`${analyzeCmd} --skip-check-match-compatibility`, rootDir);
+      expect(providenceStub.args[0][1].skipCheckMatchCompatibility).to.equal(true);
+    });
   });
 
   describe('Commands', () => {
@@ -385,6 +390,7 @@ describe('Providence CLI', () => {
           allowlist: ['al'],
           allowlistReference: ['alr'],
           cwd: undefined,
+          skipCheckMatchCompatibility: true,
         });
       });
     });

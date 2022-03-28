@@ -129,6 +129,7 @@ async function cli({ cwd, providenceConf } = {}) {
       referenceProjectPaths: referencePaths,
       targetProjectRootPaths: searchTargetPaths,
       writeLogFile: commander.writeLogFile,
+      skipCheckMatchCompatibility: commander.skipCheckMatchCompatibility,
     });
   }
 
@@ -225,6 +226,10 @@ async function cli({ cwd, providenceConf } = {}) {
     .option(
       '--allowlist-mode-reference [allowlist-mode-reference]',
       `allowlist mode applied to refernce project`,
+    )
+    .option(
+      '--skip-check-match-compatibility',
+      `skips semver checks, handy for forward compatible libs or libs below v1`,
     );
 
   commander
@@ -312,6 +317,7 @@ async function cli({ cwd, providenceConf } = {}) {
           extensions: commander.extensions,
           allowlist: commander.allowlist,
           allowlistReference: commander.allowlistReference,
+          skipCheckMatchCompatibility: commander.skipCheckMatchCompatibility,
           cwd,
         })
         .then(resolveCli)
