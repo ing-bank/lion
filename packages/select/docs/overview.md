@@ -1,3 +1,3 @@
 # Lion Select Overview
 
-[=> See Source <=](../../../docs/components/inputs/select/overview.md)
+[=> See Source <=](../../../docs/components/select/overview.md)

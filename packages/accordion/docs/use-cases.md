@@ -1,3 +1,3 @@
 # Lion Accordion Use Cases
 
-[=> See Source <=](../../../docs/components/content/accordion/use-cases.md)
+[=> See Source <=](../../../docs/components/accordion/use-cases.md)

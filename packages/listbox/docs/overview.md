@@ -1,3 +1,3 @@
 # Lion Listbox Overview
 
-[=> See Source <=](../../../docs/components/inputs/listbox/overview.md)
+[=> See Source <=](../../../docs/components/listbox/overview.md)

@@ -1,3 +1,3 @@
 # Lion Textarea Overview
 
-[=> See Source <=](../../../docs/components/inputs/textarea/overview.md)
+[=> See Source <=](../../../docs/components/textarea/overview.md)

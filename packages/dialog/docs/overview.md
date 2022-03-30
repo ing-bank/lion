@@ -1,3 +1,3 @@
 # Lion Dialog Overview
 
-[=> See Source <=](../../../docs/components/interaction/dialog/overview.md)
+[=> See Source <=](../../../docs/components/dialog/overview.md)

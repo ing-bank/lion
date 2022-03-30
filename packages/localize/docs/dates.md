@@ -1,3 +1,3 @@
 # Localize System Dates
 
-[=> See Source <=](../../../docs/docs/systems/localize/dates.md)
+[=> See Source <=](../../../docs/fundamentals/systems/localize/dates.md)

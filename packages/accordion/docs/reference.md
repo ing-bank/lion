@@ -1,3 +1,3 @@
 # Lion Accordion Reference
 
-[=> See Source <=](../../../docs/components/content/accordion/reference.md)
+[=> See Source <=](../../../docs/components/accordion/reference.md)

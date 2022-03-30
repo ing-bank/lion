@@ -1,3 +1,3 @@
 # Remark Extend
 
-[=> See Source <=](../../../docs/docs/node-tools/remark-extend/overview.md)
+[=> See Source <=](../../../docs/fundamentals/node-tools/remark-extend/overview.md)

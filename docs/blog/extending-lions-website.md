@@ -68,7 +68,7 @@ Note: importBlock is a faster way of writing imports for headlines
 ::import('./path/to/file.md', 'heading[depth=2]:has([value=red])', 'heading[depth=2]:has([value=red]) ~heading[depth=2]')
 ```
 
-If you want to know more please look at the documentation for [remark-extend](../docs/node-tools/remark-extend/overview.md).
+If you want to know more please look at the documentation for [remark-extend](../fundamentals/node-tools/remark-extend/overview.md).
 
 ## Upgrading Documentation
 

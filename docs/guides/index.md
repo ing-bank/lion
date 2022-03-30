@@ -1,4 +1,4 @@
-# Guides
+# Guides ||30
 
 Lion is a set of white label Web Components that can be extended to your own styled layer of components.
 
@@ -23,7 +23,7 @@ Developers extending our web components, for instance: `class MaterialInput exte
 Especially for subclassers we have some extra documentation:
 
 - [Subclasser APIs](./principles/subclasser-apis.md)
-- [Extend documentation](../blog/extending-documentation/)
+- [Extend documentation](../blog/extending-documentation.md)
 
 ## How To
 
@@ -31,3 +31,4 @@ Next to that we have some specific "How To" documentations.
 
 - [Get started](./how-to/get-started.md)
 - [Create a custom field](./how-to/create-a-custom-field.md)
+- [Extend a native input](./how-to/extend-a-native-input.md)

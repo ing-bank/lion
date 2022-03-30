@@ -1,9 +1,10 @@
 ---
 title: Lion Blog
 layout: layout-blog-overview
+eleventyExcludeFromCollections: false
 eleventyNavigation:
   key: Blog
-  order: 40
+  order: 50
 pagination:
   data: collections.blog
   size: 10

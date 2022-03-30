@@ -1,3 +1,3 @@
 # Lion Input
 
-[=> See Source <=](../../docs/components/inputs/input/overview.md)
+[=> See Source <=](../../docs/components/input/overview.md)

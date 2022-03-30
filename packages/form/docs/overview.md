@@ -1,3 +1,3 @@
 # Lion Form Overview
 
-[=> See Source <=](../../../docs/components/inputs/form/overview.md)
+[=> See Source <=](../../../docs/components/form/overview.md)

@@ -6,12 +6,12 @@ import { LionInput } from '@lion/input';
 import { LionInputDate } from '@lion/input-date';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import '@lion/input/define';
-import '../../docs/systems/form/assets/h-output.js';
+import '../../docs/fundamentals/systems/form/assets/h-output.js';
 
 loadDefaultFeedbackMessages();
 ```
 
-Input fields can be created by extending [LionInput](../../components/inputs/input/overview.md).
+Input fields can be created by extending [LionInput](../../components/input/overview.md).
 
 > In case you want to wrap a custom form element, follow [Create a custom Field](./create-a-custom-field.md).
 

@@ -1,3 +1,3 @@
 # Localize System Numbers
 
-[=> See Source <=](../../../docs/docs/systems/localize/numbers.md)
+[=> See Source <=](../../../docs/fundamentals/systems/localize/numbers.md)

@@ -1,3 +1,3 @@
 # Lion Fieldset
 
-[=> See Source <=](../../docs/components/inputs/fieldset/overview.md)
+[=> See Source <=](../../docs/components/fieldset/overview.md)

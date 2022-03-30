@@ -1,3 +1,3 @@
 # Lion Steps
 
-[=> See Source <=](../../docs/components/navigation/steps/overview.md)
+[=> See Source <=](../../docs/components/steps/overview.md)

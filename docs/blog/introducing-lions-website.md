@@ -15,8 +15,8 @@ Right now it's more or less a port for our existing demos from storybook. But we
 1. [Guides](../guides/index.md) <br>
    A dedicated section where we will teach you about how to get started with lion. This section is completely new and will grow over time.
 2. [Components](../components/index.md) <br>
-   Here you will find our documentation for each of our components. Each is split into two pages namely Overview and Features. We also plan to add an API page soonish.
-3. [Docs](../docs/index.md) <br>
+   Here you will find our documentation for each of our components. Each is split into two pages namely Overview and Use Cases. We also plan to add an API page soonish.
+3. [Fundamentals](../fundamentals/index.md) <br>
    This is the home for general documentation which includes the fundamental systems all our components are build upon and various tools we use in the frontend or backend.
 4. [Blog](./index.md) <br>
    We now have a dedicated section about all our blog posts. Take a peek and follow our story.
@@ -40,7 +40,7 @@ import { html, css } from '@lion/core';
 import './lion-calendar.js';
 
 export default {
-   title: 'Others/Calendar',
+  title: 'Others/Calendar',
 };
 ```
 
@@ -89,7 +89,7 @@ Now you want to make sure it gets published with your accordion package so you r
 ```
 # Accordion
 
-[=> See Source <=](../../docs/components/content/accordion/overview.md)
+[=> See Source <=](../../docs/components/accordion/overview.md)
 ```
 
 Now by calling `publish-docs` within the `prepublishOnly` step your Readme file will contain the content of its source.
@@ -100,7 +100,7 @@ The benefits of this approach are
 - The published readme contains all the documentation you need
 - All links are version safe (e.g. if you look at v0.5 it will link to the GitHub Pages at this time)
 
-If you want to know more please look at the documentation for [publish-docs](../docs/node-tools/publish-docs/overview.md).
+If you want to know more please look at the documentation for [publish-docs](../fundamentals/node-tools/publish-docs/overview.md).
 
 ## Upgrading Extending Documentation
 

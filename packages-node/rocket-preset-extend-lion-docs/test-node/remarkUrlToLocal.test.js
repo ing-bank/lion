@@ -1,11 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import path from 'path';
-import { fileURLToPath } from 'url';
 import chai from 'chai';
-import unified from 'unified';
-import markdown from 'remark-parse';
+import path from 'path';
 import mdStringify from 'remark-html';
-
+import markdown from 'remark-parse';
+import unified from 'unified';
+import { fileURLToPath } from 'url';
 import { remarkUrlToLocal } from '../src/remarkUrlToLocal.js';
 
 const { expect } = chai;
@@ -25,7 +24,7 @@ async function execute(input) {
       gitHubUrl: 'https://github.com/ing-bank/lion/',
       rootDir,
       page: {
-        inputPath: path.join(rootDir, 'docs/components/inputs/form/overview/index.md'),
+        inputPath: path.join(rootDir, 'docs/components/form/overview/index.md'),
       },
     })
     .use(mdStringify);
@@ -36,7 +35,7 @@ async function execute(input) {
 describe('remarkUrlToLocal', () => {
   it('convert urls to local', async () => {
     const result = await execute(
-      'Since it extends from [fieldset](https://github.com/ing-bank/lion/blob/6f2b6f940a0875091f1d940f45f0cd32dffce9ac/docs/components/inputs/fieldset/overview.md)',
+      'Since it extends from [fieldset](https://github.com/ing-bank/lion/blob/6f2b6f940a0875091f1d940f45f0cd32dffce9ac/docs/components/fieldset/overview.md)',
     );
 
     expect(result).to.equal(
@@ -62,11 +61,11 @@ describe('remarkUrlToLocal', () => {
 
   it('works with images', async () => {
     const result = await execute(
-      `see ![Standard flow](https://github.com/ing-bank/lion/blob/6f2b6f940a0875091f1d940f45f0cd32dffce9ac/docs/docs/systems/form/assets/FormatMixinDiagram-1.svg 'Standard flow')`,
+      `see ![Standard flow](https://github.com/ing-bank/lion/blob/6f2b6f940a0875091f1d940f45f0cd32dffce9ac/docs/fundamentals/systems/form/assets/FormatMixinDiagram-1.svg 'Standard flow')`,
     );
 
     expect(result).to.equal(
-      '<p>see <img src="../../../../docs/systems/form/assets/FormatMixinDiagram-1.svg" alt="Standard flow" title="Standard flow"></p>',
+      '<p>see <img src="../../../fundamentals/systems/form/assets/FormatMixinDiagram-1.svg" alt="Standard flow" title="Standard flow"></p>',
     );
   });
 });

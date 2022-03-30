@@ -1,3 +1,3 @@
 # Lion Overlays Configuration
 
-[=> See Source <=](../../../docs/docs/systems/overlays/configuration.md)
+[=> See Source <=](../../../docs/fundamentals/systems/overlays/configuration.md)
