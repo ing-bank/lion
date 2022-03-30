@@ -1,3 +1,3 @@
 # Form System Validate
 
-[=> See Source <=](../../../docs/docs/systems/form/validate.md)
+[=> See Source <=](../../../docs/fundamentals/systems/form/validate.md)

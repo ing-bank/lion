@@ -1,3 +1,3 @@
 # Lion Calendar
 
-[=> See Source <=](../../docs/components/inputs/calendar/overview.md)
+[=> See Source <=](../../docs/components/calendar/overview.md)

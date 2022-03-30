@@ -1,3 +1,3 @@
 # Principles
 
-[=> See Source <=](../../../../../docs/guides/principles/index.md)
+[=> See Source <=](../../../../../docs/guides/guides/principles/index.md)

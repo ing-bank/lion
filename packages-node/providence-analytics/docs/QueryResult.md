@@ -1,3 +1,3 @@
 # QueryResult
 
-[=> See Source <=](../../../docs/docs/node-tools/providence-analytics/QueryResult.md)
+[=> See Source <=](../../../docs/fundamentals/node-tools/providence-analytics/QueryResult.md)

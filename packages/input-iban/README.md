@@ -1,3 +1,3 @@
 # Lion Input Iban
 
-[=> See Source <=](../../docs/components/inputs/input-iban/overview.md)
+[=> See Source <=](../../docs/components/input-iban/overview.md)

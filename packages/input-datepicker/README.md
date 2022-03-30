@@ -1,3 +1,3 @@
 # Lion Input Date Picker
 
-[=> See Source <=](../../docs/components/inputs/input-datepicker/overview.md)
+[=> See Source <=](../../docs/components/input-datepicker/overview.md)

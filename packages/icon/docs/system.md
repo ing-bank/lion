@@ -1,3 +1,3 @@
 # Lion Icon System
 
-[=> See Source <=](../../../docs/docs/systems/icon/overview.md)
+[=> See Source <=](../../../docs/fundamentals/systems/icon/overview.md)

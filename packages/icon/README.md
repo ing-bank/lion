@@ -1,3 +1,3 @@
 # Lion Icon
 
-[=> See Source <=](../../docs/components/icons/icon/overview.md)
+[=> See Source <=](../../docs/components/icon/overview.md)

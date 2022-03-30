@@ -21,7 +21,7 @@ Examples for both categories can be found below:
     readable by screen readers, but invisible for end users.
   - When an html table is used, we allow [subclassers](./subclasser-apis.md) to override the display property (`table-cell`) to `flex`. By putting the proper accessible roles (`role="cell"`) in the markup, we guarantee our markup stays accessible.
 
-Although Lion components try to stay as unbiased as possible with regard to styling, defaults will be needed. In these cases we try to follow the platform as much as possible. If the platform doesn't provide defaults, the largest common denominator across existing UI frameworks is taken as a lead.
+Although Lion components try to stay as unbiased as possible with regard to styling, defaults will be needed. In these cases we try to follow the platform as much as possible. If the platform doesn't provide defaults, the largest common denominator across existing UI systems is taken as a lead.
 
 ## CSS variables
 

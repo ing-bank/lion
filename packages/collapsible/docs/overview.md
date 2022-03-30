@@ -1,3 +1,3 @@
 # Lion Collapsible Overview
 
-[=> See Source <=](../../../docs/components/content/collapsible/overview.md)
+[=> See Source <=](../../../docs/components/collapsible/overview.md)

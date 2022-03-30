@@ -1,3 +1,3 @@
 # Lion Progress Indicator
 
-[=> See Source <=](../../docs/components/content/progress-indicator/overview.md)
+[=> See Source <=](../../docs/components/progress-indicator/overview.md)

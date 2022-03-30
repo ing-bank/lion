@@ -1,3 +1,3 @@
 # Switch
 
-[=> See Source <=](../../../docs/components/interaction/switch/overview.md)
+[=> See Source <=](../../../docs/components/switch/overview.md)
