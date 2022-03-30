@@ -424,6 +424,16 @@ class InputDataService {
   }
 
   /**
+   * Gets allowlist mode that determines which files to analyze
+   * @param {PathFromSystemRoot} startPath - local filesystem path
+   * @returns {'git'|'npm'}
+   */
+  static _determineAllowListMode(startPath) {
+    const isNodeModule = /^.*\/(node_modules\/@.*|node_modules)\/.*$/.test(startPath);
+    return isNodeModule ? 'npm' : 'git';
+  }
+
+  /**
    * Gets an array of files for given extension
    * @param {PathFromSystemRoot} startPath - local filesystem path
    * @param {Partial<GatherFilesConfig>} customConfig - configuration object
@@ -453,9 +463,7 @@ class InputDataService {
     let gitIgnorePaths = [];
     /** @type {string[]} */
     let npmPackagePaths = [];
-
-    const hasGitIgnore = getGitignoreFile(startPath);
-    const allowlistMode = cfg.allowlistMode || (hasGitIgnore ? 'git' : 'npm');
+    const allowlistMode = cfg.allowlistMode || this._determineAllowListMode(startPath);
 
     if (allowlistMode === 'git') {
       gitIgnorePaths = getGitIgnorePaths(startPath);

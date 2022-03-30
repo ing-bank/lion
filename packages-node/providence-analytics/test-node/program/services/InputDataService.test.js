@@ -349,9 +349,7 @@ build/
             './package.json': JSON.stringify({
               files: ['dist'],
             }),
-            '.gitignore': `
-/dist
-            `,
+            '.gitignore': '/dist',
           });
           const globOutput = InputDataService.gatherFilesFromDir('/fictional/project');
           expect(globOutput).to.eql([
@@ -371,6 +369,36 @@ build/
           expect(globOutput2).to.eql([
             // This means allowlistMode is 'npm'
             '/fictional/project/dist/bundle.js',
+          ]);
+
+          mockProject(
+            { './dist/bundle.js': '', '.gitignore': '/dist' },
+            {
+              projectName: 'detect-as-npm',
+              projectPath: '/inside/proj/with/node_modules/detect-as-npm',
+            },
+          );
+          const globOutput3 = InputDataService.gatherFilesFromDir(
+            '/inside/proj/with/node_modules/detect-as-npm',
+          );
+          expect(globOutput3).to.eql([
+            // This means allowlistMode is 'npm' (even though we found .gitignore)
+            '/inside/proj/with/node_modules/detect-as-npm/dist/bundle.js',
+          ]);
+
+          mockProject(
+            { './dist/bundle.js': '', '.gitignore': '/dist' },
+            {
+              projectName: '@scoped/detect-as-npm',
+              projectPath: '/inside/proj/with/node_modules/@scoped/detect-as-npm',
+            },
+          );
+          const globOutput4 = InputDataService.gatherFilesFromDir(
+            '/inside/proj/with/node_modules/@scoped/detect-as-npm',
+          );
+          expect(globOutput4).to.eql([
+            // This means allowlistMode is 'npm' (even though we found .gitignore)
+            '/inside/proj/with/node_modules/@scoped/detect-as-npm/dist/bundle.js',
           ]);
         });
 
