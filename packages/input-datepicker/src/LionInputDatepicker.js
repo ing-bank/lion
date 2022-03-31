@@ -426,6 +426,22 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   }
 
   /**
+   * Responsible for listening param change event and
+   * sync the calendar dates with the updated validator params
+   * @param {Event|CustomEvent} e
+   * @param {{validator: Validator}} metaData
+   * @protected
+   */
+  // @ts-ignore Binding element 'any' implicitly has an 'any' type.
+  _onValidatorUpdated(e, metaData) {
+    // @ts-ignore
+    super._onValidatorUpdated(e, metaData);
+    if (e.type === 'param-changed') {
+      this.__syncDisabledDates([metaData.validator]);
+    }
+  }
+
+  /**
    * @override Configures OverlayMixin
    */
   get _overlayInvokerNode() {
