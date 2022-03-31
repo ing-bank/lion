@@ -192,6 +192,37 @@ export function runValidateMixinSuite(customConfig) {
         expect(validateSpy.callCount).to.equal(1);
       });
 
+      it('calls "_onValidatorUpdated" when Validator instanced updated', async () => {
+        const validator = new MinLength(3);
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag}
+            .validators=${[validator]}
+            .modelValue=${'myValue'}
+          >${lightDom}</${tag}>
+        `)
+        );
+
+        // @ts-ignore
+        const spy = sinon.spy(el, '_onValidatorUpdated');
+
+        // on param-changed
+        validator.param = 4;
+        expect(spy.callCount).to.equal(1);
+        const [eventArg1, metaArg1] = spy.args[0];
+        expect(eventArg1).to.be.instanceOf(Event);
+        expect(eventArg1.type).to.equal('param-changed');
+        expect(metaArg1).to.eql({ validator });
+
+        // on config-changed
+        validator.config = {};
+        expect(spy.callCount).to.equal(2);
+        const [eventArg2, metaArg2] = spy.args[1];
+        expect(eventArg2).to.be.instanceOf(Event);
+        expect(eventArg2.type).to.equal('config-changed');
+        expect(metaArg2).to.eql({ validator });
+      });
+
       it('clears current results when ".modelValue" changes', async () => {
         const el = /** @type {ValidateElement} */ (
           await fixture(html`
