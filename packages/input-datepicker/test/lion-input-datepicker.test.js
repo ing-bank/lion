@@ -328,6 +328,43 @@ describe('<lion-input-datepicker>', () => {
         expect(elObj.calendarEl.maxDate).to.equal(myMaxDate);
       });
 
+      it('should sync MinDate validator param with Calendar MinDate', async () => {
+        const myMinDateValidator = new MinDate(new Date('2020/02/02'));
+        const el = await fixture(html`
+          <lion-input-datepicker .validators="${[myMinDateValidator]}"> </lion-input-datepicker>
+        `);
+        myMinDateValidator.param = new Date('2020/01/01');
+
+        expect(el.__calendarMinDate.toString()).to.equal(new Date('2020/01/01').toString());
+      });
+
+      it('should sync MaxDate validator param with Calendar MaxDate', async () => {
+        const myMaxDateValidator = new MaxDate(new Date('2020/02/02'));
+        const el = await fixture(html`
+          <lion-input-datepicker .validators="${[myMaxDateValidator]}"> </lion-input-datepicker>
+        `);
+        myMaxDateValidator.param = new Date('2020/03/03');
+
+        expect(el.__calendarMaxDate.toString()).to.equal(new Date('2020/03/03').toString());
+      });
+
+      it('should sync MinMaxDate validator param with Calendar Min And Max Date', async () => {
+        const myMinDate = new Date('2019/06/15');
+        const myMaxDate = new Date('2030/06/15');
+        const myMinMaxDateValidator = new MinMaxDate({ min: myMinDate, max: myMaxDate });
+        const el = await fixture(html`
+          <lion-input-datepicker .validators=${[myMinMaxDateValidator]}> </lion-input-datepicker>
+        `);
+
+        myMinMaxDateValidator.param = {
+          min: new Date('2019/05/15'),
+          max: new Date('2019/07/15'),
+        };
+
+        expect(el.__calendarMinDate.toString()).to.equal(new Date('2019/05/15').toString());
+        expect(el.__calendarMaxDate.toString()).to.equal(new Date('2019/07/15').toString());
+      });
+
       /**
        * Not in scope:
        * - min/max attr (like platform has): could be added in future if observers needed

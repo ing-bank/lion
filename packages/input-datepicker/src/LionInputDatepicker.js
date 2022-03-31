@@ -11,6 +11,7 @@ import {
 import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
 
 /**
+ * @typedef {import('@lion/form-core').Validator} Validator
  * @typedef {import('@lion/core').RenderOptions} RenderOptions
  */
 
@@ -423,6 +424,22 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         this.__calendarDisableDates = v.param;
       }
     });
+  }
+
+  /**
+   * Responsible for listening param change event and
+   * sync the calendar dates with the updated validator params
+   * @param {Event|CustomEvent} e
+   * @param {{validator: Validator}} metaData
+   * @protected
+   */
+  // @ts-ignore Binding element 'any' implicitly has an 'any' type.
+  _onValidatorUpdated(e, metaData) {
+    // @ts-ignore
+    super._onValidatorUpdated(e, metaData);
+    if (e.type === 'param-changed') {
+      this.__syncDisabledDates([metaData.validator]);
+    }
   }
 
   /**
