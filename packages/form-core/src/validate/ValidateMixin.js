@@ -252,8 +252,8 @@ export const ValidateMixinImplementation = superclass =>
        */
       this.__childModelValueChanged = false;
 
-      /** @private */
-      this.__onValidatorUpdated = this.__onValidatorUpdated.bind(this);
+      /** @protected */
+      this._onValidatorUpdated = this._onValidatorUpdated.bind(this);
       /** @protected */
       this._updateFeedbackComponent = this._updateFeedbackComponent.bind(this);
     }
@@ -580,9 +580,9 @@ export const ValidateMixinImplementation = superclass =>
 
     /**
      * @param {Event|CustomEvent} e
-     * @private
+     * @protected
      */
-    __onValidatorUpdated(e) {
+    _onValidatorUpdated(e) {
       if (e.type === 'param-changed' || e.type === 'config-changed') {
         this.validate();
       }
@@ -597,7 +597,7 @@ export const ValidateMixinImplementation = superclass =>
         this.__prevValidators.forEach(v => {
           events.forEach(e => {
             if (v.removeEventListener) {
-              v.removeEventListener(e, this.__onValidatorUpdated);
+              v.removeEventListener(e, this._onValidatorUpdated);
             }
           });
           v.onFormControlDisconnect(this);
@@ -621,9 +621,15 @@ export const ValidateMixinImplementation = superclass =>
           console.error(errorMessage, this);
           throw new Error(errorMessage);
         }
-        events.forEach(e => {
+        /** Updated the code to fix issue #1607 to sync the calendar date with validators params
+         *  Here _onValidatorUpdated is responsible for responding to the event
+         */
+        events.forEach(eventName => {
           if (v.addEventListener) {
-            v.addEventListener(e, this.__onValidatorUpdated);
+            v.addEventListener(eventName, e => {
+              // @ts-ignore for making validator param dynamic
+              this._onValidatorUpdated(e, { validator: v });
+            });
           }
         });
         v.onFormControlConnect(this);

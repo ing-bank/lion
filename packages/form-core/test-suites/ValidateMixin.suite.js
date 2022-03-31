@@ -173,6 +173,25 @@ export function runValidateMixinSuite(customConfig) {
         expect(validateSpy.callCount).to.equal(1);
       });
 
+      it('revalidates when validator "param-changed"', async () => {
+        const validator = new MinLength(3);
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag}
+            .validators=${[validator]}
+            .modelValue=${'myValue'}
+          >${lightDom}</${tag}>
+        `)
+        );
+
+        const validateSpy = sinon.spy(el, 'validate');
+        expect(validateSpy.callCount).to.equal(0);
+
+        validator.param = 4;
+
+        expect(validateSpy.callCount).to.equal(1);
+      });
+
       it('clears current results when ".modelValue" changes', async () => {
         const el = /** @type {ValidateElement} */ (
           await fixture(html`
