@@ -14,7 +14,7 @@ availability of the pop-up.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { listboxData } from '../../../../packages/listbox/docs/listboxData.js';
+import { listboxData } from '../listbox/src/listboxData.js';
 import '@lion/listbox/define';
 import '@lion/combobox/define';
 import { lazyRender } from './src/lazyRender.js';

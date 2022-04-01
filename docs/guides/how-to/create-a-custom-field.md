@@ -4,7 +4,7 @@
 import { html, css, LitElement } from '@mdjs/mdjs-preview';
 import { LionField } from '@lion/form-core';
 import '@lion/form-core/define';
-import '../../docs/fundamentals/systems/form/assets/h-output.js';
+import '../../fundamentals/systems/form/assets/h-output.js';
 
 // A) the custom [slot=input] or 'HTMLElementWithValue'
 class DummySlider extends LitElement {

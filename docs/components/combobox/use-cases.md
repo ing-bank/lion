@@ -14,8 +14,8 @@ availability of the popup.
 
 ```js script
 import { LitElement, html, repeat } from '@mdjs/mdjs-preview';
-import { listboxData } from '../../../../packages/listbox/docs/listboxData.js';
-import { LionCombobox } from '../../../../packages/combobox/src/LionCombobox.js';
+import { listboxData } from '../listbox/src/listboxData.js';
+import { LionCombobox } from '@lion/combobox';
 import '@lion/listbox/define';
 import '@lion/combobox/define';
 import './src/demo-selection-display.js';
