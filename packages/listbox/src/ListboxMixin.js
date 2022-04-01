@@ -133,8 +133,9 @@ const ListboxMixinImplementation = superclass =>
       return {
         ...super.slots,
         input: () => {
-          // @ts-ignore we load a polyfill to support createElement on shadowRoot
-          const lionOptions = this.shadowRoot.createElement('lion-options');
+          const lionOptions = /** @type {import('./LionOptions.js').LionOptions} */ (
+            this.createScopedElement('lion-options')
+          );
           lionOptions.setAttribute('data-tag-name', 'lion-options');
           lionOptions.registrationTarget = this;
           return lionOptions;

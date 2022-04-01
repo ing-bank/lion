@@ -107,8 +107,7 @@ export const ValidateMixinImplementation = superclass =>
       return {
         ...super.slots,
         feedback: () => {
-          // @ts-ignore we load a polyfill to support createElement on shadowRoot
-          const feedbackEl = this.shadowRoot.createElement('lion-validation-feedback');
+          const feedbackEl = this.createScopedElement('lion-validation-feedback');
           feedbackEl.setAttribute('data-tag-name', 'lion-validation-feedback');
           return feedbackEl;
         },
