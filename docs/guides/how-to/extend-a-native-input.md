@@ -6,7 +6,7 @@ import { LionInput } from '@lion/input';
 import { LionInputDate } from '@lion/input-date';
 import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import '@lion/input/define';
-import '../../docs/fundamentals/systems/form/assets/h-output.js';
+import '../../fundamentals/systems/form/assets/h-output.js';
 
 loadDefaultFeedbackMessages();
 ```
