@@ -13,6 +13,19 @@ Can be provided via the `label` attribute or via the `slot="label"`.
 export const label = () => html` <lion-input label="Input" name="input"></lion-input> `;
 ```
 
+## Label sr-only (a11y)
+
+Can be provided via the `label-sr-only` boolean attribute.
+
+The label will be hidden, but still readable by screen readers.
+
+```js preview-story
+export const labelSrOnly = () =>
+  html` <lion-input label-sr-only label="Input" name="input"></lion-input> `;
+```
+
+> Note: Once we support the ElementInternals API, the equivalent will be `<lion-input aria-label="Input" name="input"></lion-input>`
+
 ## Help-text
 
 A helper text shown below the label to give extra clarification.
