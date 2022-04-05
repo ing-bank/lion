@@ -110,7 +110,7 @@ As you can see the 'validators' property expects a map (an array of arrays). So,
 
 ### Validator classes
 
-All validators extend from the default `Validator` class. Below example is an example of a validator could look like:
+All validators extend from the default `Validator` class. Below is an example of what a validator could look like:
 
 ```js
 class EqualsText extends Validator {
@@ -126,6 +126,40 @@ class EqualsText extends Validator {
 
   static getMessage({ fieldName, modelValue, formControl }) {
     return `Please make sure values are equal`;
+  }
+}
+```
+
+The `execute()` method returns a boolean by default, but it can also be customized to return enums instead. In this example below, we customize the method to return one among some possible enums as strings.
+
+```js
+class EnumOutComeValidator extends Validator {
+  static validatorName = 'EnumOutCome';
+
+  /**
+   * @param {string} modelValue
+   * @param {number} maxLength
+   * @returns {false|'overload'|'error'}
+   */
+  execute(modelValue, maxLength) {
+    if (modelValue.length > maxLength) {
+      return 'overload';
+    } else if (modelValue.length < 0) {
+      return 'error';
+    }
+    return false;
+  }
+
+  /**
+   * @param {{outcome: 'overload'|'error'|false}} opts
+   */
+  static async getMessage({ outcome }) {
+    const results = {
+      overload: 'Too many characters!',
+      error: 'Something went wrong..',
+      false: 'All good!',
+    };
+    return results[outcome];
   }
 }
 ```
