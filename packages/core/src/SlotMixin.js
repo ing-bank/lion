@@ -39,7 +39,11 @@ const SlotMixinImplementation = superclass =>
      * @param {import('@lion/core').TemplateResult} template
      */
     __renderAsNodes(template) {
-      const tempRenderTarget = document.createElement('div');
+      // @ts-expect-error wait for browser support
+      const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
+      const registryRoot = supportsScopedRegistry ? this.shadowRoot : document;
+      // @ts-expect-error wait for browser support
+      const tempRenderTarget = registryRoot.createElement('div');
       render(template, tempRenderTarget, this.renderOptions);
       return Array.from(tempRenderTarget.childNodes);
     }
