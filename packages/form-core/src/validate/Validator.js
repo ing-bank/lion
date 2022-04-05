@@ -50,9 +50,9 @@ export class Validator extends EventTarget {
   static async = false;
 
   /**
-   * The function that returns a validity outcome. When we need to shpw feedback,
+   * The function that returns a validity outcome. When we need to show feedback,
    * it should return true, otherwise false. So when an error\info|warning|success message
-   * needs to be shown, return true. For async Validators, the function canretun  a Promise.
+   * needs to be shown, return true. For async Validators, the function can return a Promise.
    * It's also possible to return an enum. Let's say that a phone number can have multiple
    * states: 'invalid-country-code' | 'too-long' | 'too-short'
    * Those states can be retrieved in the getMessage
