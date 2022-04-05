@@ -2967,6 +2967,11 @@
     portfinder "^1.0.28"
     source-map "^0.7.3"
 
+"@webcomponents/scoped-custom-element-registry@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@webcomponents/scoped-custom-element-registry/-/scoped-custom-element-registry-0.0.5.tgz#96377f6a5587c76479b90d13deb7674b51b82603"
+  integrity sha512-vtlIyf+b657A1MWY69uTTJaGYwqUS3Lnm0+n2vLyuVf5MYOwSOB3Mx42AyBxz/6t9gw+IDelm1HQFOiA1xZCEQ==
+
 "@webcomponents/shadycss@^1.10.2":
   version "1.10.2"
   resolved "https://registry.yarnpkg.com/@webcomponents/shadycss/-/shadycss-1.10.2.tgz#40e03cab6dc5e12f199949ba2b79e02f183d1e7b"
