@@ -8,3 +8,6 @@ _site-dev
 _site
 docs/_merged_*
 patches/
+
+/docs/_assets/scoped-custom-element-registry.min.js
+/docs/_assets/scoped-custom-element-registry.min.js.map
