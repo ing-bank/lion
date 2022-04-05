@@ -3,6 +3,20 @@ import { defineCE, expect, fixture } from '@open-wc/testing';
 import { SlotMixin } from '../src/SlotMixin.js';
 import { LitElement, ScopedElementsMixin, html } from '../index.js';
 
+function mockScopedRegistry() {
+  // @ts-expect-error wait for browser support
+  ShadowRoot.prototype.createElement = () => {};
+  // @ts-expect-error wait for browser support
+  window.CustomElementRegistry = class {};
+}
+
+function unMockScopedRegistry() {
+  // @ts-expect-error wait for browser support
+  delete ShadowRoot.prototype.createElement;
+  // @ts-expect-error wait for browser support
+  delete window.CustomElementRegistry;
+}
+
 describe('SlotMixin', () => {
   it('inserts provided element into lightdom and sets slot', async () => {
     const tag = defineCE(
@@ -188,7 +202,7 @@ describe('SlotMixin', () => {
         }
       },
     );
-    const el = await fixture(`<${tag}><${tag}>`);
+    const el = await fixture(`<${tag}></${tag}>`);
     const slot = /** @type HTMLSpanElement */ (
       Array.from(el.children).find(elm => elm.slot === 'template')
     );
@@ -196,14 +210,10 @@ describe('SlotMixin', () => {
     expect(slot.tagName).to.equal('SPAN');
   });
 
-  it('supports scoped elements', async () => {
-    const scopedSpy = sinon.spy();
-    class ScopedEl extends LitElement {
-      connectedCallback() {
-        super.connectedCallback();
-        scopedSpy();
-      }
-    }
+  it('supports scoped elements when polyfill loaded', async () => {
+    mockScopedRegistry();
+
+    class ScopedEl extends LitElement {}
 
     const tag = defineCE(
       class extends ScopedElementsMixin(SlotMixin(LitElement)) {
@@ -222,12 +232,44 @@ describe('SlotMixin', () => {
           };
         }
 
-        connectedCallback() {
-          super.connectedCallback();
+        render() {
+          return html`<slot name="template"></slot>`;
+        }
+      },
+    );
 
-          // Not rendered to shadowRoot, notScopedSpy should not be called
-          const notScoped = document.createElement('not-scoped');
-          this.appendChild(notScoped);
+    let error = '';
+    try {
+      // @ts-ignore
+      await fixture(html`<${tag}></${tag}>`, { scopedElements: true });
+    } catch (e) {
+      // @ts-ignore
+      error = e.toString();
+    }
+    // it throws when it uses our temp mock (error is browser specific, so we check overlapping part)
+    expect(error).to.include('.importNode is not a function');
+
+    unMockScopedRegistry();
+  });
+
+  it('does not scope elements when polyfill not loaded', async () => {
+    class ScopedEl extends LitElement {}
+
+    const tag = defineCE(
+      class extends ScopedElementsMixin(SlotMixin(LitElement)) {
+        static get scopedElements() {
+          return {
+            // @ts-expect-error
+            ...super.scopedElements,
+            'scoped-el': ScopedEl,
+          };
+        }
+
+        get slots() {
+          return {
+            ...super.slots,
+            template: () => html`<scoped-el></scoped-el>`,
+          };
         }
 
         render() {
@@ -236,7 +278,10 @@ describe('SlotMixin', () => {
       },
     );
 
-    await fixture(`<${tag}><${tag}>`);
-    expect(scopedSpy).to.have.been.called;
+    const docSpy = sinon.spy(document, 'createElement');
+    await fixture(html`<${tag}></${tag}>`);
+    // one for the fixture, one for the scoped slot
+    expect(docSpy).to.have.been.calledTwice;
+    docSpy.restore();
   });
 });
