@@ -1,3 +1,3 @@
 # Lion Localize
 
-[=> See Source <=](../../docs/docs/systems/localize/overview.md)
+[=> See Source <=](../../docs/fundamentals/systems/localize/overview.md)

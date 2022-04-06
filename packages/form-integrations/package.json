@@ -27,7 +27,7 @@
     "debug": "cd ../../ && npm run debug -- --group form-integrations",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group form-integrations",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group form-integrations",
-    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../ --copy-dir docs/docs/fundamentals/systems/form/assets",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../ --copy-dir docs/fundamentals/systems/form/assets",
     "prepublishOnly": "npm run publish-docs",
     "test": "cd ../../ && npm run test:browser -- --group form-integrations"
   },

@@ -1,3 +1,3 @@
 # Localize System Use Cases
 
-[=> See Source <=](../../../docs/docs/systems/localize/use-cases.md)
+[=> See Source <=](../../../docs/fundamentals/systems/localize/use-cases.md)

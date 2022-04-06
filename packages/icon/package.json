@@ -28,7 +28,7 @@
     "debug": "cd ../../ && npm run debug -- --group icon",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group icon",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group icon",
-    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../ --copy-dir docs/components/icons/icon/assets",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../ --copy-dir docs/components/icon/assets",
     "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser -- --group icon"
   },

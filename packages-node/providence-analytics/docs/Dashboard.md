@@ -1,3 +1,3 @@
 # Dashboard
 
-[=> See Source <=](../../../docs/docs/node-tools/providence-analytics/dashboard.md)
+[=> See Source <=](../../../docs/fundamentals/node-tools/providence-analytics/dashboard.md)

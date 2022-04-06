@@ -1,3 +1,3 @@
 # Lion Helpers
 
-[=> See Source <=](../../../docs/docs/tools/helpers/overview.md)
+[=> See Source <=](../../../docs/fundamentals/tools/helpers/overview.md)

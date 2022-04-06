@@ -27,7 +27,7 @@
     "debug": "cd ../../ && npm run debug -- --group ajax",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group ajax",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group ajax",
-    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../ --copy-dir docs/docs/tools/ajax/assets",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../ --copy-dir docs/fundamentals/tools/ajax/assets",
     "prepublishOnly": "npm run publish-docs",
     "test": "cd ../../ && npm run test:browser -- --group ajax"
   },
