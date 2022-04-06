@@ -15,6 +15,8 @@ import '@lion/select-rich/define';
 import '@lion/input-range/define';
 import '@lion/textarea/define';
 import '@lion/button/define';
+import '@lion/input-tel/define';
+import '@lion/input-tel-dropdown/define';
 
 export class UmbrellaForm extends LitElement {
   get _lionFormNode() {
@@ -60,6 +62,11 @@ export class UmbrellaForm extends LitElement {
           <lion-input-amount name="money" label="Money"></lion-input-amount>
           <lion-input-iban name="iban" label="Iban"></lion-input-iban>
           <lion-input-email name="email" label="Email"></lion-input-email>
+          <lion-input-tel name="tel" label="Telephone Number"></lion-input-tel>
+          <lion-input-tel-dropdown
+            name="tel-dropdown"
+            label="Telephone Number with dropdown list"
+          ></lion-input-tel-dropdown>
           <lion-checkbox-group
             label="What do you like?"
             name="checkers"

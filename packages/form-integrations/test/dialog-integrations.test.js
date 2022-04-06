@@ -24,13 +24,6 @@ describe('Form inside dialog Integrations', () => {
     const registeredEls = getAllTagNames(formEl);
 
     expect(registeredEls).to.eql([
-      // [1] In a dialog, these are registered before the rest (which is in chronological dom order)
-      // Ideally, this should be the same. It would be once the platform allows to create dialogs
-      // that don't need to move content to the body
-      'lion-checkbox-group',
-      '  lion-checkbox',
-      'lion-switch',
-      // [2] 'the rest' (chronologically ordered registrations)
       'lion-fieldset',
       '  lion-input',
       '  lion-input',
@@ -41,6 +34,7 @@ describe('Form inside dialog Integrations', () => {
       'lion-input-iban',
       'lion-input-email',
       'lion-input-tel',
+      'lion-input-tel-dropdown',
       'lion-checkbox-group',
       '  lion-checkbox',
       '  lion-checkbox',
@@ -66,8 +60,9 @@ describe('Form inside dialog Integrations', () => {
       '  lion-option',
       'lion-select',
       'lion-input-range',
-      // [3] this is where [1] should have been inserted
-      // [4] more of 'the rest' (chronologically ordered registrations)
+      'lion-checkbox-group',
+      '  lion-checkbox',
+      'lion-switch',
       'lion-input-stepper',
       'lion-textarea',
     ]);

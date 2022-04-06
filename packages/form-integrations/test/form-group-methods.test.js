@@ -160,6 +160,7 @@ describe(`Submitting/Resetting/Clearing Form`, async () => {
       range: '',
       rsvp: '',
       tel: '',
+      'tel-dropdown': '',
       terms: [],
       comments: '',
     });

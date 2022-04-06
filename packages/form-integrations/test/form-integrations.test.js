@@ -1,3 +1,4 @@
+import sinon from 'sinon';
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import { getAllTagNames } from './helpers/helpers.js';
@@ -33,6 +34,7 @@ describe('Form Integrations', () => {
       notifications: { value: '', checked: false },
       rsvp: '',
       tel: '',
+      'tel-dropdown': '',
       comments: '',
     });
   });
@@ -61,6 +63,7 @@ describe('Form Integrations', () => {
       notifications: '',
       rsvp: '',
       tel: '',
+      'tel-dropdown': '',
       comments: '',
     });
   });
@@ -97,14 +100,8 @@ describe('Form Integrations', () => {
     });
   });
 
-  it('Successfully registers all form components', async () => {
-    const el = /** @type {UmbrellaForm} */ await fixture(html`<umbrella-form></umbrella-form>`);
-    // @ts-ignore
-    const formEl = /** @type {LionForm} */ (el._lionFormNode);
-    await formEl.registrationComplete;
-    const registeredEls = getAllTagNames(formEl);
-
-    expect(registeredEls).to.eql([
+  describe('Registering', () => {
+    const registerTagsResult = [
       'lion-fieldset',
       '  lion-input',
       '  lion-input',
@@ -115,6 +112,7 @@ describe('Form Integrations', () => {
       'lion-input-iban',
       'lion-input-email',
       'lion-input-tel',
+      'lion-input-tel-dropdown',
       'lion-checkbox-group',
       '  lion-checkbox',
       '  lion-checkbox',
@@ -145,6 +143,31 @@ describe('Form Integrations', () => {
       'lion-switch',
       'lion-input-stepper',
       'lion-textarea',
-    ]);
+    ];
+
+    it('successfully registers all form components', async () => {
+      const el = /** @type {UmbrellaForm} */ await fixture(html`<umbrella-form></umbrella-form>`);
+      // @ts-ignore
+      const formEl = /** @type {LionForm} */ (el._lionFormNode);
+      await formEl.registrationComplete;
+      const registeredEls = getAllTagNames(formEl);
+
+      expect(registeredEls).to.eql(registerTagsResult);
+    });
+
+    it('successfully unregisters all form components', async () => {
+      const el = /** @type {UmbrellaForm} */ await fixture(html`<umbrella-form></umbrella-form>`);
+      const offlineContainer = document.createElement('div');
+      // @ts-ignore
+      const formEl = /** @type {LionForm} */ (el._lionFormNode);
+      await formEl.registrationComplete;
+
+      for (const child of formEl.formElements) {
+        const spy = sinon.spy(child, '__unregisterFormElement');
+        offlineContainer.appendChild(child);
+        await child.updateComplete;
+        expect(spy).to.have.been.called;
+      }
+    });
   });
 });
