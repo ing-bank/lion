@@ -13,7 +13,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  * @typedef {import('../types').RegionCode} RegionCode
  * @typedef {import('../types').PhoneNumberType} PhoneNumberType
  * @typedef {import('@lion/form-core/types/FormatMixinTypes').FormatOptions} FormatOptions
- * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
+ * @typedef {* & import('@lion/input-tel/src/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
  * @typedef {FormatOptions & {regionCode: RegionCode; formatStrategy: FormatStrategy}} FormatOptionsTel
  */
 

@@ -8,7 +8,7 @@ import {
 } from '../test-helpers/mockPhoneUtilManager.js';
 
 /**
- * @typedef {* & import('@lion/input-tel/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
+ * @typedef {* & import('@lion/input-tel/src/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
  */
 
 // For enum output, see: https://www.npmjs.com/package/awesome-phonenumber

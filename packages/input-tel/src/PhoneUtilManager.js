@@ -9,7 +9,7 @@ let resolveLoaded;
  */
 export class PhoneUtilManager {
   static async loadLibPhoneNumber() {
-    const PhoneUtil = (await import('../lib/awesome-phonenumber-esm.js')).default;
+    const PhoneUtil = (await import('./lib/awesome-phonenumber-esm.js')).default;
     this.PhoneUtil = PhoneUtil;
     resolveLoaded(undefined);
     return PhoneUtil;
