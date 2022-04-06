@@ -1,5 +1,16 @@
 # rocket-preset-extend-lion-docs
 
+## 0.3.0
+
+### Minor Changes
+
+- 672c8e99: New documentation structure
+
+### Patch Changes
+
+- Updated dependencies [672c8e99]
+  - remark-extend@0.5.0
+
 ## 0.2.2
 
 ### Patch Changes
