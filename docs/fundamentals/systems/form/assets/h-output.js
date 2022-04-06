@@ -76,7 +76,7 @@ export class HelperOutput extends LitElement {
     }
     this.__rerender = this.__rerender.bind(this);
 
-    const storyRoot = this.field.closest('[mdjs-story-name]') || this.parentElement;
+    const storyRoot = this.closest('[mdjs-story-name]') || this.parentElement;
 
     storyRoot.addEventListener('model-value-changed', this.__rerender);
     storyRoot.addEventListener('mousemove', this.__rerender);
