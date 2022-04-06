@@ -1,3 +1,3 @@
 # Lion Core Overview
 
-[=> See Source <=](../../../docs/docs/systems/core/overview.md)
+[=> See Source <=](../../../docs/fundamentals/systems/core/overview.md)

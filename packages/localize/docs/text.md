@@ -1,3 +1,3 @@
 # Localize System Text
 
-[=> See Source <=](../../../docs/docs/systems/localize/text.md)
+[=> See Source <=](../../../docs/fundamentals/systems/localize/text.md)

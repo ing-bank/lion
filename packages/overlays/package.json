@@ -27,7 +27,7 @@
     "debug": "cd ../../ && npm run debug -- --group overlays",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group overlays",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group overlays",
-    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../ --copy-dir docs/docs/systems/overlays/assets",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../ --copy-dir docs/fundamentals/systems/overlays/assets",
     "prepublishOnly": "npm run publish-docs",
     "test": "cd ../../ && npm run test:browser -- --group overlays"
   },

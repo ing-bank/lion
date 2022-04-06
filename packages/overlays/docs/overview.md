@@ -1,3 +1,3 @@
 # Lion Overlays Overview
 
-[=> See Source <=](../../../docs/docs/systems/overlays/overview.md)
+[=> See Source <=](../../../docs/fundamentals/systems/overlays/overview.md)

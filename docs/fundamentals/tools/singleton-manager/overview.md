@@ -160,7 +160,7 @@ Steps to reproduce:
 2. Page B => "Blocked: false" (even when hitting the refresh button)
 
 ➡️ See [it on the example page](./example-fail/index.md). <br>
-➡️ See [the code](https://github.com/ing-bank/lion/tree/master/docs/docs/tools/singleton-manager/example-fail/demo-app.js).
+➡️ See [the code](https://github.com/ing-bank/lion/tree/master/docs/fundamentals/tools/singleton-manager/example-fail/demo-app.js).
 
 ---
 
@@ -203,7 +203,7 @@ npm run start:singleton
 ```
 
 ➡️ See [it on the example page](./example-success/index.md). <br>
-➡️ See [the code](https://github.com/ing-bank/lion/tree/master/docs/docs/tools/singleton-manager/example-success/demo-app.js).
+➡️ See [the code](https://github.com/ing-bank/lion/tree/master/docs/fundamentals/tools/singleton-manager/example-success/demo-app.js).
 
 ---
 
@@ -244,7 +244,7 @@ npm run start:singleton-complex
 ```
 
 ➡️ See [it on the example page](./example-complex/index.md). <br>
-➡️ See [the code](https://github.com/ing-bank/lion/tree/master/docs/docs/tools/singleton-manager/example-complex/demo-app.js).
+➡️ See [the code](https://github.com/ing-bank/lion/tree/master/docs/fundamentals/tools/singleton-manager/example-complex/demo-app.js).
 
 ---
 

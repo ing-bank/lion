@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import fs from 'fs-extra';
 import path from 'path';
 import { listFiles } from './listFiles.js';
@@ -162,14 +163,20 @@ export class PublishDocs {
           }
           const rawImportFilePath = matches[1];
           const importFilePath = path.join(path.dirname(file), rawImportFilePath);
-          let newFileContent = await fs.promises.readFile(importFilePath, 'utf8');
+          try {
+            let newFileContent = await fs.promises.readFile(importFilePath, 'utf8');
 
-          newFileContent = rewriteLinksInMdContent(newFileContent, importFilePath, {
-            gitHubUrl: this.options.gitHubUrl,
-            gitRootDir: this.options.gitRootDir,
-          });
+            newFileContent = rewriteLinksInMdContent(newFileContent, importFilePath, {
+              gitHubUrl: this.options.gitHubUrl,
+              gitRootDir: this.options.gitRootDir,
+            });
 
-          await fs.promises.writeFile(file, newFileContent);
+            await fs.promises.writeFile(file, newFileContent);
+          } catch (err) {
+            throw new Error(
+              [`Error in "${file}":`, `- Could not find import file ${importFilePath}`].join('\n'),
+            );
+          }
         }
       }
     }

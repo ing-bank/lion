@@ -1,3 +1,3 @@
 # Side Effects
 
-[=> See Source <=](../../../../docs/docs/rationales/side-effects.md)
+[=> See Source <=](../../../../docs/fundamentals/rationales/side-effects.md)

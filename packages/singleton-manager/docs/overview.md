@@ -1,3 +1,3 @@
-# Select Rich
+# Singleton Manager
 
-[=> See Source <=](../../../docs/docs/tools/singleton-manager/overview.md)
+[=> See Source <=](../../../docs/fundamentals/tools/singleton-manager/overview.md)

@@ -1,3 +1,3 @@
 # Lion Overlays Rationale
 
-[=> See Source <=](../../../docs/docs/systems/overlays/rationale.md)
+[=> See Source <=](../../../docs/fundamentals/systems/overlays/rationale.md)

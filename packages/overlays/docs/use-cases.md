@@ -1,3 +1,3 @@
 # Lion Overlays Use Cases
 
-[=> See Source <=](../../../docs/docs/systems/overlays/use-cases.md)
+[=> See Source <=](../../../docs/fundamentals/systems/overlays/use-cases.md)

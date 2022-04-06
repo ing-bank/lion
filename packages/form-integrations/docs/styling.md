@@ -1,3 +1,3 @@
 # Form System Styling
 
-[=> See Source <=](../../../docs/docs/fundamentals/systems/form/styling.md)
+[=> See Source <=](../../../docs/fundamentals/systems/form/styling.md)

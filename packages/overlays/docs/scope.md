@@ -1,3 +1,3 @@
 # Lion Overlays Scope
 
-[=> See Source <=](../../../docs/docs/systems/overlays/scope.md)
+[=> See Source <=](../../../docs/fundamentals/systems/overlays/scope.md)
