@@ -1,6 +1,6 @@
 {
   "name": "rocket-preset-extend-lion-docs",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "A rocket preset to reuse lion documentation inside your design system extension",
   "license": "MIT",
   "author": "ing-bank",
@@ -32,7 +32,7 @@
     "babel-plugin-extend-docs": "0.5.3",
     "es-module-lexer": "^0.3.6",
     "plugins-manager": "^0.3.0",
-    "remark-extend": "0.4.4",
+    "remark-extend": "0.5.0",
     "unist-util-visit": "^2.0.2"
   },
   "keywords": [

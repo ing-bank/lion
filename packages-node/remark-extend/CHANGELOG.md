@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- 672c8e99: New documentation structure
+
 ## 0.4.4
 
 ### Patch Changes

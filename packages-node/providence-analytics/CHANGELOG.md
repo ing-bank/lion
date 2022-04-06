@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.13.0
+
+### Minor Changes
+
+- 672c8e99: New documentation structure
+
+### Patch Changes
+
+- ab7cc1e0: providence-analytics: expose skipCheckMatchCompatibility: skips semver checks when targets and reference projects are matched. Handy for forward compatible libs and libs below v1
+- 17dadabf: providence-analytics: enhanced allowlistMode detection
+
 ## 0.12.5
 
 ### Patch Changes

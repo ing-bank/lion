@@ -1,5 +1,11 @@
 # publish-docs
 
+## 0.2.0
+
+### Minor Changes
+
+- 672c8e99: New documentation structure
+
 ## 0.1.3
 
 ### Patch Changes
