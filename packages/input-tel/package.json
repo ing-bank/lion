@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-tel",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Input field for entering phone numbers, including validation, formatting and mobile keyboard support.",
   "license": "MIT",
   "author": "ing-bank",
