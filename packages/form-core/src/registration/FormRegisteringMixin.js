@@ -42,6 +42,14 @@ const FormRegisteringMixinImplementation = superclass =>
 
     disconnectedCallback() {
       super.disconnectedCallback();
+      this.__unregisterFormElement();
+    }
+
+    /**
+     * Putting this in a separate method makes testing easier
+     * @private
+     */
+    __unregisterFormElement() {
       if (this._parentFormGroup) {
         this._parentFormGroup.removeFormElement(/** @type {* & FormRegisteringHost} */ (this));
       }

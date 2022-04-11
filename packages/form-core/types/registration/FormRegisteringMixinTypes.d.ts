@@ -14,6 +14,8 @@ export declare class FormRegisteringHost {
    * ChoiceGroup
    */
   protected _parentFormGroup: FormRegistrarHost | undefined;
+
+  private __unregisterFormElement: void;
 }
 
 export declare function FormRegisteringImplementation<T extends Constructor<LitElement>>(
