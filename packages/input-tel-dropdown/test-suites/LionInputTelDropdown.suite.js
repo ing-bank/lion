@@ -134,6 +134,16 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         );
       });
 
+      it('syncs disabled attribute to dropdown', async () => {
+        const el = await fixture(html` <${tag} disabled></${tag}> `);
+        expect(el.refs.dropdown.value?.hasAttribute('disabled')).to.be.true;
+      });
+
+      it('disables dropdown on readonly', async () => {
+        const el = await fixture(html` <${tag} readonly></${tag}> `);
+        expect(el.refs.dropdown.value?.hasAttribute('disabled')).to.be.true;
+      });
+
       it('renders to prefix slot in light dom', async () => {
         const el = await fixture(html` <${tag} .allowedRegions="${['DE']}"></${tag}> `);
         const prefixSlot = /** @type {HTMLElement} */ (

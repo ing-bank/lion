@@ -254,6 +254,14 @@ export class LionInputTelDropdown extends LionInputTel {
     if (changedProperties.has('activeRegion')) {
       this.__syncRegionWithDropdown();
     }
+
+    if (changedProperties.has('disabled') || changedProperties.has('readOnly')) {
+      if (this.disabled || this.readOnly) {
+        this.refs.dropdown?.value?.setAttribute('disabled', '');
+      } else {
+        this.refs.dropdown?.value?.removeAttribute('disabled');
+      }
+    }
   }
 
   /**
