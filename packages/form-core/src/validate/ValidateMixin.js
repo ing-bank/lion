@@ -499,7 +499,7 @@ export const ValidateMixinImplementation = superclass =>
 
     /**
      * step b (as explained in `validate()`), called by __finishValidation
-     * @param {{validator:Validator; outcome: boolean|string;}[]} regularValidationResult result of steps 1-3
+     * @param {{validator: Validator;outcome: boolean | string;}[]} regularValidationResult result of steps 1-3
      * @private
      */
     __executeResultValidators(regularValidationResult) {
@@ -509,6 +509,16 @@ export const ValidateMixinImplementation = superclass =>
           return !vCtor.async && v instanceof ResultValidator;
         })
       );
+
+      if (!resultValidators.length) {
+        return [];
+      }
+
+      // If empty, do not show the ResulValidation message (e.g. Correct!)
+      if (this._isEmpty(this.modelValue)) {
+        this.__prevShownValidationResult = [];
+        return [];
+      }
 
       // Map everything to Validator[] for backwards compatibility
       return resultValidators
@@ -537,8 +547,9 @@ export const ValidateMixinImplementation = superclass =>
     __finishValidation({ source, hasAsync }) {
       const syncAndAsyncOutcome = [...this.__syncValidationResult, ...this.__asyncValidationResult];
       // if we have any ResultValidators left, now is the time to run them...
-      const resultOutCome = this.__executeResultValidators(syncAndAsyncOutcome);
-
+      const resultOutCome = /** @type {ValidationResultEntry[]} */ (
+        this.__executeResultValidators(syncAndAsyncOutcome)
+      );
       this.__validationResult = [...resultOutCome, ...syncAndAsyncOutcome];
 
       const ctor = /** @type {ValidateHostConstructor} */ (this.constructor);
@@ -560,7 +571,6 @@ export const ValidateMixinImplementation = superclass =>
       this.hasFeedbackFor = [
         ...new Set(this.__validationResult.map(({ validator }) => validator.type)),
       ];
-
       /** private event that should be listened to by LionFieldSet */
       this.dispatchEvent(new Event('validate-performed', { bubbles: true }));
       if (source === 'async' || !hasAsync) {
