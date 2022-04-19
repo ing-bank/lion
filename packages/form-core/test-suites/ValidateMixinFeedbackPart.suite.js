@@ -4,7 +4,14 @@ import { localizeTearDown } from '@lion/localize/test-helpers';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { getFormControlMembers } from '@lion/form-core/test-helpers';
 import sinon from 'sinon';
-import { DefaultSuccess, MinLength, Required, ValidateMixin, Validator } from '../index.js';
+import {
+  DefaultSuccess,
+  MinLength,
+  MaxLength,
+  Required,
+  ValidateMixin,
+  Validator,
+} from '../index.js';
 import { AlwaysInvalid } from '../test-helpers/index.js';
 
 /**
@@ -371,6 +378,38 @@ export function runValidateMixinFeedbackPart() {
       await el.updateComplete;
       await el.feedbackComplete;
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
+    });
+
+    it('does not show success message after fixing error an & field is empty', async () => {
+      class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
+        static get validationTypes() {
+          return ['error', 'success'];
+        }
+      }
+      const elTagString = defineCE(ValidateElementCustomTypes);
+      const elTag = unsafeStatic(elTagString);
+      const el = /** @type {ValidateElementCustomTypes} */ (
+        await fixture(html`
+        <${elTag}
+          .submitted=${true}
+          .validators=${[
+            new MaxLength(3, { getMessage: async () => 'Max length is 3!' }),
+            new DefaultSuccess(null, { getMessage: () => 'This is a success message' }),
+          ]}
+        >${lightDom}</${elTag}>
+      `)
+      );
+      const { _feedbackNode } = getFormControlMembers(el);
+
+      el.modelValue = 'abcd';
+      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Max length is 3!');
+
+      el.modelValue = '';
+      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(_feedbackNode.feedbackData).to.deep.equal([]);
     });
 
     describe('Accessibility', () => {

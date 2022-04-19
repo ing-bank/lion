@@ -23,7 +23,6 @@ To fire a submit from JavaScript, select the `lion-form` element and call `.subm
 ```js preview-story
 export const formSubmit = () => {
   loadDefaultFeedbackMessages();
-
   const submitHandler = ev => {
     if (ev.target.hasFeedbackFor.includes('error')) {
       const firstFormElWithError = ev.target.formElements.find(el =>
