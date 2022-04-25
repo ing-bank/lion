@@ -74,6 +74,7 @@ describe('cacheManager', () => {
         requestIdFunction,
         invalidateUrls: invalidateUrlsResult,
         invalidateUrlsRegex: invalidateUrlsRegexResult,
+        contentTypes,
       } = extendCacheOptions({ invalidateUrls, invalidateUrlsRegex });
       // Assert
       expect(useCache).to.be.false;
@@ -82,6 +83,7 @@ describe('cacheManager', () => {
       expect(typeof requestIdFunction).to.eql('function');
       expect(invalidateUrlsResult).to.equal(invalidateUrls);
       expect(invalidateUrlsRegexResult).to.equal(invalidateUrlsRegex);
+      expect(contentTypes).to.be.undefined;
     });
 
     it('the DEFAULT_GET_REQUEST_ID function throws when called with no arguments', () => {
@@ -197,7 +199,7 @@ describe('cacheManager', () => {
       it('does not accept anything else', () => {
         // @ts-ignore
         expect(() => validateCacheOptions({ invalidateUrls: 'not-an-array' })).to.throw(
-          'Property `invalidateUrls` must be an `Array` or `falsy`',
+          'Property `invalidateUrls` must be an `Array` or `undefined`',
         );
       });
     });
@@ -213,7 +215,7 @@ describe('cacheManager', () => {
         // @ts-ignore
         expect(() =>
           validateCacheOptions({ invalidateUrlsRegex: 'a string is not a regex' }),
-        ).to.throw('Property `invalidateUrlsRegex` must be a `RegExp` or `falsy`');
+        ).to.throw('Property `invalidateUrlsRegex` must be a `RegExp` or `undefined`');
       });
     });
     describe('the requestIdFunction property', () => {
@@ -230,6 +232,22 @@ describe('cacheManager', () => {
         // @ts-ignore
         expect(() => validateCacheOptions({ requestIdFunction: 'not a function' })).to.throw(
           'Property `requestIdFunction` must be a `function`',
+        );
+      });
+    });
+    describe('the contentTypes property', () => {
+      it('accepts an array', () => {
+        // @ts-ignore Typescript requires this to be an array of string, but this is not checked by validateCacheOptions
+        expect(() => validateCacheOptions({ contentTypes: [6, 'elements', 'in', 1, true, Array] }))
+          .not.to.throw;
+      });
+      it('accepts undefined', () => {
+        expect(() => validateCacheOptions({ contentTypes: undefined })).not.to.throw;
+      });
+      it('does not accept anything else', () => {
+        // @ts-ignore
+        expect(() => validateCacheOptions({ contentTypes: 'not-an-array' })).to.throw(
+          'Property `contentTypes` must be an `Array` or `undefined`',
         );
       });
     });

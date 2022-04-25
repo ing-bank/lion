@@ -20,6 +20,18 @@ const isMethodSupported = (cacheOptions, method) =>
   cacheOptions.methods.includes(method.toLowerCase());
 
 /**
+ * Tests whether the response content type is supported by the `contentTypes` whitelist
+ * @param {Response} response
+ * @param {CacheOptions} cacheOptions
+ * @returns {boolean} `true` if the contentTypes property is not an array, or if the value of the Content-Type header is in the array
+ */
+const isResponseContentTypeSupported = (response, { contentTypes } = {}) => {
+  if (!Array.isArray(contentTypes)) return true;
+
+  return contentTypes.includes(String(response.headers.get('Content-Type')));
+};
+
+/**
  * Request interceptor to return relevant cached requests
  * @param {function(): string} getCacheId used to invalidate cache if identifier is changed
  * @param {CacheOptions} globalCacheOptions
@@ -58,7 +70,7 @@ const createCacheRequestInterceptor =
     }
 
     const cachedResponse = ajaxCache.get(requestId, cacheOptions.maxAge);
-    if (cachedResponse) {
+    if (cachedResponse && isResponseContentTypeSupported(cachedResponse, cacheOptions)) {
       // Return the response from cache
       request.cacheOptions = request.cacheOptions ?? { useCache: false };
       /** @type {CacheResponse} */
@@ -92,7 +104,10 @@ const createCacheResponseInterceptor =
     if (!response.fromCache && isMethodSupported(cacheOptions, response.request.method)) {
       const requestId = cacheOptions.requestIdFunction(response.request);
 
-      if (isCurrentSessionId(response.request.cacheSessionId)) {
+      if (
+        isCurrentSessionId(response.request.cacheSessionId) &&
+        isResponseContentTypeSupported(response, cacheOptions)
+      ) {
         // Cache the response
         ajaxCache.set(requestId, response.clone());
       }
