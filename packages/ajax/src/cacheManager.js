@@ -82,6 +82,7 @@ export const extendCacheOptions = ({
   requestIdFunction = DEFAULT_GET_REQUEST_ID,
   invalidateUrls,
   invalidateUrlsRegex,
+  contentTypes,
 }) => ({
   useCache,
   methods,
@@ -89,6 +90,7 @@ export const extendCacheOptions = ({
   requestIdFunction,
   invalidateUrls,
   invalidateUrlsRegex,
+  contentTypes,
 });
 
 /**
@@ -101,6 +103,7 @@ export const validateCacheOptions = ({
   requestIdFunction,
   invalidateUrls,
   invalidateUrlsRegex,
+  contentTypes,
 } = {}) => {
   if (useCache !== undefined && typeof useCache !== 'boolean') {
     throw new Error('Property `useCache` must be a `boolean`');
@@ -112,13 +115,16 @@ export const validateCacheOptions = ({
     throw new Error('Property `maxAge` must be a finite `number`');
   }
   if (invalidateUrls !== undefined && !Array.isArray(invalidateUrls)) {
-    throw new Error('Property `invalidateUrls` must be an `Array` or `falsy`');
+    throw new Error('Property `invalidateUrls` must be an `Array` or `undefined`');
   }
   if (invalidateUrlsRegex !== undefined && !(invalidateUrlsRegex instanceof RegExp)) {
-    throw new Error('Property `invalidateUrlsRegex` must be a `RegExp` or `falsy`');
+    throw new Error('Property `invalidateUrlsRegex` must be a `RegExp` or `undefined`');
   }
   if (requestIdFunction !== undefined && typeof requestIdFunction !== 'function') {
     throw new Error('Property `requestIdFunction` must be a `function`');
+  }
+  if (contentTypes !== undefined && !Array.isArray(contentTypes)) {
+    throw new Error('Property `contentTypes` must be an `Array` or `undefined`');
   }
 };
 
