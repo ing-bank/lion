@@ -432,10 +432,10 @@ describe('<lion-checkbox-indeterminate>', () => {
 
   // https://www.w3.org/TR/wai-aria-practices-1.1/examples/checkbox/checkbox-2/checkbox-2.html
   describe('Tri-state', () => {
-    it('should have a tri-state, none -> indeterminate -> all, cycling through', async () => {
+    it('can have a tri-state (using tri-state attribute), none -> indeterminate -> all, cycling through', async () => {
       const el = await fixture(html`
         <lion-checkbox-group name="scientists[]">
-          <lion-checkbox-indeterminate label="Favorite scientists">
+          <lion-checkbox-indeterminate mixed-state label="Favorite scientists">
             <lion-checkbox slot="checkbox" label="Archimedes" checked></lion-checkbox>
             <lion-checkbox slot="checkbox" label="Francis Bacon"></lion-checkbox>
             <lion-checkbox slot="checkbox" label="Marie Curie"></lion-checkbox>
@@ -445,6 +445,8 @@ describe('<lion-checkbox-indeterminate>', () => {
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
         el.querySelector('lion-checkbox-indeterminate')
       );
+
+      expect(elIndeterminate.mixedState).to.be.true;
       expect(elIndeterminate.checked).to.be.false;
       expect(elIndeterminate.indeterminate).to.be.true;
 
@@ -470,7 +472,7 @@ describe('<lion-checkbox-indeterminate>', () => {
     it('should reset to old child checkbox states when reaching indeterminate state', async () => {
       const el = await fixture(html`
         <lion-checkbox-group name="scientists[]">
-          <lion-checkbox-indeterminate label="Favorite scientists">
+          <lion-checkbox-indeterminate mixed-state label="Favorite scientists">
             <lion-checkbox slot="checkbox" label="Archimedes" checked></lion-checkbox>
             <lion-checkbox slot="checkbox" label="Francis Bacon"></lion-checkbox>
             <lion-checkbox slot="checkbox" label="Marie Curie"></lion-checkbox>

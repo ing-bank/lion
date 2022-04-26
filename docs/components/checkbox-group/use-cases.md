@@ -219,3 +219,39 @@ export const indeterminateChildren = () => html`
   </lion-checkbox-group>
 `;
 ```
+
+You can also use `mixed-state` attribute so your indeterminate checkbox toggles through three states (indeterminate, checked, unchecked), where for indeterminate state the old children states are restored when you toggle back into this.
+
+The `checkbox-indeterminate` can have another `checkbox-indeterminate` as a child.
+
+```js preview-story
+export const mixedState = () => html`
+  <lion-checkbox-group name="scientists[]" label="Favorite scientists">
+    <lion-checkbox-indeterminate mixed-state label="Scientists">
+      <lion-checkbox
+        slot="checkbox"
+        label="Isaac Newton"
+        .choiceValue=${'Isaac Newton'}
+      ></lion-checkbox>
+      <lion-checkbox
+        slot="checkbox"
+        label="Galileo Galilei"
+        .choiceValue=${'Galileo Galilei'}
+      ></lion-checkbox>
+      <lion-checkbox-indeterminate mixed-state slot="checkbox" label="Old Greek scientists">
+        <lion-checkbox
+          slot="checkbox"
+          label="Archimedes"
+          .choiceValue=${'Archimedes'}
+        ></lion-checkbox>
+        <lion-checkbox slot="checkbox" label="Plato" .choiceValue=${'Plato'}></lion-checkbox>
+        <lion-checkbox
+          slot="checkbox"
+          label="Pythagoras"
+          .choiceValue=${'Pythagoras'}
+        ></lion-checkbox>
+      </lion-checkbox-indeterminate>
+    </lion-checkbox-indeterminate>
+  </lion-checkbox-group>
+`;
+```
