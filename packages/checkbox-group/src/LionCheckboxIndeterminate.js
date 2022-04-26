@@ -143,15 +143,15 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
       if (this.mixedState) {
         this._setBasedOnMixedState();
       }
-      if (!this.indeterminate) {
-        this._subCheckboxes.forEach(checkbox => {
-          // eslint-disable-next-line no-param-reassign
-          checkbox.checked = this._inputNode.checked;
-        });
-      } else {
+      if (this.indeterminate && this.mixedState) {
         this._subCheckboxes.forEach((checkbox, i) => {
           // eslint-disable-next-line no-param-reassign
           checkbox.checked = this._indeterminateSubStates[i];
+        });
+      } else {
+        this._subCheckboxes.forEach(checkbox => {
+          // eslint-disable-next-line no-param-reassign
+          checkbox.checked = this._inputNode.checked;
         });
       }
     } else {
@@ -162,6 +162,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         }
       });
     }
+
     if (this.mixedState) {
       this._setOldState();
     }

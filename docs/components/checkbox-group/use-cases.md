@@ -222,8 +222,6 @@ export const indeterminateChildren = () => html`
 
 You can also use `mixed-state` attribute so your indeterminate checkbox toggles through three states (indeterminate, checked, unchecked), where for indeterminate state the old children states are restored when you toggle back into this.
 
-The `checkbox-indeterminate` can have another `checkbox-indeterminate` as a child.
-
 ```js preview-story
 export const mixedState = () => html`
   <lion-checkbox-group name="scientists[]" label="Favorite scientists">
