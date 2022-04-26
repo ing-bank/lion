@@ -150,14 +150,12 @@ describe('cache interceptors', () => {
       expect(fetchStub.callCount).to.equal(1);
     });
 
-    // TODO: Check if this is the behaviour we want
-    it('all calls with non-default `maxAge` are cached proactively', async () => {
+    it('all calls are cached proactively', async () => {
       // Given
       newCacheId();
 
       addCacheInterceptors(ajax, {
         useCache: false,
-        maxAge: 100,
       });
 
       // When
@@ -169,11 +167,7 @@ describe('cache interceptors', () => {
       expect(fetchStub.callCount).to.equal(1);
 
       // When
-      await ajax.fetch('/test', {
-        cacheOptions: {
-          useCache: true,
-        },
-      });
+      await ajax.fetch('/test');
 
       // Then
       expect(fetchStub.callCount).to.equal(2);

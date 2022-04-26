@@ -23,11 +23,12 @@ export class Ajax {
    */
   constructor(config = {}) {
     /**
-     * @type {Partial<AjaxConfig>}
+     * @type {AjaxConfig}
      * @private
      */
     this.__config = {
       addAcceptLanguage: true,
+      addCaching: false,
       xsrfCookieName: 'XSRF-TOKEN',
       xsrfHeaderName: 'X-XSRF-TOKEN',
       jsonPrefix: '',
@@ -53,7 +54,7 @@ export class Ajax {
     }
 
     const { cacheOptions } = this.__config;
-    if (cacheOptions?.useCache) {
+    if (cacheOptions.useCache || this.__config.addCaching) {
       const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
         cacheOptions.getCacheIdentifier,
         cacheOptions,
@@ -65,7 +66,7 @@ export class Ajax {
 
   /**
    * Configures the Ajax instance
-   * @param {Partial<AjaxConfig>} config configuration for the Ajax instance
+   * @param {AjaxConfig} config configuration for the Ajax instance
    */
   set options(config) {
     this.__config = config;
