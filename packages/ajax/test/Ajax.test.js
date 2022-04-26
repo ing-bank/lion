@@ -8,9 +8,20 @@ describe('Ajax', () => {
   /** @type {Ajax} */
   let ajax;
 
+  let responseId = 1;
+
+  const responseInit = () => ({
+    headers: {
+      // eslint-disable-next-line no-plusplus
+      'x-request-id': `${responseId++}`,
+      'content-type': 'application/json',
+      'x-custom-header': 'y-custom-value',
+    },
+  });
+
   beforeEach(() => {
     fetchStub = stub(window, 'fetch');
-    fetchStub.returns(Promise.resolve(new Response('mock response')));
+    fetchStub.callsFake(() => Promise.resolve(new Response('mock response', responseInit())));
     ajax = new Ajax();
   });
 
@@ -68,13 +79,16 @@ describe('Ajax', () => {
 
   describe('fetch()', () => {
     it('calls fetch with the given args, returning the result', async () => {
-      const response = await (await ajax.fetch('/foo', { method: 'POST' })).text();
+      const response = await ajax.fetch('/foo', { method: 'POST' });
+      const responseText = await response.text();
 
       expect(fetchStub).to.have.been.calledOnce;
       const request = fetchStub.getCall(0).args[0];
       expect(request.url).to.equal(`${window.location.origin}/foo`);
       expect(request.method).to.equal('POST');
-      expect(response).to.equal('mock response');
+      expect(responseText).to.equal('mock response');
+      expect(response.headers.get('Content-Type')).to.equal('application/json');
+      expect(response.headers.get('X-Custom-Header')).to.equal('y-custom-value');
     });
 
     it('throws on 4xx responses', async () => {
@@ -112,7 +126,7 @@ describe('Ajax', () => {
     });
   });
 
-  describe('fetchtJson', () => {
+  describe('fetchJson', () => {
     beforeEach(() => {
       fetchStub.returns(Promise.resolve(new Response('{}')));
     });
@@ -124,9 +138,11 @@ describe('Ajax', () => {
     });
 
     it('decodes response from json', async () => {
-      fetchStub.returns(Promise.resolve(new Response('{"a":1,"b":2}')));
+      fetchStub.returns(Promise.resolve(new Response('{"a":1,"b":2}', responseInit())));
       const response = await ajax.fetchJson('/foo');
       expect(response.body).to.eql({ a: 1, b: 2 });
+      expect(response.response.headers.get('Content-Type')).to.equal('application/json');
+      expect(response.response.headers.get('X-Custom-Header')).to.equal('y-custom-value');
     });
 
     describe('given a request body', () => {
@@ -287,39 +303,87 @@ describe('Ajax', () => {
       getCacheIdentifier = () => String(cacheId);
     });
 
-    it('allows configuring cache interceptors on the Ajax config', async () => {
-      newCacheId();
-      const customAjax = new Ajax({
-        cacheOptions: {
-          useCache: true,
-          maxAge: 100,
-          getCacheIdentifier,
-        },
+    describe('caching interceptors', async () => {
+      /**
+       * @type {Ajax}
+       */
+      let customAjax;
+
+      beforeEach(async () => {
+        newCacheId();
+        customAjax = new Ajax({
+          cacheOptions: {
+            useCache: true,
+            maxAge: 100,
+            getCacheIdentifier,
+          },
+        });
       });
 
-      const clock = useFakeTimers({
-        shouldAdvanceTime: true,
+      it('works', async () => {
+        await customAjax.fetch('/foo');
+
+        const secondResponse = await customAjax.fetch('/foo');
+        expect(fetchStub.callCount).to.equal(1);
+        expect(await secondResponse.text()).to.equal('mock response');
+        expect(secondResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+        expect(secondResponse.headers.get('Content-Type')).to.equal('application/json');
       });
 
-      // Smoke test 1: verify caching works
-      await customAjax.fetch('/foo');
-      expect(fetchStub.callCount).to.equal(1);
-      await customAjax.fetch('/foo');
-      expect(fetchStub.callCount).to.equal(1);
+      it('works with fetchJson', async () => {
+        fetchStub.returns(Promise.resolve(new Response('{"a":1,"b":2}', responseInit())));
 
-      // Smoke test 2: verify caching is invalidated on non-get method
-      await customAjax.fetch('/foo', { method: 'POST' });
-      expect(fetchStub.callCount).to.equal(2);
-      await customAjax.fetch('/foo');
-      expect(fetchStub.callCount).to.equal(3);
+        const firstResponse = await customAjax.fetchJson('/foo');
+        expect(firstResponse.body).to.deep.equal({ a: 1, b: 2 });
+        expect(firstResponse.response.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+        expect(firstResponse.response.headers.get('Content-Type')).to.equal('application/json');
 
-      // Smoke test 3: verify caching is invalidated after TTL has passed
-      await customAjax.fetch('/foo');
-      expect(fetchStub.callCount).to.equal(3);
-      clock.tick(101);
-      await customAjax.fetch('/foo');
-      expect(fetchStub.callCount).to.equal(4);
-      clock.restore();
+        const secondResponse = await customAjax.fetchJson('/foo');
+        expect(fetchStub.callCount).to.equal(1);
+        expect(secondResponse.body).to.deep.equal({ a: 1, b: 2 });
+        expect(secondResponse.response.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+        expect(secondResponse.response.headers.get('Content-Type')).to.equal('application/json');
+      });
+
+      it('is invalidated on non-get method', async () => {
+        await customAjax.fetch('/foo');
+
+        const secondResponse = await customAjax.fetch('/foo', { method: 'POST' });
+        expect(fetchStub.callCount).to.equal(2);
+        expect(await secondResponse.text()).to.equal('mock response');
+        expect(secondResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+        expect(secondResponse.headers.get('Content-Type')).to.equal('application/json');
+
+        const thirdResponse = await customAjax.fetch('/foo');
+        expect(fetchStub.callCount).to.equal(3);
+        expect(await thirdResponse.text()).to.equal('mock response');
+        expect(thirdResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+        expect(thirdResponse.headers.get('Content-Type')).to.equal('application/json');
+      });
+
+      it('is invalidated after TTL has passed', async () => {
+        const clock = useFakeTimers({
+          shouldAdvanceTime: true,
+        });
+
+        await customAjax.fetch('/foo');
+
+        const secondResponse = await customAjax.fetch('/foo');
+        expect(fetchStub.callCount).to.equal(1);
+        expect(await secondResponse.text()).to.equal('mock response');
+        expect(secondResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+        expect(secondResponse.headers.get('Content-Type')).to.equal('application/json');
+
+        clock.tick(101);
+
+        const thirdResponse = await customAjax.fetch('/foo');
+        expect(fetchStub.callCount).to.equal(2);
+        expect(await thirdResponse.text()).to.equal('mock response');
+        expect(thirdResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+        expect(thirdResponse.headers.get('Content-Type')).to.equal('application/json');
+
+        clock.restore();
+      });
     });
   });
 
