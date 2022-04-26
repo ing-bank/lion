@@ -1,0 +1,23 @@
+{
+  "name": "lit-hybrid",
+  "version": "0.0.0",
+  "description": "The double lit experiment: allow multiple versions of lit (1 and 2) in one runtime with best performance",
+  "dependencies": {
+    "lit": "^2.0.2",
+    "lit-html": "npm:lit-html@^1.4.0",
+    "lit-element": "npm:lit-element@^2.5.0"
+  },
+  "devDependencies": {
+    "@web/dev-server": "^0.1.30",
+    "lit_2_0_1": "npm:lit@2.0.1",
+    "lit-element_2_4": "npm:lit-element@~2.4.0",
+    "lit-html_1_3": "npm:lit-html@~1.3.0",
+    "tachometer": "^0.5.9",
+    "chromedriver": "^100.0.0"
+  },
+  "scripts": {
+    "demo": "wds --node-resolve --open --app-index demo/index.html --watch",
+    "benchmarkx:css-hybrid": "tach --config benchmarks/css-hybrid/tachometer-vs-css2.json --trace",
+    "benchmark:css-hybrid": "tach benchmarks/css-hybrid/index.html?benchmark=cssHybrid"
+  }
+}

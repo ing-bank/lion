@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Polymer/tachometer/master/config.schema.json",
+  "sampleSize": 50,
+  "timeout": 0,
+  "benchmarks": [
+    {
+      "browser": {
+        "name": "chrome",
+        "headless": true
+      },
+      "measurement": [
+        {
+          "mode": "performance",
+          "entryName": "css1"
+        },
+        {
+          "mode": "performance",
+          "entryName": "css2"
+        },
+        {
+          "mode": "performance",
+          "entryName": "cssHybrid"
+        }
+      ],
+      "expand": [
+        {
+          "name": "css-tags",
+          "url": "benchmarks/css-hybrid/index.html"
+        }
+      ]
+    }
+  ]
+}
