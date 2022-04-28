@@ -49,7 +49,14 @@ function getPackageJson(rootPath) {
     const fileContent = fs.readFileSync(`${rootPath}/package.json`, 'utf8');
     return JSON.parse(fileContent);
   } catch (_) {
-    return undefined;
+    try {
+      // For testing purposes, we allow to have a package.mock.json that contains 'fictional'
+      // packages (like 'exporting-ref-project') not on npm registry
+      const fileContent = fs.readFileSync(`${rootPath}/package.mock.json`, 'utf8');
+      return JSON.parse(fileContent);
+    } catch (__) {
+      return undefined;
+    }
   }
 }
 
@@ -252,8 +259,7 @@ class InputDataService {
     const project = { path: projectPath };
     // Add project meta info
     try {
-      const file = pathLib.resolve(projectPath, 'package.json');
-      const pkgJson = JSON.parse(fs.readFileSync(file, 'utf8'));
+      const pkgJson = getPackageJson(projectPath);
       // eslint-disable-next-line no-param-reassign
       project.mainEntry = this.__normalizeMainEntry(pkgJson.main || './index.js');
       // eslint-disable-next-line no-param-reassign
