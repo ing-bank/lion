@@ -433,7 +433,6 @@ describe('<lion-checkbox-indeterminate>', () => {
   // https://www.w3.org/TR/wai-aria-practices-1.1/examples/checkbox/checkbox-2/checkbox-2.html
   describe('mixed-state', () => {
   it('can have a mixed-state (using mixed-state attribute), none -> indeterminate -> all, cycling through', async () => {
-    it('can have a tri-state (using tri-state attribute), none -> indeterminate -> all, cycling through', async () => {
       const el = await fixture(html`
         <lion-checkbox-group name="scientists[]">
           <lion-checkbox-indeterminate mixed-state label="Favorite scientists">
