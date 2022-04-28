@@ -81,6 +81,9 @@ const ListboxMixinImplementation = superclass =>
           reflect: true,
           attribute: 'has-no-default-selected',
         },
+        _noTypeAhead: {
+          type: Boolean,
+        },
       };
     }
 
@@ -270,7 +273,16 @@ const ListboxMixinImplementation = superclass =>
        * See: https://www.w3.org/TR/wai-aria-practices/#kbd_selection_follows_focus
        */
       this.selectionFollowsFocus = false;
-
+      /**
+       * When false, a user can type on which the focus will jump to the matching option
+       */
+      this._noTypeAhead = false;
+      /**
+       * The pending char sequence that will set active list item
+       * @type {number}
+       * @protected
+       */
+      this._typeAheadTimeout = 1000;
       /**
        * @type {number | null}
        * @protected
@@ -327,6 +339,11 @@ const ListboxMixinImplementation = superclass =>
        * @private
        */
       this.__preventScrollingWithArrowKeys = this.__preventScrollingWithArrowKeys.bind(this);
+      /**
+       * @type {string[]}
+       * @private
+       */
+      this.__typedChars = [];
     }
 
     connectedCallback() {
@@ -464,6 +481,39 @@ const ListboxMixinImplementation = superclass =>
     clear() {
       this.setCheckedIndex(-1);
       this.resetInteractionState();
+    }
+
+    /**
+     * @param {KeyboardEvent} ev
+     * @param {{setAsChecked:boolean}} options
+     * @protected
+     */
+    _handleTypeAhead(ev, { setAsChecked }) {
+      const { key, code } = ev;
+
+      if (code.startsWith('Key') || code.startsWith('Digit') || code.startsWith('Numpad')) {
+        ev.preventDefault();
+        this.__typedChars.push(key);
+        const chars = this.__typedChars.join('');
+        const matchedItemIndex =
+          // TODO: consider making this condition overridable for Subclassers by extracting it into protected method
+          this.formElements.findIndex(el => el.modelValue.value.toLowerCase().startsWith(chars));
+        if (matchedItemIndex >= 0) {
+          if (setAsChecked) {
+            this.setCheckedIndex(matchedItemIndex);
+          }
+          this.activeIndex = matchedItemIndex;
+        }
+        if (this.__pendingTypeAheadTimeout) {
+          // Prevent that pending timeouts 'intersect' with new 'typeahead sessions'
+          // @ts-ignore
+          window.clearTimeout(this.__pendingTypeAheadTimeout);
+        }
+        this.__pendingTypeAheadTimeout = setTimeout(() => {
+          // schedule a timeout to reset __typedChars
+          this.__typedChars = [];
+        }, this._typeAheadTimeout);
+      }
     }
 
     /**
@@ -621,7 +671,12 @@ const ListboxMixinImplementation = superclass =>
           ev.preventDefault();
           this.activeIndex = this._getPreviousEnabledOption(this.formElements.length - 1, 0);
           break;
-        /* no default */
+        default:
+          if (!this._noTypeAhead) {
+            this._handleTypeAhead(ev, {
+              setAsChecked: this.selectionFollowsFocus && !this.multipleChoice,
+            });
+          }
       }
 
       const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
