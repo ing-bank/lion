@@ -138,7 +138,7 @@ export const disabledRotateNavigation = () => html`
     <lion-option .choiceValue=${'Beets'}>Beets</lion-option>
     <lion-option .choiceValue=${'Bell pepper'}>Bell pepper</lion-option>
     <lion-option .choiceValue=${'Broccoli'}>Broccoli</lion-option>
-    <lion-option .choiceValue=${'Brussel sprout'} disabled>Brussels sprout</lion-option>
+    <lion-option .choiceValue=${'Brussels sprout'} disabled>Brussels sprout</lion-option>
     <lion-option .choiceValue=${'Cabbage'}>Cabbage</lion-option>
     <lion-option .choiceValue=${'Carrot'}>Carrot</lion-option>
   </lion-listbox>

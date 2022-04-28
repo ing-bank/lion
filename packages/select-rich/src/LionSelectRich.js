@@ -489,7 +489,10 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
           this.opened = true;
         }
         break;
-      /* no default */
+      default:
+        if (!this._noTypeAhead) {
+          this._handleTypeAhead(ev, { setAsChecked: true });
+        }
     }
   }
 
@@ -514,7 +517,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
         // Tab can only be caught in keydown
         this.opened = false;
         break;
-      /* no default */
       case 'Escape':
         this.opened = false;
         this.__blockListShowDuringTransition();
