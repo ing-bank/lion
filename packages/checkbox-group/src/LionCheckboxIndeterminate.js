@@ -62,7 +62,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
    * @protected
    */
   _setOwnCheckedState() {
-    const subCheckboxes = this._subCheckboxes;
+    const subCheckboxes = this._subCheckboxes.filter(checkbox => !checkbox.disabled);
     if (!subCheckboxes.length) {
       return;
     }
@@ -100,10 +100,12 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
 
     const _ev = /** @type {CustomEvent} */ (ev);
     if (_ev.detail.formPath[0] === this && !this.__settingOwnChecked) {
-      this._subCheckboxes.forEach(checkbox => {
-        // eslint-disable-next-line no-param-reassign
-        checkbox.checked = this._inputNode.checked;
-      });
+      this._subCheckboxes
+        .filter(checkbox => !checkbox.disabled)
+        .forEach(checkbox => {
+          // eslint-disable-next-line no-param-reassign
+          checkbox.checked = this._inputNode.checked;
+        });
     }
     this._setOwnCheckedState();
   }

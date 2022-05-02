@@ -152,6 +152,34 @@ describe('<lion-checkbox-indeterminate>', () => {
     expect(elIndeterminate?.checked).to.be.true;
   });
 
+  it('should become checked if all children except disabled ones are checked', async () => {
+    // Arrange
+    const el = /**  @type {LionCheckboxGroup} */ (
+      await fixture(html`
+        <lion-checkbox-group name="scientists[]">
+          <lion-checkbox-indeterminate label="Favorite scientists">
+            <lion-checkbox slot="checkbox" label="Archimedes"></lion-checkbox>
+            <lion-checkbox slot="checkbox" label="Francis Bacon" disabled></lion-checkbox>
+            <lion-checkbox slot="checkbox" label="Marie Curie"></lion-checkbox>
+          </lion-checkbox-indeterminate>
+        </lion-checkbox-group>
+      `)
+    );
+    const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+      el.querySelector('lion-checkbox-indeterminate')
+    );
+    const { _subCheckboxes } = getCheckboxIndeterminateMembers(elIndeterminate);
+
+    // Act
+    _subCheckboxes[0].checked = true;
+    _subCheckboxes[2].checked = true;
+    await el.updateComplete;
+
+    // Assert
+    expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.false;
+    expect(elIndeterminate?.checked).to.be.true;
+  });
+
   it('should sync all children when parent is checked (from indeterminate to checked)', async () => {
     // Arrange
     const el = /**  @type {LionCheckboxGroup} */ (
@@ -178,6 +206,35 @@ describe('<lion-checkbox-indeterminate>', () => {
     expect(elIndeterminate.hasAttribute('indeterminate')).to.be.false;
     expect(_subCheckboxes[0].hasAttribute('checked')).to.be.true;
     expect(_subCheckboxes[1].hasAttribute('checked')).to.be.true;
+    expect(_subCheckboxes[2].hasAttribute('checked')).to.be.true;
+  });
+
+  it('should not sync any disabled children when parent is checked (from indeterminate to checked)', async () => {
+    // Arrange
+    const el = /**  @type {LionCheckboxGroup} */ (
+      await fixture(html`
+        <lion-checkbox-group name="scientists[]">
+          <lion-checkbox-indeterminate label="Favorite scientists">
+            <lion-checkbox slot="checkbox" label="Archimedes"></lion-checkbox>
+            <lion-checkbox slot="checkbox" label="Francis Bacon" disabled></lion-checkbox>
+            <lion-checkbox slot="checkbox" label="Marie Curie"></lion-checkbox>
+          </lion-checkbox-indeterminate>
+        </lion-checkbox-group>
+      `)
+    );
+    const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+      el.querySelector('lion-checkbox-indeterminate')
+    );
+    const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
+
+    // Act
+    _inputNode.click();
+    await elIndeterminate.updateComplete;
+
+    // Assert
+    expect(elIndeterminate.hasAttribute('indeterminate')).to.be.false;
+    expect(_subCheckboxes[0].hasAttribute('checked')).to.be.true;
+    expect(_subCheckboxes[1].hasAttribute('checked')).to.be.false;
     expect(_subCheckboxes[2].hasAttribute('checked')).to.be.true;
   });
 
