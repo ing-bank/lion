@@ -140,9 +140,13 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     // If the model value change event is coming from out own _inputNode
     // and we're not already setting our own (mixed) state programmatically
     if (_ev.detail.formPath[0] === this && !this.__settingOwnChecked) {
-      if (this.mixedState) {
+      const allEqual = (/** @type {any[]} */ arr) => arr.every(val => val === arr[0]);
+      // If our child checkboxes states are all the same, we shouldn't be able to reach indeterminate (mixed) state
+      if (this.mixedState && !allEqual(this._indeterminateSubStates)) {
         this._setBasedOnMixedState();
       }
+
+      this.__settingOwnSubs = true;
       if (this.indeterminate && this.mixedState) {
         this._subCheckboxes.forEach((checkbox, i) => {
           // eslint-disable-next-line no-param-reassign
@@ -154,10 +158,13 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
           checkbox.checked = this._inputNode.checked;
         });
       }
+      this.updateComplete.then(() => {
+        this.__settingOwnSubs = false;
+      });
     } else {
       this._setOwnCheckedState();
       this.updateComplete.then(() => {
-        if (this.indeterminate && !this.__settingOwnChecked && this.mixedState) {
+        if (!this.__settingOwnSubs && !this.__settingOwnChecked && this.mixedState) {
           this._storeIndeterminateState();
         }
       });

@@ -432,7 +432,7 @@ describe('<lion-checkbox-indeterminate>', () => {
 
   // https://www.w3.org/TR/wai-aria-practices-1.1/examples/checkbox/checkbox-2/checkbox-2.html
   describe('mixed-state', () => {
-  it('can have a mixed-state (using mixed-state attribute), none -> indeterminate -> all, cycling through', async () => {
+    it('can have a mixed-state (using mixed-state attribute), none -> indeterminate -> all, cycling through', async () => {
       const el = await fixture(html`
         <lion-checkbox-group name="scientists[]">
           <lion-checkbox-indeterminate mixed-state label="Favorite scientists">
@@ -502,6 +502,80 @@ describe('<lion-checkbox-indeterminate>', () => {
       elIndeterminate._inputNode.click();
       await elIndeterminate.updateComplete;
       expect(checkboxEls.map(checkboxEl => checkboxEl.checked)).to.eql([true, false, false]);
+    });
+
+    it('should no longer reach indeterminate state if the child boxes are all checked or all unchecked during indeterminate state', async () => {
+      const el = await fixture(html`
+        <lion-checkbox-group name="scientists[]">
+          <lion-checkbox-indeterminate mixed-state label="Favorite scientists">
+            <lion-checkbox slot="checkbox" label="Archimedes" checked></lion-checkbox>
+            <lion-checkbox slot="checkbox" label="Francis Bacon"></lion-checkbox>
+            <lion-checkbox slot="checkbox" label="Marie Curie"></lion-checkbox>
+          </lion-checkbox-indeterminate>
+        </lion-checkbox-group>
+      `);
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector('lion-checkbox-indeterminate')
+      );
+      const checkboxEls = /** @type {LionCheckbox[]} */ (
+        Array.from(el.querySelectorAll('lion-checkbox'))
+      );
+
+      // Check when all child boxes in indeterminate state are unchecked
+      // we don't have a tri-state, but a duo-state.
+
+      // @ts-ignore for testing purposes, we access this protected getter
+      checkboxEls[0]._inputNode.click();
+      await elIndeterminate.updateComplete;
+
+      // @ts-ignore for testing purposes, we access this protected getter
+      elIndeterminate._inputNode.click();
+      await elIndeterminate.updateComplete;
+      expect(elIndeterminate.checked).to.be.true;
+      expect(elIndeterminate.indeterminate).to.be.false;
+
+      // @ts-ignore for testing purposes, we access this protected getter
+      elIndeterminate._inputNode.click();
+      await elIndeterminate.updateComplete;
+      expect(elIndeterminate.checked).to.be.false;
+      expect(elIndeterminate.indeterminate).to.be.false;
+
+      // @ts-ignore for testing purposes, we access this protected getter
+      elIndeterminate._inputNode.click();
+      await elIndeterminate.updateComplete;
+      expect(elIndeterminate.checked).to.be.true;
+      expect(elIndeterminate.indeterminate).to.be.false;
+
+      // Check when all child boxes in indeterminate state are getting checked
+      // we also don't have a tri-state, but a duo-state.
+
+      // @ts-ignore for testing purposes, we access this protected getter
+      elIndeterminate._inputNode.click(); // unchecked
+      await elIndeterminate.updateComplete;
+
+      for (const checkEl of checkboxEls) {
+        // @ts-ignore for testing purposes, we access this protected getter
+        checkEl._inputNode.click();
+        // Give each checking of the sub checkbox a chance to finish updating
+        // This means indeterminate state will be true for a bit and the state gets stored
+        await checkEl.updateComplete;
+        await elIndeterminate.updateComplete;
+      }
+
+      expect(elIndeterminate.checked).to.be.true;
+      expect(elIndeterminate.indeterminate).to.be.false;
+
+      // @ts-ignore for testing purposes, we access this protected getter
+      elIndeterminate._inputNode.click();
+      await elIndeterminate.updateComplete;
+      expect(elIndeterminate.checked).to.be.false;
+      expect(elIndeterminate.indeterminate).to.be.false;
+
+      // @ts-ignore for testing purposes, we access this protected getter
+      elIndeterminate._inputNode.click();
+      await elIndeterminate.updateComplete;
+      expect(elIndeterminate.checked).to.be.true;
+      expect(elIndeterminate.indeterminate).to.be.false;
     });
   });
 });
