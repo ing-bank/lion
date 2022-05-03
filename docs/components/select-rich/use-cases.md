@@ -188,7 +188,7 @@ export const checkedIndexAndValue = ({ shadowRoot }) => html`
       aria-labelledby="label-richSelectCheckedInput"
       type="number"
       @change=${e => {
-        const selectEl = shadowRoot.getElementById('checkedRichSelect');
+        const selectEl = shadowRoot.querySelector('#checkedRichSelect');
         selectEl.checkedIndex = e.target.value;
       }}
     />
@@ -196,7 +196,7 @@ export const checkedIndexAndValue = ({ shadowRoot }) => html`
   <button
     class="log-button"
     @click=${() => {
-      const selectEl = shadowRoot.getElementById('checkedRichSelect');
+      const selectEl = shadowRoot.querySelector('#checkedRichSelect');
       console.log(`checkedIndex: ${selectEl.checkedIndex}`);
       console.log(`checkedValue: ${selectEl.checkedValue}`);
     }}
