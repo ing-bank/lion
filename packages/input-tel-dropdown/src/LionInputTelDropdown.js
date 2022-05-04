@@ -300,9 +300,6 @@ export class LionInputTelDropdown extends LionInputTel {
       setTimeout(() => {
         this._inputNode.focus();
       });
-    } else {
-      // For native select
-      this._inputNode.focus();
     }
   }
 
@@ -333,9 +330,23 @@ export class LionInputTelDropdown extends LionInputTel {
     if (!dropdownElement || !regionCode) {
       return;
     }
+    const inputCountryCode = this._phoneUtil?.getCountryCodeForRegionCode(regionCode);
+
     if ('modelValue' in dropdownElement) {
+      const dropdownCountryCode = this._phoneUtil?.getCountryCodeForRegionCode(
+        dropdownElement.modelValue,
+      );
+      if (dropdownCountryCode === inputCountryCode) {
+        return;
+      }
       /** @type {* & FormatHost} */ (dropdownElement).modelValue = regionCode;
     } else {
+      const dropdownCountryCode = this._phoneUtil?.getCountryCodeForRegionCode(
+        dropdownElement.value,
+      );
+      if (dropdownCountryCode === inputCountryCode) {
+        return;
+      }
       /** @type {HTMLSelectElement} */ (dropdownElement).value = regionCode;
     }
   }

@@ -28,7 +28,7 @@ const fixtureSync = /** @type {(arg: string | TemplateResult) => LionInputTelDro
 );
 
 /**
- * @param {DropdownElement} dropdownEl
+ * @param {DropdownElement | HTMLSelectElement} dropdownEl
  * @returns {string}
  */
 function getDropdownValue(dropdownEl) {
@@ -183,18 +183,39 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         expect(el.value).to.equal('+32612345678');
       });
 
-      it('focuses the textbox right after selection', async () => {
+      it('focuses the textbox right after selection if selected via opened dropdown', async () => {
         const el = await fixture(
           html` <${tag} .allowedRegions="${[
             'NL',
             'BE',
           ]}" .modelValue="${'+31612345678'}"></${tag}> `,
         );
+        const dropdownElement = el.refs.dropdown.value;
+        // @ts-expect-error [allow-protected-in-tests]
+        if (dropdownElement?._overlayCtrl) {
+          // @ts-expect-error [allow-protected-in-tests]
+          dropdownElement._overlayCtrl.show();
+          mimicUserChangingDropdown(dropdownElement, 'BE');
+          await el.updateComplete;
+          await aTimeout(0);
+          // @ts-expect-error [allow-protected-in-tests]
+          expect(el._inputNode).to.equal(document.activeElement);
+        }
+      });
+
+      it('keeps focus on dropdownElement after selection if selected via unopened dropdown', async () => {
+        const el = await fixture(
+          html` <${tag} .allowedRegions="${[
+            'NL',
+            'BE',
+          ]}" .modelValue="${'+31612345678'}"></${tag}> `,
+        );
+        const dropdownElement = el.refs.dropdown.value;
         // @ts-ignore
-        mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
+        mimicUserChangingDropdown(dropdownElement, 'BE');
         await el.updateComplete;
-        // @ts-expect-error
-        expect(el._inputNode).to.equal(document.activeElement);
+        // @ts-expect-error [allow-protected-in-tests]
+        expect(el._inputNode).to.not.equal(document.activeElement);
       });
 
       it('prefills country code when textbox is empty', async () => {
@@ -216,6 +237,17 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         await el.updateComplete;
         expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
           'BE',
+        );
+      });
+
+      it('keeps dropdown value if countryCode is the same', async () => {
+        const el = await fixture(html` <${tag} .modelValue="${'+12345678901'}"></${tag}> `);
+        expect(el.activeRegion).to.equal('US');
+        // @ts-expect-error [allow-protected-in test]
+        el._setActiveRegion('AG'); // Also +1
+        await el.updateComplete;
+        expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
+          'US',
         );
       });
     });
