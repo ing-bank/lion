@@ -153,10 +153,12 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
           checkbox.checked = this._indeterminateSubStates[i];
         });
       } else {
-        this._subCheckboxes.forEach(checkbox => {
-          // eslint-disable-next-line no-param-reassign
-          checkbox.checked = this._inputNode.checked;
-        });
+        this._subCheckboxes
+          .filter(checkbox => !checkbox.disabled)
+          .forEach(checkbox => {
+            // eslint-disable-next-line no-param-reassign
+            checkbox.checked = this._inputNode.checked;
+          });
       }
       this.updateComplete.then(() => {
         this.__settingOwnSubs = false;
