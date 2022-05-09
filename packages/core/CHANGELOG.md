@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.17.1
+
+### Patch Changes
+
+- d1d977c1: Update to latest lit v1
+
 ## 0.17.0
 
 ### Minor Changes
