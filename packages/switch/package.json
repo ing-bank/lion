@@ -1,6 +1,6 @@
 {
   "name": "@lion/switch",
-  "version": "0.16.2",
+  "version": "0.16.3",
   "description": "A Switch is used for switching a property or feature on and off",
   "license": "MIT",
   "author": "ing-bank",
@@ -38,9 +38,9 @@
     "lion-switch-button.js"
   ],
   "dependencies": {
-    "@lion/core": "0.17.1",
-    "@lion/form-core": "0.13.1",
-    "@lion/helpers": "0.8.1"
+    "@lion/core": "0.17.2",
+    "@lion/form-core": "0.13.2",
+    "@lion/helpers": "0.8.2"
   },
   "keywords": [
     "lion",
