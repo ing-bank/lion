@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.14.2
+
+### Patch Changes
+
+- @lion/form-core@0.13.1
+
 ## 0.14.1
 
 ### Patch Changes
