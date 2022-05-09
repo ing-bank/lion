@@ -14,9 +14,9 @@ export default {
       simulationSettings: {
         simulatorUrl: '/simulator/',
         languages: [
-          { key: 'en-US', name: 'English (United States)' },
-          { key: 'en-US', name: 'English (United Kingdom)' },
           { key: 'de-DE', name: 'German' },
+          { key: 'en-GB', name: 'English (United Kingdom)' },
+          { key: 'en-US', name: 'English (United States)' },
           { key: 'nl-NL', name: 'Dutch' },
         ],
       },

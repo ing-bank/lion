@@ -1,7 +1,7 @@
 module.exports = async function () {
   return {
     dir: 'ltr',
-    lang: 'en',
+    lang: 'en-GB',
     name: 'Lion',
     description: 'Fundamental white label web components for building your design system',
     socialLinks: [
