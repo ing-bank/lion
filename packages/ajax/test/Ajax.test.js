@@ -197,6 +197,44 @@ describe('Ajax', () => {
       expect(response).to.equal('mock response intercepted-1 intercepted-2');
     });
 
+    it('can add request and response interceptors on opposite sides of their queues, so related interceptors operate on the correct types of data', async () => {
+      fetchStub.returns(Promise.resolve(new Response('r3spons3-in-th3ir-languag3')));
+
+      const addTranslatingPlugin = (/** @type Ajax */ ajx) => {
+        ajx.addRequestInterceptor(
+          async r =>
+            new Request(r.url, {
+              method: r.method,
+              body: (await r.text()).replace(/-in-my-language/, '-in-their-language'),
+            }),
+        );
+        ajx.addResponseInterceptor(
+          async r =>
+            new Response((await r.text()).replace(/-in-their-language/, '-in-my-language')),
+          0,
+        );
+      };
+
+      const addEncodingPlugin = (/** @type Ajax */ ajx) => {
+        ajx.addRequestInterceptor(
+          async r =>
+            new Request(r.url, { method: r.method, body: (await r.text()).replace(/e/g, '3') }),
+        );
+        ajx.addResponseInterceptor(async r => new Response((await r.text()).replace(/3/g, 'e')), 0);
+      };
+
+      addTranslatingPlugin(ajax);
+      addEncodingPlugin(ajax);
+
+      const response = await (
+        await ajax.fetch('/foo', { method: 'POST', body: 'request-in-my-language' })
+      ).text();
+      const request = await fetchStub.getCall(0).args[0].text();
+
+      expect(request).to.equal('r3qu3st-in-th3ir-languag3');
+      expect(response).to.equal('response-in-my-language');
+    });
+
     it('removeRequestInterceptor() removes a request interceptor', async () => {
       const interceptor1 = /** @param {Request} r */ async r =>
         new Request(`${r.url}/intercepted-1`);

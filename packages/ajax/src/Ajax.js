@@ -76,8 +76,8 @@ export class Ajax {
   }
 
   /** @param {RequestInterceptor} requestInterceptor */
-  addRequestInterceptor(requestInterceptor) {
-    this._requestInterceptors.push(requestInterceptor);
+  addRequestInterceptor(requestInterceptor, position = Infinity) {
+    this._requestInterceptors.splice(position, 0, requestInterceptor);
   }
 
   /** @param {RequestInterceptor} requestInterceptor */
@@ -88,8 +88,8 @@ export class Ajax {
   }
 
   /** @param {ResponseInterceptor} responseInterceptor */
-  addResponseInterceptor(responseInterceptor) {
-    this._responseInterceptors.push(responseInterceptor);
+  addResponseInterceptor(responseInterceptor, position = Infinity) {
+    this._responseInterceptors.splice(position, 0, responseInterceptor);
   }
 
   /** @param {ResponseInterceptor} responseInterceptor */
