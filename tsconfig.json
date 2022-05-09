@@ -16,6 +16,8 @@
   },
   "include": ["packages/**/*.js", "packages-node/**/*.js"],
   "exclude": [
+    "packages/**/*.test.js",
+    "packages/*/test-suites/*",
     "node_modules",
     "**/node_modules/*",
     "**/coverage/*",
