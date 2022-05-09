@@ -2,9 +2,9 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 import { formatPhoneNumber } from './formatters.js';
 
 /**
- * @typedef {import('../types').FormatStrategy} FormatStrategy
  * @typedef {import('../types').RegionCode} RegionCode
- * @typedef {* & import('@lion/input-tel/src/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
+ * @typedef {import('awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
+ * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
  */
 
 /**
@@ -13,7 +13,7 @@ import { formatPhoneNumber } from './formatters.js';
  * @param {RegionCode} options.regionCode
  * @param {string} options.prevViewValue
  * @param {number} options.currentCaretIndex
- * @param {FormatStrategy} options.formatStrategy
+ * @param {PhoneNumberFormat} options.formatStrategy
  * @returns {{viewValue:string; caretIndex:number;}|undefined}
  */
 export function liveFormatPhoneNumber(

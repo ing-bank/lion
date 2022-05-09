@@ -3430,6 +3430,11 @@ autosize@4.0.2:
   resolved "https://registry.yarnpkg.com/autosize/-/autosize-4.0.2.tgz#073cfd07c8bf45da4b9fd153437f5bafbba1e4c9"
   integrity sha512-jnSyH2d+qdfPGpWlcuhGiHmqBJ6g3X+8T+iRwFrHPLVcdoGJE/x6Qicm6aDHfTsbgZKxyV8UU/YB2p4cjKDRRA==
 
+awesome-phonenumber@3.0.1:
+  version "3.0.1"
+  resolved "https://pkgs.dev.azure.com/INGCDaaS/IngOne/_packaging/central-npm-feed/npm/registry/awesome-phonenumber/-/awesome-phonenumber-3.0.1.tgz#8d73aaa1c2b0a660b117567b0d9797623457e1d0"
+  integrity sha1-jXOqocKwpmCxF1Z7DZeXYjRX4dA=
+
 axe-core@^4.3.3:
   version "4.3.3"
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.3.3.tgz#b55cd8e8ddf659fe89b064680e1c6a4dceab0325"
