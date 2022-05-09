@@ -41,6 +41,7 @@ export interface CacheOptions {
   invalidateUrlsRegex?: RegExp;
   requestIdFunction?: RequestIdFunction;
   contentTypes?: string[];
+  maxResponseSize?: number;
 }
 
 export interface CacheOptionsWithIdentifier extends CacheOptions {
