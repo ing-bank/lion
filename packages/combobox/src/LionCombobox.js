@@ -331,7 +331,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
      * @protected
      */
     this._listboxReceivesNoFocus = true;
-
+    /**
+     * @configure ListboxMixin
+     * @protected
+     */
+    this._noTypeAhead = true;
     /**
      * @private
      */

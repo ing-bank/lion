@@ -11,6 +11,16 @@ import '@lion/select-rich/define';
  */
 
 /**
+ * @param {HTMLElement} el
+ * @param {string} key
+ * @param {string} code
+ */
+function mimicKeyPress(el, key, code = '') {
+  el.dispatchEvent(new KeyboardEvent('keydown', { key, code }));
+  el.dispatchEvent(new KeyboardEvent('keyup', { key, code }));
+}
+
+/**
  * @param {LionSelectRich} lionSelectEl
  */
 function getNodes(lionSelectEl) {
@@ -141,6 +151,27 @@ describe('lion-select-rich interactions', () => {
       el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
       expect(el.checkedIndex).to.equal(0);
       expectOnlyGivenOneOptionToBeChecked(options, 0);
+    });
+
+    it('checkes a value with [character] keys while listbox unopened', async () => {
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="windows/linux">
+            <lion-options slot="input">
+              <lion-option .choiceValue=${'red'}>Red</lion-option>
+              <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+              <lion-option .choiceValue=${'turquoise'}>Turquoise</lion-option>
+            </lion-options>
+          </lion-select-rich>
+        `)
+      );
+
+      // @ts-ignore [allow-private] in test
+      mimicKeyPress(el, 't', 'KeyT');
+      expect(el.checkedIndex).to.equal(1);
+
+      mimicKeyPress(el, 'u', 'KeyU');
+      expect(el.checkedIndex).to.equal(2);
     });
   });
 

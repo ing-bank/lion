@@ -12,6 +12,7 @@ export interface LionRequestInit extends Omit<RequestInit, 'body'> {
 
 export interface AjaxConfig {
   addAcceptLanguage: boolean;
+  addCaching: boolean;
   xsrfCookieName: string | null;
   xsrfHeaderName: string | null;
   cacheOptions: CacheOptionsWithIdentifier;
