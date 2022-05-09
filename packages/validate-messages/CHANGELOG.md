@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.6.3
+
+### Patch Changes
+
+- @lion/form-core@0.13.2
+- @lion/localize@0.19.2
+
 ## 0.6.2
 
 ### Patch Changes

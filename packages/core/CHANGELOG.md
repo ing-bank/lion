@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.17.2
+
+### Patch Changes
+
+- 92361c19: export Directive from core package
+
 ## 0.17.1
 
 ### Patch Changes
