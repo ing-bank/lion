@@ -37,6 +37,7 @@ export {
   reparentNodes,
   removeNodes,
 } from 'lit-html';
+export { Directive } from 'lit-html/directive.js';
 export { asyncAppend } from 'lit-html/directives/async-append.js';
 export { asyncReplace } from 'lit-html/directives/async-replace.js';
 export { cache } from 'lit-html/directives/cache.js';
