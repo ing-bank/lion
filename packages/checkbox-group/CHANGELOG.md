@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.20.1
+
+### Patch Changes
+
+- 41297869: Add mixed-state feature to checkbox indeterminate. See https://www.w3.org/TR/wai-aria-practices-1.1/examples/checkbox/checkbox-2/checkbox-2.html for the WAI ARIA pattern.
+- Updated dependencies [43dd1320]
+  - @lion/form-core@0.17.1
+
 ## 0.20.0
 
 ### Minor Changes

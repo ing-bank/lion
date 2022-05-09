@@ -1,5 +1,12 @@
 # @lion/input-tel-dropdown
 
+## 0.1.2
+
+### Patch Changes
+
+- 8ecfc31c: sync disable state to dropdown for a11y
+  - @lion/input-tel@0.1.2
+
 ## 0.1.1
 
 ### Patch Changes

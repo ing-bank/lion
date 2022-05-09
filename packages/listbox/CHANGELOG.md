@@ -1,5 +1,13 @@
 # @lion/listbox
 
+## 0.13.1
+
+### Patch Changes
+
+- a28686ee: Add TypeAhead, so with typing characters you will set an option with matching value active/checked
+- Updated dependencies [43dd1320]
+  - @lion/form-core@0.17.1
+
 ## 0.13.0
 
 ### Minor Changes
