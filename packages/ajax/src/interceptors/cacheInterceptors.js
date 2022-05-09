@@ -32,6 +32,21 @@ const isResponseContentTypeSupported = (response, { contentTypes } = {}) => {
 };
 
 /**
+ * Tests whether the response size is not too large to be cached according to the `maxResponseSize` property
+ * @param {Response} response
+ * @param {CacheOptions} cacheOptions
+ * @returns {boolean} `true` if the `maxResponseSize` property is not larger than zero, or if the Content-Length header is not present, or if the value of the header is not larger than the `maxResponseSize` property
+ */
+const isResponseSizeSupported = (response, { maxResponseSize } = {}) => {
+  const responseSize = +(response.headers.get('Content-Length') || 0);
+
+  if (!maxResponseSize) return true;
+  if (!responseSize) return true;
+
+  return responseSize <= maxResponseSize;
+};
+
+/**
  * Request interceptor to return relevant cached requests
  * @param {function(): string} getCacheId used to invalidate cache if identifier is changed
  * @param {CacheOptions} globalCacheOptions
@@ -70,7 +85,11 @@ const createCacheRequestInterceptor =
     }
 
     const cachedResponse = ajaxCache.get(requestId, cacheOptions.maxAge);
-    if (cachedResponse && isResponseContentTypeSupported(cachedResponse, cacheOptions)) {
+    if (
+      cachedResponse &&
+      isResponseContentTypeSupported(cachedResponse, cacheOptions) &&
+      isResponseSizeSupported(cachedResponse, cacheOptions)
+    ) {
       // Return the response from cache
       request.cacheOptions = request.cacheOptions ?? { useCache: false };
       /** @type {CacheResponse} */
@@ -106,7 +125,8 @@ const createCacheResponseInterceptor =
 
       if (
         isCurrentSessionId(response.request.cacheSessionId) &&
-        isResponseContentTypeSupported(response, cacheOptions)
+        isResponseContentTypeSupported(response, cacheOptions) &&
+        isResponseSizeSupported(response, cacheOptions)
       ) {
         // Cache the response
         ajaxCache.set(requestId, response.clone());

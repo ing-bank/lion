@@ -75,6 +75,7 @@ describe('cacheManager', () => {
         invalidateUrls: invalidateUrlsResult,
         invalidateUrlsRegex: invalidateUrlsRegexResult,
         contentTypes,
+        maxResponseSize,
       } = extendCacheOptions({ invalidateUrls, invalidateUrlsRegex });
       // Assert
       expect(useCache).to.be.false;
@@ -84,6 +85,7 @@ describe('cacheManager', () => {
       expect(invalidateUrlsResult).to.equal(invalidateUrls);
       expect(invalidateUrlsRegexResult).to.equal(invalidateUrlsRegex);
       expect(contentTypes).to.be.undefined;
+      expect(maxResponseSize).to.be.undefined;
     });
 
     it('the DEFAULT_GET_REQUEST_ID function throws when called with no arguments', () => {
@@ -131,18 +133,22 @@ describe('cacheManager', () => {
     it('does not accept null as argument', () => {
       expect(() => validateCacheOptions(null)).to.throw(TypeError);
     });
+
     it('accepts an empty object', () => {
       expect(() => validateCacheOptions({})).not.to.throw(
         'Property `useCache` must be a `boolean`',
       );
     });
+
     describe('the useCache property', () => {
       it('accepts a boolean', () => {
         expect(() => validateCacheOptions({ useCache: false })).not.to.throw;
       });
+
       it('accepts undefined', () => {
         expect(() => validateCacheOptions({ useCache: undefined })).not.to.throw;
       });
+
       it('does not accept anything else', () => {
         // @ts-ignore
         expect(() => validateCacheOptions({ useCache: '' })).to.throw(
@@ -150,13 +156,16 @@ describe('cacheManager', () => {
         );
       });
     });
+
     describe('the methods property', () => {
       it('accepts an array with the value `get`', () => {
         expect(() => validateCacheOptions({ methods: ['get'] })).not.to.throw;
       });
+
       it('accepts undefined', () => {
         expect(() => validateCacheOptions({ methods: undefined })).not.to.throw;
       });
+
       it('does not accept anything else', () => {
         expect(() => validateCacheOptions({ methods: [] })).to.throw(
           'Cache can only be utilized with `GET` method',
@@ -169,13 +178,16 @@ describe('cacheManager', () => {
         );
       });
     });
+
     describe('the maxAge property', () => {
       it('accepts a finite number', () => {
         expect(() => validateCacheOptions({ maxAge: 42 })).not.to.throw;
       });
+
       it('accepts undefined', () => {
         expect(() => validateCacheOptions({ maxAge: undefined })).not.to.throw;
       });
+
       it('does not accept anything else', () => {
         // @ts-ignore
         expect(() => validateCacheOptions({ maxAge: 'string' })).to.throw(
@@ -186,6 +198,7 @@ describe('cacheManager', () => {
         );
       });
     });
+
     describe('the invalidateUrls property', () => {
       it('accepts an array', () => {
         // @ts-ignore Typescript requires this to be an array of string, but this is not checked by validateCacheOptions
@@ -193,9 +206,11 @@ describe('cacheManager', () => {
           validateCacheOptions({ invalidateUrls: [6, 'elements', 'in', 1, true, Array] }),
         ).not.to.throw;
       });
+
       it('accepts undefined', () => {
         expect(() => validateCacheOptions({ invalidateUrls: undefined })).not.to.throw;
       });
+
       it('does not accept anything else', () => {
         // @ts-ignore
         expect(() => validateCacheOptions({ invalidateUrls: 'not-an-array' })).to.throw(
@@ -203,14 +218,17 @@ describe('cacheManager', () => {
         );
       });
     });
+
     describe('the invalidateUrlsRegex property', () => {
       it('accepts a regular expression', () => {
         expect(() => validateCacheOptions({ invalidateUrlsRegex: /this is a very picky regex/ }))
           .not.to.throw;
       });
+
       it('accepts undefined', () => {
         expect(() => validateCacheOptions({ invalidateUrlsRegex: undefined })).not.to.throw;
       });
+
       it('does not accept anything else', () => {
         // @ts-ignore
         expect(() =>
@@ -218,6 +236,7 @@ describe('cacheManager', () => {
         ).to.throw('Property `invalidateUrlsRegex` must be a `RegExp` or `undefined`');
       });
     });
+
     describe('the requestIdFunction property', () => {
       it('accepts a function', () => {
         // @ts-ignore Typescript requires the requestIdFunction to return a string, but this is not checked by validateCacheOptions
@@ -225,9 +244,11 @@ describe('cacheManager', () => {
           validateCacheOptions({ requestIdFunction: () => ['this-is-ok-outside-typescript'] }),
         ).not.to.throw;
       });
+
       it('accepts undefined', () => {
         expect(() => validateCacheOptions({ requestIdFunction: undefined })).not.to.throw;
       });
+
       it('does not accept anything else', () => {
         // @ts-ignore
         expect(() => validateCacheOptions({ requestIdFunction: 'not a function' })).to.throw(
@@ -235,19 +256,42 @@ describe('cacheManager', () => {
         );
       });
     });
+
     describe('the contentTypes property', () => {
       it('accepts an array', () => {
         // @ts-ignore Typescript requires this to be an array of string, but this is not checked by validateCacheOptions
         expect(() => validateCacheOptions({ contentTypes: [6, 'elements', 'in', 1, true, Array] }))
           .not.to.throw;
       });
+
       it('accepts undefined', () => {
         expect(() => validateCacheOptions({ contentTypes: undefined })).not.to.throw;
       });
+
       it('does not accept anything else', () => {
         // @ts-ignore
         expect(() => validateCacheOptions({ contentTypes: 'not-an-array' })).to.throw(
           'Property `contentTypes` must be an `Array` or `undefined`',
+        );
+      });
+    });
+
+    describe('the maxResponseSize property', () => {
+      it('accepts a finite number', () => {
+        expect(() => validateCacheOptions({ maxResponseSize: 42 })).not.to.throw;
+      });
+
+      it('accepts undefined', () => {
+        expect(() => validateCacheOptions({ maxResponseSize: undefined })).not.to.throw;
+      });
+
+      it('does not accept anything else', () => {
+        // @ts-ignore
+        expect(() => validateCacheOptions({ maxResponseSize: 'string' })).to.throw(
+          'Property `maxResponseSize` must be a finite `number`',
+        );
+        expect(() => validateCacheOptions({ maxResponseSize: Infinity })).to.throw(
+          'Property `maxResponseSize` must be a finite `number`',
         );
       });
     });

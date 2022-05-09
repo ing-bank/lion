@@ -395,6 +395,40 @@ describe('cache interceptors', () => {
       // Then
       expect(fetchStub.callCount).to.equal(1);
     });
+
+    it('does save to the cache when `maxResponseSize` is specified and the response size is within the threshold', async () => {
+      // Given
+      newCacheId();
+      mockResponse.headers.set('content-length', '20000');
+      addCacheInterceptors(ajax, {
+        useCache: true,
+        maxResponseSize: 50000,
+      });
+
+      // When
+      await ajax.fetch('/test');
+      await ajax.fetch('/test');
+
+      // Then
+      expect(fetchStub.callCount).to.equal(1);
+    });
+
+    it('does save to the cache when `maxResponseSize` is specified and the response size is unknown', async () => {
+      // Given
+      newCacheId();
+
+      addCacheInterceptors(ajax, {
+        useCache: true,
+        maxResponseSize: 50000,
+      });
+
+      // When
+      await ajax.fetch('/test');
+      await ajax.fetch('/test');
+
+      // Then
+      expect(fetchStub.callCount).to.equal(1);
+    });
   });
 
   describe('Bypassing the cache', () => {
@@ -477,6 +511,46 @@ describe('cache interceptors', () => {
 
       // When
       await ajax.fetch('/test', { cacheOptions: { contentTypes: [] } });
+
+      // Then
+      expect(fetchStub.callCount).to.equal(2);
+    });
+
+    it('does not save to the cache when `maxResponseSize` is specified and a larger content-length is specified in the response', async () => {
+      // Given
+      newCacheId();
+      mockResponse.headers.set('content-length', '80000');
+      addCacheInterceptors(ajax, {
+        useCache: true,
+        maxResponseSize: 50000,
+      });
+
+      // When
+      await ajax.fetch('/test');
+      await ajax.fetch('/test', { cacheOptions: { maxResponseSize: 100000 } });
+
+      // Then
+      expect(fetchStub.callCount).to.equal(2);
+    });
+
+    it('does not read from the cache when `maxResponseSize` is specified and a larger content-length is specified in the response', async () => {
+      // Given
+      newCacheId();
+      mockResponse.headers.set('content-length', '80000');
+      addCacheInterceptors(ajax, {
+        useCache: true,
+        maxResponseSize: 100000,
+      });
+
+      // When
+      await ajax.fetch('/test');
+      await ajax.fetch('/test');
+
+      // Then
+      expect(fetchStub.callCount).to.equal(1);
+
+      // When
+      await ajax.fetch('/test', { cacheOptions: { maxResponseSize: 50000 } });
 
       // Then
       expect(fetchStub.callCount).to.equal(2);
