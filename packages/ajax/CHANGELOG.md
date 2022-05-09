@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.15.0
+
+### Minor Changes
+
+- 558edcb6: Adds a `maxResponseSize` cache option to specify a max size for responses to be cached. The option prevents caching and cache retrieval for responses that are larger than the given maximum as reported in the `Content-Length` header. If this header is missing nothing happens, that is to say caching is not prevented.
+- efcdf653: Adds a `contentTypes` cache option to specify a whitelist of content types to be cached. The option prevents caching and cache retrieval for responses that do not have one of these values in the `Content-Type` header.
+- 56af96f1: Add an option "addCaching" to the Ajax config, in order to add cache interceptors when useCache is turned off. In this situation, all requests are cached proactively.
+
 ## 0.14.0
 
 ### Minor Changes

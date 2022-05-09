@@ -1,5 +1,12 @@
 # @lion/input-tel
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [43dd1320]
+  - @lion/form-core@0.17.1
+
 ## 0.1.1
 
 ### Patch Changes
