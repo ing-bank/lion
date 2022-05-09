@@ -12,10 +12,13 @@
     "alwaysStrict": true,
     "types": ["node", "mocha", "sinon"],
     "esModuleInterop": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true,
+    "skipLibCheck": true
   },
   "include": ["packages/**/*.js", "packages-node/**/*.js"],
   "exclude": [
+    "packages/**/*.test.js",
+    "packages/*/test-suites/*",
     "node_modules",
     "**/node_modules/*",
     "**/coverage/*",
