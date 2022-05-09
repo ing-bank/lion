@@ -23,6 +23,7 @@
     "types"
   ],
   "scripts": {
+    "custom-elements-manifest": "wireit",
     "debug": "cd ../../ && npm run debug -- --group core",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group core",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group core",
@@ -43,8 +44,21 @@
   "publishConfig": {
     "access": "public"
   },
+  "customElements": "custom-elements.json",
   "exports": {
     ".": "./index.js",
     "./docs/*": "./docs/*"
+  },
+  "wireit": {
+    "custom-elements-manifest": {
+      "command": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\" \"**/*.d.ts\"",
+      "files": [
+        "src/**/*.js",
+        "index.js"
+      ],
+      "output": [
+        "custom-elements.json"
+      ]
+    }
   }
 }

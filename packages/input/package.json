@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
+    "custom-elements-manifest": "wireit",
     "debug": "cd ../../ && npm run debug -- --group input",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input",
@@ -52,5 +52,20 @@
     "./define": "./lion-input.js",
     "./docs/*": "./docs/*",
     "./test-helpers": "./test-helpers/index.js"
+  },
+  "wireit": {
+    "custom-elements-manifest": {
+      "command": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\" \"**/*.d.ts\"",
+      "dependencies": [
+        "../form-core:custom-elements-manifest"
+      ],
+      "files": [
+        "src/**/*.js",
+        "index.js"
+      ],
+      "output": [
+        "custom-elements.json"
+      ]
+    }
   }
 }

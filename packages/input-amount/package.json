@@ -24,7 +24,7 @@
     "types"
   ],
   "scripts": {
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
+    "custom-elements-manifest": "wireit",
     "debug": "cd ../../ && npm run debug -- --group input-amount",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input-amount",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-amount",
@@ -55,5 +55,22 @@
     ".": "./index.js",
     "./define": "./lion-input-amount.js",
     "./docs/*": "./docs/*"
+  },
+  "wireit": {
+    "custom-elements-manifest": {
+      "command": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
+      "dependencies": [
+        "../input:custom-elements-manifest",
+        "../form-core:custom-elements-manifest",
+        "../localize:custom-elements-manifest"
+      ],
+      "files": [
+        "src/**/*.js",
+        "index.js"
+      ],
+      "output": [
+        "custom-elements.json"
+      ]
+    }
   }
 }
