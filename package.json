@@ -39,7 +39,7 @@
   "devDependencies": {
     "@babel/core": "^7.10.1",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
-    "@changesets/cli": "^2.9.2",
+    "@changesets/cli": "^2.22.0",
     "@commitlint/cli": "^7.0.0",
     "@commitlint/config-conventional": "^7.0.0",
     "@custom-elements-manifest/analyzer": "^0.1.8",
