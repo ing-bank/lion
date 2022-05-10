@@ -1,46 +1,6 @@
-/*
- * Phone number types as provided by google-libphonenumber
- * See:
- * - https://www.npmjs.com/package/google-libphonenumber
- * - https://www.npmjs.com/package/awesome-phonenumber
- */
-export type PhoneNumberType =
-  | 'fixed-line'
-  | 'fixed-line-or-mobile'
-  | 'mobile'
-  | 'pager'
-  | 'personal-number'
-  | 'premium-rate'
-  | 'shared-cost'
-  | 'toll-free'
-  | 'uan'
-  | 'voip'
-  | 'unknown';
-
-/*
- * Phone number possibilities as provided by google-libphonenumber
- * See:
- * - https://www.npmjs.com/package/google-libphonenumber
- * - https://www.npmjs.com/package/awesome-phonenumber
- */
-export type PhoneNumberPossibility =
-  | 'is-possible'
-  | 'invalid-country-code'
-  | 'too-long'
-  | 'too-short'
-  | 'unknown';
-
-/*
- * Phone number formats / formatting strategies as provided by google-libphonenumber
- * See:
- * - https://www.npmjs.com/package/google-libphonenumber
- * - https://www.npmjs.com/package/awesome-phonenumber
- */
-export type FormatStrategy = 'e164' | 'international' | 'national' | 'rfc3966' | 'significant';
-
 /**
  * Supported countries/regions as provided via
- * `libphonenumber.PhoneNumberUtil.getInstance().getSupportedRegions()`
+ * `libphonenumber.getSupportedRegionCodes()`
  */
 export type RegionCode =
   | 'AC'
