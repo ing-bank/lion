@@ -50,6 +50,7 @@
   },
   "exports": {
     ".": "./index.js",
+    "./directive": "./directive.js",
     "./test-helpers": "./test-helpers/index.js",
     "./closestPolyfill": "./src/closestPolyfill.js",
     "./differentKeyEventNamesShimIE": "./src/differentKeyEventNamesShimIE.js",

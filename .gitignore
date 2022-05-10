@@ -23,6 +23,7 @@ yarn-error.log
 
 ## types
 *.d.ts
+!packages/core/directive.d.ts
 !packages/**/*/types/**/*
 !packages/**/index.d.ts
 !packages-node/**/*/types/**/*
