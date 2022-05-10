@@ -40,7 +40,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    * 2. user input: try to derive active region from user input
    * 3. locale: try to get the region from locale (`html[lang]` attribute)
    * @readonly
-   * @property {getRegionCodeForCountryCode|undefined}activeRegion
+   * @property {RegionCode|undefined}activeRegion
    */
   get activeRegion() {
     return this.__activeRegion;
