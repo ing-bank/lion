@@ -133,27 +133,6 @@ export function runFormGroupMixinSuite(cfg = {}) {
       ]);
     });
 
-    it('throws if an element without a name tries to register', async () => {
-      const orig = console.info;
-      console.info = () => {};
-
-      let error;
-      const el = /**  @type {FormGroup} */ (await fixture(html`<${tag}></${tag}>`));
-      try {
-        // we test the api directly as errors thrown from a web component are in a
-        // different context and we can not catch them here => register fake elements
-        el.addFormElement(
-          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({}),
-        );
-      } catch (err) {
-        error = err;
-      }
-      expect(error).to.be.instanceOf(TypeError);
-      expect(/** @type {TypeError} */ (error).message).to.equal('You need to define a name');
-
-      console.info = orig; // restore original console
-    });
-
     it('throws if name is the same as its parent', async () => {
       const orig = console.info;
       console.info = () => {};
