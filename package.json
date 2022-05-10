@@ -25,7 +25,7 @@
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "tsc",
     "lint:versions": "node ./scripts/lint-versions.js",
-    "release": "npm run build:types && changeset publish",
+    "release": "npm run build:types && changeset publish --tag lit1",
     "rocket:build": "rocket build",
     "rocket:build:start": "web-dev-server --root-dir _site --open",
     "start": "rocket start",
