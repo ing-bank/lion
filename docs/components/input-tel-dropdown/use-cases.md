@@ -7,6 +7,9 @@ import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import { PhoneUtilManager } from '@lion/input-tel';
 import '@lion/input-tel-dropdown/define';
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
+
+// TODO: make each example load/use the dependencies by default
+// loadDefaultFeedbackMessages();
 ```
 
 ## Input Tel Dropdown
@@ -15,17 +18,20 @@ When `.allowedRegions` is not configured, all regions/countries will be availabl
 list. Once a region is chosen, its country/dial code will be adjusted with that of the new locale.
 
 ```js preview-story
-export const InputTelDropdown = () => html`
-  <lion-input-tel-dropdown
-    label="Select region via dropdown"
-    help-text="Shows all regions by default"
-    name="phoneNumber"
-  ></lion-input-tel-dropdown>
-  <h-output
-    .show="${['modelValue', 'activeRegion']}"
-    .readyPromise="${PhoneUtilManager.loadComplete}"
-  ></h-output>
-`;
+export const InputTelDropdown = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <lion-input-tel-dropdown
+      label="Select region via dropdown"
+      help-text="Shows all regions by default"
+      name="phoneNumber"
+    ></lion-input-tel-dropdown>
+    <h-output
+      .show="${['modelValue', 'activeRegion']}"
+      .readyPromise="${PhoneUtilManager.loadComplete}"
+    ></h-output>
+  `;
+};
 ```
 
 ## Allowed regions
@@ -34,19 +40,22 @@ When `.allowedRegions` is configured, only those regions/countries will be avail
 list.
 
 ```js preview-story
-export const allowedRegions = () => html`
-  <lion-input-tel-dropdown
-    label="Select region via dropdown"
-    help-text="With region code 'NL'"
-    .modelValue=${'+31612345678'}
-    name="phoneNumber"
-    .allowedRegions=${['NL', 'DE', 'GB']}
-  ></lion-input-tel-dropdown>
-  <h-output
-    .show="${['modelValue', 'activeRegion']}"
-    .readyPromise="${PhoneUtilManager.loadComplete}"
-  ></h-output>
-`;
+export const allowedRegions = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <lion-input-tel-dropdown
+      label="Select region via dropdown"
+      help-text="With region code 'NL'"
+      .modelValue=${'+31612345678'}
+      name="phoneNumber"
+      .allowedRegions=${['NL', 'DE', 'GB']}
+    ></lion-input-tel-dropdown>
+    <h-output
+      .show="${['modelValue', 'activeRegion']}"
+      .readyPromise="${PhoneUtilManager.loadComplete}"
+    ></h-output>
+  `;
+};
 ```
 
 ## Preferred regions
@@ -54,18 +63,21 @@ export const allowedRegions = () => html`
 When `.preferredRegions` is configured, they will show up on top of the dropdown list to enhance user experience.
 
 ```js preview-story
-export const preferredRegionCodes = () => html`
-  <lion-input-tel-dropdown
-    label="Select region via dropdown"
-    help-text="Preferred regions show on top"
-    .modelValue=${'+31612345678'}
-    name="phoneNumber"
-    .allowedRegions=${['BE', 'CA', 'DE', 'GB', 'NL', 'US']}
-    .preferredRegions=${['DE', 'NL']}
-  ></lion-input-tel-dropdown>
-  <h-output
-    .show="${['modelValue', 'activeRegion']}"
-    .readyPromise="${PhoneUtilManager.loadComplete}"
-  ></h-output>
-`;
+export const preferredRegionCodes = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <lion-input-tel-dropdown
+      label="Select region via dropdown"
+      help-text="Preferred regions show on top"
+      .modelValue=${'+31612345678'}
+      name="phoneNumber"
+      .allowedRegions=${['BE', 'CA', 'DE', 'GB', 'NL', 'US']}
+      .preferredRegions=${['DE', 'NL']}
+    ></lion-input-tel-dropdown>
+    <h-output
+      .show="${['modelValue', 'activeRegion']}"
+      .readyPromise="${PhoneUtilManager.loadComplete}"
+    ></h-output>
+  `
+};
 ```

@@ -172,10 +172,12 @@ export function loadDefaultFeedbackMessages() {
     await forMessagesToBeReady();
     const { type, outcome } = data;
     if (outcome === 'too-long') {
-      return localize.msg(`lion-validate:${type}.MaxLength`, data);
+      // TODO: get max-length of country and use MaxLength validator
+      return localize.msg(`lion-validate:${type}.Pattern`, data);
     }
     if (outcome === 'too-short') {
-      return localize.msg(`lion-validate:${type}.MinLength`, data);
+      // TODO: get min-length of country and use MinLength validator
+      return localize.msg(`lion-validate:${type}.Pattern`, data);
     }
     // TODO: add a more specific message here
     if (outcome === 'invalid-country-code') {

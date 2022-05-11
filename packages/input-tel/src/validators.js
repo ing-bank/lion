@@ -4,6 +4,7 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 /**
  * @typedef {import('../types').RegionCode} RegionCode
  * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
+ * @typedef {import('@lion/form-core/types/validate/validate').FeedbackMessageData} FeedbackMessageData
  */
 
 /**
@@ -61,10 +62,5 @@ export class PhoneNumber extends Validator {
       });
     }
     return hasFeedback(modelValue, regionCode);
-  }
-
-  // TODO: add a file for loadDefaultMessages
-  static async getMessage() {
-    return 'Not a valid phone number';
   }
 }

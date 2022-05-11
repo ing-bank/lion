@@ -10,6 +10,9 @@ import { PhoneUtilManager } from '@lion/input-tel';
 import '@lion/input-tel/define';
 import './src/h-region-code-table.js';
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
+
+// TODO: make each example load/use the dependencies by default
+// loadDefaultFeedbackMessages();
 ```
 
 ## Regions: some context
@@ -23,7 +26,10 @@ The table below lists all possible regions worldwide. When [allowed regions](#al
 all of them will be supported as values of Input Tel.
 
 ```js story
-export const regionCodesTable = () => html`<h-region-code-table></h-region-code-table>`;
+export const regionCodesTable = () => {
+  loadDefaultFeedbackMessages();
+  return html`<h-region-code-table></h-region-code-table>`;
+};
 ```
 
 ### Active region
@@ -51,6 +57,8 @@ The following heuristic will be applied:
 
 ```js preview-story
 export const heuristic = () => {
+  loadDefaultFeedbackMessages();
+
   const initialAllowedRegions = ['CN', 'ES'];
   const [inputTelRef, outputRef, selectRef] = [createRef(), createRef(), createRef()];
 
@@ -126,19 +134,22 @@ values that are present in this list.
 > be shown in the dropdown list.
 
 ```js preview-story
-export const allowedRegions = () => html`
-  <lion-input-tel
-    label="Allowed regions 'NL', 'BE', 'DE'"
-    help-text="Type '+31'(NL), '+32'(BE) or '+49'(DE) and see how activeRegion changes"
-    .allowedRegions="${['NL', 'BE', 'DE']}"
-    .modelValue="${'+31612345678'}"
-    name="phoneNumber"
-  ></lion-input-tel>
-  <h-output
-    .show="${['modelValue', 'activeRegion']}"
-    .readyPromise="${PhoneUtilManager.loadComplete}"
-  ></h-output>
-`;
+export const allowedRegions = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <lion-input-tel
+      label="Allowed regions 'NL', 'BE', 'DE'"
+      help-text="Type '+31'(NL), '+32'(BE) or '+49'(DE) and see how activeRegion changes"
+      .allowedRegions="${['NL', 'BE', 'DE']}"
+      .modelValue="${'+31612345678'}"
+      name="phoneNumber"
+    ></lion-input-tel>
+    <h-output
+      .show="${['modelValue', 'activeRegion']}"
+      .readyPromise="${PhoneUtilManager.loadComplete}"
+    ></h-output>
+  `;
+};
 ```
 
 ### Restrict to one region
@@ -147,19 +158,22 @@ When one allowed region is configured, validation and formatting will be restric
 region (that means that changes of the region via viewValue won't have effect).
 
 ```js preview-story
-export const oneAllowedRegion = () => html`
-  <lion-input-tel
-    label="Only allowed region 'DE'"
-    help-text="Restricts validation / formatting to one region"
-    .allowedRegions="${['DE']}"
-    .modelValue="${'+31612345678'}"
-    name="phoneNumber"
-  ></lion-input-tel>
-  <h-output
-    .show="${['modelValue', 'activeRegion', 'validationStates']}"
-    .readyPromise="${PhoneUtilManager.loadComplete}"
-  ></h-output>
-`;
+export const oneAllowedRegion = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <lion-input-tel
+      label="Only allowed region 'DE'"
+      help-text="Restricts validation / formatting to one region"
+      .allowedRegions="${['DE']}"
+      .modelValue="${'+31612345678'}"
+      name="phoneNumber"
+    ></lion-input-tel>
+    <h-output
+      .show="${['modelValue', 'activeRegion', 'validationStates']}"
+      .readyPromise="${PhoneUtilManager.loadComplete}"
+    ></h-output>
+  `;
+};
 ```
 
 ## Format strategy
@@ -183,6 +197,7 @@ Also see:
 
 ```js preview-story
 export const formatStrategy = () => {
+  loadDefaultFeedbackMessages();
   const inputTel = createRef();
   return html`
     <select @change="${({ target }) => (inputTel.value.formatStrategy = target.value)}">
@@ -215,16 +230,19 @@ Type '6' in the example below to see how the phone number is formatted during ty
 See [awesome-phonenumber documentation](https://www.npmjs.com/package/awesome-phonenumber)
 
 ```js preview-story
-export const liveFormat = () => html`
-  <lion-input-tel
-    label="Realtime format on user input"
-    help-text="Partial numbers are also formatted"
-    .modelValue=${new Unparseable('+31')}
-    format-strategy="international"
-    live-format
-    name="phoneNumber"
-  ></lion-input-tel>
-`;
+export const liveFormat = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <lion-input-tel
+      label="Realtime format on user input"
+      help-text="Partial numbers are also formatted"
+      .modelValue=${new Unparseable('+31')}
+      format-strategy="international"
+      live-format
+      name="phoneNumber"
+    ></lion-input-tel>
+  `;
+};
 ```
 
 ## Active phone number type
@@ -239,16 +257,19 @@ Also see:
 - [awesome-phonenumber documentation](https://www.npmjs.com/package/awesome-phonenumber)
 
 ```js preview-story
-export const activePhoneNumberType = () => html`
-  <lion-input-tel
-    label="Active phone number type"
-    .modelValue="${'+31612345678'}"
-    format-strategy="international"
-    name="phoneNumber"
-  ></lion-input-tel>
-  <h-output
-    .show="${['activePhoneNumberType']}"
-    .readyPromise="${PhoneUtilManager.loadComplete}"
-  ></h-output>
-`;
+export const activePhoneNumberType = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <lion-input-tel
+      label="Active phone number type"
+      .modelValue="${'+31612345678'}"
+      format-strategy="international"
+      name="phoneNumber"
+    ></lion-input-tel>
+    <h-output
+      .show="${['activePhoneNumberType']}"
+      .readyPromise="${PhoneUtilManager.loadComplete}"
+    ></h-output>
+  `;
+};
 ```

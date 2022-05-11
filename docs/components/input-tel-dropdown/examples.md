@@ -4,6 +4,7 @@
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/select-rich/define';
 import './src/intl-input-tel-dropdown.js';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 ```
 
 ## Input Tel International
@@ -16,13 +17,16 @@ Inspired by:
 - [react-phone-input-2](https://github.com/bl00mber/react-phone-input-2)
 
 ```js preview-story
-export const IntlInputTelDropdown = () => html`
-  <intl-input-tel-dropdown
-    .preferredRegions="${['NL', 'PH']}"
-    .modelValue=${'+639608920056'}
-    label="Telephone number"
-    help-text="Advanced dropdown and styling"
-    name="phoneNumber"
-  ></intl-input-tel-dropdown>
-`;
+export const IntlInputTelDropdown = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <intl-input-tel-dropdown
+      .preferredRegions="${['NL', 'PH']}"
+      .modelValue=${'+639608920056'}
+      label="Telephone number"
+      help-text="Advanced dropdown and styling"
+      name="phoneNumber"
+    ></intl-input-tel-dropdown>
+  `;
+};
 ```
