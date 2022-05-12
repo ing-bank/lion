@@ -1,10 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 
-const yarnLockPath = './yarn.lock';
-const data = fs.readFileSync(path.resolve(yarnLockPath), 'utf8');
-if (data.match(/artifactory/g)) {
-  throw new Error(
-    'Artifactory references in your yarn.lock! Please make sure you are using a public npm registry when downloading your dependencies!',
-  );
-}
+const lockFileContent = fs.readFileSync(path.resolve('./yarn.lock'), 'utf8');
+
+const allowedRegistries = ['registry.yarnpkg.com', 'registry.npmjs.org'];
+const resolvedUrls = lockFileContent.match(/"https:.*"/g);
+resolvedUrls.forEach(url => {
+  const [, registry] = url.match(/^"https:\/\/(.*?)\/.*"$/) || [];
+  if (!allowedRegistries.includes(registry)) {
+    throw new Error(
+      `Disallowed registries ("${registry}") in your yarn.lock!
+      Please make sure you are using a public npm registry when downloading your dependencies!`,
+    );
+  }
+});
