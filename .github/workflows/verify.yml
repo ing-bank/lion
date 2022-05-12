@@ -9,6 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Sanity check
+        run: node ./scripts/yarn-lock-scan.js
+
       - name: Setup Node 14.x
         uses: actions/setup-node@v1
         with:
