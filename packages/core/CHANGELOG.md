@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.17.3
+
+### Patch Changes
+
+- a35ec45d: Export forward compatible class based Directive in separate file like lit-html
+
 ## 0.17.2
 
 ### Patch Changes
