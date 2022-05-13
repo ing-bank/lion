@@ -76,6 +76,7 @@ describe('cacheManager', () => {
         invalidateUrlsRegex: invalidateUrlsRegexResult,
         contentTypes,
         maxResponseSize,
+        maxCacheSize,
       } = extendCacheOptions({ invalidateUrls, invalidateUrlsRegex });
       // Assert
       expect(useCache).to.be.false;
@@ -86,6 +87,7 @@ describe('cacheManager', () => {
       expect(invalidateUrlsRegexResult).to.equal(invalidateUrlsRegex);
       expect(contentTypes).to.be.undefined;
       expect(maxResponseSize).to.be.undefined;
+      expect(maxCacheSize).to.be.undefined;
     });
 
     it('the DEFAULT_GET_REQUEST_ID function throws when called with no arguments', () => {
@@ -292,6 +294,26 @@ describe('cacheManager', () => {
         );
         expect(() => validateCacheOptions({ maxResponseSize: Infinity })).to.throw(
           'Property `maxResponseSize` must be a finite `number`',
+        );
+      });
+    });
+
+    describe('the maxCacheSize property', () => {
+      it('accepts a finite number', () => {
+        expect(() => validateCacheOptions({ maxCacheSize: 42 })).not.to.throw;
+      });
+
+      it('accepts undefined', () => {
+        expect(() => validateCacheOptions({ maxCacheSize: undefined })).not.to.throw;
+      });
+
+      it('does not accept anything else', () => {
+        // @ts-ignore
+        expect(() => validateCacheOptions({ maxCacheSize: 'string' })).to.throw(
+          'Property `maxCacheSize` must be a finite `number`',
+        );
+        expect(() => validateCacheOptions({ maxCacheSize: Infinity })).to.throw(
+          'Property `maxCacheSize` must be a finite `number`',
         );
       });
     });
