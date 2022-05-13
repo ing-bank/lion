@@ -2,44 +2,48 @@
 import '../typedef.js';
 import {
   ajaxCache,
-  resetCacheSession,
   extendCacheOptions,
-  validateCacheOptions,
   invalidateMatchingCache,
-  pendingRequestStore,
   isCurrentSessionId,
+  pendingRequestStore,
+  resetCacheSession,
+  validateCacheOptions,
 } from '../cacheManager.js';
 
 /**
  * Tests whether the request method is supported according to the `cacheOptions`
- * @param {ValidatedCacheOptions} cacheOptions
+ * @param {string[]} methods
  * @param {string} method
  * @returns {boolean}
  */
-const isMethodSupported = (cacheOptions, method) =>
-  cacheOptions.methods.includes(method.toLowerCase());
+const isMethodSupported = (methods, method) => methods.includes(method.toLowerCase());
 
 /**
  * Tests whether the response content type is supported by the `contentTypes` whitelist
  * @param {Response} response
- * @param {CacheOptions} cacheOptions
+ * @param {string[]|undefined} contentTypes
  * @returns {boolean} `true` if the contentTypes property is not an array, or if the value of the Content-Type header is in the array
  */
-const isResponseContentTypeSupported = (response, { contentTypes } = {}) => {
+const isResponseContentTypeSupported = (response, contentTypes) => {
   if (!Array.isArray(contentTypes)) return true;
 
   return contentTypes.includes(String(response.headers.get('Content-Type')));
 };
 
 /**
- * Tests whether the response size is not too large to be cached according to the `maxResponseSize` property
  * @param {Response} response
- * @param {CacheOptions} cacheOptions
- * @returns {boolean} `true` if the `maxResponseSize` property is not larger than zero, or if the Content-Length header is not present, or if the value of the header is not larger than the `maxResponseSize` property
+ * @returns {Promise<number>}
  */
-const isResponseSizeSupported = (response, { maxResponseSize } = {}) => {
-  const responseSize = +(response.headers.get('Content-Length') || 0);
+const getResponseSize = async response =>
+  Number(response.headers.get('Content-Length')) || (await response.clone().blob()).size || 0;
 
+/**
+ * Tests whether the response size is not too large to be cached according to the `maxResponseSize` property
+ * @param {number|undefined} responseSize
+ * @param {number|undefined} maxResponseSize
+ * @returns {boolean} `true` if the `maxResponseSize` property is not larger than zero, or if the response size is not known, or if the value of the header is not larger than the `maxResponseSize` property
+ */
+const isResponseSizeSupported = (responseSize, maxResponseSize) => {
   if (!maxResponseSize) return true;
   if (!responseSize) return true;
 
@@ -63,17 +67,20 @@ const createCacheRequestInterceptor =
       ...request.cacheOptions,
     });
 
+    const { useCache, requestIdFunction, methods, contentTypes, maxAge, maxResponseSize } =
+      cacheOptions;
+
     // store cacheOptions and cacheSessionId in the request, to use it in the response interceptor.
     request.cacheOptions = cacheOptions;
     request.cacheSessionId = cacheSessionId;
 
-    if (!cacheOptions.useCache) {
+    if (!useCache) {
       return request;
     }
 
-    const requestId = cacheOptions.requestIdFunction(request);
+    const requestId = requestIdFunction(request);
 
-    if (!isMethodSupported(cacheOptions, request.method)) {
+    if (!isMethodSupported(methods, request.method)) {
       invalidateMatchingCache(requestId, cacheOptions);
       return request;
     }
@@ -84,15 +91,11 @@ const createCacheRequestInterceptor =
       await pendingRequest;
     }
 
-    const cachedResponse = ajaxCache.get(requestId, cacheOptions.maxAge);
-    if (
-      cachedResponse &&
-      isResponseContentTypeSupported(cachedResponse, cacheOptions) &&
-      isResponseSizeSupported(cachedResponse, cacheOptions)
-    ) {
+    const cachedResponse = ajaxCache.get(requestId, { maxAge, maxResponseSize });
+    if (cachedResponse && isResponseContentTypeSupported(cachedResponse, contentTypes)) {
       // Return the response from cache
       request.cacheOptions = request.cacheOptions ?? { useCache: false };
-      /** @type {CacheResponse} */
+
       const response = cachedResponse.clone();
       response.request = request;
       response.fromCache = true;
@@ -109,35 +112,49 @@ const createCacheRequestInterceptor =
  * @param {CacheOptions} globalCacheOptions
  * @returns {ResponseInterceptor}
  */
-const createCacheResponseInterceptor =
-  globalCacheOptions => /** @param {CacheResponse} response */ async response => {
-    if (!response.request) {
-      throw new Error('Missing request in response');
-    }
+const createCacheResponseInterceptor = globalCacheOptions => async responseParam => {
+  const response = /** @type {CacheResponse} */ (responseParam);
 
-    const cacheOptions = extendCacheOptions({
-      ...globalCacheOptions,
-      ...response.request.cacheOptions,
-    });
+  if (!response.request) {
+    throw new Error('Missing request in response');
+  }
 
-    if (!response.fromCache && isMethodSupported(cacheOptions, response.request.method)) {
-      const requestId = cacheOptions.requestIdFunction(response.request);
+  const {
+    requestIdFunction,
+    methods,
+    contentTypes,
+    maxResponseSize,
+    maxCacheSize,
+    replacementPolicy,
+  } = extendCacheOptions({
+    ...globalCacheOptions,
+    ...response.request.cacheOptions,
+  });
 
-      if (
-        isCurrentSessionId(response.request.cacheSessionId) &&
-        isResponseContentTypeSupported(response, cacheOptions) &&
-        isResponseSizeSupported(response, cacheOptions)
-      ) {
-        // Cache the response
-        ajaxCache.set(requestId, response.clone());
+  if (!response.fromCache && isMethodSupported(methods, response.request.method)) {
+    const requestId = requestIdFunction(response.request);
+    const responseSize = maxCacheSize || maxResponseSize ? await getResponseSize(response) : 0;
+
+    if (
+      isCurrentSessionId(response.request.cacheSessionId) &&
+      isResponseContentTypeSupported(response, contentTypes) &&
+      isResponseSizeSupported(responseSize, maxResponseSize)
+    ) {
+      // Cache the response
+      ajaxCache.set(requestId, response.clone(), responseSize);
+
+      // Truncate the cache if needed
+      if (maxCacheSize) {
+        replacementPolicy.call(ajaxCache, maxCacheSize);
       }
-
-      // Mark the pending request as resolved
-      pendingRequestStore.resolve(requestId);
     }
 
-    return response;
-  };
+    // Mark the pending request as resolved
+    pendingRequestStore.resolve(requestId);
+  }
+
+  return response;
+};
 
 /**
  * Response interceptor to cache relevant requests

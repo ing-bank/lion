@@ -42,6 +42,8 @@ export interface CacheOptions {
   requestIdFunction?: RequestIdFunction;
   contentTypes?: string[];
   maxResponseSize?: number;
+  maxCacheSize?: number;
+  replacementPolicy?: (maxSize: number) => void
 }
 
 export interface CacheOptionsWithIdentifier extends CacheOptions {
@@ -53,6 +55,7 @@ export interface ValidatedCacheOptions extends CacheOptions {
   methods: string[];
   maxAge: number;
   requestIdFunction: RequestIdFunction;
+  replacementPolicy: (maxSize: number) => void;
 }
 
 export interface CacheRequestExtension {
@@ -72,13 +75,16 @@ export interface CacheResponseRequest {
 
 export interface CacheResponseExtension {
   request: CacheResponseRequest;
-  data: object | string;
   fromCache?: boolean;
 }
 
 export type CacheRequest = Request & Partial<CacheRequestExtension>;
 
-export type CacheResponse = Response & Partial<CacheResponseExtension>;
+export interface CacheResponse extends Response, CacheResponseExtension {
+  clone: () => CacheResponse;
+}
+
+export type CachedRequests = { [requestId: string]: { createdAt: number, size: number, response: CacheResponse } };
 
 export type CachedRequestInterceptor = (
   request: CacheRequest,

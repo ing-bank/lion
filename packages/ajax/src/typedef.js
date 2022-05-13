@@ -13,6 +13,7 @@
  * @typedef {import('../types/types').CacheResponseRequest} CacheResponseRequest
  * @typedef {import('../types/types').CacheRequest} CacheRequest
  * @typedef {import('../types/types').CacheResponse} CacheResponse
+ * @typedef {import('../types/types').CachedRequests} CachedRequests
  * @typedef {import('../types/types').CachedRequestInterceptor} CachedRequestInterceptor
  * @typedef {import('../types/types').CachedResponseInterceptor} CachedResponseInterceptor
  */

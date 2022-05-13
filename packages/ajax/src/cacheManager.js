@@ -67,6 +67,27 @@ const DEFAULT_GET_REQUEST_ID = (
 };
 
 /**
+ * The default replacement policy for cache setups with a `maxSize` defined. Deletes the oldest cache entries until it is not longer greater than `maxSize`.
+ *
+ * @this Cache
+ * @param {number} maxSize
+ */
+const FIFO_REPLACEMENT_POLICY = function fifoReplacementPolicy(maxSize) {
+  if (this.size <= maxSize) return;
+
+  // @ts-ignore private field can be accessed by this function
+  const requests = this._cachedRequests;
+  const sortedRequestIds = Object.keys(requests).sort(
+    (a, b) => requests[a].createdAt - requests[b].createdAt,
+  );
+
+  for (const requestId of sortedRequestIds) {
+    this.delete(requestId);
+    if (this.size <= maxSize) return;
+  }
+};
+
+/**
  * Defaults to 1 hour
  */
 const DEFAULT_MAX_AGE = 1000 * 60 * 60;
@@ -84,6 +105,8 @@ export const extendCacheOptions = ({
   invalidateUrlsRegex,
   contentTypes,
   maxResponseSize,
+  maxCacheSize,
+  replacementPolicy = FIFO_REPLACEMENT_POLICY,
 }) => ({
   useCache,
   methods,
@@ -93,6 +116,8 @@ export const extendCacheOptions = ({
   invalidateUrlsRegex,
   contentTypes,
   maxResponseSize,
+  maxCacheSize,
+  replacementPolicy,
 });
 
 /**
@@ -107,6 +132,8 @@ export const validateCacheOptions = ({
   invalidateUrlsRegex,
   contentTypes,
   maxResponseSize,
+  maxCacheSize,
+  replacementPolicy,
 } = {}) => {
   if (useCache !== undefined && typeof useCache !== 'boolean') {
     throw new Error('Property `useCache` must be a `boolean`');
@@ -131,6 +158,12 @@ export const validateCacheOptions = ({
   }
   if (maxResponseSize !== undefined && !Number.isFinite(maxResponseSize)) {
     throw new Error('Property `maxResponseSize` must be a finite `number`');
+  }
+  if (maxCacheSize !== undefined && !Number.isFinite(maxCacheSize)) {
+    throw new Error('Property `maxCacheSize` must be a finite `number`');
+  }
+  if (replacementPolicy !== undefined && typeof replacementPolicy !== 'function') {
+    throw new Error('Property `replacementPolicy` must be a `function`');
   }
 };
 

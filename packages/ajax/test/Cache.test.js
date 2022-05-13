@@ -32,8 +32,12 @@ describe('Cache', () => {
     const cache = new Cache();
 
     cache._cachedRequests = {
-      requestId1: { createdAt: Date.now() - TWO_MINUTES_IN_MS, response: 'cached data 1' },
-      requestId2: { createdAt: Date.now(), response: 'cached data 2' },
+      requestId1: {
+        createdAt: Date.now() - TWO_MINUTES_IN_MS,
+        response: 'cached data 1',
+        size: 1000,
+      },
+      requestId2: { createdAt: Date.now(), response: 'cached data 2', size: 100 },
     };
 
     it('returns undefined if no cached request found for requestId', () => {
@@ -41,7 +45,7 @@ describe('Cache', () => {
       const maxAge = TEN_MINUTES_IN_MS;
       const expected = undefined;
       // When
-      const result = cache.get('nonCachedRequestId', maxAge);
+      const result = cache.get('nonCachedRequestId', { maxAge });
       // Then
       expect(result).to.equal(expected);
     });
@@ -51,7 +55,7 @@ describe('Cache', () => {
       const maxAge = 'some string';
       const expected = undefined;
       // When
-      const result = cache.get('requestId1', maxAge);
+      const result = cache.get('requestId1', { maxAge });
       // Then
       expect(result).to.equal(expected);
     });
@@ -61,7 +65,7 @@ describe('Cache', () => {
       const maxAge = 1 / 0;
       const expected = undefined;
       // When
-      const result = cache.get('requestId1', maxAge);
+      const result = cache.get('requestId1', { maxAge });
       // Then
       expect(result).to.equal(expected);
     });
@@ -71,7 +75,7 @@ describe('Cache', () => {
       const maxAge = -10;
       const expected = undefined;
       // When
-      const result = cache.get('requestId1', maxAge);
+      const result = cache.get('requestId1', { maxAge });
       // Then
       expect(result).to.equal(expected);
     });
@@ -81,7 +85,7 @@ describe('Cache', () => {
       const maxAge = A_MINUTE_IN_MS;
       const expected = undefined;
       // When
-      const result = cache.get('requestId1', maxAge);
+      const result = cache.get('requestId1', { maxAge });
       // Then
       expect(result).to.equal(expected);
     });
@@ -91,7 +95,29 @@ describe('Cache', () => {
       const maxAge = TEN_MINUTES_IN_MS;
       const expected = cache._cachedRequests?.requestId1?.response;
       // When
-      const result = cache.get('requestId1', maxAge);
+      const result = cache.get('requestId1', { maxAge });
+      // Then
+      expect(result).to.deep.equal(expected);
+    });
+
+    it('returns undefined if maxResponseSize is set and is smaller than the recorded size of the cache item', () => {
+      // Given
+      const maxAge = TEN_MINUTES_IN_MS;
+      const maxResponseSize = 100;
+      const expected = undefined;
+      // When
+      const result = cache.get('requestId1', { maxAge, maxResponseSize });
+      // Then
+      expect(result).to.equal(expected);
+    });
+
+    it('gets the cached request by requestId if maxResponseSize is set and is greater than the recorded size of the cache item', () => {
+      // Given
+      const maxAge = TEN_MINUTES_IN_MS;
+      const maxResponseSize = 10000;
+      const expected = cache._cachedRequests?.requestId1?.response;
+      // When
+      const result = cache.get('requestId1', { maxAge, maxResponseSize });
       // Then
       expect(result).to.deep.equal(expected);
     });
@@ -108,8 +134,8 @@ describe('Cache', () => {
       cache.set('requestId1', response1);
       cache.set('requestId2', response2);
       // Then
-      expect(cache.get('requestId1', maxAge)).to.equal(response1);
-      expect(cache.get('requestId2', maxAge)).to.equal(response2);
+      expect(cache.get('requestId1', { maxAge })).to.equal(response1);
+      expect(cache.get('requestId2', { maxAge })).to.equal(response2);
     });
 
     it('updates the `response` for the given `requestId`, if already cached', () => {
@@ -121,11 +147,11 @@ describe('Cache', () => {
       // When
       cache.set('requestId1', response);
       // Then
-      expect(cache.get('requestId1', maxAge)).to.equal(response);
+      expect(cache.get('requestId1', { maxAge })).to.equal(response);
       // When
       cache.set('requestId1', updatedResponse);
       // Then
-      expect(cache.get('requestId1', maxAge)).to.equal(updatedResponse);
+      expect(cache.get('requestId1', { maxAge })).to.equal(updatedResponse);
     });
   });
 
@@ -140,13 +166,13 @@ describe('Cache', () => {
       cache.set('requestId1', response1);
       cache.set('requestId2', response2);
       // Then
-      expect(cache.get('requestId1', maxAge)).to.equal(response1);
-      expect(cache.get('requestId2', maxAge)).to.equal(response2);
+      expect(cache.get('requestId1', { maxAge })).to.equal(response1);
+      expect(cache.get('requestId2', { maxAge })).to.equal(response2);
       // When
       cache.delete('requestId1');
       // Then
-      expect(cache.get('requestId1', maxAge)).to.be.undefined;
-      expect(cache.get('requestId2', maxAge)).to.equal(response2);
+      expect(cache.get('requestId1', { maxAge })).to.be.undefined;
+      expect(cache.get('requestId2', { maxAge })).to.equal(response2);
     });
 
     it('deletes cache by regex', () => {
@@ -161,15 +187,15 @@ describe('Cache', () => {
       cache.set('requestId2', response2);
       cache.set('anotherRequestId', response3);
       // Then
-      expect(cache.get('requestId1', maxAge)).to.equal(response1);
-      expect(cache.get('requestId2', maxAge)).to.equal(response2);
-      expect(cache.get('anotherRequestId', maxAge)).to.equal(response3);
+      expect(cache.get('requestId1', { maxAge })).to.equal(response1);
+      expect(cache.get('requestId2', { maxAge })).to.equal(response2);
+      expect(cache.get('anotherRequestId', { maxAge })).to.equal(response3);
       // When
       cache.deleteMatching(/^requestId/);
       // Then
-      expect(cache.get('requestId1', maxAge)).to.be.undefined;
-      expect(cache.get('requestId2', maxAge)).to.be.undefined;
-      expect(cache.get('anotherRequestId', maxAge)).to.equal(response3);
+      expect(cache.get('requestId1', { maxAge })).to.be.undefined;
+      expect(cache.get('requestId2', { maxAge })).to.be.undefined;
+      expect(cache.get('anotherRequestId', { maxAge })).to.equal(response3);
     });
   });
 
@@ -181,16 +207,62 @@ describe('Cache', () => {
       const response1 = 'response of request1';
       const response2 = 'response of request2';
       // When
-      cache.set('requestId1', response1);
-      cache.set('requestId2', response2);
+      cache.set('requestId1', response1, { maxAge: 1 });
+      cache.set('requestId2', response2, { maxAge: 2 });
       // Then
-      expect(cache.get('requestId1', maxAge)).to.equal(response1);
-      expect(cache.get('requestId2', maxAge)).to.equal(response2);
+      expect(cache.get('requestId1', { maxAge })).to.equal(response1, 3);
+      expect(cache.get('requestId2', { maxAge })).to.equal(response2, 4);
       // When
       cache.reset();
       // Then
-      expect(cache.get('requestId1', maxAge)).to.be.undefined;
-      expect(cache.get('requestId2', maxAge)).to.be.undefined;
+      expect(cache.get('requestId1', { maxAge })).to.be.undefined;
+      expect(cache.get('requestId2', { maxAge })).to.be.undefined;
+    });
+  });
+
+  describe('cache.size', () => {
+    let cache;
+
+    beforeEach(() => {
+      cache = new Cache();
+    });
+
+    it('starts with size 0', () => {
+      expect(cache.size).to.equal(0);
+    });
+
+    it('increases when a new item is added', () => {
+      cache.set('requestId1', 'response1', 123);
+      cache.set('requestId2', 'response2', 321);
+
+      expect(cache.size).to.equal(444);
+    });
+
+    it('updates when an item is updated', () => {
+      cache.set('requestId1', 'response1', 123);
+      cache.set('requestId2', 'response2', 321);
+
+      cache.set('requestId1', 'response3', 111);
+
+      expect(cache.size).to.equal(432);
+    });
+
+    it('decreases when an item is deleted', () => {
+      cache.set('requestId1', 'response1', 123);
+      cache.set('requestId2', 'response2', 321);
+
+      cache.delete('requestId1');
+
+      expect(cache.size).to.equal(321);
+    });
+
+    it('resets when the cache is reset', () => {
+      cache.set('requestId1', 'response1', 123);
+      cache.set('requestId2', 'response2', 321);
+
+      cache.reset();
+
+      expect(cache.size).to.equal(0);
     });
   });
 });

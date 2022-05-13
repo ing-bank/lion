@@ -5,6 +5,10 @@ import { Ajax } from '../../index.js';
 import { extendCacheOptions, resetCacheSession, ajaxCache } from '../../src/cacheManager.js';
 import { createCacheInterceptors } from '../../src/interceptors/cacheInterceptors.js';
 
+const MOCK_RESPONSE = 'mock response';
+
+const getUrl = (/** @type {string} */ url) => new URL(url, window.location.href).toString();
+
 /** @type {Ajax} */
 let ajax;
 
@@ -53,7 +57,7 @@ describe('cache interceptors', () => {
 
   beforeEach(() => {
     ajax = new Ajax();
-    mockResponse = new Response('mock response');
+    mockResponse = new Response(MOCK_RESPONSE);
     fetchStub = sinon.stub(window, 'fetch');
     fetchStub.resolves(mockResponse);
     ajaxRequestSpy = sinon.spy(ajax, 'fetch');
@@ -361,7 +365,7 @@ describe('cache interceptors', () => {
       newCacheId();
       fetchStub.returns(
         Promise.resolve(
-          new Response('mock response', { status: 206, headers: { 'x-foo': 'x-bar' } }),
+          new Response(MOCK_RESPONSE, { status: 206, headers: { 'x-foo': 'x-bar' } }),
         ),
       );
 
@@ -654,7 +658,7 @@ describe('cache interceptors', () => {
       const cacheOptions = {
         invalidateUrls: [
           requestIdFunction({
-            url: new URL('/test-invalid-url', window.location.href).toString(),
+            url: getUrl('/test-invalid-url'),
             params: { foo: 1, bar: 2 },
           }),
         ],
@@ -719,10 +723,37 @@ describe('cache interceptors', () => {
 
       const firstResponse = await firstRequest;
 
-      expect(firstResponse).to.equal('mock response');
+      expect(firstResponse).to.equal(MOCK_RESPONSE);
       // @ts-ignore
       expect(ajaxCache._cachedRequests).to.deep.equal({});
       expect(fetchStub.callCount).to.equal(1);
+    });
+
+    describe('when maxCacheSize is set', () => {
+      beforeEach(() => {
+        newCacheId();
+
+        addCacheInterceptors(ajax, {
+          useCache: true,
+          maxCacheSize: MOCK_RESPONSE.length * 3 + 1,
+        });
+      });
+
+      it('discards the last added request when the cache is full', async () => {
+        expect(ajaxCache.size).to.equal(0);
+
+        await ajax.fetch('/test1');
+        await ajax.fetch('/test2');
+        await ajax.fetch('/test3');
+        await ajax.fetch('/test4');
+
+        // @ts-ignore use this private field
+        expect(Object.keys(ajaxCache._cachedRequests)).to.deep.equal(
+          ['/test2', '/test3', '/test4'].map(getUrl),
+        );
+        expect(fetchStub.callCount).to.equal(4);
+        expect(ajaxCache.size).to.equal(MOCK_RESPONSE.length * 3);
+      });
     });
   });
 });
