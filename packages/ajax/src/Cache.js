@@ -3,40 +3,72 @@ import './typedef.js';
 export default class Cache {
   constructor() {
     /**
-     * @type {{ [requestId: string]: { createdAt: number, response: CacheResponse } }}
+     * @type CachedRequests
      * @private
      */
     this._cachedRequests = {};
+
+    /**
+     * @type {number}
+     * @private
+     */
+    this._size = 0;
   }
 
   /**
    * Store an item in the cache
    * @param {string} requestId key by which the request is stored
-   * @param {Response} response the cached response
+   * @param {CacheResponse} response the cached response
+   * @param {number} size the response size
    */
-  set(requestId, response) {
+  set(requestId, response, size = 0) {
+    if (this._cachedRequests[requestId]) {
+      this.delete(requestId);
+    }
+
     this._cachedRequests[requestId] = {
       createdAt: Date.now(),
+      size,
       response,
     };
+
+    this._size += size;
   }
 
   /**
    * Retrieve an item from the cache
    * @param {string} requestId key by which the cache is stored
-   * @param {number} maxAge maximum age of a cached request to serve from cache, in milliseconds
+   * @param {object} options
+   * @param {number} [options.maxAge] maximum age of a cached request to serve from cache, in milliseconds
+   * @param {number} [options.maxResponseSize] maximum size of a cached request to serve from cache, in bytes
    * @returns {CacheResponse | undefined}
    */
-  get(requestId, maxAge = 0) {
+  get(requestId, { maxAge = Infinity, maxResponseSize = Infinity } = {}) {
+    const isNumber = (/** @type any */ num) => Number(num) === num;
+
     const cachedRequest = this._cachedRequests[requestId];
     if (!cachedRequest) {
-      return;
+      return undefined;
     }
-    const cachedRequestAge = Date.now() - cachedRequest.createdAt;
-    if (Number.isFinite(maxAge) && cachedRequestAge < maxAge) {
-      // eslint-disable-next-line consistent-return
-      return cachedRequest.response;
+
+    // maxAge and maxResponseSize should both be numbers
+    if (!isNumber(maxAge)) {
+      return undefined;
     }
+
+    if (!isNumber(maxResponseSize)) {
+      return undefined;
+    }
+
+    if (Date.now() >= cachedRequest.createdAt + maxAge) {
+      return undefined;
+    }
+
+    if (cachedRequest.size > maxResponseSize) {
+      return undefined;
+    }
+
+    return cachedRequest.response;
   }
 
   /**
@@ -44,6 +76,13 @@ export default class Cache {
    * @param {string } requestId the request id to delete from the cache
    */
   delete(requestId) {
+    const cachedRequest = this._cachedRequests[requestId];
+
+    if (!cachedRequest) {
+      return;
+    }
+
+    this._size -= cachedRequest.size;
     delete this._cachedRequests[requestId];
   }
 
@@ -59,7 +98,28 @@ export default class Cache {
     });
   }
 
+  /**
+   * Truncate the cache to the given size, according to a First-In-First-Out (FIFO) policy
+   *
+   * @param {number} maxAllowedCacheSize
+   */
+  truncateTo(maxAllowedCacheSize) {
+    if (this._size <= maxAllowedCacheSize) return;
+
+    const requests = this._cachedRequests;
+
+    const sortedRequestIds = Object.keys(requests).sort(
+      (a, b) => requests[a].createdAt - requests[b].createdAt,
+    );
+
+    for (const requestId of sortedRequestIds) {
+      this.delete(requestId);
+      if (this._size <= maxAllowedCacheSize) return;
+    }
+  }
+
   reset() {
     this._cachedRequests = {};
+    this._size = 0;
   }
 }

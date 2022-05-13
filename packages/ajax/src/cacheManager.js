@@ -84,6 +84,7 @@ export const extendCacheOptions = ({
   invalidateUrlsRegex,
   contentTypes,
   maxResponseSize,
+  maxCacheSize,
 }) => ({
   useCache,
   methods,
@@ -93,6 +94,7 @@ export const extendCacheOptions = ({
   invalidateUrlsRegex,
   contentTypes,
   maxResponseSize,
+  maxCacheSize,
 });
 
 /**
@@ -107,6 +109,7 @@ export const validateCacheOptions = ({
   invalidateUrlsRegex,
   contentTypes,
   maxResponseSize,
+  maxCacheSize,
 } = {}) => {
   if (useCache !== undefined && typeof useCache !== 'boolean') {
     throw new Error('Property `useCache` must be a `boolean`');
@@ -131,6 +134,9 @@ export const validateCacheOptions = ({
   }
   if (maxResponseSize !== undefined && !Number.isFinite(maxResponseSize)) {
     throw new Error('Property `maxResponseSize` must be a finite `number`');
+  }
+  if (maxCacheSize !== undefined && !Number.isFinite(maxCacheSize)) {
+    throw new Error('Property `maxCacheSize` must be a finite `number`');
   }
 };
 
