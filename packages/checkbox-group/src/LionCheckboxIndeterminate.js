@@ -79,13 +79,14 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
    * @protected
    */
   _setOwnCheckedState() {
-    const subCheckboxes = this._subCheckboxes.filter(checkbox => !checkbox.disabled);
+    const subCheckboxes = this._subCheckboxes;
     if (!subCheckboxes.length) {
       return;
     }
 
     this.__settingOwnChecked = true;
     const checkedElements = subCheckboxes.filter(checkbox => checkbox.checked);
+
     switch (subCheckboxes.length - checkedElements.length) {
       // all checked
       case 0:
@@ -147,7 +148,18 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
       }
 
       this.__settingOwnSubs = true;
-      if (this.indeterminate && this.mixedState) {
+
+      const subCheckboxes = this._subCheckboxes;
+      const checkedElements = subCheckboxes.filter(checkbox => checkbox.checked);
+      const disabledElements = subCheckboxes.filter(checkbox => checkbox.disabled);
+      const allChecked = subCheckboxes.length === checkedElements.length;
+      const hasDisabledElements = disabledElements.length > 0;
+
+      if (subCheckboxes.length === disabledElements.length) {
+        this.checked = allChecked;
+      }
+
+      if (this.indeterminate && (this.mixedState || hasDisabledElements)) {
         this._subCheckboxes.forEach((checkbox, i) => {
           // eslint-disable-next-line no-param-reassign
           checkbox.checked = this._indeterminateSubStates[i];
