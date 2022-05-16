@@ -3430,7 +3430,7 @@ autosize@4.0.2:
   resolved "https://registry.yarnpkg.com/autosize/-/autosize-4.0.2.tgz#073cfd07c8bf45da4b9fd153437f5bafbba1e4c9"
   integrity sha512-jnSyH2d+qdfPGpWlcuhGiHmqBJ6g3X+8T+iRwFrHPLVcdoGJE/x6Qicm6aDHfTsbgZKxyV8UU/YB2p4cjKDRRA==
 
-awesome-phonenumber@3.0.1:
+awesome-phonenumber@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/awesome-phonenumber/-/awesome-phonenumber-3.0.1.tgz#8d73aaa1c2b0a660b117567b0d9797623457e1d0"
   integrity sha512-H5rqjTJ1+HxmyuSKDoPgvHUgP+RBRhtWQ25ccy4BmSLQL5UVg3K+yo2QCX4IlkxiVNst3suGMArV9TH7B1KEPw==

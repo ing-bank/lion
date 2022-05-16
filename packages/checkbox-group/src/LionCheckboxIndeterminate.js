@@ -13,7 +13,6 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         :host .choice-field__nested-checkboxes {
           display: block;
         }
-
         ::slotted([slot='checkbox']) {
           padding-left: 8px;
         }
@@ -86,6 +85,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
 
     this.__settingOwnChecked = true;
     const checkedElements = subCheckboxes.filter(checkbox => checkbox.checked);
+
     switch (subCheckboxes.length - checkedElements.length) {
       // all checked
       case 0:
@@ -147,16 +147,32 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
       }
 
       this.__settingOwnSubs = true;
-      if (this.indeterminate && this.mixedState) {
+
+      const subCheckboxes = this._subCheckboxes;
+      const checkedElements = subCheckboxes.filter(checkbox => checkbox.checked);
+      const disabledElements = subCheckboxes.filter(checkbox => checkbox.disabled);
+      const allChecked =
+        subCheckboxes.length > 0 && subCheckboxes.length === checkedElements.length;
+      const allDisabled =
+        subCheckboxes.length > 0 && subCheckboxes.length === disabledElements.length;
+      const hasDisabledElements = disabledElements.length > 0;
+
+      if (allDisabled) {
+        this.checked = allChecked;
+      }
+
+      if (this.indeterminate && (this.mixedState || hasDisabledElements)) {
         this._subCheckboxes.forEach((checkbox, i) => {
           // eslint-disable-next-line no-param-reassign
           checkbox.checked = this._indeterminateSubStates[i];
         });
       } else {
-        this._subCheckboxes.forEach(checkbox => {
-          // eslint-disable-next-line no-param-reassign
-          checkbox.checked = this._inputNode.checked;
-        });
+        this._subCheckboxes
+          .filter(checkbox => !checkbox.disabled)
+          .forEach(checkbox => {
+            // eslint-disable-next-line no-param-reassign
+            checkbox.checked = this._inputNode.checked;
+          });
       }
       this.updateComplete.then(() => {
         this.__settingOwnSubs = false;
