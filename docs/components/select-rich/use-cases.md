@@ -198,7 +198,7 @@ export const checkedIndexAndValue = ({ shadowRoot }) => html`
     @click=${() => {
       const selectEl = shadowRoot.querySelector('#checkedRichSelect');
       console.log(`checkedIndex: ${selectEl.checkedIndex}`);
-      console.log(`checkedValue: ${selectEl.checkedValue}`);
+      console.log(`modelValue: ${selectEl.modelValue}`);
     }}
   >
     Console log checked index and value
