@@ -9,12 +9,12 @@ import { PhoneNumber } from './validators.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
- * @typedef {import('../types').FormatStrategy} FormatStrategy
  * @typedef {import('../types').RegionCode} RegionCode
- * @typedef {import('../types').PhoneNumberType} PhoneNumberType
+ * @typedef {import('awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
+ * @typedef {import('awesome-phonenumber').PhoneNumberTypes} PhoneNumberTypes
  * @typedef {import('@lion/form-core/types/FormatMixinTypes').FormatOptions} FormatOptions
- * @typedef {* & import('@lion/input-tel/src/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
- * @typedef {FormatOptions & {regionCode: RegionCode; formatStrategy: FormatStrategy}} FormatOptionsTel
+ * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
+ * @typedef {FormatOptions & {regionCode: RegionCode; formatStrategy: PhoneNumberFormat}} FormatOptionsTel
  */
 
 export class LionInputTel extends LocalizeMixin(LionInput) {
@@ -65,7 +65,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    * -'unknown'
    * See https://www.npmjs.com/package/awesome-phonenumber
    * @readonly
-   * @property {PhoneNumberType|undefined} activePhoneNumberType
+   * @property {PhoneNumberTypes|undefined} activePhoneNumberTypes
    */
   get activePhoneNumberType() {
     let pn;
@@ -135,7 +135,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
      * Determines what the formatter output should look like.
      * Formatting strategies as provided by google-libphonenumber
      * See: https://www.npmjs.com/package/google-libphonenumber
-     * @type {FormatStrategy}
+     * @type {PhoneNumberFormat}
      */
     this.formatStrategy = 'international';
 
@@ -286,7 +286,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    */
   _onPhoneNumberUtilReady() {
     // This should trigger a rerender in shadow dom
-    this._phoneUtil = /** @type {PhoneNumber} */ (PhoneUtilManager.PhoneUtil);
+    this._phoneUtil = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
     // This should trigger a rerender in light dom
     this._scheduleLightDomRender();
     // Format when libPhoneNumber is loaded

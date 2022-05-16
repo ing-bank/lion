@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-tel",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Input field for entering phone numbers, including validation, formatting and mobile keyboard support.",
   "license": "MIT",
   "author": "ing-bank",
@@ -38,9 +38,10 @@
   ],
   "dependencies": {
     "@lion/core": "0.22.0",
-    "@lion/form-core": "0.17.0",
+    "@lion/form-core": "0.17.1",
     "@lion/input": "0.17.0",
-    "@lion/localize": "0.24.0"
+    "@lion/localize": "0.24.0",
+    "awesome-phonenumber": "^3.0.1"
   },
   "keywords": [
     "input",

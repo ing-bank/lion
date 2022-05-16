@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.20.1
+
+### Patch Changes
+
+- 355aabc0: fix(switch) unregister on disconnectedCallback
+- Updated dependencies [43dd1320]
+  - @lion/form-core@0.17.1
+
 ## 0.20.0
 
 ### Minor Changes

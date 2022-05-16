@@ -1,16 +1,16 @@
 import { PhoneUtilManager } from './PhoneUtilManager.js';
 
 /**
- * @typedef {import('../types').FormatStrategy} FormatStrategy
+ * @typedef {import('awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
  * @typedef {import('../types').RegionCode} RegionCode
- * @typedef {* & import('@lion/input-tel/src/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
+ * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
  */
 
 /**
  * @param {string} modelValue
  * @param {object} options
  * @param {RegionCode} options.regionCode
- * @param {FormatStrategy} [options.formatStrategy='international']
+ * @param {PhoneNumberFormat} [options.formatStrategy='international']
  * @returns {string}
  */
 export function formatPhoneNumber(modelValue, { regionCode, formatStrategy = 'international' }) {
