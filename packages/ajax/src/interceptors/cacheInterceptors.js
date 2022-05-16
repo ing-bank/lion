@@ -11,6 +11,42 @@ import {
 } from '../cacheManager.js';
 
 /**
+ * Tests whether the request method is supported according to the `cacheOptions`
+ * @param {ValidatedCacheOptions} cacheOptions
+ * @param {string} method
+ * @returns {boolean}
+ */
+const isMethodSupported = (cacheOptions, method) =>
+  cacheOptions.methods.includes(method.toLowerCase());
+
+/**
+ * Tests whether the response content type is supported by the `contentTypes` whitelist
+ * @param {Response} response
+ * @param {CacheOptions} cacheOptions
+ * @returns {boolean} `true` if the contentTypes property is not an array, or if the value of the Content-Type header is in the array
+ */
+const isResponseContentTypeSupported = (response, { contentTypes } = {}) => {
+  if (!Array.isArray(contentTypes)) return true;
+
+  return contentTypes.includes(String(response.headers.get('Content-Type')));
+};
+
+/**
+ * Tests whether the response size is not too large to be cached according to the `maxResponseSize` property
+ * @param {Response} response
+ * @param {CacheOptions} cacheOptions
+ * @returns {boolean} `true` if the `maxResponseSize` property is not larger than zero, or if the Content-Length header is not present, or if the value of the header is not larger than the `maxResponseSize` property
+ */
+const isResponseSizeSupported = (response, { maxResponseSize } = {}) => {
+  const responseSize = +(response.headers.get('Content-Length') || 0);
+
+  if (!maxResponseSize) return true;
+  if (!responseSize) return true;
+
+  return responseSize <= maxResponseSize;
+};
+
+/**
  * Request interceptor to return relevant cached requests
  * @param {function(): string} getCacheId used to invalidate cache if identifier is changed
  * @param {CacheOptions} globalCacheOptions
@@ -36,9 +72,8 @@ const createCacheRequestInterceptor =
     }
 
     const requestId = cacheOptions.requestIdFunction(request);
-    const isMethodSupported = cacheOptions.methods.includes(request.method.toLowerCase());
 
-    if (!isMethodSupported) {
+    if (!isMethodSupported(cacheOptions, request.method)) {
       invalidateMatchingCache(requestId, cacheOptions);
       return request;
     }
@@ -50,7 +85,11 @@ const createCacheRequestInterceptor =
     }
 
     const cachedResponse = ajaxCache.get(requestId, cacheOptions.maxAge);
-    if (cachedResponse) {
+    if (
+      cachedResponse &&
+      isResponseContentTypeSupported(cachedResponse, cacheOptions) &&
+      isResponseSizeSupported(cachedResponse, cacheOptions)
+    ) {
       // Return the response from cache
       request.cacheOptions = request.cacheOptions ?? { useCache: false };
       /** @type {CacheResponse} */
@@ -81,13 +120,14 @@ const createCacheResponseInterceptor =
       ...response.request.cacheOptions,
     });
 
-    const requestId = cacheOptions.requestIdFunction(response.request);
-    const isAlreadyFromCache = !!response.fromCache;
-    const isCacheActive = cacheOptions.useCache;
-    const isMethodSupported = cacheOptions.methods.includes(response.request?.method.toLowerCase());
+    if (!response.fromCache && isMethodSupported(cacheOptions, response.request.method)) {
+      const requestId = cacheOptions.requestIdFunction(response.request);
 
-    if (!isAlreadyFromCache && isCacheActive && isMethodSupported) {
-      if (isCurrentSessionId(response.request.cacheSessionId)) {
+      if (
+        isCurrentSessionId(response.request.cacheSessionId) &&
+        isResponseContentTypeSupported(response, cacheOptions) &&
+        isResponseSizeSupported(response, cacheOptions)
+      ) {
         // Cache the response
         ajaxCache.set(requestId, response.clone());
       }
@@ -95,6 +135,7 @@ const createCacheResponseInterceptor =
       // Mark the pending request as resolved
       pendingRequestStore.resolve(requestId);
     }
+
     return response;
   };
 

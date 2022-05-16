@@ -51,9 +51,13 @@ export declare class ListboxHost {
 
   protected _listboxReceivesNoFocus: boolean;
 
+  protected _noTypeAhead: boolean;
+
   protected _uncheckChildren(): void;
 
   private __setupListboxNode(): void;
+
+  protected _handleTypeAhead(ev: KeyboardEvent, { setAsChecked: boolean }): void;
 
   protected _getPreviousEnabledOption(currentIndex: number, offset?: number): number;
 
@@ -78,6 +82,8 @@ export declare class ListboxHost {
   protected get _activeDescendantOwnerNode(): HTMLElement;
 
   protected _onListboxContentChanged(): void;
+
+  private __pendingTypeAheadTimeout: number | undefined;
 }
 
 export declare function ListboxImplementation<T extends Constructor<LitElement>>(

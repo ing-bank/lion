@@ -12,6 +12,7 @@ export interface LionRequestInit extends Omit<RequestInit, 'body'> {
 
 export interface AjaxConfig {
   addAcceptLanguage: boolean;
+  addCaching: boolean;
   xsrfCookieName: string | null;
   xsrfHeaderName: string | null;
   cacheOptions: CacheOptionsWithIdentifier;
@@ -39,6 +40,8 @@ export interface CacheOptions {
   invalidateUrls?: string[];
   invalidateUrlsRegex?: RegExp;
   requestIdFunction?: RequestIdFunction;
+  contentTypes?: string[];
+  maxResponseSize?: number;
 }
 
 export interface CacheOptionsWithIdentifier extends CacheOptions {

@@ -1,4 +1,4 @@
-import { RegionCode } from '@lion/input-tel/types/types';
+import { RegionCode } from '@lion/input-tel/types';
 import { LionSelectRich } from '@lion/select-rich';
 import { LionCombobox } from '@lion/combobox';
 

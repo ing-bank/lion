@@ -156,10 +156,6 @@ const FormRegistrarMixinImplementation = superclass =>
       // 2. Add children as object key
       if (this._isFormOrFieldset) {
         const { name } = child;
-        if (!name) {
-          console.info('Error Node:', child); // eslint-disable-line no-console
-          throw new TypeError('You need to define a name');
-        }
         if (name === this.name) {
           console.info('Error Node:', child); // eslint-disable-line no-console
           throw new TypeError(`You can not have the same name "${name}" as your parent`);

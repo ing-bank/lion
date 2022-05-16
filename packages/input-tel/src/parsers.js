@@ -2,12 +2,12 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 
 /**
  * @typedef {import('../types').RegionCode} RegionCode
- * @typedef {* & import('@lion/input-tel/src/lib/awesome-phonenumber-esm').default} AwesomePhoneNumber
+ * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
  */
 
 /**
  * @param {string} viewValue
- * @param {{regionCode:RegionCode;}} options
+ * @param {{regionCode:RegionCode}} options
  * @returns {string}
  */
 export function parsePhoneNumber(viewValue, { regionCode }) {

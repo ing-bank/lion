@@ -26,10 +26,11 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ (_f
 /**
  * @param {HTMLElement} el
  * @param {string} key
+ * @param {string} code
  */
-function mimicKeyPress(el, key) {
-  el.dispatchEvent(new KeyboardEvent('keydown', { key }));
-  el.dispatchEvent(new KeyboardEvent('keyup', { key }));
+function mimicKeyPress(el, key, code = '') {
+  el.dispatchEvent(new KeyboardEvent('keydown', { key, code }));
+  el.dispatchEvent(new KeyboardEvent('keyup', { key, code }));
 }
 
 /**
@@ -381,8 +382,7 @@ export function runListboxMixinSuite(customConfig = {}) {
     });
 
     describe('Accessibility', () => {
-      // TODO: enable when native button is not a child anymore
-      it.skip('[axe]: is accessible when opened', async () => {
+      it('[axe]: is accessible when opened', async () => {
         const el = await fixture(html`
           <${tag} label="age" opened>
             <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
@@ -396,14 +396,13 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
 
       // NB: regular listbox is always 'opened', but needed for combobox and select-rich
-      // TODO: enable when native button is not a child anymore
-      it.skip('[axe]: is accessible when closed', async () => {
+      it('[axe]: is accessible when closed', async () => {
         const el = await fixture(html`
-                <${tag} label="age">
-                  <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
-                  <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
-                </${tag}>
-              `);
+          <${tag} label="age">
+            <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
+          </${tag}>
+        `);
         await expect(el).to.be.accessible();
       });
 
@@ -442,7 +441,6 @@ export function runListboxMixinSuite(customConfig = {}) {
         await el.updateComplete;
         expect(_activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal('first');
         mimicKeyPress(_activeDescendantOwnerNode, 'ArrowDown');
-        // _activeDescendantOwnerNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
         await el.updateComplete;
         expect(_activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal('second');
       });
@@ -601,7 +599,6 @@ export function runListboxMixinSuite(customConfig = {}) {
             // Normalize
             el.activeIndex = 0;
             const options = el.formElements;
-            // mimicKeyPress(listbox, 'ArrowUp');
 
             mimicKeyPress(_listboxNode, 'ArrowUp');
 
@@ -609,7 +606,6 @@ export function runListboxMixinSuite(customConfig = {}) {
             expect(options[1].active).to.be.false;
             expect(options[2].active).to.be.false;
             el.activeIndex = 2;
-            // mimicKeyPress(listbox, 'ArrowDown');
             mimicKeyPress(_listboxNode, 'ArrowDown');
 
             expect(options[0].active).to.be.false;
@@ -709,32 +705,138 @@ export function runListboxMixinSuite(customConfig = {}) {
           });
         });
         // TODO: add key combinations like shift+home/ctrl+A etc etc.
-        // TODO: nice to have. Get from menu impl.
-        it.skip('selects a value with single [character] key', async () => {
-          const el = await fixture(html`
-              <${tag} opened>
-                <${optionTag} .choiceValue=${'a'}>A</${optionTag}>
-                <${optionTag} .choiceValue=${'b'}>B</${optionTag}>
-                <${optionTag} .choiceValue=${'c'}>C</${optionTag}>
-              </${tag}>
-            `);
-          expect(el.modelValue).to.equal('a');
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'C' }));
-          expect(el.modelValue).to.equal('c');
+
+        describe('Typeahead', () => {
+          it('activates a value with single [character] key', async () => {
+            const el = await fixture(html`
+            <${tag} opened id="color" name="color" label="Favorite color">
+              <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
+              <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
+              <${optionTag} .choiceValue=${'turquoise'}>Turquoise</${optionTag}>
+            </${tag}>
+          `);
+            // @ts-expect-error [allow-protected-in-tests]
+            if (el._noTypeAhead) {
+              return;
+            }
+
+            const { _listboxNode } = getListboxMembers(el);
+
+            // Normalize start values between listbox, select and combobox and test interaction below
+            el.activeIndex = 0;
+
+            mimicKeyPress(_listboxNode, 't', 'KeyT');
+            // await aTimeout(0);
+            expect(el.activeIndex).to.equal(1);
+          });
+
+          it('activates a value with multiple [character] keys', async () => {
+            const el = await fixture(html`
+            <${tag} opened id="color" name="color" label="Favorite color">
+              <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
+              <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
+              <${optionTag} .choiceValue=${'turquoise'}>Turquoise</${optionTag}>
+            </${tag}>
+          `);
+            // @ts-expect-error [allow-protected-in-tests]
+            if (el._noTypeAhead) {
+              return;
+            }
+
+            const { _listboxNode } = getListboxMembers(el);
+
+            // Normalize start values between listbox, select and combobox and test interaction below
+            el.activeIndex = 0;
+
+            mimicKeyPress(_listboxNode, 't', 'KeyT');
+            expect(el.activeIndex).to.equal(1);
+
+            mimicKeyPress(_listboxNode, 'u', 'KeyU');
+            expect(el.activeIndex).to.equal(2);
+          });
+
+          it('selects a value with [character] keys and selectionFollowsFocus', async () => {
+            const el = await fixture(html`
+            <${tag} opened id="color" name="color" label="Favorite color" selection-follows-focus>
+              <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
+              <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
+              <${optionTag} .choiceValue=${'turquoise'}>Turquoise</${optionTag}>
+            </${tag}>
+          `);
+            // @ts-expect-error [allow-protected-in-tests]
+            if (el._noTypeAhead) {
+              return;
+            }
+
+            const { _listboxNode } = getListboxMembers(el);
+
+            // Normalize start values between listbox, select and combobox and test interaction below
+            el.checkedIndex = 0;
+
+            mimicKeyPress(_listboxNode, 't', 'KeyT');
+            expect(el.checkedIndex).to.equal(1);
+
+            mimicKeyPress(_listboxNode, 'u', 'KeyU');
+            expect(el.checkedIndex).to.equal(2);
+          });
+
+          it('clears typedChars after _typeAheadTimeout', async () => {
+            const el = await fixture(html`
+            <${tag} opened id="color" name="color" label="Favorite color">
+              <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
+              <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
+              <${optionTag} .choiceValue=${'turquoise'}>turquoise</${optionTag}>
+            </${tag}>
+          `);
+            // @ts-expect-error [allow-protected-in-tests]
+            if (el._noTypeAhead) {
+              return;
+            }
+
+            const clock = sinon.useFakeTimers();
+            const { _listboxNode } = getListboxMembers(el);
+
+            mimicKeyPress(_listboxNode, 't', 'KeyT');
+            // @ts-ignore [allow-private] in test
+            expect(el.__typedChars).to.deep.equal(['t']);
+
+            mimicKeyPress(_listboxNode, 'u', 'KeyU');
+            // @ts-ignore [allow-private] in test
+            expect(el.__typedChars).to.deep.equal(['t', 'u']);
+
+            clock.tick(1000);
+            // @ts-ignore [allow-private] in test
+            expect(el.__typedChars).to.deep.equal([]);
+
+            clock.restore();
+          });
+
+          it('clears scheduled timeouts', async () => {
+            const el = await fixture(html`
+            <${tag} opened id="color" name="color" label="Favorite color">
+              <${optionTag} .choiceValue=${'red'}>Red</${optionTag}>
+              <${optionTag} .choiceValue=${'teal'}>Teal</${optionTag}>
+              <${optionTag} .choiceValue=${'turquoise'}>Turquoise</${optionTag}>
+            </${tag}>
+          `);
+            // @ts-expect-error [allow-protected-in-tests]
+            if (el._noTypeAhead) {
+              return;
+            }
+
+            const { _listboxNode } = getListboxMembers(el);
+
+            // Normalize start values between listbox, select and combobox and test interaction below
+            el.activeIndex = 0;
+            mimicKeyPress(_listboxNode, 't', 'KeyT');
+            // @ts-expect-error [allow-private-in-tests]
+            const pendingClear = el.__pendingTypeAheadTimeout;
+            const clearTimeoutSpy = sinon.spy(window, 'clearTimeout');
+            mimicKeyPress(_listboxNode, 'u', 'KeyU');
+            expect(clearTimeoutSpy.args[0][0]).to.equal(pendingClear);
+          });
         });
-        it.skip('selects a value with multiple [character] keys', async () => {
-          const el = await fixture(html`
-              <${tag} opened>
-                <${optionTag} .choiceValue=${'bar'}>Bar</${optionTag}>
-                <${optionTag} .choiceValue=${'far'}>Far</${optionTag}>
-                <${optionTag} .choiceValue=${'foo'}>Foo</${optionTag}>
-              </${tag}>
-            `);
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'F' }));
-          expect(el.modelValue).to.equal('far');
-          el.dispatchEvent(new KeyboardEvent('keydown', { key: 'O' }));
-          expect(el.modelValue).to.equal('foo');
-        });
+
         it('navigates to first and last option with [Home] and [End] keys', async () => {
           const el = await fixture(html`
               <${tag} opened>
@@ -1021,7 +1123,7 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           const { _listboxNode } = getListboxMembers(el);
           const options = el.formElements;
-          // Normalize start values between listbox, slect and combobox and test interaction below
+          // Normalize start values between listbox, select and combobox and test interaction below
           el.activeIndex = 0;
           el.checkedIndex = 0;
           expect(el.activeIndex).to.equal(0);

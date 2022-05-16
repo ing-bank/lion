@@ -43,6 +43,7 @@ describe('Ajax', () => {
       };
       const expected = {
         addAcceptLanguage: true,
+        addCaching: false,
         xsrfCookieName: 'XSRF-TOKEN',
         xsrfHeaderName: 'X-XSRF-TOKEN',
         jsonPrefix: ")]}',",
@@ -301,6 +302,44 @@ describe('Ajax', () => {
 
     beforeEach(() => {
       getCacheIdentifier = () => String(cacheId);
+    });
+
+    it('does not add cache interceptors when useCache is turned off', () => {
+      const customAjax = new Ajax({
+        cacheOptions: {
+          maxAge: 100,
+          getCacheIdentifier,
+        },
+      });
+
+      expect(customAjax._requestInterceptors.length).to.equal(2);
+      expect(customAjax._responseInterceptors.length).to.equal(0);
+    });
+
+    it('adds cache interceptors when useCache is turned on', () => {
+      const customAjax = new Ajax({
+        cacheOptions: {
+          useCache: true,
+          maxAge: 100,
+          getCacheIdentifier,
+        },
+      });
+
+      expect(customAjax._requestInterceptors.length).to.equal(3);
+      expect(customAjax._responseInterceptors.length).to.equal(1);
+    });
+
+    it('adds cache interceptors when addCaching is turned on', () => {
+      const customAjax = new Ajax({
+        addCaching: true,
+        cacheOptions: {
+          maxAge: 100,
+          getCacheIdentifier,
+        },
+      });
+
+      expect(customAjax._requestInterceptors.length).to.equal(3);
+      expect(customAjax._responseInterceptors.length).to.equal(1);
     });
 
     describe('caching interceptors', async () => {
