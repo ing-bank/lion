@@ -9,14 +9,14 @@
   - @lion/button@0.12.3
   - @lion/checkbox-group@0.17.4
   - @lion/combobox@0.6.5
-  - @lion/fieldset@0.19.4
+  - @lion/fieldset@0.19.1-legacy.0
   - @lion/form-core@0.13.3
   - @lion/input-amount@0.13.4
-  - @lion/input-date@0.12.4
+  - @lion/input-date@0.12.1-legacy.0
   - @lion/input-datepicker@0.22.4
-  - @lion/input-email@0.13.4
+  - @lion/input-email@0.13.1-legacy.0
   - @lion/input-iban@0.15.4
-  - @lion/input-range@0.10.3
+  - @lion/input-range@0.10.0-legacy.0
   - @lion/input-stepper@0.5.4
   - @lion/listbox@0.9.3
   - @lion/localize@0.19.3
