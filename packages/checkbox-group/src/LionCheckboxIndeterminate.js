@@ -152,10 +152,13 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
       const subCheckboxes = this._subCheckboxes;
       const checkedElements = subCheckboxes.filter(checkbox => checkbox.checked);
       const disabledElements = subCheckboxes.filter(checkbox => checkbox.disabled);
-      const allChecked = subCheckboxes.length === checkedElements.length;
+      const allChecked =
+        subCheckboxes.length > 0 && subCheckboxes.length === checkedElements.length;
+      const allDisabled =
+        subCheckboxes.length > 0 && subCheckboxes.length === disabledElements.length;
       const hasDisabledElements = disabledElements.length > 0;
 
-      if (subCheckboxes.length === disabledElements.length) {
+      if (allDisabled) {
         this.checked = allChecked;
       }
 
