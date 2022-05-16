@@ -36,7 +36,7 @@
     "lion-form.js"
   ],
   "dependencies": {
-    "@lion/fieldset": "0.19.4"
+    "@lion/fieldset": "0.19.1-legacy.0"
   },
   "keywords": [
     "form",

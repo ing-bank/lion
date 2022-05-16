@@ -8,7 +8,7 @@
   - @lion/core@0.17.3
   - @lion/calendar@0.15.3
   - @lion/form-core@0.13.3
-  - @lion/input-date@0.12.4
+  - @lion/input-date@0.12.1-legacy.0
   - @lion/localize@0.19.3
   - @lion/overlays@0.27.3
   - @lion/validate-messages@0.6.4

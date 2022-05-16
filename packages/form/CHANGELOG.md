@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- @lion/fieldset@0.19.4
+- @lion/fieldset@0.19.1-legacy.0
 
 ## 0.11.3
 
