@@ -58,7 +58,7 @@
   },
   "wireit": {
     "custom-elements-manifest": {
-      "command": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
+      "command": "node ../../node_modules/@custom-elements-manifest/root/packages/analyzer/index.js  analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
       "dependencies": [
         "../input:custom-elements-manifest",
         "../form-core:custom-elements-manifest",

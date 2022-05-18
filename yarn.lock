@@ -1374,6 +1374,10 @@
     globby "11.0.4"
     typescript "~4.3.2"
 
+"@custom-elements-manifest/root@https://github.com/tlouisse/custom-elements-manifest.git#feat/get3rdPartyDepsFromPkgJson":
+  version "0.0.0"
+  resolved "https://github.com/tlouisse/custom-elements-manifest.git#47c8f35e0cbf9d220570e512f89db573ed351d9e"
+
 "@eslint/eslintrc@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.1.tgz#442763b88cecbe3ee0ec7ca6d6dd6168550cbf14"
@@ -7047,6 +7051,13 @@ get-symbol-description@^1.0.0:
     call-bind "^1.0.2"
     get-intrinsic "^1.1.1"
 
+git@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/git/-/git-0.1.5.tgz#9ef62df93f851c27542143bf52d1c68b1017ca15"
+  integrity sha1-nvYt+T+FHCdUIUO/UtHGixAXyhU=
+  dependencies:
+    mime "1.2.9"
+
 github-build@^1.2.0:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/github-build/-/github-build-1.2.2.tgz#d5d5d989dc8cead0d46e2bb0864be7fddd50be15"
@@ -9432,6 +9443,11 @@ mime-types@^2.1.18, mime-types@^2.1.27, mime-types@~2.1.17, mime-types@~2.1.24:
   integrity sha512-crmjA4bLtR8m9qLpHvgxSChT+XoSlZi8J4n/aIdn3z92e/U47Z0V/yl+Wh9W046GgFVAmoNR/fmdbZYcSSIUeg==
   dependencies:
     mime-db "1.47.0"
+
+mime@1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-1.2.9.tgz#009cd40867bd35de521b3b966f04e2f8d4d13d09"
+  integrity sha1-AJzUCGe9Nd5SGzuWbwTi+NTRPQk=
 
 mime@1.4.1:
   version "1.4.1"
