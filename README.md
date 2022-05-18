@@ -169,6 +169,8 @@ The accessibility column indicates whether the functionality is accessible in it
 | **-- [Helpers](https://lion-web-components.netlify.app/?path=/docs/helpers-intro--page) --**                  | [![helpers](https://img.shields.io/npm/v/@lion/helpers.svg)](https://www.npmjs.com/package/@lion/helpers)                               | Helpers to make your and your life easier                                                      |                            |
 | [sb-action-logger](https://lion-web-components.netlify.app/?path=/docs/helpers-storybook-action-logger--main) |                                                                                                                                         | Storybook action logger                                                                        |
 
+| star rating | n/a |
+
 ## Technologies
 
 Lion Web Components aims to be future-proof and use well-supported proven technology. The stack we have chosen should reflect this.

@@ -2,5 +2,5 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/pagination/define';
+import '@lion/rating/define';
 ```

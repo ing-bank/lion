@@ -30,5 +30,6 @@ import '../packages/steps/index.js';
 import '../packages/switch/index.js';
 import '../packages/tabs/index.js';
 import '../packages/textarea/index.js';
+import '../packages/rating/index.js';
 import '../packages/tooltip/index.js';
 import '../packages/validate-messages/index.js';
