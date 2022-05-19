@@ -112,7 +112,11 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
             },
             refs: {
               dropdown: {
-                labels: { selectCountry: 'Select country' },
+                labels: {
+                  selectCountry: 'Select country',
+                  allCountries: 'All countries',
+                  preferredCountries: 'Suggested countries',
+                },
                 listeners: {
                   // @ts-expect-error [allow-protected]
                   change: el._onDropdownValueChange,
@@ -125,6 +129,42 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
             },
           }),
         );
+        spy.restore();
+      });
+
+      it('can override "all-countries-label"', async () => {
+        const el = fixtureSync(html` <${tag}
+          .preferredRegions="${['PH']}"
+          all-countries-label="foo"
+          ></${tag}> `);
+        const spy = sinon.spy(
+          /** @type {typeof LionInputTelDropdown} */ (el.constructor).templates,
+          'dropdown',
+        );
+        await el.updateComplete;
+        const templateDataForDropdown = /** @type {TemplateDataForDropdownInputTel} */ (
+          spy.args[0][0]
+        );
+        
+        expect(templateDataForDropdown.refs.dropdown.labels.allCountries).to.eql('foo');
+        spy.restore();
+      });
+
+      it('can override "preferred-countries-label"', async () => {
+        const el = fixtureSync(html` <${tag}
+          .preferredRegions="${['PH']}"
+          preferred-countries-label="foo"
+          ></${tag}> `);
+        const spy = sinon.spy(
+          /** @type {typeof LionInputTelDropdown} */ (el.constructor).templates,
+          'dropdown',
+        );
+        await el.updateComplete;
+        const templateDataForDropdown = /** @type {TemplateDataForDropdownInputTel} */ (
+          spy.args[0][0]
+        );
+        expect(templateDataForDropdown.refs.dropdown.labels.preferredCountries).to.eql('foo');
+        spy.restore();
       });
 
       it('syncs dropdown value initially from activeRegion', async () => {

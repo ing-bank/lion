@@ -228,6 +228,9 @@ const FormRegistrarMixinImplementation = superclass =>
       if (this.formElements && Array.isArray(this.formElements)) {
         indexToInsertAt = this.formElements.indexOf(child.nextElementSibling);
       }
+      if (ev.detail.indexToInsertAt) {
+        indexToInsertAt = ev.detail.indexToInsertAt;
+      }
       this.addFormElement(child, indexToInsertAt);
     }
 

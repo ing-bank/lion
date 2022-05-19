@@ -26,7 +26,7 @@
     "rocket:build:start": "web-dev-server --root-dir _site --open",
     "start": "rocket start",
     "test": "run-p test:browser test:node",
-    "test:browser": "web-test-runner --coverage",
+    "test:browser": "web-test-runner --coverage --group input-tel-dropdown",
     "test:browserstack": "web-test-runner --config ./web-test-runner-browserstack.config.js",
     "test:node": "node scripts/workspaces-scripts.mjs run test:node",
     "test:screenshots": "rimraf screenshots/.diff/ && rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",

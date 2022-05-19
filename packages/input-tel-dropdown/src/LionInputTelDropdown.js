@@ -52,7 +52,11 @@ export class LionInputTelDropdown extends LionInputTel {
    * @configure LitElement
    * @type {any}
    */
-  static properties = { preferredRegions: { type: Array } };
+  static properties = {
+    preferredRegions: { type: Array },
+    allCountriesLabel: { type: String, attribute: 'all-countries-label' },
+    preferredCountriesLabel: { type: String, attribute: 'preferred-countries-label' },
+};
 
   refs = {
     /** @type {DropdownRef} */
@@ -97,6 +101,9 @@ export class LionInputTelDropdown extends LionInputTel {
         },
         labels: {
           selectCountry: localize.msg('lion-input-tel:selectCountry'),
+          // TODO: add translations
+          allCountries: this.allCountriesLabel || 'All countries',
+          preferredCountries: this.preferredCountriesLabel || 'Suggested countries',
         },
       },
     };
@@ -126,9 +133,12 @@ export class LionInputTelDropdown extends LionInputTel {
         >
           ${data?.regionMetaListPreferred?.length
             ? html`
-                ${data.regionMetaListPreferred.map(renderOption)}
-                <option disabled>---------------</option>
-                ${data?.regionMetaList?.map(renderOption)}
+                <optgroup label="${refs?.dropdown?.labels?.preferredCountries}">
+                  ${data.regionMetaListPreferred.map(renderOption)}
+                </optgroup>
+                <optgroup label="${refs?.dropdown?.labels?.allCountries}">
+                  ${data?.regionMetaList?.map(renderOption)}
+                </optgroup>
               `
             : html` ${data?.regionMetaList?.map(renderOption)}`}
         </select>
@@ -206,6 +216,8 @@ export class LionInputTelDropdown extends LionInputTel {
      * @type {string[]}
      */
     this.preferredRegions = [];
+    this.allCountriesLabel = '';
+    this.preferredCountriesLabel = '';
 
     /** @type {HTMLDivElement} */
     this.__dropdownRenderParent = document.createElement('div');

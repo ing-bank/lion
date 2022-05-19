@@ -24,6 +24,9 @@ export class LionOption extends DisabledMixin(
         type: Boolean,
         reflect: true,
       },
+      index: {
+        type: Number,
+      }
     };
   }
 
@@ -70,8 +73,14 @@ export class LionOption extends DisabledMixin(
   constructor() {
     super();
     this.active = false;
+    /**
+     * @type {Number}
+     */
+    this.index = -1;
     /** @private */
     this.__onClick = this.__onClick.bind(this);
+    /** @private */
+    this.__handleFormElementRegister = this.__handleFormElementRegister.bind(this);
     /** @private */
     this.__registerEventListeners();
   }
@@ -122,11 +131,17 @@ export class LionOption extends DisabledMixin(
   /** @private */
   __registerEventListeners() {
     this.addEventListener('click', this.__onClick);
+    if (this.index >= 0) {
+      this.addEventListener('form-element-register', /** @type {EventListenerOrEventListenerObject} */ (this.__handleFormElementRegister));
+    }
   }
 
   /** @private */
   __unRegisterEventListeners() {
     this.removeEventListener('click', this.__onClick);
+    if (this.index >= 0) {
+      this.removeEventListener('form-element-register', /** @type {EventListenerOrEventListenerObject} */ (this.__handleFormElementRegister));
+    }
   }
 
   /** @private */
@@ -144,5 +159,21 @@ export class LionOption extends DisabledMixin(
       this.active = true;
     }
     this._isHandlingUserInput = false;
+  }
+
+  /**
+   * Hook for Subclassers to perform logic before an element is added
+   * @param {CustomEvent} ev
+   * @private
+   */
+  __handleFormElementRegister(ev) {
+    console.log('hello', ev.detail.element, this.index);
+
+    // this.dispatchEvent(
+    //   new CustomEvent('form-element-register', {
+    //     detail: { element: this, indexToInsertAt:  },
+    //     bubbles: true,
+    //   }),
+    // );
   }
 }

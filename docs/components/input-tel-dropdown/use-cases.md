@@ -51,8 +51,9 @@ export const allowedRegions = () => html`
 
 ## Preferred regions
 
-When `.preferredRegions` is configured, they will show up on top of the dropdown list to
-enhance user experience.
+When `.preferredRegions` is configured, they will show up on top of the dropdown list to enhance user experience.
+
+The labels the `optgroup`s can be set with `all-countries-label` &  `preferred-countries-label` attributes.
 
 ```js preview-story
 export const preferredRegionCodes = () => html`
@@ -61,8 +62,8 @@ export const preferredRegionCodes = () => html`
     help-text="Preferred regions show on top"
     .modelValue=${'+31612345678'}
     name="phoneNumber"
-    .allowedRegions=${['NL', 'DE', 'GB', 'BE', 'US', 'CA']}
-    .preferredRegions=${['NL', 'DE']}
+    .allowedRegions=${['BE', 'CA', 'DE', 'GB', 'NL', 'US']}
+    .preferredRegions=${['DE', 'NL']}
   ></lion-input-tel-dropdown>
   <h-output
     .show="${['modelValue', 'activeRegion']}"

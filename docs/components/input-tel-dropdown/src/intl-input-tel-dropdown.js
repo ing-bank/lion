@@ -1,4 +1,4 @@
-import { html, css, ScopedElementsMixin, ref, repeat } from '@lion/core';
+import { html, css, ifDefined, ScopedElementsMixin, ref } from '@lion/core';
 import { LionInputTelDropdown } from '@lion/input-tel-dropdown';
 import {
   IntlSelectRich,
@@ -74,6 +74,12 @@ export class IntlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdo
      */
     dropdown: templateDataForDropdown => {
       const { refs, data } = templateDataForDropdown;
+      const renderOptionWithIndex = (/** @type {RegionMeta} */ regionMeta, /** @type {Number} */ index) =>
+        html`${this.templates.dropdownOption(templateDataForDropdown, regionMeta, index)} `;
+
+      const renderOption = (/** @type {RegionMeta} */ regionMeta) =>
+        html`${this.templates.dropdownOption(templateDataForDropdown, regionMeta)} `;
+
       // TODO: once spread directive available, use it per ref (like ref(refs?.dropdown?.ref))
       return html`
         <intl-select-rich
@@ -84,31 +90,28 @@ export class IntlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdo
           style="${refs?.dropdown?.props?.style}"
         >
           ${data?.regionMetaListPreferred?.length
-            ? html` ${repeat(
-                  data.regionMetaListPreferred,
-                  regionMeta => regionMeta.regionCode,
-                  regionMeta =>
-                    html`${this.templates.dropdownOption(templateDataForDropdown, regionMeta)} `,
-                )}<intl-separator></intl-separator>`
+            ? html` 
+              ${data.regionMetaListPreferred.map(renderOptionWithIndex)}
+              <intl-separator></intl-separator>`
             : ''}
-          ${repeat(
-            data.regionMetaList,
-            regionMeta => regionMeta.regionCode,
-            regionMeta =>
-              html`${this.templates.dropdownOption(templateDataForDropdown, regionMeta)} `,
-          )}
+          ${data?.regionMetaList?.map(renderOption)}
         </intl-select-rich>
       `;
     },
     /**
      * @param {TemplateDataForDropdownInputTel} templateDataForDropdown
      * @param {RegionMeta} regionMeta
+     * @param {Number} [index]
      */
     // eslint-disable-next-line class-methods-use-this
-    dropdownOption: (templateDataForDropdown, regionMeta) => html`
-      <intl-option .choiceValue="${regionMeta.regionCode}" .regionMeta="${regionMeta}">
+    dropdownOption: (templateDataForDropdown, regionMeta, index) => { 
+      if (index) {
+        console.log('dropdownOption, index:', index);
+      }
+      return html`
+      <intl-option .choiceValue="${regionMeta.regionCode}" .regionMeta="${regionMeta}" index="${index ? index : -1}">
       </intl-option>
-    `,
+    `},
   };
 
   /**
