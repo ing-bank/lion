@@ -1,4 +1,5 @@
 import { css, html, LitElement } from '@lion/core';
+import { uuid } from '@lion/helpers';
 
 /**
  * @typedef {Object} StoreEntry
@@ -10,10 +11,6 @@ import { css, html, LitElement } from '@lion/core';
  * @property {(event: Event) => unknown} keydownHandler executed on keydown event
  * @property {(event: Event) => unknown} keyupHandler executed on keyup event
  */
-
-function uuid() {
-  return Math.random().toString(36).substr(2, 10);
-}
 
 /**
  * @param {StoreEntry} options

@@ -36,7 +36,8 @@
     "lion-accordion.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.22.0"
+    "@lion/core": "^0.22.0",
+    "@lion/helpers": "^0.11.0"
   },
   "keywords": [
     "accordion",

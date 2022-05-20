@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import { LitElement, css, html } from '@lion/core';
-
+import { uuid } from '@lion/helpers';
 /**
  * @typedef {Object} StoreEntry
  * @property {string} uid Unique ID for the entry
@@ -10,8 +10,6 @@ import { LitElement, css, html } from '@lion/core';
  * @property {(event: Event) => unknown} clickHandler executed on click event
  * @property {(event: Event) => unknown} keydownHandler executed on keydown event
  */
-
-const uuid = () => Math.random().toString(36).substr(2, 10);
 
 /**
  * # <lion-accordion> webcomponent

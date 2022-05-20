@@ -1,4 +1,5 @@
 import { css, dedupeMixin, html, nothing, SlotMixin, DisabledMixin } from '@lion/core';
+import { uuid } from '@lion/helpers';
 import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDomOrder.js';
 import { Unparseable } from './validate/Unparseable.js';
 import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
@@ -15,14 +16,6 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  * @typedef {import('../types/FormControlMixinTypes.js').FormControlMixin} FormControlMixin
  * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
-
-/**
- * Generates random unique identifier (for dom elements)
- * @param {string} prefix
- */
-function uuid(prefix) {
-  return `${prefix}-${Math.random().toString(36).substr(2, 10)}`;
-}
 
 /**
  * #FormControlMixin :
