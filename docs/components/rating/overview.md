@@ -4,11 +4,16 @@ A web component that handles rating.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/pagination/define';
+import '@lion/rating/define';
 ```
 
 ```js preview-story
-export const main = () => html` <lion-pagination count="20" current="10"></lion-pagination> `;
+export const main = () =>
+  html`<lion-rating
+    totalItemsToShow="6"
+    currentRate="6"
+    @onRateChange="function() { conole.log('')}"
+  ></lion-rating>`;
 ```
 
 ## Features
@@ -20,7 +25,7 @@ npm i --save @lion/rating
 ```
 
 ```js
-import { LionRating } from '@lion/rating';
+import { LionPagination } from '@lion/rating';
 // or
 import '@lion/rating/define';
 ```
