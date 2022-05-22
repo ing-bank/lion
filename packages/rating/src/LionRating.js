@@ -16,7 +16,6 @@ export class LionRating extends LitElement {
       :host {
         --uiRatingColor: var(--ratingColor, #eee);
         --uiRatingColorActive: var(--ratingColorActive, #ffcc00);
-
         font-size: var(--ratingSize, 1rem);
         color: var(--uiRatingColor);
       }
@@ -44,14 +43,12 @@ export class LionRating extends LitElement {
       }
 
       .screen__reader {
-        width: var(--screenReaderWidth, 1px) !important;
-        height: var(--screenReaderHeight, 1px) !important;
-        padding: var(--screenReaderPadding, 0) !important;
-        border: var(--screenReaderBorder, none) !important;
-
-        position: var(--screenReaderPosition, absolute) !important;
-        clip: var(--screenReaderClip, rect(1px, 1px, 1px, 1px)) !important;
-        overflow: var(--screenReaderOverflow, hidden) !important;
+        width: var(--screenReaderWidth, 1px);
+        height: var(--screenReaderHeight, 1px);
+        padding: var(--screenReaderPadding, 0);
+        border: var(--screenReaderBorder, none);
+        position: var(--screenReaderPosition, absolute);
+        overflow: var(--screenReaderOverflow, hidden);
       }
     `;
   }
@@ -66,6 +63,10 @@ export class LionRating extends LitElement {
       // total stars to show
       totalItemsToShow: {
         type: Number,
+        reflect: true,
+      },
+      readonly: {
+        type: Boolean,
         reflect: true,
       },
     };
@@ -88,6 +89,7 @@ export class LionRating extends LitElement {
     super();
     this.totalItemsToShow = 5;
     this.currentRate = 0;
+    this.readonly = false;
 
     this.changeRateEvent = new CustomEvent('on-rate-change', {
       bubbles: true,
@@ -142,7 +144,10 @@ export class LionRating extends LitElement {
       }
     };
 
-    setEventListeners();
+    if (!this.readonly) {
+      setEventListeners();
+    }
+
     handleCheckedState();
 
     return InputElement;
