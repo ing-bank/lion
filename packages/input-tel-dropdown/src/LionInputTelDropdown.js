@@ -52,7 +52,9 @@ export class LionInputTelDropdown extends LionInputTel {
    * @configure LitElement
    * @type {any}
    */
-  static properties = { preferredRegions: { type: Array } };
+  static properties = {
+    preferredRegions: { type: Array },
+  };
 
   refs = {
     /** @type {DropdownRef} */
@@ -97,6 +99,9 @@ export class LionInputTelDropdown extends LionInputTel {
         },
         labels: {
           selectCountry: localize.msg('lion-input-tel:selectCountry'),
+          // TODO: add translations
+          allCountries: this._allCountriesLabel || 'All countries',
+          preferredCountries: this._preferredCountriesLabel || 'Suggested countries',
         },
       },
     };
@@ -126,9 +131,12 @@ export class LionInputTelDropdown extends LionInputTel {
         >
           ${data?.regionMetaListPreferred?.length
             ? html`
-                ${data.regionMetaListPreferred.map(renderOption)}
-                <option disabled>---------------</option>
-                ${data?.regionMetaList?.map(renderOption)}
+                <optgroup label="${refs?.dropdown?.labels?._preferredCountries}">
+                  ${data.regionMetaListPreferred.map(renderOption)}
+                </optgroup>
+                <optgroup label="${refs?.dropdown?.labels?._allCountries}">
+                  ${data?.regionMetaList?.map(renderOption)}
+                </optgroup>
               `
             : html` ${data?.regionMetaList?.map(renderOption)}`}
         </select>
@@ -206,6 +214,16 @@ export class LionInputTelDropdown extends LionInputTel {
      * @type {string[]}
      */
     this.preferredRegions = [];
+    /**
+     * Group label for all countries, when preferredCountries are shown
+     * @protected
+     */
+    this._allCountriesLabel = '';
+    /**
+     * Group label for preferred countries, when preferredCountries are shown
+     * @protected
+     */
+    this._preferredCountriesLabel = '';
 
     /** @type {HTMLDivElement} */
     this.__dropdownRenderParent = document.createElement('div');

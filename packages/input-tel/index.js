@@ -1,3 +1,4 @@
+export { formatPhoneNumber } from './src/formatters.js';
 export { LionInputTel } from './src/LionInputTel.js';
 export { PhoneNumber } from './src/validators.js';
 export { PhoneUtilManager } from './src/PhoneUtilManager.js';
