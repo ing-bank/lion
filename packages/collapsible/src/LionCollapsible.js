@@ -1,8 +1,5 @@
 import { LitElement, html, css } from '@lion/core';
-/**
- * Generate random UUID
- */
-const uuid = () => Math.random().toString(36).substr(2, 10);
+import { uuid } from '@lion/helpers';
 /**
  * `LionCollapsible` is a class for custom collapsible element (`<lion-collapsible>` web component).
  *

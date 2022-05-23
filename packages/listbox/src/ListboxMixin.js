@@ -1,5 +1,6 @@
 import { css, dedupeMixin, html, ScopedElementsMixin, SlotMixin } from '@lion/core';
 import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/form-core';
+import { uuid } from '@lion/helpers';
 import { LionOptions } from './LionOptions.js';
 
 // TODO: extract ListNavigationWithActiveDescendantMixin that can be reused in [role="menu"]
@@ -49,10 +50,6 @@ function moveDefaultSlottablesToTarget(source, target) {
       target.appendChild(c);
     }
   });
-}
-
-function uuid() {
-  return Math.random().toString(36).substr(2, 10);
 }
 
 /**
