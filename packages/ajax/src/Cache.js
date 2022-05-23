@@ -16,7 +16,7 @@ export default class Cache {
   }
 
   /**
-   * The size of the cache
+   * The combined size of the bodies of all responses in the cache
    * @returns {number}
    */
   get size() {
