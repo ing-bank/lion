@@ -1,15 +1,22 @@
 import sinon from 'sinon';
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
+import { PhoneUtilManager } from '@lion/input-tel';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
 
 /**
  * @typedef {import('./helpers/umbrella-form.js').UmbrellaForm} UmbrellaForm
+ * @typedef {import('@lion/input-tel-dropdown').LionInputTelDropdown} LionInputTelDropdown
  */
 
 // Test umbrella form.
 describe('Form Integrations', () => {
+  beforeEach(async () => {
+    // Wait till PhoneUtilManager has been loaded
+    await PhoneUtilManager.loadComplete;
+  });
+
   it('".serializedValue" returns all non disabled fields based on form structure', async () => {
     const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
     await el.updateComplete;
@@ -43,6 +50,10 @@ describe('Form Integrations', () => {
     const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
     await el.updateComplete;
     const formEl = el._lionFormNode;
+    const inputTelDropdownEl = /** @type {LionInputTelDropdown} */ (
+      formEl.querySelector('lion-input-tel-dropdown')
+    );
+    await inputTelDropdownEl?.updateComplete;
 
     expect(formEl.formattedValue).to.eql({
       full_name: { first_name: '', last_name: '' },
@@ -63,7 +74,7 @@ describe('Form Integrations', () => {
       notifications: '',
       rsvp: '',
       tel: '',
-      'tel-dropdown': '',
+      'tel-dropdown': '+44',
       comments: '',
     });
   });

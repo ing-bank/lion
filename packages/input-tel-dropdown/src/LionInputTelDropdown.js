@@ -279,6 +279,29 @@ export class LionInputTelDropdown extends LionInputTel {
         this.refs.dropdown?.value?.removeAttribute('disabled');
       }
     }
+
+    if (changedProperties.has('_phoneUtil')) {
+      this._initModelValueBasedOnDropdown();
+    }
+  }
+
+  _initModelValueBasedOnDropdown() {
+    if (!this._initialModelValue && this._phoneUtil) {
+      const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
+      this._initialModelValue = `+${countryCode}`;
+      this.modelValue = this._initialModelValue;
+      this.initInteractionState();
+    }
+  }
+
+  /**
+   * Used for Required validation and computation of interaction states
+   * @param {any} modelValue
+   * @return {boolean}
+   * @protected
+   */
+  _isEmpty(modelValue = /** @type {any} */ (this).modelValue) {
+    return super._isEmpty(modelValue) || this.modelValue === this._initialModelValue;
   }
 
   /**
@@ -287,7 +310,7 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   _onDropdownValueChange(event) {
     const isInitializing = event.detail?.initialize || !this._phoneUtil;
-    if (isInitializing) {
+    if (isInitializing || (this.activeRegion && this.activeRegion === event.target.modelValue)) {
       return;
     }
 
@@ -301,15 +324,9 @@ export class LionInputTelDropdown extends LionInputTel {
     if (prevActiveRegion !== this.activeRegion && !this.focused && this._phoneUtil) {
       const prevCountryCode = this._phoneUtil.getCountryCodeForRegionCode(prevActiveRegion);
       const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
-      if (countryCode && !this.modelValue) {
-        // When textbox is empty, prefill it with country code
-        this.modelValue = `+${countryCode}`;
-      } else if (prevCountryCode && countryCode) {
-        // When textbox is not empty, replace country code
-        this.modelValue = this._callParser(
-          this.value.replace(`+${prevCountryCode}`, `+${countryCode}`),
-        );
-      }
+      this.modelValue = this._callParser(
+        this.value.replace(`+${prevCountryCode}`, `+${countryCode}`),
+      );
     }
 
     // Put focus on text box
