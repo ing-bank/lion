@@ -142,4 +142,16 @@ describe('isVisible()', () => {
     const target = /** @type {HTMLElement} */ (element.querySelector('#target'));
     expect(isVisible(target)).to.equal(false);
   });
+
+  it('returns true when display contents', async () => {
+    const element = /** @type {HTMLElement} */ (
+      await fixture(`
+      <div style="display: contents;">
+        <div style="width:10px; height:10px;"></div>
+      </div>
+      `)
+    );
+
+    expect(isVisible(element)).to.equal(true);
+  });
 });
