@@ -30,7 +30,8 @@
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input-amount",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
-    "test": "cd ../../ && npm run test:browser -- --group input-amount"
+    "test": "cd ../../ && npm run test:browser -- --group input-amount",
+    "api-table": "web-dev-server --node-resolve --open --watch"
   },
   "sideEffects": [
     "lion-input-amount.js"
@@ -58,7 +59,7 @@
   },
   "wireit": {
     "custom-elements-manifest": {
-      "command": "node ../../node_modules/@custom-elements-manifest/root/packages/analyzer/index.js  analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
+      "command": "WIREIT_CACHE=none node ../../node_modules/@custom-elements-manifest/root/packages/analyzer/index.js  analyze --litelement --dependencies --exclude \"docs/**/*\" \"test-helpers/**/*\"",
       "dependencies": [
         "../input:custom-elements-manifest",
         "../form-core:custom-elements-manifest",

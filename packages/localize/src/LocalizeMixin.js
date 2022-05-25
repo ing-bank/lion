@@ -151,6 +151,7 @@ const LocalizeMixinImplementation = superclass =>
     /**
      * @param {string} newLocale
      * @param {string} oldLocale
+     * @protected
      */
     // eslint-disable-next-line no-unused-vars
     onLocaleChanged(newLocale, oldLocale) {

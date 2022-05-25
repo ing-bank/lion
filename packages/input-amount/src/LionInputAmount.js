@@ -68,6 +68,10 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this.currency = undefined;
     /** @type {string | undefined} */
     this.locale = undefined;
+    /** 
+     * @private
+     * @type {boolean}
+     */
     this.__currencyDisplayNodeIsConnected = true;
     this.defaultValidators.push(new IsNumber());
   }
@@ -200,6 +204,9 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     }
   }
 
+  /**
+   * @private
+   */
   get __currencyLabel() {
     return this.currency ? formatCurrencyLabel(this.currency, localize.locale) : '';
   }

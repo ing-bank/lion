@@ -55,7 +55,7 @@
   },
   "wireit": {
     "custom-elements-manifest": {
-      "command": "node ../../node_modules/@custom-elements-manifest/root/packages/analyzer/index.js  analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\" \"**/*.d.ts\"",
+      "command": "WIREIT_CACHE=none node ../../node_modules/@custom-elements-manifest/root/packages/analyzer/index.js analyze --litelement --dev --dependencies --exclude \"docs/**/*\" \"test-helpers/**/*\" \"**/*.d.ts\"",
       "dependencies": [
         "../form-core:custom-elements-manifest"
       ],
