@@ -5,6 +5,11 @@ const hasStyleVisibility = ({ visibility, display }) =>
   visibility !== 'hidden' && display !== 'none';
 
 /**
+ * @param {CSSStyleDeclaration} styles
+ */
+const isDisplayContents = ({ display }) => display === 'contents';
+
+/**
  * @param {HTMLElement} element
  * @returns {boolean} Whether the element is visible
  */
@@ -24,10 +29,18 @@ export function isVisible(element) {
     return false;
   }
 
+  const computedStyle = window.getComputedStyle(element);
+
   // Check computed styles
-  // matches display: none, visbility: hidden on element and visibility: hidden from parent
-  if (!hasStyleVisibility(window.getComputedStyle(element))) {
+  // matches display: none, visibility: hidden on element and visibility: hidden from parent
+  if (!hasStyleVisibility(computedStyle)) {
     return false;
+  }
+
+  // Allow element that delegates layout (i.e. display: contents)
+  // matches display: contents
+  if (isDisplayContents(computedStyle)) {
+    return true;
   }
 
   // display: none is not inherited, so finally check if element has calculated width or height

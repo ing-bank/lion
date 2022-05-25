@@ -53,12 +53,16 @@ describe('getFocusableElements()', () => {
             <input id='el4'>
           </div>
         </div>
+
+        <div style='display: contents;'>
+          <button id='el5'></button>
+        </div>
       </div>
     `);
     const nodes = getFocusableElements(element);
     const ids = nodes.map(n => n.id);
 
-    expect(ids).eql(['el1', 'el2', 'el3', 'el4']);
+    expect(ids).eql(['el1', 'el2', 'el3', 'el4', 'el5']);
   });
 
   it('skips elements that should not receive focus', async () => {
