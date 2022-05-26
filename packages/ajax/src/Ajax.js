@@ -8,6 +8,14 @@ import { AjaxFetchError } from './AjaxFetchError.js';
 import './typedef.js';
 
 /**
+ * @param {Response} response
+ * @returns {boolean}
+ */
+function isFailedResponse(response) {
+  return response.status >= 400 && response.status < 600;
+}
+
+/**
  * A small wrapper around `fetch`.
 - Allows globally registering request and response interceptors
 - Throws on 4xx and 5xx status codes
@@ -115,8 +123,13 @@ export class Ajax {
     // run request interceptors, returning directly and skipping the network
     const interceptedRequestOrResponse = await this.__interceptRequest(request);
     if (interceptedRequestOrResponse instanceof Response) {
+      const response = /** @type {CacheResponse} */ (interceptedRequestOrResponse);
+      response.request = request;
+      if (isFailedResponse(interceptedRequestOrResponse)) {
+        throw new AjaxFetchError(request, response);
+      }
       // prevent network request, return cached response
-      return interceptedRequestOrResponse;
+      return response;
     }
 
     const response = /** @type {CacheResponse} */ (await fetch(interceptedRequestOrResponse));
@@ -124,7 +137,7 @@ export class Ajax {
 
     const interceptedResponse = await this.__interceptResponse(response);
 
-    if (interceptedResponse.status >= 400 && interceptedResponse.status < 600) {
+    if (isFailedResponse(interceptedResponse)) {
       throw new AjaxFetchError(request, interceptedResponse);
     }
     return interceptedResponse;
