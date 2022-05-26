@@ -228,6 +228,30 @@ describe('Ajax', () => {
       const text = await response.text();
       expect(text).to.equal('mock response');
     });
+
+    it('returns the original request object', async () => {
+      ajax.addRequestInterceptor(async () => new Response('my response', { status: 200 }));
+
+      const response = /** @type {CacheResponse} */ (await await ajax.fetch('/foo'));
+      expect(response.request).to.be.an.instanceOf(Request);
+    });
+
+    it('throws on 4xx responses returned from request interceptor', async () => {
+      ajax.addRequestInterceptor(async () => new Response('my response', { status: 400 }));
+
+      let thrown = false;
+      try {
+        await ajax.fetch('/foo');
+      } catch (e) {
+        // https://github.com/microsoft/TypeScript/issues/20024 open issue, can't type catch clause in param
+        const _e = /** @type {AjaxFetchError} */ (e);
+        expect(_e).to.be.an.instanceOf(AjaxFetchError);
+        expect(_e.request).to.be.an.instanceOf(Request);
+        expect(_e.response).to.be.an.instanceOf(Response);
+        thrown = true;
+      }
+      expect(thrown).to.be.true;
+    });
   });
 
   describe('accept-language header', () => {
