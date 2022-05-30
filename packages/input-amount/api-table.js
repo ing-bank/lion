@@ -2,6 +2,7 @@
 /* eslint-disable max-classes-per-file */
 import { LitElement, html, css } from 'lit';
 // import { getCustomElements, getElementData, getPublicFields } from '@api-viewer/common';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 const isCustomElementExport = y => y.kind === 'custom-element-definition';
 const isCustomElementDeclaration = y => y.customElement;
@@ -150,7 +151,7 @@ class ApiTable extends LitElement {
                       ? html`<p>(Inherited from ${prop.inheritedFrom.name})</p>`
                       : ''}
                   </td>
-                  <td>${prop.description}</td>
+                  <td>${prop.description ? unsafeHTML(prop.description.replace(/\n/g, '<br>')) : ''}</td>
                   <td>
                     ${prop.type?.text}
                     ${prop.default && prop.default !== 'undefined'
@@ -178,7 +179,7 @@ class ApiTable extends LitElement {
                       ? html`<p>(Inherited from ${prop.inheritedFrom.name})</p>`
                       : ''}
                   </td>
-                  <td>${prop.description}</td>
+                  <td>${prop.description ? unsafeHTML(prop.description.replace(/\n/g, '<br>')) : ''}</td>
                   <td>
                     ${prop.parameters?.map(
                       x =>
@@ -211,7 +212,7 @@ class ApiTable extends LitElement {
                       ? html`<p>(Inherited from ${prop.inheritedFrom.name})</p>`
                       : ''}
                   </td>
-                  <td>${prop.description}</td>
+                  <td>${prop.description ? unsafeHTML(prop.description.replace(/\n/g, '<br>')) : ''}</td>
                   <td>${prop.type?.text}</td>
                 </tr>
               `,
@@ -230,6 +231,7 @@ class ApiTable extends LitElement {
       td {
         border-bottom: 1px solid #ccc;
         padding: 10px 0;
+        vertical-align: top;
       }
       p {
         margin: 0;

@@ -9,14 +9,7 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
   /** @type {any} */
   static get properties() {
     return {
-      /**
-       * A Boolean attribute which, if present, indicates that the user should not be able to edit
-       * the value of the input. The difference between disabled and readonly is that read-only
-       * controls can still function, whereas disabled controls generally do not function as
-       * controls until they are enabled.
-       *
-       * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
-       */
+
       readOnly: {
         type: Boolean,
         attribute: 'readonly',
@@ -58,6 +51,14 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
 
   constructor() {
     super();
+    /**
+     * A Boolean attribute which, if present, indicates that the user should not be able to edit
+     * the value of the input. The difference between disabled and readonly is that read-only
+     * controls can still function, whereas disabled controls generally do not function as
+     * controls until they are enabled.
+     *
+     * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
+     */
     this.readOnly = false;
     this.type = 'text';
     this.placeholder = '';
