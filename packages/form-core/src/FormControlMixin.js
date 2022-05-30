@@ -1,5 +1,4 @@
-import { css, dedupeMixin, html, nothing, SlotMixin, DisabledMixin } from '@lion/core';
-import { uuid } from '@lion/helpers';
+import { css, dedupeMixin, html, nothing, SlotMixin, DisabledMixin, uuid } from '@lion/core';
 import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDomOrder.js';
 import { Unparseable } from './validate/Unparseable.js';
 import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';

@@ -2,4 +2,4 @@
 '@lion/input-tel': patch
 ---
 
-Make use of awsome-phonenumber, remove local copy
+Make use of awesome-phonenumber, remove local copy

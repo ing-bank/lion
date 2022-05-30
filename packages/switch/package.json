@@ -39,8 +39,7 @@
   ],
   "dependencies": {
     "@lion/core": "^0.22.0",
-    "@lion/form-core": "^0.17.1",
-    "@lion/helpers": "^0.11.0"
+    "@lion/form-core": "^0.17.1"
   },
   "keywords": [
     "lion",

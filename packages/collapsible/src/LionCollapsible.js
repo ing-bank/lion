@@ -1,5 +1,4 @@
-import { LitElement, html, css } from '@lion/core';
-import { uuid } from '@lion/helpers';
+import { LitElement, html, css, uuid } from '@lion/core';
 /**
  * `LionCollapsible` is a class for custom collapsible element (`<lion-collapsible>` web component).
  *
