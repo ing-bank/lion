@@ -25,6 +25,7 @@
   ],
   "scripts": {
     "custom-elements-manifest": "wireit",
+    "cem": "custom-elements-manifest analyze --litelement --dependencies --exclude \"docs/**/*\" \"test-helpers/**/*\"",
     "debug": "cd ../../ && npm run debug -- --group input",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group input",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group input",
@@ -55,7 +56,7 @@
   },
   "wireit": {
     "custom-elements-manifest": {
-      "command": "WIREIT_CACHE=none node ../../node_modules/@custom-elements-manifest/root/packages/analyzer/index.js analyze --litelement --dev --dependencies --exclude \"docs/**/*\" \"test-helpers/**/*\" \"**/*.d.ts\"",
+      "command": "custom-elements-manifest analyze --litelement --dependencies --exclude \"docs/**/*\" \"test-helpers/**/*\"",
       "dependencies": [
         "../form-core:custom-elements-manifest"
       ],

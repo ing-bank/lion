@@ -59,7 +59,7 @@
   },
   "wireit": {
     "custom-elements-manifest": {
-      "command": "WIREIT_CACHE=none node ../../node_modules/@custom-elements-manifest/root/packages/analyzer/index.js  analyze --litelement --dependencies --exclude \"docs/**/*\" \"test-helpers/**/*\"",
+      "command": "custom-elements-manifest analyze --litelement --dependencies --exclude \"docs/**/*\" \"test-helpers/**/*\"",
       "dependencies": [
         "../input:custom-elements-manifest",
         "../form-core:custom-elements-manifest",
