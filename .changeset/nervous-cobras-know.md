@@ -1,5 +1,5 @@
 ---
-'@lion/helpers': minor
+'@lion/core': patch
 '@lion/accordion': patch
 '@lion/collapsible': patch
 '@lion/form-core': patch

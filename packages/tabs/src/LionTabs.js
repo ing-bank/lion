@@ -1,5 +1,4 @@
-import { css, html, LitElement } from '@lion/core';
-import { uuid } from '@lion/helpers';
+import { css, html, LitElement, uuid } from '@lion/core';
 
 /**
  * @typedef {Object} StoreEntry

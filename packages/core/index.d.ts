@@ -85,3 +85,4 @@ export { SlotMixin } from './src/SlotMixin.js';
 export { UpdateStylesMixin } from './src/UpdateStylesMixin.js';
 export { browserDetection } from './src/browserDetection.js';
 export { EventTargetShim } from './src/EventTargetShim.js';
+export { uuid } from './src/uuid.js';

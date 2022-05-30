@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
-import { LitElement, css, html } from '@lion/core';
-import { uuid } from '@lion/helpers';
+import { LitElement, css, html, uuid } from '@lion/core';
+
 /**
  * @typedef {Object} StoreEntry
  * @property {string} uid Unique ID for the entry
