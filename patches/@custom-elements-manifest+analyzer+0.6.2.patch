@@ -1,0 +1,27 @@
+diff --git a/node_modules/@custom-elements-manifest/analyzer/src/utils/find-external-manifests.js b/node_modules/@custom-elements-manifest/analyzer/src/utils/find-external-manifests.js
+index 121d42e..e034c1e 100644
+--- a/node_modules/@custom-elements-manifest/analyzer/src/utils/find-external-manifests.js
++++ b/node_modules/@custom-elements-manifest/analyzer/src/utils/find-external-manifests.js
+@@ -13,14 +13,20 @@ import { findDependencies, splitPath } from '@custom-elements-manifest/find-depe
+  *  basePath?: string,
+  * }} [options]
+  */
+-export async function findExternalManifests(paths, options) {
++export async function findExternalManifests(paths, {basePath = process.cwd(), nodeModulesDepth}) {
+   /** @type {Package[]} */
+   const cemsToMerge = [];
+   const visited = new Set();
+ 
+-  const dependencies = await findDependencies(paths, options);
++  const dependencies = await findDependencies(paths, {basePath, nodeModulesDepth});
+ 
+   dependencies?.forEach((dependencyPath) => {
++    const isCurrentPackageRegex = new RegExp(`^${basePath}\\${path.sep}(?!.*node_modules).*`);
++    if (isCurrentPackageRegex.test(dependencyPath)) {
++      // Make sure that we do not look for custom-elements.json in our own package
++      return;
++    }
++
+     const { packageRoot, packageName } = splitPath(dependencyPath);
+ 
+     if(visited.has(packageName)) return;
