@@ -286,7 +286,7 @@ export class LionInputTelDropdown extends LionInputTel {
   }
 
   _initModelValueBasedOnDropdown() {
-    if (!this._initialModelValue && this._phoneUtil) {
+    if (!this._initialModelValue && !this.dirty && this._phoneUtil) {
       const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
       this._initialModelValue = `+${countryCode}`;
       this.modelValue = this._initialModelValue;
@@ -295,15 +295,19 @@ export class LionInputTelDropdown extends LionInputTel {
   }
 
   /**
-   * Used for Required validation and computation of interaction states. 
+   * Used for Required validation and computation of interaction states.
    * We need to override this, because we prefill the input with the region code (like +31), but for proper UX,
    * we don't consider this as having interaction state `prefilled`
    * @param {string} modelValue
    * @return {boolean}
    * @protected
    */
-  _isEmpty(modelValue = /** @type {string} */ (this).modelValue) {
-    return super._isEmpty(modelValue) || this.modelValue === this._initialModelValue;
+  _isEmpty(modelValue = this.modelValue) {
+    // the activeRegion is not synced on time, so it can't be used in this check
+    return (
+      super._isEmpty(modelValue) ||
+      (this.modelValue === this._initialModelValue && this._initialModelValue?.length <= 4)
+    );
   }
 
   /**
@@ -312,14 +316,13 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   _onDropdownValueChange(event) {
     const isInitializing = event.detail?.initialize || !this._phoneUtil;
-    if (isInitializing || (this.activeRegion === event.target.modelValue)) {
+    const dropdownValue = /** @type {RegionCode} */ (event.target.modelValue || event.target.value);
+    if (isInitializing || (this.activeRegion && this.activeRegion === dropdownValue)) {
       return;
     }
 
     const prevActiveRegion = this.activeRegion;
-    this._setActiveRegion(
-      /** @type {RegionCode} */ (event.target.value || event.target.modelValue),
-    );
+    this._setActiveRegion(dropdownValue);
 
     // Change region code in text box
     // From: https://bl00mber.github.io/react-phone-input-2.html

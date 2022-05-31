@@ -91,7 +91,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
       expect(el.value).to.equal('+44');
     });
 
-    it('syncs value of dropdown on init does not influence interaction states', async () => {
+    it('syncs value of dropdown on init if input has no value does not influence interaction states', async () => {
       const el = await fixture(html` <${tag}></${tag}> `);
       // TODO find out why its get dirty again
       // expect(el.dirty).to.be.false;
@@ -109,6 +109,13 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
       await el.updateComplete;
       expect(el.dirty).to.be.false;
       expect(el.prefilled).to.be.false;
+    });
+
+    it('sets correct interaction states on init if input has a value', async () => {
+      const el = await fixture(html` <${tag} .modelValue="${'+31612345678'}"></${tag}> `);
+      // TODO find out why its get dirty again
+      // expect(el.dirty).to.be.false;
+      expect(el.prefilled).to.be.true;
     });
 
     describe('Dropdown display', () => {
