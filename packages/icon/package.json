@@ -1,6 +1,6 @@
 {
   "name": "@lion/icon",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "A web component easily displaying svg icons",
   "license": "MIT",
   "author": "ing-bank",
@@ -38,8 +38,8 @@
     "./docs/icon-resolvers.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.22.0",
-    "singleton-manager": "^1.4.3"
+    "@lion/core": "^0.23.0",
+    "singleton-manager": "^1.5.0"
   },
   "keywords": [
     "icon",

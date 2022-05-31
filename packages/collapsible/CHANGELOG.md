@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.9.0
+
+### Minor Changes
+
+- e7a4ca1d: Add "type":"module" to ESM packages so loaders like Vite will interpret the package as ESM properly.
+
+### Patch Changes
+
+- 96a24c4a: add common uuid helper and remove separate implementations
+- Updated dependencies [e7a4ca1d]
+- Updated dependencies [96a24c4a]
+  - @lion/core@0.23.0
+
 ## 0.8.0
 
 ### Minor Changes

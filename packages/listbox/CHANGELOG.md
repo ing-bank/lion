@@ -1,5 +1,20 @@
 # @lion/listbox
 
+## 0.14.0
+
+### Minor Changes
+
+- e7a4ca1d: Add "type":"module" to ESM packages so loaders like Vite will interpret the package as ESM properly.
+
+### Patch Changes
+
+- 96a24c4a: add common uuid helper and remove separate implementations
+- Updated dependencies [e7a4ca1d]
+- Updated dependencies [33fd1bef]
+- Updated dependencies [96a24c4a]
+  - @lion/core@0.23.0
+  - @lion/form-core@0.18.0
+
 ## 0.13.1
 
 ### Patch Changes

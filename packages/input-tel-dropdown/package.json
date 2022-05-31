@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-tel-dropdown",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Input field for entering phone numbers with the help of a dropdown region list",
   "license": "MIT",
   "author": "ing-bank",
@@ -35,9 +35,9 @@
     "lion-input-tel-dropdown.js"
   ],
   "dependencies": {
-    "@lion/core": "0.22.0",
-    "@lion/input-tel": "0.1.2",
-    "@lion/localize": "0.24.0"
+    "@lion/core": "0.23.0",
+    "@lion/input-tel": "0.2.0",
+    "@lion/localize": "0.25.0"
   },
   "keywords": [
     "input",
