@@ -5,10 +5,12 @@ Extension of Input Tel that prefixes a dropdown list that shows all possible reg
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/input-tel-dropdown/define';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 ```
 
 ```js preview-story
 export const main = () => {
+  loadDefaultFeedbackMessages();
   return html`
     <lion-input-tel-dropdown label="Telephone number" name="phoneNumber"></lion-input-tel-dropdown>
   `;

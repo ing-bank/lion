@@ -7,11 +7,13 @@ import { html } from '@mdjs/mdjs-preview';
 import { ref, createRef } from '@lion/core';
 import { PhoneUtilManager } from '@lion/input-tel';
 import '@lion/input-tel/define';
+import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 ```
 
 ```js preview-story
 export const main = () => {
+  loadDefaultFeedbackMessages();
   return html`
     <lion-input-tel
       .modelValue="${'+639921343959'}"

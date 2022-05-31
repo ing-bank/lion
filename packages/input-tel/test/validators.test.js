@@ -34,16 +34,14 @@ describe('PhoneNumber validation', () => {
     expect(validator.execute('+32612345678', 'NL')).to.equal('invalid-country-code');
   });
 
-  // TODO: find out why awesome-phonenumber does not detect too-short/too-long
-  it.skip('is invalid when number is too short, returns "too-short"', () => {
+  it('is invalid when number is too short, returns "too-short"', () => {
     const validator = new PhoneNumber();
-    expect(validator.execute('+3161234567', 'NL')).to.equal('too-short');
+    expect(validator.execute('+316123', 'NL')).to.equal('too-short');
   });
 
-  // TODO: find out why awesome-phonenumber does not detect too-short/too-long
-  it.skip('is invalid when number is too long, returns "too-long"', () => {
+  it('is invalid when number is too long, returns "too-long"', () => {
     const validator = new PhoneNumber();
-    expect(validator.execute('+316123456789', 'NL')).to.equal('too-long');
+    expect(validator.execute('+31612345678901', 'NL')).to.equal('too-long');
   });
 
   it('is valid when a phone number is entered', () => {
