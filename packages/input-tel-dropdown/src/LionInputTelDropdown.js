@@ -290,7 +290,6 @@ export class LionInputTelDropdown extends LionInputTel {
       const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
       this.__initializedRegionCode = `+${countryCode}`;
       this.modelValue = this.__initializedRegionCode;
-      console.log('ja, hallo', this.dirty);
       this._initialModelValue = this.__initializedRegionCode;
       this.initInteractionState();
     }
@@ -316,16 +315,10 @@ export class LionInputTelDropdown extends LionInputTel {
   _onDropdownValueChange(event) {
     const isInitializing = event.detail?.initialize || !this._phoneUtil;
     const dropdownValue = /** @type {RegionCode} */ (event.target.modelValue || event.target.value);
-    console.log(
-      'jajaj',
-      { dropdownValue, isInitializing, activeRegion: this.activeRegion },
-      this.dirty,
-    );
 
     if (isInitializing || (this.activeRegion && this.activeRegion === dropdownValue)) {
       return;
     }
-    console.log('jajaj2');
 
     const prevActiveRegion = this.activeRegion;
     this._setActiveRegion(dropdownValue);
