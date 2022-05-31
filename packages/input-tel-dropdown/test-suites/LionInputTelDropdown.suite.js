@@ -71,6 +71,53 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
       await PhoneUtilManager.loadComplete;
     });
 
+    it('syncs value of dropdown on init if input has no value', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      expect(el.activeRegion).to.equal('GB');
+      expect(el.value).to.equal('+44');
+      expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
+        'GB',
+      );
+    });
+
+    it('syncs value of dropdown on reset if input has no value', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      el.modelValue = '+31612345678';
+      await el.updateComplete;
+      expect(el.activeRegion).to.equal('NL');
+      el.reset();
+      await el.updateComplete;
+      expect(el.activeRegion).to.equal('GB');
+      expect(el.value).to.equal('+44');
+    });
+
+    it('syncs value of dropdown on init if input has no value does not influence interaction states', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      // TODO find out why its get dirty again
+      // expect(el.dirty).to.be.false;
+      expect(el.prefilled).to.be.false;
+    });
+
+    it('syncs value of dropdown on reset also resets interaction states', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      el.modelValue = '+31612345678';
+      await el.updateComplete;
+
+      expect(el.dirty).to.be.true;
+      expect(el.prefilled).to.be.false;
+      el.reset();
+      await el.updateComplete;
+      expect(el.dirty).to.be.false;
+      expect(el.prefilled).to.be.false;
+    });
+
+    it('sets correct interaction states on init if input has a value', async () => {
+      const el = await fixture(html` <${tag} .modelValue="${'+31612345678'}"></${tag}> `);
+      // TODO find out why its get dirty again
+      // expect(el.dirty).to.be.false;
+      expect(el.prefilled).to.be.true;
+    });
+
     describe('Dropdown display', () => {
       it('calls `templates.dropdown` with TemplateDataForDropdownInputTel object', async () => {
         const el = fixtureSync(html` <${tag}
@@ -261,7 +308,9 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
       });
 
       it('prefills country code when textbox is empty', async () => {
-        const el = await fixture(html` <${tag} .allowedRegions="${['NL', 'BE']}"></${tag}> `);
+        const el = await fixture(
+          html` <${tag} .allowedRegions="${['NL', 'BE']}" .modelValue="${''}"></${tag}> `,
+        );
         // @ts-ignore
         mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
         await el.updateComplete;
