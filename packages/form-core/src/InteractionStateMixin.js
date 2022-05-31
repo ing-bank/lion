@@ -140,6 +140,9 @@ const InteractionStateMixinImplementation = superclass =>
      * Since this method will be called twice in last mentioned scenario, it must stay idempotent.
      */
     initInteractionState() {
+      if (this.tagName === 'TEST-1') {
+        console.trace('initInteractionState');
+      }
       this.dirty = false;
       this.prefilled = !this._isEmpty();
     }
@@ -159,6 +162,9 @@ const InteractionStateMixinImplementation = superclass =>
      * @protected
      */
     _iStateOnValueChange() {
+      if (this.tagName === 'TEST-1') {
+        console.trace('_iStateOnValueChange');
+      }
       this.dirty = true;
     }
 

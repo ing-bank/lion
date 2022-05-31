@@ -92,9 +92,12 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
     });
 
     it('syncs value of dropdown on init if input has no value does not influence interaction states', async () => {
+      console.log('hmmm');
       const el = await fixture(html` <${tag}></${tag}> `);
+      console.log('hmmm2');
+
       // TODO find out why its get dirty again
-      // expect(el.dirty).to.be.false;
+      expect(el.dirty).to.be.false;
       expect(el.prefilled).to.be.false;
     });
 
@@ -114,7 +117,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
     it('sets correct interaction states on init if input has a value', async () => {
       const el = await fixture(html` <${tag} .modelValue="${'+31612345678'}"></${tag}> `);
       // TODO find out why its get dirty again
-      // expect(el.dirty).to.be.false;
+      expect(el.dirty).to.be.false;
       expect(el.prefilled).to.be.true;
     });
 

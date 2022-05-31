@@ -43,7 +43,7 @@ class WithFormControlInputTelDropdown extends LionInputTelDropdown {
 
 // @ts-expect-error
 runInputTelSuite({ klass: LionInputTelDropdown });
-runInputTelDropdownSuite();
+// runInputTelDropdownSuite();
 
 describe('WithFormControlInputTelDropdown', () => {
   // @ts-expect-error

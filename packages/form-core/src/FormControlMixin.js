@@ -890,6 +890,10 @@ const FormControlMixinImplementation = superclass =>
       // repropagate init events of our children (we already sent our own
       // initial model-value-change event in firstUpdated)
       const isGroup = this._repropagationRole !== 'child'; // => fieldset or choice-group
+      if (!isGroup) {
+        // For instance, we are an Input with a helper (rich) select (like LionInputTelDropdown)
+        return;
+      }
       const isSelfInitializing = isGroup && !this.__repropagateChildrenInitialized;
       const isChildGroupInitializing = ev.detail && ev.detail.initialize;
       if (isSelfInitializing || isChildGroupInitializing) {
