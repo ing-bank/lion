@@ -310,7 +310,7 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   _onDropdownValueChange(event) {
     const isInitializing = event.detail?.initialize || !this._phoneUtil;
-    if (isInitializing || (this.activeRegion && this.activeRegion === event.target.modelValue)) {
+    if (isInitializing || (this.activeRegion === event.target.modelValue)) {
       return;
     }
 
