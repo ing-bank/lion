@@ -10,6 +10,7 @@
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages/input-datepicker"
   },
+  "type": "module",
   "main": "index.js",
   "module": "index.js",
   "files": [
