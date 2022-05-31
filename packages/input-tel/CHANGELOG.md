@@ -1,5 +1,24 @@
 # @lion/input-tel
 
+## 0.2.0
+
+### Minor Changes
+
+- e7a4ca1d: Add "type":"module" to ESM packages so loaders like Vite will interpret the package as ESM properly.
+
+### Patch Changes
+
+- abcff8c9: Add replace Min/MaxLength validator messages with Pattern validator message in PhoneNumber validator, since wrong info (param) was shown. And removed default Validator message for PhoneNumber validator.
+- d382887e: Make use of awesome-phonenumber, remove local copy
+- 01fd0d20: Export formatPhoneNumber
+- Updated dependencies [e7a4ca1d]
+- Updated dependencies [33fd1bef]
+- Updated dependencies [96a24c4a]
+  - @lion/core@0.23.0
+  - @lion/form-core@0.18.0
+  - @lion/input@0.18.0
+  - @lion/localize@0.25.0
+
 ## 0.1.2
 
 ### Patch Changes

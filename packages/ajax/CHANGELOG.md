@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.16.0
+
+### Minor Changes
+
+- e7a4ca1d: Add "type":"module" to ESM packages so loaders like Vite will interpret the package as ESM properly.
+- 447383bd: Add a `maxCacheSize` cache option to specify a max size for the whole cache
+
+### Patch Changes
+
+- 362ee0e2: Align intercepted and non-intercepted response behavior
+
 ## 0.15.0
 
 ### Minor Changes

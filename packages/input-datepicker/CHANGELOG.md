@@ -1,5 +1,26 @@
 # Change Log
 
+## 0.26.0
+
+### Minor Changes
+
+- e7a4ca1d: Add "type":"module" to ESM packages so loaders like Vite will interpret the package as ESM properly.
+
+### Patch Changes
+
+- Updated dependencies [e7a4ca1d]
+- Updated dependencies [915de370]
+- Updated dependencies [abcff8c9]
+- Updated dependencies [33fd1bef]
+- Updated dependencies [96a24c4a]
+  - @lion/calendar@0.20.0
+  - @lion/core@0.23.0
+  - @lion/form-core@0.18.0
+  - @lion/input-date@0.15.0
+  - @lion/localize@0.25.0
+  - @lion/overlays@0.33.0
+  - @lion/validate-messages@0.10.0
+
 ## 0.25.0
 
 ### Minor Changes

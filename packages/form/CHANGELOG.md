@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.15.0
+
+### Minor Changes
+
+- e7a4ca1d: Add "type":"module" to ESM packages so loaders like Vite will interpret the package as ESM properly.
+
+### Patch Changes
+
+- Updated dependencies [e7a4ca1d]
+  - @lion/fieldset@0.22.0
+
 ## 0.14.0
 
 ### Minor Changes

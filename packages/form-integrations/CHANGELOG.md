@@ -1,5 +1,43 @@
 # Change Log
 
+## 0.12.0
+
+### Minor Changes
+
+- e7a4ca1d: Add "type":"module" to ESM packages so loaders like Vite will interpret the package as ESM properly.
+
+### Patch Changes
+
+- Updated dependencies [e7a4ca1d]
+- Updated dependencies [abcff8c9]
+- Updated dependencies [33fd1bef]
+- Updated dependencies [f78cad3c]
+- Updated dependencies [05e17d69]
+- Updated dependencies [96a24c4a]
+  - @lion/button@0.18.0
+  - @lion/checkbox-group@0.21.0
+  - @lion/combobox@0.11.0
+  - @lion/core@0.23.0
+  - @lion/fieldset@0.22.0
+  - @lion/form@0.15.0
+  - @lion/form-core@0.18.0
+  - @lion/input@0.18.0
+  - @lion/input-amount@0.17.0
+  - @lion/input-date@0.15.0
+  - @lion/input-datepicker@0.26.0
+  - @lion/input-email@0.16.0
+  - @lion/input-iban@0.19.0
+  - @lion/input-range@0.13.0
+  - @lion/input-stepper@0.9.0
+  - @lion/listbox@0.14.0
+  - @lion/localize@0.25.0
+  - @lion/radio-group@0.21.0
+  - @lion/select@0.17.0
+  - @lion/select-rich@0.31.0
+  - @lion/switch@0.21.0
+  - @lion/textarea@0.16.0
+  - @lion/validate-messages@0.10.0
+
 ## 0.11.0
 
 ### Minor Changes

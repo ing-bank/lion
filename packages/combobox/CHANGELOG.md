@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.11.0
+
+### Minor Changes
+
+- e7a4ca1d: Add "type":"module" to ESM packages so loaders like Vite will interpret the package as ESM properly.
+
+### Patch Changes
+
+- f78cad3c: Set noTypeAhead to true
+- Updated dependencies [e7a4ca1d]
+- Updated dependencies [915de370]
+- Updated dependencies [33fd1bef]
+- Updated dependencies [96a24c4a]
+  - @lion/core@0.23.0
+  - @lion/form-core@0.18.0
+  - @lion/listbox@0.14.0
+  - @lion/overlays@0.33.0
+
 ## 0.10.0
 
 ### Minor Changes

@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.24.0
+
+### Minor Changes
+
+- e7a4ca1d: Add "type":"module" to ESM packages so loaders like Vite will interpret the package as ESM properly.
+
+### Patch Changes
+
+- Updated dependencies [e7a4ca1d]
+- Updated dependencies [915de370]
+- Updated dependencies [96a24c4a]
+  - @lion/core@0.23.0
+  - @lion/overlays@0.33.0
+
 ## 0.23.0
 
 ### Minor Changes
