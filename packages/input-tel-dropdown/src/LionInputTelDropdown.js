@@ -288,8 +288,10 @@ export class LionInputTelDropdown extends LionInputTel {
   _initModelValueBasedOnDropdown() {
     if (!this._initialModelValue && !this.dirty && this._phoneUtil) {
       const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
-      this._initialModelValue = `+${countryCode}`;
-      this.modelValue = this._initialModelValue;
+      this.__initializedRegionCode = `+${countryCode}`;
+      this.modelValue = this.__initializedRegionCode;
+      console.log('ja, hallo', this.dirty);
+      this._initialModelValue = this.__initializedRegionCode;
       this.initInteractionState();
     }
   }
@@ -304,10 +306,7 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   _isEmpty(modelValue = this.modelValue) {
     // the activeRegion is not synced on time, so it can't be used in this check
-    return (
-      super._isEmpty(modelValue) ||
-      (this.modelValue === this._initialModelValue && this._initialModelValue?.length <= 4)
-    );
+    return super._isEmpty(modelValue) || this.value === this.__initializedRegionCode;
   }
 
   /**
@@ -317,9 +316,16 @@ export class LionInputTelDropdown extends LionInputTel {
   _onDropdownValueChange(event) {
     const isInitializing = event.detail?.initialize || !this._phoneUtil;
     const dropdownValue = /** @type {RegionCode} */ (event.target.modelValue || event.target.value);
+    console.log(
+      'jajaj',
+      { dropdownValue, isInitializing, activeRegion: this.activeRegion },
+      this.dirty,
+    );
+
     if (isInitializing || (this.activeRegion && this.activeRegion === dropdownValue)) {
       return;
     }
+    console.log('jajaj2');
 
     const prevActiveRegion = this.activeRegion;
     this._setActiveRegion(dropdownValue);
