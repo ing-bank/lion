@@ -295,12 +295,14 @@ export class LionInputTelDropdown extends LionInputTel {
   }
 
   /**
-   * Used for Required validation and computation of interaction states
-   * @param {any} modelValue
+   * Used for Required validation and computation of interaction states. 
+   * We need to override this, because we prefill the input with the region code (like +31), but for proper UX,
+   * we don't consider this as having interaction state `prefilled`
+   * @param {string} modelValue
    * @return {boolean}
    * @protected
    */
-  _isEmpty(modelValue = /** @type {any} */ (this).modelValue) {
+  _isEmpty(modelValue = /** @type {string} */ (this).modelValue) {
     return super._isEmpty(modelValue) || this.modelValue === this._initialModelValue;
   }
 
