@@ -38,10 +38,10 @@
     "lion-input-tel.js"
   ],
   "dependencies": {
-    "@lion/core": "0.23.0",
-    "@lion/form-core": "0.18.0",
-    "@lion/input": "0.18.0",
-    "@lion/localize": "0.25.0",
+    "@lion/core": "^0.23.0",
+    "@lion/form-core": "^0.18.0",
+    "@lion/input": "^0.18.0",
+    "@lion/localize": "^0.25.0",
     "awesome-phonenumber": "^3.0.1"
   },
   "keywords": [
