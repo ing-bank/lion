@@ -316,7 +316,7 @@ export class LionInputTelDropdown extends LionInputTel {
     const isInitializing = event.detail?.initialize || !this._phoneUtil;
     const dropdownValue = /** @type {RegionCode} */ (event.target.modelValue || event.target.value);
 
-    if (isInitializing || (this.activeRegion && this.activeRegion === dropdownValue)) {
+    if (isInitializing || this.activeRegion === dropdownValue) {
       return;
     }
 
@@ -328,9 +328,15 @@ export class LionInputTelDropdown extends LionInputTel {
     if (prevActiveRegion !== this.activeRegion && !this.focused && this._phoneUtil) {
       const prevCountryCode = this._phoneUtil.getCountryCodeForRegionCode(prevActiveRegion);
       const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
-      this.modelValue = this._callParser(
-        this.value.replace(`+${prevCountryCode}`, `+${countryCode}`),
-      );
+      if (this.value.includes(`+${prevCountryCode}`)) {
+        this.modelValue = this._callParser(
+          this.value.replace(`+${prevCountryCode}`, `+${countryCode}`),
+        );
+      } else {
+        // In case of dropdown has +31, and input has only +3
+        const valueObj = this.value.split(' ');
+        this.modelValue = this._callParser(this.value.replace(valueObj[0], `+${countryCode}`));
+      }
     }
 
     // Put focus on text box
