@@ -272,6 +272,56 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         expect(el.value).to.equal('+32612345678');
       });
 
+      it('changes the currently active country code in the textbox when empty', async () => {
+        const el = await fixture(html` <${tag} .allowedRegions="${['NL', 'BE']}"></${tag}> `);
+        el.value = '';
+        // @ts-ignore
+        mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
+        await el.updateComplete;
+        await el.updateComplete;
+        expect(el.value).to.equal('+32');
+      });
+
+      it('changes the currently active country code in the textbox when invalid', async () => {
+        const el = await fixture(html` <${tag} .allowedRegions="${['NL', 'BE']}"></${tag}> `);
+        el.value = '+3';
+        // @ts-ignore
+        mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
+        await el.updateComplete;
+        await el.updateComplete;
+        expect(el.value).to.equal('+32');
+      });
+
+      it('changes the currently active country code in the textbox when invalid and small part of phone number', async () => {
+        const el = await fixture(html` <${tag} .allowedRegions="${['NL', 'BE']}"></${tag}> `);
+        el.value = '+3 2';
+        // @ts-ignore
+        mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
+        await el.updateComplete;
+        await el.updateComplete;
+        expect(el.value).to.equal('+32 2');
+      });
+
+      it('changes the currently active country code in the textbox when invalid and bigger part of phone number', async () => {
+        const el = await fixture(html` <${tag} .allowedRegions="${['NL', 'BE']}"></${tag}> `);
+        el.value = '+3 612345678';
+        // @ts-ignore
+        mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
+        await el.updateComplete;
+        await el.updateComplete;
+        expect(el.value).to.equal('+32 612345678');
+      });
+
+      it('changes the currently phonenumber completely in the textbox when not sure what to replace', async () => {
+        const el = await fixture(html` <${tag} .allowedRegions="${['NL', 'BE']}""></${tag}> `);
+        el.value = '+9912345678';
+        // @ts-ignore
+        mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
+        await el.updateComplete;
+        await el.updateComplete;
+        expect(el.value).to.equal('+32');
+      });
+
       it('focuses the textbox right after selection if selected via opened dropdown', async () => {
         const el = await fixture(
           html` <${tag} .allowedRegions="${[
@@ -305,17 +355,6 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         await el.updateComplete;
         // @ts-expect-error [allow-protected-in-tests]
         expect(el._inputNode).to.not.equal(document.activeElement);
-      });
-
-      it('prefills country code when textbox is empty', async () => {
-        const el = await fixture(
-          html` <${tag} .allowedRegions="${['NL', 'BE']}" .modelValue="${''}"></${tag}> `,
-        );
-        // @ts-ignore
-        mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
-        await el.updateComplete;
-        await el.updateComplete;
-        expect(el.value).to.equal('+32');
       });
     });
 
