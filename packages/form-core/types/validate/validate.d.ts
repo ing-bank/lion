@@ -1,5 +1,5 @@
 import { FormControlHost } from '../../src/FormControlMixin';
-export { ValidationType } from '../../types/ValidateMixinTypes';
+import { ValidationType } from './ValidateMixinTypes';
 
 /**
  * The name under which validation results get registered. For convience and predictability, this
