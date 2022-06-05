@@ -160,13 +160,30 @@ describe('<lion-accordion>', () => {
     it('are visible when corresponding invoker is expanded', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const contents = el.querySelectorAll('[slot=content]');
+      const invokers = el.querySelectorAll('[slot=invoker]');
+
       el.expanded = [0];
-      expect(contents[0]).to.be.visible;
-      expect(contents[1]).to.be.not.visible;
+
+      if (invokers[0].hasAttribute('data-target')) {
+        const target = invokers[0].getAttribute('data-target');
+        const targetContentNode = el.querySelector(`[data-content=${target}]`);
+        expect(targetContentNode).to.not.equal(null);
+        expect(targetContentNode).to.be.visible;
+      } else {
+        expect(contents[0]).to.be.visible;
+        expect(contents[1]).to.be.not.visible;
+      }
 
       el.expanded = [1];
-      expect(contents[0]).to.be.not.visible;
-      expect(contents[1]).to.be.visible;
+      if (invokers[1].hasAttribute('data-target')) {
+        const target = invokers[1].getAttribute('data-target');
+        const targetContentNode = el.querySelector(`[data-content=${target}]`);
+        expect(targetContentNode).to.not.equal(null);
+        expect(targetContentNode).to.be.visible;
+      } else {
+        expect(contents[0]).to.be.not.visible;
+        expect(contents[1]).to.be.visible;
+      }
     });
 
     it.skip('have a DOM structure that allows them to be animated ', async () => {});

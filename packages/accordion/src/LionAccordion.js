@@ -4,7 +4,8 @@ import { LitElement, css, html, uuid } from '@lion/core';
 /**
  * @typedef {Object} StoreEntry
  * @property {string} uid Unique ID for the entry
- * @property {number} index index of the node
+ * @property {number} invokerIndex invoker index of the node
+ * @property {number} contentIndex content index associated with the invoker
  * @property {HTMLElement} invoker invoker node
  * @property {HTMLElement} content content node
  * @property {(event: Event) => unknown} clickHandler executed on click event
@@ -166,16 +167,34 @@ export class LionAccordion extends LitElement {
       );
     }
 
-    invokers.forEach((invoker, index) => {
+    invokers.forEach((invoker, invokerIndex) => {
       const uid = uuid();
-      const content = contents[index];
+
+      let contentIndex = invokerIndex;
+
+      /**
+       * If invoker contains attribute data-target="value", then
+       * invoke content node with attribute data-content="value"
+       */
+
+      if (invoker.hasAttribute('data-target')) {
+        const target = invoker.getAttribute('data-target');
+        const contentIndexWithId = contents.findIndex(
+          item => item.hasAttribute('data-content') && item.getAttribute('data-content') === target,
+        );
+        if (contentIndexWithId !== -1) {
+          contentIndex = contentIndexWithId;
+        }
+      }
+      const content = contents[contentIndex];
       /** @type {StoreEntry} */
       const entry = {
         uid,
-        index,
+        invokerIndex,
+        contentIndex,
         invoker,
         content,
-        clickHandler: this.__createInvokerClickHandler(index),
+        clickHandler: this.__createInvokerClickHandler(invokerIndex),
         keydownHandler: this.__handleInvokerKeydown.bind(this),
       };
       this._setupContent(entry);
@@ -187,13 +206,13 @@ export class LionAccordion extends LitElement {
   }
 
   /**
-   * @param {number} index
+   * @param {number} invokerIndex
    * @private
    */
-  __createInvokerClickHandler(index) {
+  __createInvokerClickHandler(invokerIndex) {
     return () => {
-      this.focusedIndex = index;
-      this.__toggleExpanded(index);
+      this.focusedIndex = invokerIndex;
+      this.__toggleExpanded(invokerIndex);
     };
   }
 
@@ -242,8 +261,8 @@ export class LionAccordion extends LitElement {
    * @protected
    */
   _setupContent(entry) {
-    const { content, index, uid } = entry;
-    content.style.setProperty('order', `${index + 1}`);
+    const { content, contentIndex, uid } = entry;
+    content.style.setProperty('order', `${contentIndex + 1}`);
     content.setAttribute('id', `content-${uid}`);
     content.setAttribute('aria-labelledby', `invoker-${uid}`);
   }
@@ -253,8 +272,8 @@ export class LionAccordion extends LitElement {
    * @protected
    */
   _setupInvoker(entry) {
-    const { invoker, uid, index, clickHandler, keydownHandler } = entry;
-    invoker.style.setProperty('order', `${index + 1}`);
+    const { invoker, uid, invokerIndex, clickHandler, keydownHandler } = entry;
+    invoker.style.setProperty('order', `${invokerIndex + 1}`);
     const firstChild = invoker.firstElementChild;
     if (firstChild) {
       firstChild.setAttribute('id', `invoker-${uid}`);
@@ -357,8 +376,8 @@ export class LionAccordion extends LitElement {
     if (!this.__store) {
       return;
     }
-    this.__store.forEach((entry, index) => {
-      const entryExpanded = this.expanded.indexOf(index) !== -1;
+    this.__store.forEach(entry => {
+      const entryExpanded = this.expanded.indexOf(entry.invokerIndex) !== -1;
 
       if (entryExpanded) {
         this._expand(entry);
@@ -369,17 +388,30 @@ export class LionAccordion extends LitElement {
   }
 
   /**
-   * @param {number} value
+   * @param {number} invokerIndex
    * @private
    */
-  __toggleExpanded(value) {
-    const { expanded } = this;
-    const index = expanded.indexOf(value);
+  __toggleExpanded(invokerIndex) {
+    const { expanded, __store } = this;
+    const { contentIndex } = __store[invokerIndex];
+    const expandedIndex = expanded.indexOf(invokerIndex);
 
-    if (index === -1) {
-      expanded.push(value);
+    const matchInvoker = (/** @type {StoreEntry} */ entry) =>
+      entry.invokerIndex === invokerIndex || entry.contentIndex === contentIndex;
+
+    const matchedInvokers = __store.filter(entry => matchInvoker(entry));
+
+    if (expandedIndex === -1) {
+      matchedInvokers.forEach(entry => expanded.push(entry.invokerIndex));
     } else {
-      expanded.splice(index, 1);
+      // In-place filter
+      matchedInvokers.forEach(entry =>
+        expanded.splice(
+          0,
+          expanded.length,
+          ...expanded.filter(item => item !== entry.invokerIndex),
+        ),
+      );
     }
 
     this.expanded = expanded;
