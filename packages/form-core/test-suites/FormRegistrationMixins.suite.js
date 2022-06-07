@@ -1,4 +1,4 @@
-import { LitElement } from '@lion/core';
+import { LitElement, uuid } from '@lion/core';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { FormRegisteringMixin } from '../src/registration/FormRegisteringMixin.js';
 import { FormRegistrarMixin } from '../src/registration/FormRegistrarMixin.js';
@@ -69,6 +69,74 @@ export const runRegistrationSuite = customConfig => {
       `)
       );
       expect(el.formElements.length).to.equal(1);
+    });
+
+    it('maintains dom order if there are arbitrary none-form elements between registering elements', async () => {
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
+          <${parentTag}>
+            <${childTag} pos="1"></${childTag}>
+            <something-other></something-other>
+            <${childTag} pos="2"></${childTag}>
+          </${parentTag}>
+        `)
+      );
+
+      const newField = await fixture(html`
+        <${childTag} pos="insert-between-1-and-2"></${childTag}>
+      `);
+      el.insertBefore(newField, el.children[1]);
+
+      expect(el.formElements.length).to.equal(3);
+      expect(el.formElements.map(fel => fel.getAttribute('pos'))).to.deep.equal([
+        '1',
+        'insert-between-1-and-2',
+        '2',
+      ]);
+    });
+
+    it('maintains dom order if there are arbitrary none-form group elements between registering elements', async () => {
+      /**
+       * @param {string} tagString
+       */
+      function lazyDefine(tagString) {
+        class Extension extends RegisteringClass {}
+        customElements.define(tagString, Extension);
+      }
+
+      const [tagName1, tagName2, tagName3] = [uuid('lazy-1'), uuid('lazy-2'), uuid('lazy-3')];
+      const [tag1, tag2, tag3] = [tagName1, tagName2, tagName3].map(name => unsafeStatic(name));
+
+      const el = /** @type {RegistrarClass} */ (
+        await fixture(html`
+          <${parentTag} .name=${'test-group'}>
+            <div role="group">
+              <${tag1} .name=${'one'}></${tag1}>
+            </div>
+            <div role="group">
+              <${tag2} .name=${'two'}></${tag2}>
+              <${tag3} .name=${'three'}></${tag3}>
+            </div>
+          </${parentTag}>
+        `)
+      );
+      expect(el.formElements.length).to.equal(0);
+
+      lazyDefine(tagName3);
+      await el.updateComplete;
+      expect(el.formElements.map(fel => fel.localName)).to.deep.equal([tagName3]);
+
+      lazyDefine(tagName1);
+      await el.updateComplete;
+      expect(el.formElements.map(fel => fel.localName)).to.deep.equal([tagName1, tagName3]);
+
+      lazyDefine(tagName2);
+      await el.updateComplete;
+      expect(el.formElements.map(fel => fel.localName)).to.deep.equal([
+        tagName1,
+        tagName2,
+        tagName3,
+      ]);
     });
 
     it('supports nested registration parents', async () => {
@@ -147,30 +215,38 @@ export const runRegistrationSuite = customConfig => {
        */
       const newField = /** @type {RegisteringClass & prop} */ (
         await fixture(html`
-        <${childTag}></${childTag}>
-      `)
+          <${childTag} pos="inserted-before-1"></${childTag}>
+        `)
       );
-      newField.setAttribute('pos', 'inserted-before-1');
+      // newField.setAttribute('pos', 'inserted-before-1');
       el.insertBefore(newField, el.children[1]);
 
       expect(el.formElements.length).to.equal(4);
-      const secondChild = /** @type {RegisteringClass & prop} */ (el.children[1]);
-      expect(secondChild.getAttribute('pos')).to.equal('inserted-before-1');
-      expect(el.formElements[1].getAttribute('pos')).to.equal('inserted-before-1');
+      expect(el.formElements.map(fel => fel.getAttribute('pos'))).to.deep.equal([
+        '0',
+        'inserted-before-1',
+        '1',
+        '2',
+      ]);
 
       /** INSERT field before the pos=0 (e.g. at the top) */
       const topField = /** @type {RegisteringClass & prop} */ (
         await fixture(html`
-        <${childTag}></${childTag}>
-      `)
+           <${childTag} pos="inserted-before-0"></${childTag}>
+        `)
       );
-      topField.setAttribute('pos', 'inserted-before-0');
       el.insertBefore(topField, el.children[0]);
 
       // expect(el.formElements.length).to.equal(5);
       const firstChild = /** @type {RegisteringClass & prop} */ (el.children[0]);
       expect(firstChild.getAttribute('pos')).to.equal('inserted-before-0');
-      expect(el.formElements[0].getAttribute('pos')).to.equal('inserted-before-0');
+      expect(el.formElements.map(fel => fel.getAttribute('pos'))).to.deep.equal([
+        'inserted-before-0',
+        '0',
+        'inserted-before-1',
+        '1',
+        '2',
+      ]);
     });
 
     describe('FormRegistrarPortalMixin', () => {
