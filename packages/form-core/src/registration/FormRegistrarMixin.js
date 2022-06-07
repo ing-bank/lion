@@ -222,11 +222,22 @@ const FormRegistrarMixinImplementation = superclass =>
       }
       ev.stopPropagation();
 
-      // Check for siblings to determine the right order to insert into formElements
-      // If there is no next sibling, index is -1
+      // Check for DOM order to determine the right order to insert into formElements
+      // If there is no other element, index is -1 (e.g. add it to the end)
       let indexToInsertAt = -1;
       if (this.formElements && Array.isArray(this.formElements)) {
-        indexToInsertAt = this.formElements.indexOf(child.nextElementSibling);
+        // we start comparing from the end of the array as it's the most likely position where the element will be added
+        for (const [i, formElement] of this.formElements.entries()) {
+          // compareDocumentPosition returns a bitmask
+          // eslint-disable-next-line no-bitwise
+          if (formElement.compareDocumentPosition(child) & Node.DOCUMENT_POSITION_FOLLOWING) {
+            // nothing as child is after formElement in DOM
+          } else {
+            // first time child is NOT after formElement in DOM we insert it
+            indexToInsertAt = i;
+            break;
+          }
+        }
       }
       this.addFormElement(child, indexToInsertAt);
     }
