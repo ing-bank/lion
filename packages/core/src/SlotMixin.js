@@ -44,7 +44,9 @@ const SlotMixinImplementation = superclass =>
       const registryRoot = supportsScopedRegistry ? this.shadowRoot : document;
       // @ts-expect-error wait for browser support
       const tempRenderTarget = registryRoot.createElement('div');
-      render(template, tempRenderTarget, this.renderOptions);
+      // Providing all options breaks Safari; keep host and creationScope
+      const { creationScope, host } = this.renderOptions;
+      render(template, tempRenderTarget, { creationScope, host });
       return Array.from(tempRenderTarget.childNodes);
     }
 
