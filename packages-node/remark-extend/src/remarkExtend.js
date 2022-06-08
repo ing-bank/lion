@@ -36,6 +36,7 @@ function handleImportedFile({
   startSelector,
   endSelector,
   userFunction,
+  globalReplaceFunction,
   filePath,
   missingEndSelectorMeansUntilEndOfFile = false,
 }) {
@@ -73,6 +74,9 @@ function handleImportedFile({
       }
 
       if (insertIt) {
+        if (globalReplaceFunction) {
+          node = globalReplaceFunction(node, { index, parent, tree });
+        }
         if (userFunction) {
           node = userFunction(node, { index, parent, tree });
         }
@@ -87,7 +91,7 @@ function handleImportedFile({
 
 // unified expect direct
 // eslint-disable-next-line consistent-return
-function remarkExtend({ rootDir = process.cwd(), page } = {}) {
+function remarkExtend({ rootDir = process.cwd(), page, globalReplaceFunction } = {}) {
   return tree => {
     visit(tree, (node, index, parent) => {
       if (
@@ -178,6 +182,7 @@ function remarkExtend({ rootDir = process.cwd(), page } = {}) {
             startSelector,
             endSelector,
             userFunction,
+            globalReplaceFunction,
             filePath,
             fileImport,
             missingEndSelectorMeansUntilEndOfFile,

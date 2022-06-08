@@ -28,11 +28,15 @@ async function expectThrowsAsync(method, { errorMatch, errorMessage } = {}) {
   }
 }
 
-async function execute(input) {
+async function execute(input, { globalReplaceFunction } = {}) {
   const parser = unified()
     //
     .use(markdown)
-    .use(remarkExtend, { rootDir: __dirname, page: { inputPath: 'test-file.md' } })
+    .use(remarkExtend, {
+      rootDir: __dirname,
+      page: { inputPath: 'test-file.md' },
+      globalReplaceFunction,
+    })
     .use(mdStringify);
   const result = await parser.process(input);
   return result.contents;
@@ -144,6 +148,36 @@ describe('remarkExtend', () => {
 
     expect(result).to.equal(
       ['<h1>Red</h1>', '<h2>More Green</h2>', '<p>the sun can get green</p>', ''].join('\n'),
+    );
+  });
+
+  it('can do global replacements, that run before local replacements', async () => {
+    const result = await execute(
+      [
+        //
+        '# Red',
+        "```js ::import('./fixtures/three-sections-red.md', 'heading:has([value=More Red])', 'heading:has([value=More Red]) ~ heading[depth=2]')",
+        'module.exports.replaceSection = (node) => {',
+        '  if (node.value) {',
+        "     node.value = node.value.replace(/green/g, 'blue').replace(/Red/g, 'Blue');",
+        '  }',
+        '  return node;',
+        '};',
+        '```',
+      ].join('\n'),
+      {
+        globalReplaceFunction: node => {
+          if (node.value) {
+            // eslint-disable-next-line no-param-reassign
+            node.value = node.value.replace(/red/g, 'green');
+          }
+          return node;
+        },
+      },
+    );
+
+    expect(result).to.equal(
+      ['<h1>Red</h1>', '<h2>More Blue</h2>', '<p>the sun can get blue</p>', ''].join('\n'),
     );
   });
 
