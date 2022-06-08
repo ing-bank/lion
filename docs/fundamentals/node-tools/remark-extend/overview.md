@@ -184,7 +184,7 @@ This function gets called with these nodes in order.
 #### Adjustment Result
 
 ```md
-# Below you will not find any read
+# Below you will not find any 'red'
 
 ### Green
 
@@ -192,6 +192,21 @@ green is the fire
 ```
 
 ---
+
+It's also possible to globally define a replace function.
+The example below shows the config object that is provided to the `remarkExtend` function.
+Note that local replacements are run after global replacements.
+
+```js
+{ globalReplaceFunction: node => {
+  if (node.type === 'link') {
+    // All internal links to '/systems/' (like '(../../fundamentals/systems/overlays/configuration.md)'),
+    // will be changed into '/web-systems/' ('(../../fundamentals/web-systems/overlays/configuration.md)').
+    node.url = node.url.replace(/\systems\/g, '/web-systems/');
+  }
+  return node;
+}};
+```
 
 ## Import selection
 
