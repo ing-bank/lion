@@ -1,6 +1,5 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
-
 import { addPlugin } from 'plugins-manager';
 // @ts-ignore
 import remarkExtendPkg from 'remark-extend';
@@ -23,6 +22,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * @param {string} opts.tagBareImport
  * @param {string} opts.tagBareImport
  * @param {string} [opts.exportsMapJsonFileName]
+ * @param {function} [opts.globalReplaceFunction] a remark-extend replace function that is executed on all markdown ast nodes
  * @returns
  */
 export async function extendLionDocs({
@@ -34,6 +34,7 @@ export async function extendLionDocs({
   tagPrefix,
   tagBareImport,
   exportsMapJsonFileName,
+  globalReplaceFunction,
 }) {
   const changes = await generateExtendDocsConfig({
     nodeModulesDir,
@@ -55,7 +56,7 @@ export async function extendLionDocs({
     setupUnifiedPlugins: [
       addPlugin(
         remarkExtendPkg.remarkExtend,
-        {},
+        { globalReplaceFunction },
         {
           location: markdownPkg,
         },
