@@ -1,5 +1,13 @@
 # rocket-preset-extend-lion-docs
 
+## 0.3.1
+
+### Patch Changes
+
+- f46d9087: feat: allow globalReplaceFunction in rocket-preset-extend-lion-docs
+- Updated dependencies [63f8f6fd]
+  - remark-extend@0.5.1
+
 ## 0.3.0
 
 ### Minor Changes
