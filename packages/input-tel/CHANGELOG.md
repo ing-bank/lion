@@ -1,5 +1,14 @@
 # @lion/input-tel
 
+## 0.2.1
+
+### Patch Changes
+
+- 20436115: make sure input-tel(-dropdown) depends on latest minors
+- Updated dependencies [63466d61]
+- Updated dependencies [20af7a44]
+  - @lion/form-core@0.18.1
+
 ## 0.2.0
 
 ### Minor Changes

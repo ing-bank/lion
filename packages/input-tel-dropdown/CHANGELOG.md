@@ -1,5 +1,14 @@
 # @lion/input-tel-dropdown
 
+## 0.2.1
+
+### Patch Changes
+
+- 20436115: make sure input-tel(-dropdown) depends on latest minors
+- 3dee788f: add fix for edge cases onDropdownValueChange
+- Updated dependencies [20436115]
+  - @lion/input-tel@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.1
+
+### Patch Changes
+
+- 63f8f6fd: feat: allow globalReplaceFunction in remark-extend
+
 ## 0.5.0
 
 ### Minor Changes

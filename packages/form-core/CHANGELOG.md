@@ -1,5 +1,24 @@
 # Change Log
 
+## 0.18.1
+
+### Patch Changes
+
+- 63466d61: fix type export ValidationType
+- 20af7a44: Make sure form elements are added in the correct order even when non-form elements are in between.
+
+  ```html
+  <lion-form>
+    <lion-input></lion-input>
+    <some-separator></some-separator>
+    <!-- inserting something here should result in the correct formElements order -->
+    <div role="group">
+      <lion-input></lion-input>
+      <!-- inserting something here should result in the correct formElements order -->
+    </div>
+  </lion-form>
+  ```
+
 ## 0.18.0
 
 ### Minor Changes
