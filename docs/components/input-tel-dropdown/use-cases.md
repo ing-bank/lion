@@ -78,6 +78,6 @@ export const preferredRegionCodes = () => {
       .show="${['modelValue', 'activeRegion']}"
       .readyPromise="${PhoneUtilManager.loadComplete}"
     ></h-output>
-  `
+  `;
 };
 ```
