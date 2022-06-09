@@ -246,3 +246,40 @@ In order for such imports to work you need to define them
   "#tabs/define": "./__element-definitions/wolf-tabs.js",
 }
 ```
+
+## Global replacements
+
+Sometimes you need a bit more power when extending lion documentation.
+For instance, you're extending repository has a different folder structure. Instead of putting your systems
+documentation inside 'systems', you want to put it in 'web-systems'.
+
+The configuration for that is (see `globalReplaceFunction`):
+
+👉 _rocket.config.js_
+
+```js
+import { rocketLaunch } from '@rocket/launch';
+import { extendLionDocs } from 'rocket-preset-extend-lion-docs';
+
+const extendLionDocsInstance = await extendLionDocs({
+  classPrefix: 'Wolf',
+  classBareImport: 'wolf-web/',
+  tagPrefix: 'wolf-',
+  tagBareImport: 'wolf-web/',
+  globalReplaceFunction: node => {
+    if (node.type === 'link') {
+      // All internal links to '/systems/' (like '(../../fundamentals/systems/overlays/configuration.md)'),
+      // will be changed into '/web-systems/' ('(../../fundamentals/web-systems/overlays/configuration.md)').
+      node.url = node.url.replace(/\systems\/g, '/web-systems/');
+    }
+    return node;
+  }
+});
+
+export default {
+  presets: [rocketLaunch(), extendLionDocsInstance],
+};
+```
+
+Remember: with great power comes great responsibility, so make sure your replacements do not introduce unintended
+effects.
