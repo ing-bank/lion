@@ -1,0 +1,57 @@
+{
+  "name": "@lion/toast",
+  "version": "0.0.0",
+  "description": "lion-toast following open-wc recommendations",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages/dialog"
+  },
+  "type": "module",
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "*.d.ts",
+    "*.js",
+    "docs",
+    "src",
+    "test",
+    "test-helpers",
+    "translations",
+    "types"
+  ],
+  "scripts": {
+    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
+    "debug": "cd ../../ && npm run debug -- --group lion-toast",
+    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group lion-toast",
+    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group lion-toast",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
+    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
+    "test": "cd ../../ && npm run test:browser -- --group lion-toast"
+  },
+  "sideEffects": [
+    "lion-dialog.js",
+    "./docs/styled-dialog-content.js"
+  ],
+  "dependencies": {
+    "@lion/core": "^0.23.0",
+    "@lion/overlays": "^0.33.0"
+  },
+  "keywords": [
+    "dialog",
+    "lion",
+    "web-components"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "customElements": "custom-elements.json",
+  "exports": {
+    ".": "./index.js",
+    "./define": "./lion-dialog.js",
+    "./docs/*": "./docs/*"
+  }
+}
