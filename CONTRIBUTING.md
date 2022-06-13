@@ -36,8 +36,8 @@ npm run lint
 # Tests
 npm run test
 
-# Storybook Demo
-npm run storybook
+# Portal
+npm run start
 ```
 
 Create a Pull Request:
@@ -57,4 +57,6 @@ git push -u fork fix/buttonSize
 Some things that will increase the chance that your merge request is accepted:
 
 - Write tests.
+- Add documentation.
+- Add a [changeset](https://github.com/changesets/changesets/blob/main/docs/intro-to-using-changesets.md).
 - Write a [good commit message](https://www.conventionalcommits.org/).
