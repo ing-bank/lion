@@ -2,6 +2,7 @@
 import { render, html, css, ref, createRef } from '@lion/core';
 import { LionInputTel } from '@lion/input-tel';
 import { localize } from '@lion/localize';
+import { getFlagSymbol } from './getFlagSymbol.js';
 
 /**
  * Note: one could consider to implement LionInputTelDropdown as a
@@ -30,14 +31,6 @@ import { localize } from '@lion/localize';
  * @typedef {import('@lion/overlays').OverlayController} OverlayController
  * @typedef {TemplateDataForDropdownInputTel & {data: {regionMetaList:RegionMeta[]}}} TemplateDataForIntlInputTel
  */
-
-// eslint-disable-next-line prefer-destructuring
-/**
- * @param {string} char
- */
-function getRegionalIndicatorSymbol(char) {
-  return String.fromCodePoint(0x1f1e6 - 65 + char.toUpperCase().charCodeAt(0));
-}
 
 /**
  * LionInputTelDropdown renders a dropdown like element next to the text field, inside the
@@ -419,8 +412,7 @@ export class LionInputTelDropdown extends LionInputTel {
       const countryCode =
         this._phoneUtil && this._phoneUtil.getCountryCodeForRegionCode(regionCode);
 
-      const flagSymbol =
-        getRegionalIndicatorSymbol(regionCode[0]) + getRegionalIndicatorSymbol(regionCode[1]);
+      const flagSymbol = getFlagSymbol(regionCode);
 
       const destinationList = this.preferredRegions.includes(regionCode)
         ? this.__regionMetaListPreferred
