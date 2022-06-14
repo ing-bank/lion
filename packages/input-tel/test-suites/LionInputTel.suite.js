@@ -10,6 +10,7 @@ import {
 import sinon from 'sinon';
 import { mimicUserInput } from '@lion/form-core/test-helpers';
 import { localize } from '@lion/localize';
+import { Unparseable } from '@lion/form-core';
 import { LionInputTel } from '../src/LionInputTel.js';
 import { PhoneNumber } from '../src/validators.js';
 import { PhoneUtilManager } from '../src/PhoneUtilManager.js';
@@ -100,6 +101,28 @@ function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
         resolvePhoneUtilLoaded(undefined);
         await el.updateComplete;
       }
+      expect(el.activeRegion).to.equal('NL');
+    });
+
+    it('deducts it from value when modelValue is unparseable', async () => {
+      const modelValue = new Unparseable('+316');
+      const el = await fixture(html` <${tag} .modelValue=${modelValue}></${tag}> `);
+      if (resolvePhoneUtilLoaded) {
+        resolvePhoneUtilLoaded(undefined);
+        await el.updateComplete;
+      }
+      // Region code for country code '31' is 'NL'
+      expect(el.activeRegion).to.equal('NL');
+    });
+
+    it('deducts it from value when modelValue is unparseable and contains parentheses', async () => {
+      const modelValue = new Unparseable('(+31)6');
+      const el = await fixture(html` <${tag} .modelValue=${modelValue}></${tag}> `);
+      if (resolvePhoneUtilLoaded) {
+        resolvePhoneUtilLoaded(undefined);
+        await el.updateComplete;
+      }
+      // Region code for country code '31' is 'NL'
       expect(el.activeRegion).to.equal('NL');
     });
 
@@ -269,6 +292,16 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
           mimicUserInput(el, '612345678');
           await aTimeout(0);
           expect(el.formattedValue).to.equal('612345678');
+        });
+
+        it('formats according to formatCountryCodeStyle', async () => {
+          const el = await fixture(
+            html` <${tag} format-country-code-style="parentheses" .modelValue="${'+31612345678'}" .allowedRegions="${[
+              'NL',
+            ]}"></${tag}> `,
+          );
+          await aTimeout(0);
+          expect(el.formattedValue).to.equal('(+31) 6 12345678');
         });
       });
 

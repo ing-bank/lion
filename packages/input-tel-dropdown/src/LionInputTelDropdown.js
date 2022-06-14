@@ -281,7 +281,11 @@ export class LionInputTelDropdown extends LionInputTel {
   _initModelValueBasedOnDropdown() {
     if (!this._initialModelValue && !this.dirty && this._phoneUtil) {
       const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
-      this.__initializedRegionCode = `+${countryCode}`;
+      if (this.formatCountryCodeStyle === 'parentheses') {
+        this.__initializedRegionCode = `(+${countryCode})`;
+      } else {
+        this.__initializedRegionCode = `+${countryCode}`;
+      }
       this.modelValue = this.__initializedRegionCode;
       this._initialModelValue = this.__initializedRegionCode;
       this.initInteractionState();
@@ -328,7 +332,11 @@ export class LionInputTelDropdown extends LionInputTel {
       } else {
         // In case of dropdown has +31, and input has only +3
         const valueObj = this.value.split(' ');
-        this.modelValue = this._callParser(this.value.replace(valueObj[0], `+${countryCode}`));
+        if (this.formatCountryCodeStyle === 'parentheses' && !this.value.includes('(')) {
+          this.modelValue = this._callParser(this.value.replace(valueObj[0], `(+${countryCode})`));
+        } else {
+          this.modelValue = this._callParser(this.value.replace(valueObj[0], `+${countryCode}`));
+        }
       }
     }
 
