@@ -18,10 +18,11 @@ export function parsePhoneNumber(viewValue, { regionCode }) {
 
   // eslint-disable-next-line prefer-destructuring
   const PhoneNumber = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
-
+  const regex = /[+0-9]+/gi;
+  const strippedViewValue = viewValue.match(regex)?.join('');
   let pn;
   try {
-    pn = PhoneNumber(viewValue, regionCode);
+    pn = PhoneNumber(strippedViewValue, regionCode);
     // eslint-disable-next-line no-empty
   } catch (_) {}
 

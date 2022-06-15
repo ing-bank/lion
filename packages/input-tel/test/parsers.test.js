@@ -13,4 +13,12 @@ describe('parsePhoneNumber', () => {
     expect(parsePhoneNumber('0707123456', { regionCode: 'NL' })).to.equal('+31707123456');
     expect(parsePhoneNumber('0707123456', { regionCode: 'DE' })).to.equal('+49707123456');
   });
+
+  it('removes unwanted characters', () => {
+    expect(parsePhoneNumber('(+31)707123456', { regionCode: 'NL' })).to.equal('+31707123456');
+    expect(parsePhoneNumber('+31 70 7123456', { regionCode: 'NL' })).to.equal('+31707123456');
+    expect(parsePhoneNumber('+31-70-7123456', { regionCode: 'NL' })).to.equal('+31707123456');
+    expect(parsePhoneNumber('+31|70|7123456', { regionCode: 'NL' })).to.equal('+31707123456');
+    expect(parsePhoneNumber('tel:+31707123456', { regionCode: 'NL' })).to.equal('+31707123456');
+  });
 });

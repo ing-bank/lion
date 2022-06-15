@@ -14,7 +14,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  * @typedef {import('awesome-phonenumber').PhoneNumberTypes} PhoneNumberTypes
  * @typedef {import('@lion/form-core/types/FormatMixinTypes').FormatOptions} FormatOptions
  * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
- * @typedef {FormatOptions & {regionCode: RegionCode; formatStrategy: PhoneNumberFormat}} FormatOptionsTel
+ * @typedef {FormatOptions & {regionCode: RegionCode; formatStrategy: PhoneNumberFormat; formatCountryCodeStyle: string;}} FormatOptionsTel
  */
 
 export class LionInputTel extends LocalizeMixin(LionInput) {
@@ -24,6 +24,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
   static properties = {
     allowedRegions: { type: Array },
     formatStrategy: { type: String, attribute: 'format-strategy' },
+    formatCountryCodeStyle: { type: String, attribute: 'format-country-code-style' },
     activeRegion: { type: String },
     _phoneUtil: { type: Object, state: true },
     _needsLightDomRender: { type: Number, state: true },
@@ -140,6 +141,13 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     this.formatStrategy = 'international';
 
     /**
+     * Extra styling of the format strategy
+     * default | parentheses
+     * @type {string}
+     */
+    this.formatCountryCodeStyle = 'default';
+
+    /**
      * The regions that should be considered when international phone numbers are detected.
      * (when not configured, all regions worldwide will be considered)
      * @type {RegionCode[]}
@@ -208,6 +216,12 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
       (this.formatOptions).formatStrategy = this.formatStrategy;
     }
 
+    if (changedProperties.has('formatCountryCodeStyle')) {
+      this._calculateValues({ source: null });
+      /** @type {FormatOptionsTel} */
+      (this.formatOptions).formatCountryCodeStyle = this.formatCountryCodeStyle;
+    }
+
     if (changedProperties.has('modelValue') || changedProperties.has('allowedRegions')) {
       this.__calculateActiveRegion();
     }
@@ -239,6 +253,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     return formatPhoneNumber(modelValue, {
       regionCode: /** @type {RegionCode} */ (this.activeRegion),
       formatStrategy: this.formatStrategy,
+      formatCountryCodeStyle: this.formatCountryCodeStyle,
     });
   }
 
@@ -265,6 +280,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     return liveFormatPhoneNumber(viewValue, {
       regionCode: /** @type {RegionCode} */ (this.activeRegion),
       formatStrategy: this.formatStrategy,
+      formatCountryCodeStyle: this.formatCountryCodeStyle,
       currentCaretIndex,
       prevViewValue,
     });
@@ -313,7 +329,10 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     }
 
     // 2. Try to derive action region from user value
-    const value = !(this.modelValue instanceof Unparseable) ? this.modelValue : this.value;
+    const regex = /[+0-9]+/gi;
+    const value = !(this.modelValue instanceof Unparseable)
+      ? this.modelValue
+      : this.value.match(regex)?.join('');
     const regionDerivedFromValue = value && this._phoneUtil && this._phoneUtil(value).g?.regionCode;
 
     if (regionDerivedFromValue && this._allowedOrAllRegions.includes(regionDerivedFromValue)) {

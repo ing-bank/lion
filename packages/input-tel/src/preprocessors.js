@@ -1,5 +1,5 @@
+import { formatPhoneNumber, getFormatCountryCodeStyle } from './formatters.js';
 import { PhoneUtilManager } from './PhoneUtilManager.js';
-import { formatPhoneNumber } from './formatters.js';
 
 /**
  * @typedef {import('../types').RegionCode} RegionCode
@@ -14,11 +14,12 @@ import { formatPhoneNumber } from './formatters.js';
  * @param {string} options.prevViewValue
  * @param {number} options.currentCaretIndex
  * @param {PhoneNumberFormat} options.formatStrategy
+ * @param {string?} [options.formatCountryCodeStyle='default']
  * @returns {{viewValue:string; caretIndex:number;}|undefined}
  */
 export function liveFormatPhoneNumber(
   viewValue,
-  { regionCode, formatStrategy, prevViewValue, currentCaretIndex },
+  { regionCode, formatStrategy, prevViewValue, currentCaretIndex, formatCountryCodeStyle },
 ) {
   const diff = viewValue.length - prevViewValue.length;
   // Do not format when not loaded
@@ -36,7 +37,12 @@ export function liveFormatPhoneNumber(
     }
   }
 
-  const newViewValue = formatPhoneNumber(ayt.number(), { regionCode, formatStrategy });
+  let parenthesesAdded = false;
+  let newViewValue = formatPhoneNumber(ayt.number(), { regionCode, formatStrategy });
+  if (formatCountryCodeStyle === 'parentheses' && regionCode && !newViewValue.includes(`(`)) {
+    newViewValue = getFormatCountryCodeStyle(newViewValue, { regionCode, formatCountryCodeStyle });
+    parenthesesAdded = true;
+  }
 
   /**
    * Given following situation:
@@ -45,7 +51,16 @@ export function liveFormatPhoneNumber(
    * - prevViewValue `+36123` (we inserted '1' at position 2)
    * => we should get `+31 6123`, and new caretIndex should be 3, and not newViewValue.length
    */
+  const countryCode = PhoneUtilManager?.PhoneUtil?.getCountryCodeForRegionCode(regionCode);
   const diffBetweenNewAndCurrent = newViewValue.length - viewValue.length;
-  const newCaretIndex = currentCaretIndex + diffBetweenNewAndCurrent;
+  let newCaretIndex = currentCaretIndex + diffBetweenNewAndCurrent;
+  if (
+    parenthesesAdded &&
+    countryCode &&
+    viewValue.length > countryCode.toString().length + 1 &&
+    currentCaretIndex <= countryCode.toString().length + 1
+  ) {
+    newCaretIndex -= 2;
+  }
   return newViewValue ? { viewValue: newViewValue, caretIndex: newCaretIndex } : undefined;
 }

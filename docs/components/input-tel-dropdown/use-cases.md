@@ -81,3 +81,79 @@ export const preferredRegionCodes = () => {
   `;
 };
 ```
+
+## Format
+
+### Format strategy
+
+Determines what the formatter output should look like.
+Formatting strategies as provided by awesome-phonenumber / google-libphonenumber.
+
+Possible values:
+
+| strategy      |                                output |
+| :------------ | ------------------------------------: |
+| e164          |                        `+46707123456` |
+| international |                    `+46 70 712 34 56` |
+| national      | not applicable for input-tel-dropdown |
+| significant   | not applicable for input-tel-dropdown |
+| rfc3966       |                `tel:+46-70-712-34-56` |
+
+Also see:
+
+- [awesome-phonenumber documentation](https://www.npmjs.com/package/awesome-phonenumber)
+
+```js preview-story
+export const formatStrategy = () => {
+  loadDefaultFeedbackMessages();
+  const inputTel = createRef();
+  return html`
+    <select @change="${({ target }) => (inputTel.value.formatStrategy = target.value)}">
+      <option value="e164">e164</option>
+      <option value="international">international</option>
+      <option value="rfc3966">rfc3966</option>
+    </select>
+    <lion-input-tel-dropdown
+      ${ref(inputTel)}
+      label="Format strategy"
+      help-text="Choose a strategy above"
+      format-strategy="e164"
+      name="phoneNumber"
+    ></lion-input-tel-dropdown>
+    <h-output
+      .show="${['modelValue', 'formatStrategy']}"
+      .readyPromise="${PhoneUtilManager.loadComplete}"
+    ></h-output>
+  `;
+};
+```
+
+### Format country code style
+
+You can style the country code with parentheses.
+
+```js preview-story
+export const formatCountryCodeStyle = () => {
+  loadDefaultFeedbackMessages();
+  const inputTel = createRef();
+  return html`
+    <select @change="${({ target }) => (inputTel.value.formatStrategy = target.value)}">
+      <option value="e164">e164</option>
+      <option value="international">international</option>
+      <option value="rfc3966">rfc3966</option>
+    </select>
+    <lion-input-tel-dropdown
+      ${ref(inputTel)}
+      label="Format strategy"
+      help-text="Choose a strategy above"
+      format-country-code-style="parentheses"
+      format-strategy="e164"
+      name="phoneNumber"
+    ></lion-input-tel-dropdown>
+    <h-output
+      .show="${['modelValue', 'formatStrategy']}"
+      .readyPromise="${PhoneUtilManager.loadComplete}"
+    ></h-output>
+  `;
+};
+```

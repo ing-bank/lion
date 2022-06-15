@@ -2,6 +2,7 @@
 import { render, html, css, ref, createRef } from '@lion/core';
 import { LionInputTel } from '@lion/input-tel';
 import { localize } from '@lion/localize';
+import { getFlagSymbol } from './getFlagSymbol.js';
 
 /**
  * Note: one could consider to implement LionInputTelDropdown as a
@@ -30,14 +31,6 @@ import { localize } from '@lion/localize';
  * @typedef {import('@lion/overlays').OverlayController} OverlayController
  * @typedef {TemplateDataForDropdownInputTel & {data: {regionMetaList:RegionMeta[]}}} TemplateDataForIntlInputTel
  */
-
-// eslint-disable-next-line prefer-destructuring
-/**
- * @param {string} char
- */
-function getRegionalIndicatorSymbol(char) {
-  return String.fromCodePoint(0x1f1e6 - 65 + char.toUpperCase().charCodeAt(0));
-}
 
 /**
  * LionInputTelDropdown renders a dropdown like element next to the text field, inside the
@@ -288,7 +281,11 @@ export class LionInputTelDropdown extends LionInputTel {
   _initModelValueBasedOnDropdown() {
     if (!this._initialModelValue && !this.dirty && this._phoneUtil) {
       const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
-      this.__initializedRegionCode = `+${countryCode}`;
+      if (this.formatCountryCodeStyle === 'parentheses') {
+        this.__initializedRegionCode = `(+${countryCode})`;
+      } else {
+        this.__initializedRegionCode = `+${countryCode}`;
+      }
       this.modelValue = this.__initializedRegionCode;
       this._initialModelValue = this.__initializedRegionCode;
       this.initInteractionState();
@@ -335,7 +332,11 @@ export class LionInputTelDropdown extends LionInputTel {
       } else {
         // In case of dropdown has +31, and input has only +3
         const valueObj = this.value.split(' ');
-        this.modelValue = this._callParser(this.value.replace(valueObj[0], `+${countryCode}`));
+        if (this.formatCountryCodeStyle === 'parentheses' && !this.value.includes('(')) {
+          this.modelValue = this._callParser(this.value.replace(valueObj[0], `(+${countryCode})`));
+        } else {
+          this.modelValue = this._callParser(this.value.replace(valueObj[0], `+${countryCode}`));
+        }
       }
     }
 
@@ -419,8 +420,7 @@ export class LionInputTelDropdown extends LionInputTel {
       const countryCode =
         this._phoneUtil && this._phoneUtil.getCountryCodeForRegionCode(regionCode);
 
-      const flagSymbol =
-        getRegionalIndicatorSymbol(regionCode[0]) + getRegionalIndicatorSymbol(regionCode[1]);
+      const flagSymbol = getFlagSymbol(regionCode);
 
       const destinationList = this.preferredRegions.includes(regionCode)
         ? this.__regionMetaListPreferred

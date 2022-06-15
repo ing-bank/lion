@@ -176,7 +176,9 @@ export const oneAllowedRegion = () => {
 };
 ```
 
-## Format strategy
+## Format
+
+### Format strategy
 
 Determines what the formatter output should look like.
 Formatting strategies as provided by awesome-phonenumber / google-libphonenumber.
@@ -223,7 +225,37 @@ export const formatStrategy = () => {
 };
 ```
 
-## Live format
+### Format country code style
+
+You can also style the country code with parentheses.
+
+```js preview-story
+export const formatCountryCodeStyle = () => {
+  loadDefaultFeedbackMessages();
+  const inputTel = createRef();
+  return html`
+    <select @change="${({ target }) => (inputTel.value.formatStrategy = target.value)}">
+      <option value="e164">e164</option>
+      <option value="international">international</option>
+      <option value="rfc3966">rfc3966</option>
+    </select>
+    <lion-input-tel
+      ${ref(inputTel)}
+      label="Format strategy"
+      help-text="Choose a strategy above"
+      .modelValue=${'+46707123456'}
+      format-country-code-style="parentheses"
+      name="phoneNumber"
+    ></lion-input-tel>
+    <h-output
+      .show="${['modelValue', 'formatStrategy']}"
+      .readyPromise="${PhoneUtilManager.loadComplete}"
+    ></h-output>
+  `;
+};
+```
+
+### Live format
 
 Type '6' in the example below to see how the phone number is formatted during typing.
 
