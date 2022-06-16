@@ -77,7 +77,7 @@ export const globalOverlaysStyle = css`
     height: 100%;
     z-index: -1;
     background-color: #333333;
-    opacity: 0.3;
+    filter: opacity(30%);
     display: none;
   }
 
