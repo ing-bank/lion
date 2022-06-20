@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.33.1
+
+### Patch Changes
+
+- 270c7b30: fix chromium opacity bug by using filter
+- Updated dependencies [5ad98a26]
+  - @lion/core@0.23.1
+
 ## 0.33.0
 
 ### Minor Changes

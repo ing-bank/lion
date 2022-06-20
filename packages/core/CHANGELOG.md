@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.23.1
+
+### Patch Changes
+
+- 5ad98a26: fix: use partial renderOptions in SlotMixin (for Safari)
+
 ## 0.23.0
 
 ### Minor Changes
