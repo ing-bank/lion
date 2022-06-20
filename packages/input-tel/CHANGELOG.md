@@ -1,5 +1,14 @@
 # @lion/input-tel
 
+## 0.2.2
+
+### Patch Changes
+
+- 7239d604: Add option to style the country-code with parentheses in the formatter
+- 7239d604: Remove unwanted characters in input-tel parser
+- Updated dependencies [5ad98a26]
+  - @lion/core@0.23.1
+
 ## 0.2.1
 
 ### Patch Changes
