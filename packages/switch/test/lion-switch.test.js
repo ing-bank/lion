@@ -213,4 +213,11 @@ describe('lion-switch', () => {
     );
     expect(el.showsFeedbackFor).to.eql(['info']);
   });
+
+  it('should not cause error by setting an attribute in the constructor', async () => {
+    const div = await fixture(html`<div></div>`);
+    const el = /** @type {LionSwitch} */ (document.createElement('lion-switch'));
+    div.appendChild(el);
+    expect(el.role).to.equal('switch');
+  });
 });
