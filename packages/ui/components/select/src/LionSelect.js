@@ -60,6 +60,19 @@ export class LionSelect extends LionFieldWithSelect {
   connectedCallback() {
     super.connectedCallback();
     this._inputNode.addEventListener('change', this._proxyChangeEvent);
+
+    this.__selectObserver = new MutationObserver(() => {
+      this._syncValueUpwards();
+      // We need to force computation of other values in case model didn't change
+      // TODO: consider bringing this generically in FormatMixin._syncValueUpwards
+      this._calculateValues({ source: 'model' });
+    });
+
+    this.__selectObserver.observe(this._inputNode, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    });
   }
 
   /** @param {import('lit').PropertyValues } changedProperties */
@@ -82,6 +95,7 @@ export class LionSelect extends LionFieldWithSelect {
   disconnectedCallback() {
     super.disconnectedCallback();
     this._inputNode.removeEventListener('change', this._proxyChangeEvent);
+    this.__selectObserver?.disconnect();
   }
 
   /**
