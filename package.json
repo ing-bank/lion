@@ -80,7 +80,7 @@
     "lint-staged": "^10.0.0",
     "looks-same": "^7.2.3",
     "markdownlint-cli": "^0.17.0",
-    "mermaid": "^8.13.8",
+    "mermaid": "^9.1.2",
     "minimist": "^1.2.6",
     "mkdirp-promise": "^5.0.1",
     "mocha": "^7.1.1",
