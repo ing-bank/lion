@@ -413,7 +413,6 @@ export class LionInputTelDropdown extends LionInputTel {
     this.__regionMetaList = [];
     this.__regionMetaListPreferred = [];
     this._allowedOrAllRegions.forEach(regionCode => {
-      // @ts-expect-error Intl.DisplayNames platform api not yet typed
       const namesForRegion = new Intl.DisplayNames([regionCode.toLowerCase()], {
         type: 'region',
       });
@@ -430,7 +429,7 @@ export class LionInputTelDropdown extends LionInputTel {
         regionCode,
         countryCode,
         flagSymbol,
-        nameForLocale: this.__namesForLocale.of(regionCode),
+        nameForLocale: this.__namesForLocale?.of(regionCode),
         nameForRegion: namesForRegion.of(regionCode),
       });
     });
