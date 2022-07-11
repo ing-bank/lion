@@ -61,6 +61,25 @@ export class LionAccordion extends LitElement {
           visibility: visible;
           display: block;
         }
+
+        .accordion [slot='invoker'] {
+          margin: 0;
+        }
+
+        .accordion [slot='invoker'][expanded] {
+          font-weight: bold;
+        }
+
+        .accordion [slot='content'] {
+          margin: 0;
+          visibility: hidden;
+          display: none;
+        }
+
+        .accordion [slot='content'][expanded] {
+          visibility: visible;
+          display: block;
+        }
       `,
     ];
   }
@@ -139,10 +158,12 @@ export class LionAccordion extends LitElement {
   __setupSlots() {
     const invokerSlot = this.shadowRoot?.querySelector('slot[name=invoker]');
     const handleSlotChange = () => {
-      this.__cleanStore();
-      this.__setupStore();
-      this.__updateFocused();
-      this.__updateExpanded();
+      if (invokerSlot instanceof HTMLSlotElement && invokerSlot.assignedNodes().length > 0) {
+        this.__cleanStore();
+        this.__setupStore();
+        this.__updateFocused();
+        this.__updateExpanded();
+      }
     };
     if (invokerSlot) {
       invokerSlot.addEventListener('slotchange', handleSlotChange);
@@ -180,10 +201,31 @@ export class LionAccordion extends LitElement {
       };
       this._setupContent(entry);
       this._setupInvoker(entry);
+      this.__rearrangeInvokersAndContent();
       this._unfocusInvoker(entry);
       this._collapse(entry);
       this.__store.push(entry);
     });
+  }
+
+  /**
+   *  @private
+   */
+  __rearrangeInvokersAndContent() {
+    const invokers = /** @type {HTMLElement[]} */ (
+      Array.from(this.querySelectorAll('[slot="invoker"]'))
+    );
+    const contents = /** @type {HTMLElement[]} */ (
+      Array.from(this.querySelectorAll('[slot="content"]'))
+    );
+    const accordion = this.shadowRoot?.querySelector('.accordion');
+
+    if (accordion) {
+      invokers.forEach((invoker, index) => {
+        accordion.insertAdjacentElement('beforeend', invoker);
+        accordion.insertAdjacentElement('beforeend', contents[index]);
+      });
+    }
   }
 
   /**
