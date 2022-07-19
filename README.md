@@ -91,9 +91,12 @@ There's a couple of "systems" in lion which have a JavaScript API. Examples are 
 <script type="module">
   import { ajax } from '@lion/ajax';
 
-  ajax.get('data.json').then(response => {
-    // most likely you will use response.data
-  });
+  ajax
+    .fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+      // do something with the data
+    });
 </script>
 ```
 
