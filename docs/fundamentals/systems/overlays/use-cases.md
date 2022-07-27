@@ -420,7 +420,7 @@ export const openedState = () => {
 ## Intercepting open/close
 
 It is possible to intercept the open/close process by calling `.preventDefault()` on
-the `before-close` or `before-open` events.
+the `before-closed` or `before-opened` events.
 
 ```js preview-story
 export const interceptingOpenClose = () => {
