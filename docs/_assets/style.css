@@ -95,24 +95,24 @@ rocket-navigation ul > li.active > ul > li.current > ul {
 }
 
 /* only apply on components list (li > 6) */
-rocket-navigation > ul > li:nth-last-child(n+6) > a,
-rocket-navigation > ul > li:nth-child(n+6) > a {
+rocket-navigation > ul > li:nth-last-child(n + 6) > a,
+rocket-navigation > ul > li:nth-child(n + 6) > a {
   font-size: 16px;
   text-transform: none;
   color: var(--primary-text-color);
 }
 
-rocket-navigation > ul > li:nth-last-child(n+6) > a:hover,
-rocket-navigation > ul > li:nth-child(n+6) > a:hover {
+rocket-navigation > ul > li:nth-last-child(n + 6) > a:hover,
+rocket-navigation > ul > li:nth-child(n + 6) > a:hover {
   color: var(--primary-color);
 }
 
-rocket-navigation > ul > li:nth-last-child(n+6) > ul,
-rocket-navigation ul > li:nth-child(n+6) > ul {
+rocket-navigation > ul > li:nth-last-child(n + 6) > ul,
+rocket-navigation ul > li:nth-child(n + 6) > ul {
   display: none;
 }
 
-rocket-navigation > ul > li:nth-last-child(n+6).active > ul,
-rocket-navigation ul > li:nth-child(n+6).active > ul {
+rocket-navigation > ul > li:nth-last-child(n + 6).active > ul,
+rocket-navigation ul > li:nth-child(n + 6).active > ul {
   display: block;
 }
