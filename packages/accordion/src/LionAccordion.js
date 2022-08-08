@@ -43,21 +43,21 @@ export class LionAccordion extends LitElement {
           flex-direction: column;
         }
 
-        .accordion ::slotted([slot='invoker']) {
+        .accordion ::slotted([slot='accordion']) {
           margin: 0;
         }
 
-        .accordion ::slotted([slot='invoker'][expanded]) {
+        .accordion ::slotted([slot='accordion'][expanded]) {
           font-weight: bold;
         }
 
-        .accordion ::slotted([slot='content']) {
+        .accordion ::slotted([slot='accordion']) {
           margin: 0;
           visibility: hidden;
           display: none;
         }
 
-        .accordion ::slotted([slot='content'][expanded]) {
+        .accordion ::slotted([slot='accordion'][expanded]) {
           visibility: visible;
           display: block;
         }
@@ -148,6 +148,7 @@ export class LionAccordion extends LitElement {
       <div class="accordion">
         <slot name="invoker"></slot>
         <slot name="content"></slot>
+        <slot name="accordion"></slot>
       </div>
     `;
   }
@@ -218,7 +219,7 @@ export class LionAccordion extends LitElement {
     const contents = /** @type {HTMLElement[]} */ (
       Array.from(this.querySelectorAll('[slot="content"]'))
     );
-    const accordion = this.shadowRoot?.querySelector('.accordion');
+    const accordion = this.shadowRoot?.querySelector('slot[name=accordion]');
 
     if (accordion) {
       invokers.forEach((invoker, index) => {

@@ -18,6 +18,12 @@ const basicAccordion = html`
   </lion-accordion>
 `;
 
+function getAccordionChildren(/** @type {Element} */ el) {
+  const slot = el.shadowRoot?.querySelector('slot[name=accordion]');
+
+  return slot ? slot.children : [];
+}
+
 describe('<lion-accordion>', () => {
   describe('Accordion', () => {
     it('sets expanded to [] by default', async () => {
@@ -37,15 +43,16 @@ describe('<lion-accordion>', () => {
         `)
       );
       expect(el.expanded).to.deep.equal([1]);
+
       expect(
-        Array.from(el.children).find(
+        Array.from(getAccordionChildren(el)).find(
           child => child.slot === 'invoker' && child.hasAttribute('expanded'),
         )?.textContent,
       ).to.equal('invoker 2');
 
       el.expanded = [0];
       expect(
-        Array.from(el.children).find(
+        Array.from(getAccordionChildren(el)).find(
           child => child.slot === 'invoker' && child.hasAttribute('expanded'),
         )?.textContent,
       ).to.equal('invoker 1');
@@ -118,14 +125,14 @@ describe('<lion-accordion>', () => {
       );
       expect(el.focusedIndex).to.equal(1);
       expect(
-        Array.from(el.children).find(
+        Array.from(getAccordionChildren(el)).find(
           child => child.slot === 'invoker' && child.firstElementChild?.hasAttribute('focused'),
         )?.textContent,
       ).to.equal('invoker 2');
 
       el.focusedIndex = 0;
       expect(
-        Array.from(el.children).find(
+        Array.from(getAccordionChildren(el)).find(
           child => child.slot === 'invoker' && child.firstElementChild?.hasAttribute('focused'),
         )?.textContent,
       ).to.equal('invoker 1');
@@ -325,12 +332,12 @@ describe('<lion-accordion>', () => {
       el.expanded = [4];
       await el.updateComplete;
       expect(
-        Array.from(el.children).find(
+        Array.from(getAccordionChildren(el)).find(
           child => child.slot === 'invoker' && child.hasAttribute('expanded'),
         )?.textContent,
       ).to.equal('invoker 5');
       expect(
-        Array.from(el.children).find(
+        Array.from(getAccordionChildren(el)).find(
           child => child.slot === 'content' && child.hasAttribute('expanded'),
         )?.textContent,
       ).to.equal('content 5');
@@ -375,12 +382,12 @@ describe('<lion-accordion>', () => {
           <div slot="content">content 2</div>
         </lion-accordion>
       `);
-      expect(Array.from(el.children).find(child => child.slot === 'content')).to.not.have.attribute(
-        'tabindex',
-      );
-      expect(Array.from(el.children).find(child => child.slot === 'content')).to.not.have.attribute(
-        'tabindex',
-      );
+      expect(
+        Array.from(getAccordionChildren(el)).find(child => child.slot === 'content'),
+      ).to.not.have.attribute('tabindex');
+      expect(
+        Array.from(getAccordionChildren(el)).find(child => child.slot === 'content'),
+      ).to.not.have.attribute('tabindex');
     });
 
     describe('Invokers', () => {
@@ -411,7 +418,8 @@ describe('<lion-accordion>', () => {
           </lion-accordion>
         `);
         expect(
-          Array.from(el.children).find(child => child.slot === 'invoker')?.firstElementChild,
+          Array.from(getAccordionChildren(el)).find(child => child.slot === 'invoker')
+            ?.firstElementChild,
         ).to.have.attribute('aria-expanded', 'false');
       });
 
@@ -426,7 +434,8 @@ describe('<lion-accordion>', () => {
         );
         el.expanded = [0];
         expect(
-          Array.from(el.children).find(child => child.slot === 'invoker')?.firstElementChild,
+          Array.from(getAccordionChildren(el)).find(child => child.slot === 'invoker')
+            ?.firstElementChild,
         ).to.have.attribute('aria-expanded', 'true');
       });
     });
