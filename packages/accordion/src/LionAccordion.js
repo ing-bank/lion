@@ -175,12 +175,20 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __setupStore() {
-    const invokers = /** @type {HTMLElement[]} */ (
-      Array.from(this.querySelectorAll('[slot="invoker"]'))
-    );
-    const contents = /** @type {HTMLElement[]} */ (
-      Array.from(this.querySelectorAll('[slot="content"]'))
-    );
+    const accordion = this.shadowRoot?.querySelector('slot[name=accordion]');
+    const existingInvokers = accordion ? accordion.querySelectorAll('[slot=invoker]') : [];
+    const existingContent = accordion ? accordion.querySelectorAll('[slot=content]') : [];
+
+    const invokers = /** @type {HTMLElement[]} */ ([
+      ...Array.from(existingInvokers),
+      ...Array.from(this.querySelectorAll('[slot="invoker"]')),
+    ]);
+
+    const contents = /** @type {HTMLElement[]} */ ([
+      ...Array.from(existingContent),
+      ...Array.from(this.querySelectorAll('[slot="content"]')),
+    ]);
+
     if (invokers.length !== contents.length) {
       // eslint-disable-next-line no-console
       console.warn(
@@ -202,11 +210,12 @@ export class LionAccordion extends LitElement {
       };
       this._setupContent(entry);
       this._setupInvoker(entry);
-      this.__rearrangeInvokersAndContent();
       this._unfocusInvoker(entry);
       this._collapse(entry);
       this.__store.push(entry);
     });
+
+    this.__rearrangeInvokersAndContent();
   }
 
   /**
@@ -220,7 +229,6 @@ export class LionAccordion extends LitElement {
       Array.from(this.querySelectorAll('[slot="content"]'))
     );
     const accordion = this.shadowRoot?.querySelector('slot[name=accordion]');
-
     if (accordion) {
       invokers.forEach((invoker, index) => {
         accordion.insertAdjacentElement('beforeend', invoker);
