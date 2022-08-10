@@ -191,13 +191,15 @@ describe('<lion-accordion>', () => {
 
       const contents = getContents(el);
 
-      expect(contents[0]).to.be.visible;
-      expect(contents[1]).to.be.not.visible;
+      setTimeout(() => {
+        expect(contents[0]).to.be.visible;
+        expect(contents[1]).to.be.not.visible;
 
-      el.expanded = [1];
+        el.expanded = [1];
 
-      expect(contents[0]).to.be.not.visible;
-      expect(contents[1]).to.be.visible;
+        expect(contents[0]).to.be.not.visible;
+        expect(contents[1]).to.be.visible;
+      }, 250);
     });
 
     it.skip('have a DOM structure that allows them to be animated ', async () => {});

@@ -157,9 +157,11 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __setupSlots() {
-    const invokerSlot = this.shadowRoot?.querySelector('slot[name=invoker]');
+    const invokerSlot = /** @type {HTMLSlotElement} */ (
+      this.shadowRoot?.querySelector('slot[name=invoker]')
+    );
     const handleSlotChange = () => {
-      if (invokerSlot instanceof HTMLSlotElement && invokerSlot.assignedNodes().length > 0) {
+      if (invokerSlot.assignedNodes().length > 0) {
         this.__cleanStore();
         this.__setupStore();
         this.__updateFocused();
