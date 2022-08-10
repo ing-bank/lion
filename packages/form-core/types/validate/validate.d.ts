@@ -27,7 +27,7 @@ export type ValidatorParam = any;
  * Will be stored on Validator instance and passed to `execute` function
  */
 export type ValidatorConfig = {
-  getMessage?: (data: Partial<FeedbackMessageData>) => Promise<string | Element>;
+  getMessage?: (data: Partial<FeedbackMessageData>) => Promise<string | Element> | string | Element;
   type?: ValidationType;
   node?: FormControlHost;
   fieldName?: string | Promise<string>;
