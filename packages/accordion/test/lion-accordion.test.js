@@ -22,7 +22,7 @@ const basicAccordion = html`
  * @param {Element} el
  */
 function getAccordionChildren(el) {
-  const slot = el.shadowRoot?.querySelector('slot[name=accordion]');
+  const slot = el.shadowRoot?.querySelector('slot[name=_accordion]');
 
   return slot ? slot.children : [];
 }
@@ -31,7 +31,7 @@ function getAccordionChildren(el) {
  * @param {Element} el
  */
 function getInvokers(el) {
-  const slot = el.shadowRoot?.querySelector('slot[name=accordion]');
+  const slot = el.shadowRoot?.querySelector('slot[name=_accordion]');
 
   return slot ? slot.querySelectorAll('[slot=invoker]') : [];
 }
@@ -40,7 +40,7 @@ function getInvokers(el) {
  * @param {Element} el
  */
 function getContents(el) {
-  const slot = el.shadowRoot?.querySelector('slot[name=accordion]');
+  const slot = el.shadowRoot?.querySelector('slot[name=_accordion]');
 
   return slot ? slot.querySelectorAll('[slot=content]') : [];
 }
