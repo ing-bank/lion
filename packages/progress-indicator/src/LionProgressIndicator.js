@@ -1,9 +1,27 @@
-/* eslint-disable class-methods-use-this, import/no-extraneous-dependencies */
-
-import { nothing, LitElement } from '@lion/core';
+/* eslint-disable import/no-extraneous-dependencies */
+import { LitElement, nothing } from '@lion/core';
 import { localize, LocalizeMixin } from '@lion/localize';
 
+/**
+ * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ */
 export class LionProgressIndicator extends LocalizeMixin(LitElement) {
+  static get properties() {
+    return {
+      value: {
+        type: Number,
+      },
+      min: {
+        type: Number,
+      },
+      max: {
+        type: Number,
+      },
+      _ariaLabel: { attribute: 'aria-label', type: String },
+      _ariaLabelledby: { attribute: 'aria-labelledby', type: String },
+    };
+  }
+
   static get localizeNamespaces() {
     return [
       {
@@ -67,7 +85,41 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
     ];
   }
 
+  /**
+   * @readonly
+   * @type {boolean}
+   */
+  get indeterminate() {
+    return !this.hasAttribute('value');
+  }
+
+  /**
+   * In case of a determinate progress-indicator it returns the progress percentage
+   * based on value, min & max.
+   * Could be used for styling inside the _graphicTemplate
+   *
+   * @example
+   * style="width: ${this._progressPercentage}%"
+   */
+  get _progressPercentage() {
+    if (this.indeterminate) {
+      return undefined;
+    }
+    return ((this.value - this.min) / (this.max - this.min)) * 100;
+  }
+
+  constructor() {
+    super();
+    this.value = 0;
+    this.min = 0;
+    this.max = 100;
+    this._ariaLabel = '';
+    this._ariaLabelledby = '';
+    this.__hasDefaultLabelSet = false;
+  }
+
   /** @protected */
+  // eslint-disable-next-line class-methods-use-this
   _graphicTemplate() {
     return nothing;
   }
@@ -78,12 +130,76 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
 
   connectedCallback() {
     super.connectedCallback();
-    this.setAttribute('role', 'status');
-    this.setAttribute('aria-live', 'polite');
+    this.setAttribute('role', 'progressbar');
+  }
+
+  /**
+   * Update aria labels on state change.
+   * @param {import('@lion/core').PropertyValues } changedProperties
+   */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+
+    if (this.indeterminate) {
+      if (changedProperties.has('_ariaLabel') || changedProperties.has('_ariaLabelledby')) {
+        this._setDefaultLabel();
+      }
+      if (changedProperties.has('value')) {
+        this._resetAriaValueAttributes();
+        this._setDefaultLabel();
+      }
+    } else {
+      if (changedProperties.has('value')) {
+        if (!this.value || typeof this.value !== 'number') {
+          this.removeAttribute('value');
+        } else if (this.value < this.min) {
+          this.value = this.min;
+          this.setAttribute('aria-valuenow', this.min.toString());
+        } else if (this.value > this.max) {
+          this.value = this.max;
+          this.setAttribute('aria-valuenow', this.max.toString());
+        } else {
+          this.setAttribute('aria-valuenow', this.value.toString());
+        }
+        if (this.__hasDefaultLabelSet === true) {
+          this.removeAttribute('aria-label');
+        }
+      }
+      if (changedProperties.has('min')) {
+        this.setAttribute('aria-valuemin', this.min.toString());
+        if (this.value < this.min) {
+          this.value = this.min;
+        }
+      }
+      if (changedProperties.has('max')) {
+        this.setAttribute('aria-valuemax', this.max.toString());
+        if (this.value > this.max) {
+          this.value = this.max;
+        }
+      }
+    }
   }
 
   onLocaleUpdated() {
-    const label = localize.msg('lion-progress-indicator:loading');
-    this.setAttribute('aria-label', label);
+    super.onLocaleUpdated();
+    // only set default label for indeterminate
+    if (this.indeterminate) {
+      this._setDefaultLabel();
+    }
+  }
+
+  _resetAriaValueAttributes() {
+    this.removeAttribute('aria-valuenow');
+    this.removeAttribute('aria-valuemin');
+    this.removeAttribute('aria-valuemax');
+  }
+
+  _setDefaultLabel() {
+    if (this._ariaLabelledby) {
+      this.removeAttribute('aria-label');
+    } else if (!this._ariaLabel) {
+      this.setAttribute('aria-label', localize.msg('lion-progress-indicator:loading'));
+      this.__hasDefaultLabelSet = true;
+    }
   }
 }

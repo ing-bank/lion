@@ -2,19 +2,26 @@
 
 A web component that implements accessibility requirements for progress indicators.
 
-```html
-<lion-progress-indicator></lion-progress-indicator>
+```js script
+import { html } from '@mdjs/mdjs-preview';
+import '@lion/progress-indicator/define';
 ```
 
-Note: You don't see a live demo here as it would be empty, since there is no styling. Check out the [examples](./examples.md) if you want to see a possible implementation.
+```html
+<lion-progress-indicator aria-label="Interest rate" value="50"></lion-progress-indicator>
+```
 
 ## Features
 
 This component is designed to be extended in order to add visuals.
 
+- Can be indeterminate or determinate, depending on whether it has a value.
 - Accessibility compliant
-- Localized "Loading" label
+- Localized "Loading" label in case of an indeterminate progress-indicator
 - Implementation independent of visuals
+- `value`: progress value, setting this makes the progress-indicator determinate.
+- `min`: progress min value
+- `max`: progress max value
 
 ## Installation
 
