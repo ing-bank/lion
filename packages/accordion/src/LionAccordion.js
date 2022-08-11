@@ -43,25 +43,6 @@ export class LionAccordion extends LitElement {
           flex-direction: column;
         }
 
-        .accordion ::slotted([slot='accordion']) {
-          margin: 0;
-        }
-
-        .accordion ::slotted([slot='accordion'][expanded]) {
-          font-weight: bold;
-        }
-
-        .accordion ::slotted([slot='accordion']) {
-          margin: 0;
-          visibility: hidden;
-          display: none;
-        }
-
-        .accordion ::slotted([slot='accordion'][expanded]) {
-          visibility: visible;
-          display: block;
-        }
-
         .accordion [slot='invoker'] {
           margin: 0;
         }
@@ -148,7 +129,7 @@ export class LionAccordion extends LitElement {
       <div class="accordion">
         <slot name="invoker"></slot>
         <slot name="content"></slot>
-        <slot name="accordion"></slot>
+        <slot name="_accordion"></slot>
       </div>
     `;
   }
@@ -177,7 +158,7 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __setupStore() {
-    const accordion = this.shadowRoot?.querySelector('slot[name=accordion]');
+    const accordion = this.shadowRoot?.querySelector('slot[name=_accordion]');
     const existingInvokers = accordion ? accordion.querySelectorAll('[slot=invoker]') : [];
     const existingContent = accordion ? accordion.querySelectorAll('[slot=content]') : [];
 
@@ -222,6 +203,9 @@ export class LionAccordion extends LitElement {
 
   /**
    *  @private
+   *
+   *  Moves all invokers and content to slot[name=_accordion] in correct order so focus works
+   *  correctly when the user tabs.
    */
   __rearrangeInvokersAndContent() {
     const invokers = /** @type {HTMLElement[]} */ (
@@ -230,7 +214,7 @@ export class LionAccordion extends LitElement {
     const contents = /** @type {HTMLElement[]} */ (
       Array.from(this.querySelectorAll('[slot="content"]'))
     );
-    const accordion = this.shadowRoot?.querySelector('slot[name=accordion]');
+    const accordion = this.shadowRoot?.querySelector('slot[name=_accordion]');
     if (accordion) {
       invokers.forEach((invoker, index) => {
         accordion.insertAdjacentElement('beforeend', invoker);
