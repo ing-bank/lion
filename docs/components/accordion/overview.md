@@ -28,7 +28,7 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
             decrease gradually during development, whereas volatile aroma compounds tend to peak in
             mid– to late–season development. Taste quality tends to improve later in harvests when
             there is a higher sugar/acid ratio with less bitterness. As a citrus fruit, the orange
-            is acidic, with pH levels ranging from 2.9 to 4.0.
+            is acidic, with pH levels ranging from 2.9 to 4.0. <a href="#">Link</a>
           </p>
           <p>
             Sensory qualities vary according to genetic background, environmental conditions during

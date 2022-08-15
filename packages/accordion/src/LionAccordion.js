@@ -43,21 +43,21 @@ export class LionAccordion extends LitElement {
           flex-direction: column;
         }
 
-        .accordion ::slotted([slot='invoker']) {
+        .accordion [slot='invoker'] {
           margin: 0;
         }
 
-        .accordion ::slotted([slot='invoker'][expanded]) {
+        .accordion [slot='invoker'][expanded] {
           font-weight: bold;
         }
 
-        .accordion ::slotted([slot='content']) {
+        .accordion [slot='content'] {
           margin: 0;
           visibility: hidden;
           display: none;
         }
 
-        .accordion ::slotted([slot='content'][expanded]) {
+        .accordion [slot='content'][expanded] {
           visibility: visible;
           display: block;
         }
@@ -129,6 +129,7 @@ export class LionAccordion extends LitElement {
       <div class="accordion">
         <slot name="invoker"></slot>
         <slot name="content"></slot>
+        <slot name="_accordion"></slot>
       </div>
     `;
   }
@@ -137,12 +138,16 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __setupSlots() {
-    const invokerSlot = this.shadowRoot?.querySelector('slot[name=invoker]');
+    const invokerSlot = /** @type {HTMLSlotElement} */ (
+      this.shadowRoot?.querySelector('slot[name=invoker]')
+    );
     const handleSlotChange = () => {
-      this.__cleanStore();
-      this.__setupStore();
-      this.__updateFocused();
-      this.__updateExpanded();
+      if (invokerSlot.assignedNodes().length > 0) {
+        this.__cleanStore();
+        this.__setupStore();
+        this.__updateFocused();
+        this.__updateExpanded();
+      }
     };
     if (invokerSlot) {
       invokerSlot.addEventListener('slotchange', handleSlotChange);
@@ -153,12 +158,20 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __setupStore() {
-    const invokers = /** @type {HTMLElement[]} */ (
-      Array.from(this.querySelectorAll('[slot="invoker"]'))
-    );
-    const contents = /** @type {HTMLElement[]} */ (
-      Array.from(this.querySelectorAll('[slot="content"]'))
-    );
+    const accordion = this.shadowRoot?.querySelector('slot[name=_accordion]');
+    const existingInvokers = accordion ? accordion.querySelectorAll('[slot=invoker]') : [];
+    const existingContent = accordion ? accordion.querySelectorAll('[slot=content]') : [];
+
+    const invokers = /** @type {HTMLElement[]} */ ([
+      ...Array.from(existingInvokers),
+      ...Array.from(this.querySelectorAll('[slot="invoker"]')),
+    ]);
+
+    const contents = /** @type {HTMLElement[]} */ ([
+      ...Array.from(existingContent),
+      ...Array.from(this.querySelectorAll('[slot="content"]')),
+    ]);
+
     if (invokers.length !== contents.length) {
       // eslint-disable-next-line no-console
       console.warn(
@@ -184,6 +197,30 @@ export class LionAccordion extends LitElement {
       this._collapse(entry);
       this.__store.push(entry);
     });
+
+    this.__rearrangeInvokersAndContent();
+  }
+
+  /**
+   *  @private
+   *
+   *  Moves all invokers and content to slot[name=_accordion] in correct order so focus works
+   *  correctly when the user tabs.
+   */
+  __rearrangeInvokersAndContent() {
+    const invokers = /** @type {HTMLElement[]} */ (
+      Array.from(this.querySelectorAll('[slot="invoker"]'))
+    );
+    const contents = /** @type {HTMLElement[]} */ (
+      Array.from(this.querySelectorAll('[slot="content"]'))
+    );
+    const accordion = this.shadowRoot?.querySelector('slot[name=_accordion]');
+    if (accordion) {
+      invokers.forEach((invoker, index) => {
+        accordion.insertAdjacentElement('beforeend', invoker);
+        accordion.insertAdjacentElement('beforeend', contents[index]);
+      });
+    }
   }
 
   /**
