@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.18.2
+
+### Patch Changes
+
+- 0b97918d: Extend type of getMessage to allow it being implemented as a sync function.
+
 ## 0.18.1
 
 ### Patch Changes

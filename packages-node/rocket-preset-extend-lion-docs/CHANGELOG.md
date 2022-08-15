@@ -1,5 +1,11 @@
 # rocket-preset-extend-lion-docs
 
+## 0.3.2
+
+### Patch Changes
+
+- 2514fa97: fix: run plugins in correct order, allowing replace functions to access local urls and kick in after tag transforms
+
 ## 0.3.1
 
 ### Patch Changes
