@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.11.0
+
+### Minor Changes
+
+- d597892a: focus now jumps from header to panel when tabbing
+
 ## 0.10.0
 
 ### Minor Changes

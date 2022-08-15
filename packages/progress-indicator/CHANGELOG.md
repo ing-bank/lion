@@ -1,5 +1,11 @@
 # @lion/progress-indicator
 
+## 0.10.0
+
+### Minor Changes
+
+- a616fd8d: Add option to make the progress-indicator determinate
+
 ## 0.9.0
 
 ### Minor Changes
