@@ -180,14 +180,19 @@ export class Ajax {
       responseText = responseText.substring(jsonPrefix.length);
     }
 
-    try {
-      return {
-        response,
-        body: JSON.parse(responseText),
-      };
-    } catch (error) {
-      throw new Error(`Failed to parse response from ${response.url} as JSON.`);
+    /** @type {any} */
+    let body = responseText;
+    if (response.headers.get('content-type')?.includes('application/json')) {
+      try {
+        body = JSON.parse(responseText);
+      } catch (error) {
+        throw new Error(`Failed to parse response from ${response.url} as JSON.`);
+      }
+    } else {
+      body = responseText;
     }
+
+    return { response, body };
   }
 
   /**

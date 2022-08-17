@@ -159,6 +159,12 @@ describe('Ajax', () => {
       expect(response.response.headers.get('X-Custom-Header')).to.equal('y-custom-value');
     });
 
+    it('handles non-json responses', async () => {
+      fetchStub.returns(Promise.resolve(new Response('!@#$')));
+      const response = await ajax.fetchJson('/foo');
+      expect(response.body).to.eql('!@#$');
+    });
+
     describe('given a request body', () => {
       it('encodes the request body as json', async () => {
         await ajax.fetchJson('/foo', { method: 'POST', body: { a: 1, b: 2 } });
@@ -176,14 +182,14 @@ describe('Ajax', () => {
     describe('given a json prefix', () => {
       it('strips json prefix from response before decoding', async () => {
         const localAjax = new Ajax({ jsonPrefix: '//.,!' });
-        fetchStub.returns(Promise.resolve(new Response('//.,!{"a":1,"b":2}')));
+        fetchStub.returns(Promise.resolve(new Response('//.,!{"a":1,"b":2}', responseInit())));
         const response = await localAjax.fetchJson('/foo');
         expect(response.body).to.eql({ a: 1, b: 2 });
       });
     });
 
     it('throws on invalid JSON responses', async () => {
-      fetchStub.returns(Promise.resolve(new Response('invalid-json')));
+      fetchStub.returns(Promise.resolve(new Response('invalid-json', responseInit())));
 
       let thrown = false;
       try {
