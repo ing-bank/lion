@@ -58,6 +58,18 @@ describe('<lion-input-amount>', () => {
     expect(el.formattedValue).to.equal('123,00');
   });
 
+  it('supports overriding decimalSeparator in formatOptions', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(
+        html`<lion-input-amount
+          .formatOptions="${{ locale: 'nl-NL', decimalSeparator: '.' }}"
+          .modelValue="${99}"
+        ></lion-input-amount>`,
+      )
+    );
+    expect(el.formattedValue).to.equal('99.00');
+  });
+
   it('ignores global locale change if property is provided', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(html`

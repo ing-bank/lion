@@ -8,4 +8,9 @@ describe('getDecimalSeparator', () => {
     expect(getDecimalSeparator('nl-NL')).to.equal(',');
     expect(getDecimalSeparator('fr-FR')).to.equal(',');
   });
+
+  it('will return the decimalSeparator from options if passed', () => {
+    expect(getDecimalSeparator('nl-NL')).to.equal(',');
+    expect(getDecimalSeparator('nl-NL', { decimalSeparator: '.' })).to.equal('.');
+  });
 });
