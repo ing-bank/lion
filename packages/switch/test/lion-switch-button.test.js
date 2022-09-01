@@ -118,6 +118,14 @@ describe('lion-switch-button', () => {
     expect(handlerSpy.called).to.be.false;
   });
 
+  it('should not dispatch "checked-changed" event if disabled on update', () => {
+    const handlerSpy = sinon.spy();
+    el.disabled = true;
+    el.addEventListener('checked-changed', handlerSpy);
+    el.checked = !el.checked;
+    expect(handlerSpy.called).to.be.false;
+  });
+
   describe('a11y', () => {
     it('should manage "aria-checked"', async () => {
       expect(el.hasAttribute('aria-checked')).to.be.true;
