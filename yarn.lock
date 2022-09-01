@@ -11637,6 +11637,11 @@ singleton-manager@1.4.2:
   resolved "https://registry.yarnpkg.com/singleton-manager/-/singleton-manager-1.4.2.tgz#4649acafca3eccf987d828ab16369ee59c4a22a5"
   integrity sha512-3/K7K61TiN0+tw32HRC3AZQBacN0Ky/NmHEnhofFPEFROqZ5T6BXK45Z94OQsvuFD2euOVOU40XDNeTal63Baw==
 
+singleton-manager@1.4.3:
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/singleton-manager/-/singleton-manager-1.4.3.tgz#bdfd71e3b8c99ee8a0d9086496a795c84f886d0e"
+  integrity sha512-Jy1Ib9cO9xCQ6UZ/vyFOqqWMnSpfZ8/Sc2vme944aWsCLO+lMPiFG9kGZGpyiRT9maYeI0JyZH1CGgjmkSN8VA==
+
 sinon@^7.2.2:
   version "7.5.0"
   resolved "https://registry.yarnpkg.com/sinon/-/sinon-7.5.0.tgz#e9488ea466070ea908fd44a3d6478fd4923c67ec"

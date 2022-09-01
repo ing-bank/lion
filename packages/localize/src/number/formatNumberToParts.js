@@ -83,9 +83,9 @@ export function formatNumberToParts(number, options = {}) {
         formattedParts.push({ type: 'integer', value: numberPart });
         numberPart = '';
       }
-      const decimal = getDecimalSeparator(computedLocale);
-      if (formattedNumber[i] === decimal) {
-        formattedParts.push({ type: 'decimal', value: formattedNumber[i] });
+      const decimal = getDecimalSeparator(computedLocale, options);
+      if (formattedNumber[i] === decimal || options.decimalSeparator === decimal) {
+        formattedParts.push({ type: 'decimal', value: decimal });
         fraction = true;
       } else {
         formattedParts.push({ type: 'group', value: formattedNumber[i] });
