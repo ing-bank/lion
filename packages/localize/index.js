@@ -13,5 +13,6 @@ export { getCurrencyName } from './src/number/getCurrencyName.js';
 export { getDecimalSeparator } from './src/number/getDecimalSeparator.js';
 export { getFractionDigits } from './src/number/getFractionDigits.js';
 export { getGroupSeparator } from './src/number/getGroupSeparator.js';
+export { getSeparatorsFromNumber } from './src/number/getSeparatorsFromNumber.js';
 export { normalizeCurrencyLabel } from './src/number/normalizeCurrencyLabel.js';
 export { parseNumber } from './src/number/parseNumber.js';

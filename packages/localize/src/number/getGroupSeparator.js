@@ -9,8 +9,8 @@ import { normalSpaces } from './utils/normalSpaces.js';
  * @returns {string}
  */
 export function getGroupSeparator(locale, options) {
-  if (options && options.thousandSeparator) {
-    return options.thousandSeparator;
+  if (options && options.groupSeparator) {
+    return options.groupSeparator;
   }
   const computedLocale = getLocale(locale);
   const formattedNumber = Intl.NumberFormat(computedLocale, {

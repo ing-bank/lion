@@ -3,9 +3,9 @@
  * @param {number} parsedNumber
  * @param {string} formattedNumber
  * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} [options]
- * @returns {{thousandSeparator: string|null, decimalSeparator: string|null}}
+ * @returns {{groupSeparator: string|null, decimalSeparator: string|null}}
  */
-export function getSeparators(parsedNumber, formattedNumber, options) {
+export function getSeparatorsFromNumber(parsedNumber, formattedNumber, options) {
   // separator can only happen if there is at least 1 digit before and after the separator
   // eslint-disable-next-line no-irregular-whitespace
   const regexSeparator = /[0-9](?<sep>[\s,. _ '])[0-9]/g;
@@ -20,39 +20,39 @@ export function getSeparators(parsedNumber, formattedNumber, options) {
     }
   }
 
-  let thousandSeparator = null;
+  let groupSeparator = null;
   let decimalSeparator = null;
   if (separators) {
     if (separators.length === 1) {
       const parts = formattedNumber.split(separators[0]);
-      // Not sure if decimal or thousand, because only 1 separator.
+      // Not sure if decimal or group, because only 1 separator.
       // if the separator is followed by at least 3 or more digits
       // and if the original number value is more or equal than 1000 or less or equal than -1000
       // or the minimum integer digits is forced to more than 3,
-      // it has to be the thousand separator
+      // it has to be the group separator
       if (
         parts[1].replace(/[^0-9]/g, '').length >= 3 &&
         (parsedNumber >= 1000 ||
           parsedNumber <= -1 * 1000 ||
           (options?.minimumIntegerDigits && options.minimumIntegerDigits > 3))
       ) {
-        [thousandSeparator] = separators;
+        [groupSeparator] = separators;
       } else {
         [decimalSeparator] = separators;
       }
     } else if (separators.every(val => val === separators[0])) {
       // multiple separators, check if they are all the same or not
-      // if the same, it means they are thousand separators
+      // if the same, it means they are group separators
       // if not, it means that the last one must be the decimal separator
-      [thousandSeparator] = separators;
+      [groupSeparator] = separators;
     } else {
-      [thousandSeparator] = separators;
+      [groupSeparator] = separators;
       decimalSeparator = separators[separators.length - 1];
     }
   }
 
   return {
-    thousandSeparator,
+    groupSeparator,
     decimalSeparator,
   };
 }

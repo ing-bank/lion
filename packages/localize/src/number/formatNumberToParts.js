@@ -1,5 +1,5 @@
 import { emptyStringWhenNumberNan } from './utils/emptyStringWhenNumberNan.js';
-import { getSeparators } from './getSeparators.js';
+import { getSeparatorsFromNumber } from './getSeparatorsFromNumber.js';
 import { getDecimalSeparator } from './getDecimalSeparator.js';
 import { getGroupSeparator } from './getGroupSeparator.js';
 import { getLocale } from '../utils/getLocale.js';
@@ -49,7 +49,7 @@ export function formatNumberToParts(number, options = {}) {
   let formattedParts = [];
 
   const formattedNumber = Intl.NumberFormat(computedLocale, options).format(parsedNumber);
-  const { decimalSeparator, thousandSeparator } = getSeparators(
+  const { decimalSeparator, groupSeparator } = getSeparatorsFromNumber(
     parsedNumber,
     formattedNumber,
     options,
@@ -63,13 +63,13 @@ export function formatNumberToParts(number, options = {}) {
   let currency = '';
   let numberPart = '';
   let fraction = false;
-  let isThousand = false;
-  const thousand = getGroupSeparator(computedLocale, options);
+  let isGroup = false;
+  const group = getGroupSeparator(computedLocale, options);
   const decimal = getDecimalSeparator(computedLocale, options);
-  if (decimalSeparator && thousandSeparator && thousand === decimal) {
-    throw new Error(`Decimal and thousand separator are the same character: '${thousand}'.
+  if (decimalSeparator && groupSeparator && group === decimal) {
+    throw new Error(`Decimal and group (thousand) separator are the same character: '${group}'.
 This can happen due to both props being specified as the same, or one of the props being the same as the other one from default locale.
-Please specify .thousandSeparator / .decimalSeparator on the formatOptions object to be different.`);
+Please specify .groupSeparator / .decimalSeparator on the formatOptions object to be different.`);
   }
 
   for (let i = 0; i < formattedNumber.length; i += 1) {
@@ -92,9 +92,9 @@ Please specify .thousandSeparator / .decimalSeparator on the formatOptions objec
       currency = '';
     }
 
-    // thousand sep must be lead by / followed by a number
+    // group sep must be lead by / followed by a number
     if (
-      formattedNumber[i] === thousandSeparator &&
+      formattedNumber[i] === groupSeparator &&
       formattedNumber[i - 1].match(regexNum) &&
       formattedNumber[i + 1].match(regexNum)
     ) {
@@ -104,8 +104,8 @@ Please specify .thousandSeparator / .decimalSeparator on the formatOptions objec
         numberPart = '';
       }
 
-      formattedParts.push({ type: 'group', value: thousand });
-      isThousand = true;
+      formattedParts.push({ type: 'group', value: group });
+      isGroup = true;
     }
 
     if (formattedNumber[i] === decimalSeparator) {
@@ -121,7 +121,6 @@ Please specify .thousandSeparator / .decimalSeparator on the formatOptions objec
 
     // detect literals (empty spaces) or space group separator
     if (regexSpace.test(formattedNumber[i])) {
-      const group = getGroupSeparator(computedLocale);
       const hasNumberPart = !!numberPart;
       // Write number grouping
       if (numberPart && !fraction) {
@@ -134,12 +133,12 @@ Please specify .thousandSeparator / .decimalSeparator on the formatOptions objec
       // If space equals the group separator it gets type group
       if (normalSpaces(formattedNumber[i]) === group && hasNumberPart && !fraction) {
         formattedParts.push({ type: 'group', value: formattedNumber[i] });
-        // if we already pushed it as a thousand separator, don't add it as a literal on top..
-      } else if (!isThousand) {
+        // if we already pushed it as a group separator, don't add it as a literal on top..
+      } else if (!isGroup) {
         formattedParts.push({ type: 'literal', value: formattedNumber[i] });
       }
     }
-    isThousand = false;
+    isGroup = false;
     // Numbers after the decimal sign are fractions, write the last
     // fractions at the end of the number
     if (fraction === true && i === formattedNumber.length - 1) {

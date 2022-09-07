@@ -94,7 +94,7 @@ function parseHeuristic(value) {
     // 1. put placeholder at decimal separator
     const numberString = value
       .replace(/(,|\.)([^,|.]*)$/g, '_decSep_$2')
-      .replace(/(,|\.| )/g, '') // 2. remove all thousand separators
+      .replace(/(,|\.| )/g, '') // 2. remove all group separators
       .replace(/_decSep_/, '.'); // 3. restore decimal separator
     return parseFloat(numberString);
   }

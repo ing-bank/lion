@@ -108,15 +108,15 @@ export const noDecimals = () => html`
 
 For copy pasting numbers into the input-amount, there is slightly different parsing behavior.
 
-Normally, when it receives an input with only 1 separator character, we check the locale to determine whether this character is a thousand separator, or a decimal separator.
+Normally, when it receives an input with only 1 separator character, we check the locale to determine whether this character is a group (thousand) separator, or a decimal separator.
 When a user pastes the input from a different source, we find this approach (locale-based) quite unreliable, because it may have been copied from a 'mathematical context' (like an Excel sheet) or a context with a different locale.
 Therefore, we use the heuristics based method to parse the input when it is pasted by the user.
 
 ### What this means
 
 If the user in an English locale types `400,0` it will become `4,000.00`
-because the locale determines that the comma is a thousand separator, not a decimal separator.
+because the locale determines that the comma is a group separator, not a decimal separator.
 
 If the user in an English locale pastes `400,0` instead, it will become `400.00` because we cannot rely on locale.
-Therefore, instead, we determine that the comma cannot be a thousand separator because it is not followed by 3 digits after.
+Therefore, instead, we determine that the comma cannot be a group separator because it is not followed by 3 digits after.
 It is more likely to be a decimal separator.
