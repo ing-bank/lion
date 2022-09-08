@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.26.0
+
+### Minor Changes
+
+- 2d58320e: Allow specifying thousandSeparator for format number. BREAKING: change decimalSeparator type to only be ',' or '.'.
+
+### Patch Changes
+
+- 11c5ffe0: Fixes the already existing decimalSeparator property to actually override the decimal with the prop in formatNumberToParts.
+- Updated dependencies [cc294f20]
+  - @lion/core@0.24.0
+
 ## 0.25.0
 
 ### Minor Changes

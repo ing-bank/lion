@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.10.1
+
+### Patch Changes
+
+- Updated dependencies [2d58320e]
+- Updated dependencies [11c5ffe0]
+  - @lion/localize@0.26.0
+  - @lion/form-core@0.18.3
+  - @lion/input-tel@0.2.3
+
 ## 0.10.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@lion/collapsible",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "This component is a combination of a button (the invoker), a chunk of extra content.",
   "license": "MIT",
   "author": "ing-bank",
@@ -39,7 +39,7 @@
     "demo/custom-collapsible.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.23.0"
+    "@lion/core": "^0.24.0"
   },
   "keywords": [
     "collapsible",

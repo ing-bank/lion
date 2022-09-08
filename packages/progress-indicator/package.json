@@ -1,6 +1,6 @@
 {
   "name": "@lion/progress-indicator",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "A progress indicator that is easily styleable and accessible in all contexts",
   "license": "MIT",
   "author": "ing-bank",
@@ -37,8 +37,8 @@
     "lion-progress-indicator.js"
   ],
   "dependencies": {
-    "@lion/core": "^0.23.0",
-    "@lion/localize": "^0.25.0"
+    "@lion/core": "^0.24.0",
+    "@lion/localize": "^0.26.0"
   },
   "keywords": [
     "lion",
