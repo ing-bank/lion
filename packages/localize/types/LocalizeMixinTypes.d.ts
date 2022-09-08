@@ -19,7 +19,6 @@ export declare interface FormatDateOptions extends Intl.DateTimeFormatOptions {
 
   roundMode?: string;
   returnIfNaN?: string;
-  decimalSeparator?: string;
   mode?: 'pasted' | 'auto';
 
   postProcessors?: Map<string, DatePostProcessor>;
@@ -35,7 +34,11 @@ export declare interface FormatNumberOptions extends Intl.NumberFormatOptions {
   numberingSystem?: string;
   roundMode?: string;
   returnIfNaN?: string;
-  decimalSeparator?: string;
+  // https://en.wikipedia.org/wiki/Decimal_separator#Current_standards
+  decimalSeparator?: ',' | '.';
+  // https://en.wikipedia.org/wiki/Decimal_separator#Digit_grouping
+  // note the half space in there as well
+  groupSeparator?: ',' | '.' | ' ' | '_' | ' ' | "'";
   mode?: 'pasted' | 'auto';
 
   postProcessors?: Map<string, NumberPostProcessor>;

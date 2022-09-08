@@ -179,6 +179,64 @@ describe('formatNumber', () => {
         maximumFractionDigits: 2,
       }),
     ).to.equal('112.345.678,00');
+    expect(
+      formatNumber(112345678, {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        groupSeparator: ' ',
+        decimalSeparator: '.',
+      }),
+    ).to.equal('112 345 678.00');
+  });
+
+  it('throws when decimal and group separator are the same value, only when problematic', () => {
+    localize.locale = 'nl-NL';
+    const fn = () =>
+      formatNumber(112345678, {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        decimalSeparator: '.', // same as group separator for nl-NL
+      });
+
+    expect(fn).to.throw(`Decimal and group (thousand) separator are the same character: '.'.
+This can happen due to both props being specified as the same, or one of the props being the same as the other one from default locale.
+Please specify .groupSeparator / .decimalSeparator on the formatOptions object to be different.`);
+
+    const fn2 = () =>
+      formatNumber(112345678, {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        groupSeparator: ',',
+        decimalSeparator: ',',
+      });
+
+    expect(fn2).to.throw(`Decimal and group (thousand) separator are the same character: ','.
+This can happen due to both props being specified as the same, or one of the props being the same as the other one from default locale.
+Please specify .groupSeparator / .decimalSeparator on the formatOptions object to be different.`);
+
+    // this one doesn't end up with decimals, so not a problem
+    const fn3 = () =>
+      formatNumber(112345678, {
+        groupSeparator: ',',
+        decimalSeparator: ',',
+      });
+
+    expect(fn3).to.not.throw();
+
+    // this one doesn't end up with group separators (<1000), so not a problem
+    const fn4 = () =>
+      formatNumber(112.345678, {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        groupSeparator: ',',
+        decimalSeparator: ',',
+      });
+
+    expect(fn4).to.not.throw();
   });
 
   it('formats 2-digit decimals correctly', () => {

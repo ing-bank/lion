@@ -1,4 +1,5 @@
 import { emptyStringWhenNumberNan } from './utils/emptyStringWhenNumberNan.js';
+import { getSeparatorsFromNumber } from './getSeparatorsFromNumber.js';
 import { getDecimalSeparator } from './getDecimalSeparator.js';
 import { getGroupSeparator } from './getGroupSeparator.js';
 import { getLocale } from '../utils/getLocale.js';
@@ -48,14 +49,29 @@ export function formatNumberToParts(number, options = {}) {
   let formattedParts = [];
 
   const formattedNumber = Intl.NumberFormat(computedLocale, options).format(parsedNumber);
-  const regexCurrency = /[.,\s0-9]/;
+  const { decimalSeparator, groupSeparator } = getSeparatorsFromNumber(
+    parsedNumber,
+    formattedNumber,
+    options,
+  );
+
+  // eslint-disable-next-line no-irregular-whitespace
+  const regexCurrency = /[.,\s0-9 _ ]/;
   const regexMinusSign = /[-]/; // U+002D, Hyphen-Minus, &#45;
   const regexNum = /[0-9]/;
-  const regexSeparator = /[.,]/;
   const regexSpace = /[\s]/;
   let currency = '';
   let numberPart = '';
   let fraction = false;
+  let isGroup = false;
+  const group = getGroupSeparator(computedLocale, options);
+  const decimal = getDecimalSeparator(computedLocale, options);
+  if (decimalSeparator && groupSeparator && group === decimal) {
+    throw new Error(`Decimal and group (thousand) separator are the same character: '${group}'.
+This can happen due to both props being specified as the same, or one of the props being the same as the other one from default locale.
+Please specify .groupSeparator / .decimalSeparator on the formatOptions object to be different.`);
+  }
+
   for (let i = 0; i < formattedNumber.length; i += 1) {
     // detect minusSign
     if (regexMinusSign.test(formattedNumber[i])) {
@@ -76,24 +92,35 @@ export function formatNumberToParts(number, options = {}) {
       currency = '';
     }
 
-    // detect dot and comma separators
-    if (regexSeparator.test(formattedNumber[i])) {
+    // group sep must be lead by / followed by a number
+    if (
+      formattedNumber[i] === groupSeparator &&
+      formattedNumber[i - 1].match(regexNum) &&
+      formattedNumber[i + 1].match(regexNum)
+    ) {
       // Write number grouping
       if (numberPart) {
         formattedParts.push({ type: 'integer', value: numberPart });
         numberPart = '';
       }
-      const decimal = getDecimalSeparator(computedLocale, options);
-      if (formattedNumber[i] === decimal || options.decimalSeparator === decimal) {
-        formattedParts.push({ type: 'decimal', value: decimal });
-        fraction = true;
-      } else {
-        formattedParts.push({ type: 'group', value: formattedNumber[i] });
-      }
+
+      formattedParts.push({ type: 'group', value: group });
+      isGroup = true;
     }
+
+    if (formattedNumber[i] === decimalSeparator) {
+      // Write number grouping
+      if (numberPart) {
+        formattedParts.push({ type: 'integer', value: numberPart });
+        numberPart = '';
+      }
+
+      formattedParts.push({ type: 'decimal', value: decimal });
+      fraction = true;
+    }
+
     // detect literals (empty spaces) or space group separator
     if (regexSpace.test(formattedNumber[i])) {
-      const group = getGroupSeparator(computedLocale);
       const hasNumberPart = !!numberPart;
       // Write number grouping
       if (numberPart && !fraction) {
@@ -106,10 +133,12 @@ export function formatNumberToParts(number, options = {}) {
       // If space equals the group separator it gets type group
       if (normalSpaces(formattedNumber[i]) === group && hasNumberPart && !fraction) {
         formattedParts.push({ type: 'group', value: formattedNumber[i] });
-      } else {
+        // if we already pushed it as a group separator, don't add it as a literal on top..
+      } else if (!isGroup) {
         formattedParts.push({ type: 'literal', value: formattedNumber[i] });
       }
     }
+    isGroup = false;
     // Numbers after the decimal sign are fractions, write the last
     // fractions at the end of the number
     if (fraction === true && i === formattedNumber.length - 1) {

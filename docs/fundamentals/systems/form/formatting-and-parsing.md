@@ -89,7 +89,7 @@ export const unparseable = () => html`
 
 A formatter should return a `formattedValue`. It accepts the current modelValue and an options object.
 
-Below is a very naive and limited parser that ignores non-digits. The formatter then uses `Intl.NumberFormat` to format it with thousand separators.
+Below is a very naive and limited parser that ignores non-digits. The formatter then uses `Intl.NumberFormat` to format it with group (thousand) separators.
 
 Formatted value is reflected back to the user `on-blur` of the field, but only if the field has no errors (validation).
 
