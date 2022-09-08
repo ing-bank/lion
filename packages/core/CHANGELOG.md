@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.24.0
+
+### Minor Changes
+
+- cc294f20: BREAKING: Remove unused `UpdateStylesMixin` & `DelegateMixin`
+
 ## 0.23.1
 
 ### Patch Changes

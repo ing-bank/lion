@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.0
+
+### Major Changes
+
+- 18287a64: First major release (no difference with 0.16.0)
+
 ## 0.16.0
 
 ### Minor Changes

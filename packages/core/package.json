@@ -1,6 +1,6 @@
 {
   "name": "@lion/core",
-  "version": "0.23.1",
+  "version": "0.24.0",
   "description": "Core functionality that is shared across all Lion Web Components",
   "license": "MIT",
   "author": "ing-bank",

@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.26.1
+
+### Patch Changes
+
+- Updated dependencies [cc294f20]
+- Updated dependencies [2d58320e]
+- Updated dependencies [11c5ffe0]
+  - @lion/core@0.24.0
+  - @lion/localize@0.26.0
+  - @lion/calendar@0.20.1
+  - @lion/form-core@0.18.3
+  - @lion/input-date@0.15.1
+  - @lion/overlays@0.33.2
+  - @lion/validate-messages@0.10.1
+
 ## 0.26.0
 
 ### Minor Changes
