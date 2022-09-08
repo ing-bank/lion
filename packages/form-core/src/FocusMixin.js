@@ -27,6 +27,7 @@ const FocusMixinImplementation = superclass =>
       return {
         focused: { type: Boolean, reflect: true },
         focusedVisible: { type: Boolean, reflect: true, attribute: 'focused-visible' },
+        autofocus: { type: Boolean, reflect: true }, // Required in Lit to observe autofocus
       };
     }
 
@@ -52,11 +53,41 @@ const FocusMixinImplementation = superclass =>
     connectedCallback() {
       super.connectedCallback();
       this.__registerEventsForFocusMixin();
+      this.__syncAutofocusToFocusableElement();
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
       this.__teardownEventsForFocusMixin();
+    }
+
+    /**
+     * Gets called when an attribute is changed.
+     * @param {String} name
+     * @param {String | null} _old
+     * @param {String | null} value
+     * @protected
+     */
+    attributeChangedCallback(name, _old, value) {
+      super.attributeChangedCallback(name, _old, value);
+      if (name === 'autofocus') {
+        this.__syncAutofocusToFocusableElement();
+      }
+    }
+
+    /**
+     * @private
+     */
+    __syncAutofocusToFocusableElement() {
+      if (!this._focusableNode) {
+        return;
+      }
+
+      if (this.hasAttribute('autofocus')) {
+        this._focusableNode.setAttribute('autofocus', '');
+      } else {
+        this._focusableNode.removeAttribute('autofocus');
+      }
     }
 
     /**
