@@ -53,7 +53,7 @@ describe('Analyzer "find-exports"', () => {
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
       expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('x');
-      expect(firstEntry.result[0].source).to.be.null;
+      expect(firstEntry.result[0].source).to.be.undefined;
     });
 
     it(`supports [export default class X {}] (default export)`, async () => {
@@ -189,7 +189,7 @@ describe('Analyzer "find-exports"', () => {
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
       expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('X');
-      expect(firstEntry.result[0].source).to.be.null;
+      expect(firstEntry.result[0].source).to.be.undefined;
     });
 
     it(`functions`, async () => {
@@ -199,7 +199,7 @@ describe('Analyzer "find-exports"', () => {
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
       expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('y');
-      expect(firstEntry.result[0].source).to.be.null;
+      expect(firstEntry.result[0].source).to.be.undefined;
     });
 
     // ...etc?
