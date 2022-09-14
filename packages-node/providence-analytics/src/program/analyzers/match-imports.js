@@ -5,6 +5,12 @@ const FindImportsAnalyzer = require('./find-imports.js');
 const FindExportsAnalyzer = require('./find-exports.js');
 const { Analyzer } = require('./helpers/Analyzer.js');
 const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
+const {
+  transformIntoIterableFindExportsOutput,
+} = require('./helpers/transform-into-iterable-find-exports-output.js');
+const {
+  transformIntoIterableFindImportsOutput,
+} = require('./helpers/transform-into-iterable-find-imports-output.js');
 
 /**
  * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
@@ -30,120 +36,6 @@ function compareImportAndExportPaths(exportPath, translatedImportPath) {
     exportPath === `${translatedImportPath}.js` ||
     exportPath === `${translatedImportPath}/index.js`
   );
-}
-
-/**
- * Convert to more easily iterable object
- *
- * From:
- * ```js
- * [
- *  "file": "./file-1.js",
- *  "result": [{
- *    "exportSpecifiers": [ "a", "b"],
- *    "localMap": [{...},{...}],
- *    "source": null,
- *    "rootFileMap": [{"currentFileSpecifier": "a", "rootFile": { "file": "[current]", "specifier": "a" }}]
- *  }, ...],
- * ```
- * To:
- * ```js
- * [{
- *   "file": ""./file-1.js",
- *   "exportSpecifier": "a",
- *   "localMap": {...},
- *   "source": null,
- *   "rootFileMap": {...}
- * },
- * {{
- *   "file": ""./file-1.js",
- *   "exportSpecifier": "b",
- *   "localMap": {...},
- *   "source": null,
- *   "rootFileMap": {...}
- * }}],
- *
- * @param {FindExportsAnalyzerResult} exportsAnalyzerResult
- */
-function transformIntoIterableFindExportsOutput(exportsAnalyzerResult) {
-  /** @type {IterableFindExportsAnalyzerEntry[]} */
-  const iterableEntries = [];
-
-  for (const { file, result } of exportsAnalyzerResult.queryOutput) {
-    for (const { exportSpecifiers, source, rootFileMap, localMap, meta } of result) {
-      if (!exportSpecifiers) {
-        continue;
-      }
-      for (const exportSpecifier of exportSpecifiers) {
-        const i = exportSpecifiers.indexOf(exportSpecifier);
-        /** @type {IterableFindExportsAnalyzerEntry} */
-        const resultEntry = {
-          file,
-          specifier: exportSpecifier,
-          source,
-          rootFile: rootFileMap ? rootFileMap[i] : undefined,
-          localSpecifier: localMap ? localMap[i] : undefined,
-          meta,
-        };
-        iterableEntries.push(resultEntry);
-      }
-    }
-  }
-  return iterableEntries;
-}
-
-/**
- * Convert to more easily iterable object
- *
- * From:
- * ```js
- * [
- *  "file": "./file-1.js",
- *  "result": [{
- *    "importSpecifiers": [ "a", "b" ],
- *    "source": "exporting-ref-project",
- *    "normalizedSource": "exporting-ref-project"
- * }], ,
- * ```
- * To:
- * ```js
- * [{
- *   "file": ""./file-1.js",
- *   "importSpecifier": "a",,
- *   "source": "exporting-ref-project",
- *   "normalizedSource": "exporting-ref-project"
- * },
- * {{
- *   "file": ""./file-1.js",
- *   "importSpecifier": "b",,
- *   "source": "exporting-ref-project",
- *   "normalizedSource": "exporting-ref-project"
- * }}],
- *
- * @param {FindImportsAnalyzerResult} importsAnalyzerResult
- */
-function transformIntoIterableFindImportsOutput(importsAnalyzerResult) {
-  /** @type {IterableFindImportsAnalyzerEntry[]} */
-  const iterableEntries = [];
-
-  for (const { file, result } of importsAnalyzerResult.queryOutput) {
-    for (const { importSpecifiers, source, normalizedSource } of result) {
-      if (!importSpecifiers) {
-        continue;
-      }
-      for (const importSpecifier of importSpecifiers) {
-        /** @type {IterableFindImportsAnalyzerEntry} */
-        const resultEntry = {
-          file,
-          specifier: importSpecifier,
-          source,
-          normalizedSource,
-        };
-        iterableEntries.push(resultEntry);
-      }
-    }
-  }
-  return iterableEntries;
 }
 
 /**
