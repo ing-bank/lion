@@ -220,7 +220,9 @@ async function cli({ cwd, providenceConf } = {}) {
       (a dependency installed via npm) or a git repository, different paths will be
       automatically put in the appropiate mode.
       A mode of 'npm' will look at the package.json "files" entry and a mode of
-      'git' will look at '.gitignore' entry. The mode will be auto detected, but can be overridden
+      'git' will look at '.gitignore' entry. A mode of 'export-map' will look for all paths
+      exposed via an export map.
+      The mode will be auto detected, but can be overridden
       via this option.`,
     )
     .option(
