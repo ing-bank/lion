@@ -124,7 +124,7 @@ export interface GatherFilesConfig {
   omitDefaultAllowlist?: boolean;
   depth?: number;
   allowlist: string[];
-  allowlistMode?: 'npm' | 'git' | 'all';
+  allowlistMode?: 'npm' | 'git' | 'all' | 'export-map';
 }
 
 export interface ProjectInputData {
