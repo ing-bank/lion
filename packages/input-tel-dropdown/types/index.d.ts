@@ -12,8 +12,8 @@ type RefTemplateData = {
 export type RegionMeta = {
   countryCode: number;
   regionCode: RegionCode;
-  nameForRegion: string;
-  nameForLocale: string;
+  nameForRegion?: string;
+  nameForLocale?: string;
   flagSymbol: string;
 };
 
