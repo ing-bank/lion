@@ -205,6 +205,33 @@ function multiGlobSync(patterns, { keepDirs = false, root } = {}) {
   return Array.from(res);
 }
 
+function stripDotSlashFromLocalPath(localPathWithDotSlash) {
+  return localPathWithDotSlash.replace(/^\.\//, '');
+}
+
+function normalizeLocalPathWithDotSlash(localPathWithoutDotSlash) {
+  if (!localPathWithoutDotSlash.startsWith('.')) {
+    return `./${localPathWithoutDotSlash}`;
+  }
+  return localPathWithoutDotSlash;
+}
+
+/**
+ * @param {{val:object|string;nodeResolveMode:string}} opts
+ * @returns {string}
+ */
+function getStringOrObjectValOfExportMapEntry({ val, nodeResolveMode, packageRootPath }) {
+  if (typeof val !== 'object') {
+    return val;
+  }
+  if (!val[nodeResolveMode]) {
+    throw new Error(
+      `[getExportMapExports]: nodeResolveMode "${nodeResolveMode}" not found in package.json of package ${packageRootPath}`,
+    );
+  }
+  return val[nodeResolveMode];
+}
+
 /**
  * To be used in main program.
  * It creates an instance on which the 'files' array is stored.
@@ -215,22 +242,30 @@ function multiGlobSync(patterns, { keepDirs = false, root } = {}) {
 class InputDataService {
   /**
    * Create an array of ProjectData
-   * @param {PathFromSystemRoot[]} projectPaths
+   * @param {PathFromSystemRoot | ProjectInputData []} projectPaths
    * @param {Partial<GatherFilesConfig>} gatherFilesConfig
    * @returns {ProjectInputData[]}
    */
   static createDataObject(projectPaths, gatherFilesConfig = {}) {
     /** @type {ProjectInputData[]} */
-    const inputData = projectPaths.map(projectPath => ({
-      project: /** @type {Project} */ ({
-        name: pathLib.basename(projectPath),
-        path: projectPath,
-      }),
-      entries: this.gatherFilesFromDir(projectPath, {
-        ...this.defaultGatherFilesConfig,
-        ...gatherFilesConfig,
-      }),
-    }));
+    const inputData = projectPaths.map(projectPathOrObj => {
+      if (typeof projectPathOrObj === 'object') {
+        // ProjectInputData was provided already manually
+        return projectPathOrObj;
+      }
+
+      const projectPath = projectPathOrObj;
+      return {
+        project: /** @type {Project} */ ({
+          name: pathLib.basename(projectPath),
+          path: projectPath,
+        }),
+        entries: this.gatherFilesFromDir(projectPath, {
+          ...this.defaultGatherFilesConfig,
+          ...gatherFilesConfig,
+        }),
+      };
+    });
     // @ts-ignore
     return this._addMetaToProjectsData(inputData);
   }
@@ -456,13 +491,23 @@ class InputDataService {
         ...(customConfig.allowlist || []),
       ];
     }
-    const allowlistModes = ['npm', 'git', 'all'];
+
+    const allowlistModes = ['npm', 'git', 'all', 'export-map'];
     if (customConfig.allowlistMode && !allowlistModes.includes(customConfig.allowlistMode)) {
       throw new Error(
         `[gatherFilesConfig] Please provide a valid allowListMode like "${allowlistModes.join(
           '|',
         )}". Found: "${customConfig.allowlistMode}"`,
       );
+    }
+
+    if (cfg.allowlistMode === 'export-map') {
+      const pkgJson = getPackageJson(startPath);
+      if (!pkgJson.exports) {
+        LogService.error(`No exports found in package.json of ${startPath}`);
+      }
+      const exposedAndInternalPaths = this.getPathsFromExportMap(pkgJson.exports, { packageRootPath: startPath });
+      return exposedAndInternalPaths.map(p => p.internal);
     }
 
     /** @type {string[]} */
@@ -563,6 +608,62 @@ class InputDataService {
     }
     // TODO: support forward compatibility for npm?
     return undefined;
+  }
+
+  /**
+   * @param {object} exports
+   * @param {object} opts
+   * @param {'default'|'development'|string} [opts.nodeResolveMode='default']
+   * @param {string} opts.packageRootPath
+   * @returns {Promise<{internalExportMapPaths:string[]; exposedExportMapPaths:string[]}>}
+   */
+  static getPathsFromExportMap(exports, { nodeResolveMode = 'default', packageRootPath }) {
+    const exportMapPaths = [];
+
+    for (const [key, val] of Object.entries(exports)) {
+      if (!key.includes('*')) {
+        exportMapPaths.push({
+          internal: getStringOrObjectValOfExportMapEntry({ val, nodeResolveMode, packageRootPath }),
+          exposed: key,
+        });
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+
+      const valueToUseForGlob = stripDotSlashFromLocalPath(
+        getStringOrObjectValOfExportMapEntry({ val, nodeResolveMode, packageRootPath }),
+      );
+
+      // Generate all possible entries via glob, first strip './'
+      const internalExportMapPathsForKeyRaw = glob.sync(valueToUseForGlob, {
+        cwd: packageRootPath,
+      });
+
+      const exposedExportMapPathsForKeyRaw = internalExportMapPathsForKeyRaw.map(pathInside => {
+        // Say we have "exports": { "./*.js": "./src/*.js" }
+        // => internalExportMapPathsForKey: ['./src/a.js', './src/b.js']
+        // => exposedExportMapPathsForKey: ['./a.js', './b.js']
+        const [, variablePart] = pathInside.match(
+          new RegExp(valueToUseForGlob.replace('*', '(.*)')),
+        );
+        return key.replace('*', variablePart);
+      });
+      const internalExportMapPathsForKey = internalExportMapPathsForKeyRaw.map(filePath =>
+        normalizeLocalPathWithDotSlash(filePath),
+      );
+      const exposedExportMapPathsForKey = exposedExportMapPathsForKeyRaw.map(filePath =>
+        normalizeLocalPathWithDotSlash(filePath),
+      );
+
+      exportMapPaths.push(
+        ...internalExportMapPathsForKey.map((internal, idx) => ({
+          internal,
+          exposed: exposedExportMapPathsForKey[idx],
+        })),
+      );
+    }
+
+    return exportMapPaths;
   }
 }
 InputDataService.cacheDisabled = false;
