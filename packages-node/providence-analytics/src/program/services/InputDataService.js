@@ -506,7 +506,9 @@ class InputDataService {
       if (!pkgJson.exports) {
         LogService.error(`No exports found in package.json of ${startPath}`);
       }
-      const exposedAndInternalPaths = this.getPathsFromExportMap(pkgJson.exports, { packageRootPath: startPath });
+      const exposedAndInternalPaths = this.getPathsFromExportMap(pkgJson.exports, {
+        packageRootPath: startPath,
+      });
       return exposedAndInternalPaths.map(p => p.internal);
     }
 
