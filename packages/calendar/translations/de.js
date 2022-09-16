@@ -1,6 +1,6 @@
 export default {
   nextMonth: 'Nächster Monat',
   previousMonth: 'Vorheriger Monat',
-  nextFullYear: 'Nächster Jahr',
-  previousFullYear: 'Vorheriger Jahr',
+  nextFullYear: 'Nächstes Jahr',
+  previousFullYear: 'Vorheriges Jahr',
 };
