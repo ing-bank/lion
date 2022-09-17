@@ -1230,6 +1230,70 @@ describe('lion-combobox', () => {
       expect(el2.checkedIndex).to.equal(-1);
     });
 
+    it('resets "checkedIndex" when going from matched to another matched textbox value', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="both">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      /** Goes from 2nd option Chard to 3rd option Chicory */
+      mimicUserTyping(el, 'ch');
+      await el.updateComplete;
+      expect(el.checkedIndex).to.equal(1);
+
+      mimicUserTyping(el, 'chi');
+      await el.updateComplete;
+      expect(el.checkedIndex).to.equal(2);
+
+      const el2 = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="both">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      mimicUserTyping(el2, 'ch');
+      await el2.updateComplete;
+      expect(el2.checkedIndex).to.equal(1);
+
+      // match-mode all ensures the user sees Artichoke option, but it's not
+      // auto-completed or auto-selected, because it doesn't start with "cho"
+      // See next test for more clarification
+      mimicUserTyping(el2, 'cho');
+      await el2.updateComplete;
+      expect(el2.checkedIndex).to.equal(-1);
+      expect(getFilteredOptionValues(el2)).to.eql(['Artichoke']);
+    });
+
+    it('sets "checkedIndex" only if the match, matches from the beginning of the word', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="both">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            <lion-option .choiceValue="${'Daikon'}">Daikon</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      // first match is Char'd', but better match is 'D'aikon
+      mimicUserTyping(el, 'd');
+      await el.updateComplete;
+      expect(el.checkedIndex).to.equal(3);
+      expect(getFilteredOptionValues(el)).to.eql(['Chard', 'Daikon']);
+    });
+
     it('completes chars inside textbox', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
