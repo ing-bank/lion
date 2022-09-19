@@ -104,6 +104,10 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   updated(changedProperties) {
     super.updated(changedProperties);
     this._syncButtonSwitch();
+
+    if (changedProperties.has('checked')) {
+      this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
+    }
   }
 
   /**

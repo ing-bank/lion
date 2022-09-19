@@ -221,4 +221,36 @@ describe('lion-switch', () => {
     div.appendChild(el);
     expect(el.role).to.equal('switch');
   });
+
+  describe('Accessibility', () => {
+    it('reflects "checked" state via "aria-checked"', async () => {
+      const el = await fixture(html`<lion-switch></lion-switch>`);
+      expect(el.getAttribute('aria-checked')).to.equal('false');
+
+      el.checked = true;
+      await el.updateComplete;
+      expect(el.getAttribute('aria-checked')).to.equal('true');
+    });
+
+    it('passes axe a11y audit', async () => {
+      const el = await fixture(html`<lion-switch name="hi" label="My label"></lion-switch>`);
+      // TDOO: rework switch so that it does not use checkbox inside or make fully checkbox(?)
+      await expect(el).to.be.accessible({ ignoredRules: ['nested-interactive'] });
+
+      el.checked = true;
+      await el.updateComplete;
+      await expect(el).to.be.accessible({ ignoredRules: ['nested-interactive'] });
+    });
+
+    it('passes axe a11y audit when disabled', async () => {
+      const el = await fixture(
+        html`<lion-switch name="hi" label="My label" disabled></lion-switch>`,
+      );
+      await expect(el).to.be.accessible();
+
+      el.checked = true;
+      await el.updateComplete;
+      await expect(el).to.be.accessible();
+    });
+  });
 });
