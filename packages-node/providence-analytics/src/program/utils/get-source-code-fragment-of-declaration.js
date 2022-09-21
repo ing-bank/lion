@@ -1,6 +1,8 @@
 const fs = require('fs');
+const path = require('path');
 const babelTraversePkg = require('@babel/traverse');
 const { AstService } = require('../services/AstService.js');
+const { trackDownIdentifier } = require('../analyzers/helpers/track-down-identifier.js');
 
 /**
  *  Assume we had:
@@ -22,6 +24,10 @@ function getReferencedDeclaration({ referencedIdentifierName, globalScopeBinding
     ([key]) => key === referencedIdentifierName,
   );
 
+  if (refDeclaratorBinding.path.type === 'ImportSpecifier') {
+    return refDeclaratorBinding.path;
+  }
+
   if (refDeclaratorBinding.path.node.init.type === 'Identifier') {
     return getReferencedDeclaration({
       referencedIdentifierName: refDeclaratorBinding.path.node.init.name,
@@ -36,7 +42,11 @@ function getReferencedDeclaration({ referencedIdentifierName, globalScopeBinding
  *
  * @param {{ filePath: string; exportedIdentifier: string; }} opts
  */
-async function getSourceCodeFragmentOfDeclaration({ filePath, exportedIdentifier }) {
+async function getSourceCodeFragmentOfDeclaration({
+  filePath,
+  exportedIdentifier,
+  projectRootPath,
+}) {
   const code = fs.readFileSync(filePath, 'utf-8');
   const ast = AstService.getAst(code, 'babel');
 
@@ -73,17 +83,19 @@ async function getSourceCodeFragmentOfDeclaration({ filePath, exportedIdentifier
       } else {
         const variableDeclaratorPath = babelPath.scope.getBinding(exportedIdentifier).path;
         const isReferenced = variableDeclaratorPath.node.init?.type === 'Identifier';
+        const contentPath = variableDeclaratorPath.node.init
+          ? variableDeclaratorPath.get('init')
+          : variableDeclaratorPath;
+        const name = variableDeclaratorPath.node.init
+          ? variableDeclaratorPath.node.init.name
+          : variableDeclaratorPath.node.id.name;
 
         if (!isReferenced) {
           // it must be an exported declaration
-          finalNodePath = variableDeclaratorPath.node.init
-            ? variableDeclaratorPath.get('init')
-            : variableDeclaratorPath;
+          finalNodePath = contentPath;
         } else {
           finalNodePath = getReferencedDeclaration({
-            referencedIdentifierName: variableDeclaratorPath.node.init
-              ? variableDeclaratorPath.node.init.name
-              : variableDeclaratorPath.node.id.name,
+            referencedIdentifierName: name,
             globalScopeBindings,
           });
         }
@@ -91,9 +103,28 @@ async function getSourceCodeFragmentOfDeclaration({ filePath, exportedIdentifier
     },
   });
 
+  if (finalNodePath.type === 'ImportSpecifier') {
+    const importDeclNode = finalNodePath.parentPath.node;
+    const source = importDeclNode.source.value;
+    const identifierName = finalNodePath.node.imported.name;
+    const currentFilePath = filePath;
+
+    const rootFile = await trackDownIdentifier(
+      source,
+      identifierName,
+      currentFilePath,
+      projectRootPath,
+    );
+
+    return getSourceCodeFragmentOfDeclaration({
+      filePath: path.resolve(projectRootPath, rootFile.file),
+      exportedIdentifier: rootFile.specifier,
+    });
+  }
+
   return {
     sourceNodePath: finalNodePath,
-    sourceFragment: code.slice(finalNodePath.node.start, finalNodePath.node.end),
+    sourceFragment: code.slice(finalNodePath.node?.start, finalNodePath.node?.end),
   };
 }
 
