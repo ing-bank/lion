@@ -218,18 +218,17 @@ function normalizeLocalPathWithDotSlash(localPathWithoutDotSlash) {
 
 /**
  * @param {{val:object|string;nodeResolveMode:string}} opts
- * @returns {string}
+ * @returns {string|null}
  */
-function getStringOrObjectValOfExportMapEntry({ val, nodeResolveMode, packageRootPath }) {
-  if (typeof val !== 'object') {
-    return val;
+function getStringOrObjectValOfExportMapEntry({ valObjOrStr, nodeResolveMode }) {
+  if (typeof valObjOrStr !== 'object') {
+    return valObjOrStr;
   }
-  if (!val[nodeResolveMode]) {
-    throw new Error(
-      `[getExportMapExports]: nodeResolveMode "${nodeResolveMode}" not found in package.json of package ${packageRootPath}`,
-    );
+  if (!valObjOrStr[nodeResolveMode]) {
+    // This is allowed: it makes sense to have an entrypoint on the root for typescript, not for others
+    return null;
   }
-  return val[nodeResolveMode];
+  return valObjOrStr[nodeResolveMode];
 }
 
 /**
@@ -355,7 +354,12 @@ class InputDataService {
         /** @type {ProjectInputDataWithMeta['entries'][]} */
         const newEntries = [];
         projectObj.entries.forEach(entry => {
-          const code = fs.readFileSync(entry, 'utf8');
+          let code;
+          try {
+            code = fs.readFileSync(entry, 'utf8');
+          } catch (e) {
+            LogService.error(`Could not find "${entry}"`);
+          }
           const file = getFilePathRelativeFromRoot(
             toPosixPath(entry),
             toPosixPath(projectObj.project.path),
@@ -613,7 +617,7 @@ class InputDataService {
   }
 
   /**
-   * @param {object} exports
+   * @param {{[key:string]: string|object}} exports
    * @param {object} opts
    * @param {'default'|'development'|string} [opts.nodeResolveMode='default']
    * @param {string} opts.packageRootPath
@@ -622,23 +626,36 @@ class InputDataService {
   static getPathsFromExportMap(exports, { nodeResolveMode = 'default', packageRootPath }) {
     const exportMapPaths = [];
 
-    for (const [key, val] of Object.entries(exports)) {
-      if (!key.includes('*')) {
+    for (const [key, valObjOrStr] of Object.entries(exports)) {
+      let resolvedKey = key;
+      let resolvedVal = getStringOrObjectValOfExportMapEntry({ valObjOrStr, nodeResolveMode });
+      if (resolvedVal === null) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+
+      // Allow older specs like "./__element-definitions/" : "./__element-definitions/" to also work,
+      // so we normalize them to the new spec
+      if (resolvedVal.endsWith?.('/') && resolvedKey.endsWith('/')) {
+        resolvedVal += '*';
+        resolvedKey += '*';
+      }
+
+      if (!resolvedKey.includes('*')) {
         exportMapPaths.push({
-          internal: getStringOrObjectValOfExportMapEntry({ val, nodeResolveMode, packageRootPath }),
-          exposed: key,
+          internal: resolvedVal,
+          exposed: resolvedKey,
         });
         // eslint-disable-next-line no-continue
         continue;
       }
 
-      const valueToUseForGlob = stripDotSlashFromLocalPath(
-        getStringOrObjectValOfExportMapEntry({ val, nodeResolveMode, packageRootPath }),
-      );
+      const valueToUseForGlob = stripDotSlashFromLocalPath(resolvedVal);
 
       // Generate all possible entries via glob, first strip './'
       const internalExportMapPathsForKeyRaw = glob.sync(valueToUseForGlob, {
         cwd: packageRootPath,
+        nodir: true,
       });
 
       const exposedExportMapPathsForKeyRaw = internalExportMapPathsForKeyRaw.map(pathInside => {
@@ -648,7 +665,7 @@ class InputDataService {
         const [, variablePart] = pathInside.match(
           new RegExp(valueToUseForGlob.replace('*', '(.*)')),
         );
-        return key.replace('*', variablePart);
+        return resolvedKey.replace('*', variablePart);
       });
       const internalExportMapPathsForKey = internalExportMapPathsForKeyRaw.map(filePath =>
         normalizeLocalPathWithDotSlash(filePath),
