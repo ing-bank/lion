@@ -655,6 +655,46 @@ build/
           ]);
         });
       });
+
+      describe('Deprecated root mappings ("/" instead of "/*")', () => {
+        it('works for values defined as strings', async () => {
+          const fakeFs = {
+            '/my/proj/internal-folder/file-a.js': 'export const a = 1;',
+            '/my/proj/internal-folder/file-b.js': 'export const b = 2;',
+          };
+          mock(fakeFs);
+          const exports = {
+            // An old spec that
+            './exposed-folder/': './internal-folder/',
+          };
+          const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+            packageRootPath: '/my/proj',
+          });
+          expect(exportMapPaths).to.eql([
+            { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
+            { internal: './internal-folder/file-b.js', exposed: './exposed-folder/file-b.js' },
+          ]);
+        });
+
+        it('works for values defined as objects', async () => {
+          const fakeFs = {
+            '/my/proj/internal-folder/file-a.js': 'export const a = 1;',
+            '/my/proj/internal-folder/file-b.js': 'export const b = 2;',
+          };
+          mock(fakeFs);
+          const exports = {
+            // An old spec that
+            './exposed-folder/': { default: './internal-folder/' },
+          };
+          const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+            packageRootPath: '/my/proj',
+          });
+          expect(exportMapPaths).to.eql([
+            { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
+            { internal: './internal-folder/file-b.js', exposed: './exposed-folder/file-b.js' },
+          ]);
+        });
+      });
     });
   });
 });
