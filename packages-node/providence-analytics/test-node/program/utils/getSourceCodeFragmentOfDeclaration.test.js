@@ -52,6 +52,42 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
 
       expect(sourceFragment).to.equal('88');
     });
+
+    describe('Different types of declarations', () => {
+      it('handles class declarations', async () => {
+        const fakeFs = {
+          '/my/proj/exports/ajax.js': `
+        import { AjaxClass as LionAjaxClass } from '../_legacy/ajax/index.js';
+
+        export class AjaxClass extends LionAjaxClass {}
+        `,
+        };
+        mock(fakeFs);
+
+        const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
+          filePath: '/my/proj/exports/ajax.js',
+          exportedIdentifier: 'AjaxClass',
+        });
+
+        expect(sourceFragment).to.equal('class AjaxClass extends LionAjaxClass {}');
+      });
+
+      it('handles function declarations', async () => {
+        const fakeFs = {
+          '/my/proj/exports/myFn.js': `
+        export function myFn() {}
+        `,
+        };
+        mock(fakeFs);
+
+        const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
+          filePath: '/my/proj/exports/myFn.js',
+          exportedIdentifier: 'myFn',
+        });
+
+        expect(sourceFragment).to.equal('function myFn() {}');
+      });
+    });
   });
 
   describe('[default] specifiers', () => {
@@ -102,6 +138,42 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
       });
 
       expect(sourceFragment).to.equal('88');
+    });
+
+    describe('Different types of declarations', () => {
+      it('handles class declarations', async () => {
+        const fakeFs = {
+          '/my/proj/exports/ajax.js': `
+        import { AjaxClass as LionAjaxClass } from '../_legacy/ajax/index.js';
+
+        export default class AjaxClass extends LionAjaxClass {}
+        `,
+        };
+        mock(fakeFs);
+
+        const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
+          filePath: '/my/proj/exports/ajax.js',
+          exportedIdentifier: '[default]',
+        });
+
+        expect(sourceFragment).to.equal('class AjaxClass extends LionAjaxClass {}');
+      });
+
+      it('handles function declarations', async () => {
+        const fakeFs = {
+          '/my/proj/exports/myFn.js': `
+        export default function myFn() {}
+        `,
+        };
+        mock(fakeFs);
+
+        const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
+          filePath: '/my/proj/exports/myFn.js',
+          exportedIdentifier: '[default]',
+        });
+
+        expect(sourceFragment).to.equal('function myFn() {}');
+      });
     });
   });
 });

@@ -76,10 +76,14 @@ async function getSourceCodeFragmentOfDeclaration({ filePath, exportedIdentifier
 
         if (!isReferenced) {
           // it must be an exported declaration
-          finalNodePath = variableDeclaratorPath.get('init');
+          finalNodePath = variableDeclaratorPath.node.init
+            ? variableDeclaratorPath.get('init')
+            : variableDeclaratorPath;
         } else {
           finalNodePath = getReferencedDeclaration({
-            referencedIdentifierName: variableDeclaratorPath.node.init.name,
+            referencedIdentifierName: variableDeclaratorPath.node.init
+              ? variableDeclaratorPath.node.init.name
+              : variableDeclaratorPath.node.id.name,
             globalScopeBindings,
           });
         }
