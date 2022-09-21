@@ -53,6 +53,27 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
       expect(sourceFragment).to.equal('88');
     });
 
+    it('finds source code for imported referenced specifiers', async () => {
+      const fakeFs = {
+        '/my/proj/exports/file-1.js': `
+        export const black59 = '#aaa';
+        `,
+        '/my/proj/exports/file-2.js': `
+        import { black59 } from './file-1.js';
+        export const black67 = black59;
+        `,
+      };
+      mock(fakeFs);
+
+      const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
+        filePath: '/my/proj/exports/file-2.js',
+        exportedIdentifier: 'black67',
+        projectRootPath: '/my/proj',
+      });
+
+      expect(sourceFragment).to.equal("'#aaa'");
+    });
+
     describe('Different types of declarations', () => {
       it('handles class declarations', async () => {
         const fakeFs = {
