@@ -168,6 +168,51 @@ describe('trackdownIdentifier', () => {
     });
   });
 
+  it(`works with multiple re-exports in a file`, async () => {
+    mockProject(
+      {
+        './packages/accordion/IngAccordionContent.js': `export class IngAccordionContent { }`,
+        './packages/accordion/IngAccordionInvokerButton.js': `export class IngAccordionInvokerButton { }`,
+        './packages/accordion/index.js': `
+      export { IngAccordionContent } from './IngAccordionContent.js';
+      export { IngAccordionInvokerButton } from './IngAccordionInvokerButton.js';`,
+      },
+      {
+        projectName: 'my-project',
+        projectPath: '/my/project',
+      },
+    );
+
+    // Let's say we want to track down 'IngAccordionInvokerButton' in the code above
+    const source = './IngAccordionContent.js';
+    const identifierName = 'IngAccordionContent';
+    const currentFilePath = '/my/project/packages/accordion/index.js';
+    const rootPath = '/my/project';
+
+    const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
+    expect(rootFile).to.eql({
+      file: './packages/accordion/IngAccordionContent.js',
+      specifier: 'IngAccordionContent',
+    });
+
+    // Let's say we want to track down 'IngAccordionInvokerButton' in the code above
+    const source2 = './IngAccordionInvokerButton.js';
+    const identifierName2 = 'IngAccordionInvokerButton';
+    const currentFilePath2 = '/my/project/packages/accordion/index.js';
+    const rootPath2 = '/my/project';
+
+    const rootFile2 = await trackDownIdentifier(
+      source2,
+      identifierName2,
+      currentFilePath2,
+      rootPath2,
+    );
+    expect(rootFile2).to.eql({
+      file: './packages/accordion/IngAccordionInvokerButton.js',
+      specifier: 'IngAccordionInvokerButton',
+    });
+  });
+
   // TODO: improve perf
   describe.skip('Caching', () => {});
 });
