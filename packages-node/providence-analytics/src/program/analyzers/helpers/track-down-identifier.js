@@ -138,6 +138,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
 
   let reexportMatch = false; // named specifier declaration
   let pendingTrackDownPromise;
+  let exportMatch;
 
   traverse(ast, {
     ExportDefaultDeclaration(path) {
@@ -172,7 +173,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
         }
         // Are we dealing with a re-export ?
         if (path.node.specifiers && path.node.specifiers.length) {
-          const exportMatch = path.node.specifiers.find(s => s.exported.name === identifierName);
+          exportMatch = path.node.specifiers.find(s => s.exported.name === identifierName);
 
           if (exportMatch) {
             const localName = exportMatch.local.name;
@@ -218,7 +219,10 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
           // in current file...
           rootSpecifier = identifierName;
           rootFilePath = toRelativeSourcePath(resolvedSourcePath, rootPath);
-          path.stop();
+
+          if (exportMatch) {
+            path.stop();
+          }
         }
       },
     },

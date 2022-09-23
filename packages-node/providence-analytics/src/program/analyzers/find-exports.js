@@ -46,16 +46,19 @@ async function trackdownRoot(transformedEntry, relativePath, projectPath) {
         if (specObj.localMap) {
           localMapMatch = specObj.localMap.find(m => m.exported === specifier);
         }
+
         // TODO: find out if possible to use trackDownIdentifierFromScope
         if (specObj.source) {
           // TODO: see if still needed: && (localMapMatch || specifier === '[default]')
           const importedIdentifier = localMapMatch?.local || specifier;
+
           rootFile = await trackDownIdentifier(
             specObj.source,
             importedIdentifier,
             fullCurrentFilePath,
             projectPath,
           );
+
           /** @type {RootFileMapEntry} */
           const entry = {
             currentFileSpecifier: specifier,
@@ -122,7 +125,8 @@ function getLocalNameSpecifiers(node) {
     .map(s => {
       if (s.exported && s.local && s.exported.name !== s.local.name) {
         return {
-          local: s.local.name,
+          // if reserved keyword 'default' is used, translate it into 'providence keyword'
+          local: s.local.name === 'default' ? '[default]' : s.local.name,
           exported: s.exported.name,
         };
       }

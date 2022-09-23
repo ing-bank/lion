@@ -66,6 +66,45 @@ describe('Analyzer "find-exports"', () => {
       expect(firstEntry.result[0].source).to.equal(undefined);
     });
 
+    it(`supports [export {default as x} from 'y'] (default re-export)`, async () => {
+      mockProject({
+        './file-with-default-export.js': 'export default 1;',
+        './file-with-default-re-export.js':
+          "export { default as namedExport } from './file-with-default-export.js';",
+      });
+
+      await providence(findExportsQueryConfig, _providenceCfg);
+      const queryResult = queryResults[0];
+      const firstEntry = getEntry(queryResult);
+      expect(firstEntry.result[0]).to.eql({
+        exportSpecifiers: ['[default]'],
+        source: undefined,
+        rootFileMap: [
+          {
+            currentFileSpecifier: '[default]',
+            rootFile: { file: '[current]', specifier: '[default]' },
+          },
+        ],
+      });
+
+      const secondEntry = getEntry(queryResult, 1);
+      expect(secondEntry.result[0].exportSpecifiers.length).to.equal(1);
+      expect(secondEntry.result[0].exportSpecifiers[0]).to.equal('namedExport');
+      expect(secondEntry.result[0].source).to.equal('./file-with-default-export.js');
+      expect(secondEntry.result[0]).to.eql({
+        exportSpecifiers: ['namedExport'],
+        source: './file-with-default-export.js',
+        localMap: [{ exported: 'namedExport', local: '[default]' }],
+        normalizedSource: './file-with-default-export.js',
+        rootFileMap: [
+          {
+            currentFileSpecifier: 'namedExport',
+            rootFile: { file: './file-with-default-export.js', specifier: '[default]' },
+          },
+        ],
+      });
+    });
+
     it(`supports [export { x } from 'my/source'] (re-export named specifier)`, async () => {
       mockProject([`export { x } from 'my/source'`]);
       await providence(findExportsQueryConfig, _providenceCfg);
