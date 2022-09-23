@@ -130,6 +130,8 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
   /**
    * @type {PathFromSystemRoot}
    */
+
+  console.log({ source, currentFilePath });
   const resolvedSourcePath = await resolveImportPath(source, currentFilePath);
   LogService.debug(`[trackDownIdentifier] ${resolvedSourcePath}`);
   const code = fs.readFileSync(resolvedSourcePath, 'utf8');

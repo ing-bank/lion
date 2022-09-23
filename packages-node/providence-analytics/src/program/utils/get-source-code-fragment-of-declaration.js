@@ -4,6 +4,15 @@ const babelTraversePkg = require('@babel/traverse');
 const { AstService } = require('../services/AstService.js');
 const { trackDownIdentifier } = require('../analyzers/helpers/track-down-identifier.js');
 
+function getFilePathOrExternalSource({ rootPath, localPath }) {
+  if (!localPath.startsWith('.')) {
+    // We are not resolving external files like '@lion/input-amount/x.js',
+    // but we give a 100% score if from and to are same here..
+    return localPath;
+  }
+  return path.resolve(rootPath, localPath);
+}
+
 /**
  *  Assume we had:
  *  ```js
@@ -47,6 +56,12 @@ async function getSourceCodeFragmentOfDeclaration({
   exportedIdentifier,
   projectRootPath,
 }) {
+  // try {
+  //   fs.readFileSync(filePath, 'utf-8');
+  // } catch {
+  //   console.trace('no file', { filePath, exportedIdentifier, projectRootPath });
+  // }
+
   const code = fs.readFileSync(filePath, 'utf-8');
   const ast = AstService.getAst(code, 'babel');
 
@@ -82,13 +97,15 @@ async function getSourceCodeFragmentOfDeclaration({
         }
       } else {
         const variableDeclaratorPath = babelPath.scope.getBinding(exportedIdentifier).path;
-        const isReferenced = variableDeclaratorPath.node.init?.type === 'Identifier';
-        const contentPath = variableDeclaratorPath.node.init
+        const varDeclNode = variableDeclaratorPath.node;
+        const isReferenced = varDeclNode.init?.type === 'Identifier';
+        const contentPath = varDeclNode.init
           ? variableDeclaratorPath.get('init')
           : variableDeclaratorPath;
-        const name = variableDeclaratorPath.node.init
-          ? variableDeclaratorPath.node.init.name
-          : variableDeclaratorPath.node.id.name;
+
+        const name = varDeclNode.init
+          ? varDeclNode.init.name
+          : varDeclNode.id?.name || varDeclNode.imported.name;
 
         if (!isReferenced) {
           // it must be an exported declaration
@@ -115,19 +132,36 @@ async function getSourceCodeFragmentOfDeclaration({
       currentFilePath,
       projectRootPath,
     );
+    const filePathOrSrc = getFilePathOrExternalSource({
+      rootPath: projectRootPath,
+      localPath: rootFile.file,
+    });
+
+    // TODO: allow resolving external project file paths
+    if (!filePathOrSrc.startsWith('/')) {
+      // So we have external project; smth like '@lion/input/x.js'
+      return {
+        sourceNodePath: finalNodePath,
+        sourceFragment: null,
+        externalImportSource: filePathOrSrc,
+      };
+    }
 
     return getSourceCodeFragmentOfDeclaration({
-      filePath: path.resolve(projectRootPath, rootFile.file),
+      filePath: filePathOrSrc,
       exportedIdentifier: rootFile.specifier,
+      projectRootPath,
     });
   }
 
   return {
     sourceNodePath: finalNodePath,
     sourceFragment: code.slice(finalNodePath.node?.start, finalNodePath.node?.end),
+    externalImportSource: null,
   };
 }
 
 module.exports = {
   getSourceCodeFragmentOfDeclaration,
+  getFilePathOrExternalSource,
 };
