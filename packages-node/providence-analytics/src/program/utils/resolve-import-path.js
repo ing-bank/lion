@@ -12,7 +12,7 @@
 const pathLib = require('path');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const { LogService } = require('../services/LogService.js');
-const { memoizeAsync } = require('./memoize.js');
+const { memoize } = require('./memoize.js');
 const { toPosixPath } = require('./to-posix-path.js');
 
 const fakePluginContext = {
@@ -64,6 +64,6 @@ async function resolveImportPath(importee, importer, opts = {}) {
  * @param {{customResolveOptions?: {preserveSymlinks:boolean}}} [opts] nodeResolve options
  * @returns {Promise<PathFromSystemRoot|null>} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
  */
-const resolveImportPathMemoized = memoizeAsync(resolveImportPath);
+const resolveImportPathMemoized = memoize(resolveImportPath);
 
 module.exports = { resolveImportPath: resolveImportPathMemoized };
