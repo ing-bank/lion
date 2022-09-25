@@ -7,7 +7,7 @@ const {
 const { resolveImportPath } = require('../../utils/resolve-import-path.js');
 const { AstService } = require('../../services/AstService.js');
 const { LogService } = require('../../services/LogService.js');
-const { memoizeAsync } = require('../../utils/memoize.js');
+const { memoize } = require('../../utils/memoize.js');
 
 /**
  * @typedef {import('../../types/core').RootFile} RootFile
@@ -233,7 +233,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
   return /** @type { RootFile } */ { file: rootFilePath, specifier: rootSpecifier };
 }
 
-trackDownIdentifier = memoizeAsync(trackDownIdentifierFn);
+trackDownIdentifier = memoize(trackDownIdentifierFn);
 
 /**
  * @param {BabelPath} astPath
@@ -265,7 +265,7 @@ async function trackDownIdentifierFromScopeFn(
   return rootFile;
 }
 
-const trackDownIdentifierFromScope = memoizeAsync(trackDownIdentifierFromScopeFn);
+const trackDownIdentifierFromScope = memoize(trackDownIdentifierFromScopeFn);
 
 module.exports = {
   trackDownIdentifier,
