@@ -690,4 +690,6 @@ class InputDataService {
 }
 InputDataService.cacheDisabled = false;
 
+InputDataService.getPackageJson = getPackageJson;
+
 module.exports = { InputDataService };
