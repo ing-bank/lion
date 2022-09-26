@@ -4,6 +4,8 @@ const { default: traverse } = require('@babel/traverse');
 const { Analyzer } = require('./helpers/Analyzer.js');
 const { trackDownIdentifier } = require('./helpers/track-down-identifier.js');
 const { normalizeSourcePaths } = require('./helpers/normalize-source-paths.js');
+const { getReferencedDeclaration } = require('../utils/get-source-code-fragment-of-declaration.js');
+
 const { LogService } = require('../services/LogService.js');
 
 /**
@@ -135,6 +137,9 @@ function getLocalNameSpecifiers(node) {
     .filter(s => s);
 }
 
+const isImportingSpecifier = pathOrNode =>
+  pathOrNode.type === 'ImportDefaultSpecifier' || pathOrNode.type === 'ImportSpecifier';
+
 /**
  * @desc Finds import specifiers and sources for a given ast result
  * @param {BabelAst} ast
@@ -150,17 +155,38 @@ function findExportsPerAstEntry(ast, { skipFileImports }) {
   // Unfortunately, we cannot have async functions in babel traverse.
   // Therefore, we store a temp reference to path that we use later for
   // async post processing (tracking down original export Identifier)
+  let globalScopeBindings;
+
   traverse(ast, {
+    Program: {
+      enter(babelPath) {
+        const body = babelPath.get('body');
+        if (body.length) {
+          globalScopeBindings = body[0].scope.bindings;
+        }
+      },
+    },
     ExportNamedDeclaration(path) {
       const exportSpecifiers = getExportSpecifiers(path.node);
       const localMap = getLocalNameSpecifiers(path.node);
       const source = path.node.source?.value;
       transformedEntry.push({ exportSpecifiers, localMap, source, __tmp: { path } });
     },
-    ExportDefaultDeclaration(path) {
+    ExportDefaultDeclaration(defaultExportPath) {
       const exportSpecifiers = ['[default]'];
-      const source = path.node.declaration.name;
-      transformedEntry.push({ exportSpecifiers, source, __tmp: { path } });
+      let source;
+      if (defaultExportPath.node.declaration?.type !== 'Identifier') {
+        source = defaultExportPath.node.declaration.name;
+      } else {
+        const importOrDeclPath = getReferencedDeclaration({
+          referencedIdentifierName: defaultExportPath.node.declaration.name,
+          globalScopeBindings,
+        });
+        if (isImportingSpecifier(importOrDeclPath)) {
+          source = importOrDeclPath.parentPath.node.source.value;
+        }
+      }
+      transformedEntry.push({ exportSpecifiers, source, __tmp: { path: defaultExportPath } });
     },
   });
 

@@ -61,7 +61,7 @@ class AstService {
   static _getBabelAst(code) {
     const ast = babelParser.parse(code, {
       sourceType: 'module',
-      plugins: ['importMeta', 'dynamicImport', 'classProperties'],
+      plugins: ['importMeta', 'dynamicImport', 'classProperties', 'exportDefaultFrom'],
     });
     return ast;
   }
