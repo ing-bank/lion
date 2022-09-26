@@ -4,9 +4,10 @@ const {
   isRelativeSourcePath,
   toRelativeSourcePath,
 } = require('../../utils/relative-source-path.js');
-const { resolveImportPath } = require('../../utils/resolve-import-path.js');
 const { AstService } = require('../../services/AstService.js');
 const { LogService } = require('../../services/LogService.js');
+const { InputDataService } = require('../../services/InputDataService.js');
+const { resolveImportPath } = require('../../utils/resolve-import-path.js');
 const { memoize } = require('../../utils/memoize.js');
 
 /**
@@ -15,6 +16,18 @@ const { memoize } = require('../../utils/memoize.js');
  * @typedef {import('../../types/core').IdentifierName} IdentifierName
  * @typedef {import('../../types/core').PathFromSystemRoot} PathFromSystemRoot
  */
+
+/**
+ * @param {string} source
+ * @param {string} projectName
+ */
+function isExternalProject(source, projectName) {
+  return (
+    !source.startsWith('#') &&
+    !isRelativeSourcePath(source) &&
+    !source.startsWith(`${projectName}/`)
+  );
+}
 
 /**
  * Other than with import, no binding is created for MyClass by Babel(?)
@@ -108,14 +121,27 @@ let trackDownIdentifier;
  * @param {IdentifierName} identifierName imported reference/Identifier name, like 'MyComp'
  * @param {PathFromSystemRoot} currentFilePath file path, like '/path/to/target-proj/my-comp-import.js'
  * @param {PathFromSystemRoot} rootPath dir path, like '/path/to/target-proj'
+ * @param {string} [projectName] like 'target-proj' or '@lion/input'
  * @returns {Promise<RootFile>} file: path of file containing the binding (exported declaration),
  * like '/path/to/ref-proj/src/RefComp.js'
  */
-async function trackDownIdentifierFn(source, identifierName, currentFilePath, rootPath, depth = 0) {
+async function trackDownIdentifierFn(
+  source,
+  identifierName,
+  currentFilePath,
+  rootPath,
+  projectName,
+  depth = 0,
+) {
   let rootFilePath; // our result path
   let rootSpecifier; // the name under which it was imported
 
-  if (!isRelativeSourcePath(source)) {
+  if (!projectName) {
+    // eslint-disable-next-line no-param-reassign
+    projectName = InputDataService.getPackageJson(rootPath)?.name;
+  }
+
+  if (isExternalProject(source, projectName)) {
     // So, it is an external ref like '@lion/core' or '@open-wc/scoped-elements/index.js'
     // At this moment in time, we don't know if we have file system access to this particular
     // project. Therefore, we limit ourselves to tracking down local references.
@@ -137,8 +163,8 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
   const shouldLookForDefaultExport = identifierName === '[default]';
 
   let reexportMatch = false; // named specifier declaration
-  let pendingTrackDownPromise;
   let exportMatch;
+  let pendingTrackDownPromise;
 
   traverse(ast, {
     ExportDefaultDeclaration(path) {
@@ -157,6 +183,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
           '[default]',
           resolvedSourcePath,
           rootPath,
+          projectName,
           depth + 1,
         );
       } else {
@@ -173,7 +200,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
         }
 
         // Are we dealing with a re-export ?
-        if (path.node.specifiers && path.node.specifiers.length) {
+        if (path.node.specifiers?.length) {
           exportMatch = path.node.specifiers.find(s => s.exported.name === identifierName);
 
           if (exportMatch) {
@@ -203,12 +230,12 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
               }
             }
             reexportMatch = true;
-
             pendingTrackDownPromise = trackDownIdentifier(
               newSource,
               localName,
               resolvedSourcePath,
               rootPath,
+              projectName,
               depth + 1,
             );
             path.stop();
@@ -236,6 +263,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
     rootFilePath = resObj.file;
     rootSpecifier = resObj.specifier;
   }
+
   return /** @type { RootFile } */ { file: rootFilePath, specifier: rootSpecifier };
 }
 
@@ -246,12 +274,14 @@ trackDownIdentifier = memoize(trackDownIdentifierFn);
  * @param {string} identifierNameInScope
  * @param {string} fullCurrentFilePath
  * @param {string} projectPath
+ * @param {string} [projectName]
  */
 async function trackDownIdentifierFromScopeFn(
   astPath,
   identifierNameInScope,
   fullCurrentFilePath,
   projectPath,
+  projectName,
 ) {
   const sourceObj = getImportSourceFromAst(astPath, identifierNameInScope);
 
@@ -263,6 +293,7 @@ async function trackDownIdentifierFromScopeFn(
       sourceObj.importedIdentifierName,
       fullCurrentFilePath,
       projectPath,
+      projectName,
     );
   } else {
     const specifier = sourceObj.importedIdentifierName || identifierNameInScope;

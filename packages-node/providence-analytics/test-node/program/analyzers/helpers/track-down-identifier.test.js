@@ -137,6 +137,72 @@ describe('trackdownIdentifier', () => {
     });
   });
 
+  // TODO: support import maps
+  it(`identifies import map entries as internal sources`, async () => {
+    mockProject(
+      {
+        './MyClass.js': `export default class {}`,
+        './currentFile.js': `
+        import MyClass from '#internal/source';
+      `,
+        './package.json': JSON.stringify({
+          name: 'my-project',
+          imports: { '#internal/source': './MyClass.js' },
+        }),
+      },
+      {
+        projectName: 'my-project',
+        projectPath: '/my/project',
+      },
+    );
+
+    // Let's say we want to track down 'MyClass' in the code above
+    const source = '#internal/source';
+    const identifierName = '[default]';
+    const currentFilePath = '/my/project/currentFile.js';
+    const rootPath = '/my/project';
+
+    const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
+    expect(rootFile).to.eql({
+      file: './MyClass.js',
+      specifier: '[default]',
+    });
+  });
+
+  it(`identifies the current project as internal source`, async () => {
+    mockProject(
+      {
+        './MyClass.js': `export default class {}`,
+        './currentFile.js': `
+        import MyClass from 'my-project/MyClass.js';
+      `,
+      },
+      {
+        projectName: 'my-project',
+        projectPath: '/my/project',
+      },
+    );
+
+    // Let's say we want to track down 'MyClass' in the code above
+    const source = '#internal/source';
+    const identifierName = '[default]';
+    const currentFilePath = '/my/project/currentFile.js';
+    const rootPath = '/my/project';
+    const projectName = 'my-project';
+
+    const rootFile = await trackDownIdentifier(
+      source,
+      identifierName,
+      currentFilePath,
+      rootPath,
+      projectName,
+    );
+    expect(rootFile).to.eql({
+      file: './MyClass.js',
+      specifier: '[default]',
+    });
+  });
+
   it(`tracks down locally declared, reexported identifiers (without a source defined)`, async () => {
     mockProject(
       {
