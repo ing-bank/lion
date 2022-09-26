@@ -513,7 +513,9 @@ class InputDataService {
       const exposedAndInternalPaths = this.getPathsFromExportMap(pkgJson.exports, {
         packageRootPath: startPath,
       });
-      return exposedAndInternalPaths.map(p => p.internal);
+      return exposedAndInternalPaths
+        .map(p => p.internal)
+        .filter(p => cfg.extensions.includes(`${pathLib.extname(p)}`));
     }
 
     /** @type {string[]} */
@@ -650,7 +652,8 @@ class InputDataService {
         continue;
       }
 
-      const valueToUseForGlob = stripDotSlashFromLocalPath(resolvedVal);
+      // https://nodejs.org/api/packages.html#subpath-exports
+      const valueToUseForGlob = stripDotSlashFromLocalPath(resolvedVal).replace('*', '**/*');
 
       // Generate all possible entries via glob, first strip './'
       const internalExportMapPathsForKeyRaw = glob.sync(valueToUseForGlob, {

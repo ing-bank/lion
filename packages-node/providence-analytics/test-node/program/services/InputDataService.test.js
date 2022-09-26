@@ -540,7 +540,7 @@ build/
       it('supports "*" on file level inside key and value of export map entry', async () => {
         const fakeFs = {
           '/my/proj/internal-folder/file-a.js': 'export const a = 1;',
-          '/my/proj/internal-folder/file-b.js': 'export const b = 2;',
+          '/my/proj/internal-folder/another-folder/file-b.js': 'export const b = 2;',
         };
         mock(fakeFs);
         const exports = {
@@ -550,8 +550,11 @@ build/
           packageRootPath: '/my/proj',
         });
         expect(exportMapPaths).to.eql([
+          {
+            internal: './internal-folder/another-folder/file-b.js',
+            exposed: './exposed-folder/another-folder/file-b.js',
+          },
           { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
-          { internal: './internal-folder/file-b.js', exposed: './exposed-folder/file-b.js' },
         ]);
       });
 
@@ -573,6 +576,27 @@ build/
           { internal: './folder-b/file.js', exposed: './exposed-folder/folder-b/file.js' },
         ]);
       });
+
+      // TDOO: implement
+      it.skip('supports private internal => ""./features/private-internal/*": null"', async () => {
+        const fakeFs = {
+          '/my/proj/internal-folder/file-a.js': 'export const a = 1;',
+          '/my/proj/internal-folder/private-folder/file-b.js': 'export const b = 2;',
+        };
+        mock(fakeFs);
+        const exports = {
+          './exposed-folder/*.js': './internal-folder/*.js',
+          './exposed-folder/private-folder/*.js': null,
+        };
+        const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+          packageRootPath: '/my/proj',
+        });
+        expect(exportMapPaths).to.eql([
+          { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
+        ]);
+      });
+
+      // TODO: short notation => {"exports": "./index.js"}
 
       describe('ResolveMode', () => {
         it('has nodeResolveMode "default" when nothing specified', async () => {
