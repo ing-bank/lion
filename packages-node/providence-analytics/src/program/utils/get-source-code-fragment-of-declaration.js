@@ -21,7 +21,7 @@ function getFilePathOrExternalSource({ rootPath, localPath }) {
  *  const y = x;
  *  export const myIdentifier = y;
  *  ```
- *  - We started in getSourceCodeFragmentOfDeclaration (looing for 'myIdentifier'), which found VariableDeclarator of export myIdentifier
+ *  - We started in getSourceCodeFragmentOfDeclaration (looking for 'myIdentifier'), which found VariableDeclarator of export myIdentifier
  *  - getReferencedDeclaration is called with { referencedIdentifierName: 'y', ... }
  *  - now we will look in globalScopeBindings, till we find declaration of 'y'
  *    - Is it a ref? Call ourselves with referencedIdentifierName ('x' in example above)
@@ -34,7 +34,10 @@ function getReferencedDeclaration({ referencedIdentifierName, globalScopeBinding
     ([key]) => key === referencedIdentifierName,
   );
 
-  if (refDeclaratorBinding.path.type === 'ImportSpecifier') {
+  if (
+    refDeclaratorBinding.path.type === 'ImportSpecifier' ||
+    refDeclaratorBinding.path.type === 'ImportDefaultSpecifier'
+  ) {
     return refDeclaratorBinding.path;
   }
 
@@ -159,4 +162,5 @@ async function getSourceCodeFragmentOfDeclaration({
 module.exports = {
   getSourceCodeFragmentOfDeclaration,
   getFilePathOrExternalSource,
+  getReferencedDeclaration,
 };

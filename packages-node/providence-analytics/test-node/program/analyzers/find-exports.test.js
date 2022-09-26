@@ -66,6 +66,16 @@ describe('Analyzer "find-exports"', () => {
       expect(firstEntry.result[0].source).to.equal(undefined);
     });
 
+    it(`supports [export default fn(){}] (default export)`, async () => {
+      mockProject([`export default x => x * 3`]);
+      await providence(findExportsQueryConfig, _providenceCfg);
+      const queryResult = queryResults[0];
+      const firstEntry = getEntry(queryResult);
+      expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
+      expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('[default]');
+      expect(firstEntry.result[0].source).to.equal(undefined);
+    });
+
     it(`supports [export {default as x} from 'y'] (default re-export)`, async () => {
       mockProject({
         './file-with-default-export.js': 'export default 1;',
@@ -103,6 +113,26 @@ describe('Analyzer "find-exports"', () => {
           },
         ],
       });
+    });
+
+    it(`supports [import {x} from 'y'; export default x] (named re-export as default)`, async () => {
+      mockProject([`import {x} from 'y'; export default x;`]);
+      await providence(findExportsQueryConfig, _providenceCfg);
+      const queryResult = queryResults[0];
+      const firstEntry = getEntry(queryResult);
+      expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
+      expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('[default]');
+      expect(firstEntry.result[0].source).to.equal('y');
+    });
+
+    it(`supports [import x from 'y'; export default x] (default re-export as default)`, async () => {
+      mockProject([`import x from 'y'; export default x;`]);
+      await providence(findExportsQueryConfig, _providenceCfg);
+      const queryResult = queryResults[0];
+      const firstEntry = getEntry(queryResult);
+      expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
+      expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('[default]');
+      expect(firstEntry.result[0].source).to.equal('y');
     });
 
     it(`supports [export { x } from 'my/source'] (re-export named specifier)`, async () => {
@@ -191,17 +221,18 @@ describe('Analyzer "find-exports"', () => {
       ]);
     });
 
-    // TODO: myabe in the future: This experimental syntax requires enabling the parser plugin: 'exportDefaultFrom'
-    it.skip(`stores rootFileMap of an exported Identifier`, async () => {
+    it(`stores rootFileMap of an exported Identifier`, async () => {
       mockProject({
         './src/reexport.js': `
           // a direct default import
           import RefDefault from 'exporting-ref-project';
 
-          export RefDefault;
+          export default RefDefault;
         `,
         './index.js': `
-          export { ExtendRefDefault } from './src/reexport.js';
+          import ExtendRefDefault from './src/reexport.js';
+
+          export default ExtendRefDefault;
         `,
       });
       await providence(findExportsQueryConfig, _providenceCfg);
@@ -210,13 +241,23 @@ describe('Analyzer "find-exports"', () => {
 
       expect(firstEntry.result[0].rootFileMap).to.eql([
         {
-          currentFileSpecifier: 'ExtendRefDefault',
+          currentFileSpecifier: '[default]',
           rootFile: {
             file: 'exporting-ref-project',
             specifier: '[default]',
           },
         },
       ]);
+    });
+
+    it(`correctly handles empty files`, async () => {
+      // These can be encountered while scanning repos.. They should not break the code...
+      mockProject([`// some comment here...`]);
+      await providence(findExportsQueryConfig, _providenceCfg);
+      const queryResult = queryResults[0];
+      const firstEntry = getEntry(queryResult);
+      expect(firstEntry.result[0].exportSpecifiers).to.eql(['[file]']);
+      expect(firstEntry.result[0].source).to.equal(undefined);
     });
   });
 

@@ -171,6 +171,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
         if (reexportMatch || shouldLookForDefaultExport) {
           return;
         }
+
         // Are we dealing with a re-export ?
         if (path.node.specifiers && path.node.specifiers.length) {
           exportMatch = path.node.specifiers.find(s => s.exported.name === identifierName);
@@ -202,6 +203,7 @@ async function trackDownIdentifierFn(source, identifierName, currentFilePath, ro
               }
             }
             reexportMatch = true;
+
             pendingTrackDownPromise = trackDownIdentifier(
               newSource,
               localName,
