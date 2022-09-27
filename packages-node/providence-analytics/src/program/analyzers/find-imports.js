@@ -60,11 +60,15 @@ function findImportsPerAstEntry(ast) {
   traverse(ast, {
     ImportDeclaration(path) {
       const importSpecifiers = getImportOrReexportsSpecifiers(path.node);
-      if (importSpecifiers.length === 0) {
+      if (!importSpecifiers.length) {
         importSpecifiers.push('[file]'); // apparently, there was just a file import
       }
       const source = path.node.source.value;
-      transformedEntry.push({ importSpecifiers, source });
+      const entry = { importSpecifiers, source };
+      if (path.node.assertions?.length) {
+        entry.assertionType = path.node.assertions[0].value?.value;
+      }
+      transformedEntry.push(entry);
     },
     // Dynamic imports
     CallExpression(path) {
@@ -86,7 +90,11 @@ function findImportsPerAstEntry(ast) {
       }
       const importSpecifiers = getImportOrReexportsSpecifiers(path.node);
       const source = path.node.source.value;
-      transformedEntry.push({ importSpecifiers, source });
+      const entry = { importSpecifiers, source };
+      if (path.node.assertions?.length) {
+        entry.assertionType = path.node.assertions[0].value?.value;
+      }
+      transformedEntry.push(entry);
     },
     // ExportAllDeclaration(path) {
     //   if (!path.node.source) {
@@ -97,6 +105,7 @@ function findImportsPerAstEntry(ast) {
     //   transformedEntry.push({ importSpecifiers, source });
     // },
   });
+
   return transformedEntry;
 }
 
@@ -140,15 +149,16 @@ class FindImportsAnalyzer extends Analyzer {
     const queryOutput = await this._traverse(async (ast, { relativePath }) => {
       let transformedEntry = findImportsPerAstEntry(ast);
       // Post processing based on configuration...
-
       transformedEntry = await normalizeSourcePaths(
         transformedEntry,
         relativePath,
         cfg.targetProjectPath,
       );
+
       if (!cfg.keepInternalSources) {
         transformedEntry = options.onlyExternalSources(transformedEntry);
       }
+
       return { result: transformedEntry };
     });
 

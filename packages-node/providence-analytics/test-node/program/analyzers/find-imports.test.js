@@ -168,6 +168,7 @@ describe('Analyzer "find-imports"', () => {
       expect(firstEntry.result[0].source).to.equal('my/source');
     });
 
+    // TODO: we can track [variable] down via trackdownId + getSourceCodeFragmentOfDeclaration
     it(`supports [import(pathReference)] (dynamic imports with variable source)`, async () => {
       mockProject([
         `
@@ -181,6 +182,29 @@ describe('Analyzer "find-imports"', () => {
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
       // TODO: somehow mark as dynamic??
       expect(firstEntry.result[0].source).to.equal('[variable]');
+    });
+
+    // import styles from "./styles.css" assert { type: "css" };
+    it(`supports [import styles from "@css/lib/styles.css" assert { type: "css" }] (import assertions)`, async () => {
+      mockProject([`import styles from "@css/lib/styles.css" assert { type: "css" };`]);
+      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResult = queryResults[0];
+      const firstEntry = getEntry(queryResult);
+      console.log({ firstEntry });
+      expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
+      expect(firstEntry.result[0].source).to.equal('@css/lib/styles.css');
+      expect(firstEntry.result[0].assertionType).to.equal('css');
+    });
+
+    it(`supports [export styles from "@css/lib/styles.css" assert { type: "css" }] (import assertions)`, async () => {
+      mockProject([`export styles from "@css/lib/styles.css" assert { type: "css" };`]);
+      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResult = queryResults[0];
+      const firstEntry = getEntry(queryResult);
+      console.log({ firstEntry });
+      expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
+      expect(firstEntry.result[0].source).to.equal('@css/lib/styles.css');
+      expect(firstEntry.result[0].assertionType).to.equal('css');
     });
 
     describe('Filter out false positives', () => {
@@ -335,12 +359,5 @@ describe('Analyzer "find-imports"', () => {
         'fictional-project/file2.js',
       ]);
     });
-  });
-
-  // TODO: put this in the generic providence/analyzer part
-  describe.skip('With <script type="module"> inside .html', () => {
-    it('gets the source from script tags', async () => {});
-
-    it('gets the content from script tags', async () => {});
   });
 });

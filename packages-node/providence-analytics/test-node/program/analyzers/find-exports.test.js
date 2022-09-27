@@ -155,6 +155,46 @@ describe('Analyzer "find-exports"', () => {
       expect(firstEntry.result[0].source).to.equal('my/source');
     });
 
+    it(`supports [export styles from './styles.css' assert { type: "css" }] (import assertions)`, async () => {
+      mockProject({
+        './styles.css': '.block { display:block; };',
+        './x.js': `export styles from './styles.css' assert { type: "css" };`,
+      });
+      await providence(findExportsQueryConfig, _providenceCfg);
+      const queryResult = queryResults[0];
+      const firstEntry = getEntry(queryResult);
+      expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
+      expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('styles');
+      expect(firstEntry.result[0].source).to.equal('./styles.css');
+      expect(firstEntry.result[0].rootFileMap[0]).to.eql({
+        currentFileSpecifier: 'styles',
+        rootFile: {
+          file: './styles.css',
+          specifier: '[default]',
+        },
+      });
+    });
+
+    it(`supports [import styles from './styles.css' assert { type: "css" }; export default styles;] (import assertions)`, async () => {
+      mockProject({
+        './styles.css': '.block { display:block; };',
+        './x.js': `import styles from './styles.css' assert { type: "css" }; export default styles;`,
+      });
+      await providence(findExportsQueryConfig, _providenceCfg);
+      const queryResult = queryResults[0];
+      const firstEntry = getEntry(queryResult);
+      expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
+      expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('[default]');
+      expect(firstEntry.result[0].source).to.equal('./styles.css');
+      expect(firstEntry.result[0].rootFileMap[0]).to.eql({
+        currentFileSpecifier: '[default]',
+        rootFile: {
+          file: './styles.css',
+          specifier: '[default]',
+        },
+      });
+    });
+
     it(`stores meta info(local name) of renamed specifiers`, async () => {
       mockProject([`export { x as y } from 'my/source'`]);
       await providence(findExportsQueryConfig, _providenceCfg);
