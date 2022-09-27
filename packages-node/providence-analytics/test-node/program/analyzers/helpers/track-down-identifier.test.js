@@ -137,7 +137,6 @@ describe('trackdownIdentifier', () => {
     });
   });
 
-  // TODO: support import maps
   it(`identifies import map entries as internal sources`, async () => {
     mockProject(
       {

@@ -170,7 +170,11 @@ function findExportsPerAstEntry(ast, { skipFileImports }) {
       const exportSpecifiers = getExportSpecifiers(path.node);
       const localMap = getLocalNameSpecifiers(path.node);
       const source = path.node.source?.value;
-      transformedEntry.push({ exportSpecifiers, localMap, source, __tmp: { path } });
+      const entry = { exportSpecifiers, localMap, source, __tmp: { path } };
+      if (path.node.assertions?.length) {
+        entry.assertionType = path.node.assertions[0].value?.value;
+      }
+      transformedEntry.push(entry);
     },
     ExportDefaultDeclaration(defaultExportPath) {
       const exportSpecifiers = ['[default]'];

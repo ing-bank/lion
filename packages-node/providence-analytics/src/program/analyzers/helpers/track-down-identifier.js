@@ -1,4 +1,5 @@
 const fs = require('fs');
+const pathLib = require('path');
 const { default: traverse } = require('@babel/traverse');
 const {
   isRelativeSourcePath,
@@ -157,7 +158,16 @@ async function trackDownIdentifierFn(
    * @type {PathFromSystemRoot}
    */
   const resolvedSourcePath = await resolveImportPath(source, currentFilePath);
+
   LogService.debug(`[trackDownIdentifier] ${resolvedSourcePath}`);
+  const allowedJsModuleExtensions = ['.mjs', '.js'];
+  if (!allowedJsModuleExtensions.includes(pathLib.extname(resolvedSourcePath))) {
+    // We have an import assertion
+    return /** @type { RootFile } */ {
+      file: toRelativeSourcePath(resolvedSourcePath, rootPath),
+      specifier: '[default]',
+    };
+  }
   const code = fs.readFileSync(resolvedSourcePath, 'utf8');
   const ast = AstService.getAst(code, 'babel', { filePath: resolvedSourcePath });
   const shouldLookForDefaultExport = identifierName === '[default]';
