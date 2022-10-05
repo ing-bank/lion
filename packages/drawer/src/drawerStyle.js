@@ -35,6 +35,8 @@ export const drawerStyle = css`
       width: var(--min-width);
       min-width: var(--min-width);
       max-width: var(--max-width);
+      min-height: auto;
+      max-height: fit-content;
       border-radius: 0 16px 16px 0;
       transition: width 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
