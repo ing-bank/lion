@@ -1,7 +1,8 @@
 # Drawer >> Overview ||10
 
-A web component that wraps a modal drawer controller.
-Its purpose is to make it easy to use our Overlay System declaratively.
+A combination of a button (the invoker) and a chunk of 'extra content'. This web component can be extended with an
+animation to disclose the extra content. There are two slots available respectively; invoker to specify the
+drawer's invoker and content for the content of the drawer.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
@@ -42,8 +43,7 @@ export const main = () => html`
 ## Features
 
 - Show content when clicking the invoker
-- Respond to close event in the slot="content" element, to close the content
-- Have a `.config` object to set or update the OverlayController's configuration
+- ...
 
 ## Installation
 
@@ -52,7 +52,7 @@ npm i --save @lion/drawer
 ```
 
 ```js
-import { LionDialog } from '@lion/drawer';
+import { LionDrawer } from '@lion/drawer';
 // or
 import '@lion/drawer/define';
 ```
