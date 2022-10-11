@@ -4,6 +4,18 @@ export const drawerStyle = css`
   :host {
     display: block;
     height: 100%;
+    --min-width: 72px;
+    --max-width: 320px;
+    --min-height: auto;
+    --max-height: fit-content;
+    --start-width: var(--min-width);
+    --start-height: 100%;
+    --transition-property: width;
+    --background-color: #ffffff;
+  }
+
+  :host([position='top']) {
+    width: 100%;
     --min-width: 0px;
     --max-width: none;
     --min-height: 50px;
@@ -14,20 +26,7 @@ export const drawerStyle = css`
     --transition-property: height;
   }
 
-  @media screen and (min-width: 640px) {
-    :host {
-      --min-width: 72px;
-      --max-width: 320px;
-      --min-height: auto;
-      --max-height: fit-content;
-      --start-width: var(--min-width);
-      --start-height: 100%;
-      --border-radius: 0 16px 16px 0;
-      --transition-property: width;
-    }
-  }
-
-  #container {
+  .container {
     display: flex;
     flex-direction: column;
     width: var(--start-width);
@@ -38,27 +37,34 @@ export const drawerStyle = css`
     max-height: var(--max-height);
     overflow: hidden;
     box-sizing: border-box;
-    border: 1px solid #000000;
-    border-radius: var(--border-radius);
     padding: 16px 24px;
-    background-color: #ffffff;
+    background-color: var(--background-color);
     transition: var(--transition-property) 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
-  #headline-container {
+  .headline-container {
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
     height: 16px;
   }
 
-  #content-container {
+  :host([position='right']) .headline-container {
+    flex-direction: row-reverse;
+  }
+
+  .content-container {
     overflow: hidden;
     padding: 16px 0;
+    flex-grow: 1;
   }
 
   ::slotted([slot='headline']) {
     margin-left: 16px;
+  }
+
+  :host([position='right']) ::slotted([slot='headline']) {
+    margin-right: 16px;
   }
 
   ::slotted([slot='content']) {

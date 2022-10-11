@@ -1,4 +1,4 @@
-import { html } from '@lion/core';
+import { html, uuid } from '@lion/core';
 import { LionCollapsible } from '@lion/collapsible';
 import { drawerStyle } from './drawerStyle.js';
 
@@ -18,6 +18,10 @@ export class LionDrawer extends LionCollapsible {
         type: Boolean,
         reflect: true,
       },
+      position: {
+        type: String,
+        reflect: true,
+      },
     };
   }
 
@@ -33,43 +37,25 @@ export class LionDrawer extends LionCollapsible {
   connectedCallback() {
     super.connectedCallback();
 
+    if (!this.hasAttribute('position')) {
+      this.position = 'left';
+    }
+
+    const uid = uuid();
+
+    if (this._bottomInvokerNode) {
+      this._bottomInvokerNode.addEventListener('click', this.toggle);
+      this._bottomInvokerNode.setAttribute('aria-expanded', `${this.opened}`);
+      this._bottomInvokerNode.setAttribute('id', `collapsible-invoker-${uid}`);
+      this._bottomInvokerNode.setAttribute('aria-controls', `collapsible-content-${uid}`);
+    }
+
     // this._contentNode?.style.setProperty(
     //   'transition',
     //   'max-width 0.35s, padding 0.35s',
     // );
-    const setBoundaries = () => {
-      const host = this.shadowRoot?.host;
 
-      if (this.orientation === 'top') {
-        this.minHeight = host ? getComputedStyle(host).getPropertyValue('--min-height') : '0px';
-        this.maxHeight = host ? getComputedStyle(host).getPropertyValue('--max-height') : '0px';
-        this.minWidth = 'auto';
-        this.maxWidth = 'auto';
-      }
-
-      if (this.orientation === 'left') {
-        this.minWidth = host ? getComputedStyle(host).getPropertyValue('--min-width') : '0px';
-        this.maxWidth = host ? getComputedStyle(host).getPropertyValue('--max-width') : '0px';
-        this.minHeight = 'auto';
-        this.maxHeight = 'auto';
-      }
-
-      setTimeout(() => {
-        const prop = this.orientation === 'left' ? 'height' : 'width';
-        this._contentNode.style.setProperty(prop, '');
-      });
-    };
-
-    const mediaQuery = window.matchMedia('(min-width: 640px)');
-    this.orientation = mediaQuery.matches ? 'left' : 'top';
-
-    mediaQuery.addEventListener('change', e => {
-      this.orientation = e.matches ? 'left' : 'top';
-
-      setBoundaries();
-    });
-
-    setBoundaries();
+    this.__setBoundaries();
   }
 
   /**
@@ -86,6 +72,46 @@ export class LionDrawer extends LionCollapsible {
     return [drawerStyle];
   }
 
+  __setBoundaries() {
+    const host = this.shadowRoot?.host;
+
+    if (this.position === 'top') {
+      this.minHeight = host ? getComputedStyle(host).getPropertyValue('--min-height') : '0px';
+      this.maxHeight = host ? getComputedStyle(host).getPropertyValue('--max-height') : '0px';
+      this.minWidth = 'auto';
+      this.maxWidth = 'auto';
+    }
+
+    if (this.position === 'left' || this.position === 'right') {
+      this.minWidth = host ? getComputedStyle(host).getPropertyValue('--min-width') : '0px';
+      this.maxWidth = host ? getComputedStyle(host).getPropertyValue('--max-width') : '0px';
+      this.minHeight = 'auto';
+      this.maxHeight = 'auto';
+    }
+
+    setTimeout(() => {
+      const prop = this.position === 'top' ? 'width' : 'height';
+      this._contentNode.style.setProperty(prop, '');
+    });
+  }
+
+  /**
+   * Update aria labels on state change.
+   * @param {String} position
+   */
+  set position(position) {
+    const stale = this.position;
+    this._position = position;
+    this.setAttribute('position', position);
+
+    this.__setBoundaries();
+    this.requestUpdate('position', stale);
+  }
+
+  get position() {
+    return this._position ?? 'left';
+  }
+
   /**
    * Trigger show animation and wait for transition to be finished.
    * @param {Object} options - element node and its options
@@ -93,9 +119,9 @@ export class LionDrawer extends LionCollapsible {
    * @override
    */
   async _showAnimation({ contentNode }) {
-    const min = this.orientation === 'left' ? this.minWidth : this.minHeight;
-    const max = this.orientation === 'left' ? this.maxWidth : this.maxHeight;
-    const prop = this.orientation === 'left' ? 'width' : 'height';
+    const min = this.position === 'top' ? this.minHeight : this.minWidth;
+    const max = this.position === 'top' ? this.maxHeight : this.maxWidth;
+    const prop = this.position === 'top' ? 'height' : 'width';
 
     contentNode.style.setProperty(prop, /** @type {string} */ (min));
     await new Promise(resolve => requestAnimationFrame(() => resolve(true)));
@@ -111,14 +137,15 @@ export class LionDrawer extends LionCollapsible {
    */
   async _hideAnimation({ contentNode }) {
     if (
-      (this.orientation === 'left' && this._contentWidth === this.minWidth) ||
-      (this.orientation === 'top' && this._contentHeight === this.minHeight)
+      ((this.position === 'left' || this.position === 'right') &&
+        this._contentWidth === this.minWidth) ||
+      (this.position === 'top' && this._contentHeight === this.minHeight)
     ) {
       return;
     }
 
-    const min = this.orientation === 'left' ? this.minWidth : this.minHeight;
-    const prop = this.orientation === 'left' ? 'width' : 'height';
+    const min = this.position === 'top' ? this.minHeight : this.minWidth;
+    const prop = this.position === 'top' ? 'height' : 'width';
 
     contentNode.style.setProperty(prop, /** @type {string} */ (min));
     await this._waitForTransition({ contentNode });
@@ -150,8 +177,17 @@ export class LionDrawer extends LionCollapsible {
   /**
    * @protected
    */
+  get _bottomInvokerNode() {
+    return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
+      child => child.slot === 'bottom-invoker',
+    );
+  }
+
+  /**
+   * @protected
+   */
   get _contentNode() {
-    return /** @type {HTMLElement} */ (this.shadowRoot?.querySelector('#container'));
+    return /** @type {HTMLElement} */ (this.shadowRoot?.querySelector('.container'));
   }
 
   get _contentWidth() {
@@ -184,14 +220,15 @@ export class LionDrawer extends LionCollapsible {
 
   render() {
     return html`
-      <div id="container">
-        <div id="headline-container">
+      <div class="container">
+        <div class="headline-container">
           <slot name="invoker"></slot>
           <slot name="headline"></slot>
         </div>
-        <div id="content-container">
+        <div class="content-container">
           <slot name="content"></slot>
         </div>
+        <slot name="bottom-invoker"></slot>
       </div>
     `;
   }
