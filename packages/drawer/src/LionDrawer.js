@@ -43,17 +43,19 @@ export class LionDrawer extends LionCollapsible {
 
     const uid = uuid();
 
+    if (this._contentNode) {
+      this._contentNode.style.setProperty('display', '');
+    }
+
     if (this._bottomInvokerNode) {
       this._bottomInvokerNode.addEventListener('click', this.toggle);
       this._bottomInvokerNode.setAttribute('aria-expanded', `${this.opened}`);
       this._bottomInvokerNode.setAttribute('id', `collapsible-invoker-${uid}`);
-      this._bottomInvokerNode.setAttribute('aria-controls', `collapsible-content-${uid}`);
-    }
 
-    // this._contentNode?.style.setProperty(
-    //   'transition',
-    //   'max-width 0.35s, padding 0.35s',
-    // );
+      if (this._contentNode) {
+        this._bottomInvokerNode.setAttribute('aria-controls', this._contentNode.id);
+      }
+    }
 
     this.__setBoundaries();
   }
@@ -91,7 +93,10 @@ export class LionDrawer extends LionCollapsible {
 
     setTimeout(() => {
       const prop = this.position === 'top' ? 'width' : 'height';
-      this._contentNode.style.setProperty(prop, '');
+
+      if (this.__contentNode) {
+        this.__contentNode.style.setProperty(prop, '');
+      }
     });
   }
 
@@ -186,17 +191,17 @@ export class LionDrawer extends LionCollapsible {
   /**
    * @protected
    */
-  get _contentNode() {
+  get __contentNode() {
     return /** @type {HTMLElement} */ (this.shadowRoot?.querySelector('.container'));
   }
 
   get _contentWidth() {
-    const size = this._contentNode?.getBoundingClientRect().width || 0;
+    const size = this.__contentNode?.getBoundingClientRect().width || 0;
     return `${size}px`;
   }
 
   get _contentHeight() {
-    const size = this._contentNode?.getBoundingClientRect().height || 0;
+    const size = this.__contentNode?.getBoundingClientRect().height || 0;
     return `${size}px`;
   }
 
@@ -205,15 +210,20 @@ export class LionDrawer extends LionCollapsible {
     if (this._invokerNode) {
       this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
     }
+
+    if (this._bottomInvokerNode) {
+      this._bottomInvokerNode.setAttribute('aria-expanded', `${this.opened}`);
+    }
+
     this.dispatchEvent(new CustomEvent('opened-changed'));
   }
 
   async _updateContentSize() {
-    if (this._contentNode) {
+    if (this.__contentNode) {
       if (this.opened) {
-        await this._showAnimation({ contentNode: this._contentNode });
+        await this._showAnimation({ contentNode: this.__contentNode });
       } else {
-        await this._hideAnimation({ contentNode: this._contentNode });
+        await this._hideAnimation({ contentNode: this.__contentNode });
       }
     }
   }

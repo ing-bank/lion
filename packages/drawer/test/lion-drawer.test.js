@@ -4,7 +4,6 @@ import { html } from 'lit/static-html.js';
 import '@lion/drawer/define';
 
 /**
-
  * @typedef {import('../src/LionDrawer').LionDrawer} LionDrawer
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
@@ -94,6 +93,20 @@ describe('<lion-drawer>', () => {
         expect(invoker?.getAttribute('aria-controls')).to.equal(content?.id);
       });
 
+      it('links id of content items to bottom-invoker via [aria-controls]', async () => {
+        const collapsibleElement = await fixture(template);
+        const invoker = collapsibleElement.querySelector('[slot="bottom-invoker"]');
+        const content = collapsibleElement.querySelector('[slot=content]');
+        expect(invoker?.getAttribute('aria-controls')).to.equal(content?.id);
+      });
+
+      it('links id of content items to bottom-invoker via [aria-controls]', async () => {
+        const drawerElement = await fixture(template);
+        const invoker = drawerElement.querySelector('[slot="bottom-invoker"]');
+        const content = drawerElement.querySelector('[slot=content]');
+        expect(invoker?.getAttribute('aria-controls')).to.equal(content?.id);
+      });
+
       it('adds aria-expanded="false" to invoker when its content is not expanded', async () => {
         const drawerElement = await fixture(template);
         const invoker = drawerElement.querySelector('[slot=invoker]');
@@ -103,6 +116,20 @@ describe('<lion-drawer>', () => {
       it('adds aria-expanded="true" to invoker when its content is expanded', async () => {
         const drawerElement = await fixture(template);
         const invoker = drawerElement.querySelector('[slot=invoker]');
+        drawerElement.opened = true;
+        await drawerElement.updateComplete;
+        expect(invoker).to.have.attribute('aria-expanded', 'true');
+      });
+
+      it('adds aria-expanded="false" to bottom-invoker when its content is not expanded', async () => {
+        const drawerElement = await fixture(template);
+        const invoker = drawerElement.querySelector('[slot="bottom-invoker"]');
+        expect(invoker).to.have.attribute('aria-expanded', 'false');
+      });
+
+      it('adds aria-expanded="true" to bottom-invoker when its content is expanded', async () => {
+        const drawerElement = await fixture(template);
+        const invoker = drawerElement.querySelector('[slot="bottom-invoker"]');
         drawerElement.opened = true;
         await drawerElement.updateComplete;
         expect(invoker).to.have.attribute('aria-expanded', 'true');
