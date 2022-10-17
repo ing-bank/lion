@@ -22,7 +22,6 @@ export const drawerStyle = css`
     --max-height: 200px;
     --start-width: 100%;
     --start-height: var(--min-height);
-    --border-radius: 0 0 16px 16px;
     --transition-property: height;
   }
 
@@ -37,7 +36,6 @@ export const drawerStyle = css`
     max-height: var(--max-height);
     overflow: hidden;
     box-sizing: border-box;
-    padding: 16px 24px;
     background-color: var(--background-color);
     transition: var(--transition-property) 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
@@ -55,16 +53,7 @@ export const drawerStyle = css`
 
   .content-container {
     overflow: hidden;
-    padding: 16px 0;
     flex-grow: 1;
-  }
-
-  ::slotted([slot='headline']) {
-    margin-left: 16px;
-  }
-
-  :host([position='right']) ::slotted([slot='headline']) {
-    margin-right: 16px;
   }
 
   ::slotted([slot='content']) {

@@ -1,20 +1,13 @@
 # Drawer >> Use Cases ||20
 
-`lion-drawer`
-
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import { icons } from '@lion/icon';
 import '@lion/drawer/define';
 import '@lion/icon/define';
-import { demoStyle } from './src/demoStyle.js';
 
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {
-    case 'bugs':
-      return import('../icon/assets/iconset-bugs.js').then(module => module[name]);
-    case 'space':
-      return import('../icon/assets/iconset-space.js').then(module => module[name]);
     case 'misc':
       return import('../icon/assets/iconset-misc.js').then(module => module[name]);
     default:
@@ -22,6 +15,8 @@ icons.addIconResolver('lion', (iconset, name) => {
   }
 });
 ```
+
+## Positioning
 
 ## Default left
 
