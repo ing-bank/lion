@@ -14,7 +14,6 @@ const template = html`
     <button slot="invoker">Open</button>
     <p slot="headline">Headline</p>
     <div slot="content" class="drawer">This is the content of the drawer</div>
-    <button slot="bottom-invoker">Open</button>
   </lion-drawer>
 `;
 
@@ -64,15 +63,6 @@ describe('<lion-drawer>', () => {
     });
   });
 
-  describe('User interaction', () => {
-    it('opens when bottom invoker is clicked', async () => {
-      const drawer = await fixture(template);
-      const invoker = drawer.querySelector('[slot="bottom-invoker"]');
-      invoker?.dispatchEvent(new Event('click'));
-      expect(drawer.opened).to.equal(true);
-    });
-  });
-
   describe('Accessibility', () => {
     it('[collapsed] is a11y AXE accessible', async () => {
       const drawer = await fixture(template);
@@ -93,20 +83,6 @@ describe('<lion-drawer>', () => {
         expect(invoker?.getAttribute('aria-controls')).to.equal(content?.id);
       });
 
-      it('links id of content items to bottom-invoker via [aria-controls]', async () => {
-        const collapsibleElement = await fixture(template);
-        const invoker = collapsibleElement.querySelector('[slot="bottom-invoker"]');
-        const content = collapsibleElement.querySelector('[slot=content]');
-        expect(invoker?.getAttribute('aria-controls')).to.equal(content?.id);
-      });
-
-      it('links id of content items to bottom-invoker via [aria-controls]', async () => {
-        const drawerElement = await fixture(template);
-        const invoker = drawerElement.querySelector('[slot="bottom-invoker"]');
-        const content = drawerElement.querySelector('[slot=content]');
-        expect(invoker?.getAttribute('aria-controls')).to.equal(content?.id);
-      });
-
       it('adds aria-expanded="false" to invoker when its content is not expanded', async () => {
         const drawerElement = await fixture(template);
         const invoker = drawerElement.querySelector('[slot=invoker]');
@@ -116,20 +92,6 @@ describe('<lion-drawer>', () => {
       it('adds aria-expanded="true" to invoker when its content is expanded', async () => {
         const drawerElement = await fixture(template);
         const invoker = drawerElement.querySelector('[slot=invoker]');
-        drawerElement.opened = true;
-        await drawerElement.updateComplete;
-        expect(invoker).to.have.attribute('aria-expanded', 'true');
-      });
-
-      it('adds aria-expanded="false" to bottom-invoker when its content is not expanded', async () => {
-        const drawerElement = await fixture(template);
-        const invoker = drawerElement.querySelector('[slot="bottom-invoker"]');
-        expect(invoker).to.have.attribute('aria-expanded', 'false');
-      });
-
-      it('adds aria-expanded="true" to bottom-invoker when its content is expanded', async () => {
-        const drawerElement = await fixture(template);
-        const invoker = drawerElement.querySelector('[slot="bottom-invoker"]');
         drawerElement.opened = true;
         await drawerElement.updateComplete;
         expect(invoker).to.have.attribute('aria-expanded', 'true');
