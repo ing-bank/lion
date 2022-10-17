@@ -18,13 +18,13 @@ icons.addIconResolver('lion', (iconset, name) => {
 
 ## Positioning
 
-## Default left
+### Default left
 
 By default, the drawer is positioned on the left side of the viewport.
 
 With the `position` property it can be positioned at the top or on the right of the screen.
 
-## Top
+### Top
 
 ```js preview-story
 export const top = () => html`
@@ -73,7 +73,7 @@ export const top = () => html`
 `;
 ```
 
-## Right
+### Right
 
 ```js preview-story
 export const right = () => html`
