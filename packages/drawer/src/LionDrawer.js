@@ -89,7 +89,7 @@ export class LionDrawer extends LionCollapsible {
   }
 
   /**
-   * Update aria labels on state change.
+   * Setter for position property, available values are 'top', 'left' and 'right'
    * @param {String} position
    */
   set position(position) {
