@@ -6,6 +6,7 @@ import { Unparseable } from './validate/Unparseable.js';
 import { ValidateMixin } from './validate/ValidateMixin.js';
 
 /**
+ * @typedef {import('@lion/core').PropertyDeclarations} PropertyDeclarations
  * @typedef {import('../types/FormatMixinTypes').FormatMixin} FormatMixin
  * @typedef {import('../types/FormatMixinTypes').FormatOptions} FormatOptions
  * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
@@ -60,7 +61,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
 const FormatMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormatMixin extends ValidateMixin(FormControlMixin(superclass)) {
-    /** @type {any} */
+    /** @type {PropertyDeclarations} */
     static get properties() {
       return {
         formattedValue: { attribute: false },

@@ -2,6 +2,7 @@ import { dedupeMixin } from '@lion/core';
 import { FormControlMixin } from './FormControlMixin.js';
 
 /**
+ * @typedef {import('@lion/core').PropertyDeclarations} PropertyDeclarations
  * @typedef {import('../types/InteractionStateMixinTypes').InteractionStateMixin} InteractionStateMixin
  * @typedef {import('../types/InteractionStateMixinTypes').InteractionStates} InteractionStates
  */
@@ -21,7 +22,7 @@ import { FormControlMixin } from './FormControlMixin.js';
 const InteractionStateMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class InteractionStateMixin extends FormControlMixin(superclass) {
-    /** @type {any} */
+    /** @type {PropertyDeclarations} */
     static get properties() {
       return {
         touched: { type: Boolean, reflect: true },

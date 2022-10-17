@@ -4,6 +4,7 @@ import { FormControlsCollection } from './FormControlsCollection.js';
 import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 
 /**
+ * @typedef {import('@lion/core').PropertyDeclarations} PropertyDeclarations
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarMixin} FormRegistrarMixin
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
@@ -27,7 +28,7 @@ const FormRegistrarMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class extends FormRegisteringMixin(superclass) {
-    /** @type {any} */
+    /** @type {PropertyDeclarations} */
     static get properties() {
       return {
         _isFormOrFieldset: { type: Boolean },

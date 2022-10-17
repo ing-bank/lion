@@ -15,6 +15,7 @@ import { FormControlMixin } from '../FormControlMixin.js';
 // TODO: [v1] make all @readOnly => @readonly and actually make sure those values cannot be set
 
 /**
+ * @typedef {import('@lion/core').PropertyDeclarations} PropertyDeclarations
  * @typedef {import('../../types/validate/ValidateMixinTypes').ValidateMixin} ValidateMixin
  * @typedef {import('../../types/validate/ValidateMixinTypes').ValidationType} ValidationType
  * @typedef {import('../../types/validate/ValidateMixinTypes').ValidateHost} ValidateHost
@@ -54,7 +55,7 @@ export const ValidateMixinImplementation = superclass =>
       };
     }
 
-    /** @type {any} */
+    /** @type {PropertyDeclarations} */
     static get properties() {
       return {
         validators: { attribute: false },

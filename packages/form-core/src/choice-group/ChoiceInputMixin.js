@@ -4,6 +4,7 @@ import { css, html, nothing, dedupeMixin } from '@lion/core';
 import { FormatMixin } from '../FormatMixin.js';
 
 /**
+ * @typedef {import('@lion/core').PropertyDeclarations} PropertyDeclarations
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputMixin} ChoiceInputMixin
@@ -23,7 +24,7 @@ const hasChanged = (nw, old = {}) => nw.value !== old.value || nw.checked !== ol
 const ChoiceInputMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ChoiceInputMixin extends FormatMixin(superclass) {
-    /** @type {any} */
+    /** @type {PropertyDeclarations} */
     static get properties() {
       return {
         checked: { type: Boolean, reflect: true },

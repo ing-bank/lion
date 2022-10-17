@@ -4,6 +4,7 @@ import { FocusMixin } from './FocusMixin.js';
 import { FormatMixin } from './FormatMixin.js';
 
 /**
+ * @typedef {import('@lion/core').PropertyDeclarations} PropertyDeclarations
  * @typedef {import('../types/NativeTextFieldMixinTypes').NativeTextFieldMixin} NativeTextFieldMixin
  * @type {NativeTextFieldMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass} superclass
@@ -11,7 +12,7 @@ import { FormatMixin } from './FormatMixin.js';
 const NativeTextFieldMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class NativeTextFieldMixin extends FormatMixin(FocusMixin(FormControlMixin(superclass))) {
-    /** @type {any} */
+    /** @type {PropertyDeclarations} */
     static get properties() {
       return {
         autocomplete: { type: String, reflect: true },

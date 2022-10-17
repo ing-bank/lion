@@ -17,6 +17,7 @@ export {
   LitElement,
   defaultConverter,
   CSSResultArray,
+  PropertyDeclarations,
   PropertyValues,
   TemplateResult,
 } from 'lit';
