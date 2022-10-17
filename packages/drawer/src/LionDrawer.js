@@ -1,4 +1,4 @@
-import { html, uuid } from '@lion/core';
+import { html } from '@lion/core';
 import { LionCollapsible } from '@lion/collapsible';
 import { drawerStyle } from './drawerStyle.js';
 
@@ -41,20 +41,8 @@ export class LionDrawer extends LionCollapsible {
       this.position = 'left';
     }
 
-    const uid = uuid();
-
     if (this._contentNode) {
       this._contentNode.style.setProperty('display', '');
-    }
-
-    if (this._bottomInvokerNode) {
-      this._bottomInvokerNode.addEventListener('click', this.toggle);
-      this._bottomInvokerNode.setAttribute('aria-expanded', `${this.opened}`);
-      this._bottomInvokerNode.setAttribute('id', `collapsible-invoker-${uid}`);
-
-      if (this._contentNode) {
-        this._bottomInvokerNode.setAttribute('aria-controls', this._contentNode.id);
-      }
     }
 
     this.__setBoundaries();
@@ -182,15 +170,6 @@ export class LionDrawer extends LionCollapsible {
   /**
    * @protected
    */
-  get _bottomInvokerNode() {
-    return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
-      child => child.slot === 'bottom-invoker',
-    );
-  }
-
-  /**
-   * @protected
-   */
   get __contentNode() {
     return /** @type {HTMLElement} */ (this.shadowRoot?.querySelector('.container'));
   }
@@ -209,10 +188,6 @@ export class LionDrawer extends LionCollapsible {
     this._updateContentSize();
     if (this._invokerNode) {
       this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
-    }
-
-    if (this._bottomInvokerNode) {
-      this._bottomInvokerNode.setAttribute('aria-expanded', `${this.opened}`);
     }
 
     this.dispatchEvent(new CustomEvent('opened-changed'));
@@ -238,7 +213,6 @@ export class LionDrawer extends LionCollapsible {
         <div class="content-container">
           <slot name="content"></slot>
         </div>
-        <slot name="bottom-invoker"></slot>
       </div>
     `;
   }

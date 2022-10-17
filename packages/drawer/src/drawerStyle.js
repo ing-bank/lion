@@ -11,7 +11,6 @@ export const drawerStyle = css`
     --start-width: var(--min-width);
     --start-height: 100%;
     --transition-property: width;
-    --background-color: #ffffff;
   }
 
   :host([position='top']) {
@@ -36,7 +35,6 @@ export const drawerStyle = css`
     max-height: var(--max-height);
     overflow: hidden;
     box-sizing: border-box;
-    background-color: var(--background-color);
     transition: var(--transition-property) 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
