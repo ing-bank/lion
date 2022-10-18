@@ -68,15 +68,15 @@ export class LionDrawer extends LionCollapsible {
     if (this.position === 'top') {
       this.minHeight = host ? getComputedStyle(host).getPropertyValue('--min-height') : '0px';
       this.maxHeight = host ? getComputedStyle(host).getPropertyValue('--max-height') : '0px';
-      this.minWidth = 'auto';
-      this.maxWidth = 'auto';
+      this.minWidth = '0px';
+      this.maxWidth = 'none';
     }
 
     if (this.position === 'left' || this.position === 'right') {
       this.minWidth = host ? getComputedStyle(host).getPropertyValue('--min-width') : '0px';
       this.maxWidth = host ? getComputedStyle(host).getPropertyValue('--max-width') : '0px';
       this.minHeight = 'auto';
-      this.maxHeight = 'auto';
+      this.maxHeight = 'fit-content';
     }
 
     setTimeout(() => {

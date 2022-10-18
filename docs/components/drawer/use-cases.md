@@ -5,6 +5,7 @@ import { html } from '@mdjs/mdjs-preview';
 import { icons } from '@lion/icon';
 import '@lion/drawer/define';
 import '@lion/icon/define';
+import { demoStyle } from './src/demoStyle.js';
 
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {
@@ -29,27 +30,7 @@ With the `position` property it can be positioned at the top or on the right of 
 ```js preview-story
 export const top = () => html`
   <style>
-    .demo-container-top {
-      height: 400px;
-      display: flex;
-      flex-direction: column;
-      background-color: #f6f8fa;
-    }
-
-    .demo-container-top div {
-      padding: 8px;
-    }
-
-    .demo-container-top lion-drawer {
-      height: auto;
-      width: 100%;
-    }
-
-    button {
-      all: revert !important;
-      border: 2px solid #000000;
-      background-color: rgb(239, 239, 239);
-    }
+    ${demoStyle}
   </style>
   <div class="demo-container-top">
     <lion-drawer position="top">
@@ -78,20 +59,7 @@ export const top = () => html`
 ```js preview-story
 export const right = () => html`
   <style>
-    .demo-container-right {
-      height: 400px;
-      display: flex;
-      flex-direction: row-reverse;
-      background-color: #f6f8fa;
-    }
-
-    .demo-container-right div {
-      padding: 8px;
-    }
-
-    .demo-container-right lion-drawer {
-      height: 400px;
-    }
+    ${demoStyle}
   </style>
   <div class="demo-container-right">
     <lion-drawer position="right">
@@ -122,20 +90,7 @@ Add the `opened` attribute to display the drawer opened.
 ```js preview-story
 export const opened = () => html`
   <style>
-    .demo-container-opened {
-      height: 400px;
-      display: flex;
-      flex-direction: row;
-      background-color: #f6f8fa;
-    }
-
-    .demo-container-opened div {
-      padding: 8px;
-    }
-
-    .demo-container-opened lion-drawer {
-      height: 400px;
-    }
+    ${demoStyle}
   </style>
   <div class="demo-container">
     <lion-drawer opened>
@@ -167,20 +122,7 @@ There are the following methods available to control the extra content for the d
 ```js preview-story
 export const methods = ({ shadowRoot }) => html`
   <style>
-    .demo-container {
-      height: 400px;
-      display: flex;
-      flex-direction: row;
-      background-color: #f6f8fa;
-    }
-
-    .demo-container div {
-      padding: 8px;
-    }
-
-    lion-drawer {
-      height: 400px;
-    }
+    ${demoStyle}
   </style>
   <section style="margin-top:16px">
     <button @click=${() => shadowRoot.querySelector('#drawer').toggle()}>Toggle content</button>
@@ -219,22 +161,8 @@ export const methods = ({ shadowRoot }) => html`
 ```js preview-story
 export const events = ({ shadowRoot }) => html`
   <style>
-    .demo-container {
-      height: 400px;
-      display: flex;
-      flex-direction: row;
-      background-color: #f6f8fa;
-    }
-
-    .demo-container div {
-      padding: 8px;
-    }
-
-    lion-drawer {
-      height: 400px;
-    }
+    ${demoStyle}
   </style>
-
   <div class="demo-custom-collapsible-state-container">
     <strong id="collapsible-state"></strong>
   </div>
