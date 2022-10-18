@@ -19,13 +19,11 @@ git clone https://github.com/ing-bank/lion.git
 cd lion
 
 # Install dependencies
-yarn
+npm install
 
 # Create a branch for your changes
 git checkout -b fix/buttonSize
 ```
-
-> Requires to use yarn for now, since we use workspaces, and NPM 7 is still too buggy
 
 Make sure everything works as expected:
 

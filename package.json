@@ -6,7 +6,7 @@
     "build": "rocket build",
     "build:types": "tsc -p tsconfig.build.types.json",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
-    "custom-elements-manifest": "node scripts/workspaces-scripts.mjs run custom-elements-manifest",
+    "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present",
     "debug": "web-test-runner --watch --config web-test-runner-chrome.config.mjs",
     "debug:firefox": "web-test-runner --watch --config web-test-runner-firefox.config.mjs",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
@@ -28,7 +28,7 @@
     "test": "run-p test:browser test:node",
     "test:browser": "web-test-runner --coverage",
     "test:browserstack": "web-test-runner --config ./web-test-runner-browserstack.config.js",
-    "test:node": "node scripts/workspaces-scripts.mjs run test:node",
+    "test:node": "npm run test:node --workspaces --if-present",
     "test:screenshots": "rimraf screenshots/.diff/ && rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots"
   },
@@ -107,7 +107,7 @@
     },
     {
       "path": "./bundlesize/dist/all/*.js",
-      "maxSize": "56 kB"
+      "maxSize": "60 kB"
     }
   ],
   "prettier": {

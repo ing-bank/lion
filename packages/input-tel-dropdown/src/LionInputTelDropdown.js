@@ -413,6 +413,7 @@ export class LionInputTelDropdown extends LionInputTel {
     this.__regionMetaList = [];
     this.__regionMetaListPreferred = [];
     this._allowedOrAllRegions.forEach(regionCode => {
+      // @ts-ignore relatively new platform api
       const namesForRegion = new Intl.DisplayNames([regionCode.toLowerCase()], {
         type: 'region',
       });
