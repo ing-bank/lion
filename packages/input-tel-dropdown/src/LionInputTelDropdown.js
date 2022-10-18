@@ -242,7 +242,7 @@ export class LionInputTelDropdown extends LionInputTel {
 
   /**
    * @lifecycle LitElement
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('@lion/core').PropertyValues } changedProperties
    */
   willUpdate(changedProperties) {
     super.willUpdate(changedProperties);
@@ -253,7 +253,7 @@ export class LionInputTelDropdown extends LionInputTel {
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('@lion/core').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);
@@ -413,6 +413,7 @@ export class LionInputTelDropdown extends LionInputTel {
     this.__regionMetaList = [];
     this.__regionMetaListPreferred = [];
     this._allowedOrAllRegions.forEach(regionCode => {
+      // @ts-expect-error relatively new platform api
       const namesForRegion = new Intl.DisplayNames([regionCode.toLowerCase()], {
         type: 'region',
       });

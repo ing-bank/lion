@@ -184,7 +184,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('@lion/core').PropertyValues } changedProperties
    */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
@@ -194,7 +194,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
   }
 
   /**
-   * @param {import('lit-element').PropertyValues } changedProperties
+   * @param {import('@lion/core').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

@@ -232,7 +232,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     this.removeEventListener('form-element-register', this._onRequestToAddFormElement);
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this._setOldState();
@@ -241,7 +241,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     }
   }
 
-  /** @param {import('lit-element').PropertyValues } changedProperties */
+  /** @param {import('@lion/core').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('indeterminate')) {
