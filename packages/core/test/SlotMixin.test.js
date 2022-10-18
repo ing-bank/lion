@@ -210,7 +210,8 @@ describe('SlotMixin', () => {
     expect(slot.tagName).to.equal('SPAN');
   });
 
-  it('supports scoped elements when polyfill loaded', async () => {
+  // TODO: @Thijs is this still needed?
+  it.skip('supports scoped elements when polyfill loaded', async () => {
     mockScopedRegistry();
 
     class ScopedEl extends LitElement {}

@@ -178,7 +178,6 @@ Lion Web Components aims to be future-proof and use well-supported proven techno
 
 - [lit](https://lit.dev/)
 - [npm](http://npmjs.com)
-- [yarn](https://yarnpkg.com)
 - [Open Web Components](https://open-wc.org)
 - [Modern Web](https://modern-web.dev)
 - [Mocha](https://mochajs.org)
@@ -203,7 +202,7 @@ Check out our [coding guidelines](https://lion-web.netlify.app/guides/principles
 
 ## How to contribute
 
-**Please note:** This project uses Yarn [Workspaces](https://classic.yarnpkg.com/en/docs/workspaces). If you want to run all demos locally you need to get [Yarn](https://classic.yarnpkg.com/en/docs/install) and install all dependencies by executing `yarn install`.
+**Please note:** This project uses Npm [Workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspaces). If you want to run all demos locally you need to get at least npm 7+ and install all dependencies by executing `npm install`.
 
 Lion Web Components are only as good as its contributions.
 Read our [contribution guide](https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md) and feel free to enhance/improve Lion. We keep feature requests closed while we're not working on them.
