@@ -70,9 +70,7 @@ export class LionDrawer extends LionCollapsible {
       this.maxHeight = host ? getComputedStyle(host).getPropertyValue('--max-height') : '0px';
       this.minWidth = '0px';
       this.maxWidth = 'none';
-    }
-
-    if (this.position === 'left' || this.position === 'right') {
+    } else {
       this.minWidth = host ? getComputedStyle(host).getPropertyValue('--min-width') : '0px';
       this.maxWidth = host ? getComputedStyle(host).getPropertyValue('--max-width') : '0px';
       this.minHeight = 'auto';
