@@ -3,6 +3,7 @@ import { FormRegistrarMixin } from '../registration/FormRegistrarMixin.js';
 import { InteractionStateMixin } from '../InteractionStateMixin.js';
 
 /**
+ * @typedef {import('@lion/core').PropertyDeclarations} PropertyDeclarations
  * @typedef {import('../../types/choice-group/ChoiceGroupMixinTypes').ChoiceGroupMixin} ChoiceGroupMixin
  * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
@@ -23,7 +24,7 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
 const ChoiceGroupMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class ChoiceGroupMixin extends FormRegistrarMixin(InteractionStateMixin(superclass)) {
-    /** @type {any} */
+    /** @type {PropertyDeclarations} */
     static get properties() {
       return {
         multipleChoice: { type: Boolean, attribute: 'multiple-choice' },

@@ -7,6 +7,7 @@ import { getAriaElementsInRightDomOrder } from '../utils/getAriaElementsInRightD
 import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
 
 /**
+ * @typedef {import('@lion/core').PropertyDeclarations} PropertyDeclarations
  * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormGroupMixin} FormGroupMixin
  * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormGroupHost} FormGroupHost
  * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormControl} FormControl
@@ -32,7 +33,7 @@ const FormGroupMixinImplementation = superclass =>
   class FormGroupMixin extends FormRegistrarMixin(
     FormControlMixin(ValidateMixin(DisabledMixin(SlotMixin(superclass)))),
   ) {
-    /** @type {any} */
+    /** @type {PropertyDeclarations} */
     static get properties() {
       return {
         submitted: { type: Boolean, reflect: true },

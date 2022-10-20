@@ -7,6 +7,7 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
  * @typedef {import('@lion/core').CSSResult} CSSResult
  * @typedef {import('@lion/core').CSSResultArray} CSSResultArray
+ * @typedef {import('@lion/core').PropertyDeclarations} PropertyDeclarations
  * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
  * @typedef {import('./validate/LionValidationFeedback').LionValidationFeedback} LionValidationFeedback
  * @typedef {import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
@@ -29,12 +30,12 @@ const FormControlMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormControlMixin extends FormRegisteringMixin(DisabledMixin(SlotMixin(superclass))) {
-    /** @type {any} */
+    /** @type {PropertyDeclarations} */
     static get properties() {
       return {
         name: { type: String, reflect: true },
         readOnly: { type: Boolean, attribute: 'readonly', reflect: true },
-        label: String, // FIXME: { attribute: false } breaks a bunch of tests, but shouldn't...
+        label: { type: String }, // FIXME: { attribute: false } breaks a bunch of tests, but shouldn't...
         labelSrOnly: { type: Boolean, attribute: 'label-sr-only', reflect: true },
         helpText: { type: String, attribute: 'help-text' },
         modelValue: { attribute: false },
