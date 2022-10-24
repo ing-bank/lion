@@ -2,10 +2,10 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { MinMaxDate, IsDateDisabled } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import { formatDate } from '@lion/localize';
-import '@lion/input-datepicker/define';
+import { MinMaxDate, IsDateDisabled } from '@lion/components/form-core.js';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
+import { formatDate } from '@lion/components/localize.js';
+import '@lion/components/define/lion-input-datepicker.js';
 ```
 
 ## Minimum and maximum date

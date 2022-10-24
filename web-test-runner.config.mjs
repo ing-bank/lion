@@ -2,21 +2,21 @@ import fs from 'fs';
 import { playwrightLauncher } from '@web/test-runner-playwright';
 
 const packages = fs
-  .readdirSync('packages')
+  .readdirSync('packages/components/src')
   .filter(
-    dir => fs.statSync(`packages/${dir}`).isDirectory() && fs.existsSync(`packages/${dir}/test`),
+    dir => fs.statSync(`packages/components/src/${dir}`).isDirectory() && fs.existsSync(`packages/components/src/${dir}/test`),
   )
   // .filter(x => x.endsWith('-dropdown'))
-  .concat(
-    fs
-      .readdirSync('packages/helpers')
-      .filter(
-        dir =>
-          fs.statSync(`packages/helpers/${dir}`).isDirectory() &&
-          fs.existsSync(`packages/helpers/${dir}/test`),
-      )
-      .map(dir => `helpers/${dir}`),
-  );
+  // .concat(
+  //   fs
+  //     .readdirSync('packages/helpers')
+  //     .filter(
+  //       dir =>
+  //         fs.statSync(`packages/helpers/${dir}`).isDirectory() &&
+  //         fs.existsSync(`packages/helpers/${dir}/test`),
+  //     )
+  //     .map(dir => `helpers/${dir}`),
+  // );
 
 export default {
   nodeResolve: true,
@@ -42,6 +42,6 @@ export default {
   ],
   groups: packages.map(pkg => ({
     name: pkg,
-    files: `packages/${pkg}/test/**/*.test.js`,
+    files: `packages/components/src/${pkg}/test/**/*.test.js`,
   })),
 };

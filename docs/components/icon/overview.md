@@ -4,8 +4,8 @@ A web component for displaying icons.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { icons } from '@lion/icon';
-import '@lion/icon/define';
+import { icons } from '@lion/components/icon.js';
+import '@lion/components/define/lion-icon.js';
 
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {
@@ -34,7 +34,7 @@ npm i --save @lion/icon
 ```
 
 ```js
-import { LionIcon } from '@lion/icon';
+import { LionIcon } from '@lion/components/icon.js';
 // or
-import '@lion/icon/define';
+import '@lion/components/define/lion-icon.js';
 ```

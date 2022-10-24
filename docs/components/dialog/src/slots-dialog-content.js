@@ -1,4 +1,4 @@
-import { LitElement, html, css } from '@lion/core';
+import { LitElement, html, css } from 'lit';
 
 class SlotsDialogContent extends LitElement {
   static get styles() {

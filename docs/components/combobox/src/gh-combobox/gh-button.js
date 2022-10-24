@@ -1,5 +1,5 @@
-import { css, html } from '@lion/core';
-import { LionButton } from '@lion/button';
+import { css, html } from 'lit';
+import { LionButton } from '@lion/components/button.js';
 
 export class GhButton extends LionButton {
   static get properties() {

@@ -1,4 +1,4 @@
-import { LionCollapsible } from '@lion/collapsible';
+import { LionCollapsible } from '@lion/components/collapsible.js';
 
 const EVENT = {
   TRANSITION_END: 'transitionend',

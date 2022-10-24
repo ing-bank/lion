@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/textarea/define';
+import '@lion/components/define/lion-textarea.js';
 ```
 
 ## Prefilled

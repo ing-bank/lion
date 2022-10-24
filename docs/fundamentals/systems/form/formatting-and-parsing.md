@@ -2,9 +2,9 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input/define';
-import { Unparseable } from '@lion/form-core';
-import { liveFormatPhoneNumber } from '@lion/input-tel';
+import '@lion/components/define/lion-input.js';
+import { Unparseable } from '@lion/components/form-core.js';
+import { liveFormatPhoneNumber } from '@lion/components/input-tel.js';
 import './assets/h-output.js';
 ```
 

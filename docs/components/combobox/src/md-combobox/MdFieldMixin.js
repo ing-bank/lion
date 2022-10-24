@@ -1,4 +1,5 @@
-import { html, css, dedupeMixin } from '@lion/core';
+import { html, css } from 'lit';
+import { dedupeMixin } from '@lion/components/core.js';
 
 export const MdFieldMixin = dedupeMixin(
   superclass =>

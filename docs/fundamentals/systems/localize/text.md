@@ -4,8 +4,8 @@
 
 ```js script
 import { html, render, LitElement } from '@mdjs/mdjs-preview';
-import { localize, formatNumber, formatDate, LocalizeMixin } from '@lion/localize';
-import '@lion/helpers/define';
+import { localize, formatNumber, formatDate, LocalizeMixin } from '@lion/components/localize.js';
+import '@lion/components/define-helpers/sb-locale-switcher.js';
 ```
 
 ```js preview-story

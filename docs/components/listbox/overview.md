@@ -8,7 +8,8 @@ multiple options to be selected is a `multi-select listbox`.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/listbox/define';
+import '@lion/components/define/lion-listbox.js';
+import '@lion/components/define/lion-option.js';
 ```
 
 ```js preview-story
@@ -36,5 +37,6 @@ npm i --save @lion/listbox
 ```
 
 ```js
-import '@lion/listbox/define';
+import '@lion/components/define/lion-listbox.js';
+import '@lion/components/define/lion-option.js';
 ```

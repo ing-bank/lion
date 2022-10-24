@@ -6,7 +6,7 @@ We encourage using our standard [input-date](../input-date/overview.md) for this
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input-datepicker/define';
+import '@lion/components/define/lion-input-datepicker.js';
 ```
 
 ```js preview-story
@@ -36,7 +36,7 @@ npm i --save @lion/input-datepicker
 ```
 
 ```js
-import { LionInputDatepicker } from '@lion/input-datepicker';
+import { LionInputDatepicker } from '@lion/components/input-datepicker.js';
 // or
-import '@lion/input-datepicker/define';
+import '@lion/components/define/lion-input-datepicker.js';
 ```

@@ -2,7 +2,7 @@
 
 ```js script
 import { html, css } from '@mdjs/mdjs-preview';
-import '@lion/calendar/define';
+import '@lion/components/define/lion-calendar.js';
 ```
 
 ## Selected date

@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input/define';
+import '@lion/components/define/lion-input.js';
 ```
 
 ## Label

@@ -1,4 +1,6 @@
-import { LitElement, css, html, repeat, ScopedStylesController } from '@lion/core';
+import { LitElement, css, html } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
+import { ScopedStylesController } from '@lion/components/core.js';
 import { regionMetaList } from '../../select-rich/src/regionMetaList.js';
 
 export class HRegionCodeTable extends LitElement {

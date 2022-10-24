@@ -23,7 +23,7 @@ Example using the sb-action-logger helper component.
 
 ```html
 <script type="module">
-  import '@lion/helpers/define-sb-action-logger';
+  import '@lion/components/define-helpers/sb-action-logger.js';
 </script>
 
 <sb-action-logger></sb-action-logger>

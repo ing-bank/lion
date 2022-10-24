@@ -1,6 +1,6 @@
-import { css, html } from '@lion/core';
-import { LionOption } from '@lion/listbox';
-import { LionCombobox } from '@lion/combobox';
+import { css, html } from 'lit';
+import { LionOption } from '@lion/components/listbox.js';
+import { LionCombobox } from '@lion/components/combobox.js';
 import { MdFieldMixin } from './MdFieldMixin.js';
 import './style/md-ripple.js';
 import './style/load-roboto.js';

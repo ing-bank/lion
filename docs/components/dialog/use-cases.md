@@ -5,7 +5,7 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/dialog/define';
+import '@lion/components/define/lion-dialog.js';
 
 import { demoStyle } from './src/demoStyle.js';
 import './src/styled-dialog-content.js';

@@ -2,12 +2,12 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { icons } from '@lion/icon';
+import { icons } from '@lion/components/icon.js';
 import './assets/iconset-bugs.js';
 import './assets/iconset-misc.js';
 import * as spaceSet from './assets/iconset-space.js';
 
-import '@lion/icon/define';
+import '@lion/components/define/lion-icon.js';
 
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {

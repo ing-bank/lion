@@ -1,4 +1,4 @@
-import { html, css, LitElement } from '@lion/core';
+import { html, css, LitElement } from 'lit';
 
 /**
  * Material Design Ripple Element

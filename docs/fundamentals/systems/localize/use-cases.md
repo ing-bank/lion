@@ -11,7 +11,7 @@ It is exposed as a `localize` singleton instance.
 This ensures that the data can be cached in the single place and reused across different components and same component instances.
 
 ```js
-import { localize } from '@lion/localize';
+import { localize } from '@lion/components/localize.js';
 // localize is the instance of LocalizeManager
 ```
 
@@ -275,7 +275,7 @@ If you want to optimize the page rendering and you can inline some of your local
 
 ```js
 // my-inlined-data.js
-import { localize } from '@lion/localize';
+import { localize } from '@lion/components/localize.js';
 localize.addData('en-GB', 'my-namespace', {
   /* data */
 });

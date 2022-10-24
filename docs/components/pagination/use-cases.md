@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/pagination/define';
+import '@lion/components/define/lion-pagination.js';
 ```
 
 ## Without current defined

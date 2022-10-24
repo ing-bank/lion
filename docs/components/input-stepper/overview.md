@@ -4,7 +4,7 @@ A web component that enables the user to increase and decrease a numeric value b
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input-stepper/define';
+import '@lion/components/define/lion-input-stepper.js';
 ```
 
 ```js preview-story
@@ -30,7 +30,7 @@ npm i --save @lion/input-stepper
 ```
 
 ```js
-import { LionInputStepper } from '@lion/input-stepper';
+import { LionInputStepper } from '@lion/components/input-stepper.js';
 // or
-import '@lion/input-stepper/define';
+import '@lion/components/define/lion-input-stepper.js';
 ```

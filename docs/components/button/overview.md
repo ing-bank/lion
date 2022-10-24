@@ -4,7 +4,7 @@ A button web component that is easily stylable and accessible.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/button/define';
+import '@lion/components/define/lion-button.js';
 ```
 
 ```js preview-story
@@ -24,7 +24,7 @@ npm i --save @lion/button
 ```
 
 ```js
-import { LionButton, LionButtonReset, LionButtonSubmit } from '@lion/button';
+import { LionButton, LionButtonReset, LionButtonSubmit } from '@lion/components/button.js';
 // or
-import '@lion/button/define';
+import '@lion/components/define/lion-button.js';
 ```

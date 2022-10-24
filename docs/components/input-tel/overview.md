@@ -4,10 +4,11 @@ Input field for entering phone numbers, including validation, formatting and mob
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { ref, createRef } from '@lion/core';
-import { PhoneUtilManager } from '@lion/input-tel';
-import '@lion/input-tel/define';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import { ref, createRef } from 'lit/directives/ref.js';
+
+import { PhoneUtilManager } from '@lion/components/input-tel.js';
+import '@lion/components/define/lion-input-tel.js';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 ```
 
@@ -55,7 +56,7 @@ npm i --save @lion/input-tel
 ```
 
 ```js
-import { LionInputTel } from '@lion/input-tel';
+import { LionInputTel } from '@lion/components/input-tel.js';
 // or
-import '@lion/input-tel/define';
+import '@lion/components/define/lion-input-tel.js';
 ```

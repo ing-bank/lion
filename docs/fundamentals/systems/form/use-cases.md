@@ -5,28 +5,28 @@ For usage and installation please see the appropriate packages.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/button/define';
-import '@lion/checkbox-group/define';
-import '@lion/combobox/define';
-import '@lion/fieldset/define';
-import '@lion/form/define';
-import '@lion/input-amount/define';
-import '@lion/input-date/define';
-import '@lion/input-datepicker/define';
-import '@lion/input-email/define';
-import '@lion/input-tel/define';
-import '@lion/input-iban/define';
-import '@lion/input-range/define';
-import '@lion/input-stepper/define';
-import '@lion/input/define';
-import '@lion/listbox/define';
-import '@lion/radio-group/define';
-import '@lion/select/define';
-import '@lion/select-rich/define';
-import '@lion/switch/define';
-import '@lion/textarea/define';
-import { MinLength, Required } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import '@lion/components/define/lion-button.js';
+import '@lion/components/define/lion-checkbox-group.js';
+import '@lion/components/define/lion-combobox.js';
+import '@lion/components/define/lion-fieldset.js';
+import '@lion/components/define/lion-form.js';
+import '@lion/components/define/lion-input-amount.js';
+import '@lion/components/define/lion-input-date.js';
+import '@lion/components/define/lion-input-datepicker.js';
+import '@lion/components/define/lion-input-email.js';
+import '@lion/components/define/lion-input-tel.js';
+import '@lion/components/define/lion-input-iban.js';
+import '@lion/components/define/lion-input-range.js';
+import '@lion/components/define/lion-input-stepper.js';
+import '@lion/components/define/lion-input.js';
+import '@lion/components/define/lion-listbox.js';
+import '@lion/components/define/lion-radio-group.js';
+import '@lion/components/define/lion-select.js';
+import '@lion/components/define/lion-select-rich.js';
+import '@lion/components/define/lion-switch.js';
+import '@lion/components/define/lion-textarea.js';
+import { MinLength, Required } from '@lion/components/form-core.js';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
 ```
 
 ## Umbrella Form

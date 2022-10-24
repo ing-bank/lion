@@ -4,10 +4,10 @@ A web component based on the generic text input field. Its purpose is to provide
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { MinDate, MinMaxDate, MaxDate } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import { formatDate } from '@lion/localize';
-import '@lion/input-date/define';
+import { MinDate, MinMaxDate, MaxDate } from '@lion/components/form-core.js';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
+import { formatDate } from '@lion/components/localize.js';
+import '@lion/components/define/lion-input-date.js';
 ```
 
 ```js preview-story
@@ -33,7 +33,7 @@ npm i --save @lion/input-date
 ```
 
 ```js
-import { LionInputDate } from '@lion/input-date';
+import { LionInputDate } from '@lion/components/input-date.js';
 // or
-import '@lion/input-date/define';
+import '@lion/components/define/lion-input-date.js';
 ```

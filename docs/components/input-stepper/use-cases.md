@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input-stepper/define';
+import '@lion/components/define/lion-input-stepper.js';
 ```
 
 ## Default with no specification

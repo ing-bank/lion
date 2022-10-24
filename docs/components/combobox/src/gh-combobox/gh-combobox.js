@@ -1,8 +1,8 @@
-import { css, html } from '@lion/core';
-import { LionOption } from '@lion/listbox';
-import { renderLitAsNode } from '@lion/helpers';
-// import { withModalDialogConfig } from '@lion/overlays';
-import { LionCombobox } from '@lion/combobox';
+import { css, html } from 'lit';
+import { LionOption } from '@lion/components/listbox.js';
+import { renderLitAsNode } from '@lion/components/helpers.js';
+// import { withModalDialogConfig } from '@lion/components/overlays.js';
+import { LionCombobox } from '@lion/components/combobox.js';
 import './gh-button.js';
 
 export class GhOption extends LionOption {

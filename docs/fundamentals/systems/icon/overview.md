@@ -9,7 +9,7 @@ application, and you don't need to worry about carefully coordinating the dynami
 For security reasons, icons are defined using lit-html templates to guarantee XSS safety:
 
 ```js
-import { html } from '@lion/core';
+import { html } from 'lit';
 
 export default html` <svg focusable="false" ...>...</svg> `;
 ```
@@ -80,7 +80,7 @@ Icon resolvers are registered in the `IconManager` on a namespace. There can be 
 make sure they are unique. A good idea is to use your package name as the namespace.
 
 ```js
-import { icons } from '@lion/icon';
+import { icons } from '@lion/components/icon.js';
 
 function resolveLionIcon(iconset, name) {
   switch (iconset) {
@@ -103,7 +103,7 @@ icons.addIconResolver('lion', resolveLionIcon);
 After register an icon resolver, icons can be resolved from the manager:
 
 ```js
-import { icons } from '@lion/icon';
+import { icons } from '@lion/components/icon.js';
 
 const spaceshipIcon = await icons.resolveIcon('lion', 'space', 'alienSpaceship');
 ```
@@ -111,7 +111,7 @@ const spaceshipIcon = await icons.resolveIcon('lion', 'space', 'alienSpaceship')
 Icons can also be resolved from a single string, using the pattern: `namespace:iconset:name`:
 
 ```js
-import { icons } from '@lion/icon';
+import { icons } from '@lion/components/icon.js';
 
 const spaceshipIcon = await icons.resolveIconForId('lion:space:alienSpaceship');
 ```

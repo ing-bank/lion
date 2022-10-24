@@ -7,8 +7,9 @@ import { html as previewHtml } from '@mdjs/mdjs-preview';
 ```
 
 ```js preview-story
-import { html, LitElement, ScopedElementsMixin } from '@lion/core';
-import { LionAccordion } from '@lion/accordion';
+import { html, LitElement } from 'lit';
+import { ScopedElementsMixin } from '@lion/components/core.js';
+import { LionAccordion } from '@lion/components/accordion.js';
 
 class MyComponent extends ScopedElementsMixin(LitElement) {
   static get scopedElements() {
@@ -81,8 +82,9 @@ npm i --save @lion/accordion
 2. Use scoped registry
 
 ```js
-import { html, LitElement, ScopedElementsMixin } from '@lion/core';
-import { LionAccordion } from '@lion/accordion';
+import { html, LitElement } from 'lit';
+import { ScopedElementsMixin } from '@lion/components/core.js';
+import { LionAccordion } from '@lion/components/accordion.js';
 
 class MyComponent extends ScopedElementsMixin(LitElement) {
   static get scopedElements() {
@@ -110,7 +112,7 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
 
 ```html
 <script type="module">
-  import '@lion/accordion/define';
+  import '@lion/components/define/lion-accordion.js';
 </script>
 
 <lion-accordion>

@@ -2,8 +2,8 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { Validator } from '@lion/form-core';
-import '@lion/input-email/define';
+import { Validator } from '@lion/components/form-core.js';
+import '@lion/components/define/lion-input-email.js';
 ```
 
 ## Faulty Prefilled

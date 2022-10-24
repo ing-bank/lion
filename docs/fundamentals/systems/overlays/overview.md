@@ -34,7 +34,7 @@ npm i --save @lion/dialog
 ### Example
 
 ```js
-import '@lion/dialog/define';
+import '@lion/components/define/lion-dialog.js';
 
 html`
   <lion-dialog .config=${{
@@ -57,7 +57,7 @@ html`
 Or by creating a controller yourself
 
 ```js
-import { OverlayController } from '@lion/overlays';
+import { OverlayController } from '@lion/components/overlays.js';
 
 const ctrl = new OverlayController({
   ...withModalDialogConfig(),
@@ -69,8 +69,8 @@ const ctrl = new OverlayController({
 Or creating your own Web Component which uses the Overlay System
 
 ```js
-import { LitElement, html } from '@lion/core';
-import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
+import { LitElement, html } from 'lit';
+import { OverlayMixin, withModalDialogConfig } from '@lion/components/overlays.js';
 
 class MyOverlayComponent extends OverlayMixin(LitElement) {
   _defineOverlayConfig() {

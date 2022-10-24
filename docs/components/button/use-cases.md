@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/button/define';
+import '@lion/components/define/lion-button.js';
 ```
 
 ## With click handler

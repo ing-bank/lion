@@ -7,7 +7,7 @@ To be sure a compatible version is used you should import it via this package.
 
 ```js
 // DO
-import { LitElement, html, render } from '@lion/core';
+import { LitElement, html, render } from 'lit';
 
 // DON'T
 import { LitElement, html, render } from 'lit-element';
@@ -30,7 +30,7 @@ npm i --save @lion/core
 ```
 
 ```js
-import { dedupeMixin, LitElement } from '@lion/core';
+import { dedupeMixin, LitElement } from 'lit';
 ```
 
 ### Example

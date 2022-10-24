@@ -15,8 +15,8 @@ availability of the pop-up.
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import { listboxData } from '../listbox/src/listboxData.js';
-import '@lion/listbox/define';
-import '@lion/combobox/define';
+import '@lion/components/define/lion-combobox.js';
+import '@lion/components/define/lion-option.js';
 import { lazyRender } from './src/lazyRender.js';
 ```
 
@@ -46,6 +46,6 @@ npm i --save @lion/combobox
 ```
 
 ```js
-import '@lion/combobox/define';
-import '@lion/listbox/lion-option.js';
+import '@lion/components/define/lion-combobox.js';
+import '@lion/components/define/lion-option.js';
 ```

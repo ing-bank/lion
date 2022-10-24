@@ -4,7 +4,7 @@ A web component that allows users to quickly move between a small number of equa
 
 ```js script
 import { LitElement, html } from '@mdjs/mdjs-preview';
-import '@lion/tabs/define';
+import '@lion/components/define/lion-tabs.js';
 ```
 
 ```js preview-story
@@ -25,9 +25,9 @@ npm i --save @lion/tabs
 ```
 
 ```js
-import { LionTabs } from '@lion/tabs';
+import { LionTabs } from '@lion/components/tabs.js';
 // or
-import '@lion/tabs/define';
+import '@lion/components/define/lion-tabs.js';
 ```
 
 ## Rationale

@@ -4,7 +4,7 @@ A web component that handles pagination.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/pagination/define';
+import '@lion/components/define/lion-pagination.js';
 ```
 
 ```js preview-story
@@ -23,7 +23,7 @@ npm i --save @lion/pagination
 ```
 
 ```js
-import { LionPagination } from '@lion/pagination';
+import { LionPagination } from '@lion/components/pagination.js';
 // or
-import '@lion/pagination/define';
+import '@lion/components/define/lion-pagination.js';
 ```

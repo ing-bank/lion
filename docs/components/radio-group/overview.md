@@ -6,7 +6,8 @@ You should use our `radio` inside this element.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/radio-group/define';
+import '@lion/components/define/lion-radio-group.js';
+import '@lion/components/define/lion-radio.js';
 ```
 
 ```js preview-story
@@ -38,7 +39,8 @@ npm i --save @lion/radio-group
 ```
 
 ```js
-import { LionRadioGroup, LionRadio } from '@lion/radio-group';
+import { LionRadioGroup, LionRadio } from '@lion/components/radio-group.js';
 // or
-import '@lion/radio-group/define';
+import '@lion/components/define/lion-radio-group.js';
+import '@lion/components/define/lion-radio.js';
 ```

@@ -2,10 +2,10 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { ref, createRef } from '@lion/core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import { PhoneUtilManager } from '@lion/input-tel';
-import '@lion/input-tel-dropdown/define';
+import { ref, createRef } from 'lit/directives/ref.js';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
+import { PhoneUtilManager } from '@lion/components/input-tel.js';
+import '@lion/components/define/lion-input-tel-dropdown.js';
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 
 // TODO: make each example load/use the dependencies by default

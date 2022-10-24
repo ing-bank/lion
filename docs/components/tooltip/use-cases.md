@@ -2,8 +2,8 @@
 
 ```js script
 import { css, html } from '@mdjs/mdjs-preview';
-import { LionTooltip } from '@lion/tooltip';
-import '@lion/tooltip/define';
+import { LionTooltip } from '@lion/components/tooltip.js';
+import '@lion/components/define/lion-tooltip.js';
 ```
 
 ## invokerRelation

@@ -3,8 +3,8 @@
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 
-import '@lion/input/define';
-import '@lion/fieldset/define';
+import '@lion/components/define/lion-input.js';
+import '@lion/components/define/lion-fieldset.js';
 ```
 
 A web component that can be used to group multiple input fields or other fieldsets together.
@@ -43,7 +43,7 @@ npm i --save @lion/fieldset
 ```
 
 ```js
-import { LionFieldset } from '@lion/fieldset';
+import { LionFieldset } from '@lion/components/fieldset.js';
 // or
-import '@lion/fieldset/define';
+import '@lion/components/define/lion-fieldset.js';
 ```

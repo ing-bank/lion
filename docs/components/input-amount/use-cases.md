@@ -2,12 +2,12 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { MaxLength } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import { MaxLength } from '@lion/components/form-core.js';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
 
-import { localize } from '@lion/localize';
+import { localize } from '@lion/components/localize.js';
 
-import '@lion/input-amount/define';
+import '@lion/components/define/lion-input-amount.js';
 ```
 
 ## Negative Number
@@ -61,7 +61,7 @@ Separator characters include:
 - , (comma)
 
 ```js preview-story
-import { preprocessAmount } from '@lion/input-amount';
+import { preprocessAmount } from '@lion/components/input-amount.js';
 
 export const forceDigits = () => html`
   <lion-input-amount label="Amount" .preprocessor=${preprocessAmount}></lion-input-amount>

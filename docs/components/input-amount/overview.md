@@ -11,7 +11,7 @@ If there are no valid characters in the input whatsoever, it will provide an err
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input-amount/define';
+import '@lion/components/define/lion-input-amount.js';
 ```
 
 ```js preview-story
@@ -43,7 +43,7 @@ npm i --save @lion/input-amount
 ```
 
 ```js
-import { LionInputAmount } from '@lion/input-amount';
+import { LionInputAmount } from '@lion/components/input-amount.js';
 // or
-import '@lion/input-amount/define';
+import '@lion/components/define/lion-input-amount.js';
 ```

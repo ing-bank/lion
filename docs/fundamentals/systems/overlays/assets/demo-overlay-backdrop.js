@@ -1,4 +1,4 @@
-import { css, LitElement } from '@lion/core';
+import { css, LitElement } from 'lit';
 
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig

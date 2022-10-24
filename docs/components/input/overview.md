@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input/define';
+import '@lion/components/define/lion-input.js';
 ```
 
 A web component that enhances the functionality of the native `<input>` element.
@@ -32,5 +32,5 @@ npm i --save @lion/input
 ```
 
 ```js
-import '@lion/input/define';
+import '@lion/components/define/lion-input.js';
 ```

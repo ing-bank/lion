@@ -2,9 +2,9 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/select-rich/define';
+import '@lion/components/define/lion-select-rich.js';
 import './src/intl-input-tel-dropdown.js';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
 ```
 
 ## Input Tel International

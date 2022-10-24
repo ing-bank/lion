@@ -2,10 +2,10 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input-datepicker/define';
-import '@lion/listbox/define';
-import '@lion/listbox/define';
-import '@lion/select-rich/define';
+import '@lion/components/define/lion-input-datepicker.js';
+import '@lion/components/define/lion-listbox.js';
+import '@lion/components/define/lion-listbox.js';
+import '@lion/components/define/lion-select-rich.js';
 import './assets/demo-overlay-system.js';
 import './assets/applyDemoOverlayStyles.js';
 ```

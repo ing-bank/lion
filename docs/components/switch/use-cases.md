@@ -2,10 +2,10 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { Validator } from '@lion/form-core';
-import { LionSwitch } from '@lion/switch';
-import '@lion/switch/define';
-import '@lion/helpers/define-sb-action-logger';
+import { Validator } from '@lion/components/form-core.js';
+import { LionSwitch } from '@lion/components/switch.js';
+import '@lion/components/define/lion-switch.js';
+import '@lion/components/define-helpers/sb-action-logger.js';
 ```
 
 ## Disabled

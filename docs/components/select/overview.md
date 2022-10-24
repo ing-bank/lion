@@ -7,7 +7,7 @@ Sets of options where each option name starts with the same word or phrase can a
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/select/define';
+import '@lion/components/define/lion-select.js';
 ```
 
 ```js preview-story
@@ -38,7 +38,7 @@ npm i --save @lion/select
 ```
 
 ```js
-import { LionSelect } from '@lion/select';
+import { LionSelect } from '@lion/components/select.js';
 // or
-import '@lion/select/define';
+import '@lion/components/define/lion-select.js';
 ```

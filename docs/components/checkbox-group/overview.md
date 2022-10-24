@@ -7,7 +7,8 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/checkbox-group/define';
+import '@lion/components/define/lion-checkbox-group.js';
+import '@lion/components/define/lion-checkbox.js';
 ```
 
 ```js preview-story
@@ -34,5 +35,6 @@ npm i --save @lion/checkbox-group
 ```
 
 ```js
-import '@lion/checkbox-group/define';
+import '@lion/components/define/lion-checkbox-group.js';
+import '@lion/components/define/lion-checkbox.js';
 ```

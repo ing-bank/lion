@@ -1,4 +1,4 @@
-import { dedupeMixin } from '@lion/core';
+import { dedupeMixin } from '@lion/components/core.js';
 
 /**
  * @typedef {import('lit-element').PropertyValues } changedProperties

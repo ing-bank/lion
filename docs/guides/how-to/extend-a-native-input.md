@@ -2,10 +2,10 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { LionInput } from '@lion/input';
-import { LionInputDate } from '@lion/input-date';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import '@lion/input/define';
+import { LionInput } from '@lion/components/input.js';
+import { LionInputDate } from '@lion/components/input-date.js';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
+import '@lion/components/define/lion-input.js';
 import '../../fundamentals/systems/form/assets/h-output.js';
 
 loadDefaultFeedbackMessages();

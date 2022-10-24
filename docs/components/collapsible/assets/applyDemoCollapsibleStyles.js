@@ -1,4 +1,4 @@
-import { css } from '@lion/core';
+import { css } from 'lit';
 
 const applyDemoCollapsibleStyles = () => {
   const demoCollapsibleStyles = css`

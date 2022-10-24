@@ -20,7 +20,7 @@ export default {
     categoryConfig: [
       {
         // This is the name found in package.json
-        project: '@lion/root',
+        project: '@lion/components/root.js',
         // These conditions will be run on overy filePath
         categories: {
           core: p => p.startsWith('./packages/core'),
@@ -45,7 +45,7 @@ export default {
 ### referenceCollections
 
 A list of file system paths. They can be defined relative from the current project root or they can be full paths.
-When a [MatchAnalyzer](../../../fundamentals/node-tools/providence-analytics/analyzer.md) like `match-imports` or `match-subclasses` is used, the default reference(s) can be configured here. For instance: ['/path/to/@lion/form']
+When a [MatchAnalyzer](../../../fundamentals/node-tools/providence-analytics/analyzer.md) like `match-imports` or `match-subclasses` is used, the default reference(s) can be configured here. For instance: ['/path/to/@lion/components/form.js']
 
 An example:
 

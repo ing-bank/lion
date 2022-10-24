@@ -7,3 +7,5 @@ _site-dev
 
 /docs/_assets/scoped-custom-element-registry.min.js
 /docs/_assets/scoped-custom-element-registry.min.js.map
+
+/packages/components/_legacy-changelogs

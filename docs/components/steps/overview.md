@@ -4,7 +4,8 @@ A web component that can be used to break a single goal down into dependable sub
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/steps/define';
+import '@lion/components/define/lion-steps.js';
+import '@lion/components/define/lion-step.js';
 ```
 
 ```js preview-story
@@ -55,7 +56,8 @@ npm i --save @lion/steps
 ```
 
 ```js
-import { LionSteps, LionStep } from '@lion/steps';
+import { LionSteps, LionStep } from '@lion/components/steps.js';
 // or
-import '@lion/steps/define';
+import '@lion/components/define/lion-steps.js';
+import '@lion/components/define/lion-step.js';
 ```

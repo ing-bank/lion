@@ -2,30 +2,30 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { LionInput } from '@lion/input';
-import '@lion/checkbox-group/define';
-import '@lion/checkbox-group/define';
-import '@lion/combobox/define';
-import '@lion/fieldset/define';
-import '@lion/form/define';
-import '@lion/input-amount/define';
-import '@lion/input-date/define';
-import '@lion/input-datepicker/define';
-import '@lion/input-email/define';
-import '@lion/input-iban/define';
-import '@lion/input-range/define';
-import '@lion/input-stepper/define';
-import '@lion/input/define';
-import '@lion/listbox/define';
-import '@lion/listbox/define-listbox';
-import '@lion/listbox/define-option';
-import '@lion/listbox/define-options';
-import '@lion/radio-group/define';
-import '@lion/radio-group/define-radio-group';
-import '@lion/radio-group/define-radio';
-import '@lion/select/define';
-import '@lion/select-rich/define-select-rich';
-import '@lion/textarea/define';
+import { LionInput } from '@lion/components/input.js';
+import '@lion/components/define/lion-checkbox-group.js';
+import '@lion/components/define/lion-checkbox-group.js';
+import '@lion/components/define/lion-combobox.js';
+import '@lion/components/define/lion-fieldset.js';
+import '@lion/components/define/lion-form.js';
+import '@lion/components/define/lion-input-amount.js';
+import '@lion/components/define/lion-input-date.js';
+import '@lion/components/define/lion-input-datepicker.js';
+import '@lion/components/define/lion-input-email.js';
+import '@lion/components/define/lion-input-iban.js';
+import '@lion/components/define/lion-input-range.js';
+import '@lion/components/define/lion-input-stepper.js';
+import '@lion/components/define/lion-input.js';
+import '@lion/components/define/lion-listbox.js';
+import '@lion/components/define/lion-listbox.js';
+import '@lion/components/define/lion-option.js';
+import '@lion/components/define/lion-options.js';
+import '@lion/components/define/lion-radio-group.js';
+import '@lion/components/define/lion-radio-group.js';
+import '@lion/components/define/lion-radio.js';
+import '@lion/components/define/lion-select.js';
+import '@lion/components/define/lion-select-rich.js';
+import '@lion/components/define/lion-textarea.js';
 import {
   DefaultSuccess,
   EqualsLength,
@@ -46,10 +46,10 @@ import {
   Validator,
   Pattern,
   Unparseable,
-} from '@lion/form-core';
-import { localize } from '@lion/localize';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import { renderLitAsNode } from '@lion/helpers';
+} from '@lion/components/form-core.js';
+import { localize } from '@lion/components/localize.js';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
+import { renderLitAsNode } from '@lion/components/helpers.js';
 ```
 
 ## When validation happens
@@ -175,8 +175,8 @@ npm i --save @lion/form-core
 ```
 
 ```js
-import '@lion/input/define';
-import { %ValidatorName% } from '@lion/form-core';
+import '@lion/components/define/lion-input.js';
+import { %ValidatorName% } from '@lion/components/form-core.js';
 ```
 
 ## Default Validators
@@ -198,7 +198,7 @@ npm i --save @lion/validate-messages
 ```
 
 ```js
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
 ```
 
 ```js preview-story

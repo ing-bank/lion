@@ -26,7 +26,7 @@ npm i --save @lion/localize
 ```
 
 ```js
-import { localize } from '@lion/localize';
+import { localize } from '@lion/components/localize.js';
 ```
 
 ### Example
@@ -37,7 +37,7 @@ The single source of truth for page's locale is `<html lang="my-LOCALE">`.
 At the same time the interaction should happen via `localize.locale` getter/setter to be able to notify and react to the change.
 
 ```js
-import { localize } from '@lion/localize.js';
+import { localize } from '@lion/components/localize.js.js';
 
 localize.addEventListener('localeChanged', () => {
   // do smth when data is loaded for a new locale

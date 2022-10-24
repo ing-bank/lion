@@ -2,12 +2,12 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { ref, createRef } from '@lion/core';
-import { Unparseable } from '@lion/form-core';
-import { localize } from '@lion/localize';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import { PhoneUtilManager } from '@lion/input-tel';
-import '@lion/input-tel/define';
+import { ref, createRef } from 'lit/directives/ref.js';
+import { Unparseable } from '@lion/components/form-core.js';
+import { localize } from '@lion/components/localize.js';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
+import { PhoneUtilManager } from '@lion/components/input-tel.js';
+import '@lion/components/define/lion-input-tel.js';
 import './src/h-region-code-table.js';
 import '../../../docs/fundamentals/systems/form/assets/h-output.js';
 

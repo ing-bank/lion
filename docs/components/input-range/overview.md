@@ -4,7 +4,7 @@ A web component based on the native range input. Its purpose is to provide a way
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input-range/define';
+import '@lion/components/define/lion-input-range.js';
 ```
 
 ```js preview-story
@@ -28,7 +28,7 @@ npm i --save @lion/input-range
 ```
 
 ```js
-import { LionInputRange } from '@lion/input-range';
+import { LionInputRange } from '@lion/components/input-range.js';
 // or
-import '@lion/input-range/define';
+import '@lion/components/define/lion-input-range.js';
 ```

@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/progress-indicator/define';
+import '@lion/components/define/lion-progress-indicator.js';
 import './assets/my-indeterminate-progress-spinner.js';
 import './assets/my-determinate-progress-bar.js';
 

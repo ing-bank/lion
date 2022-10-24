@@ -2,8 +2,8 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/steps/define';
-import '@lion/steps/define';
+import '@lion/components/define/lion-steps.js';
+import '@lion/components/define/lion-step.js';
 ```
 
 ```js preview-story

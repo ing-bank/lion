@@ -2,9 +2,9 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import { IsCountryIBAN, IsNotCountryIBAN } from '@lion/input-iban';
-import '@lion/input-iban/define';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
+import { IsCountryIBAN, IsNotCountryIBAN } from '@lion/components/input-iban.js';
+import '@lion/components/define/lion-input-iban.js';
 ```
 
 ## Prefilled

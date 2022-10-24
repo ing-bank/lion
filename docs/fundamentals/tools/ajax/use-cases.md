@@ -2,9 +2,9 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { renderLitAsNode } from '@lion/helpers';
+import { renderLitAsNode } from '@lion/components/helpers.js';
 import { ajax, createCacheInterceptors } from '@lion/ajax';
-import '@lion/helpers/define';
+import '@lion/components/define-helpers/sb-action-logger.js';
 
 const getCacheIdentifier = () => {
   let userId = localStorage.getItem('lion-ajax-cache-demo-user-id');

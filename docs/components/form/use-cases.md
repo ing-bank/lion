@@ -2,10 +2,10 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { Required } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import '@lion/input/define';
-import '@lion/form/define';
+import { Required } from '@lion/components/form-core.js';
+import { loadDefaultFeedbackMessages } from '@lion/components/validate-messages.js';
+import '@lion/components/define/lion-input.js';
+import '@lion/components/define/lion-form.js';
 ```
 
 ## Submit & Reset

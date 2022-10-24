@@ -1,5 +1,8 @@
-import { html, css, ScopedElementsMixin, ref, repeat } from '@lion/core';
-import { LionInputTelDropdown } from '@lion/input-tel-dropdown';
+import { ScopedElementsMixin } from '@lion/components/core.js';
+import { html, css } from 'lit';
+import { ref } from 'lit/directives/ref.js';
+import { repeat } from 'lit/directives/repeat.js';
+import { LionInputTelDropdown } from '@lion/components/input-tel-dropdown.js';
 import {
   IntlSelectRich,
   IntlOption,
@@ -7,7 +10,7 @@ import {
 } from '../../select-rich/src/intl-select-rich.js';
 
 /**
- * @typedef {import('@lion/input-tel-dropdown/types').TemplateDataForDropdownInputTel}TemplateDataForDropdownInputTel
+ * @typedef {import('@lion/components/input-tel-dropdown/types.js').TemplateDataForDropdownInputTel}TemplateDataForDropdownInputTel
  */
 
 // Example implementation for https://intl-tel-input.com/

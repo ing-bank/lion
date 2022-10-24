@@ -1,5 +1,5 @@
-import { css, html } from '@lion/core';
-import { LionProgressIndicator } from '@lion/progress-indicator';
+import { css, html } from 'lit';
+import { LionProgressIndicator } from '@lion/components/progress-indicator.js';
 
 export class MyDeterminateProgressBar extends LionProgressIndicator {
   static get styles() {
