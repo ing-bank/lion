@@ -72,19 +72,10 @@ describe('parseNumber()', () => {
     expect(parseNumber('123456.78', { mode: 'pasted' })).to.equal(123456.78);
   });
 
-  it('detects separators heuristically when there are 2 same ones e.g. 1.234.56', () => {
-    expect(parseNumber('1.234.5')).to.equal(1234.5);
-    expect(parseNumber('1,234,5')).to.equal(1234.5);
-
-    expect(parseNumber('1.234.56')).to.equal(1234.56);
-    expect(parseNumber('1,234,56')).to.equal(1234.56);
+  it('detects separators unparseable when there are 2 same ones e.g. 1.234.56', () => {
+    expect(parseNumber('1.234.56')).to.equal(123456);
+    expect(parseNumber('1,234,56')).to.equal(123456);
     expect(parseNumber('1 234 56')).to.equal(123456);
-
-    expect(parseNumber('1.234.5678')).to.equal(1234.5678);
-    expect(parseNumber('1,234,5678')).to.equal(1234.5678);
-
-    expect(parseNumber('1.234.56789')).to.equal(1234.56789);
-    expect(parseNumber('1,234,56789')).to.equal(1234.56789);
   });
 
   it('uses locale to parse amount if there is only one separator e.g. 1.234', () => {
