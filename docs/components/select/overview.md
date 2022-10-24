@@ -7,7 +7,7 @@ Sets of options where each option name starts with the same word or phrase can a
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/select/define';
+import '@lion/ui/define/lion-select.js';
 ```
 
 ```js preview-story
@@ -34,11 +34,11 @@ For most other form elements we do this for you, because there's no need to put 
 ## Installation
 
 ```bash
-npm i --save @lion/select
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionSelect } from '@lion/select';
+import { LionSelect } from '@lion/ui/select.js';
 // or
-import '@lion/select/define';
+import '@lion/ui/define/lion-select.js';
 ```

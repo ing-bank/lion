@@ -1,3 +1,0 @@
-# Lion Tooltip
-
-[=> See Source <=](../../docs/components/tooltip/overview.md)

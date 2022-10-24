@@ -22,7 +22,8 @@ This means that you can use a Lion Component like `lion-listbox` (which uses com
 To clarify: within Lion class files we never import files that run `customElement.define`
 
 ```js
-import { LitElement, html, ScopedElementsMixin } from '@lion/core';
+import { LitElement, html } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { MyCardHeader } from './MyCardHeader.js';
 
 export class MyCard extends ScopedElementsMixin(LitElement) {
@@ -76,7 +77,8 @@ If you extend Lion components and you imperatively create scoped custom elements
 Be sure to always define **ALL** the sub elements you are using in your template within your `scopedElements` property.
 
 ```js
-import { LitElement, html, ScopedElementsMixin } from '@lion/core';
+import { LitElement, html } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { MyCardHeader } from './MyCardHeader.js';
 
 export class MyCard extends ScopedElementsMixin(LitElement) {

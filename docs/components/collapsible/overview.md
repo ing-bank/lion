@@ -4,7 +4,7 @@ A combination of a button (the invoker) and a chunk of 'extra content'. This web
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/collapsible/define';
+import '@lion/ui/define/lion-collapsible.js';
 ```
 
 ```js preview-story
@@ -29,11 +29,11 @@ export const main = () => html`
 ## Installation
 
 ```bash
-npm i --save @lion/collapsible
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionCollapsible } from '@lion/collapsible';
+import { LionCollapsible } from '@lion/ui/collapsible.js';
 // or
-import '@lion/collapsible/define';
+import '@lion/ui/define/lion-collapsible.js';
 ```

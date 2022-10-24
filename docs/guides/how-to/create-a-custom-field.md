@@ -2,8 +2,10 @@
 
 ```js script
 import { html, css, LitElement } from '@mdjs/mdjs-preview';
-import { LionField } from '@lion/form-core';
-import '@lion/form-core/define';
+import { LionField } from '@lion/ui/form-core.js';
+import '@lion/ui/define/lion-field.js';
+import '@lion/ui/define/lion-validation-feedback.js';
+
 import '../../fundamentals/systems/form/assets/h-output.js';
 
 // A) the custom [slot=input] or 'HTMLElementWithValue'

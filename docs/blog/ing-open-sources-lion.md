@@ -150,7 +150,7 @@ npm i lit-element @lion/tabs
 Create a `lea-tabs` component by reusing the functionality of Lion. This gives Lea all the functionality and accessible core that she needs for his custom tabs component.
 
 ```js
-import { css } from 'lit-element';
+import { css } from 'lit';
 import { LionTabs } from '@lion/tabs';
 
 export class LeaTabs extends LionTabs {

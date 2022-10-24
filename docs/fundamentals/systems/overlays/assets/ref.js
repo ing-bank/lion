@@ -1,7 +1,7 @@
-import { directive } from '@lion/core';
+import { directive } from 'lit/directive.js';
 
 /**
- * @typedef {import('@lion/core').PropertyPart} PropertyPart
+ * @typedef {import('@lion/ui/core.js').PropertyPart} PropertyPart
  */
 
 /** @type {WeakSet<Element>} */

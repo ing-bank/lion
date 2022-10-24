@@ -5,7 +5,7 @@ Its purpose is to provide a way for users to fill in an IBAN (International Bank
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input-iban/define';
+import '@lion/ui/define/lion-input-iban.js';
 ```
 
 ```js preview-story
@@ -27,11 +27,11 @@ export const main = () => {
 ## Installation
 
 ```bash
-npm i --save @lion/input-amount
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionInputIban } from '@lion/input-iban';
+import { LionInputIban } from '@lion/ui/input-iban.js';
 // or
-import '@lion/input-amount/define';
+import '@lion/ui/define/lion-input-amount.js';
 ```

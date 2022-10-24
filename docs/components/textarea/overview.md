@@ -5,7 +5,7 @@ Its purpose is to provide a way for users to write text that is multiple lines l
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/textarea/define';
+import '@lion/ui/define/lion-textarea.js';
 ```
 
 ```js preview-story
@@ -25,11 +25,11 @@ export const main = () => html`
 ## Installation
 
 ```bash
-npm i --save @lion/textarea
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionTextarea } from '@lion/textarea';
+import { LionTextarea } from '@lion/ui/textarea.js';
 // or
-import '@lion/textarea/define';
+import '@lion/ui/define/lion-textarea.js';
 ```

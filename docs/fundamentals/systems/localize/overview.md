@@ -22,11 +22,11 @@ Further examples and a more in depth description can be found at the [Use Cases 
 ## Installation
 
 ```bash
-npm i --save @lion/localize
+npm i --save @lion/ui
 ```
 
 ```js
-import { localize } from '@lion/localize';
+import { localize } from '@lion/ui/localize.js';
 ```
 
 ### Example
@@ -37,7 +37,7 @@ The single source of truth for page's locale is `<html lang="my-LOCALE">`.
 At the same time the interaction should happen via `localize.locale` getter/setter to be able to notify and react to the change.
 
 ```js
-import { localize } from '@lion/localize.js';
+import { localize } from '@lion/ui/localize.js';
 
 localize.addEventListener('localeChanged', () => {
   // do smth when data is loaded for a new locale

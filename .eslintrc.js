@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   extends: ['@open-wc/eslint-config', 'eslint-config-prettier'].map(require.resolve),
   overrides: [
@@ -40,4 +42,9 @@ module.exports = {
       },
     },
   ],
+  settings: {
+    'import/resolver': {
+      [path.resolve('./scripts/eslint-resolver.cjs')]: {},
+    },
+  },
 };

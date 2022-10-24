@@ -7,7 +7,7 @@ To be sure a compatible version is used you should import it via this package.
 
 ```js
 // DO
-import { LitElement, html, render } from '@lion/core';
+import { LitElement, html, render } from 'lit';
 
 // DON'T
 import { LitElement, html, render } from 'lit-element';
@@ -26,11 +26,11 @@ import { LitElement, html, render } from 'lit-element';
 ## Installation
 
 ```bash
-npm i --save @lion/core
+npm i --save @lion/ui
 ```
 
 ```js
-import { dedupeMixin, LitElement } from '@lion/core';
+import { dedupeMixin, LitElement } from 'lit';
 ```
 
 ### Example

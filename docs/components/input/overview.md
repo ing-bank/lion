@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input/define';
+import '@lion/ui/define/lion-input.js';
 ```
 
 A web component that enhances the functionality of the native `<input>` element.
@@ -28,9 +28,9 @@ export const main = () => html`<lion-input label="First Name"></lion-input>`;
 ## Installation
 
 ```bash
-npm i --save @lion/input
+npm i --save @lion/ui
 ```
 
 ```js
-import '@lion/input/define';
+import '@lion/ui/define/lion-input.js';
 ```

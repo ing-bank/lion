@@ -1,6 +1,6 @@
-import { css, html, LitElement } from '@lion/core';
-import { LionField } from '@lion/form-core';
-import { LionFieldset } from '@lion/fieldset';
+import { css, html, LitElement } from 'lit';
+import { LionField } from '@lion/ui/form-core.js';
+import { LionFieldset } from '@lion/ui/fieldset.js';
 
 export class HelperOutput extends LitElement {
   static properties = {

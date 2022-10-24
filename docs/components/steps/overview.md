@@ -4,7 +4,8 @@ A web component that can be used to break a single goal down into dependable sub
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/steps/define';
+import '@lion/ui/define/lion-steps.js';
+import '@lion/ui/define/lion-step.js';
 ```
 
 ```js preview-story
@@ -51,11 +52,12 @@ In many application you build multi-step workflows like multi-step forms where y
 ## Installation
 
 ```bash
-npm i --save @lion/steps
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionSteps, LionStep } from '@lion/steps';
+import { LionSteps, LionStep } from '@lion/ui/steps.js';
 // or
-import '@lion/steps/define';
+import '@lion/ui/define/lion-steps.js';
+import '@lion/ui/define/lion-step.js';
 ```

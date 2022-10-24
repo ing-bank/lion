@@ -3,7 +3,7 @@ module.exports = {
   '*.js': ['eslint --fix', 'prettier --write', 'git add'],
   '*.md': [
     'prettier --write',
-    "markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md}'",
+    "markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md}'",
     'git add',
   ],
   'package-lock.json': ['node ./scripts/lock-scan.js'],

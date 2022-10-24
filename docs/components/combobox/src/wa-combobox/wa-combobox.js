@@ -1,7 +1,7 @@
-import { html, css } from '@lion/core';
-import { renderLitAsNode } from '@lion/helpers';
-import { LionOption } from '@lion/listbox';
-import { LionCombobox } from '@lion/combobox';
+import { html, css } from 'lit';
+import { renderLitAsNode } from '@lion/ui/helpers.js';
+import { LionOption } from '@lion/ui/listbox.js';
+import { LionCombobox } from '@lion/ui/combobox.js';
 
 class WaOption extends LionOption {
   static get properties() {

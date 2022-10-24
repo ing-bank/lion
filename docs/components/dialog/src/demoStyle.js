@@ -1,4 +1,4 @@
-import { css } from '@lion/core';
+import { css } from 'lit';
 
 export const demoStyle = css`
   .demo-box {

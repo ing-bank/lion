@@ -2,10 +2,10 @@
 
 ```js script
 import { html, render } from '@mdjs/mdjs-preview';
-import { renderLitAsNode } from '@lion/helpers';
-import '@lion/input/define';
-import '@lion/input-date/define';
-import { Validator, Unparseable, MinDate, Required } from '@lion/form-core';
+import { renderLitAsNode } from '@lion/ui/helpers.js';
+import '@lion/ui/define/lion-input.js';
+import '@lion/ui/define/lion-input-date.js';
+import { Validator, Unparseable, MinDate, Required } from '@lion/ui/form-core.js';
 import './assets/h-output.js';
 ```
 

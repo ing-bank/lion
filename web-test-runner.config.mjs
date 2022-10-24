@@ -2,21 +2,23 @@ import fs from 'fs';
 import { playwrightLauncher } from '@web/test-runner-playwright';
 
 const packages = fs
-  .readdirSync('packages')
+  .readdirSync('packages/ui/src')
   .filter(
-    dir => fs.statSync(`packages/${dir}`).isDirectory() && fs.existsSync(`packages/${dir}/test`),
-  )
-  // .filter(x => x.endsWith('-dropdown'))
-  .concat(
-    fs
-      .readdirSync('packages/helpers')
-      .filter(
-        dir =>
-          fs.statSync(`packages/helpers/${dir}`).isDirectory() &&
-          fs.existsSync(`packages/helpers/${dir}/test`),
-      )
-      .map(dir => `helpers/${dir}`),
+    dir =>
+      fs.statSync(`packages/ui/src/${dir}`).isDirectory() &&
+      fs.existsSync(`packages/ui/src/${dir}/test`),
   );
+// .filter(x => x.endsWith('-dropdown'))
+// .concat(
+//   fs
+//     .readdirSync('packages/helpers')
+//     .filter(
+//       dir =>
+//         fs.statSync(`packages/helpers/${dir}`).isDirectory() &&
+//         fs.existsSync(`packages/helpers/${dir}/test`),
+//     )
+//     .map(dir => `helpers/${dir}`),
+// );
 
 export default {
   nodeResolve: true,
@@ -32,7 +34,7 @@ export default {
   },
   testFramework: {
     config: {
-      timeout: '3000',
+      timeout: '5000',
     },
   },
   browsers: [
@@ -42,6 +44,6 @@ export default {
   ],
   groups: packages.map(pkg => ({
     name: pkg,
-    files: `packages/${pkg}/test/**/*.test.js`,
+    files: `packages/ui/src/${pkg}/test/**/*.test.js`,
   })),
 };

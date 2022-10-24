@@ -4,8 +4,8 @@ Extension of Input Tel that prefixes a dropdown list that shows all possible reg
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input-tel-dropdown/define';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import '@lion/ui/define/lion-input-tel-dropdown.js';
+import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 ```
 
 ```js preview-story
@@ -28,11 +28,11 @@ export const main = () => {
 ## Installation
 
 ```bash
-npm i --save @lion/input-tel-dropdown
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionInputTelDropdown } from '@lion/input-tel-dropdown';
+import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 // or
-import '@lion/input-tel-dropdown/define';
+import '@lion/ui/define/lion-input-tel-dropdown.js';
 ```

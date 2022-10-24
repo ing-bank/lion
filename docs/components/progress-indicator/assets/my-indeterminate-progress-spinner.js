@@ -1,5 +1,5 @@
-import { html, css } from '@lion/core';
-import { LionProgressIndicator } from '@lion/progress-indicator';
+import { html, css } from 'lit';
+import { LionProgressIndicator } from '@lion/ui/progress-indicator.js';
 
 export class MyIndeterminateProgressSpinner extends LionProgressIndicator {
   static get styles() {

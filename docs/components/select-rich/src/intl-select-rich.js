@@ -1,11 +1,12 @@
-import { html, css, LitElement } from '@lion/core';
-import { LionSelectRich, LionOption, LionSelectInvoker } from '@lion/select-rich';
+import { html, css, LitElement } from 'lit';
+import { LionSelectRich, LionSelectInvoker } from '@lion/ui/select-rich.js';
+import { LionOption } from '@lion/ui/listbox.js';
 import { flagStyles } from './flagStyles.js';
 
 /**
- * @typedef {import('@lion/core').RenderOptions} RenderOptions
- * @typedef {import('@lion/input-tel/types/types').RegionAndCountryCode} RegionAndCountryCode
- * @typedef {import('@lion/input-tel/types/types').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
+ * @typedef {import('@lion/ui/core.js').RenderOptions} RenderOptions
+ * @typedef {import('@lion/ui/input-tel/types/types.js').RegionAndCountryCode} RegionAndCountryCode
+ * @typedef {import('@lion/ui/input-tel/types/types.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
  * @typedef {{countryCode: string; regionCode: string; nameForRegion: string; nameForLocale: string}} RegionMetaList
  * @typedef {TemplateDataForDropdownInputTel & {data: {regionMetaList:RegionMetaList}}} TemplateDataForIntlInputTel
  */

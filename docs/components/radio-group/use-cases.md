@@ -2,8 +2,8 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/radio-group/define';
-import '@lion/radio-group/define';
+import '@lion/ui/define/lion-radio-group.js';
+import '@lion/ui/define/lion-radio.js';
 ```
 
 ## Model value

@@ -6,7 +6,8 @@ You should use our `radio` inside this element.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/radio-group/define';
+import '@lion/ui/define/lion-radio-group.js';
+import '@lion/ui/define/lion-radio.js';
 ```
 
 ```js preview-story
@@ -34,11 +35,12 @@ Since it extends from our [fieldset](../fieldset/overview.md), it has all the fe
 ## Installation
 
 ```bash
-npm i --save @lion/radio-group
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionRadioGroup, LionRadio } from '@lion/radio-group';
+import { LionRadioGroup, LionRadio } from '@lion/ui/radio-group.js';
 // or
-import '@lion/radio-group/define';
+import '@lion/ui/define/lion-radio-group.js';
+import '@lion/ui/define/lion-radio.js';
 ```

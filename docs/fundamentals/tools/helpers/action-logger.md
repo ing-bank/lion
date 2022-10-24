@@ -4,7 +4,7 @@ A visual element to show action logs in demos `sb-action-logger`
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/helpers/define';
+import '@lion/ui/define-helpers/sb-action-logger.js';
 ```
 
 ```js preview-story

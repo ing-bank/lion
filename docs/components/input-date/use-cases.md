@@ -2,10 +2,10 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { MinDate, MinMaxDate, MaxDate } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import { formatDate } from '@lion/localize';
-import '@lion/input-date/define';
+import { MinDate, MinMaxDate, MaxDate } from '@lion/ui/form-core.js';
+import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
+import { formatDate } from '@lion/ui/localize.js';
+import '@lion/ui/define/lion-input-date.js';
 ```
 
 ## Is a date
