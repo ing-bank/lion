@@ -1,14 +1,21 @@
 import sinon from 'sinon';
-import { defineCE, expect, fixture } from '@open-wc/testing';
+import { defineCE, expect, fixture, unsafeStatic, html } from '@open-wc/testing';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { SlotMixin } from '@lion/ui/core.js';
-import { LitElement, html } from 'lit';
+import { LitElement } from 'lit';
 
+const mockedRenderTarget = document.createElement('div');
 function mockScopedRegistry() {
+  const outputObj = { createElementCallCount: 0 };
   // @ts-expect-error wait for browser support
-  ShadowRoot.prototype.createElement = () => {};
+  ShadowRoot.prototype.createElement = () => {
+    outputObj.createElementCallCount += 1;
+    // Return an element that lit can use as render target
+    return mockedRenderTarget;
+  };
   // @ts-expect-error wait for browser support
   window.CustomElementRegistry = class {};
+  return outputObj;
 }
 
 function unMockScopedRegistry() {
@@ -211,13 +218,12 @@ describe('SlotMixin', () => {
     expect(slot.tagName).to.equal('SPAN');
   });
 
-  // TODO: @Thijs is this still needed?
-  it.skip('supports scoped elements when polyfill loaded', async () => {
-    mockScopedRegistry();
+  it('supports scoped elements when polyfill loaded', async () => {
+    const outputObj = mockScopedRegistry();
 
     class ScopedEl extends LitElement {}
 
-    const tag = defineCE(
+    const tagName = defineCE(
       class extends ScopedElementsMixin(SlotMixin(LitElement)) {
         static get scopedElements() {
           return {
@@ -240,16 +246,10 @@ describe('SlotMixin', () => {
       },
     );
 
-    let error = '';
-    try {
-      // @ts-ignore
-      await fixture(html`<${tag}></${tag}>`, { scopedElements: true });
-    } catch (e) {
-      // @ts-ignore
-      error = e.toString();
-    }
-    // it throws when it uses our temp mock (error is browser specific, so we check overlapping part)
-    expect(error).to.include('.importNode is not a function');
+    const tag = unsafeStatic(tagName);
+    await fixture(html`<${tag}></${tag}>`);
+
+    expect(outputObj.createElementCallCount).to.equal(1);
 
     unMockScopedRegistry();
   });
@@ -257,7 +257,7 @@ describe('SlotMixin', () => {
   it('does not scope elements when polyfill not loaded', async () => {
     class ScopedEl extends LitElement {}
 
-    const tag = defineCE(
+    const tagName = defineCE(
       class extends ScopedElementsMixin(SlotMixin(LitElement)) {
         static get scopedElements() {
           return {
@@ -280,10 +280,17 @@ describe('SlotMixin', () => {
       },
     );
 
+    const renderTarget = document.createElement('div');
+    const el = document.createElement(tagName);
+
+    // We don't use fixture, so we limit the amount of calls to document.createElement
     const docSpy = sinon.spy(document, 'createElement');
-    await fixture(html`<${tag}></${tag}>`);
-    // one for the fixture, one for the scoped slot
-    expect(docSpy).to.have.been.calledTwice;
+    document.body.appendChild(renderTarget);
+    renderTarget.appendChild(el);
+
+    expect(docSpy.callCount).to.equal(2);
+
+    document.body.removeChild(renderTarget);
     docSpy.restore();
   });
 });
