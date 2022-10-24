@@ -1,5 +1,5 @@
 // eslint-disable-next-line max-classes-per-file
-import { LitElement, html, css, nothing } from '@lion/core';
+import { LitElement, html, css, nothing } from 'lit';
 
 /**
  * Disclaimer: this is just an example component demoing the selection display of LionCombobox

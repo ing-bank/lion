@@ -2,14 +2,14 @@
 
 ```js script
 import { html, render, LitElement } from '@mdjs/mdjs-preview';
-import { renderLitAsNode } from '@lion/helpers';
+import { renderLitAsNode } from '@lion/ui/helpers.js';
 import {
   ArrowMixin,
   OverlayMixin,
   withBottomSheetConfig,
   withDropdownConfig,
   withModalDialogConfig,
-} from '@lion/overlays';
+} from '@lion/ui/overlays.js';
 
 import './assets/demo-overlay-system.js';
 import './assets/demo-overlay-backdrop.js';
@@ -482,7 +482,7 @@ By default, there are only a few `OverlayMixin` methods you need to override to 
 
 ```js
 import { LitElement } from '@mdjs/mdjs-preview';
-import { OverlayMixin } from '@lion/overlays';
+import { OverlayMixin } from '@lion/ui/overlays.js';
 
 class MyOverlayWC extends OverlayMixin(LitElement) {
   _defineOverlayConfig() {

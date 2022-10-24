@@ -1,4 +1,4 @@
-import { LitElement, css, html } from '@lion/core';
+import { LitElement, css, html } from 'lit';
 
 import 'page-a/page-a.js';
 import 'page-b/page-b.js';

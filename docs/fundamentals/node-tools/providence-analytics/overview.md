@@ -38,7 +38,7 @@ npm i --save-dev providence-analytics
 
 ```json
 "scripts": {
-  "providence:match-imports": "providence analyze match-imports -r 'node_modules/@lion/*'",
+  "providence:match-imports": "providence analyze match-imports -r 'node_modules/@lion/ui/*.js'",
 }
 ```
 

@@ -27,14 +27,13 @@ Usually you will use `lion-dialog` (or `lion-tooltip` if this makes more sense).
 ## Installation
 
 ```bash
-npm i --save @lion/overlays
-npm i --save @lion/dialog
+npm i --save @lion/ui
 ```
 
 ### Example
 
 ```js
-import '@lion/dialog/define';
+import '@lion/ui/define/lion-dialog.js';
 
 html`
   <lion-dialog .config=${{
@@ -57,7 +56,7 @@ html`
 Or by creating a controller yourself
 
 ```js
-import { OverlayController } from '@lion/overlays';
+import { OverlayController } from '@lion/ui/overlays.js';
 
 const ctrl = new OverlayController({
   ...withModalDialogConfig(),
@@ -69,8 +68,8 @@ const ctrl = new OverlayController({
 Or creating your own Web Component which uses the Overlay System
 
 ```js
-import { LitElement, html } from '@lion/core';
-import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
+import { LitElement, html } from 'lit';
+import { OverlayMixin, withModalDialogConfig } from '@lion/ui/overlays.js';
 
 class MyOverlayComponent extends OverlayMixin(LitElement) {
   _defineOverlayConfig() {

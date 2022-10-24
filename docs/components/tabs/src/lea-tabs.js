@@ -1,5 +1,5 @@
-import { css } from '@lion/core';
-import { LionTabs } from '@lion/tabs';
+import { css } from 'lit';
+import { LionTabs } from '@lion/ui/tabs.js';
 
 export class LeaTabs extends LionTabs {
   static get styles() {

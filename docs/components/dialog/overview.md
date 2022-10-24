@@ -5,7 +5,7 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/dialog/define';
+import '@lion/ui/define/lion-dialog.js';
 
 import { demoStyle } from './src/demoStyle.js';
 ```
@@ -39,13 +39,13 @@ export const main = () => html`
 ## Installation
 
 ```bash
-npm i --save @lion/dialog
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionDialog } from '@lion/dialog';
+import { LionDialog } from '@lion/ui/dialog.js';
 // or
-import '@lion/dialog/define';
+import '@lion/ui/define/lion-dialog.js';
 ```
 
 - Your `slot="content"` node will be moved to the global overlay container during initialization.

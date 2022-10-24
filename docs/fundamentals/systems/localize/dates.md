@@ -13,7 +13,7 @@ The input value is `new Date('1987/05/12')`.
 
 ```js script
 import { css, html } from '@mdjs/mdjs-preview';
-import { formatNumber, formatNumberToParts, formatDate } from '@lion/localize';
+import { formatNumber, formatNumberToParts, formatDate } from '@lion/ui/localize.js';
 import allLocales from './assets/all-locales.js';
 
 const formatDateDemoStyle = css`

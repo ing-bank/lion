@@ -15,10 +15,10 @@
     "format:prettier": "prettier \"**/*.{js,md}\" \"packages/*/package.json\" \"package.json\" --write",
     "postinstall": "npm run custom-elements-manifest",
     "lint": "run-p lint:*",
+    "lint-disabled:types": "tsc",
     "lint:eslint": "eslint --ext .js,.html .",
-    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md}'",
+    "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md}'",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
-    "lint:types": "tsc",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
     "release": "npm run build:types && changeset publish",
@@ -70,9 +70,9 @@
     "concurrently": "^5.2.0",
     "cross-env": "^7.0.2",
     "es6-promisify": "^6.1.1",
-    "eslint": "^8.5.0",
+    "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-lit": "^1.6.1",
     "eslint-plugin-lit-a11y": "^2.2.0",
     "eslint-plugin-wc": "^1.3.2",
@@ -102,12 +102,8 @@
   },
   "bundlesize": [
     {
-      "path": "./bundlesize/dist/core/*.js",
-      "maxSize": "13 kB"
-    },
-    {
-      "path": "./bundlesize/dist/all/*.js",
-      "maxSize": "60 kB"
+      "path": "./bundlesize/dist/*/*.js",
+      "maxSize": "20 kB"
     }
   ],
   "prettier": {

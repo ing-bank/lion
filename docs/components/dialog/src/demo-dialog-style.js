@@ -1,3 +1,3 @@
-import { css } from '@lion/core';
+import { css } from 'lit';
 
 export default css``;

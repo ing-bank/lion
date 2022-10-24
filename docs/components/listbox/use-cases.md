@@ -3,7 +3,8 @@
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import { listboxData } from './src/listboxData.js';
-import '@lion/listbox/define';
+import '@lion/ui/define/lion-listbox.js';
+import '@lion/ui/define/lion-option.js';
 ```
 
 ## Multiple choice

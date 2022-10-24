@@ -5,7 +5,7 @@ Its purpose is to show content appearing when the user hovers over an invoker el
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/tooltip/define';
+import '@lion/ui/define/lion-tooltip.js';
 ```
 
 ```js preview-story
@@ -34,11 +34,11 @@ export const main = () => html`
 ## Installation
 
 ```bash
-npm i --save @lion/tooltip
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionTooltip } from '@lion/tooltip';
+import { LionTooltip } from '@lion/ui/tooltip.js';
 // or
-import '@lion/tooltip/define';
+import '@lion/ui/define/lion-tooltip.js';
 ```

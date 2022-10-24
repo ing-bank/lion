@@ -7,7 +7,8 @@ Its purpose is to provide a way for users to check **multiple** options amongst 
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/checkbox-group/define';
+import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox.js';
 ```
 
 ```js preview-story
@@ -30,9 +31,10 @@ it has all the features a fieldset has.
 ## Installation
 
 ```bash
-npm i --save @lion/checkbox-group
+npm i --save @lion/ui
 ```
 
 ```js
-import '@lion/checkbox-group/define';
+import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox.js';
 ```

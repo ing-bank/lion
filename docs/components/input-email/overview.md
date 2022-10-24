@@ -4,7 +4,7 @@ A web component based on the generic text input field. Its purpose is to provide
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input-email/define';
+import '@lion/ui/define/lion-input-email.js';
 ```
 
 ```js preview-story
@@ -22,11 +22,11 @@ export const main = () => {
 ## Installation
 
 ```bash
-npm i --save @lion/input-email
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionInputEmail } from '@lion/input-email';
+import { LionInputEmail } from '@lion/ui/input-email.js';
 // or
-import '@lion/input-email/define';
+import '@lion/ui/define/lion-input-email.js';
 ```

@@ -1,4 +1,4 @@
-import { css, unsafeCSS } from '@lion/core';
+import { css, unsafeCSS } from 'lit';
 
 const flagsImgUrl = unsafeCSS(new URL('./flags.png', import.meta.url).href);
 const flagsImg2xUrl = unsafeCSS(new URL('./flags@2x.png', import.meta.url).href);

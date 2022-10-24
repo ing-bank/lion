@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/select/define';
+import '@lion/ui/define/lion-select.js';
 ```
 
 ## Pre-select

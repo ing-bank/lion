@@ -1,4 +1,4 @@
-import { css } from '@lion/core';
+import { css } from 'lit';
 
 const applyDemoOverlayStyles = () => {
   const demoOverlaysStyle = css`

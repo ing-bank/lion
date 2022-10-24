@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/tooltip/define';
+import '@lion/ui/define/lion-tooltip.js';
 ```
 
 ```js preview-story

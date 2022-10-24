@@ -2,8 +2,8 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input/define';
-import '@lion/button/define';
+import '@lion/ui/define/lion-input.js';
+import '@lion/ui/define/lion-button.js';
 ```
 
 ## Label

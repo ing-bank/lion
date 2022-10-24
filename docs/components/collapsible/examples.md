@@ -2,8 +2,8 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/collapsible/define';
-import '@lion/button/define';
+import '@lion/ui/define/lion-collapsible.js';
+import '@lion/ui/define/lion-button.js';
 import './assets/CustomCollapsible.js';
 import './assets/applyDemoCollapsibleStyles.js';
 ```

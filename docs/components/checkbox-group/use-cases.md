@@ -2,7 +2,8 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/checkbox-group/define';
+import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox.js';
 ```
 
 ## Model value

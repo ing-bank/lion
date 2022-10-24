@@ -1,4 +1,4 @@
-import { dedupeMixin } from '@lion/core';
+import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
  * @typedef {import('lit-element').PropertyValues } changedProperties

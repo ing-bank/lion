@@ -4,12 +4,13 @@
 
 ```js script
 import { html as previewHtml } from '@mdjs/mdjs-preview';
-import '@lion/switch/define-switch';
+import '@lion/ui/define/lion-switch.js';
 ```
 
 ```js preview-story
-import { html, LitElement, ScopedElementsMixin } from '@lion/core';
-import { LionSwitch } from '@lion/switch';
+import { html, LitElement } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { LionSwitch } from '@lion/ui/switch.js';
 
 class MyComponent extends ScopedElementsMixin(LitElement) {
   static get scopedElements() {
@@ -43,14 +44,15 @@ export const main = () => previewHtml`<my-component></my-component>`;
 1. Install
 
 ```bash
-npm i --save @lion/switch
+npm i --save @lion/ui
 ```
 
 2. Use scoped registry
 
 ```js
-import { html, LitElement, ScopedElementsMixin } from '@lion/core';
-import { LionSwitch } from '@lion/switch';
+import { html, LitElement } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { LionSwitch } from '@lion/ui/switch.js';
 
 class MyComponent extends ScopedElementsMixin(LitElement) {
   static get scopedElements() {
@@ -66,7 +68,7 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
 
 ```html
 <script type="module">
-  import '@lion/switch/define-switch';
+  import '@lion/ui/define/lion-switch.js';
 </script>
 
 <lion-switch></lion-switch>
