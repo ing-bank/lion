@@ -1,9 +1,10 @@
 const { expect } = require('chai');
 const pathLib = require('path');
-const { InputDataService } = require('../../../src/program/services/InputDataService.js');
+const { InputDataService } = require('../../../src/index.js');
 const {
   restoreMockedProjects,
   mockProject,
+  mock,
 } = require('../../../test-helpers/mock-project-helpers.js');
 
 function restoreOriginalInputDataPaths() {
@@ -278,34 +279,94 @@ describe('InputDataService', () => {
           expect(globOutput).to.eql(['/fictional/project/index.js']);
         });
 
-        it('filters npm "files" entries when allowlistMode is "npm"', async () => {
-          mockProject({
-            './docs/x.js': '',
-            './src/y.js': '',
-            './file.add.js': '',
-            './omit.js': '',
-            './package.json': JSON.stringify({
-              files: ['*.add.js', 'docs', 'src'],
-            }),
-          });
-          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
-            allowlistMode: 'npm',
-          });
-          expect(globOutput).to.eql([
-            '/fictional/project/docs/x.js',
-            '/fictional/project/file.add.js',
-            '/fictional/project/src/y.js',
-          ]);
-        });
+        describe('AllowlistMode', () => {
+          it('autodetects allowlistMode', async () => {
+            mockProject({
+              './dist/bundle.js': '',
+              './package.json': JSON.stringify({
+                files: ['dist'],
+              }),
+              '.gitignore': '/dist',
+            });
+            const globOutput = InputDataService.gatherFilesFromDir('/fictional/project');
+            expect(globOutput).to.eql([
+              // This means allowlistMode is 'git'
+            ]);
 
-        it('filters .gitignore entries when allowlistMode is "git"', async () => {
-          mockProject({
-            './coverage/file.js': '',
-            './storybook-static/index.js': '',
-            './build/index.js': '',
-            './shall/pass.js': '',
-            './keep/it.js': '',
-            '.gitignore': `
+            restoreOriginalInputDataPaths();
+            restoreMockedProjects();
+
+            mockProject({
+              './dist/bundle.js': '',
+              './package.json': JSON.stringify({
+                files: ['dist'],
+              }),
+            });
+            const globOutput2 = InputDataService.gatherFilesFromDir('/fictional/project');
+            expect(globOutput2).to.eql([
+              // This means allowlistMode is 'npm'
+              '/fictional/project/dist/bundle.js',
+            ]);
+
+            mockProject(
+              { './dist/bundle.js': '', '.gitignore': '/dist' },
+              {
+                projectName: 'detect-as-npm',
+                projectPath: '/inside/proj/with/node_modules/detect-as-npm',
+              },
+            );
+            const globOutput3 = InputDataService.gatherFilesFromDir(
+              '/inside/proj/with/node_modules/detect-as-npm',
+            );
+            expect(globOutput3).to.eql([
+              // This means allowlistMode is 'npm' (even though we found .gitignore)
+              '/inside/proj/with/node_modules/detect-as-npm/dist/bundle.js',
+            ]);
+
+            mockProject(
+              { './dist/bundle.js': '', '.gitignore': '/dist' },
+              {
+                projectName: '@scoped/detect-as-npm',
+                projectPath: '/inside/proj/with/node_modules/@scoped/detect-as-npm',
+              },
+            );
+            const globOutput4 = InputDataService.gatherFilesFromDir(
+              '/inside/proj/with/node_modules/@scoped/detect-as-npm',
+            );
+            expect(globOutput4).to.eql([
+              // This means allowlistMode is 'npm' (even though we found .gitignore)
+              '/inside/proj/with/node_modules/@scoped/detect-as-npm/dist/bundle.js',
+            ]);
+          });
+
+          it('filters npm "files" entries when allowlistMode is "npm"', async () => {
+            mockProject({
+              './docs/x.js': '',
+              './src/y.js': '',
+              './file.add.js': '',
+              './omit.js': '',
+              './package.json': JSON.stringify({
+                files: ['*.add.js', 'docs', 'src'],
+              }),
+            });
+            const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+              allowlistMode: 'npm',
+            });
+            expect(globOutput).to.eql([
+              '/fictional/project/docs/x.js',
+              '/fictional/project/file.add.js',
+              '/fictional/project/src/y.js',
+            ]);
+          });
+
+          it('filters .gitignore entries when allowlistMode is "git"', async () => {
+            mockProject({
+              './coverage/file.js': '',
+              './storybook-static/index.js': '',
+              './build/index.js': '',
+              './shall/pass.js': '',
+              './keep/it.js': '',
+              '.gitignore': `
 /coverage
 # comment
 /storybook-static/
@@ -313,93 +374,51 @@ describe('InputDataService', () => {
 build/
 !keep/
             `,
+            });
+            const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+              allowlistMode: 'git',
+            });
+            expect(globOutput).to.eql([
+              '/fictional/project/keep/it.js',
+              '/fictional/project/shall/pass.js',
+            ]);
           });
-          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
-            allowlistMode: 'git',
-          });
-          expect(globOutput).to.eql([
-            '/fictional/project/keep/it.js',
-            '/fictional/project/shall/pass.js',
-          ]);
-        });
 
-        it('filters no entries when allowlistMode is "all"', async () => {
-          mockProject({
-            './dist/bundle.js': '',
-            './src/file.js': '',
-            './package.json': JSON.stringify({
-              files: ['dist', 'src'],
-            }),
-            '.gitignore': `
+          it('filters no entries when allowlistMode is "all"', async () => {
+            mockProject({
+              './dist/bundle.js': '',
+              './src/file.js': '',
+              './package.json': JSON.stringify({
+                files: ['dist', 'src'],
+              }),
+              '.gitignore': `
 /dist
             `,
+            });
+            const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+              allowlistMode: 'all',
+            });
+            expect(globOutput).to.eql([
+              '/fictional/project/dist/bundle.js',
+              '/fictional/project/src/file.js',
+            ]);
           });
-          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
-            allowlistMode: 'all',
+
+          it('filters npm export map entries when allowlistMode is "export-map"', async () => {
+            mockProject({
+              './internal/file.js': '',
+              './non-exposed/file.js': '',
+              './package.json': JSON.stringify({
+                exports: {
+                  './exposed/*': './internal/*',
+                },
+              }),
+            });
+            const globOutput = InputDataService.gatherFilesFromDir('/fictional/project', {
+              allowlistMode: 'export-map',
+            });
+            expect(globOutput).to.eql(['./internal/file.js']);
           });
-          expect(globOutput).to.eql([
-            '/fictional/project/dist/bundle.js',
-            '/fictional/project/src/file.js',
-          ]);
-        });
-
-        it('autodetects allowlistMode', async () => {
-          mockProject({
-            './dist/bundle.js': '',
-            './package.json': JSON.stringify({
-              files: ['dist'],
-            }),
-            '.gitignore': '/dist',
-          });
-          const globOutput = InputDataService.gatherFilesFromDir('/fictional/project');
-          expect(globOutput).to.eql([
-            // This means allowlistMode is 'git'
-          ]);
-
-          restoreOriginalInputDataPaths();
-          restoreMockedProjects();
-
-          mockProject({
-            './dist/bundle.js': '',
-            './package.json': JSON.stringify({
-              files: ['dist'],
-            }),
-          });
-          const globOutput2 = InputDataService.gatherFilesFromDir('/fictional/project');
-          expect(globOutput2).to.eql([
-            // This means allowlistMode is 'npm'
-            '/fictional/project/dist/bundle.js',
-          ]);
-
-          mockProject(
-            { './dist/bundle.js': '', '.gitignore': '/dist' },
-            {
-              projectName: 'detect-as-npm',
-              projectPath: '/inside/proj/with/node_modules/detect-as-npm',
-            },
-          );
-          const globOutput3 = InputDataService.gatherFilesFromDir(
-            '/inside/proj/with/node_modules/detect-as-npm',
-          );
-          expect(globOutput3).to.eql([
-            // This means allowlistMode is 'npm' (even though we found .gitignore)
-            '/inside/proj/with/node_modules/detect-as-npm/dist/bundle.js',
-          ]);
-
-          mockProject(
-            { './dist/bundle.js': '', '.gitignore': '/dist' },
-            {
-              projectName: '@scoped/detect-as-npm',
-              projectPath: '/inside/proj/with/node_modules/@scoped/detect-as-npm',
-            },
-          );
-          const globOutput4 = InputDataService.gatherFilesFromDir(
-            '/inside/proj/with/node_modules/@scoped/detect-as-npm',
-          );
-          expect(globOutput4).to.eql([
-            // This means allowlistMode is 'npm' (even though we found .gitignore)
-            '/inside/proj/with/node_modules/@scoped/detect-as-npm/dist/bundle.js',
-          ]);
         });
 
         it('custom "allowlist" will take precedence over "allowlistMode"', async () => {
@@ -454,6 +473,250 @@ build/
               '/fictional/project/xyz.conf.js',
             ]);
           });
+        });
+      });
+    });
+
+    describe('"getPathsFromExportMap"', () => {
+      it('gets "internalExportMapPaths", "exposedExportMapPaths"', async () => {
+        const fakeFs = {
+          '/my/proj/internal-path.js': 'export const x = 0;',
+          '/my/proj/internal/folder-a/path.js': 'export const a = 1;',
+          '/my/proj/internal/folder-b/path.js': 'export const b = 2;',
+        };
+        mock(fakeFs);
+
+        const exports = {
+          './exposed-path.js': './internal-path.js',
+          './external/*/path.js': './internal/*/path.js',
+        };
+        const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+          packageRootPath: '/my/proj',
+        });
+
+        expect(exportMapPaths).to.eql([
+          { internal: './internal-path.js', exposed: './exposed-path.js' },
+          { internal: './internal/folder-a/path.js', exposed: './external/folder-a/path.js' },
+          { internal: './internal/folder-b/path.js', exposed: './external/folder-b/path.js' },
+        ]);
+      });
+
+      it('supports 1-on-1 path maps in export map entry', async () => {
+        const fakeFs = {
+          '/my/proj/internal-path.js': 'export const x = 0;',
+        };
+        mock(fakeFs);
+        const exports = {
+          './exposed-path.js': './internal-path.js',
+        };
+        const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+          packageRootPath: '/my/proj',
+        });
+        expect(exportMapPaths).to.eql([
+          { internal: './internal-path.js', exposed: './exposed-path.js' },
+        ]);
+      });
+
+      it('supports "./*" root mappings', async () => {
+        const fakeFs = {
+          '/my/proj/internal-exports-folder/file-a.js': 'export const x = 0;',
+          '/my/proj/internal-exports-folder/file-b.js': 'export const x = 0;',
+          '/my/proj/internal-exports-folder/file-c.js': 'export const x = 0;',
+        };
+        mock(fakeFs);
+        const exports = {
+          './*': './internal-exports-folder/*',
+        };
+        const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+          packageRootPath: '/my/proj',
+        });
+        expect(exportMapPaths).to.eql([
+          { internal: './internal-exports-folder/file-a.js', exposed: './file-a.js' },
+          { internal: './internal-exports-folder/file-b.js', exposed: './file-b.js' },
+          { internal: './internal-exports-folder/file-c.js', exposed: './file-c.js' },
+        ]);
+      });
+
+      it('supports "*" on file level inside key and value of export map entry', async () => {
+        const fakeFs = {
+          '/my/proj/internal-folder/file-a.js': 'export const a = 1;',
+          '/my/proj/internal-folder/another-folder/file-b.js': 'export const b = 2;',
+        };
+        mock(fakeFs);
+        const exports = {
+          './exposed-folder/*.js': './internal-folder/*.js',
+        };
+        const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+          packageRootPath: '/my/proj',
+        });
+        expect(exportMapPaths).to.eql([
+          {
+            internal: './internal-folder/another-folder/file-b.js',
+            exposed: './exposed-folder/another-folder/file-b.js',
+          },
+          { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
+        ]);
+      });
+
+      it('supports "*" on folder level inside key and value of export map entry', async () => {
+        const fakeFs = {
+          '/my/proj/folder-a/file.js': 'export const a = 1;',
+          '/my/proj/folder-b/file.js': 'export const b = 2;',
+        };
+        mock(fakeFs);
+        const exports = {
+          // Hypothetical example that indicates the * can be placed everywhere
+          './exposed-folder/*/file.js': './*/file.js',
+        };
+        const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+          packageRootPath: '/my/proj',
+        });
+        expect(exportMapPaths).to.eql([
+          { internal: './folder-a/file.js', exposed: './exposed-folder/folder-a/file.js' },
+          { internal: './folder-b/file.js', exposed: './exposed-folder/folder-b/file.js' },
+        ]);
+      });
+
+      // TDOO: implement
+      it.skip('supports private internal => ""./features/private-internal/*": null"', async () => {
+        const fakeFs = {
+          '/my/proj/internal-folder/file-a.js': 'export const a = 1;',
+          '/my/proj/internal-folder/private-folder/file-b.js': 'export const b = 2;',
+        };
+        mock(fakeFs);
+        const exports = {
+          './exposed-folder/*.js': './internal-folder/*.js',
+          './exposed-folder/private-folder/*.js': null,
+        };
+        const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+          packageRootPath: '/my/proj',
+        });
+        expect(exportMapPaths).to.eql([
+          { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
+        ]);
+      });
+
+      // TODO: short notation => {"exports": "./index.js"}
+
+      describe('ResolveMode', () => {
+        it('has nodeResolveMode "default" when nothing specified', async () => {
+          const fakeFs = {
+            '/my/proj/esm-exports/file.js': 'export const x = 0;',
+            '/my/proj/cjs-exports/file.cjs': 'export const x = 0;',
+          };
+          mock(fakeFs);
+          const exports = {
+            './*': { default: './esm-exports/*', require: './cjs-exports/*' },
+          };
+          const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+            packageRootPath: '/my/proj',
+          });
+          expect(exportMapPaths).to.eql([
+            { internal: './esm-exports/file.js', exposed: './file.js' },
+          ]);
+        });
+
+        it('supports nodeResolveMode "require"', async () => {
+          const fakeFs = {
+            '/my/proj/esm-exports/file.js': 'export const x = 0;',
+            '/my/proj/cjs-exports/file.cjs': 'export const x = 0;',
+          };
+          mock(fakeFs);
+          const exports = {
+            './*': { default: './esm-exports/*', require: './cjs-exports/*' },
+          };
+
+          const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+            packageRootPath: '/my/proj',
+            nodeResolveMode: 'require',
+          });
+          expect(exportMapPaths).to.eql([
+            { internal: './cjs-exports/file.cjs', exposed: './file.cjs' },
+          ]);
+        });
+
+        it('supports other arbitrary nodeResolveModes (like "develop")', async () => {
+          const fakeFs = {
+            '/my/proj/esm-exports/file.js': 'export const x = 0;',
+            '/my/proj/develop-exports/file.js': 'export const x = 0;',
+          };
+          mock(fakeFs);
+          const exports = {
+            './*': { default: './esm-exports/*', develop: './develop-exports/*' },
+          };
+
+          const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+            packageRootPath: '/my/proj',
+            nodeResolveMode: 'develop',
+          });
+          expect(exportMapPaths).to.eql([
+            { internal: './develop-exports/file.js', exposed: './file.js' },
+          ]);
+        });
+
+        it('without "*" in key', async () => {
+          const fakeFs = {
+            '/my/proj/index.js': 'export const a = 1;',
+            '/my/proj/file.js': 'export const b = 2;',
+          };
+          mock(fakeFs);
+
+          const exports = {
+            '.': {
+              default: './index.js',
+            },
+            './exposed-file.js': {
+              default: './file.js',
+            },
+          };
+
+          const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+            packageRootPath: '/my/proj',
+          });
+          expect(exportMapPaths).to.eql([
+            { internal: './index.js', exposed: '.' },
+            { internal: './file.js', exposed: './exposed-file.js' },
+          ]);
+        });
+      });
+
+      describe('Deprecated root mappings ("/" instead of "/*")', () => {
+        it('works for values defined as strings', async () => {
+          const fakeFs = {
+            '/my/proj/internal-folder/file-a.js': 'export const a = 1;',
+            '/my/proj/internal-folder/file-b.js': 'export const b = 2;',
+          };
+          mock(fakeFs);
+          const exports = {
+            // An old spec that
+            './exposed-folder/': './internal-folder/',
+          };
+          const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+            packageRootPath: '/my/proj',
+          });
+          expect(exportMapPaths).to.eql([
+            { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
+            { internal: './internal-folder/file-b.js', exposed: './exposed-folder/file-b.js' },
+          ]);
+        });
+
+        it('works for values defined as objects', async () => {
+          const fakeFs = {
+            '/my/proj/internal-folder/file-a.js': 'export const a = 1;',
+            '/my/proj/internal-folder/file-b.js': 'export const b = 2;',
+          };
+          mock(fakeFs);
+          const exports = {
+            // An old spec that
+            './exposed-folder/': { default: './internal-folder/' },
+          };
+          const exportMapPaths = await InputDataService.getPathsFromExportMap(exports, {
+            packageRootPath: '/my/proj',
+          });
+          expect(exportMapPaths).to.eql([
+            { internal: './internal-folder/file-a.js', exposed: './exposed-folder/file-a.js' },
+            { internal: './internal-folder/file-b.js', exposed: './exposed-folder/file-b.js' },
+          ]);
         });
       });
     });

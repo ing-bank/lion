@@ -95,7 +95,7 @@ Inside ING, our design system also makes use of this providence tool to create t
 
 ```json
 "scripts": {
-  "upgrade:lion": "yarn upgrade --scope @lion --latest --exact && npm run providence:extend",
+  "upgrade:lion": "npm upgrade --scope @lion --latest --exact && npm run providence:extend",
   "providence:extend": "providence extend-docs -r 'node_modules/@lion/*' --prefix-from lion --prefix-to ing"
 }
 ```

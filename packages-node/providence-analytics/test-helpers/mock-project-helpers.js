@@ -174,6 +174,7 @@ function mockTargetAndReferenceProject(searchTargetProject, referenceProject) {
 }
 
 module.exports = {
+  mock,
   mockProject,
   restoreMockedProjects,
   getEntry,

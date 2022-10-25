@@ -20,7 +20,6 @@ describe('babel-plugin-extend-docs', () => {
     ].join('\n');
     const output = [
       `import { WolfInput } from "wolf-web/input";`,
-      '',
       `class Foo extends WolfInput {}`,
     ].join('\n');
     expect(executeBabel(code, testConfig)).to.equal(output);
@@ -142,14 +141,12 @@ describe('babel-plugin-extend-docs', () => {
     const output = [
       'import { html, LitElement, ScopedElementsMixin } from "@lion/core";',
       'import { WolfInput } from "wolf-web/input";',
-      '',
       'class MyComponent extends ScopedElementsMixin(LitElement) {',
       '  static get scopedElements() {',
       '    return {',
       '      "wolf-input": WolfInput',
       '    };',
       '  }',
-      '',
       '}',
     ].join('\n');
     expect(executeBabel(code, testConfig)).to.equal(output);
@@ -169,7 +166,6 @@ describe('babel-plugin-extend-docs', () => {
     const output = [
       'import { html, LitElement, ScopedElementsMixin } from "@lion/core";',
       'import { WolfInput } from "wolf-web/input";',
-      '',
       'class MyComponent extends ScopedElementsMixin(LitElement) {',
       '  static scopedElements = {',
       '    "wolf-input": WolfInput',
@@ -306,7 +302,6 @@ describe('babel-plugin-extend-docs', () => {
       '      </wolf-input>',
       '    `;',
       '  }',
-      '', // babel puts an empty line here?
       '}',
     ].join('\n');
     expect(executeBabel(code, testConfig)).to.equal(output);
