@@ -32,6 +32,11 @@ export type ModelValueEventDetails = {
    * case `isTriggeredByUser` is true))
    */
   initialize?: boolean;
+
+  /**
+   * Whether an element was added or removed from the form.
+   */
+  mutation?: 'added' | 'removed';
 };
 
 declare interface HTMLElementWithValue extends HTMLElement {

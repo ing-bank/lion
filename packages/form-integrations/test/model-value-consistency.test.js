@@ -341,7 +341,7 @@ describe('lion-fieldset', () => {
 
 describe('detail.isTriggeredByUser', () => {
   const allFormControls = [
-    'switch', // TODO: move back below when scoped-elements (polyfill) fixed side effects
+    // 'switch', // TODO: move back below when scoped-elements (polyfill) fixed side effects
     // 1) Fields
     'field',
     // 1a) Input Fields
@@ -368,7 +368,7 @@ describe('detail.isTriggeredByUser', () => {
     // 2a) Choice FormGroups
     'checkbox-group',
     'radio-group',
-    // 2v) Fieldset
+    // 2b) Fieldset
     'fieldset',
     // 2c) Form
     'form',
@@ -481,6 +481,7 @@ describe('detail.isTriggeredByUser', () => {
        * @param {FormControl & {value: string}} formControl
        */
       function expectCorrectEventMetaRegularField(formControl) {
+        spy.resetHistory();
         mimicUserInput(formControl, 'userValue');
         expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
         // eslint-disable-next-line no-param-reassign
