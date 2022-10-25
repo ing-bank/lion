@@ -6,6 +6,7 @@ import { OverlayController } from '@lion/components/overlays.js';
 import { mimicClick } from '@lion/components/overlays-test-helpers.js';
 import { LionSelectInvoker, LionSelectRich } from '@lion/components/select-rich.js';
 
+import '@lion/components/define/lion-option.js';
 import '@lion/components/define/lion-listbox.js';
 import '@lion/components/define/lion-select-rich.js';
 import {

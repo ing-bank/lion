@@ -3,6 +3,8 @@ import { Required } from '@lion/components/form-core.js';
 import { html } from 'lit/static-html.js';
 import { browserDetection } from '@lion/components/core.js';
 
+import '@lion/components/define/lion-option.js';
+
 import '@lion/components/define/lion-listbox.js';
 import '@lion/components/define/lion-select-rich.js';
 
