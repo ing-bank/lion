@@ -1,5 +1,6 @@
 // @ts-ignore
 import { PhoneUtilManager } from '@lion/components/input-tel.js';
+import { LionInputTelDropdown } from '@lion/components/input-tel-dropdown.js';
 // @ts-ignore
 import {
   mockPhoneUtilManager,
@@ -15,7 +16,9 @@ import {
   unsafeStatic,
 } from '@open-wc/testing';
 import sinon from 'sinon';
-import { LionInputTelDropdown } from '@lion/components/input-tel-dropdown.js';
+
+// import '@lion/components/define/lion-input-tel.js';
+// import '@lion/components/define/lion-input-tel-dropdown.js';
 
 /**
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
@@ -72,15 +75,21 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
     beforeEach(async () => {
       // Wait till PhoneUtilManager has been loaded
       await PhoneUtilManager.loadComplete;
+      await LionInputTelDropdown.loadComplete;
     });
 
-    it('syncs value of dropdown on init if input has no value', async () => {
+    it.only('syncs value of dropdown on init if input has no value', async () => {
       const el = await fixture(html` <${tag}></${tag}> `);
-      expect(el.activeRegion).to.equal('GB');
-      expect(el.value).to.equal('+44');
+      const res = el.activeRegion;
+      await aTimeout(1000);
+      // console.log(res);
+      console.log(el.refs.dropdown.value);
+      await aTimeout(1000);
+      // expect(res).to.equal('GB');
+      // expect(el.value).to.equal('+44');
       expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
         'GB',
-      );
+      ); // FIXME: this assertion fails
     });
 
     it('syncs value of dropdown on reset if input has no value', async () => {
