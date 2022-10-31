@@ -1,2 +1,2 @@
-export { LionInputDatepicker } from '../src/input-datepicker/LionInputDatepicker.js';
-export { LionCalendarOverlayFrame } from '../src/input-datepicker/LionCalendarOverlayFrame.js';
+export { LionInputDatepicker } from '../components/input-datepicker/LionInputDatepicker.js';
+export { LionCalendarOverlayFrame } from '../components/input-datepicker/LionCalendarOverlayFrame.js';

@@ -1,7 +1,7 @@
 // Utilities
-export { renderLitAsNode } from '../src/helpers/renderLitAsNode.js';
-export { sortEachDepth } from '../src/helpers/sortEachDepth.js';
+export { renderLitAsNode } from '../components/helpers/renderLitAsNode.js';
+export { sortEachDepth } from '../components/helpers/sortEachDepth.js';
 
 // Components
-export { SbActionLogger } from '../src/helpers/SbActionLogger.js';
-export { SbLocaleSwitcher } from '../src/helpers/SbLocaleSwitcher.js';
+export { SbActionLogger } from '../components/helpers/SbActionLogger.js';
+export { SbLocaleSwitcher } from '../components/helpers/SbLocaleSwitcher.js';

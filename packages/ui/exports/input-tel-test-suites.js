@@ -1,1 +1,1 @@
-export { runInputTelSuite } from '../src/input-tel/test-suites/LionInputTel.suite.js';
+export { runInputTelSuite } from '../components/input-tel/test-suites/LionInputTel.suite.js';

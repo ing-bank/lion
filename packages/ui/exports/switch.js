@@ -1,2 +1,2 @@
-export { LionSwitch } from '../src/switch/LionSwitch.js';
-export { LionSwitchButton } from '../src/switch/LionSwitchButton.js';
+export { LionSwitch } from '../components/switch/LionSwitch.js';
+export { LionSwitchButton } from '../components/switch/LionSwitchButton.js';

@@ -1,1 +1,1 @@
-export { LionAccordion } from '../src/accordion/LionAccordion.js';
+export { LionAccordion } from '../components/accordion/LionAccordion.js';

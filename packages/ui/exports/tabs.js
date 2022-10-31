@@ -1,1 +1,1 @@
-export { LionTabs } from '../src/tabs/LionTabs.js';
+export { LionTabs } from '../components/tabs/LionTabs.js';

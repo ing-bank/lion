@@ -1,1 +1,1 @@
-export { LionInputRange } from '../src/input-range/LionInputRange.js';
+export { LionInputRange } from '../components/input-range/LionInputRange.js';

@@ -1,1 +1,1 @@
-export { runListboxMixinSuite } from '../src/listbox/test-suites/ListboxMixin.suite.js';
+export { runListboxMixinSuite } from '../components/listbox/test-suites/ListboxMixin.suite.js';

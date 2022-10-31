@@ -1,4 +1,4 @@
-export { LionInputAmount } from '../src/input-amount/LionInputAmount.js';
-export { formatAmount } from '../src/input-amount/formatters.js';
-export { parseAmount } from '../src/input-amount/parsers.js';
-export { preprocessAmount } from '../src/input-amount/preprocessors.js';
+export { LionInputAmount } from '../components/input-amount/LionInputAmount.js';
+export { formatAmount } from '../components/input-amount/formatters.js';
+export { parseAmount } from '../components/input-amount/parsers.js';
+export { preprocessAmount } from '../components/input-amount/preprocessors.js';

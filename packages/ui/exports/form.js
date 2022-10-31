@@ -1,1 +1,1 @@
-export { LionForm } from '../src/form/LionForm.js';
+export { LionForm } from '../components/form/LionForm.js';

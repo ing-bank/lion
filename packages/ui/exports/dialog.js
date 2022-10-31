@@ -1,1 +1,1 @@
-export { LionDialog } from '../src/dialog/LionDialog.js';
+export { LionDialog } from '../components/dialog/LionDialog.js';

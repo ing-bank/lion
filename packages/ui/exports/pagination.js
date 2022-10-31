@@ -1,1 +1,1 @@
-export { LionPagination } from '../src/pagination/LionPagination.js';
+export { LionPagination } from '../components/pagination/LionPagination.js';
