@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import isLocalizeESModule from '../isLocalizeESModule.js';
+import isLocalizeESModule from '../src/isLocalizeESModule.js';
 
 describe('isLocalizeESModule', () => {
   it('detects a module by finding the "default" key containing an object', () => {

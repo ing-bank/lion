@@ -5,8 +5,8 @@ import sinon from 'sinon';
 import { OverlayController, overlays } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 
-import { keyCodes } from '../utils/key-codes.js';
-import { simulateTab } from '../utils/simulate-tab.js';
+import { keyCodes } from '../src/utils/key-codes.js';
+import { simulateTab } from '../src/utils/simulate-tab.js';
 
 /**
  * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig

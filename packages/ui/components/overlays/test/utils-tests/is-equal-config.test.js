@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { isEqualConfig } from '../../utils/is-equal-config.js';
+import { isEqualConfig } from '../../src/utils/is-equal-config.js';
 
 function TestConfig() {
   return {

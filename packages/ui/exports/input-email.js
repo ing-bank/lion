@@ -1,1 +1,1 @@
-export { LionInputEmail } from '../components/input-email/LionInputEmail.js';
+export { LionInputEmail } from '../components/input-email/src/LionInputEmail.js';

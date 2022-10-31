@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
-import { parsePhoneNumber } from '../parsers.js';
+import { parsePhoneNumber } from '../src/parsers.js';
 
 describe('parsePhoneNumber', () => {
   beforeEach(async () => {

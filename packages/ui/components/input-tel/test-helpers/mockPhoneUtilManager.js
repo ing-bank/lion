@@ -1,4 +1,4 @@
-import { PhoneUtilManager } from '../PhoneUtilManager.js';
+import { PhoneUtilManager } from '../src/PhoneUtilManager.js';
 
 const originalLoadComplete = PhoneUtilManager.loadComplete;
 const originalIsLoaded = PhoneUtilManager.isLoaded;

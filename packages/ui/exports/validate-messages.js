@@ -1,1 +1,1 @@
-export { loadDefaultFeedbackMessages } from '../components/validate-messages/loadDefaultFeedbackMessages.js';
+export { loadDefaultFeedbackMessages } from '../components/validate-messages/src/loadDefaultFeedbackMessages.js';

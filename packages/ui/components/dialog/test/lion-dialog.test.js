@@ -4,7 +4,7 @@ import '@lion/ui/define/lion-dialog.js';
 
 /**
 
- * @typedef {import('../LionDialog').LionDialog} LionDialog
+ * @typedef {import('../src/LionDialog').LionDialog} LionDialog
  * @typedef {import('@lion/core').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ (_fixture);

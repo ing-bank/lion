@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 import { html } from 'lit';
-import { renderLitAsNode } from '../renderLitAsNode.js';
+import { renderLitAsNode } from '../src/renderLitAsNode.js';
 
 describe('renderLitAsNode', () => {
   it('should return a matching HTMLElement (Node)', () => {
