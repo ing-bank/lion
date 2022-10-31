@@ -1,2 +1,2 @@
-export { LionSelectRich } from '../components/select-rich/LionSelectRich.js';
-export { LionSelectInvoker } from '../components/select-rich/LionSelectInvoker.js';
+export { LionSelectRich } from '../components/select-rich/src/LionSelectRich.js';
+export { LionSelectInvoker } from '../components/select-rich/src/LionSelectInvoker.js';

@@ -1,1 +1,1 @@
-export { LionCollapsible } from '../components/collapsible/LionCollapsible.js';
+export { LionCollapsible } from '../components/collapsible/src/LionCollapsible.js';

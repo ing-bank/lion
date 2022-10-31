@@ -1,3 +1,3 @@
-export { LionButton } from '../components/button/LionButton.js';
-export { LionButtonReset } from '../components/button/LionButtonReset.js';
-export { LionButtonSubmit } from '../components/button/LionButtonSubmit.js';
+export { LionButton } from '../components/button/src/LionButton.js';
+export { LionButtonReset } from '../components/button/src/LionButtonReset.js';
+export { LionButtonSubmit } from '../components/button/src/LionButtonSubmit.js';

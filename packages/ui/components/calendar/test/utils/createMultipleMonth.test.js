@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
-import { createMultipleMonth } from '../../utils/createMultipleMonth.js';
-import { createMonth } from '../../utils/createMonth.js';
+import { createMultipleMonth } from '../../src/utils/createMultipleMonth.js';
+import { createMonth } from '../../src/utils/createMonth.js';
 
 /**
  * @param {{ months: import('../../types/day').Month[]}} obj

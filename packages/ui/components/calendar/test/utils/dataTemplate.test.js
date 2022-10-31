@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-expressions */
 import { expect, fixture } from '@open-wc/testing';
 
-import { createMultipleMonth } from '../../utils/createMultipleMonth.js';
-import { dataTemplate } from '../../utils/dataTemplate.js';
-import { weekdayNames } from '../../test-helpers.js';
+import { weekdayNames } from '@lion/ui/calendar-test-helpers.js';
+import { createMultipleMonth } from '../../src/utils/createMultipleMonth.js';
+import { dataTemplate } from '../../src/utils/dataTemplate.js';
 
 // eslint-disable-next-line camelcase
 import snapshot_enGB_Sunday_201812 from './snapshots/monthTemplate_en-GB_Sunday_2018-12.js';

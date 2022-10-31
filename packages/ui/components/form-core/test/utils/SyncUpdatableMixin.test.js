@@ -1,7 +1,7 @@
 import { LitElement } from 'lit';
 import { defineCE, expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
-import { SyncUpdatableMixin } from '../../utils/SyncUpdatableMixin.js';
+import { SyncUpdatableMixin } from '../../src/utils/SyncUpdatableMixin.js';
 
 describe('SyncUpdatableMixin', () => {
   describe('Until firstUpdated', () => {

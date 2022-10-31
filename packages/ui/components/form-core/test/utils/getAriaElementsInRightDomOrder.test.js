@@ -2,7 +2,7 @@ import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import { browserDetection } from '@lion/ui/core.js';
-import { getAriaElementsInRightDomOrder } from '../../utils/getAriaElementsInRightDomOrder.js';
+import { getAriaElementsInRightDomOrder } from '../../src/utils/getAriaElementsInRightDomOrder.js';
 
 describe('getAriaElementsInRightDomOrder', () => {
   it('orders by putting preceding siblings and local parents first', async () => {

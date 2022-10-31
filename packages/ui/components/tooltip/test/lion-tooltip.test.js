@@ -1,6 +1,6 @@
 import '@lion/ui/define/lion-tooltip.js';
 import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
-import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
+import { runOverlayMixinSuite } from '@lion/ui/overlays-test-suites.js';
 
 /**
  * @typedef {import('../src/LionTooltip.js.js').LionTooltip} LionTooltip

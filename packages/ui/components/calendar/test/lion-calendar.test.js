@@ -5,7 +5,7 @@ import { expect, fixture as _fixture } from '@open-wc/testing';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-calendar.js';
 import { isSameDate } from '@lion/ui/calendar.js';
-import { CalendarObject, DayObject } from '../test-helpers.js';
+import { CalendarObject, DayObject } from '@lion/ui/calendar-test-helpers.js';
 
 /**
  * @typedef {import('../src/LionCalendar').LionCalendar} LionCalendar

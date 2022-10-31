@@ -1,1 +1,1 @@
-export { LionTooltip } from '../components/tooltip/LionTooltip.js';
+export { LionTooltip } from '../components/tooltip/src/LionTooltip.js';

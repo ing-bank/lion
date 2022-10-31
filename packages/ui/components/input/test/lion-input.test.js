@@ -1,7 +1,7 @@
 import { Validator } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-input.js';
 import { aTimeout, expect, fixture, html, triggerFocusFor, unsafeStatic } from '@open-wc/testing';
-import { getInputMembers } from '../../../exports/input-test-helpers.js';
+import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 
 /**
  * @typedef {import('../src/LionInput').LionInput} LionInput

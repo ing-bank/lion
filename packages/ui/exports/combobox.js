@@ -1,1 +1,1 @@
-export { LionCombobox } from '../components/combobox/LionCombobox.js';
+export { LionCombobox } from '../components/combobox/src/LionCombobox.js';

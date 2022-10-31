@@ -1,6 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 
-import { isVisible } from '../../utils/is-visible.js';
+import { isVisible } from '../../src/utils/is-visible.js';
 
 describe('isVisible()', () => {
   it('returns true for static block elements', async () => {

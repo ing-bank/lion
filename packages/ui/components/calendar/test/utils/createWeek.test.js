@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
-import { createWeek } from '../../utils/createWeek.js';
-import { createDay } from '../../utils/createDay.js';
+import { createWeek } from '../../src/utils/createWeek.js';
+import { createDay } from '../../src/utils/createDay.js';
 
 /**
  * @param {import('../../types/day').Week} obj

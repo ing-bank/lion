@@ -1,1 +1,1 @@
-export { LionSelect } from '../components/select/LionSelect.js';
+export { LionSelect } from '../components/select/src/LionSelect.js';

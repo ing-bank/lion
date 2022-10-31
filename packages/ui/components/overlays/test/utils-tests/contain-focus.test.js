@@ -4,8 +4,8 @@ import { html } from 'lit/static-html.js';
 import { renderLitAsNode } from '@lion/ui/helpers.js';
 import { getDeepActiveElement, getFocusableElements } from '@lion/ui/overlays.js';
 
-import { keyCodes } from '../../utils/key-codes.js';
-import { containFocus } from '../../utils/contain-focus.js';
+import { keyCodes } from '../../src/utils/key-codes.js';
+import { containFocus } from '../../src/utils/contain-focus.js';
 
 function simulateTabWithinContainFocus() {
   const event = new CustomEvent('keydown', { detail: 0, bubbles: true });

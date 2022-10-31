@@ -1,1 +1,1 @@
-export { LionInputStepper } from '../components/input-stepper/LionInputStepper.js';
+export { LionInputStepper } from '../components/input-stepper/src/LionInputStepper.js';

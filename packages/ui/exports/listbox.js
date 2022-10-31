@@ -1,4 +1,4 @@
-export { LionListbox } from '../components/listbox/LionListbox.js';
-export { ListboxMixin } from '../components/listbox/ListboxMixin.js';
-export { LionOption } from '../components/listbox/LionOption.js';
-export { LionOptions } from '../components/listbox/LionOptions.js';
+export { LionListbox } from '../components/listbox/src/LionListbox.js';
+export { ListboxMixin } from '../components/listbox/src/ListboxMixin.js';
+export { LionOption } from '../components/listbox/src/LionOption.js';
+export { LionOptions } from '../components/listbox/src/LionOptions.js';
