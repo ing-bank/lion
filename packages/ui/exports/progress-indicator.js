@@ -1,1 +1,1 @@
-export { LionProgressIndicator } from '../src/progress-indicator/LionProgressIndicator.js';
+export { LionProgressIndicator } from '../components/progress-indicator/LionProgressIndicator.js';

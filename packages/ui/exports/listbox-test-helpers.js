@@ -1,1 +1,1 @@
-export { getListboxMembers } from '../src/listbox/test-helpers/getListboxMembers.js';
+export { getListboxMembers } from '../components/listbox/test-helpers/getListboxMembers.js';

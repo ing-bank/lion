@@ -1,1 +1,1 @@
-export { DatepickerInputObject } from '../src/input-datepicker/test-helpers/DatepickerInputObject.js';
+export { DatepickerInputObject } from '../components/input-datepicker/test-helpers/DatepickerInputObject.js';

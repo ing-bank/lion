@@ -1,1 +1,1 @@
-export { LionFieldset } from '../src/fieldset/LionFieldset.js';
+export { LionFieldset } from '../components/fieldset/LionFieldset.js';

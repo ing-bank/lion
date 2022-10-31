@@ -13,14 +13,14 @@
   "type": "module",
   "exports": {
     "./*": "./exports/*",
-    "./calendar-translations/*": "./src/calendar/translations/*",
-    "./pagination-translations/*": "./src/pagination/translations/*",
-    "./progress-indicator-translations/*": "./src/progress-indicator/translations/*",
-    "./input-datepicker-translations/*": "./src/input-datepicker/translations/*",
-    "./input-iban-translations/*": "./src/input-iban/translations/*",
-    "./input-tel-translations/*": "./src/input-tel/translations/*",
-    "./overlays-translations/*": "./src/overlays/translations/*",
-    "./validate-messages-translations/*": "./src/validate-messages/translations/*"
+    "./calendar-translations/*": "./components/calendar/translations/*",
+    "./pagination-translations/*": "./components/pagination/translations/*",
+    "./progress-indicator-translations/*": "./components/progress-indicator/translations/*",
+    "./input-datepicker-translations/*": "./components/input-datepicker/translations/*",
+    "./input-iban-translations/*": "./components/input-iban/translations/*",
+    "./input-tel-translations/*": "./components/input-tel/translations/*",
+    "./overlays-translations/*": "./components/overlays/translations/*",
+    "./validate-messages-translations/*": "./components/validate-messages/translations/*"
   },
   "files": [
     "*.d.ts",

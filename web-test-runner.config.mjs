@@ -9,13 +9,13 @@ const packages = fs
   .map(dir => ({ name: dir, path: `packages/${dir}/test` }))
   .concat(
     fs
-      .readdirSync('packages/ui/src')
+      .readdirSync('packages/ui/components')
       .filter(
         dir =>
-          fs.statSync(`packages/ui/src/${dir}`).isDirectory() &&
-          fs.existsSync(`packages/ui/src/${dir}/test`),
+          fs.statSync(`packages/ui/components/${dir}`).isDirectory() &&
+          fs.existsSync(`packages/ui/components/${dir}/test`),
       )
-      .map(dir => ({ name: dir, path: `packages/ui/src/${dir}/test` })),
+      .map(dir => ({ name: dir, path: `packages/ui/components/${dir}/test` })),
   );
 // .filter(x => x.endsWith('-dropdown'))
 // .concat(

@@ -1,1 +1,1 @@
-export { getInputMembers } from '../src/input/test-helpers/getInputMembers.js';
+export { getInputMembers } from '../components/input/test-helpers/getInputMembers.js';

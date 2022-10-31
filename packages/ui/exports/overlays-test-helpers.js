@@ -1,1 +1,1 @@
-export { mimicClick } from '../src/overlays/test-helpers/mimicClick.js';
+export { mimicClick } from '../components/overlays/test-helpers/mimicClick.js';

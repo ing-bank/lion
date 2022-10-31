@@ -1,4 +1,4 @@
 export {
   mockPhoneUtilManager,
   restorePhoneUtilManager,
-} from '../src/input-tel/test-helpers/mockPhoneUtilManager.js';
+} from '../components/input-tel/test-helpers/mockPhoneUtilManager.js';

@@ -1,1 +1,1 @@
-export { LionTextarea } from '../src/textarea/LionTextarea.js';
+export { LionTextarea } from '../components/textarea/LionTextarea.js';

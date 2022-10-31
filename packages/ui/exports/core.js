@@ -1,7 +1,7 @@
-export { DisabledMixin } from '../src/core/DisabledMixin.js';
-export { DisabledWithTabIndexMixin } from '../src/core/DisabledWithTabIndexMixin.js';
-export { ScopedStylesController } from '../src/core/ScopedStylesController.js';
-export { SlotMixin } from '../src/core/SlotMixin.js';
-export { browserDetection } from '../src/core/browserDetection.js';
-export { EventTargetShim } from '../src/core/EventTargetShim.js';
-export { uuid } from '../src/core/uuid.js';
+export { DisabledMixin } from '../components/core/DisabledMixin.js';
+export { DisabledWithTabIndexMixin } from '../components/core/DisabledWithTabIndexMixin.js';
+export { ScopedStylesController } from '../components/core/ScopedStylesController.js';
+export { SlotMixin } from '../components/core/SlotMixin.js';
+export { browserDetection } from '../components/core/browserDetection.js';
+export { EventTargetShim } from '../components/core/EventTargetShim.js';
+export { uuid } from '../components/core/uuid.js';
