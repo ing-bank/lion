@@ -20,6 +20,7 @@
     "./pagination-translations/*": "./components/pagination/translations/*",
     "./progress-indicator-translations/*": "./components/progress-indicator/translations/*",
     "./input-datepicker-translations/*": "./components/input-datepicker/translations/*",
+    "./input-file-translations/*": "./components/input-file/translations/*",
     "./input-iban-translations/*": "./components/input-iban/translations/*",
     "./input-tel-translations/*": "./components/input-tel/translations/*",
     "./overlays-translations/*": "./components/overlays/translations/*",

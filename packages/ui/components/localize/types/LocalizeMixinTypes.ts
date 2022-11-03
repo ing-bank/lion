@@ -3,6 +3,10 @@ import { LitElement } from 'lit';
 import { DirectiveResult } from 'lit/directive.js';
 import { LocalizeManager } from '../src/LocalizeManager.js';
 
+/**
+ * @typedef {import('lit/directive.js').DirectiveResult} DirectiveResult
+ */
+
 export interface FormatNumberPart {
   type: string;
   value: string;

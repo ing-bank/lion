@@ -16,6 +16,7 @@ import '@lion/ui/define/lion-input-amount.js';
 import '@lion/ui/define/lion-input-date.js';
 import '@lion/ui/define/lion-input-datepicker.js';
 import '@lion/ui/define/lion-input-email.js';
+import '@lion/ui/define/lion-input-file.js';
 import '@lion/ui/define/lion-input-tel.js';
 import '@lion/ui/define/lion-input-tel-dropdown.js';
 import '@lion/ui/define/lion-input-iban.js';
@@ -75,6 +76,7 @@ export const main = () => {
         <lion-input-amount name="money" label="Money"></lion-input-amount>
         <lion-input-iban name="iban" label="Iban"></lion-input-iban>
         <lion-input-email name="email" label="Email"></lion-input-email>
+        <lion-input-file name="file" label="File"></lion-input-file>
         <lion-input-tel name="tel" label="Telephone number"></lion-input-tel>
         <lion-checkbox-group
           label="What do you like?"

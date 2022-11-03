@@ -1,48 +1,19 @@
 import { elementUpdated, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import './helpers/umbrella-form.js';
 import { getAllFieldsAndFormGroups } from './helpers/helpers.js';
-
-import '@lion/ui/define/lion-button.js';
-import '@lion/ui/define/lion-button-submit.js';
-import '@lion/ui/define/lion-button-reset.js';
-
-import '@lion/ui/define/lion-checkbox.js';
-import '@lion/ui/define/lion-checkbox-group.js';
-import '@lion/ui/define/lion-combobox.js';
-
-import '@lion/ui/define/lion-dialog.js';
-
-import '@lion/ui/define/lion-form.js';
-import '@lion/ui/define/lion-fieldset.js';
-import '@lion/ui/define/lion-select-rich.js';
-import '@lion/ui/define/lion-select.js';
-
-import '@lion/ui/define/lion-input-stepper.js';
-import '@lion/ui/define/lion-input-range.js';
-import '@lion/ui/define/lion-input-amount.js';
-import '@lion/ui/define/lion-input.js';
-import '@lion/ui/define/lion-input-date.js';
-import '@lion/ui/define/lion-input-iban.js';
-import '@lion/ui/define/lion-input-email.js';
-import '@lion/ui/define/lion-input-tel-dropdown.js';
-import '@lion/ui/define/lion-input-datepicker.js';
-
-import '@lion/ui/define/lion-textarea.js';
-
-import '@lion/ui/define/lion-radio.js';
-import '@lion/ui/define/lion-radio-group.js';
-
-import '@lion/ui/define/lion-listbox.js';
-import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-options.js';
-
-import '@lion/ui/define/lion-validation-feedback.js';
+import './helpers/umbrella-form.js';
 /**
  * @typedef {import('../../form-core/src/LionField.js').LionField} LionField
+ * @typedef {import('../../input-file/types/input-file.js').InputFile} InputFile
  * @typedef {import('../../button/src/LionButton.js').LionButton} LionButton
  * @typedef {import('./helpers/umbrella-form.js').UmbrellaForm} UmbrellaForm
  */
+
+const file = /** @type {InputFile} */ (
+  new File(['foo'], 'foo.txt', {
+    type: 'text/plain',
+  })
+);
 
 const fullyPrefilledSerializedValue = {
   fullName: { firstName: 'Lorem', lastName: 'Ipsum' },
@@ -57,6 +28,7 @@ const fullyPrefilledSerializedValue = {
   favoriteFruit: 'Banana',
   favoriteMovie: 'Rocky',
   favoriteColor: 'hotpink',
+  file: [],
   lyrics: '1',
   notifications: {
     checked: true,
@@ -81,6 +53,7 @@ const fullyChangedSerializedValue = {
   favoriteFruit: '',
   favoriteMovie: '',
   favoriteColor: '',
+  file: [file],
   lyrics: '2',
   notifications: {
     checked: false,
@@ -189,6 +162,7 @@ describe(`Submitting/Resetting/Clearing Form`, async () => {
       favoriteFruit: '',
       favoriteMovie: '',
       favoriteColor: '',
+      file: [],
       lyrics: '',
       notifications: {
         checked: false,
