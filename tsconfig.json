@@ -20,21 +20,4 @@
     "declarationMap": true,
     "sourceMap": true
   }
-  // "include": ["packages/**/*.js", "packages-node/**/*.js"],
-  // "exclude": [
-  //   "node_modules",
-  //   "**/node_modules/*",
-  //   "**/coverage/*",
-  //   "**/dist/**/*",
-  //   "packages/**/test-helpers",
-  //   "packages/**/docs/**/*",
-  //   "packages/singleton-manager/demo/",
-  //   "packages/singleton-manager/test/",
-  //   // ignore test/demos for singleton manager until overlays are typed as it's used in there
-  //   "packages-node/**/test-helpers",
-  //   "packages-node/**/docs/**/*",
-  //   "packages-node/babel-plugin-extend-docs/**/*.js",
-  //   "packages-node/providence-analytics/**/*.js",
-  //   "packages-node/remark-extend/**/*.js"
-  // ]
 }
