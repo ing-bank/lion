@@ -3,8 +3,8 @@ import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing'
 import { runOverlayMixinSuite } from '@lion/ui/overlays-test-suites.js';
 
 /**
- * @typedef {import('../src/LionTooltip.js.js').LionTooltip} LionTooltip
- * @typedef {import('@lion/overlays/types/OverlayConfig').OverlayConfig} OverlayConfig
+ * @typedef {import('../src/LionTooltip.js').LionTooltip} LionTooltip
+ * @typedef {import('../../overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig
  */
 
 describe('lion-tooltip', () => {
@@ -249,9 +249,10 @@ describe('lion-tooltip', () => {
       );
 
       await aTimeout(0);
-      // @ts-expect-error allow protected props in tests
+      // TODO: we are testing a protected property `_overlayCtrl` here, which is not ideal
+      // @ts-ignore
       const initialPopperModifiers = el._overlayCtrl.config.popperConfig.modifiers;
-      // @ts-expect-error allow protected props in tests
+      // @ts-ignore
       expect(el._overlayCtrl.config.popperConfig.placement).to.equal('top');
 
       el.config = {
@@ -263,10 +264,10 @@ describe('lion-tooltip', () => {
       el.opened = false;
       el.opened = true;
       await aTimeout(0);
-      // @ts-expect-error allow protected props in tests
+      // @ts-ignore
       const updatedPopperModifiers = el._overlayCtrl.config.popperConfig.modifiers;
       expect(updatedPopperModifiers).to.deep.equal(initialPopperModifiers);
-      // @ts-expect-error allow protected props in tests
+      // @ts-ignore
       expect(el._overlayCtrl.config.popperConfig.placement).to.equal('bottom');
     });
   });

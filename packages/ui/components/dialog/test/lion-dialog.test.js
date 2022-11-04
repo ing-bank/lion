@@ -3,9 +3,8 @@ import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.su
 import '@lion/ui/define/lion-dialog.js';
 
 /**
-
- * @typedef {import('../src/LionDialog').LionDialog} LionDialog
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionDialog.js').LionDialog} LionDialog
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ (_fixture);
 

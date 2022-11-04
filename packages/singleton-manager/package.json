@@ -11,30 +11,24 @@
     "directory": "packages/singleton-manager"
   },
   "type": "module",
-  "main": "index.js",
-  "module": "index.js",
   "files": [
-    "*.d.ts",
-    "*.js",
+    "dist-types",
     "docs",
     "src",
-    "test",
-    "test-helpers",
-    "translations",
-    "types"
+    "test"
   ],
   "scripts": {
     "debug": "cd ../../ && npm run debug -- --group singleton-manager",
     "debug:firefox": "cd ../../ && npm run debug:firefox -- --group singleton-manager",
     "debug:webkit": "cd ../../ && npm run debug:webkit -- --group singleton-manager",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
-    "prepublishOnly": "npm run publish-docs",
+    "prepublishOnly": "npm run types && npm run publish-docs",
     "start:fail": "es-dev-server -c demo/fail/server.js",
     "start:singleton": "es-dev-server -c demo/singleton/server.js",
     "start:singleton-complex": "es-dev-server -c demo/singleton-complex/server.js",
-    "test": "cd ../../ && npm run test:browser -- --group singleton-manager"
+    "test": "cd ../../ && npm run test:browser -- --group singleton-manager",
+    "types": "wireit"
   },
-  "sideEffects": false,
   "keywords": [
     "lion",
     "singleton-manager"
@@ -43,7 +37,24 @@
     "access": "public"
   },
   "exports": {
-    ".": "./index.js",
+    ".": {
+      "types": "./dist-types/src/index.d.ts",
+      "default": "./src/index.js"
+    },
     "./docs/*": "./docs/*"
+  },
+  "wireit": {
+    "types": {
+      "command": "tsc --build --pretty",
+      "files": [
+        "src/**/*.js",
+        "test/**/*.js",
+        "types/**",
+        "tsconfig.json"
+      ],
+      "output": [
+        "dist-types/**"
+      ]
+    }
   }
 }

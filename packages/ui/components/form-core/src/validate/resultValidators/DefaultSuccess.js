@@ -1,7 +1,7 @@
 import { ResultValidator } from '../ResultValidator.js';
 
 /**
- * @typedef {import('../Validator').Validator} Validator
+ * @typedef {import('../Validator.js').Validator} Validator
  */
 
 export class DefaultSuccess extends ResultValidator {

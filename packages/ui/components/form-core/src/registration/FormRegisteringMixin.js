@@ -1,12 +1,12 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
- * @typedef {import('@lion/core').LitElement} LitElement
- * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringMixin} FormRegisteringMixin
- * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
- * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
- * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
+ * @typedef {import('lit').LitElement} LitElement
+ * @typedef {import('../../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../../types/registration/FormRegisteringMixinTypes.js').FormRegisteringMixin} FormRegisteringMixin
+ * @typedef {import('../../types/registration/FormRegisteringMixinTypes.js').FormRegisteringHost} FormRegisteringHost
+ * @typedef {import('../../types/registration/FormRegistrarMixinTypes.js').ElementWithParentFormGroup} ElementWithParentFormGroup
+ * @typedef {import('../../types/registration/FormRegistrarMixinTypes.js').FormRegistrarHost} FormRegistrarHost
  */
 
 /**

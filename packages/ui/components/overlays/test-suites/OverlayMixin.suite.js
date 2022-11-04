@@ -6,11 +6,11 @@ import { overlays, OverlayController } from '@lion/ui/overlays.js';
 import '@lion/ui/define/lion-dialog.js';
 
 /**
- * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
- * @typedef {import('../types/OverlayMixinTypes').DefineOverlayConfig} DefineOverlayConfig
- * @typedef {import('../types/OverlayMixinTypes').OverlayHost} OverlayHost
- * @typedef {import('../types/OverlayMixinTypes').OverlayMixin} OverlayMixin
- * @typedef {import('@lion/core').LitElement} LitElement
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/OverlayMixinTypes.js').DefineOverlayConfig} DefineOverlayConfig
+ * @typedef {import('../types/OverlayMixinTypes.js').OverlayHost} OverlayHost
+ * @typedef {import('../types/OverlayMixinTypes.js').OverlayMixin} OverlayMixin
+ * @typedef {import('lit').LitElement} LitElement
  * @typedef {LitElement & OverlayHost & {_overlayCtrl:OverlayController}} OverlayEl
  */
 

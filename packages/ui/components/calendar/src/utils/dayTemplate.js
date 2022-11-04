@@ -20,7 +20,7 @@ const lastDaysOfYear = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 /**
  *
- * @param {import('../../types/day').Day} day
+ * @param {import('../../types/day.js').Day} day
  * @param {{ weekdays: string[], monthsLabels?: string[] }} opts
  */
 export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }) {

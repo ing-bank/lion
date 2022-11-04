@@ -6,7 +6,7 @@ import { DayObject } from './DayObject.js';
  */
 export class CalendarObject {
   /**
-   * @param {import('../src/LionCalendar').LionCalendar} calendarEl
+   * @param {import('../src/LionCalendar.js').LionCalendar} calendarEl
    */
   constructor(calendarEl) {
     this.el = calendarEl;

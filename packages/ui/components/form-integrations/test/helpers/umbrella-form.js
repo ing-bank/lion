@@ -24,7 +24,7 @@ import '@lion/ui/define/lion-input-stepper.js';
 
 export class UmbrellaForm extends LitElement {
   get _lionFormNode() {
-    return /** @type {import('@lion/form').LionForm} */ (
+    return /** @type {import('../../../form/src/LionForm.js').LionForm} */ (
       this.shadowRoot?.querySelector('lion-form')
     );
   }

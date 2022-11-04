@@ -15,8 +15,8 @@ import {
 import sinon from 'sinon';
 
 /**
- * @typedef {import('../src/LionField.js.js').LionField} LionField
- * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../src/LionField.js').LionField} LionField
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  */
 
@@ -28,7 +28,7 @@ const inputSlotString = '<input slot="input" />';
 const inputSlot = unsafeHTML(inputSlotString);
 
 /**
- * @param {import("../index.js.js").LionField} formControl
+ * @param {LionField} formControl
  * @param {string} newViewValue
  */
 function mimicUserInput(formControl, newViewValue) {
@@ -252,7 +252,7 @@ describe('<lion-field>', () => {
       );
 
       /**
-       * @param {import("../index.js.js").LionField} _sceneEl
+       * @param {LionField} _sceneEl
        * @param {{ index?: number; el: any; wantedShowsFeedbackFor: any; }} scenario
        */
       const executeScenario = async (_sceneEl, scenario) => {

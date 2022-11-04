@@ -5,8 +5,8 @@ import '@lion/ui/define/lion-collapsible.js';
 
 /**
 
- * @typedef {import('../src/LionCollapsible').LionCollapsible} LionCollapsible
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionCollapsible.js').LionCollapsible} LionCollapsible
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionCollapsible>} */ (_fixture);
 

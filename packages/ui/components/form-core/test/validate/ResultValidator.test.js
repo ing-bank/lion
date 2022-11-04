@@ -2,7 +2,7 @@ import { expect } from '@open-wc/testing';
 import { MinLength, Required, DefaultSuccess, ResultValidator } from '@lion/ui/form-core.js';
 
 /**
- * @typedef {import('../../src/validate/Validator').Validator} Validator
+ * @typedef {import('../../src/validate/Validator.js').Validator} Validator
  */
 
 describe('ResultValidator', () => {

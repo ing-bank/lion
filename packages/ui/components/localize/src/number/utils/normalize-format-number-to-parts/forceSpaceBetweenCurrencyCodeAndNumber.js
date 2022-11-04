@@ -1,9 +1,9 @@
 /**
  * When in some locales there is no space between currency and amount it is added
  *
- * @typedef {import('../../../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../../../types/LocalizeMixinTypes.js').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
- * @param {import('../../../../types/LocalizeMixinTypes').FormatNumberOptions} [options]
+ * @param {import('../../../../types/LocalizeMixinTypes.js').FormatNumberOptions} options
  * @returns {FormatNumberPart[]}
  */
 export function forceSpaceBetweenCurrencyCodeAndNumber(

@@ -3,7 +3,7 @@ import { createMonth } from '../../src/utils/createMonth.js';
 import { createWeek } from '../../src/utils/createWeek.js';
 
 /**
- * @param {import('../../types/day').Month} obj
+ * @param {import('../../types/day.js').Month} obj
  */
 function compareMonth(obj) {
   obj.weeks.forEach((week, weeki) => {

@@ -2,7 +2,7 @@
  *
  * @param {number} parsedNumber
  * @param {string} formattedNumber
- * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} [options]
+ * @param {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} [options]
  * @returns {{groupSeparator: string|null, decimalSeparator: string|null}}
  */
 export function getSeparatorsFromNumber(parsedNumber, formattedNumber, options) {

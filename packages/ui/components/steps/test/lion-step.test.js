@@ -4,7 +4,7 @@ import { html } from 'lit/static-html.js';
 import '@lion/ui/define/lion-step.js';
 
 /**
- * @typedef {import('../src/LionStep').LionStep} LionStep
+ * @typedef {import('../src/LionStep.js').LionStep} LionStep
  */
 
 describe('lion-step', () => {

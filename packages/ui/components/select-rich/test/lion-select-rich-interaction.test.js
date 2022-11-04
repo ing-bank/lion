@@ -9,8 +9,8 @@ import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
 
 /**
- * @typedef {import('../src/LionSelectRich').LionSelectRich} LionSelectRich
- * @typedef {import('@lion/listbox').LionOption} LionOption
+ * @typedef {import('../src/LionSelectRich.js').LionSelectRich} LionSelectRich
+ * @typedef {import('../../listbox/src/LionOption.js').LionOption} LionOption
  */
 
 /**

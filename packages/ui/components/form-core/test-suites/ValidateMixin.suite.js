@@ -22,7 +22,7 @@ import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 
 /**
- * @typedef {import('..').LionField} LionField
+ * @typedef {import('@lion/ui/form-core.js').LionField} LionField
  */
 
 /**
@@ -1111,15 +1111,17 @@ export function runValidateMixinSuite(customConfig) {
         const { _inputNode } = getFormControlMembers(el);
 
         if (_inputNode) {
-          // @ts-expect-error
+          // @ts-ignore -- we are testing the protected _inputNode here
           const spy = sinon.spy(el._inputNode, 'setCustomValidity');
           el.modelValue = '';
           expect(spy.callCount).to.equal(1);
-          // @ts-expect-error needs to be rewritten to new API
+
+          // TODO: why are we testing validationMessage here?
+          // @ts-ignore
           expect(el.validationMessage).to.be('foo');
           el.modelValue = '123';
           expect(spy.callCount).to.equal(2);
-          // @ts-expect-error needs to be rewritten to new API
+          // @ts-ignore
           expect(el.validationMessage).to.be('');
         }
       });
@@ -1226,7 +1228,7 @@ export function runValidateMixinSuite(customConfig) {
         await el.feedbackComplete;
 
         const feedbackNode =
-          /** @type {import('../src/validate/LionValidationFeedback').LionValidationFeedback} */
+          /** @type {import('../src/validate/LionValidationFeedback.js').LionValidationFeedback} */
           (_feedbackNode);
         const resultOrder = feedbackNode.feedbackData?.map(v => v.type);
         expect(resultOrder).to.deep.equal(['error', 'x', 'y']);

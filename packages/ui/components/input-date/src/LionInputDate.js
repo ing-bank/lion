@@ -38,7 +38,7 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
     this.type = 'text';
   }
 
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
+  /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('locale')) {

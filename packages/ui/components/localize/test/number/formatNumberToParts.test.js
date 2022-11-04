@@ -21,7 +21,7 @@ const m = { type: 'minusSign', value: '−' };
 
 const stringifyParts =
   /**
-   * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+   * @typedef {import('../../types/LocalizeMixinTypes.js').FormatNumberPart} FormatNumberPart
    * @param {FormatNumberPart[]} parts
    * @returns {string}
    */

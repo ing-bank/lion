@@ -17,6 +17,10 @@ yarn-error.log
 /build/
 /bundlesize/dist/
 **/custom-elements.json
+dist
+dist-types
+*.tsbuildinfo
+.wireit
 
 ## types
 *.d.ts

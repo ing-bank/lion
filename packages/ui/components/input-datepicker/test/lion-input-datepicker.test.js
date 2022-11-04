@@ -11,7 +11,7 @@ import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
 import '@lion/ui/define/lion-input-datepicker.js';
 
 /**
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 /**

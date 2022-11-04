@@ -3,8 +3,8 @@ import { expect, fixture as _fixture, nextFrame, html } from '@open-wc/testing';
 import '@lion/ui/define/lion-input-range.js';
 
 /**
- * @typedef {import('../src/LionInputRange').LionInputRange} LionInputRange
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionInputRange.js').LionInputRange} LionInputRange
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputRange>} */ (_fixture);
 

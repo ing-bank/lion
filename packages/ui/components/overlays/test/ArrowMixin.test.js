@@ -8,7 +8,7 @@ describe('ArrowMixin', () => {
      * @overridable method `_defineOverlay`
      * @desc Overrides arrow and keepTogether modifier to be enabled,
      * and adds onCreate and onUpdate hooks to sync from popper state
-     * @returns {import('../types/OverlayConfig').OverlayConfig}
+     * @returns {import('../types/OverlayConfig.js').OverlayConfig}
      */
     _defineOverlayConfig() {
       return {
@@ -84,7 +84,7 @@ describe('ArrowMixin', () => {
       await fixture(html`
         <arrow-test
           .config="${
-            /** @type {import('../types/OverlayConfig').OverlayConfig} */ ({
+            /** @type {import('../types/OverlayConfig.js').OverlayConfig} */ ({
               popperConfig: {
                 placement: 'right',
               },

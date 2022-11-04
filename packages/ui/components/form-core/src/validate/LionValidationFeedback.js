@@ -1,8 +1,8 @@
 import { html, LitElement } from 'lit';
 
 /**
- * @typedef {import('./Validator').Validator} Validator
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('./Validator.js').Validator} Validator
+ * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {Object} messageMap
  * @property {string | Node} message
  * @property {string} type
@@ -34,7 +34,7 @@ export class LionValidationFeedback extends LitElement {
   }
 
   /**
-   * @param {import('@lion/core').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

@@ -2,9 +2,9 @@ import { Validator } from '@lion/ui/form-core.js';
 import { PhoneUtilManager } from './PhoneUtilManager.js';
 
 /**
- * @typedef {import('../types').RegionCode} RegionCode
+ * @typedef {import('../types/index.js').RegionCode} RegionCode
  * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
- * @typedef {import('@lion/form-core/types/validate/validate').FeedbackMessageData} FeedbackMessageData
+ * @typedef {import('../../form-core/types/validate/validate.js').FeedbackMessageData} FeedbackMessageData
  */
 
 /**

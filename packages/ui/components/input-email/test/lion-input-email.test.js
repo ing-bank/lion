@@ -3,8 +3,8 @@ import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import '@lion/ui/define/lion-input-email.js';
 
 /**
- * @typedef {import('../src/LionInputEmail').LionInputEmail} LionInputEmail
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionInputEmail.js').LionInputEmail} LionInputEmail
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputEmail>} */ (_fixture);
 

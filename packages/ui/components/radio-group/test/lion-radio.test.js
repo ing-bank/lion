@@ -3,7 +3,7 @@ import { html } from 'lit/static-html.js';
 import '@lion/ui/define/lion-radio.js';
 
 /**
- * @typedef {import('../src/LionRadio').LionRadio} LionRadio
+ * @typedef {import('../src/LionRadio.js').LionRadio} LionRadio
  */
 
 describe('<lion-radio>', () => {

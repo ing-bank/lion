@@ -6,7 +6,7 @@ import '@lion/ui/define/lion-validation-feedback.js';
 import { AlwaysInvalid, AlwaysValid } from '@lion/ui/form-core-test-helpers.js';
 
 /**
- * @typedef {import('../../src/validate/LionValidationFeedback').LionValidationFeedback} LionValidationFeedback
+ * @typedef {import('../../src/validate/LionValidationFeedback.js').LionValidationFeedback} LionValidationFeedback
  */
 
 describe('lion-validation-feedback', () => {

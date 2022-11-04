@@ -13,8 +13,8 @@ import {
 import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
 
 /**
- * @typedef {import('@lion/form-core').Validator} Validator
- * @typedef {import('@lion/core').RenderOptions} RenderOptions
+ * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
+ * @typedef {import('lit').RenderOptions} RenderOptions
  */
 
 /**
@@ -230,13 +230,13 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     }
   }
 
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
+  /** @param {import('lit').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__toggleInvokerDisabled();
   }
 
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
+  /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('validators')) {
@@ -354,7 +354,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   async __openCalendarOverlay() {
     await this._overlayCtrl.show();
     await Promise.all([
-      /** @type {import('@lion/core').LitElement} */ (this._overlayCtrl.contentNode).updateComplete,
+      /** @type {import('lit').LitElement} */ (this._overlayCtrl.contentNode).updateComplete,
       this._calendarNode.updateComplete,
     ]);
     this._onCalendarOverlayOpened();
@@ -408,13 +408,16 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   /**
    * Validators contain the information to synchronize the input with
    * the min, max and enabled dates of the calendar.
-   * @param {import('@lion/form-core').Validator[]} validators - errorValidators or warningValidators array
+   * @param {Validator[]} validators - errorValidators or warningValidators array
    */
   __syncDisabledDates(validators) {
     // On every validator change, synchronize disabled dates: this means
     // we need to extract minDate, maxDate, minMaxDate and disabledDates validators
     validators.forEach(v => {
-      const vctor = /** @type {typeof import('@lion/form-core').Validator} */ (v.constructor);
+      const vctor =
+        /** @type {typeof import('../../form-core/src/validate/Validator.js').Validator} */ (
+          v.constructor
+        );
       if (vctor.validatorName === 'MinDate') {
         this.__calendarMinDate = v.param;
       } else if (vctor.validatorName === 'MaxDate') {

@@ -27,7 +27,7 @@ export class LionField extends FormControlMixin(
   InteractionStateMixin(FocusMixin(FormatMixin(ValidateMixin(SlotMixin(LitElement))))),
 ) {
   /**
-   * @param {import('@lion/core').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues} changedProperties
    */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);

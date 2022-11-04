@@ -50,6 +50,9 @@ export const runRegistrationSuite = customConfig => {
     });
 
     it('works with document.createElement', async () => {
+      if (parentTagString === undefined || childTagString === undefined) {
+        throw new Error('You need to define parentTagString & childTagString');
+      }
       const el = /** @type {RegistrarClass} */ (document.createElement(parentTagString));
       const childEl = document.createElement(childTagString);
       expect(el.formElements.length).to.equal(0);

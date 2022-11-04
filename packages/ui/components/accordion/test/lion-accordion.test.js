@@ -3,8 +3,9 @@ import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 
 import '@lion/ui/define/lion-accordion.js';
+
 /**
- * @typedef {import('../LionAccordion.js').LionAccordion} LionAccordion
+ * @typedef {import('../src/LionAccordion.js').LionAccordion} LionAccordion
  */
 
 const basicAccordion = html`

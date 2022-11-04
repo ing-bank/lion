@@ -30,9 +30,9 @@ export function roundNumber(number, roundMode) {
 /**
  * Splits a number up in parts for integer, fraction, group, literal, decimal and currency.
  *
- * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../types/LocalizeMixinTypes.js').FormatNumberPart} FormatNumberPart
  * @param {number} number Number to split up
- * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} [options] Intl options are available extended by roundMode,returnIfNaN
+ * @param {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} [options] Intl options are available extended by roundMode,returnIfNaN
  * @returns {string | FormatNumberPart[]} Array with parts or (an empty string or returnIfNaN if not a number)
  */
 export function formatNumberToParts(number, options = {}) {

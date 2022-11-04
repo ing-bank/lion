@@ -1,8 +1,8 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
- * @typedef {import('../../types/registration/FormRegistrarPortalMixinTypes').FormRegistrarPortalMixin} FormRegistrarPortalMixin
- * @typedef {import('../../types/registration/FormRegistrarPortalMixinTypes').FormRegistrarPortalHost} FormRegistrarPortalHost
+ * @typedef {import('../../types/registration/FormRegistrarPortalMixinTypes.js').FormRegistrarPortalMixin} FormRegistrarPortalMixin
+ * @typedef {import('../../types/registration/FormRegistrarPortalMixinTypes.js').FormRegistrarPortalHost} FormRegistrarPortalHost
  */
 
 /**

@@ -37,7 +37,7 @@ const SUPPORTED_LOCALES = {
 };
 
 /**
- * @typedef {import('../../types/LocalizeMixinTypes').FormatDateOptions} FormatDateOptions
+ * @typedef {import('../../types/LocalizeMixinTypes.js').FormatDateOptions} FormatDateOptions
  */
 
 describe('formatDate', () => {

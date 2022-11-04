@@ -8,9 +8,9 @@ import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import '@lion/ui/define/lion-switch.js';
 
 /**
- * @typedef {import('../src/LionSwitchButton').LionSwitchButton} LionSwitchButton
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../src/LionSwitchButton.js').LionSwitchButton} LionSwitchButton
+ * @typedef {import('lit').TemplateResult} TemplateResult
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
 
 const IsTrue = class extends Validator {

@@ -4,7 +4,7 @@ import { getLocale } from '../utils/getLocale.js';
  * To get the decimal separator
  *
  * @param {string} [locale] To override the browser locale
- * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} [options]
+ * @param {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} [options]
  * @returns {string} The separator
  */
 export function getDecimalSeparator(locale, options) {

@@ -4,9 +4,9 @@ import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio.js';
 
 /**
- * @typedef {import('../src/LionRadioGroup').LionRadioGroup} LionRadioGroup
- * @typedef {import('../src/LionRadio').LionRadio} LionRadio
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionRadioGroup.js').LionRadioGroup} LionRadioGroup
+ * @typedef {import('../src/LionRadio.js').LionRadio} LionRadio
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionRadioGroup>} */ (_fixture);
 

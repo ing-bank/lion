@@ -3,7 +3,7 @@ import { isTemplateResult } from 'lit/directive-helpers.js';
 import { icons } from './icons.js';
 
 /**
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {(tag: (strings: TemplateStringsArray, ... expr: string[]) => string) => string} TagFunction
  */
 
@@ -111,7 +111,7 @@ export class LionIcon extends LitElement {
     this.__svg = nothing;
   }
 
-  /** @param {import('@lion/core').PropertyValues} changedProperties */
+  /** @param {import('lit').PropertyValues} changedProperties */
   update(changedProperties) {
     super.update(changedProperties);
     if (changedProperties.has('ariaLabel')) {

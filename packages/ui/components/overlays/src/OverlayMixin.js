@@ -3,14 +3,14 @@ import { OverlayController } from './OverlayController.js';
 import { isEqualConfig } from './utils/is-equal-config.js';
 
 /**
- * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
- * @typedef {import('../types/OverlayMixinTypes').DefineOverlayConfig} DefineOverlayConfig
- * @typedef {import('../types/OverlayMixinTypes').OverlayMixin} OverlayMixin
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/OverlayMixinTypes.js').DefineOverlayConfig} DefineOverlayConfig
+ * @typedef {import('../types/OverlayMixinTypes.js').OverlayMixin} OverlayMixin
  */
 
 /**
  * @type {OverlayMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 export const OverlayMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -114,7 +114,7 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('@lion/core').PropertyValues } changedProperties
+     * @param {import('lit').PropertyValues } changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

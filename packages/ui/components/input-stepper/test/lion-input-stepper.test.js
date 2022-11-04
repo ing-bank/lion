@@ -4,8 +4,8 @@ import sinon from 'sinon';
 import '@lion/ui/define/lion-input-stepper.js';
 
 /**
- * @typedef {import('../src/LionInputStepper').LionInputStepper} LionInputStepper
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionInputStepper.js').LionInputStepper} LionInputStepper
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputStepper>} */ (_fixture);
 

@@ -20,16 +20,16 @@ import { getFlagSymbol } from './getFlagSymbol.js';
 
 /**
  * @typedef {import('lit/directives/ref.js').Ref} Ref
- * @typedef {import('@lion/core').RenderOptions} RenderOptions
- * @typedef {import('@lion/form-core/types/FormatMixinTypes').FormatHost} FormatHost
- * @typedef {import('@lion/input-tel/types').RegionCode} RegionCode
- * @typedef {import('../types').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
- * @typedef {import('../types').OnDropdownChangeEvent} OnDropdownChangeEvent
- * @typedef {import('../types').DropdownRef} DropdownRef
- * @typedef {import('../types').RegionMeta} RegionMeta
+ * @typedef {import('lit').RenderOptions} RenderOptions
+ * @typedef {import('../../form-core/types/FormatMixinTypes.js').FormatHost} FormatHost
+ * @typedef {import('../../input-tel/types/index.js').RegionCode} RegionCode
+ * @typedef {import('../types/index.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
+ * @typedef {import('../types/index.js').OnDropdownChangeEvent} OnDropdownChangeEvent
+ * @typedef {import('../types/index.js').DropdownRef} DropdownRef
+ * @typedef {import('../types/index.js').RegionMeta} RegionMeta
  * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
- * @typedef {import('@lion/select-rich').LionSelectRich} LionSelectRich
- * @typedef {import('@lion/overlays').OverlayController} OverlayController
+ * @typedef {import('../../select-rich/src/LionSelectRich.js').LionSelectRich} LionSelectRich
+ * @typedef {import('../../overlays/src/OverlayController.js').OverlayController} OverlayController
  * @typedef {TemplateDataForDropdownInputTel & {data: {regionMetaList:RegionMeta[]}}} TemplateDataForIntlInputTel
  */
 

@@ -12,7 +12,10 @@
   },
   "type": "module",
   "exports": {
-    "./*": "./exports/*",
+    "./*": {
+      "types": "./dist-types/exports/*",
+      "default": "./exports/*"
+    },
     "./calendar-translations/*": "./components/calendar/translations/*",
     "./pagination-translations/*": "./components/pagination/translations/*",
     "./progress-indicator-translations/*": "./components/progress-indicator/translations/*",
@@ -23,22 +26,21 @@
     "./validate-messages-translations/*": "./components/validate-messages/translations/*"
   },
   "files": [
-    "*.d.ts",
-    "*.js",
     "custom-elements.json",
     "docs",
+    "components",
     "exports",
-    "src",
-    "types"
+    "dist-types"
   ],
   "scripts": {
     "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
-    "debug": "cd ../../ && npm run debug -- --group accordion",
-    "debug:firefox": "cd ../../ && npm run debug:firefox -- --group accordion",
-    "debug:webkit": "cd ../../ && npm run debug:webkit -- --group accordion",
+    "debug": "cd ../../ && npm run debug",
+    "debug:firefox": "cd ../../ && npm run debug:firefox",
+    "debug:webkit": "cd ../../ && npm run debug:webkit",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
-    "prepublishOnly": "npm run publish-docs && npm run custom-elements-manifest",
-    "test": "cd ../../ && npm run test:browser -- --group accordion"
+    "prepublishOnly": "npm run types && npm run publish-docs && npm run custom-elements-manifest",
+    "test": "cd ../../ && npm run test:browser",
+    "types": "wireit"
   },
   "dependencies": {
     "@bundled-es-modules/message-format": "^6.0.4",
@@ -51,12 +53,28 @@
     "singleton-manager": "^1.5.0"
   },
   "keywords": [
-    "accordion",
     "lion",
-    "web-components"
+    "web-components",
+    "design-system"
   ],
   "publishConfig": {
     "access": "public"
   },
-  "customElements": "custom-elements.json"
+  "customElements": "custom-elements.json",
+  "wireit": {
+    "types": {
+      "command": "tsc --build --pretty",
+      "dependencies": [
+        "../singleton-manager:types"
+      ],
+      "files": [
+        "exports/**/*.js",
+        "components/**/*",
+        "tsconfig.json"
+      ],
+      "output": [
+        "dist-types/**"
+      ]
+    }
+  }
 }

@@ -8,7 +8,7 @@ async function sleep(t = 0) {
 
 /**
  * @param {HTMLElement} el
- * @param {{isAsync?:boolean, releaseElement?: HTMLElement}} [config]
+ * @param {{isAsync?:boolean, releaseElement?: HTMLElement}} config
  */
 export async function mimicClick(el, { isAsync, releaseElement } = { isAsync: false }) {
   const releaseEl = releaseElement || el;

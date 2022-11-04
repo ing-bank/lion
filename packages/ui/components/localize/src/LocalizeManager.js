@@ -1,13 +1,13 @@
-// @ts-expect-error [external]: no types for this package
+// @ts-ignore
 import MessageFormat from '@bundled-es-modules/message-format/MessageFormat.js';
 import isLocalizeESModule from './isLocalizeESModule.js';
 
 /**
- * @typedef {import('../types/LocalizeMixinTypes').NamespaceObject} NamespaceObject
+ * @typedef {import('../types/LocalizeMixinTypes.js').NamespaceObject} NamespaceObject
  */
 
-/** @typedef {import('../types/LocalizeMixinTypes').DatePostProcessor} DatePostProcessor */
-/** @typedef {import('../types/LocalizeMixinTypes').NumberPostProcessor} NumberPostProcessor */
+/** @typedef {import('../types/LocalizeMixinTypes.js').DatePostProcessor} DatePostProcessor */
+/** @typedef {import('../types/LocalizeMixinTypes.js').NumberPostProcessor} NumberPostProcessor */
 
 /**
  * `LocalizeManager` manages your translations (includes loading)
@@ -222,7 +222,7 @@ export class LocalizeManager {
 
   /**
    * @param {NamespaceObject[]} namespaces
-   * @param {Object} [options]
+   * @param {Object} options
    * @param {string} [options.locale]
    * @returns {Promise.<Object>}
    */
@@ -237,7 +237,7 @@ export class LocalizeManager {
 
   /**
    * @param {NamespaceObject} namespaceObj
-   * @param {Object} [options]
+   * @param {Object} options
    * @param {string} [options.locale]
    * @returns {Promise.<Object|void>}
    */

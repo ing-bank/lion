@@ -1,12 +1,12 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
- * @typedef {import('../types/DisabledMixinTypes').DisabledMixin} DisabledMixin
+ * @typedef {import('../types/DisabledMixinTypes.js').DisabledMixin} DisabledMixin
  */
 
 /**
  * @type {DisabledMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('../index').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const DisabledMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow

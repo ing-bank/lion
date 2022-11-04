@@ -64,7 +64,7 @@ function getParseMode(value, { mode = 'auto' } = {}) {
  * parseWithLocale('1,234', { locale: 'en-GB' }) => 1234
  *
  * @param {string} value Number to be parsed
- * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} options Locale Options
+ * @param {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} options Locale Options
  */
 function parseWithLocale(value, options) {
   const locale = options && options.locale ? options.locale : undefined;
@@ -118,7 +118,7 @@ function parseHeuristic(value) {
  * parseNumber('1,234.56'); // method: heuristic => 1234.56
  *
  * @param {string} value Number to be parsed
- * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} [options] Locale Options
+ * @param {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} [options] Locale Options
  */
 export function parseNumber(value, options) {
   const containsNumbers = value.match(/\d/g);

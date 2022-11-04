@@ -1,14 +1,14 @@
 import { CalendarObject } from '@lion/ui/calendar-test-helpers.js';
 
 export class DatepickerInputObject {
-  /** @param {import('../src/LionInputDatepicker').LionInputDatepicker} el */
+  /** @param {import('../src/LionInputDatepicker.js').LionInputDatepicker} el */
   constructor(el) {
     this.el = el;
   }
 
   /**
    * Methods mimicing User Interaction
-   * @param {{click?:boolean}} [options]
+   * @param {{click?:boolean}} options
    */
   async openCalendar({ click } = {}) {
     // Make sure the calendar is opened, not closed/toggled;

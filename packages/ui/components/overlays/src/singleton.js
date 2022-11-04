@@ -1,5 +1,4 @@
 import { singletonManager } from 'singleton-manager';
-// eslint-disable-next-line import/no-cycle
 import { OverlaysManager } from './OverlaysManager.js';
 
 // eslint-disable-next-line import/no-mutable-exports

@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-import '../typedef.js';
 import {
   ajaxCache,
   extendCacheOptions,
@@ -9,6 +8,14 @@ import {
   resetCacheSession,
   validateCacheOptions,
 } from '../cacheManager.js';
+
+/**
+ * @typedef {import('../../types/types.js').RequestInterceptor} RequestInterceptor
+ * @typedef {import('../../types/types.js').ResponseInterceptor} ResponseInterceptor
+ * @typedef {import('../../types/types.js').CacheOptions} CacheOptions
+ * @typedef {import('../../types/types.js').CacheRequest} CacheRequest
+ * @typedef {import('../../types/types.js').CacheResponse} CacheResponse
+ */
 
 /**
  * Tests whether the request method is supported according to the `cacheOptions`
