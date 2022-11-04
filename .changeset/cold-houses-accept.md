@@ -2,4 +2,4 @@
 'providence-analytics': minor
 ---
 
-Expose more exports; uopdated to cjs format only
+Expose more exports; updated to cjs format only
