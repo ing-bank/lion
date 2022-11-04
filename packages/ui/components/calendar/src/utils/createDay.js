@@ -1,6 +1,6 @@
 /**
  * @param {Date} date,
- * @returns {import('../../types/day').Day} day
+ * @returns {import('../../types/day.js').Day} day
  */
 export function createDay(
   date = new Date(),

@@ -22,7 +22,7 @@ import {
 } from '@lion/ui/localize-test-helpers.js';
 
 /**
- * @typedef {import('../types/LocalizeMixinTypes').LocalizeMixin} LocalizeMixinHost
+ * @typedef {import('../types/LocalizeMixinTypes.js').LocalizeMixin} LocalizeMixinHost
  */
 
 describe('LocalizeMixin', () => {

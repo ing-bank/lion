@@ -3,11 +3,11 @@ import { FormRegistrarMixin } from '../registration/FormRegistrarMixin.js';
 import { InteractionStateMixin } from '../InteractionStateMixin.js';
 
 /**
- * @typedef {import('../../types/choice-group/ChoiceGroupMixinTypes').ChoiceGroupMixin} ChoiceGroupMixin
- * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
- * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormControl} FormControl
- * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
+ * @typedef {import('../../types/choice-group/ChoiceGroupMixinTypes.js').ChoiceGroupMixin} ChoiceGroupMixin
+ * @typedef {import('../../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../../types/registration/FormRegistrarMixinTypes.js').ElementWithParentFormGroup} ElementWithParentFormGroup
+ * @typedef {import('../../types/form-group/FormGroupMixinTypes.js').FormControl} FormControl
+ * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes.js').ChoiceInputHost} ChoiceInputHost
  */
 
 /**
@@ -18,7 +18,7 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  * children events, like in FormGroups
  *
  * @type {ChoiceGroupMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const ChoiceGroupMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -166,7 +166,7 @@ const ChoiceGroupMixinImplementation = superclass =>
       Promise.resolve().then(() => super._completeRegistration());
     }
 
-    /** @param {import('@lion/core').PropertyValues} changedProperties */
+    /** @param {import('lit').PropertyValues} changedProperties */
     updated(changedProperties) {
       super.updated(changedProperties);
       if (changedProperties.has('name') && this.name !== changedProperties.get('name')) {

@@ -1,9 +1,12 @@
-import './typedef.js';
+/**
+ * @typedef {import('../types/types.js').CachedRequests} CachedRequests
+ * @typedef {import('../types/types.js').CacheResponse} CacheResponse
+ */
 
 export default class Cache {
   constructor() {
     /**
-     * @type CachedRequests
+     * @type {CachedRequests}
      * @private
      */
     this._cachedRequests = {};

@@ -3,7 +3,7 @@
  *
  * @param {string} str
  * @param {string} [locale='']
- * @param {import('@lion/localize/types/LocalizeMixinTypes').FormatDateOptions} [options] Intl options are available
+ * @param {import('../../../types/LocalizeMixinTypes.js').FormatDateOptions} options Intl options are available
  * @returns {string}
  */
 export function normalizeIntlDate(str, locale = '', { weekday, year, month, day } = {}) {

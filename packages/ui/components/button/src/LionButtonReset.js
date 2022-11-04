@@ -1,7 +1,7 @@
 import { LionButton } from './LionButton.js';
 
 /**
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 /**

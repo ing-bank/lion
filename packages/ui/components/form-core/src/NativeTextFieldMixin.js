@@ -4,9 +4,9 @@ import { FocusMixin } from './FocusMixin.js';
 import { FormatMixin } from './FormatMixin.js';
 
 /**
- * @typedef {import('../types/NativeTextFieldMixinTypes').NativeTextFieldMixin} NativeTextFieldMixin
+ * @typedef {import('../types/NativeTextFieldMixinTypes.js').NativeTextFieldMixin} NativeTextFieldMixin
  * @type {NativeTextFieldMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass} superclass
  */
 const NativeTextFieldMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -70,7 +70,8 @@ const NativeTextFieldMixinImplementation = superclass =>
 
     /**
      * The view value. Will be delegated to `._inputNode.value`
-     * @override FormatMixin
+     *
+     * Note: Overrides the implementation from FormatMixin
      */
     get value() {
       return (this._inputNode && this._inputNode.value) || this.__value || '';
@@ -78,7 +79,7 @@ const NativeTextFieldMixinImplementation = superclass =>
 
     /**
      * @param {string} value
-     * @override FormatMixin - We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
+     * Note: Overridess the implementation from FormatMixin - We don't delegate, because we want to preserve caret position via _setValueAndPreserveCaret
      */
     set value(value) {
       // if not yet connected to dom can't change the value
@@ -125,7 +126,7 @@ const NativeTextFieldMixinImplementation = superclass =>
     }
 
     /**
-     * @override FormatMixin
+     * Note: Overrides the implementation from FormatMixin
      */
     _reflectBackFormattedValueToUser() {
       super._reflectBackFormattedValueToUser();

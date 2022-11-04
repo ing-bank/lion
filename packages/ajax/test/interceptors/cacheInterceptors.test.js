@@ -1,9 +1,9 @@
 import { expect } from '@open-wc/testing';
 import * as sinon from 'sinon';
-import '../../src/typedef.js';
-import { Ajax } from '../../index.js';
+import { Ajax, createCacheInterceptors } from '@lion/ajax';
+
+// TODO: these are private API? should they be exposed? if not why do we test them?
 import { extendCacheOptions, resetCacheSession, ajaxCache } from '../../src/cacheManager.js';
-import { createCacheInterceptors } from '../../src/interceptors/cacheInterceptors.js';
 
 const MOCK_RESPONSE = 'mock response';
 
@@ -11,6 +11,11 @@ const getUrl = (/** @type {string} */ url) => new URL(url, window.location.href)
 
 /** @type {Ajax} */
 let ajax;
+
+/**
+ * @typedef {import('../../types/types.js').CacheOptions} CacheOptions
+ * @typedef {import('../../types/types.js').RequestIdFunction} RequestIdFunction
+ */
 
 describe('cache interceptors', () => {
   /**

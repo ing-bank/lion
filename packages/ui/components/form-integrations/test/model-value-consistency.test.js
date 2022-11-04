@@ -36,12 +36,12 @@ import '@lion/ui/define/lion-validation-feedback.js';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 
 /**
- * @typedef {import('@lion/core').LitElement} LitElement
- * @typedef {import('@lion/form-core').LionField} LionField
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost & LitElement & {__parentFormGroup?: HTMLElement, checked?: boolean, disabled: boolean, hasFeedbackFor: string[], makeRequestToBeDisabled: Function }} FormControl
- * @typedef {import('@lion/input').LionInput} LionInput
- * @typedef {import('@lion/select').LionSelect} LionSelect
- * @typedef {import('@lion/listbox').LionOption} LionOption
+ * @typedef {import('lit').LitElement} LitElement
+ * @typedef {import('../../form-core/src/LionField.js').LionField} LionField
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost & LitElement & {__parentFormGroup?: HTMLElement, checked?: boolean, disabled: boolean, hasFeedbackFor: string[], makeRequestToBeDisabled: Function }} FormControl
+ * @typedef {import('../../input/src/LionInput.js').LionInput} LionInput
+ * @typedef {import('../../select/src/LionSelect.js').LionSelect} LionSelect
+ * @typedef {import('../../listbox/src/LionOption.js').LionOption} LionOption
  */
 
 /**

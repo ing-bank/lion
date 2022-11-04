@@ -3,7 +3,7 @@ import { createWeek } from '../../src/utils/createWeek.js';
 import { createDay } from '../../src/utils/createDay.js';
 
 /**
- * @param {import('../../types/day').Week} obj
+ * @param {import('../../types/day.js').Week} obj
  */
 function compareWeek(obj) {
   for (let i = 0; i < 7; i += 1) {

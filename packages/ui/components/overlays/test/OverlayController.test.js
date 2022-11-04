@@ -1,6 +1,13 @@
 /* eslint-disable no-new */
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
-import { fixtureSync } from '@open-wc/testing-helpers';
+import {
+  aTimeout,
+  defineCE,
+  expect,
+  fixture,
+  html,
+  unsafeStatic,
+  fixtureSync,
+} from '@open-wc/testing';
 import sinon from 'sinon';
 import { OverlayController, overlays } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
@@ -9,8 +16,8 @@ import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 
 /**
- * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
- * @typedef {import('../types/OverlayConfig').ViewportPlacement} ViewportPlacement
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
  */
 
 /**

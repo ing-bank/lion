@@ -14,7 +14,7 @@ import {
 } from '@lion/ui/form-core.js';
 
 /**
- * @typedef {import('../types').FeedbackMessageData} FeedbackMessageData
+ * @typedef {import('../types/validate/validate.js').FeedbackMessageData} FeedbackMessageData
  */
 
 export function runValidateMixinFeedbackPart() {

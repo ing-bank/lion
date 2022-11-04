@@ -15,8 +15,8 @@ import { LionInputTel, PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.
 import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
 
 /**
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
- * @typedef {import('../types').RegionCode} RegionCode
+ * @typedef {import('lit').TemplateResult} TemplateResult
+ * @typedef {import('../types/index.js').RegionCode} RegionCode
  */
 
 const fixture = /** @type {(arg: string | TemplateResult) => Promise<LionInputTel>} */ (_fixture);

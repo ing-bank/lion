@@ -10,6 +10,13 @@
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages-node/providence-analytics"
   },
+  "exports": {
+    ".": "./src/index.js",
+    "./src/cli": "./src/cli/index.js",
+    "./utils.js": "./src/program/utils/index.js",
+    "./analyzers": "./src/program/analyzers/index.js",
+    "./docs/*": "./docs/*"
+  },
   "main": "./src/program/providence.js",
   "bin": {
     "providence": "./src/cli/index.mjs"
@@ -55,7 +62,7 @@
     "parse5": "^5.1.1",
     "read-package-tree": "5.3.1",
     "semver": "^7.1.3",
-    "typescript": "4.5.5"
+    "typescript": "~4.8.4"
   },
   "keywords": [
     "analysis",
@@ -70,12 +77,5 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "exports": {
-    ".": "./src/index.js",
-    "./src/cli": "./src/cli/index.js",
-    "./utils.js": "./src/program/utils/index.js",
-    "./analyzers": "./src/program/analyzers/index.js",
-    "./docs/*": "./docs/*"
   }
 }

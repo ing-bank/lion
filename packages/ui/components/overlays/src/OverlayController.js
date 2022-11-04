@@ -3,11 +3,11 @@ import { overlays } from './singleton.js';
 import { containFocus } from './utils/contain-focus.js';
 
 /**
- * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
- * @typedef {import('../types/OverlayConfig').ViewportConfig} ViewportConfig
- * @typedef {import('@popperjs/core/lib/popper').createPopper} Popper
- * @typedef {import('@popperjs/core/lib/popper').Options} PopperOptions
- * @typedef {import('@popperjs/core/lib/enums').Placement} Placement
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/OverlayConfig.js').ViewportConfig} ViewportConfig
+ * @typedef {import('@popperjs/core/lib/popper.js').createPopper} Popper
+ * @typedef {import('@popperjs/core/lib/popper.js').Options} PopperOptions
+ * @typedef {import('@popperjs/core/lib/enums.js').Placement} Placement
  * @typedef {{ createPopper: Popper }} PopperModule
  * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
  */
@@ -16,8 +16,10 @@ import { containFocus } from './utils/contain-focus.js';
  * @returns {Promise<PopperModule>}
  */
 async function preloadPopper() {
-  // eslint-disable-next-line import/no-extraneous-dependencies -- [external]: import complains about untyped module, but we typecast it ourselves
+  /* eslint-disable import/no-extraneous-dependencies */ // -- [external]: import complains about untyped module, but we typecast it ourselves
+  // @ts-ignore
   return /** @type {* & Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
+  /* eslint-enable import/no-extraneous-dependencies */
 }
 
 const GLOBAL_OVERLAYS_CONTAINER_CLASS = 'global-overlays__overlay-container';

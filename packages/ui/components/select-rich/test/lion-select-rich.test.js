@@ -20,9 +20,9 @@ import {
 } from '@open-wc/testing';
 
 /**
- * @typedef {import('@lion/listbox/src/LionOptions').LionOptions} LionOptions
- * @typedef {import('@lion/listbox/types/ListboxMixinTypes').ListboxHost} ListboxHost
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
+ * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
 
 /**
@@ -39,7 +39,7 @@ function getSelectRichMembers(el) {
 }
 
 /**
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionSelectRich>} */ (_fixture);

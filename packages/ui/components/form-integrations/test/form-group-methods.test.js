@@ -39,8 +39,8 @@ import '@lion/ui/define/lion-options.js';
 
 import '@lion/ui/define/lion-validation-feedback.js';
 /**
- * @typedef {import('@lion/form-core').LionField} LionField
- * @typedef {import('@lion/button').LionButton} LionButton
+ * @typedef {import('../../form-core/src/LionField.js').LionField} LionField
+ * @typedef {import('../../button/src/LionButton.js').LionButton} LionButton
  * @typedef {import('./helpers/umbrella-form.js').UmbrellaForm} UmbrellaForm
  */
 

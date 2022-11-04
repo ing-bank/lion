@@ -10,13 +10,13 @@ import { LionOptions } from './LionOptions.js';
 // list items that can be found via MutationObserver or registration (.formElements)
 
 /**
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').HTMLElementWithValue} HTMLElementWithValue
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {import('./LionOption').LionOption} LionOption
- * @typedef {import('../types/ListboxMixinTypes').ListboxMixin} ListboxMixin
- * @typedef {import('../types/ListboxMixinTypes').ListboxHost} ListboxHost
- * @typedef {import('@lion/form-core/types/registration/FormRegistrarPortalMixinTypes').FormRegistrarPortalHost} FormRegistrarPortalHost
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').HTMLElementWithValue} HTMLElementWithValue
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('./LionOption.js').LionOption} LionOption
+ * @typedef {import('../types/ListboxMixinTypes.js').ListboxMixin} ListboxMixin
+ * @typedef {import('../types/ListboxMixinTypes.js').ListboxHost} ListboxHost
+ * @typedef {import('../../form-core/types/registration/FormRegistrarPortalMixinTypes.js').FormRegistrarPortalHost} FormRegistrarPortalHost
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
 
 // TODO: consider adding methods below to @lion/helpers
@@ -56,7 +56,7 @@ function moveDefaultSlottablesToTarget(source, target) {
 
 /**
  * @type {ListboxMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const ListboxMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -361,7 +361,7 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('@lion/core').PropertyValues } changedProperties
+     * @param {import('lit').PropertyValues } changedProperties
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
@@ -379,7 +379,7 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('@lion/core').PropertyValues } changedProperties
+     * @param {import('lit').PropertyValues } changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

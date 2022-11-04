@@ -1,7 +1,7 @@
 import { Validator } from '../Validator.js';
 
 /**
- * @typedef {import('../../../types/FormControlMixinTypes.js.js').FormControlHost} FormControlHost
+ * @typedef {import('../../../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
 
 export class Required extends Validator {

@@ -1,7 +1,7 @@
 import { formatNumber, getFractionDigits, normalizeCurrencyLabel } from '@lion/ui/localize.js';
 
 /**
- * @typedef {import('@lion/localize/types/LocalizeMixinTypes').FormatNumberOptions} FormatOptions
+ * @typedef {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} FormatOptions
  */
 
 /**

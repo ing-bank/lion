@@ -3,14 +3,14 @@ import { createMonth } from './createMonth.js';
 /**
  *
  * @param {Date} date
- * @return {{months: import('../../types/day').Month[]}}
+ * @return {{months: import('../../types/day.js').Month[]}}
  */
 export function createMultipleMonth(
   date,
   { firstDayOfWeek = 0, pastMonths = 0, futureMonths = 0 } = {},
 ) {
   const multipleMonths = {
-    /** @type {{weeks: {days: import('../../types/day').Day[]}[]}[]} */
+    /** @type {{weeks: {days: import('../../types/day.js').Day[]}[]}[]} */
     months: [],
   };
 

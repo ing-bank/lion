@@ -3,7 +3,7 @@ import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 
 /**
- * @typedef {import('../src/LionTabs.js.js').LionTabs} LionTabs
+ * @typedef {import('../src/LionTabs.js').LionTabs} LionTabs
  */
 import '@lion/ui/define/lion-tabs.js';
 

@@ -11,9 +11,9 @@ import { forceENAUSymbols } from './forceENAUSymbols.js';
 /**
  * Normalizes function "formatNumberToParts"
  *
- * @typedef {import('../../../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../../../types/LocalizeMixinTypes.js').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
- * @param {import('../../../../types/LocalizeMixinTypes').FormatNumberOptions} options
+ * @param {import('../../../../types/LocalizeMixinTypes.js').FormatNumberOptions} options
  * @param {string} _locale
  * @returns {FormatNumberPart[]}
  */

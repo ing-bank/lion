@@ -2,12 +2,12 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { DisabledMixin } from './DisabledMixin.js';
 
 /**
- * @typedef {import('../types/DisabledWithTabIndexMixinTypes').DisabledWithTabIndexMixin} DisabledWithTabIndexMixin
+ * @typedef {import('../types/DisabledWithTabIndexMixinTypes.js').DisabledWithTabIndexMixin} DisabledWithTabIndexMixin
  */
 
 /**
  * @type {DisabledWithTabIndexMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('../index').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const DisabledWithTabIndexMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow

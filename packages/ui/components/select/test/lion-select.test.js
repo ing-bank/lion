@@ -3,7 +3,7 @@ import { aTimeout, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 
 /**
- * @typedef {import('../src/LionSelect').LionSelect} LionSelect
+ * @typedef {import('../src/LionSelect.js').LionSelect} LionSelect
  */
 
 describe('lion-select', () => {

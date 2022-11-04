@@ -1,6 +1,6 @@
 /**
  * @typedef {import('lit-html').nothing} nothing
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 export class IconManager {

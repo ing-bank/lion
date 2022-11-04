@@ -77,7 +77,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     this.__intersectionObserver.observe(this);
   }
 
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
+  /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
 

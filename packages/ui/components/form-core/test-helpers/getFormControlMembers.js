@@ -1,6 +1,6 @@
 /**
- * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {import('../types/validate/ValidateMixinTypes').ValidateHost} ValidateHost
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHost
  */
 
 /**

@@ -1,11 +1,10 @@
-import { expect } from '@open-wc/testing';
+import { expect, fixtureSync } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
-import { fixtureSync } from '@open-wc/testing-helpers';
 import { OverlayController, overlays } from '@lion/ui/overlays.js';
 
 /**
- * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
- * @typedef {import('../types/OverlayConfig').ViewportPlacement} ViewportPlacement
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
  */
 
 const withDefaultGlobalConfig = () =>

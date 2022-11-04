@@ -10,9 +10,9 @@ import sinon from 'sinon';
 import { LionCombobox } from '@lion/ui/combobox.js';
 
 /**
- * @typedef {import('../types/SelectionDisplay').SelectionDisplay} SelectionDisplay
- * @typedef {import('@lion/listbox/types/ListboxMixinTypes').ListboxHost} ListboxHost
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../types/SelectionDisplay.js').SelectionDisplay} SelectionDisplay
+ * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
 
 /**
@@ -136,7 +136,7 @@ function getFilteredOptionValues(el) {
 }
 
 /**
- * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all' }} [config]
+ * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all' }} config
  */
 async function fruitFixture({ autocomplete, matchMode } = {}) {
   const el = /** @type {LionCombobox} */ (
@@ -954,7 +954,7 @@ describe('lion-combobox', () => {
   describe('Selection display', () => {
     class MySelectionDisplay extends LitElement {
       /**
-       * @param {import('@lion/core').PropertyValues } changedProperties
+       * @param {import('lit').PropertyValues } changedProperties
        */
       onComboboxElementUpdated(changedProperties) {
         if (

@@ -1,4 +1,6 @@
-import '../typedef.js';
+/**
+ * @typedef {import('../../types/types.js').RequestInterceptor} RequestInterceptor
+ */
 
 /**
  * @param {string} name the cookie name
@@ -20,7 +22,7 @@ export function getCookie(name, _document = document) {
  */
 export function createXsrfRequestInterceptor(cookieName, headerName, _document = document) {
   /**
-   * @type {RequestInterceptor}
+   * @param {Request} request
    */
   async function xsrfRequestInterceptor(request) {
     const xsrfToken = getCookie(cookieName, _document);

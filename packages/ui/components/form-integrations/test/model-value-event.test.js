@@ -6,9 +6,9 @@ import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 
 /**
- * @typedef {import('@lion/input').LionInput} LionInput
- * @typedef {import('@lion/fieldset').LionFieldset} LionFieldset
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../../input/src/LionInput.js').LionInput} LionInput
+ * @typedef {import('../../fieldset/src/LionFieldset.js').LionFieldset} LionFieldset
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const inputFixture = /** @type {(arg: TemplateResult) => Promise<LionInput>} */ (fixture);
 const fieldsetFixture = /** @type {(arg: TemplateResult) => Promise<LionFieldset>} */ (fixture);

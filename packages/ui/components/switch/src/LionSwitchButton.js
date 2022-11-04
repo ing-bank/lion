@@ -143,7 +143,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     }
   }
 
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
+  /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     if (changedProperties.has('disabled')) {
       this.setAttribute('aria-disabled', `${this.disabled}`); // create mixin if we need it in more places

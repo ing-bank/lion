@@ -1,6 +1,6 @@
 import { html } from 'lit';
-import { SlotMixin, DisabledMixin } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
+import { SlotMixin, DisabledMixin } from '@lion/ui/core.js';
 import { FormControlMixin } from '../FormControlMixin.js';
 import { FormControlsCollection } from '../registration/FormControlsCollection.js';
 import { FormRegistrarMixin } from '../registration/FormRegistrarMixin.js';
@@ -9,12 +9,12 @@ import { getAriaElementsInRightDomOrder } from '../utils/getAriaElementsInRightD
 import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
 
 /**
- * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormGroupMixin} FormGroupMixin
- * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormGroupHost} FormGroupHost
- * @typedef {import('../../types/form-group/FormGroupMixinTypes').FormControl} FormControl
- * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
- * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
+ * @typedef {import('../../types/form-group/FormGroupMixinTypes.js').FormGroupMixin} FormGroupMixin
+ * @typedef {import('../../types/form-group/FormGroupMixinTypes.js').FormGroupHost} FormGroupHost
+ * @typedef {import('../../types/form-group/FormGroupMixinTypes.js').FormControl} FormControl
+ * @typedef {import('../../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../../types/registration/FormRegisteringMixinTypes.js').FormRegisteringHost} FormRegisteringHost
+ * @typedef {import('../../types/registration/FormRegistrarMixinTypes.js').ElementWithParentFormGroup} ElementWithParentFormGroup
  */
 
 /**
@@ -27,7 +27,7 @@ import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
  * children via formElements and the automatic grouping of formElements via '[]').
  *
  * @type {FormGroupMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const FormGroupMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -199,7 +199,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('@lion/core').PropertyValues } changedProperties
+     * @param {import('lit').PropertyValues } changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

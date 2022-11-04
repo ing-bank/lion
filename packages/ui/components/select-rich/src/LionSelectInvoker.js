@@ -3,10 +3,10 @@ import { css, html } from 'lit';
 import { SlotMixin } from '@lion/ui/core.js';
 
 /**
- * @typedef {import('@lion/core').CSSResult} CSSResult
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
- * @typedef {import('@lion/listbox').LionOption} LionOption
- * @typedef {import('@lion/select-rich').LionSelectRich} LionSelectRich
+ * @typedef {import('lit').CSSResult} CSSResult
+ * @typedef {import('lit').TemplateResult} TemplateResult
+ * @typedef {import('../../listbox/src/LionOption.js').LionOption} LionOption
+ * @typedef {import('../../select-rich/src/LionSelectRich.js').LionSelectRich} LionSelectRich
  */
 
 /**

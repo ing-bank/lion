@@ -4,8 +4,8 @@ import { expect, fixture as _fixture } from '@open-wc/testing';
 import '@lion/ui/define/lion-progress-indicator.js';
 
 /**
- * @typedef {import('../src/LionProgressIndicator').LionProgressIndicator} LionProgressIndicator
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionProgressIndicator.js').LionProgressIndicator} LionProgressIndicator
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionProgressIndicator>} */ (_fixture);

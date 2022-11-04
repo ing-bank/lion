@@ -2,7 +2,7 @@
  * @desc Intl uses 0 as group separator for bg-BG locale.
  * This should be a ' '
  *
- * @typedef {import('../../../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../../../types/LocalizeMixinTypes.js').FormatNumberPart} FormatNumberPart
  * @param {FormatNumberPart[]} formattedParts
  * @returns {FormatNumberPart[]} corrected formatted parts
  */

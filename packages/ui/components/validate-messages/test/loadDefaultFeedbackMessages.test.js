@@ -5,7 +5,7 @@ import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 
 /**
- * @typedef {import('@lion/form-core').Validator} Validator
+ * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
  */
 
 /**

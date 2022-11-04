@@ -1,0 +1,12 @@
+diff --git a/node_modules/awesome-phonenumber/package.json b/node_modules/awesome-phonenumber/package.json
+index 391577c..5a5ec22 100644
+--- a/node_modules/awesome-phonenumber/package.json
++++ b/node_modules/awesome-phonenumber/package.json
+@@ -15,6 +15,7 @@
+   "types": "./index.d.ts",
+   "exports": {
+     ".": {
++      "types": "./index.d.ts",
+       "require": "./index.js",
+       "default": "./index-esm.mjs"
+     },

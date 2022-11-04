@@ -1,6 +1,6 @@
 import { expect, oneEvent, aTimeout } from '@open-wc/testing';
 import sinon from 'sinon';
-// @ts-expect-error no types for this package
+// @ts-ignore
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
 import { setupFakeImport, resetFakeImport, fakeImport } from '@lion/ui/localize-test-helpers.js';
 

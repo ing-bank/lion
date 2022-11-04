@@ -1,7 +1,7 @@
 import { PhoneUtilManager } from './PhoneUtilManager.js';
 
 /**
- * @typedef {import('../types').RegionCode} RegionCode
+ * @typedef {import('../types/index.js').RegionCode} RegionCode
  * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
  */
 

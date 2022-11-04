@@ -3,7 +3,7 @@ import { html } from 'lit/static-html.js';
 import '@lion/ui/define/lion-checkbox.js';
 
 /**
- * @typedef {import('../src/LionCheckbox').LionCheckbox} LionCheckbox
+ * @typedef {import('../src/LionCheckbox.js').LionCheckbox} LionCheckbox
  */
 
 describe('<lion-checkbox>', () => {

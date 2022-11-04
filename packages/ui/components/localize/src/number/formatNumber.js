@@ -1,4 +1,4 @@
-/** @typedef {import('../../types/LocalizeMixinTypes').NumberPostProcessor} NumberPostProcessor */
+/** @typedef {import('../../types/LocalizeMixinTypes.js').NumberPostProcessor} NumberPostProcessor */
 
 import { localize } from '../singleton.js';
 import { getLocale } from '../utils/getLocale.js';
@@ -7,8 +7,8 @@ import { formatNumberToParts } from './formatNumberToParts.js';
 /**
  * Formats a number based on locale and options. It uses Intl for the formatting.
  *
- * @typedef {import('../../types/LocalizeMixinTypes').FormatNumberPart} FormatNumberPart
- * @typedef {import('@lion/localize/types/LocalizeMixinTypes').FormatNumberOptions} FormatOptions
+ * @typedef {import('../../types/LocalizeMixinTypes.js').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} FormatOptions
  * @param {number} number Number to be formatted
  * @param {FormatOptions} [options] Intl options are available extended by roundMode and returnIfNaN
  * @returns {string}

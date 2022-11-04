@@ -1,11 +1,11 @@
 /**
- * @typedef {import('../../types/validate').FeedbackMessageData} FeedbackMessageData
- * @typedef {import('../../types/validate').ValidatorParam} ValidatorParam
- * @typedef {import('../../types/validate').ValidatorConfig} ValidatorConfig
- * @typedef {import('../../types/validate').ValidatorOutcome} ValidatorOutcome
- * @typedef {import('../../types/validate').ValidatorName} ValidatorName
- * @typedef {import('../../types/validate').ValidationType} ValidationType
- * @typedef {import('../FormControlMixin').FormControlHost} FormControlHost
+ * @typedef {import('../../types/validate/index.js').FeedbackMessageData} FeedbackMessageData
+ * @typedef {import('../../types/validate/index.js').ValidatorParam} ValidatorParam
+ * @typedef {import('../../types/validate/index.js').ValidatorConfig} ValidatorConfig
+ * @typedef {import('../../types/validate/index.js').ValidatorOutcome} ValidatorOutcome
+ * @typedef {import('../../types/validate/index.js').ValidatorName} ValidatorName
+ * @typedef {import('../../types/validate/index.js').ValidationType} ValidationType
+ * @typedef {import('../FormControlMixin.js').FormControlHost} FormControlHost
  */
 
 // TODO: support attribute validators like <my-el my-validator=${dynamicParam}></my-el> =>

@@ -4,11 +4,11 @@ import { FormControlsCollection } from './FormControlsCollection.js';
 import { FormRegisteringMixin } from './FormRegisteringMixin.js';
 
 /**
- * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarMixin} FormRegistrarMixin
- * @typedef {import('../../types/registration/FormRegistrarMixinTypes').FormRegistrarHost} FormRegistrarHost
- * @typedef {import('../../types/registration/FormRegistrarMixinTypes').ElementWithParentFormGroup} ElementWithParentFormGroup
- * @typedef {import('../../types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
+ * @typedef {import('../../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../../types/registration/FormRegistrarMixinTypes.js').FormRegistrarMixin} FormRegistrarMixin
+ * @typedef {import('../../types/registration/FormRegistrarMixinTypes.js').FormRegistrarHost} FormRegistrarHost
+ * @typedef {import('../../types/registration/FormRegistrarMixinTypes.js').ElementWithParentFormGroup} ElementWithParentFormGroup
+ * @typedef {import('../../types/registration/FormRegisteringMixinTypes.js').FormRegisteringHost} FormRegisteringHost
  * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
  */
 
@@ -21,7 +21,7 @@ import { FormRegisteringMixin } from './FormRegisteringMixin.js';
  * For choice groups, the value will only stay an array.
  * See FormControlsCollection for more information
  * @type {FormRegistrarMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const FormRegistrarMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars

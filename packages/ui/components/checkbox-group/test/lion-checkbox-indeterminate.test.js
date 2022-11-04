@@ -6,9 +6,9 @@ import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox-indeterminate.js';
 
 /**
- * @typedef {import('../src/LionCheckbox').LionCheckbox} LionCheckbox
- * @typedef {import('../src/LionCheckboxIndeterminate').LionCheckboxIndeterminate} LionCheckboxIndeterminate
- * @typedef {import('../src/LionCheckboxGroup').LionCheckboxGroup} LionCheckboxGroup
+ * @typedef {import('../src/LionCheckbox.js').LionCheckbox} LionCheckbox
+ * @typedef {import('../src/LionCheckboxIndeterminate.js').LionCheckboxIndeterminate} LionCheckboxIndeterminate
+ * @typedef {import('../src/LionCheckboxGroup.js').LionCheckboxGroup} LionCheckboxGroup
  */
 
 /**

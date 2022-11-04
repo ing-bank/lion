@@ -144,7 +144,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         // we test the api directly as errors thrown from a web component are in a
         // different context and we can not catch them here => register fake elements
         el.addFormElement(
-          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({
+          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes.js').FormControlHost} */ ({
             name: 'foo',
           }),
         );
@@ -169,12 +169,12 @@ export function runFormGroupMixinSuite(cfg = {}) {
         // we test the api directly as errors thrown from a web component are in a
         // different context and we can not catch them here => register fake elements
         el.addFormElement(
-          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({
+          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes.js').FormControlHost} */ ({
             name: 'fooBar',
           }),
         );
         el.addFormElement(
-          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes').FormControlHost} */ ({
+          /**  @type {HTMLElement & import('../../types/FormControlMixinTypes.js').FormControlHost} */ ({
             name: 'fooBar',
           }),
         );
@@ -324,7 +324,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
 
         /**
          *
-         * @param {import('../../types/FormControlMixinTypes').FormControlHost & {disabled: boolean}} el
+         * @param {import('../../types/FormControlMixinTypes.js').FormControlHost & {disabled: boolean}} el
          * @param {string} type
          */
         _getFromAllFormElementsFilter(el, type) {
@@ -383,8 +383,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         }
 
         /**
-         *
-         * @param {import('../../types/FormControlMixinTypes').FormControlHost & {disabled: boolean}} el
+         * @param {import('../../types/FormControlMixinTypes.js').FormControlHost & {disabled: boolean}} el
          * @param {string} type
          */
         _getFromAllFormElementsFilter(el, type) {
@@ -413,7 +412,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         `)
       );
 
-      // @ts-expect-error access protected method
+      // @ts-ignore -- we are testing a protected method here
       expect(el._getFromAllFormElements('serializedValue')).to.eql({
         b: 'x',
         newFieldset: {
@@ -421,7 +420,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         },
       });
 
-      // @ts-expect-error access protected method
+      // @ts-ignore -- we are testing a protected method here
       expect(el._getFromAllFormElements('serializedValue', () => true)).to.eql({
         a: 'x',
         b: 'x',
@@ -1236,7 +1235,6 @@ export function runFormGroupMixinSuite(cfg = {}) {
         `)
           );
           const childFieldsetEl = el.querySelector(tagString);
-          // @ts-expect-error
           const resetGroupSpy = sinon.spy(childFieldsetEl, 'resetGroup');
           el.resetGroup();
           expect(resetGroupSpy.callCount).to.equal(1);
@@ -1273,7 +1271,6 @@ export function runFormGroupMixinSuite(cfg = {}) {
         `)
           );
           const childFieldsetEl = el.querySelector(tagString);
-          // @ts-expect-error
           const clearGroupSpy = sinon.spy(childFieldsetEl, 'clearGroup');
           el.clearGroup();
           expect(clearGroupSpy.callCount).to.equal(1);

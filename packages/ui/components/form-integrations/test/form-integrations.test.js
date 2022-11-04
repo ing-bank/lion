@@ -5,14 +5,14 @@ import { PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
 
-// import '@lion/ui/define/lion-input-tel-dropdown.js';
+import '@lion/ui/define/lion-input-tel-dropdown.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-radio.js';
 
 /**
  * @typedef {import('./helpers/umbrella-form.js').UmbrellaForm} UmbrellaForm
- * @typedef {import('@lion/input-tel-dropdown').LionInputTelDropdown} LionInputTelDropdown
+ * @typedef {import('../../input-tel-dropdown/src/LionInputTelDropdown.js').LionInputTelDropdown} LionInputTelDropdown
  */
 
 // Test umbrella form.

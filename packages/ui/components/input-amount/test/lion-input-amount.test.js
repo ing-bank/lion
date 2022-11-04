@@ -8,8 +8,8 @@ import { formatAmount, parseAmount } from '@lion/ui/input-amount.js';
 import '@lion/ui/define/lion-input-amount.js';
 
 /**
- * @typedef {import('@lion/input/src/LionInput').LionInput} LionInput
- * @typedef {import('../src/LionInputAmount').LionInputAmount} LionInputAmount
+ * @typedef {import('../../input/src/LionInput.js').LionInput} LionInput
+ * @typedef {import('../src/LionInputAmount.js').LionInputAmount} LionInputAmount
  */
 
 describe('<lion-input-amount>', () => {

@@ -5,7 +5,18 @@ import {
   createCacheInterceptors,
 } from './interceptors/index.js';
 import { AjaxFetchError } from './AjaxFetchError.js';
-import './typedef.js';
+
+/**
+ * @typedef {import('../types/types.js').RequestInterceptor} RequestInterceptor
+ * @typedef {import('../types/types.js').CachedRequestInterceptor} CachedRequestInterceptor
+ * @typedef {import('../types/types.js').ResponseInterceptor} ResponseInterceptor
+ * @typedef {import('../types/types.js').CachedResponseInterceptor} CachedResponseInterceptor
+ * @typedef {import('../types/types.js').AjaxConfig} AjaxConfig
+ * @typedef {import('../types/types.js').CacheRequest} CacheRequest
+ * @typedef {import('../types/types.js').CacheResponse} CacheResponse
+ * @typedef {import('../types/types.js').CacheRequestExtension} CacheRequestExtension
+ * @typedef {import('../types/types.js').LionRequestInit} LionRequestInit
+ */
 
 /**
  * @param {Response} response
@@ -225,7 +236,7 @@ export class Ajax {
     for (const intercept of this._responseInterceptors) {
       // In this instance we actually do want to await for each sequence
       // eslint-disable-next-line no-await-in-loop
-      interceptedResponse = await intercept(/** @type CacheResponse */ (interceptedResponse));
+      interceptedResponse = await intercept(/** @type {CacheResponse} */ (interceptedResponse));
     }
     return interceptedResponse;
   }

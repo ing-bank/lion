@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 
 /**
- * @typedef {import('./LionSteps').LionSteps} LionSteps
+ * @typedef {import('./LionSteps.js').LionSteps} LionSteps
  */
 
 /**
@@ -89,7 +89,7 @@ export class LionStep extends LitElement {
     return html`<slot></slot>`;
   }
 
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
+  /** @param {import('lit').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.controller = /** @type {LionSteps} */ (this.parentNode);

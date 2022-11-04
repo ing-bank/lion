@@ -4,8 +4,8 @@ import sinon from 'sinon';
 import '@lion/ui/define/lion-switch-button.js';
 
 /**
- * @typedef {import('../src/LionSwitchButton').LionSwitchButton} LionSwitchButton
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionSwitchButton.js').LionSwitchButton} LionSwitchButton
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionSwitchButton>} */ (_fixture);

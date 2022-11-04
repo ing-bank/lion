@@ -19,7 +19,7 @@ describe('SingletonManagerClass', () => {
     expect(mngr.has('overlays/overlays.js::0.14.x')).to.be.false;
   });
 
-  it('does not override existing keys (e.g. subsequentual calls for the same keys are ignored)', () => {
+  it('does not override existing keys (e.g. subsequential calls for the same keys are ignored)', () => {
     const mngr = new SingletonManagerClass();
     mngr.set('overlays/overlays.js::0.14.x', 'is-set');
     mngr.set('overlays/overlays.js::0.14.x', 'new-set');

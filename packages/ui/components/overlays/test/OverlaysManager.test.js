@@ -3,7 +3,7 @@ import { html } from 'lit/static-html.js';
 import { OverlayController, OverlaysManager } from '@lion/ui/overlays.js';
 
 /**
- * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  */
 
 describe('OverlaysManager', () => {

@@ -27,7 +27,7 @@ class ChoiceInputGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {}
 customElements.define('choice-input-group', ChoiceInputGroup);
 
 /**
- * @param {{ parentTagString?:string, childTagString?: string, choiceType?: string}} [config]
+ * @param {{ parentTagString?:string, childTagString?: string, choiceType?: string}} config
  */
 export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choiceType } = {}) {
   const cfg = {

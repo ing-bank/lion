@@ -5,10 +5,10 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { FormatMixin } from '../FormatMixin.js';
 
 /**
- * @typedef {import('../../types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
- * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputMixin} ChoiceInputMixin
- * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes').ChoiceInputModelValue} ChoiceInputModelValue
+ * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes.js').ChoiceInputMixin} ChoiceInputMixin
+ * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes.js').ChoiceInputModelValue} ChoiceInputModelValue
  */
 
 /**
@@ -19,7 +19,7 @@ const hasChanged = (nw, old = {}) => nw.value !== old.value || nw.checked !== ol
 
 /**
  * @type {ChoiceInputMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const ChoiceInputMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -70,7 +70,7 @@ const ChoiceInputMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('@lion/core').PropertyValues } changedProperties
+     * @param {import('lit').PropertyValues } changedProperties
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
@@ -82,7 +82,7 @@ const ChoiceInputMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('@lion/core').PropertyValues } changedProperties
+     * @param {import('lit').PropertyValues } changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

@@ -1,6 +1,6 @@
 /**
- * @typedef {import('@lion/form').LionForm} LionForm
- * @typedef {import('@lion/form-core').LionField} LionField
+ * @typedef {import('../../../form/src/LionForm.js').LionForm} LionForm
+ * @typedef {import('../../../form-core/src/LionField.js').LionField} LionField
  */
 
 /**

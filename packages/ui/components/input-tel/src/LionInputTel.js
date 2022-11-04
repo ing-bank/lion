@@ -10,10 +10,10 @@ import { PhoneNumber } from './validators.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
- * @typedef {import('../types').RegionCode} RegionCode
+ * @typedef {import('../types/index.js').RegionCode} RegionCode
  * @typedef {import('awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
  * @typedef {import('awesome-phonenumber').PhoneNumberTypes} PhoneNumberTypes
- * @typedef {import('@lion/form-core/types/FormatMixinTypes').FormatOptions} FormatOptions
+ * @typedef {import('../../form-core/types/FormatMixinTypes.js').FormatOptions} FormatOptions
  * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
  * @typedef {FormatOptions & {regionCode: RegionCode; formatStrategy: PhoneNumberFormat; formatCountryCodeStyle: string;}} FormatOptionsTel
  */
