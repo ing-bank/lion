@@ -6,7 +6,7 @@ import { formatAmount, formatCurrencyLabel } from './formatters.js';
 import { parseAmount } from './parsers.js';
 
 /**
- * @typedef {import('@lion/form-core/types/FormatMixinTypes').FormatOptions} FormatOptions
+ * @typedef {import('../../form-core/types/FormatMixinTypes.js').FormatOptions} FormatOptions
  * @typedef {FormatOptions & {locale?:string;currency:string|undefined}} AmountFormatOptions
  */
 
@@ -83,7 +83,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     }
   }
 
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
+  /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('currency')) {

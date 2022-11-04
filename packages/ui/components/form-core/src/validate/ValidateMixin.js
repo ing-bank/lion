@@ -17,10 +17,10 @@ import { FormControlMixin } from '../FormControlMixin.js';
 // TODO: [v1] make all @readOnly => @readonly and actually make sure those values cannot be set
 
 /**
- * @typedef {import('../../types/validate/ValidateMixinTypes').ValidateMixin} ValidateMixin
- * @typedef {import('../../types/validate/ValidateMixinTypes').ValidationType} ValidationType
- * @typedef {import('../../types/validate/ValidateMixinTypes').ValidateHost} ValidateHost
- * @typedef {typeof import('../../types/validate/ValidateMixinTypes').ValidateHost} ValidateHostConstructor
+ * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidateMixin} ValidateMixin
+ * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidationType} ValidationType
+ * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHost
+ * @typedef {typeof import('../../types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHostConstructor
  * @typedef {{validator:Validator; outcome:boolean|string}} ValidationResultEntry
  * @typedef {{[type:string]: {[validatorName:string]:boolean|string}}} ValidationStates
  */
@@ -38,7 +38,7 @@ function arrayDiff(array1 = [], array2 = []) {
  * UI. All error visibility, dom interaction and accessibility are handled in FeedbackMixin.
  *
  * @type {ValidateMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 export const ValidateMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -47,7 +47,7 @@ export const ValidateMixinImplementation = superclass =>
   ) {
     static get scopedElements() {
       const scopedElementsCtor =
-        /** @type {typeof import('@open-wc/scoped-elements/src/types').ScopedElementsHost} */ (
+        /** @type {typeof import('@open-wc/scoped-elements').ScopedElementsHost} */ (
           super.constructor
         );
       return {
@@ -271,7 +271,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('@lion/core').PropertyValues} changedProperties
+     * @param {import('lit').PropertyValues} changedProperties
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
@@ -363,7 +363,7 @@ export const ValidateMixinImplementation = superclass =>
      * Situations a2 and a3 are not mutually exclusive and can be triggered within one `validate()`
      * call. Situation b will occur after every call.
      *
-     * @param {{ clearCurrentResult?: boolean }} [opts]
+     * @param {{ clearCurrentResult?: boolean }} opts
      */
     async validate({ clearCurrentResult } = {}) {
       if (this.disabled) {
@@ -468,6 +468,8 @@ export const ValidateMixinImplementation = superclass =>
         this.__syncValidationResult = syncValidators
           .map(v => ({
             validator: v,
+            // TODO: fix this type - ts things this is not a FormControlHost?
+            // @ts-ignore
             outcome: /** @type {boolean|string} */ (v.execute(value, v.param, { node: this })),
           }))
           .filter(v => Boolean(v.outcome));
@@ -612,7 +614,11 @@ export const ValidateMixinImplementation = superclass =>
               v.removeEventListener(e, this._onValidatorUpdated);
             }
           });
-          v.onFormControlDisconnect(this);
+          v.onFormControlDisconnect(
+            /** @type {import('../../types/FormControlMixinTypes.js').FormControlHost} */ (
+              /** @type {unknown} */ (this)
+            ),
+          );
         });
       }
       this._allValidators.forEach(v => {
@@ -826,7 +832,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('@lion/core').PropertyValues} changedProperties
+     * @param {import('lit').PropertyValues} changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

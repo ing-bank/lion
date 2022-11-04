@@ -4,7 +4,7 @@ import { aTimeout, expect, fixture, html, triggerFocusFor, unsafeStatic } from '
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 
 /**
- * @typedef {import('../src/LionInput').LionInput} LionInput
+ * @typedef {import('../src/LionInput.js').LionInput} LionInput
  */
 
 const tagString = 'lion-input';

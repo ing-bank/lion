@@ -3,7 +3,7 @@ import { createMultipleMonth } from '../../src/utils/createMultipleMonth.js';
 import { createMonth } from '../../src/utils/createMonth.js';
 
 /**
- * @param {{ months: import('../../types/day').Month[]}} obj
+ * @param {{ months: import('../../types/day.js').Month[]}} obj
  */
 function compareMultipleMonth(obj) {
   obj.months.forEach((month, monthi) => {

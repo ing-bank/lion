@@ -6,9 +6,9 @@ import { Unparseable } from './validate/Unparseable.js';
 import { ValidateMixin } from './validate/ValidateMixin.js';
 
 /**
- * @typedef {import('../types/FormatMixinTypes').FormatMixin} FormatMixin
- * @typedef {import('../types/FormatMixinTypes').FormatOptions} FormatOptions
- * @typedef {import('../types/FormControlMixinTypes.js.js').ModelValueEventDetails} ModelValueEventDetails
+ * @typedef {import('../types/FormatMixinTypes.js').FormatMixin} FormatMixin
+ * @typedef {import('../types/FormatMixinTypes.js').FormatOptions} FormatOptions
+ * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
 
 // For a future breaking release:
@@ -55,7 +55,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
  *     Flow: serializedValue (deserializer) -> `.modelValue` (formatter) -> `.formattedValue` -> `._inputNode.value`
  *
  * @type {FormatMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const FormatMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -310,10 +310,12 @@ const FormatMixinImplementation = superclass =>
         /** @privateEvent model-value-changed: FormControl redispatches it as public event */
         new CustomEvent('model-value-changed', {
           bubbles: true,
-          detail: /** @type { ModelValueEventDetails } */ ({
-            formPath: [this],
-            isTriggeredByUser: Boolean(this._isHandlingUserInput),
-          }),
+          detail: /** @type { ModelValueEventDetails } */ (
+            /** @type {unknown} */ ({
+              formPath: [this],
+              isTriggeredByUser: Boolean(this._isHandlingUserInput),
+            })
+          ),
         }),
       );
     }

@@ -2,7 +2,7 @@
 import { LionField } from '@lion/ui/form-core.js';
 
 /**
- * @typedef {import('@lion/localize/types/LocalizeMixinTypes').FormatNumberOptions} FormatOptions
+ * @typedef {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} FormatOptions
  */
 class LionFieldWithSelect extends LionField {
   /** @type {any} */
@@ -62,7 +62,7 @@ export class LionSelect extends LionFieldWithSelect {
     this._inputNode.addEventListener('change', this._proxyChangeEvent);
   }
 
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
+  /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('disabled')) {

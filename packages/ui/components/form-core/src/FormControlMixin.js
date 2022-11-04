@@ -6,16 +6,16 @@ import { Unparseable } from './validate/Unparseable.js';
 import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
 
 /**
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
- * @typedef {import('@lion/core').CSSResult} CSSResult
- * @typedef {import('@lion/core').CSSResultArray} CSSResultArray
- * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
- * @typedef {import('./validate/LionValidationFeedback').LionValidationFeedback} LionValidationFeedback
- * @typedef {import('../types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
- * @typedef {import('../types/FormControlMixinTypes.js.js').FormControlHost} FormControlHost
- * @typedef {import('../types/FormControlMixinTypes.js.js').HTMLElementWithValue} HTMLElementWithValue
- * @typedef {import('../types/FormControlMixinTypes.js.js').FormControlMixin} FormControlMixin
- * @typedef {import('../types/FormControlMixinTypes.js.js').ModelValueEventDetails} ModelValueEventDetails
+ * @typedef {import('lit').TemplateResult} TemplateResult
+ * @typedef {import('lit').CSSResult} CSSResult
+ * @typedef {import('lit').CSSResultArray} CSSResultArray
+ * @typedef {import('../../core/types/SlotMixinTypes.js').SlotsMap} SlotsMap
+ * @typedef {import('./validate/LionValidationFeedback.js').LionValidationFeedback} LionValidationFeedback
+ * @typedef {import('../types/choice-group/ChoiceInputMixinTypes.js').ChoiceInputHost} ChoiceInputHost
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../types/FormControlMixinTypes.js').HTMLElementWithValue} HTMLElementWithValue
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlMixin} FormControlMixin
+ * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
  */
 
 /**
@@ -24,7 +24,7 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  * This Mixin is a shared fundament for all form components, it's applied on:
  * - LionField (which is extended to LionInput, LionTextarea, LionSelect etc. etc.)
  * - LionFieldset (which is extended to LionRadioGroup, LionCheckboxGroup, LionForm)
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  * @type {FormControlMixin}
  */
 const FormControlMixinImplementation = superclass =>
@@ -272,7 +272,7 @@ const FormControlMixinImplementation = superclass =>
       }
     }
 
-    /** @param {import('@lion/core').PropertyValues } changedProperties */
+    /** @param {import('lit').PropertyValues } changedProperties */
     updated(changedProperties) {
       super.updated(changedProperties);
 

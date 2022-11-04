@@ -6,7 +6,7 @@ import { Unparseable, Validator, FormatMixin } from '@lion/ui/form-core.js';
 import { getFormControlMembers, mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
 
 /**
- * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
  */
 

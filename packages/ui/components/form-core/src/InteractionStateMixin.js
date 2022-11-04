@@ -2,8 +2,8 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { FormControlMixin } from './FormControlMixin.js';
 
 /**
- * @typedef {import('../types/InteractionStateMixinTypes').InteractionStateMixin} InteractionStateMixin
- * @typedef {import('../types/InteractionStateMixinTypes').InteractionStates} InteractionStates
+ * @typedef {import('../types/InteractionStateMixinTypes.js').InteractionStateMixin} InteractionStateMixin
+ * @typedef {import('../types/InteractionStateMixinTypes.js').InteractionStates} InteractionStates
  */
 
 /**
@@ -16,7 +16,7 @@ import { FormControlMixin } from './FormControlMixin.js';
  * - on keyup (actually, on the model-value-changed event) -> 'dirty' will be set to true
  *
  * @type {InteractionStateMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const InteractionStateMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051

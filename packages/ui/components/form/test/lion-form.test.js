@@ -17,8 +17,8 @@ import {
 import { spy } from 'sinon';
 
 /**
- * @typedef {import('../src/LionForm').LionForm} LionForm
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionForm.js').LionForm} LionForm
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionForm>} */ (_fixture);
 

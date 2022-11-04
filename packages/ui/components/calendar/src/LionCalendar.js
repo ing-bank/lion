@@ -18,9 +18,9 @@ import { getLastDayPreviousMonth } from './utils/getLastDayPreviousMonth.js';
 import { isSameDate } from './utils/isSameDate.js';
 
 /**
- * @typedef {import('../types/day').Day} Day
- * @typedef {import('../types/day').Week} Week
- * @typedef {import('../types/day').Month} Month
+ * @typedef {import('../types/day.js').Day} Day
+ * @typedef {import('../types/day.js').Week} Week
+ * @typedef {import('../types/day.js').Month} Month
  */
 
 /**
@@ -308,7 +308,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     }
   }
 
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
+  /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('__focusedDate') && this.__focusedDate) {

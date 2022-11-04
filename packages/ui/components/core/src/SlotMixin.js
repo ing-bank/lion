@@ -4,9 +4,9 @@ import { render } from 'lit';
 import { isTemplateResult } from 'lit/directive-helpers.js';
 
 /**
- * @typedef {import('../types/SlotMixinTypes').SlotMixin} SlotMixin
- * @typedef {import('../types/SlotMixinTypes').SlotsMap} SlotsMap
- * @typedef {import('../index').LitElement} LitElement
+ * @typedef {import('../types/SlotMixinTypes.js').SlotMixin} SlotMixin
+ * @typedef {import('../types/SlotMixinTypes.js').SlotsMap} SlotsMap
+ * @typedef {import('lit').LitElement} LitElement
  */
 
 /**
@@ -36,7 +36,7 @@ const SlotMixinImplementation = superclass =>
 
     /**
      * @private
-     * @param {import('@lion/core').TemplateResult} template
+     * @param {import('lit').TemplateResult} template
      */
     __renderAsNodes(template) {
       // @ts-expect-error wait for browser support

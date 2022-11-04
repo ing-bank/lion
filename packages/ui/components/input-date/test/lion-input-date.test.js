@@ -7,8 +7,8 @@ import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import '@lion/ui/define/lion-input-date.js';
 
 /**
- * @typedef {import('../src/LionInputDate').LionInputDate} LionInputDate
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionInputDate.js').LionInputDate} LionInputDate
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionInputDate>} */ (_fixture);
 

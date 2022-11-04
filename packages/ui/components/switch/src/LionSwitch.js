@@ -100,7 +100,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
     }
   }
 
-  /** @param {import('@lion/core').PropertyValues } changedProperties */
+  /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     this._syncButtonSwitch();

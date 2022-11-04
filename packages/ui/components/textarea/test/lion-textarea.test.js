@@ -6,8 +6,8 @@ import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import '@lion/ui/define/lion-textarea.js';
 
 /**
- * @typedef {import('../src/LionTextarea').LionTextarea} LionTextarea
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionTextarea.js').LionTextarea} LionTextarea
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionTextarea>} */ (_fixture);

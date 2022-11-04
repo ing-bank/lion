@@ -10,7 +10,7 @@ import {
 } from '@lion/ui/form-core.js';
 
 /**
- * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
 
 describe('FormControlMixin', () => {
@@ -267,7 +267,7 @@ describe('FormControlMixin', () => {
         `);
 
         /**
-         * @typedef {* & import('../types/FormControlMixinTypes').FormControlHost} FormControl
+         * @typedef {* & import('../types/FormControlMixinTypes.js').FormControlHost} FormControl
          */
         const field1El = /** @type {FormControl} */ (formEl.querySelector('[name=field1]'));
         const field2El = /** @type {FormControl} */ (formEl.querySelector('[name=field2]'));

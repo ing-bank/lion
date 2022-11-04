@@ -11,7 +11,7 @@ const isFirefox = (() => {
 })();
 
 /**
- * @typedef {import('../types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
  */
 

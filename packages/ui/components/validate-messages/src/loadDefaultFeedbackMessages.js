@@ -22,7 +22,7 @@ import {
 import { PhoneNumber } from '@lion/ui/input-tel.js';
 
 /**
- * @typedef {import('@lion/form-core/types').FeedbackMessageData} FeedbackMessageData
+ * @typedef {import('../../form-core/types/validate/validate.js').FeedbackMessageData} FeedbackMessageData
  */
 
 let loaded = false;

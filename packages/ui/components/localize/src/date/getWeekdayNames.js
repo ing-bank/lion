@@ -44,7 +44,7 @@ function getCachedWeekdayNames(locale) {
 
 /**
  * @desc Returns weekday names for locale
- * @param {Object} [options]
+ * @param {Object} options
  * @param {string} [options.locale] locale
  * @param {string} [options.style=long] long, short or narrow
  * @param {number} [options.firstDayOfWeek=0] 0 (Sunday), 1 (Monday), etc...

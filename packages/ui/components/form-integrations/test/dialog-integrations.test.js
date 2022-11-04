@@ -9,8 +9,8 @@ import '@lion/ui/define/lion-radio.js';
 
 /**
  * @typedef {import('./helpers/umbrella-form.js').UmbrellaForm} UmbrellaForm
- * @typedef {import('@lion/dialog').LionDialog} LionDialog
- * @typedef {import('@lion/form').LionForm} LionForm
+ * @typedef {import('../../dialog/src/LionDialog.js').LionDialog} LionDialog
+ * @typedef {import('../../form/src/LionForm.js').LionForm} LionForm
  */
 
 // Test umbrella form inside dialog

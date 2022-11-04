@@ -1,5 +1,5 @@
 /**
- * @typedef {import('../../types/OverlayConfig').OverlayConfig} OverlayConfig
+ * @typedef {import('../../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  */
 
 export const withDropdownConfig = () =>

@@ -6,12 +6,12 @@ import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
 
 /**
- * @typedef {import('@lion/listbox').LionOptions} LionOptions
- * @typedef {import('@lion/listbox').LionOption} LionOption
- * @typedef {import('@open-wc/scoped-elements/src/types').ScopedElementsHost} ScopedElementsHost
- * @typedef {import('@lion/form-core/types/registration/FormRegisteringMixinTypes').FormRegisteringHost} FormRegisteringHost
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
+ * @typedef {import('@open-wc/scoped-elements').ScopedElementsHost} ScopedElementsHost
+ * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
+ * @typedef {import('../../listbox/src/LionOption.js').LionOption} LionOption
+ * @typedef {import('../../form-core/types/registration/FormRegisteringMixinTypes.js').FormRegisteringHost} FormRegisteringHost
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../../core/types/SlotMixinTypes.js').SlotsMap} SlotsMap
  */
 
 function detectInteractionMode() {
@@ -176,7 +176,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
-   * @param {import('@lion/core').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

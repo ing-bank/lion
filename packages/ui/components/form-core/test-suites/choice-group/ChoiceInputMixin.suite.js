@@ -14,7 +14,7 @@ class ChoiceInput extends ChoiceInputMixin(LionInput) {
 customElements.define('choice-group-input', ChoiceInput);
 
 /**
- * @param {{ tagString?:string, tagType?: string}} [config]
+ * @param {{ tagString?:string, tagType?: string}} config
  * @deprecated
  */
 export function runChoiceInputMixinSuite({ tagString } = {}) {

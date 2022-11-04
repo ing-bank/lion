@@ -3,8 +3,8 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // TODO: will be moved to @Lion/core later?
 
 /**
- * @typedef {import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableMixin} SyncUpdatableMixin
- * @typedef {import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableNamespace} SyncUpdatableNamespace
+ * @typedef {import('../../types/utils/SyncUpdatableMixinTypes.js').SyncUpdatableMixin} SyncUpdatableMixin
+ * @typedef {import('../../types/utils/SyncUpdatableMixinTypes.js').SyncUpdatableNamespace} SyncUpdatableNamespace
  */
 
 /**
@@ -21,7 +21,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * Whenever the implementation of `requestUpdate` changes (this happened in the past for
  * `requestUpdate`) we only have to change our abstraction instead of all our components
  * @type {SyncUpdatableMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const SyncUpdatableMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -76,7 +76,7 @@ const SyncUpdatableMixinImplementation = superclass =>
     __syncUpdatableInitialize() {
       const ns = this.__SyncUpdatableNamespace;
       const ctor =
-        /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableHost} */ (
+        /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes.js').SyncUpdatableHost} */ (
           this.constructor
         );
 
@@ -103,7 +103,7 @@ const SyncUpdatableMixinImplementation = superclass =>
       const ns = this.__SyncUpdatableNamespace;
 
       const ctor =
-        /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes').SyncUpdatableHost} */ (
+        /** @type {typeof SyncUpdatableMixin & typeof import('../../types/utils/SyncUpdatableMixinTypes.js').SyncUpdatableHost} */ (
           this.constructor
         );
       // Before connectedCallback: queue

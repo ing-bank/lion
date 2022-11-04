@@ -8,7 +8,7 @@ import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing'
 import { FormGroupMixin } from '@lion/ui/form-core.js';
 
 /**
- * @typedef {import('@lion/form-core').LionField} LionField
+ * @typedef {import('@lion/ui/form-core.js').LionField} LionField
  */
 
 /**

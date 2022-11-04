@@ -1,5 +1,5 @@
 /**
- * @typedef {import('@lion/core').CSSResult} CSSResult
+ * @typedef {import('lit').CSSResult} CSSResult
  * @typedef {import('./OverlayController.js').OverlayController} OverlayController
  */
 
@@ -177,7 +177,7 @@ export class OverlaysManager {
   }
 
   /**
-   * @param {{ disabledCtrl?:OverlayController, findNewTrap?:boolean }} [options]
+   * @param {{ disabledCtrl?:OverlayController, findNewTrap?:boolean }} options
    */
   informTrapsKeyboardFocusGotDisabled({ disabledCtrl, findNewTrap = true } = {}) {
     const next = this.shownList.find(

@@ -3,16 +3,16 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { OverlayMixin } from './OverlayMixin.js';
 
 /**
- * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
- * @typedef {import('../types/ArrowMixinTypes').ArrowMixin} ArrowMixin
- * @typedef {import('@popperjs/core/lib/popper').Options} PopperOptions
- * @typedef {import('@popperjs/core/lib/enums').Placement} Placement
- * @typedef {import('@lion/core').CSSResultArray} CSSResultArray
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/ArrowMixinTypes.js').ArrowMixin} ArrowMixin
+ * @typedef {import('@popperjs/core/lib/popper.js').Options} PopperOptions
+ * @typedef {import('@popperjs/core/lib/enums.js').Placement} Placement
+ * @typedef {import('lit').CSSResultArray} CSSResultArray
  */
 
 /**
  * @type {ArrowMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 export const ArrowMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -152,7 +152,7 @@ export const ArrowMixinImplementation = superclass =>
      * @protected
      */
     _getPopperArrowConfig(popperConfigToExtendFrom) {
-      /** @type {Partial<PopperOptions> & { afterWrite: (arg0: Partial<import('@popperjs/core/lib/popper').State>) => void }} */
+      /** @type {Partial<PopperOptions> & { afterWrite: (arg0: Partial<import('@popperjs/core/lib/popper.js').State>) => void }} */
       const popperCfg = {
         ...(popperConfigToExtendFrom || {}),
         placement: /** @type {Placement} */ ('top'),
@@ -171,11 +171,11 @@ export const ArrowMixinImplementation = superclass =>
           },
           ...((popperConfigToExtendFrom && popperConfigToExtendFrom.modifiers) || []),
         ],
-        /** @param {Partial<import('@popperjs/core/lib/popper').State>} data */
+        /** @param {Partial<import('@popperjs/core/lib/popper.js').State>} data */
         onFirstUpdate: data => {
           this.__syncFromPopperState(data);
         },
-        /** @param {Partial<import('@popperjs/core/lib/popper').State>} data */
+        /** @param {Partial<import('@popperjs/core/lib/popper.js').State>} data */
         afterWrite: data => {
           this.__syncFromPopperState(data);
         },
@@ -196,7 +196,7 @@ export const ArrowMixinImplementation = superclass =>
     }
 
     /**
-     * @param {Partial<import('@popperjs/core/lib/popper').State>} data
+     * @param {Partial<import('@popperjs/core/lib/popper.js').State>} data
      * @private
      */
     __syncFromPopperState(data) {

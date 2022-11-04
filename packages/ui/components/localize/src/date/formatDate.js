@@ -2,13 +2,13 @@ import { getLocale } from '../utils/getLocale.js';
 import { localize } from '../singleton.js';
 import { normalizeIntlDate } from './utils/normalizeIntlDate.js';
 
-/** @typedef {import('../../types/LocalizeMixinTypes').DatePostProcessor} DatePostProcessor */
+/** @typedef {import('../../types/LocalizeMixinTypes.js').DatePostProcessor} DatePostProcessor */
 
 /**
  * Formats date based on locale and options
  *
  * @param {Date} date
- * @param {import('@lion/localize/types/LocalizeMixinTypes').FormatDateOptions} [options] Intl options are available
+ * @param {import('../../types/LocalizeMixinTypes.js').FormatDateOptions} [options] Intl options are available
  * @returns {string}
  */
 export function formatDate(date, options) {
@@ -17,8 +17,7 @@ export function formatDate(date, options) {
   }
 
   const formatOptions =
-    options ||
-    /** @type {import('@lion/localize/types/LocalizeMixinTypes').FormatDateOptions} */ ({});
+    options || /** @type {import('../../types/LocalizeMixinTypes.js').FormatDateOptions} */ ({});
   /**
    * Set smart defaults if:
    * 1) no options object is passed

@@ -6,7 +6,7 @@ import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
 
 /**
- * @typedef {import('../src/LionSelectRich').LionSelectRich} LionSelectRich
+ * @typedef {import('../src/LionSelectRich.js').LionSelectRich} LionSelectRich
  */
 
 const tagString = defineCE(

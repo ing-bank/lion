@@ -62,13 +62,13 @@ function makeMatchingTextBold(root, matchingString, option) {
 // on Listbox or ListNavigationWithActiveDescendantMixin
 
 /**
- * @typedef {import('@lion/listbox').LionOption} LionOption
- * @typedef {import('@lion/listbox').LionOptions} LionOptions
- * @typedef {import('@lion/overlays/types/OverlayConfig').OverlayConfig} OverlayConfig
- * @typedef {import('@lion/core/types/SlotMixinTypes').SlotsMap} SlotsMap
- * @typedef {import('@lion/form-core/types/choice-group/ChoiceInputMixinTypes').ChoiceInputHost} ChoiceInputHost
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
- * @typedef {import('../types/SelectionDisplay').SelectionDisplay} SelectionDisplay
+ * @typedef {import('../../listbox/src/LionOption.js').LionOption} LionOption
+ * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
+ * @typedef {import('../../overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('../../core/types/SlotMixinTypes.js').SlotsMap} SlotsMap
+ * @typedef {import('../../form-core/types/choice-group/ChoiceInputMixinTypes.js').ChoiceInputHost} ChoiceInputHost
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../types/SelectionDisplay.js').SelectionDisplay} SelectionDisplay
  */
 
 /**
@@ -419,7 +419,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @param {import('@lion/core').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

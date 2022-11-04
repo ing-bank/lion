@@ -4,7 +4,7 @@ import { stub } from 'sinon';
 import { IconManager } from '@lion/ui/icon.js';
 
 /**
- * @typedef {import("lit-html").TemplateResult} TemplateResult
+ * @typedef {import("lit").TemplateResult} TemplateResult
  */
 
 /**

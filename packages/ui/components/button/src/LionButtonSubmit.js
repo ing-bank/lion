@@ -1,7 +1,7 @@
 import { LionButtonReset } from './LionButtonReset.js';
 
 /**
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {{lionButtons: Set<LionButtonSubmit>, helper:HTMLButtonElement, observer:MutationObserver}} HelperRegistration
  */
 

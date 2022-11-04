@@ -1,8 +1,8 @@
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 
 /**
- * @typedef {import('../src/LionInput').LionInput} LionInput
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../src/LionInput.js').LionInput} LionInput
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
 
 /**

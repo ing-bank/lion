@@ -6,7 +6,7 @@ const monthsLocaleCache = {};
 
 /**
  * @desc Returns month names for locale
- * @param {Object} [options]
+ * @param {Object} options
  * @param {string} [options.locale] locale
  * @param {"long" | "numeric" | "2-digit" | "short" | "narrow"} [options.style=long] long, short or narrow
  * @returns {string[]} like: ['January', 'February', ...etc].

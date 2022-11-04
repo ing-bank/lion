@@ -6,7 +6,7 @@ import { LionSelectInvoker } from '@lion/ui/select-rich.js';
 import '@lion/ui/define/lion-select-invoker.js';
 
 /**
- * @typedef {import('@lion/listbox').LionOption} LionOption
+ * @typedef {import('../../listbox/src/LionOption.js').LionOption} LionOption
  */
 
 describe('lion-select-invoker', () => {

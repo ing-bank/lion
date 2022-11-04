@@ -1,6 +1,4 @@
-// @ts-ignore
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
-// @ts-ignore
 import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
 import {
   aTimeout,
@@ -15,9 +13,9 @@ import sinon from 'sinon';
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 
 /**
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {HTMLSelectElement|HTMLElement & {modelValue:string}} DropdownElement
- * @typedef {import('../types').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
+ * @typedef {import('../types/index.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
  */
 
 const fixture = /** @type {(arg: string | TemplateResult) => Promise<LionInputTelDropdown>} */ (

@@ -69,7 +69,8 @@ describe('Ajax', () => {
         },
       };
       // When
-      // @ts-expect-error
+      // TODO: fix AjaxConfig types => e.g. create FullAjaxConfig with everything "mandatory" and then AjaxConfig (= Partial of it) for user
+      // @ts-ignore
       const ajax1 = new Ajax(config);
       const defaultCacheIdentifierFunction = ajax1.options?.cacheOptions?.getCacheIdentifier;
       // Then
@@ -267,7 +268,9 @@ describe('Ajax', () => {
     it('returns the original request object', async () => {
       ajax.addRequestInterceptor(async () => new Response('my response', { status: 200 }));
 
-      const response = /** @type {CacheResponse} */ (await await ajax.fetch('/foo'));
+      const response = /** @type {import('../types/types.js').CacheResponse} */ (
+        await await ajax.fetch('/foo')
+      );
       expect(response.request).to.be.an.instanceOf(Request);
     });
 

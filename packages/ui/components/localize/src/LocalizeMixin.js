@@ -4,14 +4,14 @@ import { until } from 'lit/directives/until.js';
 import { localize } from './singleton.js';
 
 /**
- * @typedef {import('@lion/core').DirectiveResult} DirectiveResult
- * @typedef {import('../types/LocalizeMixinTypes').LocalizeMixin} LocalizeMixin
+ * @typedef {import('lit/directive.js').DirectiveResult} DirectiveResult
+ * @typedef {import('../types/LocalizeMixinTypes.js').LocalizeMixin} LocalizeMixin
  */
 
 /**
  * # LocalizeMixin - for self managed templates
  * @type {LocalizeMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const LocalizeMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -41,11 +41,9 @@ const LocalizeMixinImplementation = superclass =>
           this.__localizeOnLocaleChanged(event);
         };
 
-      this.__boundLocalizeOnLocaleChanging =
-        /** @param {...Object} args */
-        () => {
-          this.__localizeOnLocaleChanging();
-        };
+      this.__boundLocalizeOnLocaleChanging = () => {
+        this.__localizeOnLocaleChanging();
+      };
 
       // should be loaded in advance
       /** @private */

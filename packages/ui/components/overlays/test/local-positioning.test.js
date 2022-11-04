@@ -5,8 +5,8 @@ import { OverlayController } from '@lion/ui/overlays.js';
 import { normalizeTransformStyle } from './utils-tests/local-positioning-helpers.js';
 
 /**
- * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
- * @typedef {import('../types/OverlayConfig').ViewportPlacement} ViewportPlacement
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
  */
 
 const withLocalTestConfig = () =>

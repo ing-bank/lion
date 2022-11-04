@@ -5,7 +5,7 @@ import { normalSpaces } from './utils/normalSpaces.js';
  * Gets the group separator
  *
  * @param {string} [locale] To override the browser locale
- * @param {import('../../types/LocalizeMixinTypes').FormatNumberOptions} [options]
+ * @param {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} [options]
  * @returns {string}
  */
 export function getGroupSeparator(locale, options) {

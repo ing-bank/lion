@@ -1,9 +1,9 @@
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 
 /**
- * @typedef {import('@lion/listbox/src/LionOptions').LionOptions} LionOptions
- * @typedef {import('@lion/listbox/types/ListboxMixinTypes').ListboxHost} ListboxHost
- * @typedef {import('@lion/form-core/types/FormControlMixinTypes').FormControlHost} FormControlHost
+ * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
+ * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
+ * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
 
 /**

@@ -8,8 +8,8 @@ import { isSameDate } from '@lion/ui/calendar.js';
 import { CalendarObject, DayObject } from '@lion/ui/calendar-test-helpers.js';
 
 /**
- * @typedef {import('../src/LionCalendar').LionCalendar} LionCalendar
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('../src/LionCalendar.js').LionCalendar} LionCalendar
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionCalendar>} */ (_fixture);

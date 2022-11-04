@@ -1,5 +1,3 @@
-import './typedef.js';
-
 export default class PendingRequestStore {
   constructor() {
     /**

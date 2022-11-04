@@ -2,7 +2,7 @@ import { html, css } from 'lit';
 import { LionCheckbox } from './LionCheckbox.js';
 
 /**
- * @typedef {import('./LionCheckboxGroup').LionCheckboxGroup} LionCheckboxGroup
+ * @typedef {import('./LionCheckboxGroup.js').LionCheckboxGroup} LionCheckboxGroup
  */
 
 export class LionCheckboxIndeterminate extends LionCheckbox {

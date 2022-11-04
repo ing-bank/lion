@@ -5,7 +5,7 @@ const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' |
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
 
 /**
- * @typedef {import('@lion/core').TemplateResult} TemplateResult
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 /**
@@ -143,7 +143,7 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
   }
 
   /**
-   * @param {import('@lion/core').PropertyValues } changedProperties
+   * @param {import('lit').PropertyValues } changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

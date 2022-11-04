@@ -2,9 +2,9 @@ import { css, LitElement } from 'lit';
 import { ArrowMixin, OverlayMixin } from '@lion/ui/overlays.js';
 
 /**
- * @typedef {import('@lion/overlays/types/OverlayConfig').OverlayConfig} OverlayConfig
- * @typedef {import('@lion/core').CSSResult} CSSResult
- * @typedef {import('@lion/core').CSSResultArray} CSSResultArray
+ * @typedef {import('../../overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('lit').CSSResult} CSSResult
+ * @typedef {import('lit').CSSResultArray} CSSResultArray
  */
 
 /**

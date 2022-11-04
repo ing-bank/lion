@@ -135,7 +135,7 @@ export function containFocus(rootElement) {
   }
 
   /**
-   * @param {Object} [opts]
+   * @param {Object} opts
    * @param {boolean} [opts.resetToRoot]
    * @desc When we simulate a modal dialog, we need to restore the focus to the first or last
    * element of the rootElement

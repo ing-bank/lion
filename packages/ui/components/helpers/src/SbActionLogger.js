@@ -1,6 +1,6 @@
 import { css, html, LitElement, render } from 'lit';
 
-/** @typedef {import('@lion/core').TemplateResult} TemplateResult */
+/** @typedef {import('lit').TemplateResult} TemplateResult */
 
 export class SbActionLogger extends LitElement {
   static get properties() {
