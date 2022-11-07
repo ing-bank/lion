@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.1
+
+### Patch Changes
+
+- bfd5152a: fix: relax content types when setting cache
+
 ## 1.1.0
 
 ### Minor Changes
