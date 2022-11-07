@@ -6,52 +6,13 @@ on:
       - master
 
 jobs:
-  browser-tests:
-    name: Browser tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Node 16.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
-
-      - name: Install Dependencies
-        run: npm install --ci
-
-      - uses: microsoft/playwright-github-action@v1
-
-      - name: Test
-        run: npm run test:browser
-
-  node-tests:
-    name: Node tests
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [16.x]
-        os: [ubuntu-latest]
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install Dependencies
-        run: npm install --ci
-
-      - name: Test
-        run: npm run test:node
-
   release:
     # Prevents changesets action from creating a PR on forks
     if: github.repository == 'ing-bank/lion'
     name: Release
     runs-on: ubuntu-latest
     steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
       - name: Checkout Repo
         uses: actions/checkout@master
         with:

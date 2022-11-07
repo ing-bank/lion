@@ -7,6 +7,7 @@ jobs:
     name: Verify changes
     runs-on: ubuntu-latest
     steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
       - uses: actions/checkout@v2
 
       - name: Sanity check
@@ -30,6 +31,7 @@ jobs:
     name: Browser tests
     runs-on: ubuntu-latest
     steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
       - uses: actions/checkout@v2
 
       - name: Setup Node 16.x
@@ -53,6 +55,7 @@ jobs:
         node-version: [16.x]
         os: [ubuntu-latest]
     steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
       - uses: actions/checkout@v2
 
       - name: Setup Node ${{ matrix.node-version }}
@@ -75,6 +78,7 @@ jobs:
         node-version: [16.x]
         os: [windows-latest]
     steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
       - uses: actions/checkout@v2
 
       - name: Setup Node ${{ matrix.node-version }}
