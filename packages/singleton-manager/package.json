@@ -1,6 +1,6 @@
 {
   "name": "singleton-manager",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Manage singletons across multiple major versions so they converge to a single instance",
   "license": "MIT",
   "author": "ing-bank",
@@ -11,6 +11,13 @@
     "directory": "packages/singleton-manager"
   },
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist-types/src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./docs/*": "./docs/*"
+  },
   "files": [
     "dist-types",
     "docs",
@@ -35,13 +42,6 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist-types/src/index.d.ts",
-      "default": "./src/index.js"
-    },
-    "./docs/*": "./docs/*"
   },
   "wireit": {
     "types": {
