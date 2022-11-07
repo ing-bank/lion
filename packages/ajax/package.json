@@ -1,6 +1,6 @@
 {
   "name": "@lion/ajax",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Thin wrapper around fetch with support for interceptors.",
   "license": "MIT",
   "author": "ing-bank",
@@ -11,6 +11,13 @@
     "directory": "packages/ajax"
   },
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist-types/src/index.d.ts",
+      "default": "./src/index.js"
+    },
+    "./docs/*": "./docs/*"
+  },
   "main": "src/index.js",
   "module": "src/index.js",
   "files": [
@@ -36,13 +43,6 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist-types/src/index.d.ts",
-      "default": "./src/index.js"
-    },
-    "./docs/*": "./docs/*"
   },
   "wireit": {
     "types": {
