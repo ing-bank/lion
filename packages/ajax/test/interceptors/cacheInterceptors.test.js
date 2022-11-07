@@ -1,6 +1,7 @@
 import { expect } from '@open-wc/testing';
 import * as sinon from 'sinon';
 import { Ajax, createCacheInterceptors } from '@lion/ajax';
+import { isResponseContentTypeSupported } from '../../src/interceptors/cacheInterceptors.js';
 
 // TODO: these are private API? should they be exposed? if not why do we test them?
 import { extendCacheOptions, resetCacheSession, ajaxCache } from '../../src/cacheManager.js';
@@ -70,6 +71,36 @@ describe('cache interceptors', () => {
 
   afterEach(() => {
     sinon.restore();
+  });
+
+  describe('isResponseContentTypeSupported', () => {
+    /** @type {Response} */
+    let r;
+
+    beforeEach(() => {
+      r = new Response('');
+    });
+
+    it('matches default content type', () => {
+      r.headers.set('Content-Type', 'application/json');
+      expect(isResponseContentTypeSupported(r, ['application/json'])).to.equal(true);
+    });
+
+    it('returns false when it doesnt match', () => {
+      r.headers.set('Content-Type', 'text/json');
+      expect(isResponseContentTypeSupported(r, ['application/json'])).to.equal(false);
+    });
+
+    it('partially matches content type', () => {
+      r.headers.set('Content-Type', 'text/plain;charset=UTF-8;');
+      expect(isResponseContentTypeSupported(r, ['text/plain'])).to.equal(true);
+    });
+
+    it('returns true if `contentTypes` is not an array', () => {
+      r.headers.set('Content-Type', 'foo');
+      // @ts-ignore needed for test
+      expect(isResponseContentTypeSupported(r, 'string')).to.equal(true);
+    });
   });
 
   describe('Original ajax instance', () => {
