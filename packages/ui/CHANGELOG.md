@@ -1,5 +1,14 @@
 # @lion/ui
 
+## 0.0.2
+
+### Patch Changes
+
+- c7ea0357: [core]: replaced import('lit-element') with import('lit') to fix tests, fixed test for SlotMixin
+- c7ea0357: [drawer]: implemented initial version of lion-drawer
+- Updated dependencies [faa26f12]
+  - singleton-manager@1.6.1
+
 ## 0.0.1
 
 ### Patch Changes
