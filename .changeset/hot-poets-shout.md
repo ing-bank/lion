@@ -2,4 +2,4 @@
 '@lion/ui': patch
 ---
 
-implemented lion-drawer
+[drawer]: implemented initial version of lion-drawer
