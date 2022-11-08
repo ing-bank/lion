@@ -18,6 +18,7 @@
     },
     "./docs/*": "./docs/*"
   },
+  "main": "./src/index.js",
   "files": [
     "dist-types",
     "docs",
