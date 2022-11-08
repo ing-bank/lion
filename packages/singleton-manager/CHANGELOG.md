@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.6.1
+
+### Patch Changes
+
+- faa26f12: Keep the `main` entry in package.json for now, as it is still used by some tools.
+
 ## 1.6.0
 
 ### Minor Changes
