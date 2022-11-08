@@ -1,5 +1,5 @@
 ---
-'@lion/ui/drawer': patch
+'@lion/ui': patch
 ---
 
 implemented lion-drawer
