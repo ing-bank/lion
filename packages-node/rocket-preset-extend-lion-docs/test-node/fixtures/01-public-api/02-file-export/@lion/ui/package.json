@@ -1,0 +1,10 @@
+{
+  "name": "@lion/ui",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist-types/exports/*",
+      "default": "./src/LionAccordion.js"
+    }
+  }
+}
