@@ -1,3 +1,3 @@
-import { LionAccordion } from './src/LionAccordion.js';
+import { LionAccordion } from '../accordion.js';
 
 customElements.define('lion-accordion', LionAccordion);
