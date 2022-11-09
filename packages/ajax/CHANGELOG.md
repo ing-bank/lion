@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.2
+
+### Patch Changes
+
+- 2553e7ac: fix: relax content type restriction of json response
+
 ## 1.1.1
 
 ### Patch Changes
