@@ -21,7 +21,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * @returns
  */
 async function execute(input, options = {}) {
-  const nodeModulesDir = path.join(__dirname, input);
+  const nodeModulesDir = path.join(__dirname, input.split('/').join(path.sep));
 
   const result = await generateExtendDocsConfig({
     // used tsc version does not recognize optional jsdoc params

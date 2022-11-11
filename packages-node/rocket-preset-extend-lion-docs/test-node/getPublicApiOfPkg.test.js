@@ -13,13 +13,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * @returns
  */
 async function execute(input) {
-  const pkgJsonPath = path.join(__dirname, input);
+  const pkgJsonPath = path.join(__dirname, input.split('/').join(path.sep));
   const result = await getPublicApiOfPkg(pkgJsonPath);
   return {
     ...result,
     entryPoints: result.entryPoints.map(ep => ({
       ...ep,
-      path: ep.path.replace(__dirname, 'abs::'),
+      path: ep.path.replace(__dirname, 'abs::').replace(/\\/g, '/'),
     })),
   };
 }
