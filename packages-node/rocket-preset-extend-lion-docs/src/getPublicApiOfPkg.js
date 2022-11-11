@@ -28,12 +28,16 @@ export async function getPublicApiOfPkg(pkgJsonPath) {
       pkgExports[pkgExportDefinition].default ||
       pkgExports[pkgExportDefinition].module ||
       pkgExports[pkgExportDefinition];
-    const entryPointFilePath = path.join(pkgPath, pkgExportPath);
+    const entryPointFilePath = path.join(pkgPath, pkgExportPath.split('/').join(path.sep));
 
-    if (glob.hasMagic(entryPointFilePath)) {
-      const globifiedEntryPointFilePath = entryPointFilePath.replace(/\*/, '**');
+    const globifiedEntryPointFilePath = entryPointFilePath
+      .split(path.sep)
+      .join('/')
+      .replace(/\*/, '**');
+
+    if (glob.hasMagic(globifiedEntryPointFilePath)) {
       for (const entryPointFile of glob.sync(globifiedEntryPointFilePath, { nodir: true })) {
-        const fullPkgExportPath = path.join(pkgPath, pkgExportPath);
+        const fullPkgExportPath = path.join(pkgPath, pkgExportPath).split(path.sep).join('/');
         const reg = new RegExp(`^${fullPkgExportPath.replace('*', '(.*)')}$`);
         const match = reg.exec(entryPointFile);
         if (match) {
@@ -48,7 +52,7 @@ export async function getPublicApiOfPkg(pkgJsonPath) {
               name: pkgEntryPoint,
               namePath: pkgEntryPointPath,
               exports,
-              path: entryPointFile,
+              path: entryPointFile.split('/').join(path.sep),
             });
           }
         }
