@@ -1,9 +1,0 @@
-{
-  "name": "fail-demo-app",
-  "version": "1.0.0",
-  "dependencies": {
-    "@lion/core": "0.13.6",
-    "page-a": "^1.0.0",
-    "page-b": "^1.0.0"
-  }
-}
