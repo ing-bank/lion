@@ -1,6 +1,6 @@
 {
   "name": "rocket-preset-extend-lion-docs",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "A rocket preset to reuse lion documentation inside your design system extension",
   "license": "MIT",
   "author": "ing-bank",

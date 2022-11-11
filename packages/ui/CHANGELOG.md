@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.0.3
+
+### Patch Changes
+
+- 4708fe94: Include documentation in the npm package so it can be reused
+- da057efc: [localize] simplify and fix parseMode check
+
 ## 0.0.2
 
 ### Patch Changes
