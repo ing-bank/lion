@@ -1,7 +1,18 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { TemplateResult, LitElement } from 'lit';
 
-declare function slotFunction(): HTMLElement | Node[] | TemplateResult | undefined;
+/**
+ * Implicitly creates a wrapper node that allows for rerenders
+ */
+export type SlotRerenderObject = {
+  template: TemplateResult;
+  /* Add logic that will be performed after the render */
+  afterRender?: Function;
+};
+
+export type SlotFunctionResult = TemplateResult | Element | SlotRerenderObject | undefined;
+
+declare function slotFunction(): SlotFunctionResult;
 
 export type SlotsMap = {
   [key: string]: typeof slotFunction;
