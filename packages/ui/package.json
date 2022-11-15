@@ -23,7 +23,8 @@
     "./input-iban-translations/*": "./components/input-iban/translations/*",
     "./input-tel-translations/*": "./components/input-tel/translations/*",
     "./overlays-translations/*": "./components/overlays/translations/*",
-    "./validate-messages-translations/*": "./components/validate-messages/translations/*"
+    "./validate-messages-translations/*": "./components/validate-messages/translations/*",
+    "./docs/*": "./docs/*"
   },
   "files": [
     "components",
