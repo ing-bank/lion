@@ -15,93 +15,12 @@ const isRerenderConfig = (/** @type {SlotFunctionResult} */ o) =>
   !Array.isArray(o) && typeof o === 'object' && 'template' in o;
 
 /**
- * The SlotMixin is made for solving accessibility challenges that inherently come with the usage of shadow dom.
- * Until [AOM](https://wicg.github.io/aom/explainer.html) is not in place yet, it is not possible to create relations between different shadow doms.
- * The need for this can occur in the following situations:
- * 1. a user defined slot
- * For instance:
- * `<my-input>
- *   <label slot="label"><></label>
- * </my-input>`.
+ * All intricacies involved in managing light dom can be delegated to SlotMixin. Amongst others, it automatically:
+ * - mediates between light dom provided by the user ('public slots') and light dom provided by the component author ('private slots').
+ * - allows to hook into the reactive update loop of LitElement (rerendering on property changes)
+ * - respects the scoped registry belonging to the shadow root.
  *
- * The label here needs to be connected to the input element that may live in shadow dom. The input needs to have `aria-labelledby="label-id".`
- *
- * 2. an interplay of multiple nested web components
- * For instance:
- * `<my-fieldset>
- *   <my-input></my-input>
- *   <my-input></my-input>
- *   <div id="msg">Group errror message</div>
- * </my-fieldset>`
- * In the case above, all inputs need to be able to refer the error message of their parent
- * `
- * In a nutshell: SlotMixin helps you with everything related to rendering light dom (i.e. rendering to slots).
- * So that you can build accessible ui components with ease, while delegating all edge cases to SlotMixin.
- * Edge cases that it solves:
- * - rendering light dom in context of scoped customElementRegistries: we respect the customElementRegistry bound to your ShadowRoot
- * - the concept of rerendering based on property effects
- * - easily render lit templates
- *
- * So what does the api look like? SlotMixin can be used like this:
- *
- * @example
- * ```js
- * class AccessibleControl extends SlotMixin(LitElement) {
- *  get slots() {
- *    return {
- *      ...super.slots,
- *      'my-public-slot': () => document.createElement('input'),
- *      '_my-private-slot': () => html`<wc-rendered-to-light-dom></wc-rendered-to-light-dom>`;
- *      '' => () => html`<div>default slot</div>`,
- *    };
- *  }
- * }
- * ```
- *
- * ## Private and public slots
- * Some elements provide a property/attribute api with a fallback to content projection as a means to provide more advanced html.
- * For instance, a simple text label is provided like this:
- * `<my-input label="My label"></my-input>`
- *
- * A more advanced label can be provided like this:
- * `<my-input>
- *   <label slot="label"><my-icon aria-hidden="true"></my-icon>My label</label>
- * </my-input>`
- *
- * In the property/attribute case, SlotMixin adds the `<label slot="label">` under the hood. **unless** the developer already provided the slot.
- * This will make sure that the slot provided by the user always takes precedence and only one slot instance will be available in light dom per slot.
- *
- * ### Default slot
- * As can be seen in the example above, '' can be used to add content to the default slot
- *
- * ## SlotFunctionResult
- *
- * The `SlotFunctionResult` is the output of the functions provided in `get slots()`. It can output the following types:
- *
- * ```ts
- * TemplateResult | Element | SlotRerenderObject | undefined;
- * ```
- *
- * ### Element
- * For simple cases, an element can be returned. Use this when no web component is needed.
- *
- * ### TemplateResult
- * Return a TemplateResult when you need web components in your light dom. They will be automatically scoped correctly (to the scoped registry belonging to your shadowRoot)
- * If your template needs to be rerender, use a `SlotRerenderObject`.
- *
- * ### SlotRerenderObject
- * A `SlotRerenderObject` looks like this:
- *
- * ```ts
- * {
- *  template: TemplateResult;
- *  afterRender?: Function;
- * };
- * ```
- * It is meant for complex templates that need rerenders. Normally, when rendering into shadow dom (behavior we could have when [AOM](https://wicg.github.io/aom/explainer.html) was implemented), we would get rerenders
- * "for free" when a [property effect](https://lit.dev/docs/components/properties/#when-properties-change) takes place.
- * When we configure `SlotFunctionResult` to return a `SlotRerenderObject`, we get the same behavior for light dom.
- * For this rerendering to work predictably (no focus and other interaction issues), the slot will be created with a wrapper div.
+ * Be sure to read all details about SlotMixin in the [SlotMixin documentation](docs/fundamentals/systems/core/SlotMixin.md)
  *
  * @type {SlotMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass

@@ -268,9 +268,6 @@ export class LionInputTelDropdown extends LionInputTel {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    // if (changedProperties.has('_needsLightDomRender')) {
-    //   this.__renderDropdown();
-    // }
     if (changedProperties.has('activeRegion')) {
       this.__syncRegionWithDropdown();
     }
