@@ -174,9 +174,7 @@ export class LionInputTelDropdown extends LionInputTel {
       ...super.slots,
       prefix: () => {
         const ctor = /** @type {typeof LionInputTelDropdown} */ (this.constructor);
-        // If the user locally overrode the templates, get those on the instance
-        // @ts-expect-error
-        const templates = this.templates || ctor.templates;
+        const { templates } = ctor;
 
         return {
           template: templates.dropdown(this._templateDataDropdown),
@@ -429,5 +427,19 @@ export class LionInputTelDropdown extends LionInputTel {
         nameForRegion: namesForRegion.of(regionCode),
       });
     });
+  }
+
+  /**
+   * Usually, we don't use composition in regular LionFields (non choice-groups). Here we use a LionSelect(Rich) inside.
+   * We don't want to repropagate any children, since an Application Developer is not concerned with these internals (see repropate logic in FormControlMixin)
+   * Also, we don't want to give (wrong) info to InteractionStateMixin, that will set the wrong interaction states based on child info.
+   * TODO: Make "this._repropagationRole !== 'child'" the default for FormControlMixin
+   * (so that FormControls used within are never repropagated for LionFields)
+   * @protected
+   * @configure FormControlMixin: don't repropagate any children
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _repropagationCondition() {
+    return false;
   }
 }
