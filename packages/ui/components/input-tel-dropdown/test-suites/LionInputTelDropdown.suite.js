@@ -112,8 +112,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
 
     it('sets correct interaction states on init if input has a value', async () => {
       const el = await fixture(html` <${tag} .modelValue="${'+31612345678'}"></${tag}> `);
-      // TODO find out why its get dirty again
-      // expect(el.dirty).to.be.false;
+      expect(el.dirty).to.be.false;
       expect(el.prefilled).to.be.true;
     });
 
