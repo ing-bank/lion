@@ -1,4 +1,4 @@
-import { html, render, css } from 'lit';
+import { html, css } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 
 import { LionInputTel } from '@lion/ui/input-tel.js';
@@ -99,6 +99,7 @@ export class LionInputTelDropdown extends LionInputTel {
         },
       },
     };
+
     return {
       refs,
       data: {
@@ -155,7 +156,7 @@ export class LionInputTelDropdown extends LionInputTel {
     css`
       /**
            * We need to align the height of the dropdown with the height of the text field.
-           * We target the HTMLDivElement 'this.__dropdownRenderParent' here. Its child,
+           * We target the HTMLDivElement (render wrapper from SlotMixin) here. Its child,
            * [data-ref=dropdown], recieves a 100% height as well via inline styles (since we
            * can't target from shadow styles).
            */
@@ -171,7 +172,19 @@ export class LionInputTelDropdown extends LionInputTel {
   get slots() {
     return {
       ...super.slots,
-      prefix: () => this.__dropdownRenderParent,
+      prefix: () => {
+        const ctor = /** @type {typeof LionInputTelDropdown} */ (this.constructor);
+        // If the user locally overrode the templates, get those on the instance
+        // @ts-expect-error
+        const templates = this.templates || ctor.templates;
+
+        return {
+          template: templates.dropdown(this._templateDataDropdown),
+          afterRender: () => {
+            this.__syncRegionWithDropdown();
+          },
+        };
+      },
     };
   }
 
@@ -186,7 +199,6 @@ export class LionInputTelDropdown extends LionInputTel {
       type: 'region',
     });
     this.__createRegionMeta();
-    this._scheduleLightDomRender();
   }
 
   /**
@@ -195,6 +207,8 @@ export class LionInputTelDropdown extends LionInputTel {
   _onPhoneNumberUtilReady() {
     super._onPhoneNumberUtilReady();
     this.__createRegionMeta();
+    // render dropdown (trigger render of prefix slot via SlotMixin)
+    this.requestUpdate();
   }
 
   /**
@@ -218,9 +232,6 @@ export class LionInputTelDropdown extends LionInputTel {
      * @protected
      */
     this._preferredCountriesLabel = '';
-
-    /** @type {HTMLDivElement} */
-    this.__dropdownRenderParent = document.createElement('div');
 
     /**
      * Contains everything needed for rendering region options:
@@ -259,9 +270,9 @@ export class LionInputTelDropdown extends LionInputTel {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    if (changedProperties.has('_needsLightDomRender')) {
-      this.__renderDropdown();
-    }
+    // if (changedProperties.has('_needsLightDomRender')) {
+    //   this.__renderDropdown();
+    // }
     if (changedProperties.has('activeRegion')) {
       this.__syncRegionWithDropdown();
     }
@@ -326,6 +337,7 @@ export class LionInputTelDropdown extends LionInputTel {
     if (prevActiveRegion !== this.activeRegion && !this.focused && this._phoneUtil) {
       const prevCountryCode = this._phoneUtil.getCountryCodeForRegionCode(prevActiveRegion);
       const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
+
       if (this.value.includes(`+${prevCountryCode}`)) {
         this.modelValue = this._callParser(
           this.value.replace(`+${prevCountryCode}`, `+${countryCode}`),
@@ -348,25 +360,6 @@ export class LionInputTelDropdown extends LionInputTel {
         this._inputNode.focus();
       });
     }
-  }
-
-  /**
-   * Abstract away rendering to light dom, so that we can rerender when needed
-   * @private
-   */
-  __renderDropdown() {
-    const ctor = /** @type {typeof LionInputTelDropdown} */ (this.constructor);
-    // If the user locally overrode the templates, get those on the instance
-    const templates = this.templates || ctor.templates;
-    render(
-      templates.dropdown(this._templateDataDropdown),
-      this.__dropdownRenderParent,
-      /** @type {RenderOptions} */ ({
-        scopeName: this.localName,
-        eventContext: this,
-      }),
-    );
-    this.__syncRegionWithDropdown();
   }
 
   /**
@@ -411,6 +404,7 @@ export class LionInputTelDropdown extends LionInputTel {
     if (!this._allowedOrAllRegions?.length || !this.__namesForLocale) {
       return;
     }
+
     this.__regionMetaList = [];
     this.__regionMetaListPreferred = [];
     this._allowedOrAllRegions.forEach(regionCode => {

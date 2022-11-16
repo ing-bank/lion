@@ -305,18 +305,11 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     // This should trigger a rerender in shadow dom
     this._phoneUtil = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
     // This should trigger a rerender in light dom
-    this._scheduleLightDomRender();
+    // this._scheduleLightDomRender();
+    // this._scheduleSlotRenderFor('prefix');
     // Format when libPhoneNumber is loaded
     this._calculateValues({ source: null });
     this.__calculateActiveRegion();
-  }
-
-  /**
-   * This allows to hook into the update hook
-   * @protected
-   */
-  _scheduleLightDomRender() {
-    this._needsLightDomRender += 1;
   }
 
   /**

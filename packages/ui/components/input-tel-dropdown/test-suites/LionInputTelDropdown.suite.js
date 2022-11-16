@@ -71,6 +71,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
 
     it('syncs value of dropdown on init if input has no value', async () => {
       const el = await fixture(html` <${tag}></${tag}> `);
+      // await el.updateComplete;
       expect(el.activeRegion).to.equal('GB');
       expect(el.value).to.equal('+44');
       expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
@@ -92,7 +93,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
     it('syncs value of dropdown on init if input has no value does not influence interaction states', async () => {
       const el = await fixture(html` <${tag}></${tag}> `);
       // TODO find out why its get dirty again
-      // expect(el.dirty).to.be.false;
+      expect(el.dirty).to.be.false;
       expect(el.prefilled).to.be.false;
     });
 
@@ -245,10 +246,10 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         const { resolveLoaded } = mockPhoneUtilManager();
         const el = await fixture(html` <${tag} .allowedRegions="${['DE']}"></${tag}> `);
         // @ts-ignore
-        const spy = sinon.spy(el, '_scheduleLightDomRender');
+        const spy = sinon.spy(el, '__rerenderSlot');
         resolveLoaded(undefined);
         await aTimeout(0);
-        expect(spy).to.have.been.calledOnce;
+        expect(spy).to.have.been.calledWith('prefix');
         restorePhoneUtilManager();
         spy.restore();
       });
@@ -323,6 +324,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         mimicUserChangingDropdown(el.refs.dropdown.value, 'BE');
         await el.updateComplete;
         await el.updateComplete;
+
         expect(el.value).to.equal('+32 612345678');
       });
 
