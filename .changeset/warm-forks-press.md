@@ -2,4 +2,5 @@
 '@lion/ui': patch
 ---
 
-Align with SlotMixin rerender functionality + fix interaction state synchronization
+[input-tel] Align with SlotMixin rerender functionality
+[input-tel-dropdown] Align with SlotMixin rerender functionality + fix interaction state synchronization
