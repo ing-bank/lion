@@ -1,5 +1,15 @@
 # @lion/ui
 
+## 0.0.4
+
+### Patch Changes
+
+- 11436fc0: [core] SlotMixin: allow rerenders of templates
+- eee83cca: Export types that are useful for subclassers
+- d7938ef6: [input-tel] Align with SlotMixin rerender functionality
+  [input-tel-dropdown] Align with SlotMixin rerender functionality + fix interaction state synchronization
+- bc252703: expose docs via export map
+
 ## 0.0.3
 
 ### Patch Changes
