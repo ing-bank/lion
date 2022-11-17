@@ -19,3 +19,8 @@ export {
 } from '../components/overlays/src/utils/inert-siblings.js';
 
 export { overlays, setOverlays } from '../components/overlays/src/singleton.js';
+
+/** @typedef {import('../components/overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig */
+/** @typedef {import('../components/overlays/types/OverlayMixinTypes.js').DefineOverlayConfig} DefineOverlayConfig */
+/** @typedef {import('../components/overlays/types/OverlayMixinTypes.js').OverlayHost} OverlayHost */
+/** @typedef {import('../components/overlays/types/ArrowMixinTypes.js').ArrowHost} ArrowHost */
