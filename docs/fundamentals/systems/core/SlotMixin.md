@@ -4,7 +4,7 @@ The SlotMixin is made for solving accessibility challenges that inherently come 
 Until [AOM](https://wicg.github.io/aom/explainer.html) is in place, it is not possible to create relations between different shadow doms.
 The need for this can occur in the following situations:
 
-1. A user defined slot. For instance:
+- A user-defined slot. For instance:
 
 ```html
 <my-input>
@@ -14,30 +14,33 @@ The need for this can occur in the following situations:
 
 The help text here needs to be connected to the input element that may live in shadow dom. The input needs to have `aria-describedby="help-text-id".`
 
-2. An interplay of multiple nested web components. For instance:
+- An interplay of multiple nested web components. For instance:
 
 ```html
 <my-fieldset>
-  <my-input></my-input>
-  <my-input></my-input>
-  <div id="msg">Group errror message</div>
+  <my-input><input aria-describedby="parent-msg" /></my-input>
+  <my-input><input aria-describedby="parent-msg" /></my-input>
+  <div id="parent-msg">Group errror message</div>
 </my-fieldset>
 ```
 
 In the case above, all inputs need to be able to refer the error message of their parent.
 
-In a nutshell: SlotMixin helps you with everything related to rendering light dom (i.e. rendering to slots).
-So that you can build accessible ui components with ease, while delegating all edge cases to SlotMixin.
-Edge cases that it solves:
+**In a nutshell**: SlotMixin helps you with everything related to rendering light dom (i.e. rendering to slots).
+You can build accessible ui components with ease, while delegating all edge cases to SlotMixin.
 
-- rendering light dom in context of scoped customElementRegistries: we respect the customElementRegistry bound to your ShadowRoot
-- the concept of rerendering based on property effects
-- easily render lit templates
+Edge cases that SlotMixin solves:
+
+- **mediates** between light dom provided by the user ('public slots') and light dom provided by the component author ('private slots').
+- allows to hook into the reactive update loop of LitElement (**rerendering** on property changes)
+- respects the **scoped registry** belonging to the shadow root.
+
+## The api
 
 So, what does the api look like? SlotMixin can be used like this:
 
 ```js
-class AccessibleControl extends SlotMixin(LitElement) {
+class MyAccessibleControl extends SlotMixin(LitElement) {
   get slots() {
     return {
       ...super.slots,
@@ -50,7 +53,7 @@ class AccessibleControl extends SlotMixin(LitElement) {
 
 ## SlotFunctionResults
 
-The `SlotFunctionResult` is the output of the functions provided in `get slots()`. It can output the four types:
+The `SlotFunctionResult` is the output of the functions provided in `get slots()`. It can output these four types, which are explained in detail below:
 
 ```ts
 Element | TemplateResult | SlotRerenderObject | undefined;
@@ -59,7 +62,7 @@ Element | TemplateResult | SlotRerenderObject | undefined;
 Below configuration gives an example of all of them, after which we explain when each type should be used
 
 ```js
-class AccessibleControl extends SlotMixin(LitElement) {
+class MyAccessibleControl extends SlotMixin(LitElement) {
  get slots() {
    return {
      ...super.slots,
@@ -111,6 +114,19 @@ It is meant for complex templates that need rerenders. Normally - when rendering
 When we configure `SlotFunctionResult` to return a `SlotRerenderObject`, we get the same behavior for light dom.
 For this rerendering to work predictably (no focus and other interaction issues), the slot will be created with a wrapper div.
 
+### Undefined
+
+Whether the slot should be rendered can be dependent on a global or instance configuration.
+When `undefined` or nothing (implicitly `undefined`) is returned, SlotMixin will not render the slot
+
+```js
+if (this.conditionApplies) {
+  // Here we can return `Element | TemplateResult | SlotRerenderObject`
+  return html`<div>default slot</div>`;
+}
+return undefined;
+```
+
 ## Private and public slots
 
 Some elements provide a property/attribute api with a fallback to content projection as a means to provide more advanced html.
@@ -120,7 +136,7 @@ For instance, a simple text label is provided like this:
 <my-input label="My label"></my-input>
 ```
 
-- A more advanced label (using html that can't be provided via a string) can be provided like this:
+A more advanced label (using html that can't be provided via a string) can be provided like this:
 
 ```html
 <my-input>
@@ -128,9 +144,9 @@ For instance, a simple text label is provided like this:
 </my-input>
 ```
 
-- In the property/attribute case, SlotMixin adds the `<label slot="label">` under the hood, **unless** the developer already provided the slot.
-  This will make sure that the slot provided by the user always takes precedence and only one slot instance will be available in light dom per slot.
+In the property/attribute case, SlotMixin adds the `<label slot="label">` under the hood, **unless** the developer already provided the slot.
+This will make sure that the slot provided by the user always takes precedence and only one slot instance will be available in light dom per slot.
 
 ### Default slot
 
-As can be seen in the example below, '' can be used to add content to the default slot
+As can be seen in the example of [SlotFunctionResults](#slotfunctionresults), '' can be used to add content to the default slot

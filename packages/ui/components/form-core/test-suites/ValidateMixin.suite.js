@@ -64,7 +64,7 @@ export function runValidateMixinSuite(customConfig) {
      * - *feedback-node*
      *   The 'this._feedbackNode' property (usually a getter) that returns/contains a reference to
      *   the output container for validation feedback. Messages will be written to this element
-     *   based on user defined or default validity feedback visibility conditions.
+     *   based on user-defined or default validity feedback visibility conditions.
      *
      * - *show-{type}-feedback-condition*
      *   The 'this.hasErrorVisible value that stores whether the
