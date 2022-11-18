@@ -7,6 +7,13 @@ import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 import { setSiblingsInert, unsetSiblingsInert } from './utils/inert-siblings.js';
 
 const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
+const isMacSafari =
+  navigator.vendor &&
+  navigator.vendor.indexOf('Apple') > -1 &&
+  navigator.userAgent &&
+  navigator.userAgent.indexOf('CriOS') === -1 &&
+  navigator.userAgent.indexOf('FxiOS') === -1 &&
+  navigator.appVersion.indexOf('Mac') !== -1;
 
 /**
  * `OverlaysManager` which manages overlays which are rendered into the body
@@ -201,10 +208,12 @@ export class OverlaysManager {
   requestToPreventScroll() {
     // no check as classList will dedupe it anyways
     document.body.classList.add('global-overlays-scroll-lock');
-    if (isIOS) {
-      // iOS has issues with overlays with input fields. This is fixed by applying
+    if (isIOS || isMacSafari) {
+      // iOS and safar for mac have issues with overlays with input fields. This is fixed by applying
       // position: fixed to the body. As a side effect, this will scroll the body to the top.
       document.body.classList.add('global-overlays-scroll-lock-ios-fix');
+    }
+    if (isIOS) {
       document.documentElement.classList.add('global-overlays-scroll-lock-ios-fix');
     }
   }
@@ -212,8 +221,10 @@ export class OverlaysManager {
   requestToEnableScroll() {
     if (!this.shownList.some(ctrl => ctrl.preventsScroll === true)) {
       document.body.classList.remove('global-overlays-scroll-lock');
-      if (isIOS) {
+      if (isIOS || isMacSafari) {
         document.body.classList.remove('global-overlays-scroll-lock-ios-fix');
+      }
+      if (isIOS) {
         document.documentElement.classList.remove('global-overlays-scroll-lock-ios-fix');
       }
     }
