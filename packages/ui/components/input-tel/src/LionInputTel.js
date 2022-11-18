@@ -28,7 +28,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     formatCountryCodeStyle: { type: String, attribute: 'format-country-code-style' },
     activeRegion: { type: String },
     _phoneUtil: { type: Object, state: true },
-    _needsLightDomRender: { type: Number, state: true },
   };
 
   static localizeNamespaces = [
@@ -168,14 +167,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     this._phoneUtil = PhoneUtilManager.isLoaded
       ? /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil)
       : null;
-
-    /**
-     * Helper that triggers a light dom render aligned with update loop.
-     * TODO: combine with render fn of SlotMixin
-     * @protected
-     * @type {number}
-     */
-    this._needsLightDomRender = 0;
 
     if (!PhoneUtilManager.isLoaded) {
       PhoneUtilManager.loadComplete.then(() => {

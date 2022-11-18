@@ -178,9 +178,7 @@ export class LionInputTelDropdown extends LionInputTel {
 
         return {
           template: templates.dropdown(this._templateDataDropdown),
-          afterRender: () => {
-            this.__syncRegionWithDropdown();
-          },
+          afterRender: this.__syncRegionWithDropdown,
         };
       },
     };
@@ -205,8 +203,6 @@ export class LionInputTelDropdown extends LionInputTel {
   _onPhoneNumberUtilReady() {
     super._onPhoneNumberUtilReady();
     this.__createRegionMeta();
-    // render dropdown (trigger render of prefix slot via SlotMixin)
-    this.requestUpdate();
   }
 
   /**
@@ -234,19 +230,27 @@ export class LionInputTelDropdown extends LionInputTel {
     /**
      * Contains everything needed for rendering region options:
      * region code, country code, display name according to locale, display name
+     * @private
      * @type {RegionMeta[]}
      */
     this.__regionMetaList = [];
 
     /**
      * A filtered `this.__regionMetaList`, containing all regions provided in `preferredRegions`
+     * @private
      * @type {RegionMeta[]}
      */
     this.__regionMetaListPreferred = [];
 
-    /** @type {EventListener} */
+    /**
+     * @protected
+     * @type {EventListener}
+     */
     this._onDropdownValueChange = this._onDropdownValueChange.bind(this);
-    /** @type {EventListener} */
+    /**
+     * @private
+     * @type {EventListener}
+     */
     this.__syncRegionWithDropdown = this.__syncRegionWithDropdown.bind(this);
   }
 
@@ -285,6 +289,9 @@ export class LionInputTelDropdown extends LionInputTel {
     }
   }
 
+  /**
+   * @protected
+   */
   _initModelValueBasedOnDropdown() {
     if (!this._initialModelValue && !this.dirty && this._phoneUtil) {
       const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
