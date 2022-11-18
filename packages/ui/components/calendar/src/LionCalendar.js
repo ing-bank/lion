@@ -317,11 +317,17 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   /**
-   * @param {string} name
-   * @param {?} oldValue
+   * @param {string} [name]
+   * @param {unknown} [oldValue]
+   * @param {import('lit').PropertyDeclaration} [options]
+   * @returns {void}
    */
-  requestUpdate(name, oldValue) {
-    super.requestUpdate(name, oldValue);
+  requestUpdate(name, oldValue, options) {
+    super.requestUpdate(name, oldValue, options);
+
+    if (name === undefined) {
+      return;
+    }
 
     const map = {
       disableDates: () => this.__disableDatesChanged(),

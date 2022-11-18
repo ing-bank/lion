@@ -156,11 +156,13 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
-   * @param {string} name
-   * @param {unknown} oldValue
+   * @param {string} [name]
+   * @param {unknown} [oldValue]
+   * @param {import('lit').PropertyDeclaration} [options]
+   * @returns {void}
    */
-  requestUpdate(name, oldValue) {
-    super.requestUpdate(name, oldValue);
+  requestUpdate(name, oldValue, options) {
+    super.requestUpdate(name, oldValue, options);
     if (name === 'interactionMode') {
       if (this.interactionMode === 'auto') {
         this.interactionMode = detectInteractionMode();

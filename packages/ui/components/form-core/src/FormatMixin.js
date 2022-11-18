@@ -70,19 +70,21 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
-     * @param {string} name
-     * @param {any} oldVal
+     * @param {string} [name]
+     * @param {unknown} [oldValue]
+     * @param {import('lit').PropertyDeclaration} [options]
+     * @returns {void}
      */
-    requestUpdate(name, oldVal) {
-      super.requestUpdate(name, oldVal);
+    requestUpdate(name, oldValue, options) {
+      super.requestUpdate(name, oldValue, options);
 
-      if (name === 'modelValue' && this.modelValue !== oldVal) {
-        this._onModelValueChanged({ modelValue: this.modelValue }, { modelValue: oldVal });
+      if (name === 'modelValue' && this.modelValue !== oldValue) {
+        this._onModelValueChanged({ modelValue: this.modelValue }, { modelValue: oldValue });
       }
-      if (name === 'serializedValue' && this.serializedValue !== oldVal) {
+      if (name === 'serializedValue' && this.serializedValue !== oldValue) {
         this._calculateValues({ source: 'serialized' });
       }
-      if (name === 'formattedValue' && this.formattedValue !== oldVal) {
+      if (name === 'formattedValue' && this.formattedValue !== oldValue) {
         this._calculateValues({ source: 'formatted' });
       }
     }

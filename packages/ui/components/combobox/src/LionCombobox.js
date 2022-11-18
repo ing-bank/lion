@@ -378,11 +378,13 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
-   * @param {'disabled'|'modelValue'|'readOnly'|'focused'} name
-   * @param {unknown} oldValue
+   * @param {string} [name]
+   * @param {unknown} [oldValue]
+   * @param {import('lit').PropertyDeclaration} [options]
+   * @returns {void}
    */
-  requestUpdate(name, oldValue) {
-    super.requestUpdate(name, oldValue);
+  requestUpdate(name, oldValue, options) {
+    super.requestUpdate(name, oldValue, options);
     if (name === 'disabled' || name === 'readOnly') {
       this.__setComboboxDisabledAndReadOnly();
     }

@@ -60,7 +60,7 @@ export declare class SlotHost {
  *   };
  * }
  */
-export declare function SlotMixinImplementation<T extends Constructor<LitElement>>(
+declare function SlotMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
 ): T &
   Constructor<SlotHost> &
