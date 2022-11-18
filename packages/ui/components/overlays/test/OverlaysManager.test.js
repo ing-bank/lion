@@ -1,6 +1,7 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import { OverlayController, OverlaysManager } from '@lion/ui/overlays.js';
+import { _browserDetection } from '../src/OverlaysManager.js';
 
 /**
  * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
@@ -96,5 +97,80 @@ describe('OverlaysManager', () => {
 
     await dialog2.hide();
     expect(mngr.shownList).to.deep.equal([]);
+  });
+
+  describe('Browser/device edge cases', () => {
+    const isIOSOriginal = _browserDetection.isIOS;
+    const isMacSafariOriginal = _browserDetection.isMacSafari;
+
+    function mockIOS() {
+      _browserDetection.isIOS = true;
+      _browserDetection.isMacSafari = false;
+    }
+
+    function mockMacSafari() {
+      // When we are iOS
+      _browserDetection.isIOS = false;
+      _browserDetection.isMacSafari = true;
+    }
+
+    afterEach(() => {
+      // Restore original values
+      _browserDetection.isIOS = isIOSOriginal;
+      _browserDetection.isMacSafari = isMacSafariOriginal;
+    });
+
+    describe('When initialized with "preventsScroll: true"', () => {
+      it('adds class "global-overlays-scroll-lock-ios-fix" to body and html on iOS', async () => {
+        mockIOS();
+        const dialog = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
+        await dialog.show();
+        expect(Array.from(document.body.classList)).to.contain(
+          'global-overlays-scroll-lock-ios-fix',
+        );
+        expect(Array.from(document.documentElement.classList)).to.contain(
+          'global-overlays-scroll-lock-ios-fix',
+        );
+        await dialog.hide();
+        expect(Array.from(document.body.classList)).to.not.contain(
+          'global-overlays-scroll-lock-ios-fix',
+        );
+        expect(Array.from(document.documentElement.classList)).to.not.contain(
+          'global-overlays-scroll-lock-ios-fix',
+        );
+
+        // When we are not iOS nor MacSafari
+        _browserDetection.isIOS = false;
+        _browserDetection.isMacSafari = false;
+
+        const dialog2 = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
+        await dialog2.show();
+        expect(Array.from(document.body.classList)).to.not.contain(
+          'global-overlays-scroll-lock-ios-fix',
+        );
+        expect(Array.from(document.documentElement.classList)).to.not.contain(
+          'global-overlays-scroll-lock-ios-fix',
+        );
+      });
+
+      it('adds class "global-overlays-scroll-lock-ios-fix" to body on MacSafari', async () => {
+        mockMacSafari();
+        const dialog = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
+        await dialog.show();
+        expect(Array.from(document.body.classList)).to.contain(
+          'global-overlays-scroll-lock-ios-fix',
+        );
+        expect(Array.from(document.documentElement.classList)).to.not.contain(
+          'global-overlays-scroll-lock-ios-fix',
+        );
+        await dialog.hide();
+        expect(Array.from(document.body.classList)).to.not.contain(
+          'global-overlays-scroll-lock-ios-fix',
+        );
+        expect(Array.from(document.documentElement.classList)).to.not.contain(
+          'global-overlays-scroll-lock-ios-fix',
+        );
+      });
+    });
   });
 });
