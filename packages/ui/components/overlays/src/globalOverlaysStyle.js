@@ -126,4 +126,14 @@ export const globalOverlaysStyle = css`
   html.global-overlays-scroll-lock-ios-fix {
     height: 100vh;
   }
+
+  @media screen and (prefers-reduced-motion: reduce) {
+    .global-overlays .global-overlays__backdrop--animation-in {
+      animation: global-overlays-backdrop-fade-in 1ms;
+    }
+
+    .global-overlays .global-overlays__backdrop--animation-out {
+      animation: global-overlays-backdrop-fade-out 1ms;
+    }
+  }
 `;
