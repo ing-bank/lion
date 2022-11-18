@@ -151,14 +151,13 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
   }
 
   /**
-   * We synchronously update aria-checked to support voice over on safari.
-   *
-   * @param {PropertyKey} name
-   * @param {?} oldValue
-   * @override
+   * @param {string} [name]
+   * @param {unknown} [oldValue]
+   * @param {import('lit').PropertyDeclaration} [options]
+   * @returns {void}
    */
-  requestUpdate(name, oldValue) {
-    super.requestUpdate(name, oldValue);
+  requestUpdate(name, oldValue, options) {
+    super.requestUpdate(name, oldValue, options);
     if (this.isConnected && name === 'checked' && this.checked !== oldValue && !this.disabled) {
       this.__checkedStateChange();
     }

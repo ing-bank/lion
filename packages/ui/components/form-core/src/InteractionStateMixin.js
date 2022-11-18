@@ -33,12 +33,14 @@ const InteractionStateMixinImplementation = superclass =>
     }
 
     /**
-     * @param {PropertyKey} name
-     * @param {*} oldVal
+     * @param {string} [name]
+     * @param {unknown} [oldValue]
+     * @param {import('lit').PropertyDeclaration} [options]
+     * @returns {void}
      */
-    requestUpdate(name, oldVal) {
-      super.requestUpdate(name, oldVal);
-      if (name === 'touched' && this.touched !== oldVal) {
+    requestUpdate(name, oldValue, options) {
+      super.requestUpdate(name, oldValue, options);
+      if (name === 'touched' && this.touched !== oldValue) {
         this._onTouchedChanged();
       }
 
@@ -48,7 +50,7 @@ const InteractionStateMixinImplementation = superclass =>
         this.filled = !this._isEmpty();
       }
 
-      if (name === 'dirty' && this.dirty !== oldVal) {
+      if (name === 'dirty' && this.dirty !== oldValue) {
         this._onDirtyChanged();
       }
     }

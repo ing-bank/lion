@@ -58,12 +58,13 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     /**
-     * @override
-     * @param {string} name
-     * @param {any} oldValue
+     * @param {string} [name]
+     * @param {unknown} [oldValue]
+     * @param {import('lit').PropertyDeclaration} [options]
+     * @returns {void}
      */
-    requestUpdate(name, oldValue) {
-      super.requestUpdate(name, oldValue);
+    requestUpdate(name, oldValue, options) {
+      super.requestUpdate(name, oldValue, options);
       if (name === 'opened' && this.opened !== oldValue) {
         this.dispatchEvent(new Event('opened-changed'));
       }
