@@ -6,14 +6,18 @@
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 import { setSiblingsInert, unsetSiblingsInert } from './utils/inert-siblings.js';
 
-const isIOS = navigator.userAgent.match(/iPhone|iPad|iPod/i);
-const isMacSafari =
-  navigator.vendor &&
-  navigator.vendor.indexOf('Apple') > -1 &&
-  navigator.userAgent &&
-  navigator.userAgent.indexOf('CriOS') === -1 &&
-  navigator.userAgent.indexOf('FxiOS') === -1 &&
-  navigator.appVersion.indexOf('Mac') !== -1;
+// Export this as protected var, so that we can easily mock it in tests
+// TODO: combine with browserDetection of core?
+export const _browserDetection = {
+  isIOS: /iPhone|iPad|iPod/i.test(navigator.userAgent),
+  isMacSafari:
+    navigator.vendor &&
+    navigator.vendor.indexOf('Apple') > -1 &&
+    navigator.userAgent &&
+    navigator.userAgent.indexOf('CriOS') === -1 &&
+    navigator.userAgent.indexOf('FxiOS') === -1 &&
+    navigator.appVersion.indexOf('Mac') !== -1,
+};
 
 /**
  * `OverlaysManager` which manages overlays which are rendered into the body
@@ -206,6 +210,7 @@ export class OverlaysManager {
 
   // eslint-disable-next-line class-methods-use-this
   requestToPreventScroll() {
+    const { isIOS, isMacSafari } = _browserDetection;
     // no check as classList will dedupe it anyways
     document.body.classList.add('global-overlays-scroll-lock');
     if (isIOS || isMacSafari) {
@@ -219,6 +224,7 @@ export class OverlaysManager {
   }
 
   requestToEnableScroll() {
+    const { isIOS, isMacSafari } = _browserDetection;
     if (!this.shownList.some(ctrl => ctrl.preventsScroll === true)) {
       document.body.classList.remove('global-overlays-scroll-lock');
       if (isIOS || isMacSafari) {
