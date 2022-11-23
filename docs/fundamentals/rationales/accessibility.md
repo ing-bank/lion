@@ -17,7 +17,7 @@ A practical example: all form components inside a form need to be able to lay ac
 
 A huge part of Lion consists of its form system and components.
 
-This [presentation about accessible form components](../_assets/theoryOfFormsLion.pdf) explains how accesibility is built-in in all form components.
+This [presentation about accessible form components](/_merged_assets/_static/theoryOfFormsLion.pdf) explains how accesibility is built-in in all form components.
 
 ## SlotMixin
 
