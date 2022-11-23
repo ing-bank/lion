@@ -31,7 +31,8 @@
     "test:node": "npm run test:node --workspaces --if-present",
     "test:screenshots": "rimraf screenshots/.diff/ && rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
-    "types": "npm run types --workspaces --if-present && npm run types-correct-after-build",
+    "types": "npm run types --workspaces --if-present &&  npm run types-correct-after-build",
+    "types-check-only": "npm run types-check-only --workspaces --if-present",
     "types-correct-after-build": "node ./scripts/types-correct-after-build.mjs"
   },
   "workspaces": [
