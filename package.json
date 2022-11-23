@@ -31,7 +31,8 @@
     "test:node": "npm run test:node --workspaces --if-present",
     "test:screenshots": "rimraf screenshots/.diff/ && rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
-    "types": "npm run types --workspaces --if-present"
+    "types": "npm run types --workspaces --if-present && npm run types-correct-after-build",
+    "types-correct-after-build": "node ./scripts/types-correct-after-build.mjs"
   },
   "workspaces": [
     "packages/*",
@@ -78,6 +79,7 @@
     "eslint-plugin-lit": "^1.6.1",
     "eslint-plugin-lit-a11y": "^2.2.0",
     "eslint-plugin-wc": "^1.3.2",
+    "globby": "^13.1.2",
     "husky": "^6.0.0",
     "lint-staged": "^10.0.0",
     "looks-same": "^7.2.3",
