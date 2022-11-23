@@ -173,7 +173,8 @@ const SlotMixinImplementation = superclass =>
         const slotFunctionResult = this.slots[slotName]();
         // Allow to conditionally return a slot
         if (slotFunctionResult === undefined) {
-          return;
+          // eslint-disable-next-line no-continue
+          continue;
         }
 
         if (!this.__isConnectedSlotMixin) {

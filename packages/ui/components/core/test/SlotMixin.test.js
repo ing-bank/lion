@@ -81,12 +81,20 @@ describe('SlotMixin', () => {
   });
 
   it('does not override user provided slots', async () => {
+    const shouldReturn = false;
     const tag = defineCE(
       class extends SlotMixin(LitElement) {
         get slots() {
           return {
             ...super.slots,
             feedback: () => document.createElement('div'),
+            'more-feedback': () => {
+              if (shouldReturn) {
+                return document.createElement('div');
+              }
+              return undefined;
+            },
+            'even-more-feedback': () => document.createElement('div'),
           };
         }
       },
@@ -94,6 +102,9 @@ describe('SlotMixin', () => {
     const el = await fixture(`<${tag}><p slot="feedback">user-content</p></${tag}>`);
     expect(el.children[0].tagName).to.equal('P');
     expect(/** @type HTMLParagraphElement */ (el.children[0]).innerText).to.equal('user-content');
+
+    expect(el.children[1].tagName).to.equal('DIV');
+    expect(/** @type HTMLParagraphElement */ (el.children[1]).slot).to.equal('even-more-feedback');
   });
 
   it('does add when user provided slots are not direct children', async () => {
