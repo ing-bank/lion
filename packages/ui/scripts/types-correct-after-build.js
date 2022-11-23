@@ -15,10 +15,10 @@ import fs from 'fs';
 import { globby } from 'globby';
 import { fileURLToPath } from 'url';
 
-const monorepoRootPath = fileURLToPath(new URL('../', import.meta.url));
+const packageRoot = fileURLToPath(new URL('../', import.meta.url));
 
 async function alignLitImports() {
-  const fileNames = await globby([`${monorepoRootPath}/packages/ui/dist-types`]);
+  const fileNames = await globby([`${packageRoot}/dist-types`]);
   for (const fileName of fileNames) {
     // eslint-disable-next-line no-await-in-loop
     const contents = await fs.promises.readFile(fileName, 'utf-8');

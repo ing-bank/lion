@@ -42,7 +42,8 @@
     "prepublishOnly": "npm run types && npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser",
     "types": "wireit",
-    "types-check-only": "tsc --project tsconfig-check-only.json"
+    "types-check-only": "tsc --project tsconfig-check-only.json",
+    "types-correct-after-build": "node ./scripts/types-correct-after-build.js"
   },
   "dependencies": {
     "@bundled-es-modules/message-format": "^6.0.4",
@@ -65,7 +66,7 @@
   "customElements": "custom-elements.json",
   "wireit": {
     "types": {
-      "command": "tsc --build --pretty",
+      "command": "tsc --build --pretty && npm run types-correct-after-build",
       "dependencies": [
         "../singleton-manager:types"
       ],
