@@ -3,7 +3,6 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 /**
  * @typedef {import('awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
  * @typedef {import('../types/index.js').RegionCode} RegionCode
- * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
  */
 
 /**
@@ -42,33 +41,32 @@ export function formatPhoneNumber(
     return modelValue;
   }
 
-  // eslint-disable-next-line prefer-destructuring
-  const PhoneUtil = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
+  const AwesomePhoneNumber = PhoneUtilManager.PhoneUtil;
 
   let pn;
   try {
-    pn = new PhoneUtil(modelValue, regionCode);
+    pn = AwesomePhoneNumber.parsePhoneNumber(modelValue, { regionCode });
     // eslint-disable-next-line no-empty
   } catch (_) {}
 
-  if (modelValue?.length >= 4 && modelValue?.length <= 16 && pn?.isValid()) {
+  if (modelValue?.length >= 4 && modelValue?.length <= 16 && pn?.valid) {
     let formattedValue;
 
     switch (formatStrategy) {
       case 'e164':
-        formattedValue = pn.getNumber('e164'); // -> '+46707123456' (default)
+        formattedValue = pn.number.e164; // -> '+46707123456' (default)
         break;
       case 'international':
-        formattedValue = pn.getNumber('international'); // -> '+46 70 712 34 56'
+        formattedValue = pn.number.international; // -> '+46 70 712 34 56'
         break;
       case 'national':
-        formattedValue = pn.getNumber('national'); // -> '070-712 34 56'
+        formattedValue = pn.number.national; // -> '070-712 34 56'
         break;
       case 'rfc3966':
-        formattedValue = pn.getNumber('rfc3966'); // -> 'tel:+46-70-712-34-56'
+        formattedValue = pn.number.rfc3966; // -> 'tel:+46-70-712-34-56'
         break;
       case 'significant':
-        formattedValue = pn.getNumber('significant'); // -> '707123456'
+        formattedValue = pn.number.significant; // -> '707123456'
         break;
       default:
         break;

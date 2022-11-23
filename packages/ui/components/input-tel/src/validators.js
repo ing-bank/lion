@@ -20,15 +20,15 @@ function hasFeedback(modelValue, regionCode) {
   if (regionCode && modelValue?.length >= 4 && modelValue?.length <= 16) {
     let pn;
     try {
-      pn = PhoneNumber(modelValue, regionCode);
-      invalidCountryCode = pn.g.regionCode !== regionCode;
+      pn = PhoneNumber.parsePhoneNumber(modelValue, { regionCode });
+      invalidCountryCode = pn.regionCode !== regionCode;
       if (invalidCountryCode) {
         return 'invalid-country-code';
       }
       // eslint-disable-next-line no-empty
     } catch (_) {}
     // too-short/too-long info seems to be not there (we get 'is-possible'?)
-    const enumValue = !pn.isValid() ? pn.g.possibility : false;
+    const enumValue = !pn.valid ? pn.possibility : false;
     if (enumValue === 'is-possible') {
       return 'unknown';
     }

@@ -2,7 +2,6 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 
 /**
  * @typedef {import('../types/index.js').RegionCode} RegionCode
- * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
  */
 
 /**
@@ -17,17 +16,17 @@ export function parsePhoneNumber(viewValue, { regionCode }) {
   }
 
   // eslint-disable-next-line prefer-destructuring
-  const PhoneNumber = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
+  const AwesomePhoneNumber = PhoneUtilManager.PhoneUtil;
   const regex = /[+0-9]+/gi;
   const strippedViewValue = viewValue.match(regex)?.join('');
   let pn;
   try {
-    pn = PhoneNumber(strippedViewValue, regionCode);
+    pn = AwesomePhoneNumber.parsePhoneNumber(strippedViewValue, { regionCode });
     // eslint-disable-next-line no-empty
   } catch (_) {}
 
   if (pn) {
-    return pn.getNumber('e164');
+    return pn.number.e164;
   }
 
   return viewValue;
