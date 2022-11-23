@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.0.6
+
+### Patch Changes
+
+- 5dd5a848: [core] SlotMixin: conditional slots should not break init loop
+
 ## 0.0.5
 
 ### Patch Changes
