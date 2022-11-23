@@ -1,5 +1,14 @@
 # @lion/ui
 
+## 0.0.5
+
+### Patch Changes
+
+- 9b4cbb1d: [lion-input-tel] upgrade to awesome-phonenumber v4
+- e090d2d8: adds support for reduced motion capabilities in overlay manager by disabling the opacity transition when a modal is opened/closed
+- 2572012d: [lion-input-tel(-dropdown)] polish / cleanup code
+- 53459451: [overlays] scroll issues on mac safari fixed when dialog are openend
+
 ## 0.0.4
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.2
+
+### Patch Changes
+
+- 8eb68f50: compensate for unist-util-select not depending on "not" dependency
+
 ## 0.5.1
 
 ### Patch Changes
