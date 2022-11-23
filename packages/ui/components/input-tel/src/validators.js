@@ -3,7 +3,6 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 
 /**
  * @typedef {import('../types/index.js').RegionCode} RegionCode
- * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
  * @typedef {import('../../form-core/types/validate/validate.js').FeedbackMessageData} FeedbackMessageData
  */
 
@@ -13,14 +12,13 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
  * @returns {false|'invalid-country-code'|'unknown'|'too-long'|'too-short'}
  */
 function hasFeedback(modelValue, regionCode) {
-  // eslint-disable-next-line prefer-destructuring
-  const PhoneNumber = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
+  const AwesomePhoneNumber = PhoneUtilManager.PhoneUtil;
   let invalidCountryCode = false;
 
   if (regionCode && modelValue?.length >= 4 && modelValue?.length <= 16) {
     let pn;
     try {
-      pn = PhoneNumber.parsePhoneNumber(modelValue, { regionCode });
+      pn = AwesomePhoneNumber.parsePhoneNumber(modelValue, { regionCode });
       invalidCountryCode = pn.regionCode !== regionCode;
       if (invalidCountryCode) {
         return 'invalid-country-code';

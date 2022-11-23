@@ -1234,7 +1234,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
           </${tag}>
         `)
           );
-          const childFieldsetEl = el.querySelector(tagString);
+          const childFieldsetEl = /** @type {FormGroup} */ (el.querySelector(tagString));
           const resetGroupSpy = sinon.spy(childFieldsetEl, 'resetGroup');
           el.resetGroup();
           expect(resetGroupSpy.callCount).to.equal(1);
@@ -1270,7 +1270,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
           </${tag}>
         `)
           );
-          const childFieldsetEl = el.querySelector(tagString);
+          const childFieldsetEl = /** @type {FormGroup} */ (el.querySelector(tagString));
           const clearGroupSpy = sinon.spy(childFieldsetEl, 'clearGroup');
           el.clearGroup();
           expect(clearGroupSpy.callCount).to.equal(1);

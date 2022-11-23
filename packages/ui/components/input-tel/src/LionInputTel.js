@@ -14,7 +14,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  * @typedef {import('awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
  * @typedef {import('awesome-phonenumber').PhoneNumberTypes} PhoneNumberTypes
  * @typedef {import('../../form-core/types/FormatMixinTypes.js').FormatOptions} FormatOptions
- * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
+ * @typedef {* & import('awesome-phonenumber')} AwesomePhoneNumber
  * @typedef {FormatOptions & {regionCode: RegionCode; formatStrategy: PhoneNumberFormat; formatCountryCodeStyle: string;}} FormatOptionsTel
  */
 
