@@ -1,5 +1,5 @@
 ---
-'@lion/overlays': patch
+'@lion/ui': patch
 ---
 
-scroll issues on mac safari fixed when dialog are openend
+[overlays] scroll issues on mac safari fixed when dialog are openend
