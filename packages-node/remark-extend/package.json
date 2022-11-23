@@ -1,6 +1,6 @@
 {
   "name": "remark-extend",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "A plugin for remark that allows to extend a md file with another md file",
   "license": "MIT",
   "author": "ing-bank",
@@ -9,6 +9,10 @@
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages-node/remark-extend"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./docs/*": "./docs/*"
   },
   "main": "index.js",
   "files": [
@@ -38,9 +42,5 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "exports": {
-    ".": "./index.js",
-    "./docs/*": "./docs/*"
   }
 }
