@@ -72,10 +72,12 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
   get activePhoneNumberType() {
     let pn;
     try {
-      pn = this._phoneUtil && this._phoneUtil(this.modelValue, this.activeRegion);
+      pn =
+        this._phoneUtil &&
+        this._phoneUtil.parsePhoneNumber(this.modelValue, { regionCode: this.activeRegion });
       // eslint-disable-next-line no-empty
     } catch (_) {}
-    return pn?.g?.type || 'unknown';
+    return pn?.type || 'unknown';
   }
 
   // @ts-ignore read only
@@ -325,7 +327,8 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     const value = !(this.modelValue instanceof Unparseable)
       ? this.modelValue
       : this.value.match(regex)?.join('');
-    const regionDerivedFromValue = value && this._phoneUtil && this._phoneUtil(value).g?.regionCode;
+    const regionDerivedFromValue =
+      value && this._phoneUtil && this._phoneUtil.parsePhoneNumber(value).regionCode;
 
     if (regionDerivedFromValue && this._allowedOrAllRegions.includes(regionDerivedFromValue)) {
       this._setActiveRegion(regionDerivedFromValue);
