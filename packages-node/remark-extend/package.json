@@ -25,6 +25,7 @@
     "test:watch": "mocha test-node --watch"
   },
   "dependencies": {
+    "not": "^0.1.0",
     "remark-gfm": "^1.0.0",
     "remark-parse": "^9.0.0",
     "unified": "^9.2.0",
