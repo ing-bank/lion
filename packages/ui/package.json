@@ -41,7 +41,8 @@
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "prepublishOnly": "npm run types && npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser",
-    "types": "wireit"
+    "types": "wireit",
+    "types-check-only": "tsc --project tsconfig-check-only.json"
   },
   "dependencies": {
     "@bundled-es-modules/message-format": "^6.0.4",
