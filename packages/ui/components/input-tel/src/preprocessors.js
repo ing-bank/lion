@@ -4,7 +4,6 @@ import { PhoneUtilManager } from './PhoneUtilManager.js';
 /**
  * @typedef {import('../types/index.js').RegionCode} RegionCode
  * @typedef {import('awesome-phonenumber').PhoneNumberFormat} PhoneNumberFormat
- * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
  */
 
 /**
@@ -27,9 +26,8 @@ export function liveFormatPhoneNumber(
     return undefined;
   }
 
-  // eslint-disable-next-line prefer-destructuring
-  const PhoneNumber = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
-  const ayt = PhoneNumber.getAsYouType(regionCode);
+  const AwesomePhoneNumber = PhoneUtilManager.PhoneUtil;
+  const ayt = AwesomePhoneNumber.getAsYouType(regionCode);
 
   for (const char of viewValue) {
     if (char !== '') {

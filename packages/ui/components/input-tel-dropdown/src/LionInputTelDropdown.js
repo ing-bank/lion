@@ -27,7 +27,6 @@ import { getFlagSymbol } from './getFlagSymbol.js';
  * @typedef {import('../types/index.js').OnDropdownChangeEvent} OnDropdownChangeEvent
  * @typedef {import('../types/index.js').DropdownRef} DropdownRef
  * @typedef {import('../types/index.js').RegionMeta} RegionMeta
- * @typedef {* & import('awesome-phonenumber').default} AwesomePhoneNumber
  * @typedef {import('../../select-rich/src/LionSelectRich.js').LionSelectRich} LionSelectRich
  * @typedef {import('../../overlays/src/OverlayController.js').OverlayController} OverlayController
  * @typedef {TemplateDataForDropdownInputTel & {data: {regionMetaList:RegionMeta[]}}} TemplateDataForIntlInputTel
