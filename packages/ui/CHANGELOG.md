@@ -1,5 +1,24 @@
 # @lion/ui
 
+## 0.0.8
+
+### Patch Changes
+
+- f0e6ee92: BREAKING: remove setIcons, setOverlays, setLocalize.
+
+  Recommended approach is to do below at the top of your app (before lion code runs):
+
+  ```js
+  import { singletonManager } from 'singleton-manager';
+  import { LocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+
+  class MyLocalizeManager extends LocalizeManager {}
+
+  singletonManager.set('@lion/ui::localize::0.x', new MyLocalizeManager());
+  ```
+
+- de51dae2: Use the correct names for singleton registrations
+
 ## 0.0.7
 
 ### Patch Changes
