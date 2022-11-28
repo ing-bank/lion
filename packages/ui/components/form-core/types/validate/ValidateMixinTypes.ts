@@ -1,6 +1,6 @@
 import { LitElement } from 'lit';
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { ScopedElementsHost } from '@open-wc/scoped-elements';
+import { ScopedElementsHost } from '@open-wc/scoped-elements/types.js';
 
 import { DisabledHost } from '../../../core/types/DisabledMixinTypes.js';
 import { SlotHost } from '../../../core/types/SlotMixinTypes.js';
@@ -8,10 +8,6 @@ import { SlotHost } from '../../../core/types/SlotMixinTypes.js';
 import { FormControlHost } from '../FormControlMixinTypes.js';
 import { SyncUpdatableHost } from '../utils/SyncUpdatableMixinTypes.js';
 import { Validator } from '../../src/validate/Validator.js';
-
-type ScopedElementsMap = {
-  [key: string]: typeof HTMLElement;
-};
 
 type FeedbackMessage = {
   message: string | Node;

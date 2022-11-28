@@ -47,7 +47,7 @@ export const ValidateMixinImplementation = superclass =>
   ) {
     static get scopedElements() {
       const scopedElementsCtor =
-        /** @type {typeof import('@open-wc/scoped-elements').ScopedElementsHost} */ (
+        /** @type {typeof import('@open-wc/scoped-elements/types.js').ScopedElementsHost} */ (
           super.constructor
         );
       return {
