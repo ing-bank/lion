@@ -6,7 +6,6 @@ import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
 
 /**
- * @typedef {import('@open-wc/scoped-elements').ScopedElementsHost} ScopedElementsHost
  * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
  * @typedef {import('../../listbox/src/LionOption.js').LionOption} LionOption
  * @typedef {import('../../form-core/types/registration/FormRegisteringMixinTypes.js').FormRegisteringHost} FormRegisteringHost
