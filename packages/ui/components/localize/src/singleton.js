@@ -4,7 +4,7 @@ import { LocalizeManager } from './LocalizeManager.js';
 /** @type {LocalizeManager} */
 // eslint-disable-next-line import/no-mutable-exports
 export let localize =
-  singletonManager.get('@lion/localize::localize::0.10.x') ||
+  singletonManager.get('@lion/ui::localize::0.x') ||
   new LocalizeManager({
     autoLoadOnLocaleChange: true,
     fallbackLocale: 'en-GB',
