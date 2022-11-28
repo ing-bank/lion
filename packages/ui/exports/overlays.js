@@ -18,4 +18,4 @@ export {
   unsetSiblingsInert,
 } from '../components/overlays/src/utils/inert-siblings.js';
 
-export { overlays, setOverlays } from '../components/overlays/src/singleton.js';
+export { overlays } from '../components/overlays/src/singleton.js';

@@ -18,4 +18,4 @@ export { normalizeCurrencyLabel } from '../components/localize/src/number/normal
 export { parseNumber } from '../components/localize/src/number/parseNumber.js';
 export { getLocale } from '../components/localize/src/utils/getLocale.js';
 
-export { localize, setLocalize } from '../components/localize/src/singleton.js';
+export { localize } from '../components/localize/src/singleton.js';

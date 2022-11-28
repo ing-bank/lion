@@ -1,7 +1,6 @@
 import { expect } from '@open-wc/testing';
-import sinon from 'sinon';
 
-import { localize, setLocalize, LocalizeManager } from '@lion/ui/localize.js';
+import { localize, LocalizeManager } from '@lion/ui/localize.js';
 
 /**
  * @param {LocalizeManager} localizeManagerEl
@@ -25,22 +24,6 @@ describe('localize', () => {
 
   it('is an instance of LocalizeManager', () => {
     expect(localize).to.be.an.instanceOf(LocalizeManager);
-  });
-
-  it('is overridable globally', () => {
-    const oldLocalize = localize;
-    const oldLocalizeTeardown = localize.teardown;
-    localize.teardown = sinon.spy();
-
-    const newLocalize = /** @type {LocalizeManager} */ ({ teardown: () => {} });
-    setLocalize(newLocalize);
-    expect(localize).to.equal(newLocalize);
-
-    // @ts-ignore since we're testing another reference to the same global instance
-    expect(oldLocalize.teardown.callCount).to.equal(1);
-
-    setLocalize(oldLocalize);
-    localize.teardown = oldLocalizeTeardown;
   });
 
   it('is configured to automatically load namespaces if locale is changed', () => {
