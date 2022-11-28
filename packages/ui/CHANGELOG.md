@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.0.7
+
+### Patch Changes
+
+- 11f6f19a: Update `@open-wc/scoped-elements` to a version that exposes its types.
+
 ## 0.0.6
 
 ### Patch Changes
