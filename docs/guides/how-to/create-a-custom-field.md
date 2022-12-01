@@ -41,7 +41,7 @@ class DummySlider extends LitElement {
         height: 24px;
         width: 24px;
         top: 50%;
-        transform: translateY(-50%);
+        transform: translateY(-50%) translateX(-50%);
         transition: left 0.5s ease 0s;
       }
     `,
