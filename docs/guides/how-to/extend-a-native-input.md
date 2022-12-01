@@ -1,4 +1,4 @@
-# How To >> Extend a native Input ||20
+# How To >> Extend a native input ||20
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
