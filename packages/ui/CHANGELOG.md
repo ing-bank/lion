@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.0.9
+
+### Patch Changes
+
+- f147024c: validate-messages without side effects
+
 ## 0.0.8
 
 ### Patch Changes
