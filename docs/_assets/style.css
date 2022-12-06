@@ -118,8 +118,8 @@ rocket-navigation ul > li:nth-child(n + 6).active > ul {
 }
 
 .markdown-body mdjs-preview > [slot='story'],
-.markdown-body mdjs-preview > [slot='story'] :where(img, button, p, h1, h2, h3, h4, h5, h6) {
-  all: initial;
+[slot='story']:where(img, button, p, h1, h2, h3, h4, h5, h6) {
+  all: revert;
 }
 
 .markdown-body mdjs-preview > [slot='story'] {
