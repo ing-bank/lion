@@ -196,7 +196,8 @@ const SlotMixinImplementation = superclass =>
           this.__slotsThatNeedRerender.add(slotName);
         } else {
           throw new Error(
-            'Please provide a function inside "get slots()" returning TemplateResult | Node | {template:TemplateResult, afterRender?:function} | undefined',
+            `Slot "${slotName}" configured inside "get slots()" (in prototype) of ${this.constructor.name} may return these types: TemplateResult | Node | {template:TemplateResult, afterRender?:function} | undefined.
+            You provided: ${slotFunctionResult}`,
           );
         }
       }
