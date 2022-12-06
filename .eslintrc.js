@@ -4,7 +4,7 @@ module.exports = {
   extends: ['@open-wc/eslint-config', 'eslint-config-prettier'].map(require.resolve),
   overrides: [
     {
-      files: ['**/*.js'],
+      files: ['**/*.js', '**/*.mjs'],
       rules: {
         'wc/guard-super-call': 'off', // types will prevent you from calling the super if it's not in the base class, making the guard unnecessary
         'no-await-in-loop': 'off',
