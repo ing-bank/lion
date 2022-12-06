@@ -24,9 +24,8 @@ describe('Global Positioning', () => {
         ...withDefaultGlobalConfig(),
       });
       await ctrl.show();
-      expect(
-        ctrl.contentWrapperNode.classList.contains('global-overlays__overlay-container--center'),
-      ).to.be.true;
+      expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--center')).to
+        .be.true;
     });
 
     it('positions relative to the viewport ', async () => {
@@ -51,7 +50,7 @@ describe('Global Positioning', () => {
         await ctrl.show();
         expect(
           ctrl.contentWrapperNode.classList.contains(
-            `global-overlays__overlay-container--${viewportPlacement}`,
+            `overlays__overlay-container--${viewportPlacement}`,
           ),
         ).to.be.true;
       });

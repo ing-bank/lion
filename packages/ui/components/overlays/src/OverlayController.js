@@ -2,7 +2,7 @@ import { EventTargetShim } from '@lion/ui/core.js';
 import { adoptStyles } from 'lit';
 import { overlays } from './singleton.js';
 import { containFocus } from './utils/contain-focus.js';
-import { globalOverlaysStyle } from './globalOverlaysStyle.js';
+import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
 
 /**
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
@@ -239,7 +239,6 @@ export class OverlayController extends EventTargetShim {
       viewportConfig: {
         placement: 'center',
       },
-
       zIndex: 9999,
     };
 
@@ -495,7 +494,7 @@ export class OverlayController extends EventTargetShim {
      * @type {OverlayConfig}
      * @private
      */
-    this.__prevConfig = this.config || {};
+    this.__prevConfig = this.config;
 
     /** @type {OverlayConfig} */
     this.config = {
@@ -571,10 +570,9 @@ export class OverlayController extends EventTargetShim {
       if (!OverlayController.popperModule) {
         OverlayController.popperModule = preloadPopper();
       }
-    } else {
-      const rootNode = /** @type {ShadowRoot} */ (this.contentWrapperNode.getRootNode());
-      adoptStyles(rootNode, [...(rootNode.adoptedStyleSheets || []), globalOverlaysStyle]);
     }
+    const rootNode = /** @type {ShadowRoot} */ (this.contentWrapperNode.getRootNode());
+    adoptStyles(rootNode, [...(rootNode.adoptedStyleSheets || []), overlayShadowDomStyle]);
     this._handleFeatures({ phase: 'init' });
   }
 
@@ -612,10 +610,11 @@ export class OverlayController extends EventTargetShim {
     // A11y will depend on the type of overlay and is arranged on contentNode level.
     // Also see: https://www.scottohara.me/blog/2019/03/05/open-dialog.html
     wrappingDialogElement.setAttribute('role', 'none');
+    wrappingDialogElement.setAttribute('data-overlay-outer-wrapper', '');
     // N.B. position: fixed is needed to escape out of 'overflow: hidden'
     // We give a high z-index for non-modal dialogs, so that we at least win from all siblings of our
     // parent stacking context
-    wrappingDialogElement.style.cssText = `display:none; background-image: none; border-style: none; padding: 0; z-index: ${this.config.zIndex};`;
+    wrappingDialogElement.style.cssText = `display:none; z-index: ${this.config.zIndex};`;
     this.__wrappingDialogNode = wrappingDialogElement;
 
     /**
@@ -788,16 +787,16 @@ export class OverlayController extends EventTargetShim {
    */
   async _handlePosition({ phase }) {
     if (this.placementMode === 'global') {
-      const placementClass = `global-overlays__overlay-container--${this.viewportConfig.placement}`;
+      const placementClass = `overlays__overlay-container--${this.viewportConfig.placement}`;
 
       if (phase === 'show') {
-        this.contentWrapperNode.classList.add('global-overlays__overlay-container');
+        this.contentWrapperNode.classList.add('overlays__overlay-container');
         this.contentWrapperNode.classList.add(placementClass);
-        this.contentNode.classList.add('global-overlays__overlay');
+        this.contentNode.classList.add('overlays__overlay');
       } else if (phase === 'hide') {
-        this.contentWrapperNode.classList.remove('global-overlays__overlay-container');
+        this.contentWrapperNode.classList.remove('overlays__overlay-container');
         this.contentWrapperNode.classList.remove(placementClass);
-        this.contentNode.classList.remove('global-overlays__overlay');
+        this.contentNode.classList.remove('overlays__overlay');
       }
     } else if (this.placementMode === 'local' && phase === 'show') {
       /**
@@ -918,7 +917,7 @@ export class OverlayController extends EventTargetShim {
     if (!backdropNode) {
       return;
     }
-    backdropNode.classList.remove(`global-overlays__backdrop--animation-in`);
+    backdropNode.classList.remove(`overlays__backdrop--animation-in`);
   }
 
   /**
@@ -939,7 +938,7 @@ export class OverlayController extends EventTargetShim {
     await this.transitionShow({ backdropNode: this.backdropNode, contentNode: this.contentNode });
 
     if (showConfig.backdropNode) {
-      showConfig.backdropNode.classList.add(`global-overlays__backdrop--animation-in`);
+      showConfig.backdropNode.classList.add(`overlays__backdrop--animation-in`);
     }
   }
 
@@ -1049,7 +1048,7 @@ export class OverlayController extends EventTargetShim {
           if (!this.config?.backdropNode) {
             this.__backdropNode = document.createElement('div');
             // If backdropNode existed in config, styles are applied by implementing party
-            this.__backdropNode.classList.add(`global-overlays__backdrop`);
+            this.__backdropNode.classList.add(`overlays__backdrop`);
           }
           // @ts-ignore
           this.__wrappingDialogNode.prepend(this.backdropNode);
@@ -1058,7 +1057,7 @@ export class OverlayController extends EventTargetShim {
         break;
       }
       case 'show':
-        this.backdropNode.classList.add(`global-overlays__backdrop--visible`);
+        this.backdropNode.classList.add(`overlays__backdrop--visible`);
         this.__hasActiveBackdrop = true;
         break;
       case 'hide':

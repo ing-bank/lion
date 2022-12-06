@@ -14,6 +14,7 @@ class DemoOverlayBackdrop extends LitElement {
         height: 100%;
         background-color: grey;
         opacity: 0.3;
+        position: fixed;
       }
 
       :host(.local-overlays__backdrop--visible) {

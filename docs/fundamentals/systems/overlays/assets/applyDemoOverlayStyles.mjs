@@ -15,7 +15,7 @@ const applyDemoOverlayStyles = () => {
   `;
 
   const styleTag = document.createElement('style');
-  styleTag.setAttribute('data-demo-global-overlays', '');
+  styleTag.setAttribute('data-demo-overlays', '');
   styleTag.textContent = demoOverlaysStyle.cssText;
   document.head.appendChild(styleTag);
 };

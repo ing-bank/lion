@@ -20,8 +20,7 @@ import { simulateTab } from '../src/utils/simulate-tab.js';
  * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
  */
 
-const wrappingDialogNodeStyle =
-  'display: none; background-image: none; border-style: none; padding: 0px; z-index: 9999;';
+const wrappingDialogNodeStyle = 'display: none; z-index: 9999;';
 
 /**
  * @param {HTMLElement} node
@@ -178,8 +177,7 @@ describe('OverlayController', () => {
       });
 
       it('succeeds when passing a content node that was created "online"', async () => {
-        const contentNode = document.createElement('div');
-        document.body.appendChild(contentNode);
+        const contentNode = /** @type {HTMLElement} */ (fixtureSync('<div>'));
         const overlay = new OverlayController({
           ...withLocalTestConfig(),
           contentNode,
@@ -236,7 +234,7 @@ describe('OverlayController', () => {
 
             // The total dom structure created...
             expect(el).shadowDom.to.equal(`
-              <dialog open="" role="none" style="${wrappingDialogNodeStyle}">
+              <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
                 <div data-id="content-wrapper">
                   <slot name="content">
                   </slot>
@@ -263,7 +261,7 @@ describe('OverlayController', () => {
 
             // The total dom structure created...
             expect(el).lightDom.to.equal(`
-              <dialog open="" role="none" style="${wrappingDialogNodeStyle}">
+              <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
                 <div data-id="content-wrapper">
                   <div id="content">non projected</div>
                 </div>
@@ -304,7 +302,7 @@ describe('OverlayController', () => {
 
             // The total dom structure created...
             expect(el).shadowDom.to.equal(`
-              <dialog open="" role="none" style="${wrappingDialogNodeStyle}">
+              <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
                 <div data-id="content-wrapper">
                   <slot name="content"></slot>
                 </div>
@@ -347,7 +345,7 @@ describe('OverlayController', () => {
 
             // The total dom structure created...
             expect(el).shadowDom.to.equal(`
-              <dialog open="" role="none" style="${wrappingDialogNodeStyle}">
+              <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
                 <div data-id="content-wrapper">
                   <div id="arrow"></div>
                   <slot name="content"></slot>
@@ -414,8 +412,8 @@ describe('OverlayController', () => {
         // The total dom structure created...
         expect(el).shadowDom.to.equal(
           `
-          <dialog open="" role="none" style="${wrappingDialogNodeStyle}">
-            <div class="global-overlays__backdrop"></div>
+          <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
+            <div class="overlays__backdrop"></div>
             <div data-id="content-wrapper">
               <slot name="content">
               </slot>
@@ -563,6 +561,18 @@ describe('OverlayController', () => {
         });
         await ctrl.show();
         document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        expect(ctrl.isShown).to.be.true;
+      });
+
+      it('does not hide when [escape] is pressed with modal <dialog> and "hidesOnEsc" is false', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+          hidesOnEsc: false,
+        });
+        await ctrl.show();
+        ctrl.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        await aTimeout(0);
         expect(ctrl.isShown).to.be.true;
       });
     });
@@ -929,10 +939,10 @@ describe('OverlayController', () => {
         });
 
         await ctrl.show();
-        expect(getComputedStyle(document.body).overflow).to.equal('hidden');
+        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock');
 
         await ctrl.hide();
-        expect(getComputedStyle(document.body).overflow).to.equal('visible');
+        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock');
       });
 
       it('keeps preventing of scrolling when multiple overlays are opened and closed', async () => {
@@ -948,7 +958,7 @@ describe('OverlayController', () => {
         await ctrl0.show();
         await ctrl1.show();
         await ctrl1.hide();
-        expect(getComputedStyle(document.body).overflow).to.equal('hidden');
+        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock');
       });
     });
 
@@ -975,7 +985,7 @@ describe('OverlayController', () => {
           hasBackdrop: true,
         });
         await controllerWithBackdrop.show();
-        expect(controllerWithBackdrop.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(controllerWithBackdrop.backdropNode).to.have.class('overlays__backdrop');
       });
 
       it('reenables the backdrop when shown/hidden/shown', async () => {
@@ -984,10 +994,10 @@ describe('OverlayController', () => {
           hasBackdrop: true,
         });
         await ctrl.show();
-        expect(ctrl.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(ctrl.backdropNode).to.have.class('overlays__backdrop');
         await ctrl.hide();
         await ctrl.show();
-        expect(ctrl.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(ctrl.backdropNode).to.have.class('overlays__backdrop');
       });
 
       it('adds and stacks backdrops if .hasBackdrop is enabled', async () => {
@@ -996,14 +1006,14 @@ describe('OverlayController', () => {
           hasBackdrop: true,
         });
         await ctrl0.show();
-        expect(ctrl0.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(ctrl0.backdropNode).to.have.class('overlays__backdrop');
 
         const ctrl1 = new OverlayController({
           ...withGlobalTestConfig(),
           hasBackdrop: false,
         });
         await ctrl1.show();
-        expect(ctrl0.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(ctrl0.backdropNode).to.have.class('overlays__backdrop');
         expect(ctrl1.backdropNode).to.be.undefined;
 
         const ctrl2 = new OverlayController({
@@ -1012,9 +1022,9 @@ describe('OverlayController', () => {
         });
         await ctrl2.show();
 
-        expect(ctrl0.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(ctrl0.backdropNode).to.have.class('overlays__backdrop');
         expect(ctrl1.backdropNode).to.be.undefined;
-        expect(ctrl2.backdropNode).to.have.class('global-overlays__backdrop');
+        expect(ctrl2.backdropNode).to.have.class('overlays__backdrop');
       });
     });
 
@@ -1404,15 +1414,11 @@ describe('OverlayController', () => {
       });
 
       ctrl.show();
-      expect(
-        ctrl.contentWrapperNode.classList.contains('global-overlays__overlay-container--center'),
-      );
+      expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--center'));
       expect(ctrl.isShown).to.be.true;
 
       ctrl.updateConfig({ viewportConfig: { placement: 'top-right' } });
-      expect(
-        ctrl.contentWrapperNode.classList.contains('global-overlays__overlay-container--top-right'),
-      );
+      expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--top-right'));
       expect(ctrl.isShown).to.be.true;
     });
   });

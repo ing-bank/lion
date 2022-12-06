@@ -1,8 +1,23 @@
 import { Options } from '@popperjs/core';
 
 export interface OverlayConfig {
-  /** Determines the connection point in DOM (body vs next to invoker). */
+  // Positioning
+
+  /** Determines the positioning anchore (viewport vs invokerNode/referenceNode). */
   placementMode?: 'global' | 'local' | undefined;
+  /** Popper configuration. Will be used when placementMode is 'local' */
+  popperConfig?: Partial<Options>;
+  /** Viewport positioning configuration. Will be used when placementMode is 'global' */
+  viewportConfig?: ViewportConfig;
+  /** Hides other overlays when multiple are opened (currently exclusive to globalOverlayController) */
+  isBlocking?: boolean;
+  /** Will align contentNode with referenceNode (invokerNode by default) for local overlays. Usually needed for dropdowns. 'max' will prevent contentNode from exceeding width of referenceNode, 'min' guarantees that contentNode will be at least as wide as referenceNode. 'full' will make sure that the invoker width always is the same. */
+  inheritsReferenceWidth?: 'max' | 'full' | 'min' | 'none';
+  /** Change the default of 9999 */
+  zIndex?: number;
+
+  // Elements
+
   /** The interactive element (usually a button) invoking the dialog or tooltip */
   invokerNode?: HTMLElement;
   /** The element that is used to position the overlay content relative to. Usually, this is the same element as invokerNode. Should only be provided when invokerNode should not be positioned against */
@@ -15,10 +30,14 @@ export interface OverlayConfig {
   backdropNode?: HTMLElement;
   /** The element that should be called `.focus()` on after dialog closes */
   elementToFocusAfterHide?: HTMLElement;
+
+  // Backdrop
+
   /** Whether it should have a backdrop (currently exclusive to globalOverlayController) */
   hasBackdrop?: boolean;
-  /** Hides other overlays when multiple are opened (currently exclusive to globalOverlayController) */
-  isBlocking?: boolean;
+
+  // User interaction
+
   /** Prevents scrolling body content when overlay opened (currently exclusive to globalOverlayController) */
   preventsScroll?: boolean;
   /** Rotates tab, implicitly set when 'isModal' */
@@ -29,8 +48,9 @@ export interface OverlayConfig {
   hidesOnOutsideClick?: boolean;
   /** Hides the overlay when pressing esc, even when contentNode has no focus */
   hidesOnOutsideEsc?: boolean;
-  /** Will align contentNode with referenceNode (invokerNode by default) for local overlays. Usually needed for dropdowns. 'max' will prevent contentNode from exceeding width of referenceNode, 'min' guarantees that contentNode will be at least as wide as referenceNode. 'full' will make sure that the invoker width always is the same. */
-  inheritsReferenceWidth?: 'max' | 'full' | 'min' | 'none';
+
+  // Accessibility
+
   /**
    *  For non `isTooltip`:
    *  - sets aria-expanded="true/false" and aria-haspopup="true" on invokerNode
@@ -42,17 +62,13 @@ export interface OverlayConfig {
    *  - sets role="tooltip" and aria-labelledby/aria-describedby on the content
    */
   handlesAccessibility?: boolean;
+
+  // Tooltip
+
   /** Has a totally different interaction- and accessibility pattern from all other overlays. Will behave as role="tooltip" element instead of a role="dialog" element */
   isTooltip?: boolean;
   /** By default, the tooltip content is a 'description' for the invoker (uses aria-describedby) Setting this property to 'label' makes the content function as a label (via aria-labelledby) */
   invokerRelation?: 'label' | 'description';
-  /** Popper configuration. Will be used when placementMode is 'local' */
-  popperConfig?: Partial<Options>;
-  /** Viewport configuration. Will be used when placementMode is 'global' */
-  viewportConfig?: ViewportConfig;
-
-  /** Change the default of 9999 */
-  zIndex?: number;
 
   /** render a div instead of dialog */
   _noDialogEl?: Boolean;

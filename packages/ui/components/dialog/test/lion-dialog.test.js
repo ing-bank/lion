@@ -12,7 +12,7 @@ describe('lion-dialog', () => {
   // For some reason, globalRootNode is not cleared properly on disconnectedCallback from previous overlay test fixtures...
   // Not sure why this "bug" happens...
   beforeEach(() => {
-    const globalRootNode = document.querySelector('.global-overlays');
+    const globalRootNode = document.querySelector('.overlays');
     if (globalRootNode) {
       globalRootNode.innerHTML = '';
     }
