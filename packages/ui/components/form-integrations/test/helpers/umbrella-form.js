@@ -11,10 +11,13 @@ import '@lion/ui/define/lion-input-email.js';
 import '@lion/ui/define/lion-input-tel.js';
 import '@lion/ui/define/lion-input-tel-dropdown.js';
 import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-radio-group.js';
+import '@lion/ui/define/lion-radio.js';
 import '@lion/ui/define/lion-select.js';
 import '@lion/ui/define/lion-select-rich.js';
 import '@lion/ui/define/lion-listbox.js';
+import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-input-range.js';
 import '@lion/ui/define/lion-textarea.js';
@@ -34,6 +37,13 @@ export class UmbrellaForm extends LitElement {
    */
   set serializedValue(v) {
     this.__serializedValue = v;
+  }
+
+  /**
+   * Prevents errors outside test from being thrown
+   */
+  async waitForAllChildrenUpdates() {
+    return Promise.all(this._lionFormNode.formElements.map(child => child.updateComplete));
   }
 
   render() {

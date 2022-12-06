@@ -8,15 +8,22 @@ import '@lion/ui/define/lion-input-datepicker.js';
 import '@lion/ui/define/lion-input-amount.js';
 import '@lion/ui/define/lion-input-iban.js';
 import '@lion/ui/define/lion-input-email.js';
+import '@lion/ui/define/lion-input-tel.js';
+import '@lion/ui/define/lion-input-tel-dropdown.js';
 import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-radio-group.js';
+import '@lion/ui/define/lion-radio.js';
 import '@lion/ui/define/lion-select.js';
 import '@lion/ui/define/lion-select-rich.js';
+import '@lion/ui/define/lion-listbox.js';
+import '@lion/ui/define/lion-option.js';
+import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-input-range.js';
 import '@lion/ui/define/lion-textarea.js';
 import '@lion/ui/define/lion-button.js';
-import '@lion/ui/define/lion-input-tel.js';
-import '@lion/ui/define/lion-input-tel-dropdown.js';
+import '@lion/ui/define/lion-switch.js';
+import '@lion/ui/define/lion-input-stepper.js';
 
 export class UmbrellaForm extends LitElement {
   get _lionFormNode() {
