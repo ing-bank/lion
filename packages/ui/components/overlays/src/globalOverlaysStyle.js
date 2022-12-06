@@ -6,10 +6,6 @@ export const globalOverlaysStyle = css`
     z-index: 200;
   }
 
-  .global-overlays__overlay {
-    pointer-events: auto;
-  }
-
   .global-overlays__overlay-container {
     display: flex;
     position: fixed;
@@ -18,6 +14,10 @@ export const globalOverlaysStyle = css`
     width: 100%;
     height: 100%;
     pointer-events: none;
+  }
+
+  .global-overlays__overlay-container::backdrop {
+    display: none;
   }
 
   .global-overlays__overlay-container--top-left {
@@ -54,6 +54,7 @@ export const globalOverlaysStyle = css`
     justify-content: flex-end;
     align-items: flex-end;
   }
+
   .global-overlays__overlay-container--left {
     justify-content: flex-start;
     align-items: center;
@@ -68,7 +69,12 @@ export const globalOverlaysStyle = css`
     width: 100%;
   }
 
-  .global-overlays .global-overlays__backdrop {
+  ::slotted(.global-overlays__overlay),
+  .global-overlays__overlay {
+    pointer-events: auto;
+  }
+
+  .global-overlays__backdrop {
     content: '';
     position: fixed;
     top: 0;
@@ -81,15 +87,16 @@ export const globalOverlaysStyle = css`
     display: none;
   }
 
-  .global-overlays .global-overlays__backdrop--visible {
+  .global-overlays__backdrop--visible {
     display: block;
   }
 
-  .global-overlays .global-overlays__backdrop--animation-in {
+  .global-overlays__backdrop--animation-in {
     animation: global-overlays-backdrop-fade-in 300ms;
+    opacity: 0.3;
   }
 
-  .global-overlays .global-overlays__backdrop--animation-out {
+  .global-overlays__backdrop--animation-out {
     animation: global-overlays-backdrop-fade-out 300ms;
     opacity: 0;
   }

@@ -76,9 +76,9 @@ export const closeOverlayFromComponent = () => html`
 ```js preview-story
 export const placementOverrides = () => {
   const dialog = placement => html`
-    <lion-dialog .config=${{ viewportConfig: { placement } }}>
+    <lion-dialog .config="${{ viewportConfig: { placement } }}">
       <button slot="invoker">Dialog ${placement}</button>
-      <div slot="content" class="dialog">
+      <div slot="content" class="dialog demo-box">
         Hello! You can close this notification here:
         <button
           class="close-button"

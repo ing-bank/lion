@@ -18,25 +18,15 @@ describe('Global Positioning', () => {
     overlays.teardown();
   });
 
-  describe('Basics', () => {
-    it('puts ".contentNode" in the body of the page', async () => {
-      const ctrl = new OverlayController({
-        ...withDefaultGlobalConfig(),
-      });
-      await ctrl.show();
-      expect(overlays.globalRootNode.children.length).to.equal(1);
-      expect(overlays.globalRootNode.children[0]).to.have.trimmed.text('my content');
-    });
-  });
-
   describe('viewportConfig', () => {
     it('positions the overlay in center by default', async () => {
       const ctrl = new OverlayController({
         ...withDefaultGlobalConfig(),
       });
       await ctrl.show();
-      expect(ctrl.content.classList.contains('global-overlays__overlay-container--center')).to.be
-        .true;
+      expect(
+        ctrl.contentWrapperNode.classList.contains('global-overlays__overlay-container--center'),
+      ).to.be.true;
     });
 
     it('positions relative to the viewport ', async () => {
@@ -60,7 +50,7 @@ describe('Global Positioning', () => {
         });
         await ctrl.show();
         expect(
-          ctrl.content.classList.contains(
+          ctrl.contentWrapperNode.classList.contains(
             `global-overlays__overlay-container--${viewportPlacement}`,
           ),
         ).to.be.true;

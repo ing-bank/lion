@@ -394,7 +394,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         await el.updateComplete;
         await el.updateComplete; // need 2 awaits as overlay.show is an async function
 
-        await expect(el).to.be.accessible();
+        await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
       });
 
       // NB: regular listbox is always 'opened', but needed for combobox and select-rich
@@ -405,7 +405,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
-        await expect(el).to.be.accessible();
+        await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
       });
 
       it('does not have a tabindex', async () => {
@@ -430,7 +430,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         const el = await fixture(html`
           <${tag} opened has-no-default-selected autocomplete="none" show-all-on-empty>
             <${optionTag} .choiceValue=${'10'} id="first">Item 1</${optionTag}>
-            <${optionTag} .choiceValue=${'20'} checked id="second">Item 2</${optionTag}>
+            <${optionTag} .choiceValue=${'20'} id="second">Item 2</${optionTag}>
           </${tag}>
         `);
         const { _activeDescendantOwnerNode } = getListboxMembers(el);

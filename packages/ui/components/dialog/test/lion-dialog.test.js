@@ -57,15 +57,11 @@ describe('lion-dialog', () => {
         </lion-dialog>
       `);
 
-      // @ts-expect-error you're not allowed to call protected _overlayInvokerNode in public context, but for testing it's okay
+      // @ts-expect-error [allow-protected] in tests
       el._overlayInvokerNode.click();
       expect(el.opened).to.be.true;
 
-      const overlaysContainer = /** @type {HTMLElement} */ (
-        document.querySelector('.global-overlays')
-      );
-      const wrapperNode = Array.from(overlaysContainer.children)[1];
-      const nestedDialog = /** @type {LionDialog} */ (wrapperNode.querySelector('lion-dialog'));
+      const nestedDialog = /** @type {LionDialog} */ (el.querySelector('lion-dialog'));
       // @ts-expect-error you're not allowed to call protected _overlayInvokerNode in public context, but for testing it's okay
       nestedDialog?._overlayInvokerNode.click();
       expect(nestedDialog.opened).to.be.true;

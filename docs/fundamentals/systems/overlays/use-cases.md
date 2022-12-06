@@ -11,9 +11,9 @@ import {
   withModalDialogConfig,
 } from '@lion/ui/overlays.js';
 
-import './assets/demo-overlay-system.js';
-import './assets/demo-overlay-backdrop.js';
-import './assets/applyDemoOverlayStyles.js';
+import './assets/demo-overlay-system.mjs';
+import './assets/demo-overlay-backdrop.mjs';
+import './assets/applyDemoOverlayStyles.mjs';
 import { ref, createRef } from 'lit/directives/ref.js';
 ```
 
@@ -329,52 +329,55 @@ _defineOverlay({ invokerNode, contentNode }) {
 Below is another demo where you can toggle between configurations using buttons.
 
 ```js preview-story
-export const responsiveSwitching2 = () => html`
-  <style>
-    .demo-overlay {
-      background-color: white;
-      border: 1px solid black;
+export const responsiveSwitching2 = () => {
+  const overlayRef = createRef();
+  const selectRef = createRef();
+
+  const getConfig = selectValue => {
+    switch (selectValue) {
+      case 'modaldialog':
+        return { ...withModalDialogConfig(), hasBackdrop: true };
+      case 'bottomsheet':
+        return { ...withBottomSheetConfig() };
+      case 'dropdown':
+        return { ...withDropdownConfig(), hasBackdrop: false };
+      default:
+        return { ...withModalDialogConfig(), hasBackdrop: true };
     }
-  </style>
-  Change config to:
-  <button
-    @click=${e => {
-      e.target.parentElement.querySelector('#respSwitchOverlay').config = {
-        ...withModalDialogConfig(),
-      };
-    }}
-  >
-    Modal Dialog
-  </button>
-  <button
-    @click=${e => {
-      e.target.parentElement.querySelector('#respSwitchOverlay').config = {
-        ...withBottomSheetConfig(),
-      };
-    }}
-  >
-    Bottom Sheet
-  </button>
-  <button
-    @click=${e => {
-      e.target.parentElement.querySelector('#respSwitchOverlay').config = {
-        ...withDropdownConfig(),
-      };
-    }}
-  >
-    Dropdown
-  </button>
-  <br />
-  <demo-overlay-system id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
-    <button slot="invoker">Click me to open the overlay!</button>
-    <div slot="content" class="demo-overlay">
-      Hello! You can close this notification here:
-      <button @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}>
-        ⨯
-      </button>
-    </div>
-  </demo-overlay-system>
-`;
+  };
+  const onSelectChange = e => {
+    overlayRef.value.config = getConfig(e.target.value);
+  };
+
+  return html`
+    <style>
+      .demo-overlay {
+        background-color: white;
+        border: 1px solid black;
+      }
+    </style>
+    Change config to:
+
+    <select ${ref(selectRef)} @change="${onSelectChange}">
+      <option value="modaldialog">Modal Dialog</option>
+      <option value="bottomsheet">Bottom Sheet</option>
+      <option value="dropdown">Dropdown</option>
+    </select>
+
+    <br />
+    <demo-overlay-system ${ref(overlayRef)} .config=${getConfig(selectRef.value?.value)}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </demo-overlay-system>
+  `;
+};
 ```
 
 ## Opened state

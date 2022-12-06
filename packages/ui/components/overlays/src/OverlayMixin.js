@@ -27,9 +27,8 @@ export const OverlayMixinImplementation = superclass =>
     constructor() {
       super();
       this.opened = false;
-      /** @private */
-      this.__needsSetup = true;
-      /** @type {OverlayConfig} */
+
+      /** @type {Partial<OverlayConfig>} */
       this.config = {};
 
       /** @type {EventListener} */
@@ -163,16 +162,13 @@ export const OverlayMixinImplementation = superclass =>
       }
     }
 
-    connectedCallback() {
-      super.connectedCallback();
-      // we do a setup after every connectedCallback as firstUpdated will only be called once
-      this.__needsSetup = true;
-      this.updateComplete.then(() => {
-        if (this.__needsSetup) {
-          this._setupOverlayCtrl();
-        }
-        this.__needsSetup = false;
-      });
+    /**
+     * @param {import('lit-element').PropertyValues } changedProperties
+     */
+    firstUpdated(changedProperties) {
+      super.firstUpdated(changedProperties);
+
+      this._setupOverlayCtrl();
     }
 
     disconnectedCallback() {
@@ -197,9 +193,12 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     get _overlayBackdropNode() {
-      return /** @type {HTMLElement | undefined} */ (
-        Array.from(this.children).find(child => child.slot === 'backdrop')
-      );
+      if (!this.__cachedOverlayBackdropNode) {
+        this.__cachedOverlayBackdropNode = /** @type {HTMLElement | undefined} */ (
+          Array.from(this.children).find(child => child.slot === 'backdrop')
+        );
+      }
+      return this.__cachedOverlayBackdropNode;
     }
 
     get _overlayContentNode() {

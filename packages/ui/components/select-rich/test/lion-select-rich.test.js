@@ -1,5 +1,4 @@
 import { LitElement } from 'lit';
-import { renderLitAsNode } from '@lion/ui/helpers.js';
 import { LionOption } from '@lion/ui/listbox.js';
 import { getListboxMembers } from '@lion/ui/listbox-test-helpers.js';
 import { OverlayController } from '@lion/ui/overlays.js';
@@ -152,7 +151,7 @@ describe('lion-select-rich', () => {
     });
 
     it('updates the invoker when the selected element is the same but the modelValue was updated asynchronously', async () => {
-      const tag = defineCE(
+      const tagString = defineCE(
         class LionCustomOption extends LionOption {
           render() {
             return html`${this.modelValue.value}`;
@@ -163,27 +162,26 @@ describe('lion-select-rich', () => {
           }
         },
       );
-      const tagString = unsafeStatic(tag);
-
+      const tag = unsafeStatic(tagString);
       const firstOption = /** @type {LionOption} */ (
-        renderLitAsNode(html`<${tagString} checked .choiceValue=${10}></${tagString}>`)
+        await _fixture(html`<${tag} checked .choiceValue=${10}></${tag}>`)
       );
 
       const el = await fixture(html`
         <lion-select-rich>
           ${firstOption}
-          <${tagString} .choiceValue=${20}></${tagString}>
+          <${tag} .choiceValue=${20}></${tag}>
         </lion-select-rich>
       `);
 
       const { _invokerNode } = getSelectRichMembers(el);
+
       const firstChild = /** @type {HTMLElement} */ (
         /** @type {ShadowRoot} */ (_invokerNode.shadowRoot).firstElementChild
       );
       expect(firstChild.textContent).to.equal('10');
 
       firstOption.modelValue = { value: 30, checked: true };
-      await firstOption.updateComplete;
       await el.updateComplete;
       expect(firstChild.textContent).to.equal('30');
     });

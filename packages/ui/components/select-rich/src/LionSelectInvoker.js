@@ -15,8 +15,7 @@ import { SlotMixin } from '@lion/ui/core.js';
 export class LionSelectInvoker extends SlotMixin(LionButton) {
   static get styles() {
     return [
-      // TODO switch back to ...super.styles once fixed https://github.com/lit/lit.dev/pull/535
-      ...LionButton.styles,
+      ...super.styles,
       css`
         :host {
           justify-content: space-between;
@@ -31,9 +30,9 @@ export class LionSelectInvoker extends SlotMixin(LionButton) {
     ];
   }
 
+  /** @type {any} */
   static get properties() {
     return {
-      ...super.properties,
       selectedElement: { type: Object },
       hostElement: { type: Object },
       readOnly: { type: Boolean, reflect: true, attribute: 'readonly' },

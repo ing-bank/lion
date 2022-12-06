@@ -2,7 +2,7 @@ import { html, LitElement } from 'lit';
 import { OverlayMixin } from '@lion/ui/overlays.js';
 
 /**
- * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  */
 class DemoOverlaySystem extends OverlayMixin(LitElement) {
   // eslint-disable-next-line class-methods-use-this
