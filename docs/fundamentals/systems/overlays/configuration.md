@@ -2,8 +2,8 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import './assets/demo-overlay-system.js';
-import './assets/applyDemoOverlayStyles.js';
+import './assets/demo-overlay-system.mjs';
+import './assets/applyDemoOverlayStyles.mjs';
 ```
 
 The `OverlayController` has many configuration options.
@@ -351,11 +351,11 @@ Options:
 export const viewportConfig = () => {
   const viewportConfig = {
     placementMode: 'global',
-    viewportConfig: { placement: 'top-left' },
+    viewportConfig: { placement: 'bottom-left' },
   };
   return html`
     <demo-overlay-system .config=${viewportConfig}>
-      <button slot="invoker">Click me to open the overlay in the top left corner!</button>
+      <button slot="invoker">Click me to open the overlay in the bottom left corner!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button

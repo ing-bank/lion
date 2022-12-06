@@ -27,24 +27,25 @@ describe('OverlaysManager', () => {
     mngr.teardown();
   });
 
-  it('provides .globalRootNode as a render target on first access', () => {
-    expect(document.body.querySelectorAll('.global-overlays').length).to.equal(0);
-    const rootNode = mngr.globalRootNode;
-    expect(document.body.querySelector('.global-overlays')).to.equal(rootNode);
+  it('provides global stylesheet for arrangement of body scroll', () => {
+    expect(document.head.querySelectorAll('[data-global-overlays]').length).to.equal(1);
   });
 
   it('provides .teardown() for cleanup', () => {
-    const rootNode = mngr.globalRootNode;
-    expect(document.body.querySelector('.global-overlays')).to.equal(rootNode);
     expect(document.head.querySelector('[data-global-overlays=""]')).not.be.undefined;
 
     mngr.teardown();
-    expect(document.body.querySelectorAll('.global-overlays').length).to.equal(0);
     expect(document.head.querySelector('[data-global-overlays=""]')).be.null;
 
     // safety check via private access (do not use this)
-    expect(OverlaysManager.__globalRootNode).to.be.undefined;
     expect(OverlaysManager.__globalStyleNode).to.be.undefined;
+
+    // @ts-ignore [allow-private-in-test]
+    expect(mngr.__list).to.be.empty;
+    // @ts-ignore [allow-private-in-test]
+    expect(mngr.__shownList).to.be.empty;
+    // @ts-ignore [allow-private-in-test]
+    expect(mngr.__siblingsInert).to.be.false;
   });
 
   it('can add/remove controllers', () => {

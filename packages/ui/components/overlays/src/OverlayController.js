@@ -1,34 +1,114 @@
 import { EventTargetShim } from '@lion/ui/core.js';
+import { adoptStyles } from 'lit';
 import { overlays } from './singleton.js';
 import { containFocus } from './utils/contain-focus.js';
+import { globalOverlaysStyle } from './globalOverlaysStyle.js';
 
 /**
- * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
- * @typedef {import('../types/OverlayConfig.js').ViewportConfig} ViewportConfig
- * @typedef {import('@popperjs/core/lib/popper.js').createPopper} Popper
- * @typedef {import('@popperjs/core/lib/popper.js').Options} PopperOptions
- * @typedef {import('@popperjs/core/lib/enums.js').Placement} Placement
+ * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
+ * @typedef {import('@lion/ui/types/overlays.js').ViewportConfig} ViewportConfig
+ * @typedef {import('@popperjs/core').createPopper} Popper
+ * @typedef {import('@popperjs/core').Options} PopperOptions
+ * @typedef {import('@popperjs/core').Placement} Placement
  * @typedef {{ createPopper: Popper }} PopperModule
  * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
  */
 
 /**
+ * From:
+ * - wrappingDialogNodeL1: `<dialog role="none"/>`
+ * - contentWrapperNodeL2: `<div id="content-wrapper-node"/>`
+ * - contentNodeL3: `<div slot="my-content"/>`
+ * To:
+ * ```html
+ * <dialog role="none">
+ *   <div id="content-wrapper-node">
+ *     <!-- this was the (slot for) original content node -->
+ *     <slot name="my-content"></slot>
+ *   </div>
+ * </dialog>
+ * ```
+ *
+ * `<slot name="my-content">` belonging to `<div slot="content"/>` will be wrapped with wrappingDialogNodeL1 and contentWrapperNodeL2
+ * inside shadow dom. With the help of temp markers, `<slot name="my-content">`'s original position will be respected.
+ *
+ * @param {{ wrappingDialogNodeL1:HTMLDialogElement|HTMLDivElement; contentWrapperNodeL2:Element; contentNodeL3: Element }} opts
+ */
+function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNodeL3 }) {
+  if (!(contentWrapperNodeL2.isConnected || contentNodeL3.isConnected)) {
+    throw new Error(
+      '[OverlayController] Could not find a render target, since the provided contentNode is not connected to the DOM. Make sure that it is connected, e.g. by doing "document.body.appendChild(contentNode)", before passing it on.',
+    );
+  }
+
+  let parentElement;
+  const tempMarker = document.createComment('temp-marker');
+
+  if (contentWrapperNodeL2.isConnected) {
+    // This is the case when contentWrapperNode (living in shadow dom, wrapping <slot name="my-content-outlet">) is already provided via controller.
+    parentElement = contentWrapperNodeL2.parentElement || contentWrapperNodeL2.getRootNode();
+    parentElement.insertBefore(tempMarker, contentWrapperNodeL2);
+    // Wrap...
+    wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
+  }
+  // if contentNodeL3.isConnected
+  else {
+    const contentIsProjected = contentNodeL3.assignedSlot;
+    if (contentIsProjected) {
+      parentElement =
+        contentNodeL3.assignedSlot.parentElement || contentNodeL3.assignedSlot.getRootNode();
+      parentElement.insertBefore(tempMarker, contentNodeL3.assignedSlot);
+      wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
+      // Important: we do not move around contentNodeL3, but the assigned slot
+      contentWrapperNodeL2.appendChild(contentNodeL3.assignedSlot);
+    } else {
+      parentElement = contentNodeL3.parentElement || contentNodeL3.getRootNode();
+      parentElement.insertBefore(tempMarker, contentNodeL3);
+      wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
+      contentWrapperNodeL2.appendChild(contentNodeL3);
+    }
+  }
+
+  /**
+   * From:
+   * ```html
+   * #shadow-root:
+   * <div>
+   *   <!-- tempMarker -->
+   *   <slot name="x"/>
+   * </div>
+   * ```
+   *
+   * To:
+   * ```html
+   * #shadow-root:
+   * <div>
+   *   <!-- tempMarker -->
+   *   <dialog role="none">
+   *     <div id="content-wrapper-node">
+   *       <slot name="x"/>
+   *     </div>
+   *   </dialog>
+   * </div>
+   * ```
+   */
+  parentElement.insertBefore(wrappingDialogNodeL1, tempMarker);
+  parentElement?.removeChild(tempMarker);
+}
+
+/**
  * @returns {Promise<PopperModule>}
  */
 async function preloadPopper() {
-  /* eslint-disable import/no-extraneous-dependencies */ // -- [external]: import complains about untyped module, but we typecast it ourselves
-  // @ts-ignore
+  // @ts-ignore [external]: import complains about untyped module, but we typecast it ourselves
   return /** @type {* & Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
-  /* eslint-enable import/no-extraneous-dependencies */
 }
 
-const GLOBAL_OVERLAYS_CONTAINER_CLASS = 'global-overlays__overlay-container';
-const GLOBAL_OVERLAYS_CLASS = 'global-overlays__overlay';
 // @ts-expect-error [external]: CSS not yet typed
 const supportsCSSTypedObject = window.CSS?.number && document.body.attributeStyleMap?.set;
 
 /**
- * @desc OverlayController is the fundament for every single type of overlay. With the right
+ * OverlayController is the fundament for every single type of overlay. With the right
  * configuration, it can be used to build (modal) dialogs, tooltips, dropdowns, popovers,
  * bottom/top/left/right sheets etc.
  *
@@ -74,7 +154,7 @@ const supportsCSSTypedObject = window.CSS?.number && document.body.attributeStyl
  * #### html structure for a content projected node
  * <div id="contentWrapperNode">
  *  <slot name="contentNode"></slot>
- *  <div x-arrow></div>
+ *  <div data-popper-arrow></div>
  * </div>
  *
  * Structure above depicts [l4]
@@ -96,6 +176,9 @@ export class OverlayController extends EventTargetShim {
     this.manager = manager;
     /** @private */
     this.__sharedConfig = config;
+
+    /** @type {OverlayConfig} */
+    this.config = {};
 
     /**
      * @type {OverlayConfig}
@@ -123,7 +206,7 @@ export class OverlayController extends EventTargetShim {
       handlesAccessibility: false,
       popperConfig: {
         placement: 'top',
-        strategy: 'absolute',
+        strategy: 'fixed',
         modifiers: [
           {
             name: 'preventOverflow',
@@ -156,6 +239,8 @@ export class OverlayController extends EventTargetShim {
       viewportConfig: {
         placement: 'center',
       },
+
+      zIndex: 9999,
     };
 
     this.manager.add(this);
@@ -163,25 +248,11 @@ export class OverlayController extends EventTargetShim {
     this._contentId = `overlay-content--${Math.random().toString(36).substr(2, 10)}`;
     /** @private */
     this.__originalAttrs = new Map();
-    if (this._defaultConfig.contentNode) {
-      if (!this._defaultConfig.contentNode.isConnected) {
-        throw new Error(
-          '[OverlayController] Could not find a render target, since the provided contentNode is not connected to the DOM. Make sure that it is connected, e.g. by doing "document.body.appendChild(contentNode)", before passing it on.',
-        );
-      }
-      this.__isContentNodeProjected = Boolean(this._defaultConfig.contentNode.assignedSlot);
-    }
     this.updateConfig(config);
     /** @private */
     this.__hasActiveTrapsKeyboardFocus = false;
     /** @private */
     this.__hasActiveBackdrop = true;
-    /**
-     * @type {HTMLElement | undefined}
-     * @private
-     */
-    this.__backdropNodeToBeTornDown = undefined;
-
     /** @private */
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
   }
@@ -196,10 +267,10 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * The contentWrapperNode
-   * @type {HTMLElement}
+   * @type {HTMLDialogElement | HTMLDivElement}
    */
   get content() {
-    return /** @type {HTMLElement} */ (this.contentWrapperNode);
+    return /** @type {HTMLDialogElement | HTMLDivElement} */ (this.__wrappingDialogNode);
   }
 
   /**
@@ -386,28 +457,6 @@ export class OverlayController extends EventTargetShim {
   }
 
   /**
-   * Usually the parent node of contentWrapperNode that either exists locally or globally.
-   * When a responsive scenario is created (in which we switch from global to local or vice versa)
-   * we need to know where we should reappend contentWrapperNode (or contentNode in case it's
-   * projected).
-   * @type {HTMLElement}
-   * @protected
-   */
-  get _renderTarget() {
-    /** config [g1] */
-    if (this.placementMode === 'global') {
-      return this.manager.globalRootNode;
-    }
-    /** config [l2] or [l4] */
-    if (this.__isContentNodeProjected) {
-      // @ts-expect-error [external]: fix Node types
-      return this.__originalContentParent?.getRootNode().host;
-    }
-    /** config [l1] or [l3] */
-    return /** @type {HTMLElement} */ (this.__originalContentParent);
-  }
-
-  /**
    * @desc The element our local overlay will be positioned relative to.
    * @type {HTMLElement | undefined}
    * @protected
@@ -420,12 +469,8 @@ export class OverlayController extends EventTargetShim {
    * @param {number} value
    */
   set elevation(value) {
-    if (this.contentWrapperNode) {
-      this.contentWrapperNode.style.zIndex = `${value}`;
-    }
-    if (this.backdropNode) {
-      this.backdropNode.style.zIndex = `${value}`;
-    }
+    // @ts-expect-error find out why config would/could be undfined
+    this.__wrappingDialogNode.style.zIndex = `${this.config.zIndex + value}`;
   }
 
   /**
@@ -472,9 +517,9 @@ export class OverlayController extends EventTargetShim {
     };
 
     /** @private */
-    this.__validateConfiguration(/** @type {OverlayConfig} */ (this.config));
+    this.__validateConfiguration(this.config);
     /** @protected */
-    this._init({ cfgToAdd });
+    this._init();
     /** @private */
     this.__elementToFocusAfterHide = undefined;
   }
@@ -498,16 +543,6 @@ export class OverlayController extends EventTargetShim {
     if (!newConfig.contentNode) {
       throw new Error('[OverlayController] You need to provide a .contentNode');
     }
-    if (this.__isContentNodeProjected && !newConfig.contentWrapperNode) {
-      throw new Error(
-        '[OverlayController] You need to provide a .contentWrapperNode when .contentNode is projected',
-      );
-    }
-    if (newConfig.isTooltip && newConfig.placementMode !== 'local') {
-      throw new Error(
-        '[OverlayController] .isTooltip should be configured with .placementMode "local"',
-      );
-    }
     if (newConfig.isTooltip && !newConfig.handlesAccessibility) {
       throw new Error(
         '[OverlayController] .isTooltip only takes effect when .handlesAccessibility is enabled',
@@ -519,84 +554,94 @@ export class OverlayController extends EventTargetShim {
   }
 
   /**
-   * @param {{ cfgToAdd: OverlayConfig }} options
    * @protected
    */
-  _init({ cfgToAdd }) {
-    this.__initContentWrapperNode({ cfgToAdd });
-    this.__initConnectionTarget();
+  _init() {
+    if (!this.__contentHasBeenInitialized) {
+      this.__initContentDomStructure();
+      this.__contentHasBeenInitialized = true;
+    }
+
+    // Reset all positioning styles (local, c.q. Popper) and classes (global)
+    this.contentWrapperNode.removeAttribute('style');
+    this.contentWrapperNode.removeAttribute('class');
 
     if (this.placementMode === 'local') {
       // Lazily load Popper if not done yet
       if (!OverlayController.popperModule) {
-        // a@ts-expect-error FIXME: for some reason createPopper is missing here
         OverlayController.popperModule = preloadPopper();
       }
+    } else {
+      const rootNode = /** @type {ShadowRoot} */ (this.contentWrapperNode.getRootNode());
+      adoptStyles(rootNode, [...(rootNode.adoptedStyleSheets || []), globalOverlaysStyle]);
     }
     this._handleFeatures({ phase: 'init' });
   }
 
-  /** @private */
-  __initConnectionTarget() {
-    // Now, add our node to the right place in dom (renderTarget)
-    if (this.contentWrapperNode !== this.__prevConfig?.contentWrapperNode) {
-      if (this.config?.placementMode === 'global' || !this.__isContentNodeProjected) {
-        /** @type {HTMLElement} */
-        (this.contentWrapperNode).appendChild(this.contentNode);
-      }
-    }
-
-    if (!this._renderTarget) {
-      return;
-    }
-
-    if (this.__isContentNodeProjected && this.placementMode === 'local') {
-      // We add the contentNode in its slot, so that it will be projected by contentWrapperNode
-      this._renderTarget.appendChild(this.contentNode);
-    } else {
-      const isInsideRenderTarget = this._renderTarget === this.contentWrapperNode.parentNode;
-      const nodeContainsTarget = this.contentWrapperNode.contains(this._renderTarget);
-      if (!isInsideRenderTarget && !nodeContainsTarget) {
-        // contentWrapperNode becomes the direct (non projected) parent of contentNode
-        this._renderTarget.appendChild(this.contentWrapperNode);
-      }
-    }
-  }
-
   /**
-   * Cleanup ._contentWrapperNode. We do this, because creating a fresh wrapper
-   * can lead to problems with event listeners...
-   * @param {{ cfgToAdd: OverlayConfig }} options
+   * Here we arrange our content node via:
+   * 1. HTMLDialogElement: the content will always be painted to the browser's top layer
+   *   - no matter what context the contentNode lives in, the overlay will be painted correctly via the <dialog> element,
+   *     even if 'overflow:hidden' or a css transform is applied in its parent hierarchy.
+   *   - the dialog element will be unstyled, but will span the whole screen
+   *   - a backdrop element will be a child of the dialog element, so it leverages the capabilities of the parent
+   *     (filling the whole screen if wanted an always painted to top layer)
+   * 2. ContentWrapper: the content receives the right positioning styles in a clean/non conflicting way:
+   *  - local positioning: receive inline (position) styling that can never conflict with the already existing computed styles
+   *  - global positioning: receive flex (child) classes that position the content correctly relative to the viewport
+   *
+   * The resulting structure that will be created looks like this:
+   *
+   * ...
+   * <dialog role="none">
+   *   <div id="optional-backdrop"></div>
+   *   <div id="content-wrapper-node">
+   *     <!-- this was the (slot for) original content node -->
+   *     <slot name="content"></slot>
+   *   </div>
+   * </dialog>
+   * ...
+   *
    * @private
    */
-  __initContentWrapperNode({ cfgToAdd }) {
-    if (this.config?.contentWrapperNode && this.placementMode === 'local') {
-      /** config [l2],[l3],[l4] */
-      this.__contentWrapperNode = this.config.contentWrapperNode;
-    } else {
-      /** config [l1],[g1] */
+  __initContentDomStructure() {
+    const wrappingDialogElement = document.createElement(
+      this.config?._noDialogEl ? 'div' : 'dialog',
+    );
+    // We use a dialog for its visual capabilities: it renders to the top layer.
+    // A11y will depend on the type of overlay and is arranged on contentNode level.
+    // Also see: https://www.scottohara.me/blog/2019/03/05/open-dialog.html
+    wrappingDialogElement.setAttribute('role', 'none');
+    // N.B. position: fixed is needed to escape out of 'overflow: hidden'
+    // We give a high z-index for non-modal dialogs, so that we at least win from all siblings of our
+    // parent stacking context
+    wrappingDialogElement.style.cssText = `display:none; background-image: none; border-style: none; padding: 0; z-index: ${this.config.zIndex};`;
+    this.__wrappingDialogNode = wrappingDialogElement;
+
+    /**
+     * Based on the configuration of the developer, multiple scenarios are accounted for
+     * A. We already have a contentWrapperNode ()
+     */
+    if (!this.config?.contentWrapperNode) {
       this.__contentWrapperNode = document.createElement('div');
     }
+    this.contentWrapperNode.setAttribute('data-id', 'content-wrapper');
 
-    this.contentWrapperNode.style.cssText = '';
-    this.contentWrapperNode.style.display = 'none';
+    rearrangeNodes({
+      wrappingDialogNodeL1: wrappingDialogElement,
+      contentWrapperNodeL2: this.contentWrapperNode,
+      contentNodeL3: this.contentNode,
+    });
+    // @ts-ignore
+    wrappingDialogElement.open = true;
+
+    this.__wrappingDialogNode.style.display = 'none';
+    this.contentWrapperNode.style.zIndex = '1';
 
     if (getComputedStyle(this.contentNode).position === 'absolute') {
       // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
       // computed height of 0...
       this.contentNode.style.position = 'static';
-    }
-
-    if (this.__isContentNodeProjected && this.contentWrapperNode.isConnected) {
-      // We need to keep track of the original local context.
-      /** config [l2], [l4] */
-      this.__originalContentParent = /** @type {HTMLElement} */ (
-        this.contentWrapperNode.parentNode
-      );
-    } else if (cfgToAdd.contentNode && cfgToAdd.contentNode.isConnected) {
-      // We need to keep track of the original local context.
-      /** config [l1], [l3], [g1] */
-      this.__originalContentParent = /** @type {HTMLElement} */ (this.contentNode?.parentNode);
     }
   }
 
@@ -613,7 +658,7 @@ export class OverlayController extends EventTargetShim {
     if (phase === 'setup') {
       const zIndexNumber = Number(getComputedStyle(this.contentNode).zIndex);
       if (zIndexNumber < 1 || Number.isNaN(zIndexNumber)) {
-        this.contentWrapperNode.style.zIndex = '1';
+        this.contentNode.style.zIndex = '1';
       }
     }
   }
@@ -686,7 +731,7 @@ export class OverlayController extends EventTargetShim {
   }
 
   get isShown() {
-    return Boolean(this.contentWrapperNode.style.display !== 'none');
+    return Boolean(this.__wrappingDialogNode?.style.display !== 'none');
   }
 
   /**
@@ -717,7 +762,11 @@ export class OverlayController extends EventTargetShim {
     const event = new CustomEvent('before-show', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
-      this.contentWrapperNode.style.display = '';
+      if (this.__wrappingDialogNode instanceof HTMLDialogElement) {
+        this.__wrappingDialogNode.show();
+      }
+      // @ts-ignore
+      this.__wrappingDialogNode.style.display = '';
       this._keepBodySize({ phase: 'before-show' });
       await this._handleFeatures({ phase: 'show' });
       this._keepBodySize({ phase: 'show' });
@@ -739,11 +788,17 @@ export class OverlayController extends EventTargetShim {
    */
   async _handlePosition({ phase }) {
     if (this.placementMode === 'global') {
-      const addOrRemove = phase === 'show' ? 'add' : 'remove';
-      const placementClass = `${GLOBAL_OVERLAYS_CONTAINER_CLASS}--${this.viewportConfig.placement}`;
-      this.contentWrapperNode.classList[addOrRemove](GLOBAL_OVERLAYS_CONTAINER_CLASS);
-      this.contentWrapperNode.classList[addOrRemove](placementClass);
-      this.contentNode.classList[addOrRemove](GLOBAL_OVERLAYS_CLASS);
+      const placementClass = `global-overlays__overlay-container--${this.viewportConfig.placement}`;
+
+      if (phase === 'show') {
+        this.contentWrapperNode.classList.add('global-overlays__overlay-container');
+        this.contentWrapperNode.classList.add(placementClass);
+        this.contentNode.classList.add('global-overlays__overlay');
+      } else if (phase === 'hide') {
+        this.contentWrapperNode.classList.remove('global-overlays__overlay-container');
+        this.contentWrapperNode.classList.remove(placementClass);
+        this.contentNode.classList.remove('global-overlays__overlay');
+      }
     } else if (this.placementMode === 'local' && phase === 'show') {
       /**
        * Popper is weird about properly positioning the popper element when it is recreated so
@@ -753,7 +808,7 @@ export class OverlayController extends EventTargetShim {
        * This is however necessary for initial placement.
        */
       await this.__createPopperInstance();
-      /** @type {Popper} */ (this._popper).forceUpdate();
+      this._popper.forceUpdate();
     }
   }
 
@@ -829,7 +884,11 @@ export class OverlayController extends EventTargetShim {
         contentNode: this.contentNode,
       });
 
-      this.contentWrapperNode.style.display = 'none';
+      if (this.__wrappingDialogNode instanceof HTMLDialogElement) {
+        this.__wrappingDialogNode.close();
+      }
+      // @ts-ignore
+      this.__wrappingDialogNode.style.display = 'none';
       this._handleFeatures({ phase: 'hide' });
       this._keepBodySize({ phase: 'hide' });
       this.dispatchEvent(new Event('hide'));
@@ -843,6 +902,7 @@ export class OverlayController extends EventTargetShim {
    *
    * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} hideConfig
    */
+  // @ts-ignore
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
   async transitionHide(hideConfig) {}
 
@@ -851,48 +911,27 @@ export class OverlayController extends EventTargetShim {
    * @protected
    */
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
-  async _transitionHide(hideConfig) {
+  async _transitionHide({ backdropNode, contentNode }) {
     // `this.transitionHide` is a hook for our users
-    await this.transitionHide({ backdropNode: this.backdropNode, contentNode: this.contentNode });
-
-    if (hideConfig.backdropNode) {
-      hideConfig.backdropNode.classList.remove(
-        `${this.placementMode}-overlays__backdrop--animation-in`,
-      );
-      /** @type {() => void} */
-      let afterFadeOut = () => {};
-      hideConfig.backdropNode.classList.add(
-        `${this.placementMode}-overlays__backdrop--animation-out`,
-      );
-      this.__backdropAnimation = new Promise(resolve => {
-        afterFadeOut = () => {
-          if (hideConfig.backdropNode) {
-            hideConfig.backdropNode.classList.remove(
-              `${this.placementMode}-overlays__backdrop--animation-out`,
-            );
-            hideConfig.backdropNode.classList.remove(
-              `${this.placementMode}-overlays__backdrop--visible`,
-            );
-            hideConfig.backdropNode.removeEventListener('animationend', afterFadeOut);
-          }
-          resolve(undefined);
-        };
-      });
-
-      hideConfig.backdropNode.addEventListener('animationend', afterFadeOut);
+    await this.transitionHide({ backdropNode, contentNode });
+    this._handlePosition({ phase: 'hide' });
+    if (!backdropNode) {
+      return;
     }
+    backdropNode.classList.remove(`global-overlays__backdrop--animation-in`);
   }
 
   /**
    * To be overridden by subclassers
    *
-   * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} showConfig
+   * @param {{backdropNode:HTMLElement; contentNode:HTMLElement}} showConfig
    */
+  // @ts-ignore
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
   async transitionShow(showConfig) {}
 
   /**
-   * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} showConfig
+   * @param {{backdropNode:HTMLElement; contentNode:HTMLElement}} showConfig
    */
   // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
   async _transitionShow(showConfig) {
@@ -900,23 +939,16 @@ export class OverlayController extends EventTargetShim {
     await this.transitionShow({ backdropNode: this.backdropNode, contentNode: this.contentNode });
 
     if (showConfig.backdropNode) {
-      showConfig.backdropNode.classList.add(
-        `${this.placementMode}-overlays__backdrop--animation-in`,
-      );
+      showConfig.backdropNode.classList.add(`global-overlays__backdrop--animation-in`);
     }
   }
 
   /** @protected */
   _restoreFocus() {
-    const { activeElement } = /** @type {* & ShadowRoot} */ (
-      this.__contentWrapperNode
-    ).getRootNode();
+    const { activeElement } = /** @type {ShadowRoot} */ (this.contentWrapperNode.getRootNode());
     // We only are allowed to move focus if we (still) 'own' it.
     // Otherwise we assume the 'outside world' has, purposefully, taken over
-    if (
-      activeElement &&
-      /** @type {HTMLElement} */ (this.__contentWrapperNode).contains(activeElement)
-    ) {
+    if (activeElement instanceof HTMLElement && this.contentWrapperNode.contains(activeElement)) {
       if (this.elementToFocusAfterHide) {
         this.elementToFocusAfterHide.focus();
       } else {
@@ -1010,55 +1042,28 @@ export class OverlayController extends EventTargetShim {
    * @protected
    */
   _handleBackdrop({ phase }) {
+    // eslint-disable-next-line default-case
     switch (phase) {
       case 'init': {
-        if (!this.backdropNode) {
-          this.__backdropNode = document.createElement('div');
-          /** @type {HTMLElement} */
-          (this.backdropNode).slot = 'backdrop';
-          /** @type {HTMLElement} */
-          (this.backdropNode).classList.add(`${this.placementMode}-overlays__backdrop`);
+        if (!this.__backdropInitialized) {
+          if (!this.config?.backdropNode) {
+            this.__backdropNode = document.createElement('div');
+            // If backdropNode existed in config, styles are applied by implementing party
+            this.__backdropNode.classList.add(`global-overlays__backdrop`);
+          }
+          // @ts-ignore
+          this.__wrappingDialogNode.prepend(this.backdropNode);
+          this.__backdropInitialized = true;
         }
-
-        let insertionAnchor = /** @type {HTMLElement} */ (this.contentNode.parentNode);
-        let insertionBefore = this.contentNode;
-        if (this.placementMode === 'global') {
-          insertionAnchor = /** @type {HTMLElement} */ (this.contentWrapperNode.parentElement);
-          insertionBefore = this.contentWrapperNode;
-        }
-        insertionAnchor.insertBefore(this.backdropNode, insertionBefore);
         break;
       }
       case 'show':
-        this.backdropNode.classList.add(`${this.placementMode}-overlays__backdrop--visible`);
+        this.backdropNode.classList.add(`global-overlays__backdrop--visible`);
         this.__hasActiveBackdrop = true;
         break;
       case 'hide':
-        if (!this.backdropNode) {
-          return;
-        }
         this.__hasActiveBackdrop = false;
         break;
-      case 'teardown':
-        if (!this.backdropNode || !this.backdropNode.parentNode) {
-          return;
-        }
-        if (this.__backdropAnimation) {
-          this.__backdropNodeToBeTornDown = this.backdropNode;
-
-          this.__backdropAnimation.then(() => {
-            if (this.__backdropNodeToBeTornDown && this.__backdropNodeToBeTornDown.parentNode) {
-              this.__backdropNodeToBeTornDown.parentNode.removeChild(
-                this.__backdropNodeToBeTornDown,
-              );
-            }
-          });
-        } else {
-          this.backdropNode.parentNode.removeChild(this.backdropNode);
-        }
-        this.__backdropNode = undefined;
-        break;
-      /* no default */
     }
   }
 
@@ -1072,7 +1077,16 @@ export class OverlayController extends EventTargetShim {
    */
   _handleTrapsKeyboardFocus({ phase }) {
     if (phase === 'show') {
+      // @ts-ignore
+      if ('showModal' in this.__wrappingDialogNode) {
+        // @ts-ignore
+        this.__wrappingDialogNode.close();
+        // @ts-ignore
+        this.__wrappingDialogNode.showModal();
+      }
+      // else {
       this.enableTrapsKeyboardFocus();
+      // }
     } else if (phase === 'hide' || phase === 'teardown') {
       this.disableTrapsKeyboardFocus();
     }
@@ -1271,24 +1285,6 @@ export class OverlayController extends EventTargetShim {
 
   teardown() {
     this._handleFeatures({ phase: 'teardown' });
-
-    if (this.placementMode === 'global' && this.__isContentNodeProjected) {
-      /** @type {HTMLElement} */ (this.__originalContentParent).appendChild(this.contentNode);
-    }
-
-    // Remove the content node wrapper from the global rootnode
-    this._teardownContentWrapperNode();
-  }
-
-  /** @protected */
-  _teardownContentWrapperNode() {
-    if (
-      this.placementMode === 'global' &&
-      this.contentWrapperNode &&
-      this.contentWrapperNode.parentNode
-    ) {
-      this.contentWrapperNode.parentNode.removeChild(this.contentWrapperNode);
-    }
   }
 
   /** @private */

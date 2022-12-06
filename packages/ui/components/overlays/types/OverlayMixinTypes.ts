@@ -18,8 +18,8 @@ export interface DefineOverlayConfig {
 
 export declare class OverlayHost {
   opened: Boolean;
-  get config(): OverlayConfig;
-  set config(value: OverlayConfig);
+  get config(): Partial<OverlayConfig>;
+  set config(value: Partial<OverlayConfig>);
 
   open(): Promise<void>;
   close(): Promise<void>;

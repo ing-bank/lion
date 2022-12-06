@@ -17,7 +17,7 @@ export interface OverlayConfig {
   elementToFocusAfterHide?: HTMLElement;
   /** Whether it should have a backdrop (currently exclusive to globalOverlayController) */
   hasBackdrop?: boolean;
-  /** Hides other overlays when mutiple are opened (currently exclusive to globalOverlayController) */
+  /** Hides other overlays when multiple are opened (currently exclusive to globalOverlayController) */
   isBlocking?: boolean;
   /** Prevents scrolling body content when overlay opened (currently exclusive to globalOverlayController) */
   preventsScroll?: boolean;
@@ -50,6 +50,12 @@ export interface OverlayConfig {
   popperConfig?: Partial<Options>;
   /** Viewport configuration. Will be used when placementMode is 'global' */
   viewportConfig?: ViewportConfig;
+
+  /** Change the default of 9999 */
+  zIndex?: number;
+
+  /** render a div instead of dialog */
+  _noDialogEl?: Boolean;
 }
 
 export type ViewportPlacement =
@@ -61,8 +67,7 @@ export type ViewportPlacement =
   | 'bottom-right'
   | 'bottom'
   | 'bottom-left'
-  | 'left'
-  | 'center';
+  | 'left';
 
 export interface ViewportConfig {
   placement: ViewportPlacement;

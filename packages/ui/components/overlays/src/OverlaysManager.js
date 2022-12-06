@@ -4,7 +4,6 @@
  */
 
 import { globalOverlaysStyle } from './globalOverlaysStyle.js';
-import { setSiblingsInert, unsetSiblingsInert } from './utils/inert-siblings.js';
 
 // Export this as protected var, so that we can easily mock it in tests
 // TODO: combine with browserDetection of core?
@@ -23,32 +22,12 @@ export const _browserDetection = {
  * `OverlaysManager` which manages overlays which are rendered into the body
  */
 export class OverlaysManager {
-  static __createGlobalRootNode() {
-    const rootNode = document.createElement('div');
-    rootNode.classList.add('global-overlays');
-    document.body.appendChild(rootNode);
-    return rootNode;
-  }
-
   static __createGlobalStyleNode() {
     const styleTag = document.createElement('style');
     styleTag.setAttribute('data-global-overlays', '');
     styleTag.textContent = /** @type {CSSResult} */ (globalOverlaysStyle).cssText;
     document.head.appendChild(styleTag);
     return styleTag;
-  }
-
-  /**
-   * no setter as .list is intended to be read-only
-   * You can use .add or .remove to modify it
-   */
-  // eslint-disable-next-line class-methods-use-this
-  get globalRootNode() {
-    if (!OverlaysManager.__globalRootNode) {
-      OverlaysManager.__globalRootNode = OverlaysManager.__createGlobalRootNode();
-      OverlaysManager.__globalStyleNode = OverlaysManager.__createGlobalStyleNode();
-    }
-    return OverlaysManager.__globalRootNode;
   }
 
   /**
@@ -85,6 +64,10 @@ export class OverlaysManager {
      * @private
      */
     this.__blockingMap = new WeakMap();
+
+    if (!OverlaysManager.__globalStyleNode) {
+      OverlaysManager.__globalStyleNode = OverlaysManager.__createGlobalStyleNode();
+    }
   }
 
   /**
@@ -108,6 +91,7 @@ export class OverlaysManager {
       throw new Error('could not find controller to remove');
     }
     this.__list = this.list.filter(ctrl => ctrl !== ctrlToRemove);
+    this.__shownList = this.shownList.filter(ctrl => ctrl !== ctrlToRemove);
   }
 
   /**
@@ -147,13 +131,7 @@ export class OverlaysManager {
     this.__shownList = [];
     this.__siblingsInert = false;
 
-    const rootNode = OverlaysManager.__globalRootNode;
-    if (rootNode) {
-      if (rootNode.parentElement) {
-        rootNode.parentElement.removeChild(rootNode);
-      }
-      OverlaysManager.__globalRootNode = undefined;
-
+    if (OverlaysManager.__globalStyleNode) {
       document.head.removeChild(
         /** @type {HTMLStyleElement} */ (OverlaysManager.__globalStyleNode),
       );
@@ -180,9 +158,6 @@ export class OverlaysManager {
    */
   informTrapsKeyboardFocusGotEnabled(placementMode) {
     if (this.siblingsInert === false && placementMode === 'global') {
-      if (OverlaysManager.__globalRootNode) {
-        setSiblingsInert(this.globalRootNode);
-      }
       this.__siblingsInert = true;
     }
   }
@@ -199,9 +174,6 @@ export class OverlaysManager {
         next.enableTrapsKeyboardFocus();
       }
     } else if (this.siblingsInert === true) {
-      if (OverlaysManager.__globalRootNode) {
-        unsetSiblingsInert(this.globalRootNode);
-      }
       this.__siblingsInert = false;
     }
   }
@@ -242,8 +214,7 @@ export class OverlaysManager {
    */
   requestToShowOnly(blockingCtrl) {
     const controllersToHide = this.shownList.filter(ctrl => ctrl !== blockingCtrl);
-
-    controllersToHide.map(ctrl => ctrl.hide());
+    controllersToHide.forEach(ctrl => ctrl.hide());
     this.__blockingMap.set(blockingCtrl, controllersToHide);
   }
 
@@ -255,11 +226,10 @@ export class OverlaysManager {
       const controllersWhichGotHidden = /** @type {OverlayController[]} */ (
         this.__blockingMap.get(blockingCtrl)
       );
-      controllersWhichGotHidden.map(ctrl => ctrl.show());
+      controllersWhichGotHidden.forEach(ctrl => ctrl.show());
     }
   }
 }
-/** @type {HTMLElement | undefined} */
-OverlaysManager.__globalRootNode = undefined;
+
 /** @type {HTMLStyleElement | undefined} */
 OverlaysManager.__globalStyleNode = undefined;

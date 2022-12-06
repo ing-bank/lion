@@ -408,27 +408,29 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @protected
    */
   async _alignInvokerWidth() {
-    if (this._overlayCtrl && this._overlayCtrl.content) {
-      await this.updateComplete;
-      const initContentDisplay = this._overlayCtrl.content.style.display;
-      const initContentMinWidth = this._overlayCtrl.content.style.minWidth;
-      const initContentWidth = this._overlayCtrl.content.style.width;
-      this._overlayCtrl.content.style.display = '';
-      this._overlayCtrl.content.style.minWidth = 'auto';
-      this._overlayCtrl.content.style.width = 'auto';
-      const contentWidth = this._overlayCtrl.content.getBoundingClientRect().width;
-      /**
-       * TODO when inside an overlay the current solution doesn't work.
-       * Since that dialog is still hidden, open and close the select-rich
-       * doesn't have any effect so the contentWidth returns 0
-       */
-      if (contentWidth > 0) {
-        this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
-      }
-      this._overlayCtrl.content.style.display = initContentDisplay;
-      this._overlayCtrl.content.style.minWidth = initContentMinWidth;
-      this._overlayCtrl.content.style.width = initContentWidth;
+    if (!this._overlayCtrl?.content) {
+      return;
     }
+
+    await this.updateComplete;
+    const initContentDisplay = this._overlayCtrl.content.style.display;
+    const initContentMinWidth = this._overlayCtrl.contentWrapperNode.style.minWidth;
+    const initContentWidth = this._overlayCtrl.contentWrapperNode.style.width;
+    this._overlayCtrl.content.style.display = '';
+    this._overlayCtrl.contentWrapperNode.style.minWidth = 'auto';
+    this._overlayCtrl.contentWrapperNode.style.width = 'auto';
+    const contentWidth = this._overlayCtrl.contentWrapperNode.getBoundingClientRect().width;
+    /**
+     * TODO when inside an overlay the current solution doesn't work.
+     * Since that dialog is still hidden, open and close the select-rich
+     * doesn't have any effect so the contentWidth returns 0
+     */
+    if (contentWidth > 0) {
+      this._invokerNode.style.width = `${contentWidth + this._arrowWidth}px`;
+    }
+    this._overlayCtrl.content.style.display = initContentDisplay;
+    this._overlayCtrl.contentWrapperNode.style.minWidth = initContentMinWidth;
+    this._overlayCtrl.contentWrapperNode.style.width = initContentWidth;
   }
 
   /**

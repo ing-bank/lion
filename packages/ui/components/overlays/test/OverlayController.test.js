@@ -20,6 +20,18 @@ import { simulateTab } from '../src/utils/simulate-tab.js';
  * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
  */
 
+const wrappingDialogNodeStyle =
+  'display: none; background-image: none; border-style: none; padding: 0px; z-index: 9999;';
+
+/**
+ * @param {HTMLElement} node
+ */
+function normalizeOverlayContentWapper(node) {
+  if (node.hasAttribute('style') && !node.style.cssText) {
+    node.removeAttribute('style');
+  }
+}
+
 /**
  * @param {OverlayController} overlayControllerEl
  */
@@ -66,7 +78,7 @@ describe('OverlayController', () => {
         ...withGlobalTestConfig(),
       });
       expect(ctrl.content).not.to.be.undefined;
-      expect(ctrl.contentNode.parentElement).to.equal(ctrl.content);
+      expect(ctrl.contentNode.parentElement).to.equal(ctrl.contentWrapperNode);
     });
 
     describe('Z-index on local overlays', () => {
@@ -106,17 +118,21 @@ describe('OverlayController', () => {
           contentNode: await createZNode('auto', { mode: 'global' }),
         });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('1');
+        // @ts-expect-error find out why config would/could be undfined
+        expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
         ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('1');
+        // @ts-expect-error find out why config would/could be undfined
+        expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
 
         ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'global' }) });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('1');
+        // @ts-expect-error find out why config would/could be undfined
+        expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
         ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'inline' }) });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('1');
+        // @ts-expect-error find out why config would/could be undfined
+        expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
       });
 
       it.skip("doesn't set a z-index when contentNode already has >= 1", async () => {
@@ -147,42 +163,7 @@ describe('OverlayController', () => {
       });
     });
 
-    describe('Render target', () => {
-      it('creates global target for placement mode "global"', async () => {
-        const ctrl = new OverlayController({
-          ...withGlobalTestConfig(),
-        });
-        const { renderTarget } = getProtectedMembers(ctrl);
-        expect(renderTarget).to.equal(overlays.globalRootNode);
-      });
-
-      it.skip('creates local target next to sibling for placement mode "local"', async () => {
-        const ctrl = new OverlayController({
-          ...withLocalTestConfig(),
-          invokerNode: /** @type {HTMLElement} */ (await fixture(html`<button>Invoker</button>`)),
-        });
-        const { renderTarget } = getProtectedMembers(ctrl);
-        expect(renderTarget).to.be.undefined;
-        expect(ctrl.content).to.equal(ctrl.invokerNode?.nextElementSibling);
-      });
-
-      it('keeps local target for placement mode "local" when already connected', async () => {
-        const parentNode = /** @type {HTMLElement} */ (
-          await fixture(html`
-            <div id="parent">
-              <div id="content">Content</div>
-            </div>
-          `)
-        );
-        const contentNode = /** @type {HTMLElement} */ (parentNode.querySelector('#content'));
-        const ctrl = new OverlayController({
-          ...withLocalTestConfig(),
-          contentNode,
-        });
-        const { renderTarget } = getProtectedMembers(ctrl);
-        expect(renderTarget).to.equal(parentNode);
-      });
-
+    describe('Offline content', () => {
       it('throws when passing a content node that was created "offline"', async () => {
         const contentNode = document.createElement('div');
         const createOverlayController = () => {
@@ -203,107 +184,245 @@ describe('OverlayController', () => {
           ...withLocalTestConfig(),
           contentNode,
         });
-        const { renderTarget } = getProtectedMembers(overlay);
-
         expect(overlay.contentNode.isConnected).to.be.true;
-        expect(renderTarget).to.not.be.undefined;
       });
     });
   });
 
   // TODO: Add teardown feature tests
-  describe('Teardown', () => {
-    it('removes the contentWrapperNode from global rootnode upon teardown', async () => {
-      const ctrl = new OverlayController({
-        ...withGlobalTestConfig(),
-      });
-
-      expect(ctrl.manager.globalRootNode.children.length).to.equal(1);
-      ctrl.teardown();
-      expect(ctrl.manager.globalRootNode.children.length).to.equal(0);
-    });
-
-    it('[global] restores contentNode if it was/is a projected node', async () => {
-      const shadowHost = document.createElement('div');
-      shadowHost.id = 'shadowHost';
-      shadowHost.attachShadow({ mode: 'open' });
-      /** @type {ShadowRoot} */
-      (shadowHost.shadowRoot).innerHTML = `
-        <div id="contentWrapperNode">
-          <slot name="contentNode"></slot>
-          <my-arrow></my-arrow>
-        </div>
-      `;
-      const contentNode = document.createElement('div');
-      contentNode.slot = 'contentNode';
-      shadowHost.appendChild(contentNode);
-
-      const wrapper = /** @type {HTMLElement} */ (await fixture('<div id="wrapper"></div>'));
-      // Ensure the contentNode is connected to DOM
-      wrapper.appendChild(shadowHost);
-
-      // has one child = <div slot="contentNode"></div>
-      expect(shadowHost.children.length).to.equal(1);
-
-      const ctrl = new OverlayController({
-        ...withLocalTestConfig(),
-        placementMode: 'global',
-        contentNode,
-        contentWrapperNode: shadowHost,
-      });
-
-      // has no children as content gets moved to the body
-      expect(shadowHost.children.length).to.equal(0);
-      ctrl.teardown();
-
-      // restores original light dom in teardown
-      expect(shadowHost.children.length).to.equal(1);
-    });
-  });
+  describe('Teardown', () => {});
 
   describe('Node Configuration', () => {
-    it('accepts an .contentNode<Node> to directly set content', async () => {
-      const ctrl = new OverlayController({
-        ...withGlobalTestConfig(),
-        contentNode: /** @type {HTMLElement} */ (await fixture('<p>direct node</p>')),
-      });
-      expect(ctrl.contentNode).to.have.trimmed.text('direct node');
-    });
-
-    it('accepts an .invokerNode<Node> to directly set invoker', async () => {
-      const ctrl = new OverlayController({
-        ...withGlobalTestConfig(),
-        invokerNode: /** @type {HTMLElement} */ (await fixture('<button>invoke</button>')),
-      });
-      expect(ctrl.invokerNode).to.have.trimmed.text('invoke');
-    });
-
-    describe('When contentWrapperNode projects contentNode', () => {
-      it('recognizes projected contentNode', async () => {
-        const shadowHost = document.createElement('div');
-        shadowHost.attachShadow({ mode: 'open' });
-        /** @type {ShadowRoot} */ (shadowHost.shadowRoot).innerHTML = `
-          <div id="contentWrapperNode">
-            <slot name="contentNode"></slot>
-            <my-arrow></my-arrow>
-          </div>
-        `;
-        const contentNode = document.createElement('div');
-        contentNode.slot = 'contentNode';
-        shadowHost.appendChild(contentNode);
-
-        // Ensure the contentNode is connected to DOM
-        document.body.appendChild(shadowHost);
-
+    describe('Content', async () => {
+      it('accepts a .contentNode for displaying content of the overlay', async () => {
+        const myContentNode = /** @type {HTMLElement} */ (fixtureSync('<p>direct node</p>'));
         const ctrl = new OverlayController({
-          ...withLocalTestConfig(),
-          contentNode,
-          contentWrapperNode: /** @type {HTMLElement} */ (
-            /** @type {ShadowRoot} */ (shadowHost.shadowRoot).getElementById('contentWrapperNode')
-          ),
+          ...withGlobalTestConfig(),
+          contentNode: myContentNode,
+        });
+        expect(ctrl.contentNode).to.have.trimmed.text('direct node');
+        expect(ctrl.contentNode).to.equal(myContentNode);
+      });
+
+      describe('Embedded dom structure', async () => {
+        describe('When projected in shadow dom', async () => {
+          it('wraps a .contentWrapperNode for style application and a <dialog role="none"> for top layer paints', async () => {
+            const tagString = defineCE(
+              class extends HTMLElement {
+                constructor() {
+                  super();
+                  this.attachShadow({ mode: 'open' });
+                }
+
+                connectedCallback() {
+                  /** @type {ShadowRoot} */
+                  (this.shadowRoot).innerHTML = '<slot name="content"></slot>';
+                  this.innerHTML = '<div slot="content">projected</div>';
+                }
+              },
+            );
+
+            const el = /** @type {HTMLElement} */ (fixtureSync(`<${tagString}></${tagString}>`));
+            const myContentNode = /** @type {HTMLElement} */ (el.querySelector('[slot=content]'));
+            const ctrl = new OverlayController({
+              ...withGlobalTestConfig(),
+              contentNode: myContentNode,
+            });
+
+            expect(ctrl.contentNode.assignedSlot?.parentElement).to.equal(ctrl.contentWrapperNode);
+            expect(ctrl.contentWrapperNode.parentElement?.tagName).to.equal('DIALOG');
+
+            normalizeOverlayContentWapper(ctrl.contentWrapperNode);
+
+            // The total dom structure created...
+            expect(el).shadowDom.to.equal(`
+              <dialog open="" role="none" style="${wrappingDialogNodeStyle}">
+                <div data-id="content-wrapper">
+                  <slot name="content">
+                  </slot>
+                </div>
+              </dialog>
+            `);
+
+            expect(el).lightDom.to.equal(`<div slot="content">projected</div>`);
+          });
         });
 
-        expect(ctrl.__isContentNodeProjected).to.be.true;
+        describe('When in light dom', async () => {
+          it('wraps a .contentWrapperNode for style application and a <dialog role="none"> for top layer paints', async () => {
+            const el = fixtureSync('<section><div id="content">non projected</div></section>');
+            const myContentNode = /** @type {HTMLElement} */ (el.querySelector('#content'));
+            const ctrl = new OverlayController({
+              ...withGlobalTestConfig(),
+              contentNode: myContentNode,
+            });
+            expect(ctrl.contentNode.parentElement).to.equal(ctrl.contentWrapperNode);
+            expect(ctrl.contentWrapperNode.parentElement?.tagName).to.equal('DIALOG');
+
+            normalizeOverlayContentWapper(ctrl.contentWrapperNode);
+
+            // The total dom structure created...
+            expect(el).lightDom.to.equal(`
+              <dialog open="" role="none" style="${wrappingDialogNodeStyle}">
+                <div data-id="content-wrapper">
+                  <div id="content">non projected</div>
+                </div>
+              </dialog>
+          `);
+          });
+        });
+
+        describe('When .contenWrapperNode provided', async () => {
+          it('keeps the .contentWrapperNode for style application and wraps a <dialog role="none"> for top layer paints', async () => {
+            const tagString = defineCE(
+              class extends HTMLElement {
+                constructor() {
+                  super();
+                  this.attachShadow({ mode: 'open' });
+                }
+
+                connectedCallback() {
+                  /** @type {ShadowRoot} */
+                  (this.shadowRoot).innerHTML = '<div><slot name="content"></slot></div>';
+                  this.innerHTML = '<div slot="content">projected</div>';
+                }
+              },
+            );
+
+            const el = /** @type {HTMLElement} */ (fixtureSync(`<${tagString}></${tagString}>`));
+            const myContentNode = /** @type {HTMLElement} */ (el.querySelector('[slot=content]'));
+            const myContentWrapper = /** @type {HTMLElement} */ (
+              el.shadowRoot?.querySelector('div')
+            );
+            const ctrl = new OverlayController({
+              ...withGlobalTestConfig(),
+              contentNode: myContentNode,
+              contentWrapperNode: myContentWrapper,
+            });
+
+            normalizeOverlayContentWapper(ctrl.contentWrapperNode);
+
+            // The total dom structure created...
+            expect(el).shadowDom.to.equal(`
+              <dialog open="" role="none" style="${wrappingDialogNodeStyle}">
+                <div data-id="content-wrapper">
+                  <slot name="content"></slot>
+                </div>
+              </dialog>
+            `);
+          });
+
+          it("uses the .contentWrapperNode as container for Popper's arrow", async () => {
+            const tagString = defineCE(
+              class extends HTMLElement {
+                constructor() {
+                  super();
+                  this.attachShadow({ mode: 'open' });
+                }
+
+                connectedCallback() {
+                  /** @type {ShadowRoot} */
+                  (this.shadowRoot).innerHTML = `
+                    <div>
+                      <div id="arrow"></div>
+                      <slot name="content"></slot>
+                    </div>`;
+                  this.innerHTML = '<div slot="content">projected</div>';
+                }
+              },
+            );
+
+            const el = /** @type {HTMLElement} */ (fixtureSync(`<${tagString}></${tagString}>`));
+            const myContentNode = /** @type {HTMLElement} */ (el.querySelector('[slot=content]'));
+            const myContentWrapper = /** @type {HTMLElement} */ (
+              el.shadowRoot?.querySelector('div')
+            );
+            const ctrl = new OverlayController({
+              ...withLocalTestConfig(),
+              contentNode: myContentNode,
+              contentWrapperNode: myContentWrapper,
+            });
+
+            normalizeOverlayContentWapper(ctrl.contentWrapperNode);
+
+            // The total dom structure created...
+            expect(el).shadowDom.to.equal(`
+              <dialog open="" role="none" style="${wrappingDialogNodeStyle}">
+                <div data-id="content-wrapper">
+                  <div id="arrow"></div>
+                  <slot name="content"></slot>
+                </div>
+              </dialog>
+            `);
+          });
+        });
+      });
+    });
+
+    describe('Invoker / Reference', async () => {
+      it('accepts a .invokerNode to directly set invoker', async () => {
+        const myInvokerNode = /** @type {HTMLElement} */ (fixtureSync('<button>invoke</button>'));
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          invokerNode: myInvokerNode,
+        });
+        expect(ctrl.invokerNode).to.equal(myInvokerNode);
+        expect(ctrl.referenceNode).to.equal(undefined);
+      });
+
+      it('accepts a .referenceNode as positioning anchor different from .invokerNode', async () => {
+        const myInvokerNode = /** @type {HTMLElement} */ (fixtureSync('<button>invoke</button>'));
+        const myReferenceNode = /** @type {HTMLElement} */ (fixtureSync('<div>anchor</div>'));
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          invokerNode: myInvokerNode,
+          referenceNode: myReferenceNode,
+        });
+        expect(ctrl.referenceNode).to.equal(myReferenceNode);
+        expect(ctrl.invokerNode).to.not.equal(ctrl.referenceNode);
+      });
+    });
+
+    describe('Backdrop', () => {
+      it('creates a .backdropNode inside <dialog> for guaranteed top layer paints and positioning opportunities', async () => {
+        const tagString = defineCE(
+          class extends HTMLElement {
+            constructor() {
+              super();
+              this.attachShadow({ mode: 'open' });
+            }
+
+            connectedCallback() {
+              /** @type {ShadowRoot} */
+              (this.shadowRoot).innerHTML = '<slot name="content"></slot>';
+              this.innerHTML = '<div slot="content">projected</div>';
+            }
+          },
+        );
+
+        const el = /** @type {HTMLElement} */ (fixtureSync(`<${tagString}></${tagString}>`));
+        const myContentNode = /** @type {HTMLElement} */ (el.querySelector('[slot=content]'));
+
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          contentNode: myContentNode,
+          hasBackdrop: true,
+        });
+
+        normalizeOverlayContentWapper(ctrl.contentWrapperNode);
+
+        // The total dom structure created...
+        expect(el).shadowDom.to.equal(
+          `
+          <dialog open="" role="none" style="${wrappingDialogNodeStyle}">
+            <div class="global-overlays__backdrop"></div>
+            <div data-id="content-wrapper">
+              <slot name="content">
+              </slot>
+            </div>
+          </dialog>
+        `,
+        );
       });
     });
 
@@ -1003,24 +1122,24 @@ describe('OverlayController', () => {
         await ctrl0.show();
         await ctrl1.show();
         await ctrl2.show(); // blocking
-        expect(ctrl0.content).to.not.be.displayed;
-        expect(ctrl1.content).to.not.be.displayed;
-        expect(ctrl2.content).to.be.displayed;
+        expect(ctrl0.__wrappingDialogNode).to.not.be.displayed;
+        expect(ctrl1.__wrappingDialogNode).to.not.be.displayed;
+        expect(ctrl2.__wrappingDialogNode).to.be.displayed;
 
         await ctrl3.show();
         await ctrl3._showComplete;
-        expect(ctrl3.content).to.be.displayed;
+        expect(ctrl3.__wrappingDialogNode).to.be.displayed;
 
         await ctrl2.hide();
         await ctrl2._hideComplete;
-        expect(ctrl0.content).to.be.displayed;
-        expect(ctrl1.content).to.be.displayed;
+        expect(ctrl0.__wrappingDialogNode).to.be.displayed;
+        expect(ctrl1.__wrappingDialogNode).to.be.displayed;
 
         await ctrl2.show(); // blocking
-        expect(ctrl0.content).to.not.be.displayed;
-        expect(ctrl1.content).to.not.be.displayed;
-        expect(ctrl2.content).to.be.displayed;
-        expect(ctrl3.content).to.not.be.displayed;
+        expect(ctrl0.__wrappingDialogNode).to.not.be.displayed;
+        expect(ctrl1.__wrappingDialogNode).to.not.be.displayed;
+        expect(ctrl2.__wrappingDialogNode).to.be.displayed;
+        expect(ctrl3.__wrappingDialogNode).to.not.be.displayed;
       });
 
       it('keeps backdrop status when used in combination with blocking', async () => {
@@ -1197,11 +1316,11 @@ describe('OverlayController', () => {
 
       ctrl.hide();
 
-      expect(getComputedStyle(ctrl.contentWrapperNode).display).to.equal('block');
+      expect(getComputedStyle(ctrl.content).display).to.equal('block');
       setTimeout(() => {
         hideTransitionFinished();
         setTimeout(() => {
-          expect(getComputedStyle(ctrl.contentWrapperNode).display).to.equal('none');
+          expect(getComputedStyle(ctrl.content).display).to.equal('none');
           done();
         }, 0);
       }, 0);
@@ -1379,89 +1498,9 @@ describe('OverlayController', () => {
       expect(properlyInstantiated).to.be.true;
     });
 
-    it('adds attributes inert and aria-hidden="true" on all siblings of rootNode if an overlay is shown', async () => {
-      const ctrl = new OverlayController({
-        ...withGlobalTestConfig(),
-        trapsKeyboardFocus: true,
-      });
-
-      const sibling1 = document.createElement('div');
-      const sibling2 = document.createElement('div');
-      document.body.insertBefore(sibling1, ctrl.manager.globalRootNode);
-      document.body.appendChild(sibling2);
-
-      await ctrl.show();
-
-      [sibling1, sibling2].forEach(sibling => {
-        expect(sibling).to.have.attribute('aria-hidden', 'true');
-        expect(sibling).to.have.attribute('inert');
-      });
-      expect(ctrl.content.hasAttribute('aria-hidden')).to.be.false;
-      expect(ctrl.content.hasAttribute('inert')).to.be.false;
-
-      await ctrl.hide();
-
-      [sibling1, sibling2].forEach(sibling => {
-        expect(sibling).to.not.have.attribute('aria-hidden');
-        expect(sibling).to.not.have.attribute('inert');
-      });
-
-      // cleanup
-      document.body.removeChild(sibling1);
-      document.body.removeChild(sibling2);
-    });
-
-    /**
-     * style.userSelect:
-     *   - chrome: 'none'
-     *   - rest: undefined
-     *
-     * style.pointerEvents:
-     *   - chrome: auto
-     *   - IE11: visiblePainted
-     */
-    it('disables pointer events and selection on inert elements', async () => {
-      const ctrl = new OverlayController({
-        ...withGlobalTestConfig(),
-        trapsKeyboardFocus: true,
-      });
-
-      // show+hide are needed to create a root node
-      await ctrl.show();
-      await ctrl.hide();
-
-      const sibling1 = document.createElement('div');
-      const sibling2 = document.createElement('div');
-      document.body.insertBefore(sibling1, ctrl.manager.globalRootNode);
-      document.body.appendChild(sibling2);
-
-      await ctrl.show();
-
-      [sibling1, sibling2].forEach(sibling => {
-        expect(window.getComputedStyle(sibling).userSelect).to.be.oneOf(['none', undefined]);
-        expect(window.getComputedStyle(sibling).pointerEvents).to.equal('none');
-      });
-
-      expect(window.getComputedStyle(ctrl.contentNode).userSelect).to.be.oneOf(['auto', undefined]);
-      expect(window.getComputedStyle(ctrl.contentNode).pointerEvents).to.be.oneOf([
-        'auto',
-        'visiblePainted',
-      ]);
-
-      await ctrl.hide();
-
-      [sibling1, sibling2].forEach(sibling => {
-        expect(window.getComputedStyle(sibling).userSelect).to.be.oneOf(['auto', undefined]);
-        expect(window.getComputedStyle(sibling).pointerEvents).to.be.oneOf([
-          'auto',
-          'visiblePainted',
-        ]);
-      });
-
-      // cleanup
-      document.body.removeChild(sibling1);
-      document.body.removeChild(sibling2);
-    });
+    // TODO: check if we covered all functionality. "Inertness" should be handled by the platform with a modal overlay...
+    it.skip('adds attributes inert and aria-hidden="true" on all siblings of rootNode if an overlay is shown', async () => {});
+    it.skip('disables pointer events and selection on inert elements', async () => {});
 
     describe('Tooltip', () => {
       it('adds [aria-describedby] on invoker', async () => {
@@ -1614,47 +1653,6 @@ describe('OverlayController', () => {
           placementMode: 'global',
         });
       }).to.throw('[OverlayController] You need to provide a .contentNode');
-    });
-
-    it('throws if contentNodeWrapper is not provided for projected contentNode', async () => {
-      const shadowHost = document.createElement('div');
-      shadowHost.attachShadow({ mode: 'open' });
-      /** @type {ShadowRoot} */ (shadowHost.shadowRoot).innerHTML = `
-        <div id="contentWrapperNode">
-          <slot name="contentNode"></slot>
-          <my-arrow></my-arrow>
-        </div>
-      `;
-      const contentNode = document.createElement('div');
-      contentNode.slot = 'contentNode';
-      shadowHost.appendChild(contentNode);
-
-      // Ensure the contentNode is connected to DOM
-      document.body.appendChild(shadowHost);
-
-      expect(() => {
-        new OverlayController({
-          ...withLocalTestConfig(),
-          contentNode,
-        });
-      }).to.throw(
-        '[OverlayController] You need to provide a .contentWrapperNode when .contentNode is projected',
-      );
-    });
-
-    it('throws if placementMode is global for a tooltip', async () => {
-      const contentNode = document.createElement('div');
-      document.body.appendChild(contentNode);
-      expect(() => {
-        new OverlayController({
-          placementMode: 'global',
-          contentNode,
-          isTooltip: true,
-          handlesAccessibility: true,
-        });
-      }).to.throw(
-        '[OverlayController] .isTooltip should be configured with .placementMode "local"',
-      );
     });
 
     it('throws if handlesAccessibility is false for a tooltip', async () => {

@@ -58,7 +58,6 @@ describe('ArrowMixin', () => {
       `)
     );
     expect(el.hasAttribute('has-arrow')).to.be.true;
-
     const arrowNode = /** @type {Element} */ (el._arrowNode);
     expect(window.getComputedStyle(arrowNode).getPropertyValue('display')).to.equal('block');
   });

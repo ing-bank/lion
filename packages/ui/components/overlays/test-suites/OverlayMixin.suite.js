@@ -1,7 +1,7 @@
 import { expect, fixture, html, nextFrame, aTimeout } from '@open-wc/testing';
 
 import sinon from 'sinon';
-import { overlays, OverlayController } from '@lion/ui/overlays.js';
+import { overlays as overlaysManager, OverlayController } from '@lion/ui/overlays.js';
 
 import '@lion/ui/define/lion-dialog.js';
 import { _browserDetection } from '../src/OverlaysManager.js';
@@ -15,10 +15,12 @@ import { _browserDetection } from '../src/OverlaysManager.js';
  * @typedef {LitElement & OverlayHost & {_overlayCtrl:OverlayController}} OverlayEl
  */
 
-function getGlobalOverlayNodes() {
-  return Array.from(overlays.globalRootNode.children).filter(
-    child => !child.classList.contains('global-overlays__backdrop'),
-  );
+function getGlobalOverlayCtrls() {
+  return overlaysManager.list;
+}
+
+function resetOverlaysManager() {
+  overlaysManager.list.forEach(overlayCtrl => overlaysManager.remove(overlayCtrl));
 }
 
 /**
@@ -220,23 +222,21 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       function sendCloseEvent(/** @type {Event} */ e) {
         e.target?.dispatchEvent(new Event('close-overlay', { bubbles: true }));
       }
-      const closeBtn = /** @type {OverlayEl} */ (
-        await fixture(html` <button @click=${sendCloseEvent}>close</button> `)
-      );
 
       const el = /** @type {OverlayEl} */ (
         await fixture(html`
         <${tag} opened>
           <div slot="content">
             content of the overlay
-            ${closeBtn}
+            <button @click=${sendCloseEvent}>close</button>
           </div>
           <button slot="invoker">invoker button</button>
         </${tag}>
       `)
       );
-      closeBtn.click();
-      await nextFrame(); // hide takes at least a frame
+      // @ts-ignore
+      el.querySelector('[slot=content] button').click();
+      await el._overlayCtrl._hideComplete;
       expect(el.opened).to.be.false;
     });
 
@@ -337,10 +337,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
     // For some reason, globalRootNode is not cleared properly on disconnectedCallback from previous overlay test fixtures...
     // Not sure why this "bug" happens...
     beforeEach(() => {
-      const globalRootNode = document.querySelector('.global-overlays');
-      if (globalRootNode) {
-        globalRootNode.innerHTML = '';
-      }
+      resetOverlaysManager();
     });
 
     it('supports nested overlays', async () => {
@@ -362,7 +359,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       );
 
       if (el._overlayCtrl.placementMode === 'global') {
-        expect(getGlobalOverlayNodes().length).to.equal(2);
+        expect(getGlobalOverlayCtrls().length).to.equal(2);
       }
 
       el.opened = true;
@@ -386,12 +383,12 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       `)
       );
       if (el._overlayCtrl.placementMode === 'global') {
-        expect(getGlobalOverlayNodes().length).to.equal(1);
+        expect(getGlobalOverlayCtrls().length).to.equal(1);
 
         const moveTarget = /** @type {OverlayEl} */ (await fixture('<div id="target"></div>'));
         moveTarget.appendChild(el);
         await el.updateComplete;
-        expect(getGlobalOverlayNodes().length).to.equal(1);
+        expect(getGlobalOverlayCtrls().length).to.equal(1);
       }
     });
 
@@ -419,14 +416,9 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
       if (el._overlayCtrl.placementMode === 'global') {
         // Find the outlets that are not backdrop outlets
-        const overlayContainerNodes = getGlobalOverlayNodes();
-        expect(overlayContainerNodes.length).to.equal(2);
-        const lastContentNodeInContainer = overlayContainerNodes[1];
+        expect(getGlobalOverlayCtrls().length).to.equal(2);
         // Check that the last container is the nested one with the intended content
-        expect(lastContentNodeInContainer.firstElementChild.firstChild.textContent).to.equal(
-          'content of the nested overlay',
-        );
-        expect(lastContentNodeInContainer.firstElementChild.slot).to.equal('content');
+        expect(el.contains(nestedEl)).to.be.true;
       } else {
         const contentNode = /** @type {HTMLElement} */ (
           // @ts-ignore [allow-protected] in tests

@@ -1,21 +1,19 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { css, LitElement } from 'lit';
 
 /**
- * @typedef {import('../types/OverlayConfig').OverlayConfig} OverlayConfig
+ * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  */
 class DemoOverlayBackdrop extends LitElement {
   static get styles() {
     return css`
       :host {
-        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: 1;
         background-color: grey;
         opacity: 0.3;
-        display: none;
       }
 
       :host(.local-overlays__backdrop--visible) {
