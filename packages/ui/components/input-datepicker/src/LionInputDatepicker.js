@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LionCalendar } from '@lion/ui/calendar.js';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
-import { html, render } from 'lit';
+import { html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
 import {
@@ -10,7 +10,8 @@ import {
   withModalDialogConfig,
   ArrowMixin,
 } from '@lion/ui/overlays.js';
-import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
+import { LocalizeMixin } from '@lion/ui/localize.js';
+import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
@@ -21,14 +22,47 @@ import { LionCalendarOverlayFrame } from './LionCalendarOverlayFrame.js';
  * @customElement lion-input-datepicker
  */
 export class LionInputDatepicker extends ScopedElementsMixin(
-  ArrowMixin(OverlayMixin(LionInputDate)),
+  ArrowMixin(OverlayMixin(LocalizeMixin(LionInputDate))),
 ) {
   static get scopedElements() {
     return {
       ...super.scopedElements,
       'lion-calendar': LionCalendar,
-      'lion-calendar-overlay-frame': LionCalendarOverlayFrame,
     };
+  }
+
+  static get styles() {
+    return [
+      ...super.styles,
+      css`
+        .calendar__overlay-frame {
+          display: inline-block;
+          background: white;
+          position: relative;
+        }
+
+        .calendar-overlay__header {
+          display: flex;
+        }
+
+        .calendar-overlay__heading {
+          padding: 16px 16px 8px;
+          flex: 1;
+        }
+
+        .calendar-overlay__heading > .calendar-overlay__close-button {
+          flex: none;
+        }
+
+        .calendar-overlay__close-button {
+          min-width: 40px;
+          min-height: 32px;
+          border-width: 0;
+          padding: 0;
+          font-size: 24px;
+        }
+      `,
+    ];
   }
 
   /** @type {any} */
@@ -68,101 +102,12 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   get slots() {
     return {
       ...super.slots,
-      [this._calendarInvokerSlot]: () => {
-        const renderParent = document.createElement('div');
-        render(
-          this._invokerTemplate(),
-          renderParent,
-          /** @type {RenderOptions} */ ({
-            scopeName: this.localName,
-            eventContext: this,
-          }),
-        );
-        return /** @type {HTMLElement} */ (renderParent.firstElementChild);
-      },
+      [this._calendarInvokerSlot]: () => this._invokerTemplate(),
     };
   }
 
   static get localizeNamespaces() {
-    return [
-      {
-        'lion-input-datepicker': /** @param {string} locale */ locale => {
-          switch (locale) {
-            case 'bg-BG':
-              return import('@lion/ui/input-datepicker-translations/bg-BG.js');
-            case 'bg':
-              return import('@lion/ui/input-datepicker-translations/bg.js');
-            case 'cs-CZ':
-              return import('@lion/ui/input-datepicker-translations/cs-CZ.js');
-            case 'cs':
-              return import('@lion/ui/input-datepicker-translations/cs.js');
-            case 'de-DE':
-              return import('@lion/ui/input-datepicker-translations/de-DE.js');
-            case 'de':
-              return import('@lion/ui/input-datepicker-translations/de.js');
-            case 'en-AU':
-              return import('@lion/ui/input-datepicker-translations/en-AU.js');
-            case 'en-GB':
-              return import('@lion/ui/input-datepicker-translations/en-GB.js');
-            case 'en-US':
-              return import('@lion/ui/input-datepicker-translations/en-US.js');
-            case 'en-PH':
-            case 'en':
-              return import('@lion/ui/input-datepicker-translations/en.js');
-            case 'es-ES':
-              return import('@lion/ui/input-datepicker-translations/es-ES.js');
-            case 'es':
-              return import('@lion/ui/input-datepicker-translations/es.js');
-            case 'fr-FR':
-              return import('@lion/ui/input-datepicker-translations/fr-FR.js');
-            case 'fr-BE':
-              return import('@lion/ui/input-datepicker-translations/fr-BE.js');
-            case 'fr':
-              return import('@lion/ui/input-datepicker-translations/fr.js');
-            case 'hu-HU':
-              return import('@lion/ui/input-datepicker-translations/hu-HU.js');
-            case 'hu':
-              return import('@lion/ui/input-datepicker-translations/hu.js');
-            case 'it-IT':
-              return import('@lion/ui/input-datepicker-translations/it-IT.js');
-            case 'it':
-              return import('@lion/ui/input-datepicker-translations/it.js');
-            case 'nl-BE':
-              return import('@lion/ui/input-datepicker-translations/nl-BE.js');
-            case 'nl-NL':
-              return import('@lion/ui/input-datepicker-translations/nl-NL.js');
-            case 'nl':
-              return import('@lion/ui/input-datepicker-translations/nl.js');
-            case 'pl-PL':
-              return import('@lion/ui/input-datepicker-translations/pl-PL.js');
-            case 'pl':
-              return import('@lion/ui/input-datepicker-translations/pl.js');
-            case 'ro-RO':
-              return import('@lion/ui/input-datepicker-translations/ro-RO.js');
-            case 'ro':
-              return import('@lion/ui/input-datepicker-translations/ro.js');
-            case 'ru-RU':
-              return import('@lion/ui/input-datepicker-translations/ru-RU.js');
-            case 'ru':
-              return import('@lion/ui/input-datepicker-translations/ru.js');
-            case 'sk-SK':
-              return import('@lion/ui/input-datepicker-translations/sk-SK.js');
-            case 'sk':
-              return import('@lion/ui/input-datepicker-translations/sk.js');
-            case 'uk-UA':
-              return import('@lion/ui/input-datepicker-translations/uk-UA.js');
-            case 'uk':
-              return import('@lion/ui/input-datepicker-translations/uk.js');
-            case 'zh-CN':
-            case 'zh':
-              return import('@lion/ui/input-datepicker-translations/zh.js');
-            default:
-              return import('@lion/ui/input-datepicker-translations/en.js');
-          }
-        },
-      },
-      ...super.localizeNamespaces,
-    ];
+    return [{ 'lion-input-datepicker': localizeNamespaceLoader }, ...super.localizeNamespaces];
   }
 
   /**
@@ -262,11 +207,29 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     // This would make first paint quicker
     return html`
       <div id="overlay-content-node-wrapper">
-        <lion-calendar-overlay-frame class="calendar__overlay-frame">
-          <span slot="heading">${this.calendarHeading}</span>
-          ${this._calendarTemplate()}
-        </lion-calendar-overlay-frame>
-        ${this._arrowNodeTemplate()}
+        ${this._overlayFrameTemplate()} ${this._arrowNodeTemplate()}
+      </div>
+    `;
+  }
+
+  _overlayFrameTemplate() {
+    return html`
+      <div class="calendar__overlay-frame">
+        <div class="calendar-overlay">
+          <div class="calendar-overlay__header">
+            <h1 class="calendar-overlay__heading">${this.calendarHeading}</h1>
+            <button
+              @click="${() => this._overlayCtrl.hide()}"
+              id="close-button"
+              title="${this.msgLit('lion-input-datepicker:close')}"
+              aria-label="${this.msgLit('lion-input-datepicker:close')}"
+              class="calendar-overlay__close-button"
+            >
+              <slot name="close-icon">&times;</slot>
+            </button>
+          </div>
+          <div>${this._calendarTemplate()}</div>
+        </div>
       </div>
     `;
   }
@@ -466,6 +429,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     this._cachedOverlayContentNode = /** @type {HTMLElement} */ (
       /** @type {ShadowRoot} */ (this.shadowRoot).querySelector('.calendar__overlay-frame')
     );
+
     return this._cachedOverlayContentNode;
   }
 }

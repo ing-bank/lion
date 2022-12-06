@@ -44,15 +44,17 @@ describe('<lion-input-datepicker>', () => {
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
 
-      expect(elObj.overlayEl.shadowRoot.querySelector('.calendar-overlay')).not.to.equal(null);
-      expect(elObj.overlayEl.shadowRoot.querySelector('.calendar-overlay__header')).not.to.equal(
-        null,
-      );
-      expect(elObj.overlayEl.shadowRoot.querySelector('.calendar-overlay__heading')).not.to.equal(
-        null,
-      );
       expect(
-        elObj.overlayEl.shadowRoot.querySelector('.calendar-overlay__close-button'),
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('.calendar-overlay'),
+      ).not.to.equal(null);
+      expect(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('.calendar-overlay__header'),
+      ).not.to.equal(null);
+      expect(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('.calendar-overlay__heading'),
+      ).not.to.equal(null);
+      expect(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('.calendar-overlay__close-button'),
       ).not.to.equal(null);
     });
 
@@ -74,11 +76,7 @@ describe('<lion-input-datepicker>', () => {
       `);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
-      expect(
-        /** @type {HTMLSlotElement} */ (
-          elObj.overlayHeadingEl.querySelector('slot[name="heading"]')
-        ).assignedNodes()[0],
-      ).lightDom.to.equal('Pick your date');
+      expect(elObj.overlayHeadingEl.textContent).to.equal('Pick your date');
     });
 
     it('can have a custom heading', async () => {
@@ -90,11 +88,7 @@ describe('<lion-input-datepicker>', () => {
       `);
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
-      expect(
-        /** @type {HTMLSlotElement} */ (
-          elObj.overlayHeadingEl.querySelector('slot[name="heading"]')
-        ).assignedNodes()[0],
-      ).lightDom.to.equal('foo');
+      expect(elObj.overlayHeadingEl.innerText).to.equal('foo');
     });
 
     it('closes the calendar on [esc] key', async () => {
@@ -670,7 +664,8 @@ describe('<lion-input-datepicker>', () => {
       expect(submitSpy.callCount).to.equal(0);
     });
 
-    it('is hidden when attribute hidden is true', async () => {
+    // TODO: remove: became irrelevant after we don't need dialog-frame
+    it.skip('is hidden when attribute hidden is true', async () => {
       const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
 
       await el.updateComplete;
@@ -690,7 +685,9 @@ describe('<lion-input-datepicker>', () => {
       await myElObj.openCalendar();
       expect(el.hasArrow).to.be.false;
       expect(
-        el?.shadowRoot?.contains(myElObj.overlayController.contentNode),
+        myElObj.overlayController.contentNode.classList.contains(
+          'global-overlays__overlay--bottom-sheet',
+        ),
         'Datepicker does not get rendered as bottom sheet',
       ).to.be.false;
     });

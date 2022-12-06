@@ -29,7 +29,7 @@ export class DatepickerInputObject {
 
   async closeCalendar() {
     this.overlayCloseButtonEl.click();
-    await this.overlayEl.updateComplete;
+    await this.el.updateComplete;
   }
 
   /**
@@ -58,13 +58,13 @@ export class DatepickerInputObject {
 
   get overlayHeadingEl() {
     return /** @type {HTMLElement} */ (
-      this.overlayEl && this.overlayEl.shadowRoot?.querySelector('.calendar-overlay__heading')
+      this.overlayEl && this.el.shadowRoot?.querySelector('.calendar-overlay__heading')
     );
   }
 
   get overlayCloseButtonEl() {
     return /** @type {HTMLElement} */ (
-      this.calendarEl && this.overlayEl.shadowRoot?.querySelector('#close-button')
+      this.calendarEl && this.el.shadowRoot?.querySelector('#close-button')
     );
   }
 
