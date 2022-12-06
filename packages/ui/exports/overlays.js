@@ -1,6 +1,5 @@
 export { OverlaysManager } from '../components/overlays/src/OverlaysManager.js';
 
-export { globalOverlaysStyle } from '../components/overlays/src/globalOverlaysStyle.js';
 export { OverlayController } from '../components/overlays/src/OverlayController.js';
 export { OverlayMixin } from '../components/overlays/src/OverlayMixin.js';
 export { ArrowMixin } from '../components/overlays/src/ArrowMixin.js';

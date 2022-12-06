@@ -11,7 +11,7 @@ async function combineLocalizeImports(importPromises) {
   }
   return combinedResult;
 }
-/* eslint-disable import/no-extraneous-dependencies */
+
 export const localizeNamespaceLoader = /** @param {string} locale */ locale => {
   switch (locale) {
     case 'bg-BG':

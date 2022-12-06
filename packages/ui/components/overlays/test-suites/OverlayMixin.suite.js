@@ -96,7 +96,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         )
       );
 
-      // For now, we skip this test for MacSafari, since the body.global-overlays-scroll-lock-ios-fix
+      // For now, we skip this test for MacSafari, since the body.overlays-scroll-lock-ios-fix
       // class results in a scrollbar when preventsScroll is true.
       // However, fully functioning interacive elements (input fields) in the dialog are more important
       if (_browserDetection.isMacSafari && elWithBigParent._overlayCtrl.preventsScroll) {

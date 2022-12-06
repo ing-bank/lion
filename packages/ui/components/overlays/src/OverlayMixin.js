@@ -90,10 +90,10 @@ export const OverlayMixinImplementation = superclass =>
         ...this.config, // user provided (e.g. in template)
         popperConfig: {
           ...(overlayConfig.popperConfig || {}),
-          ...(this.config.popperConfig || {}),
+          ...(this.config?.popperConfig || {}),
           modifiers: [
             ...(overlayConfig.popperConfig?.modifiers || []),
-            ...(this.config.popperConfig?.modifiers || []),
+            ...(this.config?.popperConfig?.modifiers || []),
           ],
         },
       });

@@ -3,7 +3,7 @@
  * @typedef {import('./OverlayController.js').OverlayController} OverlayController
  */
 
-import { globalOverlaysStyle } from './globalOverlaysStyle.js';
+import { overlayDocumentStyle } from './overlayDocumentStyle.js';
 
 // Export this as protected var, so that we can easily mock it in tests
 // TODO: combine with browserDetection of core?
@@ -24,8 +24,8 @@ export const _browserDetection = {
 export class OverlaysManager {
   static __createGlobalStyleNode() {
     const styleTag = document.createElement('style');
-    styleTag.setAttribute('data-global-overlays', '');
-    styleTag.textContent = /** @type {CSSResult} */ (globalOverlaysStyle).cssText;
+    styleTag.setAttribute('data-overlays', '');
+    styleTag.textContent = /** @type {CSSResult} */ (overlayDocumentStyle).cssText;
     document.head.appendChild(styleTag);
     return styleTag;
   }
@@ -184,27 +184,32 @@ export class OverlaysManager {
   requestToPreventScroll() {
     const { isIOS, isMacSafari } = _browserDetection;
     // no check as classList will dedupe it anyways
-    document.body.classList.add('global-overlays-scroll-lock');
+    document.body.classList.add('overlays-scroll-lock');
     if (isIOS || isMacSafari) {
       // iOS and safar for mac have issues with overlays with input fields. This is fixed by applying
       // position: fixed to the body. As a side effect, this will scroll the body to the top.
-      document.body.classList.add('global-overlays-scroll-lock-ios-fix');
+      document.body.classList.add('overlays-scroll-lock-ios-fix');
     }
     if (isIOS) {
-      document.documentElement.classList.add('global-overlays-scroll-lock-ios-fix');
+      document.documentElement.classList.add('overlays-scroll-lock-ios-fix');
     }
   }
 
   requestToEnableScroll() {
+    const hasOpenSiblingThatPreventsScroll = this.shownList.some(
+      ctrl => ctrl.preventsScroll === true,
+    );
+    if (hasOpenSiblingThatPreventsScroll) {
+      return;
+    }
+
     const { isIOS, isMacSafari } = _browserDetection;
-    if (!this.shownList.some(ctrl => ctrl.preventsScroll === true)) {
-      document.body.classList.remove('global-overlays-scroll-lock');
-      if (isIOS || isMacSafari) {
-        document.body.classList.remove('global-overlays-scroll-lock-ios-fix');
-      }
-      if (isIOS) {
-        document.documentElement.classList.remove('global-overlays-scroll-lock-ios-fix');
-      }
+    document.body.classList.remove('overlays-scroll-lock');
+    if (isIOS || isMacSafari) {
+      document.body.classList.remove('overlays-scroll-lock-ios-fix');
+    }
+    if (isIOS) {
+      document.documentElement.classList.remove('overlays-scroll-lock-ios-fix');
     }
   }
 

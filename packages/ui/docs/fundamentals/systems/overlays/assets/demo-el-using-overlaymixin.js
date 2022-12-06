@@ -2,9 +2,9 @@ import { html, LitElement } from 'lit';
 import { OverlayMixin } from '@lion/ui/overlays.js';
 
 /**
- * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  */
-class DemoOverlaySystem extends OverlayMixin(LitElement) {
+class DemoElUsingOverlayMixin extends OverlayMixin(LitElement) {
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return /** @type {OverlayConfig} */ ({
@@ -35,8 +35,7 @@ class DemoOverlaySystem extends OverlayMixin(LitElement) {
       <div id="overlay-content-node-wrapper">
         <slot name="content"></slot>
       </div>
-      <div>popup is ${this.opened ? 'opened' : 'closed'}</div>
     `;
   }
 }
-customElements.define('demo-overlay-system', DemoOverlaySystem);
+customElements.define('demo-el-using-overlaymixin', DemoElUsingOverlayMixin);

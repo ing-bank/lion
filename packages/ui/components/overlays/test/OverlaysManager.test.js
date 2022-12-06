@@ -28,14 +28,14 @@ describe('OverlaysManager', () => {
   });
 
   it('provides global stylesheet for arrangement of body scroll', () => {
-    expect(document.head.querySelectorAll('[data-global-overlays]').length).to.equal(1);
+    expect(document.head.querySelectorAll('[data-overlays]').length).to.equal(1);
   });
 
   it('provides .teardown() for cleanup', () => {
-    expect(document.head.querySelector('[data-global-overlays=""]')).not.be.undefined;
+    expect(document.head.querySelector('[data-overlays=""]')).not.be.undefined;
 
     mngr.teardown();
-    expect(document.head.querySelector('[data-global-overlays=""]')).be.null;
+    expect(document.head.querySelector('[data-overlays=""]')).be.null;
 
     // safety check via private access (do not use this)
     expect(OverlaysManager.__globalStyleNode).to.be.undefined;
@@ -122,22 +122,18 @@ describe('OverlaysManager', () => {
     });
 
     describe('When initialized with "preventsScroll: true"', () => {
-      it('adds class "global-overlays-scroll-lock-ios-fix" to body and html on iOS', async () => {
+      it('adds class "overlays-scroll-lock-ios-fix" to body and html on iOS', async () => {
         mockIOS();
         const dialog = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
         await dialog.show();
-        expect(Array.from(document.body.classList)).to.contain(
-          'global-overlays-scroll-lock-ios-fix',
-        );
+        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
         expect(Array.from(document.documentElement.classList)).to.contain(
-          'global-overlays-scroll-lock-ios-fix',
+          'overlays-scroll-lock-ios-fix',
         );
         await dialog.hide();
-        expect(Array.from(document.body.classList)).to.not.contain(
-          'global-overlays-scroll-lock-ios-fix',
-        );
+        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
         expect(Array.from(document.documentElement.classList)).to.not.contain(
-          'global-overlays-scroll-lock-ios-fix',
+          'overlays-scroll-lock-ios-fix',
         );
 
         // When we are not iOS nor MacSafari
@@ -146,30 +142,24 @@ describe('OverlaysManager', () => {
 
         const dialog2 = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
         await dialog2.show();
-        expect(Array.from(document.body.classList)).to.not.contain(
-          'global-overlays-scroll-lock-ios-fix',
-        );
+        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
         expect(Array.from(document.documentElement.classList)).to.not.contain(
-          'global-overlays-scroll-lock-ios-fix',
+          'overlays-scroll-lock-ios-fix',
         );
       });
 
-      it('adds class "global-overlays-scroll-lock-ios-fix" to body on MacSafari', async () => {
+      it('adds class "overlays-scroll-lock-ios-fix" to body on MacSafari', async () => {
         mockMacSafari();
         const dialog = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
         await dialog.show();
-        expect(Array.from(document.body.classList)).to.contain(
-          'global-overlays-scroll-lock-ios-fix',
-        );
+        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
         expect(Array.from(document.documentElement.classList)).to.not.contain(
-          'global-overlays-scroll-lock-ios-fix',
+          'overlays-scroll-lock-ios-fix',
         );
         await dialog.hide();
-        expect(Array.from(document.body.classList)).to.not.contain(
-          'global-overlays-scroll-lock-ios-fix',
-        );
+        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
         expect(Array.from(document.documentElement.classList)).to.not.contain(
-          'global-overlays-scroll-lock-ios-fix',
+          'overlays-scroll-lock-ios-fix',
         );
       });
     });

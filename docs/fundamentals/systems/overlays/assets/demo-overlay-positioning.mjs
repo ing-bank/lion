@@ -3,7 +3,7 @@
 import { html, LitElement, css } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 import { OverlayMixin } from '@lion/ui/overlays.js';
-import './demo-overlay-system.mjs';
+import './demo-el-using-overlaymixin.mjs';
 
 /**
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
@@ -44,8 +44,7 @@ class DemoOverlayEl extends OverlayMixin(LitElement) {
           height: 100%;
         }
 
-        :host([simulate-viewport])
-          #overlay-content-node-wrapper.global-overlays__overlay-container {
+        :host([simulate-viewport]) #overlay-content-node-wrapper.overlays__overlay-container {
           position: absolute;
         }
 

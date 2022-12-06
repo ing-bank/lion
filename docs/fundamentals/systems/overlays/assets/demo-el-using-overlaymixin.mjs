@@ -7,7 +7,7 @@ import { LionButton } from '@lion/ui/button.js';
 /**
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  */
-class DemoOverlaySystem extends OverlayMixin(LitElement) {
+class DemoElUsingOverlayMixin extends OverlayMixin(LitElement) {
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
     return /** @type {OverlayConfig} */ ({
@@ -36,12 +36,10 @@ class DemoOverlaySystem extends OverlayMixin(LitElement) {
       <slot name="invoker"></slot>
       <slot name="backdrop"></slot>
       <slot name="content"></slot>
-
-      <div>popup is ${this.opened ? 'opened' : 'closed'}</div>
     `;
   }
 }
-customElements.define('demo-overlay-system', DemoOverlaySystem);
+customElements.define('demo-el-using-overlaymixin', DemoElUsingOverlayMixin);
 
 class DemoOverlay extends OverlayMixin(LitElement) {
   static get styles() {

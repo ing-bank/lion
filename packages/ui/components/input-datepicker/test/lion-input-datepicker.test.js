@@ -685,9 +685,7 @@ describe('<lion-input-datepicker>', () => {
       await myElObj.openCalendar();
       expect(el.hasArrow).to.be.false;
       expect(
-        myElObj.overlayController.contentNode.classList.contains(
-          'global-overlays__overlay--bottom-sheet',
-        ),
+        myElObj.overlayController.contentNode.classList.contains('overlays__overlay--bottom-sheet'),
         'Datepicker does not get rendered as bottom sheet',
       ).to.be.false;
     });

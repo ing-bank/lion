@@ -1,41 +1,15 @@
-# Systems >> Overlays >> Positioning ||10
+---
+eleventyExcludeFromCollections: true
+---
+
+# Systems >> Overlays >> Edge cases ||10
 
 ```js script
 import { html, render, LitElement } from '@mdjs/mdjs-preview';
 import { ref, createRef } from 'lit/directives/ref.js';
+import './assets/demo-el-using-overlaymixin.mjs';
+import './assets/applyDemoOverlayStyles.mjs';
 import './assets/demo-overlay-positioning.mjs';
-```
-
-Overlays can have two different placement modes: relative to their anchor element and relative to the viewport.
-Depending on screen size and viewing device, one placement mode might be suited better than the other.
-
-> Note that, the placementMode option has the values 'local' (anchor) and 'global' (viewport). These refer to their
-> legacy position in dom (global overlays were put in the body of the page). Since overlays are built with the native `<dialog>` element,
-> no content is moved around anymore, so their names are a bit less intuitive.
-
-## Relative to anchor
-
-An anchor is usually the invoker button, it can also be a non interactive reference element.
-Anchor placement uses Popper under the hood. It supports 9 positions:
-`top-start`, `top`, `top-end`, `right-start`, `right`, `right-end`, `bottom-start`, `bottom`, `bottom-end`, `left-start`,`left`,`left-end`
-
-```js story
-export const localPositioning = () => html`<demo-overlay-positioning></demo-overlay-positioning>`;
-```
-
-## Relative to viewport
-
-Viewport placement uses the flexbox layout mode, leveraging the best browser capabilities when
-the content or screen size updates.
-Supported modes:
-`center`, `top-left`, `top`, `top-right`, `right`, `bottom-right`, `bottom`, `bottom-left`, `left`
-
-```js story
-export const globalPositioning = () =>
-  html`<demo-overlay-positioning
-    placement-mode="global"
-    simulate-viewport
-  ></demo-overlay-positioning>`;
 ```
 
 ## Notorious edge cases

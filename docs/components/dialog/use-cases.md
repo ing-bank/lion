@@ -22,73 +22,27 @@ import './src/slots-dialog-content.js';
 </lion-dialog>
 ```
 
-## Styling content
-
-It's not possible to style content from the dialog component. This is because the content slot is moved to the global root node. This is why a custom component should be created and slotted in as the content. This ensures style encapsulation on the dialog content.
-
-```js preview-story
-export const stylingContent = () => html`
-  <style>
-    ${demoStyle}
-  </style>
-  <lion-dialog .config=${{ hidesOnOutsideClick: true, hidesOnEsc: true }}>
-    <button slot="invoker">Styled dialog</button>
-    <styled-dialog-content slot="content"></styled-dialog-content>
-  </lion-dialog>
-`;
-```
-
-## Content with slots
-
-```js preview-story
-export const slotsContent = () => html`
-  <style>
-    ${demoStyle}
-  </style>
-  <lion-dialog .config=${{ hidesOnOutsideClick: true, hidesOnEsc: true }}>
-    <button slot="invoker">Dialog with content with slots</button>
-    <slots-dialog-content slot="content">
-      <p>Some Stuff</p>
-      <p slot="actions">I am in the actions slot</p>
-    </slots-dialog-content>
-  </lion-dialog>
-`;
-```
-
-## Close overlay from component slotted as content
-
-The overlay cannot be closed by dispatching the `close-overlay` from a button in a styled component that is slotted in as content, because it will not cross the shadow boundary of the component. A method should be created that will dispatch the `close-overlay` event from the component.
-
-```js preview-story
-export const closeOverlayFromComponent = () => html`
-  <style>
-    ${demoStyle}
-  </style>
-  <lion-dialog .config=${{ hidesOnOutsideClick: true, hidesOnEsc: true }}>
-    <button slot="invoker">Styled dialog</button>
-    <styled-dialog-content slot="content"></styled-dialog-content>
-  </lion-dialog>
-`;
-```
-
 ## Placement overrides
 
 ```js preview-story
 export const placementOverrides = () => {
-  const dialog = placement => html`
-    <lion-dialog .config="${{ viewportConfig: { placement } }}">
-      <button slot="invoker">Dialog ${placement}</button>
-      <div slot="content" class="dialog demo-box">
-        Hello! You can close this notification here:
-        <button
-          class="close-button"
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-        >
-          ⨯
-        </button>
-      </div>
-    </lion-dialog>
-  `;
+  const dialog = placement => {
+    const cfg = { viewportConfig: { placement } };
+    return html`
+      <lion-dialog .config="${cfg}">
+        <button slot="invoker">Dialog ${placement}</button>
+        <div slot="content" class="dialog demo-box">
+          Hello! You can close this notification here:
+          <button
+            class="close-button"
+            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          >
+            ⨯
+          </button>
+        </div>
+      </lion-dialog>
+    `;
+  };
   return html`
     <style>
       ${demoStyle}
@@ -116,30 +70,32 @@ Configuration passed to `config` property:
 No backdrop, hides on escape, prevents scrolling while opened, and focuses the body when hiding.
 
 ```js preview-story
-export const otherOverrides = () => html`
-  <style>
-    ${demoStyle}
-  </style>
-  <lion-dialog
-    .config=${{
-      hasBackdrop: false,
-      hidesOnEscape: true,
-      preventsScroll: true,
-      elementToFocusAfterHide: document.body,
-    }}
-  >
-    <button slot="invoker">Click me to open dialog</button>
-    <div slot="content" class="dialog">
-      Hello! You can close this dialog here:
-      <button
-        class="close-button"
-        @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-      >
-        ⨯
-      </button>
-    </div>
-  </lion-dialog>
-`;
+export const otherOverrides = () => {
+  const cfg = {
+    hasBackdrop: false,
+    hidesOnEscape: true,
+    preventsScroll: true,
+    elementToFocusAfterHide: document.body,
+  };
+
+  return html`
+    <style>
+      ${demoStyle}
+    </style>
+    <lion-dialog .config="${cfg}">
+      <button slot="invoker">Click me to open dialog</button>
+      <div slot="content" class="demo-dialog-content">
+        Hello! You can close this dialog here:
+        <button
+          class="demo-dialog-content__close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </lion-dialog>
+  `;
+};
 ```
 
 Configuration passed to `config` property:
