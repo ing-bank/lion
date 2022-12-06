@@ -25,7 +25,7 @@ export function parsePhoneNumber(viewValue, { regionCode }) {
     // eslint-disable-next-line no-empty
   } catch (_) {}
 
-  if (pn) {
+  if (pn?.number) {
     return pn.number.e164;
   }
 

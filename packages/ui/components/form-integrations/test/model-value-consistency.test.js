@@ -11,23 +11,19 @@ import '@lion/ui/define/lion-input-email.js';
 import '@lion/ui/define/lion-input-iban.js';
 import '@lion/ui/define/lion-input-range.js';
 import '@lion/ui/define/lion-input-stepper.js';
-
+import '@lion/ui/define/lion-input-tel.js';
+import '@lion/ui/define/lion-input-tel-dropdown.js';
 import '@lion/ui/define/lion-textarea.js';
-
 import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-checkbox-group.js';
-
 import '@lion/ui/define/lion-radio.js';
 import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-switch.js';
-
 import '@lion/ui/define/lion-select.js';
 import '@lion/ui/define/lion-option.js';
-
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
-
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-form.js';
 import '@lion/ui/define/lion-field.js';
@@ -344,7 +340,6 @@ describe('lion-fieldset', () => {
 
 describe('detail.isTriggeredByUser', () => {
   const allFormControls = [
-    'switch', // TODO: move back below when scoped-elements (polyfill) fixed side effects
     // 1) Fields
     'field',
     // 1a) Input Fields
@@ -356,12 +351,14 @@ describe('detail.isTriggeredByUser', () => {
     'input-iban',
     'input-range',
     'input-stepper',
+    'input-tel',
+    'input-tel-dropdown',
     'textarea',
     // 1b) Choice Fields
     'option',
     'checkbox',
     'radio',
-    // 'switch',
+    'switch',
     // 1c) Choice Group Fields
     'select',
     'listbox',
@@ -423,9 +420,10 @@ describe('detail.isTriggeredByUser', () => {
   /**
    * @param {FormControl & {value: string;}} el
    * @param {string} newViewValue
-   * @param {{ triggerType?: string, labelInsteadOfInput?: boolean }} [optionals]
+   * @param {{ triggerType?: string, labelInsteadOfInput?: boolean, parent?: HTMLElement }} options
    */
-  function mimicUserInput(el, newViewValue, optionals) {
+  function mimicUserInput(el, newViewValue, options = {}) {
+    // @ts-ignore
     const { _inputNode, _labelNode } = getFormControlMembers(el);
     const type = detectType(el);
     let userInputEv;
@@ -434,15 +432,15 @@ describe('detail.isTriggeredByUser', () => {
       el.value = newViewValue; // eslint-disable-line no-param-reassign
       _inputNode.dispatchEvent(new Event(userInputEv, { bubbles: true }));
     } else if (type === 'ChoiceField') {
-      if (optionals?.labelInsteadOfInput) {
+      if (options?.labelInsteadOfInput) {
         _labelNode.click();
       } else {
         _inputNode.click();
       }
     } else if (type === 'OptionChoiceField') {
-      if (!optionals?.triggerType) {
+      if (!options?.triggerType) {
         el.dispatchEvent(new Event('click', { bubbles: true }));
-      } else if (optionals?.triggerType === 'keypress') {
+      } else if (options?.triggerType === 'keypress') {
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
         el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown', bubbles: true }));
         el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
@@ -503,9 +501,12 @@ describe('detail.isTriggeredByUser', () => {
 
       /**
        * @param {FormControl & {value: string;}} formControl
-       * @param {boolean | undefined} [testKeyboardBehavior]
+       * @param {{parent?: FormControl; testKeyboardBehavior?: boolean}} moreOpts
        */
-      async function expectCorrectEventMetaChoiceField(formControl, testKeyboardBehavior) {
+      async function expectCorrectEventMetaChoiceField(
+        formControl,
+        { parent, testKeyboardBehavior } = {},
+      ) {
         const type = detectType(formControl);
 
         await resetChoiceFieldToForceRepropagation(formControl);
@@ -526,14 +527,19 @@ describe('detail.isTriggeredByUser', () => {
         formControl.modelValue = { value: 'programmaticValue', checked: false };
         expect(spy.secondCall.args[0].detail.isTriggeredByUser).to.be.false;
 
-        if (type === 'OptionChoiceField' && testKeyboardBehavior) {
+        if (
+          type === 'OptionChoiceField' &&
+          testKeyboardBehavior &&
+          parent?.constructor.name !== 'LionCombobox' // modelValue only changeable via click or textbox
+        ) {
           await resetChoiceFieldToForceRepropagation(formControl);
-          mimicUserInput(formControl, 'userValue', { triggerType: 'keypress' });
-          // TODO: get rid of try/catch (?)...
+          mimicUserInput(formControl, 'userValue', { triggerType: 'keypress', parent });
           try {
             expect(spy.firstCall.args[0].detail.isTriggeredByUser).to.be.true;
           } catch (e) {
-            console.log(formControl);
+            throw new Error(
+              `model-value-changed of ${formControl.constructor.name} with parent ${parent?.constructor.name} not caught`,
+            );
           }
         }
       }
@@ -556,7 +562,10 @@ describe('detail.isTriggeredByUser', () => {
         );
         el.appendChild(childrenEls);
         await el.registrationComplete;
-        await expectCorrectEventMetaChoiceField(el.formElements[0], true);
+        await expectCorrectEventMetaChoiceField(el.formElements[0], {
+          testKeyboardBehavior: true,
+          parent: el,
+        });
       } else if (type === 'FormOrFieldset') {
         const childrenEls = await fixture(
           html`<div><lion-input name="one"></lion-input><lion-input name="two"></lion-input></div>`,

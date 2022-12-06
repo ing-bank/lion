@@ -25,6 +25,7 @@ describe('Form Integrations', () => {
   it('".serializedValue" returns all non disabled fields based on form structure', async () => {
     const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
     await el.updateComplete;
+    await el.waitForAllChildrenUpdates();
     const formEl = el._lionFormNode;
 
     expect(formEl.serializedValue).to.eql({
@@ -46,7 +47,7 @@ describe('Form Integrations', () => {
       notifications: { value: '', checked: false },
       rsvp: '',
       tel: '',
-      'tel-dropdown': '',
+      'tel-dropdown': '+44',
       comments: '',
     });
   });
@@ -110,6 +111,7 @@ describe('Form Integrations', () => {
           ></umbrella-form>`,
         )
       );
+      await el.waitForAllChildrenUpdates();
 
       await el._lionFormNode.initComplete;
       expect(el._lionFormNode.dirty).to.be.false;
@@ -162,9 +164,10 @@ describe('Form Integrations', () => {
     ];
 
     it('successfully registers all form components', async () => {
-      const el = /** @type {UmbrellaForm} */ await fixture(html`<umbrella-form></umbrella-form>`);
-      // @ts-ignore
-      const formEl = /** @type {LionForm} */ (el._lionFormNode);
+      const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
+      await el.waitForAllChildrenUpdates();
+
+      const formEl = el._lionFormNode;
       await formEl.registrationComplete;
       const registeredEls = getAllTagNames(formEl);
 
@@ -172,8 +175,10 @@ describe('Form Integrations', () => {
     });
 
     it('successfully unregisters all form components', async () => {
-      const el = /** @type {UmbrellaForm} */ await fixture(html`<umbrella-form></umbrella-form>`);
+      const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
       const offlineContainer = document.createElement('div');
+      await el.waitForAllChildrenUpdates();
+
       // @ts-ignore
       const formEl = /** @type {LionForm} */ (el._lionFormNode);
       await formEl.registrationComplete;

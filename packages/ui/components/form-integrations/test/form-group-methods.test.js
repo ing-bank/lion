@@ -96,15 +96,13 @@ describe(`Submitting/Resetting/Clearing Form`, async () => {
   it('pressing submit button of a form should make submitted true for all fields', async () => {
     const el = /** @type {UmbrellaForm} */ (await fixture(html`<umbrella-form></umbrella-form>`));
     await el.updateComplete;
+    await el.waitForAllChildrenUpdates();
+
     const formEl = el._lionFormNode;
 
     const allElements = getAllFieldsAndFormGroups(formEl);
 
     allElements.forEach((/** @type {LionField} */ field) => {
-      if (field.tagName === 'LION-SWITCH') {
-        // TODO: remove this when this is fixed: https://github.com/ing-bank/lion/issues/1204
-        return;
-      }
       // TODO: prefer submitted 'false' over 'undefined'
       expect(Boolean(field.submitted)).to.be.false;
     });
@@ -122,6 +120,8 @@ describe(`Submitting/Resetting/Clearing Form`, async () => {
         html`<umbrella-form .serializedValue="${fullyPrefilledSerializedValue}"></umbrella-form>`,
       )
     );
+    await el.waitForAllChildrenUpdates();
+
     await el.updateComplete;
     const formEl = el._lionFormNode;
 
@@ -168,6 +168,8 @@ describe(`Submitting/Resetting/Clearing Form`, async () => {
         html`<umbrella-form .serializedValue="${fullyPrefilledSerializedValue}"></umbrella-form>`,
       )
     );
+    await el.waitForAllChildrenUpdates();
+
     await el.updateComplete;
     const formEl = el._lionFormNode;
 
