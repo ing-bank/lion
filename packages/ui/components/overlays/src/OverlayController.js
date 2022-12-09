@@ -112,58 +112,6 @@ const supportsCSSTypedObject = window.CSS?.number && document.body.attributeStyl
  * configuration, it can be used to build (modal) dialogs, tooltips, dropdowns, popovers,
  * bottom/top/left/right sheets etc.
  *
- * ### About contentNode, contentWrapperNode and renderTarget.
- *
- * #### contentNode
- * Node containing actual overlay contents.
- * It will not be touched by the OverlayController, it will only set attributes needed
- * for accessibility.
- *
- * #### contentWrapperNode
- * The 'positioning' element.
- * For local overlays, this node will be provided to Popper and all
- * inline positioning styles will be added here. It will also act as the container of an arrow
- * element (the arrow needs to be a sibling of contentNode for Popper to work correctly).
- * When projecting a contentNode from a shadowRoot, it is essential to have the wrapper in
- * shadow dom, so that contentNode can be styled via `::slotted` from the shadow root.
- * The Popper arrow can then be styled from that same shadow root as well.
- * For global overlays, the contentWrapperNode will be appended to the globalRootNode structure.
- *
- * #### renderTarget
- * Usually the parent node of contentWrapperNode that either exists locally or globally.
- * When a responsive scenario is created (in which we switch from global to local or vice versa)
- * we need to know where we should reappend contentWrapperNode (or contentNode in case it's projected)
- *
- * So a regular flow can be summarized as follows:
- * 1. Application Developer spawns an OverlayController with a contentNode reference
- * 2. OverlayController will create a contentWrapperNode around contentNode (or consumes when provided)
- * 3. contentWrapperNode will be appended to the right renderTarget
- *
- * There are subtle differences depending on the following factors:
- * - whether in global/local placement mode
- * - whether contentNode projected
- * - whether an arrow is provided
- *
- * This leads to the following possible combinations:
- * - [l1]. local + no content projection + no arrow
- * - [l2]. local +    content projection + no arrow
- * - [l3]. local + no content projection +    arrow
- * - [l4]. local +    content projection +    arrow
- * - [g1]. global
- *
- * #### html structure for a content projected node
- * <div id="contentWrapperNode">
- *  <slot name="contentNode"></slot>
- *  <div data-popper-arrow></div>
- * </div>
- *
- * Structure above depicts [l4]
- * So in case of [l1] and [l3], the <slot> element would be a regular element
- * In case of [l1] and [l2], there would be no arrow.
- * Note that a contentWrapperNode should be provided for [l2], [l3] and [l4]
- * In case of a global overlay ([g1]), it's enough to provide just the contentNode.
- * In case of a local overlay or a responsive overlay switching from placementMode, one should
- * always configure as if it were a local overlay.
  */
 export class OverlayController extends EventTargetShim {
   /**
@@ -944,15 +892,19 @@ export class OverlayController extends EventTargetShim {
 
   /** @protected */
   _restoreFocus() {
-    const { activeElement } = /** @type {ShadowRoot} */ (this.contentWrapperNode.getRootNode());
-    // We only are allowed to move focus if we (still) 'own' it.
-    // Otherwise we assume the 'outside world' has, purposefully, taken over
-    if (activeElement instanceof HTMLElement && this.contentWrapperNode.contains(activeElement)) {
-      if (this.elementToFocusAfterHide) {
-        this.elementToFocusAfterHide.focus();
-      } else {
-        activeElement.blur();
-      }
+    // We only are allowed to move focus if we (still) 'own' the active element.
+    // Otherwise we assume the 'outside world' has purposefully taken over
+    const { activeElement } = /** @type {ShadowRoot} */ (this.contentNode.getRootNode());
+    const weStillOwnActiveElement =
+      activeElement instanceof HTMLElement && this.contentNode.contains(activeElement);
+    if (!weStillOwnActiveElement) {
+      return;
+    }
+
+    if (this.elementToFocusAfterHide) {
+      this.elementToFocusAfterHide.focus();
+    } else {
+      activeElement.blur();
     }
   }
 
