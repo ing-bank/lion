@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { css } from 'lit';
 
 const applyDemoOverlayStyles = () => {
