@@ -889,6 +889,35 @@ describe('OverlayController', () => {
         expect(document.activeElement).to.equal(input);
       });
 
+      it('supports elementToFocusAfterHide option when shadowRoot involved involved', async () => {
+        const input = /** @type {HTMLElement} */ (await fixture('<input />'));
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture('<div><textarea></textarea></div>')
+        );
+
+        const shadowEl = document.createElement('div');
+        shadowEl.attachShadow({ mode: 'open' });
+        /** @type {ShadowRoot} */ (shadowEl.shadowRoot).innerHTML = `<slot></slot>`;
+        shadowEl.appendChild(contentNode);
+        document.body.appendChild(shadowEl);
+
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          elementToFocusAfterHide: input,
+          contentNode,
+        });
+
+        await ctrl.show();
+        const textarea = /** @type {HTMLTextAreaElement} */ (contentNode.querySelector('textarea'));
+        textarea.focus();
+        expect(document.activeElement).to.equal(textarea);
+
+        await ctrl.hide();
+        expect(document.activeElement).to.equal(input);
+
+        document.body.removeChild(shadowEl);
+      });
+
       it(`only sets focus when outside world didn't take over already`, async () => {
         const input = /** @type {HTMLElement} */ (await fixture('<input />'));
         const outsideButton = /** @type {HTMLButtonElement} */ (await fixture('<button></button>'));
