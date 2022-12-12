@@ -72,6 +72,12 @@ export interface OverlayConfig {
 
   /** render a div instead of dialog */
   _noDialogEl?: Boolean;
+
+  /**
+   * Determines the conditions hiding/showing should be based on. It gets the OverlayController as input and returns an object with
+   * functions with Overlay phases as keys
+   */
+  handlesUserInteraction?: Function;
 }
 
 export type ViewportPlacement =

@@ -58,7 +58,7 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
   }
 
   let parentElement;
-  const tempMarker = document.createComment('temp-marker');
+  const tempMarker = document.createComment('tempMarker');
 
   if (contentWrapperNodeL2.isConnected) {
     // This is the case when contentWrapperNode (living in shadow dom, wrapping <slot name="my-content-outlet">) is already provided via controller.
@@ -166,7 +166,7 @@ export class OverlayController extends EventTargetShim {
       hidesOnOutsideClick: false,
       isTooltip: false,
       invokerRelation: 'description',
-      // handlesUserInteraction: false,
+      handlesUserInteraction: undefined,
       handlesAccessibility: false,
       popperConfig: {
         placement: 'top',
@@ -419,6 +419,10 @@ export class OverlayController extends EventTargetShim {
     return /** @type {ViewportConfig} */ (this.config?.viewportConfig);
   }
 
+  get handlesUserInteraction() {
+    return /** @type {function} */ (this.config?.handlesUserInteraction);
+  }
+
   /**
    * @desc The element our local overlay will be positioned relative to.
    * @type {HTMLElement | undefined}
@@ -470,11 +474,9 @@ export class OverlayController extends EventTargetShim {
         ...(this.__sharedConfig.popperConfig || {}),
         ...(cfgToAdd.popperConfig || {}),
         modifiers: [
-          ...((this._defaultConfig.popperConfig && this._defaultConfig.popperConfig.modifiers) ||
-            []),
-          ...((this.__sharedConfig.popperConfig && this.__sharedConfig.popperConfig.modifiers) ||
-            []),
-          ...((cfgToAdd.popperConfig && cfgToAdd.popperConfig.modifiers) || []),
+          ...(this._defaultConfig.popperConfig?.modifiers || []),
+          ...(this.__sharedConfig.popperConfig?.modifiers || []),
+          ...(cfgToAdd.popperConfig?.modifiers || []),
         ],
       },
     };
@@ -575,6 +577,7 @@ export class OverlayController extends EventTargetShim {
    * @private
    */
   __initContentDomStructure() {
+    console.log('__initContentDomStructure');
     const wrappingDialogElement = document.createElement(
       this.config?._noDialogEl ? 'div' : 'dialog',
     );
@@ -734,7 +737,7 @@ export class OverlayController extends EventTargetShim {
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
       if (this.__wrappingDialogNode instanceof HTMLDialogElement) {
-        this.__wrappingDialogNode.show();
+        this.__wrappingDialogNode.open = true;
       }
       // @ts-ignore
       this.__wrappingDialogNode.style.display = '';
@@ -970,6 +973,24 @@ export class OverlayController extends EventTargetShim {
     }
     if (this.inheritsReferenceWidth) {
       this._handleInheritsReferenceWidth();
+    }
+
+    if (this.handlesUserInteraction) {
+      this._handleUserInteraction({ phase });
+    }
+  }
+
+  /**
+   * @param {{ phase: OverlayPhase }} config
+   */
+  _handleUserInteraction({ phase }) {
+    if (typeof this.handlesUserInteraction === 'function') {
+      if (phase === 'init') {
+        this.__userInteractionHandler = this.handlesUserInteraction({ phase, controller: this });
+      }
+      if (this.__userInteractionHandler[phase]) {
+        this.__userInteractionHandler[phase]();
+      }
     }
   }
 
@@ -1275,6 +1296,16 @@ export class OverlayController extends EventTargetShim {
         ...this.config?.popperConfig,
       });
     }
+  }
+
+  _hasDisabledInvoker() {
+    if (this.invokerNode) {
+      return (
+        /** @type {HTMLElement & { disabled: boolean }} */ (this.invokerNode).disabled ||
+        this.invokerNode.getAttribute('aria-disabled') === 'true'
+      );
+    }
+    return false;
   }
 }
 /** @type {Promise<PopperModule> | undefined} */
