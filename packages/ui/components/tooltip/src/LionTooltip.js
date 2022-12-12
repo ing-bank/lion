@@ -1,8 +1,8 @@
 import { css, LitElement } from 'lit';
-import { ArrowMixin, OverlayMixin } from '@lion/ui/overlays.js';
+import { ArrowMixin, OverlayMixin, withTooltipConfig } from '@lion/ui/overlays.js';
 
 /**
- * @typedef {import('../../overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  * @typedef {import('lit').CSSResult} CSSResult
  * @typedef {import('lit').CSSResultArray} CSSResultArray
  */
@@ -49,10 +49,6 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
      * @type {'label'|'description'}
      */
     this.invokerRelation = 'description';
-    /** @protected */
-    this._mouseActive = false;
-    /** @protected */
-    this._keyActive = false;
   }
 
   /** @protected */
@@ -60,90 +56,7 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
   _defineOverlayConfig() {
     return /** @type {OverlayConfig} */ ({
       ...super._defineOverlayConfig(),
-      placementMode: 'local',
-      elementToFocusAfterHide: undefined,
-      hidesOnEsc: true,
-      hidesOnOutsideEsc: true,
-      handlesAccessibility: true,
-      isTooltip: true,
-      invokerRelation: this.invokerRelation,
+      ...withTooltipConfig({ invokerRelation: this.invokerRelation }),
     });
-  }
-
-  /** @protected */
-  _hasDisabledInvoker() {
-    if (this._overlayCtrl && this._overlayCtrl.invoker) {
-      return (
-        /** @type {HTMLElement & { disabled: boolean }} */ (this._overlayCtrl.invoker).disabled ||
-        this._overlayCtrl.invoker.getAttribute('aria-disabled') === 'true'
-      );
-    }
-    return false;
-  }
-
-  /** @protected */
-  _setupOpenCloseListeners() {
-    super._setupOpenCloseListeners();
-    this.__resetActive = this.__resetActive.bind(this);
-    this._overlayCtrl.addEventListener('hide', this.__resetActive);
-
-    this.addEventListener('mouseenter', this._showMouse);
-    this.addEventListener('mouseleave', this._hideMouse);
-
-    this._showKey = this._showKey.bind(this);
-    this._overlayInvokerNode.addEventListener('focusin', this._showKey);
-
-    this._hideKey = this._hideKey.bind(this);
-    this._overlayInvokerNode.addEventListener('focusout', this._hideKey);
-  }
-
-  /** @protected */
-  _teardownOpenCloseListeners() {
-    super._teardownOpenCloseListeners();
-    this._overlayCtrl.removeEventListener('hide', this.__resetActive);
-    this.removeEventListener('mouseenter', this._showMouse);
-    this.removeEventListener('mouseleave', this._hideMouse);
-    this._overlayInvokerNode.removeEventListener('focusin', this._showKey);
-    this._overlayInvokerNode.removeEventListener('focusout', this._hideKey);
-  }
-
-  /** @private */
-  __resetActive() {
-    this._mouseActive = false;
-    this._keyActive = false;
-  }
-
-  /** @protected */
-  _showMouse() {
-    if (!this._keyActive) {
-      this._mouseActive = true;
-      if (!this._hasDisabledInvoker()) {
-        this.opened = true;
-      }
-    }
-  }
-
-  /** @protected */
-  _hideMouse() {
-    if (!this._keyActive) {
-      this.opened = false;
-    }
-  }
-
-  /** @protected */
-  _showKey() {
-    if (!this._mouseActive) {
-      this._keyActive = true;
-      if (!this._hasDisabledInvoker()) {
-        this.opened = true;
-      }
-    }
-  }
-
-  /** @protected */
-  _hideKey() {
-    if (!this._mouseActive) {
-      this.opened = false;
-    }
   }
 }

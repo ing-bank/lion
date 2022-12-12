@@ -1,3 +1,5 @@
+import { withClickInteraction } from './visibility-trigger-partials/withClickInteraction.js';
+
 /**
  * @typedef {import('../../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  */
@@ -19,4 +21,5 @@ export const withDropdownConfig = () =>
       ],
     },
     handlesAccessibility: true,
+    ...withClickInteraction(),
   });

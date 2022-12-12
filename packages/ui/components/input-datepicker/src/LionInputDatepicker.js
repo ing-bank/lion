@@ -305,6 +305,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
       return {
         ...withModalDialogConfig(),
         hidesOnOutsideClick: true,
+        visibilityTriggerFunction: undefined,
         ...super._defineOverlayConfig(),
         popperConfig: {
           ...super._defineOverlayConfig().popperConfig,
@@ -379,10 +380,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     // On every validator change, synchronize disabled dates: this means
     // we need to extract minDate, maxDate, minMaxDate and disabledDates validators
     validators.forEach(v => {
-      const vctor =
-        /** @type {typeof import('../../form-core/src/validate/Validator.js').Validator} */ (
-          v.constructor
-        );
+      const vctor = /** @type {typeof import('@lion/ui/form-core.js').Validator} */ (v.constructor);
       if (vctor.validatorName === 'MinDate') {
         this.__calendarMinDate = v.param;
       } else if (vctor.validatorName === 'MaxDate') {

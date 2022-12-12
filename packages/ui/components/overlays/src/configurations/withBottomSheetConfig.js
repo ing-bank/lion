@@ -1,3 +1,5 @@
+import { withClickInteraction } from './visibility-trigger-partials/withClickInteraction.js';
+
 /**
  * @typedef {import('../../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  */
@@ -13,4 +15,5 @@ export const withBottomSheetConfig = () =>
       placement: 'bottom',
     },
     handlesAccessibility: true,
+    ...withClickInteraction(),
   });

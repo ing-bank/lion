@@ -2,14 +2,6 @@ import { html, LitElement } from 'lit';
 import { OverlayMixin, withModalDialogConfig } from '@lion/ui/overlays.js';
 
 export class LionDialog extends OverlayMixin(LitElement) {
-  constructor() {
-    super();
-    /** @private */
-    this.__toggle = () => {
-      this.opened = !this.opened;
-    };
-  }
-
   /**
    * @protected
    */
@@ -18,26 +10,6 @@ export class LionDialog extends OverlayMixin(LitElement) {
     return {
       ...withModalDialogConfig(),
     };
-  }
-
-  /**
-   * @protected
-   */
-  _setupOpenCloseListeners() {
-    super._setupOpenCloseListeners();
-    if (this._overlayInvokerNode) {
-      this._overlayInvokerNode.addEventListener('click', this.__toggle);
-    }
-  }
-
-  /**
-   * @protected
-   */
-  _teardownOpenCloseListeners() {
-    super._teardownOpenCloseListeners();
-    if (this._overlayInvokerNode) {
-      this._overlayInvokerNode.removeEventListener('click', this.__toggle);
-    }
   }
 
   render() {
