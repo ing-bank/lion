@@ -11,7 +11,7 @@ import {
 import sinon from 'sinon';
 import { OverlayController, overlays } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
-
+import { overlayShadowDomStyle } from '../src/overlayShadowDomStyle.js';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
 
@@ -23,6 +23,22 @@ import { simulateTab } from '../src/utils/simulate-tab.js';
 const wrappingDialogNodeStyle = 'display: none; z-index: 9999;';
 
 /**
+ * Returns element that adopts stylesheet
+ * @param {Element} shadowOrBodyEl
+ * @returns {ShadowRoot}
+ */
+function getRootNodeOrBodyElThatAdoptsStylesheet(shadowOrBodyEl) {
+  const rootNode = /** @type {* & DocumentOrShadowRoot} */ (shadowOrBodyEl.getRootNode());
+  if (rootNode === document) {
+    // @ts-ignore
+    return document.body;
+  }
+  return rootNode;
+}
+
+/**
+ * Make sure that all browsers serialize html in a similar way
+ * (Firefox tends to output empty style attrs)
  * @param {HTMLElement} node
  */
 function normalizeOverlayContentWapper(node) {
@@ -78,6 +94,55 @@ describe('OverlayController', () => {
       });
       expect(ctrl.content).not.to.be.undefined;
       expect(ctrl.contentNode.parentElement).to.equal(ctrl.contentWrapperNode);
+    });
+
+    describe('Stylesheets', () => {
+      it('adds a stylesheet to the body when contentWrapper is located there', async () => {
+        new OverlayController({
+          ...withLocalTestConfig(),
+        });
+        // @ts-ignore
+        if (document.body.adoptedStyleSheets) {
+          // @ts-ignore
+          expect(document.body.adoptedStyleSheets).to.include(overlayShadowDomStyle.styleSheet);
+        }
+      });
+
+      it('adds a stylesheet to the shadowRoot when contentWrappeNode is located there', async () => {
+        const contentNode = /** @type {HTMLElement} */ (await fixture('<div>contentful</div>'));
+        const shadowHost = document.createElement('div');
+        shadowHost.attachShadow({ mode: 'open' });
+        /** @type {ShadowRoot} */ (shadowHost.shadowRoot).innerHTML = `<slot></slot>`;
+        shadowHost.appendChild(contentNode);
+        document.body.appendChild(shadowHost);
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode,
+        });
+
+        const rootNodeOrBody = getRootNodeOrBodyElThatAdoptsStylesheet(ctrl.contentWrapperNode);
+        expect(rootNodeOrBody).to.not.equal(document.body);
+
+        if (rootNodeOrBody.adoptedStyleSheets) {
+          expect(rootNodeOrBody.adoptedStyleSheets).to.include(overlayShadowDomStyle.styleSheet);
+        }
+        document.body.removeChild(shadowHost);
+      });
+
+      it('does not add same stylesheet twice', async () => {
+        // @ts-ignore
+        if (!document.body.adoptedStyleSheets) {
+          return;
+        }
+
+        new OverlayController({ ...withLocalTestConfig() });
+        // @ts-ignore
+        const amountOfStylesheetsAfterOneInit = document.body.adoptedStyleSheets.length;
+
+        new OverlayController({ ...withLocalTestConfig() });
+        // @ts-ignore
+        expect(document.body.adoptedStyleSheets.length).to.equal(amountOfStylesheetsAfterOneInit);
+      });
     });
 
     describe('Z-index on local overlays', () => {
@@ -895,11 +960,11 @@ describe('OverlayController', () => {
           await fixture('<div><textarea></textarea></div>')
         );
 
-        const shadowEl = document.createElement('div');
-        shadowEl.attachShadow({ mode: 'open' });
-        /** @type {ShadowRoot} */ (shadowEl.shadowRoot).innerHTML = `<slot></slot>`;
-        shadowEl.appendChild(contentNode);
-        document.body.appendChild(shadowEl);
+        const shadowHost = document.createElement('div');
+        shadowHost.attachShadow({ mode: 'open' });
+        /** @type {ShadowRoot} */ (shadowHost.shadowRoot).innerHTML = `<slot></slot>`;
+        shadowHost.appendChild(contentNode);
+        document.body.appendChild(shadowHost);
 
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
@@ -915,7 +980,7 @@ describe('OverlayController', () => {
         await ctrl.hide();
         expect(document.activeElement).to.equal(input);
 
-        document.body.removeChild(shadowEl);
+        document.body.removeChild(shadowHost);
       });
 
       it(`only sets focus when outside world didn't take over already`, async () => {

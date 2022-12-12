@@ -14,6 +14,22 @@ import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
  * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
  */
 
+const rootNodeStylesMap = new WeakSet();
+
+/**
+ * Returns element that adopts stylesheet
+ * @param {Element} shadowOrBodyEl
+ * @returns {ShadowRoot}
+ */
+function getRootNodeOrBodyElThatAdoptsStylesheet(shadowOrBodyEl) {
+  const rootNode = /** @type {* & DocumentOrShadowRoot} */ (shadowOrBodyEl.getRootNode());
+  if (rootNode === document) {
+    // @ts-ignore
+    return document.body;
+  }
+  return rootNode;
+}
+
 /**
  * From:
  * - wrappingDialogNodeL1: `<dialog role="none"/>`
@@ -519,9 +535,17 @@ export class OverlayController extends EventTargetShim {
         OverlayController.popperModule = preloadPopper();
       }
     }
-    const rootNode = /** @type {ShadowRoot} */ (this.contentWrapperNode.getRootNode());
-    adoptStyles(rootNode, [...(rootNode.adoptedStyleSheets || []), overlayShadowDomStyle]);
+    this.__initOverlayStyles();
     this._handleFeatures({ phase: 'init' });
+  }
+
+  __initOverlayStyles() {
+    const rootNode = getRootNodeOrBodyElThatAdoptsStylesheet(this.contentWrapperNode);
+    if (!rootNodeStylesMap.has(rootNode)) {
+      // TODO: ideally we should also support a teardown
+      adoptStyles(rootNode, [...(rootNode.adoptedStyleSheets || []), overlayShadowDomStyle]);
+      rootNodeStylesMap.add(rootNode);
+    }
   }
 
   /**
