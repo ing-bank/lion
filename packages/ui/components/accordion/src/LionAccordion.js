@@ -210,10 +210,10 @@ export class LionAccordion extends LitElement {
    */
   __rearrangeInvokersAndContent() {
     const invokers = /** @type {HTMLElement[]} */ (
-      Array.from(this.querySelectorAll('[slot="invoker"]'))
+      Array.from(this.querySelectorAll(':scope > [slot="invoker"]'))
     );
     const contents = /** @type {HTMLElement[]} */ (
-      Array.from(this.querySelectorAll('[slot="content"]'))
+      Array.from(this.querySelectorAll(':scope > [slot="content"]'))
     );
     const accordion = this.shadowRoot?.querySelector('slot[name=_accordion]');
     if (accordion) {
