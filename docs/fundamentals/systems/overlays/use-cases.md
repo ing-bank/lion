@@ -359,9 +359,9 @@ export const responsiveSwitching2 = () => {
     Change config to:
 
     <select ${ref(selectRef)} @change="${onSelectChange}">
+      <option value="dropdown">Dropdown</option>
       <option value="modaldialog">Modal Dialog</option>
       <option value="bottomsheet">Bottom Sheet</option>
-      <option value="dropdown">Dropdown</option>
     </select>
 
     <br />

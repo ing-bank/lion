@@ -122,17 +122,17 @@ export const overlayShadowDomStyle = css`
     }
   }
 
-  dialog[data-overlay-outer-wrapper] {
+  dialog[data-overlay-id='outer-wrapper'] {
     background-image: none;
     border-style: none;
-    padding: 0px;
+    padding: 0;
   }
 
   /** 
    * We don't want to use pseudo el ::backdrop.  
    * We have our own, that creates more flexibility wrt scrolling etc.
    */
-  dialog[data-overlay-outer-wrapper]::backdrop {
+  dialog[data-overlay-id='outer-wrapper']::backdrop {
     display: none;
   }
 `;

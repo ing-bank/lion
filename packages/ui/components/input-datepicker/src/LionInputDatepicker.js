@@ -6,7 +6,7 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
 import {
   OverlayMixin,
-  withBottomSheetConfig,
+  // withBottomSheetConfig,
   withModalDialogConfig,
   ArrowMixin,
 } from '@lion/ui/overlays.js';
@@ -284,14 +284,14 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     `;
   }
 
-  _setupOverlayCtrl() {
-    super._setupOverlayCtrl();
+  // _setupOverlayCtrl() {
+  //   super._setupOverlayCtrl();
 
-    this.__datepickerBeforeShow = () => {
-      this._overlayCtrl.updateConfig(this._defineOverlayConfig());
-    };
-    this._overlayCtrl.addEventListener('before-show', this.__datepickerBeforeShow);
-  }
+  //   // this.__datepickerBeforeShow = () => {
+  //   //   this._overlayCtrl.updateConfig(this._defineOverlayConfig());
+  //   // };
+  //   // this._overlayCtrl.addEventListener('before-show', this.__datepickerBeforeShow);
+  // }
 
   /**
    * @override Configures OverlayMixin
@@ -300,20 +300,23 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
-    if (window.innerWidth >= 600) {
-      this.hasArrow = true;
-      return {
-        ...withModalDialogConfig(),
-        hidesOnOutsideClick: true,
-        ...super._defineOverlayConfig(),
-        popperConfig: {
-          ...super._defineOverlayConfig().popperConfig,
-          placement: 'bottom',
-        },
-      };
-    }
-    this.hasArrow = false;
-    return withBottomSheetConfig();
+    // if (window.innerWidth >= 600) {
+    this.hasArrow = true;
+    return {
+      ...withModalDialogConfig(),
+      hidesOnOutsideClick: true,
+      ...super._defineOverlayConfig(),
+      popperConfig: {
+        ...super._defineOverlayConfig().popperConfig,
+        placement: 'bottom',
+      },
+      trapsKeyboardFocus: false,
+      preventsScroll: false,
+      hasBackdrop: false,
+    };
+    // }
+    // this.hasArrow = false;
+    // return withBottomSheetConfig();
   }
 
   async __openCalendarOverlay() {

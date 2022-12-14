@@ -30,7 +30,8 @@ export interface OverlayConfig {
   backdropNode?: HTMLElement;
   /** The element that should be called `.focus()` on after dialog closes */
   elementToFocusAfterHide?: HTMLElement;
-
+  /** The arrow element that will be used by floating-ui */
+  arrowNode: HTMLElement;
   // Backdrop
 
   /** Whether it should have a backdrop (currently exclusive to globalOverlayController) */

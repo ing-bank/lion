@@ -299,8 +299,8 @@ describe('OverlayController', () => {
 
             // The total dom structure created...
             expect(el).shadowDom.to.equal(`
-              <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
-                <div data-id="content-wrapper">
+              <dialog data-overlay-id="outer-wrapper" open="" role="none" style="${wrappingDialogNodeStyle}">
+                <div data-overlay-id="content-wrapper">
                   <slot name="content">
                   </slot>
                 </div>
@@ -326,8 +326,8 @@ describe('OverlayController', () => {
 
             // The total dom structure created...
             expect(el).lightDom.to.equal(`
-              <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
-                <div data-id="content-wrapper">
+              <dialog data-overlay-id="outer-wrapper" open="" role="none" style="${wrappingDialogNodeStyle}">
+                <div data-overlay-id="content-wrapper">
                   <div id="content">non projected</div>
                 </div>
               </dialog>
@@ -367,8 +367,8 @@ describe('OverlayController', () => {
 
             // The total dom structure created...
             expect(el).shadowDom.to.equal(`
-              <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
-                <div data-id="content-wrapper">
+              <dialog data-overlay-id="outer-wrapper" open="" role="none" style="${wrappingDialogNodeStyle}">
+                <div data-overlay-id="content-wrapper">
                   <slot name="content"></slot>
                 </div>
               </dialog>
@@ -410,8 +410,8 @@ describe('OverlayController', () => {
 
             // The total dom structure created...
             expect(el).shadowDom.to.equal(`
-              <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
-                <div data-id="content-wrapper">
+              <dialog data-overlay-id="outer-wrapper" open="" role="none" style="${wrappingDialogNodeStyle}">
+                <div data-overlay-id="content-wrapper">
                   <div id="arrow"></div>
                   <slot name="content"></slot>
                 </div>
@@ -477,9 +477,9 @@ describe('OverlayController', () => {
         // The total dom structure created...
         expect(el).shadowDom.to.equal(
           `
-          <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
+          <dialog data-overlay-id="outer-wrapper" open="" role="none" style="${wrappingDialogNodeStyle}">
             <div class="overlays__backdrop"></div>
-            <div data-id="content-wrapper">
+            <div data-overlay-id="content-wrapper">
               <slot name="content">
               </slot>
             </div>

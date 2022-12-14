@@ -3,6 +3,9 @@ import { adoptStyles } from 'lit';
 import { overlays } from './singleton.js';
 import { containFocus } from './utils/contain-focus.js';
 import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
+import { convertPopperToFloatingUiConfig } from './utils/convertPopperToFloatingUiConfig.js';
+
+window.process = { env: { NODE_ENV: 'dev' } };
 
 /**
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
@@ -10,7 +13,9 @@ import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
  * @typedef {import('@popperjs/core').createPopper} Popper
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
- * @typedef {{ createPopper: Popper }} PopperModule
+ * @typedef {{ createPopper: Popper }} floatingUiModule
+ *
+ * @typedef {import('@floating-ui/dom')} FloatingUi
  * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
  */
 
@@ -113,11 +118,10 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
 }
 
 /**
- * @returns {Promise<PopperModule>}
+ * @returns {Promise<FloatingUi>}
  */
-async function preloadPopper() {
-  // @ts-ignore [external]: import complains about untyped module, but we typecast it ourselves
-  return /** @type {* & Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
+async function preloadFloatingUi() {
+  return /** @type {Promise<FloatingUi>} */ (import('@floating-ui/dom'));
 }
 
 // @ts-expect-error [external]: CSS not yet typed
@@ -170,7 +174,7 @@ export class OverlayController extends EventTargetShim {
       handlesAccessibility: false,
       popperConfig: {
         placement: 'top',
-        strategy: 'fixed',
+        strategy: 'absolute',
         modifiers: [
           {
             name: 'preventOverflow',
@@ -204,6 +208,7 @@ export class OverlayController extends EventTargetShim {
         placement: 'center',
       },
       zIndex: 9999,
+      // _noDialogEl: true,
     };
 
     this.manager.add(this);
@@ -425,7 +430,7 @@ export class OverlayController extends EventTargetShim {
 
   /**
    * @desc The element our local overlay will be positioned relative to.
-   * @type {HTMLElement | undefined}
+   * @type {HTMLElement}
    * @protected
    */
   get _referenceNode() {
@@ -533,8 +538,8 @@ export class OverlayController extends EventTargetShim {
 
     if (this.placementMode === 'local') {
       // Lazily load Popper if not done yet
-      if (!OverlayController.popperModule) {
-        OverlayController.popperModule = preloadPopper();
+      if (!OverlayController.floatingUiModule) {
+        OverlayController.floatingUiModule = preloadFloatingUi();
       }
     }
     this.__initOverlayStyles();
@@ -577,7 +582,6 @@ export class OverlayController extends EventTargetShim {
    * @private
    */
   __initContentDomStructure() {
-    console.log('__initContentDomStructure');
     const wrappingDialogElement = document.createElement(
       this.config?._noDialogEl ? 'div' : 'dialog',
     );
@@ -585,7 +589,7 @@ export class OverlayController extends EventTargetShim {
     // A11y will depend on the type of overlay and is arranged on contentNode level.
     // Also see: https://www.scottohara.me/blog/2019/03/05/open-dialog.html
     wrappingDialogElement.setAttribute('role', 'none');
-    wrappingDialogElement.setAttribute('data-overlay-outer-wrapper', '');
+    wrappingDialogElement.setAttribute('data-overlay-id', 'outer-wrapper');
     // N.B. position: fixed is needed to escape out of 'overflow: hidden'
     // We give a high z-index for non-modal dialogs, so that we at least win from all siblings of our
     // parent stacking context
@@ -599,7 +603,17 @@ export class OverlayController extends EventTargetShim {
     if (!this.config?.contentWrapperNode) {
       this.__contentWrapperNode = document.createElement('div');
     }
-    this.contentWrapperNode.setAttribute('data-id', 'content-wrapper');
+    this.contentWrapperNode.setAttribute('data-overlay-id', 'content-wrapper');
+    this.contentWrapperNode.style.zIndex = '1';
+    // Prepare contentWrapperNode: https://floating-ui.com/docs/computePosition
+    this.contentWrapperNode.style.cssText = `
+      /* Float on top of the UI */
+      position: ${this.config.popperConfig?.strategy};
+
+      /* Avoid layout interference */
+      width: max-content;
+      top: 0;
+      left: 0;`;
 
     rearrangeNodes({
       wrappingDialogNodeL1: wrappingDialogElement,
@@ -610,7 +624,6 @@ export class OverlayController extends EventTargetShim {
     wrappingDialogElement.open = true;
 
     this.__wrappingDialogNode.style.display = 'none';
-    this.contentWrapperNode.style.zIndex = '1';
 
     if (getComputedStyle(this.contentNode).position === 'absolute') {
       // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
@@ -761,29 +774,134 @@ export class OverlayController extends EventTargetShim {
    * @protected
    */
   async _handlePosition({ phase }) {
-    if (this.placementMode === 'global') {
-      const placementClass = `overlays__overlay-container--${this.viewportConfig.placement}`;
-
-      if (phase === 'show') {
-        this.contentWrapperNode.classList.add('overlays__overlay-container');
-        this.contentWrapperNode.classList.add(placementClass);
-        this.contentNode.classList.add('overlays__overlay');
-      } else if (phase === 'hide') {
-        this.contentWrapperNode.classList.remove('overlays__overlay-container');
-        this.contentWrapperNode.classList.remove(placementClass);
-        this.contentNode.classList.remove('overlays__overlay');
-      }
-    } else if (this.placementMode === 'local' && phase === 'show') {
-      /**
-       * Popper is weird about properly positioning the popper element when it is recreated so
-       * we just recreate the popper instance to make it behave like it should.
-       * Probably related to this issue: https://github.com/FezVrasta/popper.js/issues/796
-       * calling just the .update() function on the popper instance sadly does not resolve this.
-       * This is however necessary for initial placement.
-       */
-      await this.__createPopperInstance();
-      this._popper.forceUpdate();
+    switch (this.placementMode) {
+      case 'global':
+        await this._handlePositionGlobal({
+          phase,
+          contentNode: this.contentNode,
+          contentWrapperNode: this.contentWrapperNode,
+          viewportPlacement: this.config.viewportConfig?.placement,
+        });
+        break;
+      case 'local':
+        await this._handlePositionLocal({ phase });
+        break;
+      default:
+        break;
     }
+  }
+
+  /**
+   * @param {{ phase: OverlayPhase; contentNode: HTMLElement; contentWrapperNode: HTMLElement; viewportPlacement: import('../types/OverlayConfig.js').ViewportPlacement }} config
+   * @protected
+   */
+  // eslint-disable-next-line class-methods-use-this
+  async _handlePositionGlobal({ phase, contentNode, contentWrapperNode, viewportPlacement }) {
+    const placementClass = `overlays__overlay-container--${viewportPlacement}`;
+
+    if (phase === 'show') {
+      contentWrapperNode.classList.add('overlays__overlay-container');
+      contentWrapperNode.classList.add(placementClass);
+      contentNode.classList.add('overlays__overlay');
+    } else if (phase === 'hide') {
+      contentWrapperNode.classList.remove('overlays__overlay-container');
+      contentWrapperNode.classList.remove(placementClass);
+      contentNode.classList.remove('overlays__overlay');
+    }
+  }
+
+  /**
+   * @param {{ phase: OverlayPhase }} config
+   * @protected
+   */
+  async _handlePositionLocal({ phase }) {
+    const floatingUi = /** @type {FloatingUi} */ (await OverlayController.floatingUiModule);
+
+    switch (phase) {
+      case 'show':
+        this.__clearAutoUpdate = floatingUi.autoUpdate(
+          this._referenceNode,
+          this.contentWrapperNode,
+          () =>
+            this.__updateLocalPosition({
+              floatingUi,
+              popperConfig: this.config?.popperConfig,
+              referenceNode: this._referenceNode,
+              contentWrapperNode: this.contentWrapperNode,
+              arrowNode: this._arrowNode,
+              adjustWidthFn: () => this._handleInheritsReferenceWidth(),
+            }),
+        );
+        break;
+      case 'hide':
+      case 'teardown':
+        this.__clearAutoUpdate?.();
+        break;
+      default:
+        break;
+    }
+  }
+
+  get _arrowNode() {
+    return this.config?.arrowNode || this.contentWrapperNode.querySelector('[data-popper-arrow]');
+  }
+
+  /**
+   * @param {{floatingUi:FloatingUi; popperConfig: PopperOptions; referenceNode: Element; contentWrapperNode: HTMLElement; arrowNode: HTMLElement; adjustWidthFn?: Function }} opts
+   */
+  // eslint-disable-next-line class-methods-use-this
+  async __updateLocalPosition({
+    floatingUi,
+    popperConfig,
+    referenceNode,
+    contentWrapperNode,
+    arrowNode,
+    adjustWidthFn,
+  }) {
+    const floatingUiConfig = await convertPopperToFloatingUiConfig(popperConfig, {
+      floatingUi,
+      arrowEl: arrowNode,
+    });
+
+    // Prepare contentWrapperNode: https://floating-ui.com/docs/computePosition
+    // eslint-disable-next-line no-param-reassign
+    contentWrapperNode.style.cssText = `
+      position: ${floatingUiConfig.strategy};
+      width: max-content;
+      top: 0;
+      left: 0;`;
+    adjustWidthFn?.();
+
+    const { x, y, middlewareData } = await floatingUi.computePosition(
+      referenceNode,
+      contentWrapperNode,
+      {
+        placement: floatingUiConfig.placement,
+        strategy: floatingUiConfig.strategy,
+        middleware: floatingUiConfig.middleware,
+      },
+    );
+
+    // Since `computePosition` removes inline style, we need to add the
+    // reference width styles again...
+    // eslint-disable-next-line no-param-reassign
+    contentWrapperNode.style.cssText = `
+      position: ${floatingUiConfig.strategy};
+      width: max-content;
+      transform: translate3d(${Math.round(x)}px,${Math.round(y)}px,0);`;
+    adjustWidthFn?.();
+
+    if (!middlewareData.arrow) {
+      return;
+    }
+
+    const { x: arrowX, y: arrowY, centerOffset } = middlewareData.arrow;
+
+    Object.assign(arrowNode.style, {
+      position: 'absolute',
+      left: `${arrowX}px`,
+      top: `${arrowY}px`,
+    });
   }
 
   /**
@@ -1285,17 +1403,19 @@ export class OverlayController extends EventTargetShim {
 
   /** @private */
   async __createPopperInstance() {
-    if (this._popper) {
-      this._popper.destroy();
-      this._popper = undefined;
-    }
-
-    if (OverlayController.popperModule !== undefined) {
-      const { createPopper } = await OverlayController.popperModule;
-      this._popper = createPopper(this._referenceNode, this.contentWrapperNode, {
-        ...this.config?.popperConfig,
-      });
-    }
+    // if (this._popper) {
+    //   this._popper.destroy();
+    //   this._popper = undefined;
+    // }
+    // if (OverlayController.floatingUiModule !== undefined) {
+    //   const { computePosition } = await OverlayController.floatingUiModule;
+    //   // this._popper = createPopper(this._referenceNode, this.contentWrapperNode, {
+    //   //   ...this.config?.popperConfig,
+    //   // });
+    //   computePosition(this._referenceNode, this.contentWrapperNode, {
+    //     ...this.config?.popperConfig,
+    //   });
+    // }
   }
 
   _hasDisabledInvoker() {
@@ -1308,5 +1428,5 @@ export class OverlayController extends EventTargetShim {
     return false;
   }
 }
-/** @type {Promise<PopperModule> | undefined} */
-OverlayController.popperModule = undefined;
+/** @type {Promise<FloatingUi> | undefined} */
+OverlayController.floatingUiModule = undefined;
