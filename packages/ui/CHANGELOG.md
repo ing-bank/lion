@@ -1,5 +1,13 @@
 # @lion/ui
 
+## 0.0.11
+
+### Patch Changes
+
+- 5e707168: [tooltip] prevent infinite loops
+- 49092c97: `accordion`: narrowed the scope of the selectors that query [slot=invoker] and [slot=content] to prevent that any nested elements with [slot=invoker] and [slot=content] are moved to slot=\_accordion as well
+- fafd9222: overlays: add adopted stylesheets once; attach correctly to body
+
 ## 0.0.10
 
 ### Patch Changes
