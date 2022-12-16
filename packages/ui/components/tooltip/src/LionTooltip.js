@@ -32,6 +32,10 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
         :host([hidden]) {
           display: none;
         }
+
+        ::slotted([slot='content']) {
+          width: max-content;
+        }
       `,
     ];
   }
@@ -54,9 +58,19 @@ export class LionTooltip extends ArrowMixin(OverlayMixin(LitElement)) {
   /** @protected */
   // eslint-disable-next-line class-methods-use-this
   _defineOverlayConfig() {
+    const superCfg = super._defineOverlayConfig();
+    const tooltipCfg = withTooltipConfig({ invokerRelation: this.invokerRelation });
     return /** @type {OverlayConfig} */ ({
-      ...super._defineOverlayConfig(),
-      ...withTooltipConfig({ invokerRelation: this.invokerRelation }),
+      ...superCfg,
+      ...tooltipCfg,
+      popperConfig: {
+        ...(superCfg.popperConfig || {}),
+        ...(tooltipCfg.popperConfig || {}),
+        modifiers: [
+          ...(superCfg.popperConfig?.modifiers || []),
+          ...(tooltipCfg.popperConfig?.modifiers || []),
+        ],
+      },
     });
   }
 }

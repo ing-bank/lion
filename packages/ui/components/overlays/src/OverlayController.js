@@ -1,4 +1,3 @@
-import { EventTargetShim } from '@lion/ui/core.js';
 import { adoptStyles } from 'lit';
 import { overlays } from './singleton.js';
 import { containFocus } from './utils/contain-focus.js';
@@ -129,7 +128,7 @@ const supportsCSSTypedObject = window.CSS?.number && document.body.attributeStyl
  * bottom/top/left/right sheets etc.
  *
  */
-export class OverlayController extends EventTargetShim {
+export class OverlayController extends EventTarget {
   /**
    * @constructor
    * @param {OverlayConfig} config initial config. Will be remembered as shared config
@@ -973,22 +972,24 @@ export class OverlayController extends EventTargetShim {
     if (this.inheritsReferenceWidth) {
       this._handleInheritsReferenceWidth();
     }
-
     if (this.visibilityTriggerFunction) {
-      this._handleUserInteraction({ phase });
+      this._handleVisibilityTriggers({ phase });
     }
   }
 
   /**
    * @param {{ phase: OverlayPhase }} config
    */
-  _handleUserInteraction({ phase }) {
+  _handleVisibilityTriggers({ phase }) {
     if (typeof this.visibilityTriggerFunction === 'function') {
       if (phase === 'init') {
-        this.__userInteractionHandler = this.visibilityTriggerFunction({ phase, controller: this });
+        this.__visibilityTriggerHandler = this.visibilityTriggerFunction({
+          phase,
+          controller: this,
+        });
       }
-      if (this.__userInteractionHandler[phase]) {
-        this.__userInteractionHandler[phase]();
+      if (this.__visibilityTriggerHandler[phase]) {
+        this.__visibilityTriggerHandler[phase]();
       }
     }
   }
@@ -1053,10 +1054,14 @@ export class OverlayController extends EventTargetShim {
         break;
       }
       case 'show':
-        this.backdropNode.classList.add(`overlays__backdrop--visible`);
+        if (this.config.hasBackdrop) {
+          this.backdropNode.classList.add(`overlays__backdrop--visible`);
+        }
         this.__hasActiveBackdrop = true;
         break;
       case 'hide':
+      case 'teardown':
+        this.backdropNode.classList.remove(`overlays__backdrop--visible`);
         this.__hasActiveBackdrop = false;
         break;
     }
