@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.0.12
+
+### Patch Changes
+
+- 7ac0a422: [overlays] fixes (responsive backdrop/select-rich/tooltip)
+
 ## 0.0.11
 
 ### Patch Changes
