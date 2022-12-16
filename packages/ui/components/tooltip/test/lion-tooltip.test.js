@@ -227,8 +227,7 @@ describe('lion-tooltip', () => {
       expect(el._arrowNode).to.be.displayed;
     });
 
-    // TODO: promise for dynamic import popper does not resolve?
-    it.skip('makes sure positioning of the arrow is correct', async () => {
+    it('makes sure positioning of the arrow is correct', async () => {
       const el = /** @type {LionTooltip} */ (
         await fixture(html`
           <lion-tooltip

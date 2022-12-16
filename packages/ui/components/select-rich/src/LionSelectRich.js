@@ -336,6 +336,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   _defineOverlayConfig() {
     return {
       ...withDropdownConfig(),
+      // Needs more advanced behavior (see `__invokerOnClick`)
+      visibilityTriggerFunction: undefined,
     };
   }
 

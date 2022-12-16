@@ -1515,6 +1515,22 @@ describe('OverlayController', () => {
       expect(ctrl.contentWrapperNode.classList.contains('overlays__overlay-container--top-right'));
       expect(ctrl.isShown).to.be.true;
     });
+
+    it('disables backdrop when switching to hasBackrop "false"', async () => {
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        contentNode: /** @type {HTMLElement} */ (await fixture(html`<div>content1</div>`)),
+        hasBackdrop: true,
+      });
+      await ctrl.show(); // Popper adds inline styles
+      expect(ctrl.backdropNode).not.to.be.undefined;
+      expect(Array.from(ctrl.backdropNode.classList)).to.include('overlays__backdrop--visible');
+
+      ctrl.updateConfig({
+        hasBackdrop: false,
+      });
+      expect(Array.from(ctrl.backdropNode.classList)).to.not.include('overlays__backdrop--visible');
+    });
   });
 
   describe('Accessibility', () => {
