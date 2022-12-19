@@ -67,14 +67,11 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     `;
   }
 
+  /** @type {SlotsMap} */
   get slots() {
     return {
       ...super.slots,
-      invoker: () => {
-        const invokerEl = this.createScopedElement('lion-select-invoker');
-        invokerEl.setAttribute('data-tag-name', 'lion-select-invoker');
-        return invokerEl;
-      },
+      invoker: () => html`<lion-select-invoker></lion-select-invoker>`,
     };
   }
 
