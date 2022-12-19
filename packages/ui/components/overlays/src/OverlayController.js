@@ -207,7 +207,7 @@ export class OverlayController extends EventTarget {
 
     this.manager.add(this);
     /** @protected */
-    this._contentId = `overlay-content--${Math.random().toString(36).substr(2, 10)}`;
+    this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
     /** @private */
     this.__originalAttrs = new Map();
     this.updateConfig(config);
