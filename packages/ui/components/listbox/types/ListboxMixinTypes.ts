@@ -11,7 +11,7 @@ import { LionOption } from '../src/LionOption.js';
 export declare class ListboxHost {
   static get styles(): CSSResultArray;
   /**
-   * When true, will synchronize activedescendant and selected element on
+   * When true, will synchronize active descendant and selected element on
    * arrow key navigation.
    * This behavior can usually be seen on <select> on the Windows platform.
    * Note that this behavior cannot be used when multiple-choice is true.
@@ -30,9 +30,6 @@ export declare class ListboxHost {
   public orientation: 'vertical' | 'horizontal';
 
   public hasNoDefaultSelected: boolean;
-
-  public singleOption: boolean;
-  // protected _invokerNode: HTMLElement;
 
   public checkedIndex: number | number[];
 
