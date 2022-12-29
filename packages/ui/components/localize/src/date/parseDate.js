@@ -58,7 +58,7 @@ export function parseDate(dateString) {
   }
 
   const [year, month, day] = parsedString.split('/').map(Number);
-  const parsedDate = new Date(Date.UTC(year, month - 1, day));
+  const parsedDate = new Date(new Date(year, month - 1, day));
 
   // Check if parsedDate is not `Invalid Date` or that the date has changed (e.g. the not existing 31.02.2020)
   if (
