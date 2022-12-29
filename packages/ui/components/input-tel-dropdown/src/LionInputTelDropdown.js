@@ -92,9 +92,9 @@ export class LionInputTelDropdown extends LionInputTel {
         },
         labels: {
           selectCountry: localize.msg('lion-input-tel:selectCountry'),
-          // TODO: add translations
-          allCountries: this._allCountriesLabel || 'All countries',
-          preferredCountries: this._preferredCountriesLabel || 'Suggested countries',
+          allCountries: this._allCountriesLabel || localize.msg('lion-input-tel:allCountries'),
+          preferredCountries:
+            this._preferredCountriesLabel || localize.msg('lion-input-tel:suggestedCountries'),
         },
       },
     };
@@ -125,10 +125,10 @@ export class LionInputTelDropdown extends LionInputTel {
         >
           ${data?.regionMetaListPreferred?.length
             ? html`
-                <optgroup label="${refs?.dropdown?.labels?._preferredCountries}">
+                <optgroup label="${refs?.dropdown?.labels?.preferredCountries}">
                   ${data.regionMetaListPreferred.map(renderOption)}
                 </optgroup>
-                <optgroup label="${refs?.dropdown?.labels?._allCountries}">
+                <optgroup label="${refs?.dropdown?.labels?.allCountries}">
                   ${data?.regionMetaList?.map(renderOption)}
                 </optgroup>
               `
