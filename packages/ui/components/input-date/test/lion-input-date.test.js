@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
-import { MaxDate } from '@lion/ui/form-core.js';
+import { MinDate, MaxDate } from '@lion/ui/form-core.js';
 import { expect, fixture as _fixture } from '@open-wc/testing';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import '@lion/ui/define/lion-input-date.js';
@@ -67,49 +67,95 @@ describe('<lion-input-date>', () => {
     expect(el.validationStates.error).not.to.have.property('MaxDate');
   });
 
-  it('uses formatOptions.locale', async () => {
-    const el = await fixture(html`
-      <lion-input-date
-        .formatOptions="${{ locale: 'en-GB' }}"
-        .modelValue=${new Date('2017/06/15')}
-      ></lion-input-date>
-    `);
-    expect(el.formattedValue).to.equal('15/06/2017');
+  describe('locale', () => {
+    it('uses formatOptions.locale', async () => {
+      const el = await fixture(html`
+        <lion-input-date
+          .formatOptions="${{ locale: 'en-GB' }}"
+          .modelValue=${new Date('2017/06/15')}
+        ></lion-input-date>
+      `);
+      expect(el.formattedValue).to.equal('15/06/2017');
 
-    const el2 = await fixture(html`
-      <lion-input-date
-        .formatOptions="${{ locale: 'en-US' }}"
-        .modelValue=${new Date('2017/06/15')}
-      ></lion-input-date>
-    `);
-    expect(el2.formattedValue).to.equal('06/15/2017');
+      const el2 = await fixture(html`
+        <lion-input-date
+          .formatOptions="${{ locale: 'en-US' }}"
+          .modelValue=${new Date('2017/06/15')}
+        ></lion-input-date>
+      `);
+      expect(el2.formattedValue).to.equal('06/15/2017');
+    });
+
+    it('uses global locale when formatOptions.locale is not defined', async () => {
+      localizeManager.locale = 'fr-FR';
+      const el = await fixture(html`
+        <lion-input-date .modelValue=${new Date('2017/06/15')}></lion-input-date>
+      `);
+      expect(el.formattedValue).to.equal('15/06/2017');
+
+      localizeManager.locale = 'en-US';
+      const el2 = await fixture(html`
+        <lion-input-date .modelValue=${new Date('2017/06/15')}></lion-input-date>
+      `);
+      expect(el2.formattedValue).to.equal('06/15/2017');
+    });
+
+    it('ignores global locale change if formatOptions.locale is provided', async () => {
+      const el = await fixture(html`
+        <lion-input-date
+          .modelValue=${new Date('2017/06/15')}
+          .formatOptions="${{ locale: 'en-GB' }}"
+        ></lion-input-date>
+      `);
+      expect(el.formattedValue).to.equal('15/06/2017'); // british
+      localizeManager.locale = 'en-US';
+      await el.updateComplete;
+      expect(el.formattedValue).to.equal('15/06/2017'); // should stay british
+    });
   });
 
-  it('uses global locale when formatOptions.locale is not defined', async () => {
-    localizeManager.locale = 'fr-FR';
-    const el = await fixture(html`
-      <lion-input-date .modelValue=${new Date('2017/06/15')}></lion-input-date>
-    `);
-    expect(el.formattedValue).to.equal('15/06/2017');
+  describe('timezones', async () => {
+    const dateAmsterdam = new Date(
+      new Date('2017/06/15').toLocaleString('en-US', { timeZone: 'Europe/Amsterdam' }),
+    );
+    const dateManila = new Date(
+      new Date('2017/06/15').toLocaleString('en-US', { timeZone: 'Asia/Manila' }),
+    );
+    const dateNewYork = new Date(
+      new Date('2017/06/15').toLocaleString('en-US', { timeZone: 'America/New_York' }),
+    );
 
-    localizeManager.locale = 'en-US';
-    const el2 = await fixture(html`
-      <lion-input-date .modelValue=${new Date('2017/06/15')}></lion-input-date>
-    `);
-    expect(el2.formattedValue).to.equal('06/15/2017');
-  });
+    it('works with different timezones', async () => {
+      const el = await fixture(html`
+        <lion-input-date .modelValue=${dateAmsterdam}></lion-input-date>
+      `);
+      expect(el.formattedValue).to.equal('15/06/2017', 'Europe/Amsterdam');
 
-  it('ignores global locale change if formatOptions.locale is provided', async () => {
-    const el = await fixture(html`
-      <lion-input-date
-        .modelValue=${new Date('2017/06/15')}
-        .formatOptions="${{ locale: 'en-GB' }}"
-      ></lion-input-date>
-    `);
-    expect(el.formattedValue).to.equal('15/06/2017'); // british
-    localizeManager.locale = 'en-US';
-    await el.updateComplete;
-    expect(el.formattedValue).to.equal('15/06/2017'); // should stay british
+      el.modelValue = dateManila;
+      expect(el.formattedValue).to.equal('15/06/2017', 'Asia/Manila');
+
+      el.modelValue = dateNewYork;
+      expect(el.formattedValue).to.equal('14/06/2017', 'America/New_York');
+    });
+
+    it('validators work with different timezones', async () => {
+      const el = await fixture(html`
+        <lion-input-date
+          .modelValue=${new Date('2017/06/15')}
+          .validators=${[new MinDate(new Date('2017/06/14'))]}
+        ></lion-input-date>
+      `);
+      expect(el.formattedValue).to.equal('15/06/2017', 'Europe/Amsterdam');
+      expect(el.hasFeedbackFor).not.to.include('error', 'Europe/Amsterdam');
+
+      el.modelValue = dateManila;
+      expect(el.formattedValue).to.equal('15/06/2017', 'Asia/Manila');
+      expect(el.hasFeedbackFor).not.to.include('error', 'Asia/Manila');
+
+      el.modelValue = dateNewYork;
+      expect(el.formattedValue).to.equal('14/06/2017', 'America/New_York');
+      expect(el.hasFeedbackFor).not.to.include('error', 'America/New_York');
+    });
   });
 
   it('is accessible', async () => {

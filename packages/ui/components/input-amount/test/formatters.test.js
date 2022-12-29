@@ -1,10 +1,12 @@
 import { expect } from '@open-wc/testing';
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
 import { formatAmount } from '@lion/ui/input-amount.js';
 
 describe('formatAmount()', () => {
+  const localizeManager = getLocalizeManager();
+
   afterEach(() => {
     localizeTearDown();
   });
@@ -67,9 +69,9 @@ describe('formatAmount()', () => {
   });
 
   it('fallbacks to global locale and EUR by default', async () => {
-    localize.locale = 'en-GB';
+    localizeManager.locale = 'en-GB';
     expect(formatAmount(12345678)).to.equal('12,345,678.00');
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     expect(formatAmount(12345678)).to.equal('12.345.678,00');
   });
 });
