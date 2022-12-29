@@ -400,6 +400,19 @@ describe('lion-select-rich', () => {
       expect(el.singleOption).to.be.false;
       expect(_invokerNode.singleOption).to.be.false;
     });
+
+    it('should have singleOption only if one option and no hasNoDefaultSelected', async () => {
+      const el = await fixture(html`
+        <lion-select-rich has-no-default-selected>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+        </lion-select-rich>
+      `);
+
+      const { _invokerNode } = getSelectRichMembers(el);
+
+      expect(el.singleOption).to.be.false;
+      expect(_invokerNode.singleOption).to.be.false;
+    });
   });
 
   describe('interaction-mode', () => {

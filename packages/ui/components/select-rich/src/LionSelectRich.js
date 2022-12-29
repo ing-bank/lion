@@ -259,7 +259,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
 
   /** @protected */
   _onFormElementsChanged() {
-    this.singleOption = this.formElements.length === 1;
+    this.singleOption = this.formElements.length === 1 && !this.hasNoDefaultSelected;
     this._invokerNode.singleOption = this.singleOption;
   }
 

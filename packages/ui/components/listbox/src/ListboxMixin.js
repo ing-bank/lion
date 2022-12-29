@@ -384,10 +384,6 @@ const ListboxMixinImplementation = superclass =>
     updated(changedProperties) {
       super.updated(changedProperties);
 
-      if (this.formElements.length === 1) {
-        this.singleOption = true;
-      }
-
       if (changedProperties.has('disabled')) {
         if (this.disabled) {
           this.__requestOptionsToBeDisabled();
