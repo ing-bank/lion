@@ -1,4 +1,6 @@
 export default {
-  selectCountry: 'Выбрать страну',
+  allCountries: 'Все страны',
   phoneNumber: 'Номер телефона',
+  selectCountry: 'Выбрать страну',
+  suggestedCountries: 'Предлагаемые страны',
 };

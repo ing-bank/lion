@@ -1,4 +1,6 @@
 export default {
-  selectCountry: 'Seleccione país',
+  allCountries: 'Pays suggérés',
   phoneNumber: 'Número de teléfono',
+  selectCountry: 'Seleccione país',
+  suggestedCountries: 'Países sugeridos',
 };
