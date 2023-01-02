@@ -539,7 +539,7 @@ Below an example is shown with the `isBlocking` option, which makes use of the O
 
 ```js preview-story
 export const overlayManager = () => {
-  const hasBackdropConfig = { hasBackdrop: true };
+  const hasBackdropConfig = { ...withModalDialogConfig(), hasBackdrop: true };
   return html`
     <demo-el-using-overlaymixin .config=${hasBackdropConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
@@ -558,7 +558,7 @@ export const overlayManager = () => {
     </demo-el-using-overlaymixin>
     <demo-el-using-overlaymixin
       id="secondOverlay"
-      .config=${{ hasBackdrop: true, isBlocking: true }}
+      .config=${{ ...withModalDialogConfig(), hasBackdrop: true, isBlocking: true }}
     >
       <div slot="content" class="demo-overlay demo-overlay--second">
         Hello! You can close this notification here:
@@ -581,7 +581,7 @@ Here is the example below
 
 ```js preview-story
 export const localBackdrop = () => {
-  const localBackdropConfig = { placementMode: 'local' };
+  const localBackdropConfig = { ...withDropdownConfig() };
   return html`
     <demo-el-using-overlaymixin .config=${localBackdropConfig}>
       <demo-overlay-backdrop slot="backdrop"></demo-overlay-backdrop>
