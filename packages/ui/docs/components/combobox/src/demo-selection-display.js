@@ -7,7 +7,7 @@ import { LitElement, html, css, nothing } from 'lit';
  */
 
 /**
- * @typedef {import('./LionCombobox.js.js.js.js').LionCombobox} LionCombobox
+ * @typedef {import('../src/LionCombobox.js').LionCombobox} LionCombobox
  */
 
 /**

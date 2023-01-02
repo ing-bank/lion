@@ -39,7 +39,7 @@
     "debug:firefox": "cd ../../ && npm run debug:firefox",
     "debug:webkit": "cd ../../ && npm run debug:webkit",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
-    "prepublishOnly": "npm run types && npm run publish-docs && npm run custom-elements-manifest",
+    "prepublishOnly": "npm run types && node ./scripts/copy-doc-assets.js && npm run publish-docs && npm run custom-elements-manifest",
     "test": "cd ../../ && npm run test:browser",
     "types": "wireit",
     "types-check-only": "tsc --project tsconfig-check-only.json",
