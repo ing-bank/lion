@@ -1,11 +1,14 @@
 const { readdirSync, existsSync, readFileSync } = require('fs');
 const semver = require('semver');
 
-const getDirectories = source =>
+const getDirectories = (/** @type {string} */ source) =>
   readdirSync(source, { withFileTypes: true })
     .filter(pathMeta => pathMeta.isDirectory())
     .map(pathMeta => pathMeta.name);
 
+/**
+ * @param {string} filePath
+ */
 function readPackageJsonDeps(filePath) {
   if (existsSync(filePath)) {
     const jsonData = JSON.parse(readFileSync(filePath, 'utf-8'));
@@ -24,6 +27,9 @@ function readPackageJsonDeps(filePath) {
   return {};
 }
 
+/**
+ * @param {string} filePath
+ */
 function readPackageJsonNameVersion(filePath) {
   if (existsSync(filePath)) {
     const jsonData = JSON.parse(readFileSync(filePath, 'utf-8'));
@@ -34,6 +40,12 @@ function readPackageJsonNameVersion(filePath) {
   return {};
 }
 
+/**
+ *
+ * @param {object} versionsA
+ * @param {object} versionsB
+ * @returns
+ */
 function compareVersions(versionsA, versionsB) {
   let output = '';
   const newVersions = { ...versionsA };
@@ -46,6 +58,7 @@ function compareVersions(versionsA, versionsB) {
         const rangeA = semver.validRange(versionsA[dep]);
         const rangeB = semver.validRange(versionsB[dep]);
         if (
+          // @ts-ignore
           !(rangeA && rangeB && (semver.subset(rangeA, rangeB) || semver.subset(rangeB, rangeA)))
         ) {
           output += `  - "${dep}" "${versionsB[dep]}" does not seem semver compatible with "${versionsA[dep]}" and probably one of them needs a bump"\n`;
@@ -64,6 +77,9 @@ function compareVersions(versionsA, versionsB) {
 }
 
 let endReturn = 0;
+/**
+ * @param {string} folder
+ */
 function lintVersions(folder) {
   let currentVersions = readPackageJsonDeps('./package.json');
 
