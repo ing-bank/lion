@@ -22,10 +22,10 @@ const gatherFilesConfig = {
  * @param {string} startPath - local filesystem path
  * @param {object} cfg - configuration object
  * @param {string} cfg.extension - file extension like '.md'
- * @param {array} cfg.excludeFiles - file names filtered out
- * @param {array} cfg.excludeFolders - folder names filtered out
- * @param {array} result - list of file paths
- * @returns {array} result list of file paths
+ * @param {string[]} cfg.excludeFiles - file names filtered out
+ * @param {string[]} cfg.excludeFolders - folder names filtered out
+ * @param {string[]} result - list of file paths
+ * @returns {string[]} result list of file paths
  */
 function gatherFilesFromDir(startPath, cfg = gatherFilesConfig, result = []) {
   const files = fs.readdirSync(startPath);
@@ -59,7 +59,7 @@ function gatherFilesFromDir(startPath, cfg = gatherFilesConfig, result = []) {
  * @returns {string} adjusted contents of input md file (mdContent)
  */
 function rewriteLinksInMdContent(mdContent, filePath, cfg = rewriteLinksConfig) {
-  const rewrite = href => {
+  const rewrite = (/** @type {string} */ href) => {
     let newHref = href;
     const isRelativeUrlPattern = /^(\.\/|\.\.\/)/; // starts with './' or '../'
     if (href.match(isRelativeUrlPattern)) {
@@ -74,8 +74,13 @@ function rewriteLinksInMdContent(mdContent, filePath, cfg = rewriteLinksConfig) 
     return newHref;
   };
 
-  const mdLink = (href, title, text) => `[${text}](${rewrite(href)}${title ? ` ${title}` : ''})`;
+  const mdLink = (
+    /** @type {string} */ href,
+    /** @type {string} */ title,
+    /** @type {string} */ text,
+  ) => `[${text}](${rewrite(href)}${title ? ` ${title}` : ''})`;
 
+  /** @type {string[]} */
   const resultLinks = [];
   // /^!?\[(label)\]\(href(?:\s+(title))?\s*\)/
   const linkPattern = '!?\\[(.*)\\]\\(([^|\\s]*)( +(.*))?\\s*\\)'; // eslint-disable-line
@@ -93,6 +98,7 @@ function rewriteLinksInMdContent(mdContent, filePath, cfg = rewriteLinksConfig) 
   // Now that we have our rewritten links, stitch back together the desired result
   const tokenPattern = /!?\[.*\]\([^|\s]*(?: +.*)?\s*\)/;
   const tokens = mdContent.split(new RegExp(tokenPattern, 'g'));
+  /** @type {string[]} */
   const resultTokens = [];
   tokens.forEach((token, i) => {
     resultTokens.push(token + (resultLinks[i] || ''));
@@ -105,6 +111,7 @@ function rewriteLinksInMdContent(mdContent, filePath, cfg = rewriteLinksConfig) 
  * Main code
  */
 function main({ dryRun } = { dryRun: false }) {
+  /** @type {string[]} */
   const mdFilePaths = gatherFilesFromDir(process.cwd()); // [path.resolve(__dirname, '../', 'packages/field/README.md')];
   mdFilePaths.forEach(filePath => {
     const content = fs.readFileSync(filePath).toString();

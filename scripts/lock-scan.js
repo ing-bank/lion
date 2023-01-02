@@ -5,7 +5,7 @@ const lockFileContent = fs.readFileSync(path.resolve('./package-lock.json'), 'ut
 
 const allowedRegistries = ['registry.yarnpkg.com', 'registry.npmjs.org'];
 const resolvedUrls = lockFileContent.match(/"resolved": "https:.*"/g);
-resolvedUrls.forEach(url => {
+resolvedUrls?.forEach(url => {
   const [, registry] = url.match(/^"resolved": "https:\/\/(.*?)\/.*"$/) || [];
   if (!allowedRegistries.includes(registry)) {
     throw new Error(
