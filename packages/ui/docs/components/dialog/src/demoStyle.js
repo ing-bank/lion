@@ -36,4 +36,22 @@ export const demoStyle = css`
     border-radius: 4px;
     padding: 8px;
   }
+
+  .demo-dialog-content {
+    display: block;
+    position: absolute;
+    font-size: 16px;
+    color: white;
+    background-color: black;
+    border-radius: 4px;
+    padding: 8px;
+  }
+
+  .demo-dialog-content__close-button {
+    color: black;
+    font-size: 28px;
+    line-height: 28px;
+    padding: 0;
+    border-style: none;
+  }
 `;

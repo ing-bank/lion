@@ -15,22 +15,6 @@ class DemoElUsingOverlayMixin extends OverlayMixin(LitElement) {
     });
   }
 
-  _setupOpenCloseListeners() {
-    super._setupOpenCloseListeners();
-
-    if (this._overlayInvokerNode) {
-      this._overlayInvokerNode.addEventListener('click', this.toggle);
-    }
-  }
-
-  _teardownOpenCloseListeners() {
-    super._teardownOpenCloseListeners();
-
-    if (this._overlayInvokerNode) {
-      this._overlayInvokerNode.removeEventListener('click', this.toggle);
-    }
-  }
-
   render() {
     return html`
       <slot name="invoker"></slot>
