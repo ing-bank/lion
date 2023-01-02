@@ -20,7 +20,7 @@ or in the `overlays` container at the bottom of the `<body>`.
 
 ```js preview-story
 export const placementLocal = () => {
-  const placementModeLocalConfig = { placementMode: 'local' };
+  const placementModeLocalConfig = { ...withDropdownConfig() };
   return html`
     <style>
       .demo-overlay {
@@ -77,22 +77,11 @@ As specified in the [overlay rationale](./rationale.md) there are only two offic
 Since most overlays have interactive content the default is set to dialogs. To get a tooltip, you can add `isTooltip` to the config object. This only works for local placement and it also needs to have `handlesAccessibility` activated to work.
 
 ```js preview-story
-export const isTooltip = () => {
-  function showTooltip() {
-    const tooltip = document.querySelector('#tooltip');
-    tooltip.opened = true;
-  }
-
-  function hideTooltip() {
-    const tooltip = document.querySelector('#tooltip');
-    tooltip.opened = false;
-  }
-
-  const tooltipConfig = { placementMode: 'local', isTooltip: true, handlesAccessibility: true };
+  const tooltipConfig = { ...withTooltipConfig() };
 
   return html`
     <demo-el-using-overlaymixin id="tooltip" .config=${tooltipConfig}>
-      <button slot="invoker" @mouseenter=${showTooltip} @mouseleave=${hideTooltip}>
+      <button slot="invoker">
         Hover me to open the tooltip!
       </button>
       <div slot="content" class="demo-overlay">Hello!</div>
@@ -112,7 +101,7 @@ You use the feature on any type of overlay.
 
 ```js preview-story
 export const trapsKeyboardFocus = () => {
-  const trapsKeyboardFocusConfig = { trapsKeyboardFocus: true };
+  const trapsKeyboardFocusConfig = { ...withDropdownConfig(), trapsKeyboardFocus: true };
   return html`
     <demo-el-using-overlaymixin .config=${trapsKeyboardFocusConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
@@ -138,7 +127,7 @@ Boolean property. Will allow closing the overlay on ESC key when enabled.
 
 ```js preview-story
 export const hidesOnEsc = () => {
-  const hidesOnEscConfig = { hidesOnEsc: true };
+  const hidesOnEscConfig = { ...withDropdownConfig(), hidesOnEsc: true };
   return html`
     <demo-el-using-overlaymixin .config=${hidesOnEscConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
@@ -162,7 +151,7 @@ Boolean property. When enabled allows closing the overlay on ESC key, even when 
 
 ```js preview-story
 export const hidesOnOutsideEsc = () => {
-  const hidesOnEscConfig = { hidesOnOutsideEsc: true };
+  const hidesOnEscConfig = { ...withDropdownConfig(), hidesOnOutsideEsc: true };
   return html`
     <demo-el-using-overlaymixin .config=${hidesOnEscConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
@@ -186,7 +175,7 @@ Boolean property. Will allow closing the overlay by clicking outside the `conten
 
 ```js preview-story
 export const hidesOnOutsideClick = () => {
-  const hidesOnOutsideClickConfig = { hidesOnOutsideClick: true };
+  const hidesOnOutsideClickConfig = { ...withDropdownConfig(), hidesOnOutsideClick: true };
   return html`
     <demo-el-using-overlaymixin .config=${hidesOnOutsideClickConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
@@ -216,7 +205,7 @@ export const elementToFocusAfterHide = () => {
   const btn = document.createElement('button');
   btn.innerText = 'I should get focus';
 
-  const elementToFocusAfterHideConfig = { elementToFocusAfterHide: btn };
+  const elementToFocusAfterHideConfig = { ...withDropdownConfig(), elementToFocusAfterHide: btn };
   return html`
     <demo-el-using-overlaymixin .config=${elementToFocusAfterHideConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
@@ -252,7 +241,7 @@ This currently only supports CSS Animations, because it relies on the `animation
 
 ```js preview-story
 export const hasBackdrop = () => {
-  const hasBackdropConfig = { hasBackdrop: true };
+  const hasBackdropConfig = { ...withDropdownConfig(), hasBackdrop: true };
   return html`
     <demo-el-using-overlaymixin .config=${hasBackdropConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
@@ -276,7 +265,7 @@ Boolean property. When true, will block other overlays.
 
 ```js preview-story
 export const isBlocking = () => {
-  const isBlockingConfig = { hasBackdrop: true, isBlocking: true };
+  const isBlockingConfig = { ...withDropdownConfig(), hasBackdrop: true, isBlocking: true };
   return html`
     <demo-el-using-overlaymixin>
       <button slot="invoker">Overlay A: open first</button>
