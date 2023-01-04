@@ -3,6 +3,8 @@
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-button.js';
+import '@lion/ui/define/lion-button-reset.js';
+import '@lion/ui/define/lion-button-submit.js';
 ```
 
 ## With click handler
