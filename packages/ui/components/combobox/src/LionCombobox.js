@@ -391,10 +391,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (name === 'modelValue' && this.modelValue && this.modelValue !== oldValue) {
       if (this._syncToTextboxCondition(this.modelValue, this._oldModelValue)) {
         if (!this.multipleChoice) {
-          const textboxValue = this._getTextboxValueFromOption(
-            this.formElements[/** @type {number} */ (this.checkedIndex)],
-          );
-          this._setTextboxValue(textboxValue);
+          this._syncToTextboxSingle();
         } else {
           this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
         }
@@ -591,7 +588,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @protected
    */
   _setTextboxValue(v) {
-    // Make sure that we don't loose inputNode.selectionStart and inputNode.selectionEnd
+    // Make sure that we don't lose inputNode.selectionStart and inputNode.selectionEnd
     if (this._inputNode.value !== v) {
       this._inputNode.value = v;
     }
@@ -608,9 +605,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
           phase: 'overlay-close',
         })
       ) {
-        this._inputNode.value = this._getTextboxValueFromOption(
-          this.formElements[/** @type {number} */ (this.checkedIndex)],
-        );
+        this._syncToTextboxSingle();
       }
     } else {
       this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
@@ -964,6 +959,16 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     return (
       this.autocomplete === 'inline' || this.autocomplete === 'both' || phase === 'overlay-close'
     );
+  }
+
+  /**
+   * @overridable
+   */
+  _syncToTextboxSingle() {
+    const selectedOptionValue = this._getTextboxValueFromOption(
+      this.formElements[/** @type {number} */ (this.checkedIndex)],
+    );
+    this._setTextboxValue(selectedOptionValue);
   }
 
   /**

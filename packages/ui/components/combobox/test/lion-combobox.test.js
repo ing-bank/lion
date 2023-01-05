@@ -1741,6 +1741,57 @@ describe('lion-combobox', () => {
     });
 
     describe('Subclassers', () => {
+      it('allows to override "_syncCheckedWithTextboxSingle"', async () => {
+        class X extends LionCombobox {
+          // eslint-disable-next-line no-unused-vars
+          _syncToTextboxCondition() {
+            return true;
+          }
+
+          // eslint-disable-next-line no-unused-vars
+          _syncToTextboxSingle() {
+            const selectedOptionValue = this._getTextboxValueFromOption(
+              this.formElements[/** @type {number} */ (this.checkedIndex)],
+            );
+            this._setTextboxValue(`${selectedOptionValue}-single`);
+          }
+        }
+        const tagName = defineCE(X);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+          <${tag} name="foo" autocomplete="none">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `)
+        );
+        const { _inputNode } = getComboboxMembers(el);
+
+        el.setCheckedIndex(-1);
+        el.autocomplete = 'none';
+        el.setCheckedIndex(0);
+        expect(_inputNode.value).to.equal('Artichoke-single');
+
+        el.setCheckedIndex(-1);
+        el.autocomplete = 'list';
+        el.setCheckedIndex(0);
+        expect(_inputNode.value).to.equal('Artichoke-single');
+
+        el.setCheckedIndex(-1);
+        el.autocomplete = 'inline';
+        el.setCheckedIndex(0);
+        expect(_inputNode.value).to.equal('Artichoke-single');
+
+        el.setCheckedIndex(-1);
+        el.autocomplete = 'both';
+        el.setCheckedIndex(0);
+        expect(_inputNode.value).to.equal('Artichoke-single');
+      });
+
       it('allows to override "_syncCheckedWithTextboxMultiple"', async () => {
         class X extends LionCombobox {
           // eslint-disable-next-line no-unused-vars
