@@ -1,5 +1,5 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { LitElement, nothing, TemplateResult, CSSResultArray } from 'lit';
+import { LitElement, nothing, TemplateResult, CSSResultArray, PropertyValues } from 'lit';
 import { DisabledHost } from '../../core/types/DisabledMixinTypes.js';
 import { SlotHost } from '../../core/types/SlotMixinTypes.js';
 import { FormRegisteringHost } from './registration/FormRegisteringMixinTypes.js';
@@ -157,7 +157,7 @@ export declare class FormControlHost {
     },
   ): void;
 
-  updated(changedProperties: import('lit').PropertyValues): void;
+  updated(changedProperties: PropertyValues): void;
 
   /**
    * The interactive (form) element. Can be a native element like input/textarea/select or

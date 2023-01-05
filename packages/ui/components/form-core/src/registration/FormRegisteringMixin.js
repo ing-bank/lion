@@ -1,7 +1,6 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
- * @typedef {import('lit').LitElement} LitElement
  * @typedef {import('../../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {import('../../types/registration/FormRegisteringMixinTypes.js').FormRegisteringMixin} FormRegisteringMixin
  * @typedef {import('../../types/registration/FormRegisteringMixinTypes.js').FormRegisteringHost} FormRegisteringHost

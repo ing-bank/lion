@@ -5,10 +5,6 @@ const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' |
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
 
 /**
- * @typedef {import('lit').TemplateResult} TemplateResult
- */
-
-/**
  * Use LionButton (or LionButtonReset|LionButtonSubmit) when there is a need to extend HTMLButtonElement.
  * It allows to create complex shadow DOM for buttons needing this. Think of:
  * - a material Design button that needs a JS controlled ripple
@@ -143,7 +139,7 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
   }
 
   /**
-   * @param {import('lit').PropertyValues } changedProperties
+   * @param {PropertyValues} changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

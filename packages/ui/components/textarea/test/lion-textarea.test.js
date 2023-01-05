@@ -7,7 +7,6 @@ import '@lion/ui/define/lion-textarea.js';
 
 /**
  * @typedef {import('../src/LionTextarea.js').LionTextarea} LionTextarea
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionTextarea>} */ (_fixture);

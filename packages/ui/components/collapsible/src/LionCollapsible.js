@@ -65,7 +65,7 @@ export class LionCollapsible extends LitElement {
 
   /**
    * Update aria labels on state change.
-   * @param {import('lit').PropertyValues } changedProperties
+   * @param {PropertyValues} changedProperties
    */
   updated(changedProperties) {
     if (changedProperties.has('opened')) {

@@ -4,7 +4,6 @@ import '@lion/ui/define/lion-input-range.js';
 
 /**
  * @typedef {import('../src/LionInputRange.js').LionInputRange} LionInputRange
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputRange>} */ (_fixture);
 

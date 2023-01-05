@@ -11,7 +11,6 @@ import { _browserDetection } from '../src/OverlaysManager.js';
  * @typedef {import('../types/OverlayMixinTypes.js').DefineOverlayConfig} DefineOverlayConfig
  * @typedef {import('../types/OverlayMixinTypes.js').OverlayHost} OverlayHost
  * @typedef {import('../types/OverlayMixinTypes.js').OverlayMixin} OverlayMixin
- * @typedef {import('lit').LitElement} LitElement
  * @typedef {LitElement & OverlayHost & {_overlayCtrl:OverlayController}} OverlayEl
  */
 

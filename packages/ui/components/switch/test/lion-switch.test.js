@@ -9,7 +9,6 @@ import '@lion/ui/define/lion-switch.js';
 
 /**
  * @typedef {import('../src/LionSwitchButton.js').LionSwitchButton} LionSwitchButton
- * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
 

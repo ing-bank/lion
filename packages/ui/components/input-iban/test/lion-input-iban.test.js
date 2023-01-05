@@ -6,7 +6,6 @@ import '@lion/ui/define/lion-input-iban.js';
 
 /**
  * @typedef {import('../src/LionInputIban.js').LionInputIban} LionInputIban
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputIban>} */ (_fixture);
 

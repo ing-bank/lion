@@ -9,7 +9,6 @@ import heartSvg from './heart.svg.js';
 /**
  * @typedef {(strings: TemplateStringsArray, ... expr: string[]) => string} TaggedTemplateLiteral
  * @typedef {import('../src/LionIcon.js').LionIcon} LionIcon
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionIcon>} */ (_fixture);
 

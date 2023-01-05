@@ -7,7 +7,7 @@ import { DisabledMixin } from './DisabledMixin.js';
 
 /**
  * @type {DisabledWithTabIndexMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const DisabledWithTabIndexMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow
@@ -62,7 +62,7 @@ const DisabledWithTabIndexMixinImplementation = superclass =>
     /**
      * @param {string} [name]
      * @param {unknown} [oldValue]
-     * @param {import('lit').PropertyDeclaration} [options]
+     * @param {PropertyDeclaration} [options]
      * @returns {void}
      */
     requestUpdate(name, oldValue, options) {

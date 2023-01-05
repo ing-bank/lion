@@ -2,9 +2,6 @@
 import { LitElement, nothing } from 'lit';
 import { localize, LocalizeMixin } from '@lion/ui/localize.js';
 
-/**
- * @typedef {import('lit').TemplateResult} TemplateResult
- */
 export class LionProgressIndicator extends LocalizeMixin(LitElement) {
   static get properties() {
     return {
@@ -135,7 +132,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
 
   /**
    * Update aria labels on state change.
-   * @param {import('lit').PropertyValues } changedProperties
+   * @param {PropertyValues} changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

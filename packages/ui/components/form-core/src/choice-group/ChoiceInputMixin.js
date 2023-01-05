@@ -19,7 +19,7 @@ const hasChanged = (nw, old = {}) => nw.value !== old.value || nw.checked !== ol
 
 /**
  * @type {ChoiceInputMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const ChoiceInputMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -54,7 +54,7 @@ const ChoiceInputMixinImplementation = superclass =>
     /**
      * @param {string} [name]
      * @param {unknown} [oldValue]
-     * @param {import('lit').PropertyDeclaration} [options]
+     * @param {PropertyDeclaration} [options]
      * @returns {void}
      */
     requestUpdate(name, oldValue, options) {
@@ -72,7 +72,7 @@ const ChoiceInputMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit').PropertyValues } changedProperties
+     * @param {PropertyValues} changedProperties
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
@@ -84,7 +84,7 @@ const ChoiceInputMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit').PropertyValues } changedProperties
+     * @param {PropertyValues} changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

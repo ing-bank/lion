@@ -6,7 +6,7 @@ import { FormatMixin } from './FormatMixin.js';
 /**
  * @typedef {import('../types/NativeTextFieldMixinTypes.js').NativeTextFieldMixin} NativeTextFieldMixin
  * @type {NativeTextFieldMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass} superclass
  */
 const NativeTextFieldMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051

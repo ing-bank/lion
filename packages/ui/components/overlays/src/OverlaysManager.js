@@ -1,5 +1,4 @@
 /**
- * @typedef {import('lit').CSSResult} CSSResult
  * @typedef {import('./OverlayController.js').OverlayController} OverlayController
  */
 

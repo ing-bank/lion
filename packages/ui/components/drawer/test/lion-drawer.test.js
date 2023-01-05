@@ -4,7 +4,6 @@ import '@lion/ui/define/lion-drawer.js';
 
 /**
  * @typedef {import('../src/LionDrawer.js').LionDrawer} LionDrawer
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionDrawer>} */ (_fixture);
 

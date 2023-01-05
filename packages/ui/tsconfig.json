@@ -2,8 +2,20 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist-types",
-    "rootDir": "."
+    "rootDir": ".",
+    "types": [
+      "./prelude",
+      "node",
+      "mocha",
+      "chai",
+      "sinon",
+    ],
   },
-  "include": ["exports", "components"],
-  "exclude": ["dist-types"]
+  "include": [
+    "exports",
+    "components"
+  ],
+  "exclude": [
+    "dist-types"
+  ]
 }

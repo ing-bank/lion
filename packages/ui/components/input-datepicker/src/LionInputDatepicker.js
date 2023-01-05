@@ -15,7 +15,6 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
- * @typedef {import('lit').RenderOptions} RenderOptions
  */
 
 /**
@@ -158,7 +157,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   /**
    * @param {string} [name]
    * @param {unknown} [oldValue]
-   * @param {import('lit').PropertyDeclaration} [options]
+   * @param {PropertyDeclaration} [options]
    * @returns {void}
    */
   requestUpdate(name, oldValue, options) {
@@ -177,13 +176,13 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     }
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__toggleInvokerDisabled();
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('validators')) {
@@ -320,7 +319,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   async __openCalendarOverlay() {
     await this._overlayCtrl.show();
     await Promise.all([
-      /** @type {import('lit').LitElement} */ (this._overlayCtrl.contentNode).updateComplete,
+      /** @type {LitElement} */ (this._overlayCtrl.contentNode).updateComplete,
       this._calendarNode.updateComplete,
     ]);
     this._onCalendarOverlayOpened();

@@ -119,7 +119,7 @@ export class LionAccordion extends LitElement {
     this.__expanded = [];
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__setupSlots();

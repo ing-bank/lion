@@ -66,7 +66,7 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
   /**
    * @param {string} [name]
    * @param {unknown} [oldValue]
-   * @param {import('lit').PropertyDeclaration} [options]
+   * @param {PropertyDeclaration} [options]
    * @returns {void}
    */
   requestUpdate(name, oldValue, options) {
@@ -76,13 +76,13 @@ export class LionInput extends NativeTextFieldMixin(LionField) {
     }
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__delegateReadOnly();
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('type')) {

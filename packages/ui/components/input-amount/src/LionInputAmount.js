@@ -83,7 +83,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     }
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('currency')) {

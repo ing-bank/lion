@@ -1,10 +1,6 @@
 import { LionButton } from './LionButton.js';
 
 /**
- * @typedef {import('lit').TemplateResult} TemplateResult
- */
-
-/**
  * This adds functionality for form buttons (type 'submit' and 'reset').
  * It allows to submit or reset a <form> by spawning a click on a temporrary native button inside
  * the form.

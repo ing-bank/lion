@@ -7,7 +7,6 @@ import '@lion/ui/define/lion-steps.js';
 /**
  * @typedef {import('../src/LionSteps.js').LionSteps} LionSteps
  * @typedef {import('../src/LionStep.js').LionStep} LionStep
- * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {{[key: string]: ?}} UnknownData
  */
 

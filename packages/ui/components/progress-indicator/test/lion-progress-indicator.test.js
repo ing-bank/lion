@@ -5,7 +5,6 @@ import '@lion/ui/define/lion-progress-indicator.js';
 
 /**
  * @typedef {import('../src/LionProgressIndicator.js').LionProgressIndicator} LionProgressIndicator
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionProgressIndicator>} */ (_fixture);

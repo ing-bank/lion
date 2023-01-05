@@ -4,7 +4,7 @@ import { render } from 'lit';
  * Helper to render a lit TemplateResult as an offline-created DOM node
  * Make sure that the top-most element in the template has no siblings,
  * as they won't be taken into account. We only return firstElementChild.
- * @param {import('lit').TemplateResult} litHtmlTemplate
+ * @param {TemplateResult} litHtmlTemplate
  */
 export const renderLitAsNode = litHtmlTemplate => {
   const offlineRenderContainer = document.createElement('div');

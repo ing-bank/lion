@@ -37,10 +37,6 @@ function getSelectRichMembers(el) {
   };
 }
 
-/**
- * @typedef {import('lit').TemplateResult} TemplateResult
- */
-
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionSelectRich>} */ (_fixture);
 
 describe('lion-select-rich', () => {

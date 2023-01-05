@@ -4,7 +4,6 @@ import '@lion/ui/define-helpers/sb-action-logger.js';
 
 /**
  * @typedef {import('../src/SbActionLogger.js').SbActionLogger} SbActionLogger
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<SbActionLogger>} */ (_fixture);
 

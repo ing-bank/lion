@@ -56,7 +56,7 @@ function moveDefaultSlottablesToTarget(source, target) {
 
 /**
  * @type {ListboxMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const ListboxMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -361,7 +361,7 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit').PropertyValues } changedProperties
+     * @param {PropertyValues} changedProperties
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
@@ -379,7 +379,7 @@ const ListboxMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit').PropertyValues } changedProperties
+     * @param {PropertyValues} changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

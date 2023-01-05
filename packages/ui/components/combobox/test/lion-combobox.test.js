@@ -954,7 +954,7 @@ describe('lion-combobox', () => {
   describe('Selection display', () => {
     class MySelectionDisplay extends LitElement {
       /**
-       * @param {import('lit').PropertyValues } changedProperties
+       * @param {PropertyValues} changedProperties
        */
       onComboboxElementUpdated(changedProperties) {
         if (

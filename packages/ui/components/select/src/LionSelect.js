@@ -62,7 +62,7 @@ export class LionSelect extends LionFieldWithSelect {
     this._inputNode.addEventListener('change', this._proxyChangeEvent);
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('disabled')) {

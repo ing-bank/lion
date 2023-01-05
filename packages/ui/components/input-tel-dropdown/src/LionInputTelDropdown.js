@@ -20,7 +20,6 @@ import { getFlagSymbol } from './getFlagSymbol.js';
 
 /**
  * @typedef {import('lit/directives/ref.js').Ref} Ref
- * @typedef {import('lit').RenderOptions} RenderOptions
  * @typedef {import('../../form-core/types/FormatMixinTypes.js').FormatHost} FormatHost
  * @typedef {import('../../input-tel/types/index.js').RegionCode} RegionCode
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel

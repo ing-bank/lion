@@ -20,7 +20,6 @@ import { getListboxMembers } from '../../../exports/listbox-test-helpers.js';
  * @typedef {import('../src/LionListbox.js').LionListbox} LionListbox
  * @typedef {import('../src/LionOption.js').LionOption} LionOption
  * @typedef {import('../../select-rich/src/LionSelectInvoker.js').LionSelectInvoker} LionSelectInvoker
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ (_fixture);

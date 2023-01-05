@@ -3,7 +3,7 @@ import { dayTemplate as defaultDayTemplate } from './dayTemplate.js';
 
 /**
  * @param {{months: {weeks: {days: import('../../types/day.js').Day[]}[]}[]}} data
- * @param {{ weekdaysShort: string[], weekdays: string[], monthsLabels?: string[], dayTemplate?: (day: import('../../types/day.js').Day, { weekdays, monthsLabels }?: any) => import('lit').TemplateResult }} opts
+ * @param {{ weekdaysShort: string[], weekdays: string[], monthsLabels?: string[], dayTemplate?: (day: import('../../types/day.js').Day, { weekdays, monthsLabels }?: any) => TemplateResult }} opts
  */
 export function dataTemplate(
   data,

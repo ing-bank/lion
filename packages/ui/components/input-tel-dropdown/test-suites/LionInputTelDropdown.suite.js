@@ -13,7 +13,6 @@ import sinon from 'sinon';
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 
 /**
- * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {HTMLSelectElement|HTMLElement & {modelValue:string}} DropdownElement
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
  */

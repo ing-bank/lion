@@ -59,7 +59,7 @@ export class LionSteps extends LitElement {
     this._max = 0;
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this._max = this.steps.length - 1;
@@ -76,7 +76,7 @@ export class LionSteps extends LitElement {
     }
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('current')) {

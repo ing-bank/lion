@@ -15,7 +15,6 @@ import { LionInputTel, PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.
 import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
 
 /**
- * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {import('../types/index.js').RegionCode} RegionCode
  */
 

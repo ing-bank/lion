@@ -6,7 +6,6 @@ import '@lion/ui/define/lion-pagination.js';
 
 /**
  * @typedef {import('../src/LionPagination.js').LionPagination} LionPagination
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionPagination>} */ (_fixture);

@@ -6,9 +6,6 @@ import { Unparseable } from './validate/Unparseable.js';
 import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
 
 /**
- * @typedef {import('lit').TemplateResult} TemplateResult
- * @typedef {import('lit').CSSResult} CSSResult
- * @typedef {import('lit').CSSResultArray} CSSResultArray
  * @typedef {import('../../core/types/SlotMixinTypes.js').SlotsMap} SlotsMap
  * @typedef {import('./validate/LionValidationFeedback.js').LionValidationFeedback} LionValidationFeedback
  * @typedef {import('../types/choice-group/ChoiceInputMixinTypes.js').ChoiceInputHost} ChoiceInputHost
@@ -24,7 +21,7 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  * This Mixin is a shared fundament for all form components, it's applied on:
  * - LionField (which is extended to LionInput, LionTextarea, LionSelect etc. etc.)
  * - LionFieldset (which is extended to LionRadioGroup, LionCheckboxGroup, LionForm)
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  * @type {FormControlMixin}
  */
 const FormControlMixinImplementation = superclass =>
@@ -272,7 +269,7 @@ const FormControlMixinImplementation = superclass =>
       }
     }
 
-    /** @param {import('lit').PropertyValues } changedProperties */
+    /** @param {PropertyValues} changedProperties */
     updated(changedProperties) {
       super.updated(changedProperties);
 

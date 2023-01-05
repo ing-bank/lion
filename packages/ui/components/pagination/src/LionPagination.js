@@ -3,10 +3,6 @@ import { LitElement, html, css } from 'lit';
 import { LocalizeMixin } from '@lion/ui/localize.js';
 
 /**
- * @typedef {import('lit').TemplateResult} TemplateResult
- */
-
-/**
  * `LionPagination` is a class for custom Pagination element (`<lion-pagination>` web component).
  *
  * @customElement lion-pagination

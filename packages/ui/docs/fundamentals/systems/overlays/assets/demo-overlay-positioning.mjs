@@ -434,7 +434,7 @@ class DemoOverlayPositioning extends LitElement {
   }
 
   /**
-   * @param {import('lit').PropertyValues } changedProperties
+   * @param {PropertyValues} changedProperties
    */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
@@ -443,7 +443,7 @@ class DemoOverlayPositioning extends LitElement {
   }
 
   /**
-   * @param {import('lit').PropertyValues } changedProperties
+   * @param {PropertyValues} changedProperties
    */
   update(changedProperties) {
     if (changedProperties.has('placementMode')) {
@@ -480,7 +480,7 @@ class DemoOverlayPositioning extends LitElement {
   }
 
   /**
-   * @param {import('lit').PropertyValues } changedProperties
+   * @param {PropertyValues} changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

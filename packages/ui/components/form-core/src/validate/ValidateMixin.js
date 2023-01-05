@@ -38,7 +38,7 @@ function arrayDiff(array1 = [], array2 = []) {
  * UI. All error visibility, dom interaction and accessibility are handled in FeedbackMixin.
  *
  * @type {ValidateMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 export const ValidateMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -271,7 +271,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit').PropertyValues} changedProperties
+     * @param {PropertyValues} changedProperties
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
@@ -832,7 +832,7 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit').PropertyValues} changedProperties
+     * @param {PropertyValues} changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

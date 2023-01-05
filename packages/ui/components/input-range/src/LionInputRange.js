@@ -5,10 +5,6 @@ import { LionInput } from '@lion/ui/input.js';
 import { formatNumber } from '@lion/ui/localize.js';
 
 /**
- * @typedef {import('lit').CSSResult} CSSResult
- */
-
-/**
  * LionInputRange: extension of lion-input.
  *
  * @customElement `lion-input-range`
@@ -74,7 +70,7 @@ export class LionInputRange extends LionInput {
     this.parser = modelValue => parseFloat(modelValue);
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
 
@@ -91,7 +87,7 @@ export class LionInputRange extends LionInput {
     }
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     if (changedProperties.has('modelValue')) {
