@@ -49,8 +49,19 @@ describe('lion-select-rich', () => {
     expect(document.activeElement === document.body).to.be.true;
     const { _labelNode, _invokerNode } = getSelectRichMembers(el);
     _labelNode.click();
-
     expect(document.activeElement === _invokerNode).to.be.true;
+  });
+
+  it('has an attribute focused when focused', async () => {
+    const el = await fixture(html` <lion-select-rich label="foo"> </lion-select-rich> `);
+
+    el.focus();
+    await el.updateComplete;
+    expect(el.hasAttribute('focused')).to.be.true;
+
+    el.blur();
+    await el.updateComplete;
+    expect(el.hasAttribute('focused')).to.be.false;
   });
 
   it('checks the first enabled option', async () => {
