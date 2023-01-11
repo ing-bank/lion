@@ -1,7 +1,7 @@
-import { adoptStyles } from 'lit';
 import { overlays } from './singleton.js';
 import { containFocus } from './utils/contain-focus.js';
 import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
+import { _adoptStyleUtils } from './utils/adopt-styles.js';
 
 /**
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
@@ -12,22 +12,6 @@ import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
  * @typedef {{ createPopper: Popper }} PopperModule
  * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
  */
-
-const rootNodeStylesMap = new WeakSet();
-
-/**
- * Returns element that adopts stylesheet
- * @param {Element} shadowOrBodyEl
- * @returns {ShadowRoot}
- */
-function getRootNodeOrBodyElThatAdoptsStylesheet(shadowOrBodyEl) {
-  const rootNode = /** @type {* & DocumentOrShadowRoot} */ (shadowOrBodyEl.getRootNode());
-  if (rootNode === document) {
-    // @ts-ignore
-    return document.body;
-  }
-  return rootNode;
-}
 
 /**
  * From:
@@ -536,16 +520,20 @@ export class OverlayController extends EventTarget {
         OverlayController.popperModule = preloadPopper();
       }
     }
-    this.__initOverlayStyles();
+    this.__handleOverlayStyles({ phase: 'init' });
     this._handleFeatures({ phase: 'init' });
   }
 
-  __initOverlayStyles() {
-    const rootNode = getRootNodeOrBodyElThatAdoptsStylesheet(this.contentWrapperNode);
-    if (!rootNodeStylesMap.has(rootNode)) {
-      // TODO: ideally we should also support a teardown
-      adoptStyles(rootNode, [...(rootNode.adoptedStyleSheets || []), overlayShadowDomStyle]);
-      rootNodeStylesMap.add(rootNode);
+  /**
+   * @param {{ phase: OverlayPhase }} config
+   * @private
+   */
+  __handleOverlayStyles({ phase }) {
+    const rootNode = /** @type {ShadowRoot} */ (this.contentWrapperNode?.getRootNode());
+    if (phase === 'init') {
+      _adoptStyleUtils.adoptStyle(rootNode, overlayShadowDomStyle);
+    } else if (phase === 'teardown') {
+      _adoptStyleUtils.adoptStyle(rootNode, overlayShadowDomStyle, { teardown: true });
     }
   }
 
@@ -1284,6 +1272,7 @@ export class OverlayController extends EventTarget {
   }
 
   teardown() {
+    this.__handleOverlayStyles({ phase: 'teardown' });
     this._handleFeatures({ phase: 'teardown' });
   }
 

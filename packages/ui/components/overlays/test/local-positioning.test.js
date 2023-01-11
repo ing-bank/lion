@@ -2,7 +2,7 @@
 import { expect, fixture, fixtureSync } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import { OverlayController } from '@lion/ui/overlays.js';
-import { normalizeTransformStyle } from './utils-tests/local-positioning-helpers.js';
+import { normalizeTransformStyle } from '../test-helpers/normalizeTransformStyle.js';
 
 /**
  * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
