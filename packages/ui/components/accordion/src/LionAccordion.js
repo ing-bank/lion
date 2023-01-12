@@ -44,21 +44,21 @@ export class LionAccordion extends LitElement {
           flex-direction: column;
         }
 
-        .accordion [slot='invoker'] {
+        .accordion ::slotted(.invoker) {
           margin: 0;
         }
 
-        .accordion [slot='invoker'][expanded] {
+        .accordion ::slotted(.invoker)[expanded] {
           font-weight: bold;
         }
 
-        .accordion [slot='content'] {
+        .accordion ::slotted(.content) {
           margin: 0;
           visibility: hidden;
           display: none;
         }
 
-        .accordion [slot='content'][expanded] {
+        .accordion ::slotted(.content[expanded]) {
           visibility: visible;
           display: block;
         }
@@ -159,9 +159,15 @@ export class LionAccordion extends LitElement {
    *  @private
    */
   __setupStore() {
-    const accordion = this.shadowRoot?.querySelector('slot[name=_accordion]');
-    const existingInvokers = accordion ? accordion.querySelectorAll('[slot=invoker]') : [];
-    const existingContent = accordion ? accordion.querySelectorAll('[slot=content]') : [];
+    const accordion = /** @type {HTMLSlotElement} */ (
+      this.shadowRoot?.querySelector('slot[name=_accordion]')
+    );
+    const existingInvokers = accordion
+      ? accordion.assignedElements().filter(child => child.classList.contains('invoker'))
+      : [];
+    const existingContent = accordion
+      ? accordion.assignedElements().filter(child => child.classList.contains('content'))
+      : [];
 
     const invokers = /** @type {HTMLElement[]} */ ([
       ...Array.from(existingInvokers),
@@ -212,14 +218,21 @@ export class LionAccordion extends LitElement {
     const invokers = /** @type {HTMLElement[]} */ (
       Array.from(this.children).filter(child => child.slot === 'invoker')
     );
+
     const contents = /** @type {HTMLElement[]} */ (
       Array.from(this.children).filter(child => child.slot === 'content')
     );
+
     const accordion = this.shadowRoot?.querySelector('slot[name=_accordion]');
+
     if (accordion) {
       invokers.forEach((invoker, index) => {
-        accordion.insertAdjacentElement('beforeend', invoker);
-        accordion.insertAdjacentElement('beforeend', contents[index]);
+        invoker.classList.add('invoker');
+        // eslint-disable-next-line no-param-reassign
+        invoker.slot = '_accordion';
+
+        contents[index].classList.add('content');
+        contents[index].slot = '_accordion';
       });
     }
   }

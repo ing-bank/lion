@@ -23,27 +23,27 @@ const basicAccordion = html`
  * @param {Element} el
  */
 function getAccordionChildren(el) {
-  const slot = el.shadowRoot?.querySelector('slot[name=_accordion]');
+  if (el.shadowRoot) {
+    const slot = el.shadowRoot?.querySelector('slot[name=_accordion]');
 
-  return slot ? slot.children : [];
+    return slot && slot instanceof HTMLSlotElement ? slot.assignedElements() : [];
+  }
+
+  return [];
 }
 
 /**
  * @param {Element} el
  */
 function getInvokers(el) {
-  const slot = el.shadowRoot?.querySelector('slot[name=_accordion]');
-
-  return slot ? slot.querySelectorAll('[slot=invoker]') : [];
+  return getAccordionChildren(el).filter(child => child.classList.contains('invoker'));
 }
 
 /**
  * @param {Element} el
  */
 function getContents(el) {
-  const slot = el.shadowRoot?.querySelector('slot[name=_accordion]');
-
-  return slot ? slot.querySelectorAll('[slot=content]') : [];
+  return getAccordionChildren(el).filter(child => child.classList.contains('content'));
 }
 
 describe('<lion-accordion>', () => {
@@ -68,14 +68,14 @@ describe('<lion-accordion>', () => {
 
       expect(
         Array.from(getAccordionChildren(el)).find(
-          child => child.slot === 'invoker' && child.hasAttribute('expanded'),
+          child => child.className === 'invoker' && child.hasAttribute('expanded'),
         )?.textContent,
       ).to.equal('invoker 2');
 
       el.expanded = [0];
       expect(
         Array.from(getAccordionChildren(el)).find(
-          child => child.slot === 'invoker' && child.hasAttribute('expanded'),
+          child => child.className === 'invoker' && child.hasAttribute('expanded'),
         )?.textContent,
       ).to.equal('invoker 1');
     });
@@ -146,17 +146,16 @@ describe('<lion-accordion>', () => {
         `)
       );
       expect(el.focusedIndex).to.equal(1);
+
       expect(
-        Array.from(getAccordionChildren(el)).find(
-          child => child.slot === 'invoker' && child.firstElementChild?.hasAttribute('focused'),
-        )?.textContent,
+        Array.from(getInvokers(el)).find(child => child.firstElementChild?.hasAttribute('focused'))
+          ?.textContent,
       ).to.equal('invoker 2');
 
       el.focusedIndex = 0;
       expect(
-        Array.from(getAccordionChildren(el)).find(
-          child => child.slot === 'invoker' && child.firstElementChild?.hasAttribute('focused'),
-        )?.textContent,
+        Array.from(getInvokers(el)).find(child => child.firstElementChild?.hasAttribute('focused'))
+          ?.textContent,
       ).to.equal('invoker 1');
     });
 
@@ -360,14 +359,10 @@ describe('<lion-accordion>', () => {
       await el.updateComplete;
 
       expect(
-        Array.from(getAccordionChildren(el)).find(
-          child => child.slot === 'invoker' && child.hasAttribute('expanded'),
-        )?.textContent,
+        Array.from(getInvokers(el)).find(child => child.hasAttribute('expanded'))?.textContent,
       ).to.equal('invoker 5');
       expect(
-        Array.from(getAccordionChildren(el)).find(
-          child => child.slot === 'content' && child.hasAttribute('expanded'),
-        )?.textContent,
+        Array.from(getContents(el)).find(child => child.hasAttribute('expanded'))?.textContent,
       ).to.equal('content 5');
     });
 
@@ -410,11 +405,13 @@ describe('<lion-accordion>', () => {
           <div slot="content">content 2</div>
         </lion-accordion>
       `);
+
+      // console.log(getAccordionChildren(el));
       expect(
-        Array.from(getAccordionChildren(el)).find(child => child.slot === 'content'),
+        Array.from(getAccordionChildren(el)).find(child => child.classList.contains('content')),
       ).to.not.have.attribute('tabindex');
       expect(
-        Array.from(getAccordionChildren(el)).find(child => child.slot === 'content'),
+        Array.from(getAccordionChildren(el)).find(child => child.classList.contains('content')),
       ).to.not.have.attribute('tabindex');
     });
 
@@ -445,10 +442,10 @@ describe('<lion-accordion>', () => {
             <div slot="content">content</div>
           </lion-accordion>
         `);
-        expect(
-          Array.from(getAccordionChildren(el)).find(child => child.slot === 'invoker')
-            ?.firstElementChild,
-        ).to.have.attribute('aria-expanded', 'false');
+        expect(Array.from(getInvokers(el))[0]?.firstElementChild).to.have.attribute(
+          'aria-expanded',
+          'false',
+        );
       });
 
       it('adds aria-expanded="true" to invoker when its content is expanded', async () => {
@@ -461,10 +458,10 @@ describe('<lion-accordion>', () => {
           `)
         );
         el.expanded = [0];
-        expect(
-          Array.from(getAccordionChildren(el)).find(child => child.slot === 'invoker')
-            ?.firstElementChild,
-        ).to.have.attribute('aria-expanded', 'true');
+        expect(Array.from(getInvokers(el))[0]?.firstElementChild).to.have.attribute(
+          'aria-expanded',
+          'true',
+        );
       });
     });
 
