@@ -1,5 +1,15 @@
 # @lion/ui
 
+## 0.0.13
+
+### Patch Changes
+
+- fd09f652: [select-rich] solve case of having singleOption and hasNoDefaultSelected as the same time
+- af2e0293: [overlays]: fix adoptStyles fallback and make testable
+- 9f6270b3: [select-rich] set focusableNode correctly so focused and focused-visible attributes are set when invoker gets focus
+- 9fb14fa1: `accordion`: rearranging invokers and content for a correct tab order is now implemented by changing the slot attributes of both instead of moving them, changed css for this implementation, updated tests
+- 9a43dc4d: [input-tel-dropdown] add translations for "All countries" and "Suggested countries" labels.
+
 ## 0.0.12
 
 ### Patch Changes
