@@ -194,11 +194,17 @@ export class LionIcon extends LitElement {
       }
     } else {
       const iconIdBeforeResolve = this.iconId;
-      const svg = await this._iconManager.resolveIconForId(iconIdBeforeResolve);
 
-      // update SVG if it did not change in the meantime to avoid race conditions
-      if (this.iconId === iconIdBeforeResolve) {
-        this.svg = svg;
+      // Wrap in try-catch so error is non-fatal.
+      // Failure to load an icon (asset) should not crash the entire app.
+      try {
+        const svg = await this._iconManager.resolveIconForId(iconIdBeforeResolve);
+        // update SVG if it did not change in the meantime to avoid race conditions
+        if (this.iconId === iconIdBeforeResolve) {
+          this.svg = svg;
+        }
+      } catch (e) {
+        console.error(e);
       }
     }
   }
