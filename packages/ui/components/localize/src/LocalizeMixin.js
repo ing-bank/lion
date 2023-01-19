@@ -6,6 +6,7 @@ import { localize } from './singleton.js';
 /**
  * @typedef {import('lit/directive.js').DirectiveResult} DirectiveResult
  * @typedef {import('../types/LocalizeMixinTypes.js').LocalizeMixin} LocalizeMixin
+ * @typedef {import('../types/LocalizeMixinTypes.js').NamespaceObject} NamespaceObject
  */
 
 /**
@@ -17,7 +18,7 @@ const LocalizeMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class LocalizeMixin extends superclass {
     /**
-     * @returns {Object.<string,function>[]}
+     * @returns {NamespaceObject[]}
      */
     static get localizeNamespaces() {
       return [];
@@ -106,11 +107,11 @@ const LocalizeMixinImplementation = superclass =>
     }
 
     /**
-     * @returns {string[]}
+     * @returns {NamespaceObject[]}
      * @private
      */
     __getUniqueNamespaces() {
-      /** @type {string[]} */
+      /** @type {NamespaceObject[]} */
       const uniqueNamespaces = [];
 
       // IE11 does not support iterable in the constructor
