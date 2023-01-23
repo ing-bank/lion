@@ -1,5 +1,13 @@
 # @lion/ui
 
+## 0.0.14
+
+### Patch Changes
+
+- a5330c92: Unresolved icons to not cause a fatal error, but console.error instead. Missing assets shouldn't prevent the rest of the application from rendering.
+- d204195c: Updated the return type of `localizeNamespaces()` of the localize mixin to allow `NamespaceObject[]`
+- 87e565ca: fix: overlay docs error: 'return' outside of function
+
 ## 0.0.13
 
 ### Patch Changes
