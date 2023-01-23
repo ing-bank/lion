@@ -204,6 +204,7 @@ export class LionIcon extends LitElement {
           this.svg = svg;
         }
       } catch (e) {
+        // eslint-disable-next-line no-console
         console.error(e);
       }
     }
