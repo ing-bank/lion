@@ -77,7 +77,7 @@ As specified in the [overlay rationale](./rationale.md) there are only two offic
 Since most overlays have interactive content the default is set to dialogs. To get a tooltip, you can add `isTooltip` to the config object. This only works for local placement and it also needs to have `handlesAccessibility` activated to work.
 
 ```js preview-story
-export const withTooltipConfig = () => {
+export const usingTooltipConfig = () => {
   const tooltipConfig = { ...withTooltipConfig() };
 
   return html`
