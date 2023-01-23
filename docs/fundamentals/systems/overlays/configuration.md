@@ -77,14 +77,16 @@ As specified in the [overlay rationale](./rationale.md) there are only two offic
 Since most overlays have interactive content the default is set to dialogs. To get a tooltip, you can add `isTooltip` to the config object. This only works for local placement and it also needs to have `handlesAccessibility` activated to work.
 
 ```js preview-story
-const tooltipConfig = { ...withTooltipConfig() };
+export const withTooltipConfig = () => {
+  const tooltipConfig = { ...withTooltipConfig() };
 
-return html`
-  <demo-el-using-overlaymixin id="tooltip" .config=${tooltipConfig}>
-    <button slot="invoker">Hover me to open the tooltip!</button>
-    <div slot="content" class="demo-overlay">Hello!</div>
-  </demo-el-using-overlaymixin>
-`;
+  return html`
+    <demo-el-using-overlaymixin id="tooltip" .config=${tooltipConfig}>
+      <button slot="invoker">Hover me to open the tooltip!</button>
+      <div slot="content" class="demo-overlay">Hello!</div>
+    </demo-el-using-overlaymixin>
+  `;
+};
 ```
 
 ## trapsKeyboardFocus
