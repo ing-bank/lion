@@ -105,28 +105,44 @@ describe('parseNumber()', () => {
     expect(parseNumber('1 23.4')).to.equal(123.4);
   });
 
-  it('parses negative numbers', () => {
-    expect(parseNumber('-0')).to.equal(0);
-    expect(parseNumber('-1')).to.equal(-1);
-    expect(parseNumber('-1234')).to.equal(-1234);
-    expect(parseNumber('-1.234,5')).to.equal(-1234.5);
-    expect(parseNumber('-1,234.5')).to.equal(-1234.5);
-    expect(parseNumber('-1.234,5678')).to.equal(-1234.5678);
-    expect(parseNumber('-1,234.5678')).to.equal(-1234.5678);
-  });
-
   it('ignores all non-number symbols (including currency)', () => {
     expect(parseNumber('€ 1,234.56')).to.equal(1234.56);
-    expect(parseNumber('€ -1,234.56')).to.equal(-1234.56);
-    expect(parseNumber('-€ 1,234.56')).to.equal(-1234.56);
     expect(parseNumber('1,234.56 €')).to.equal(1234.56);
-    expect(parseNumber('-1,234.56 €')).to.equal(-1234.56);
     expect(parseNumber('EUR 1,234.56')).to.equal(1234.56);
-    expect(parseNumber('EUR -1,234.56')).to.equal(-1234.56);
-    expect(parseNumber('-EUR 1,234.56')).to.equal(-1234.56);
     expect(parseNumber('1,234.56 EUR')).to.equal(1234.56);
-    expect(parseNumber('-1,234.56 EUR')).to.equal(-1234.56);
     expect(parseNumber('Number is 1,234.56')).to.equal(1234.56);
+  });
+
+  describe('negative numbers', () => {
+    it('can get parsed', () => {
+      expect(parseNumber('-0')).to.equal(0);
+      expect(parseNumber('-1')).to.equal(-1);
+      expect(parseNumber('-1234')).to.equal(-1234);
+      expect(parseNumber('-1.234,5')).to.equal(-1234.5);
+      expect(parseNumber('-1,234.5')).to.equal(-1234.5);
+      expect(parseNumber('-1.234,5678')).to.equal(-1234.5678);
+      expect(parseNumber('-1,234.5678')).to.equal(-1234.5678);
+    });
+
+    it('parses different type of hypens', () => {
+      expect(parseNumber('-1')).to.equal(-1, 'Hypen');
+      expect(parseNumber('−1')).to.equal(-1, 'Minus-Sign');
+    });
+
+    it('ignores all non-number symbols (including currency)', () => {
+      expect(parseNumber('€ -1,234.56')).to.equal(-1234.56);
+      expect(parseNumber('-€ 1,234.56')).to.equal(-1234.56);
+      expect(parseNumber('-1,234.56 €')).to.equal(-1234.56);
+      expect(parseNumber('EUR -1,234.56')).to.equal(-1234.56);
+      expect(parseNumber('-EUR 1,234.56')).to.equal(-1234.56);
+      expect(parseNumber('-1,234.56 EUR')).to.equal(-1234.56);
+    });
+
+    it('detects separators unparseable when there are 2 same ones e.g. -1.234.56', () => {
+      expect(parseNumber('-1.234.56')).to.equal(-123456);
+      expect(parseNumber('-1,234,56')).to.equal(-123456);
+      expect(parseNumber('-1 234 56')).to.equal(-123456);
+    });
   });
 
   it('ignores non-number characters and returns undefined', () => {
