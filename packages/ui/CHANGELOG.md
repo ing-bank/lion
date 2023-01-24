@@ -1,5 +1,15 @@
 # @lion/ui
 
+## 0.1.0
+
+### Minor Changes
+
+- a4ffebbd: Release `@lion/ui` beta 0.1.0
+
+### Patch Changes
+
+- 851329ee: [localize] Correct msgLit return type to include DirectiveResult
+
 ## 0.0.14
 
 ### Patch Changes
