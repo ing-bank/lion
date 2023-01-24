@@ -104,7 +104,8 @@ export function parseNumber(value, options) {
   if (!containsNumbers) {
     return undefined;
   }
-  const matchedInput = value.match(/[0-9,.\- ]/g);
+  const valueM = value.replace(/[−]/g, '-'); // U+002D, Hyphen-Minus, &#45;
+  const matchedInput = valueM.match(/[0-9,.\- ]/g);
   if (!matchedInput) {
     return undefined;
   }
@@ -112,7 +113,7 @@ export function parseNumber(value, options) {
   const parseMode = getParseMode(cleanedInput, options);
   switch (parseMode) {
     case 'unparseable': {
-      const cleanedInputMatchStr = cleanedInput.match(/[0-9]/g)?.join('');
+      const cleanedInputMatchStr = cleanedInput.match(/[0-9-]/g)?.join('');
       if (!cleanedInputMatchStr) {
         return NaN;
       }
