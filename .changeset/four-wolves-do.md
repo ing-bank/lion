@@ -1,5 +1,5 @@
 ---
-'@lion/ui': minor
+'@lion/ui': patch
 ---
 
 Side-effect-free alternative for `localize` (the globally shared instance of LocalizeManager).
