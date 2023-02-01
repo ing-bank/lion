@@ -4,7 +4,7 @@ import sinon from 'sinon';
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
 import { setupFakeImport, resetFakeImport, fakeImport } from '@lion/ui/localize-test-helpers.js';
 
-import { LocalizeManager } from '@lion/ui/localize.js';
+import { LocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 
 /**
  * @param {LocalizeManager} localizeManagerEl

@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { localize, formatNumber } from '@lion/ui/localize.js';
+import { getLocalizeManager, formatNumber } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
 // TODO: This is broken only in Safari 13.1.2 Wait till ci is on 13.1.3 and remove
@@ -20,6 +20,8 @@ const currencySymbol = /** @param {string} currency */ currency => ({
 });
 
 describe('formatNumber', () => {
+  const localizeManager = getLocalizeManager();
+
   afterEach(localizeTearDown);
 
   it('displays the appropriate amount of decimal places based on currencies spec http://www.currency-iso.org/en/home/tables/table-a1.html', () => {
@@ -74,14 +76,14 @@ describe('formatNumber', () => {
     expect(formatNumber(undefined)).to.equal('');
   });
 
-  it('uses `localize.formatNumberOptions.returnIfNaN`', () => {
-    const savedReturnIfNaN = localize.formatNumberOptions.returnIfNaN;
+  it('uses `localizeManager.formatNumberOptions.returnIfNaN`', () => {
+    const savedReturnIfNaN = localizeManager.formatNumberOptions.returnIfNaN;
 
-    localize.formatNumberOptions.returnIfNaN = '-';
+    localizeManager.formatNumberOptions.returnIfNaN = '-';
     // @ts-ignore
     expect(formatNumber('foo')).to.equal('-');
 
-    localize.formatNumberOptions.returnIfNaN = savedReturnIfNaN;
+    localizeManager.formatNumberOptions.returnIfNaN = savedReturnIfNaN;
   });
 
   it("can set what to returns when NaN via `returnIfNaN: 'foo'`", () => {
@@ -89,11 +91,11 @@ describe('formatNumber', () => {
     expect(formatNumber('foo', { returnIfNaN: '-' })).to.equal('-');
   });
 
-  it('uses `localize.locale`', () => {
+  it('uses `localizeManager.locale`', () => {
     expect(formatNumber(123456.789, { style: 'decimal', maximumFractionDigits: 2 })).to.equal(
       '123,456.79',
     );
-    localize.locale = 'de-DE';
+    localizeManager.locale = 'de-DE';
     expect(formatNumber(123456.789, { style: 'decimal', maximumFractionDigits: 2 })).to.equal(
       '123.456,79',
     );
@@ -136,7 +138,7 @@ describe('formatNumber', () => {
   });
 
   it('formats numbers correctly', () => {
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     expect(formatNumber(0, { style: 'decimal', minimumFractionDigits: 2 })).to.equal('0,00');
     expect(formatNumber(0.1, { style: 'decimal', minimumFractionDigits: 2 })).to.equal('0,10');
     expect(formatNumber(0.12, { style: 'decimal', minimumFractionDigits: 2 })).to.equal('0,12');
@@ -190,7 +192,7 @@ describe('formatNumber', () => {
   });
 
   it('throws when decimal and group separator are the same value, only when problematic', () => {
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     const fn = () =>
       formatNumber(112345678, {
         style: 'decimal',
@@ -239,7 +241,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
   });
 
   it('formats 2-digit decimals correctly', () => {
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     Array.from(new Array(100), (val, index) => index).forEach(i => {
       const iString = `${i}`;
       let number = 0.0;
@@ -253,7 +255,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
   describe('normalization', () => {
     describe('en-GB', () => {
       it('supports basics', () => {
-        localize.locale = 'en-GB';
+        localizeManager.locale = 'en-GB';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('EUR 123,456.79');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('USD 123,456.79');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('JPY 123,457');
@@ -265,7 +267,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
 
     describe('en-US', () => {
       it('supports basics', () => {
-        localize.locale = 'en-US';
+        localizeManager.locale = 'en-US';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('EUR 123,456.79');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('USD 123,456.79');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('JPY 123,457');
@@ -282,7 +284,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
       }
 
       it('supports basics', () => {
-        localize.locale = 'en-AU';
+        localizeManager.locale = 'en-AU';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('EUR 123,456.79');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('USD 123,456.79');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('JPY 123,457');
@@ -294,7 +296,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
 
     describe('en-PH', () => {
       it('supports basics', () => {
-        localize.locale = 'en-PH';
+        localizeManager.locale = 'en-PH';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('EUR 123,456.79');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('USD 123,456.79');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('JPY 123,457');
@@ -306,7 +308,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
 
     describe('nl-NL', () => {
       it('supports basics', () => {
-        localize.locale = 'nl-NL';
+        localizeManager.locale = 'nl-NL';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123.456,79 USD');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123.457 JPY');
@@ -323,7 +325,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
       }
 
       it('supports basics', () => {
-        localize.locale = 'nl-BE';
+        localizeManager.locale = 'nl-BE';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123.456,79 USD');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123.457 JPY');
@@ -335,7 +337,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
 
     describe('fr-FR', () => {
       it('supports basics', () => {
-        localize.locale = 'fr-FR';
+        localizeManager.locale = 'fr-FR';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123 456,79 EUR');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123 456,79 USD');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123 457 JPY');
@@ -351,7 +353,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
         if (isSafari) {
           return;
         }
-        localize.locale = 'fr-BE';
+        localizeManager.locale = 'fr-BE';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123 456,79 EUR');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123 456,79 USD');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123 457 JPY');
@@ -363,7 +365,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
 
     describe('bg-BG', () => {
       it('supports basics', () => {
-        localize.locale = 'bg-BG';
+        localizeManager.locale = 'bg-BG';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123 456,79 EUR');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123 456,79 USD');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123 457 JPY');
@@ -373,7 +375,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
       });
 
       it('normalizes group separator', () => {
-        localize.locale = 'bg-BG';
+        localizeManager.locale = 'bg-BG';
         expect(formatNumber(1.234, currencyCode('EUR'))).to.equal('1,23 EUR');
         expect(formatNumber(1234.567, currencyCode('EUR'))).to.equal('1 234,57 EUR');
         expect(formatNumber(-1234.567, currencyCode('EUR'))).to.equal('−1 234,57 EUR');
@@ -382,7 +384,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
 
     describe('cs-CZ', () => {
       it('supports basics', () => {
-        localize.locale = 'cs-CZ';
+        localizeManager.locale = 'cs-CZ';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123 456,79 EUR');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123 456,79 USD');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123 457 JPY');
@@ -401,7 +403,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
       }
 
       it('supports basics', () => {
-        localize.locale = 'tr-TR';
+        localizeManager.locale = 'tr-TR';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123.456,79 USD');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('123.457 JPY');
@@ -413,7 +415,7 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
       });
 
       it('forces turkish currency code ', () => {
-        localize.locale = 'tr-TR';
+        localizeManager.locale = 'tr-TR';
         expect(
           formatNumber(1234.56, { style: 'currency', currencyDisplay: 'code', currency: 'TRY' }),
         ).to.equal('1.234,56 TL');
@@ -428,10 +430,10 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
     /** @type {Map<string, import('../../types/LocalizeMixinTypes.js').NumberPostProcessor>} */
     let savedpostProcessors;
     beforeEach(() => {
-      savedpostProcessors = localize.formatNumberOptions.postProcessors;
+      savedpostProcessors = localizeManager.formatNumberOptions.postProcessors;
     });
     afterEach(() => {
-      localize.formatNumberOptions.postProcessors = savedpostProcessors;
+      localizeManager.formatNumberOptions.postProcessors = savedpostProcessors;
     });
 
     /**
@@ -460,8 +462,8 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
       ).to.equal('112 345 678');
     });
 
-    it('uses `localize.formatNumberOptions.postProcessors`', () => {
-      localize.setNumberPostProcessorForLocale({
+    it('uses `localizeManager.formatNumberOptions.postProcessors`', () => {
+      localizeManager.setNumberPostProcessorForLocale({
         locale: 'en-GB',
         postProcessor: commaToSpaceProcessor,
       });
@@ -469,11 +471,11 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
       expect(formatNumber(112345678)).to.equal('112 345 678');
     });
 
-    it('uses `options.postProcessors` and `localize.formatNumberOptions.postProcessors`', () => {
+    it('uses `options.postProcessors` and `localizeManager.formatNumberOptions.postProcessors`', () => {
       const postProcessors = new Map();
       postProcessors.set('en-GB', commaToSpaceProcessor);
 
-      localize.setNumberPostProcessorForLocale({
+      localizeManager.setNumberPostProcessorForLocale({
         locale: 'en-GB',
         postProcessor: firstSpaceToDotProcessor,
       });

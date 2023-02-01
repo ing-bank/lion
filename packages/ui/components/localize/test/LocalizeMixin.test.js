@@ -12,7 +12,7 @@ import {
   unsafeStatic,
 } from '@open-wc/testing';
 import sinon from 'sinon';
-import { localize, LocalizeMixin } from '@lion/ui/localize.js';
+import { LocalizeMixin, getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import {
   fakeImport,
   localizeTearDown,
@@ -26,6 +26,8 @@ import {
  */
 
 describe('LocalizeMixin', () => {
+  const localizeManager = getLocalizeManager();
+
   afterEach(() => {
     resetFakeImport();
     localizeTearDown();
@@ -48,7 +50,7 @@ describe('LocalizeMixin', () => {
 
     setupEmptyFakeImportsFor(['my-element'], ['en-GB']);
 
-    const loadNamespaceSpy = sinon.spy(localize, 'loadNamespace');
+    const loadNamespaceSpy = sinon.spy(localizeManager, 'loadNamespace');
     await fixture(html`<${tag}></${tag}>`);
 
     expect(loadNamespaceSpy.callCount).to.equal(1);
@@ -88,7 +90,7 @@ describe('LocalizeMixin', () => {
 
     setupEmptyFakeImportsFor(['default', 'parent-element', 'child-element'], ['en-GB']);
 
-    const loadNamespaceSpy = sinon.spy(localize, 'loadNamespace');
+    const loadNamespaceSpy = sinon.spy(localizeManager, 'loadNamespace');
 
     await fixture(html`<${tag}></${tag}>`);
     expect(loadNamespaceSpy.callCount).to.equal(3);
@@ -151,7 +153,7 @@ describe('LocalizeMixin', () => {
 
     await el.localizeNamespacesLoaded;
 
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     await el.localizeNamespacesLoaded;
     expect(onLocaleChangedSpy.callCount).to.equal(0);
 
@@ -159,7 +161,7 @@ describe('LocalizeMixin', () => {
     wrapper.appendChild(el);
 
     // Changing locale will result in onLocaleChanged to be invoked
-    localize.locale = 'ru-RU';
+    localizeManager.locale = 'ru-RU';
     await el.localizeNamespacesLoaded;
     expect(onLocaleChangedSpy.callCount).to.equal(2);
     expect(onLocaleChangedSpy.calledWithExactly('ru-RU', 'nl-NL')).to.be.true;
@@ -183,10 +185,10 @@ describe('LocalizeMixin', () => {
       onLocaleChanged(newLocale, oldLocale) {
         super.onLocaleChanged(newLocale, oldLocale);
 
-        // Can call localize.msg immediately, without having to await localize.loadingComplete
+        // Can call localizeManager.msg immediately, without having to await localizeManager.loadingComplete
         // This is because localeChanged event is fired only after awaiting loading
         // unless the user disables _autoLoadOnLocaleChange property
-        this.foo = localize.msg('my-element:foo');
+        this.foo = localizeManager.msg('my-element:foo');
       }
     }
 
@@ -198,11 +200,11 @@ describe('LocalizeMixin', () => {
     const wrapper = await fixture('<div></div>');
     wrapper.appendChild(el);
 
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     await el.localizeNamespacesLoaded;
     expect(el.foo).to.equal('bar-nl-NL');
 
-    localize.locale = 'ru-RU';
+    localizeManager.locale = 'ru-RU';
     await el.localizeNamespacesLoaded;
     expect(el.foo).to.equal('bar-ru-RU');
   });
@@ -233,7 +235,7 @@ describe('LocalizeMixin', () => {
     await el.localizeNamespacesLoaded;
     expect(onLocaleUpdatedSpy.callCount).to.equal(1);
 
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     await el.localizeNamespacesLoaded;
     expect(onLocaleUpdatedSpy.callCount).to.equal(2);
   });
@@ -261,7 +263,7 @@ describe('LocalizeMixin', () => {
 
       async onLocaleUpdated() {
         super.onLocaleUpdated();
-        this.label = localize.msg('my-element:label');
+        this.label = localizeManager.msg('my-element:label');
       }
     }
 
@@ -272,7 +274,7 @@ describe('LocalizeMixin', () => {
     await nextFrame(); // needed as both are added to the micro task que
     expect(el.label).to.equal('one');
 
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     await el.localizeNamespacesLoaded;
     expect(el.label).to.equal('two');
   });
@@ -297,7 +299,7 @@ describe('LocalizeMixin', () => {
 
     el.connectedCallback();
 
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     await el.localizeNamespacesLoaded;
 
     // await next frame for requestUpdate to be fired
@@ -325,7 +327,7 @@ describe('LocalizeMixin', () => {
     const tagString = defineCE(MyElement);
     const el = /** @type {MyElement} */ (document.createElement(tagString));
     el.connectedCallback();
-    const lionLocalizeMessageSpy = sinon.spy(localize, 'msg');
+    const lionLocalizeMessageSpy = sinon.spy(localizeManager, 'msg');
 
     const messageDirective = el.msgLit('my-element:greeting');
     expect(lionLocalizeMessageSpy.callCount).to.equal(0);
@@ -442,7 +444,7 @@ describe('LocalizeMixin', () => {
     if (el.shadowRoot) {
       const p = /** @type {HTMLParagraphElement} */ (el.shadowRoot.querySelector('p'));
       expect(p.innerText).to.equal('Hi!');
-      localize.locale = 'en-US';
+      localizeManager.locale = 'en-US';
       expect(p.innerText).to.equal('Hi!');
       await el.localizeNamespacesLoaded;
       await nextFrame(); // needed because msgLit relies on until directive to re-render
