@@ -1,6 +1,6 @@
 import { css } from 'lit';
 import { LionInput } from '@lion/ui/input.js';
-import { getCurrencyName, localize, LocalizeMixin } from '@lion/ui/localize.js';
+import { getCurrencyName, LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { IsNumber } from '@lion/ui/form-core.js';
 import { formatAmount, formatCurrencyLabel } from './formatters.js';
 import { parseAmount } from './parsers.js';
@@ -201,7 +201,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   }
 
   get __currencyLabel() {
-    return this.currency ? formatCurrencyLabel(this.currency, localize.locale) : '';
+    return this.currency ? formatCurrencyLabel(this.currency, this._localizeManager.locale) : '';
   }
 
   __reformat() {

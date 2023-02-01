@@ -1,6 +1,6 @@
 /* eslint-disable max-classes-per-file */
 // TODO: move to input-datepicker?
-import { normalizeDateTime } from '@lion/ui/localize.js';
+import { normalizeDateTime } from '@lion/ui/localize-no-side-effects.js';
 import { Validator } from '../Validator.js';
 
 /**

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LitElement, nothing } from 'lit';
-import { localize, LocalizeMixin } from '@lion/ui/localize.js';
+import { getLocalizeManager, LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -195,10 +195,11 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
   }
 
   _setDefaultLabel() {
+    const localizeManager = getLocalizeManager();
     if (this._ariaLabelledby) {
       this.removeAttribute('aria-label');
     } else if (!this._ariaLabel) {
-      this.setAttribute('aria-label', localize.msg('lion-progress-indicator:loading'));
+      this.setAttribute('aria-label', localizeManager.msg('lion-progress-indicator:loading'));
       this.__hasDefaultLabelSet = true;
     }
   }

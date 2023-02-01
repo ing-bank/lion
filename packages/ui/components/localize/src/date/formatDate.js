@@ -1,5 +1,5 @@
 import { getLocale } from '../utils/getLocale.js';
-import { localize } from '../singleton.js';
+import { getLocalizeManager } from '../getLocalizeManager.js';
 import { normalizeIntlDate } from './utils/normalizeIntlDate.js';
 
 /** @typedef {import('../../types/LocalizeMixinTypes.js').DatePostProcessor} DatePostProcessor */
@@ -12,6 +12,7 @@ import { normalizeIntlDate } from './utils/normalizeIntlDate.js';
  * @returns {string}
  */
 export function formatDate(date, options) {
+  const localizeManager = getLocalizeManager();
   if (!(date instanceof Date)) {
     return '';
   }
@@ -36,8 +37,8 @@ export function formatDate(date, options) {
     formattedDate = '';
   }
 
-  if (localize.formatDateOptions.postProcessors.size > 0) {
-    Array.from(localize.formatDateOptions.postProcessors).forEach(([locale, fn]) => {
+  if (localizeManager.formatDateOptions.postProcessors.size > 0) {
+    Array.from(localizeManager.formatDateOptions.postProcessors).forEach(([locale, fn]) => {
       if (locale === computedLocale) {
         formattedDate = fn(formattedDate);
       }

@@ -3,7 +3,7 @@ import { SlotMixin, DisabledMixin } from '@lion/ui/core.js';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // TODO: make form-core independent from localize
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { AsyncQueue } from '../utils/AsyncQueue.js';
 import { pascalCase } from '../utils/pascalCase.js';
 import { SyncUpdatableMixin } from '../utils/SyncUpdatableMixin.js';
@@ -262,12 +262,16 @@ export const ValidateMixinImplementation = superclass =>
 
     connectedCallback() {
       super.connectedCallback();
-      localize.addEventListener('localeChanged', this._updateFeedbackComponent);
+
+      const localizeManager = getLocalizeManager();
+      localizeManager.addEventListener('localeChanged', this._updateFeedbackComponent);
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
-      localize.removeEventListener('localeChanged', this._updateFeedbackComponent);
+
+      const localizeManager = getLocalizeManager();
+      localizeManager.removeEventListener('localeChanged', this._updateFeedbackComponent);
     }
 
     /**

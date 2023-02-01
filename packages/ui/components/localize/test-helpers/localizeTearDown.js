@@ -1,11 +1,12 @@
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 
 export const localizeTearDown = () => {
+  const localizeManager = getLocalizeManager();
   // makes sure that between tests the localization is reset to default state
   // @ts-ignore
-  localize._teardownHtmlLangAttributeObserver();
+  localizeManager._teardownHtmlLangAttributeObserver();
   document.documentElement.lang = 'en-GB';
   // @ts-ignore
-  localize._setupHtmlLangAttributeObserver();
-  localize.reset();
+  localizeManager._setupHtmlLangAttributeObserver();
+  localizeManager.reset();
 };

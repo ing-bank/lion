@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-import { parseDate } from '@lion/ui/localize.js';
+import { parseDate } from '@lion/ui/localize-no-side-effects.js';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 import { Unparseable, Validator, FormatMixin } from '@lion/ui/form-core.js';

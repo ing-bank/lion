@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { loadDefaultFeedbackMessagesNoSideEffects } from './loadDefaultFeedbackMessagesNoSideEffects.js';
 
 /**
@@ -7,5 +7,5 @@ import { loadDefaultFeedbackMessagesNoSideEffects } from './loadDefaultFeedbackM
  */
 
 export function loadDefaultFeedbackMessages() {
-  return loadDefaultFeedbackMessagesNoSideEffects({ localize });
+  return loadDefaultFeedbackMessagesNoSideEffects({ localize: getLocalizeManager() });
 }

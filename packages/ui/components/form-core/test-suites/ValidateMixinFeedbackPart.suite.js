@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { getFormControlMembers, AlwaysInvalid } from '@lion/ui/form-core-test-helpers.js';
@@ -18,6 +18,8 @@ import {
  */
 
 export function runValidateMixinFeedbackPart() {
+  const localizeManager = getLocalizeManager();
+
   describe('Validity Feedback', () => {
     beforeEach(() => {
       localizeTearDown();
@@ -65,7 +67,7 @@ export function runValidateMixinFeedbackPart() {
 
     AlwaysInvalid.getMessage = async () => 'Message for AlwaysInvalid';
     MinLength.getMessage = async () =>
-      localize.locale === 'de-DE' ? 'Nachricht für MinLength' : 'Message for MinLength';
+      localizeManager.locale === 'de-DE' ? 'Nachricht für MinLength' : 'Message for MinLength';
     ContainsLowercaseA.getMessage = async () => 'Message for ContainsLowercaseA';
     ContainsCat.getMessage = async () => 'Message for ContainsCat';
 
@@ -341,8 +343,8 @@ export function runValidateMixinFeedbackPart() {
       expect(_feedbackNode.feedbackData?.length).to.equal(1);
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Message for MinLength');
 
-      localize.locale = 'de-DE';
-      await localize.loadingComplete;
+      localizeManager.locale = 'de-DE';
+      await localizeManager.loadingComplete;
       await el.feedbackComplete;
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Nachricht für MinLength');
     });

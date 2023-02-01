@@ -1,5 +1,5 @@
 import { Unparseable } from '@lion/ui/form-core.js';
-import { LocalizeMixin, localize } from '@lion/ui/localize.js';
+import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { LionInput } from '@lion/ui/input.js';
 
 import { PhoneUtilManager } from './PhoneUtilManager.js';
@@ -125,7 +125,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
   // @ts-expect-error
   // eslint-disable-next-line class-methods-use-this
   get fieldName() {
-    return localize.msg('lion-input-tel:phoneNumber');
+    return this._localizeManager.msg('lion-input-tel:phoneNumber');
   }
 
   /**
@@ -227,7 +227,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
   onLocaleUpdated() {
     super.onLocaleUpdated();
 
-    const localeSplitted = localize.locale.split('-');
+    const localeSplitted = this._localizeManager.locale.split('-');
     /**
      * @protected
      * @type {RegionCode}

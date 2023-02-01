@@ -1,4 +1,4 @@
-import { LocalizeMixin } from '@lion/ui/localize.js';
+import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { LionInput } from '@lion/ui/input.js';
 import { formatIBAN } from './formatters.js';
 import { parseIBAN } from './parsers.js';

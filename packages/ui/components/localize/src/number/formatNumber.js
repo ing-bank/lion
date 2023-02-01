@@ -1,6 +1,6 @@
 /** @typedef {import('../../types/LocalizeMixinTypes.js').NumberPostProcessor} NumberPostProcessor */
 
-import { localize } from '../singleton.js';
+import { getLocalizeManager } from '../getLocalizeManager.js';
 import { getLocale } from '../utils/getLocale.js';
 import { formatNumberToParts } from './formatNumberToParts.js';
 
@@ -14,12 +14,13 @@ import { formatNumberToParts } from './formatNumberToParts.js';
  * @returns {string}
  */
 export function formatNumber(number, options = /** @type {FormatOptions} */ ({})) {
+  const localizeManager = getLocalizeManager();
   if (number === undefined || number === null) return '';
   const formattedToParts = formatNumberToParts(number, options);
   // If number is not a number
   if (
     formattedToParts === options.returnIfNaN ||
-    formattedToParts === localize.formatNumberOptions.returnIfNaN
+    formattedToParts === localizeManager.formatNumberOptions.returnIfNaN
   ) {
     return /** @type {string} */ (formattedToParts);
   }
@@ -33,8 +34,8 @@ export function formatNumber(number, options = /** @type {FormatOptions} */ ({})
 
   const computedLocale = getLocale(options && options.locale);
 
-  if (localize.formatNumberOptions.postProcessors.size > 0) {
-    Array.from(localize.formatNumberOptions.postProcessors).forEach(([locale, fn]) => {
+  if (localizeManager.formatNumberOptions.postProcessors.size > 0) {
+    Array.from(localizeManager.formatNumberOptions.postProcessors).forEach(([locale, fn]) => {
       if (locale === computedLocale) {
         printNumberOfParts = fn(printNumberOfParts);
       }

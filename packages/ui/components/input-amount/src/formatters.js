@@ -1,4 +1,8 @@
-import { formatNumber, getFractionDigits, normalizeCurrencyLabel } from '@lion/ui/localize.js';
+import {
+  formatNumber,
+  getFractionDigits,
+  normalizeCurrencyLabel,
+} from '@lion/ui/localize-no-side-effects.js';
 
 /**
  * @typedef {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} FormatOptions
