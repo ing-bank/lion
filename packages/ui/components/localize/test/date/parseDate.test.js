@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { parseDate, localize } from '@lion/ui/localize.js';
+import { parseDate, getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
 /**
@@ -18,6 +18,7 @@ function equalsDate(value, date) {
 }
 
 describe('parseDate()', () => {
+  const localizeManager = getLocalizeManager();
   beforeEach(() => {
     localizeTearDown();
   });
@@ -45,9 +46,9 @@ describe('parseDate()', () => {
   });
 
   it('handles different locales', () => {
-    localize.locale = 'en-GB';
+    localizeManager.locale = 'en-GB';
     expect(equalsDate(parseDate('31-12-1976'), new Date('1976/12/31'))).to.equal(true);
-    localize.locale = 'en-US';
+    localizeManager.locale = 'en-US';
     expect(equalsDate(parseDate('12-31-1976'), new Date('1976/12/31'))).to.equal(true);
   });
 
@@ -55,11 +56,11 @@ describe('parseDate()', () => {
     expect(parseDate('12.12.1976.,')).to.equal(undefined); // wrong delimiter
     expect(parseDate('foo')).to.equal(undefined); // no date
 
-    localize.locale = 'en-GB';
+    localizeManager.locale = 'en-GB';
     expect(parseDate('31.02.2020')).to.equal(undefined); // non existing date
     expect(parseDate('12.31.2020')).to.equal(undefined); // day & month switched places
 
-    localize.locale = 'en-US';
+    localizeManager.locale = 'en-US';
     expect(parseDate('02.31.2020')).to.equal(undefined); // non existing date
     expect(parseDate('31.12.2020')).to.equal(undefined); // day & month switched places
   });

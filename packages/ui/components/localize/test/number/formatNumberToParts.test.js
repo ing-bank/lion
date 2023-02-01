@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { localize, formatNumberToParts } from '@lion/ui/localize.js';
+import { getLocalizeManager, formatNumberToParts } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
 // TODO: This is broken only in Safari 13.1.2 Wait till ci is on 13.1.3 and remove
@@ -28,6 +28,8 @@ const stringifyParts =
   parts => parts.map(part => part.value).join('');
 
 describe('formatNumberToParts', () => {
+  const localizeManager = getLocalizeManager();
+
   afterEach(localizeTearDown);
 
   describe("style: 'currency symbol'", () => {
@@ -114,7 +116,7 @@ describe('formatNumberToParts', () => {
         it(`formats ${locale} ${amount} as "${stringifyParts(
           /** @type {FormatNumberPart[]} */ (expectedResult),
         )}"`, () => {
-          localize.locale = locale;
+          localizeManager.locale = locale;
           expect(
             formatNumberToParts(Number(amount), {
               style: 'decimal',
@@ -143,7 +145,7 @@ describe('formatNumberToParts', () => {
         it(`formats ${locale} ${amount} as "${stringifyParts(
           /** @type {FormatNumberPart[]} */ (expectedResult),
         )}"`, () => {
-          localize.locale = locale;
+          localizeManager.locale = locale;
           expect(
             formatNumberToParts(Number(amount), {
               style: 'decimal',

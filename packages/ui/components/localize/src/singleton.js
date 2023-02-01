@@ -1,11 +1,8 @@
-import { singletonManager } from 'singleton-manager';
-import { LocalizeManager } from './LocalizeManager.js';
+import { getLocalizeManager } from './getLocalizeManager.js';
 
-/** @type {LocalizeManager} */
+/**
+ * Use the side-effect-free `const localizeManager = getLocalizeManager()` instead.
+ * @deprecated
+ */
 // eslint-disable-next-line import/no-mutable-exports
-export const localize =
-  /** @type {LocalizeManager} */ (singletonManager.get('@lion/ui::localize::0.x')) ||
-  new LocalizeManager({
-    autoLoadOnLocaleChange: true,
-    fallbackLocale: 'en-GB',
-  });
+export const localize = getLocalizeManager();

@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { getCurrencyName } from '@lion/ui/localize.js';
+import { getCurrencyName } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
 describe('getCurrencyName', () => {

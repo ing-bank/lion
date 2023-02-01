@@ -1,5 +1,5 @@
 import { expect } from '@open-wc/testing';
-import { localize, formatDate, parseDate } from '@lion/ui/localize.js';
+import { getLocalizeManager, formatDate, parseDate } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
 const SUPPORTED_LOCALES = {
@@ -41,6 +41,7 @@ const SUPPORTED_LOCALES = {
  */
 
 describe('formatDate', () => {
+  const localizeManager = getLocalizeManager();
   beforeEach(() => {
     localizeTearDown();
   });
@@ -50,16 +51,16 @@ describe('formatDate', () => {
 
     expect(formatDate(testDate)).to.equal('21/05/2012');
 
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     expect(formatDate(testDate)).to.equal('21-05-2012');
 
-    localize.locale = 'fr-FR';
+    localizeManager.locale = 'fr-FR';
     expect(formatDate(testDate)).to.equal('21/05/2012');
 
-    localize.locale = 'de-DE';
+    localizeManager.locale = 'de-DE';
     expect(formatDate(testDate)).to.equal('21.05.2012');
 
-    localize.locale = 'en-US';
+    localizeManager.locale = 'en-US';
     expect(formatDate(testDate)).to.equal('05/21/2012');
   });
 
@@ -74,13 +75,13 @@ describe('formatDate', () => {
     };
 
     expect(formatDate(testDate, options)).to.equal('Monday, 21 May 2012');
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     expect(formatDate(testDate, options)).to.equal('maandag 21 mei 2012');
-    localize.locale = 'fr-FR';
+    localizeManager.locale = 'fr-FR';
     expect(formatDate(testDate, options)).to.equal('lundi 21 mai 2012');
-    localize.locale = 'de-DE';
+    localizeManager.locale = 'de-DE';
     expect(formatDate(testDate, options)).to.equal('Montag, 21. Mai 2012');
-    localize.locale = 'en-US';
+    localizeManager.locale = 'en-US';
     expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
   });
 
@@ -93,7 +94,7 @@ describe('formatDate', () => {
       day: '2-digit',
       locale: 'en-US',
     };
-    localize.locale = 'hu-HU';
+    localizeManager.locale = 'hu-HU';
     let date = /** @type {Date} */ (parseDate('2018-5-28'));
     expect(formatDate(date)).to.equal('2018. 05. 28.');
 
@@ -110,7 +111,7 @@ describe('formatDate', () => {
       day: '2-digit',
       locale: 'en-US',
     };
-    localize.locale = 'bg-BG';
+    localizeManager.locale = 'bg-BG';
     let date = /** @type {Date} */ (parseDate('29-12-2017'));
     expect(formatDate(date)).to.equal('29.12.2017 г.');
 
@@ -130,7 +131,7 @@ describe('formatDate', () => {
       day: '2-digit',
       locale: 'en-US',
     };
-    localize.locale = 'en-US';
+    localizeManager.locale = 'en-US';
     let date = /** @type {Date} */ (parseDate('12-29-1940'));
     expect(formatDate(date)).to.equal('12/29/1940');
 
@@ -276,11 +277,11 @@ describe('formatDate', () => {
 
       // locale is en-GB
       expect(formatDate(testDate, options)).to.equal('Monday, 21 May 2012');
-      localize.locale = 'nl-NL';
+      localizeManager.locale = 'nl-NL';
       expect(formatDate(testDate, options)).to.equal('MAANDAG 21 MEI 2012');
-      localize.locale = 'de-DE';
+      localizeManager.locale = 'de-DE';
       expect(formatDate(testDate, options)).to.equal('montag, 21. mai 2012');
-      localize.locale = 'en-US';
+      localizeManager.locale = 'en-US';
       expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
     });
 
@@ -293,21 +294,21 @@ describe('formatDate', () => {
         month: 'long',
         day: '2-digit',
       };
-      localize.setDatePostProcessorForLocale({
+      localizeManager.setDatePostProcessorForLocale({
         locale: 'nl-NL',
         postProcessor: upperCaseProcessor,
       });
-      localize.setDatePostProcessorForLocale({
+      localizeManager.setDatePostProcessorForLocale({
         locale: 'de-DE',
         postProcessor: upperCaseProcessor,
       });
 
       expect(formatDate(testDate, options)).to.equal('Monday, 21 May 2012');
-      localize.locale = 'nl-NL';
+      localizeManager.locale = 'nl-NL';
       expect(formatDate(testDate, options)).to.equal('MAANDAG 21 MEI 2012');
-      localize.locale = 'de-DE';
+      localizeManager.locale = 'de-DE';
       expect(formatDate(testDate, options)).to.equal('MONTAG, 21. MAI 2012');
-      localize.locale = 'en-US';
+      localizeManager.locale = 'en-US';
       expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
     });
 
@@ -326,17 +327,17 @@ describe('formatDate', () => {
         postProcessors,
       };
 
-      localize.setDatePostProcessorForLocale({
+      localizeManager.setDatePostProcessorForLocale({
         locale: 'de-DE',
         postProcessor: lowerCaseProcessor,
       });
 
       expect(formatDate(testDate, options)).to.equal('Monday, 21 May 2012');
-      localize.locale = 'nl-NL';
+      localizeManager.locale = 'nl-NL';
       expect(formatDate(testDate, options)).to.equal('MAANDAG 21 MEI 2012');
-      localize.locale = 'de-DE';
+      localizeManager.locale = 'de-DE';
       expect(formatDate(testDate, options)).to.equal('MONTAG, 21. MAI 2012');
-      localize.locale = 'en-US';
+      localizeManager.locale = 'en-US';
       expect(formatDate(testDate, options)).to.equal('Monday, May 21, 2012');
     });
   });

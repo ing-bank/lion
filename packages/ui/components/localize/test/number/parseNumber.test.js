@@ -1,7 +1,9 @@
 import { expect } from '@open-wc/testing';
-import { localize, parseNumber } from '@lion/ui/localize.js';
+import { getLocalizeManager, parseNumber } from '@lion/ui/localize-no-side-effects.js';
 
 describe('parseNumber()', () => {
+  const localizeManager = getLocalizeManager();
+
   it('parses integers', () => {
     expect(parseNumber('1')).to.equal(1);
     expect(parseNumber('12')).to.equal(12);
@@ -79,13 +81,13 @@ describe('parseNumber()', () => {
   });
 
   it('uses locale to parse amount if there is only one separator e.g. 1.234', () => {
-    localize.locale = 'en-GB';
+    localizeManager.locale = 'en-GB';
     expect(parseNumber('12.34')).to.equal(12.34);
     expect(parseNumber('12,34')).to.equal(1234);
     expect(parseNumber('1.234')).to.equal(1.234);
     expect(parseNumber('1,234')).to.equal(1234);
 
-    localize.locale = 'nl-NL';
+    localizeManager.locale = 'nl-NL';
     expect(parseNumber('12.34')).to.equal(1234);
     expect(parseNumber('12,34')).to.equal(12.34);
     expect(parseNumber('1.234')).to.equal(1234);
