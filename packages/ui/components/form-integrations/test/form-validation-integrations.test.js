@@ -1,12 +1,13 @@
 import { DefaultSuccess, Required, Validator } from '@lion/ui/form-core.js';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { LionInput } from '@lion/ui/input.js';
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 
 describe('Form Validation Integrations', () => {
+  const localizeManager = getLocalizeManager();
   const lightDom = '';
   before(() => {
     loadDefaultFeedbackMessages();
@@ -126,11 +127,11 @@ describe('Form Validation Integrations', () => {
         }
 
         async updateLabel() {
-          this.label = localize.msg('test-default-label:label');
+          this.label = localizeManager.msg('test-default-label:label');
         }
 
         async setDefaultLabel() {
-          localize.loadNamespace({
+          localizeManager.loadNamespace({
             'test-default-label': /** @param {string} locale */ async locale => {
               switch (locale) {
                 case 'nl-NL':
@@ -143,11 +144,11 @@ describe('Form Validation Integrations', () => {
           this.boundUpdateLabel = this.updateLabel.bind(this);
 
           // localeChanged is fired AFTER localize has finished loading missing translations
-          // so no need to await localize.loadingComplete
-          localize.addEventListener('localeChanged', this.boundUpdateLabel);
+          // so no need to await localizeManager.loadingComplete
+          localizeManager.addEventListener('localeChanged', this.boundUpdateLabel);
 
           // Wait for it to complete when updating the label for the first time
-          await localize.loadingComplete;
+          await localizeManager.loadingComplete;
           this.boundUpdateLabel();
         }
       }
@@ -167,15 +168,15 @@ describe('Form Validation Integrations', () => {
       const { _feedbackNode } = getFormControlMembers(el);
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Please enter a(n) Text.');
 
-      localize.locale = 'nl-NL';
-      await localize.loadingComplete;
+      localizeManager.locale = 'nl-NL';
+      await localizeManager.loadingComplete;
       await el.updateComplete;
       await el.feedbackComplete;
       expect(el.label).to.equal('Tekst');
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Vul een Tekst in.');
 
-      localize.locale = 'en-GB';
-      await localize.loadingComplete;
+      localizeManager.locale = 'en-GB';
+      await localizeManager.loadingComplete;
       await el.updateComplete;
       await el.feedbackComplete;
       expect(el.label).to.equal('Text');

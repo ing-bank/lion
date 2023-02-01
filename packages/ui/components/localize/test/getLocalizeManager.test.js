@@ -6,6 +6,7 @@ import { getLocalizeManager } from '../src/getLocalizeManager.js';
 
 describe('getLocalizeManager', () => {
   beforeEach(() => {
+    // @ts-ignore
     singletonManager._map.clear();
   });
 
