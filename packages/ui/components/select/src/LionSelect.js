@@ -64,7 +64,8 @@ export class LionSelect extends LionFieldWithSelect {
     this.__selectObserver = new MutationObserver(() => {
       this._syncValueUpwards();
       // We need to force computation of other values in case model didn't change
-      // TODO: consider bringing this generically in FormatMixin._syncValueUpwards
+      // This can happen when options are loaded asynchronously so the modelValue doesn't change
+      // The MutationObserver detects this and makes sure the modelValue is updated
       this._calculateValues({ source: 'model' });
     });
 
