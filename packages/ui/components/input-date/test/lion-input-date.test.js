@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { MaxDate } from '@lion/ui/form-core.js';
 import { expect, fixture as _fixture } from '@open-wc/testing';
@@ -13,6 +13,8 @@ import '@lion/ui/define/lion-input-date.js';
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionInputDate>} */ (_fixture);
 
 describe('<lion-input-date>', () => {
+  const localizeManager = getLocalizeManager();
+
   beforeEach(() => {
     localizeTearDown();
   });
@@ -84,13 +86,13 @@ describe('<lion-input-date>', () => {
   });
 
   it('uses global locale when formatOptions.locale is not defined', async () => {
-    localize.locale = 'fr-FR';
+    localizeManager.locale = 'fr-FR';
     const el = await fixture(html`
       <lion-input-date .modelValue=${new Date('2017/06/15')}></lion-input-date>
     `);
     expect(el.formattedValue).to.equal('15/06/2017');
 
-    localize.locale = 'en-US';
+    localizeManager.locale = 'en-US';
     const el2 = await fixture(html`
       <lion-input-date .modelValue=${new Date('2017/06/15')}></lion-input-date>
     `);
@@ -105,7 +107,7 @@ describe('<lion-input-date>', () => {
       ></lion-input-date>
     `);
     expect(el.formattedValue).to.equal('15/06/2017'); // british
-    localize.locale = 'en-US';
+    localizeManager.locale = 'en-US';
     await el.updateComplete;
     expect(el.formattedValue).to.equal('15/06/2017'); // should stay british
   });

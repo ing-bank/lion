@@ -2,7 +2,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { Required, Validator } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-field.js';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import {
   expect,
@@ -52,6 +52,8 @@ function getSlot(el, slot) {
 }
 
 describe('<lion-field>', () => {
+  const localizeManager = getLocalizeManager();
+
   it(`puts a unique id "${tagString}-[hash]" on the native input`, async () => {
     const el = /** @type {LionField} */ (await fixture(html`<${tag}>${inputSlot}</${tag}>`));
     // @ts-ignore allow protected accessors in tests
@@ -219,7 +221,7 @@ describe('<lion-field>', () => {
     beforeEach(() => {
       // Reset and preload validation translations
       localizeTearDown();
-      localize.addData('en-GB', 'lion-validate', {
+      localizeManager.addData('en-GB', 'lion-validate', {
         error: {
           hasX: 'This is error message for hasX',
         },

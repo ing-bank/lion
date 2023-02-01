@@ -16,7 +16,7 @@ import { LocalizeManager } from './LocalizeManager.js';
  * ```js
  * function myFunction() {
  *   // note that 'localizeManager' is the same as former 'localize'
- *   const localize = getLocalizeManger();
+ *   const localizeManager = getLocalizeManger();
  *   // ...
  * }
  * ```

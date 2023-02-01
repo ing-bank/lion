@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { expect, fixture as _fixture } from '@open-wc/testing';
 import sinon from 'sinon';
@@ -15,6 +15,8 @@ import { CalendarObject, DayObject } from '@lion/ui/calendar-test-helpers.js';
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionCalendar>} */ (_fixture);
 
 describe('<lion-calendar>', () => {
+  const localizeManager = getLocalizeManager();
+
   beforeEach(() => {
     localizeTearDown();
   });
@@ -1348,7 +1350,7 @@ describe('<lion-calendar>', () => {
       await el.updateComplete;
       expect(elObj.activeMonth).to.equal('décembre');
 
-      localize.locale = 'cs-CZ';
+      localizeManager.locale = 'cs-CZ';
       await el.updateComplete;
       expect(elObj.activeMonth).to.equal('décembre');
 
@@ -1391,7 +1393,7 @@ describe('<lion-calendar>', () => {
         'Sat',
       ]);
 
-      localize.locale = 'nl-NL';
+      localizeManager.locale = 'nl-NL';
       await el.localizeNamespacesLoaded;
       await el.updateComplete;
       expect(elObj.nextMonthButtonEl?.getAttribute('aria-label')).to.equal(
