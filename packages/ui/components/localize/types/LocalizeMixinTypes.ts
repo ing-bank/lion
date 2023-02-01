@@ -1,6 +1,7 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from 'lit';
 import { DirectiveResult } from 'lit/directive.js';
+import { LocalizeManager } from '../src/LocalizeManager.js';
 
 export interface FormatNumberPart {
   type: string;
@@ -76,7 +77,13 @@ export declare class LocalizeMixinHost {
   public onLocaleUpdated(): void;
   public connectedCallback(): void;
   public disconnectedCallback(): void;
-  public msgLit(keys: string | string[], variables?: msgVariables, options?: msgOptions): string | DirectiveResult;
+  public msgLit(
+    keys: string | string[],
+    variables?: msgVariables,
+    options?: msgOptions,
+  ): string | DirectiveResult;
+
+  protected _localizeManager: LocalizeManager;
 
   private __boundLocalizeOnLocaleChanged(...args: Object[]): void;
   private __boundLocalizeOnLocaleChanging(...args: Object[]): void;

@@ -1,15 +1,16 @@
 /* eslint-disable max-classes-per-file, import/no-extraneous-dependencies */
 
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { Unparseable, Validator } from '@lion/ui/form-core.js';
 import { isValidIBAN } from 'ibantools';
 
 let loaded = false;
 const loadTranslations = async () => {
+  const localizeManager = getLocalizeManager();
   if (loaded) {
     return;
   }
-  await localize.loadNamespace(
+  await localizeManager.loadNamespace(
     {
       'lion-validate+iban': /** @param {string} locale */ locale => {
         switch (locale) {
@@ -86,7 +87,7 @@ const loadTranslations = async () => {
         }
       },
     },
-    { locale: localize.locale },
+    { locale: localizeManager.locale },
   );
   loaded = true;
 };
@@ -113,8 +114,9 @@ export class IsIBAN extends Validator {
    * @returns {Promise<string|Element>}
    */
   static async getMessage(data) {
+    const localizeManager = getLocalizeManager();
     await loadTranslations();
-    return localize.msg('lion-validate+iban:error.IsIBAN', data);
+    return localizeManager.msg('lion-validate+iban:error.IsIBAN', data);
   }
 }
 
@@ -156,11 +158,13 @@ export class IsCountryIBAN extends IsIBAN {
    * @returns {Promise<string|Element>}
    */
   static async getMessage(data) {
+    const localizeManager = getLocalizeManager();
+
     await loadTranslations();
     // If modelValue is Unparseable, the IsIBAN message is the more appropriate feedback
     return data?.modelValue instanceof Unparseable
-      ? localize.msg('lion-validate+iban:error.IsIBAN', data)
-      : localize.msg('lion-validate+iban:error.IsCountryIBAN', data);
+      ? localizeManager.msg('lion-validate+iban:error.IsIBAN', data)
+      : localizeManager.msg('lion-validate+iban:error.IsCountryIBAN', data);
   }
 }
 
@@ -203,6 +207,8 @@ export class IsNotCountryIBAN extends IsIBAN {
    * @returns {Promise<string|Element>}
    */
   static async getMessage(data) {
+    const localizeManager = getLocalizeManager();
+
     await loadTranslations();
     const _data = {
       ...data,
@@ -211,7 +217,7 @@ export class IsNotCountryIBAN extends IsIBAN {
     };
     // If modelValue is Unparseable, the IsIBAN message is the more appropriate feedback
     return data?.modelValue instanceof Unparseable
-      ? localize.msg('lion-validate+iban:error.IsIBAN', _data)
-      : localize.msg('lion-validate+iban:error.IsNotCountryIBAN', _data);
+      ? localizeManager.msg('lion-validate+iban:error.IsIBAN', _data)
+      : localizeManager.msg('lion-validate+iban:error.IsNotCountryIBAN', _data);
   }
 }

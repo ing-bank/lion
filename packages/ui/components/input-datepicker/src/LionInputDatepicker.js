@@ -10,7 +10,7 @@ import {
   withModalDialogConfig,
   ArrowMixin,
 } from '@lion/ui/overlays.js';
-import { LocalizeMixin } from '@lion/ui/localize.js';
+import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**

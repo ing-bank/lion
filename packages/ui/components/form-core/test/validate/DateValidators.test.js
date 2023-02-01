@@ -1,6 +1,6 @@
 import { expect } from '@open-wc/testing';
 
-import { normalizeDateTime } from '@lion/ui/localize.js';
+import { normalizeDateTime } from '@lion/ui/localize-no-side-effects.js';
 import { IsDate, MinDate, MaxDate, MinMaxDate, IsDateDisabled } from '@lion/ui/form-core.js';
 
 describe('Date Validation', () => {

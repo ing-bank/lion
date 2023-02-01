@@ -2,7 +2,7 @@
 import { css, html } from 'lit';
 import { ScopedStylesController } from '@lion/ui/core.js';
 import { LionInput } from '@lion/ui/input.js';
-import { formatNumber } from '@lion/ui/localize.js';
+import { formatNumber } from '@lion/ui/localize-no-side-effects.js';
 
 /**
  * @typedef {import('lit').CSSResult} CSSResult

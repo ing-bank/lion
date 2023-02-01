@@ -1,4 +1,4 @@
-import { localize } from '../../singleton.js';
+import { getLocalizeManager } from '../../getLocalizeManager.js';
 
 /**
  * When number is NaN we should return an empty string or returnIfNaN param
@@ -7,5 +7,6 @@ import { localize } from '../../singleton.js';
  * @returns {string}
  */
 export function emptyStringWhenNumberNan(returnIfNaN) {
-  return returnIfNaN || localize.formatNumberOptions.returnIfNaN;
+  const localizeManager = getLocalizeManager();
+  return returnIfNaN || localizeManager.formatNumberOptions.returnIfNaN;
 }

@@ -1,4 +1,4 @@
-import { localize } from '../singleton.js';
+import { getLocalizeManager } from '../getLocalizeManager.js';
 import { formatNumberToParts } from './formatNumberToParts.js';
 import { forceCurrencyNameForPHPEnGB } from './utils/normalize-get-currency-name/forceCurrencyNameForPHPEnGB.js';
 
@@ -11,6 +11,7 @@ import { forceCurrencyNameForPHPEnGB } from './utils/normalize-get-currency-name
  * @returns {string} currency name like 'US dollar'
  */
 export function getCurrencyName(currencyIso, options) {
+  const localizeManager = getLocalizeManager();
   const parts = /** @type {FormatNumberPart[]} */ (
     formatNumberToParts(1, {
       ...options,
@@ -23,7 +24,7 @@ export function getCurrencyName(currencyIso, options) {
     .filter(p => p.type === 'currency')
     .map(o => o.value)
     .join(' ');
-  const locale = options?.locale || localize.locale;
+  const locale = options?.locale || localizeManager.locale;
   if (currencyIso === 'PHP' && locale === 'en-GB') {
     currencyName = forceCurrencyNameForPHPEnGB(currencyName);
   }

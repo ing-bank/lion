@@ -1,7 +1,7 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { nothing } from 'lit';
 import { until } from 'lit/directives/until.js';
-import { localize } from './singleton.js';
+import { getLocalizeManager } from './getLocalizeManager.js';
 
 /**
  * @typedef {import('lit/directive.js').DirectiveResult} DirectiveResult
@@ -33,6 +33,8 @@ const LocalizeMixinImplementation = superclass =>
 
     constructor() {
       super();
+
+      this._localizeManager = getLocalizeManager();
 
       /** @private */
       this.__boundLocalizeOnLocaleChanged =
@@ -74,14 +76,23 @@ const LocalizeMixinImplementation = superclass =>
       if (this.localizeNamespacesLoaded) {
         this.localizeNamespacesLoaded.then(() => this.onLocaleReady());
       }
-      localize.addEventListener('__localeChanging', this.__boundLocalizeOnLocaleChanging);
-      localize.addEventListener('localeChanged', this.__boundLocalizeOnLocaleChanged);
+      this._localizeManager.addEventListener(
+        '__localeChanging',
+        this.__boundLocalizeOnLocaleChanging,
+      );
+      this._localizeManager.addEventListener('localeChanged', this.__boundLocalizeOnLocaleChanged);
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
-      localize.removeEventListener('__localeChanging', this.__boundLocalizeOnLocaleChanging);
-      localize.removeEventListener('localeChanged', this.__boundLocalizeOnLocaleChanged);
+      this._localizeManager.removeEventListener(
+        '__localeChanging',
+        this.__boundLocalizeOnLocaleChanging,
+      );
+      this._localizeManager.removeEventListener(
+        'localeChanged',
+        this.__boundLocalizeOnLocaleChanged,
+      );
     }
 
     /**
@@ -93,7 +104,7 @@ const LocalizeMixinImplementation = superclass =>
      */
     msgLit(keys, variables, options) {
       if (this.__localizeMessageSync) {
-        return localize.msg(keys, variables, options);
+        return this._localizeManager.msg(keys, variables, options);
       }
 
       if (!this.localizeNamespacesLoaded) {
@@ -101,7 +112,9 @@ const LocalizeMixinImplementation = superclass =>
       }
 
       return until(
-        this.localizeNamespacesLoaded.then(() => localize.msg(keys, variables, options)),
+        this.localizeNamespacesLoaded.then(() =>
+          this._localizeManager.msg(keys, variables, options),
+        ),
         nothing,
       );
     }
@@ -125,12 +138,14 @@ const LocalizeMixinImplementation = superclass =>
 
     /** @private */
     __localizeStartLoadingNamespaces() {
-      this.localizeNamespacesLoaded = localize.loadNamespaces(this.__getUniqueNamespaces());
+      this.localizeNamespacesLoaded = this._localizeManager.loadNamespaces(
+        this.__getUniqueNamespaces(),
+      );
     }
 
     /**
      * Start loading namespaces on the event that is sent immediately
-     * when localize.locale changes --> 'localeChanging'
+     * when this._localizeManager.locale changes --> 'localeChanging'
      * @private
      */
     __localizeOnLocaleChanging() {

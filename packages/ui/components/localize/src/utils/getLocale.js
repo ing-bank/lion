@@ -1,4 +1,4 @@
-import { localize } from '../singleton.js';
+import { getLocalizeManager } from '../getLocalizeManager.js';
 
 /**
  * Gets the locale to use
@@ -7,11 +7,6 @@ import { localize } from '../singleton.js';
  * @returns {string}
  */
 export function getLocale(locale) {
-  if (locale) {
-    return locale;
-  }
-  if (localize && localize.locale) {
-    return localize.locale;
-  }
-  return 'en-GB';
+  const localizeManager = getLocalizeManager();
+  return locale || localizeManager?.locale || 'en-GB';
 }

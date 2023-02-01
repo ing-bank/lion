@@ -2,7 +2,7 @@ import { html, css } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 
 import { LionInputTel } from '@lion/ui/input-tel.js';
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { getFlagSymbol } from './getFlagSymbol.js';
 
 /**
@@ -80,6 +80,7 @@ export class LionInputTelDropdown extends LionInputTel {
    * @type {TemplateDataForDropdownInputTel}
    */
   get _templateDataDropdown() {
+    const localizeManager = getLocalizeManager();
     const refs = {
       dropdown: {
         ref: this.refs.dropdown,
@@ -91,10 +92,12 @@ export class LionInputTelDropdown extends LionInputTel {
           'model-value-changed': this._onDropdownValueChange,
         },
         labels: {
-          selectCountry: localize.msg('lion-input-tel:selectCountry'),
-          allCountries: this._allCountriesLabel || localize.msg('lion-input-tel:allCountries'),
+          selectCountry: localizeManager.msg('lion-input-tel:selectCountry'),
+          allCountries:
+            this._allCountriesLabel || localizeManager.msg('lion-input-tel:allCountries'),
           preferredCountries:
-            this._preferredCountriesLabel || localize.msg('lion-input-tel:suggestedCountries'),
+            this._preferredCountriesLabel ||
+            localizeManager.msg('lion-input-tel:suggestedCountries'),
         },
       },
     };

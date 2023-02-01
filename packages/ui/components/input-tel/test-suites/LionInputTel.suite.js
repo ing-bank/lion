@@ -9,7 +9,7 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 import { mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { Unparseable } from '@lion/ui/form-core.js';
 import { LionInputTel, PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
@@ -23,7 +23,8 @@ const fixture = /** @type {(arg: string | TemplateResult) => Promise<LionInputTe
 const fixtureSync = /** @type {(arg: string | TemplateResult) => LionInputTel} */ (_fixtureSync);
 
 const getRegionCodeBasedOnLocale = () => {
-  const localeSplitted = localize.locale.split('-');
+  const localizeManager = getLocalizeManager();
+  const localeSplitted = localizeManager.locale.split('-');
   return /** @type {RegionCode} */ (localeSplitted[localeSplitted.length - 1]).toUpperCase();
 };
 

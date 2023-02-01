@@ -3,10 +3,9 @@ import { html, LitElement } from 'lit';
 import {
   getMonthNames,
   getWeekdayNames,
-  localize,
   LocalizeMixin,
   normalizeDateTime,
-} from '@lion/ui/localize.js';
+} from '@lion/ui/localize-no-side-effects.js';
 
 import { calendarStyle } from './calendarStyle.js';
 import { createDay } from './utils/createDay.js';
@@ -862,6 +861,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   __getLocale() {
-    return this.locale || localize.locale;
+    return this.locale || this._localizeManager.locale;
   }
 }

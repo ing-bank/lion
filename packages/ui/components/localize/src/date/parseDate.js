@@ -1,5 +1,5 @@
 import { getDateFormatBasedOnLocale } from './getDateFormatBasedOnLocale.js';
-import { localize } from '../singleton.js';
+import { getLocalizeManager } from '../getLocalizeManager.js';
 import { addLeadingZero } from './utils/addLeadingZero.js';
 
 /**
@@ -29,10 +29,12 @@ const memoizedGetDateFormatBasedOnLocale = memoize(getDateFormatBasedOnLocale);
  * @returns {Date | undefined}
  */
 export function parseDate(dateString) {
+  const localizeManager = getLocalizeManager();
+
   const stringToParse = addLeadingZero(dateString);
   let parsedString;
 
-  switch (memoizedGetDateFormatBasedOnLocale(localize.locale)) {
+  switch (memoizedGetDateFormatBasedOnLocale(localizeManager.locale)) {
     case 'day-month-year':
       parsedString = `${stringToParse.slice(6, 10)}/${stringToParse.slice(
         3,

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LitElement, html, css } from 'lit';
-import { LocalizeMixin } from '@lion/ui/localize.js';
+import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
