@@ -199,17 +199,27 @@ export class LocalizeManager {
    * @param {string} locale
    * @param {string} namespace
    * @param {object} data
-   * @throws {Error} Namespace can be added only once, for a given locale
+   * @param {boolean} allowOverridesForExistingNamespaces
+   * @throws {Error} Namespace can be added only once, for a given locale unless allowOverridesForExistingNamespaces
+   * is set to `true`
    */
-  addData(locale, namespace, data) {
-    if (this._isNamespaceInCache(locale, namespace)) {
+  addData(locale, namespace, data, allowOverridesForExistingNamespaces = false) {
+    if (!allowOverridesForExistingNamespaces && this._isNamespaceInCache(locale, namespace)) {
       throw new Error(
         `Namespace "${namespace}" has been already added for the locale "${locale}".`,
       );
     }
 
     this.__storage[locale] = this.__storage[locale] || {};
-    this.__storage[locale][namespace] = data;
+
+    if (allowOverridesForExistingNamespaces) {
+      this.__storage[locale][namespace] = {
+        ...this.__storage[locale][namespace],
+        ...data,
+      };
+    } else {
+      this.__storage[locale][namespace] = data;
+    }
   }
 
   /**

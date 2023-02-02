@@ -155,7 +155,7 @@ describe('LocalizeManager', () => {
       });
     });
 
-    it('prevents mutating existing data for the same locale & namespace', () => {
+    it('prevents mutating existing data for the same locale & namespace when "allowOverridesForExistingNamespaces" argument is not given', () => {
       manager = new LocalizeManager();
       const { storage } = getProtectedMembers(manager);
 
@@ -167,6 +167,23 @@ describe('LocalizeManager', () => {
 
       expect(storage).to.deep.equal({
         'en-GB': { 'lion-hello': { greeting: 'Hi!' } },
+      });
+    });
+
+    it('allows mutating existing data for the same locale & namespace when "allowOverridesForExistingNamespaces" argument is set to "true"', () => {
+      manager = new LocalizeManager();
+      const { storage } = getProtectedMembers(manager);
+
+      manager.addData('en-GB', 'lion-hello', { greeting: 'Hi!' });
+
+      expect(storage).to.deep.equal({
+        'en-GB': { 'lion-hello': { greeting: 'Hi!' } },
+      });
+
+      manager.addData('en-GB', 'lion-hello', { greeting: 'Hi!', alternative: 'Hello!' }, true);
+
+      expect(storage).to.deep.equal({
+        'en-GB': { 'lion-hello': { greeting: 'Hi!', alternative: 'Hello!' } },
       });
     });
   });
