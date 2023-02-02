@@ -2,4 +2,4 @@
 '@lion/ui': patch
 ---
 
-LocalizeManager: added `allowOverridesForExistingNamespaces` parameter to `addData` method to allow for changing data in a namespace for a given locale
+LocalizeManager: added `allowOverridesForExistingNamespaces` option to `constructor` argument to allow for changing data in a namespace for a given locale
