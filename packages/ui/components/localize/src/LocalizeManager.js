@@ -18,6 +18,7 @@ export class LocalizeManager {
     autoLoadOnLocaleChange = false,
     fallbackLocale = '',
     showKeyAsFallback = false,
+    allowOverridesForExistingNamespaces = false,
   } = {}) {
     /** @private */
     this.__delegationTarget = document.createDocumentFragment();
@@ -27,6 +28,9 @@ export class LocalizeManager {
     this._fallbackLocale = fallbackLocale;
     /** @protected */
     this._showKeyAsFallback = showKeyAsFallback;
+
+    /** @private */
+    this.__allowOverridesForExistingNamespaces = allowOverridesForExistingNamespaces;
 
     /**
      * @type {Object.<string, Object.<string, Object>>}
@@ -199,17 +203,29 @@ export class LocalizeManager {
    * @param {string} locale
    * @param {string} namespace
    * @param {object} data
-   * @throws {Error} Namespace can be added only once, for a given locale
+   * @throws {Error} Namespace can be added only once, for a given locale unless allowOverridesForExistingNamespaces
+   * is set to `true`
    */
   addData(locale, namespace, data) {
-    if (this._isNamespaceInCache(locale, namespace)) {
+    if (
+      !this.__allowOverridesForExistingNamespaces &&
+      this._isNamespaceInCache(locale, namespace)
+    ) {
       throw new Error(
         `Namespace "${namespace}" has been already added for the locale "${locale}".`,
       );
     }
 
     this.__storage[locale] = this.__storage[locale] || {};
-    this.__storage[locale][namespace] = data;
+
+    if (this.__allowOverridesForExistingNamespaces) {
+      this.__storage[locale][namespace] = {
+        ...this.__storage[locale][namespace],
+        ...data,
+      };
+    } else {
+      this.__storage[locale][namespace] = data;
+    }
   }
 
   /**
