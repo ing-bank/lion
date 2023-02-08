@@ -29,7 +29,7 @@ describe('Form Integrations', () => {
     const formEl = el._lionFormNode;
 
     expect(formEl.serializedValue).to.eql({
-      full_name: { first_name: '', last_name: '' },
+      fullName: { firstName: '', lastName: '' },
       date: '2000-12-12',
       datepicker: '2020-12-12',
       bio: '',
@@ -62,7 +62,7 @@ describe('Form Integrations', () => {
     await inputTelDropdownEl?.updateComplete;
 
     expect(formEl.formattedValue).to.eql({
-      full_name: { first_name: '', last_name: '' },
+      fullName: { firstName: '', lastName: '' },
       date: '12/12/2000',
       datepicker: '12/12/2020',
       bio: '',
@@ -91,7 +91,7 @@ describe('Form Integrations', () => {
         await fixture(
           html`<umbrella-form
             .serializedValue="${{
-              full_name: { first_name: '', last_name: '' },
+              fullName: { firstName: '', lastName: '' },
               date: '2000-12-12',
               datepicker: '2020-12-12',
               bio: '',
