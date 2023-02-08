@@ -45,7 +45,7 @@ import '@lion/ui/define/lion-validation-feedback.js';
  */
 
 const fullyPrefilledSerializedValue = {
-  full_name: { first_name: 'Lorem', last_name: 'Ipsum' },
+  fullName: { firstName: 'Lorem', lastName: 'Ipsum' },
   date: '2000-12-12',
   datepicker: '2020-12-12',
   bio: 'Lorem',
@@ -69,7 +69,7 @@ const fullyPrefilledSerializedValue = {
 };
 
 const fullyChangedSerializedValue = {
-  full_name: { first_name: 'LoremChanged', last_name: 'IpsumChanged' },
+  fullName: { firstName: 'LoremChanged', lastName: 'IpsumChanged' },
   date: '1999-12-12',
   datepicker: '1986-12-12',
   bio: 'LoremChanged',
@@ -177,7 +177,7 @@ describe(`Submitting/Resetting/Clearing Form`, async () => {
     await elementUpdated(formEl);
     await formEl.updateComplete;
     expect(formEl.serializedValue).to.eql({
-      full_name: { first_name: '', last_name: '' },
+      fullName: { firstName: '', lastName: '' },
       date: '',
       datepicker: '',
       bio: '',
