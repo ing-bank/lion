@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 const { legacyPlugin } = require('@web/dev-server-legacy');
 const { browserstackLauncher } = require('@web/test-runner-browserstack');
 
