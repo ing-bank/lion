@@ -424,6 +424,39 @@ describe('lion-select-rich', () => {
       expect(el.singleOption).to.be.false;
       expect(_invokerNode.singleOption).to.be.false;
     });
+
+    it('adds/removes the autofocus attribute to/from _listboxNode', async () => {
+      const el = await fixture(html` <lion-select-rich></lion-select-rich> `);
+      const { _listboxNode } = getSelectRichMembers(el);
+
+      expect(_listboxNode.hasAttribute('autofocus')).to.be.false;
+
+      el.opened = true;
+      await el.updateComplete;
+      expect(_listboxNode.hasAttribute('autofocus')).to.be.true;
+
+      el.opened = false;
+      await el.updateComplete;
+      await el.updateComplete; // safari takes a little longer
+      expect(_listboxNode.hasAttribute('autofocus')).to.be.false;
+    });
+
+    it('adds focus to element with [role=listbox] when trapsKeyboardFocus is true', async () => {
+      const el = await fixture(
+        html` <lion-select-rich .config=${{ trapsKeyboardFocus: true }}></lion-select-rich> `,
+      );
+      const { _listboxNode } = getSelectRichMembers(el);
+      expect(document.activeElement).to.not.equal(_listboxNode);
+
+      el.opened = true;
+      await el.updateComplete;
+      expect(document.activeElement).to.equal(_listboxNode);
+
+      el.opened = false;
+      await el.updateComplete;
+      await el.updateComplete; // safari takes a little longer
+      expect(document.activeElement).to.not.equal(_listboxNode);
+    });
   });
 
   describe('interaction-mode', () => {
