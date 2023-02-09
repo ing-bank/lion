@@ -370,6 +370,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       this._noDefaultSelectedInheritsWidth();
     }
 
+    // When `trapsKeyboardFocus:true` is configured in our overlay, we need to make sure
+    // that our element with [role=listbox] gets focus. The `containFocus` util will look
+    // for an element with [autofocus] (otherwise it sets focus to `contentNode` (the 'root' of the overlay))
     this._listboxNode.setAttribute('autofocus', '');
   }
 
