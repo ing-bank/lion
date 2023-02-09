@@ -369,6 +369,8 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     if (this.hasNoDefaultSelected) {
       this._noDefaultSelectedInheritsWidth();
     }
+
+    this._listboxNode.setAttribute('autofocus', '');
   }
 
   /** @private */
@@ -382,6 +384,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   /** @private */
   __overlayOnHide() {
     this._invokerNode.focus();
+    this._listboxNode.removeAttribute('autofocus');
   }
 
   /**

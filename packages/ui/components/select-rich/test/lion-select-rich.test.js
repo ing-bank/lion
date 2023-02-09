@@ -424,6 +424,22 @@ describe('lion-select-rich', () => {
       expect(el.singleOption).to.be.false;
       expect(_invokerNode.singleOption).to.be.false;
     });
+
+    it('adds/removes the autofocus attribute to/from _listboxNode', async () => {
+      const el = await fixture(html` <lion-select-rich></lion-select-rich> `);
+      const { _listboxNode } = getSelectRichMembers(el);
+
+      expect(_listboxNode.hasAttribute('autofocus')).to.be.false;
+
+      el.opened = true;
+      await el.updateComplete;
+      expect(_listboxNode.hasAttribute('autofocus')).to.be.true;
+
+      el.opened = false;
+      await el.updateComplete;
+      await el.updateComplete; // safari takes a little longer
+      expect(_listboxNode.hasAttribute('autofocus')).to.be.false;
+    });
   });
 
   describe('interaction-mode', () => {
