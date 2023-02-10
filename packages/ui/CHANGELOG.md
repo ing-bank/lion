@@ -1,5 +1,14 @@
 # @lion/ui
 
+## 0.1.2
+
+### Patch Changes
+
+- 9ff7cd77: fix(@lion/ui): export types necessary for type inference of mixins (fixes #1903)
+- 74b4b686: don't set unparseable for negative timezones
+- eff3259e: LocalizeManager: added `allowOverridesForExistingNamespaces` option to `constructor` argument to allow for changing data in a namespace for a given locale
+- 84173cdb: lion-select-rich: when the overlay is shown, the "autofocus" attribute is added to \_listboxNode (\_inputNode) to make sure that keyboard navigation continues to work when the element is inside a an element with `trapsKeyboardFocus:true`, like the bottomsheet created via `withBottomSheetConfig()`. When the overlay is closed the attribute is removed.
+
 ## 0.1.1
 
 ### Patch Changes
