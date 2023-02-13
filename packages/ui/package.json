@@ -45,6 +45,13 @@
     "types-check-only": "tsc --project tsconfig-check-only.json",
     "types-correct-after-build": "node ./scripts/types-correct-after-build.js"
   },
+  "sideEffects": [
+    "exports/define/**/*.js",
+    "exports/define-helpers/**/*.js",
+    "exports/icon.js",
+    "exports/localize.js",
+    "exports/overlays.js"
+  ],
   "dependencies": {
     "@bundled-es-modules/message-format": "^6.0.4",
     "@open-wc/dedupe-mixin": "^1.3.1",
