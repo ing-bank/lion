@@ -13,6 +13,7 @@ import { LionCombobox } from '@lion/ui/combobox.js';
  * @typedef {import('../types/SelectionDisplay.js').SelectionDisplay} SelectionDisplay
  * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
  * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('@lion/ui/listbox.js').LionOption} LionOption
  */
 
 /**
@@ -1632,7 +1633,7 @@ describe('lion-combobox', () => {
       });
     });
 
-    it('highlights matching options', async () => {
+    it('highlights first occcurence of matching option', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" match-mode="all">
@@ -1644,6 +1645,16 @@ describe('lion-combobox', () => {
         `)
       );
       const options = el.formElements;
+
+      mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
+
+      await el.updateComplete;
+      expect(options[0]).lightDom.to.equal(`<span aria-label="Artichoke">Arti<b>c</b>hoke</span>`);
+      expect(options[1]).lightDom.to.equal(`<span aria-label="Chard"><b>C</b>hard</span>`);
+      expect(options[2]).lightDom.to.equal(`<span aria-label="Chicory"><b>C</b>hicory</span>`);
+      expect(options[3]).lightDom.to.equal(
+        `<span aria-label="Victoria Plum">Vi<b>c</b>toria Plum</span>`,
+      );
 
       mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
 
@@ -1660,6 +1671,48 @@ describe('lion-combobox', () => {
       expect(options[1]).lightDom.to.equal(`<span aria-label="Chard">Char<b>d</b></span>`);
       expect(options[2]).lightDom.to.equal(`Chicory`);
       expect(options[3]).lightDom.to.equal(`Victoria Plum`);
+    });
+
+    it('highlights matching complex options', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" match-mode="all">
+            <lion-option .choiceValue="${'Artichoke'}">
+              <div>Artichoke</div>
+              <small>Cardoon</small>
+            </lion-option>
+            <lion-option .choiceValue="${'Chard'}">
+              <div>Chard</div>
+              <small>Beet</small>
+            </lion-option>
+            <lion-option .choiceValue="${'Chicory'}">
+              <div>Chicory</div>
+              <small>Chicory</small>
+            </lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">
+              <div>Victoria Plum</div>
+              <small>Prunus domestica</small>
+            </lion-option>
+          </lion-combobox>
+        `)
+      );
+      const options = el.formElements;
+
+      mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+
+      await el.updateComplete;
+      expect(options[0]).lightDom.to.equal(
+        `<span aria-label=" Artichoke Cardoon "><div>Arti<b>ch</b>oke</div><small>Cardoon</small>`,
+      );
+      expect(options[1]).lightDom.to.equal(
+        `<span aria-label=" Chard Beet "><div><b>Ch</b>ard</div><small>Beet</small>`,
+      );
+      expect(options[2]).lightDom.to.equal(
+        `<span aria-label=" Chicory Chicory "><div><b>Ch</b>icory</div><small><b>Ch</b>icory</small>`,
+      );
+      expect(options[3]).lightDom.to.equal(
+        `<div>Victoria Plum</div><small>Prunus domestica</small>`,
+      );
     });
 
     it('synchronizes textbox when autocomplete is "inline" or "both"', async () => {
@@ -1999,6 +2052,98 @@ describe('lion-combobox', () => {
           await performChecks();
         });
       });
+
+      it('allows to override "_onFilterMatch" and "_onFilterUmatch"', async () => {
+        class X extends LionCombobox {
+          /**
+           * @overridable
+           * @param {LionOption & {__originalInnerHTML?:string}} option
+           * @param {string} matchingString
+           * @protected
+           */
+          _onFilterMatch(option, matchingString) {
+            Array.from(option.children).forEach(child => {
+              if (child.hasAttribute('data-key')) {
+                this._highlightMatchedOption(child, matchingString);
+              }
+            });
+            // Alternatively, an extension can add an animation here
+            // option.style.display = '';
+          }
+
+          /**
+           * @overridable
+           * @param {LionOption & {__originalInnerHTML?:string}} option
+           * @param {string} [curValue]
+           * @param {string} [prevValue]
+           * @protected
+           */
+          // eslint-disable-next-line no-unused-vars
+          _onFilterUnmatch(option, curValue, prevValue) {
+            Array.from(option.children).forEach(child => {
+              if (child.hasAttribute('data-key')) {
+                this._unhighlightMatchedOption(child);
+              }
+            });
+            // Alternatively, an extension can add an animation here
+            // option.style.display = 'none';
+          }
+        }
+        const tagName = defineCE(X);
+        const tag = unsafeStatic(tagName);
+
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <${tag} name="foo" autocomplete="both">
+              <lion-option .choiceValue="${'Artichoke'}">
+                <div data-key>Artichoke</div>
+                <small>Cardoon</small>
+              </lion-option>
+              <lion-option .choiceValue="${'Chard'}">
+                <div data-key>Chard</div>
+                <small>Beet</small>
+              </lion-option>
+              <lion-option .choiceValue="${'Chicory'}">
+                <div data-key>Chicory</div>
+                <small>Chicory</small>
+              </lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">
+                <div data-key>Victoria Plum</div>
+                <small>Prunus domestica</small>
+              </lion-option>
+            </${tag}>
+          `)
+        );
+        const options = el.formElements;
+
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+
+        await el.updateComplete;
+        expect(options[0]).lightDom.to.equal(
+          `<div data-key><span aria-label="Artichoke">Arti<b>ch</b>oke</span></div><small>Cardoon</small>`,
+        );
+        expect(options[1]).lightDom.to.equal(
+          `<div data-key><span aria-label="Chard"><b>Ch</b>ard</div></span><small>Beet</small>`,
+        );
+        expect(options[2]).lightDom.to.equal(
+          `<div data-key><span aria-label="Chicory"><b>Ch</b>icory</span></div><small>Chicory</small>`,
+        );
+        expect(options[3]).lightDom.to.equal(
+          `<div data-key>Victoria Plum</div><small>Prunus domestica</small>`,
+        );
+
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'D');
+
+        await el.updateComplete;
+        expect(options[0]).lightDom.to.equal(`<div data-key>Artichoke</div><small>Cardoon</small>`);
+        expect(options[1]).lightDom.to.equal(
+          `<div data-key><span aria-label="Chard">Char<b>d</b></div></span><small>Beet</small>`,
+        );
+        expect(options[2]).lightDom.to.equal(`<div data-key>Chicory</div><small>Chicory</small>`);
+        expect(options[3]).lightDom.to.equal(
+          `<div data-key>Victoria Plum</div><small>Prunus domestica</small>`,
+        );
+      });
     });
 
     describe('Active index behavior', () => {
@@ -2277,6 +2422,26 @@ describe('lion-combobox', () => {
         const labelledElement = options[0].querySelector('span[aria-label="Artichoke"]');
         expect(labelledElement).to.not.be.null;
         expect(labelledElement.innerText).to.equal('Artichoke');
+      });
+
+      it('adds aria-label to highlighted complex options', async () => {
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" match-mode="all">
+              <lion-option .choiceValue="${'Artichoke'}">
+                <div>Artichoke</div>
+                <small>Cardoon</small>
+              </lion-option>
+            </lion-combobox>
+          `)
+        );
+        const options = el.formElements;
+
+        mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
+        await el.updateComplete;
+        const labelledElement = options[0].querySelector('span[aria-label=" Artichoke Cardoon "]');
+        expect(labelledElement).to.not.be.null;
+        expect(labelledElement.innerText).to.equal('Artichoke\nCardoon');
       });
     });
   });
