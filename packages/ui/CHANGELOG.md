@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.1.3
+
+### Patch Changes
+
+- e871fe67: fix(@lion/ui): export types necessary for type inference of core.js
+
 ## 0.1.2
 
 ### Patch Changes
