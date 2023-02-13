@@ -3,6 +3,32 @@ import { LionInput } from '@lion/ui/input.js';
 import { formatDate, LocalizeMixin, parseDate } from '@lion/ui/localize-no-side-effects.js';
 
 /**
+ *
+ * @param {Date | undefined} newV
+ * @param {Date | undefined} oldV
+ */
+function hasDateChanged(newV, oldV) {
+  return !(
+    (
+      Object.prototype.toString.call(newV) === '[object Date]' && // is Date Object
+      newV &&
+      newV.getDate() === oldV?.getDate?.() && // day
+      newV.getMonth() === oldV.getMonth?.() && // month
+      newV.getFullYear() === oldV.getFullYear?.()
+    ) // year
+  );
+}
+
+/**
+ * Change function that returns true if `value` is different from `oldValue`.
+ * This method is used as the default for a property's `hasChanged` function.
+ */
+export const notEqual = (value, old) => {
+  // This ensures (old==NaN, value==NaN) always returns false
+  return old !== value && (old === old || value === value);
+};
+
+/**
  * @param {Date|number} date
  */
 function isValidDate(date) {
@@ -22,7 +48,10 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
   /** @type {any} */
   static get properties() {
     return {
-      modelValue: Date,
+      modelValue: {
+        type: Date,
+        hasChanged: hasDateChanged,
+      },
     };
   }
 

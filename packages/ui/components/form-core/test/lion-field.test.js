@@ -357,40 +357,32 @@ describe('<lion-field>', () => {
       expect(el.validationStates.error.Required).to.not.exist;
     });
 
-    it('will only update formattedValue when valid on `user-input-changed`', async () => {
+    it('for best DX, on `user-input-changed` (during typing/interacting): will only update formattedValue when no errors', async () => {
       const formatterSpy = sinon.spy(value => `foo: ${value}`);
-      const Bar = class extends Validator {
-        static get validatorName() {
-          return 'Bar';
-        }
+      const EqualsBar = class extends Validator {
+        static validatorName = 'EqualsBar';
 
-        /**
-         * @param {string} value
-         */
-        execute(value) {
-          const hasError = value !== 'bar';
-          return hasError;
-        }
+        execute = (/** @type {string} */ value) => value !== 'bar';
       };
       const el = /** @type {LionField} */ (
         await fixture(html`
         <${tag}
           .modelValue=${'init-string'}
           .formatter=${formatterSpy}
-          .validators=${[new Bar()]}
+          .validators=${[new EqualsBar()]}
         >${inputSlot}</${tag}>
       `)
       );
 
-      expect(formatterSpy.callCount).to.equal(0);
-      expect(el.formattedValue).to.equal('init-string');
+      expect(formatterSpy.callCount).to.equal(1);
+      expect(el.formattedValue).to.equal('foo: init-string');
 
       el.modelValue = 'bar';
-      expect(formatterSpy.callCount).to.equal(1);
+      expect(formatterSpy.callCount).to.equal(2);
       expect(el.formattedValue).to.equal('foo: bar');
 
       mimicUserInput(el, 'foo');
-      expect(formatterSpy.callCount).to.equal(1);
+      expect(formatterSpy.callCount).to.equal(2);
       expect(el.value).to.equal('foo');
     });
   });

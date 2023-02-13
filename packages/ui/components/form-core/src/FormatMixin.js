@@ -4,6 +4,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { FormControlMixin } from './FormControlMixin.js';
 import { Unparseable } from './validate/Unparseable.js';
 import { ValidateMixin } from './validate/ValidateMixin.js';
+import { SyncUpdatableMixin } from './utils/SyncUpdatableMixin.js';
 
 /**
  * @typedef {import('../types/FormatMixinTypes.js').FormatMixin} FormatMixin
@@ -59,7 +60,7 @@ import { ValidateMixin } from './validate/ValidateMixin.js';
  */
 const FormatMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
-  class FormatMixin extends ValidateMixin(FormControlMixin(superclass)) {
+  class FormatMixin extends ValidateMixin(FormControlMixin(SyncUpdatableMixin(superclass))) {
     /** @type {any} */
     static get properties() {
       return {
@@ -69,22 +70,40 @@ const FormatMixinImplementation = superclass =>
       };
     }
 
-    /**
-     * @param {string} [name]
-     * @param {unknown} [oldValue]
-     * @param {import('lit').PropertyDeclaration} [options]
-     * @returns {void}
-     */
-    requestUpdate(name, oldValue, options) {
-      super.requestUpdate(name, oldValue, options);
+    // /**
+    //  * @param {string} [name]
+    //  * @param {unknown} [oldValue]
+    //  * @param {import('lit').PropertyDeclaration} [options]
+    //  * @returns {void}
+    //  */
+    // requestUpdate(name, oldValue, options) {
+    //   super.requestUpdate(name, oldValue, options);
 
-      if (name === 'modelValue' && this.modelValue !== oldValue) {
+    //   // if (name === 'modelValue' && this.modelValue !== oldValue) {
+    //   //   this._onModelValueChanged({ modelValue: this.modelValue }, { modelValue: oldValue });
+    //   // }
+    //   // if (name === 'serializedValue' && this.serializedValue !== oldValue) {
+    //   //   this._calculateValues({ source: 'serialized' });
+    //   // }
+    //   // if (name === 'formattedValue' && this.formattedValue !== oldValue) {
+    //   //   this._calculateValues({ source: 'formatted' });
+    //   // }
+    // }
+
+    /**
+     * @param {string} name
+     * @param {unknown} [oldValue]
+     */
+    updateSync(name, oldValue) {
+      super.updateSync(name, oldValue);
+
+      if (name === 'modelValue') {
         this._onModelValueChanged({ modelValue: this.modelValue }, { modelValue: oldValue });
       }
-      if (name === 'serializedValue' && this.serializedValue !== oldValue) {
+      if (name === 'serializedValue') {
         this._calculateValues({ source: 'serialized' });
       }
-      if (name === 'formattedValue' && this.formattedValue !== oldValue) {
+      if (name === 'formattedValue') {
         this._calculateValues({ source: 'formatted' });
       }
     }
@@ -93,7 +112,7 @@ const FormatMixinImplementation = superclass =>
      * The view value. Will be delegated to `._inputNode.value`
      */
     get value() {
-      return (this._inputNode && this._inputNode.value) || this.__value || '';
+      return this._inputNode?.value || this.__value || '';
     }
 
     /** @param {string} value */
@@ -269,12 +288,14 @@ const FormatMixinImplementation = superclass =>
       // imperatively, we DO want to format a value (it is the only way to get meaningful
       // input into `._inputNode` with modelValue as input)
 
-      if (
-        this._isHandlingUserInput &&
-        this.hasFeedbackFor?.length &&
-        this.hasFeedbackFor.includes('error') &&
-        this._inputNode
-      ) {
+      console.debug(
+        '_callFormatter',
+        this._isHandlingUserInput,
+        this.hasFeedbackFor,
+        this._inputNode,
+      );
+
+      if (this._isHandlingUserInput && this.hasFeedbackFor?.includes('error') && this._inputNode) {
         return this._inputNode ? this.value : undefined;
       }
 
@@ -416,6 +437,7 @@ const FormatMixinImplementation = superclass =>
      * @protected
      */
     _proxyInputEvent() {
+      console.debug('_proxyInputEvent');
       // TODO: [v1] remove composed (and bubbles as well if possible)
       /** @protectedEvent user-input-changed meant for usage by Subclassers only */
       this.dispatchEvent(new Event('user-input-changed', { bubbles: true }));
@@ -423,6 +445,7 @@ const FormatMixinImplementation = superclass =>
 
     /** @protected */
     _onUserInputChanged() {
+      console.debug('_onUserInputChanged');
       // Upwards syncing. Most properties are delegated right away, value is synced to
       // `LionField`, to be able to act on (imperatively set) value changes
       this._isHandlingUserInput = true;
