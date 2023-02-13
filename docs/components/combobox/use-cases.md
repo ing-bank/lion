@@ -14,7 +14,7 @@ availability of the popup.
 
 ```js script
 import { LitElement, html, repeat } from '@mdjs/mdjs-preview';
-import { listboxData } from '../listbox/src/listboxData.js';
+import { listboxData, listboxComplexData } from '../listbox/src/listboxData.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
@@ -328,20 +328,45 @@ customElements.define('demo-server-side', DemoServerSide);
 export const serverSideCompletion = () => html`<demo-server-side></demo-server-side>`;
 ```
 
-## Set complex object in choiceValue
+## Complex options
 
-A common use case is to set a complex object in the `choiceValue` property. By default, `LionCombobox` will display in the text input the `modelValue`. By overriding the `_getTextboxValueFromOption` method, you can choose which value will be used for the input value.
+For performance reasons a complex object in the choiceValue property is unwanted. But it is possible to create more complex options.
+
+To highlight the correct elements of the option, each element should be tagged with a `data-key` attribute. Which will be used in the `_onFilterMatch` and `_onFilterUnmatch` functions.
 
 ```js preview-story
 class ComplexObjectCombobox extends LionCombobox {
   /**
-   * Override how the input text is filled
-   * @param {LionOption} option
-   * @returns {string}
+   * @overridable
+   * @param {LionOption & {__originalInnerHTML?:string}} option
+   * @param {string} matchingString
+   * @protected
    */
-  // eslint-disable-next-line class-methods-use-this
-  _getTextboxValueFromOption(option) {
-    return option.label;
+  _onFilterMatch(option, matchingString) {
+    Array.from(option.children).forEach(child => {
+      if (child.hasAttribute('data-key')) {
+        this._highlightMatchedOption(child, matchingString);
+      }
+    });
+    // Alternatively, an extension can add an animation here
+    option.style.display = '';
+  }
+
+  /**
+   * @overridable
+   * @param {LionOption & {__originalInnerHTML?:string}} option
+   * @param {string} [curValue]
+   * @param {string} [prevValue]
+   * @protected
+   */
+  _onFilterUnmatch(option, curValue, prevValue) {
+    Array.from(option.children).forEach(child => {
+      if (child.hasAttribute('data-key')) {
+        this._unhighlightMatchedOption(child);
+      }
+    });
+    // Alternatively, an extension can add an animation here
+    option.style.display = 'none';
   }
 }
 
@@ -351,20 +376,19 @@ const onModelValueChanged = event => {
   console.log(`event.target.modelValue: ${JSON.stringify(event.target.modelValue)}`);
 };
 
-const listboxDataObject = listboxData.map(e => {
-  return { label: e, name: e };
-});
-
 export const complexObjectChoiceValue = () => html` <complex-object-combobox
   name="combo"
   label="Display only the label once selected"
   @model-value-changed="${onModelValueChanged}"
 >
   ${lazyRender(
-    listboxDataObject.map(
+    listboxComplexData.map(
       entry =>
         html`
-          <lion-option .choiceValue="${entry}" .label="${entry.label}">${entry.label}</lion-option>
+          <lion-option .choiceValue="${entry.label}">
+            <div data-key>${entry.label}</div>
+            <small>${entry.description}</small>
+          </lion-option>
         `,
     ),
   )}
