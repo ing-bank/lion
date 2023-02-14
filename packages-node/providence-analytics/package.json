@@ -17,7 +17,7 @@
     "./analyzers": "./src/program/analyzers/index.js",
     "./docs/*": "./docs/*"
   },
-  "main": "./src/program/providence.js",
+  "main": "./src/index.js",
   "bin": {
     "providence": "./src/cli/index.mjs"
   },
