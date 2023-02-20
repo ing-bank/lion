@@ -1,9 +1,9 @@
 export default {
-  ALLOWED_FILE_SIZE: 'Prześlij plik o maksymalnym rozmiarze {params}.',
-  ALLOWED_FILE_TYPE: 'Tylko przesyłanie {params}.',
-  DRAG_AND_DROP_TEXT: 'Drag & Drop your files here or',
-  REMOVE_BUTTON_LABEL: 'Remove file',
-  UPLOAD_TEXT_DUPLICATE_FILE_NAME: 'A file with same filename was already present.',
-  UPLOAD_TEXT_MULTIPLE_FILE: 'Wybierz pliki',
-  UPLOAD_TEXT_SINGLE_FILE: 'Wybierz plik',
+  allowedFileSize: 'Prześlij plik o maksymalnym rozmiarze {params}.',
+  allowedFileType: 'Tylko przesyłanie {params}.',
+  dragAndDropText: 'Drag & Drop your files here or',
+  removeButtonLabel: 'Remove file',
+  uploadTextDuplicateFileName: 'A file with same filename was already present.',
+  uploadTextMultipleFile: 'Wybierz pliki',
+  uploadTextSingleFile: 'Wybierz plik',
 };

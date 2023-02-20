@@ -2,6 +2,7 @@ import { LionField } from '@lion/ui/form-core.js';
 import { LocalizeMixin } from '@lion/ui/localize.js';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { css, html } from 'lit';
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { FileHandle, MAX_FILE_SIZE } from './FileHandle.js';
 import { LionUploadedFileList } from './LionUploadedFileList.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
@@ -52,14 +53,10 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         type: String,
         attribute: 'allowed-file-types',
       },
-      enableDragAndDrop: {
+      enableDropZone: {
         type: Boolean,
-        attribute: 'enable-drag-and-drop',
+        attribute: 'enable-drop-zone',
       },
-      /**
-       * style property
-       */
-      isDragging: { type: Boolean, reflect: true, attribute: 'is-dragging' },
       maxFileSize: {
         type: Number,
         attribute: 'max-file-size',
@@ -93,21 +90,29 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   get slots() {
     return {
       ...super.slots,
-      input: () => {
-        // TODO: Find a better way to do value delegation via attr
-        const input = document.createElement('input');
-        const value = this.getAttribute('value');
-        if (value) {
-          input.setAttribute('value', value);
-        }
-        return input;
-      },
+      input: () => html`<input .value="${ifDefined(this.getAttribute('value'))}" />`,
+      // input: () => {
+      //   // TODO: Find a better way to do value delegation via attr
+      //   const input = document.createElement('input');
+      //   const value = this.getAttribute('value');
+      //   if (value) {
+      //     input.setAttribute('value', value);
+      //   }
+      //   return input;
+      // },
+      // 'file-upload-button': () => ({ template: html`
+      //   <button
+      //     id="${`upload-button-${this._inputId}`}"
+      //     type="button"
+      //     @click="${() => this._inputNode.click()}"
+      //   >${this.__fileUploadButtonLabel}</button>
+      // `}),
       'file-upload-button': () => {
         const button = document.createElement('button');
         button.setAttribute('id', `upload-button-${this._inputId}`);
         button.setAttribute('type', 'button');
         button.setAttribute('click', `${() => this._inputNode.click()}`);
-        button.innerHTML = this.fileUploadButtonLabel;
+        button.textContent = this.fileUploadButtonLabel;
         return button;
       },
       'uploaded-file-list': () => ({
@@ -130,6 +135,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     return /** @type {HTMLInputElement} */ (super._inputNode);
   }
 
+  /**
+   * @protected
+   */
   get _fileUploadButtonNode() {
     return this.querySelector(`#upload-button-${this._inputId}`);
   }
@@ -166,6 +174,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     return this._fileUploadButtonNode;
   }
 
+  /**
+   * @protected
+   */
   // eslint-disable-next-line class-methods-use-this
   get _isDragAndDropSupported() {
     return 'draggable' in document.createElement('div');
@@ -185,12 +196,11 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     this.__initialUploadResponse = this.uploadResponse;
     this.uploadOnFormSubmit = true;
     this.multiple = false;
-    this.enableDragAndDrop = false;
-    this.isDragging = false;
+    this.enableDropZone = false;
     this.maxFileSize = MAX_FILE_SIZE;
     this.allowedFileTypes = '';
     this.allowedFileExtensions = '';
-    this._isUserProvidedLabel = '';
+    this._hasUserProvidedFileUploadButtonLabel = '';
     /**
      * @type {InputFile[]}
      */
@@ -204,7 +214,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   connectedCallback() {
     super.connectedCallback();
-    this._isUserProvidedLabel = this.fileUploadButtonLabel;
+    this._hasUserProvidedFileUploadButtonLabel = this.fileUploadButtonLabel;
     this.__initialUploadResponse = this.uploadResponse;
 
     this._inputNode.addEventListener('change', this._onChange);
@@ -227,11 +237,11 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   onLocaleUpdated() {
     super.onLocaleUpdated();
-    if (!this._isUserProvidedLabel) {
+    if (!this._hasUserProvidedFileUploadButtonLabel) {
       if (this.multiple) {
-        this.fileUploadButtonLabel = this.msgLit('lion-input-file:UPLOAD_TEXT_MULTIPLE_FILE');
+        this.fileUploadButtonLabel = this.msgLit('lion-input-file:uploadTextMultipleFile');
       } else {
-        this.fileUploadButtonLabel = this.msgLit('lion-input-file:UPLOAD_TEXT_SINGLE_FILE');
+        this.fileUploadButtonLabel = this.msgLit('lion-input-file:uploadTextSingleFile');
       }
     }
   }
@@ -305,14 +315,17 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   setupDragDropEventListeners() {
     const dropZone = this.shadowRoot?.querySelector('.input-file__drop-zone');
-
     ['dragenter', 'dragover', 'dragleave'].forEach(eventName => {
       dropZone?.addEventListener(
         eventName,
         (/** @type {Event} */ ev) => {
           ev.preventDefault();
           ev.stopPropagation();
-          this.isDragging = eventName !== 'dragleave';
+          if (eventName !== 'dragleave') {
+            this.setAttribute('is-dragging', '');
+          } else {
+            this.removeAttribute('is-dragging');
+          }
         },
         false,
       );
@@ -324,7 +337,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         if (ev.target === this._inputNode) {
           ev.preventDefault();
         }
-        this.isDragging = false;
+        this.removeAttribute('is-dragging');
       },
       false,
     );
@@ -347,9 +360,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       }
     }
 
-    if (this.enableDragAndDrop && this._isDragAndDropSupported) {
+    if (this.enableDropZone && this._isDragAndDropSupported) {
       this.setupDragDropEventListeners();
-      this.setAttribute('drag-and-drop', '');
+      this.setAttribute('drop-zone', '');
     }
   }
 
@@ -465,7 +478,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   uploadDroppedFiles(ev) {
     ev.preventDefault();
-    this.isDragging = false;
+    this.removeAttribute('is-dragging');
     if (ev.dataTransfer && ev.dataTransfer?.items.length > 1 && !this.multiple) {
       return;
     }
@@ -486,6 +499,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   /**
    * @param {Event} ev
+   * @protected
    */
   // @ts-ignore
   _onChange(ev) {
@@ -498,6 +512,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   /**
    * Clear _inputNode.value to make sure onChange is called even for duplicate files
    * @param {Event} ev
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
   _onClick(ev) {
@@ -505,6 +520,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     ev.target.value = ''; // eslint-disable-line no-param-reassign
   }
 
+  /**
+   * @protected
+   */
   _enhanceUploadedList() {
     /**
      * @type {LionUploadedFileList | null}
@@ -516,6 +534,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
   }
 
+  /**
+   * @protected
+   */
   _syncAriaLabelledByAttributes() {
     if (this._inputNode.hasAttribute('aria-labelledby')) {
       const ariaLabelledBy = this._inputNode.getAttribute('aria-labelledby');
@@ -526,6 +547,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
   }
 
+  /**
+   * @protected
+   */
   _syncAriaDescribedByAttributes() {
     if (this._inputNode.hasAttribute('aria-describedby')) {
       const ariaDescribedby = this._inputNode.getAttribute('aria-describedby') || '';
@@ -533,6 +557,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
   }
 
+  /**
+   * @private
+   */
   __setupFileValidators() {
     const { allowedFileTypes, allowedFileExtensions, maxFileSize } = this.fileLimit;
 
@@ -549,6 +576,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   /**
    * @param {InputFile[]} uploadedFiles
+   * @protected
    */
   _uploadFiles(uploadedFiles) {
     // file size and type validators are required only when file is uploaded and not in case of prefill
@@ -593,14 +621,15 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
 
     if (_newFiles.length > 0) {
-      this.dispatchFileListChangeEvent(_newFiles);
+      this._dispatchFileListChangeEvent(_newFiles);
     }
   }
 
   /**
    * @param {InputFile[]} _newFiles
+   * @protected
    */
-  dispatchFileListChangeEvent(_newFiles) {
+  _dispatchFileListChangeEvent(_newFiles) {
     this.dispatchEvent(
       new CustomEvent('file-list-changed', {
         composed: true,
@@ -612,6 +641,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     );
   }
 
+  /**
+   * @protected
+   */
   _handleErrors() {
     let hasErrors = false;
     this._uploadedFilesMetaData.forEach(fileObj => {
@@ -637,6 +669,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   /**
    * @param {InputFile} fileObj
+   * @protected
    */
   /* eslint-disable no-param-reassign */
   _handleErroredFiles(fileObj) {
@@ -679,7 +712,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
 
     const errorObj = {
-      message: `${this.msgLit('lion-input-file:ALLOWED_FILE_VALIDATOR', {
+      message: `${this.msgLit('lion-input-file:allowedFileValidator', {
         hasAllowedTypes: !!lastItem,
         allowedTypesArrayLength: arrayLength,
         allowedTypesArray: array.join(', ') || '',
@@ -710,6 +743,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   /**
    * @param {CustomEvent} ev
+   * @protected
    */
   _onRemoveFile(ev) {
     if (this.disabled) {
@@ -725,6 +759,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   /**
    * @param {InputFile} removedFile
+   * @protected
    */
   _removeFile(removedFile) {
     this.dispatchEvent(
@@ -756,7 +791,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   /**
    * Helper method for the mutually exclusive Required Validator
    * @override ValidateMixin
-   * @private
    */
   _isEmpty() {
     return (
@@ -774,7 +808,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     return html`
       <div @drop="${this.uploadDroppedFiles}" class="input-file__drop-zone">
         <div class="input-file__drop-zone__text">
-          ${this.msgLit('lion-input-file:DRAG_AND_DROP_TEXT')}
+          ${this.msgLit('lion-input-file:dragAndDropText')}
         </div>
         <slot name="file-upload-button"></slot>
       </div>
@@ -798,7 +832,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   _inputGroupInputTemplate() {
     return html`
       <slot name="input"> </slot>
-      ${this.enableDragAndDrop && this._isDragAndDropSupported
+      ${this.enableDropZone && this._isDragAndDropSupported
         ? this._dropZoneTemplate()
         : html`
             <div class="input-group__file-upload-button">
@@ -819,7 +853,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
           width: fit-content;
         }
 
-        :host([drag-and-drop]) .input-group__container {
+        :host([drop-zone]) .input-group__container {
           width: auto;
         }
 

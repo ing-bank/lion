@@ -4,7 +4,10 @@ import { FileValidation } from './validators.js';
  * @typedef {import('../types/input-file.js').SystemFile} SystemFile
  */
 
-export const MAX_FILE_SIZE = 117654604;
+/**
+ * 500MB in bytes
+ */
+export const MAX_FILE_SIZE = 524288000;
 
 /**
  * @typedef {Object} property
@@ -40,18 +43,20 @@ export class FileHandle {
   }
 
   /**
-   * Syntactic sugar for getting the file extension
    * @param {string} fileName
    * @return {string}
+   * @protected
    */
   // eslint-disable-next-line class-methods-use-this
-  _getExtension = fileName => fileName.slice(fileName.lastIndexOf('.'));
+  _getFileNameExtension(fileName) {
+    return fileName.slice(fileName.lastIndexOf('.'));
+  }
 
   // checks the file size and type to set failedProp property
   uploadFileStatus() {
     const fileValidation = new FileValidation();
     if (this.fileLimit.allowedFileExtensions.length !== 0) {
-      const fileExtension = this._getExtension(this.systemFile.name);
+      const fileExtension = this._getFileNameExtension(this.systemFile.name);
       if (!fileValidation.isExtensionAllowed(fileExtension, this.fileLimit.allowedFileExtensions)) {
         this.status = UPLOAD_FILE_STATUS.fail;
         this.failedProp.push(FILE_FAILED_PROP.type);

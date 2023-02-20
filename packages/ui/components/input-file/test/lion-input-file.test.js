@@ -173,7 +173,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please upload a(n) text file with max 112.2MB.');
+        expect(error.message).to.deep.equal('Please upload a(n) text file with max 500MB.');
       });
     });
 
@@ -186,7 +186,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please upload a(n) text file with max 112.2MB.');
+        expect(error.message).to.deep.equal('Please upload a(n) text file with max 500MB.');
       });
     });
 
@@ -199,7 +199,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please upload a(n) .html file with max 112.2MB.');
+        expect(error.message).to.deep.equal('Please upload a(n) .html file with max 500MB.');
       });
     });
 
@@ -212,7 +212,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please upload a(n) .svg file with max 112.2MB.');
+        expect(error.message).to.deep.equal('Please upload a(n) .svg file with max 500MB.');
       });
     });
 
@@ -225,7 +225,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please upload a .html or .csv file with max 112.2MB.');
+        expect(error.message).to.deep.equal('Please upload a .html or .csv file with max 500MB.');
       });
     });
 
@@ -238,7 +238,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please upload a .html or .csv file with max 112.2MB.');
+        expect(error.message).to.deep.equal('Please upload a .html or .csv file with max 500MB.');
       });
     });
   });
@@ -277,7 +277,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please upload a(n) .jpg file with max 112.2MB.');
+        expect(error.message).to.equal('Please upload a(n) .jpg file with max 500MB.');
       });
     });
 
@@ -293,7 +293,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please upload a .jpg, .png or .pdf file with max 112.2MB.');
+        expect(error.message).to.equal('Please upload a .jpg, .png or .pdf file with max 500MB.');
       });
     });
 
@@ -306,7 +306,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please upload a .jpg, .png or .pdf file with max 112.2MB.');
+        expect(error.message).to.equal('Please upload a .jpg, .png or .pdf file with max 500MB.');
       });
     });
 
@@ -319,7 +319,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please upload a .jpg, .png or .pdf file with max 112.2MB.');
+        expect(error.message).to.equal('Please upload a .jpg, .png or .pdf file with max 500MB.');
       });
     });
   });
@@ -409,7 +409,6 @@ describe('lion-input-file', () => {
 
       _mimicUploadFile(el, [file]);
       await el.updateComplete;
-      console.log('el', el.modelValue);
       expect(el.modelValue).to.deep.equal([file]);
     });
 
@@ -606,7 +605,7 @@ describe('lion-input-file', () => {
         })
       );
 
-      const fileListChangedSpy = sinon.spy(el, 'dispatchFileListChangeEvent');
+      const fileListChangedSpy = sinon.spy(el, '_dispatchFileListChangeEvent');
 
       _mimicUploadFile(el, [filePdf]);
 
@@ -827,43 +826,56 @@ describe('lion-input-file', () => {
     let el;
     beforeEach(async () => {
       el = await fixture(html`
-        <lion-input-file name="myFiles" multiple enable-drag-and-drop></lion-input-file>
+        <lion-input-file name="myFiles" multiple enable-drop-zone></lion-input-file>
       `);
 
       await el.updateComplete;
     });
 
-    context('uploadDroppedFiles', () => {
-      let droppedFiles;
-      /**
-       * @type {sinon.SinonSpy<[uploadedFiles: InputFile[]], void>}
-       */
-      let uploadFilesSpy;
-      beforeEach(async () => {
-        const list = new DataTransfer();
+    it('should set "is-dragging" on dragenter', async () => {
+      const dropzone = el.shadowRoot?.querySelector('.input-file__drop-zone');
+      dropzone?.dispatchEvent(new Event('dragenter', { bubbles: true }));
+      expect(el.hasAttribute('is-dragging')).to.equal(true);
+    });
+
+    it('should set "is-dragging" on dragover', async () => {
+      const dropzone = el.shadowRoot?.querySelector('.input-file__drop-zone');
+      dropzone?.dispatchEvent(new Event('dragover', { bubbles: true }));
+      expect(el.hasAttribute('is-dragging')).to.equal(true);
+    });
+
+    it('should remove "is-dragging" on dragleave', async () => {
+      const dropzone = el.shadowRoot?.querySelector('.input-file__drop-zone');
+      dropzone?.dispatchEvent(new Event('dragenter', { bubbles: true }));
+      await el.updateComplete;
+
+      dropzone?.dispatchEvent(new Event('dragleave', { bubbles: true }));
+      expect(el.hasAttribute('is-dragging')).to.equal(false);
+    });
+
+    it('should remove "is-dragging" on drop', async () => {
+      const dropzone = el.shadowRoot?.querySelector('.input-file__drop-zone');
+      dropzone?.dispatchEvent(new Event('dragenter', { bubbles: true }));
+      await el.updateComplete;
+
+      window.dispatchEvent(new Event('drop', { bubbles: true }));
+      expect(el.hasAttribute('is-dragging')).to.equal(false);
+    });
+
+    it('should call uploadFiles method', async () => {
+      const list = new DataTransfer();
+      // @ts-ignore
+      list.items.add(file);
+      const droppedFiles = list.files;
+      const uploadFilesSpy = sinon.spy(el, '_uploadFiles');
+      await el.uploadDroppedFiles({
         // @ts-ignore
-        list.items.add(file);
-        droppedFiles = list.files;
-        uploadFilesSpy = sinon.spy(el, '_uploadFiles');
-        await el.uploadDroppedFiles({
-          // @ts-ignore
-          dataTransfer: { files: droppedFiles, items: [{ name: 'test.txt' }] },
-          preventDefault: () => {},
-        });
+        dataTransfer: { files: droppedFiles, items: [{ name: 'test.txt' }] },
+        preventDefault: () => {},
       });
 
-      it('should set isDragging back to false', async () => {
-        expect(el.isDragging).to.equal(false);
-      });
-
-      it('should set isDrag to false', async () => {
-        expect(el.isDragging).to.equal(false);
-      });
-
-      it('should call uploadFiles method', async () => {
-        expect(uploadFilesSpy).have.been.calledOnce;
-        uploadFilesSpy.restore();
-      });
+      expect(uploadFilesSpy).have.been.calledOnce;
+      uploadFilesSpy.restore();
     });
   });
 

@@ -17,7 +17,7 @@ export const main = () => {
 
 - Based on our [input](../input/overview.md)
 - Default labels and validation messages in different languages
-- Options for multi file upload and drag-and-drop.
+- Options for multi file upload and drop-zone.
 
 ## Installation
 

@@ -127,7 +127,7 @@ export class LionUploadedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
     return html`
       <button
         class="uploaded__list__item__remove-button"
-        aria-label="${this.msgLit('lion-input-file:REMOVE_BUTTON_LABEL', {
+        aria-label="${this.msgLit('lion-input-file:removeButtonLabel', {
           fileName: file.systemFile.name,
         })}"
         @click=${() => this._removeFile(file)}
@@ -158,9 +158,7 @@ export class LionUploadedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
         <div class="uploaded__list__item__label">
           ${this._labelBeforeTemplate(file)}
           <span id="uploaded-list-item-label-${fileUuid}" class="uploaded__list__item__label__text">
-            <span class="sr-only"
-              >${this.msgLit('lion-input-file:FILE_NAME_DESCRIPTION_LABEL')}</span
-            >
+            <span class="sr-only">${this.msgLit('lion-input-file:fileNameDescriptionLabel')}</span>
             ${file.downloadUrl && file.status !== 'LOADING'
               ? html`
                   <a

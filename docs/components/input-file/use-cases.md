@@ -132,7 +132,7 @@ export const typeValidator = () => {
     <lion-input-file
       .allowedFileTypes="${'image/svg+xml'}"
       label="Upload"
-      enable-drag-and-drop
+      enable-drop-zone
       @file-list-changed="${ev => {
         console.log(ev.detail.newFiles);
       }}"
@@ -403,7 +403,7 @@ export const uploadWithoutFormSubmit = () => {
 
 ### Drag and Drop
 
-Set the `enableDragAndDrop` parameter to `true` to use the drag and drop functionality in the component.
+Set the `enableDropZone` parameter to `true` to use the drag and drop functionality in the component.
 
 Drag and drop the files to be uploaded to the server.
 
@@ -413,7 +413,7 @@ export const dragAndDrop = () => {
     <lion-input-file
       label="Upload"
       name="myFiles"
-      enable-drag-and-drop
+      enable-drop-zone
       .multiple="${true}"
       .validators="${[new Required()]}"
     >

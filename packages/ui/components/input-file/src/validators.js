@@ -1,5 +1,5 @@
 import { Validator } from '@lion/ui/form-core.js';
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 
 /**
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorConfig} ValidatorConfig
@@ -109,6 +109,7 @@ export class DuplicateFileNames extends Validator {
    * @returns {Promise<string|Element>}
    */
   static async getMessage() {
-    return localize.msg('lion-input-file:UPLOAD_TEXT_DUPLICATE_FILE_NAME');
+    const localizeManager = getLocalizeManager();
+    return localizeManager.msg('lion-input-file:uploadTextDuplicateFileName');
   }
 }

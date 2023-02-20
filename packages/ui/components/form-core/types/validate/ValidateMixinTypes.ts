@@ -11,7 +11,7 @@ import { Validator } from '../../src/validate/Validator.js';
 
 export type FeedbackMessage = {
   message: string | Node;
-  type: ValidationType;
+  type: ValidationType | string;
   validator?: Validator;
 };
 

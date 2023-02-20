@@ -1,9 +1,9 @@
 export default {
-  ALLOWED_FILE_SIZE: 'Завантажте файл не більше за {params}.',
-  ALLOWED_FILE_TYPE: 'Тільки завантаження {params}.',
-  DRAG_AND_DROP_TEXT: 'Drag & Drop your files here or',
-  REMOVE_BUTTON_LABEL: 'Remove file',
-  UPLOAD_TEXT_DUPLICATE_FILE_NAME: 'A file with same filename was already present.',
-  UPLOAD_TEXT_MULTIPLE_FILE: 'Виберіть файли',
-  UPLOAD_TEXT_SINGLE_FILE: 'Виберіть файл',
+  allowedFileSize: 'Завантажте файл не більше за {params}.',
+  allowedFileType: 'Тільки завантаження {params}.',
+  dragAndDropText: 'Drag & Drop your files here or',
+  removeButtonLabel: 'Remove file',
+  uploadTextDuplicateFileName: 'A file with same filename was already present.',
+  uploadTextMultipleFile: 'Виберіть файли',
+  uploadTextSingleFile: 'Виберіть файл',
 };
