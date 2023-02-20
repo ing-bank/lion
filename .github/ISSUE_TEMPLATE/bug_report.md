@@ -16,7 +16,7 @@ Describe what happens instead. Best via a live code reproduction.
 To create one click the link below and edit away.
 Once the error is reproduced fork/safe and link it.
 
-https://webcomponents.dev/edit/Eecs3NKTis2XbgYc0jsp/
+https://studio.webcomponents.dev/edit/OJTxKWU06xEJGaI2AFSG
 
 ## Additional context
 
