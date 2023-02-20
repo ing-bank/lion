@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.1.4
+
+### Patch Changes
+
+- 1c18057c: [combobox] make the first occurrence of a string highlighted, instead of the last.
+- 974e9ea4: fix(@lion/ui): declare sideEffects in package.json
+
 ## 0.1.3
 
 ### Patch Changes
