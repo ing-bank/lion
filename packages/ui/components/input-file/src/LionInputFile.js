@@ -53,6 +53,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         type: String,
         attribute: 'allowed-file-types',
       },
+      accept: {
+        type: String,
+      },
       enableDropZone: {
         type: Boolean,
         attribute: 'enable-drop-zone',
@@ -61,7 +64,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         type: Number,
         attribute: 'max-file-size',
       },
-      fileUploadButtonLabel: { type: String, attribute: 'file-upload-button-label' },
       multiple: Boolean,
       uploadOnFormSubmit: {
         type: Boolean,
@@ -91,22 +93,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     return {
       ...super.slots,
       input: () => html`<input .value="${ifDefined(this.getAttribute('value'))}" />`,
-      // input: () => {
-      //   // TODO: Find a better way to do value delegation via attr
-      //   const input = document.createElement('input');
-      //   const value = this.getAttribute('value');
-      //   if (value) {
-      //     input.setAttribute('value', value);
-      //   }
-      //   return input;
-      // },
-      // 'file-upload-button': () => ({ template: html`
-      //   <button
-      //     id="${`upload-button-${this._inputId}`}"
-      //     type="button"
-      //     @click="${() => this._inputNode.click()}"
-      //   >${this.__fileUploadButtonLabel}</button>
-      // `}),
       'file-upload-button': () => {
         const button = document.createElement('button');
         button.setAttribute('id', `upload-button-${this._inputId}`);
@@ -198,9 +184,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     this.multiple = false;
     this.enableDropZone = false;
     this.maxFileSize = MAX_FILE_SIZE;
-    this.allowedFileTypes = '';
-    this.allowedFileExtensions = '';
-    this._hasUserProvidedFileUploadButtonLabel = '';
+    this.accept = '';
     /**
      * @type {InputFile[]}
      */
@@ -214,7 +198,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   connectedCallback() {
     super.connectedCallback();
-    this._hasUserProvidedFileUploadButtonLabel = this.fileUploadButtonLabel;
     this.__initialUploadResponse = this.uploadResponse;
 
     this._inputNode.addEventListener('change', this._onChange);
@@ -237,22 +220,28 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   onLocaleUpdated() {
     super.onLocaleUpdated();
-    if (!this._hasUserProvidedFileUploadButtonLabel) {
-      if (this.multiple) {
-        this.fileUploadButtonLabel = this.msgLit('lion-input-file:uploadTextMultipleFile');
-      } else {
-        this.fileUploadButtonLabel = this.msgLit('lion-input-file:uploadTextSingleFile');
-      }
+    if (this.multiple) {
+      // @ts-ignore
+      this.fileUploadButtonLabel = this.msgLit('lion-input-file:uploadTextMultipleFile');
+    } else {
+      // @ts-ignore
+      this.fileUploadButtonLabel = this.msgLit('lion-input-file:uploadTextSingleFile');
     }
   }
 
   get fileLimit() {
-    const { allowedFileTypes, allowedFileExtensions } = this;
+    /** @type {string[]} */
+    let allowedFileTypes = [];
+    /** @type {string[]} */
+    let allowedFileExtensions = [];
+    if (this.accept) {
+      const acceptedFiles = this.accept.replace(/\s+/g, '').replace(/\.+/g, '').split(',');
+      allowedFileTypes = acceptedFiles.filter(acceptedFile => acceptedFile.includes('/'));
+      allowedFileExtensions = acceptedFiles.filter(acceptedFile => !acceptedFile.includes('/'));
+    }
     return {
-      allowedFileTypes: allowedFileTypes ? allowedFileTypes.split(',') : [],
-      allowedFileExtensions: allowedFileExtensions
-        ? allowedFileExtensions.replace(/\s+/g, '').replace(/\.+/g, '').split(',')
-        : [],
+      allowedFileTypes,
+      allowedFileExtensions,
       maxFileSize: this.maxFileSize,
     };
   }
@@ -353,10 +342,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       this._inputNode.type = this.type;
       this._inputNode.setAttribute('tabindex', '-1');
       this._inputNode.multiple = this.multiple;
-      if (this.allowedFileExtensions?.length) {
-        this._inputNode.accept = this.allowedFileExtensions;
-      } else if (this.allowedFileTypes?.length) {
-        this._inputNode.accept = this.allowedFileTypes;
+      if (this.accept.length) {
+        this._inputNode.accept = this.accept;
       }
     }
 
@@ -682,14 +669,13 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     let arrayLength = 0;
     let lastItem;
 
-    if (this.allowedFileExtensions) {
+    if (allowedFileExtensions.length) {
       array = allowedFileExtensions;
       // eslint-disable-next-line no-return-assign
       array = array.map(item => (item = `.${item}`));
       lastItem = array.pop();
       arrayLength = array.length;
-    }
-    if (this.allowedFileTypes) {
+    } else if (allowedFileTypes.length) {
       allowedFileTypes.forEach(MIMETypes => {
         if (MIMETypes.endsWith('/*')) {
           array.push(MIMETypes.slice(0, -2));

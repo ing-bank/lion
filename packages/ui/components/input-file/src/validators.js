@@ -60,11 +60,6 @@ export class FileValidation extends Validator {
     let isInvalidType;
     let isInvalidFileExt;
     const { allowedFileTypes, allowedFileExtensions, maxFileSize } = params;
-    if (allowedFileTypes?.length && allowedFileExtensions?.length) {
-      throw new Error(
-        "You can't use both allowedFileTypes and allowedFileExtension properties. Please choose one.",
-      );
-    }
     if (allowedFileTypes && allowedFileTypes.length !== 0) {
       isInvalidType = modelValue.some(file => !this.isFileTypeAllowed(file.type, allowedFileTypes));
       return isInvalidType;

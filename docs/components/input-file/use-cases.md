@@ -25,7 +25,7 @@ API calls to upload the selected files can be done in below two ways which is dr
   label="Attachments"
   help-text="Signature scan file"
   max-file-size="1024000"
-  allowed-file-types="application/PDF"
+  accept="application/PDF"
   upload-on-form-submit
   .uploadResponse="${uploadResponse}"
 >
@@ -109,6 +109,9 @@ export const basicFileUpload = () => {
     <lion-input-file
       label="Label"
       max-file-size="1024000"
+      .accept2="${'.doc,.docx,.xml'}"
+      .accept1="${'application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'}"
+      .accept="${'.jpg,.svg,.xml,image/svg+xml'}"
       @file-list-changed="${ev => {
         console.log('fileList', ev.detail.newFiles);
       }}"
@@ -120,17 +123,17 @@ export const basicFileUpload = () => {
 
 ### Validation
 
-There is an option to check `allowedFileExtensions` instead of `allowedFileTypes`. You can only use one of them. Using both `allowedFileTypes` and `allowedFileExtensions` will throw an error.
+#### Accept
 
-#### Allowed File Types
+The `accept` attribute value is a string that defines the file types the file input should accept. This string is a comma-separated list of unique file type specifiers.
 
-A comma separated MIME types string. Refer to <https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types>. Can't be used together with `allowedFileExtensions` property.
+For more info please checkout: <https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept>.
 
 ```js preview-story
-export const typeValidator = () => {
+export const acceptValidator = () => {
   return html`
     <lion-input-file
-      .allowedFileTypes="${'image/svg+xml'}"
+      accept=".jpg,.svg,.xml,image/svg+xml"
       label="Upload"
       enable-drop-zone
       @file-list-changed="${ev => {
@@ -142,28 +145,9 @@ export const typeValidator = () => {
 };
 ```
 
-#### Extension
+#### Maximum File Size
 
-A comma separated extensions string. For example, `.pdf, .jpg, .png`. Can't be used together with `allowedFileTypes` property.
-
-```js preview-story
-export const extensionValidator = () => {
-  return html`
-    <lion-input-file
-      .allowedFileExtensions="${'.pdf, .jpg, .png'}"
-      label="Upload"
-      @file-list-changed="${ev => {
-        console.log(ev.detail.newFiles);
-      }}"
-    >
-    </lion-input-file>
-  `;
-};
-```
-
-#### Size
-
-Maximum file size in bytes.
+The `max-file-size` attribute sets the maximum file size in bytes.
 
 ```js preview-story
 export const sizeValidator = () => {

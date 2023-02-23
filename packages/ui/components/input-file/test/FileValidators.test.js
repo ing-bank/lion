@@ -33,19 +33,6 @@ describe('lion-input-file: FileValidation', () => {
       expect(returnVal).to.be.true;
     });
 
-    it('should throw if both allowedFileTypes and allowedFileExtensions are present', async () => {
-      const errorMessage =
-        "You can't use both allowedFileTypes and allowedFileExtension properties. Please choose one.";
-      expect(() => {
-        const fileTypeObj = new FileValidation();
-        // @ts-ignore ignore file typing
-        fileTypeObj.execute([{ name: 'foo.csv' }], {
-          allowedFileExtensions: ['.csv'],
-          allowedFileTypes: ['application/pdf'],
-        });
-      }).to.throw(Error, errorMessage);
-    });
-
     it('should return false for valid file type for single file', async () => {
       const fileTypeObj = new FileValidation();
       // @ts-ignore ignore file typing

@@ -21,6 +21,7 @@ const _mimicUploadFile = (
   /** @type {LionInputFile} */ formControl,
   /** @type {InputFile[]}  */ mockFiles,
 ) => {
+  // @ts-ignore [allow-protected-in-tests]
   formControl._uploadFiles(mockFiles);
   mockFiles.forEach(file => {
     // @ts-expect-error [allow-protected-in-tests]
@@ -82,6 +83,7 @@ describe('lion-input-file', () => {
 
   it('should upload 1 file', async () => {
     const el = await fixture(html`<lion-input-file></lion-input-file>`);
+    // @ts-ignore
     const uploadedFilesSpy = sinon.spy(el, '_uploadFiles');
 
     // @ts-ignore
@@ -151,7 +153,7 @@ describe('lion-input-file', () => {
 
     it('should not be added to the uploaded list', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Upload" allowed-file-types="text/plain"></lion-input-file>
+        <lion-input-file label="Upload" accept="text/plain"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -166,7 +168,7 @@ describe('lion-input-file', () => {
 
     it('error message should use main type when "/*" is used', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Upload" allowed-file-types="text/*"></lion-input-file>
+        <lion-input-file label="Upload" accept="text/*"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -179,7 +181,7 @@ describe('lion-input-file', () => {
 
     it('error message should use main type when "text/plain" is used', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Upload" allowed-file-types="text/plain"></lion-input-file>
+        <lion-input-file label="Upload" accept="text/plain"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -192,7 +194,7 @@ describe('lion-input-file', () => {
 
     it('error message should use sub type when e.g. "text/html" is used', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Upload" allowed-file-types="text/html"></lion-input-file>
+        <lion-input-file label="Upload" accept="text/html"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -205,7 +207,7 @@ describe('lion-input-file', () => {
 
     it('error message should use the first sub type when e.g. "image/svg+xml" is used', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Upload" allowed-file-types="image/svg+xml"></lion-input-file>
+        <lion-input-file label="Upload" accept="image/svg+xml"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -218,7 +220,7 @@ describe('lion-input-file', () => {
 
     it('can reflect multiple types in the error message', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Upload" allowed-file-types="text/html, text/csv"></lion-input-file>
+        <lion-input-file label="Upload" accept="text/html, text/csv"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -231,7 +233,7 @@ describe('lion-input-file', () => {
 
     it('can reflect multiple types in the error message also with a space " "', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Upload" allowed-file-types="text/html,text/csv"></lion-input-file>
+        <lion-input-file label="Upload" accept="text/html,text/csv"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -239,6 +241,19 @@ describe('lion-input-file', () => {
 
       el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
         expect(error.message).to.deep.equal('Please upload a .html or .csv file with max 500MB.');
+      });
+    });
+
+    it('can reflect multiple types in the error message with preference to extensions', async () => {
+      const el = await fixture(html`
+        <lion-input-file label="Upload" accept=".jpg,image/svg+xml"></lion-input-file>
+      `);
+
+      _mimicUploadFile(el, [fileWrongType]);
+      await el.updateComplete;
+
+      el._uploadedFilesMetaData[0].validationFeedback?.forEach(error => {
+        expect(error.message).to.deep.equal('Please upload a(n) .jpg file with max 500MB.');
       });
     });
   });
@@ -252,10 +267,7 @@ describe('lion-input-file', () => {
 
     it('should not be added to the uploaded list', async () => {
       const el = await fixture(html`
-        <lion-input-file
-          label="Upload"
-          allowed-file-extensions=".jpg, .png, .pdf"
-        ></lion-input-file>
+        <lion-input-file label="Upload" accept=".jpg, .png, .pdf"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -270,7 +282,7 @@ describe('lion-input-file', () => {
 
     it('error message should add the file extension to the validator message', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Upload" allowed-file-extensions=".jpg"></lion-input-file>
+        <lion-input-file label="Upload" accept=".jpg"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -283,10 +295,7 @@ describe('lion-input-file', () => {
 
     it('error message should add all file extensions to the validator message', async () => {
       const el = await fixture(html`
-        <lion-input-file
-          label="Upload"
-          allowed-file-extensions=".jpg, .png, .pdf"
-        ></lion-input-file>
+        <lion-input-file label="Upload" accept=".jpg, .png, .pdf"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -299,7 +308,7 @@ describe('lion-input-file', () => {
 
     it('error message should add all file extensions to the validator message also works without spaces " "', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Upload" allowed-file-extensions=".jpg,.png,.pdf"></lion-input-file>
+        <lion-input-file label="Upload" accept=".jpg,.png,.pdf"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -312,7 +321,7 @@ describe('lion-input-file', () => {
 
     it('error message should add all file extensions to the validator message also works without dots "."', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Upload" allowed-file-extensions="jpg, png, pdf"></lion-input-file>
+        <lion-input-file label="Upload" accept="jpg, png, pdf"></lion-input-file>
       `);
 
       _mimicUploadFile(el, [fileWrongType]);
@@ -359,7 +368,7 @@ describe('lion-input-file', () => {
         <lion-input-file
           label="Upload"
           max-file-size="2"
-          allowed-file-extensions=".jpg, .png, .pdf"
+          accept=".jpg, .png, .pdf"
         ></lion-input-file>
       `);
 
@@ -583,7 +592,7 @@ describe('lion-input-file', () => {
      */
     let el;
     beforeEach(async () => {
-      el = await fixture(html`<lion-input-file allowed-file-types="text/plain"></lion-input-file>`);
+      el = await fixture(html`<lion-input-file accept="text/plain"></lion-input-file>`);
     });
 
     it('should set uploadResponse data to _uploadedFilesMetaData for rendering error and status', async () => {
@@ -604,7 +613,7 @@ describe('lion-input-file', () => {
           type: 'application/pdf',
         })
       );
-
+      // @ts-ignore
       const fileListChangedSpy = sinon.spy(el, '_dispatchFileListChangeEvent');
 
       _mimicUploadFile(el, [filePdf]);
@@ -753,7 +762,7 @@ describe('lion-input-file', () => {
         systemFile: { name: 'file2.txt' },
         response: { name: 'file2.txt', status: 'FAIL' },
       };
-
+      // @ts-ignore
       const removeFileSpy = sinon.spy(el, '_removeFile');
 
       // assertion for displayed file list to be same
@@ -867,6 +876,7 @@ describe('lion-input-file', () => {
       // @ts-ignore
       list.items.add(file);
       const droppedFiles = list.files;
+      // @ts-ignore
       const uploadFilesSpy = sinon.spy(el, '_uploadFiles');
       await el.uploadDroppedFiles({
         // @ts-ignore
@@ -1055,6 +1065,7 @@ describe('lion-input-file', () => {
           `feedback-${el._inputId}`,
         );
         await el.updateComplete;
+        // @ts-ignore [allow-protected-in-tests]
         expect(el._fileUploadButtonNode?.getAttribute('aria-describedby')).to.contain(
           // @ts-ignore [allow-protected-in-tests]
           `uploaded-file-list-${el._inputId}`,
