@@ -1,0 +1,8 @@
+{
+  "plugins": [
+    "prettier-plugin-jsdoc",
+    "prettier-plugin-css-order",
+    "prettier-plugin-organize-attributes",
+    "prettier-plugin-import-sort"
+  ]
+}
