@@ -856,6 +856,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       ...withDropdownConfig(),
       elementToFocusAfterHide: undefined,
       invokerNode: this._comboboxNode,
+      visibilityTriggerFunction: undefined,
     });
   }
 

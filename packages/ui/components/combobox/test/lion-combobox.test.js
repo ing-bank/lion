@@ -670,6 +670,25 @@ describe('lion-combobox', () => {
       expect(el.checkedIndex).to.equal(-1);
     });
 
+    it('has the correct Overlay Config defined', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" .showAllOnEmpty="${true}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      // @ts-ignore [allow-protected] in test
+      expect(el._defineOverlayConfig().elementToFocusAfterHide).to.equal(undefined);
+      // @ts-ignore [allow-protected] in test
+      expect(el._defineOverlayConfig().invokerNode).to.equal(el._inputNode);
+      // @ts-ignore [allow-protected] in test
+      expect(el._defineOverlayConfig().visibilityTriggerFunction).to.equal(undefined);
+    });
+
     // NB: If this becomes a suite, move to separate file
     describe('Subclassers', () => {
       it('allows to control overlay visibility via "_showOverlayCondition"', async () => {
