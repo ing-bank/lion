@@ -17,6 +17,7 @@
       "default": "./exports/*"
     },
     "./calendar-translations/*": "./components/calendar/translations/*",
+    "./combobox-translations/*": "./components/combobox/translations/*",
     "./pagination-translations/*": "./components/pagination/translations/*",
     "./progress-indicator-translations/*": "./components/progress-indicator/translations/*",
     "./input-datepicker-translations/*": "./components/input-datepicker/translations/*",

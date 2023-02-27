@@ -899,8 +899,26 @@ describe('lion-combobox', () => {
 
         expect(el.checkedIndex).to.equal(-1);
         await el.feedbackComplete;
-        expect(el.hasFeedbackFor).to.include('error');
-        expect(el.showsFeedbackFor).to.include('error');
+        expect(el.hasFeedbackFor).to.include('error', 'hasFeedbackFor');
+        await el.feedbackComplete;
+        expect(el.showsFeedbackFor).to.include('error', 'showsFeedbackFor');
+      });
+
+      it('dropdown has a label', async () => {
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" .validators=${[new Required()]}>
+              <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
+        const { _overlayCtrl } = getComboboxMembers(el);
+        expect(_overlayCtrl.contentWrapperNode.getAttribute('aria-label')).to.equal(
+          'Combobox options popup',
+        );
       });
     });
   });
@@ -1361,6 +1379,7 @@ describe('lion-combobox', () => {
         `)
       );
       const { _inputNode } = getComboboxMembers(el);
+      await el.updateComplete;
       expect(_inputNode.value).to.equal('');
 
       /**
@@ -1375,9 +1394,10 @@ describe('lion-combobox', () => {
         await el.updateComplete;
         el.autocomplete = autocomplete;
         el.setCheckedIndex(index);
+        await el.updateComplete;
         el.opened = false;
         await el.updateComplete;
-        expect(_inputNode.value).to.equal(valueOnClose);
+        expect(_inputNode.value).to.equal(valueOnClose, autocomplete);
       }
 
       await performChecks('none', 0, 'Artichoke');
@@ -2049,6 +2069,8 @@ describe('lion-combobox', () => {
           const { _inputNode } = getComboboxMembers(el);
 
           async function performChecks() {
+            await el.updateComplete;
+
             el.formElements[0].click();
             await el.updateComplete;
 
