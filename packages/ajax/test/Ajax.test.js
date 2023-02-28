@@ -166,6 +166,23 @@ describe('Ajax', () => {
       expect(response.body).to.eql('!@#$');
     });
 
+    it('tries to parse Response body as JSON if the content-type header is missing', async () => {
+      fetchStub.restore();
+      fetchStub = stub(window, 'fetch');
+      fetchStub.callsFake(() => {
+        const resp = new Response('{"a":1,"b":2}', {
+          headers: {
+            // eslint-disable-next-line no-plusplus
+            'x-request-id': `${responseId++}`,
+          },
+        });
+        resp.headers.delete('content-type');
+        return Promise.resolve(resp);
+      });
+      const response = await ajax.fetchJson('/foo');
+      expect(response.body).to.eql({ a: 1, b: 2 });
+    });
+
     describe('given a request body', () => {
       it('encodes the request body as json', async () => {
         await ajax.fetchJson('/foo', { method: 'POST', body: { a: 1, b: 2 } });
