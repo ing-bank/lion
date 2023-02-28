@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.3
+
+### Patch Changes
+
+- 63bb012e: fetchJSON will try to parse Response body as JSON if the content-type headers are missing, in this case it will assume JSON.
+
 ## 1.1.2
 
 ### Patch Changes
