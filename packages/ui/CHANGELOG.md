@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.1.5
+
+### Patch Changes
+
+- 943618fd: [combobox] fix direct open and closing of the overlay on focus of empty input when `showAllOnEmpty`
+- 4226a014: [combobox] add translations
+
 ## 0.1.4
 
 ### Patch Changes
