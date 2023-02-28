@@ -193,7 +193,10 @@ export class Ajax {
 
     /** @type {any} */
     let body = responseText;
-    if (response.headers.get('content-type')?.includes('json')) {
+    if (
+      !response.headers.get('content-type') ||
+      response.headers.get('content-type')?.includes('json')
+    ) {
       try {
         body = JSON.parse(responseText);
       } catch (error) {
