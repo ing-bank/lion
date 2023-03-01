@@ -1453,7 +1453,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             )}
           </${tag}>
         `);
-        el.checkedIndex = 0;
+        el.setCheckedIndex(0);
         expect(el.modelValue).to.deep.equal({
           type: 'mastercard',
           label: 'Master Card',
@@ -1461,7 +1461,7 @@ export function runListboxMixinSuite(customConfig = {}) {
           active: true,
         });
 
-        el.checkedIndex = 1;
+        el.setCheckedIndex(1);
         expect(el.modelValue).to.deep.equal({
           type: 'visacard',
           label: 'Visa Card',

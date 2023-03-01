@@ -1,9 +1,10 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from 'lit';
-import { FormControlHost } from '../FormControlMixinTypes.js';
 import { FormControl } from '../form-group/FormGroupMixinTypes.js';
-import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes.js';
+import { FormControlHost } from '../FormControlMixinTypes.js';
 import { InteractionStateHost } from '../InteractionStateMixinTypes.js';
+import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes.js';
+import { ChoiceInputHost } from './ChoiceInputMixinTypes.js';
 
 export declare class ChoiceGroupHost {
   multipleChoice: boolean;
@@ -26,7 +27,7 @@ export declare class ChoiceGroupHost {
   protected _throwWhenInvalidChildModelValue(child: FormControlHost): void;
   protected _isEmpty(): void;
   protected _checkSingleChoiceElements(ev: Event): void;
-  protected _getCheckedElements(): void;
+  protected _getCheckedElements(): ChoiceInputHost[];
   protected _setCheckedElements(value: any, check: boolean): void;
   protected _onBeforeRepropagateChildrenValues(ev: Event): void;
 

@@ -19,6 +19,8 @@ export default {
       'Уведіть значення {fieldName} між {params.min, date, YYYYMMDD} та {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Ця дата недоступна, виберіть іншу.',
     IsEmail: 'Уведіть допустиме значення {fieldName} у форматі name@example.com.',
+    IsMatchingAnOption:
+      'Не знайдено відповідних результатів. Спробуйте інше ключове слово чи категорію.',
   },
   warning: {
     Required: 'Уведіть також значення {fieldName}.',
@@ -39,6 +41,8 @@ export default {
       'Уведіть значення {fieldName} між {params.min, date, YYYYMMDD} та {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Ця дата недоступна, виберіть іншу.',
     IsEmail: 'Уведіть допустиме значення {fieldName} у форматі name@example.com.',
+    IsMatchingAnOption:
+      'Не знайдено відповідних результатів. Спробуйте інше ключове слово чи категорію.',
   },
   success: {
     DefaultOk: 'Добре',

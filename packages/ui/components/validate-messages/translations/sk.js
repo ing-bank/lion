@@ -17,6 +17,7 @@ export default {
       'Uveďte {fieldName} od {params.min, date, YYYYMMDD} do {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Tento dátum je nedostupný, vyberte iný.',
     IsEmail: 'Uveďte platnú položku {fieldName} vo formáte „meno@príklad.com“.',
+    IsMatchingAnOption: 'Žiadne vyhovujúce výsledky. Skúste iné kľúčové slovo alebo kategóriu.',
   },
   warning: {
     Required: 'Uveďte aj {fieldName}.',
@@ -35,6 +36,7 @@ export default {
       'Uveďte {fieldName} od {params.min, date, YYYYMMDD} do {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Tento dátum je nedostupný, vyberte iný.',
     IsEmail: 'Uveďte platnú položku {fieldName} vo formáte „meno@príklad.com“.',
+    IsMatchingAnOption: 'Žiadne vyhovujúce výsledky. Skúste iné kľúčové slovo alebo kategóriu.',
   },
   success: {
     DefaultOk: 'Dobre',

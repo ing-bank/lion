@@ -18,6 +18,8 @@ export default {
       'Introduzca un/a {fieldName} entre {params.min, date, YYYYMMDD} y {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Esta fecha no está disponible. Elija otra.',
     IsEmail: 'Introduzca un/a {fieldName} válido/a con el formato "nombre@ejemplo.com".',
+    IsMatchingAnOption:
+      'No hay resultados que coincidan. Pruebe con una palabra clave o categoría diferente.',
   },
   warning: {
     Required: 'Introduzca también un/a {fieldName}.',
@@ -37,6 +39,8 @@ export default {
       'Introduzca un/a {fieldName} entre {params.min, date, YYYYMMDD} y {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Esta fecha no está disponible. Elija otra.',
     IsEmail: 'Introduzca un/a {fieldName} válido/a con el formato "nombre@ejemplo.com".',
+    IsMatchingAnOption:
+      'No hay resultados que coincidan. Pruebe con una palabra clave o categoría diferente.',
   },
   success: {
     DefaultOk: 'Vale',
