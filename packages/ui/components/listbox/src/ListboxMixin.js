@@ -635,6 +635,9 @@ const ListboxMixinImplementation = superclass =>
           }
           break;
         case 'ArrowLeft':
+          if (this._listboxReceivesNoFocus) {
+            return;
+          }
           ev.preventDefault();
           if (this.orientation === 'horizontal') {
             this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
@@ -647,6 +650,9 @@ const ListboxMixinImplementation = superclass =>
           }
           break;
         case 'ArrowRight':
+          if (this._listboxReceivesNoFocus) {
+            return;
+          }
           ev.preventDefault();
           if (this.orientation === 'horizontal') {
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
