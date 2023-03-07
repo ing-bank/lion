@@ -1,6 +1,5 @@
 /**
  * @typedef {import('lit-html').nothing} nothing
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 export class IconManager {

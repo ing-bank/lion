@@ -397,7 +397,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
   /**
    * @param {string} [name]
    * @param {unknown} [oldValue]
-   * @param {import('lit').PropertyDeclaration} [options]
+   * @param {PropertyDeclaration} [options]
    * @returns {void}
    */
   requestUpdate(name, oldValue, options) {
@@ -438,7 +438,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
   }
 
   /**
-   * @param {import('lit').PropertyValues } changedProperties
+   * @param {PropertyValues} changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

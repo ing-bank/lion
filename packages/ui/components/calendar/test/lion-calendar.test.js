@@ -7,12 +7,10 @@ import '@lion/ui/define/lion-calendar.js';
 import { isSameDate } from '@lion/ui/calendar.js';
 import { CalendarObject, DayObject } from '@lion/ui/calendar-test-helpers.js';
 
-/**
- * @typedef {import('../src/LionCalendar.js').LionCalendar} LionCalendar
- * @typedef {import('lit').TemplateResult} TemplateResult
- */
-
-const fixture = /** @type {(arg: TemplateResult) => Promise<LionCalendar>} */ (_fixture);
+const fixture =
+  /** @type {(arg: TemplateResult) => Promise<import('../src/LionCalendar.js').LionCalendar>} */ (
+    _fixture
+  );
 
 describe('<lion-calendar>', () => {
   const localizeManager = getLocalizeManager();

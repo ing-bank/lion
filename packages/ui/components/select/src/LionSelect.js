@@ -76,7 +76,7 @@ export class LionSelect extends LionFieldWithSelect {
     });
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('disabled')) {

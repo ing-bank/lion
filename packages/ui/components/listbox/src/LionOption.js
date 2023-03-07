@@ -3,7 +3,6 @@ import { ChoiceInputMixin, FormRegisteringMixin } from '@lion/ui/form-core.js';
 import { DisabledMixin, SlotMixin } from '@lion/ui/core.js';
 
 /**
- * @typedef {import('lit').TemplateResult } TemplateResult
  * @typedef {import('../../form-core/types/choice-group/ChoiceGroupMixinTypes.js').ChoiceGroupHost } ChoiceGroupHost
  * @typedef {import('../types/LionOption.js').LionOptionHost } LionOptionHost
  */
@@ -80,7 +79,7 @@ export class LionOption extends DisabledMixin(
   /**
    * @param {string} [name]
    * @param {unknown} [oldValue]
-   * @param {import('lit').PropertyDeclaration} [options]
+   * @param {PropertyDeclaration} [options]
    * @returns {void}
    */
   requestUpdate(name, oldValue, options) {
@@ -92,7 +91,7 @@ export class LionOption extends DisabledMixin(
   }
 
   /**
-   * @param {import('lit').PropertyValues } changedProperties
+   * @param {PropertyValues} changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

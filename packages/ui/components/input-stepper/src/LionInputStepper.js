@@ -3,10 +3,6 @@ import { LionInput } from '@lion/ui/input.js';
 import { IsNumber, MinNumber, MaxNumber } from '@lion/ui/form-core.js';
 
 /**
- * @typedef {import('lit').RenderOptions} RenderOptions
- */
-
-/**
  * `LionInputStepper` is a class for custom input-stepper element (`<lion-input-stepper>` web component).
  *
  * @customElement lion-input-stepper
@@ -93,7 +89,7 @@ export class LionInputStepper extends LionInput {
     this.removeEventListener('keydown', this.__keyDownHandler);
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
 
@@ -272,7 +268,7 @@ export class LionInputStepper extends LionInput {
 
   /**
    * Get the decrementor button sign template
-   * @returns {String|import('lit').TemplateResult}
+   * @returns {String|TemplateResult}
    * @protected
    */
   // eslint-disable-next-line class-methods-use-this
@@ -282,7 +278,7 @@ export class LionInputStepper extends LionInput {
 
   /**
    * Get the incrementor button sign template
-   * @returns {String|import('lit').TemplateResult}
+   * @returns {String|TemplateResult}
    * @protected
    */
   // eslint-disable-next-line class-methods-use-this
@@ -292,7 +288,7 @@ export class LionInputStepper extends LionInput {
 
   /**
    * Get the increment button template
-   * @returns {import('lit').TemplateResult}
+   * @returns {TemplateResult}
    * @protected
    */
   _decrementorTemplate() {
@@ -312,7 +308,7 @@ export class LionInputStepper extends LionInput {
 
   /**
    * Get the decrement button template
-   * @returns {import('lit').TemplateResult}
+   * @returns {TemplateResult}
    * @protected
    */
   _incrementorTemplate() {

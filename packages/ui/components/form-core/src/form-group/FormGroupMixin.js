@@ -27,7 +27,7 @@ import { FormElementsHaveNoError } from './FormElementsHaveNoError.js';
  * children via formElements and the automatic grouping of formElements via '[]').
  *
  * @type {FormGroupMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const FormGroupMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -199,7 +199,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit').PropertyValues } changedProperties
+     * @param {PropertyValues} changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

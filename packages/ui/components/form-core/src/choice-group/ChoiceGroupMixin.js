@@ -18,7 +18,7 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  * children events, like in FormGroups
  *
  * @type {ChoiceGroupMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const ChoiceGroupMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -166,7 +166,7 @@ const ChoiceGroupMixinImplementation = superclass =>
       Promise.resolve().then(() => super._completeRegistration());
     }
 
-    /** @param {import('lit').PropertyValues} changedProperties */
+    /** @param {PropertyValues} changedProperties */
     updated(changedProperties) {
       super.updated(changedProperties);
       if (changedProperties.has('name') && this.name !== changedProperties.get('name')) {

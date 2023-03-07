@@ -163,7 +163,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   /**
    * @param {string} [name]
    * @param {unknown} [oldValue]
-   * @param {import('lit').PropertyDeclaration} [options]
+   * @param {PropertyDeclaration} [options]
    * @returns {void}
    */
   requestUpdate(name, oldValue, options) {
@@ -183,7 +183,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
-   * @param {import('lit').PropertyValues } changedProperties
+   * @param {PropertyValues} changedProperties
    */
   updated(changedProperties) {
     super.updated(changedProperties);

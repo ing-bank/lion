@@ -21,7 +21,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * Whenever the implementation of `requestUpdate` changes (this happened in the past for
  * `requestUpdate`) we only have to change our abstraction instead of all our components
  * @type {SyncUpdatableMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const SyncUpdatableMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -95,7 +95,7 @@ const SyncUpdatableMixinImplementation = superclass =>
     /**
      * @param {string} [name]
      * @param {unknown} [oldValue]
-     * @param {import('lit').PropertyDeclaration} [options]
+     * @param {PropertyDeclaration} [options]
      * @returns {void}
      */
     requestUpdate(name, oldValue, options) {

@@ -10,7 +10,7 @@ import { isEqualConfig } from './utils/is-equal-config.js';
 
 /**
  * @type {OverlayMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 export const OverlayMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
@@ -59,7 +59,7 @@ export const OverlayMixinImplementation = superclass =>
     /**
      * @param {string} [name]
      * @param {unknown} [oldValue]
-     * @param {import('lit').PropertyDeclaration} [options]
+     * @param {PropertyDeclaration} [options]
      * @returns {void}
      */
     requestUpdate(name, oldValue, options) {
@@ -114,7 +114,7 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     /**
-     * @param {import('lit').PropertyValues } changedProperties
+     * @param {PropertyValues} changedProperties
      */
     updated(changedProperties) {
       super.updated(changedProperties);

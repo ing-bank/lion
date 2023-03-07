@@ -17,7 +17,7 @@ function applyFocusVisiblePolyfillWhenNeeded(node) {
 /**
  * @typedef {import('../types/FocusMixinTypes.js').FocusMixin} FocusMixin
  * @type {FocusMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const FocusMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051

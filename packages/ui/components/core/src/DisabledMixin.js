@@ -6,7 +6,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
  * @type {DisabledMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const DisabledMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow
@@ -60,7 +60,7 @@ const DisabledMixinImplementation = superclass =>
     /**
      * @param {string} [name]
      * @param {unknown} [oldValue]
-     * @param {import('lit').PropertyDeclaration} [options]
+     * @param {PropertyDeclaration} [options]
      * @returns {void}
      */
     requestUpdate(name, oldValue, options) {

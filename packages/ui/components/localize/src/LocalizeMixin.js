@@ -12,7 +12,7 @@ import { getLocalizeManager } from './getLocalizeManager.js';
 /**
  * # LocalizeMixin - for self managed templates
  * @type {LocalizeMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 const LocalizeMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051

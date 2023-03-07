@@ -8,7 +8,6 @@ import sinon from 'sinon';
 /**
  * @typedef {import('../../input/src/LionInput.js').LionInput} LionInput
  * @typedef {import('../../fieldset/src/LionFieldset.js').LionFieldset} LionFieldset
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const inputFixture = /** @type {(arg: TemplateResult) => Promise<LionInput>} */ (fixture);
 const fieldsetFixture = /** @type {(arg: TemplateResult) => Promise<LionFieldset>} */ (fixture);

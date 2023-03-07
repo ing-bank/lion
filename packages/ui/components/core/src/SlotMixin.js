@@ -8,7 +8,6 @@ import { isTemplateResult } from 'lit/directive-helpers.js';
  * @typedef {import('../types/SlotMixinTypes.js').SlotsMap} SlotsMap
  * @typedef {import('../types/SlotMixinTypes.js').SlotFunctionResult} SlotFunctionResult
  * @typedef {import('../types/SlotMixinTypes.js').SlotRerenderObject} SlotRerenderObject
- * @typedef {import('lit').LitElement} LitElement
  */
 
 const isRerenderConfig = (/** @type {SlotFunctionResult} */ o) =>
@@ -107,7 +106,7 @@ const SlotMixinImplementation = superclass =>
     /**
      * @private
      * @param {object} opts
-     * @param {import('lit').TemplateResult} opts.template
+     * @param {TemplateResult} opts.template
      * @param {string} opts.slotName
      * @param {boolean} [opts.shouldRerender] false when TemplateResult, true when SlotRerenderObject
      */

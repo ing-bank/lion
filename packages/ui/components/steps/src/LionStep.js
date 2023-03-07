@@ -89,7 +89,7 @@ export class LionStep extends LitElement {
     return html`<slot></slot>`;
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.controller = /** @type {LionSteps} */ (this.parentNode);

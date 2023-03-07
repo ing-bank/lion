@@ -5,7 +5,6 @@ import '@lion/ui/define/lion-switch-button.js';
 
 /**
  * @typedef {import('../src/LionSwitchButton.js').LionSwitchButton} LionSwitchButton
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionSwitchButton>} */ (_fixture);

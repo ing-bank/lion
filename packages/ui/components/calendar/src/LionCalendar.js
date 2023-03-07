@@ -307,7 +307,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     }
   }
 
-  /** @param {import('lit').PropertyValues } changedProperties */
+  /** @param {PropertyValues} changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
     if (changedProperties.has('__focusedDate') && this.__focusedDate) {
@@ -318,7 +318,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   /**
    * @param {string} [name]
    * @param {unknown} [oldValue]
-   * @param {import('lit').PropertyDeclaration} [options]
+   * @param {PropertyDeclaration} [options]
    * @returns {void}
    */
   requestUpdate(name, oldValue, options) {

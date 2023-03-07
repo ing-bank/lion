@@ -25,7 +25,7 @@ describe('SyncUpdatableMixin', () => {
           this.propB = 'init-b';
         }
 
-        /** @param {import('lit').PropertyValues } changedProperties */
+        /** @param {PropertyValues} changedProperties */
         firstUpdated(changedProperties) {
           super.firstUpdated(changedProperties);
           hasCalledFirstUpdated = true;
@@ -149,7 +149,7 @@ describe('SyncUpdatableMixin', () => {
         /**
          * @param {string} [name]
          * @param {unknown} [oldValue]
-         * @param {import('lit').PropertyDeclaration} [options]
+         * @param {PropertyDeclaration} [options]
          * @returns {void}
          */
         requestUpdate(name, oldValue, options) {

@@ -8,7 +8,6 @@ import '@lion/ui/define/lion-input-date.js';
 
 /**
  * @typedef {import('../src/LionInputDate.js').LionInputDate} LionInputDate
- * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionInputDate>} */ (_fixture);
 

@@ -7,12 +7,11 @@ import { OverlayMixin } from './OverlayMixin.js';
  * @typedef {import('../types/ArrowMixinTypes.js').ArrowMixin} ArrowMixin
  * @typedef {import('@popperjs/core/lib/popper.js').Options} PopperOptions
  * @typedef {import('@popperjs/core/lib/enums.js').Placement} Placement
- * @typedef {import('lit').CSSResultArray} CSSResultArray
  */
 
 /**
  * @type {ArrowMixin}
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<LitElement>} superclass
  */
 export const ArrowMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051

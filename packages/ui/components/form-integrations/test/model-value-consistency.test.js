@@ -32,7 +32,6 @@ import '@lion/ui/define/lion-validation-feedback.js';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 
 /**
- * @typedef {import('lit').LitElement} LitElement
  * @typedef {import('../../form-core/src/LionField.js').LionField} LionField
  * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost & LitElement & {__parentFormGroup?: HTMLElement, checked?: boolean, disabled: boolean, hasFeedbackFor: string[], makeRequestToBeDisabled: Function }} FormControl
  * @typedef {import('../../input/src/LionInput.js').LionInput} LionInput

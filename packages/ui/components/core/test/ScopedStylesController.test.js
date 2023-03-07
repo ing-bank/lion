@@ -6,8 +6,8 @@ import { ScopedStylesController } from '@lion/ui/core.js';
 describe('ScopedStylesMixin', () => {
   class Scoped extends LitElement {
     /**
-     * @param {import('lit').CSSResult} scope
-     * @returns {import('lit').CSSResultGroup}
+     * @param {CSSResult} scope
+     * @returns {CSSResultGroup}
      */
     static scopedStyles(scope) {
       return css`

@@ -1,14 +1,12 @@
 import { unsafeCSS, css } from 'lit';
 
 /**
- * @typedef {import('lit').ReactiveControllerHost} ReactiveControllerHost
- * @typedef {import('lit').ReactiveController} ReactiveController
  * @implements {ReactiveController}
  */
 export class ScopedStylesController {
   /**
-   * @param {import('lit').CSSResult} scope
-   * @return {import('lit').CSSResultGroup}
+   * @param {CSSResult} scope
+   * @return {CSSResultGroup}
    */
   // eslint-disable-next-line no-unused-vars
   static scopedStyles(scope) {
@@ -16,7 +14,7 @@ export class ScopedStylesController {
   }
 
   /**
-   * @param {ReactiveControllerHost & import('lit').LitElement} host
+   * @param {ReactiveControllerHost & LitElement} host
    */
   constructor(host) {
     (this.host = host).addController(this);

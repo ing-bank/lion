@@ -3,8 +3,6 @@ import { ArrowMixin, OverlayMixin, withTooltipConfig } from '@lion/ui/overlays.j
 
 /**
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
- * @typedef {import('lit').CSSResult} CSSResult
- * @typedef {import('lit').CSSResultArray} CSSResultArray
  */
 
 /**

@@ -10,7 +10,6 @@ import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-select-rich.js';
 
 /**
- * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {HTMLSelectElement|HTMLElement & {modelValue:string}} DropdownElement
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
  * @typedef {import('../types/index.js').RegionMeta} RegionMeta

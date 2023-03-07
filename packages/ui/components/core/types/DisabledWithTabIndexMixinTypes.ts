@@ -1,5 +1,5 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { LitElement } from 'lit';
+import { LitElement, PropertyValues } from 'lit';
 import { DisabledHost } from './DisabledMixinTypes.js';
 export declare class DisabledWithTabIndexHost {
   tabIndex: number;
@@ -15,7 +15,7 @@ export declare class DisabledWithTabIndexHost {
 
   private __internalSetTabIndex(value: boolean): void;
 
-  firstUpdated(changedProperties: import('lit').PropertyValues): void;
+  firstUpdated(changedProperties: PropertyValues): void;
 }
 
 export declare function DisabledWithTabIndexMixinImplementation<T extends Constructor<LitElement>>(
