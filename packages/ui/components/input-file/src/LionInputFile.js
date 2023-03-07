@@ -696,15 +696,26 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       lastItem = array.pop();
       arrayLength = array.length;
     }
+    let message = '';
+    if (!lastItem) {
+      message = `${this.msgLit('lion-input-file:allowedFileSize', {
+        maxSize: formatBytes(this.maxFileSize),
+      })}`;
+    } else if (!arrayLength) {
+      message = `${this.msgLit('lion-input-file:allowedFileValidatorSimple', {
+        allowedType: lastItem,
+        maxSize: formatBytes(this.maxFileSize),
+      })}`;
+    } else {
+      message = `${this.msgLit('lion-input-file:allowedFileValidatorComplex', {
+        allowedTypesArray: array.join(', '),
+        allowedTypesLastItem: lastItem,
+        maxSize: formatBytes(this.maxFileSize),
+      })}`;
+    }
 
     const errorObj = {
-      message: `${this.msgLit('lion-input-file:allowedFileValidator', {
-        hasAllowedTypes: !!lastItem,
-        allowedTypesArrayLength: arrayLength,
-        allowedTypesArray: array.join(', ') || '',
-        allowedTypesLastItem: lastItem || '',
-        maxSize: formatBytes(this.maxFileSize),
-      })}`,
+      message,
       type: 'error',
     };
     fileObj.validationFeedback?.push(errorObj);

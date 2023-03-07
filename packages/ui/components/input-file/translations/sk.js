@@ -1,9 +1,12 @@
 export default {
-  allowedFileSize: 'Nahrajte súbor, ktorý nie je väčší ako {params}.',
-  allowedFileType: 'Iba nahrávanie {params}.',
-  dragAndDropText: 'Drag & Drop your files here or',
-  removeButtonLabel: 'Remove file',
-  uploadTextDuplicateFileName: 'A file with same filename was already present.',
+  allowedFileSize: 'Nahrajte súbor s maximálnou veľkosťou {maxSize}.',
+  allowedFileValidatorSimple: 'Nahrajte súbor {allowedType} s maximálnou veľkosťou {maxSize}.',
+  allowedFileValidatorComplex:
+    'Nahrajte súbor {allowedTypesArray} alebo {allowedTypesLastItem} s maximálnou veľkosťou {maxSize}.',
+  dragAndDropText: 'Súbory presuňte sem alebo',
+  fileNameDescriptionLabel: 'Názov súboru: {fileName}',
+  removeButtonLabel: 'Odstrániť súbor {fileName}',
+  uploadTextDuplicateFileName: 'Súbor s rovnakým názvom súboru už existoval.',
   uploadTextMultipleFile: 'Vybrať súbory',
   uploadTextSingleFile: 'Vybrať súbor',
 };

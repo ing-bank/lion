@@ -1,9 +1,12 @@
 export default {
-  allowedFileSize: 'Încărcați un fișier care nu depășește {params}.',
-  allowedFileType: 'Numai încărcare {params}.',
-  dragAndDropText: 'Drag & Drop your files here or',
-  removeButtonLabel: 'Remove file',
-  uploadTextDuplicateFileName: 'A file with same filename was already present.',
+  allowedFileSize: 'Încărcaţi un fişier de max. {maxSize}.',
+  allowedFileValidatorSimple: 'Încărcaţi un fişier {allowedType} de max. {maxSize}.',
+  allowedFileValidatorComplex:
+    'Încărcaţi un fişier {allowedTypesArray} sau {allowedTypesLastItem} de max. {maxSize}.',
+  dragAndDropText: 'Glisaţi şi fixaţi fişierele aici sau',
+  fileNameDescriptionLabel: 'Nume fişier: {fileName}',
+  removeButtonLabel: 'Eliminaţi fişierul {filename}',
+  uploadTextDuplicateFileName: 'Există deja un fişier cu acelaşi nume de fişier.',
   uploadTextMultipleFile: 'Selectare fișiere',
   uploadTextSingleFile: 'Selectare fișier',
 };

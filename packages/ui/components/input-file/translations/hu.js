@@ -1,9 +1,12 @@
 export default {
-  allowedFileSize: 'Legfeljebb {params} méretű fájlt tölthet fel.',
-  allowedFileType: 'Csak ilyen típusú fájl feltöltése {params}.',
-  dragAndDropText: 'Drag & Drop your files here or',
-  removeButtonLabel: 'Remove file',
-  uploadTextDuplicateFileName: 'A file with same filename was already present.',
+  allowedFileSize: 'Töltsön fel egy legfeljebb {maxSize} méretű fájlt.',
+  allowedFileValidatorSimple: 'Töltsön fel egy legfeljebb {maxSize} méretű {allowedType} fájlt.',
+  allowedFileValidatorComplex:
+    'Töltsön fel egy legfeljebb {maxSize} méretű {allowedTypesArray} vagy {allowedTypesLastItem} fájlt.',
+  dragAndDropText: 'Húzza át a fájlokat ide vagy',
+  fileNameDescriptionLabel: 'Fájlnév: {fileName}',
+  removeButtonLabel: 'A(z) {fileName} fájl eltávolítása',
+  uploadTextDuplicateFileName: 'Már volt ilyen nevű fájl.',
   uploadTextMultipleFile: 'Fájl(ok) kiválasztása',
   uploadTextSingleFile: 'Fájl kiválasztása',
 };
