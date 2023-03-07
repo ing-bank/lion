@@ -861,6 +861,7 @@ export function runListboxMixinSuite(customConfig = {}) {
           mimicKeyPress(_listboxNode, 'End');
           expect(el.activeIndex).to.equal(3);
         });
+
         it('navigates through open lists with [ArrowDown] [ArrowUp] keys activates the option', async () => {
           const el = /** @type {LionListbox} */ (
             await fixture(html`
@@ -936,7 +937,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         it('uses [ArrowLeft] and [ArrowRight] keys when "horizontal"', async () => {
           const el = /** @type {LionListbox} */ (
             await fixture(html`
-            <${tag} opened name="foo" orientation="horizontal" autocomplete="none" show-all-on-empty>
+            <${tag} ._listboxReceivesNoFocus="${false}" opened name="foo" orientation="horizontal" autocomplete="none" show-all-on-empty>
               <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
               <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
             </${tag}>
@@ -948,15 +949,12 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           // Normalize for suite tests
           el.activeIndex = 0;
-
           await el.updateComplete;
 
           mimicKeyPress(_listboxNode, 'ArrowRight');
-
           expect(el.activeIndex).to.equal(1);
 
           mimicKeyPress(_listboxNode, 'ArrowLeft');
-
           expect(el.activeIndex).to.equal(0);
 
           // No response to vertical arrows...
@@ -965,7 +963,14 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           el.activeIndex = 1;
           mimicKeyPress(_listboxNode, 'ArrowUp');
+          expect(el.activeIndex).to.equal(1);
 
+          // @ts-ignore allow protected member access in test
+          el._listboxReceivesNoFocus = true;
+          mimicKeyPress(_listboxNode, 'ArrowLeft');
+          expect(el.activeIndex).to.equal(1);
+
+          mimicKeyPress(_listboxNode, 'ArrowRight');
           expect(el.activeIndex).to.equal(1);
         });
 
@@ -1141,6 +1146,7 @@ export function runListboxMixinSuite(customConfig = {}) {
           expect(el.checkedIndex).to.equal(0);
           expectOnlyGivenOneOptionToBeChecked(options, 0);
         });
+
         it('navigates through list with [ArrowLeft] [ArrowRight] keys when horizontal: activates and checks the option', async () => {
           /**
            * @param {LionOption[]} options
@@ -1157,7 +1163,7 @@ export function runListboxMixinSuite(customConfig = {}) {
           }
           const el = /** @type {LionListbox} */ (
             await fixture(html`
-              <${tag} opened selection-follows-focus orientation="horizontal" autocomplete="none" show-all-on-empty>
+              <${tag} ._listboxReceivesNoFocus="${false}" opened selection-follows-focus orientation="horizontal" autocomplete="none" show-all-on-empty>
                   <${optionTag} .choiceValue=${10}>Item 1</${optionTag}>
                   <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
                   <${optionTag} .choiceValue=${30}>Item 3</${optionTag}>
