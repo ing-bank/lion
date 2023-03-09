@@ -111,6 +111,18 @@
       "maxSize": "20 kB"
     }
   ],
+  "comments": {
+    "overrides": {
+      "sharp": [
+        "Version of 'sharp' package we get via '@rocket/cli' is too old to be built on a Mac.",
+        "But updating package '@rocket-cli' causes our portal to break. Reason unknown.",
+        "So, we override the sharp version in here until '@rocket-cli' can be updated."
+      ]
+    }
+  },
+  "overrides": {
+    "sharp": "^0.29.x"
+  },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
