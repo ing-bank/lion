@@ -21,7 +21,7 @@ import { createShadowHost } from '../test-helpers/createShadowHost.js';
  * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
  */
 
-const wrappingDialogNodeStyle = 'display: none; z-index: 9999;';
+const wrappingDialogNodeStyle = 'display: none; z-index: 9999; padding: 0px;';
 
 /**
  * Make sure that all browsers serialize html in a similar way
