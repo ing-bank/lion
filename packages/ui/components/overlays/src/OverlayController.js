@@ -575,7 +575,8 @@ export class OverlayController extends EventTarget {
     // N.B. position: fixed is needed to escape out of 'overflow: hidden'
     // We give a high z-index for non-modal dialogs, so that we at least win from all siblings of our
     // parent stacking context
-    wrappingDialogElement.style.cssText = `display:none; z-index: ${this.config.zIndex};`;
+    // padding reset so we don't get a weird dialog visual square showing up
+    wrappingDialogElement.style.cssText = `display:none; z-index: ${this.config.zIndex}; padding: 0;`;
     this.__wrappingDialogNode = wrappingDialogElement;
 
     /**
