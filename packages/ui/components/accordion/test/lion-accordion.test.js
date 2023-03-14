@@ -126,6 +126,37 @@ describe('<lion-accordion>', () => {
       );
       stub.restore();
     });
+
+    it('does not select any elements with slot="invoker" and slot="content" inside slotted elements', async () => {
+      const stub = sinon.stub(console, 'warn');
+      const el = /** @type {LionAccordion} */ (
+        await fixture(html`
+          <lion-accordion>
+            <h2 slot="invoker">
+              <button>invoker 1</button>
+              <button slot="invoker">Nested invoker</button>
+            </h2>
+            <h2 slot="invoker"><button>invoker 2</button></h2>
+            <div slot="content">
+              content 1
+              <p slot="content">Nested content 1</p>
+            </div>
+            <div slot="content">
+              content 2
+              <p slot="content">Nested content 2</p>
+            </div>
+          </lion-accordion>
+        `)
+      );
+
+      const invokers = Array.from(getInvokers(el));
+      const contents = Array.from(getContents(el));
+
+      expect(stub.called).to.be.false;
+      expect(invokers.length).to.equal(contents.length);
+
+      stub.restore();
+    });
   });
 
   describe('Accordion navigation', () => {
