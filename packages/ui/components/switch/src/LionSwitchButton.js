@@ -12,6 +12,9 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
         type: Boolean,
         reflect: true,
       },
+      __initialized: {
+        type: Boolean,
+      },
     };
   }
 
@@ -78,6 +81,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
     this.role = 'switch';
     this.checked = false;
+    this.__initialized = false;
     /** @protected */
     this._toggleChecked = this._toggleChecked.bind(this);
     /** @private */
@@ -158,8 +162,18 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
    */
   requestUpdate(name, oldValue, options) {
     super.requestUpdate(name, oldValue, options);
-    if (this.isConnected && name === 'checked' && this.checked !== oldValue && !this.disabled) {
+    if (
+      this.__initialized &&
+      this.isConnected &&
+      name === 'checked' &&
+      this.checked !== oldValue &&
+      !this.disabled
+    ) {
       this.__checkedStateChange();
     }
+  }
+
+  firstUpdated() {
+    this.__initialized = true;
   }
 }
