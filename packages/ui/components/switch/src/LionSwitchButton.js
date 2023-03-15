@@ -12,10 +12,6 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
         type: Boolean,
         reflect: true,
       },
-      __initialized: {
-        type: Boolean,
-        state: true,
-      },
     };
   }
 
