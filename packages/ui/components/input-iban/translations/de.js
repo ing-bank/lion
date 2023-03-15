@@ -1,6 +1,6 @@
 export default {
   error: {
-    IsIBAN: 'Geben Sie ein gültiges {fieldName} ein.',
+    IsIBAN: 'Geben Sie eine gültige {fieldName} ein.',
     IsCountryIBAN:
       'Geben Sie eine gültige {params, select,\n' +
       'AT {Österreichisch}\n' +
