@@ -170,7 +170,9 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     }
   }
 
-  firstUpdated() {
+  /** @param {import('lit').PropertyValues } changedProperties */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
     this.__initialized = true;
   }
 }
