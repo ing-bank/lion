@@ -6,7 +6,7 @@ import { LionSelectInvoker } from '@lion/ui/select-rich.js';
 import '@lion/ui/define/lion-select-invoker.js';
 
 /**
- * @typedef {import('../../listbox/src/LionOption.js').LionOption} LionOption
+ * @typedef {import('@lion/ui/listbox.js').LionOption} LionOption
  */
 
 describe('lion-select-invoker', () => {
@@ -98,6 +98,15 @@ describe('lion-select-invoker', () => {
       );
       await el.updateComplete;
       expect(el._contentWrapperNode).lightDom.to.equal('no valid selection');
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('has set the correct roles', async () => {
+      const el = /** @type {LionSelectInvoker} */ (
+        await fixture(html`<lion-select-invoker></lion-select-invoker>`)
+      );
+      await expect(el.role).to.equal('combobox');
     });
   });
 });

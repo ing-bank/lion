@@ -305,7 +305,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   __setupInvokerNode() {
     this._invokerNode.id = `invoker-${this._inputId}`;
     this._invokerNode.setAttribute('aria-haspopup', 'listbox');
-
+    this._invokerNode.setAttribute('aria-controls', this._inputId);
     this.__setupInvokerNodeEventListener();
   }
 
