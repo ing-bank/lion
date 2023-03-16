@@ -1,22 +1,23 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { MatchesOption } from '@lion/ui/combobox.js';
 import {
   DefaultSuccess,
+  EqualsLength,
   IsDate,
   IsDateDisabled,
-  MaxDate,
-  MinDate,
-  MinMaxDate,
+  IsEmail,
   IsNumber,
+  MaxDate,
+  MaxLength,
   MaxNumber,
+  MinDate,
+  MinLength,
+  MinMaxDate,
+  MinMaxLength,
   MinMaxNumber,
   MinNumber,
-  Required,
-  EqualsLength,
-  IsEmail,
-  MaxLength,
-  MinLength,
-  MinMaxLength,
   Pattern,
+  Required,
 } from '@lion/ui/form-core.js';
 import { PhoneNumber } from '@lion/ui/input-tel.js';
 
@@ -162,6 +163,8 @@ export function loadDefaultFeedbackMessagesNoSideEffects({ localize }) {
   MinMaxDate.getMessage = async data => getLocalizedMessage(data);
   /** @param {FeedbackMessageData} data */
   IsDateDisabled.getMessage = async data => getLocalizedMessage(data);
+  /** @param {FeedbackMessageData} data */
+  MatchesOption.getMessage = async data => getLocalizedMessage(data);
 
   DefaultSuccess.getMessage = async data => {
     await forMessagesToBeReady();

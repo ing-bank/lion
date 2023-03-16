@@ -1,140 +1,24 @@
-import '@lion/ui/define/lion-combobox.js';
-import { LitElement } from 'lit';
+import {
+  getComboboxMembers,
+  getFilteredOptionValues,
+  mimicKeyPress,
+  mimicUserTyping,
+  mimicUserTypingAdvanced,
+} from '@lion/ui/combobox-test-helpers.js';
+import { LionCombobox } from '@lion/ui/combobox.js';
 import { browserDetection } from '@lion/ui/core.js';
-import { Required } from '@lion/ui/form-core.js';
+import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
-import { getListboxMembers } from '@lion/ui/listbox-test-helpers.js';
+import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { LitElement } from 'lit';
 import sinon from 'sinon';
-import { LionCombobox } from '@lion/ui/combobox.js';
 
 /**
  * @typedef {import('../types/SelectionDisplay.js').SelectionDisplay} SelectionDisplay
- * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
- * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {import('@lion/ui/listbox.js').LionOption} LionOption
  */
-
-/**
- * @param { LionCombobox } el
- */
-function getComboboxMembers(el) {
-  const obj = getListboxMembers(el);
-  return {
-    ...obj,
-    ...{
-      // @ts-ignore [allow-protected] in test
-      _invokerNode: el._invokerNode,
-      // @ts-ignore [allow-protected] in test
-      _overlayCtrl: el._overlayCtrl,
-      // @ts-ignore [allow-protected] in test
-      _comboboxNode: el._comboboxNode,
-      // @ts-ignore [allow-protected] in test
-      _inputNode: el._inputNode,
-      // @ts-ignore [allow-protected] in test
-      _listboxNode: el._listboxNode,
-      // @ts-ignore [allow-protected] in test
-      _selectionDisplayNode: el._selectionDisplayNode,
-      // @ts-ignore [allow-protected] in test
-      _activeDescendantOwnerNode: el._activeDescendantOwnerNode,
-      // @ts-ignore [allow-protected] in test
-      _ariaVersion: el._ariaVersion,
-    },
-  };
-}
-
-/**
- * @param {LionCombobox} el
- * @param {string} value
- */
-// TODO: add keys that actually make sense...
-function mimicUserTyping(el, value) {
-  const { _inputNode } = getComboboxMembers(el);
-  _inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
-  // eslint-disable-next-line no-param-reassign
-  _inputNode.value = value;
-  _inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-  _inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: value }));
-  _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: value }));
-}
-
-/**
- * @param {HTMLElement} el
- * @param {string} key
- */
-function mimicKeyPress(el, key) {
-  el.dispatchEvent(new KeyboardEvent('keydown', { key }));
-  el.dispatchEvent(new KeyboardEvent('keyup', { key }));
-}
-
-/**
- * @param {LionCombobox} el
- * @param {string[]} values
- */
-async function mimicUserTypingAdvanced(el, values) {
-  const { _inputNode } = getComboboxMembers(el);
-  _inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
-
-  for (const key of values) {
-    // eslint-disable-next-line no-await-in-loop, no-loop-func
-    await new Promise(resolve => {
-      const hasSelection = _inputNode.selectionStart !== _inputNode.selectionEnd;
-
-      if (key === 'Backspace') {
-        if (hasSelection) {
-          _inputNode.value =
-            _inputNode.value.slice(
-              0,
-              _inputNode.selectionStart ? _inputNode.selectionStart : undefined,
-            ) +
-            _inputNode.value.slice(
-              _inputNode.selectionEnd ? _inputNode.selectionEnd : undefined,
-              _inputNode.value.length,
-            );
-        } else {
-          _inputNode.value = _inputNode.value.slice(0, -1);
-        }
-      } else if (hasSelection) {
-        _inputNode.value =
-          _inputNode.value.slice(
-            0,
-            _inputNode.selectionStart ? _inputNode.selectionStart : undefined,
-          ) +
-          key +
-          _inputNode.value.slice(
-            _inputNode.selectionEnd ? _inputNode.selectionEnd : undefined,
-            _inputNode.value.length,
-          );
-      } else {
-        _inputNode.value += key;
-      }
-
-      mimicKeyPress(_inputNode, key);
-      _inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-
-      el.updateComplete.then(() => {
-        // @ts-ignore
-        resolve();
-      });
-    });
-  }
-}
-
-/**
- * @param {LionCombobox} el
- */
-function getFilteredOptionValues(el) {
-  const options = el.formElements;
-  /**
-   * @param {{ style: { display: string; }; }} option
-   */
-  const filtered = options.filter(option => option.getAttribute('aria-hidden') !== 'true');
-  /**
-   * @param {{ value: any; }} option
-   */
-  return filtered.map(option => option.value);
-}
 
 /**
  * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all' }} config
@@ -387,6 +271,22 @@ describe('lion-combobox', () => {
       expect(_comboboxNode).to.exist;
       expect(el.querySelector('[role=combobox]')).to.equal(_comboboxNode);
     });
+
+    it('has validator "MatchesOption" applied by default', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'10'}" checked>Item 1</lion-option>
+            <lion-option .choiceValue="${'20'}">Item 2</lion-option>
+          </lion-combobox>
+        `)
+      );
+      mimicUserTyping(el, '30');
+      await el.updateComplete;
+      expect(el.hasFeedbackFor).to.include('error');
+      expect(el.validationStates).to.have.property('error');
+      expect(el.validationStates.error).to.have.property('MatchesOption');
+    });
   });
 
   describe('Values', () => {
@@ -408,7 +308,7 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('20');
     });
 
-    it('sets modelValue to empty string if no option is selected', async () => {
+    it('sets modelValue to Unparseable if no option is selected', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" .modelValue="${'Artichoke'}">
@@ -419,12 +319,59 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
+      const { _inputNode } = getComboboxMembers(el);
 
       expect(el.modelValue).to.equal('Artichoke');
       expect(el.formElements[0].checked).to.be.true;
-      el.checkedIndex = -1;
+      el.setCheckedIndex(-1);
+      el.__shouldAutocompleteNextUpdate = true;
       await el.updateComplete;
-      expect(el.modelValue).to.equal('');
+      expect(el.modelValue instanceof Unparseable).to.be.true;
+      expect(el.modelValue.viewValue).to.equal('Artichoke');
+      expect(el.formElements[0].checked).to.be.false;
+
+      el.setCheckedIndex(-1);
+      _inputNode.value = 'Foo';
+      el.__shouldAutocompleteNextUpdate = true;
+      await el.updateComplete;
+      expect(el.modelValue instanceof Unparseable).to.be.true;
+      expect(el.modelValue.viewValue).to.equal('Foo');
+      expect(el.formElements[0].checked).to.be.false;
+
+      el.setCheckedIndex(0);
+      el.__shouldAutocompleteNextUpdate = true;
+      await el.updateComplete;
+      expect(el.modelValue instanceof Unparseable).to.be.false;
+      expect(el.modelValue).to.equal('Artichoke');
+      expect(el.formElements[0].checked).to.be.true;
+    });
+
+    it('sets modelValue to _inputNode.value if no option is selected when requireOptionMatch is false', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" .modelValue="${'Artichoke'}" .requireOptionMatch="${false}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      const { _inputNode } = getComboboxMembers(el);
+
+      expect(el.modelValue).to.equal('Artichoke');
+      expect(el.formElements[0].checked).to.be.true;
+      el.setCheckedIndex(-1);
+      el.__shouldAutocompleteNextUpdate = true;
+      await el.updateComplete;
+      expect(el.modelValue).to.equal('Artichoke');
+      expect(el.formElements[0].checked).to.be.true;
+
+      el.setCheckedIndex(-1);
+      _inputNode.value = 'Foo';
+      el.__shouldAutocompleteNextUpdate = true;
+      await el.updateComplete;
+      expect(el.modelValue).to.equal('Foo');
       expect(el.formElements[0].checked).to.be.false;
     });
 
@@ -439,13 +386,35 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
-
-      expect(el.modelValue).to.eql(['Artichoke']);
+      expect(el.modelValue).to.deep.equal(['Artichoke']);
       expect(el.formElements[0].checked).to.be.true;
-      el.checkedIndex = [];
+      el.setCheckedIndex([]);
       await el.updateComplete;
-      expect(el.modelValue).to.eql([]);
+      expect(el.modelValue).to.deep.equal([]);
       expect(el.formElements[0].checked).to.be.false;
+    });
+
+    it('multiple choice and requireOptionMatch is false do not work together yet', async () => {
+      const errorMessage = `multipleChoice and requireOptionMatch=false can't be used at the same time (yet).`;
+      let error;
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      try {
+        el.requireOptionMatch = false;
+        await el.updateComplete;
+      } catch (err) {
+        error = err;
+      }
+      expect(error).to.be.instanceOf(Error);
+      expect(/** @type {Error} */ (error).message).to.equal(errorMessage);
     });
 
     it('clears modelValue and textbox value on clear()', async () => {
@@ -479,7 +448,43 @@ describe('lion-combobox', () => {
 
       el2.clear();
       expect(el2.modelValue).to.eql([]);
-      expect(_inputNode.value).to.equal('');
+      // @ts-ignore [allow-protected] in test
+      expect(el2._inputNode.value).to.equal('');
+    });
+
+    it('resets modelValue and textbox value on reset()', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" .modelValue="${'Artichoke'}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      const { _inputNode } = getComboboxMembers(el);
+      el.modelValue = 'Chard';
+      el.reset();
+      expect(el.modelValue).to.equal('Artichoke');
+      expect(_inputNode.value).to.equal('Artichoke');
+
+      const el2 = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice .modelValue="${['Artichoke']}">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      el2.modelValue = ['Artichoke', 'Chard'];
+      el2.reset();
+      expect(el2.modelValue).to.deep.equal(['Artichoke']);
+      // @ts-ignore [allow-protected] in test
+      expect(el2._inputNode.value).to.equal('Artichoke');
     });
 
     it('syncs textbox to modelValue', async () => {
@@ -493,27 +498,123 @@ describe('lion-combobox', () => {
       );
       const { _inputNode } = getComboboxMembers(el);
 
-      async function performChecks() {
+      /** @param {string} autocompleteMode */
+      async function performChecks(autocompleteMode) {
         el.formElements[0].click();
         await el.updateComplete;
 
         // FIXME: fix properly for Webkit
-        // expect(_inputNode.value).to.equal('Aha');
-        expect(el.checkedIndex).to.equal(0);
+        // expect(_inputNode.value).to.equal('Aha', `autocomplete mode ${autocompleteMode}`);
+        expect(el.checkedIndex).to.equal(0, `autocomplete mode ${autocompleteMode}`);
 
         mimicUserTyping(el, 'Ah');
         await el.updateComplete;
-        expect(_inputNode.value).to.equal('Ah');
+        expect(_inputNode.value).to.equal('Ah', `autocomplete mode ${autocompleteMode}`);
 
         await el.updateComplete;
-        expect(el.checkedIndex).to.equal(-1);
+        expect(el.checkedIndex).to.equal(-1, `autocomplete mode ${autocompleteMode}`);
       }
 
       el.autocomplete = 'none';
-      await performChecks();
+      await performChecks('none');
 
       el.autocomplete = 'list';
-      await performChecks();
+      await performChecks('list');
+    });
+
+    it('works with Required validator', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" .validators=${[new Required()]}>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      el.submitted = true;
+      await el.feedbackComplete;
+      expect(el.hasFeedbackFor).to.include('error', 'hasFeedbackFor');
+      await el.feedbackComplete;
+      expect(el.showsFeedbackFor).to.include('error', 'showsFeedbackFor');
+    });
+
+    it('allows a value outside of the option list when requireOptionMatch is false', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" .validators=${[new Required()]}>
+            <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      el.requireOptionMatch = false;
+      const { _inputNode } = getComboboxMembers(el);
+      expect(el.checkedIndex).to.equal(0);
+
+      mimicUserTyping(el, 'Foo');
+      _inputNode.dispatchEvent(new Event('input'));
+      await el.updateComplete;
+
+      expect(el.checkedIndex).to.equal(-1);
+      expect(el.modelValue).to.equal('Foo');
+      expect(_inputNode.value).to.equal('Foo');
+    });
+
+    it("when removing a letter it won't select the option", async () => {
+      // We don't autocomplete when characters are removed
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      const { _inputNode } = getComboboxMembers(el);
+      expect(el.checkedIndex).to.equal(0);
+
+      // Simulate backspace deleting the char at the end of the string
+      mimicKeyPress(_inputNode, 'Backspace');
+      _inputNode.dispatchEvent(new Event('input'));
+      const arr = _inputNode.value.split('');
+      arr.splice(_inputNode.value.length - 1, 1);
+      _inputNode.value = arr.join('');
+      await el.updateComplete;
+      el.dispatchEvent(new Event('blur'));
+
+      expect(el.checkedIndex).to.equal(-1);
+      expect(el.modelValue instanceof Unparseable).to.be.true;
+      expect(el.modelValue.viewValue).to.equal('Artichok');
+    });
+
+    it('allows the user to override the parser', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox
+            name="foo"
+            .parser="${/** @param {string} value */ value => value.replace(/[0-9]/g, '')}"
+          >
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      const { _inputNode } = getComboboxMembers(el);
+
+      el.setCheckedIndex(-1);
+      _inputNode.value = 'Foo123';
+      el.__shouldAutocompleteNextUpdate = true;
+      await el.updateComplete;
+      expect(el.modelValue).to.equal('Foo');
+      expect(el.formElements[0].checked).to.be.false;
     });
   });
 
@@ -872,36 +973,6 @@ describe('lion-combobox', () => {
         hiddenOptions.forEach(o => {
           expect(o.getAttribute('aria-hidden')).to.equal('true');
         });
-      });
-
-      it('works with validation', async () => {
-        const el = /** @type {LionCombobox} */ (
-          await fixture(html`
-            <lion-combobox name="foo" .validators=${[new Required()]}>
-              <lion-option checked .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-            </lion-combobox>
-          `)
-        );
-        const { _inputNode } = getComboboxMembers(el);
-        expect(el.checkedIndex).to.equal(0);
-
-        // Simulate backspace deleting the char at the end of the string
-        mimicKeyPress(_inputNode, 'Backspace');
-        _inputNode.dispatchEvent(new Event('input'));
-        const arr = _inputNode.value.split('');
-        arr.splice(_inputNode.value.length - 1, 1);
-        _inputNode.value = arr.join('');
-        await el.updateComplete;
-        el.dispatchEvent(new Event('blur'));
-
-        expect(el.checkedIndex).to.equal(-1);
-        await el.feedbackComplete;
-        expect(el.hasFeedbackFor).to.include('error', 'hasFeedbackFor');
-        await el.feedbackComplete;
-        expect(el.showsFeedbackFor).to.include('error', 'showsFeedbackFor');
       });
 
       it('dropdown has a label', async () => {
@@ -1656,7 +1727,7 @@ describe('lion-combobox', () => {
 
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
-          <${tag} name="foo" autocomplete="list" opened>
+          <${tag} name="foo" opened>
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -1948,7 +2019,10 @@ describe('lion-combobox', () => {
              */
             // eslint-disable-next-line class-methods-use-this
             _getTextboxValueFromOption(option) {
-              return option.label;
+              if (option && option.label) {
+                return option.label;
+              }
+              return this.modelValue;
             }
           }
           const tagName = defineCE(X);
@@ -1995,7 +2069,10 @@ describe('lion-combobox', () => {
              */
             // eslint-disable-next-line class-methods-use-this
             _getTextboxValueFromOption(option) {
-              return option.label;
+              if (option && option.label) {
+                return option.label;
+              }
+              return this.modelValue;
             }
           }
           const tagName = defineCE(X);
@@ -2068,29 +2145,29 @@ describe('lion-combobox', () => {
           );
           const { _inputNode } = getComboboxMembers(el);
 
-          async function performChecks() {
+          /** @param {string} autocompleteMode */
+          async function performChecks(autocompleteMode) {
             await el.updateComplete;
 
             el.formElements[0].click();
-            await el.updateComplete;
 
             // FIXME: fix properly for Webkit
-            // expect(_inputNode.value).to.equal('Aha');
-            expect(el.checkedIndex).to.equal(0);
+            // expect(_inputNode.value).to.equal('Aha', autocompleteMode);
+            expect(el.checkedIndex).to.equal(0, autocompleteMode);
 
             mimicUserTyping(el, 'Arti');
             await el.updateComplete;
-            expect(_inputNode.value).to.equal('Arti');
+            expect(_inputNode.value).to.equal('Arti', autocompleteMode);
 
             await el.updateComplete;
-            expect(el.checkedIndex).to.equal(-1);
+            expect(el.checkedIndex).to.equal(-1, autocompleteMode);
           }
 
           el.autocomplete = 'none';
-          await performChecks();
+          await performChecks('none');
 
           el.autocomplete = 'list';
-          await performChecks();
+          await performChecks('list');
         });
       });
 
@@ -2233,7 +2310,7 @@ describe('lion-combobox', () => {
           // eslint-disable-next-line no-param-reassign
           elm.activeIndex = -1;
           // eslint-disable-next-line no-param-reassign
-          elm.checkedIndex = -1;
+          elm.setCheckedIndex(-1);
           // eslint-disable-next-line no-param-reassign
           elm.opened = true;
           await elm.updateComplete;

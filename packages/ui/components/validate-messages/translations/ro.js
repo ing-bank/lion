@@ -18,6 +18,8 @@ export default {
       'Introduceți un/o {fieldName} cuprins(ă) între {params.min, date, YYYYMMDD} și {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Această dată nu este disponibilă, alegeți alta.',
     IsEmail: 'Introduceți un/o {fieldName} valid(ă) în formatul „nume@exemplu.com”.',
+    MatchesOption:
+      'Niciun rezultat corespunzător. Încercaţi un cuvânt cheie sau o categorie diferită.',
   },
   warning: {
     Required: 'Introduceți un/o {fieldName}.',
@@ -37,6 +39,8 @@ export default {
       'Introduceți un/o {fieldName} cuprins(ă) între {params.min, date, YYYYMMDD} și {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Această dată nu este disponibilă, alegeți alta.',
     IsEmail: 'Introduceți un/o {fieldName} valid(ă) în formatul „nume@exemplu.com”.',
+    MatchesOption:
+      'Niciun rezultat corespunzător. Încercaţi un cuvânt cheie sau o categorie diferită.',
   },
   success: {
     DefaultOk: 'În regulă',
