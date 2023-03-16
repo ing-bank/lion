@@ -30,7 +30,7 @@ loadDefaultFeedbackMessages();
 
 By default `requireOptionMatch` is set to true, which means that the listbox is leading. The textbox is a helping aid to quickly select an option/options. Unmatching input values become Unparseable, with the `IsMatchingAnOption` set as a default validator.
 
-When `requireOptionMatch` is set to false the textbox is leading, with the listbox as an aid to supply suggestions, e.g. an search input. This means that all input values are allowed.
+When `requireOptionMatch` is set to false the textbox is leading, with the listbox as an aid to supply suggestions, e.g. a search input. This means that all input values are allowed.
 
 ```js preview-story
 export const optionMatch = () => html`

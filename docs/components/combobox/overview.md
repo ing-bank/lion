@@ -37,12 +37,12 @@ export const main = () => html`
 
 ## Features
 
-The combobox has many configuration options to fine tune its behaviour:
+The combobox has many configurable properties to fine-tune its behaviour:
 
 - **Multiple choice** - Allows multiselection of options.
 - **requireOptionMatch**
   - **true** (default) - The listbox is leading, the textbox is a helping aid to quickly select an option/options. Unmatching input values become Unparseable, with the `IsMatchingAnOption` set as a default validator.
-  - **false** - The textbox is leading, with the listbox as an aid to supply suggestions, e.g. an search input.
+  - **false** - The textbox is leading, with the listbox as an aid to supply suggestions, e.g. a search input.
 - **Autocomplete** - When the autocompletion will happen: `none`, `list`, `inline` and `both`.
 - **Matchmode** - Which part of the value should match: `begin` and `all`.
 - **Show all on empty** - Shows the options list on empty.
