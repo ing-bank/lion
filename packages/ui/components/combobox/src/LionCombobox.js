@@ -399,7 +399,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
      * @configure ListboxMixin: the wai-aria pattern and <datalist> have selection follow focus
      */
     this.selectionFollowsFocus = true;
-    this.defaultValidators.push(new IsMatchingAnOption());
+    this.defaultValidators.push(new MatchesOption());
     /**
      * For optimal support, we allow aria v1.1 on newer browsers
      * @type {'1.1'|'1.0'}
