@@ -279,9 +279,17 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         aria-label="${this.msgLit('lion-input-datepicker:openDatepickerLabel')}"
         title="${this.msgLit('lion-input-datepicker:openDatepickerLabel')}"
       >
-        📅
+        ${this._invokerIconTemplate()}
       </button>
     `;
+  }
+
+  /**
+   * Subclassers can replace this with their custom extension invoker icon
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _invokerIconTemplate() {
+    return html`📅`;
   }
 
   _setupOverlayCtrl() {
