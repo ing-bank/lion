@@ -17,7 +17,7 @@ export default {
       'Vul een {fieldName} in tussen {params.min, date, YYYYMMDD} en {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Deze datum is niet mogelijk, kies een andere.',
     IsEmail: 'Vul een {fieldName} in formaat "name@example.com".',
-    IsMatchingAnOption:
+    MatchesOption:
       'Geen overeenkomende resultaten. Probeer een ander trefwoord of een andere categorie.',
   },
   warning: {
@@ -37,7 +37,7 @@ export default {
       'Vul een {fieldName} in tussen {params.min, date, YYYYMMDD} en {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Deze datum is niet mogelijk, kies een andere.',
     IsEmail: 'Vul een {fieldName} in formaat "name@example.com".',
-    IsMatchingAnOption:
+    MatchesOption:
       'Geen overeenkomende resultaten. Probeer een ander trefwoord of een andere categorie.',
   },
   success: {

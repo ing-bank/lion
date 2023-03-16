@@ -171,11 +171,11 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
   }
 
   /**
-   * We define the value getter/setter below as also defined in LionField (via FormatMixin). 
-   * Since FormatMixin is meant for Formgroups/ChoiceGroup it's not applied on Combobox; 
-   * Combobox is somewhat of a hybrid between a ChoiceGroup and LionField, therefore we copy over 
-   * some of the LionField members to align with its interface. 
-   * 
+   * We define the value getter/setter below as also defined in LionField (via FormatMixin).
+   * Since FormatMixin is meant for Formgroups/ChoiceGroup it's not applied on Combobox;
+   * Combobox is somewhat of a hybrid between a ChoiceGroup and LionField, therefore we copy over
+   * some of the LionField members to align with its interface.
+   *
    * The view value. Will be delegated to `._inputNode.value`
    */
   get value() {

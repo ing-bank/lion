@@ -18,7 +18,7 @@ export default {
       'Inserire un(a) {fieldName} tra {params.min, date, YYYYMMDD} e {params.max, date, YYYYMMDD}.',
     IsDateDisabled: "ТQuesta data non è disponibile, sceglierne un'altra.",
     IsEmail: 'Inserire un valore valido per {fieldName} nel formato "name@example.com".',
-    IsMatchingAnOption:
+    MatchesOption:
       'Nessun risultato corrispondente. Provare con una parola chiave o una categoria diversa.',
   },
   warning: {
@@ -39,7 +39,7 @@ export default {
       'Inserire un(a) {fieldName} tra {params.min, date, YYYYMMDD} e {params.max, date, YYYYMMDD}.',
     IsDateDisabled: "ТQuesta data non è disponibile, sceglierne un'altra.",
     IsEmail: 'Inserire un valore valido per {fieldName} nel formato "name@example.com".',
-    IsMatchingAnOption:
+    MatchesOption:
       'Nessun risultato corrispondente. Provare con una parola chiave o una categoria diversa.',
   },
   success: {

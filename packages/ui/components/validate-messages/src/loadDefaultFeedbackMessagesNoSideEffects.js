@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { IsMatchingAnOption } from '@lion/ui/combobox.js';
+import { MatchesOption } from '@lion/ui/combobox.js';
 import {
   DefaultSuccess,
   EqualsLength,
@@ -164,7 +164,7 @@ export function loadDefaultFeedbackMessagesNoSideEffects({ localize }) {
   /** @param {FeedbackMessageData} data */
   IsDateDisabled.getMessage = async data => getLocalizedMessage(data);
   /** @param {FeedbackMessageData} data */
-  IsMatchingAnOption.getMessage = async data => getLocalizedMessage(data);
+  MatchesOption.getMessage = async data => getLocalizedMessage(data);
 
   DefaultSuccess.getMessage = async data => {
     await forMessagesToBeReady();

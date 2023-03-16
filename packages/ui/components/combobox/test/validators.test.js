@@ -1,5 +1,5 @@
 import { mimicUserTyping } from '@lion/ui/combobox-test-helpers.js';
-import { IsMatchingAnOption } from '@lion/ui/combobox.js';
+import { MatchesOption } from '@lion/ui/combobox.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
 import { expect, fixture, html } from '@open-wc/testing';
@@ -8,7 +8,7 @@ import { expect, fixture, html } from '@open-wc/testing';
  * @typedef {import('@lion/ui/combobox.js').LionCombobox} LionCombobox
  */
 
-describe('IsMatchingAnOption validation', () => {
+describe('MatchesOption validation', () => {
   it('is enabled when an invalid value is set', async () => {
     let isEnabled;
     const el = /** @type {LionCombobox} */ (
@@ -23,7 +23,7 @@ describe('IsMatchingAnOption validation', () => {
     );
     const config = {};
     config.node = el;
-    const validator = new IsMatchingAnOption();
+    const validator = new MatchesOption();
 
     mimicUserTyping(el, 'Artichoke');
     await el.updateComplete;
@@ -51,7 +51,7 @@ describe('IsMatchingAnOption validation', () => {
     );
     const config = {};
     config.node = el;
-    const validator = new IsMatchingAnOption();
+    const validator = new MatchesOption();
 
     el.modelValue = '';
     await el.updateComplete;

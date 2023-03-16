@@ -19,7 +19,7 @@ export default {
       'Veuillez indiquer un(e) {fieldName} entre {params.min, date, YYYYMMDD} et {params.max, date, YYYYMMDD}.',
     IsDateDisabled: "Cette date n'est pas disponible, veuillez en choisir une autre.",
     IsEmail: 'Veuillez indiquer un(e) {fieldName} au format "nom@exemple.com".',
-    IsMatchingAnOption:
+    MatchesOption:
       'Aucun résultat correspondant. Veuillez essayer un autre mot-clé ou une autre catégorie.',
   },
   warning: {
@@ -41,7 +41,7 @@ export default {
       'Veuillez indiquer un(e) {fieldName} entre {params.min, date, YYYYMMDD} et {params.max, date, YYYYMMDD}.',
     IsDateDisabled: "Cette date n'est pas disponible, veuillez en choisir une autre.",
     IsEmail: 'Veuillez indiquer un(e) {fieldName} au format "nom@exemple.com".',
-    IsMatchingAnOption:
+    MatchesOption:
       'Aucun résultat correspondant. Veuillez essayer un autre mot-clé ou une autre catégorie.',
   },
   success: {

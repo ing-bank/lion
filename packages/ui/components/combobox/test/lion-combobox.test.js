@@ -272,7 +272,7 @@ describe('lion-combobox', () => {
       expect(el.querySelector('[role=combobox]')).to.equal(_comboboxNode);
     });
 
-    it('has validator "IsMatchingAnOption" applied by default', async () => {
+    it('has validator "MatchesOption" applied by default', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo">
@@ -285,7 +285,7 @@ describe('lion-combobox', () => {
       await el.updateComplete;
       expect(el.hasFeedbackFor).to.include('error');
       expect(el.validationStates).to.have.property('error');
-      expect(el.validationStates.error).to.have.property('IsMatchingAnOption');
+      expect(el.validationStates.error).to.have.property('MatchesOption');
     });
   });
 
