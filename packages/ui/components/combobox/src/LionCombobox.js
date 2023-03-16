@@ -5,7 +5,7 @@ import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { css, html } from 'lit';
 import { makeMatchingTextBold, unmakeMatchingTextBold } from './utils/makeMatchingTextBold.js';
-import { IsMatchingAnOption } from './validators.js';
+import { MatchesOption } from './validators.js';
 
 const matchA11ySpanReverseFns = new WeakMap();
 
