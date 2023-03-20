@@ -24,6 +24,8 @@ import './src/slots-dialog-content.js';
 
 ## Placement overrides
 
+<button type="button" id="focus-test">Focus test</button>
+
 ```js preview-story
 export const placementOverrides = () => {
   const dialog = placement => {

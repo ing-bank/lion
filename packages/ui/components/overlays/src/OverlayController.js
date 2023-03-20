@@ -124,6 +124,9 @@ export class OverlayController extends EventTarget {
     /** @private */
     this.__sharedConfig = config;
 
+    /** @private */
+    this.__activeElement = null;
+
     /** @type {OverlayConfig} */
     this.config = {};
 
@@ -187,6 +190,7 @@ export class OverlayController extends EventTarget {
         placement: 'center',
       },
       zIndex: 9999,
+      // _noDialogEl: true,
     };
 
     this.manager.add(this);
@@ -723,7 +727,7 @@ export class OverlayController extends EventTarget {
     const event = new CustomEvent('before-show', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
-      if (this.__wrappingDialogNode instanceof HTMLDialogElement) {
+      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
         this.__wrappingDialogNode.open = true;
       }
       // @ts-ignore
@@ -828,6 +832,8 @@ export class OverlayController extends EventTarget {
       this._hideResolve = resolve;
     });
 
+    this.__activeElement = document.activeElement;
+
     if (this.manager) {
       this.manager.hide(this);
     }
@@ -845,9 +851,10 @@ export class OverlayController extends EventTarget {
         contentNode: this.contentNode,
       });
 
-      if (this.__wrappingDialogNode instanceof HTMLDialogElement) {
+      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
         this.__wrappingDialogNode.close();
       }
+
       // @ts-ignore
       this.__wrappingDialogNode.style.display = 'none';
       this._handleFeatures({ phase: 'hide' });
@@ -908,17 +915,24 @@ export class OverlayController extends EventTarget {
   _restoreFocus() {
     // We only are allowed to move focus if we (still) 'own' the active element.
     // Otherwise we assume the 'outside world' has purposefully taken over
-    const { activeElement } = /** @type {ShadowRoot} */ (this.contentNode.getRootNode());
     const weStillOwnActiveElement =
-      activeElement instanceof HTMLElement && this.contentNode.contains(activeElement);
+      this.__activeElement instanceof HTMLElement &&
+      this.contentNode.contains(this.__activeElement);
+    console.log(
+      'weStillOwnActiveElement',
+      weStillOwnActiveElement,
+      this.__activeElement,
+      document.activeElement,
+    );
     if (!weStillOwnActiveElement) {
       return;
     }
 
     if (this.elementToFocusAfterHide) {
       this.elementToFocusAfterHide.focus();
+      this.elementToFocusAfterHide.scrollIntoView({ block: 'center' });
     } else {
-      activeElement.blur();
+      /** @type {HTMLElement} */ (this.__activeElement.blur());
     }
   }
 
