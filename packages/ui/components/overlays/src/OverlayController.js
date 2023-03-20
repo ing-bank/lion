@@ -570,6 +570,11 @@ export class OverlayController extends EventTarget {
     // We use a dialog for its visual capabilities: it renders to the top layer.
     // A11y will depend on the type of overlay and is arranged on contentNode level.
     // Also see: https://www.scottohara.me/blog/2019/03/05/open-dialog.html
+    //
+    // The role="dialog" is set on the contentNode (or another role), so role="none"
+    // is valid here, although AXE complains about this setup.
+    // For now we need to add `ignoredRules: ['aria-allowed-role']` in your AXE tests.
+    // see: https://lion-web.netlify.app/fundamentals/systems/overlays/rationale/#considerations
     wrappingDialogElement.setAttribute('role', 'none');
     wrappingDialogElement.setAttribute('data-overlay-outer-wrapper', '');
     // N.B. position: fixed is needed to escape out of 'overflow: hidden'
