@@ -222,11 +222,8 @@ global(modal) dialog.
 
 ## Considerations
 
-### Future for mode local (Popper)
+We use the native dialog purely because it renders to the "top layer". Not because of its accessible role, which varies per component. In the future we can use the popover attribute(<https://open-ui.org/components/popover.research.explainer/>) for this (which neatly differentiates between presentation and semantics).
 
-- Default overflow and/or max-width behavior when content is too wide or high for the viewport.
+So in our use of the dialog we want also a dialog that only does presentation (rendering on top layer in this case), but we want to check the semantics ourselves. Hence: `role="none"`. Even though the outcome is completely accessible, AXE-core uses this rule as a kind of "precautionary measure".
 
-### Aria roles
-
-- No `aria-controls` as support for it is not quite there yet
-- No `aria-haspopup`. People knowing the haspop up and hear about it don’t expect a dialog to open (at this moment in time) but expect a sub-menu. Until support for the dialog value has better implementation, it’s probably best to not use aria-haspopup on the element that opens the modal dialog.
+After a cost/benefit analysis, we choose to be temporarily incompatible with AXE-core. Therefore, we recommend running tests with `{ ignoredRules: ['aria-allowed-role'] }`. When the popover is stable and used underwater in lion overlays, AXE can again be run without this ignoredRule.
