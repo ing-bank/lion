@@ -101,6 +101,7 @@ export class LionSelectInvoker extends SlotMixin(LionButton) {
 
   connectedCallback() {
     super.connectedCallback();
+    this.setAttribute('role', 'combobox');
     this.addEventListener('keydown', this.__handleKeydown);
   }
 

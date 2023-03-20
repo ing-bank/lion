@@ -5,7 +5,7 @@ It allows providing fully customized options and a fully customized invoker butt
 styling,theming or user interaction opportunities.
 
 Its implementation is based on the following Design pattern:
-<https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html>
+<https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/>
 
 ```js script
 import { LitElement, html } from '@mdjs/mdjs-preview';
