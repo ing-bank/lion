@@ -11,7 +11,7 @@ cover_image: /blog/images/no-image-yet.jpg
 
 Lion introduces a new package `@lion/ui` which is a collection of UI components that can be used in your application.
 It contains all the components/systems that used to be distributed via separate @lion/\* packages.
-This reduces around 40 packages back to 1.
+This brings back around 40 packages to just 1.
 
 ### Better dependency management
 
