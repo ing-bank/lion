@@ -1183,5 +1183,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
   clear() {
     super.clear();
     this.value = '';
+    this.__shouldAutocompleteNextUpdate = true;
   }
 }

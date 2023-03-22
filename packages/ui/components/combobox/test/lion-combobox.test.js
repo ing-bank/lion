@@ -452,6 +452,30 @@ describe('lion-combobox', () => {
       expect(el2._inputNode.value).to.equal('');
     });
 
+    it('updates option list after clear()', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      const options = el.formElements;
+      mimicUserTyping(el, 'a');
+      await el.updateComplete;
+
+      const visibleOptions = options.filter(o => o.style.display !== 'none');
+      expect(visibleOptions.length).to.equal(3, 'after input');
+
+      el.clear();
+      await el.updateComplete;
+      const visibleOptions2 = options.filter(o => o.style.display !== 'none');
+      expect(visibleOptions2.length).to.equal(0, 'after clear');
+    });
+
     it('resets modelValue and textbox value on reset()', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
@@ -923,6 +947,7 @@ describe('lion-combobox', () => {
         expect(el.opened).to.equal(true);
 
         const visibleOptions = options.filter(o => o.style.display !== 'none');
+        expect(visibleOptions.length).to.not.equal(0);
         visibleOptions.forEach((o, i) => {
           expect(o.getAttribute('aria-posinset')).to.equal(`${i + 1}`);
           expect(o.getAttribute('aria-setsize')).to.equal(`${visibleOptions.length}`);
