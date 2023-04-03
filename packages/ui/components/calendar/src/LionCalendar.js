@@ -523,9 +523,14 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         @click=${clickDateDelegation}
         ?disabled=${disabled}
       >
-        &lt;
+        ${this._previousIconTemplate()}
       </button>
     `;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  _previousIconTemplate() {
+    return html`&lt;`;
   }
 
   /**
@@ -554,9 +559,14 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         @click=${clickDateDelegation}
         ?disabled=${disabled}
       >
-        &gt;
+        ${this._nextIconTemplate()}
       </button>
     `;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  _nextIconTemplate() {
+    return html`&gt;`;
   }
 
   /**
