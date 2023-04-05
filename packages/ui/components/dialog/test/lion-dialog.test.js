@@ -72,4 +72,36 @@ describe('lion-dialog', () => {
       expect(nestedDialogEl.opened).to.be.true;
     });
   });
+
+  describe('focus handling', () => {
+    it('should focus the element specified in the "elementToFocusAfterHide" config key', async () => {
+      const cfg = {
+        trapsKeyboardFocus: false,
+        elementToFocusAfterHide: document.querySelector('#focus-button'),
+      };
+
+      const el = await fixture(html`
+        <div>
+          <button type="button" id="focus-button">Focus</button>
+          <lion-dialog .config="${cfg}">
+            <div slot="content" class="dialog">Hey there</div>
+            <button slot="invoker">Popup button</button>
+          </lion-dialog>
+        </div>
+      `);
+
+      const dialog = /** @type {LionDialog} */ (el.querySelector('lion-dialog'));
+      const invoker = /** @type {HTMLElement} */ (dialog.querySelector('[slot="invoker"]'));
+
+      invoker.click();
+      // @ts-expect-error [allow-protected-in-tests]
+      await dialog._overlayCtrl._showComplete;
+      dialog.close();
+
+      // @ts-expect-error [allow-protected-in-tests]
+      await dialog._overlayCtrl._hideComplete;
+
+      expect(document.activeElement).to.equal(el.querySelector('#focus-button'));
+    });
+  });
 });

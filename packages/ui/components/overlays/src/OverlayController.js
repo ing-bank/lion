@@ -190,7 +190,6 @@ export class OverlayController extends EventTarget {
         placement: 'center',
       },
       zIndex: 9999,
-      // _noDialogEl: true,
     };
 
     this.manager.add(this);
@@ -832,6 +831,10 @@ export class OverlayController extends EventTarget {
       this._hideResolve = resolve;
     });
 
+    // save the current activeElement so we know if the user set focus to another element than the invoker of the dialog
+    // while the dialog was open.
+    // We need this in the _restoreFocus method to determine if we should focus this.elementToFocusAfterHide when the
+    // dialog is closed or keep focus on the element that the user deliberately gave focus
     this.__activeElement = document.activeElement;
 
     if (this.manager) {
@@ -914,16 +917,11 @@ export class OverlayController extends EventTarget {
   /** @protected */
   _restoreFocus() {
     // We only are allowed to move focus if we (still) 'own' the active element.
-    // Otherwise we assume the 'outside world' has purposefully taken over
+    // Otherwise, we assume the 'outside world' has purposefully taken over
     const weStillOwnActiveElement =
       this.__activeElement instanceof HTMLElement &&
       this.contentNode.contains(this.__activeElement);
-    console.log(
-      'weStillOwnActiveElement',
-      weStillOwnActiveElement,
-      this.__activeElement,
-      document.activeElement,
-    );
+
     if (!weStillOwnActiveElement) {
       return;
     }
@@ -932,7 +930,7 @@ export class OverlayController extends EventTarget {
       this.elementToFocusAfterHide.focus();
       this.elementToFocusAfterHide.scrollIntoView({ block: 'center' });
     } else {
-      /** @type {HTMLElement} */ (this.__activeElement.blur());
+      /** @type {HTMLElement} */ (this.__activeElement).blur();
     }
   }
 
