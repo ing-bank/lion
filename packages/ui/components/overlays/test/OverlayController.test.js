@@ -907,7 +907,7 @@ describe('OverlayController', () => {
         expect(document.activeElement).to.equal(input);
       });
 
-      it('supports elementToFocusAfterHide option when shadowRoot involved involved', async () => {
+      it('supports elementToFocusAfterHide option when shadowRoot involved', async () => {
         const input = /** @type {HTMLElement} */ (await fixture('<input />'));
         const contentNode = /** @type {HTMLElement} */ (
           await fixture('<div><textarea></textarea></div>')

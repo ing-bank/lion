@@ -75,14 +75,55 @@ describe('lion-dialog', () => {
 
   describe('focus handling', () => {
     it('should focus the element specified in the "elementToFocusAfterHide" config key', async () => {
+      const outsideBtn = await fixture(
+        html`<button type="button" id="outside-button">Focus</button>`,
+      );
       const cfg = {
         trapsKeyboardFocus: false,
-        elementToFocusAfterHide: document.querySelector('#focus-button'),
+        elementToFocusAfterHide: outsideBtn,
       };
-
       const el = await fixture(html`
         <div>
-          <button type="button" id="focus-button">Focus</button>
+          ${outsideBtn}
+          <lion-dialog .config="${cfg}">
+            <div slot="content" class="dialog">
+              <button id="focusable-inside-button">Focusable el inside</button>
+              Hey there
+            </div>
+            <button slot="invoker">Popup button</button>
+          </lion-dialog>
+        </div>
+      `);
+
+      const dialog = /** @type {LionDialog} */ (el.querySelector('lion-dialog'));
+      const focusableInsideBtn = /** @type {HTMLButtonElement} */ (
+        dialog.querySelector('#focusable-inside-button')
+      );
+
+      // @ts-expect-error [allow-protected-in-tests]
+      dialog._overlayInvokerNode.click();
+      focusableInsideBtn.focus();
+      // @ts-expect-error [allow-protected-in-tests]
+      await dialog._overlayCtrl._showComplete;
+      dialog.close();
+
+      // @ts-expect-error [allow-protected-in-tests]
+      await dialog._overlayCtrl._hideComplete;
+
+      expect(document.activeElement).to.equal(outsideBtn);
+    });
+
+    it('should focus the element specified in the "elementToFocusAfterHide" when modal', async () => {
+      const outsideBtn = await fixture(
+        html`<button type="button" id="outside-button">Focus</button>`,
+      );
+      const cfg = {
+        trapsKeyboardFocus: true, // modal
+        elementToFocusAfterHide: outsideBtn,
+      };
+      const el = await fixture(html`
+        <div>
+          ${outsideBtn}
           <lion-dialog .config="${cfg}">
             <div slot="content" class="dialog">Hey there</div>
             <button slot="invoker">Popup button</button>
@@ -91,9 +132,9 @@ describe('lion-dialog', () => {
       `);
 
       const dialog = /** @type {LionDialog} */ (el.querySelector('lion-dialog'));
-      const invoker = /** @type {HTMLElement} */ (dialog.querySelector('[slot="invoker"]'));
 
-      invoker.click();
+      // @ts-expect-error [allow-protected-in-tests]
+      dialog._overlayInvokerNode.click();
       // @ts-expect-error [allow-protected-in-tests]
       await dialog._overlayCtrl._showComplete;
       dialog.close();
@@ -101,7 +142,7 @@ describe('lion-dialog', () => {
       // @ts-expect-error [allow-protected-in-tests]
       await dialog._overlayCtrl._hideComplete;
 
-      expect(document.activeElement).to.equal(el.querySelector('#focus-button'));
+      expect(document.activeElement).to.equal(outsideBtn);
     });
   });
 });
