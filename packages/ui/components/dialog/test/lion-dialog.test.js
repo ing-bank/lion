@@ -8,6 +8,19 @@ import '@lion/ui/define/lion-dialog.js';
  */
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ (_fixture);
 
+/**
+ * @param {HTMLElement} element
+ * */
+const isInViewport = element => {
+  const rect = element.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+};
+
 describe('lion-dialog', () => {
   // For some reason, globalRootNode is not cleared properly on disconnectedCallback from previous overlay test fixtures...
   // Not sure why this "bug" happens...
@@ -111,6 +124,7 @@ describe('lion-dialog', () => {
       await dialog._overlayCtrl._hideComplete;
 
       expect(document.activeElement).to.equal(outsideBtn);
+      expect(isInViewport(outsideBtn)).to.be.true;
     });
 
     it('should focus the element specified in the "elementToFocusAfterHide" when modal', async () => {
@@ -143,6 +157,7 @@ describe('lion-dialog', () => {
       await dialog._overlayCtrl._hideComplete;
 
       expect(document.activeElement).to.equal(outsideBtn);
+      expect(isInViewport(outsideBtn)).to.be.true;
     });
   });
 });
