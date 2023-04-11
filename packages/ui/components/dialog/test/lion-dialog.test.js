@@ -159,5 +159,43 @@ describe('lion-dialog', () => {
       expect(document.activeElement).to.equal(outsideBtn);
       expect(isInViewport(outsideBtn)).to.be.true;
     });
+
+    it('should not focus the element specified in the "elementToFocusAfterHide" when user deliberately puts focus on another element when the dialog is open', async () => {
+      const outsideBtn1 = await fixture(
+        html`<button type="button" id="outside-button1">Focus</button>`,
+      );
+      const outsideBtn2 = await fixture(
+        html`<button type="button" id="outside-button2">Focus</button>`,
+      );
+
+      const cfg = {
+        trapsKeyboardFocus: false, // modal
+        elementToFocusAfterHide: outsideBtn1,
+      };
+      const el = await fixture(html`
+        <div>
+          ${outsideBtn1} ${outsideBtn2}
+          <lion-dialog .config="${cfg}">
+            <div slot="content" class="dialog">Hey there</div>
+            <button slot="invoker">Popup button</button>
+          </lion-dialog>
+        </div>
+      `);
+
+      const dialog = /** @type {LionDialog} */ (el.querySelector('lion-dialog'));
+
+      // @ts-expect-error [allow-protected-in-tests]
+      dialog._overlayInvokerNode.click();
+      // @ts-expect-error [allow-protected-in-tests]
+      await dialog._overlayCtrl._showComplete;
+      outsideBtn2.focus();
+      dialog.close();
+
+      // @ts-expect-error [allow-protected-in-tests]
+      await dialog._overlayCtrl._hideComplete;
+
+      expect(document.activeElement).to.equal(outsideBtn2);
+      expect(isInViewport(outsideBtn2)).to.be.true;
+    });
   });
 });
