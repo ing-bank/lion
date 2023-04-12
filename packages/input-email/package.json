@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-email",
-  "version": "0.13.1-legacy.0",
+  "version": "0.13.1",
   "description": "Provide a way for users to fill in an email",
   "license": "MIT",
   "author": "ing-bank",
@@ -36,11 +36,11 @@
     "lion-input-email.js"
   ],
   "dependencies": {
-    "@lion/core": "0.17.3",
-    "@lion/form-core": "0.13.3",
-    "@lion/input": "0.14.4",
-    "@lion/localize": "0.19.3",
-    "@lion/validate-messages": "0.6.4"
+    "@lion/core": "0.17.4",
+    "@lion/form-core": "0.13.4",
+    "@lion/input": "0.14.5",
+    "@lion/localize": "0.19.4",
+    "@lion/validate-messages": "0.6.5"
   },
   "keywords": [
     "input-email",

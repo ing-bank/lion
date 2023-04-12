@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.17.4
+
+### Patch Changes
+
+- 776feaa0: for lit1 version of lion: depend on latest lit1 deps for better deduping in hybrid apps using two versions of lion
+
 ## 0.17.3
 
 ### Patch Changes
