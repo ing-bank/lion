@@ -108,10 +108,14 @@ describe('formatDate', () => {
     };
     localize.locale = 'bg-BG';
     let date = /** @type {Date} */ (parseDate('29-12-2017'));
-    expect(formatDate(date)).to.equal('29.12.2017 г.');
+    let expected = window.navigator.userAgent.includes('Chrome/')
+      ? '29.12.2017 г.'
+      : '29.12.2017 г.';
+    expect(formatDate(date)).to.equal(expected);
 
     date = /** @type {Date} */ (parseDate('13-1-1940'));
-    expect(formatDate(date)).to.equal('13.01.1940 г.');
+    expected = window.navigator.userAgent.includes('Chrome/') ? '13.01.1940 г.' : '13.01.1940 г.';
+    expect(formatDate(date)).to.equal(expected);
 
     date = /** @type {Date} */ (parseDate('3-11-1970'));
     expect(formatDate(date, options)).to.equal('Tuesday, November 03, 1970');

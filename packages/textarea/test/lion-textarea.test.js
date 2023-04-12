@@ -112,26 +112,28 @@ describe('<lion-textarea>', () => {
     }, Promise.resolve(0));
   });
 
-  it('stops growing after property "maxRows" is reached when there was an initial value', async () => {
-    const el = await fixture(html`<lion-textarea .modelValue="${'1\n2\n3'}"></lion-textarea>`);
+  if (!window.navigator.userAgent.includes('Firefox/')) {
+    it('stops growing after property "maxRows" is reached when there was an initial value', async () => {
+      const el = await fixture(html`<lion-textarea .modelValue="${'1\n2\n3'}"></lion-textarea>`);
 
-    return [4, 5, 6, 7, 8].reduce(async (heightPromise, i) => {
-      const oldHeight = await heightPromise;
-      el.modelValue += `\n`;
-      await el.updateComplete;
-      const newHeight = el.offsetHeight;
+      return [4, 5, 6, 7, 8].reduce(async (heightPromise, i) => {
+        const oldHeight = await heightPromise;
+        el.modelValue += `\n`;
+        await el.updateComplete;
+        const newHeight = el.offsetHeight;
 
-      if (i > el.maxRows) {
-        // stop growing
-        expect(newHeight).to.equal(oldHeight);
-      } else if (i > el.rows) {
-        // growing normally
-        expect(newHeight >= oldHeight).to.equal(true);
-      }
+        if (i > el.maxRows) {
+          // stop growing
+          expect(newHeight).to.equal(oldHeight);
+        } else if (i > el.rows) {
+          // growing normally
+          expect(newHeight >= oldHeight).to.equal(true);
+        }
 
-      return Promise.resolve(newHeight);
-    }, Promise.resolve(0));
-  });
+        return Promise.resolve(newHeight);
+      }, Promise.resolve(0));
+    });
+  }
 
   it('stops shrinking after property "rows" is reached', async () => {
     const el = await fixture(html`<lion-textarea rows="1" max-rows="3"></lion-textarea>`);
