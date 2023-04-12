@@ -242,10 +242,11 @@ const myFormReset = ev => {
 };
 
 const myFormSubmit = ev => {
-  ev.preventDefault;
+  ev.preventDefault();
   const input = ev.target.querySelector('lion-input-file');
   console.log(input.hasFeedbackFor);
   console.log(input.serializedValue);
+  return false;
 };
 
 export const withIngForm = () => {

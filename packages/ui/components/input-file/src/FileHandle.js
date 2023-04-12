@@ -49,7 +49,7 @@ export class FileHandle {
    */
   // eslint-disable-next-line class-methods-use-this
   _getFileNameExtension(fileName) {
-    return fileName.slice(fileName.lastIndexOf('.'));
+    return fileName.slice(fileName.lastIndexOf('.') + 1);
   }
 
   // checks the file size and type to set failedProp property

@@ -97,8 +97,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         const button = document.createElement('button');
         button.setAttribute('id', `upload-button-${this._inputId}`);
         button.setAttribute('type', 'button');
-        button.setAttribute('click', `${() => this._inputNode.click()}`);
         button.textContent = this.fileUploadButtonLabel;
+        button.addEventListener('click', () => this._inputNode.click());
         return button;
       },
       'uploaded-file-list': () => ({
