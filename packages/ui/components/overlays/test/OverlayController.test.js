@@ -46,6 +46,19 @@ function getProtectedMembers(overlayControllerEl) {
   };
 }
 
+/**
+ * @param {HTMLElement} element
+ * */
+const isInViewport = element => {
+  const rect = element.getBoundingClientRect();
+  return (
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+};
+
 const withGlobalTestConfig = () =>
   /** @type {OverlayConfig} */ ({
     placementMode: 'global',
@@ -905,6 +918,7 @@ describe('OverlayController', () => {
 
         await ctrl.hide();
         expect(document.activeElement).to.equal(input);
+        expect(isInViewport(input)).to.be.true;
       });
 
       it('supports elementToFocusAfterHide option when shadowRoot involved', async () => {
