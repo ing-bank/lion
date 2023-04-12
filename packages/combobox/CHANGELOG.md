@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.6.6
+
+### Patch Changes
+
+- Updated dependencies [776feaa0]
+  - @lion/core@0.17.4
+  - @lion/form-core@0.13.4
+  - @lion/listbox@0.9.4
+  - @lion/overlays@0.27.4
+
 ## 0.6.5
 
 ### Patch Changes
