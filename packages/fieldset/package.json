@@ -1,6 +1,6 @@
 {
   "name": "@lion/fieldset",
-  "version": "0.19.1",
+  "version": "0.19.1-legacy.1",
   "description": "Allows to groups multiple input fields or other fieldsets together",
   "license": "MIT",
   "author": "ing-bank",

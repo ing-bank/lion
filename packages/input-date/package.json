@@ -1,6 +1,6 @@
 {
   "name": "@lion/input-date",
-  "version": "0.12.1",
+  "version": "0.12.1-legacy.1",
   "description": "Provide a way for users to fill in a date",
   "license": "MIT",
   "author": "ing-bank",
