@@ -1,5 +1,11 @@
 # Change Log
 
+
+
+## 0.11.6
+
+Manually depend on "-legacy.{x}" deps (the "inbetween versions" of packages that never  got a minor bump after we moved to lit2)
+
 ## 0.11.5
 
 ### Patch Changes
