@@ -124,6 +124,9 @@ export class OverlayController extends EventTarget {
     /** @private */
     this.__sharedConfig = config;
 
+    /** @private */
+    this.__activeElementRightBeforeHide = null;
+
     /** @type {OverlayConfig} */
     this.config = {};
 
@@ -728,7 +731,7 @@ export class OverlayController extends EventTarget {
     const event = new CustomEvent('before-show', { cancelable: true });
     this.dispatchEvent(event);
     if (!event.defaultPrevented) {
-      if (this.__wrappingDialogNode instanceof HTMLDialogElement) {
+      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
         this.__wrappingDialogNode.open = true;
       }
       // @ts-ignore
@@ -833,6 +836,14 @@ export class OverlayController extends EventTarget {
       this._hideResolve = resolve;
     });
 
+    // save the current activeElement so we know if the user set focus to another element than the invoker of the dialog
+    // while the dialog was open.
+    // We need this in the _restoreFocus method to determine if we should focus this.elementToFocusAfterHide when the
+    // dialog is closed or keep focus on the element that the user deliberately gave focus
+    this.__activeElementRightBeforeHide = /** @type {ShadowRoot} */ (
+      this.contentNode.getRootNode()
+    ).activeElement;
+
     if (this.manager) {
       this.manager.hide(this);
     }
@@ -850,9 +861,10 @@ export class OverlayController extends EventTarget {
         contentNode: this.contentNode,
       });
 
-      if (this.__wrappingDialogNode instanceof HTMLDialogElement) {
+      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
         this.__wrappingDialogNode.close();
       }
+
       // @ts-ignore
       this.__wrappingDialogNode.style.display = 'none';
       this._handleFeatures({ phase: 'hide' });
@@ -912,18 +924,20 @@ export class OverlayController extends EventTarget {
   /** @protected */
   _restoreFocus() {
     // We only are allowed to move focus if we (still) 'own' the active element.
-    // Otherwise we assume the 'outside world' has purposefully taken over
-    const { activeElement } = /** @type {ShadowRoot} */ (this.contentNode.getRootNode());
+    // Otherwise, we assume the 'outside world' has purposefully taken over
     const weStillOwnActiveElement =
-      activeElement instanceof HTMLElement && this.contentNode.contains(activeElement);
+      this.__activeElementRightBeforeHide instanceof HTMLElement &&
+      this.contentNode.contains(this.__activeElementRightBeforeHide);
+
     if (!weStillOwnActiveElement) {
       return;
     }
 
     if (this.elementToFocusAfterHide) {
       this.elementToFocusAfterHide.focus();
+      this.elementToFocusAfterHide.scrollIntoView({ block: 'center' });
     } else {
-      activeElement.blur();
+      /** @type {HTMLElement} */ (this.__activeElementRightBeforeHide).blur();
     }
   }
 
