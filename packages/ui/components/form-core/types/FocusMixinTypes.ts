@@ -26,6 +26,12 @@ export declare class FocusHost {
   blur(): void;
 
   /**
+  * Synchronizes property values when attributes change.
+  * @category attributes
+  */
+    attributeChangedCallback(name: string, _old: string | null, value: string | null): void;
+
+  /**
    * The focusable element:
    * could be an input, textarea, select, button or any other element with tabindex > -1
    */
