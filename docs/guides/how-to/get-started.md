@@ -31,8 +31,8 @@ npm i @lion/<package-name>
 **This is the main use case for lion**. To import component classes, and extend them for your own design system's components.
 
 ```js
-import { css } from '@lion/core';
-import { LionInput } from '@lion/input';
+import { css } from 'lit';
+import { LionInput } from '@lion/ui/input.js';
 
 class MyInput extends LionInput {
   static get styles() {
@@ -55,9 +55,12 @@ There's a couple of "systems" in lion which have a JavaScript API. Examples are 
 <script type="module">
   import { ajax } from '@lion/ajax';
 
-  ajax.get('data.json').then(response => {
-    // most likely you will use response.data
-  });
+  ajax
+    .fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+      // do something with the data
+    });
 </script>
 ```
 
@@ -67,7 +70,7 @@ You can also use the lion elements directly, although this is likely not a commo
 
 ```html
 <script type="module">
-  import '@lion/input/lion-input.js';
+  import '@lion/ui/define/lion-input.js';
 </script>
 
 <lion-input name="firstName" label="First name"></lion-input>

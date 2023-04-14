@@ -3,8 +3,8 @@
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 
-import '@lion/input/define';
-import '@lion/form/define';
+import '@lion/ui/define/lion-input.js';
+import '@lion/ui/define/lion-form.js';
 ```
 
 A web component that enhances the functionality of the native `form` component.
@@ -35,9 +35,9 @@ For more information about fields that are designed for our `form`, please read 
 ## Installation
 
 ```bash
-npm i --save @lion/form
+npm i --save @lion/ui
 ```
 
 ```js
-import '@lion/form/define';
+import '@lion/ui/define/lion-form.js';
 ```

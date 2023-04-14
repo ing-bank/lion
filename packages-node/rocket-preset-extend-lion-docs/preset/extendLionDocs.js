@@ -55,13 +55,6 @@ export async function extendLionDocs({
     path: path.resolve(__dirname),
     setupUnifiedPlugins: [
       addPlugin(
-        remarkExtendPkg.remarkExtend,
-        { globalReplaceFunction },
-        {
-          location: markdownPkg,
-        },
-      ),
-      addPlugin(
         remarkUrlToLocal,
         // the page object gets injected globally
         // @ts-ignore
@@ -70,7 +63,7 @@ export async function extendLionDocs({
           rootDir: _rootDir,
         },
         {
-          location: remarkExtendPkg.remarkExtend,
+          location: markdownPkg,
         },
       ),
       addPlugin(
@@ -79,7 +72,14 @@ export async function extendLionDocs({
         // @ts-ignore
         { extendDocsConfig },
         {
-          location: remarkExtendPkg.remarkExtend,
+          location: remarkUrlToLocal,
+        },
+      ),
+      addPlugin(
+        remarkExtendPkg.remarkExtend,
+        { globalReplaceFunction },
+        {
+          location: remarkUrlToLocal,
         },
       ),
     ],

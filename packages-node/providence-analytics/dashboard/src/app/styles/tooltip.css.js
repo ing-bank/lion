@@ -1,4 +1,5 @@
-import { css } from 'lit-element';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { css } from 'lit';
 
 export const tooltip = css`
   .c-tooltip {

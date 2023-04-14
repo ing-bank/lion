@@ -9,8 +9,8 @@ Its implementation is based on the following Design pattern:
 
 ```js script
 import { LitElement, html } from '@mdjs/mdjs-preview';
-import '@lion/listbox/define';
-import '@lion/select-rich/define';
+import '@lion/ui/define/lion-select-rich.js';
+import '@lion/ui/define/lion-option.js';
 ```
 
 ```js preview-story
@@ -34,14 +34,13 @@ export const main = () => html`
 ## Installation
 
 ```bash
-npm i --save @lion/select-rich
+npm i --save @lion/ui
 ```
 
 ```js
-import { LionSelectRich, LionOptions, LionOption } from '@lion/select-rich';
+import { LionSelectRich } from '@lion/ui/select-rich.js';
+import { LionOptions, LionOption } from '@lion/ui/listbox.js';
 // or
-import '@lion/select-rich/define';
-import '@lion/listbox/define';
+import '@lion/ui/define/lion-select-rich.js';
+import '@lion/ui/define/lion-option.js';
 ```
-
-> No need to npm install `@lion/option` separately, it comes with the rich select as a dependency

@@ -13,10 +13,13 @@ const { getFilePathRelativeFromRoot } = require('../../utils/get-file-path-relat
  * @typedef {import('../../types/core').AnalyzerName} AnalyzerName
  * @typedef {import('../../types/core').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../types/core').QueryOutput} QueryOutput
+ * @typedef {import('../../types/core').QueryOutputEntry} QueryOutputEntry
  * @typedef {import('../../types/core').ProjectInputData} ProjectInputData
  * @typedef {import('../../types/core').ProjectInputDataWithMeta} ProjectInputDataWithMeta
  * @typedef {import('../../types/core').AnalyzerQueryResult} AnalyzerQueryResult
  * @typedef {import('../../types/core').MatchAnalyzerConfig} MatchAnalyzerConfig
+ *
+ * @typedef {(ast: object, { relativePath: PathRelative }) => {result: QueryOutputEntry}} TraversEntryFn
  */
 
 /**
@@ -171,10 +174,10 @@ class Analyzer {
   }
 
   /**
-   * In a MatchAnalyzer, two Analyzers (a reference and targer) are run.
-   * For instance, in a MatchImportsAnalyzer, a FindExportsAnalyzer and FinImportsAnalyzer are run.
+   * In a MatchAnalyzer, two Analyzers (a reference and target) are run.
+   * For instance: a FindExportsAnalyzer and FindImportsAnalyzer are run.
    * Their results can be provided as config params.
-   * If they are stored in json format, 'unwind' them to be compatible for analysis...
+   * When they were stored in json format in the filesystem, 'unwind' them to be compatible for analysis...
    * @param {MatchAnalyzerConfig} cfg
    */
   static __unwindProvidedResults(cfg) {
@@ -284,16 +287,43 @@ class Analyzer {
   }
 
   /**
-   * @param {function} traverseEntry
+   * @param {function|{traverseEntryFn: function: filePaths:string[]; projectPath: string}} traverseEntryOrConfig
    */
-  async _traverse(traverseEntry) {
+  async _traverse(traverseEntryOrConfig) {
     LogService.debug(`Analyzer "${this.name}": started _traverse method`);
+
+    let traverseEntryFn;
+    let finalTargetData;
+
+    if (typeof traverseEntryOrConfig === 'function') {
+      traverseEntryFn = traverseEntryOrConfig;
+      finalTargetData = this.targetData;
+    } else {
+      traverseEntryFn = traverseEntryOrConfig.traverseEntryFn;
+      if (!traverseEntryOrConfig.filePaths) {
+        finalTargetData = this.targetData;
+      } else {
+        const { projectPath, projectName } = traverseEntryOrConfig;
+        if (!projectPath) {
+          LogService.error(`[Analyzer._traverse]: you must provide a projectPath`);
+        }
+        finalTargetData = InputDataService.createDataObject([
+          {
+            project: {
+              name: projectName || '[n/a]',
+              path: projectPath,
+            },
+            entries: traverseEntryOrConfig.filePaths,
+          },
+        ]);
+      }
+    }
 
     /**
      * Create ASTs for our inputData
      */
-    const astDataProjects = await QueryService.addAstToProjectsData(this.targetData, 'babel');
-    return analyzePerAstEntry(astDataProjects[0], traverseEntry);
+    const astDataProjects = await QueryService.addAstToProjectsData(finalTargetData, 'babel');
+    return analyzePerAstEntry(astDataProjects[0], traverseEntryFn);
   }
 
   async execute(customConfig = {}) {

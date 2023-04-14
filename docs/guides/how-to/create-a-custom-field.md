@@ -2,8 +2,10 @@
 
 ```js script
 import { html, css, LitElement } from '@mdjs/mdjs-preview';
-import { LionField } from '@lion/form-core';
-import '@lion/form-core/define';
+import { LionField } from '@lion/ui/form-core.js';
+import '@lion/ui/define/lion-field.js';
+import '@lion/ui/define/lion-validation-feedback.js';
+
 import '../../fundamentals/systems/form/assets/h-output.js';
 
 // A) the custom [slot=input] or 'HTMLElementWithValue'
@@ -39,7 +41,7 @@ class DummySlider extends LitElement {
         height: 24px;
         width: 24px;
         top: 50%;
-        transform: translateY(-50%);
+        transform: translateY(-50%) translateX(-50%);
         transition: left 0.5s ease 0s;
       }
     `,

@@ -26,7 +26,10 @@ class LogService {
    * @param {string} [title]
    */
   static debug(text, title) {
-    if (!this.debugEnabled) return;
+    if (this.allMuted || !this.debugEnabled) {
+      return;
+    }
+
     log(chalk.bgCyanBright.black.bold(`  debug${printTitle(title)}`), text);
     // @ts-ignore
     this._logHistory.push(`-   debug -${printTitle(title)} ${text}`);
@@ -37,6 +40,10 @@ class LogService {
    * @param {string} [title]
    */
   static warn(text, title) {
+    if (this.allMuted) {
+      return;
+    }
+
     log(chalk.bgYellowBright.black.bold(`warning${printTitle(title)}`), text);
     // @ts-ignore
     this._logHistory.push(`- warning -${printTitle(title)} ${text}`);
@@ -47,9 +54,18 @@ class LogService {
    * @param {string} [title]
    */
   static error(text, title) {
-    log(chalk.bgRedBright.black.bold(` error${printTitle(title)}`), text);
     // @ts-ignore
     this._logHistory.push(`-  error -${printTitle(title)} ${text}`);
+
+    if (this.throwsOnError) {
+      throw new Error(`${title ? `[${title}]: ` : ''}text`);
+    }
+
+    if (this.allMuted) {
+      return;
+    }
+
+    log(chalk.bgRedBright.black.bold(` error${printTitle(title)}`), text);
   }
 
   /**
@@ -57,9 +73,13 @@ class LogService {
    * @param {string} [title]
    */
   static success(text, title) {
-    log(chalk.bgGreen.black.bold(`success${printTitle(title)}`), text);
     // @ts-ignore
     this._logHistory.push(`- success -${printTitle(title)} ${text}`);
+    if (this.allMuted) {
+      return;
+    }
+
+    log(chalk.bgGreen.black.bold(`success${printTitle(title)}`), text);
   }
 
   /**
@@ -67,9 +87,14 @@ class LogService {
    * @param {string} [title]
    */
   static info(text, title) {
-    log(chalk.bgBlue.black.bold(`   info${printTitle(title)}`), text);
     // @ts-ignore
     this._logHistory.push(`-    info -${printTitle(title)} ${text}`);
+
+    if (this.allMuted) {
+      return;
+    }
+
+    log(chalk.bgBlue.black.bold(`   info${printTitle(title)}`), text);
   }
 
   /**
@@ -123,7 +148,11 @@ class LogService {
     this._logHistory = [];
   }
 }
+
 LogService.debugEnabled = false;
+LogService.allMuted = false;
+LogService.throwsOnError = false;
+
 /** @type {string[]} */
 LogService._logHistory = [];
 

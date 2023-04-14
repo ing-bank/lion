@@ -1,5 +1,40 @@
 # Change Log
 
+## 1.1.3
+
+### Patch Changes
+
+- 63bb012e: fetchJSON will try to parse Response body as JSON if the content-type headers are missing, in this case it will assume JSON.
+
+## 1.1.2
+
+### Patch Changes
+
+- 2553e7ac: fix: relax content type restriction of json response
+
+## 1.1.1
+
+### Patch Changes
+
+- bfd5152a: fix: relax content types when setting cache
+
+## 1.1.0
+
+### Minor Changes
+
+- e08b6bec: Update to use `package exports` with a dedicated `types` entry.
+  This means the package only supports node 16+ and TS 4.7+ with `moduleResolution: Node16` or `moduleResolution: NodeNext` as described in the [TS 4.7 Announcement](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#package-json-exports-imports-and-self-referencing).
+
+### Patch Changes
+
+- 66abd3ea: don't throw on non-JSON responses in fetchJson
+
+## 1.0.0
+
+### Major Changes
+
+- 18287a64: First major release (no difference with 0.16.0)
+
 ## 0.16.0
 
 ### Minor Changes

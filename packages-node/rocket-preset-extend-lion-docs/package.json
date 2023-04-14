@@ -1,6 +1,6 @@
 {
   "name": "rocket-preset-extend-lion-docs",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "A rocket preset to reuse lion documentation inside your design system extension",
   "license": "MIT",
   "author": "ing-bank",
@@ -11,6 +11,9 @@
     "directory": "packages-node/rocket-preset-extend-lion-docs"
   },
   "type": "module",
+  "exports": {
+    ".": "./index.js"
+  },
   "main": "index.js",
   "files": [
     "*.js",
@@ -29,10 +32,11 @@
   "dependencies": {
     "@babel/core": "^7.10.1",
     "@babel/plugin-syntax-import-assertions": "^7.14.5",
-    "babel-plugin-extend-docs": "0.5.3",
+    "babel-plugin-extend-docs": "^0.5.3",
     "es-module-lexer": "^0.3.6",
+    "glob": "^7.1.6",
     "plugins-manager": "^0.3.0",
-    "remark-extend": "0.5.1",
+    "remark-extend": "^0.5.1",
     "unist-util-visit": "^2.0.2"
   },
   "keywords": [
@@ -42,8 +46,5 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "exports": {
-    ".": "./index.js"
   }
 }

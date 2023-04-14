@@ -4,7 +4,7 @@ A reusable and accessible calendar view web component.
 
 ```js script
 import { html, css } from '@mdjs/mdjs-preview';
-import '@lion/calendar/define';
+import '@lion/ui/define/lion-calendar.js';
 ```
 
 ```js preview-story
@@ -41,9 +41,9 @@ export const main = () => {
 ## Installation
 
 ```bash
-npm i --save @lion/calendar
+npm i --save @lion/ui
 ```
 
 ```js
-import '@lion/calendar/define';
+import '@lion/ui/define/lion-calendar.js';
 ```

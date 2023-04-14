@@ -1,0 +1,8 @@
+{
+  "//": "this runs after 'scripts/types-correct-after-build.js' has been applied",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "emitDeclarationOnly": false,
+    "noEmit": true
+  }
+}

@@ -1,9 +1,7 @@
-import '../typedef.js';
-
 /**
  * Transforms a request, adding an accept-language header with the current application's locale
  * if it has not already been set.
- * @type {RequestInterceptor}
+ * @param {Request} request
  */
 export async function acceptLanguageRequestInterceptor(request) {
   if (!request.headers.has('accept-language')) {

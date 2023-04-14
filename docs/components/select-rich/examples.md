@@ -2,8 +2,8 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { repeat } from '@lion/core';
-import '@lion/select-rich/define';
+import { repeat } from 'lit/directives/repeat.js';
+import '@lion/ui/define/lion-select-rich.js';
 import './src/intl-select-rich.js';
 import { regionMetaList } from './src/regionMetaList.js';
 ```

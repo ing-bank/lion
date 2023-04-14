@@ -2,12 +2,12 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { localize } from '@lion/localize';
-import { MinLength, Validator, Required } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
+import { localize } from '@lion/ui/localize.js';
+import { MinLength, Validator, Required } from '@lion/ui/form-core.js';
+import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 
-import '@lion/input/define';
-import '@lion/fieldset/define';
+import '@lion/ui/define/lion-input.js';
+import '@lion/ui/define/lion-fieldset.js';
 ```
 
 ## With Data

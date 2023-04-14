@@ -7,11 +7,14 @@ import { readdirSync } from 'fs';
 
 const exec = promisify(execCallback);
 
-const getDirectories = source =>
+const getDirectories = (/** @type {string} */ source) =>
   readdirSync(source, { withFileTypes: true })
     .filter(pathMeta => pathMeta.isDirectory())
     .map(pathMeta => pathMeta.name);
 
+/**
+ * @param {string} folder
+ */
 async function checkNpmDistTag(folder) {
   const actions = [];
   console.log('| Name                     | Local Version | NPM dist tag latest | Check |');
@@ -26,7 +29,10 @@ async function checkNpmDistTag(folder) {
     const latestVersion = stdout.trim();
 
     console.log(
-      `| ${name.padEnd(24, ' ')} | ${version.padEnd(13, ' ')} | ${latestVersion.padEnd(19, ' ')} | ${version !== latestVersion ? '  ❌  ' : '  ✓  '} |`,
+      `| ${name.padEnd(24, ' ')} | ${version.padEnd(13, ' ')} | ${latestVersion.padEnd(
+        19,
+        ' ',
+      )} | ${version !== latestVersion ? '  ❌  ' : '  ✓  '} |`,
     );
 
     if (version !== latestVersion) {

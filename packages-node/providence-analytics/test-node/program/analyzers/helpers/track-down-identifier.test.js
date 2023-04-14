@@ -137,6 +137,71 @@ describe('trackdownIdentifier', () => {
     });
   });
 
+  it(`identifies import map entries as internal sources`, async () => {
+    mockProject(
+      {
+        './MyClass.js': `export default class {}`,
+        './currentFile.js': `
+        import MyClass from '#internal/source';
+      `,
+        './package.json': JSON.stringify({
+          name: 'my-project',
+          imports: { '#internal/source': './MyClass.js' },
+        }),
+      },
+      {
+        projectName: 'my-project',
+        projectPath: '/my/project',
+      },
+    );
+
+    // Let's say we want to track down 'MyClass' in the code above
+    const source = '#internal/source';
+    const identifierName = '[default]';
+    const currentFilePath = '/my/project/currentFile.js';
+    const rootPath = '/my/project';
+
+    const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
+    expect(rootFile).to.eql({
+      file: './MyClass.js',
+      specifier: '[default]',
+    });
+  });
+
+  it(`identifies the current project as internal source`, async () => {
+    mockProject(
+      {
+        './MyClass.js': `export default class {}`,
+        './currentFile.js': `
+        import MyClass from 'my-project/MyClass.js';
+      `,
+      },
+      {
+        projectName: 'my-project',
+        projectPath: '/my/project',
+      },
+    );
+
+    // Let's say we want to track down 'MyClass' in the code above
+    const source = '#internal/source';
+    const identifierName = '[default]';
+    const currentFilePath = '/my/project/currentFile.js';
+    const rootPath = '/my/project';
+    const projectName = 'my-project';
+
+    const rootFile = await trackDownIdentifier(
+      source,
+      identifierName,
+      currentFilePath,
+      rootPath,
+      projectName,
+    );
+    expect(rootFile).to.eql({
+      file: './MyClass.js',
+      specifier: '[default]',
+    });
+  });
+
   it(`tracks down locally declared, reexported identifiers (without a source defined)`, async () => {
     mockProject(
       {
@@ -165,6 +230,51 @@ describe('trackdownIdentifier', () => {
     expect(rootFile).to.eql({
       file: './src/declarationOfMyNumber.js',
       specifier: 'myNumber',
+    });
+  });
+
+  it(`works with multiple re-exports in a file`, async () => {
+    mockProject(
+      {
+        './packages/accordion/IngAccordionContent.js': `export class IngAccordionContent { }`,
+        './packages/accordion/IngAccordionInvokerButton.js': `export class IngAccordionInvokerButton { }`,
+        './packages/accordion/index.js': `
+      export { IngAccordionContent } from './IngAccordionContent.js';
+      export { IngAccordionInvokerButton } from './IngAccordionInvokerButton.js';`,
+      },
+      {
+        projectName: 'my-project',
+        projectPath: '/my/project',
+      },
+    );
+
+    // Let's say we want to track down 'IngAccordionInvokerButton' in the code above
+    const source = './IngAccordionContent.js';
+    const identifierName = 'IngAccordionContent';
+    const currentFilePath = '/my/project/packages/accordion/index.js';
+    const rootPath = '/my/project';
+
+    const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
+    expect(rootFile).to.eql({
+      file: './packages/accordion/IngAccordionContent.js',
+      specifier: 'IngAccordionContent',
+    });
+
+    // Let's say we want to track down 'IngAccordionInvokerButton' in the code above
+    const source2 = './IngAccordionInvokerButton.js';
+    const identifierName2 = 'IngAccordionInvokerButton';
+    const currentFilePath2 = '/my/project/packages/accordion/index.js';
+    const rootPath2 = '/my/project';
+
+    const rootFile2 = await trackDownIdentifier(
+      source2,
+      identifierName2,
+      currentFilePath2,
+      rootPath2,
+    );
+    expect(rootFile2).to.eql({
+      file: './packages/accordion/IngAccordionInvokerButton.js',
+      specifier: 'IngAccordionInvokerButton',
     });
   });
 

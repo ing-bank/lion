@@ -1,0 +1,10 @@
+export { runChoiceGroupMixinSuite } from '../components/form-core/test-suites/choice-group/ChoiceGroupMixin.suite.js';
+export { runChoiceInputMixinSuite } from '../components/form-core/test-suites/choice-group/ChoiceInputMixin.suite.js';
+export { runFormGroupMixinInputSuite } from '../components/form-core/test-suites/form-group/FormGroupMixin-input.suite.js';
+export { runFormGroupMixinSuite } from '../components/form-core/test-suites/form-group/FormGroupMixin.suite.js';
+export { runFormatMixinSuite } from '../components/form-core/test-suites/FormatMixin.suite.js';
+export { runRegistrationSuite } from '../components/form-core/test-suites/FormRegistrationMixins.suite.js';
+export { runInteractionStateMixinSuite } from '../components/form-core/test-suites/InteractionStateMixin.suite.js';
+export { runNativeTextFieldMixinSuite } from '../components/form-core/test-suites/NativeTextFieldMixin.suite.js';
+export { runValidateMixinSuite } from '../components/form-core/test-suites/ValidateMixin.suite.js';
+export { runValidateMixinFeedbackPart } from '../components/form-core/test-suites/ValidateMixinFeedbackPart.suite.js';

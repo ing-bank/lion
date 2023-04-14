@@ -3,7 +3,7 @@
 ```js script
 import { html as previewHtml } from '@mdjs/mdjs-preview';
 
-import '@lion/accordion/define';
+import '@lion/ui/define/lion-accordion.js';
 ```
 
 ## Default Accordion collapsed
@@ -168,7 +168,7 @@ One way is by creating the DOM elements and appending them as needed. For how th
 Another way is by adding data to the Lit property that you loop over in your template. See `__handlePushClick` for an example.
 
 ```js preview-story
-import { html, LitElement } from '@lion/core';
+import { html, LitElement } from 'lit';
 
 export const distributeNewElement = () => {
   class DemoDistribute extends LitElement {

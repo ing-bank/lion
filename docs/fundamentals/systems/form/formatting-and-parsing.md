@@ -2,9 +2,9 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/input/define';
-import { Unparseable } from '@lion/form-core';
-import { liveFormatPhoneNumber } from '@lion/input-tel';
+import '@lion/ui/define/lion-input.js';
+import { Unparseable } from '@lion/ui/form-core.js';
+import { liveFormatPhoneNumber } from '@lion/ui/input-tel.js';
 import './assets/h-output.js';
 ```
 
@@ -89,7 +89,7 @@ export const unparseable = () => html`
 
 A formatter should return a `formattedValue`. It accepts the current modelValue and an options object.
 
-Below is a very naive and limited parser that ignores non-digits. The formatter then uses `Intl.NumberFormat` to format it with thousand separators.
+Below is a very naive and limited parser that ignores non-digits. The formatter then uses `Intl.NumberFormat` to format it with group (thousand) separators.
 
 Formatted value is reflected back to the user `on-blur` of the field, but only if the field has no errors (validation).
 

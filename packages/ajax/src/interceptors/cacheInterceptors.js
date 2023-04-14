@@ -1,5 +1,4 @@
 /* eslint-disable no-param-reassign */
-import '../typedef.js';
 import {
   ajaxCache,
   extendCacheOptions,
@@ -9,6 +8,14 @@ import {
   resetCacheSession,
   validateCacheOptions,
 } from '../cacheManager.js';
+
+/**
+ * @typedef {import('../../types/types.js').RequestInterceptor} RequestInterceptor
+ * @typedef {import('../../types/types.js').ResponseInterceptor} ResponseInterceptor
+ * @typedef {import('../../types/types.js').CacheOptions} CacheOptions
+ * @typedef {import('../../types/types.js').CacheRequest} CacheRequest
+ * @typedef {import('../../types/types.js').CacheResponse} CacheResponse
+ */
 
 /**
  * Tests whether the request method is supported according to the `cacheOptions`
@@ -24,10 +31,10 @@ const isMethodSupported = (methods, method) => methods.includes(method.toLowerCa
  * @param {string[]|undefined} contentTypes
  * @returns {boolean} `true` if the contentTypes property is not an array, or if the value of the Content-Type header is in the array
  */
-const isResponseContentTypeSupported = (response, contentTypes) => {
+export const isResponseContentTypeSupported = (response, contentTypes) => {
   if (!Array.isArray(contentTypes)) return true;
 
-  return contentTypes.includes(String(response.headers.get('Content-Type')));
+  return !!contentTypes.find(ct => String(response.headers.get('Content-Type')).includes(ct));
 };
 
 /**

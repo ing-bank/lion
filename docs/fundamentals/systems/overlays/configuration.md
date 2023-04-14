@@ -2,8 +2,8 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import './assets/demo-overlay-system.js';
-import './assets/applyDemoOverlayStyles.js';
+import './assets/demo-el-using-overlaymixin.mjs';
+import './assets/applyDemoOverlayStyles.mjs';
 ```
 
 The `OverlayController` has many configuration options.
@@ -14,13 +14,13 @@ The `OverlayMixin` exposes these options via `.config`.
 
 Either `'local'` or `'global'`.
 This determines the DOM position of the `contentNode`, either next to the invokerNode,
-or in the `global-overlays` container at the bottom of the `<body>`.
+or in the `overlays` container at the bottom of the `<body>`.
 
 ### Local
 
 ```js preview-story
 export const placementLocal = () => {
-  const placementModeLocalConfig = { placementMode: 'local' };
+  const placementModeLocalConfig = { ...withDropdownConfig() };
   return html`
     <style>
       .demo-overlay {
@@ -28,7 +28,7 @@ export const placementLocal = () => {
         border: 1px solid black;
       }
     </style>
-    <demo-overlay-system .config=${placementModeLocalConfig}>
+    <demo-el-using-overlaymixin .config=${placementModeLocalConfig}>
       <button slot="invoker">Click me to open the local overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -39,7 +39,7 @@ export const placementLocal = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -50,7 +50,7 @@ export const placementLocal = () => {
 export const placementGlobal = () => {
   const placementModeGlobalConfig = { placementMode: 'global' };
   return html`
-    <demo-overlay-system .config=${placementModeGlobalConfig}>
+    <demo-el-using-overlaymixin .config=${placementModeGlobalConfig}>
       <button slot="invoker">Click me to open the global overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -61,7 +61,7 @@ export const placementGlobal = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -77,26 +77,14 @@ As specified in the [overlay rationale](./rationale.md) there are only two offic
 Since most overlays have interactive content the default is set to dialogs. To get a tooltip, you can add `isTooltip` to the config object. This only works for local placement and it also needs to have `handlesAccessibility` activated to work.
 
 ```js preview-story
-export const isTooltip = () => {
-  function showTooltip() {
-    const tooltip = document.querySelector('#tooltip');
-    tooltip.opened = true;
-  }
-
-  function hideTooltip() {
-    const tooltip = document.querySelector('#tooltip');
-    tooltip.opened = false;
-  }
-
-  const tooltipConfig = { placementMode: 'local', isTooltip: true, handlesAccessibility: true };
+export const usingTooltipConfig = () => {
+  const tooltipConfig = { ...withTooltipConfig() };
 
   return html`
-    <demo-overlay-system id="tooltip" .config=${tooltipConfig}>
-      <button slot="invoker" @mouseenter=${showTooltip} @mouseleave=${hideTooltip}>
-        Hover me to open the tooltip!
-      </button>
+    <demo-el-using-overlaymixin id="tooltip" .config=${tooltipConfig}>
+      <button slot="invoker">Hover me to open the tooltip!</button>
       <div slot="content" class="demo-overlay">Hello!</div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -112,9 +100,9 @@ You use the feature on any type of overlay.
 
 ```js preview-story
 export const trapsKeyboardFocus = () => {
-  const trapsKeyboardFocusConfig = { trapsKeyboardFocus: true };
+  const trapsKeyboardFocusConfig = { ...withDropdownConfig(), trapsKeyboardFocus: true };
   return html`
-    <demo-overlay-system .config=${trapsKeyboardFocusConfig}>
+    <demo-el-using-overlaymixin .config=${trapsKeyboardFocusConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         <div><a href="#">A focusable anchor</a></div>
@@ -127,7 +115,7 @@ export const trapsKeyboardFocus = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -138,9 +126,9 @@ Boolean property. Will allow closing the overlay on ESC key when enabled.
 
 ```js preview-story
 export const hidesOnEsc = () => {
-  const hidesOnEscConfig = { hidesOnEsc: true };
+  const hidesOnEscConfig = { ...withDropdownConfig(), hidesOnEsc: true };
   return html`
-    <demo-overlay-system .config=${hidesOnEscConfig}>
+    <demo-el-using-overlaymixin .config=${hidesOnEscConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -151,7 +139,7 @@ export const hidesOnEsc = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -162,9 +150,9 @@ Boolean property. When enabled allows closing the overlay on ESC key, even when 
 
 ```js preview-story
 export const hidesOnOutsideEsc = () => {
-  const hidesOnEscConfig = { hidesOnOutsideEsc: true };
+  const hidesOnEscConfig = { ...withDropdownConfig(), hidesOnOutsideEsc: true };
   return html`
-    <demo-overlay-system .config=${hidesOnEscConfig}>
+    <demo-el-using-overlaymixin .config=${hidesOnEscConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -175,7 +163,7 @@ export const hidesOnOutsideEsc = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -186,9 +174,9 @@ Boolean property. Will allow closing the overlay by clicking outside the `conten
 
 ```js preview-story
 export const hidesOnOutsideClick = () => {
-  const hidesOnOutsideClickConfig = { hidesOnOutsideClick: true };
+  const hidesOnOutsideClickConfig = { ...withDropdownConfig(), hidesOnOutsideClick: true };
   return html`
-    <demo-overlay-system .config=${hidesOnOutsideClickConfig}>
+    <demo-el-using-overlaymixin .config=${hidesOnOutsideClickConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         <label for="myInput">Clicking this label should not trigger close</label>
@@ -200,7 +188,7 @@ export const hidesOnOutsideClick = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -213,9 +201,12 @@ In the example, we focus the body instead of the `invokerNode`.
 
 ```js preview-story
 export const elementToFocusAfterHide = () => {
-  const elementToFocusAfterHideConfig = { elementToFocusAfterHide: document.body };
+  const btn = document.createElement('button');
+  btn.innerText = 'I should get focus';
+
+  const elementToFocusAfterHideConfig = { ...withDropdownConfig(), elementToFocusAfterHide: btn };
   return html`
-    <demo-overlay-system .config=${elementToFocusAfterHideConfig}>
+    <demo-el-using-overlaymixin .config=${elementToFocusAfterHideConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -226,7 +217,8 @@ export const elementToFocusAfterHide = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
+    ${btn}
   `;
 };
 ```
@@ -239,18 +231,18 @@ Boolean property. When true, will add a backdrop when the overlay is opened.
 > If this is not what you intend, you can make the overlays not nested, where opening one, closes the other.
 > Fortunately, we also have a configuration option that simulates that behavior in the next section `isBlocking`.
 
-The backdrop styling can be configured by targeting the `.global-overlays .global-overlays__backdrop` css selector.
+The backdrop styling can be configured by targeting the `.overlays .overlays__backdrop` css selector.
 
 The backdrop animation can be configured by targeting the
-`.global-overlays .global-overlays__backdrop--animation-in` and
-`.global-overlays .global-overlays__backdrop--animation-out` css selector.
+`.overlays .overlays__backdrop--animation-in` and
+`.overlays .overlays__backdrop--animation-out` css selector.
 This currently only supports CSS Animations, because it relies on the `animationend` event to add/remove classes.
 
 ```js preview-story
 export const hasBackdrop = () => {
-  const hasBackdropConfig = { hasBackdrop: true };
+  const hasBackdropConfig = { ...withDropdownConfig(), hasBackdrop: true };
   return html`
-    <demo-overlay-system .config=${hasBackdropConfig}>
+    <demo-el-using-overlaymixin .config=${hasBackdropConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -261,7 +253,7 @@ export const hasBackdrop = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -272,26 +264,12 @@ Boolean property. When true, will block other overlays.
 
 ```js preview-story
 export const isBlocking = () => {
-  const isBlockingConfig = { hasBackdrop: true, isBlocking: true };
+  const isBlockingConfig = { ...withDropdownConfig(), hasBackdrop: true, isBlocking: true };
   return html`
-    <demo-overlay-system>
-      <button slot="invoker">Click me to open the overlay!</button>
-      <div slot="content" class="demo-overlay">
-        <div>
-          <demo-overlay-system .config=${isBlockingConfig}>
-            <button slot="invoker">Click me to open another overlay which is blocking</button>
-            <div slot="content" class="demo-overlay demo-overlay--blocking">
-              Hello! You can close this notification here:
-              <button
-                class="close-button"
-                @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-              >
-                ⨯
-              </button>
-            </div>
-          </demo-overlay-system>
-        </div>
-        Hello! You can close this notification here:
+    <demo-el-using-overlaymixin>
+      <button slot="invoker">Overlay A: open first</button>
+      <div slot="content" class="demo-overlay" style="width:200px;">
+        This overlay gets closed when overlay B gets opened
         <button
           class="close-button"
           @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
@@ -299,7 +277,19 @@ export const isBlocking = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
+    <demo-el-using-overlaymixin .config=${isBlockingConfig}>
+      <button slot="invoker">Overlay B: open second</button>
+      <div slot="content" class="demo-overlay demo-overlay--blocking">
+        Overlay A is hidden... now close me and see overlay A again.
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -315,7 +305,7 @@ Boolean property. When true, prevents scrolling content that is outside of the `
 export const preventsScroll = () => {
   const preventsScrollConfig = { preventsScroll: true };
   return html`
-    <demo-overlay-system .config=${preventsScrollConfig}>
+    <demo-el-using-overlaymixin .config=${preventsScrollConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -326,7 +316,7 @@ export const preventsScroll = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -351,11 +341,11 @@ Options:
 export const viewportConfig = () => {
   const viewportConfig = {
     placementMode: 'global',
-    viewportConfig: { placement: 'top-left' },
+    viewportConfig: { placement: 'bottom-left' },
   };
   return html`
-    <demo-overlay-system .config=${viewportConfig}>
-      <button slot="invoker">Click me to open the overlay in the top left corner!</button>
+    <demo-el-using-overlaymixin .config=${viewportConfig}>
+      <button slot="invoker">Click me to open the overlay in the bottom left corner!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
@@ -365,7 +355,7 @@ export const viewportConfig = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -434,7 +424,7 @@ export const popperConfig = () => {
         border: 1px solid black;
       }
     </style>
-    <demo-overlay-system .config=${popperConfig}>
+    <demo-el-using-overlaymixin .config=${popperConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -445,7 +435,7 @@ export const popperConfig = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```

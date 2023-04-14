@@ -9,7 +9,7 @@ Here you find more details about what we offer.
 
 Let's see what each section describes.
 
-1. [](./systems/core/overview.md) <br>
+1. [Systems](./systems/core/overview.md) <br>
    These are the fundamental systems that power all of our components.
 2. [Tools](./tools/helpers/overview.md) <br>
    Frontend Tools useful for web development but are not visual and therefore are not components.

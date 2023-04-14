@@ -1,6 +1,11 @@
-import './typedef.js';
 import Cache from './Cache.js';
 import PendingRequestStore from './PendingRequestStore.js';
+
+/**
+ * @typedef {import('../types/types.js').CacheRequest} CacheRequest
+ * @typedef {import('../types/types.js').CacheOptions} CacheOptions
+ * @typedef {import('../types/types.js').ValidatedCacheOptions} ValidatedCacheOptions
+ */
 
 /**
  * The id for the cache session
@@ -46,7 +51,7 @@ export const resetCacheSession = cacheId => {
 
 /**
  * Stringify URL search params
- * @param {Params} params query string parameters object
+ * @param {*} params query string parameters object
  * @returns {string} of querystring parameters WITHOUT `?` or empty string ''
  */
 const stringifySearchParams = (params = {}) =>
@@ -152,8 +157,8 @@ export const validateCacheOptions = ({
  * so perhaps you do want to invalidate /api/accounts when invalidating /api/users.
  * If it's NOT one of the config.methods, invalidate caches
  *
- * @param requestId { string }
- * @param cacheOptions { CacheOptions }
+ * @param {string} requestId
+ * @param {CacheOptions} cacheOptions
  */
 export const invalidateMatchingCache = (requestId, { invalidateUrls, invalidateUrlsRegex }) => {
   // invalidate this request

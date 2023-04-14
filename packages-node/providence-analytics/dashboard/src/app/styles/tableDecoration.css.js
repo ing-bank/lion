@@ -1,4 +1,5 @@
-import { css } from 'lit-element';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { css } from 'lit';
 
 // Decoration of white label component 'c-table', which is consumed by webcomponent 'p-table'
 

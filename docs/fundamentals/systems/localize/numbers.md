@@ -13,7 +13,7 @@ The input value is `1234.56`.
 
 ```js script
 import { html, css } from '@mdjs/mdjs-preview';
-import { formatNumber, formatNumberToParts } from '@lion/localize';
+import { formatNumber, formatNumberToParts } from '@lion/ui/localize.js';
 import allLocales from './assets/all-locales.js';
 
 const formatNumberDemoStyle = css`

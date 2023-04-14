@@ -2,18 +2,18 @@
 
 ```js script
 import { html, render, LitElement } from '@mdjs/mdjs-preview';
-import { renderLitAsNode } from '@lion/helpers';
+import { renderLitAsNode } from '@lion/ui/helpers.js';
 import {
   ArrowMixin,
   OverlayMixin,
   withBottomSheetConfig,
   withDropdownConfig,
   withModalDialogConfig,
-} from '@lion/overlays';
+} from '@lion/ui/overlays.js';
 
-import './assets/demo-overlay-system.js';
-import './assets/demo-overlay-backdrop.js';
-import './assets/applyDemoOverlayStyles.js';
+import './assets/demo-el-using-overlaymixin.mjs';
+import './assets/demo-overlay-backdrop.mjs';
+import './assets/applyDemoOverlayStyles.mjs';
 import { ref, createRef } from 'lit/directives/ref.js';
 ```
 
@@ -25,7 +25,7 @@ For a detailed rationale, please consult [Rationale](./rationale.md).
 
 ```js preview-story
 export const main = () => html`
-  <demo-overlay-system>
+  <demo-el-using-overlaymixin>
     <button slot="invoker">Click me to open the overlay!</button>
     <div slot="content" class="demo-overlay">
       Hello! You can close this notification here:
@@ -33,7 +33,7 @@ export const main = () => html`
         ⨯
       </button>
     </div>
-  </demo-overlay-system>
+  </demo-el-using-overlaymixin>
 `;
 ```
 
@@ -132,7 +132,7 @@ render() {
 or declaratively in your template with the `.config` property
 
 ```html
-<demo-overlay-system .config=${{ ...withModalDialogConfig() }}>
+<demo-el-using-overlaymixin .config=${{ ...withModalDialogConfig() }}>
   <button slot="invoker">Click me to open the overlay!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
@@ -142,7 +142,7 @@ or declaratively in your template with the `.config` property
       ⨯
     </button>
   </div>
-</demo-overlay-system>
+</demo-el-using-overlaymixin>
 ```
 
 ### Backdrop
@@ -155,7 +155,7 @@ The easiest way is declarative. This can be achieved by adding a `<slot name="ba
 export const backdrop = () => {
   const responsiveModalDialogConfig = { ...withModalDialogConfig() };
   return html`
-    <demo-overlay-system .config=${responsiveModalDialogConfig}>
+    <demo-el-using-overlaymixin .config=${responsiveModalDialogConfig}>
       <demo-overlay-backdrop slot="backdrop"></demo-overlay-backdrop>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
@@ -166,7 +166,7 @@ export const backdrop = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -179,7 +179,7 @@ export const backdropImperative = () => {
   const backdropNode = document.createElement('demo-overlay-backdrop');
   const responsiveModalDialogConfig = { ...withModalDialogConfig(), backdropNode };
   return html`
-    <demo-overlay-system .config=${responsiveModalDialogConfig}>
+    <demo-el-using-overlaymixin .config=${responsiveModalDialogConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -189,7 +189,7 @@ export const backdropImperative = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -197,7 +197,7 @@ export const backdropImperative = () => {
 #### Backdrop animation
 
 By default our overlay system comes with a backdrop animation.
-This will add `global-overlays__backdrop--animation-in` and `global-overlays__backdrop--animation-out` classes to your backdrop node.
+This will add `overlays__backdrop--animation-in` and `overlays__backdrop--animation-out` classes to your backdrop node.
 If you have `placementMode: 'local'` it will replace those `global` strings in the CSS classes with `local`.
 
 It expects from you that you act on these classes in your CSS with an animation. For example if you have your own backdrop webcomponent (to encapsulate styles):
@@ -234,7 +234,7 @@ Under the hood, the OverlayController listens to `animationend` event, only then
 export const backdropAnimation = () => {
   const responsiveModalDialogConfig = { ...withModalDialogConfig() };
   return html`
-    <demo-overlay-system .config=${responsiveModalDialogConfig}>
+    <demo-el-using-overlaymixin .config=${responsiveModalDialogConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <demo-overlay-backdrop slot="backdrop"></demo-overlay-backdrop>
       <div slot="content" class="demo-overlay">
@@ -245,7 +245,7 @@ export const backdropAnimation = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -264,7 +264,7 @@ Drag the viewport under 600px and open the overlay to see the `withBottomSheetCo
 export const responsiveSwitching = () => {
   const responsiveBottomSheetConfig = { ...withBottomSheetConfig() };
   return html`
-    <demo-overlay-system
+    <demo-el-using-overlaymixin
       .config=${responsiveBottomSheetConfig}
       @before-opened=${e => {
         if (window.innerWidth >= 600) {
@@ -283,7 +283,7 @@ export const responsiveSwitching = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -329,52 +329,55 @@ _defineOverlay({ invokerNode, contentNode }) {
 Below is another demo where you can toggle between configurations using buttons.
 
 ```js preview-story
-export const responsiveSwitching2 = () => html`
-  <style>
-    .demo-overlay {
-      background-color: white;
-      border: 1px solid black;
+export const responsiveSwitching2 = () => {
+  const overlayRef = createRef();
+  const selectRef = createRef();
+
+  const getConfig = selectValue => {
+    switch (selectValue) {
+      case 'modaldialog':
+        return { ...withModalDialogConfig(), hasBackdrop: true };
+      case 'bottomsheet':
+        return { ...withBottomSheetConfig() };
+      case 'dropdown':
+        return { ...withDropdownConfig(), hasBackdrop: false, inheritsReferenceWidth: true };
+      default:
+        return { ...withModalDialogConfig(), hasBackdrop: true };
     }
-  </style>
-  Change config to:
-  <button
-    @click=${e => {
-      e.target.parentElement.querySelector('#respSwitchOverlay').config = {
-        ...withModalDialogConfig(),
-      };
-    }}
-  >
-    Modal Dialog
-  </button>
-  <button
-    @click=${e => {
-      e.target.parentElement.querySelector('#respSwitchOverlay').config = {
-        ...withBottomSheetConfig(),
-      };
-    }}
-  >
-    Bottom Sheet
-  </button>
-  <button
-    @click=${e => {
-      e.target.parentElement.querySelector('#respSwitchOverlay').config = {
-        ...withDropdownConfig(),
-      };
-    }}
-  >
-    Dropdown
-  </button>
-  <br />
-  <demo-overlay-system id="respSwitchOverlay" .config=${{ ...withBottomSheetConfig() }}>
-    <button slot="invoker">Click me to open the overlay!</button>
-    <div slot="content" class="demo-overlay">
-      Hello! You can close this notification here:
-      <button @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}>
-        ⨯
-      </button>
-    </div>
-  </demo-overlay-system>
-`;
+  };
+  const onSelectChange = e => {
+    overlayRef.value.config = getConfig(e.target.value);
+  };
+
+  return html`
+    <style>
+      .demo-overlay {
+        background-color: white;
+        border: 1px solid black;
+      }
+    </style>
+    Change config to:
+
+    <select ${ref(selectRef)} @change="${onSelectChange}">
+      <option value="modaldialog">Modal Dialog</option>
+      <option value="bottomsheet">Bottom Sheet</option>
+      <option value="dropdown">Dropdown</option>
+    </select>
+
+    <br />
+    <demo-el-using-overlaymixin ${ref(overlayRef)} .config=${getConfig(selectRef.value?.value)}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </demo-el-using-overlaymixin>
+  `;
+};
 ```
 
 ## Opened state
@@ -398,7 +401,7 @@ export const openedState = () => {
   }
   return html`
     appState.opened: <span ${ref(myRefs.openedState)}>${appState.opened}</span>
-    <demo-overlay-system
+    <demo-el-using-overlaymixin
       ${ref(myRefs.overlay)}
       .opened="${appState.opened}"
       @opened-changed=${onOpenClosed}
@@ -412,7 +415,7 @@ export const openedState = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -420,7 +423,7 @@ export const openedState = () => {
 ## Intercepting open/close
 
 It is possible to intercept the open/close process by calling `.preventDefault()` on
-the `before-close` or `before-open` events.
+the `before-closed` or `before-opened` events.
 
 ```js preview-story
 export const interceptingOpenClose = () => {
@@ -446,7 +449,7 @@ export const interceptingOpenClose = () => {
     >
       ${blockOverlay}
     </button>
-    <demo-overlay-system
+    <demo-el-using-overlaymixin
       ${ref(myRefs.overlay)}
       @before-closed=${intercept}
       @before-opened=${intercept}
@@ -462,7 +465,7 @@ export const interceptingOpenClose = () => {
         Hello! You can close this notification here:
         <button @click=${() => (myRefs.overlay.value.opened = false)}>⨯</button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -482,7 +485,7 @@ By default, there are only a few `OverlayMixin` methods you need to override to 
 
 ```js
 import { LitElement } from '@mdjs/mdjs-preview';
-import { OverlayMixin } from '@lion/overlays';
+import { OverlayMixin } from '@lion/ui/overlays.js';
 
 class MyOverlayWC extends OverlayMixin(LitElement) {
   _defineOverlayConfig() {
@@ -536,9 +539,9 @@ Below an example is shown with the `isBlocking` option, which makes use of the O
 
 ```js preview-story
 export const overlayManager = () => {
-  const hasBackdropConfig = { hasBackdrop: true };
+  const hasBackdropConfig = { ...withModalDialogConfig(), hasBackdrop: true };
   return html`
-    <demo-overlay-system .config=${hasBackdropConfig}>
+    <demo-el-using-overlaymixin .config=${hasBackdropConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
@@ -552,8 +555,11 @@ export const overlayManager = () => {
           Click me to open another overlay which is blocking
         </button>
       </div>
-    </demo-overlay-system>
-    <demo-overlay-system id="secondOverlay" .config=${{ hasBackdrop: true, isBlocking: true }}>
+    </demo-el-using-overlaymixin>
+    <demo-el-using-overlaymixin
+      id="secondOverlay"
+      .config=${{ ...withModalDialogConfig(), hasBackdrop: true, isBlocking: true }}
+    >
       <div slot="content" class="demo-overlay demo-overlay--second">
         Hello! You can close this notification here:
         <button
@@ -562,7 +568,7 @@ export const overlayManager = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -575,9 +581,9 @@ Here is the example below
 
 ```js preview-story
 export const localBackdrop = () => {
-  const localBackdropConfig = { placementMode: 'local' };
+  const localBackdropConfig = { ...withDropdownConfig() };
   return html`
-    <demo-overlay-system .config=${localBackdropConfig}>
+    <demo-el-using-overlaymixin .config=${localBackdropConfig}>
       <demo-overlay-backdrop slot="backdrop"></demo-overlay-backdrop>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
@@ -588,7 +594,7 @@ export const localBackdrop = () => {
           ⨯
         </button>
       </div>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```
@@ -601,10 +607,10 @@ It's also possible to compose a nested construction by moving around dom nodes.
 ```js preview-story
 export const nestedOverlays = () => {
   return html`
-    <demo-overlay-system .config="${withModalDialogConfig()}">
+    <demo-el-using-overlaymixin .config="${withModalDialogConfig()}">
       <div slot="content" id="mainContent" class="demo-overlay">
         open nested overlay:
-        <demo-overlay-system .config="${withModalDialogConfig()}">
+        <demo-el-using-overlaymixin .config="${withModalDialogConfig()}">
           <div slot="content" id="nestedContent" class="demo-overlay">
             Nested content
             <button
@@ -614,7 +620,7 @@ export const nestedOverlays = () => {
             </button>
           </div>
           <button slot="invoker" id="nestedInvoker">nested invoker button</button>
-        </demo-overlay-system>
+        </demo-el-using-overlaymixin>
         <button
           @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
         >
@@ -622,7 +628,7 @@ export const nestedOverlays = () => {
         </button>
       </div>
       <button slot="invoker" id="mainInvoker">invoker button</button>
-    </demo-overlay-system>
+    </demo-el-using-overlaymixin>
   `;
 };
 ```

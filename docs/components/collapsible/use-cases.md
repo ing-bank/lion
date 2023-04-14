@@ -2,7 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import '@lion/collapsible/define';
+import '@lion/ui/define/lion-collapsible.js';
 ```
 
 ## Default open

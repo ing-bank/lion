@@ -2,10 +2,10 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { Required } from '@lion/form-core';
-import { loadDefaultFeedbackMessages } from '@lion/validate-messages';
-import '@lion/input/define';
-import '@lion/form/define';
+import { Required } from '@lion/ui/form-core.js';
+import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
+import '@lion/ui/define/lion-input.js';
+import '@lion/ui/define/lion-form.js';
 ```
 
 ## Submit & Reset
@@ -46,12 +46,12 @@ export const formSubmit = () => {
     <lion-form @submit=${submitHandler}>
       <form @submit=${ev => ev.preventDefault()}>
         <lion-input
-          name="first_name"
+          name="firstName"
           label="First Name"
           .validators="${[new Required()]}"
         ></lion-input>
         <lion-input
-          name="last_name"
+          name="lastName"
           label="Last Name"
           .validators="${[new Required()]}"
         ></lion-input>

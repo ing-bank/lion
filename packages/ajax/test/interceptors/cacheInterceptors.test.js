@@ -1,9 +1,10 @@
 import { expect } from '@open-wc/testing';
 import * as sinon from 'sinon';
-import '../../src/typedef.js';
-import { Ajax } from '../../index.js';
+import { Ajax, createCacheInterceptors } from '@lion/ajax';
+import { isResponseContentTypeSupported } from '../../src/interceptors/cacheInterceptors.js';
+
+// TODO: these are private API? should they be exposed? if not why do we test them?
 import { extendCacheOptions, resetCacheSession, ajaxCache } from '../../src/cacheManager.js';
-import { createCacheInterceptors } from '../../src/interceptors/cacheInterceptors.js';
 
 const MOCK_RESPONSE = 'mock response';
 
@@ -11,6 +12,11 @@ const getUrl = (/** @type {string} */ url) => new URL(url, window.location.href)
 
 /** @type {Ajax} */
 let ajax;
+
+/**
+ * @typedef {import('../../types/types.js').CacheOptions} CacheOptions
+ * @typedef {import('../../types/types.js').RequestIdFunction} RequestIdFunction
+ */
 
 describe('cache interceptors', () => {
   /**
@@ -65,6 +71,36 @@ describe('cache interceptors', () => {
 
   afterEach(() => {
     sinon.restore();
+  });
+
+  describe('isResponseContentTypeSupported', () => {
+    /** @type {Response} */
+    let r;
+
+    beforeEach(() => {
+      r = new Response('');
+    });
+
+    it('matches default content type', () => {
+      r.headers.set('Content-Type', 'application/json');
+      expect(isResponseContentTypeSupported(r, ['application/json'])).to.equal(true);
+    });
+
+    it('returns false when it doesnt match', () => {
+      r.headers.set('Content-Type', 'text/json');
+      expect(isResponseContentTypeSupported(r, ['application/json'])).to.equal(false);
+    });
+
+    it('partially matches content type', () => {
+      r.headers.set('Content-Type', 'text/plain;charset=UTF-8;');
+      expect(isResponseContentTypeSupported(r, ['text/plain'])).to.equal(true);
+    });
+
+    it('returns true if `contentTypes` is not an array', () => {
+      r.headers.set('Content-Type', 'foo');
+      // @ts-ignore needed for test
+      expect(isResponseContentTypeSupported(r, 'string')).to.equal(true);
+    });
   });
 
   describe('Original ajax instance', () => {

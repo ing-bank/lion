@@ -51,7 +51,7 @@ In it you do
 ````md
 # Tabs >> Overview ||10
 
-```js ::importSmallBlockContent('@lion/tabs/docs/overview.md', '# Tabs >> Overview ||10')
+```js ::importSmallBlockContent('@lion/ui/tabs/docs/overview.md', '# Tabs >> Overview ||10.js')
 
 ```
 
@@ -77,7 +77,7 @@ as an example this is a part of the lion docs for tabs
 ````md
 ```js script
 import { LitElement, html } from '@mdjs/mdjs-preview';
-import '@lion/tabs/define';
+import '@lion/ui/define/lion-tabs.js';
 ```
 
 ```js preview-story
@@ -231,7 +231,7 @@ This rewrites the custom element definition side effects to
 
 ```js
 // from
-import '@lion/tabs/define';
+import '@lion/ui/define/lion-tabs.js';
 
 // to
 import '#tabs/define';

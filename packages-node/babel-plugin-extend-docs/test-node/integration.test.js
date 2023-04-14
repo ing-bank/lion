@@ -49,16 +49,12 @@ customElements.define('my-app', MyApp);
     const output = `import { LitElement, html } from "@lion/core";
 import { MyExtension } from "extension/counter";
 import "#counter/define";
-
 class TenCounter extends MyExtension {
   inc() {
     this.count += 10;
   }
-
 }
-
 customElements.define('ten-counter', TenCounter);
-
 class MyApp extends LitElement {
   render() {
     return html\`
@@ -69,9 +65,7 @@ class MyApp extends LitElement {
       <ten-counter></ten-counter>
     \`;
   }
-
 }
-
 customElements.define('my-app', MyApp);`;
     expect(executeBabel(code, extendDocsConfig)).to.equal(output);
   });

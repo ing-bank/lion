@@ -27,14 +27,13 @@ Usually you will use `lion-dialog` (or `lion-tooltip` if this makes more sense).
 ## Installation
 
 ```bash
-npm i --save @lion/overlays
-npm i --save @lion/dialog
+npm i --save @lion/ui
 ```
 
 ### Example
 
 ```js
-import '@lion/dialog/define';
+import '@lion/ui/define/lion-dialog.js';
 
 html`
   <lion-dialog .config=${{
@@ -57,7 +56,7 @@ html`
 Or by creating a controller yourself
 
 ```js
-import { OverlayController } from '@lion/overlays';
+import { OverlayController } from '@lion/ui/overlays.js';
 
 const ctrl = new OverlayController({
   ...withModalDialogConfig(),
@@ -69,8 +68,8 @@ const ctrl = new OverlayController({
 Or creating your own Web Component which uses the Overlay System
 
 ```js
-import { LitElement, html } from '@lion/core';
-import { OverlayMixin, withModalDialogConfig } from '@lion/overlays';
+import { LitElement, html } from 'lit';
+import { OverlayMixin, withModalDialogConfig } from '@lion/ui/overlays.js';
 
 class MyOverlayComponent extends OverlayMixin(LitElement) {
   _defineOverlayConfig() {
@@ -112,8 +111,3 @@ class MyOverlayComponent extends OverlayMixin(LitElement) {
 ## Rationales
 
 Please check the [system rationals](./rationale.md) folder, where we go more in-depth.
-
-### Aria roles
-
-- No `aria-controls` as support for it is not quite there yet
-- No `aria-haspopup`. People knowing the haspopup and hear about it don’t expect a dialog to open (at this moment in time) but expect a sub-menu. Until support for the dialog value has better implementation, it’s probably best to not use aria-haspopup on the element that opens the modal dialog.

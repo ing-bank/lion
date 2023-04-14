@@ -1,5 +1,29 @@
 # Change Log
 
+## 0.14.1
+
+### Patch Changes
+
+- d40fd90b: Fixes:
+
+  - allow absence of config file
+  - remove package=lock of non-root packages
+  - fix conflicting package entries
+
+## 0.14.0
+
+### Minor Changes
+
+- e9c6523f: Expose more exports; updated to cjs format only
+
+### Patch Changes
+
+- a849f09f: add possibility to provide a 'custom defined project' (array of filePaths) to Analyzer
+- f7fc7df3: improvements find-exports, trackdown-identifier, get-source-code-fragment-of-declaration
+- 9593c456: providence-analytics: add export-map functionality to InputDataService
+- a849f09f: add util "getSourceCodeFragmentOfDeclaration"
+- dd3458af: improve memoization
+
 ## 0.13.0
 
 ### Minor Changes
@@ -106,9 +130,7 @@
     }
 
     render() {
-      return html`
-        <my-button>click me</my-button>
-      `;
+      return html` <my-button>click me</my-button> `;
     }
   }
   ```

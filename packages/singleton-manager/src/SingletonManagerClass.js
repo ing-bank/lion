@@ -2,7 +2,7 @@ const sym = Symbol.for('lion::SingletonManagerClassStorage');
 
 export class SingletonManagerClass {
   constructor() {
-    /** protected */
+    /** @protected */
     this._map = window[sym] ? window[sym] : (window[sym] = new Map());
   }
 

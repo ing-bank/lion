@@ -7,8 +7,9 @@ import { html as previewHtml } from '@mdjs/mdjs-preview';
 ```
 
 ```js preview-story
-import { html, LitElement, ScopedElementsMixin } from '@lion/core';
-import { LionAccordion } from '@lion/accordion';
+import { html, LitElement } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { LionAccordion } from '@lion/ui/accordion.js';
 
 class MyComponent extends ScopedElementsMixin(LitElement) {
   static get scopedElements() {
@@ -28,7 +29,7 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
             decrease gradually during development, whereas volatile aroma compounds tend to peak in
             mid– to late–season development. Taste quality tends to improve later in harvests when
             there is a higher sugar/acid ratio with less bitterness. As a citrus fruit, the orange
-            is acidic, with pH levels ranging from 2.9 to 4.0.
+            is acidic, with pH levels ranging from 2.9 to 4.0. <a href="#">Link</a>
           </p>
           <p>
             Sensory qualities vary according to genetic background, environmental conditions during
@@ -75,14 +76,15 @@ export const overview = () => previewHtml`<my-component></my-component>`;
 1. Install
 
 ```bash
-npm i --save @lion/accordion
+npm i --save @lion/ui
 ```
 
 2. Use scoped registry
 
 ```js
-import { html, LitElement, ScopedElementsMixin } from '@lion/core';
-import { LionAccordion } from '@lion/accordion';
+import { html, LitElement } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { LionAccordion } from '@lion/ui/accordion.js';
 
 class MyComponent extends ScopedElementsMixin(LitElement) {
   static get scopedElements() {
@@ -110,7 +112,7 @@ class MyComponent extends ScopedElementsMixin(LitElement) {
 
 ```html
 <script type="module">
-  import '@lion/accordion/define';
+  import '@lion/ui/define/lion-accordion.js';
 </script>
 
 <lion-accordion>

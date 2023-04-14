@@ -371,7 +371,6 @@ describe('Analyzer "match-imports"', () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
         await providence(matchImportsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
-        // console.log(JSON.stringify(queryResult.queryOutput, null, 2));
         expectedExportIdsDirect.forEach(directId => {
           expect(
             queryResult.queryOutput.find(
