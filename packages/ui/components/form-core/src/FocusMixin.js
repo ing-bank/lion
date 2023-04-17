@@ -48,6 +48,7 @@ const FocusMixinImplementation = superclass =>
        * @type {boolean}
        */
       this.focusedVisible = false;
+      this.autofocus = false;
     }
 
     connectedCallback() {
@@ -62,15 +63,11 @@ const FocusMixinImplementation = superclass =>
     }
 
     /**
-     * Gets called when an attribute is changed.
-     * @param {String} name
-     * @param {String | null} _old
-     * @param {String | null} value
-     * @protected
+     * @param {import('lit').PropertyValues } changedProperties
      */
-    attributeChangedCallback(name, _old, value) {
-      super.attributeChangedCallback(name, _old, value);
-      if (name === 'autofocus') {
+    updated(changedProperties) {
+      super.updated(changedProperties);
+      if (changedProperties.has('autofocus')) {
         this.__syncAutofocusToFocusableElement();
       }
     }
