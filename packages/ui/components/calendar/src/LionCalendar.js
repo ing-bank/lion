@@ -753,7 +753,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const isDayButton = /** @param {HTMLElement} el */ el =>
       el.classList.contains('calendar__day-button');
 
-    const el = /** @type {HTMLElement & { date: Date }} */ (ev.target);
+    const el = /** @type {HTMLElement & { date: Date }} */ (ev.composedPath()[0]);
     if (isDayButton(el)) {
       this.__dateSelectedByUser(el.date);
     }
