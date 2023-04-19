@@ -6,7 +6,7 @@ export default {
   dragAndDropText: 'Плъзнете и пуснете Вашите файлове тук или',
   fileNameDescriptionLabel: 'Име на файл: {fileName}',
   removeButtonLabel: 'Отстраняване на файла {fileName}',
-  uploadTextDuplicateFileName: 'Файл със същото име на файл вече е налице.',
-  uploadTextMultipleFile: 'Избор на файлове',
-  uploadTextSingleFile: 'Избор на файл',
+  selectTextDuplicateFileName: 'Файл със същото име на файл вече е налице.',
+  selectTextMultipleFile: 'Избор на файлове',
+  selectTextSingleFile: 'Избор на файл',
 };

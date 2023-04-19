@@ -12,7 +12,7 @@ export type InputFile = {
   downloadUrl?: string;
   errorMessage?: FeedbackMessage.message;
   failedProp?: Array<string|number>;
-  response?: UploadResponse;
+  response?: FileSelectResponse;
   systemFile: Partial<SystemFile>;
   validationFeedback?: Array<FeedbackMessage>;
 } & FileBasics & Partial<File>;
@@ -21,12 +21,12 @@ export type SystemFile = {
   downloadUrl?: string;
   errorMessage?: FeedbackMessage.message;
   failedProp?: Array<string|number>;
-  response?: UploadResponse;
+  response?: FileSelectResponse;
 } & FileBasics & Partial<File>;
 
 
-export type UploadResponse = {
+export type FileSelectResponse = {
   downloadUrl?: string;
   errorMessage?: FeedbackMessage.message;
-  id?: string; 
+  id?: string;
 } & Partial<FileBasics>;

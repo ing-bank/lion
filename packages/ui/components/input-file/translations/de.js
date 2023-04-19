@@ -6,7 +6,7 @@ export default {
   dragAndDropText: 'Ziehen Sie Ihre Dateien per Drag & Drop hierher oder',
   fileNameDescriptionLabel: 'Dateiname: {fileName}',
   removeButtonLabel: 'Datei {fileName} entfernen',
-  uploadTextDuplicateFileName: 'Eine Datei mit demselben Dateinamen war bereits vorhanden.',
-  uploadTextMultipleFile: 'Dateien auswählen',
-  uploadTextSingleFile: 'Datei auswählen',
+  selectTextDuplicateFileName: 'Eine Datei mit demselben Dateinamen war bereits vorhanden.',
+  selectTextMultipleFile: 'Dateien auswählen',
+  selectTextSingleFile: 'Datei auswählen',
 };

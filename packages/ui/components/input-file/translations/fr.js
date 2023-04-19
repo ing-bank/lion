@@ -7,7 +7,7 @@ export default {
   dragAndDropText: 'Glissez et déposez vos fichiers ici ou',
   fileNameDescriptionLabel: 'Nom de fichier: {fileName}',
   removeButtonLabel: 'Supprimer le fichier {fileName}',
-  uploadTextDuplicateFileName: 'Un fichier portant le même nom de fichier était déjà présent.',
-  uploadTextMultipleFile: 'Sélectionnez des fichiers',
-  uploadTextSingleFile: 'Sélectionnez un fichier',
+  selectTextDuplicateFileName: 'Un fichier portant le même nom de fichier était déjà présent.',
+  selectTextMultipleFile: 'Sélectionnez des fichiers',
+  selectTextSingleFile: 'Sélectionnez un fichier',
 };

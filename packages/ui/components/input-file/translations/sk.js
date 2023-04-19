@@ -6,7 +6,7 @@ export default {
   dragAndDropText: 'Súbory presuňte sem alebo',
   fileNameDescriptionLabel: 'Názov súboru: {fileName}',
   removeButtonLabel: 'Odstrániť súbor {fileName}',
-  uploadTextDuplicateFileName: 'Súbor s rovnakým názvom súboru už existoval.',
-  uploadTextMultipleFile: 'Vybrať súbory',
-  uploadTextSingleFile: 'Vybrať súbor',
+  selectTextDuplicateFileName: 'Súbor s rovnakým názvom súboru už existoval.',
+  selectTextMultipleFile: 'Vybrať súbory',
+  selectTextSingleFile: 'Vybrať súbor',
 };

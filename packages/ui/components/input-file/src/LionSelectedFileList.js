@@ -13,7 +13,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  * @typedef {import('../types/input-file.js').SystemFile} SystemFile
  */
 
-export class LionUploadedFileList extends LocalizeMixin(ScopedElementsMixin(LitElement)) {
+export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitElement)) {
   static get scopedElements() {
     return {
       // @ts-expect-error [external] fix types scopedElements
@@ -126,7 +126,7 @@ export class LionUploadedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
   _labelAfterTemplate(file, fileUuid) {
     return html`
       <button
-        class="uploaded__list__item__remove-button"
+        class="selected__list__item__remove-button"
         aria-label="${this.msgLit('lion-input-file:removeButtonLabel', {
           fileName: file.systemFile.name,
         })}"
@@ -151,18 +151,18 @@ export class LionUploadedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
    * @param {InputFile} file
    * @return {TemplateResult}
    */
-  _uploadedListItemTemplate(file) {
+  _selectedListItemTemplate(file) {
     const fileUuid = uuid();
     return html`
-      <div class="uploaded__list__item" status="${file.status ? file.status.toLowerCase() : ''}">
-        <div class="uploaded__list__item__label">
+      <div class="selected__list__item" status="${file.status ? file.status.toLowerCase() : ''}">
+        <div class="selected__list__item__label">
           ${this._labelBeforeTemplate(file)}
-          <span id="uploaded-list-item-label-${fileUuid}" class="uploaded__list__item__label__text">
+          <span id="selected-list-item-label-${fileUuid}" class="selected__list__item__label__text">
             <span class="sr-only">${this.msgLit('lion-input-file:fileNameDescriptionLabel')}</span>
             ${file.downloadUrl && file.status !== 'LOADING'
               ? html`
                   <a
-                    class="uploaded__list__item__label__link"
+                    class="selected__list__item__label__link"
                     href="${file.downloadUrl}"
                     target="${file.downloadUrl.startsWith('blob') ? '_blank' : ''}"
                     rel="${ifDefined(
@@ -194,13 +194,13 @@ export class LionUploadedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
       ? html`
           ${this.multiple
             ? html`
-                <ul class="uploaded__list">
+                <ul class="selected__list">
                   ${this.fileList.map(
-                    file => html` <li>${this._uploadedListItemTemplate(file)}</li> `,
+                    file => html` <li>${this._selectedListItemTemplate(file)}</li> `,
                   )}
                 </ul>
               `
-            : html` ${this._uploadedListItemTemplate(this.fileList[0])} `}
+            : html` ${this._selectedListItemTemplate(this.fileList[0])} `}
         `
       : nothing;
   }
@@ -208,7 +208,7 @@ export class LionUploadedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
   static get styles() {
     return [
       css`
-        .uploaded__list {
+        .selected__list {
           list-style-type: none;
           margin-block-start: 0;
           margin-block-end: 0;

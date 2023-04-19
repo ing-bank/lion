@@ -6,7 +6,7 @@ export default {
   dragAndDropText: 'Glisaţi şi fixaţi fişierele aici sau',
   fileNameDescriptionLabel: 'Nume fişier: {fileName}',
   removeButtonLabel: 'Eliminaţi fişierul {filename}',
-  uploadTextDuplicateFileName: 'Există deja un fişier cu acelaşi nume de fişier.',
-  uploadTextMultipleFile: 'Selectare fișiere',
-  uploadTextSingleFile: 'Selectare fișier',
+  selectTextDuplicateFileName: 'Există deja un fişier cu acelaşi nume de fişier.',
+  selectTextMultipleFile: 'Selectare fișiere',
+  selectTextSingleFile: 'Selectare fișier',
 };

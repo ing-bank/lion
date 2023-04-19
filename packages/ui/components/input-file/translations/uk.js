@@ -6,7 +6,7 @@ export default {
   dragAndDropText: 'Перетягніть файли сюди або',
   fileNameDescriptionLabel: 'Ім’я файлу: {fileName}',
   removeButtonLabel: 'Видалення файлу {fileName}',
-  uploadTextDuplicateFileName: 'Файл із такою назвою вже існував.',
-  uploadTextMultipleFile: 'Виберіть файли',
-  uploadTextSingleFile: 'Виберіть файл',
+  selectTextDuplicateFileName: 'Файл із такою назвою вже існував.',
+  selectTextMultipleFile: 'Виберіть файли',
+  selectTextSingleFile: 'Виберіть файл',
 };

@@ -6,7 +6,7 @@ export default {
   dragAndDropText: 'Trascinare i file qui o',
   fileNameDescriptionLabel: 'Nome file: {fileName}',
   removeButtonLabel: 'Rimuovere il file {fileName}',
-  uploadTextDuplicateFileName: 'Un file con lo stesso nome file era già presente.',
-  uploadTextMultipleFile: 'Seleziona file',
-  uploadTextSingleFile: 'Seleziona file',
+  selectTextDuplicateFileName: 'Un file con lo stesso nome file era già presente.',
+  selectTextMultipleFile: 'Seleziona file',
+  selectTextSingleFile: 'Seleziona file',
 };

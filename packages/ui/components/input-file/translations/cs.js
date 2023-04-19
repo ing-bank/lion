@@ -7,7 +7,7 @@ export default {
   dragAndDropText: 'Přetáhněte soubory sem nebo',
   fileNameDescriptionLabel: 'Název souboru: {fileName}',
   removeButtonLabel: 'Odebrat soubor {fileName}',
-  uploadTextDuplicateFileName: 'Soubor se stejným názvem byl již přítomen.',
-  uploadTextMultipleFile: 'Vybrat soubory',
-  uploadTextSingleFile: 'Vybrat soubor',
+  selectTextDuplicateFileName: 'Soubor se stejným názvem byl již přítomen.',
+  selectTextMultipleFile: 'Vybrat soubory',
+  selectTextSingleFile: 'Vybrat soubor',
 };

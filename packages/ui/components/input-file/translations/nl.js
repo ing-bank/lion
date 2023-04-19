@@ -6,7 +6,7 @@ export default {
   dragAndDropText: 'Sleep uw bestanden hierheen of',
   fileNameDescriptionLabel: 'Bestandsnaam: {fileName}',
   removeButtonLabel: 'Verwijder het bestand {fileName}',
-  uploadTextDuplicateFileName: 'Er bestaat al een bestand met dezelfde bestandsnaam.',
-  uploadTextMultipleFile: 'Selecteer bestanden',
-  uploadTextSingleFile: 'Selecteer bestand',
+  selectTextDuplicateFileName: 'Er bestaat al een bestand met dezelfde bestandsnaam.',
+  selectTextMultipleFile: 'Selecteer bestanden',
+  selectTextSingleFile: 'Selecteer bestand',
 };

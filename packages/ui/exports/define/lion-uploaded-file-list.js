@@ -1,3 +1,3 @@
-import { LionUploadedFileList } from '../input-file.js';
+import { LionSelectedFileList } from '../input-file.js';
 
-customElements.define('lion-uploaded-file-list', LionUploadedFileList);
+customElements.define('lion-uploaded-file-list', LionSelectedFileList);

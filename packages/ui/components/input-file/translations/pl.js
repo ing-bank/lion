@@ -6,7 +6,7 @@ export default {
   dragAndDropText: 'Przeciągnij i upuść pliki tutaj lub',
   fileNameDescriptionLabel: 'Nazwa pliku: {fileName}',
   removeButtonLabel: 'Usuń plik {fileName}',
-  uploadTextDuplicateFileName: 'Plik o tej samej nazwie już istnieje.',
-  uploadTextMultipleFile: 'Wybierz pliki',
-  uploadTextSingleFile: 'Wybierz plik',
+  selectTextDuplicateFileName: 'Plik o tej samej nazwie już istnieje.',
+  selectTextMultipleFile: 'Wybierz pliki',
+  selectTextSingleFile: 'Wybierz plik',
 };

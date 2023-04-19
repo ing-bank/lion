@@ -1,12 +1,12 @@
 export default {
-  allowedFileSize: 'Please upload a file with max {maxSize}.',
-  allowedFileValidatorSimple: 'Please upload a(n) {allowedType} file with max {maxSize}.',
+  allowedFileSize: 'Please select a file with max {maxSize}.',
+  allowedFileValidatorSimple: 'Please select a(n) {allowedType} file with max {maxSize}.',
   allowedFileValidatorComplex:
-    'Please upload a {allowedTypesArray} or {allowedTypesLastItem} file with max {maxSize}.',
+    'Please select a {allowedTypesArray} or {allowedTypesLastItem} file with max {maxSize}.',
   dragAndDropText: 'Drag & Drop your files here or',
   fileNameDescriptionLabel: 'File name: {fileName}',
   removeButtonLabel: 'Remove {fileName} file',
-  uploadTextDuplicateFileName: 'A file with same filename was already present.',
-  uploadTextMultipleFile: 'Select files',
-  uploadTextSingleFile: 'Select file',
+  selectTextDuplicateFileName: 'A file with same filename was already present.',
+  selectTextMultipleFile: 'Select files',
+  selectTextSingleFile: 'Select file',
 };

@@ -6,7 +6,7 @@ export default {
   dragAndDropText: 'Húzza át a fájlokat ide vagy',
   fileNameDescriptionLabel: 'Fájlnév: {fileName}',
   removeButtonLabel: 'A(z) {fileName} fájl eltávolítása',
-  uploadTextDuplicateFileName: 'Már volt ilyen nevű fájl.',
-  uploadTextMultipleFile: 'Fájl(ok) kiválasztása',
-  uploadTextSingleFile: 'Fájl kiválasztása',
+  selectTextDuplicateFileName: 'Már volt ilyen nevű fájl.',
+  selectTextMultipleFile: 'Fájl(ok) kiválasztása',
+  selectTextSingleFile: 'Fájl kiválasztása',
 };

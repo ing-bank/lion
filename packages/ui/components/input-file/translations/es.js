@@ -6,7 +6,7 @@ export default {
   dragAndDropText: 'Arrastre y suelte los archivos aquí o',
   fileNameDescriptionLabel: 'Nombre de archivo: {fileName}',
   removeButtonLabel: 'Elimine el archivo: {fileName}',
-  uploadTextDuplicateFileName: 'Ya había un archivo con el mismo nombre de archivo.',
-  uploadTextMultipleFile: 'Seleccionar archivos',
-  uploadTextSingleFile: 'Seleccionar archivo',
+  selectTextDuplicateFileName: 'Ya había un archivo con el mismo nombre de archivo.',
+  selectTextMultipleFile: 'Seleccionar archivos',
+  selectTextSingleFile: 'Seleccionar archivo',
 };

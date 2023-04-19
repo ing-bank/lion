@@ -4,7 +4,7 @@ import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { FileHandle, MAX_FILE_SIZE } from './FileHandle.js';
-import { LionUploadedFileList } from './LionUploadedFileList.js';
+import { LionSelectedFileList } from './LionSelectedFileList.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 import { DuplicateFileNames, FileValidation } from './validators.js';
 
@@ -13,7 +13,7 @@ import { DuplicateFileNames, FileValidation } from './validators.js';
  * @typedef {import('lit').RenderOptions} RenderOptions
  * @typedef {import('../types/input-file.js').InputFile} InputFile
  * @typedef {import('../types/input-file.js').SystemFile} SystemFile
- * @typedef {import('../types/input-file.js').UploadResponse} UploadResponse
+ * @typedef {import('../types/input-file.js').FileSelectResponse} FileSelectResponse
  */
 
 /**
@@ -35,14 +35,14 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   static get scopedElements() {
     return {
       ...super.scopedElements,
-      'lion-uploaded-file-list': LionUploadedFileList,
+      'lion-selected-file-list': LionSelectedFileList,
     };
   }
 
   static get properties() {
     return {
       ...super.properties,
-      _uploadedFilesMetaData: {
+      _selectedFilesMetaData: {
         type: Array,
       },
       allowedFileExtensions: {
@@ -69,9 +69,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         type: Boolean,
         attribute: 'upload-on-form-submit',
       },
-      uploadResponse: {
+      fileSelectResponse: {
         type: Array,
-        attribute: 'upload-response',
+        attribute: 'file-select-response',
       },
     };
   }
@@ -93,22 +93,22 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     return {
       ...super.slots,
       input: () => html`<input .value="${ifDefined(this.getAttribute('value'))}" />`,
-      'file-upload-button': () => {
+      'file-select-button': () => {
         const button = document.createElement('button');
-        button.setAttribute('id', `upload-button-${this._inputId}`);
+        button.setAttribute('id', `select-button-${this._inputId}`);
         button.setAttribute('type', 'button');
-        button.textContent = this.fileUploadButtonLabel;
+        button.textContent = this.fileSelectButtonLabel;
         button.addEventListener('click', () => this._inputNode.click());
         return button;
       },
-      'uploaded-file-list': () => ({
+      'selected-file-list': () => ({
         template: html`
-          <lion-uploaded-file-list
-            .fileList=${this._uploadedFilesMetaData}
+          <lion-selected-file-list
+            .fileList=${this._selectedFilesMetaData}
             .multiple=${this.multiple}
-          ></lion-uploaded-file-list>
+          ></lion-selected-file-list>
         `,
-        afterRender: this._enhanceUploadedList(),
+        afterRender: this._enhanceSelectedList(),
       }),
     };
   }
@@ -124,8 +124,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   /**
    * @protected
    */
-  get _fileUploadButtonNode() {
-    return this.querySelector(`#upload-button-${this._inputId}`);
+  get _fileSelectButtonNode() {
+    return this.querySelector(`#select-button-${this._inputId}`);
   }
 
   /**
@@ -133,10 +133,10 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * When no light dom defined via [slot=help-text], this value will be used
    * @type {string}
    */
-  get fileUploadButtonLabel() {
+  get fileSelectButtonLabel() {
     return (
-      this.__fileUploadButtonLabel ||
-      (this._fileUploadButtonNode && this._fileUploadButtonNode.textContent) ||
+      this.__fileSelectButtonLabel ||
+      (this._fileSelectButtonNode && this._fileSelectButtonNode.textContent) ||
       ''
     );
   }
@@ -144,11 +144,11 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   /**
    * @param {string} newValue
    */
-  set fileUploadButtonLabel(newValue) {
-    const oldValue = this.fileUploadButtonLabel;
+  set fileSelectButtonLabel(newValue) {
+    const oldValue = this.fileSelectButtonLabel;
     /** @type {string} */
-    this.__fileUploadButtonLabel = newValue;
-    this.requestUpdate('fileUploadButtonLabel', oldValue);
+    this.__fileSelectButtonLabel = newValue;
+    this.requestUpdate('fileSelectButtonLabel', oldValue);
   }
 
   /**
@@ -157,7 +157,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   // @ts-ignore
   get _focusableNode() {
-    return this._fileUploadButtonNode;
+    return this._fileSelectButtonNode;
   }
 
   /**
@@ -174,12 +174,12 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     /**
      * @type {InputFile[]}
      */
-    this._uploadedFilesMetaData = this._uploadedFilesMetaData || [];
+    this._selectedFilesMetaData = this._selectedFilesMetaData || [];
     /**
-     * @type {UploadResponse[]}
+     * @type {FileSelectResponse[]}
      */
-    this.uploadResponse = [];
-    this.__initialUploadResponse = this.uploadResponse;
+    this.fileSelectResponse = [];
+    this.__initialFileSelectResponse = this.fileSelectResponse;
     this.uploadOnFormSubmit = true;
     this.multiple = false;
     this.enableDropZone = false;
@@ -198,7 +198,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   connectedCallback() {
     super.connectedCallback();
-    this.__initialUploadResponse = this.uploadResponse;
+    this.__initialFileSelectResponse = this.fileSelectResponse;
 
     this._inputNode.addEventListener('change', this._onChange);
     this._inputNode.addEventListener('click', this._onClick);
@@ -222,10 +222,10 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     super.onLocaleUpdated();
     if (this.multiple) {
       // @ts-ignore
-      this.fileUploadButtonLabel = this.msgLit('lion-input-file:uploadTextMultipleFile');
+      this.fileSelectButtonLabel = this.msgLit('lion-input-file:selectTextMultipleFile');
     } else {
       // @ts-ignore
-      this.fileUploadButtonLabel = this.msgLit('lion-input-file:uploadTextSingleFile');
+      this.fileSelectButtonLabel = this.msgLit('lion-input-file:selectTextSingleFile');
     }
   }
 
@@ -252,8 +252,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   reset() {
     super.reset();
-    this._uploadedFilesMetaData = [];
-    this.uploadResponse = this.__initialUploadResponse;
+    this._selectedFilesMetaData = [];
+    this.fileSelectResponse = this.__initialFileSelectResponse;
     this.modelValue = [];
     // TODO: find out why it stays dirty
     this.dirty = false;
@@ -265,8 +265,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @override LionField
    */
   clear() {
-    this._uploadedFilesMetaData = [];
-    this.uploadResponse = [];
+    this._selectedFilesMetaData = [];
+    this.fileSelectResponse = [];
     this.modelValue = [];
   }
 
@@ -364,8 +364,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       this.validate();
     }
 
-    if (changedProperties.has('fileUploadButtonLabel') && this._fileUploadButtonNode) {
-      this._fileUploadButtonNode.textContent = this.fileUploadButtonLabel;
+    if (changedProperties.has('fileSelectButtonLabel') && this._fileSelectButtonNode) {
+      this._fileSelectButtonNode.textContent = this.fileSelectButtonLabel;
     }
 
     if (changedProperties.has('name')) {
@@ -381,13 +381,13 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
 
     /**
-     * Update _uploadedFilesMetaData only if:
+     * Update _selectedFilesMetaData only if:
      *   1. It is invoked from the file-removed event handler.
-     *   2. There is a mismatch between the uploaded files and files on UI.
+     *   2. There is a mismatch between the selected files and files on UI.
      */
-    if (changedProperties.has('uploadResponse')) {
-      if (this.uploadResponse.length && this._uploadedFilesMetaData.length === 0) {
-        this.uploadResponse.forEach(preResponse => {
+    if (changedProperties.has('fileSelectResponse')) {
+      if (this.fileSelectResponse.length && this._selectedFilesMetaData.length === 0) {
+        this.fileSelectResponse.forEach(preResponse => {
           const file = {
             systemFile: {
               name: preResponse.name,
@@ -401,17 +401,17 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
             ],
           };
           // @ts-ignore
-          this._uploadedFilesMetaData = [...this._uploadedFilesMetaData, file];
+          this._selectedFilesMetaData = [...this._selectedFilesMetaData, file];
         });
       }
-      this._uploadedFilesMetaData.forEach(file => {
+      this._selectedFilesMetaData.forEach(file => {
         if (
-          !this.uploadResponse.some(response => response.name === file.systemFile.name) &&
+          !this.fileSelectResponse.some(response => response.name === file.systemFile.name) &&
           !this.uploadOnFormSubmit
         ) {
           this.removeFileFromList(file);
         } else {
-          this.uploadResponse.forEach(response => {
+          this.fileSelectResponse.forEach(response => {
             if (response.name === file.systemFile.name) {
               // eslint-disable-next-line no-param-reassign
               file.response = response;
@@ -428,7 +428,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
               ];
             }
           });
-          this._uploadedFilesMetaData = [...this._uploadedFilesMetaData];
+          this._selectedFilesMetaData = [...this._selectedFilesMetaData];
         }
       });
       this.requestUpdate();
@@ -441,7 +441,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   computeNewAddedFiles(fileList) {
     const computedFileList = fileList.filter(
       file =>
-        this._uploadedFilesMetaData.findIndex(
+        this._selectedFilesMetaData.findIndex(
           existLionFile => existLionFile.systemFile.name === file.name,
         ) === -1,
     );
@@ -462,8 +462,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   /**
    * @param {DragEvent} ev
+   * @protected
    */
-  uploadDroppedFiles(ev) {
+  _processDroppedFiles(ev) {
     ev.preventDefault();
     this.removeAttribute('is-dragging');
     if (ev.dataTransfer && ev.dataTransfer?.items.length > 1 && !this.multiple) {
@@ -474,12 +475,12 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       this._inputNode.files = ev.dataTransfer.files;
       // @ts-ignore
       this.modelValue = Array.from(ev.dataTransfer.files);
-      // if same file is uploaded again, e.dataTransfer.files lists that file.
+      // if same file is selected again, e.dataTransfer.files lists that file.
       // So filter if the file already exists
       // @ts-ignore
       const _newFiles = this.computeNewAddedFiles(Array.from(ev.dataTransfer.files));
       if (_newFiles.length > 0) {
-        this._uploadFiles(_newFiles);
+        this._processFiles(_newFiles);
       }
     }
   }
@@ -493,7 +494,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     this.touched = true;
     this._onUserInputChanged();
     // @ts-ignore
-    this._uploadFiles(ev.target?.files);
+    this._processFiles(ev.target?.files);
   }
 
   /**
@@ -510,14 +511,14 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   /**
    * @protected
    */
-  _enhanceUploadedList() {
+  _enhanceSelectedList() {
     /**
-     * @type {LionUploadedFileList | null}
+     * @type {LionSelectedFileList | null}
      */
-    const uploadedFileList = this.querySelector('[slot="uploaded-file-list"]');
-    if (uploadedFileList) {
-      uploadedFileList.setAttribute('id', `uploaded-file-list-${this._inputId}`);
-      this.addToAriaDescribedBy(uploadedFileList, { idPrefix: 'uploaded-file-list' });
+    const selectedFileList = this.querySelector('[slot="selected-file-list"]');
+    if (selectedFileList) {
+      selectedFileList.setAttribute('id', `selected-file-list-${this._inputId}`);
+      this.addToAriaDescribedBy(selectedFileList, { idPrefix: 'selected-file-list' });
     }
   }
 
@@ -527,9 +528,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   _syncAriaLabelledByAttributes() {
     if (this._inputNode.hasAttribute('aria-labelledby')) {
       const ariaLabelledBy = this._inputNode.getAttribute('aria-labelledby');
-      this._fileUploadButtonNode?.setAttribute(
+      this._fileSelectButtonNode?.setAttribute(
         'aria-labelledby',
-        `upload-button-${this._inputId} ${ariaLabelledBy}`,
+        `select-button-${this._inputId} ${ariaLabelledBy}`,
       );
     }
   }
@@ -540,7 +541,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   _syncAriaDescribedByAttributes() {
     if (this._inputNode.hasAttribute('aria-describedby')) {
       const ariaDescribedby = this._inputNode.getAttribute('aria-describedby') || '';
-      this._fileUploadButtonNode?.setAttribute('aria-describedby', ariaDescribedby);
+      this._fileSelectButtonNode?.setAttribute('aria-describedby', ariaDescribedby);
     }
   }
 
@@ -562,30 +563,30 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   }
 
   /**
-   * @param {InputFile[]} uploadedFiles
+   * @param {InputFile[]} selectedFiles
    * @protected
    */
-  _uploadFiles(uploadedFiles) {
-    // file size and type validators are required only when file is uploaded and not in case of prefill
+  _processFiles(selectedFiles) {
+    // file size and type validators are required only when file is selected and not in case of prefill
     // TODO: is this needed every time?
     this.__setupFileValidators();
-    const _newFiles = this.computeNewAddedFiles(Array.from(uploadedFiles));
+    const _newFiles = this.computeNewAddedFiles(Array.from(selectedFiles));
     if (!this.multiple && _newFiles.length > 0) {
-      this._uploadedFilesMetaData = [];
-      this.uploadResponse = [];
+      this._selectedFilesMetaData = [];
+      this.fileSelectResponse = [];
     }
 
     /**
      * @type {InputFile}
      */
     let fileObj;
-    for (const [i, uploadedFile] of _newFiles.entries()) {
+    for (const [i, selectedFile] of _newFiles.entries()) {
       // @ts-ignore
-      fileObj = new FileHandle(uploadedFile, this.fileLimit);
+      fileObj = new FileHandle(selectedFile, this.fileLimit);
       if (fileObj.failedProp && fileObj.failedProp.length > 0) {
         this._handleErroredFiles(fileObj);
-        this.uploadResponse = [
-          ...this.uploadResponse,
+        this.fileSelectResponse = [
+          ...this.fileSelectResponse,
           {
             name: fileObj.systemFile.name,
             status: 'FAIL',
@@ -595,15 +596,15 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         ];
         _newFiles.splice(i, 1); // to make sure only the error-free files are sent in the file-list-changed event
       } else {
-        this.uploadResponse = [
-          ...this.uploadResponse,
+        this.fileSelectResponse = [
+          ...this.fileSelectResponse,
           {
             name: fileObj.systemFile.name,
             status: 'SUCCESS',
           },
         ];
       }
-      this._uploadedFilesMetaData = [...this._uploadedFilesMetaData, fileObj];
+      this._selectedFilesMetaData = [...this._selectedFilesMetaData, fileObj];
       this._handleErrors();
     }
 
@@ -633,7 +634,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   _handleErrors() {
     let hasErrors = false;
-    this._uploadedFilesMetaData.forEach(fileObj => {
+    this._selectedFilesMetaData.forEach(fileObj => {
       if (fileObj.failedProp && fileObj.failedProp.length > 0) {
         hasErrors = true;
       }
@@ -725,7 +726,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @param {InputFile} removedFile
    */
   removeFileFromList(removedFile) {
-    this._uploadedFilesMetaData = this._uploadedFilesMetaData.filter(
+    this._selectedFilesMetaData = this._selectedFilesMetaData.filter(
       currentFile => currentFile.systemFile.name !== removedFile.systemFile.name,
     );
     // checks if the file is not a pre-filled file
@@ -766,7 +767,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         detail: {
           removedFile,
           status: removedFile.status,
-          uploadResponse: removedFile.response,
+          fileSelectResponse: removedFile.response,
         },
       }),
     );
@@ -803,11 +804,11 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   _dropZoneTemplate() {
     return html`
-      <div @drop="${this.uploadDroppedFiles}" class="input-file__drop-zone">
+      <div @drop="${this._processDroppedFiles}" class="input-file__drop-zone">
         <div class="input-file__drop-zone__text">
           ${this.msgLit('lion-input-file:dragAndDropText')}
         </div>
-        <slot name="file-upload-button"></slot>
+        <slot name="file-select-button"></slot>
       </div>
     `;
   }
@@ -818,7 +819,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   // eslint-disable-next-line class-methods-use-this
   _inputGroupAfterTemplate() {
-    return html` <slot name="uploaded-file-list"></slot> `;
+    return html` <slot name="selected-file-list"></slot> `;
   }
 
   /**
@@ -832,8 +833,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       ${this.enableDropZone && this._isDragAndDropSupported
         ? this._dropZoneTemplate()
         : html`
-            <div class="input-group__file-upload-button">
-              <slot name="file-upload-button"></slot>
+            <div class="input-group__file-select-button">
+              <slot name="file-select-button"></slot>
             </div>
           `}
     `;
