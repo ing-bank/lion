@@ -3,6 +3,7 @@
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox-indeterminate.js';
 import '@lion/ui/define/lion-checkbox.js';
 ```
 
