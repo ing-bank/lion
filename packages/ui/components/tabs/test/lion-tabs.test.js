@@ -345,6 +345,42 @@ describe('<lion-tabs>', () => {
       tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
       expect(el.selectedIndex).to.equal(1);
     });
+
+    it('selects next available not disabled tab if first tab is disabled also works on not buttons', async () => {
+      const el = /** @type {LionTabs} */ (
+        await fixture(html`
+          <lion-tabs>
+            <div role="button" slot="tab" disabled>tab 1</div>
+            <div slot="panel">panel 1</div>
+            <button slot="tab">tab 2</button>
+            <div slot="panel">panel 2</div>
+            <button slot="tab">tab 3</button>
+            <div slot="panel">panel 3</div>
+          </lion-tabs>
+        `)
+      );
+      expect(el.selectedIndex).to.equal(1);
+    });
+
+    it('arrow keys also works on not buttons', async () => {
+      const el = /** @type {LionTabs} */ (
+        await fixture(html`
+          <lion-tabs>
+            <button slot="tab">tab 1</button>
+            <div slot="panel">panel 1</div>
+            <div role="button" slot="tab" disabled>tab 2</div>
+            <div slot="panel">panel 2</div>
+            <button slot="tab">tab 3</button>
+            <div slot="panel">panel 3</div>
+            <div role="button" slot="tab" disabled>tab 3</div>
+            <div slot="panel">panel 3</div>
+          </lion-tabs>
+        `)
+      );
+      const tabs = el.querySelectorAll('[slot=tab]');
+      tabs[0].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      expect(el.selectedIndex).to.equal(2);
+    });
   });
 
   describe('Content distribution', () => {

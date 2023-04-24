@@ -161,8 +161,8 @@ export class LionTabs extends LitElement {
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
     this.__setupSlots();
-    if (this.tabs[0]?.disabled) {
-      this.selectedIndex = this.tabs.findIndex(tab => !tab.disabled);
+    if (this.tabs[0]?.hasAttribute('disabled')) {
+      this.selectedIndex = this.tabs.findIndex(tab => !tab.hasAttribute('disabled'));
     }
   }
 
@@ -250,8 +250,12 @@ export class LionTabs extends LitElement {
    */
   __getNextNotDisabledTab(tabs, currentTab, dir) {
     let orderedNotDisabledTabs = /** @type {HTMLButtonElement[]} */ ([]);
-    const nextNotDisabledTabs = tabs.filter((tab, i) => !tab.disabled && i > this.selectedIndex);
-    const prevNotDisabledTabs = tabs.filter((tab, i) => !tab.disabled && i < this.selectedIndex);
+    const nextNotDisabledTabs = tabs.filter(
+      (tab, i) => !tab.hasAttribute('disabled') && i > this.selectedIndex,
+    );
+    const prevNotDisabledTabs = tabs.filter(
+      (tab, i) => !tab.hasAttribute('disabled') && i < this.selectedIndex,
+    );
     if (dir === 'right') {
       orderedNotDisabledTabs = [...nextNotDisabledTabs, ...prevNotDisabledTabs];
     } else {
@@ -268,7 +272,7 @@ export class LionTabs extends LitElement {
    */
   __getNextAvailableIndex(newIndex, direction) {
     const currentTab = this.tabs[this.selectedIndex];
-    if (this.tabs.every(tab => !tab.disabled)) {
+    if (this.tabs.every(tab => !tab.hasAttribute('disabled'))) {
       return newIndex;
     }
     if (direction === 'ArrowRight' || direction === 'ArrowDown') {
@@ -280,12 +284,12 @@ export class LionTabs extends LitElement {
       return this.tabs.findIndex(tab => nextNotDisabledTab === tab);
     }
     if (direction === 'Home') {
-      return this.tabs.findIndex(tab => !tab.disabled);
+      return this.tabs.findIndex(tab => !tab.hasAttribute('disabled'));
     }
     if (direction === 'End') {
       const notDisabledTabs = this.tabs
-        .map((tab, i) => ({ disabled: tab.disabled, index: i }))
-        .filter(tab => !tab.disabled);
+        .map((tab, i) => ({ disabled: tab.hasAttribute('disabled'), index: i }))
+        .filter(tab => tab.disabled);
       return notDisabledTabs[notDisabledTabs.length - 1].index;
     }
     return -1;
