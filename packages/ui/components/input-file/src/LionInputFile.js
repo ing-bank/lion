@@ -45,14 +45,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       _selectedFilesMetaData: {
         type: Array,
       },
-      allowedFileExtensions: {
-        type: String,
-        attribute: 'allowed-file-extensions',
-      },
-      allowedFileTypes: {
-        type: String,
-        attribute: 'allowed-file-types',
-      },
       accept: {
         type: String,
       },

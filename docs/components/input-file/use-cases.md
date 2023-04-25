@@ -109,8 +109,6 @@ export const basicFileUpload = () => {
     <lion-input-file
       label="Label"
       max-file-size="1024000"
-      .accept2="${'.doc,.docx,.xml'}"
-      .accept1="${'application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'}"
       .accept="${'.jpg,.svg,.xml,image/svg+xml'}"
       @file-list-changed="${ev => {
         console.log('fileList', ev.detail.newFiles);
