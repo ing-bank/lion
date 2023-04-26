@@ -111,6 +111,22 @@ export function runListboxMixinSuite(customConfig = {}) {
         expect(spy.callCount).to.equal(1);
       });
 
+      it('should dispatch user-input-changed event on child active change', async () => {
+        const spy = sinon.spy();
+        const el = await fixture(html`
+          <${tag}>
+            <${optionTag} .choiceValue="${'10'}">Item 1</${optionTag}>
+            <${optionTag} .choiceValue="${'20'}">Item 2</${optionTag}>
+            <${optionTag} .choiceValue="${'30'}">Item 3</${optionTag}>
+          </${tag}>
+        `);
+
+        el.addEventListener('user-input-changed', spy);
+        expect(spy.callCount).to.equal(0);
+        el.formElements[2].active = true;
+        expect(spy.callCount).to.equal(1);
+      });
+
       it('automatically sets the name attribute of child checkboxes to its own name', async () => {
         const el = await fixture(html`
         <${tag} name="foo">
