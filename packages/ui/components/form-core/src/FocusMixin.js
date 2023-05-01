@@ -49,8 +49,11 @@ const FocusMixinImplementation = superclass =>
       this.focusedVisible = false;
     }
 
-    connectedCallback() {
-      super.connectedCallback();
+    /**
+     * @param {import('lit').PropertyValues } changedProperties
+     */
+    firstUpdated(changedProperties) {
+      super.firstUpdated(changedProperties);
       this.__registerEventsForFocusMixin();
     }
 
