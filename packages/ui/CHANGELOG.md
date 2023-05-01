@@ -1,5 +1,14 @@
 # @lion/ui
 
+## 0.2.1
+
+### Patch Changes
+
+- 5b8d655f: OverlayController: fixed check to determine if native dialog is supported, fixed check to determine if user has moved focus while dialog is open, added test to assert if element specified in dialog config key `elementToFocusAfterHide` is in viewport when dialog is closed
+- a5f35158: feat(@lion/ui): add \_previousIconTemplate and \_nextIconTemplate to LionCalendar
+- ddea63b3: [combobox] update option list after clear
+- 12f18008: lion-calendar: when determining if user interacted with a day button we no longer examine event.target but event.composedPath()[0] since it otherwise fails in Firefox 111+
+
 ## 0.2.0
 
 ### Minor Changes
