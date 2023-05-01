@@ -91,7 +91,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
 
   /**
    * @protected
-   * @param {Array.<import('../../form-core/types/validate/ValidateMixinTypes.js').FeedbackMessage>} validationFeedback
+   * @param {Array<import('../../form-core/types/validate/ValidateMixinTypes.js').FeedbackMessage>} validationFeedback
    * @param {string} fileUuid
    * @return {TemplateResult}
    */

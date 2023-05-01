@@ -27,11 +27,11 @@ export const UPLOAD_FILE_STATUS = {
 export class FileHandle {
   /**
    * @param {SystemFile} systemFile
-   * @param {{ allowedFileTypes: Array.<string>; allowedFileExtensions: Array.<string>; maxFileSize: number; }} fileLimit
+   * @param {{ allowedFileTypes: Array<string>; allowedFileExtensions: Array<string>; maxFileSize: number; }} fileLimit
    */
   constructor(systemFile, fileLimit) {
     /**
-     * @type {Array.<string>}
+     * @type {Array<string>}
      */
     this.failedProp = [];
     this.systemFile = systemFile;
