@@ -83,7 +83,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
         detail: {
           removedFile,
           status: removedFile.status,
-          uploadResponse: removedFile.response,
+          fileSelectResponse: removedFile.response,
         },
       }),
     );
