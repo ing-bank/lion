@@ -52,7 +52,7 @@ export class FileValidation extends Validator {
   }
 
   /**
-   * @param {Array.zzz<File>} modelValue array of file objects
+   * @param {Array<File>} modelValue array of file objects
    * @param {*} params
    * @returns {Boolean}
    */
