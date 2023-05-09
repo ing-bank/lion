@@ -1,4 +1,4 @@
-const { toPosixPath } = require('./to-posix-path.js');
+import { toPosixPath } from './to-posix-path.js';
 
 /**
  * Determines for a source path of an import- or export specifier, whether
@@ -8,7 +8,7 @@ const { toPosixPath } = require('./to-posix-path.js');
  * @param {string} source source path of an import- or export specifier
  * @returns {boolean}
  */
-function isRelativeSourcePath(source) {
+export function isRelativeSourcePath(source) {
   return source.startsWith('.');
 }
 
@@ -19,8 +19,6 @@ function isRelativeSourcePath(source) {
  * @param {string} fullPath like '/path/to/repo/my/file.js'
  * @param {string} rootPath like '/path/to/repo'
  */
-function toRelativeSourcePath(fullPath, rootPath) {
+export function toRelativeSourcePath(fullPath, rootPath) {
   return toPosixPath(fullPath).replace(toPosixPath(rootPath), '.');
 }
-
-module.exports = { isRelativeSourcePath, toRelativeSourcePath };

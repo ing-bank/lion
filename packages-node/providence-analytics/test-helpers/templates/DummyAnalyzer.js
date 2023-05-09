@@ -1,8 +1,9 @@
-const { Analyzer } = require('../../src/program/core/Analyzer.js');
+import { Analyzer } from '../../src/program/core/Analyzer.js';
 
 /**
  * @typedef {import('@babel/types').File} File
- * @typedef {import('../../src/program/types/core').QueryOutputEntry} QueryOutputEntry
+ * @typedef {import('../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../types/index.js').QueryOutputEntry} QueryOutputEntry
  */
 
 /**
@@ -31,7 +32,8 @@ const options = {
  * @param {File} ast
  */
 // eslint-disable-next-line no-unused-vars
-function myAnalyzerPerAstEntry(ast) {
+function getResultPerAstFile(ast) {
+  console.debug('myAnalyzerPerAstEntry');
   // Visit AST...
   const transformedEntryResult = [];
   // Do the traverse: https://babeljs.io/docs/en/babel-traverse
@@ -40,10 +42,9 @@ function myAnalyzerPerAstEntry(ast) {
   return transformedEntryResult;
 }
 
-class DummyAnalyzer extends Analyzer {
-  static get analyzerName() {
-    return 'dummy-analyzer';
-  }
+export class DummyAnalyzer extends Analyzer {
+  /** @type {AnalyzerName} */
+  static analyzerName = 'find-dummy-analyzer';
 
   /**
    * @param {AstDataProject[]} astDataProjects
@@ -71,7 +72,7 @@ class DummyAnalyzer extends Analyzer {
      */
     const queryOutput = await this._traverse((ast, astContext) => {
       // Run the traversel per entry
-      let transformedEntryResult = myAnalyzerPerAstEntry(ast);
+      let transformedEntryResult = getResultPerAstFile(ast);
       const meta = {};
 
       // (optional): Post processors on TransformedEntry
@@ -93,5 +94,3 @@ class DummyAnalyzer extends Analyzer {
     return this._finalize(queryOutput, cfg);
   }
 }
-
-module.exports = { DummyAnalyzer };

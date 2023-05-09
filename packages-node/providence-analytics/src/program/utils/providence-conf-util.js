@@ -3,7 +3,11 @@ import fs from 'fs';
 import { pathToFileURL } from 'url';
 
 /**
- * @returns {Promise<object|null>}
+ * @typedef {import('../../../types/index.js').ProvidenceCliConf} ProvidenceCliConf
+ */
+
+/**
+ * @returns {Promise<{providenceConf:Partial<ProvidenceCliConf>;providenceConfRaw:string}|null>}
  */
 async function getConf() {
   const confPathWithoutExtension = `${pathLib.join(process.cwd(), 'providence.conf')}`;

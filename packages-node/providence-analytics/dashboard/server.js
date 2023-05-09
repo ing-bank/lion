@@ -1,15 +1,19 @@
 import fs from 'fs';
-import pathLib, { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import pathLib from 'path';
 import { startDevServer } from '@web/dev-server';
 import { ReportService } from '../src/program/core/ReportService.js';
-import { providenceConfUtil } from '../src/program/utils/providence-conf-util.mjs';
+import { providenceConfUtil } from '../src/program/utils/providence-conf-util.js';
+import { getCurrentDir } from '../src/program/utils/get-current-dir.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+/**
+ * @typedef {import('../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../types/index.js').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../types/index.js').AnalyzerName} AnalyzerName
+ */
 
 /**
  * Gets all results found in cache folder with all results
- * @param {{ supportedAnalyzers: `match-${string}`[], resultsPath: string }} options
+ * @param {{ supportedAnalyzers?: `match-${string}`[], resultsPath?: string }} options
  */
 async function getCachedProvidenceResults({
   supportedAnalyzers = ['match-imports', 'match-subclasses'],
@@ -34,6 +38,7 @@ async function getCachedProvidenceResults({
       searchTargetDeps = content;
     } else {
       const analyzerName = fileName.split('_-_')[0];
+      // @ts-ignore
       if (!supportedAnalyzers.includes(analyzerName)) {
         return;
       }
@@ -48,7 +53,7 @@ async function getCachedProvidenceResults({
 }
 
 /**
- * @param {{ providenceConf: object; earchTargetDeps: object; resultFiles: string[]; }}
+ * @param {{ providenceConf: object; providenceConfRaw:string; searchTargetDeps: object; resultFiles: string[]; }}
  */
 function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps, resultFiles }) {
   /**
@@ -80,7 +85,10 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
     return res;
   }
 
-  const pathFromServerRootToHere = `/${pathLib.relative(process.cwd(), __dirname)}`;
+  const pathFromServerRootToHere = `/${pathLib.relative(
+    process.cwd(),
+    getCurrentDir(import.meta.url),
+  )}`;
 
   return [
     // eslint-disable-next-line consistent-return
@@ -143,7 +151,7 @@ export async function createDashboardServerConfig() {
   const moduleRoot = fromPackageRoot ? pathLib.resolve(process.cwd(), '../../') : process.cwd();
 
   return {
-    appIndex: pathLib.resolve(__dirname, 'index.html'),
+    appIndex: pathLib.resolve(getCurrentDir(import.meta.url), 'index.html'),
     rootDir: moduleRoot,
     nodeResolve: true,
     moduleDirs: pathLib.resolve(moduleRoot, 'node_modules'),
@@ -158,6 +166,7 @@ export async function createDashboardServerConfig() {
   };
 }
 
+/** @type {(value?: any) => void} */
 let resolveLoaded;
 export const serverInstanceLoaded = new Promise(resolve => {
   resolveLoaded = resolve;

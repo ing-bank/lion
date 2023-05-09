@@ -1,4 +1,4 @@
-const memoizeConfig = {
+export const memoizeConfig = {
   isCacheDisabled: false,
 };
 
@@ -24,10 +24,10 @@ function createCachableArg(arg) {
 }
 
 /**
- * @param {function} functionToMemoize
- * @param {{ storage?:object; serializeObjects?: boolean }} opts
+ * @type {<T>(functionToMemoize:T, opts?:{ storage?:object; serializeObjects?: boolean }) => T}
  */
-function memoize(functionToMemoize, { storage = {}, serializeObjects = false } = {}) {
+export function memoize(functionToMemoize, { storage = {}, serializeObjects = false } = {}) {
+  // @ts-ignore
   // eslint-disable-next-line func-names
   return function () {
     // eslint-disable-next-line prefer-rest-params
@@ -47,8 +47,3 @@ function memoize(functionToMemoize, { storage = {}, serializeObjects = false } =
     return outcome;
   };
 }
-
-module.exports = {
-  memoize,
-  memoizeConfig,
-};

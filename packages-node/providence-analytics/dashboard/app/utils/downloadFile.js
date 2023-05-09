@@ -1,5 +1,5 @@
 /**
- * @desc Can be called from a button click handler in order to let the end user download a file
+ * Can be called from a button click handler in order to let the end user download a file
  * @param {string} filename like 'overview.csv'
  * @param {string} content for instance a csv file
  */

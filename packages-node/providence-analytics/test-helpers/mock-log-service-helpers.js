@@ -1,57 +1,47 @@
-const { LogService } = require('../src/program/core/LogService.js');
+import { LogService } from '../src/program/core/LogService.js';
 
 const originalWarn = LogService.warn;
-function suppressWarningLogs() {
+export function suppressWarningLogs() {
   LogService.warn = () => {};
 }
-function restoreSuppressWarningLogs() {
+export function restoreSuppressWarningLogs() {
   LogService.warn = originalWarn;
 }
 
 const originalInfo = LogService.info;
-function suppressInfoLogs() {
+export function suppressInfoLogs() {
   LogService.info = () => {};
 }
-function restoreSuppressInfoLogs() {
+export function restoreSuppressInfoLogs() {
   LogService.info = originalInfo;
 }
 
 const originalDebug = LogService.debug;
-function suppressDebugLogs() {
+export function suppressDebugLogs() {
   LogService.debug = () => {};
 }
-function restoreSuppressDebugLogs() {
+export function restoreSuppressDebugLogs() {
   LogService.debug = originalDebug;
 }
 
 const originalSuccess = LogService.success;
-function suppressSuccessLogs() {
+export function suppressSuccessLogs() {
   LogService.success = () => {};
 }
-function restoreSuppressSuccessLogs() {
+export function restoreSuppressSuccessLogs() {
   LogService.success = originalSuccess;
 }
 
-function suppressNonCriticalLogs() {
+export function suppressNonCriticalLogs() {
   suppressInfoLogs();
   suppressWarningLogs();
   suppressDebugLogs();
   suppressSuccessLogs();
 }
 
-function restoreSuppressNonCriticalLogs() {
+export function restoreSuppressNonCriticalLogs() {
   restoreSuppressInfoLogs();
   restoreSuppressWarningLogs();
   restoreSuppressDebugLogs();
   restoreSuppressSuccessLogs();
 }
-
-module.exports = {
-  suppressWarningLogs,
-  restoreSuppressWarningLogs,
-  suppressInfoLogs,
-  restoreSuppressInfoLogs,
-
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-};

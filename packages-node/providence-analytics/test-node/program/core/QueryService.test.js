@@ -1,11 +1,12 @@
-const { expect } = require('chai');
-const { QueryService } = require('../../../src/program/core/QueryService.js');
-const { DummyAnalyzer } = require('../../../test-helpers/templates/DummyAnalyzer.js');
-const FindImportsAnalyzer = require('../../../src/program/analyzers/find-imports.js');
+import { expect } from 'chai';
+import { it } from 'mocha';
+import { QueryService } from '../../../src/program/core/QueryService.js';
+import { DummyAnalyzer } from '../../../test-helpers/templates/DummyAnalyzer.js';
+import FindImportsAnalyzer from '../../../src/program/analyzers/find-imports.js';
 
 /**
- * @typedef {import('../../../src/program/types/core').Analyzer} Analyzer
- * @typedef {import('../../../src/program/types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').Analyzer} Analyzer
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  */
 
 describe('QueryService', () => {
@@ -144,6 +145,7 @@ describe('QueryService', () => {
 
         it('throws when no string provided', async () => {
           expect(() => {
+            // @ts-ignore
             QueryService.getQueryConfigFromFeatureString();
           }).to.throw('[QueryService.getQueryConfigFromFeatureString]: provide a string');
         });
@@ -152,7 +154,10 @@ describe('QueryService', () => {
       describe('"getQueryConfigFromAnalyzer"', () => {
         const myAnalyzerCfg = { targetProjectPath: /** @type {PathFromSystemRoot} */ ('/my/path') };
         it('accepts a constructor as first argument', async () => {
-          const result = QueryService.getQueryConfigFromAnalyzer('find-imports', myAnalyzerCfg);
+          const result = await QueryService.getQueryConfigFromAnalyzer(
+            'find-imports',
+            myAnalyzerCfg,
+          );
           expect(result).to.eql({
             type: 'ast-analyzer',
             analyzerName: 'find-imports',
@@ -162,13 +167,13 @@ describe('QueryService', () => {
         });
 
         it('accepts a string as first argument', async () => {
-          const result = QueryService.getQueryConfigFromAnalyzer(
+          const result = await QueryService.getQueryConfigFromAnalyzer(
             /** @type {* & Analyzer} */ (DummyAnalyzer),
             myAnalyzerCfg,
           );
           expect(result).to.eql({
             type: 'ast-analyzer',
-            analyzerName: 'dummy-analyzer',
+            analyzerName: 'find-dummy-analyzer',
             analyzerConfig: myAnalyzerCfg,
             analyzer: DummyAnalyzer,
           });
@@ -176,22 +181,22 @@ describe('QueryService', () => {
       });
     });
 
-    describe('QueryResults', () => {
-      describe.skip('"grepSearch"', () => {
-        it('with FeatureConfig', async () => {
-          const featureCfg = QueryService.getQueryConfigFromFeatureString('tg-icon[size=xs]');
-          const result = QueryService.grepSearch(featureCfg);
-          expect(result).to.eql({
-            type: 'ast-analyzer',
-            analyzerName: 'find-imports',
-            analyzerConfig: { x: 'y' },
-            analyzer: FindImportsAnalyzer,
-          });
-        });
-      });
+    // describe('QueryResults', () => {
+    //   describe.skip('"grepSearch"', () => {
+    //     it('with FeatureConfig', async () => {
+    //       const featureCfg = QueryService.getQueryConfigFromFeatureString('tg-icon[size=xs]');
+    //       const result = QueryService.grepSearch(featureCfg);
+    //       expect(result).to.eql({
+    //         type: 'ast-analyzer',
+    //         analyzerName: 'find-imports',
+    //         analyzerConfig: { x: 'y' },
+    //         analyzer: FindImportsAnalyzer,
+    //       });
+    //     });
+    //   });
 
-      it('"astSearch"', async () => {});
-    });
+    //   it('"astSearch"', async () => {});
+    // });
 
     describe('Ast retrieval', () => {
       it('"addAstToProjectsData"', async () => {});

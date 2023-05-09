@@ -1,22 +1,22 @@
 /* eslint-disable no-param-reassign */
-const semver = require('semver');
-const pathLib = require('path');
-const { LogService } = require('./LogService.js');
-const { QueryService } = require('./QueryService.js');
-const { ReportService } = require('./ReportService.js');
-const { InputDataService } = require('./InputDataService.js');
-const { toPosixPath } = require('../utils/to-posix-path.js');
-const { memoize } = require('../utils/memoize.js');
-const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
+import semver from 'semver';
+import pathLib from 'path';
+import { LogService } from './LogService.js';
+import { QueryService } from './QueryService.js';
+import { ReportService } from './ReportService.js';
+import { InputDataService } from './InputDataService.js';
+import { toPosixPath } from '../utils/to-posix-path.js';
+import { memoize } from '../utils/memoize.js';
+import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
 
 /**
- * @typedef {import('../types/core').AnalyzerName} AnalyzerName
- * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../types/core').QueryOutput} QueryOutput
- * @typedef {import('../types/core').ProjectInputData} ProjectInputData
- * @typedef {import('../types/core').ProjectInputDataWithMeta} ProjectInputDataWithMeta
- * @typedef {import('../types/core').AnalyzerQueryResult} AnalyzerQueryResult
- * @typedef {import('../types/core').MatchAnalyzerConfig} MatchAnalyzerConfig
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
+ * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
+ * @typedef {import('../../../types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
+ * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').MatchAnalyzerConfig} MatchAnalyzerConfig
  */
 
 /**
@@ -140,14 +140,14 @@ const checkForMatchCompatibility = memoize(
     const targetPkg = InputDataService.getPackageJson(targetPath);
 
     const allTargetDeps = [
-      ...Object.entries(targetPkg.devDependencies || {}),
-      ...Object.entries(targetPkg.dependencies || {}),
+      ...Object.entries(targetPkg?.devDependencies || {}),
+      ...Object.entries(targetPkg?.dependencies || {}),
     ];
-    const importEntry = allTargetDeps.find(([name]) => referencePkg.name === name);
+    const importEntry = allTargetDeps.find(([name]) => referencePkg?.name === name);
     if (!importEntry) {
       return { compatible: false, reason: 'no-dependency' };
     }
-    if (!semver.satisfies(referencePkg.version, importEntry[1])) {
+    if (referencePkg?.version && !semver.satisfies(referencePkg.version, importEntry[1])) {
       return { compatible: false, reason: 'no-matched-version' };
     }
     return { compatible: true };
@@ -164,14 +164,15 @@ function unwindJsonResult(targetOrReferenceProjectResult) {
   return { queryOutput, analyzerMeta };
 }
 
-class Analyzer {
+export class Analyzer {
   static requiresReference = false;
 
-  /** @type {AnalyzerName|''} */
+  /** @type {AnalyzerName} */
   static analyzerName = '';
 
   name = /** @type  {typeof Analyzer} */ (this.constructor).analyzerName;
 
+  /** @type {'babel'|'swc-to-babel'|'swc-to-babel'} */
   requiredAst = 'babel';
 
   /**
@@ -196,7 +197,7 @@ class Analyzer {
    */
   _prepare(cfg) {
     LogService.debug(`Analyzer "${this.name}": started _prepare method`);
-    this.constructor.__unwindProvidedResults(cfg);
+    /** @type {typeof Analyzer} */ (this.constructor).__unwindProvidedResults(cfg);
 
     if (!cfg.targetProjectResult) {
       this.targetProjectMeta = InputDataService.getProjectMeta(cfg.targetProjectPath);
@@ -330,7 +331,10 @@ class Analyzer {
     /**
      * Create ASTs for our inputData
      */
-    const astDataProjects = await QueryService.addAstToProjectsData(finalTargetData, 'babel');
+    const astDataProjects = await QueryService.addAstToProjectsData(
+      finalTargetData,
+      this.requiredAst,
+    );
     return analyzePerAstFile(astDataProjects[0], traverseEntryFn);
   }
 
@@ -384,5 +388,3 @@ class Analyzer {
     return result;
   }
 }
-
-module.exports = { Analyzer };

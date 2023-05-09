@@ -24,13 +24,16 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-const fs = require('fs');
+import fs from 'fs';
 /* istanbul ignore next */
-const promisify = require('util').promisify || require('util-promisify');
-const { resolve, basename, dirname, join } = require('path');
-const rpj = promisify(require('read-package-json'));
-const readdir = promisify(require('readdir-scoped-modules'));
-const realpath = require('read-package-tree/realpath.js');
+import { promisify } from 'util';
+import { basename, dirname, join } from 'path';
+import rpjSync from 'read-package-json';
+import readdirSync from 'readdir-scoped-modules';
+import realpath from 'read-package-tree/realpath.js';
+
+const rpj = promisify(rpjSync);
+const readdir = promisify(readdirSync);
 
 let ID = 0;
 class Node {
@@ -220,4 +223,5 @@ const rpt = (root, filterWith, cb, mode = 'npm') => {
 
 rpt.Node = Node;
 rpt.Link = Link;
-module.exports = rpt;
+
+export default rpt;

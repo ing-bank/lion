@@ -1,5 +1,9 @@
-import { ImportOrExportId, PathRelativeFromProjectRoot, ProjectName } from '../core/core';
-import { AnalyzerQueryResult, MatchedExportSpecifier, MatchAnalyzerConfig } from '../core/Analyzer';
+import { ImportOrExportId, PathRelativeFromProjectRoot, ProjectName } from '../core/core.js';
+import {
+  AnalyzerQueryResult,
+  MatchedExportSpecifier,
+  MatchAnalyzerConfig,
+} from '../core/Analyzer.js';
 
 export interface MatchImportsAnalyzerResult extends AnalyzerQueryResult {
   queryOutput: MatchImportsAnalyzerOutputEntry[];

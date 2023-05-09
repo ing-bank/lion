@@ -6,9 +6,9 @@ import { fileURLToPath } from 'url';
 import { expect } from 'chai';
 import fetch from 'node-fetch';
 import { createTestServer } from '@web/dev-server-core/test-helpers';
-import { createDashboardServerConfig } from '../../dashboard/server.mjs';
+import { createDashboardServerConfig } from '../../dashboard/server.js';
 import { ReportService } from '../../src/program/core/ReportService.js';
-import { providenceConfUtil } from '../../src/program/utils/providence-conf-util.mjs';
+import { providenceConfUtil } from '../../src/program/utils/providence-conf-util.js';
 
 /**
  * @typedef {import('@web/dev-server-core').DevServer} DevServer

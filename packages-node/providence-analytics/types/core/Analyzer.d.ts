@@ -9,12 +9,12 @@ import {
   GatherFilesConfig,
   SpecifierName,
   QueryOutput,
-} from './index';
+} from './index.js';
 
 /**
  * Name of the analyzer, like 'find-imports' or 'match-sublcasses'
  */
-export type AnalyzerName = `${'find' | 'match'}-${string}`;
+export type AnalyzerName = `${'find' | 'match'}-${string}` | '';
 
 // TODO: make sure that data structures of JSON output (generated in ReportService)
 // and data structure generated in Analyzer.prototype._finalize match exactly (move logic from ReportSerivce to _finalize)

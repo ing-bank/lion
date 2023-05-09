@@ -1,15 +1,18 @@
 /* eslint-disable no-shadow, no-param-reassign */
-const MatchSubclassesAnalyzer = require('./match-subclasses.js');
-const FindExportsAnalyzer = require('./find-exports.js');
-const FindCustomelementsAnalyzer = require('./find-customelements.js');
-const { Analyzer } = require('../core/Analyzer.js');
+import MatchSubclassesAnalyzer from './match-subclasses.js';
+import FindExportsAnalyzer from './find-exports.js';
+import FindCustomelementsAnalyzer from './find-customelements.js';
+import { Analyzer } from '../core/Analyzer.js';
 
-/** @typedef {import('../types/core').FindExportsAnalyzerResult} FindExportsAnalyzerResult */
-/** @typedef {import('../types/core').FindCustomelementsAnalyzerResult} FindCustomelementsAnalyzerResult */
-/** @typedef {import('../types/core').MatchSubclassesAnalyzerResult} MatchSubclassesAnalyzerResult */
-/** @typedef {import('../types/core').FindImportsAnalyzerResult} FindImportsAnalyzerResult */
-/** @typedef {import('../types/core').MatchedExportSpecifier} MatchedExportSpecifier */
-/** @typedef {import('../types/core').RootFile} RootFile */
+/**
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindCustomelementsAnalyzerResult} FindCustomelementsAnalyzerResult
+ * @typedef {import('../../../types/index.js').MatchSubclassesAnalyzerResult} MatchSubclassesAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').MatchedExportSpecifier} MatchedExportSpecifier
+ * @typedef {import('../../../types/index.js').RootFile} RootFile
+ */
 
 /**
  * For prefix `{ from: 'lion', to: 'wolf' }`
@@ -361,14 +364,11 @@ function matchPathsPostprocess(
  *   ...
  * ]
  */
-class MatchPathsAnalyzer extends Analyzer {
-  static get analyzerName() {
-    return 'match-paths';
-  }
+export default class MatchPathsAnalyzer extends Analyzer {
+  /** @type {AnalyzerName} */
+  static analyzerName = 'match-paths';
 
-  static get requiresReference() {
-    return true;
-  }
+  static requiresReference = true;
 
   /**
    * @param {MatchClasspathsConfig} customConfig
@@ -513,5 +513,3 @@ class MatchPathsAnalyzer extends Analyzer {
     return this._finalize(queryOutput, cfg);
   }
 }
-
-module.exports = MatchPathsAnalyzer;

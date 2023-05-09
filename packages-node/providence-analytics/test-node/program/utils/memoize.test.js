@@ -1,5 +1,6 @@
-const { expect } = require('chai');
-const { memoize, memoizeConfig } = require('../../../src/program/utils/memoize.js');
+import { expect } from 'chai';
+import { it } from 'mocha';
+import { memoize, memoizeConfig } from '../../../src/program/utils/memoize.js';
 
 const cacheDisabledInitialValue = memoizeConfig.isCacheDisabled;
 

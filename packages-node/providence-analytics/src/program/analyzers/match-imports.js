@@ -1,28 +1,24 @@
 /* eslint-disable no-continue */
-const pathLib = require('path');
+import pathLib from 'path';
 /* eslint-disable no-shadow, no-param-reassign */
-const FindImportsAnalyzer = require('./find-imports.js');
-const FindExportsAnalyzer = require('./find-exports.js');
-const { Analyzer } = require('../core/Analyzer.js');
-const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
-const {
-  transformIntoIterableFindExportsOutput,
-} = require('./helpers/transform-into-iterable-find-exports-output.js');
-const {
-  transformIntoIterableFindImportsOutput,
-} = require('./helpers/transform-into-iterable-find-imports-output.js');
+import FindImportsAnalyzer from './find-imports.js';
+import FindExportsAnalyzer from './find-exports.js';
+import { Analyzer } from '../core/Analyzer.js';
+import { fromImportToExportPerspective } from './helpers/from-import-to-export-perspective.js';
+import { transformIntoIterableFindExportsOutput } from './helpers/transform-into-iterable-find-exports-output.js';
+import { transformIntoIterableFindImportsOutput } from './helpers/transform-into-iterable-find-imports-output.js';
 
 /**
- * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
- * @typedef {import('../types/analyzers').FindExportsAnalyzerResult} FindExportsAnalyzerResult
- * @typedef {import('../types/analyzers').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
- * @typedef {import('../types/analyzers').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
- * @typedef {import('../types/analyzers').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
- * @typedef {import('../types/analyzers').MatchImportsConfig} MatchImportsConfig
- * @typedef {import('../types/analyzers').MatchImportsAnalyzerResult} MatchImportsAnalyzerResult
- * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../types/core').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
+ * @typedef {import('../../../types/index.js').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
+ * @typedef {import('../../../types/index.js').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').MatchImportsConfig} MatchImportsConfig
+ * @typedef {import('../../../types/index.js').MatchImportsAnalyzerResult} MatchImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  */
 
 /**
@@ -77,6 +73,7 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
   // TODO: What if this info is retrieved from cached importProject/target project?
   const importProjectPath = cfg.targetProjectPath;
 
+  // TODO: make find-import / export automatically output these, to improve perf...
   const iterableFindExportsOutput = transformIntoIterableFindExportsOutput(exportsAnalyzerResult);
   const iterableFindImportsOutput = transformIntoIterableFindImportsOutput(importsAnalyzerResult);
 
@@ -107,7 +104,7 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
       /**
        * 2. Are we from the same source?
        * A.k.a. is source required by target the same as the one found in target.
-       * (we know the specifier name is tha same, now we need to check the file as well.)
+       * (we know the specifier name is the same, now we need to check the file as well.)
        *
        * Example:
        * exportFile './foo.js'
@@ -152,20 +149,16 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
   }
 
   const importProject = importsAnalyzerResult.analyzerMeta.targetProject.name;
-  return /** @type {AnalyzerQueryResult} */ createCompatibleMatchImportsResult(
-    conciseResultsArray,
-    importProject,
+  return /** @type {AnalyzerQueryResult} */ (
+    createCompatibleMatchImportsResult(conciseResultsArray, importProject)
   );
 }
 
-class MatchImportsAnalyzer extends Analyzer {
-  static get analyzerName() {
-    return 'match-imports';
-  }
+export default class MatchImportsAnalyzer extends Analyzer {
+  /** @type {AnalyzerName} */
+  static analyzerName = 'match-imports';
 
-  static get requiresReference() {
-    return true;
-  }
+  static requiresReference = true;
 
   /**
    * Based on ExportsAnalyzerResult of reference project(s) (for instance lion-based-ui)
@@ -197,10 +190,9 @@ class MatchImportsAnalyzer extends Analyzer {
     /**
      * Prepare
      */
-    const analyzerResult = this._prepare(cfg);
-
-    if (analyzerResult) {
-      return analyzerResult;
+    const cachedAnalyzerResult = this._prepare(cfg);
+    if (cachedAnalyzerResult) {
+      return cachedAnalyzerResult;
     }
 
     /**
@@ -240,5 +232,3 @@ class MatchImportsAnalyzer extends Analyzer {
     return this._finalize(queryOutput, cfg);
   }
 }
-
-module.exports = MatchImportsAnalyzer;

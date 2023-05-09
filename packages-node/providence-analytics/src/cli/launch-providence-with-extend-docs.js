@@ -1,16 +1,17 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const fs = require('fs');
-const pathLib = require('path');
-const { performance } = require('perf_hooks');
-const providenceModule = require('../program/providence.js');
-const { QueryService } = require('../program/core/QueryService.js');
-const { InputDataService } = require('../program/core/InputDataService.js');
-const { LogService } = require('../program/core/LogService.js');
-const { flatten } = require('./cli-helpers.js');
+import fs from 'fs';
+import pathLib from 'path';
+import { performance } from 'perf_hooks';
+import { _providenceModule } from '../program/providence.js';
+import { QueryService } from '../program/core/QueryService.js';
+import { InputDataService } from '../program/core/InputDataService.js';
+import { LogService } from '../program/core/LogService.js';
+import { flatten } from './cli-helpers.js';
+import MatchPathsAnalyzer from '../program/analyzers/match-paths.js';
 
 /**
- * @typedef {import('../program/types').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../program/types').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../types/index.js').GatherFilesConfig} GatherFilesConfig
  */
 
 /**
@@ -24,7 +25,7 @@ const { flatten } = require('./cli-helpers.js');
  * }} opts
  * @returns
  */
-async function getExtendDocsResults({
+export async function getExtendDocsResults({
   referenceProjectPaths,
   prefixCfg,
   extensions,
@@ -34,8 +35,8 @@ async function getExtendDocsResults({
 }) {
   const monoPkgs = InputDataService.getMonoRepoPackages(cwd);
 
-  const results = await providenceModule.providence(
-    QueryService.getQueryConfigFromAnalyzer('match-paths', { prefix: prefixCfg }),
+  const results = await _providenceModule.providence(
+    await QueryService.getQueryConfigFromAnalyzer(MatchPathsAnalyzer, { prefix: prefixCfg }),
     {
       gatherFilesConfig: {
         extensions: extensions || /** @type {GatherFilesConfig['extensions']} */ (['.js']),
@@ -98,7 +99,11 @@ async function getExtendDocsResults({
   return queryOutputs;
 }
 
-async function launchProvidenceWithExtendDocs({
+/**
+ *
+ * @param {*} opts
+ */
+export async function launchProvidenceWithExtendDocs({
   referenceProjectPaths,
   prefixCfg,
   outputFolder,
@@ -134,7 +139,7 @@ async function launchProvidenceWithExtendDocs({
   LogService.info(`"extend-docs" completed in ${Math.round((t1 - t0) / 1000)} seconds`);
 }
 
-module.exports = {
+export const _extendDocsModule = {
   launchProvidenceWithExtendDocs,
   getExtendDocsResults,
 };

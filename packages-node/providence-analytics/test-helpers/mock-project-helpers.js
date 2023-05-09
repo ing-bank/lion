@@ -1,8 +1,8 @@
-const path = require('path');
+import path from 'path';
 // eslint-disable-next-line import/no-extraneous-dependencies
-const { mockFsAndRequire: mock } = require('./mock-fs-and-require.js');
+import { mockFsAndRequire } from './mock-fs-and-require.js';
 
-
+export const mock = mockFsAndRequire;
 
 /**
  * Makes sure that, whenever the main program (providence) calls
@@ -70,21 +70,21 @@ function getMockObjectForProject(files, cfg = {}, existingMock = {}) {
  * paths match with the indexes of the files
  * @param {object} existingMock config for mock-fs, so the previous config is not overridden
  */
-function mockProject(files, cfg = {}, existingMock = {}) {
+export function mockProject(files, cfg = {}, existingMock = {}) {
   const obj = getMockObjectForProject(files, cfg, existingMock);
-  mock(obj);
+  mockFsAndRequire(obj);
   return obj;
 }
 
-function restoreMockedProjects() {
-  mock.restore();
+export function restoreMockedProjects() {
+  mockFsAndRequire.restore();
 }
 
-function getEntry(queryResult, index = 0) {
+export function getEntry(queryResult, index = 0) {
   return queryResult.queryOutput[index];
 }
 
-function getEntries(queryResult) {
+export function getEntries(queryResult) {
   return queryResult.queryOutput;
 }
 
@@ -113,7 +113,7 @@ function createPackageJson({ filePaths, codeSnippets, projectName, refProjectNam
  * When a non imported ref dependency or a wrong version of a dev dependency needs to be
  * tested, please explicitly provide a ./package.json that does so.
  */
-function mockTargetAndReferenceProject(searchTargetProject, referenceProject) {
+export function mockTargetAndReferenceProject(searchTargetProject, referenceProject) {
   const targetProjectName = searchTargetProject.name || 'fictional-target-project';
   const refProjectName = referenceProject.name || 'fictional-ref-project';
 
@@ -156,12 +156,3 @@ function mockTargetAndReferenceProject(searchTargetProject, referenceProject) {
     targetMock,
   );
 }
-
-module.exports = {
-  mock,
-  mockProject,
-  restoreMockedProjects,
-  getEntry,
-  getEntries,
-  mockTargetAndReferenceProject,
-};

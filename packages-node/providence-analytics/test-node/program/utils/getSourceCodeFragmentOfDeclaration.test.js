@@ -1,8 +1,18 @@
-const { expect } = require('chai');
-const { mock } = require('../../../test-helpers/mock-project-helpers.js');
-const { getSourceCodeFragmentOfDeclaration } = require('../../../src/program/utils/index.js');
+import { expect } from 'chai';
+import { it } from 'mocha';
+import { mock } from '../../../test-helpers/mock-project-helpers.js';
+import { getSourceCodeFragmentOfDeclaration } from '../../../src/program/utils/index.js';
+import { memoizeConfig } from '../../../src/program/utils/memoize.js';
 
 describe('getSourceCodeFragmentOfDeclaration', () => {
+  const initialMemoizeSsCacheDisabled = memoizeConfig.isCacheDisabled;
+  before(() => {
+    memoizeConfig.isCacheDisabled = true;
+  });
+  after(() => {
+    memoizeConfig.isCacheDisabled = initialMemoizeSsCacheDisabled;
+  });
+
   describe('Named specifiers', () => {
     it('finds source code for directly declared specifiers', async () => {
       const fakeFs = {

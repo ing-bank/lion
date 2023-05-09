@@ -1,29 +1,33 @@
 /* eslint-disable no-shadow, no-param-reassign */
-const pathLib = require('path');
-const { default: traverse } = require('@babel/traverse');
-const { Analyzer } = require('../core/Analyzer.js');
-const { trackDownIdentifier } = require('./helpers/track-down-identifier.js');
-const { normalizeSourcePaths } = require('./helpers/normalize-source-paths.js');
-const { getReferencedDeclaration } = require('../utils/get-source-code-fragment-of-declaration.js');
-
-const { LogService } = require('../core/LogService.js');
+import pathLib from 'path';
+import babelTraverse from '@babel/traverse';
+import { Analyzer } from '../core/Analyzer.js';
+import { trackDownIdentifier } from './helpers/track-down-identifier.js';
+import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
+import { getReferencedDeclaration } from '../utils/get-source-code-fragment-of-declaration.js';
+import { LogService } from '../core/LogService.js';
 
 /**
+ * @typedef {import('@babel/types').File} File
+ * @typedef {import('@babel/types').Node} Node
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindExportsAnalyzerEntry} FindExportsAnalyzerEntry
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('./helpers/track-down-identifier.js').RootFile} RootFile
  * @typedef {object} RootFileMapEntry
  * @typedef {string} currentFileSpecifier this is the local name in the file we track from
  * @typedef {RootFile} rootFile contains file(filePath) and specifier
  * @typedef {RootFileMapEntry[]} RootFileMap
- *
  * @typedef {{ exportSpecifiers:string[]; localMap: object; source:string, __tmp: { path:string } }} FindExportsSpecifierObj
  */
 
 /**
- * @param {FindExportsSpecifierObj[]} transformedEntry
+ * @param {FindExportsSpecifierObj[]} transformedFile
  */
-async function trackdownRoot(transformedEntry, relativePath, projectPath) {
+async function trackdownRoot(transformedFile, relativePath, projectPath) {
   const fullCurrentFilePath = pathLib.resolve(projectPath, relativePath);
-  for (const specObj of transformedEntry) {
+  for (const specObj of transformedFile) {
     /** @type {RootFileMap} */
     const rootFileMap = [];
     if (specObj.exportSpecifiers[0] === '[file]') {
@@ -79,16 +83,16 @@ async function trackdownRoot(transformedEntry, relativePath, projectPath) {
     }
     specObj.rootFileMap = rootFileMap;
   }
-  return transformedEntry;
+  return transformedFile;
 }
 
-function cleanup(transformedEntry) {
-  transformedEntry.forEach(specObj => {
+function cleanup(transformedFile) {
+  transformedFile.forEach(specObj => {
     if (specObj.__tmp) {
       delete specObj.__tmp;
     }
   });
-  return transformedEntry;
+  return transformedFile;
 }
 
 /**
@@ -110,7 +114,7 @@ function getExportSpecifiers(node) {
     let specifier;
     if (s.exported) {
       // { x as y }
-      specifier = s.exported.name;
+      specifier = s.exported.name === 'default' ? '[default]' : s.exported.name;
     } else {
       // { x }
       specifier = s.local.name;
@@ -142,22 +146,22 @@ const isImportingSpecifier = pathOrNode =>
 
 /**
  * Finds import specifiers and sources for a given ast result
- * @param {File} ast
+ * @param {File} babelAst
  * @param {FindExportsConfig} config
  */
-function findExportsPerAstEntry(ast, { skipFileImports }) {
-  LogService.debug(`Analyzer "find-exports": started findExportsPerAstEntry method`);
+function findExportsPerAstFile(babelAst, { skipFileImports }) {
+  LogService.debug(`Analyzer "find-exports": started findExportsPerAstFile method`);
 
   // Visit AST...
 
-  /** @type {FindExportsSpecifierObj} */
-  const transformedEntry = [];
+  /** @type {FindExportsSpecifierObj[]} */
+  const transformedFile = [];
   // Unfortunately, we cannot have async functions in babel traverse.
   // Therefore, we store a temp reference to path that we use later for
   // async post processing (tracking down original export Identifier)
   let globalScopeBindings;
 
-  traverse(ast, {
+  babelTraverse.default(babelAst, {
     Program: {
       enter(babelPath) {
         const body = babelPath.get('body');
@@ -174,7 +178,7 @@ function findExportsPerAstEntry(ast, { skipFileImports }) {
       if (path.node.assertions?.length) {
         entry.assertionType = path.node.assertions[0].value?.value;
       }
-      transformedEntry.push(entry);
+      transformedFile.push(entry);
     },
     ExportDefaultDeclaration(defaultExportPath) {
       const exportSpecifiers = ['[default]'];
@@ -190,26 +194,28 @@ function findExportsPerAstEntry(ast, { skipFileImports }) {
           source = importOrDeclPath.parentPath.node.source.value;
         }
       }
-      transformedEntry.push({ exportSpecifiers, source, __tmp: { path: defaultExportPath } });
+      transformedFile.push({ exportSpecifiers, source, __tmp: { path: defaultExportPath } });
     },
   });
 
   if (!skipFileImports) {
     // Always add an entry for just the file 'relativePath'
     // (since this also can be imported directly from a search target project)
-    transformedEntry.push({
+    transformedFile.push({
       exportSpecifiers: ['[file]'],
       // source: relativePath,
     });
   }
 
-  return transformedEntry;
+  return transformedFile;
 }
 
-class FindExportsAnalyzer extends Analyzer {
-  static get analyzerName() {
-    return 'find-exports';
-  }
+export default class FindExportsAnalyzer extends Analyzer {
+  /** @type {AnalyzerName} */
+  static analyzerName = 'find-exports';
+
+  /** @type {'babel'|'swc-to-babel'} */
+  requiredAst = 'swc-to-babel';
 
   /**
    * Finds export specifiers and sources
@@ -243,13 +249,13 @@ class FindExportsAnalyzer extends Analyzer {
     const projectPath = cfg.targetProjectPath;
 
     const traverseEntryFn = async (ast, { relativePath }) => {
-      let transformedEntry = findExportsPerAstEntry(ast, cfg);
+      let transformedFile = findExportsPerAstFile(ast, cfg);
 
-      transformedEntry = await normalizeSourcePaths(transformedEntry, relativePath, projectPath);
-      transformedEntry = await trackdownRoot(transformedEntry, relativePath, projectPath);
-      transformedEntry = cleanup(transformedEntry);
+      transformedFile = await normalizeSourcePaths(transformedFile, relativePath, projectPath);
+      transformedFile = await trackdownRoot(transformedFile, relativePath, projectPath);
+      transformedFile = cleanup(transformedFile);
 
-      return { result: transformedEntry };
+      return { result: transformedFile };
     };
 
     const queryOutput = await this._traverse({
@@ -264,5 +270,3 @@ class FindExportsAnalyzer extends Analyzer {
     return this._finalize(queryOutput, cfg);
   }
 }
-
-module.exports = FindExportsAnalyzer;

@@ -1,6 +1,5 @@
-import { OverlaysManager } from 'overlays';
+import { OverlaysManager , OverlaysManager as OverlaysManager2 } from 'overlays';
 import { singletonManager } from 'singleton-manager';
-import { OverlaysManager as OverlaysManager2 } from './node_modules/page-b/node_modules/overlays/index.js';
 
 let compatibleManager1;
 let compatibleManager2;

@@ -1,22 +1,30 @@
-const { expect } = require('chai');
-const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/core/QueryService.js');
-const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
-const { mockProject, getEntry } = require('../../../test-helpers/mock-project-helpers.js');
+import { expect } from 'chai';
+import { it } from 'mocha';
+import { providence } from '../../../src/program/providence.js';
+import { QueryService } from '../../../src/program/core/QueryService.js';
+import { mockProject, getEntry } from '../../../test-helpers/mock-project-helpers.js';
+import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';
+import FindClassesAnalyzer from '../../../src/program/analyzers/find-classes.js';
 
-const findClassesQueryConfig = QueryService.getQueryConfigFromAnalyzer('find-classes');
+/**
+ * @typedef {import('../../../types/index.js').ProvidenceConfig} ProvidenceConfig
+ */
 
-describe('Analyzer "find-classes"', () => {
-  const queryResults = setupAnalyzerTest();
+setupAnalyzerTest();
+
+describe('Analyzer "find-classes"', async () => {
+  const findClassesQueryConfig = await QueryService.getQueryConfigFromAnalyzer(FindClassesAnalyzer);
+
+  // const queryResults = setupAnalyzerTest();
+  /** @type {Partial<ProvidenceConfig>} */
   const _providenceCfg = {
     targetProjectPaths: ['/fictional/project'], // defined in mockProject
   };
 
   it(`finds class definitions`, async () => {
     mockProject([`class EmptyClass {}`]);
-    await providence(findClassesQueryConfig, _providenceCfg);
-    const queryResult = queryResults[0];
-    const firstEntry = getEntry(queryResult);
+    const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
+    const firstEntry = getEntry(queryResults[0]);
     expect(firstEntry.result).to.eql([
       {
         name: 'EmptyClass',
@@ -31,9 +39,8 @@ describe('Analyzer "find-classes"', () => {
 
   it(`finds mixin definitions`, async () => {
     mockProject([`const m = superclass => class MyMixin extends superclass {}`]);
-    await providence(findClassesQueryConfig, _providenceCfg);
-    const queryResult = queryResults[0];
-    const firstEntry = getEntry(queryResult);
+    const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
+    const firstEntry = getEntry(queryResults[0]);
     expect(firstEntry.result).to.eql([
       {
         name: 'MyMixin',
@@ -63,9 +70,8 @@ describe('Analyzer "find-classes"', () => {
       `,
       './internal.js': '',
     });
-    await providence(findClassesQueryConfig, _providenceCfg);
-    const queryResult = queryResults[0];
-    const firstEntry = getEntry(queryResult);
+    const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
+    const firstEntry = getEntry(queryResults[0]);
     expect(firstEntry.result[1].superClasses).to.eql([
       {
         isMixin: true,
@@ -85,9 +91,8 @@ describe('Analyzer "find-classes"', () => {
       ` const m = superclass => class MyMixin extends superclass {}
         class EmptyClass extends Mixin(OtherClass) {}`,
     ]);
-    await providence(findClassesQueryConfig, _providenceCfg);
-    const queryResult = queryResults[0];
-    const firstEntry = getEntry(queryResult);
+    const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
+    const firstEntry = getEntry(queryResults[0]);
     expect(firstEntry.result.length).to.equal(2);
   });
 
@@ -102,9 +107,8 @@ describe('Analyzer "find-classes"', () => {
           $$privateMethod() {}
         }`,
       ]);
-      await providence(findClassesQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-      const firstEntry = getEntry(queryResult);
+      const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
+      const firstEntry = getEntry(queryResults[0]);
       expect(firstEntry.result[0].members.methods).to.eql([
         {
           accessType: 'public',
@@ -139,9 +143,8 @@ describe('Analyzer "find-classes"', () => {
           static set _staticGetterSetter(v) {}
         }`,
       ]);
-      await providence(findClassesQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-      const firstEntry = getEntry(queryResult);
+      const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
+      const firstEntry = getEntry(queryResults[0]);
       expect(firstEntry.result[0].members.props).to.eql([
         {
           accessType: 'public',
@@ -168,9 +171,8 @@ describe('Analyzer "find-classes"', () => {
           disconnectedCallback() {}
         }`,
       ]);
-      await providence(findClassesQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-      const firstEntry = getEntry(queryResult);
+      const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
+      const firstEntry = getEntry(queryResults[0]);
       expect(firstEntry.result[0].members.methods.length).to.equal(0);
       expect(firstEntry.result[0].members.props.length).to.equal(0);
     });
@@ -190,9 +192,8 @@ describe('Analyzer "find-classes"', () => {
           shouldUpdate() {}
         }`,
       ]);
-      await providence(findClassesQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-      const firstEntry = getEntry(queryResult);
+      const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
+      const firstEntry = getEntry(queryResults[0]);
       expect(firstEntry.result[0].members.methods.length).to.equal(0);
       expect(firstEntry.result[0].members.props.length).to.equal(0);
     });
@@ -205,9 +206,8 @@ describe('Analyzer "find-classes"', () => {
           onLocaleUpdated() {}
         }`,
       ]);
-      await providence(findClassesQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-      const firstEntry = getEntry(queryResult);
+      const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
+      const firstEntry = getEntry(queryResults[0]);
       expect(firstEntry.result[0].members.methods.length).to.equal(0);
       expect(firstEntry.result[0].members.props.length).to.equal(0);
     });

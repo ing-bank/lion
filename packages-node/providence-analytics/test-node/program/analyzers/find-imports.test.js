@@ -1,26 +1,28 @@
-const { expect } = require('chai');
-const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/core/QueryService.js');
-const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
-const { mockProject, getEntry } = require('../../../test-helpers/mock-project-helpers.js');
+import { expect } from 'chai';
+import { it } from 'mocha';
+import { providence } from '../../../src/program/providence.js';
+import { QueryService } from '../../../src/program/core/QueryService.js';
+import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';
+import { mockProject, getEntry } from '../../../test-helpers/mock-project-helpers.js';
+import FindImportsAnalyzer from '../../../src/program/analyzers/find-imports.js';
 
 /**
- * @typedef {import('../../../src/program/types/core').ProvidenceConfig} ProvidenceConfig
+ * @typedef {import('../../../types/index.js').ProvidenceConfig} ProvidenceConfig
  */
 
-const findImportsQueryConfig = QueryService.getQueryConfigFromAnalyzer('find-imports');
-/** @type {Partial<ProvidenceConfig>} */
-const _providenceCfg = {
-  targetProjectPaths: ['/fictional/project'], // defined in mockProject
-};
+setupAnalyzerTest();
 
-describe('Analyzer "find-imports"', () => {
-  const queryResults = setupAnalyzerTest();
+describe('Analyzer "find-imports"', async () => {
+  const findImportsQueryConfig = await QueryService.getQueryConfigFromAnalyzer(FindImportsAnalyzer);
+  /** @type {Partial<ProvidenceConfig>} */
+  const _providenceCfg = {
+    targetProjectPaths: ['/fictional/project'], // defined in mockProject
+  };
 
   describe('Import notations', () => {
     it(`supports [import 'imported/source'] (no specifiers)`, async () => {
       mockProject([`import 'imported/source'`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers).to.eql(['[file]']);
@@ -29,7 +31,7 @@ describe('Analyzer "find-imports"', () => {
 
     it(`supports [import x from 'imported/source'] (default specifier)`, async () => {
       mockProject([`import x from 'imported/source'`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
@@ -38,7 +40,7 @@ describe('Analyzer "find-imports"', () => {
 
     it(`supports [import { x } from 'imported/source'] (named specifier)`, async () => {
       mockProject([`import { x } from 'imported/source'`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('x');
@@ -48,7 +50,7 @@ describe('Analyzer "find-imports"', () => {
 
     it(`supports [import { x, y } from 'imported/source'] (multiple named specifiers)`, async () => {
       mockProject([`import { x, y } from 'imported/source'`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('x');
@@ -59,7 +61,7 @@ describe('Analyzer "find-imports"', () => {
 
     it(`supports [import x, { y, z } from 'imported/source'] (default and named specifiers)`, async () => {
       mockProject([`import x, { y, z } from 'imported/source'`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
@@ -70,7 +72,7 @@ describe('Analyzer "find-imports"', () => {
 
     it(`supports [import { x as y } from 'imported/source'] (renamed specifiers)`, async () => {
       mockProject([`import { x as y } from 'imported/source'`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('x');
@@ -78,41 +80,41 @@ describe('Analyzer "find-imports"', () => {
 
     it(`supports [import * as all from 'imported/source'] (namespace specifiers)`, async () => {
       mockProject([`import * as all from 'imported/source'`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[*]');
     });
 
     describe('Reexports', () => {
-      it(`supports [export { x } from 'imported/source'] (reexported named specifiers)`, async () => {
+      it(`supports [export { x } from 'imported/source'] (re-exported named specifiers)`, async () => {
         mockProject([`export { x } from 'imported/source'`]);
-        await providence(findImportsQueryConfig, _providenceCfg);
+        const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         const firstEntry = getEntry(queryResult);
         expect(firstEntry.result[0].importSpecifiers[0]).to.equal('x');
       });
 
-      it(`supports [export { x  as y } from 'imported/source'] (reexported renamed specifiers)`, async () => {
+      it(`supports [export { x  as y } from 'imported/source'] (re-exported renamed specifiers)`, async () => {
         mockProject([`export { x as y } from 'imported/source'`]);
-        await providence(findImportsQueryConfig, _providenceCfg);
+        const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         const firstEntry = getEntry(queryResult);
         expect(firstEntry.result[0].importSpecifiers[0]).to.equal('x');
       });
 
       // maybe in the future... needs experimental babel flag "exportDefaultFrom"
-      it.skip(`supports [export x from 'imported/source'] (reexported default specifiers)`, async () => {
+      it.skip(`supports [export x from 'imported/source'] (re-exported default specifiers)`, async () => {
         mockProject([`export x from 'imported/source'`]);
-        await providence(findImportsQueryConfig, _providenceCfg);
+        const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         const firstEntry = getEntry(queryResult);
         expect(firstEntry.result[0].importSpecifiers[0]).to.equal('x');
       });
 
-      it(`supports [export * as x from 'imported/source'] (reexported namespace specifiers)`, async () => {
+      it(`supports [export * as x from 'imported/source'] (re-exported namespace specifiers)`, async () => {
         mockProject([`export * as x from 'imported/source'`]);
-        await providence(findImportsQueryConfig, _providenceCfg);
+        const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         const firstEntry = getEntry(queryResult);
         expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[*]');
@@ -122,7 +124,7 @@ describe('Analyzer "find-imports"', () => {
     // Currently only supported for find-exports. For now not needed...
     it.skip(`stores meta info(local name) of renamed specifiers`, async () => {
       mockProject([`import { x as y } from 'imported/source'`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       // This info will be relevant later to identify transitive relations
@@ -134,7 +136,7 @@ describe('Analyzer "find-imports"', () => {
 
     it(`supports [import('my/source')] (dynamic imports)`, async () => {
       mockProject([`import('my/source')`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
@@ -150,7 +152,7 @@ describe('Analyzer "find-imports"', () => {
         import(pathReference);
         `,
       ]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
@@ -161,7 +163,7 @@ describe('Analyzer "find-imports"', () => {
     // import styles from "./styles.css" assert { type: "css" };
     it(`supports [import styles from "@css/lib/styles.css" assert { type: "css" }] (import assertions)`, async () => {
       mockProject([`import styles from "@css/lib/styles.css" assert { type: "css" };`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
@@ -170,8 +172,10 @@ describe('Analyzer "find-imports"', () => {
     });
 
     it(`supports [export styles from "@css/lib/styles.css" assert { type: "css" }] (import assertions)`, async () => {
-      mockProject([`export styles from "@css/lib/styles.css" assert { type: "css" };`]);
-      await providence(findImportsQueryConfig, _providenceCfg);
+      mockProject([
+        `export { styles as default } from "@css/lib/styles.css" assert { type: "css" };`,
+      ]);
+      const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
@@ -182,7 +186,7 @@ describe('Analyzer "find-imports"', () => {
     describe('Filter out false positives', () => {
       it(`doesn't support [object.import('my/source')] (import method members)`, async () => {
         mockProject([`object.import('my/source')`]);
-        await providence(findImportsQueryConfig, {
+        const queryResults = await providence(findImportsQueryConfig, {
           targetProjectPaths: ['/fictional/project'], // defined in mockProject
         });
         const queryResult = queryResults[0];
@@ -209,7 +213,7 @@ describe('Analyzer "find-imports"', () => {
         import '../../internal/source';
       `,
       ]);
-      await providence(findImportsQueryConfig, { ..._providenceCfg });
+      const queryResults = await providence(findImportsQueryConfig, { ..._providenceCfg });
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers.length).to.equal(1);
@@ -219,7 +223,7 @@ describe('Analyzer "find-imports"', () => {
     });
 
     it('normalizes source paths', async () => {
-      const queryConfig = QueryService.getQueryConfigFromAnalyzer('find-imports', {
+      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(FindImportsAnalyzer, {
         keepInternalSources: true,
       });
       mockProject({
@@ -232,7 +236,7 @@ describe('Analyzer "find-imports"', () => {
         './internal/source/x.js': '',
         './index.js': '',
       });
-      await providence(queryConfig, _providenceCfg);
+      const queryResults = await providence(queryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       expect(firstEntry.result[0].importSpecifiers.length).to.equal(1);
@@ -250,7 +254,7 @@ describe('Analyzer "find-imports"', () => {
 
   describe('Options', () => {
     it('"keepInternalSources"', async () => {
-      const queryConfig = QueryService.getQueryConfigFromAnalyzer('find-imports', {
+      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(FindImportsAnalyzer, {
         keepInternalSources: true,
       });
       mockProject([
@@ -262,7 +266,7 @@ describe('Analyzer "find-imports"', () => {
         import '../../internal/source';
       `,
       ]);
-      await providence(queryConfig, _providenceCfg);
+      const queryResults = await providence(queryConfig, _providenceCfg);
       const queryResult = queryResults[0];
 
       const firstEntry = getEntry(queryResult);
@@ -277,11 +281,11 @@ describe('Analyzer "find-imports"', () => {
 
     // Post processors for whole result
     it('"keepOriginalSourceExtensions"', async () => {
-      const queryConfig = QueryService.getQueryConfigFromAnalyzer('find-imports', {
+      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(FindImportsAnalyzer, {
         keepOriginalSourceExtensions: true,
       });
       mockProject([`import '@external/source.js'`, `import '@external/source';`]);
-      await providence(queryConfig, _providenceCfg);
+      const queryResults = await providence(queryConfig, _providenceCfg);
       const queryResult = queryResults[0];
 
       const firstEntry = getEntry(queryResult);
@@ -295,7 +299,7 @@ describe('Analyzer "find-imports"', () => {
     // but only without loss of information and once depending analyzers (match-imports and
     // match-subclasses) are made compatible.
     it.skip('"sortBySpecifier"', async () => {
-      const queryConfig = QueryService.getQueryConfigFromAnalyzer('find-imports', {
+      const queryConfig = await QueryService.getQueryConfigFromAnalyzer(FindImportsAnalyzer, {
         sortBySpecifier: true,
       });
       mockProject(
@@ -305,7 +309,7 @@ describe('Analyzer "find-imports"', () => {
         ],
         { filePaths: ['./file1.js', './file2.js'] },
       );
-      await providence(queryConfig, _providenceCfg);
+      const queryResults = await providence(queryConfig, _providenceCfg);
       const queryResult = queryResults[0];
 
       /**

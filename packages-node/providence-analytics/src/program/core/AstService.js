@@ -1,15 +1,18 @@
-const babelParser = require('@babel/parser');
-const parse5 = require('parse5');
-const traverseHtml = require('../utils/traverse-html.js');
-const { LogService } = require('./LogService.js');
+import babelParser from '@babel/parser';
+import * as parse5 from 'parse5';
+import swc from '@swc/core';
+import { traverseHtml } from '../utils/traverse-html.js';
+import { LogService } from './LogService.js';
+import { guardedSwcToBabel } from '../utils/guarded-swc-to-babel.js';
 
 /**
  * @typedef {import("@babel/types").File} File
+ * @typedef {import("@swc/core").Module} SwcAstModule
  * @typedef {import("@babel/parser").ParserOptions} ParserOptions
- * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  */
 
-class AstService {
+export class AstService {
   /**
    * Compiles an array of file paths using Babel.
    * @param {string} code
@@ -29,6 +32,24 @@ class AstService {
       ...parserOptions,
     });
     return ast;
+  }
+
+  /**
+   * Compiles an array of file paths using Babel.
+   * @param {string} code
+   * @param {ParserOptions} parserOptions
+   * @returns {File}
+   */
+  static _getSwcToBabelAst(code, parserOptions = {}) {
+    if (this.fallbackToBabel) {
+      return this._getBabelAst(code, parserOptions);
+    }
+    const ast = swc.parseSync(code, {
+      syntax: 'typescript',
+      // importAssertions: true,
+      ...parserOptions,
+    });
+    return guardedSwcToBabel(ast, code);
   }
 
   /**
@@ -56,7 +77,7 @@ class AstService {
   /**
    * Returns the Babel AST
    * @param { string } code
-   * @param { 'babel' } astType
+   * @param { 'babel'|'swc-to-babel' } astType
    * @param { {filePath?: PathFromSystemRoot} } options
    * @returns {File|undefined}
    */
@@ -64,11 +85,21 @@ class AstService {
   static getAst(code, astType, { filePath } = {}) {
     // eslint-disable-next-line default-case
     try {
-      return this._getBabelAst(code);
+      if (astType === 'babel') {
+        return this._getBabelAst(code);
+      }
+      if (astType === 'swc-to-babel') {
+        return this._getSwcToBabelAst(code);
+      }
+      throw new Error(`astType "${astType}" not supported.`);
     } catch (e) {
       LogService.error(`Error when parsing "${filePath}":/n${e}`);
     }
   }
 }
-
-module.exports = { AstService };
+/**
+ * This option can be used as a last resort when an swc AST combined with swc-to-babel, is backwards incompatible
+ * (for instance when @babel/generator expects a different ast structure and fails).
+ * Analyzers should use guarded-swc-to-babel util.
+ */
+AstService.fallbackToBabel = false;

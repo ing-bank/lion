@@ -1,15 +1,18 @@
-const { expect } = require('chai');
-const pathLib = require('path');
-const { InputDataService } = require('../../../src/program/core/InputDataService.js');
-const { memoizeConfig } = require('../../../src/program/utils/memoize.js');
-const {
+import { expect } from 'chai';
+import { it } from 'mocha';
+import pathLib from 'path';
+import { InputDataService } from '../../../src/program/core/InputDataService.js';
+import { memoizeConfig } from '../../../src/program/utils/memoize.js';
+import { getCurrentDir } from '../../../src/program/utils/get-current-dir.js';
+import {
   restoreMockedProjects,
   mockProject,
   mock,
-} = require('../../../test-helpers/mock-project-helpers.js');
+} from '../../../test-helpers/mock-project-helpers.js';
+// import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';
 
 /**
- * @typedef {import('../../../src/program/types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  */
 
 describe('InputDataService', () => {
@@ -52,7 +55,7 @@ describe('InputDataService', () => {
     it('"createDataObject"', async () => {
       /** @type {* & PathFromSystemRoot} */
       const projectPath = pathLib.resolve(
-        __dirname,
+        getCurrentDir(import.meta.url),
         '../../../test-helpers/project-mocks/importing-target-project',
       );
 

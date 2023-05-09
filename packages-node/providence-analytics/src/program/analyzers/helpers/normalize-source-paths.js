@@ -1,17 +1,16 @@
 /* eslint-disable no-param-reassign */
-const pathLib = require('path');
-const { isRelativeSourcePath } = require('../../utils/relative-source-path.js');
-const { resolveImportPath } = require('../../utils/resolve-import-path.js');
-const { toPosixPath } = require('../../utils/to-posix-path.js');
+import pathLib from 'path';
+import { isRelativeSourcePath } from '../../utils/relative-source-path.js';
+import { resolveImportPath } from '../../utils/resolve-import-path.js';
+import { toPosixPath } from '../../utils/to-posix-path.js';
 
 /**
- * @typedef {import('../../types/core').PathRelative} PathRelative
- * @typedef {import('../../types/core').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../types/core').QueryOutput} QueryOutput
+ * @typedef {import('../../../../types/index.js').PathRelative} PathRelative
+ * @typedef {import('../../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../../types/index.js').QueryOutput} QueryOutput
  */
 
 /**
- *
  * @param {PathFromSystemRoot} currentDirPath
  * @param {PathFromSystemRoot} resolvedPath
  * @returns {PathRelative}
@@ -38,7 +37,7 @@ function toLocalPath(currentDirPath, resolvedPath) {
  * @param {string} relativePath
  * @param {string} rootPath
  */
-async function normalizeSourcePaths(queryOutput, relativePath, rootPath = process.cwd()) {
+export async function normalizeSourcePaths(queryOutput, relativePath, rootPath = process.cwd()) {
   const currentFilePath = /** @type {PathFromSystemRoot} */ (
     pathLib.resolve(rootPath, relativePath)
   );
@@ -65,5 +64,3 @@ async function normalizeSourcePaths(queryOutput, relativePath, rootPath = proces
   }
   return normalizedQueryOutput;
 }
-
-module.exports = { normalizeSourcePaths };

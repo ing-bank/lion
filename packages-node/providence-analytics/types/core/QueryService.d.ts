@@ -1,6 +1,6 @@
-import { AnalyzerName, Feature, AnalyzerConfig, PathRelativeFromProjectRoot } from './index';
-import { Analyzer } from '../../core/Analyzer';
-export { Analyzer } from '../../core/Analyzer';
+import { AnalyzerName, Feature, AnalyzerConfig, PathRelativeFromProjectRoot } from './index.js';
+import { Analyzer } from '../../src/program/core/Analyzer.js';
+export { Analyzer } from '../../src/program/core/Analyzer.js';
 
 /**
  * Type of the query. Currently only "ast-analyzer" supported

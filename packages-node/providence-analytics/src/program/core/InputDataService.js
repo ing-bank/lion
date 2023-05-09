@@ -1,39 +1,39 @@
 /* eslint-disable no-param-reassign */
-const fs = require('fs');
-const pathLib = require('path');
-const child_process = require('child_process'); // eslint-disable-line camelcase
-const glob = require('glob');
-const anymatch = require('anymatch');
+import fs from 'fs';
+import pathLib from 'path';
+import child_process from 'child_process'; // eslint-disable-line camelcase
+import glob from 'glob';
+import anymatch from 'anymatch';
 // @ts-expect-error
-const isNegatedGlob = require('is-negated-glob');
-const { LogService } = require('./LogService.js');
-const { AstService } = require('./AstService.js');
-const { getFilePathRelativeFromRoot } = require('../utils/get-file-path-relative-from-root.js');
-const { toPosixPath } = require('../utils/to-posix-path.js');
-const { memoize } = require('../utils/memoize.js');
+import isNegatedGlob from 'is-negated-glob';
+import { LogService } from './LogService.js';
+import { AstService } from './AstService.js';
+import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
+import { toPosixPath } from '../utils/to-posix-path.js';
+import { memoize } from '../utils/memoize.js';
 
 /**
- * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
- * @typedef {import('../types/analyzers').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
- * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../types/core').PathRelative} PathRelative
- * @typedef {import('../types/core').QueryConfig} QueryConfig
- * @typedef {import('../types/core').QueryResult} QueryResult
- * @typedef {import('../types/core').FeatureQueryConfig} FeatureQueryConfig
- * @typedef {import('../types/core').SearchQueryConfig} SearchQueryConfig
- * @typedef {import('../types/core').AnalyzerQueryConfig} AnalyzerQueryConfig
- * @typedef {import('../types/core').Feature} Feature
- * @typedef {import('../types/core').AnalyzerConfig} AnalyzerConfig
- * @typedef {import('../types/core').Analyzer} Analyzer
- * @typedef {import('../types/core').AnalyzerName} AnalyzerName
- * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../types/core').GatherFilesConfig} GatherFilesConfig
- * @typedef {import('../types/core').AnalyzerQueryResult} AnalyzerQueryResult
- * @typedef {import('../types/core').ProjectInputData} ProjectInputData
- * @typedef {import('../types/core').ProjectInputDataWithMeta} ProjectInputDataWithMeta
- * @typedef {import('../types/core').Project} Project
- * @typedef {import('../types/core').ProjectName} ProjectName
- * @typedef {import('../types/core').PackageJson} PackageJson
+ * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../types/index.js').PathRelative} PathRelative
+ * @typedef {import('../../../types/index.js').QueryConfig} QueryConfig
+ * @typedef {import('../../../types/index.js').QueryResult} QueryResult
+ * @typedef {import('../../../types/index.js').FeatureQueryConfig} FeatureQueryConfig
+ * @typedef {import('../../../types/index.js').SearchQueryConfig} SearchQueryConfig
+ * @typedef {import('../../../types/index.js').AnalyzerQueryConfig} AnalyzerQueryConfig
+ * @typedef {import('../../../types/index.js').Feature} Feature
+ * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('../../../types/index.js').Analyzer} Analyzer
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
+ * @typedef {import('../../../types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
+ * @typedef {import('../../../types/index.js').Project} Project
+ * @typedef {import('../../../types/index.js').ProjectName} ProjectName
+ * @typedef {import('../../../types/index.js').PackageJson} PackageJson
  * @typedef {{path:PathFromSystemRoot; name:ProjectName}} ProjectNameAndPath
  */
 
@@ -219,6 +219,10 @@ function stripDotSlashFromLocalPath(localPathWithDotSlash) {
   return localPathWithDotSlash.replace(/^\.\//, '');
 }
 
+/**
+ * @param {string} localPathWithoutDotSlash
+ * @returns {string}
+ */
 function normalizeLocalPathWithDotSlash(localPathWithoutDotSlash) {
   if (!localPathWithoutDotSlash.startsWith('.')) {
     return `./${localPathWithoutDotSlash}`;
@@ -227,7 +231,7 @@ function normalizeLocalPathWithDotSlash(localPathWithoutDotSlash) {
 }
 
 /**
- * @param {{val:object|string;nodeResolveMode:string}} opts
+ * @param {{valObjOrStr:object|string;nodeResolveMode:string}} opts
  * @returns {string|null}
  */
 function getStringOrObjectValOfExportMapEntry({ valObjOrStr, nodeResolveMode }) {
@@ -248,7 +252,7 @@ function getStringOrObjectValOfExportMapEntry({ valObjOrStr, nodeResolveMode }) 
  *
  * Also serves as SSOT in many other contexts wrt data locations and gathering
  */
-class InputDataService {
+export class InputDataService {
   /**
    * Create an array of ProjectData
    * @param {(PathFromSystemRoot|ProjectInputData)[]} projectPaths
@@ -708,5 +712,3 @@ InputDataService.getMonoRepoPackages = memoize(InputDataService.getMonoRepoPacka
 InputDataService.createDataObject = memoize(InputDataService.createDataObject);
 
 InputDataService.getPackageJson = getPackageJson;
-
-module.exports = { InputDataService };

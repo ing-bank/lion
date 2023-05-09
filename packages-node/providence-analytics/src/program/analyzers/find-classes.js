@@ -1,24 +1,27 @@
 /* eslint-disable no-shadow, no-param-reassign */
-const pathLib = require('path');
-const t = require('@babel/types');
-const { default: traverse } = require('@babel/traverse');
-const { Analyzer } = require('../core/Analyzer.js');
-const { trackDownIdentifierFromScope } = require('./helpers/track-down-identifier.js');
+import pathLib from 'path';
+import t from '@babel/types';
+import babelTraverse from '@babel/traverse';
+import { Analyzer } from '../core/Analyzer.js';
+import { trackDownIdentifierFromScope } from './helpers/track-down-identifier.js';
 
 /**
  * @typedef {import('@babel/types').File} File
  * @typedef {import('@babel/types').ClassMethod} ClassMethod
- * @typedef {import('../types/analyzers').FindClassesAnalyzerOutput} FindClassesAnalyzerOutput
- * @typedef {import('../types/analyzers').FindClassesAnalyzerOutputEntry} FindClassesAnalyzerOutputEntry
- * @typedef {import('../types/analyzers').FindClassesConfig} FindClassesConfig
+ * @typedef {import('@babel/traverse').NodePath} NodePath
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').FindClassesAnalyzerResult} FindClassesAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindClassesAnalyzerOutputFile} FindClassesAnalyzerOutputFile
+ * @typedef {import('../../../types/index.js').FindClassesAnalyzerEntry} FindClassesAnalyzerEntry
+ * @typedef {import('../../../types/index.js').FindClassesConfig} FindClassesConfig
  */
 
 /**
  * Finds import specifiers and sources
- * @param {File} ast
+ * @param {File} babelAst
  * @param {string} fullCurrentFilePath the file being currently processed
  */
-async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
+async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath) {
   // The transformed entry
   const classesFound = [];
   /**
@@ -82,18 +85,18 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
 
   /**
    *
-   * @param {*} path
-   * @param {{isMixin?:boolean}} param1
+   * @param {NodePath} astPath
+   * @param {{isMixin?:boolean}} opts
    */
-  async function traverseClass(path, { isMixin = false } = {}) {
+  async function traverseClass(astPath, { isMixin = false } = {}) {
     const classRes = {};
-    classRes.name = path.node.id && path.node.id.name;
+    classRes.name = astPath.node.id && astPath.node.id.name;
     classRes.isMixin = Boolean(isMixin);
-    if (path.node.superClass) {
+    if (astPath.node.superClass) {
       const superClasses = [];
 
       // Add all Identifier names
-      let parent = path.node.superClass;
+      let parent = astPath.node.superClass;
       while (parent.type === 'CallExpression') {
         superClasses.push({ name: parent.callee.name, isMixin: true });
         // As long as we are a CallExpression, we will have a parent
@@ -103,15 +106,15 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
       superClasses.push({ name: parent.name, isMixin: false });
 
       // For all found superclasses, track down their root location.
-      // This will either result in a local, relative path in the project,
-      // or an external path like '@lion/overlays'. In the latter case,
+      // This will either result in a local, relative astPath in the project,
+      // or an external astPath like '@lion/overlays'. In the latter case,
       // tracking down will halt and should be done when there is access to
       // the external repo... (similar to how 'match-imports' analyzer works)
 
       for (const classObj of superClasses) {
         // Finds the file that holds the declaration of the import
         classObj.rootFile = await trackDownIdentifierFromScope(
-          path,
+          astPath,
           classObj.name,
           fullCurrentFilePath,
           projectPath,
@@ -127,18 +130,18 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
       methods: [],
     };
 
-    path.traverse({
-      ClassMethod(path) {
-        // if (isBlacklisted(path)) {
+    astPath.traverse({
+      ClassMethod(astPath) {
+        // if (isBlacklisted(astPath)) {
         //   return;
         // }
-        if (isStaticProperties(path)) {
+        if (isStaticProperties(astPath)) {
           let hasFoundTopLvlObjExpr = false;
-          path.traverse({
-            ObjectExpression(path) {
+          astPath.traverse({
+            ObjectExpression(astPath) {
               if (hasFoundTopLvlObjExpr) return;
               hasFoundTopLvlObjExpr = true;
-              path.node.properties.forEach(objectProperty => {
+              astPath.node.properties.forEach(objectProperty => {
                 if (!t.isProperty(objectProperty)) {
                   // we can also have a SpreadElement
                   return;
@@ -156,19 +159,19 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
         }
 
         const methodRes = {};
-        const { name } = path.node.key;
+        const { name } = astPath.node.key;
         methodRes.name = name;
         methodRes.accessType = computeAccessType(name);
 
-        if (path.node.kind === 'set' || path.node.kind === 'get') {
-          if (path.node.static) {
+        if (astPath.node.kind === 'set' || astPath.node.kind === 'get') {
+          if (astPath.node.static) {
             methodRes.static = true;
           }
-          methodRes.kind = [...(methodRes.kind || []), path.node.kind];
+          methodRes.kind = [...(methodRes.kind || []), astPath.node.kind];
           // Merge getter/setters into one
           const found = classRes.members.props.find(p => p.name === name);
           if (found) {
-            found.kind = [...(found.kind || []), path.node.kind];
+            found.kind = [...(found.kind || []), astPath.node.kind];
           } else {
             classRes.members.props.push(methodRes);
           }
@@ -182,17 +185,18 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
   }
 
   const classesToTraverse = [];
-  traverse(ast, {
-    ClassDeclaration(path) {
-      classesToTraverse.push({ path, isMixin: false });
+
+  babelTraverse.default(babelAst, {
+    ClassDeclaration(astPath) {
+      classesToTraverse.push({ astPath, isMixin: false });
     },
-    ClassExpression(path) {
-      classesToTraverse.push({ path, isMixin: true });
+    ClassExpression(astPath) {
+      classesToTraverse.push({ astPath, isMixin: true });
     },
   });
 
   for (const klass of classesToTraverse) {
-    await traverseClass(klass.path, { isMixin: klass.isMixin });
+    await traverseClass(klass.astPath, { isMixin: klass.isMixin });
   }
 
   return classesFound;
@@ -218,24 +222,20 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
 //     });
 // }
 
-class FindClassesAnalyzer extends Analyzer {
-  static get analyzerName() {
-    return 'find-classes';
-  }
+export default class FindClassesAnalyzer extends Analyzer {
+  /** @type {AnalyzerName} */
+  static analyzerName = 'find-classes';
+
+  /** @type {'babel'|'swc-to-babel'} */
+  requiredAst = 'babel';
 
   /**
-   * @desc Will find all public members (properties (incl. getter/setters)/functions) of a class and
+   * Will find all public members (properties (incl. getter/setters)/functions) of a class and
    * will make a distinction between private, public and protected methods
-   * @param {FindClassesConfig} customConfig
+   * @param {Partial<FindClassesConfig>} customConfig
    */
-  async execute(customConfig = {}) {
-    /** @type {FindClassesConfig} */
-    const cfg = {
-      gatherFilesConfig: {},
-      targetProjectPath: null,
-      metaConfig: null,
-      ...customConfig,
-    };
+  async execute(customConfig) {
+    const cfg = customConfig;
 
     /**
      * Prepare
@@ -263,5 +263,3 @@ class FindClassesAnalyzer extends Analyzer {
     return this._finalize(queryOutput, cfg);
   }
 }
-
-module.exports = FindClassesAnalyzer;

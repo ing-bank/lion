@@ -1,23 +1,31 @@
-const fs = require('fs');
-const pathLib = require('path');
-const inquirer = require('inquirer');
-const { default: traverse } = require('@babel/traverse');
-const { InputDataService } = require('../program/core/InputDataService.js');
-const { AstService } = require('../program/core/AstService.js');
-const { LogService } = require('../program/core/LogService.js');
-const JsdocCommentParser = require('../program/utils/jsdoc-comment-parser.js');
+import fs from 'fs';
+import path from 'path';
+import inquirer from 'inquirer';
+import traverse from '@babel/traverse';
+import { InputDataService } from '../program/core/InputDataService.js';
+import { AstService } from '../program/core/AstService.js';
+import { LogService } from '../program/core/LogService.js';
+import JsdocCommentParser from '../program/utils/jsdoc-comment-parser.js';
+import { getCurrentDir } from '../program/utils/get-current-dir.js';
+
+/**
+ * @typedef {import('../../types/index.js').TargetDepsObj} TargetDepsObj
+ * @typedef {import('../../types/index.js').TargetOrRefCollectionsObj} TargetOrRefCollectionsObj
+ * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../types/index.js').AnalyzerName} AnalyzerName
+ */
 
 /**
  * Extracts name, defaultValue, optional, type, desc from JsdocCommentParser.parse method
  * result
- * @param {string[]} jsdoc
- * @returns {{ name:string, defaultValue:string, optional:boolean, type:string, desc:string }}
+ * @param {{tagName:string;tagValue:string}[]} jsdoc
+ * @returns {{ name:string, defaultValue:string, optional:boolean, type:string, desc:string }[]}
  */
 function getPropsFromParsedJsDoc(jsdoc) {
   const jsdocProps = jsdoc.filter(p => p.tagName === '@property');
   const options = jsdocProps.map(({ tagValue }) => {
     // eslint-disable-next-line no-unused-vars
-    const [_, type, nameOptionalDefault, desc] = tagValue.match(/\{(.*)\}\s*([^\s]*)\s*(.*)/);
+    const [_, type, nameOptionalDefault, desc] = tagValue.match(/\{(.*)\}\s*([^\s]*)\s*(.*)/) || [];
     let nameDefault = nameOptionalDefault;
     let optional = false;
     if (nameOptionalDefault.startsWith('[') && nameOptionalDefault.endsWith(']')) {
@@ -30,21 +38,26 @@ function getPropsFromParsedJsDoc(jsdoc) {
   return options;
 }
 
+/**
+ * @param {PathFromSystemRoot} file
+ */
 function getAnalyzerOptions(file) {
   const code = fs.readFileSync(file, 'utf8');
-  const ast = AstService.getAst(code, 'babel', { filePath: file });
+  const babelAst = AstService.getAst(code, 'swc-to-babel', { filePath: file });
 
   let commentNode;
-  traverse(ast, {
+  traverse.default(babelAst, {
     // eslint-disable-next-line no-shadow
-    VariableDeclaration(path) {
-      if (!path.node.leadingComments) {
+    VariableDeclaration(astPath) {
+      const { node } = astPath;
+      if (!node.leadingComments) {
         return;
       }
-      const decls = path.node.declarations || [];
-      decls.forEach(decl => {
-        if (decl && decl.id && decl.id.name === 'cfg') {
-          [commentNode] = path.node.leadingComments;
+      node.declarations.forEach(decl => {
+        // @ts-expect-error
+        if (decl?.id?.name === 'cfg') {
+          // eslint-disable-next-line prefer-destructuring
+          commentNode = node.leadingComments?.[0];
         }
       });
     },
@@ -57,20 +70,33 @@ function getAnalyzerOptions(file) {
   return undefined;
 }
 
-function gatherAnalyzers(dir, getConfigOptions) {
+/**
+ * @param {PathFromSystemRoot} dir
+ * @param {boolean} [shouldGetOptions]
+ */
+function gatherAnalyzers(dir, shouldGetOptions) {
   return InputDataService.gatherFilesFromDir(dir, { depth: 0 }).map(file => {
-    const analyzerObj = { file, name: pathLib.basename(file, '.js') };
-    if (getConfigOptions) {
+    const analyzerObj = { file, name: path.basename(file, '.js') };
+    if (shouldGetOptions) {
       analyzerObj.options = getAnalyzerOptions(file);
     }
     return analyzerObj;
   });
 }
 
-async function promptAnalyzerConfigMenu(
+/**
+ *
+ * @param {AnalyzerName} analyzerName
+ * @param {*} promptOptionalConfig
+ * @param {PathFromSystemRoot} [dir]
+ * @returns
+ */
+export async function promptAnalyzerConfigMenu(
   analyzerName,
   promptOptionalConfig,
-  dir = pathLib.resolve(__dirname, '../program/analyzers'),
+  dir = /** @type {PathFromSystemRoot} */ (
+    path.resolve(getCurrentDir(import.meta.url), '../program/analyzers')
+  ),
 ) {
   const menuOptions = gatherAnalyzers(dir, true);
   const analyzer = menuOptions.find(o => o.name === analyzerName);
@@ -112,7 +138,11 @@ async function promptAnalyzerConfigMenu(
   };
 }
 
-async function promptAnalyzerMenu(dir = pathLib.resolve(__dirname, '../program/analyzers')) {
+export async function promptAnalyzerMenu(
+  dir = /** @type {PathFromSystemRoot} */ (
+    path.resolve(getCurrentDir(import.meta.url), '../program/analyzers')
+  ),
+) {
   const menuOptions = gatherAnalyzers(dir);
   const answers = await inquirer.prompt([
     {
@@ -127,7 +157,7 @@ async function promptAnalyzerMenu(dir = pathLib.resolve(__dirname, '../program/a
   };
 }
 
-module.exports = {
+export const _promptAnalyzerMenuModule = {
   promptAnalyzerMenu,
   promptAnalyzerConfigMenu,
 };

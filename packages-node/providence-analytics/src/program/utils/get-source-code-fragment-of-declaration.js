@@ -1,11 +1,22 @@
-const fs = require('fs');
-const path = require('path');
-const babelTraversePkg = require('@babel/traverse');
-const { AstService } = require('../core/AstService.js');
-const { trackDownIdentifier } = require('../analyzers/helpers/track-down-identifier.js');
-const { toPosixPath } = require('./to-posix-path.js');
+import fs from 'fs';
+import path from 'path';
+import babelTraversePkg from '@babel/traverse';
+import { AstService } from '../core/AstService.js';
+import { trackDownIdentifier } from '../analyzers/helpers/track-down-identifier.js';
+import { toPosixPath } from './to-posix-path.js';
 
-function getFilePathOrExternalSource({ rootPath, localPath }) {
+/**
+ * @typedef {import('@babel/types').Node} Node
+ * @typedef {import('@babel/traverse').NodePath} NodePath
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ */
+
+/**
+ * @param {{rootPath:PathFromSystemRoot; localPath:PathRelativeFromProjectRoot}} opts
+ * @returns
+ */
+export function getFilePathOrExternalSource({ rootPath, localPath }) {
   if (!localPath.startsWith('.')) {
     // We are not resolving external files like '@lion/input-amount/x.js',
     // but we give a 100% score if from and to are same here..
@@ -27,9 +38,9 @@ function getFilePathOrExternalSource({ rootPath, localPath }) {
  *    - Is it a ref? Call ourselves with referencedIdentifierName ('x' in example above)
  *    - is it a non ref declaration? Return the path of the node
  * @param {{ referencedIdentifierName:string, globalScopeBindings:BabelBinding; }} opts
- * @returns {BabelNodePath}
+ * @returns {NodePath}
  */
-function getReferencedDeclaration({ referencedIdentifierName, globalScopeBindings }) {
+export function getReferencedDeclaration({ referencedIdentifierName, globalScopeBindings }) {
   const [, refDeclaratorBinding] = Object.entries(globalScopeBindings).find(
     ([key]) => key === referencedIdentifierName,
   );
@@ -52,22 +63,24 @@ function getReferencedDeclaration({ referencedIdentifierName, globalScopeBinding
 }
 
 /**
- *
- * @param {{ filePath: string; exportedIdentifier: string; }} opts
+ * @param {{ filePath: PathFromSystemRoot; exportedIdentifier: string; projectRootPath: PathFromSystemRoot }} opts
+ * @returns {Promise<{ sourceNodePath: string; sourceFragment: string|null; externalImportSource: string; }>}
  */
-async function getSourceCodeFragmentOfDeclaration({
+export async function getSourceCodeFragmentOfDeclaration({
   filePath,
   exportedIdentifier,
   projectRootPath,
 }) {
-  const code = fs.readFileSync(filePath, 'utf-8');
-  const ast = AstService.getAst(code, 'babel');
+  const code = fs.readFileSync(filePath, 'utf8');
+  // TODO: fix swc-to-babel lib to make this compatible with 'swc-to-babel' mode of getAst
+  const babelAst = AstService.getAst(code, 'babel', { filePath });
 
+  /** @type {NodePath} */
   let finalNodePath;
 
-  babelTraversePkg.default(ast, {
-    Program(babelPath) {
-      babelPath.stop();
+  babelTraversePkg.default(babelAst, {
+    Program(astPath) {
+      astPath.stop();
 
       // Situations
       // - Identifier is part of default export (in this case 'exportedIdentifier' is '[default]' )
@@ -77,13 +90,14 @@ async function getSourceCodeFragmentOfDeclaration({
       //   - declared right away
       //   - referenced (possibly recursively) by other declaration
 
-      const globalScopeBindings = babelPath.get('body')[0].scope.bindings;
+      const globalScopeBindings = astPath.get('body')[0].scope.bindings;
 
       if (exportedIdentifier === '[default]') {
-        const defaultExportPath = babelPath
+        const defaultExportPath = astPath
           .get('body')
           .find(child => child.node.type === 'ExportDefaultDeclaration');
-        const isReferenced = defaultExportPath.node.declaration?.type === 'Identifier';
+        // @ts-expect-error
+        const isReferenced = defaultExportPath?.node.declaration?.type === 'Identifier';
 
         if (!isReferenced) {
           finalNodePath = defaultExportPath.get('declaration');
@@ -94,7 +108,7 @@ async function getSourceCodeFragmentOfDeclaration({
           });
         }
       } else {
-        const variableDeclaratorPath = babelPath.scope.getBinding(exportedIdentifier).path;
+        const variableDeclaratorPath = astPath.scope.getBinding(exportedIdentifier).path;
         const varDeclNode = variableDeclaratorPath.node;
         const isReferenced = varDeclNode.init?.type === 'Identifier';
         const contentPath = varDeclNode.init
@@ -154,13 +168,10 @@ async function getSourceCodeFragmentOfDeclaration({
 
   return {
     sourceNodePath: finalNodePath,
-    sourceFragment: code.slice(finalNodePath.node?.start, finalNodePath.node?.end),
+    sourceFragment: code.slice(
+      finalNodePath.node?.loc?.start.index,
+      finalNodePath.node?.loc?.end.index,
+    ),
     externalImportSource: null,
   };
 }
-
-module.exports = {
-  getSourceCodeFragmentOfDeclaration,
-  getFilePathOrExternalSource,
-  getReferencedDeclaration,
-};

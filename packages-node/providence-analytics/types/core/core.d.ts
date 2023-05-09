@@ -173,6 +173,7 @@ export type ProvidenceConfig = {
   measurePerformance: boolean;
   writeLogFile: boolean;
   skipCheckMatchCompatibility: boolean;
+  fallbackToBabel: boolean;
 };
 
 /**

@@ -19,7 +19,7 @@ module.exports = {
       files: [
         '**/test-suites/**/*.js',
         '**/test/**/*.js',
-        '**/test-node/**/*.js',
+        '**/test-node/**/*.{j,mj}s',
         '**/demo/**/*.js',
         '**/docs/**/*.js',
         '**/*.config.js',

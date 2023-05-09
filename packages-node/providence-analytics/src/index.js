@@ -1,7 +1,5 @@
-const { providence } = require('./program/providence.js');
-const { QueryService } = require('./program/core/QueryService.js');
-const { LogService } = require('./program/core/LogService.js');
-const { InputDataService } = require('./program/core/InputDataService.js');
-const { AstService } = require('./program/core/AstService.js');
-
-module.exports = { providence, QueryService, LogService, InputDataService, AstService };
+export { providence } from './program/providence.js';
+export { QueryService } from './program/core/QueryService.js';
+export { LogService } from './program/core/LogService.js';
+export { InputDataService } from './program/core/InputDataService.js';
+export { AstService } from './program/core/AstService.js';

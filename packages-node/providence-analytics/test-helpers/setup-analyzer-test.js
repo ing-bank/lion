@@ -1,21 +1,22 @@
-const { InputDataService } = require('../src/program/core/InputDataService.js');
-const { QueryService } = require('../src/program/core/QueryService.js');
-const { restoreMockedProjects } = require('./mock-project-helpers.js');
-const { mockWriteToJson, restoreWriteToJson } = require('./mock-report-service-helpers.js');
-const {
+import { InputDataService } from '../src/program/core/InputDataService.js';
+import { QueryService } from '../src/program/core/QueryService.js';
+import { restoreMockedProjects } from './mock-project-helpers.js';
+import {
   suppressNonCriticalLogs,
   restoreSuppressNonCriticalLogs,
-} = require('./mock-log-service-helpers.js');
-const { memoizeConfig } = require('../src/program/utils/memoize.js');
+} from './mock-log-service-helpers.js';
+import { memoizeConfig } from '../src/program/utils/memoize.js';
 
 /**
- * @typedef {import('../src/program/types/core').QueryResult} QueryResult
- * @returns {QueryResult[]}
+ * @typedef {import('../types/index.js').QueryResult} QueryResult
  */
 
-function setupAnalyzerTest() {
-  /** @type {QueryResult[]} */
-  const queryResults = [];
+let hasRunBefore = false;
+
+export function setupAnalyzerTest() {
+  if (hasRunBefore) {
+    return;
+  }
 
   const originalReferenceProjectPaths = InputDataService.referenceProjectPaths;
   const cacheDisabledQInitialValue = QueryService.cacheDisabled;
@@ -35,16 +36,12 @@ function setupAnalyzerTest() {
 
   beforeEach(() => {
     InputDataService.referenceProjectPaths = [];
-    mockWriteToJson(queryResults);
   });
 
   afterEach(() => {
     InputDataService.referenceProjectPaths = originalReferenceProjectPaths;
-    restoreWriteToJson(queryResults);
     restoreMockedProjects();
   });
 
-  return queryResults;
+  hasRunBefore = true;
 }
-
-module.exports = { setupAnalyzerTest };

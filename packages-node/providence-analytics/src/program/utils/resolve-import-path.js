@@ -1,19 +1,19 @@
+import pathLib from 'path';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import { LogService } from '../core/LogService.js';
+import { memoize } from './memoize.js';
+import { toPosixPath } from './to-posix-path.js';
+
 /**
  * Solution inspired by es-dev-server:
  * https://github.com/open-wc/open-wc/blob/master/packages/es-dev-server/src/utils/resolve-module-imports.js
  */
 
 /**
- * @typedef {import('../types/core/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../types/core/core').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../types/core/core').SpecifierSource} SpecifierSource
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').SpecifierSource} SpecifierSource
  */
-
-const pathLib = require('path');
-const { nodeResolve } = require('@rollup/plugin-node-resolve');
-const { LogService } = require('../core/LogService.js');
-const { memoize } = require('./memoize.js');
-const { toPosixPath } = require('./to-posix-path.js');
 
 const fakePluginContext = {
   meta: {
@@ -29,7 +29,16 @@ const fakePluginContext = {
   },
 };
 
-async function resolveImportPath(importee, importer, opts) {
+/**
+ * Based on importee (in a statement "import {x} from '@lion/core'", "@lion/core" is an
+ * importee), which can be a bare module specifier, a filename without extension, or a folder
+ * name without an extension.
+ * @param {SpecifierSource} importee source like '@lion/core' or '../helpers/index.js'
+ * @param {PathFromSystemRoot} importer importing file, like '/my/project/importing-file.js'
+ * @param {{customResolveOptions?: {preserveSymlinks:boolean}}} [opts] nodeResolve options
+ * @returns {Promise<PathFromSystemRoot|null>} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
+ */
+async function resolveImportPathFn(importee, importer, opts) {
   const rollupResolve = nodeResolve({
     rootDir: pathLib.dirname(importer),
     // allow resolving polyfills for nodejs libs
@@ -59,15 +68,4 @@ async function resolveImportPath(importee, importer, opts) {
   return toPosixPath(result.id);
 }
 
-/**
- * Based on importee (in a statement "import {x} from '@lion/core'", "@lion/core" is an
- * importee), which can be a bare module specifier, a filename without extension, or a folder
- * name without an extension.
- * @param {SpecifierSource} importee source like '@lion/core' or '../helpers/index.js'
- * @param {PathFromSystemRoot} importer importing file, like '/my/project/importing-file.js'
- * @param {{customResolveOptions?: {preserveSymlinks:boolean}}} [opts] nodeResolve options
- * @returns {Promise<PathFromSystemRoot|null>} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
- */
-const resolveImportPathMemoized = memoize(resolveImportPath);
-
-module.exports = { resolveImportPath: resolveImportPathMemoized };
+export const resolveImportPath = memoize(resolveImportPathFn);

@@ -1,17 +1,16 @@
-const fs = require('fs');
-const pathLib = require('path');
-const getHash = require('../utils/get-hash.js');
-const { memoize } = require('../utils/memoize.js');
-// const memoize = fn => fn;
+import fs from 'fs';
+import pathLib from 'path';
+import { getHash } from '../utils/get-hash.js';
+import { memoize } from '../utils/memoize.js';
 
 /**
- * @typedef {import('../types/core').Project} Project
- * @typedef {import('../types/core').ProjectName} ProjectName
- * @typedef {import('../types/core').AnalyzerQueryResult} AnalyzerQueryResult
- * @typedef {import('../types/core').AnalyzerConfig} AnalyzerConfig
- * @typedef {import('../types/core').AnalyzerName} AnalyzerName
- * @typedef {import('../types/core').QueryResult} QueryResult
- * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').Project} Project
+ * @typedef {import('../../../types/index.js').ProjectName} ProjectName
+ * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').QueryResult} QueryResult
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  */
 
 /**
@@ -30,7 +29,7 @@ function createResultIdentifier(searchP, cfg, refP) {
   return `${format(searchP)}${refP ? `_+_${format(refP)}` : ''}__${cfgHash}`;
 }
 
-class ReportService {
+export class ReportService {
   /**
    * Prints queryResult report to console
    * @param {QueryResult} queryResult
@@ -130,5 +129,3 @@ class ReportService {
 }
 ReportService.createIdentifier = memoize(ReportService.createIdentifier);
 ReportService.getCachedResult = memoize(ReportService.getCachedResult);
-
-module.exports = { ReportService };

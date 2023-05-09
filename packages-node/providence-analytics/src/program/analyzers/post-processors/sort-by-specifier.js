@@ -1,5 +1,5 @@
-const pathLib = require('path');
-const { LogService } = require('../../core/LogService.js');
+import pathLib from 'path';
+import { LogService } from '../../core/LogService.js';
 
 const /** @type {AnalyzerOptions} */ options = {
     filterSpecifier(results, targetSpecifier, specifiersKey) {
@@ -77,7 +77,7 @@ function sortBySpecifier(analyzerResult, customConfig) {
   return /** @type {AnalyzerQueryResult} */ resultsBySpecifier;
 }
 
-module.exports = {
+export default {
   name: 'sort-by-specifier',
   execute: sortBySpecifier,
   compatibleAnalyzers: ['find-imports', 'find-exports'],

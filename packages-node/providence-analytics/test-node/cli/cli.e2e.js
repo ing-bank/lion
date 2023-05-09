@@ -1,9 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import pathLib from 'path';
 import { expect } from 'chai';
+import { it } from 'mocha';
 import { appendProjectDependencyPaths } from '../../src/cli/cli-helpers.js';
 import { toPosixPath } from '../../src/program/utils/to-posix-path.js';
-import { getCurrentDir } from '../../src/program/utils/get-current-dir.mjs';
+import { getCurrentDir } from '../../src/program/utils/get-current-dir.js';
 
 /**
  * These tests are added on top of unit tests. See:

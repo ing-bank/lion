@@ -4,7 +4,7 @@ import {
   PathRelativeFromProjectRoot,
   AnalyzerQueryResult,
   FindAnalyzerOutputFile,
-} from '../core';
+} from '../core/index.js';
 
 export interface FindImportsAnalyzerResult extends AnalyzerQueryResult {
   queryOutput: FindImportsAnalyzerOutputFile[];
@@ -41,6 +41,8 @@ export interface FindImportsAnalyzerEntry {
    * - file `import { x } from '../';` gives `"../index.js"`
    */
   normalizedSource: SpecifierSource;
+
+  assertionType: string;
 }
 
 /**

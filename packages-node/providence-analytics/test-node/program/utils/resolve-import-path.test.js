@@ -1,11 +1,12 @@
-const { expect } = require('chai');
-const {
+import { expect } from 'chai';
+import { it } from 'mocha';
+import {
   mockProject,
   restoreMockedProjects,
   mockTargetAndReferenceProject,
-} = require('../../../test-helpers/mock-project-helpers.js');
-const { resolveImportPath } = require('../../../src/program/utils/resolve-import-path.js');
-const { memoizeConfig } = require('../../../src/program/utils/memoize.js');
+} from '../../../test-helpers/mock-project-helpers.js';
+import { resolveImportPath } from '../../../src/program/utils/resolve-import-path.js';
+import { memoizeConfig } from '../../../src/program/utils/memoize.js';
 
 describe('resolveImportPath', () => {
   beforeEach(() => {

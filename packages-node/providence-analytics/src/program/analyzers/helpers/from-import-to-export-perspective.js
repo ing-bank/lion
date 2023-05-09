@@ -1,12 +1,12 @@
-const { isRelativeSourcePath } = require('../../utils/relative-source-path.js');
-const { LogService } = require('../../core/LogService.js');
-const { resolveImportPath } = require('../../utils/resolve-import-path.js');
-const { toPosixPath } = require('../../utils/to-posix-path.js');
+import { isRelativeSourcePath } from '../../utils/relative-source-path.js';
+import { LogService } from '../../core/LogService.js';
+import { resolveImportPath } from '../../utils/resolve-import-path.js';
+import { toPosixPath } from '../../utils/to-posix-path.js';
 
 /**
- * @typedef {import('../../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../../types/core').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../types/core').SpecifierSource} SpecifierSource
+ * @typedef {import('../../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../../types/index.js').SpecifierSource} SpecifierSource
  */
 
 /**
@@ -23,7 +23,7 @@ const { toPosixPath } = require('../../utils/to-posix-path.js');
  * @param {PathFromSystemRoot} config.importeeProjectPath '/path/to/reference/project'
  * @returns {Promise<PathRelativeFromProjectRoot|null>} './foo.js'
  */
-async function fromImportToExportPerspective({ importee, importer, importeeProjectPath }) {
+export async function fromImportToExportPerspective({ importee, importer, importeeProjectPath }) {
   if (isRelativeSourcePath(importee)) {
     LogService.warn('[fromImportToExportPerspective] Please only provide external import paths');
     return null;
@@ -38,5 +38,3 @@ async function fromImportToExportPerspective({ importee, importer, importeeProje
     absolutePath.replace(new RegExp(`^${toPosixPath(importeeProjectPath)}/?(.*)$`), './$1')
   );
 }
-
-module.exports = { fromImportToExportPerspective };

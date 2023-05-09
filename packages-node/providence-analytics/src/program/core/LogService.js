@@ -1,8 +1,18 @@
-const pathLib = require('path');
-const chalk = require('chalk');
-const fs = require('fs');
+import pathLib from 'path';
+import fs from 'fs';
 
 const { log } = console;
+
+const colors = {
+  reset: '\x1b[0m',
+  bright: '\x1b[1m',
+  dim: '\x1b[2m',
+  fgRed: '\x1b[31m',
+  fgGreen: '\x1b[32m',
+  fgYellow: '\x1b[33m',
+  fgGray: '\x1b[90m',
+  fgBlue: '\x1b[34m',
+};
 
 /**
  * @param {string} [title]
@@ -12,7 +22,7 @@ function printTitle(title) {
   return `${title ? `${title}\n` : ''}`;
 }
 
-class LogService {
+export class LogService {
   /**
    * @param {string} text
    * @param {string} [title]
@@ -22,7 +32,7 @@ class LogService {
       return;
     }
 
-    log(chalk.bgCyanBright.black.bold(`  debug${printTitle(title)}`), text);
+    log(colors.bright, `  debug${printTitle(title)}`, colors.reset, text);
     // @ts-ignore
     this._logHistory.push(`-   debug -${printTitle(title)} ${text}`);
   }
@@ -36,7 +46,7 @@ class LogService {
       return;
     }
 
-    log(chalk.bgYellowBright.black.bold(`warning${printTitle(title)}`), text);
+    log(colors.fgYellow, `warning${printTitle(title)}`, colors.reset, text);
     // @ts-ignore
     this._logHistory.push(`- warning -${printTitle(title)} ${text}`);
   }
@@ -57,7 +67,7 @@ class LogService {
       return;
     }
 
-    log(chalk.bgRedBright.black.bold(` error${printTitle(title)}`), text);
+    log(colors.fgRed, `  error${printTitle(title)}`, colors.reset, text);
   }
 
   /**
@@ -71,7 +81,7 @@ class LogService {
       return;
     }
 
-    log(chalk.bgGreen.black.bold(`success${printTitle(title)}`), text);
+    log(colors.fgGreen, `success${printTitle(title)}`, colors.reset, text);
   }
 
   /**
@@ -84,7 +94,7 @@ class LogService {
     if (this.allMuted) {
       return;
     }
-    log(chalk.bgBlue.black.bold(`   info${printTitle(title)}`), text);
+    log(colors.fgBlue, `   info${printTitle(title)}`, colors.reset, text);
   }
 
   /**
@@ -120,5 +130,3 @@ LogService.throwsOnError = false;
 
 /** @type {string[]} */
 LogService._logHistory = [];
-
-module.exports = { LogService };

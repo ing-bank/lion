@@ -1,21 +1,21 @@
 /* eslint-disable no-continue */
-const pathLib = require('path');
+import pathLib from 'path';
 /* eslint-disable no-shadow, no-param-reassign */
-const FindClassesAnalyzer = require('./find-classes.js');
-const FindExportsAnalyzer = require('./find-exports.js');
-const { Analyzer } = require('../core/Analyzer.js');
-const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
+import FindClassesAnalyzer from './find-classes.js';
+import FindExportsAnalyzer from './find-exports.js';
+import { Analyzer } from '../core/Analyzer.js';
+import { fromImportToExportPerspective } from './helpers/from-import-to-export-perspective.js';
 
 /**
- * @typedef {import('../types/analyzers').FindClassesAnalyzerResult} FindClassesAnalyzerResult
- * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
- * @typedef {import('../types/analyzers').FindExportsAnalyzerResult} FindExportsAnalyzerResult
- * @typedef {import('../types/analyzers').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
- * @typedef {import('../types/analyzers').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
- * @typedef {import('../types/analyzers').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
- * @typedef {import('../types/analyzers').MatchImportsConfig} MatchImportsConfig
- * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').FindClassesAnalyzerResult} FindClassesAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
+ * @typedef {import('../../../types/index.js').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
+ * @typedef {import('../../../types/index.js').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').MatchImportsConfig} MatchImportsConfig
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  */
 
 function getMemberOverrides(
@@ -87,7 +87,7 @@ async function matchSubclassesPostprocess(
 
   /**
    * Step 1: a 'flat' data structure
-   * @desc Create a key value storage map for exports/class matches
+   * Create a key value storage map for exports/class matches
    * - key: `${exportSpecifier}::${normalizedSource}::${project}` from reference project
    * - value: an array of import file matches like `${targetProject}::${normalizedSource}::${className}`
    * @example
@@ -199,7 +199,7 @@ async function matchSubclassesPostprocess(
 
   /**
    * Step 2: a rich data structure
-   * @desc Transform resultObj from step 1 into an array of objects
+   * Transform resultObj from step 1 into an array of objects
    * @example
    * [{
    *   exportSpecifier: {
@@ -275,7 +275,7 @@ async function matchSubclassesPostprocess(
 //   return aResult;
 // }
 
-class MatchSubclassesAnalyzer extends Analyzer {
+export default class MatchSubclassesAnalyzer extends Analyzer {
   static get analyzerName() {
     return 'match-subclasses';
   }
@@ -285,7 +285,7 @@ class MatchSubclassesAnalyzer extends Analyzer {
   }
 
   /**
-   * @desc Based on ExportsAnalyzerResult of reference project(s) (for instance lion-based-ui)
+   * Based on ExportsAnalyzerResult of reference project(s) (for instance lion-based-ui)
    * and targetClassesAnalyzerResult of search-targets (for instance my-app-using-lion-based-ui),
    * an overview is returned of all matching imports and exports.
    * @param {MatchSubclassesConfig} customConfig
@@ -357,5 +357,3 @@ class MatchSubclassesAnalyzer extends Analyzer {
     return this._finalize(queryOutput, cfg);
   }
 }
-
-module.exports = MatchSubclassesAnalyzer;

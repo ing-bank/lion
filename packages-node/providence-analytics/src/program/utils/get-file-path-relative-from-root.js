@@ -1,6 +1,6 @@
 /**
- * @typedef {import('../types/core/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../types/core/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  */
 
 /**
@@ -11,8 +11,6 @@
  * @param {PathFromSystemRoot} projectRoot
  * @returns {PathRelativeFromProjectRoot}
  */
-function getFilePathRelativeFromRoot(absolutePath, projectRoot) {
+export function getFilePathRelativeFromRoot(absolutePath, projectRoot) {
   return /** @type {PathRelativeFromProjectRoot} */ (absolutePath.replace(projectRoot, '.'));
 }
-
-module.exports = { getFilePathRelativeFromRoot };

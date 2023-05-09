@@ -1,25 +1,24 @@
-const { expect } = require('chai');
-const { default: traverse } = require('@babel/traverse');
-const {
+import { expect } from 'chai';
+import { it } from 'mocha';
+import babelTraverse from '@babel/traverse';
+import {
   trackDownIdentifier,
   trackDownIdentifierFromScope,
-} = require('../../../../src/program/analyzers/helpers/track-down-identifier.js');
-const { AstService } = require('../../../../src/program/core/AstService.js');
-const {
+} from '../../../../src/program/analyzers/helpers/track-down-identifier.js';
+import { AstService } from '../../../../src/program/core/AstService.js';
+import {
   mockProject,
   restoreMockedProjects,
-} = require('../../../../test-helpers/mock-project-helpers.js');
-const { memoizeConfig } = require('../../../../src/program/utils/memoize.js');
+} from '../../../../test-helpers/mock-project-helpers.js';
+import { setupAnalyzerTest } from '../../../../test-helpers/setup-analyzer-test.js';
+
+/**
+ * @typedef {import('@babel/traverse').NodePath} NodePath
+ */
+
+setupAnalyzerTest();
 
 describe('trackdownIdentifier', () => {
-  beforeEach(() => {
-    memoizeConfig.isCacheDisabled = true;
-  });
-  afterEach(() => {
-    memoizeConfig.isCacheDisabled = false;
-    restoreMockedProjects();
-  });
-
   it(`tracks down identifier to root file (file that declares identifier)`, async () => {
     mockProject(
       {
@@ -306,15 +305,17 @@ describe('trackDownIdentifierFromScope', () => {
     const identifierNameInScope = 'MyClass';
     const fullCurrentFilePath = '/my/project//src/declarationOfMyClass.js';
     const projectPath = '/my/project';
+    /** @type {NodePath} */
     let astPath;
 
-    traverse(ast, {
+    babelTraverse.default(ast, {
       ClassDeclaration(path) {
         astPath = path;
       },
     });
 
     const rootFile = await trackDownIdentifierFromScope(
+      // @ts-ignore
       astPath,
       identifierNameInScope,
       fullCurrentFilePath,
@@ -349,15 +350,17 @@ describe('trackDownIdentifierFromScope', () => {
     const identifierNameInScope = 'MyClass';
     const fullCurrentFilePath = '/my/project/internal.js';
     const projectPath = '/my/project';
+    /** @type {NodePath} */
     let astPath;
 
-    traverse(ast, {
+    babelTraverse.default(ast, {
       ImportDeclaration(path) {
         astPath = path;
       },
     });
 
     const rootFile = await trackDownIdentifierFromScope(
+      // @ts-ignore
       astPath,
       identifierNameInScope,
       fullCurrentFilePath,
@@ -389,15 +392,17 @@ describe('trackDownIdentifierFromScope', () => {
     const identifierNameInScope = 'El1';
     const fullCurrentFilePath = '/my/project/internal.js';
     const projectPath = '/my/project';
+    /** @type {NodePath} */
     let astPath;
 
-    traverse(ast, {
+    babelTraverse.default(ast, {
       ClassDeclaration(path) {
         astPath = path;
       },
     });
 
     const rootFile = await trackDownIdentifierFromScope(
+      // @ts-ignore
       astPath,
       identifierNameInScope,
       fullCurrentFilePath,

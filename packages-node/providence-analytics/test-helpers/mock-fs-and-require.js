@@ -1,13 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
-// @ts-ignore
-const mockFs = require('mock-fs');
-// @ts-ignore
-const mockRequire = require('mock-require');
+// @ts-expect-error
+import mockFs from 'mock-fs';
+// @ts-expect-error
+import mockRequire from 'mock-require';
 
 /**
  * @param {object} obj
  */
-function mockFsAndRequire(obj) {
+export function mockFsAndRequire(obj) {
   mockFs(obj);
 
   // Object.entries(obj).forEach(([key, value]) => {
@@ -22,8 +22,4 @@ function mockFsAndRequire(obj) {
 mockFsAndRequire.restore = () => {
   mockFs.restore();
   mockRequire.stopAll();
-};
-
-module.exports = {
-  mockFsAndRequire,
 };

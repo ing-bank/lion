@@ -1,9 +1,8 @@
 /**
- * @param {ASTNode} curNode Node to start from. Will loop over its children
+ * @param {Node} curNode Node to start from. Will loop over its children
  * @param {object} processObject Will be executed for every node
- * @param {ASTNode} [parentNode] parent of curNode
  */
-function traverseHtml(curNode, processObject) {
+export function traverseHtml(curNode, processObject) {
   function pathify(node) {
     return {
       node,
@@ -24,5 +23,3 @@ function traverseHtml(curNode, processObject) {
     });
   }
 }
-
-module.exports = traverseHtml;

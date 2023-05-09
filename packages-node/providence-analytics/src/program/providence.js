@@ -1,18 +1,18 @@
-const { performance } = require('perf_hooks');
-const deepmerge = require('deepmerge');
-const { ReportService } = require('./core/ReportService.js');
-const { InputDataService } = require('./core/InputDataService.js');
-const { LogService } = require('./core/LogService.js');
-const { QueryService } = require('./core/QueryService.js');
+import { performance } from 'perf_hooks';
+import { ReportService } from './core/ReportService.js';
+import { InputDataService } from './core/InputDataService.js';
+import { LogService } from './core/LogService.js';
+import { QueryService } from './core/QueryService.js';
+import { AstService } from './core/AstService.js';
 
 /**
- * @typedef {import('./types/core').ProvidenceConfig} ProvidenceConfig
- * @typedef {import('./types/core').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('./types/core').QueryResult} QueryResult
- * @typedef {import('./types/core').AnalyzerQueryResult} AnalyzerQueryResult
- * @typedef {import('./types/core').QueryConfig} QueryConfig
- * @typedef {import('./types/core').AnalyzerQueryConfig} AnalyzerQueryConfig
- * @typedef {import('./types/core').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../../types/index.js').ProvidenceConfig} ProvidenceConfig
+ * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../types/index.js').QueryResult} QueryResult
+ * @typedef {import('../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../types/index.js').QueryConfig} QueryConfig
+ * @typedef {import('../../types/index.js').AnalyzerQueryConfig} AnalyzerQueryConfig
+ * @typedef {import('../../types/index.js').GatherFilesConfig} GatherFilesConfig
  */
 
 /**
@@ -172,34 +172,32 @@ async function handleRegexSearch(queryConfig, cfg, inputData) {
  *
  * @param {QueryConfig} queryConfig a query configuration object containing analyzerOptions.
  * @param {Partial<ProvidenceConfig>} customConfig
+ * @return {Promise<QueryResult[]>}
  */
-async function providenceMain(queryConfig, customConfig) {
+export async function providence(queryConfig, customConfig) {
   const tStart = performance.now();
 
-  const cfg = /** @type {ProvidenceConfig} */ (
-    deepmerge(
-      {
-        queryMethod: 'grep',
-        // This is a merge of all 'main entry projects'
-        // found in search-targets, including their children
-        targetProjectPaths: null,
-        referenceProjectPaths: null,
-        // This will be needed to identify the parent/child relationship to write to
-        // {outputFolder}/entryProjectDependencies.json, which will map
-        // a project#version to [ depA#version, depB#version ]
-        targetProjectRootPaths: null,
-        gatherFilesConfig: {},
-        report: true,
-        debugEnabled: false,
-        writeLogFile: false,
-        skipCheckMatchCompatibility: false,
-        measurePerformance: false,
-        /** Allows to navigate to source file in code editor */
-        addSystemPathsInResult: false,
-      },
-      customConfig,
-    )
-  );
+  const cfg = /** @type {ProvidenceConfig} */ ({
+    queryMethod: 'grep',
+    // This is a merge of all 'main entry projects'
+    // found in search-targets, including their children
+    targetProjectPaths: null,
+    referenceProjectPaths: null,
+    // This will be needed to identify the parent/child relationship to write to
+    // {outputFolder}/entryProjectDependencies.json, which will map
+    // a project#version to [ depA#version, depB#version ]
+    targetProjectRootPaths: null,
+    gatherFilesConfig: {},
+    report: true,
+    debugEnabled: false,
+    writeLogFile: false,
+    skipCheckMatchCompatibility: false,
+    measurePerformance: false,
+    /** Allows to navigate to source file in code editor */
+    addSystemPathsInResult: false,
+    fallbackToBabel: false,
+    ...customConfig,
+  });
 
   if (cfg.debugEnabled) {
     LogService.debugEnabled = true;
@@ -207,6 +205,10 @@ async function providenceMain(queryConfig, customConfig) {
 
   if (cfg.referenceProjectPaths) {
     InputDataService.referenceProjectPaths = cfg.referenceProjectPaths;
+  }
+
+  if (cfg.fallbackToBabel) {
+    AstService.fallbackToBabel = true;
   }
 
   let queryResults;
@@ -240,6 +242,6 @@ async function providenceMain(queryConfig, customConfig) {
   return queryResults;
 }
 
-module.exports = {
-  providence: providenceMain,
+export const _providenceModule = {
+  providence,
 };
