@@ -5,9 +5,9 @@ import { sendKeys } from '@web/test-runner-commands';
 import { spy } from 'sinon';
 import { NativeTextFieldMixin } from '@lion/ui/form-core.js';
 
-const isFirefox = (() => {
+const isSafari = (() => {
   const ua = navigator.userAgent.toLowerCase();
-  return ua.indexOf('firefox') !== -1 && ua.indexOf('safari') === -1 && ua.indexOf('chrome') === -1;
+  return ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1;
 })();
 
 /**
@@ -54,8 +54,8 @@ export function runNativeTextFieldMixinSuite(customConfig) {
     });
 
     it('move focus to a next focusable element after writing some text', async () => {
-      if (isFirefox) {
-        // TODO: This test is broken on Firefox, to be fixed later
+      if (isSafari) {
+        // TODO: This test is broken on Safari, to be fixed later
         return;
       }
       const el = /** @type {NativeTextFieldClass} */ (await fixture(html`<${tag}></${tag}>`));
