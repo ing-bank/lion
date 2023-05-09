@@ -6,11 +6,12 @@ import { QueryService } from './QueryService.js';
 import { ReportService } from './ReportService.js';
 import { InputDataService } from './InputDataService.js';
 import { toPosixPath } from '../utils/to-posix-path.js';
-import { memoize } from '../utils/memoize.js';
 import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
 
 /**
+ * @typedef {import("@swc/core").Module} SwcAstModule
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
  * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
@@ -25,12 +26,13 @@ import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-fro
  * Analyzes one entry: the callback can traverse a given ast for each entry
  * @param {ProjectInputDataWithMeta} projectData
  * @param {function} astAnalysis
+ * @param {object} analyzerCfg
  */
-async function analyzePerAstFile(projectData, astAnalysis) {
+async function analyzePerAstFile(projectData, astAnalysis, analyzerCfg) {
   const entries = [];
   for (const { file, ast, context: astContext } of projectData.entries) {
     const relativePath = getFilePathRelativeFromRoot(file, projectData.project.path);
-    const context = { code: astContext.code, relativePath, projectData };
+    const context = { code: astContext.code, relativePath, projectData, analyzerCfg };
     LogService.debug(`${pathLib.resolve(projectData.project.path, file)}`);
     const { result, meta } = await astAnalysis(ast, context);
     entries.push({ file: relativePath, meta, result });
@@ -86,8 +88,8 @@ function ensureAnalyzerResultFormat(queryOutput, cfg, analyzer) {
   const aResult = {
     queryOutput,
     analyzerMeta: {
-      name: analyzer.name,
-      requiredAst: analyzer.requiredAst,
+      name: analyzer.constructor.analyzerName,
+      requiredAst: analyzer.constructor.requiredAst,
       identifier,
       ...optional,
       configuration: cfg,
@@ -131,30 +133,28 @@ function ensureAnalyzerResultFormat(queryOutput, cfg, analyzer) {
  * @typedef {(referencePath:PathFromSystemRoot,targetPath:PathFromSystemRoot) => {compatible:boolean; reason?:string}} CheckForMatchCompatibilityFn
  * @type {CheckForMatchCompatibilityFn}
  */
-const checkForMatchCompatibility = memoize(
-  (
-    /** @type {PathFromSystemRoot} */ referencePath,
-    /** @type {PathFromSystemRoot} */ targetPath,
-  ) => {
-    // const refFile = pathLib.resolve(referencePath, 'package.json');
-    const referencePkg = InputDataService.getPackageJson(referencePath);
-    // const targetFile = pathLib.resolve(targetPath, 'package.json');
-    const targetPkg = InputDataService.getPackageJson(targetPath);
+const checkForMatchCompatibility = (
+  /** @type {PathFromSystemRoot} */ referencePath,
+  /** @type {PathFromSystemRoot} */ targetPath,
+) => {
+  // const refFile = pathLib.resolve(referencePath, 'package.json');
+  const referencePkg = InputDataService.getPackageJson(referencePath);
+  // const targetFile = pathLib.resolve(targetPath, 'package.json');
+  const targetPkg = InputDataService.getPackageJson(targetPath);
 
-    const allTargetDeps = [
-      ...Object.entries(targetPkg?.devDependencies || {}),
-      ...Object.entries(targetPkg?.dependencies || {}),
-    ];
-    const importEntry = allTargetDeps.find(([name]) => referencePkg?.name === name);
-    if (!importEntry) {
-      return { compatible: false, reason: 'no-dependency' };
-    }
-    if (referencePkg?.version && !semver.satisfies(referencePkg.version, importEntry[1])) {
-      return { compatible: false, reason: 'no-matched-version' };
-    }
-    return { compatible: true };
-  },
-);
+  const allTargetDeps = [
+    ...Object.entries(targetPkg?.devDependencies || {}),
+    ...Object.entries(targetPkg?.dependencies || {}),
+  ];
+  const importEntry = allTargetDeps.find(([name]) => referencePkg?.name === name);
+  if (!importEntry) {
+    return { compatible: false, reason: 'no-dependency' };
+  }
+  if (referencePkg?.version && !semver.satisfies(referencePkg.version, importEntry[1])) {
+    return { compatible: false, reason: 'no-matched-version' };
+  }
+  return { compatible: true };
+};
 
 /**
  * If in json format, 'unwind' to be compatible for analysis...
@@ -169,13 +169,21 @@ function unwindJsonResult(targetOrReferenceProjectResult) {
 export class Analyzer {
   static requiresReference = false;
 
+  /** @type {AnalyzerAst} */
+  static requiredAst = 'babel';
+
   /** @type {AnalyzerName} */
   static analyzerName = '';
 
   name = /** @type  {typeof Analyzer} */ (this.constructor).analyzerName;
 
-  /** @type {'babel'|'swc-to-babel'} */
-  requiredAst = 'babel';
+  _customConfig = {};
+
+  get config() {
+    return {
+      ...this._customConfig,
+    };
+  }
 
   /**
    * In a MatchAnalyzer, two Analyzers (a reference and targer) are run.
@@ -335,33 +343,36 @@ export class Analyzer {
      */
     const astDataProjects = await QueryService.addAstToProjectsData(
       finalTargetData,
-      this.requiredAst,
+      this.constructor.requiredAst,
     );
-    return analyzePerAstFile(astDataProjects[0], traverseEntryFn);
+    return analyzePerAstFile(astDataProjects[0], traverseEntryFn, this.config);
   }
 
-  async execute(customConfig = {}) {
-    LogService.debug(`Analyzer "${this.name}": started execute method`);
-
-    const cfg = {
-      targetProjectPath: null,
-      referenceProjectPath: null,
-      suppressNonCriticalLogs: false,
-      ...customConfig,
-    };
+  /**
+   * Finds export specifiers and sources
+   * @param {FindExportsConfig} customConfig
+   */
+  async execute(customConfig) {
+    this._customConfig = customConfig;
+    const cfg = this.config;
 
     /**
      * Prepare
      */
-    const analyzerResult = this._prepare(cfg);
-    if (analyzerResult) {
-      return analyzerResult;
+    const cachedAnalyzerResult = this._prepare(cfg);
+    if (cachedAnalyzerResult) {
+      return cachedAnalyzerResult;
     }
 
     /**
      * Traverse
      */
-    const queryOutput = await this._traverse(() => {});
+    const queryOutput = await this._traverse({
+      // @ts-ignore
+      traverseEntryFn: this.constructor.analyzeFile,
+      filePaths: cfg.targetFilePaths,
+      projectPath: cfg.targetProjectPath,
+    });
 
     /**
      * Finalize

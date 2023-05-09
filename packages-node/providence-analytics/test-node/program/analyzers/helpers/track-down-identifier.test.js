@@ -1,15 +1,12 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
-import babelTraverse from '@babel/traverse';
+import { swcTraverse } from '../../../../src/program/utils/swc-traverse.js';
 import {
   trackDownIdentifier,
   trackDownIdentifierFromScope,
 } from '../../../../src/program/analyzers/helpers/track-down-identifier.js';
 import { AstService } from '../../../../src/program/core/AstService.js';
-import {
-  mockProject,
-  restoreMockedProjects,
-} from '../../../../test-helpers/mock-project-helpers.js';
+import { mockProject } from '../../../../test-helpers/mock-project-helpers.js';
 import { setupAnalyzerTest } from '../../../../test-helpers/setup-analyzer-test.js';
 
 /**
@@ -285,9 +282,6 @@ describe('trackdownIdentifier', () => {
       specifier: 'IngAccordionInvokerButton',
     });
   });
-
-  // TODO: improve perf
-  describe.skip('Caching', () => {});
 });
 
 describe('trackDownIdentifierFromScope', () => {
@@ -299,7 +293,8 @@ describe('trackDownIdentifierFromScope', () => {
     };
 
     mockProject(projectFiles, { projectName: 'my-project', projectPath: '/my/project' });
-    const ast = AstService._getBabelAst(projectFiles['./src/declarationOfMyClass.js']);
+    // const ast = AstService._getBabelAst(projectFiles['./src/declarationOfMyClass.js']);
+    const ast = AstService._getSwcAst(projectFiles['./src/declarationOfMyClass.js']);
 
     // Let's say we want to track down 'MyClass' in the code above
     const identifierNameInScope = 'MyClass';
@@ -308,7 +303,12 @@ describe('trackDownIdentifierFromScope', () => {
     /** @type {NodePath} */
     let astPath;
 
-    babelTraverse.default(ast, {
+    // babelTraverse.default(ast, {
+    //   ClassDeclaration(path) {
+    //     astPath = path;
+    //   },
+    // });
+    swcTraverse(ast, {
       ClassDeclaration(path) {
         astPath = path;
       },
@@ -344,7 +344,8 @@ describe('trackDownIdentifierFromScope', () => {
     };
 
     mockProject(projectFiles, { projectName: 'my-project', projectPath: '/my/project' });
-    const ast = AstService._getBabelAst(projectFiles['./imported.js']);
+    // const ast = AstService._getBabelAst(projectFiles['./imported.js']);
+    const ast = AstService._getSwcAst(projectFiles['./imported.js']);
 
     // Let's say we want to track down 'MyClass' in the code above
     const identifierNameInScope = 'MyClass';
@@ -353,7 +354,12 @@ describe('trackDownIdentifierFromScope', () => {
     /** @type {NodePath} */
     let astPath;
 
-    babelTraverse.default(ast, {
+    // babelTraverse.default(ast, {
+    //   ImportDeclaration(path) {
+    //     astPath = path;
+    //   },
+    // });
+    swcTraverse(ast, {
       ImportDeclaration(path) {
         astPath = path;
       },
@@ -372,7 +378,7 @@ describe('trackDownIdentifierFromScope', () => {
     });
   });
 
-  it(`tracks down extended classes from a reexport`, async () => {
+  it(`tracks down extended classes from a re-export`, async () => {
     const projectFiles = {
       './src/classes.js': `
           export class El1 extends HTMLElement {}
@@ -386,7 +392,8 @@ describe('trackDownIdentifierFromScope', () => {
     };
 
     mockProject(projectFiles, { projectName: 'my-project', projectPath: '/my/project' });
-    const ast = AstService._getBabelAst(projectFiles['./imported.js']);
+    // const ast = AstService._getBabelAst(projectFiles['./imported.js']);
+    const ast = AstService._getSwcAst(projectFiles['./imported.js']);
 
     // Let's say we want to track down 'MyClass' in the code above
     const identifierNameInScope = 'El1';
@@ -395,7 +402,12 @@ describe('trackDownIdentifierFromScope', () => {
     /** @type {NodePath} */
     let astPath;
 
-    babelTraverse.default(ast, {
+    // babelTraverse.default(ast, {
+    //   ClassDeclaration(path) {
+    //     astPath = path;
+    //   },
+    // });
+    swcTraverse(ast, {
       ClassDeclaration(path) {
         astPath = path;
       },

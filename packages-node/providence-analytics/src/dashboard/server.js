@@ -1,14 +1,14 @@
 import fs from 'fs';
 import pathLib from 'path';
 import { startDevServer } from '@web/dev-server';
-import { ReportService } from '../src/program/core/ReportService.js';
-import { providenceConfUtil } from '../src/program/utils/providence-conf-util.js';
-import { getCurrentDir } from '../src/program/utils/get-current-dir.js';
+import { ReportService } from '../program/core/ReportService.js';
+import { providenceConfUtil } from '../program/utils/providence-conf-util.js';
+import { getCurrentDir } from '../program/utils/get-current-dir.js';
 
 /**
- * @typedef {import('../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../types/index.js').GatherFilesConfig} GatherFilesConfig
- * @typedef {import('../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../types/index.js').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../../types/index.js').AnalyzerName} AnalyzerName
  */
 
 /**

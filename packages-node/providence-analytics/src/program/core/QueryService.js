@@ -3,8 +3,10 @@ import path from 'path';
 import { AstService } from './AstService.js';
 import { LogService } from './LogService.js';
 import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
-import { memoize } from '../utils/memoize.js';
 import { getCurrentDir } from '../utils/get-current-dir.js';
+// import { memoize } from '../utils/memoize.js';
+
+const memoize = fn => fn;
 
 /**
  * @typedef {import('./Analyzer.js').Analyzer} Analyzer
@@ -20,6 +22,7 @@ import { getCurrentDir } from '../utils/get-current-dir.js';
  * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
  * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
  * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
@@ -239,7 +242,7 @@ export class QueryService {
 
   /**
    * @param {ProjectInputData[]} projectsData
-   * @param {'babel'|'swc-to-babel'} requiredAst
+   * @param {AnalyzerAst} requiredAst
    */
   static async addAstToProjectsData(projectsData, requiredAst) {
     return projectsData.map(projectData => {

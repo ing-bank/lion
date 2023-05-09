@@ -66,9 +66,9 @@ async function resolveImportPathFn(importee, importer, opts) {
   );
 
   if (!result?.id) {
-    LogService.warn(
-      `[resolveImportPath] importee ${importee} not found in filesystem for importer '${importer}'.`,
-    );
+    // LogService.warn(
+    //   `[resolveImportPath] importee ${importee} not found in filesystem for importer '${importer}'.`,
+    // );
     return null;
   }
   return toPosixPath(result.id);

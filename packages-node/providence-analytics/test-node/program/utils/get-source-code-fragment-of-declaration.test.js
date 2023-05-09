@@ -88,8 +88,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
       it('handles class declarations', async () => {
         const fakeFs = {
           '/my/proj/exports/ajax.js': `
-        import { AjaxClass as LionAjaxClass } from '../_legacy/ajax/index.js';
-
+        import { AjaxClass as LionAjaxClass } from 'some-external-package';
         export class AjaxClass extends LionAjaxClass {}
         `,
         };

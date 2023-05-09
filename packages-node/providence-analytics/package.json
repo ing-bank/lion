@@ -23,11 +23,10 @@
     "providence": "./src/cli/index.js"
   },
   "files": [
-    "dashboard/src",
     "src"
   ],
   "scripts": {
-    "dashboard": "node ./dashboard/server.js --run-server --serve-from-package-root",
+    "dashboard": "node ./src/dashboard/server.js --run-server --serve-from-package-root",
     "postinstall": "npx patch-package",
     "match-lion-imports": "npm run providence -- analyze match-imports --search-target-collection @lion-targets --reference-collection @lion-references --measure-perf --skip-check-match-compatibility",
     "providence": "node --max-old-space-size=8192 ./src/cli/index.js",

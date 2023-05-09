@@ -12,6 +12,8 @@ import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-fro
 import { toPosixPath } from '../utils/to-posix-path.js';
 import { memoize } from '../utils/memoize.js';
 
+// const memoize = fn => fn;
+
 /**
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
@@ -309,13 +311,13 @@ export class InputDataService {
     try {
       const pkgJson = getPackageJson(projectPath);
       // eslint-disable-next-line no-param-reassign
-      project.mainEntry = this.__normalizeMainEntry(pkgJson.main || './index.js');
+      project.mainEntry = this.__normalizeMainEntry(pkgJson?.main || './index.js');
       // eslint-disable-next-line no-param-reassign
-      project.name = pkgJson.name;
+      project.name = pkgJson?.name;
       // TODO: also add meta info whether we are in a monorepo or not.
       // We do this by checking whether there is a lerna.json on root level.
       // eslint-disable-next-line no-empty
-      project.version = pkgJson.version;
+      project.version = pkgJson?.version;
     } catch (e) {
       LogService.warn(/** @type {string} */ (e));
     }
@@ -422,6 +424,10 @@ export class InputDataService {
       .filter(dirPath => fs.lstatSync(dirPath).isDirectory());
   }
 
+  static set targetProjectPaths(v) {
+    this.__targetProjectPaths = ensureArray(v);
+  }
+
   /**
    * @type {PathFromSystemRoot[]} a list of strings representing all entry paths for projects we want to query
    */
@@ -444,10 +450,6 @@ export class InputDataService {
 
   static set referenceProjectPaths(v) {
     this.__referenceProjectPaths = ensureArray(v);
-  }
-
-  static set targetProjectPaths(v) {
-    this.__targetProjectPaths = ensureArray(v);
   }
 
   /**
@@ -620,12 +622,12 @@ export class InputDataService {
   static getMonoRepoPackages(rootPath) {
     // [1] Look for npm/yarn workspaces
     const pkgJson = getPackageJson(rootPath);
-    if (pkgJson && pkgJson.workspaces) {
+    if (pkgJson?.workspaces) {
       return getPathsFromGlobList(pkgJson.workspaces, rootPath);
     }
     // [2] Look for lerna packages
     const lernaJson = getLernaJson(rootPath);
-    if (lernaJson && lernaJson.packages) {
+    if (lernaJson?.packages) {
       return getPathsFromGlobList(lernaJson.packages, rootPath);
     }
     // TODO: support forward compatibility for npm?

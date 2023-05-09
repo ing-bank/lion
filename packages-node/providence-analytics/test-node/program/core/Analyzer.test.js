@@ -25,9 +25,9 @@ describe('Analyzer', async () => {
     });
 
     it('has a "requiredAst" string', async () => {
-      expect(typeof dummyAnalyzer.requiredAst).to.equal('string');
+      expect(typeof dummyAnalyzer.constructor.requiredAst).to.equal('string');
       const allowedAsts = ['babel'];
-      expect(allowedAsts).to.include(dummyAnalyzer.requiredAst);
+      expect(allowedAsts).to.include(dummyAnalyzer.constructor.requiredAst);
     });
 
     it('has a "requiresReference" boolean', async () => {

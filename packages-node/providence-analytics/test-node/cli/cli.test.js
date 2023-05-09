@@ -13,7 +13,7 @@ import { cli } from '../../src/cli/cli.js';
 import { _promptAnalyzerMenuModule } from '../../src/cli/prompt-analyzer-menu.js';
 import { memoizeConfig } from '../../src/program/utils/memoize.js';
 import { _extendDocsModule } from '../../src/cli/launch-providence-with-extend-docs.js';
-import { dashboardServer } from '../../dashboard/server.js';
+import { dashboardServer } from '../../src/dashboard/server.js';
 import { setupAnalyzerTest } from '../../test-helpers/setup-analyzer-test.js';
 
 /**

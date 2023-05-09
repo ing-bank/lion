@@ -21,7 +21,7 @@ describe('Analyzer "find-exports"', async () => {
   };
 
   describe('Export notations', () => {
-    it(`supports "export const x = 0;" (named specifier)`, async () => {
+    it(`supports [export const x = 0] (named specifier)`, async () => {
       mockProject([`export const x = 0`]);
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstResult = getEntry(queryResults[0]).result[0];
@@ -30,7 +30,7 @@ describe('Analyzer "find-exports"', async () => {
       expect(firstResult.source).to.be.undefined;
     });
 
-    it(`supports "export default class X {};" (default export)`, async () => {
+    it(`supports [export default class X {}] (default export)`, async () => {
       mockProject([`export default class X {}`]);
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstResult = getEntry(queryResults[0]).result[0];
@@ -38,16 +38,16 @@ describe('Analyzer "find-exports"', async () => {
       expect(firstResult.source).to.be.undefined;
     });
 
-    it(`supports "export default x => x * 3;" (default function export)`, async () => {
+    it(`supports [export default fn(){}] (default export)`, async () => {
       mockProject([`export default x => x * 3`]);
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstResult = getEntry(queryResults[0]).result[0];
 
       expect(firstResult.exportSpecifiers).to.eql(['[default]']);
-      expect(firstResult.source).to.be.undefined;
+      expect(firstResult.source).to.equal(undefined);
     });
 
-    it(`supports "export {default as x} from 'y';" (default re-export)`, async () => {
+    it(`supports [export {default as x} from 'y'] (default re-export)`, async () => {
       mockProject({
         './file-with-default-export.js': 'export default 1;',
         './file-with-default-re-export.js':
@@ -82,7 +82,7 @@ describe('Analyzer "find-exports"', async () => {
       });
     });
 
-    it(`supports "import {x} from 'y'; export default x;" (named re-export as default)`, async () => {
+    it(`supports [import {x} from 'y'; export default x] (named re-export as default)`, async () => {
       mockProject([`import {x} from 'y'; export default x;`]);
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstEntry = getEntry(queryResults[0]);
@@ -91,7 +91,7 @@ describe('Analyzer "find-exports"', async () => {
       expect(firstEntry.result[0].source).to.equal('y');
     });
 
-    it(`supports "import x from 'y'; export default x" (default re-export as default)`, async () => {
+    it(`supports [import x from 'y'; export default x] (default re-export as default)`, async () => {
       mockProject([`import x from 'y'; export default x;`]);
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstEntry = getEntry(queryResults[0]);
@@ -100,7 +100,7 @@ describe('Analyzer "find-exports"', async () => {
       expect(firstEntry.result[0].source).to.equal('y');
     });
 
-    it(`supports "export { x } from 'my/source'" (re-export named specifier)`, async () => {
+    it(`supports [export { x } from 'my/source'] (re-export named specifier)`, async () => {
       mockProject([`export { x } from 'my/source'`]);
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstEntry = getEntry(queryResults[0]);
@@ -169,7 +169,7 @@ describe('Analyzer "find-exports"', async () => {
       ]);
     });
 
-    it(`supports "export { x, y } from 'my/source';" (multiple re-exported named specifiers)`, async () => {
+    it(`supports [export { x, y } from 'my/source'] (multiple re-exported named specifiers)`, async () => {
       mockProject([`export { x, y } from 'my/source'`]);
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstEntry = getEntry(queryResults[0]);
@@ -185,7 +185,6 @@ describe('Analyzer "find-exports"', async () => {
         './index.js': `export { InBetweenComp as MyComp } from './src/inbetween.js'`,
       });
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
-
       const firstEntry = getEntry(queryResults[0]);
       const secondEntry = getEntry(queryResults[0], 1);
       const thirdEntry = getEntry(queryResults[0], 2);

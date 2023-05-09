@@ -1,15 +1,14 @@
 /* eslint-disable no-shadow, no-param-reassign */
+import babelTraverse from '@babel/traverse';
 import { isRelativeSourcePath } from '../utils/relative-source-path.js';
-import { swcTraverse } from '../utils/swc-traverse.js';
 import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
 import { Analyzer } from '../core/Analyzer.js';
 import { LogService } from '../core/LogService.js';
 
 /**
- * @typedef {import("@swc/core").Module} SwcAstModule
- * @typedef {import("@swc/core").Node} SwcNode
+ * @typedef {import('@babel/types').File} File
+ * @typedef {import('@babel/types').Node} Node
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
- * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
@@ -17,86 +16,117 @@ import { LogService } from '../core/LogService.js';
  */
 
 /**
- * @param {SwcNode} node
+ * Options that allow to filter 'on a file basis'.
+ * We can also filter on the total result
+ */
+const /** @type {AnalyzerConfig} */ options = {
+    /**
+     * Only leaves entries with external sources:
+     * - keeps: '@open-wc/testing'
+     * - drops: '../testing'
+     * @param {FindImportsAnalyzerQueryOutput} result
+     * @param {string} targetSpecifier for instance 'LitElement'
+     */
+    onlyExternalSources(result) {
+      return result.filter(entry => !isRelativeSourcePath(entry.source));
+    },
+  };
+
+/**
+ * @param {Node} node
  */
 function getImportOrReexportsSpecifiers(node) {
   return node.specifiers.map(s => {
     if (
       s.type === 'ImportDefaultSpecifier' ||
       s.type === 'ExportDefaultSpecifier' ||
-      (s.type === 'ExportSpecifier' && s.exported?.value === 'default')
+      (s.type === 'ExportSpecifier' && s.exported?.name === 'default')
     ) {
       return '[default]';
     }
     if (s.type === 'ImportNamespaceSpecifier' || s.type === 'ExportNamespaceSpecifier') {
       return '[*]';
     }
-    const importedValue = s.imported?.value || s.orig?.value || s.exported?.value || s.local?.value;
-    return importedValue;
+    if ((s.imported && s.type === 'ImportNamespaceSpecifier') || s.type === 'ImportSpecifier') {
+      return s.imported.name;
+    }
+    if (s.exported && s.type === 'ExportNamespaceSpecifier') {
+      return s.exported.name;
+    }
+    return s.local.name;
   });
 }
 
 /**
  * Finds import specifiers and sources
- * @param {SwcAstModule} swcAst
+ * @param {File} babelAst
  */
-function findImportsPerAstFile(swcAst, context) {
+function findImportsPerAstFile(babelAst, context) {
   LogService.debug(`Analyzer "find-imports": started findImportsPerAstFile method`);
 
   // https://github.com/babel/babel/blob/672a58660f0b15691c44582f1f3fdcdac0fa0d2f/packages/babel-core/src/transformation/index.ts#L110
   // Visit AST...
   /** @type {Partial<FindImportsAnalyzerEntry>[]} */
   const transformedFile = [];
-
-  swcTraverse(swcAst, {
-    ImportDeclaration({ node }) {
-      const importSpecifiers = getImportOrReexportsSpecifiers(node);
+  babelTraverse.default(babelAst, {
+    ImportDeclaration(path) {
+      const importSpecifiers = getImportOrReexportsSpecifiers(path.node);
       if (!importSpecifiers.length) {
         importSpecifiers.push('[file]'); // apparently, there was just a file import
       }
-      const source = node.source.value;
+      const source = path.node.source.value;
       const entry = /** @type {Partial<FindImportsAnalyzerEntry>} */ ({ importSpecifiers, source });
-      if (node.asserts) {
-        entry.assertionType = node.asserts.properties[0].value?.value;
-      }
-      transformedFile.push(entry);
-    },
-    ExportNamedDeclaration({ node }) {
-      if (!node.source) {
-        return; // we are dealing with a regular export, not a reexport
-      }
-      const importSpecifiers = getImportOrReexportsSpecifiers(node);
-      const source = node.source.value;
-      const entry = /** @type {Partial<FindImportsAnalyzerEntry>} */ ({ importSpecifiers, source });
-      if (node.asserts) {
-        entry.assertionType = node.asserts.properties[0].value?.value;
+      if (path.node.assertions?.length) {
+        entry.assertionType = path.node.assertions[0].value?.value;
       }
       transformedFile.push(entry);
     },
     // Dynamic imports
-    CallExpression({ node }) {
-      if (node.callee?.type !== 'Import') {
+    CallExpression(path) {
+      if (path.node.callee?.type !== 'Import') {
         return;
       }
       // TODO: check for specifiers catched via obj destructuring?
       // TODO: also check for ['file']
       const importSpecifiers = ['[default]'];
-      const dynamicImportExpression = node.arguments[0].expression;
-      const source =
-        dynamicImportExpression.type === 'StringLiteral'
-          ? dynamicImportExpression.value
-          : '[variable]';
+      let source = path.node.arguments[0].value;
+      if (!source) {
+        // TODO: with advanced retrieval, we could possibly get the value
+        source = '[variable]';
+      }
       transformedFile.push({ importSpecifiers, source });
     },
+    ExportNamedDeclaration(path) {
+      if (!path.node.source) {
+        return; // we are dealing with a regular export, not a reexport
+      }
+      const importSpecifiers = getImportOrReexportsSpecifiers(path.node);
+      const source = path.node.source.value;
+      const entry = /** @type {Partial<FindImportsAnalyzerEntry>} */ ({ importSpecifiers, source });
+      if (path.node.assertions?.length) {
+        entry.assertionType = path.node.assertions[0].value?.value;
+      }
+      transformedFile.push(entry);
+    },
+    // ExportAllDeclaration(path) {
+    //   if (!path.node.source) {
+    //     return; // we are dealing with a regular export, not a reexport
+    //   }
+    //   const importSpecifiers = ['[*]'];
+    //   const source = path.node.source.value;
+    //   transformedFile.push({ importSpecifiers, source });
+    // },
   });
 
   return transformedFile;
 }
 
-export default class FindImportsSwcAnalyzer extends Analyzer {
-  static analyzerName = /** @type {AnalyzerName} */ ('find-imports');
+export default class FindImportsAnalyzer extends Analyzer {
+  /** @type {AnalyzerName} */
+  static analyzerName = 'find-imports';
 
-  static requiredAst = /** @type {AnalyzerAst} */ ('swc');
+  /** @type {'babel'|'swc-to-babel'} */
+  requiredAst = 'swc-to-babel';
 
   /**
    * Finds import specifiers and sources
@@ -128,8 +158,8 @@ export default class FindImportsSwcAnalyzer extends Analyzer {
     /**
      * Traverse
      */
-    const queryOutput = await this._traverse(async (swcAst, context) => {
-      let transformedFile = findImportsPerAstFile(swcAst, context);
+    const queryOutput = await this._traverse(async (ast, context) => {
+      let transformedFile = findImportsPerAstFile(ast, context);
       // Post processing based on configuration...
       transformedFile = await normalizeSourcePaths(
         transformedFile,
@@ -138,11 +168,18 @@ export default class FindImportsSwcAnalyzer extends Analyzer {
       );
 
       if (!cfg.keepInternalSources) {
-        transformedFile = transformedFile.filter(entry => !isRelativeSourcePath(entry.source));
+        transformedFile = options.onlyExternalSources(transformedFile);
       }
 
       return { result: transformedFile };
     });
+
+    // if (cfg.sortBySpecifier) {
+    //   queryOutput = sortBySpecifier.execute(queryOutput, {
+    //     ...cfg,
+    //     specifiersKey: 'importSpecifiers',
+    //   });
+    // }
 
     /**
      * Finalize

@@ -53,6 +53,29 @@ export class AstService {
   }
 
   /**
+   * Compiles an array of file paths using swc.
+   * @param {string} code
+   * @param {ParserOptions} parserOptions
+   * @returns {SwcAstModule}
+   */
+  static _getSwcAst(code, parserOptions = {}) {
+    const ast = swc.parseSync(code, {
+      syntax: 'typescript',
+      target: 'es2022',
+      ...parserOptions,
+    });
+    return ast;
+  }
+
+  /**
+   * Compensates for swc span bug: https://github.com/swc-project/swc/issues/1366#issuecomment-1516539812
+   * @returns {number}
+   */
+  static _getSwcOffset() {
+    return swc.parseSync('').span.end;
+  }
+
+  /**
    * Combines all script tags as if it were one js file.
    * @param {string} htmlCode
    */
@@ -77,9 +100,9 @@ export class AstService {
   /**
    * Returns the Babel AST
    * @param { string } code
-   * @param { 'babel'|'swc-to-babel'} astType
+   * @param { 'babel'|'swc-to-babel'|'swc'} astType
    * @param { {filePath?: PathFromSystemRoot} } options
-   * @returns {File|undefined}
+   * @returns {File|undefined|SwcAstModule}
    */
   // eslint-disable-next-line consistent-return
   static getAst(code, astType, { filePath } = {}) {
@@ -90,6 +113,9 @@ export class AstService {
       }
       if (astType === 'swc-to-babel') {
         return this._getSwcToBabelAst(code);
+      }
+      if (astType === 'swc') {
+        return this._getSwcAst(code);
       }
       throw new Error(`astType "${astType}" not supported.`);
     } catch (e) {

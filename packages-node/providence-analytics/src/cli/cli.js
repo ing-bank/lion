@@ -7,7 +7,7 @@ import { QueryService } from '../program/core/QueryService.js';
 import { InputDataService } from '../program/core/InputDataService.js';
 import { toPosixPath } from '../program/utils/to-posix-path.js';
 import { getCurrentDir } from '../program/utils/get-current-dir.js';
-import { dashboardServer } from '../../dashboard/server.js';
+import { dashboardServer } from '../dashboard/server.js';
 import { _providenceModule } from '../program/providence.js';
 import { _cliHelpersModule } from './cli-helpers.js';
 import { _extendDocsModule } from './launch-providence-with-extend-docs.js';

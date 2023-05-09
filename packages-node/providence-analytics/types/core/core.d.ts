@@ -54,11 +54,6 @@ export type RootFile = {
 };
 
 /**
- * Required ast for the analysis. Currently, only Babel is supported
- */
-export type RequiredAst = 'babel';
-
-/**
  * Name entry found in package.json
  */
 export type ProjectName = string;
@@ -186,4 +181,9 @@ export type PackageJson = {
   dependencies?: { [dependency: string]: string };
   devDependencies?: { [dependency: string]: string };
   workspaces?: string[];
+  main?: string;
+};
+
+export type LernaJson = {
+  packages: string[];
 };

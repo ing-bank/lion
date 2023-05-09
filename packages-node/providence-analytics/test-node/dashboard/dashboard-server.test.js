@@ -4,9 +4,10 @@ import pathLib from 'path';
 import sinon from 'sinon';
 import { fileURLToPath } from 'url';
 import { expect } from 'chai';
+import { it } from 'mocha';
 import fetch from 'node-fetch';
 import { createTestServer } from '@web/dev-server-core/test-helpers';
-import { createDashboardServerConfig } from '../../dashboard/server.js';
+import { createDashboardServerConfig } from '../../src/dashboard/server.js';
 import { ReportService } from '../../src/program/core/ReportService.js';
 import { providenceConfUtil } from '../../src/program/utils/providence-conf-util.js';
 
@@ -57,7 +58,7 @@ describe('Dashboard Server', () => {
 
     describe('Index', () => {
       it(`returns an index on '/'`, async () => {
-        const response = await fetch(`${host}/dashboard`);
+        const response = await fetch(`${host}/src/dashboard`);
         const responseText = await response.text();
         expect(response.status).to.equal(200);
         expect(responseText).to.include('<title>Providence dashboard</title>');
@@ -66,7 +67,7 @@ describe('Dashboard Server', () => {
 
     describe('App assets', () => {
       it(`returns (static) js assets via app/*`, async () => {
-        const response = await fetch(`${host}/dashboard/app/p-board.js`);
+        const response = await fetch(`${host}/src/dashboard/app/p-board.js`);
         expect(response.status).to.equal(200);
       });
     });

@@ -3,7 +3,7 @@ import {
   PathFromSystemRoot,
   QueryType,
   QueryResult,
-  RequiredAst,
+  AnalyzerAst,
   ImportOrExportId,
   Project,
   GatherFilesConfig,
@@ -16,6 +16,8 @@ import {
  */
 export type AnalyzerName = `${'find' | 'match'}-${string}` | '';
 
+export type AnalyzerAst = 'babel' | 'swc-to-babel' | 'swc';
+
 // TODO: make sure that data structures of JSON output (generated in ReportService)
 // and data structure generated in Analyzer.prototype._finalize match exactly (move logic from ReportSerivce to _finalize)
 // so that these type definitions can be used to generate a json schema: https://www.npmjs.com/package/typescript-json-schema
@@ -27,7 +29,7 @@ export interface Meta {
 
 export interface AnalyzerMeta {
   name: AnalyzerName;
-  requiredAst: RequiredAst;
+  requiredAst: AnalyzerAst;
   /* a unique hash based on target, reference and configuration */
   identifier: ImportOrExportId;
   /* target project meta object */

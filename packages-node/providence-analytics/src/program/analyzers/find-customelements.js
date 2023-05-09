@@ -2,7 +2,7 @@ import path from 'path';
 import t from '@babel/types';
 import babelTraverse from '@babel/traverse';
 import { Analyzer } from '../core/Analyzer.js';
-import { trackDownIdentifierFromScope } from './helpers/track-down-identifier.js';
+import { trackDownIdentifierFromScope } from './helpers/track-down-identifier--legacy.js';
 
 /**
  * @typedef {import('@babel/types').File} File
@@ -94,7 +94,7 @@ export default class FindCustomelementsAnalyzer extends Analyzer {
   static analyzerName = 'find-customelements';
 
   /** @type {'babel'|'swc-to-babel'} */
-  requiredAst = 'swc-to-babel';
+  static requiredAst = 'swc-to-babel';
 
   /**
    * Finds export specifiers and sources

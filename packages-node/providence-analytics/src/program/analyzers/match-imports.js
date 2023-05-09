@@ -19,6 +19,7 @@ import { transformIntoIterableFindImportsOutput } from './helpers/transform-into
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  */
 
 /**
@@ -155,8 +156,9 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
 }
 
 export default class MatchImportsAnalyzer extends Analyzer {
-  /** @type {AnalyzerName} */
-  static analyzerName = 'match-imports';
+  static analyzerName = /** @type {AnalyzerName} */ ('match-imports');
+
+  static requiredAst = /** @type {AnalyzerAst} */ ('swc');
 
   static requiresReference = true;
 

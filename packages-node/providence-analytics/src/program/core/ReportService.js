@@ -1,7 +1,8 @@
 import fs from 'fs';
 import pathLib from 'path';
 import { getHash } from '../utils/get-hash.js';
-import { memoize } from '../utils/memoize.js';
+// import { memoize } from '../utils/memoize.js';
+const memoize = fn => fn;
 
 /**
  * @typedef {import('../../../types/index.js').Project} Project
