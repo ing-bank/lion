@@ -23,8 +23,14 @@ import { getDecimalSeparator } from './getDecimalSeparator.js';
 function getParseMode(value, { mode = 'auto' } = {}) {
   const separators = value.match(/[., ]/g);
 
-  if (!separators || (mode === 'auto' && separators.length === 1)) {
+  if (!separators) {
     return 'withLocale';
+  }
+  if (mode === 'auto' && separators.length === 1) {
+    const decimalLength = value.split(`${separators}`)[1].length;
+    if (decimalLength >= 3) {
+      return 'withLocale';
+    }
   }
   if (separators.length === 1 || separators[0] !== separators[separators.length - 1]) {
     return 'heuristic';
