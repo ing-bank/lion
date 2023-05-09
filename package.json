@@ -33,7 +33,8 @@
     "test:screenshots": "rimraf screenshots/.diff/ && rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
     "types": "npm run types --workspaces --if-present",
-    "types-check-only": "npm run types-check-only --workspaces --if-present"
+    "types-check-only": "npm run types-check-only --workspaces --if-present",
+    "rm-all-node_modules": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules"
   },
   "workspaces": [
     "packages/*",
@@ -135,5 +136,8 @@
     "singleQuote": true,
     "arrowParens": "avoid",
     "trailingComma": "all"
+  },
+  "overrides": {
+    "sharp": "^0.29.x"
   }
 }
