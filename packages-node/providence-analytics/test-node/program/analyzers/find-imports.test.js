@@ -1,47 +1,21 @@
 const { expect } = require('chai');
 const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/services/QueryService.js');
-const {
-  mockProject,
-  restoreMockedProjects,
-  getEntry,
-} = require('../../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../test-helpers/mock-log-service-helpers.js');
+const { QueryService } = require('../../../src/program/core/QueryService.js');
+const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
+const { mockProject, getEntry } = require('../../../test-helpers/mock-project-helpers.js');
+
+/**
+ * @typedef {import('../../../src/program/types/core').ProvidenceConfig} ProvidenceConfig
+ */
 
 const findImportsQueryConfig = QueryService.getQueryConfigFromAnalyzer('find-imports');
+/** @type {Partial<ProvidenceConfig>} */
 const _providenceCfg = {
   targetProjectPaths: ['/fictional/project'], // defined in mockProject
 };
 
 describe('Analyzer "find-imports"', () => {
-  const queryResults = [];
-  const cacheDisabledInitialValue = QueryService.cacheDisabled;
-
-  before(() => {
-    QueryService.cacheDisabled = true;
-  });
-
-  after(() => {
-    QueryService.cacheDisabled = cacheDisabledInitialValue;
-  });
-
-  beforeEach(() => {
-    suppressNonCriticalLogs();
-    mockWriteToJson(queryResults);
-  });
-
-  afterEach(() => {
-    restoreSuppressNonCriticalLogs();
-    restoreMockedProjects();
-    restoreWriteToJson(queryResults);
-  });
+  const queryResults = setupAnalyzerTest();
 
   describe('Import notations', () => {
     it(`supports [import 'imported/source'] (no specifiers)`, async () => {
@@ -190,7 +164,6 @@ describe('Analyzer "find-imports"', () => {
       await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
-      console.log({ firstEntry });
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
       expect(firstEntry.result[0].source).to.equal('@css/lib/styles.css');
       expect(firstEntry.result[0].assertionType).to.equal('css');
@@ -201,7 +174,6 @@ describe('Analyzer "find-imports"', () => {
       await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
-      console.log({ firstEntry });
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[default]');
       expect(firstEntry.result[0].source).to.equal('@css/lib/styles.css');
       expect(firstEntry.result[0].assertionType).to.equal('css');

@@ -1,3 +1,5 @@
+import { File } from '@babel/types';
+
 /**
  * The name of a variable in a local context. Examples:
  * - 'b': (`import {a as b } from 'c';`)
@@ -140,6 +142,11 @@ export interface ProjectInputDataWithMeta {
   project: Project;
   entries: { file: PathRelativeFromProjectRoot; context: { code: string } }[];
 }
+
+export interface ProjectInputDataWithAstMeta extends ProjectInputDataWithMeta {
+  entries: { file: PathRelativeFromProjectRoot; ast: File; context: { code: string } }[];
+}
+
 /**
  * See: https://www.npmjs.com/package/anymatch
  * Allows negations as well. See: https://www.npmjs.com/package/is-negated-glob
@@ -149,3 +156,33 @@ export interface ProjectInputDataWithMeta {
  * - 'scripts/vendor/react.js'
  */
 export type AnyMatchString = string;
+
+export type ProvidenceConfig = {
+  /* Whether analyzer should be run or a grep should be performed */
+  queryMethod: 'ast' | 'grep';
+  /* Search target projects. For instance ['/path/to/app-a', '/path/to/app-b', ... '/path/to/app-z'] */
+  targetProjectPaths: PathFromSystemRoot[];
+  /* Reference projects. Needed for 'match analyzers', having `requiresReference: true`. For instance ['/path/to/lib1', '/path/to/lib2'] */
+  referenceProjectPaths: PathFromSystemRoot[];
+  /* When targetProjectPaths are dependencies of other projects (their 'roots') */
+  targetProjectRootPaths: PathFromSystemRoot[];
+  gatherFilesConfig: GatherFilesConfig;
+  gatherFilesConfigReference: GatherFilesConfig;
+  report: boolean;
+  debugEnabled: boolean;
+  measurePerformance: boolean;
+  writeLogFile: boolean;
+  skipCheckMatchCompatibility: boolean;
+};
+
+/**
+ * Representation of package.json with only those keys relevant for Providence
+ */
+export type PackageJson = {
+  name: string;
+  version: string;
+  files?: PathRelativeFromProjectRoot[];
+  dependencies?: { [dependency: string]: string };
+  devDependencies?: { [dependency: string]: string };
+  workspaces?: string[];
+};

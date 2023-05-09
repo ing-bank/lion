@@ -4,15 +4,19 @@ const {
   trackDownIdentifier,
   trackDownIdentifierFromScope,
 } = require('../../../../src/program/analyzers/helpers/track-down-identifier.js');
-const { AstService } = require('../../../../src/program/services/AstService.js');
-
+const { AstService } = require('../../../../src/program/core/AstService.js');
 const {
   mockProject,
   restoreMockedProjects,
 } = require('../../../../test-helpers/mock-project-helpers.js');
+const { memoizeConfig } = require('../../../../src/program/utils/memoize.js');
 
 describe('trackdownIdentifier', () => {
+  beforeEach(() => {
+    memoizeConfig.isCacheDisabled = true;
+  });
   afterEach(() => {
+    memoizeConfig.isCacheDisabled = false;
     restoreMockedProjects();
   });
 
@@ -168,13 +172,18 @@ describe('trackdownIdentifier', () => {
     });
   });
 
-  it(`identifies the current project as internal source`, async () => {
+  it(`self-referencing projects are recognized as internal source`, async () => {
+    // https://nodejs.org/api/packages.html#self-referencing-a-package-using-its-name
     mockProject(
       {
         './MyClass.js': `export default class {}`,
         './currentFile.js': `
         import MyClass from 'my-project/MyClass.js';
       `,
+        './package.json': JSON.stringify({
+          name: 'my-project',
+          exports: { './MyClass.js': './MyClass.js' },
+        }),
       },
       {
         projectName: 'my-project',
@@ -183,7 +192,7 @@ describe('trackdownIdentifier', () => {
     );
 
     // Let's say we want to track down 'MyClass' in the code above
-    const source = '#internal/source';
+    const source = 'my-project/MyClass.js';
     const identifierName = '[default]';
     const currentFilePath = '/my/project/currentFile.js';
     const rootPath = '/my/project';

@@ -3,7 +3,7 @@ const pathLib = require('path');
 /* eslint-disable no-shadow, no-param-reassign */
 const FindImportsAnalyzer = require('./find-imports.js');
 const FindExportsAnalyzer = require('./find-exports.js');
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
 const {
   transformIntoIterableFindExportsOutput,
@@ -21,6 +21,7 @@ const {
  * @typedef {import('../types/analyzers').MatchImportsConfig} MatchImportsConfig
  * @typedef {import('../types/analyzers').MatchImportsAnalyzerResult} MatchImportsAnalyzerResult
  * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../types/core').AnalyzerName} AnalyzerName
  */
 
@@ -117,9 +118,13 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
        */
       const fromImportToExport = await fromImportToExportPerspective({
         importee: importEntry.normalizedSource,
-        importer: pathLib.resolve(importProjectPath, importEntry.file),
+        importer: /** @type {PathFromSystemRoot} */ (
+          pathLib.resolve(importProjectPath, importEntry.file)
+        ),
+        importeeProjectPath: cfg.referenceProjectPath,
       });
       const isFromSameSource = compareImportAndExportPaths(exportEntry.file, fromImportToExport);
+
       if (!isFromSameSource) {
         continue;
       }
@@ -133,7 +138,10 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
         entry => entry.exportSpecifier && entry.exportSpecifier.id === id,
       );
       if (resultForCurrentExport) {
-        resultForCurrentExport.importProjectFiles.push(importEntry.file);
+        // Prevent that we count double import like "import * as all from 'x'" and "import {smth} from 'x'"
+        if (!resultForCurrentExport.importProjectFiles.includes(importEntry.file)) {
+          resultForCurrentExport.importProjectFiles.push(importEntry.file);
+        }
       } else {
         conciseResultsArray.push({
           exportSpecifier: { id, ...(exportEntry.meta ? { meta: exportEntry.meta } : {}) },
@@ -151,10 +159,8 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
 }
 
 class MatchImportsAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    /** @type {AnalyzerName} */
-    this.name = 'match-imports';
+  static get analyzerName() {
+    return 'match-imports';
   }
 
   static get requiresReference() {
@@ -207,6 +213,7 @@ class MatchImportsAnalyzer extends Analyzer {
         metaConfig: cfg.metaConfig,
         targetProjectPath: cfg.referenceProjectPath,
         skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+        suppressNonCriticalLogs: true,
       });
     }
 
@@ -217,6 +224,7 @@ class MatchImportsAnalyzer extends Analyzer {
         metaConfig: cfg.metaConfig,
         targetProjectPath: cfg.targetProjectPath,
         skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+        suppressNonCriticalLogs: true,
       });
     }
 

@@ -3,18 +3,19 @@ const pathLib = require('path');
 /* eslint-disable no-shadow, no-param-reassign */
 const FindClassesAnalyzer = require('./find-classes.js');
 const FindExportsAnalyzer = require('./find-exports.js');
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 const { fromImportToExportPerspective } = require('./helpers/from-import-to-export-perspective.js');
 
 /**
- * @typedef {import('../types/analyzers/find-classes').FindClassesAnalyzerResult} FindClassesAnalyzerResult
- * @typedef {import('../types/find-imports').FindImportsAnalyzerResult} FindImportsAnalyzerResult
- * @typedef {import('../types/find-exports').FindExportsAnalyzerResult} FindExportsAnalyzerResult
- * @typedef {import('../types/find-exports').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
- * @typedef {import('../types/find-imports').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
- * @typedef {import('../types/match-imports').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
- * @typedef {import('../types/match-imports').MatchImportsConfig} MatchImportsConfig
- * @typedef {import('../types/core/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../types/analyzers').FindClassesAnalyzerResult} FindClassesAnalyzerResult
+ * @typedef {import('../types/analyzers').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../types/analyzers').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../types/analyzers').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
+ * @typedef {import('../types/analyzers').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
+ * @typedef {import('../types/analyzers').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
+ * @typedef {import('../types/analyzers').MatchImportsConfig} MatchImportsConfig
+ * @typedef {import('../types/core').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../types/core').PathFromSystemRoot} PathFromSystemRoot
  */
 
 function getMemberOverrides(
@@ -52,7 +53,7 @@ function getMemberOverrides(
 }
 
 /**
- * @desc Helper method for matchImportsPostprocess. Modifies its resultsObj
+ * Helper method for matchImportsPostprocess. Modifies its resultsObj
  * @param {object} resultsObj
  * @param {string} exportId like 'myExport::./reference-project/my/export.js::my-project'
  * @param {Set<string>} filteredList
@@ -67,14 +68,14 @@ function storeResult(resultsObj, exportId, filteredList, meta) {
 }
 
 /**
- * @param {FindExportsAnalyzerResult} exportsAnalyzerResult
+ * @param {FindExportsAnalyzerResult} refExportsAnalyzerResult
  * @param {FindClassesAnalyzerResult} targetClassesAnalyzerResult
  * @param {FindClassesAnalyzerResult} refClassesAResult
  * @param {MatchSubclassesConfig} customConfig
  * @returns {AnalyzerQueryResult}
  */
 async function matchSubclassesPostprocess(
-  exportsAnalyzerResult,
+  refExportsAnalyzerResult,
   targetClassesAnalyzerResult,
   refClassesAResult,
   customConfig,
@@ -102,8 +103,8 @@ async function matchSubclassesPostprocess(
    */
   const resultsObj = {};
 
-  for (const exportEntry of exportsAnalyzerResult.queryOutput) {
-    const exportsProjectObj = exportsAnalyzerResult.analyzerMeta.targetProject;
+  for (const exportEntry of refExportsAnalyzerResult.queryOutput) {
+    const exportsProjectObj = refExportsAnalyzerResult.analyzerMeta.targetProject;
     const exportsProjectName = exportsProjectObj.name;
 
     // Look for all specifiers that are exported, like [import {specifier} 'lion-based-ui/foo.js']
@@ -124,9 +125,10 @@ async function matchSubclassesPostprocess(
         // TODO: What if this info is retrieved from cached importProject/target project?
         const importProjectPath = cfg.targetProjectPath;
         for (const { result, file } of targetClassesAnalyzerResult.queryOutput) {
-          // targetClassesAnalyzerResult.queryOutput.forEach(({ result, file }) =>
+          const importerFilePath = /** @type {PathFromSystemRoot} */ (
+            pathLib.resolve(importProjectPath, file)
+          );
           for (const classEntryResult of result) {
-            // result.forEach(classEntryResult => {
             /**
              * @example
              * Example context (read by 'find-classes'/'find-exports' analyzers)
@@ -165,7 +167,8 @@ async function matchSubclassesPostprocess(
               exportEntry.file ===
               (await fromImportToExportPerspective({
                 importee: classMatch.rootFile.file,
-                importer: pathLib.resolve(importProjectPath, file),
+                importer: importerFilePath,
+                importeeProjectPath: cfg.referenceProjectPath,
               }));
 
             if (classMatch && isFromSameSource) {
@@ -176,8 +179,14 @@ async function matchSubclassesPostprocess(
                 exportEntryResult,
                 exportSpecifier,
               );
+
+              let projectFileId = `${importProject}::${file}::${classEntryResult.name}`;
+              if (cfg.addSystemPathsInResult) {
+                projectFileId += `::${importerFilePath}`;
+              }
+
               filteredImportsList.add({
-                projectFileId: `${importProject}::${file}::${classEntryResult.name}`,
+                projectFileId,
                 memberOverrides,
               });
             }
@@ -235,13 +244,18 @@ async function matchSubclassesPostprocess(
       const matchesPerProject = [];
       flatResult.files.forEach(({ projectFileId, memberOverrides }) => {
         // eslint-disable-next-line no-shadow
-        const [project, file, identifier] = projectFileId.split('::');
+        const [project, file, identifier, filePath] = projectFileId.split('::');
         let projectEntry = matchesPerProject.find(m => m.project === project);
         if (!projectEntry) {
           matchesPerProject.push({ project, files: [] });
           projectEntry = matchesPerProject[matchesPerProject.length - 1];
         }
-        projectEntry.files.push({ file, identifier, memberOverrides });
+        const entry = { file, identifier, memberOverrides };
+        if (filePath) {
+          // @ts-ignore
+          entry.filePath = filePath;
+        }
+        projectEntry.files.push(entry);
       });
 
       return {
@@ -262,9 +276,8 @@ async function matchSubclassesPostprocess(
 // }
 
 class MatchSubclassesAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    this.name = 'match-subclasses';
+  static get analyzerName() {
+    return 'match-subclasses';
   }
 
   static get requiresReference() {
@@ -309,16 +322,18 @@ class MatchSubclassesAnalyzer extends Analyzer {
      */
     const findExportsAnalyzer = new FindExportsAnalyzer();
     /** @type {FindExportsAnalyzerResult} */
-    const exportsAnalyzerResult = await findExportsAnalyzer.execute({
+    const refExportsAnalyzerResult = await findExportsAnalyzer.execute({
       targetProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfigReference,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
     const findClassesAnalyzer = new FindClassesAnalyzer();
     /** @type {FindClassesAnalyzerResult} */
     const targetClassesAnalyzerResult = await findClassesAnalyzer.execute({
       targetProjectPath: cfg.targetProjectPath,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
     const findRefClassesAnalyzer = new FindClassesAnalyzer();
     /** @type {FindClassesAnalyzerResult} */
@@ -326,10 +341,11 @@ class MatchSubclassesAnalyzer extends Analyzer {
       targetProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfigReference,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
 
     const queryOutput = await matchSubclassesPostprocess(
-      exportsAnalyzerResult,
+      refExportsAnalyzerResult,
       targetClassesAnalyzerResult,
       refClassesAnalyzerResult,
       cfg,

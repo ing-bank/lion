@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "searchType": "ast-analyzer",
+    "analyzerMeta": {
+      "name": "match-imports",
+      "requiredAst": "babel",
+      "identifier": "%40lion%2Flistbox_0.10.7_+_%40lion%2Fform-core_0.15.4__-1773728033",
+      "targetProject": {
+        "mainEntry": "./index.js",
+        "name": "@lion/listbox",
+        "version": "0.10.7",
+        "commitHash": "[not-a-git-root]"
+      },
+      "referenceProject": {
+        "mainEntry": "./index.js",
+        "name": "@lion/form-core",
+        "version": "0.15.4",
+        "commitHash": "[not-a-git-root]"
+      },
+      "configuration": {
+        "gatherFilesConfig": {
+          "extensions": [
+            ".js",
+            ".html"
+          ]
+        },
+        "targetProjectResult": null,
+        "referenceProjectResult": null,
+        "gatherFilesConfigReference": {
+          "extensions": [
+            ".js",
+            ".html"
+          ]
+        },
+        "skipCheckMatchCompatibility": false,
+        "metaConfig": {
+          "categoryConfig": [
+            {
+              "project": "@lion/overlays",
+              "majorVersion": 1,
+              "categories": {}
+            }
+          ]
+        }
+      }
+    }
+  },
+  "queryOutput": [
+    {
+      "exportSpecifier": {
+        "id": "FocusMixin::./index.js::@lion/form-core",
+        "name": "FocusMixin",
+        "filePath": "./index.js",
+        "project": "@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/listbox",
+          "files": [
+            "./src/LionListbox.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "id": "FormControlMixin::./index.js::@lion/form-core",
+        "name": "FormControlMixin",
+        "filePath": "./index.js",
+        "project": "@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/listbox",
+          "files": [
+            "./src/ListboxMixin.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "id": "InteractionStateMixin::./index.js::@lion/form-core",
+        "name": "InteractionStateMixin",
+        "filePath": "./index.js",
+        "project": "@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/listbox",
+          "files": [
+            "./src/LionListbox.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "id": "FormRegisteringMixin::./index.js::@lion/form-core",
+        "name": "FormRegisteringMixin",
+        "filePath": "./index.js",
+        "project": "@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/listbox",
+          "files": [
+            "./src/LionOption.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "id": "FormRegistrarMixin::./index.js::@lion/form-core",
+        "name": "FormRegistrarMixin",
+        "filePath": "./index.js",
+        "project": "@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/listbox",
+          "files": [
+            "./src/ListboxMixin.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "id": "FormRegistrarPortalMixin::./index.js::@lion/form-core",
+        "name": "FormRegistrarPortalMixin",
+        "filePath": "./index.js",
+        "project": "@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/listbox",
+          "files": [
+            "./src/LionOptions.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "id": "ValidateMixin::./index.js::@lion/form-core",
+        "name": "ValidateMixin",
+        "filePath": "./index.js",
+        "project": "@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/listbox",
+          "files": [
+            "./src/LionListbox.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "id": "ChoiceGroupMixin::./index.js::@lion/form-core",
+        "name": "ChoiceGroupMixin",
+        "filePath": "./index.js",
+        "project": "@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/listbox",
+          "files": [
+            "./src/ListboxMixin.js"
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "id": "ChoiceInputMixin::./index.js::@lion/form-core",
+        "name": "ChoiceInputMixin",
+        "filePath": "./index.js",
+        "project": "@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/listbox",
+          "files": [
+            "./src/LionOption.js"
+          ]
+        }
+      ]
+    }
+  ]
+}

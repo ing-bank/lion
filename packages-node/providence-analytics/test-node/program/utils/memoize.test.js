@@ -1,16 +1,15 @@
 const { expect } = require('chai');
-const { memoize } = require('../../../src/program/utils/memoize.js');
-const { InputDataService } = require('../../../src/program/services/InputDataService.js');
+const { memoize, memoizeConfig } = require('../../../src/program/utils/memoize.js');
 
-const cacheDisabledInitialValue = InputDataService.cacheDisabled;
+const cacheDisabledInitialValue = memoizeConfig.isCacheDisabled;
 
 describe('Memoize', () => {
   beforeEach(() => {
     // This is important, since memoization only works
-    InputDataService.cacheDisabled = false;
+    memoizeConfig.isCacheDisabled = false;
   });
   afterEach(() => {
-    InputDataService.cacheDisabled = cacheDisabledInitialValue;
+    memoizeConfig.isCacheDisabled = cacheDisabledInitialValue;
   });
 
   describe('With primitives', () => {

@@ -1,12 +1,25 @@
+const { performance } = require('perf_hooks');
 const deepmerge = require('deepmerge');
-const { ReportService } = require('./services/ReportService.js');
-const { InputDataService } = require('./services/InputDataService.js');
-const { LogService } = require('./services/LogService.js');
-const { QueryService } = require('./services/QueryService.js');
-const { aForEach } = require('./utils/async-array-utils.js');
+const { ReportService } = require('./core/ReportService.js');
+const { InputDataService } = require('./core/InputDataService.js');
+const { LogService } = require('./core/LogService.js');
+const { QueryService } = require('./core/QueryService.js');
 
-// After handling a combo, we should know which project versions we have, since
-// the analyzer internally called createDataObject(which provides us the needed meta info).
+/**
+ * @typedef {import('./types/core').ProvidenceConfig} ProvidenceConfig
+ * @typedef {import('./types/core').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('./types/core').QueryResult} QueryResult
+ * @typedef {import('./types/core').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('./types/core').QueryConfig} QueryConfig
+ * @typedef {import('./types/core').AnalyzerQueryConfig} AnalyzerQueryConfig
+ * @typedef {import('./types/core').GatherFilesConfig} GatherFilesConfig
+ */
+
+/**
+ * After handling a combo, we should know which project versions we have, since
+ * the analyzer internally called createDataObject(which provides us the needed meta info).
+ * @param {{queryResult: AnalyzerQueryResult; queryConfig: AnalyzerQueryConfig; providenceConfig: ProvidenceConfig}} opts
+ */
 function addToSearchTargetDepsFile({ queryResult, queryConfig, providenceConfig }) {
   const currentSearchTarget = queryConfig.analyzerConfig.targetProjectPath;
   // eslint-disable-next-line array-callback-return, consistent-return
@@ -26,6 +39,10 @@ function addToSearchTargetDepsFile({ queryResult, queryConfig, providenceConfig 
   });
 }
 
+/**
+ * @param {AnalyzerQueryResult} queryResult
+ * @param {{outputPath:PathFromSystemRoot;report:boolean}} cfg
+ */
 function report(queryResult, cfg) {
   if (cfg.report && !queryResult.meta.analyzerMeta.__fromCache) {
     const { identifier } = queryResult.meta.analyzerMeta;
@@ -35,12 +52,13 @@ function report(queryResult, cfg) {
 
 /**
  * Creates unique QueryConfig for analyzer turn
- * @param {QueryConfig} queryConfig
- * @param {string} targetProjectPath
- * @param {string} referenceProjectPath
+ * @param {AnalyzerQueryConfig} queryConfig
+ * @param {PathFromSystemRoot} targetProjectPath
+ * @param {PathFromSystemRoot} referenceProjectPath
+ * @returns {Partial<AnalyzerQueryResult>}
  */
 function getSlicedQueryConfig(queryConfig, targetProjectPath, referenceProjectPath) {
-  return {
+  return /** @type {Partial<AnalyzerQueryResult>} */ ({
     ...queryConfig,
     ...{
       analyzerConfig: {
@@ -51,19 +69,20 @@ function getSlicedQueryConfig(queryConfig, targetProjectPath, referenceProjectPa
         },
       },
     },
-  };
+  });
 }
 
 /**
- * @desc definition "projectCombo": referenceProject#version + searchTargetProject#version
- * @param {QueryConfig} slicedQConfig
- * @param {cfg} object
+ * Definition "projectCombo": referenceProject#version + searchTargetProject#version
+ * @param {AnalyzerQueryConfig} slicedQConfig
+ * @param {{ gatherFilesConfig:GatherFilesConfig, gatherFilesConfigReference:GatherFilesConfig, skipCheckMatchCompatibility:boolean }} cfg
  */
 async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
   const queryResult = await QueryService.astSearch(slicedQConfig, {
     gatherFilesConfig: cfg.gatherFilesConfig,
     gatherFilesConfigReference: cfg.gatherFilesConfigReference,
     skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+    addSystemPathsInResult: cfg.addSystemPathsInResult,
     ...slicedQConfig.analyzerConfig,
   });
   if (queryResult) {
@@ -73,7 +92,7 @@ async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
 }
 
 /**
- * @desc Here, we will match all our reference projects (exports) against all our search targets
+ * Here, we will match all our reference projects (exports) against all our search targets
  * (imports).
  *
  * This is an expensive operation. Therefore, we allow caching.
@@ -88,16 +107,16 @@ async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
  * All the json outputs can be aggregated in our dashboard and visually presented in
  * various ways.
  *
- * @param {QueryConfig} queryConfig
- * @param {ProvidenceConfig} cfg
+ * @param {AnalyzerQueryConfig} queryConfig
+ * @param {Partial<ProvidenceConfig>} cfg
  */
 async function handleAnalyzer(queryConfig, cfg) {
   const queryResults = [];
   const { referenceProjectPaths, targetProjectPaths } = cfg;
 
-  await aForEach(targetProjectPaths, async searchTargetProject => {
+  for (const searchTargetProject of targetProjectPaths) {
     if (referenceProjectPaths) {
-      await aForEach(referenceProjectPaths, async ref => {
+      for (const ref of referenceProjectPaths) {
         // Create shallow cfg copy with just currrent reference folder
         const slicedQueryConfig = getSlicedQueryConfig(queryConfig, searchTargetProject, ref);
         const queryResult = await handleAnalyzerForProjectCombo(slicedQueryConfig, cfg);
@@ -109,7 +128,7 @@ async function handleAnalyzer(queryConfig, cfg) {
             providenceConfig: cfg,
           });
         }
-      });
+      }
     } else {
       const slicedQueryConfig = getSlicedQueryConfig(queryConfig, searchTargetProject);
       const queryResult = await handleAnalyzerForProjectCombo(slicedQueryConfig, cfg);
@@ -122,7 +141,7 @@ async function handleAnalyzer(queryConfig, cfg) {
         });
       }
     }
-  });
+  }
   return queryResults;
 }
 
@@ -149,40 +168,37 @@ async function handleRegexSearch(queryConfig, cfg, inputData) {
 }
 
 /**
- * @desc Creates a report with usage metrics, based on a queryConfig.
+ * Creates a report with usage metrics, based on a queryConfig.
  *
  * @param {QueryConfig} queryConfig a query configuration object containing analyzerOptions.
- * @param {object} customConfig
- * @param {'ast'|'grep'} customConfig.queryMethod whether analyzer should be run or a grep should
- * be performed
- * @param {string[]} customConfig.targetProjectPaths search target projects. For instance
- * ['/path/to/app-a', '/path/to/app-b', ... '/path/to/app-z']
- * @param {string[]} [customConfig.referenceProjectPaths] reference projects. Needed for 'match
- * analyzers', having `requiresReference: true`. For instance
- * ['/path/to/lib1', '/path/to/lib2']
- * @param {GatherFilesConfig} [customConfig.gatherFilesConfig]
- * @param {boolean} [customConfig.report]
- * @param {boolean} [customConfig.debugEnabled]
+ * @param {Partial<ProvidenceConfig>} customConfig
  */
 async function providenceMain(queryConfig, customConfig) {
-  const cfg = deepmerge(
-    {
-      queryMethod: 'grep',
-      // This is a merge of all 'main entry projects'
-      // found in search-targets, including their children
-      targetProjectPaths: null,
-      referenceProjectPaths: null,
-      // This will be needed to identify the parent/child relationship to write to
-      // {outputFolder}/entryProjectDependencies.json, which will map
-      // a project#version to [ depA#version, depB#version ]
-      targetProjectRootPaths: null,
-      gatherFilesConfig: {},
-      report: true,
-      debugEnabled: false,
-      writeLogFile: false,
-      skipCheckMatchCompatibility: false,
-    },
-    customConfig,
+  const tStart = performance.now();
+
+  const cfg = /** @type {ProvidenceConfig} */ (
+    deepmerge(
+      {
+        queryMethod: 'grep',
+        // This is a merge of all 'main entry projects'
+        // found in search-targets, including their children
+        targetProjectPaths: null,
+        referenceProjectPaths: null,
+        // This will be needed to identify the parent/child relationship to write to
+        // {outputFolder}/entryProjectDependencies.json, which will map
+        // a project#version to [ depA#version, depB#version ]
+        targetProjectRootPaths: null,
+        gatherFilesConfig: {},
+        report: true,
+        debugEnabled: false,
+        writeLogFile: false,
+        skipCheckMatchCompatibility: false,
+        measurePerformance: false,
+        /** Allows to navigate to source file in code editor */
+        addSystemPathsInResult: false,
+      },
+      customConfig,
+    )
   );
 
   if (cfg.debugEnabled) {
@@ -215,6 +231,12 @@ async function providenceMain(queryConfig, customConfig) {
     LogService.writeLogFile();
   }
 
+  const tEnd = performance.now();
+
+  if (cfg.measurePerformance) {
+    // eslint-disable-next-line no-console
+    console.log(`completed in ${((tEnd - tStart) / 1000).toFixed(2)} seconds`);
+  }
   return queryResults;
 }
 

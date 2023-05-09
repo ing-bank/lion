@@ -11,7 +11,7 @@
 
 const pathLib = require('path');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
-const { LogService } = require('../services/LogService.js');
+const { LogService } = require('../core/LogService.js');
 const { memoize } = require('./memoize.js');
 const { toPosixPath } = require('./to-posix-path.js');
 
@@ -29,13 +29,13 @@ const fakePluginContext = {
   },
 };
 
-async function resolveImportPath(importee, importer, opts = {}) {
+async function resolveImportPath(importee, importer, opts) {
   const rollupResolve = nodeResolve({
     rootDir: pathLib.dirname(importer),
     // allow resolving polyfills for nodejs libs
     preferBuiltins: false,
     // extensions: ['.mjs', '.js', '.json', '.node'],
-    ...opts,
+    ...(opts || {}),
   });
 
   const preserveSymlinks =
@@ -44,10 +44,14 @@ async function resolveImportPath(importee, importer, opts = {}) {
   rollupResolve.buildStart.call(fakePluginContext, { preserveSymlinks });
 
   // @ts-ignore
-  const result = await rollupResolve.resolveId.call(fakePluginContext, importee, importer, {});
+  const result = await rollupResolve.resolveId.handler.call(
+    fakePluginContext,
+    importee,
+    importer,
+    {},
+  );
   // @ts-ignore
-  if (!result || !result.id) {
-    // throw new Error(`importee ${importee} not found in filesystem.`);
+  if (!result?.id) {
     LogService.warn(`importee ${importee} not found in filesystem for importer '${importer}'.`);
     return null;
   }

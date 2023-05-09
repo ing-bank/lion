@@ -26,14 +26,15 @@
     "src"
   ],
   "scripts": {
-    "dashboard": "node ./dashboard/src/server.js --serve-from-package-root",
-    "match-lion-imports": "npm run providence analyze match-imports --search-target-collection @lion-targets --reference-collection @lion-references",
+    "dashboard": "node ./dashboard/server.mjs --run-server --serve-from-package-root",
+    "postinstall": "npx patch-package",
+    "match-lion-imports": "npm run providence -- analyze match-subclasses --search-target-collection @lion-targets --reference-collection @lion-references --measure-perf --add-system-paths",
     "providence": "node --max-old-space-size=8192 ./src/cli/index.mjs",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "prepublishOnly": "npm run publish-docs",
-    "test:node": "mocha './test-node/**/*.test.js'",
-    "test:node:e2e": "mocha './test-node/program/**/*.e2e.js' --timeout 60000",
-    "test:node:watch": "npm run test:node --watch"
+    "test:node": "npm run test:node:unit && npm run test:node:e2e",
+    "test:node:e2e": "mocha './test-node/**/*.e2e.{j,mj}s' --timeout 60000",
+    "test:node:unit": "mocha './test-node/**/*.test.{j,mj}s'"
   },
   "dependencies": {
     "@babel/core": "^7.10.1",
@@ -44,25 +45,24 @@
     "@babel/register": "^7.5.5",
     "@babel/traverse": "^7.23.2",
     "@babel/types": "^7.9.0",
-    "@rollup/plugin-node-resolve": "^13.0.6",
-    "@typescript-eslint/typescript-estree": "^3.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.0",
+    "@web/dev-server": "^0.1.28",
     "anymatch": "^3.1.1",
     "chalk": "^4.1.0",
     "commander": "^2.20.0",
     "deepmerge": "^4.0.0",
-    "es-dev-server": "^1.57.1",
-    "es-module-lexer": "^0.3.6",
     "glob": "^7.1.6",
-    "htm": "^3.0.3",
     "inquirer": "^7.0.0",
     "is-negated-glob": "^1.0.0",
     "lit-element": "~2.4.0",
-    "mock-require": "^3.0.3",
-    "ora": "^3.4.0",
     "parse5": "^5.1.1",
     "read-package-tree": "5.3.1",
     "semver": "^7.5.2",
     "typescript": "~4.8.4"
+  },
+  "devDependencies": {
+    "@web/dev-server-core": "^0.3.19",
+    "mock-require": "^3.0.3"
   },
   "keywords": [
     "analysis",
@@ -77,5 +77,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "imports": {
+    "#types": "./src/program/types"
   }
 }

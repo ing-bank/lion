@@ -1,19 +1,8 @@
 const { expect } = require('chai');
 const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/services/QueryService.js');
-const { InputDataService } = require('../../../src/program/services/InputDataService.js');
-const {
-  mockTargetAndReferenceProject,
-  restoreMockedProjects,
-} = require('../../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../test-helpers/mock-log-service-helpers.js');
+const { QueryService } = require('../../../src/program/core/QueryService.js');
+const { mockTargetAndReferenceProject } = require('../../../test-helpers/mock-project-helpers.js');
+const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
 
 // 1. Reference input data
 const referenceProject = {
@@ -136,59 +125,192 @@ const expectedMatchesOutput = [
 // eslint-disable-next-line no-shadow
 
 describe('Analyzer "match-subclasses"', () => {
-  const originalReferenceProjectPaths = InputDataService.referenceProjectPaths;
-  const queryResults = [];
-  const cacheDisabledQInitialValue = QueryService.cacheDisabled;
-  const cacheDisabledIInitialValue = InputDataService.cacheDisabled;
+  const queryResults = setupAnalyzerTest();
 
-  before(() => {
-    QueryService.cacheDisabled = true;
-    InputDataService.cacheDisabled = true;
-    suppressNonCriticalLogs();
-  });
+  describe('Match Features', () => {
+    it(`identifies all directly imported class extensions`, async () => {
+      const refProject = {
+        path: '/target/node_modules/ref',
+        name: 'ref',
+        files: [{ file: './LionComp.js', code: `export class LionComp extends HTMLElement {};` }],
+      };
+      const targetProject = {
+        path: '/target',
+        name: 'target',
+        files: [
+          {
+            file: './WolfComp.js',
+            code: `
+        import { LionComp } from 'ref/LionComp.js';
 
-  after(() => {
-    QueryService.cacheDisabled = cacheDisabledQInitialValue;
-    InputDataService.cacheDisabled = cacheDisabledIInitialValue;
-    restoreSuppressNonCriticalLogs();
-  });
+        export class WolfComp extends LionComp {}
+        `,
+          },
+        ],
+      };
+      mockTargetAndReferenceProject(targetProject, refProject);
+      await providence(matchSubclassesQueryConfig, {
+        targetProjectPaths: [targetProject.path],
+        referenceProjectPaths: [refProject.path],
+      });
+      const queryResult = queryResults[0];
+      expect(queryResult.queryOutput).eql([
+        {
+          exportSpecifier: {
+            filePath: './LionComp.js',
+            id: 'LionComp::./LionComp.js::ref',
+            name: 'LionComp',
+            project: 'ref',
+          },
+          matchesPerProject: [
+            {
+              files: [
+                { file: './WolfComp.js', identifier: 'WolfComp', memberOverrides: undefined },
+              ],
+              project: 'target',
+            },
+          ],
+        },
+      ]);
+    });
 
-  beforeEach(() => {
-    InputDataService.cacheDisabled = true;
-    InputDataService.referenceProjectPaths = [];
-    mockWriteToJson(queryResults);
-  });
+    it(`identifies all indirectly imported (transitive) class extensions`, async () => {
+      const refProject = {
+        path: '/target/node_modules/ref',
+        name: 'ref',
+        files: [
+          { file: './LionComp.js', code: `export class LionComp extends HTMLElement {};` },
+          {
+            file: './RenamedLionComp.js',
+            code: `export { LionComp as RenamedLionComp } from './LionComp.js';`,
+          },
+        ],
+      };
+      const targetProject = {
+        path: '/target',
+        name: 'target',
+        files: [
+          {
+            file: './WolfComp2.js',
+            code: `
+        import { RenamedLionComp } from 'ref/RenamedLionComp.js';
 
-  afterEach(() => {
-    InputDataService.referenceProjectPaths = originalReferenceProjectPaths;
-    restoreWriteToJson(queryResults);
-    restoreMockedProjects();
+        export class WolfComp2 extends RenamedLionComp {}
+        `,
+          },
+        ],
+      };
+      mockTargetAndReferenceProject(targetProject, refProject);
+      await providence(matchSubclassesQueryConfig, {
+        targetProjectPaths: [targetProject.path],
+        referenceProjectPaths: [refProject.path],
+      });
+      const queryResult = queryResults[0];
+      expect(queryResult.queryOutput).eql([
+        {
+          exportSpecifier: {
+            filePath: './RenamedLionComp.js',
+            id: 'RenamedLionComp::./RenamedLionComp.js::ref',
+            name: 'RenamedLionComp',
+            project: 'ref',
+          },
+          matchesPerProject: [
+            {
+              files: [
+                { file: './WolfComp2.js', identifier: 'WolfComp2', memberOverrides: undefined },
+              ],
+              project: 'target',
+            },
+          ],
+        },
+      ]);
+    });
+
+    it(`identifies Mixins`, async () => {
+      const refProject = {
+        path: '/target/node_modules/ref',
+        name: 'ref',
+        files: [
+          {
+            file: './LionMixin.js',
+            code: `
+          export function LionMixin(superclass) {
+            return class extends superclass {};
+          }`,
+          },
+        ],
+      };
+      const targetProject = {
+        path: '/target',
+        name: 'target',
+        files: [
+          {
+            file: './WolfCompUsingMixin.js',
+            code: `
+        import { LionMixin } from 'ref/LionMixin.js';
+
+        export class WolfCompUsingMixin extends LionMixin(HTMLElement) {}
+        `,
+          },
+        ],
+      };
+      mockTargetAndReferenceProject(targetProject, refProject);
+      await providence(matchSubclassesQueryConfig, {
+        targetProjectPaths: [targetProject.path],
+        referenceProjectPaths: [refProject.path],
+      });
+      const queryResult = queryResults[0];
+      expect(queryResult.queryOutput).eql([
+        {
+          exportSpecifier: {
+            filePath: './LionMixin.js',
+            id: 'LionMixin::./LionMixin.js::ref',
+            name: 'LionMixin',
+            project: 'ref',
+          },
+          matchesPerProject: [
+            {
+              files: [
+                {
+                  file: './WolfCompUsingMixin.js',
+                  identifier: 'WolfCompUsingMixin',
+                  memberOverrides: undefined,
+                },
+              ],
+              project: 'target',
+            },
+          ],
+        },
+      ]);
+    });
   });
 
   describe('Extracting exports', () => {
-    it(`identifies all indirect export specifiers consumed by "importing-target-project"`, async () => {
-      mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-      await providence(matchSubclassesQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-      expectedExportIdsIndirect.forEach(indirectId => {
-        expect(
-          queryResult.queryOutput.find(
-            exportMatchResult => exportMatchResult.exportSpecifier.id === indirectId,
-          ),
-        ).not.to.equal(undefined, `id '${indirectId}' not found`);
+    describe('Inside small example project', () => {
+      it(`identifies all indirect export specifiers consumed by "importing-target-project"`, async () => {
+        mockTargetAndReferenceProject(searchTargetProject, referenceProject);
+        await providence(matchSubclassesQueryConfig, _providenceCfg);
+        const queryResult = queryResults[0];
+        expectedExportIdsIndirect.forEach(indirectId => {
+          expect(
+            queryResult.queryOutput.find(
+              exportMatchResult => exportMatchResult.exportSpecifier.id === indirectId,
+            ),
+          ).not.to.equal(undefined, `id '${indirectId}' not found`);
+        });
       });
-    });
 
-    it(`identifies all direct export specifiers consumed by "importing-target-project"`, async () => {
-      mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-      await providence(matchSubclassesQueryConfig, _providenceCfg);
-      const queryResult = queryResults[0];
-      expectedExportIdsDirect.forEach(directId => {
-        expect(
-          queryResult.queryOutput.find(
-            exportMatchResult => exportMatchResult.exportSpecifier.id === directId,
-          ),
-        ).not.to.equal(undefined, `id '${directId}' not found`);
+      it(`identifies all direct export specifiers consumed by "importing-target-project"`, async () => {
+        mockTargetAndReferenceProject(searchTargetProject, referenceProject);
+        await providence(matchSubclassesQueryConfig, _providenceCfg);
+        const queryResult = queryResults[0];
+        expectedExportIdsDirect.forEach(directId => {
+          expect(
+            queryResult.queryOutput.find(
+              exportMatchResult => exportMatchResult.exportSpecifier.id === directId,
+            ),
+          ).not.to.equal(undefined, `id '${directId}' not found`);
+        });
       });
     });
   });

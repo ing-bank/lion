@@ -2,9 +2,9 @@ const fs = require('fs');
 const pathLib = require('path');
 const inquirer = require('inquirer');
 const { default: traverse } = require('@babel/traverse');
-const { InputDataService } = require('../program/services/InputDataService.js');
-const { AstService } = require('../program/services/AstService.js');
-const { LogService } = require('../program/services/LogService.js');
+const { InputDataService } = require('../program/core/InputDataService.js');
+const { AstService } = require('../program/core/AstService.js');
+const { LogService } = require('../program/core/LogService.js');
 const JsdocCommentParser = require('../program/utils/jsdoc-comment-parser.js');
 
 /**

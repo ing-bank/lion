@@ -1,12 +1,12 @@
 /* eslint-disable no-shadow, no-param-reassign */
 const pathLib = require('path');
 const { default: traverse } = require('@babel/traverse');
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 const { trackDownIdentifier } = require('./helpers/track-down-identifier.js');
 const { normalizeSourcePaths } = require('./helpers/normalize-source-paths.js');
 const { getReferencedDeclaration } = require('../utils/get-source-code-fragment-of-declaration.js');
 
-const { LogService } = require('../services/LogService.js');
+const { LogService } = require('../core/LogService.js');
 
 /**
  * @typedef {import('./helpers/track-down-identifier.js').RootFile} RootFile
@@ -141,8 +141,8 @@ const isImportingSpecifier = pathOrNode =>
   pathOrNode.type === 'ImportDefaultSpecifier' || pathOrNode.type === 'ImportSpecifier';
 
 /**
- * @desc Finds import specifiers and sources for a given ast result
- * @param {BabelAst} ast
+ * Finds import specifiers and sources for a given ast result
+ * @param {File} ast
  * @param {FindExportsConfig} config
  */
 function findExportsPerAstEntry(ast, { skipFileImports }) {
@@ -207,13 +207,12 @@ function findExportsPerAstEntry(ast, { skipFileImports }) {
 }
 
 class FindExportsAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    this.name = 'find-exports';
+  static get analyzerName() {
+    return 'find-exports';
   }
 
   /**
-   * @desc Finds export specifiers and sources
+   * Finds export specifiers and sources
    * @param {FindExportsConfig} customConfig
    */
   async execute(customConfig = {}) {

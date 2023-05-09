@@ -1,45 +1,11 @@
 const { expect } = require('chai');
 const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/services/QueryService.js');
-const { InputDataService } = require('../../../src/program/services/InputDataService.js');
-const {
-  mockTargetAndReferenceProject,
-  restoreMockedProjects,
-} = require('../../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../test-helpers/mock-log-service-helpers.js');
+const { QueryService } = require('../../../src/program/core/QueryService.js');
+const { setupAnalyzerTest } = require('../../../test-helpers/setup-analyzer-test.js');
+const { mockTargetAndReferenceProject } = require('../../../test-helpers/mock-project-helpers.js');
 
 describe('Analyzer "match-paths"', () => {
-  const originalReferenceProjectPaths = InputDataService.referenceProjectPaths;
-  const queryResults = [];
-  const cacheDisabledInitialValue = QueryService.cacheDisabled;
-
-  before(() => {
-    QueryService.cacheDisabled = true;
-    suppressNonCriticalLogs();
-  });
-
-  after(() => {
-    QueryService.cacheDisabled = cacheDisabledInitialValue;
-    restoreSuppressNonCriticalLogs();
-  });
-
-  beforeEach(() => {
-    InputDataService.referenceProjectPaths = [];
-    mockWriteToJson(queryResults);
-  });
-
-  afterEach(() => {
-    InputDataService.referenceProjectPaths = originalReferenceProjectPaths;
-    restoreWriteToJson(queryResults);
-    restoreMockedProjects();
-  });
+  const queryResults = setupAnalyzerTest();
 
   const referenceProject = {
     path: '/importing/target/project/node_modules/reference-project',

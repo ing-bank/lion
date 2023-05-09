@@ -5,10 +5,10 @@ const {
   isRelativeSourcePath,
   toRelativeSourcePath,
 } = require('../../utils/relative-source-path.js');
-const { AstService } = require('../../services/AstService.js');
-const { LogService } = require('../../services/LogService.js');
-const { InputDataService } = require('../../services/InputDataService.js');
+const { InputDataService } = require('../../core/InputDataService.js');
 const { resolveImportPath } = require('../../utils/resolve-import-path.js');
+const { AstService } = require('../../core/AstService.js');
+const { LogService } = require('../../core/LogService.js');
 const { memoize } = require('../../utils/memoize.js');
 
 /**
@@ -22,11 +22,19 @@ const { memoize } = require('../../utils/memoize.js');
  * @param {string} source
  * @param {string} projectName
  */
+function isSelfReferencingProject(source, projectName) {
+  return source.startsWith(`${projectName}`);
+}
+
+/**
+ * @param {string} source
+ * @param {string} projectName
+ */
 function isExternalProject(source, projectName) {
   return (
     !source.startsWith('#') &&
     !isRelativeSourcePath(source) &&
-    !source.startsWith(`${projectName}/`)
+    !isSelfReferencingProject(source, projectName)
   );
 }
 

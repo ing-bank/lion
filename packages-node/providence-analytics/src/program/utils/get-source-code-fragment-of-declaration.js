@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const babelTraversePkg = require('@babel/traverse');
-const { AstService } = require('../services/AstService.js');
+const { AstService } = require('../core/AstService.js');
 const { trackDownIdentifier } = require('../analyzers/helpers/track-down-identifier.js');
 const { toPosixPath } = require('./to-posix-path.js');
 

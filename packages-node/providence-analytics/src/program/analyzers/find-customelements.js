@@ -1,9 +1,8 @@
 const pathLib = require('path');
 const t = require('@babel/types');
 const { default: traverse } = require('@babel/traverse');
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 const { trackDownIdentifierFromScope } = require('./helpers/track-down-identifier.js');
-const { aForEach } = require('../utils/async-array-utils.js');
 
 function cleanup(transformedEntry) {
   transformedEntry.forEach(definitionObj => {
@@ -18,7 +17,7 @@ function cleanup(transformedEntry) {
 async function trackdownRoot(transformedEntry, relativePath, projectPath) {
   const fullCurrentFilePath = pathLib.resolve(projectPath, relativePath);
 
-  await aForEach(transformedEntry, async definitionObj => {
+  for (const definitionObj of transformedEntry) {
     const rootFile = await trackDownIdentifierFromScope(
       definitionObj.__tmp.path,
       definitionObj.constructorIdentifier,
@@ -27,7 +26,7 @@ async function trackdownRoot(transformedEntry, relativePath, projectPath) {
     );
     // eslint-disable-next-line no-param-reassign
     definitionObj.rootFile = rootFile;
-  });
+  }
   return transformedEntry;
 }
 
@@ -85,13 +84,12 @@ function findCustomElementsPerAstEntry(ast) {
 }
 
 class FindCustomelementsAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    this.name = 'find-customelements';
+  static get analyzerName() {
+    return 'find-customelements';
   }
 
   /**
-   * @desc Finds export specifiers and sources
+   * Finds export specifiers and sources
    * @param {FindCustomelementsConfig} customConfig
    */
   async execute(customConfig = {}) {

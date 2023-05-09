@@ -2,14 +2,14 @@
 const MatchSubclassesAnalyzer = require('./match-subclasses.js');
 const FindExportsAnalyzer = require('./find-exports.js');
 const FindCustomelementsAnalyzer = require('./find-customelements.js');
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 
-/** @typedef {import('./types').FindExportsAnalyzerResult} FindExportsAnalyzerResult */
-/** @typedef {import('./types').FindCustomelementsAnalyzerResult} FindCustomelementsAnalyzerResult */
-/** @typedef {import('./types').MatchSubclassesAnalyzerResult} MatchSubclassesAnalyzerResult */
-/** @typedef {import('./types').FindImportsAnalyzerResult} FindImportsAnalyzerResult */
-/** @typedef {import('./types').MatchedExportSpecifier} MatchedExportSpecifier */
-/** @typedef {import('./types').RootFile} RootFile */
+/** @typedef {import('../types/core').FindExportsAnalyzerResult} FindExportsAnalyzerResult */
+/** @typedef {import('../types/core').FindCustomelementsAnalyzerResult} FindCustomelementsAnalyzerResult */
+/** @typedef {import('../types/core').MatchSubclassesAnalyzerResult} MatchSubclassesAnalyzerResult */
+/** @typedef {import('../types/core').FindImportsAnalyzerResult} FindImportsAnalyzerResult */
+/** @typedef {import('../types/core').MatchedExportSpecifier} MatchedExportSpecifier */
+/** @typedef {import('../types/core').RootFile} RootFile */
 
 /**
  * For prefix `{ from: 'lion', to: 'wolf' }`
@@ -362,9 +362,8 @@ function matchPathsPostprocess(
  * ]
  */
 class MatchPathsAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    this.name = 'match-paths';
+  static get analyzerName() {
+    return 'match-paths';
   }
 
   static get requiresReference() {
@@ -429,6 +428,7 @@ class MatchPathsAnalyzer extends Analyzer {
       gatherFilesConfig: cfg.gatherFilesConfig,
       gatherFilesConfigReference: cfg.gatherFilesConfigReference,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
 
     // [A2]
@@ -438,6 +438,7 @@ class MatchPathsAnalyzer extends Analyzer {
       targetProjectPath: cfg.targetProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfig,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
 
     // [A3]
@@ -447,6 +448,7 @@ class MatchPathsAnalyzer extends Analyzer {
       targetProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfigReference,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
 
     /**
@@ -475,6 +477,7 @@ class MatchPathsAnalyzer extends Analyzer {
       targetProjectPath: cfg.targetProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfig,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
 
     // [B2]
@@ -484,6 +487,7 @@ class MatchPathsAnalyzer extends Analyzer {
       targetProjectPath: cfg.referenceProjectPath,
       gatherFilesConfig: cfg.gatherFilesConfigReference,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
+      suppressNonCriticalLogs: true,
     });
     // refFindExportsAnalyzer was already created in A3
 

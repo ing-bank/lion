@@ -3,7 +3,6 @@ const pathLib = require('path');
 const { isRelativeSourcePath } = require('../../utils/relative-source-path.js');
 const { resolveImportPath } = require('../../utils/resolve-import-path.js');
 const { toPosixPath } = require('../../utils/to-posix-path.js');
-const { aMap } = require('../../utils/async-array-utils.js');
 
 /**
  * @typedef {import('../../types/core').PathRelative} PathRelative
@@ -44,7 +43,9 @@ async function normalizeSourcePaths(queryOutput, relativePath, rootPath = proces
     pathLib.resolve(rootPath, relativePath)
   );
   const currentDirPath = /** @type {PathFromSystemRoot} */ (pathLib.dirname(currentFilePath));
-  return aMap(queryOutput, async specifierResObj => {
+
+  const normalizedQueryOutput = [];
+  for (const specifierResObj of queryOutput) {
     if (specifierResObj.source) {
       if (isRelativeSourcePath(specifierResObj.source) && relativePath) {
         // This will be a source like '../my/file.js' or './file.js'
@@ -60,8 +61,9 @@ async function normalizeSourcePaths(queryOutput, relativePath, rootPath = proces
         // specifierResObj.fullSource = specifierResObj.source;
       }
     }
-    return specifierResObj;
-  });
+    normalizedQueryOutput.push(specifierResObj);
+  }
+  return normalizedQueryOutput;
 }
 
 module.exports = { normalizeSourcePaths };

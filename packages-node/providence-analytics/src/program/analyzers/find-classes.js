@@ -2,18 +2,21 @@
 const pathLib = require('path');
 const t = require('@babel/types');
 const { default: traverse } = require('@babel/traverse');
-const { Analyzer } = require('./helpers/Analyzer.js');
+const { Analyzer } = require('../core/Analyzer.js');
 const { trackDownIdentifierFromScope } = require('./helpers/track-down-identifier.js');
-const { aForEach } = require('../utils/async-array-utils.js');
 
-/** @typedef {import('../types/analyzers').FindClassesAnalyzerOutput} FindClassesAnalyzerOutput */
-/** @typedef {import('../types/analyzers').FindClassesAnalyzerOutputEntry} FindClassesAnalyzerOutputEntry */
-/** @typedef {import('../types/analyzers').FindClassesConfig} FindClassesConfig */
+/**
+ * @typedef {import('@babel/types').File} File
+ * @typedef {import('@babel/types').ClassMethod} ClassMethod
+ * @typedef {import('../types/analyzers').FindClassesAnalyzerOutput} FindClassesAnalyzerOutput
+ * @typedef {import('../types/analyzers').FindClassesAnalyzerOutputEntry} FindClassesAnalyzerOutputEntry
+ * @typedef {import('../types/analyzers').FindClassesConfig} FindClassesConfig
+ */
 
 /**
  * Finds import specifiers and sources
- * @param {BabelAst} ast
- * @param {string} relativePath the file being currently processed
+ * @param {File} ast
+ * @param {string} fullCurrentFilePath the file being currently processed
  */
 async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
   // The transformed entry
@@ -34,6 +37,10 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
     return 'public';
   }
 
+  /**
+   * @param {{node:ClassMethod}} cfg
+   * @returns
+   */
   function isStaticProperties({ node }) {
     return node.static && node.kind === 'get' && node.key.name === 'properties';
   }
@@ -73,7 +80,12 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
   //   return false;
   // }
 
-  async function traverseClass(path, { isMixin } = {}) {
+  /**
+   *
+   * @param {*} path
+   * @param {{isMixin?:boolean}} param1
+   */
+  async function traverseClass(path, { isMixin = false } = {}) {
     const classRes = {};
     classRes.name = path.node.id && path.node.id.name;
     classRes.isMixin = Boolean(isMixin);
@@ -95,7 +107,8 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
       // or an external path like '@lion/overlays'. In the latter case,
       // tracking down will halt and should be done when there is access to
       // the external repo... (similar to how 'match-imports' analyzer works)
-      await aForEach(superClasses, async classObj => {
+
+      for (const classObj of superClasses) {
         // Finds the file that holds the declaration of the import
         classObj.rootFile = await trackDownIdentifierFromScope(
           path,
@@ -103,13 +116,17 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
           fullCurrentFilePath,
           projectPath,
         );
-      });
+      }
       classRes.superClasses = superClasses;
     }
 
-    classRes.members = {};
-    classRes.members.props = []; // meta: private, public, getter/setter, (found in static get properties)
-    classRes.members.methods = []; // meta: private, public, getter/setter
+    classRes.members = {
+      // meta: private, public, getter/setter, (found in static get properties)
+      props: [],
+      // meta: private, public, getter/setter
+      methods: [],
+    };
+
     path.traverse({
       ClassMethod(path) {
         // if (isBlacklisted(path)) {
@@ -174,9 +191,9 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
     },
   });
 
-  await aForEach(classesToTraverse, async klass => {
+  for (const klass of classesToTraverse) {
     await traverseClass(klass.path, { isMixin: klass.isMixin });
-  });
+  }
 
   return classesFound;
 }
@@ -202,9 +219,8 @@ async function findMembersPerAstEntry(ast, fullCurrentFilePath, projectPath) {
 // }
 
 class FindClassesAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    this.name = 'find-classes';
+  static get analyzerName() {
+    return 'find-classes';
   }
 
   /**

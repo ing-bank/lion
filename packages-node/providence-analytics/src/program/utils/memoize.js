@@ -1,9 +1,17 @@
-const { InputDataService } = require('../services/InputDataService.js');
+const memoizeConfig = {
+  isCacheDisabled: false,
+};
 
+/**
+ * @param {object|any[]|string} arg
+ */
 function isObject(arg) {
   return !Array.isArray(arg) && typeof arg === 'object';
 }
 
+/**
+ * @param {object|any[]|string} arg
+ */
 function createCachableArg(arg) {
   if (isObject(arg)) {
     try {
@@ -17,7 +25,7 @@ function createCachableArg(arg) {
 
 /**
  * @param {function} functionToMemoize
- * @param {{ storage:object; serializeObjects: boolean }} [opts]
+ * @param {{ storage?:object; serializeObjects?: boolean }} opts
  */
 function memoize(functionToMemoize, { storage = {}, serializeObjects = false } = {}) {
   // eslint-disable-next-line func-names
@@ -27,7 +35,7 @@ function memoize(functionToMemoize, { storage = {}, serializeObjects = false } =
     const cachableArgs = !serializeObjects ? args : args.map(createCachableArg);
     // Allow disabling of cache for testing purposes
     // @ts-ignore
-    if (!InputDataService.cacheDisabled && cachableArgs in storage) {
+    if (!memoizeConfig.isCacheDisabled && cachableArgs in storage) {
       // @ts-ignore
       return storage[cachableArgs];
     }
@@ -42,4 +50,5 @@ function memoize(functionToMemoize, { storage = {}, serializeObjects = false } =
 
 module.exports = {
   memoize,
+  memoizeConfig,
 };

@@ -3,11 +3,27 @@ const fs = require('fs');
 const pathLib = require('path');
 const { performance } = require('perf_hooks');
 const providenceModule = require('../program/providence.js');
-const { QueryService } = require('../program/services/QueryService.js');
-const { InputDataService } = require('../program/services/InputDataService.js');
-const { LogService } = require('../program/services/LogService.js');
+const { QueryService } = require('../program/core/QueryService.js');
+const { InputDataService } = require('../program/core/InputDataService.js');
+const { LogService } = require('../program/core/LogService.js');
 const { flatten } = require('./cli-helpers.js');
 
+/**
+ * @typedef {import('../program/types').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../program/types').GatherFilesConfig} GatherFilesConfig
+ */
+
+/**
+ * @param {{
+ *  referenceProjectPaths: PathFromSystemRoot[];
+ *  prefixCfg:{from:string;to:string};
+ *  extensions:GatherFilesConfig['extensions'];
+ *  allowlist?:string[];
+ *  allowlistReference?:string[];
+ *  cwd:PathFromSystemRoot
+ * }} opts
+ * @returns
+ */
 async function getExtendDocsResults({
   referenceProjectPaths,
   prefixCfg,
@@ -22,7 +38,7 @@ async function getExtendDocsResults({
     QueryService.getQueryConfigFromAnalyzer('match-paths', { prefix: prefixCfg }),
     {
       gatherFilesConfig: {
-        extensions: extensions || ['.js'],
+        extensions: extensions || /** @type {GatherFilesConfig['extensions']} */ (['.js']),
         allowlist: allowlist || ['!coverage', '!test'],
       },
       gatherFilesConfigReference: {
@@ -31,7 +47,7 @@ async function getExtendDocsResults({
       },
       queryMethod: 'ast',
       report: false,
-      targetProjectPaths: [pathLib.resolve(cwd)],
+      targetProjectPaths: [cwd],
       referenceProjectPaths,
       // For mono repos, a match between root package.json and ref project will not exist.
       // Disable this check, so it won't be a blocker for extendin docs
@@ -45,7 +61,7 @@ async function getExtendDocsResults({
 
   /**
    * @param {string} pathStr ./packages/lea-tabs/lea-tabs.js
-   * @param {string[]} pkgs ['packages/lea-tabs', ...]
+   * @param {{path:string;name:string}[]} pkgs ['packages/lea-tabs', ...]
    */
   function replaceToMonoRepoPath(pathStr, pkgs) {
     let result = pathStr;

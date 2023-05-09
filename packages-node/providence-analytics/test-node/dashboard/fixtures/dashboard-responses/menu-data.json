@@ -1,0 +1,12 @@
+{
+  "searchTargetCollections": {
+    "@lion-targets": ["@lion/ui"]
+  },
+  "referenceCollections": {
+    "@lion-references": ["@lion/ui"]
+  },
+  "searchTargetDeps": {
+    "@lion/input#0.15.7": ["@lion/input#0.15.7"],
+    "@lion/listbox#0.10.7": ["@lion/listbox#0.10.7"]
+  }
+}
