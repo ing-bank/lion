@@ -109,9 +109,9 @@ export default class FindCustomelementsAnalyzer extends Analyzer {
     /**
      * Prepare
      */
-    const analyzerResult = this._prepare(cfg);
-    if (analyzerResult) {
-      return analyzerResult;
+    const cachedAnalyzerResult = this._prepare(cfg);
+    if (cachedAnalyzerResult) {
+      return cachedAnalyzerResult;
     }
 
     /**

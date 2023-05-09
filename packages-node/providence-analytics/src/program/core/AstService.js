@@ -77,7 +77,7 @@ export class AstService {
   /**
    * Returns the Babel AST
    * @param { string } code
-   * @param { 'babel'|'swc-to-babel' } astType
+   * @param { 'babel'|'swc-to-babel'} astType
    * @param { {filePath?: PathFromSystemRoot} } options
    * @returns {File|undefined}
    */

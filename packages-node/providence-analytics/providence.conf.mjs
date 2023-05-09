@@ -34,6 +34,6 @@ export default {
     // Usually the references are different from the targets.
     // In this demo file, we test @lion usage amongst itself
     // Select via " providence analyze --reference-collection 'exampleCollection' "
-    '@lion-references': ['../../packages/ui/'],
+    '@lion-references': lionScopedPackagePaths,
   },
 };

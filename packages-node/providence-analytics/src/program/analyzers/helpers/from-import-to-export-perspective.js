@@ -25,7 +25,13 @@ import { toPosixPath } from '../../utils/to-posix-path.js';
  */
 export async function fromImportToExportPerspective({ importee, importer, importeeProjectPath }) {
   if (isRelativeSourcePath(importee)) {
-    LogService.warn('[fromImportToExportPerspective] Please only provide external import paths');
+    LogService.warn(
+      `[fromImportToExportPerspective] Please only provide external import paths for ${{
+        importee,
+        importer,
+        importeeProjectPath,
+      }}`,
+    );
     return null;
   }
 

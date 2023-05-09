@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow, no-param-reassign */
-import pathLib from 'path';
+import path from 'path';
 import t from '@babel/types';
 import babelTraverse from '@babel/traverse';
 import { Analyzer } from '../core/Analyzer.js';
@@ -251,7 +251,7 @@ export default class FindClassesAnalyzer extends Analyzer {
     /** @type {FindClassesAnalyzerOutput} */
     const queryOutput = await this._traverse(async (ast, { relativePath }) => {
       const projectPath = cfg.targetProjectPath;
-      const fullPath = pathLib.resolve(projectPath, relativePath);
+      const fullPath = path.resolve(projectPath, relativePath);
       const transformedEntry = await findMembersPerAstEntry(ast, fullPath, projectPath);
       return { result: transformedEntry };
     });

@@ -33,7 +33,6 @@ const options = {
  */
 // eslint-disable-next-line no-unused-vars
 function getResultPerAstFile(ast) {
-  console.debug('myAnalyzerPerAstEntry');
   // Visit AST...
   const transformedEntryResult = [];
   // Do the traverse: https://babeljs.io/docs/en/babel-traverse

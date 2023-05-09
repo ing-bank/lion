@@ -63,6 +63,17 @@ export function getReferencedDeclaration({ referencedIdentifierName, globalScope
 }
 
 /**
+ * @example
+ * ```js
+ * // ------ input file --------
+ * const x = 88;
+ * const y = x;
+ * export const myIdentifier = y;
+ * // --------------------------
+ *
+ * await getSourceCodeFragmentOfDeclaration(code) // finds "88"
+ * ```
+ *
  * @param {{ filePath: PathFromSystemRoot; exportedIdentifier: string; projectRootPath: PathFromSystemRoot }} opts
  * @returns {Promise<{ sourceNodePath: string; sourceFragment: string|null; externalImportSource: string; }>}
  */

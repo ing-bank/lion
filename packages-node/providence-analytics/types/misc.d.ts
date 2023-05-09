@@ -4,9 +4,11 @@ export type TargetDep = `${PkgName}#${PkgVersion}`;
 export type TargetDepsObj = {
   [key: TargetDep]: TargetDep[];
 };
+
 export type TargetOrRefCollectionsObj = {
   [key: PkgName]: PkgName[];
 };
+
 export type ProvidenceCliConf = {
   metaConfig: {
     categoryConfig: {
@@ -35,3 +37,5 @@ export type ProvidenceCliConf = {
     [referenceCollection: string]: string[];
   };
 };
+
+// export { Node as Parse5Node } from 'parse5/dist/tree-adapters/default/index.js';

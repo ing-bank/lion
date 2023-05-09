@@ -115,6 +115,25 @@ describe('resolveImportPath', () => {
     expect(foundPath).to.equal('/target/node_modules/ref/packages/x/index.js');
   });
 
+  it(`resolves native node modules`, async () => {
+    mockProject(
+      {
+        './src/someFile.js': `
+       import { readFile } from 'fs';
+
+       export const x = readFile('/path/to/someOtherFile.js');
+      `,
+      },
+      {
+        projectName: 'my-project',
+        projectPath: '/my/project',
+      },
+    );
+
+    const foundPath = await resolveImportPath('fs', '/my/project/someFile.js');
+    expect(foundPath).to.equal('[node-builtin]');
+  });
+
   /**
    * All edge cases are covered by https://github.com/rollup/plugins/tree/master/packages/node-resolve/test
    */

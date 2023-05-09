@@ -1,4 +1,5 @@
-import pathLib from 'path';
+import { isBuiltin } from 'node:module';
+import path from 'path';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { LogService } from '../core/LogService.js';
 import { memoize } from './memoize.js';
@@ -36,11 +37,15 @@ const fakePluginContext = {
  * @param {SpecifierSource} importee source like '@lion/core' or '../helpers/index.js'
  * @param {PathFromSystemRoot} importer importing file, like '/my/project/importing-file.js'
  * @param {{customResolveOptions?: {preserveSymlinks:boolean}}} [opts] nodeResolve options
- * @returns {Promise<PathFromSystemRoot|null>} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
+ * @returns {Promise<PathFromSystemRoot|null|'[node-builtin]'>} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
  */
 async function resolveImportPathFn(importee, importer, opts) {
+  if (isBuiltin(importee)) {
+    return '[node-builtin]';
+  }
+
   const rollupResolve = nodeResolve({
-    rootDir: pathLib.dirname(importer),
+    rootDir: path.dirname(importer),
     // allow resolving polyfills for nodejs libs
     preferBuiltins: false,
     // extensions: ['.mjs', '.js', '.json', '.node'],
@@ -48,23 +53,24 @@ async function resolveImportPathFn(importee, importer, opts) {
   });
 
   const preserveSymlinks =
-    (opts && opts.customResolveOptions && opts.customResolveOptions.preserveSymlinks) || false;
-  // @ts-ignore
+    (opts?.customResolveOptions && opts.customResolveOptions.preserveSymlinks) || false;
+  // @ts-expect-error
   rollupResolve.buildStart.call(fakePluginContext, { preserveSymlinks });
 
-  // @ts-ignore
+  // @ts-expect-error
   const result = await rollupResolve.resolveId.handler.call(
     fakePluginContext,
     importee,
     importer,
     {},
   );
-  // @ts-ignore
+
   if (!result?.id) {
-    LogService.warn(`importee ${importee} not found in filesystem for importer '${importer}'.`);
+    LogService.warn(
+      `[resolveImportPath] importee ${importee} not found in filesystem for importer '${importer}'.`,
+    );
     return null;
   }
-  // @ts-ignore
   return toPosixPath(result.id);
 }
 

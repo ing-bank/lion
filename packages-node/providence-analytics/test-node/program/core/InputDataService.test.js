@@ -9,7 +9,6 @@ import {
   mockProject,
   mock,
 } from '../../../test-helpers/mock-project-helpers.js';
-// import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';
 
 /**
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot

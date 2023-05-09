@@ -170,13 +170,13 @@ function findExportsPerAstFile(babelAst, { skipFileImports }) {
         }
       },
     },
-    ExportNamedDeclaration(path) {
-      const exportSpecifiers = getExportSpecifiers(path.node);
-      const localMap = getLocalNameSpecifiers(path.node);
-      const source = path.node.source?.value;
-      const entry = { exportSpecifiers, localMap, source, __tmp: { path } };
-      if (path.node.assertions?.length) {
-        entry.assertionType = path.node.assertions[0].value?.value;
+    ExportNamedDeclaration(astPath) {
+      const exportSpecifiers = getExportSpecifiers(astPath.node);
+      const localMap = getLocalNameSpecifiers(astPath.node);
+      const source = astPath.node.source?.value;
+      const entry = { exportSpecifiers, localMap, source, __tmp: { astPath } };
+      if (astPath.node.assertions?.length) {
+        entry.assertionType = astPath.node.assertions[0].value?.value;
       }
       transformedFile.push(entry);
     },
@@ -194,7 +194,7 @@ function findExportsPerAstFile(babelAst, { skipFileImports }) {
           source = importOrDeclPath.parentPath.node.source.value;
         }
       }
-      transformedFile.push({ exportSpecifiers, source, __tmp: { path: defaultExportPath } });
+      transformedFile.push({ exportSpecifiers, source, __tmp: { astPath: defaultExportPath } });
     },
   });
 
@@ -238,9 +238,9 @@ export default class FindExportsAnalyzer extends Analyzer {
     /**
      * Prepare
      */
-    const analyzerResult = this._prepare(cfg);
-    if (analyzerResult) {
-      return analyzerResult;
+    const cachedAnalyzerResult = this._prepare(cfg);
+    if (cachedAnalyzerResult) {
+      return cachedAnalyzerResult;
     }
 
     /**

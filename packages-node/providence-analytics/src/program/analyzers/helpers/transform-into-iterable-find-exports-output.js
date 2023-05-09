@@ -1,5 +1,6 @@
 /**
  * @typedef {import('../../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../../types/index.js').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
  */
 
 /**

@@ -17,6 +17,8 @@ import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-fro
  * @typedef {import('../../../types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
  * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
  * @typedef {import('../../../types/index.js').MatchAnalyzerConfig} MatchAnalyzerConfig
+ * @typedef {import('@babel/types').File} File
+ * @typedef {(ast: File, astContext: {code:string; relativePath:string; projectData: ProjectInputDataWithMeta}) => object} FileAstTraverseFn
  */
 
 /**
@@ -126,7 +128,7 @@ function ensureAnalyzerResultFormat(queryOutput, cfg, analyzer) {
  * Before running the analyzer, we need two conditions for a 'compatible match':
  * - 1. referenceProject is imported by targetProject at all
  * - 2. referenceProject and targetProject have compatible major versions
- * @typedef {(referencePath:PathFromSystemRoot,targetPath:PathFromSystemRoot) => {compatible:boolean}} CheckForMatchCompatibilityFn
+ * @typedef {(referencePath:PathFromSystemRoot,targetPath:PathFromSystemRoot) => {compatible:boolean; reason?:string}} CheckForMatchCompatibilityFn
  * @type {CheckForMatchCompatibilityFn}
  */
 const checkForMatchCompatibility = memoize(
@@ -172,7 +174,7 @@ export class Analyzer {
 
   name = /** @type  {typeof Analyzer} */ (this.constructor).analyzerName;
 
-  /** @type {'babel'|'swc-to-babel'|'swc-to-babel'} */
+  /** @type {'babel'|'swc-to-babel'} */
   requiredAst = 'babel';
 
   /**
@@ -183,10 +185,10 @@ export class Analyzer {
    * @param {MatchAnalyzerConfig} cfg
    */
   static __unwindProvidedResults(cfg) {
-    if (cfg.targetProjectResult && !cfg.targetProjectResult.analyzerMeta) {
+    if (cfg.targetProjectResult && !cfg.targetProjectResult?.analyzerMeta) {
       cfg.targetProjectResult = unwindJsonResult(cfg.targetProjectResult);
     }
-    if (cfg.referenceProjectResult && !cfg.referenceProjectResult.analyzerMeta) {
+    if (cfg.referenceProjectResult && !cfg.referenceProjectResult?.analyzerMeta) {
       cfg.referenceProjectResult = unwindJsonResult(cfg.referenceProjectResult);
     }
   }
@@ -296,7 +298,7 @@ export class Analyzer {
   }
 
   /**
-   * @param {function|{traverseEntryFn: function; filePaths:string[]; projectPath: string}} traverseEntryOrConfig
+   * @param {FileAstTraverseFn|{traverseEntryFn: FileAstTraverseFn; filePaths:string[]; projectPath: string}} traverseEntryOrConfig
    */
   async _traverse(traverseEntryOrConfig) {
     LogService.debug(`Analyzer "${this.name}": started _traverse method`);

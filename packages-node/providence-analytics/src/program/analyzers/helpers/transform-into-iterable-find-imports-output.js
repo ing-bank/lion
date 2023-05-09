@@ -1,5 +1,6 @@
 /**
  * @typedef {import('../../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../../../../types/index.js').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
  */
 
 /**
@@ -43,13 +44,12 @@ export function transformIntoIterableFindImportsOutput(importsAnalyzerResult) {
         continue;
       }
       for (const importSpecifier of importSpecifiers) {
-        /** @type {IterableFindImportsAnalyzerEntry} */
-        const resultEntry = {
+        const resultEntry = /** @type {IterableFindImportsAnalyzerEntry} */ ({
           file,
           specifier: importSpecifier,
           source,
           normalizedSource,
-        };
+        });
         iterableEntries.push(resultEntry);
       }
     }
