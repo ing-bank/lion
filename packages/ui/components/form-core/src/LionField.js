@@ -72,9 +72,11 @@ export class LionField extends FormControlMixin(
 
   /**
    * Dispatches custom bubble event
+   * @param {Event} ev
    * @protected
    */
-  _onChange() {
+  // eslint-disable-next-line no-unused-vars
+  _onChange(ev) {
     /** @protectedEvent user-input-changed */
     this.dispatchEvent(new Event('user-input-changed', { bubbles: true }));
   }
