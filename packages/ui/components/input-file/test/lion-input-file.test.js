@@ -73,7 +73,7 @@ describe('lion-input-file', () => {
     mimicSelectFile(el, [file]);
     const fileListChangedEvent = await fileListChangedEventPromise;
     // @ts-expect-error [allow-protected-in-tests]
-    expect(el._selectedFilesMetaData.length).to.equal(1);
+    expect(el._fileList.length).to.equal(1);
     expect(el._fileSelectResponse.length).to.equal(1);
 
     expect(fileListChangedEvent).to.exist;
@@ -99,7 +99,7 @@ describe('lion-input-file', () => {
 
     await el.updateComplete;
     // @ts-expect-error [allow-protected-in-test]
-    expect(el._selectedFilesMetaData.length).to.equal(1);
+    expect(el._fileList.length).to.equal(1);
     expect(el._fileSelectResponse.length).to.equal(1);
 
     // when cancel is clicked, native input value is blank which means modelValue is blank
@@ -107,7 +107,7 @@ describe('lion-input-file', () => {
 
     await el.updateComplete;
     // @ts-expect-error [allow-protected-in-test]
-    expect(el._selectedFilesMetaData.length).to.equal(1);
+    expect(el._fileList.length).to.equal(1);
   });
 
   it('has an attribute focused when focused', async () => {
@@ -139,16 +139,16 @@ describe('lion-input-file', () => {
     mimicSelectFile(el, [file]);
     await el.updateComplete;
     // @ts-expect-error [allow-protected-in-test]
-    expect(el._selectedFilesMetaData.length).to.equal(1);
+    expect(el._fileList.length).to.equal(1);
     // @ts-expect-error [allow-protected-in-test]
-    expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('foo.txt');
+    expect(el._fileList[0].systemFile.name).to.equal('foo.txt');
 
     mimicSelectFile(el, [file2]);
     await el.updateComplete;
     // @ts-expect-error [allow-protected-in-test]
-    expect(el._selectedFilesMetaData.length).to.equal(1);
+    expect(el._fileList.length).to.equal(1);
     // @ts-expect-error [allow-protected-in-test]
-    expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('bar.txt');
+    expect(el._fileList[0].systemFile.name).to.equal('bar.txt');
   });
 
   describe('invalid file types', async () => {
@@ -167,13 +167,13 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(1);
+      expect(el._fileList.length).to.equal(1);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].failedProp?.length).to.equal(1);
+      expect(el._fileList[0].failedProp?.length).to.equal(1);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].validationFeedback).to.exist;
+      expect(el._fileList[0].validationFeedback).to.exist;
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
+      expect(el._fileList[0].status).to.equal('FAIL');
       expect(el._fileSelectResponse[0].status).to.equal('FAIL');
     });
 
@@ -186,7 +186,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.deep.equal('Please select a(n) text file with max 500MB.');
       });
     });
@@ -200,7 +200,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.deep.equal('Please select a(n) text file with max 500MB.');
       });
     });
@@ -214,7 +214,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.deep.equal('Please select a(n) .html file with max 500MB.');
       });
     });
@@ -228,7 +228,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.deep.equal('Please select a(n) .svg file with max 500MB.');
       });
     });
@@ -242,7 +242,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.deep.equal('Please select a .html or .csv file with max 500MB.');
       });
     });
@@ -256,7 +256,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.deep.equal('Please select a .html or .csv file with max 500MB.');
       });
     });
@@ -270,7 +270,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.deep.equal('Please select a(n) .jpg file with max 500MB.');
       });
     });
@@ -292,13 +292,13 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(1);
+      expect(el._fileList.length).to.equal(1);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].failedProp?.length).to.equal(1);
+      expect(el._fileList[0].failedProp?.length).to.equal(1);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].validationFeedback).to.exist;
+      expect(el._fileList[0].validationFeedback).to.exist;
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
+      expect(el._fileList[0].status).to.equal('FAIL');
       expect(el._fileSelectResponse[0].status).to.equal('FAIL');
     });
 
@@ -311,7 +311,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.equal('Please select a(n) .jpg file with max 500MB.');
       });
     });
@@ -325,7 +325,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
       });
     });
@@ -339,7 +339,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
       });
     });
@@ -353,7 +353,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
       });
     });
@@ -370,13 +370,13 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(1);
+      expect(el._fileList.length).to.equal(1);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].failedProp?.length).to.equal(1);
+      expect(el._fileList[0].failedProp?.length).to.equal(1);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].validationFeedback).to.exist;
+      expect(el._fileList[0].validationFeedback).to.exist;
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
+      expect(el._fileList[0].status).to.equal('FAIL');
       expect(el._fileSelectResponse[0].status).to.equal('FAIL');
     });
 
@@ -389,7 +389,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.equal('Please select a file with max 2 bytes.');
       });
     });
@@ -407,7 +407,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
+      el._fileList[0].validationFeedback?.forEach(error => {
         expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 2 bytes.');
       });
     });
@@ -426,9 +426,9 @@ describe('lion-input-file', () => {
     const fileListChangedEvent = await oneEvent(el, 'file-list-changed');
 
     // @ts-expect-error [allow-protected-in-test]
-    expect(el._selectedFilesMetaData.length).to.equal(1);
+    expect(el._fileList.length).to.equal(1);
     // @ts-expect-error [allow-protected-in-test]
-    expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
+    expect(el._fileList[0].status).to.equal('FAIL');
     expect(el._fileSelectResponse[0].status).to.equal('FAIL');
 
     expect(fileListChangedEvent.detail.newFiles.length).to.equal(1);
@@ -444,7 +444,7 @@ describe('lion-input-file', () => {
     filesListChanged(el, fileListChangedEvent);
 
     // @ts-expect-error [allow-protected-in-test]
-    expect(el._selectedFilesMetaData[0].downloadUrl).to.exist;
+    expect(el._fileList[0].downloadUrl).to.exist;
   });
 
   describe('format', () => {
@@ -537,11 +537,11 @@ describe('lion-input-file', () => {
 
       await el.updateComplete;
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(2);
+      expect(el._fileList.length).to.equal(2);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('foo.txt');
+      expect(el._fileList[0].systemFile.name).to.equal('foo.txt');
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[1].systemFile.name).to.equal('bar.txt');
+      expect(el._fileList[1].systemFile.name).to.equal('bar.txt');
 
       expect(el._fileSelectResponse.length).to.equal(2);
       expect(el._fileSelectResponse[0].name).to.equal('foo.txt');
@@ -559,7 +559,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(2);
+      expect(el._fileList.length).to.equal(2);
 
       setTimeout(() => {
         mimicSelectFile(el, [file3, file4]);
@@ -568,7 +568,7 @@ describe('lion-input-file', () => {
       filesListChanged(el, fileListChangedEvent1);
       await el.updateComplete;
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(4);
+      expect(el._fileList.length).to.equal(4);
     });
 
     it('should add multiple files and dispatch file-list-changed event ONLY with newly added file', async () => {
@@ -589,7 +589,7 @@ describe('lion-input-file', () => {
 
       expect(fileListChangedEvent1).to.exist;
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(4);
+      expect(el._fileList.length).to.equal(4);
       expect(fileListChangedEvent1.detail.newFiles.length).to.equal(2);
       expect(fileListChangedEvent1.detail.newFiles[0].name).to.equal('foo3.txt');
       expect(fileListChangedEvent1.detail.newFiles[1].name).to.equal('foo4.txt');
@@ -607,9 +607,9 @@ describe('lion-input-file', () => {
       const fileListChangedEvent = await oneEvent(el, 'file-list-changed');
 
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(1);
+      expect(el._fileList.length).to.equal(1);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('foo.txt');
+      expect(el._fileList[0].systemFile.name).to.equal('foo.txt');
 
       expect(fileListChangedEvent).to.exist;
       expect(fileListChangedEvent.detail.newFiles.length).to.equal(1);
@@ -624,7 +624,7 @@ describe('lion-input-file', () => {
       mimicSelectFile(el, [fileDuplicate]);
       await el.updateComplete;
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(1);
+      expect(el._fileList.length).to.equal(1);
       expect(el.hasFeedbackFor).to.deep.equals(['info'], 'hasFeedbackFor');
       expect(el.showsFeedbackFor).to.deep.equals(['info'], 'showsFeedbackFor');
     });
@@ -639,7 +639,7 @@ describe('lion-input-file', () => {
       el = await fixture(html`<lion-input-file accept="text/plain"></lion-input-file>`);
     });
 
-    it('should set _fileSelectResponse data to _selectedFilesMetaData for rendering error and status', async () => {
+    it('should set _fileSelectResponse data to _fileList for rendering error and status', async () => {
       mimicSelectFile(el, [file]);
 
       el._fileSelectResponse = [{ name: 'foo.txt', status: 'LOADING', errorMessage: '500' }];
@@ -647,9 +647,9 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].status).to.equal('LOADING');
+      expect(el._fileList[0].status).to.equal('LOADING');
       // @ts-ignore
-      expect(el._selectedFilesMetaData[0].validationFeedback[0].message).to.equal('500');
+      expect(el._fileList[0].validationFeedback[0].message).to.equal('500');
     });
 
     it('should not fire file-list-changed event if invalid file is selected', async () => {
@@ -732,7 +732,7 @@ describe('lion-input-file', () => {
       await el.reset();
       expect(el.modelValue).to.deep.equal([]);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData).to.deep.equal([]);
+      expect(el._fileList).to.deep.equal([]);
       expect(el._fileSelectResponse).to.deep.equal(_fileSelectResponse);
     });
 
@@ -760,7 +760,7 @@ describe('lion-input-file', () => {
       expect(el.modelValue).to.deep.equal([]);
       expect(el._fileSelectResponse).to.deep.equal([]);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData).to.deep.equal([]);
+      expect(el._fileList).to.deep.equal([]);
     });
   });
 
@@ -794,19 +794,17 @@ describe('lion-input-file', () => {
       await el.updateComplete;
     });
 
-    it('should update the _selectedFilesMetaData according to _fileSelectResponse', () => {
+    it('should update the _fileList according to _fileSelectResponse', () => {
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(2);
+      expect(el._fileList.length).to.equal(2);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('file1.txt');
+      expect(el._fileList[0].systemFile.name).to.equal('file1.txt');
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].status).to.equal('SUCCESS');
+      expect(el._fileList[0].status).to.equal('SUCCESS');
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].downloadUrl).to.equal('/downloadFile');
+      expect(el._fileList[0].downloadUrl).to.equal('/downloadFile');
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[1].validationFeedback[0].message).to.equal(
-        'something went wrong',
-      );
+      expect(el._fileList[1].validationFeedback[0].message).to.equal('something went wrong');
     });
 
     it('should remove file on click of cross button', async () => {
@@ -824,9 +822,9 @@ describe('lion-input-file', () => {
 
       // assertion for displayed file list to be same
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(2);
+      expect(el._fileList.length).to.equal(2);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[1].systemFile.name).to.equal('file2.txt');
+      expect(el._fileList[1].systemFile.name).to.equal('file2.txt');
 
       el.dispatchEvent(
         new CustomEvent('file-remove-requested', {
@@ -843,7 +841,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
       expect(removeFileSpy).have.been.calledOnce;
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(1);
+      expect(el._fileList.length).to.equal(1);
       removeFileSpy.restore();
     });
 
@@ -981,9 +979,9 @@ describe('lion-input-file', () => {
 
       // assertion for displayed file list to be same
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(1);
+      expect(el._fileList.length).to.equal(1);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('foo.txt');
+      expect(el._fileList[0].systemFile.name).to.equal('foo.txt');
 
       // assertion for event data
       expect(removeFileEvent).to.exist;
@@ -1029,7 +1027,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
       // assertion for displayed file list to be same
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(2);
+      expect(el._fileList.length).to.equal(2);
       el._fileSelectResponse = [
         {
           name: 'file1.txt',
@@ -1041,9 +1039,9 @@ describe('lion-input-file', () => {
       await el.updateComplete;
       // assertion for displayed file list to be same
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData.length).to.equal(1);
+      expect(el._fileList.length).to.equal(1);
       // @ts-expect-error [allow-protected-in-test]
-      expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('file1.txt');
+      expect(el._fileList[0].systemFile.name).to.equal('file1.txt');
       // @ts-expect-error [allow-protected-in-tests]
       expect(el._inputNode.value).to.equal('');
     });

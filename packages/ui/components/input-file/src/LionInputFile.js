@@ -47,8 +47,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       maxFileSize: { type: Number, attribute: 'max-file-size' },
       enableDropZone: { type: Boolean, attribute: 'enable-drop-zone' },
       uploadOnFormSubmit: { type: Boolean, attribute: 'upload-on-form-submit' },
-      _fileSelectResponse: { type: Array, state: false },
-      _selectedFilesMetaData: { type: Array, state: true },
+      _fileSelectResponse: { type: Array, state: true },
+      _fileList: { type: Array, state: true },
     };
   }
 
@@ -79,7 +79,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       'selected-file-list': () => ({
         template: html`
           <lion-selected-file-list
-            .fileList=${this._selectedFilesMetaData}
+            .fileList=${this._fileList}
             .multiple=${this.multiple}
           ></lion-selected-file-list>
         `,
@@ -146,8 +146,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      * @protected
      * @type {InputFile[]}
      */
-    this._selectedFilesMetaData = [];
+    this._fileList = [];
     /**
+     * @protected
      * @type {FileSelectResponse[]}
      */
     // TODO: make readonly?
@@ -163,7 +164,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     this.maxFileSize = MAX_FILE_SIZE;
     this.accept = '';
     /**
-     * @type {InputFile[]}
+     * @type {File[]}
      */
     this.modelValue = [];
     /**
@@ -213,20 +214,15 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   }
 
   get _acceptCriteria() {
-    /** @type {string[]} */
-    let allowedFileTypes = [];
-    /** @type {string[]} */
-    let allowedFileExtensions = [];
-    if (this.accept) {
-      const acceptedFiles = this.accept.replace(/\s+/g, '').replace(/\.+/g, '').split(',');
-      allowedFileTypes = acceptedFiles.filter(acceptedFile => acceptedFile.includes('/'));
-      allowedFileExtensions = acceptedFiles.filter(acceptedFile => !acceptedFile.includes('/'));
+    const { maxFileSize } = this;
+    if (!this.accept) {
+      return { allowedFileTypes: [], allowedFileExtensions: [], maxFileSize };
     }
-    return {
-      allowedFileTypes,
-      allowedFileExtensions,
-      maxFileSize: this.maxFileSize,
-    };
+
+    const acceptedFiles = this.accept.replace(/\s+/g, '').replace(/\.+/g, '').split(',');
+    const allowedFileTypes = acceptedFiles.filter(acceptedFile => acceptedFile.includes('/'));
+    const allowedFileExtensions = acceptedFiles.filter(acceptedFile => !acceptedFile.includes('/'));
+    return { allowedFileTypes, allowedFileExtensions, maxFileSize };
   }
 
   /**
@@ -236,7 +232,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   reset() {
     super.reset();
-    this._selectedFilesMetaData = [];
+    this._fileList = [];
     this._fileSelectResponse = this.__initialFileSelectResponse;
     this.modelValue = [];
     // TODO: find out why it stays dirty
@@ -249,24 +245,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @override LionField
    */
   clear() {
-    this._selectedFilesMetaData = [];
+    this._fileList = [];
     this._fileSelectResponse = [];
     this.modelValue = [];
-  }
-
-  /**
-   * @override ValidateMixin: override to hide the IsAcceptedFile feedback at component level as they are displayed at each file level in file list
-   * @param {string} type could be 'error', 'warning', 'info', 'success' or any other custom
-   * @param {object} meta meta info (interaction states etc)
-   * @protected
-   */
-  _showFeedbackConditionFor(type, meta) {
-    return (
-      super._showFeedbackConditionFor(type, meta) &&
-      !(
-        this.validationStates.error?.FileTypeAllowed || this.validationStates.error?.FileSizeAllowed
-      )
-    );
   }
 
   /**
@@ -330,18 +311,10 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     // We need to update our light dom
     this._enhanceSelectedList();
 
-    // TODO: if there's no inputNode by now, we should either throw an error or add a slot change listener
-    if (this._inputNode) {
-      // TODO: should it be possible to change this on the fly (in updated)?
-      this._inputNode.type = this.type;
-      this._inputNode.setAttribute('tabindex', '-1');
-      // TODO: should it be possible to change this on the fly (in updated)?
-      this._inputNode.multiple = this.multiple;
-      if (this.accept.length) {
-        // TODO: should it be possible to change this on the fly (in updated)?
-        this._inputNode.accept = this.accept;
-      }
-    }
+    this._inputNode.type = this.type;
+    this._inputNode.tabIndex = -1;
+    this._inputNode.multiple = this.multiple;
+    this._inputNode.accept = this.accept;
 
     if (this.enableDropZone && this._isDragAndDropSupported) {
       this.__setupDragDropEventListeners();
@@ -371,84 +344,88 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
 
     if (changedProperties.has('_ariaLabelledNodes')) {
-      this.__syncAriaLabelledByAttributesToButton();
+      this.__syncAriaLabelledByToButton();
     }
 
     if (changedProperties.has('_ariaDescribedNodes')) {
-      this.__syncAriaDescribedByAttributesToButton();
+      this.__syncAriaDescribedByToButton();
     }
 
     /**
-     * Update _selectedFilesMetaData only if:
+     * Update _fileList only if:
      *   1. It is invoked from the file-removed event handler.
      *   2. There is a mismatch between the selected files and files on UI.
      */
     if (changedProperties.has('_fileSelectResponse')) {
-      if (this._selectedFilesMetaData.length === 0) {
-        this._fileSelectResponse.forEach(preResponse => {
-          const file = {
-            systemFile: {
-              name: preResponse.name,
+      this.__transformFileSelectResponseIntoFilelist();
+    }
+  }
+
+  __transformFileSelectResponseIntoFilelist() {
+    if (this._fileList.length === 0) {
+      this._fileSelectResponse.forEach(preResponse => {
+        const file = {
+          systemFile: {
+            name: preResponse.name,
+          },
+          response: preResponse,
+          status: preResponse.status,
+          validationFeedback: [
+            {
+              message: preResponse.errorMessage,
             },
-            response: preResponse,
-            status: preResponse.status,
-            validationFeedback: [
-              {
-                message: preResponse.errorMessage,
-              },
-            ],
-          };
-          // @ts-ignore
-          this._selectedFilesMetaData = [...this._selectedFilesMetaData, file];
-        });
-      }
-      this._selectedFilesMetaData.forEach(file => {
-        if (
-          !this._fileSelectResponse.some(response => response.name === file.systemFile.name) &&
-          !this.uploadOnFormSubmit
-        ) {
-          this.__removeFileFromList(file);
-        } else {
-          this._fileSelectResponse.forEach(response => {
-            if (response.name === file.systemFile.name) {
-              // eslint-disable-next-line no-param-reassign
-              file.response = response;
-              // eslint-disable-next-line no-param-reassign
-              file.downloadUrl = response.downloadUrl ? response.downloadUrl : file.downloadUrl;
-              // eslint-disable-next-line no-param-reassign
-              file.status = response.status;
-              // eslint-disable-next-line no-param-reassign
-              file.validationFeedback = [
-                {
-                  type: response.errorMessage?.length > 0 ? 'error' : 'success',
-                  message: response.errorMessage,
-                },
-              ];
-            }
-          });
-          // this._selectedFilesMetaData = [...this._selectedFilesMetaData];
-        }
+          ],
+        };
+        // @ts-ignore
+        this._fileList = [...this._fileList, file];
       });
     }
+    this._fileList.forEach(file => {
+      if (
+        !this._fileSelectResponse.some(response => response.name === file.systemFile.name) &&
+        !this.uploadOnFormSubmit
+      ) {
+        this.__removeFileFromList(file);
+      } else {
+        for (const response of this._fileSelectResponse) {
+          if (response.name === file.systemFile.name) {
+            // eslint-disable-next-line no-param-reassign
+            file.response = response;
+            // eslint-disable-next-line no-param-reassign
+            file.downloadUrl = response.downloadUrl ? response.downloadUrl : file.downloadUrl;
+            // eslint-disable-next-line no-param-reassign
+            file.status = response.status;
+            // eslint-disable-next-line no-param-reassign
+            file.validationFeedback = [
+              {
+                type: response.errorMessage?.length > 0 ? 'error' : 'success',
+                message: response.errorMessage,
+              },
+            ];
+            break;
+          }
+        }
+        this._fileSelectResponse.forEach(response => {});
+        // this._fileList = [...this._fileList];
+      }
+    });
   }
 
   // TODO: this method also triggers a validator...
   /**
    * @private
-   * @param {InputFile[]} fileList
+   * @param {File[]} fileList
    */
-  __computeNewAddedFiles(fileList) {
+  __computeNewFiles(fileList) {
     const computedFileList = fileList.filter(
       file =>
-        this._selectedFilesMetaData.findIndex(
-          existLionFile => existLionFile.systemFile.name === file.name,
-        ) === -1,
+        this._fileList.findIndex(existLionFile => existLionFile.systemFile.name === file.name) ===
+        -1,
     );
     // TODO: put this logic in the Validator itself. Changing the param should trigger a re-validate
     this.__duplicateFileNamesValidator.param = {
       show: fileList.length !== computedFileList.length,
     };
-    this.validate();
 
     return computedFileList;
   }
@@ -468,16 +445,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
 
     this._inputNode.files = ev.dataTransfer.files;
-    // @ts-ignore
+    // TODO: Normally, FormatMixin would sync modelValue via parser after 'input-value-changed'. Consider this here as well
     this.modelValue = Array.from(ev.dataTransfer.files);
-    // if same file is selected again, e.dataTransfer.files lists that file.
-    // So filter if the file already exists
-    // @ts-ignore
-    // const newFiles = this.__computeNewAddedFiles(Array.from(ev.dataTransfer.files));
-    // if (newFiles.length > 0) {
-    //   this._processFiles(newFiles);
-    // }
-    this._processFiles(Array.from(ev.dataTransfer.files));
+    this._processFiles(ev.dataTransfer.files);
   }
 
   /**
@@ -493,7 +463,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     // Here, we connect ourselves to the FormatMixin flow...
     // TODO: should we call super._onChange(ev) here instead?
     this._onUserInputChanged();
-    this._processFiles(/** @type {HTMLInputElement & {files:InputFile[]}} */ (ev.target)?.files);
+    this._processFiles(/** @type {HTMLInputElement & {files:FileList}} */ (ev.target)?.files);
   }
 
   /**
@@ -523,9 +493,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   }
 
   /**
-   * @protected
+   * @private
    */
-  __syncAriaLabelledByAttributesToButton() {
+  __syncAriaLabelledByToButton() {
     if (this._inputNode.hasAttribute('aria-labelledby')) {
       const ariaLabelledBy = this._inputNode.getAttribute('aria-labelledby');
       this._buttonNode?.setAttribute(
@@ -536,9 +506,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   }
 
   /**
-   * @protected
+   * @private
    */
-  __syncAriaDescribedByAttributesToButton() {
+  __syncAriaDescribedByToButton() {
     if (this._inputNode.hasAttribute('aria-describedby')) {
       const ariaDescribedby = this._inputNode.getAttribute('aria-describedby') || '';
       this._buttonNode?.setAttribute('aria-describedby', ariaDescribedby);
@@ -559,48 +529,41 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   /**
    * Runs on drag or change event
    *
-   * @param {InputFile[]} selectedFiles
+   * @param {FileList} selectedFiles
    * @protected
    */
   _processFiles(selectedFiles) {
     // file size and type validators are required only when file is selected and not in case of prefill
     // TODO: is this needed every time?
-    const newFiles = this.__computeNewAddedFiles(Array.from(selectedFiles));
-    if (!this.multiple && newFiles.length > 0) {
-      this._selectedFilesMetaData = [];
+    const newFiles = this.__computeNewFiles(Array.from(selectedFiles));
+    if (!newFiles.length) {
+      return;
+    }
+
+    if (!this.multiple) {
+      this._fileList = [];
       this._fileSelectResponse = [];
     }
 
-    /**
-     * @type {InputFile}
-     */
-    let fileObj;
     for (const [i, selectedFile] of newFiles.entries()) {
-      // @ts-ignore
-      fileObj = new FileHandle(selectedFile, this._acceptCriteria);
-      if (fileObj.failedProp?.length) {
-        this._handleErroredFiles(fileObj);
-        this._fileSelectResponse = [
-          ...this._fileSelectResponse,
-          {
-            name: fileObj.systemFile.name,
-            status: 'FAIL',
-            // @ts-expect-error
-            errorMessage: fileObj.validationFeedback[0].message,
-          },
-        ];
+      const fileHandle = new FileHandle(selectedFile, this._acceptCriteria);
+      if (fileHandle.failedProp?.length) {
+        this._addValidationFeedbackToFile(fileHandle);
+        this._fileSelectResponse.push({
+          name: fileHandle.systemFile.name,
+          status: 'FAIL',
+          // @ts-expect-error
+          errorMessage: fileHandle.validationFeedback[0].message,
+        });
         newFiles.splice(i, 1); // to make sure only the error-free files are sent in the file-list-changed event
       } else {
-        this._fileSelectResponse = [
-          ...this._fileSelectResponse,
-          {
-            name: fileObj.systemFile.name,
-            status: 'SUCCESS',
-          },
-        ];
+        this._fileSelectResponse.push({
+          name: fileHandle.systemFile.name,
+          status: 'SUCCESS',
+        });
       }
-      this._selectedFilesMetaData = [...this._selectedFilesMetaData, fileObj];
-      this._handleErrors();
+      this._fileList.push(fileHandle);
+      this._handleValidationFeedbackVisibility();
     }
 
     if (newFiles.length > 0) {
@@ -628,9 +591,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   /**
    * @protected
    */
-  _handleErrors() {
+  _handleValidationFeedbackVisibility() {
     let hasErrors = false;
-    this._selectedFilesMetaData.forEach(fileObj => {
+    this._fileList.forEach(fileObj => {
       if (fileObj.failedProp && fileObj.failedProp.length > 0) {
         hasErrors = true;
       }
@@ -653,12 +616,12 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   }
 
   /**
-   * @param {InputFile} fileObj
+   * @param {FileHandle} fileHandle
    * @protected
    */
   /* eslint-disable no-param-reassign */
-  _handleErroredFiles(fileObj) {
-    fileObj.validationFeedback = [];
+  _addValidationFeedbackToFile(fileHandle) {
+    fileHandle.validationFeedback = [];
     const { allowedFileExtensions, allowedFileTypes } = this._acceptCriteria;
     /**
      * @type {string[]}
@@ -696,27 +659,27 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
     let message = '';
     if (!lastItem) {
-      message = `${this.msgLit('lion-input-file:allowedFileSize', {
+      message = this.msgLit('lion-input-file:allowedFileSize', {
         maxSize: formatBytes(this.maxFileSize),
-      })}`;
+      });
     } else if (!arrayLength) {
-      message = `${this.msgLit('lion-input-file:allowedFileValidatorSimple', {
+      message = this.msgLit('lion-input-file:allowedFileValidatorSimple', {
         allowedType: lastItem,
         maxSize: formatBytes(this.maxFileSize),
-      })}`;
+      });
     } else {
-      message = `${this.msgLit('lion-input-file:allowedFileValidatorComplex', {
+      message = this.msgLit('lion-input-file:allowedFileValidatorComplex', {
         allowedTypesArray: array.join(', '),
         allowedTypesLastItem: lastItem,
         maxSize: formatBytes(this.maxFileSize),
-      })}`;
+      });
     }
 
     const errorObj = {
       message,
       type: 'error',
     };
-    fileObj.validationFeedback?.push(errorObj);
+    fileHandle.validationFeedback?.push(errorObj);
   }
 
   /**
@@ -724,7 +687,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @param {InputFile} removedFile
    */
   __removeFileFromList(removedFile) {
-    this._selectedFilesMetaData = this._selectedFilesMetaData.filter(
+    this._fileList = this._fileList.filter(
       currentFile => currentFile.systemFile.name !== removedFile.systemFile.name,
     );
     // checks if the file is not a pre-filled file
@@ -734,7 +697,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       );
     }
     this._inputNode.value = '';
-    this._handleErrors();
+    this._handleValidationFeedbackVisibility();
   }
 
   /**

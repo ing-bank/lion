@@ -799,22 +799,22 @@ export const backendValidation = () => {
   };
 
   class BackendValidator extends Validator {
-    static get validatorName() {
-      return 'backendValidator';
-    }
-    static get async() {
-      return true;
-    }
+    static validatorName = 'BackendValidator';
+
+    static async = true;
+
     async execute() {
       if (isBackendCallPending) {
         return await new Promise(resolve => (backendValidationResolver = resolve));
       }
       return false;
     }
+
     static getMessage({ fieldName, modelValue, params: param }) {
       return backendErrorMessage;
     }
   }
+
   return html`
     <style>
       lion-input[is-pending] {

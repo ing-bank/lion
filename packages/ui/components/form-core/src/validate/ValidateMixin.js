@@ -46,17 +46,12 @@ export const ValidateMixinImplementation = superclass =>
     SyncUpdatableMixin(DisabledMixin(SlotMixin(ScopedElementsMixin(superclass)))),
   ) {
     static get scopedElements() {
-      const scopedElementsCtor =
-        /** @type {typeof import('@open-wc/scoped-elements/types.js').ScopedElementsHost} */ (
-          super.constructor
-        );
       return {
-        ...scopedElementsCtor.scopedElements,
+        ...super.scopedElements,
         'lion-validation-feedback': LionValidationFeedback,
       };
     }
 
-    /** @type {any} */
     static get properties() {
       return {
         validators: { attribute: false },
@@ -759,7 +754,7 @@ export const ValidateMixinImplementation = superclass =>
           }
 
           const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);
-          _feedbackNode.feedbackData = messageMap.length ? messageMap : [];
+          _feedbackNode.feedbackData = messageMap || [];
         });
       } else {
         this.__feedbackQueue.add(async () => {
@@ -827,12 +822,7 @@ export const ValidateMixinImplementation = superclass =>
      * @protected
      */
     _hasFeedbackVisibleFor(type) {
-      return (
-        this.hasFeedbackFor &&
-        this.hasFeedbackFor.includes(type) &&
-        this.shouldShowFeedbackFor &&
-        this.shouldShowFeedbackFor.includes(type)
-      );
+      return this.hasFeedbackFor?.includes(type) && this.shouldShowFeedbackFor?.includes(type);
     }
 
     /**

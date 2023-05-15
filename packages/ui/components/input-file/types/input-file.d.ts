@@ -1,4 +1,4 @@
-import { FeedbackMessage } from "../../form-core/types/validate/ValidateMixinTypes.js";
+import { FeedbackMessage } from '../../form-core/types/validate/ValidateMixinTypes.js';
 
 type FileBasics = {
   name: string;
@@ -11,19 +11,20 @@ type FileBasics = {
 export type InputFile = {
   downloadUrl?: string;
   errorMessage?: FeedbackMessage.message;
-  failedProp?: Array<string|number>;
+  failedProp?: Array<string | number>;
   response?: FileSelectResponse;
   systemFile: Partial<SystemFile>;
   validationFeedback?: Array<FeedbackMessage>;
-} & FileBasics & Partial<File>;
+} & FileBasics &
+  Partial<File>;
 
 export type SystemFile = {
   downloadUrl?: string;
   errorMessage?: FeedbackMessage.message;
-  failedProp?: Array<string|number>;
+  failedProp?: Array<string | number>;
   response?: FileSelectResponse;
-} & FileBasics & Partial<File>;
-
+} & FileBasics &
+  Partial<File>;
 
 export type FileSelectResponse = {
   downloadUrl?: string;
