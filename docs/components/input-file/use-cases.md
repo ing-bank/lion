@@ -12,7 +12,7 @@ loadDefaultFeedbackMessages();
 
 ## Features
 
-API calls to upload the selected files can be done in below two ways which is driven by `uploadOnFormSubmit` property
+API calls to upload the selected files can be done in below two ways which is driven by `liveUpload` property
 
 - On `form` submit
 - On file selection
@@ -26,7 +26,7 @@ API calls to upload the selected files can be done in below two ways which is dr
   help-text="Signature scan file"
   max-file-size="1024000"
   accept="application/PDF"
-  upload-on-form-submit
+  live-upload
   .uploadResponse="${uploadResponse}"
 >
 </lion-input-file>
@@ -44,13 +44,13 @@ Boolean; setting to `true` allows selecting multiple files.
 
 Boolean; setting to `true` allows file upload through drag and drop.
 
-### uploadOnFormSubmit
+### liveUpload
 
 Boolean;
 
-- Set to `true` when API calls for file upload needs to be done on form submit.
-- Set to `false` when API calls for file upload needs to be done on file selection
-- Default is `true`.
+- Set to `true` when API calls for file upload need to be done on file selection
+- Set to `false` when API calls for file upload need to be done on form submit
+- Default is `false`.
 
 ### uploadResponse
 
@@ -324,8 +324,8 @@ export const uploadWithoutFormSubmit = () => {
     <lion-input-file
       label="Upload"
       name="upload"
-      .multiple="${true}"
-      .uploadOnFormSubmit="${false}"
+      multiple
+      live-upload
       @file-removed="${ev => {
         ev.target.uploadResponse[
           ev.target.uploadResponse.findIndex(file => file.name === ev.detail.uploadResponse.name)
@@ -405,7 +405,7 @@ export const dragAndDrop = () => {
 };
 ```
 
-### Posting file to API using axios
+### Posting file to API
 
 You can retrieve the uploaded files in `file-list-changed` event or from `modelValue` property of this component
 
@@ -413,11 +413,109 @@ To submit files you can refer to the following code snippet:
 
 ```js
 const formData = new FormData();
-const inputFile = document.querySelector('lion-input-file').modelValue;
-formData.append('file', inputFile.querySelector('input').files);
-axios.post('upload_file', formData, {
-  headers: {
-    'Content-Type': 'multipart/form-data',
-  },
+const inputFile = document.querySelector('lion-input-file');
+formData.append('file', inputFile.modelValue);
+await fetch('https://my.endpoint/upload_file', {
+  method: 'POST',
+  headers: { 'Content-Type': 'multipart/form-data' },
+  body: formData,
 });
+```
+
+## Server validation
+
+Server feedback about the upload progress should be communicated via Validators.
+This way we ensure we have an accessible solution
+For best feedback about the upload status, it's important your validation is wired up with a backend.
+
+```js preview-story
+export const backendValidation = () => {
+  // Mock
+  function fakeFetch(jsonResponse, ms = 0, withError = false) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(new Response(JSON.stringify(jsonResponse), { status: withError ? 400 : 200 }));
+      }, ms);
+    });
+  }
+
+  const backendValidationPromise = new Promise();
+  let backendData = {};
+  let isBackendCallPending = false;
+
+  const submitHandler = ev => {
+    const lionForm = ev.target;
+    if (lionForm.hasFeedbackFor.includes('error')) {
+      const firstFormElWithError = lionForm.formElements.find(el =>
+        el.hasFeedbackFor.includes('error'),
+      );
+      firstFormElWithError.focus();
+      return;
+    }
+    isBackendCallPending = true;
+    lionForm.formElements.upload.validate(); // => backendValidationPromise will resolve
+
+    // N.B. this output is backend dependent.
+    // Here we show an example of what the backend can look like
+    fakeFetch(
+      {
+        name: 'file1.txt', // name of uploaded file
+        status: 'FAIL', // SUCCESS | FAIL | LOADING
+        errorMessage: 'Upload failed', // custom error message to be displayed
+        id: 'abc', // unique id for future execution reference
+      },
+      {
+        name: 'file2.txt', // name of uploaded file
+        status: 'LOADING', // SUCCESS | FAIL | LOADING
+        errorMessage: 'Uploading takes longer than expected', // custom error message to be displayed
+        id: 'xyz', // unique id for future execution reference
+      },
+      2000,
+      true,
+    ).then(async response => {
+      if (response.status !== 200) {
+        backendData = await response.json();
+        backendValidationPromise.resolve(true);
+      }
+      backendValidationPromise.resolve(false);
+      isBackendCallPending = false;
+    });
+  };
+
+  class UploadStatus extends Validator {
+    static validatorName = 'UploadStatusPerFile';
+
+    static async = true;
+
+    async execute() {
+      if (isBackendCallPending) {
+        await backendValidationPromise;
+        return backendData.map(row => {fileName: row.name, status: status.toLowerCase()});
+      }
+      return false;
+    }
+
+    static getMessage({ fieldName, modelValue, params: param }) {
+      return backendData.map(row => {name: row.name, feedbackMessage: row.errorMessage, type: status.toLowerCase()});
+    }
+  }
+
+  return html`
+    <style>
+      lion-input[is-pending] {
+        opacity: 0.5;
+      }
+    </style>
+    <lion-form @submit=${submitHandler}>
+      <form>
+        <lion-input-file
+          label="Upload files"
+          name="upload"
+          .validators="${[new UploadStatus()]}"
+        ></lion-input-file>
+        <lion-button-submit>Submit</lion-button-submit>
+      </form>
+    </lion-form>
+  `;
+};
 ```

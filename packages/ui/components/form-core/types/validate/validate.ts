@@ -34,14 +34,16 @@ export type ValidatorConfig = {
 };
 
 /**
- * Output of the `execute` function that returns a validity outcome. When we need to shpw feedback,
- * it should return true, otherwise false. So when an error\info|warning|success message
+ * Output of the `execute` function that returns a validity outcome. When we need to show feedback,
+ * it should return true, otherwise false. So when an error|info|warning|success message
  * needs to be shown, return true.
  * It's also possible to return an enum. Let's say that a phone number can have multiple
  * states: 'invalid-country-code' | 'too-long' | 'too-short'
- * Those states can be retrieved in the getMessage function.
+ * Those states can be retrieved in the `getMessage` function.
+ * For advanced use cases like LionInputFile that has multiple validation messages for array entries
+ * in the modelValue, an array of feedback states can be returned.
  */
-export type ValidatorOutcome = string | boolean;
+export type ValidatorOutcome = boolean | string | Array<object>;
 
 /**
  * Data object that will be provided to `getMessage()` method

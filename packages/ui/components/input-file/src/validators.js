@@ -5,8 +5,39 @@ import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorConfig} ValidatorConfig
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorParam} ValidatorParam
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorOutcome} ValidatorOutcome
- * @typedef {import('../types/input-file.js').InputFile} InputFile
+ * @typedef {import('../types/input-file.js').AcceptCriteria} AcceptCriteria
+ * @typedef {import('../types/input-file.js').AcceptCategory} AcceptCategory
+ * @typedef {import('../types/input-file.js').ModelValueFile} ModelValueFile
+ * @typedef {import('../types/input-file.js').ValidatorOutcomeOfIsAcceptedFile} ValidatorOutcomeOfIsAcceptedFile
  */
+
+// /**
+//  *
+//  * @param {string[]} allowedFileTypes
+//  */
+// function getMessageMetaAllowedFileTypes(allowedFileTypes) {
+//   const array = [];
+//   for (const mimeTypeString of allowedFileTypes) {
+//     if (mimeTypeString.endsWith('/*')) {
+//       array.push(mimeTypeString.slice(0, -2));
+//     } else if (mimeTypeString === 'text/plain') {
+//       array.push('text');
+//     } else {
+//       const index = mimeTypeString.indexOf('/');
+//       const subTypes = mimeTypeString.slice(index + 1);
+//       if (!subTypes.includes('+')) {
+//         array.push(`.${subTypes}`);
+//       } else {
+//         const subType = subTypes.split('+');
+//         array.push(`.${subType[0]}`);
+//       }
+//     }
+//   }
+//   const lastItem = array.pop();
+//   // arrayLength = array.length;
+
+//   return {};
+// }
 
 /* eslint max-classes-per-file: ["error", 2] */
 export class IsAcceptedFile extends Validator {
@@ -48,127 +79,59 @@ export class IsAcceptedFile extends Validator {
   }
 
   /**
-   * @param {FileHandle} fileHandle
-   * @protected
+   * @param {File[]} modelValue array of file objects
+   * @param {AcceptCriteria} acceptCriteria
+   * @returns {ValidatorOutcomeOfIsAcceptedFile|false}
    */
-  /* eslint-disable no-param-reassign */
-  _validateAgainstAcceptCriteria(fileHandle) {
-    fileHandle.validationFeedback = [];
-    const { allowedFileExtensions, allowedFileTypes } = this._acceptCriteria;
+  execute(modelValue, acceptCriteria = this.param) {
     /**
-     * @type {string[]}
+     * The array that will be returned by the execute function in case there are
+     * errors found in any of the accept criteria categories ('type'|'extension'|'size')
+     * @type {ValidatorOutcomeOfIsAcceptedFile}
      */
-    let array = [];
-    let arrayLength = 0;
-    let lastItem;
-
-    if (allowedFileExtensions.length) {
-      array = allowedFileExtensions;
-      // eslint-disable-next-line no-return-assign
-      array = array.map(item => (item = `.${item}`));
-      lastItem = array.pop();
-      arrayLength = array.length;
-    } else if (allowedFileTypes.length) {
-      allowedFileTypes.forEach(MIMETypes => {
-        if (MIMETypes.endsWith('/*')) {
-          array.push(MIMETypes.slice(0, -2));
-        } else if (MIMETypes === 'text/plain') {
-          array.push('text');
-        } else {
-          const index = MIMETypes.indexOf('/');
-          const subTypes = MIMETypes.slice(index + 1);
-
-          if (!subTypes.includes('+')) {
-            array.push(`.${subTypes}`);
-          } else {
-            const subType = subTypes.split('+');
-            array.push(`.${subType[0]}`);
-          }
-        }
-      });
-      lastItem = array.pop();
-      arrayLength = array.length;
-    }
-    let message = '';
-    if (!lastItem) {
-      return 'too-large';
-      // message = this.msgLit('lion-input-file:allowedFileSize', {
-      //   maxSize: formatBytes(this.maxFileSize),
-      // });
-    } else if (!arrayLength) {
-      return 'simple';
-
-      // message = this.msgLit('lion-input-file:allowedFileValidatorSimple', {
-      //   allowedType: lastItem,
-      //   maxSize: formatBytes(this.maxFileSize),
-      // });
-    } else {
-      return 'complex';
-
-      // message = this.msgLit('lion-input-file:allowedFileValidatorComplex', {
-      //   allowedTypesArray: array.join(', '),
-      //   allowedTypesLastItem: lastItem,
-      //   maxSize: formatBytes(this.maxFileSize),
-      // });
-    }
-
-    const errorObj = {
-      message,
-      type: 'error',
-    };
-    fileHandle.validationFeedback?.push(errorObj);
-  }
-
-  /**
-   * @param {Array<File>} modelValue array of file objects
-   * @param {{ allowedFileTypes: string[]; allowedFileExtensions: string[]; maxFileSize: number; }} params
-   * @returns {Boolean}
-   */
-  execute(modelValue, params = this.param) {
-    let isInvalidType;
-    let isInvalidFileExt;
-
-    console.log('hhmm ja');
-
+    const outcomeForAllFiles = [];
     const ctor = /** @type {typeof IsAcceptedFile} */ (this.constructor);
-    const { allowedFileTypes, allowedFileExtensions, maxFileSize } = params;
-    if (allowedFileTypes?.length) {
-      isInvalidType = modelValue.some(file => !ctor.isFileTypeAllowed(file.type, allowedFileTypes));
-      return isInvalidType;
-    }
-    if (allowedFileExtensions?.length) {
-      isInvalidFileExt = modelValue.some(
-        file => !ctor.isExtensionAllowed(ctor.getExtension(file.name), allowedFileExtensions),
+
+    /**
+     * @param {AcceptCategory} acceptCategory
+     * @param {File[]} filesInvalidForCategory
+     */
+    const addValidatorOutcomeForCategory = (acceptCategory, filesInvalidForCategory) => {
+      for (const f of filesInvalidForCategory) {
+        // Did we already add this file for a different AcceptCategory?
+        const foundItem = outcomeForAllFiles.find(o => o.name === f.name && o.size === f.size);
+        const item = foundItem || { ...f, validatorOutcome: [] };
+        item.validatorOutcome.push({ name: acceptCategory, acceptCriteria });
+      }
+    };
+
+    if (acceptCriteria.allowedFileTypes?.length) {
+      const filesWithInvalidType = modelValue.filter(
+        f => !ctor.isFileTypeAllowed(f.type, acceptCriteria.allowedFileTypes),
       );
-      return isInvalidFileExt;
+      addValidatorOutcomeForCategory('type', filesWithInvalidType);
     }
-    const invalidFileSize = modelValue.findIndex(
-      file => !ctor.checkFileSize(file.size, maxFileSize),
+
+    if (acceptCriteria.allowedFileExtensions?.length) {
+      const filesWithInvalidExt = modelValue.filter(
+        f =>
+          !ctor.isExtensionAllowed(ctor.getExtension(f.name), acceptCriteria.allowedFileExtensions),
+      );
+      addValidatorOutcomeForCategory('extension', filesWithInvalidExt);
+    }
+
+    const filesWithInvalidSize = modelValue.filter(
+      file => !ctor.checkFileSize(file.size, acceptCriteria.maxFileSize),
     );
-    return invalidFileSize > -1;
+    addValidatorOutcomeForCategory('size', filesWithInvalidSize);
+
+    if (!outcomeForAllFiles.length) {
+      return false;
+    }
+
+    return outcomeForAllFiles;
   }
 }
-
-/** @param {FeedbackMessageData} data */
-// @ts-ignore
-IsAcceptedFile.getMessage = async data => {
-  await forMessagesToBeReady();
-  const { type, outcome } = data;
-  if (outcome === 'too-long') {
-    // TODO: get max-length of country and use MaxLength validator
-    return localize.msg(`lion-validate:${type}.Pattern`, data);
-  }
-  if (outcome === 'too-short') {
-    // TODO: get min-length of country and use MinLength validator
-    return localize.msg(`lion-validate:${type}.Pattern`, data);
-  }
-  // TODO: add a more specific message here
-  if (outcome === 'invalid-country-code') {
-    return localize.msg(`lion-validate:${type}.Pattern`, data);
-  }
-  return localize.msg(`lion-validate:${type}.Pattern`, data);
-};
-
 export class DuplicateFileNames extends Validator {
   static validatorName = 'DuplicateFileNames';
 

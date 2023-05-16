@@ -3,7 +3,7 @@ Added functionality on top of platform input[type=file]:
 - validation for selected files mismatching accept criteria
 - max file size
 - customizable selection button
-- uploadOnFormSubmit
+- liveUpload
 - advanced drag and drop support
   - When multiple is true, dragged files will be added to the existing list. (This is different from native behavior. TDOO: is this a conscious UX)choice?
   - customizable drag and drop zone
