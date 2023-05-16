@@ -1,3 +1,4 @@
+/* eslint-disable lit-a11y/no-autofocus */
 import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
 import '@lion/ui/define/lion-dialog.js';
@@ -70,6 +71,61 @@ describe('lion-dialog', () => {
       // @ts-expect-error [allow-protected-in-tests]
       await nestedDialogEl._overlayCtrl._showComplete;
       expect(nestedDialogEl.opened).to.be.true;
+    });
+  });
+
+  describe('focus', () => {
+    it('sets focus on contentSlot by default', async () => {
+      const el = await fixture(html`
+        <lion-dialog>
+          <button slot="invoker">invoker button</button>
+          <div slot="content">
+            <label for="myInput">Label</label>
+            <input id="myInput" />
+          </div>
+        </lion-dialog>
+      `);
+      // @ts-expect-error [allow-protected-in-tests]
+      const invokerNode = el._overlayInvokerNode;
+      invokerNode.focus();
+      invokerNode.click();
+      const contentNode = el.querySelector('[slot="content"]');
+      expect(document.activeElement).to.equal(contentNode);
+    });
+
+    it('sets focus on autofocused element', async () => {
+      const el = await fixture(html`
+        <lion-dialog>
+          <button slot="invoker">invoker button</button>
+          <div slot="content">
+            <label for="myInput">Label</label>
+            <input id="myInput" autofocus />
+          </div>
+        </lion-dialog>
+      `);
+      // @ts-expect-error [allow-protected-in-tests]
+      const invokerNode = el._overlayInvokerNode;
+      invokerNode.focus();
+      invokerNode.click();
+      const input = el.querySelector('input');
+      expect(document.activeElement).to.equal(input);
+    });
+
+    it('with trapsKeyboardFocus set to false the focus stays on the invoker', async () => {
+      const el = /** @type {LionDialog} */ await fixture(html`
+        <lion-dialog .config=${{ trapsKeyboardFocus: false }}>
+          <button slot="invoker">invoker button</button>
+          <div slot="content">
+            <label for="myInput">Label</label>
+            <input id="myInput" autofocus />
+          </div>
+        </lion-dialog>
+      `);
+      // @ts-expect-error [allow-protected-in-tests]
+      const invokerNode = el._overlayInvokerNode;
+      invokerNode.focus();
+      invokerNode.click();
+      expect(document.activeElement).to.equal(invokerNode);
     });
   });
 });
