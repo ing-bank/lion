@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.2.2
+
+### Patch Changes
+
+- 88e6ca03: [localize] parseNumbers as heuristic if there is only 1 separator and 2 or less decimals e.g. 12.34
+
 ## 0.2.1
 
 ### Patch Changes
