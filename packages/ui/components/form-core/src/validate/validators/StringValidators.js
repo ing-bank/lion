@@ -6,6 +6,25 @@ import { Validator } from '../Validator.js';
  */
 const isString = value => typeof value === 'string';
 
+/**
+ * Custom HTML sanitization function to prevent XSS attacks.
+ * @param {string} value - The HTML input to be sanitized
+ * @returns {string} - The sanitized HTML output
+ */
+export function sanitizeHTML(value) {
+  // Replace potentially dangerous characters
+  const sanitizedValue = value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/`/g, '&#x60;')
+    .replace(/<iframe/gi, '&lt;iframe');
+
+  return sanitizedValue;
+}
+
 export class IsString extends Validator {
   static get validatorName() {
     return 'IsString';
@@ -17,9 +36,11 @@ export class IsString extends Validator {
   // eslint-disable-next-line class-methods-use-this
   execute(value) {
     let hasError = false;
-    if (!isString(value)) {
+
+    if (!isString(value) || value !== sanitizeHTML(value)) {
       hasError = true;
     }
+
     return hasError;
   }
 }

@@ -9,6 +9,7 @@ import {
   IsEmail,
   Pattern,
 } from '@lion/ui/form-core.js';
+import { sanitizeHTML } from '../../src/validate/validators/StringValidators.js';
 
 describe('String Validation', () => {
   it('provides new IsString() to allow only strings', () => {
@@ -134,5 +135,23 @@ describe('String Validation', () => {
     }).to.throw(
       'Psst... Pattern validator expects RegExp object as parameter e.g, new Pattern(/#LionRocks/) or new Pattern(RegExp("#LionRocks")',
     );
+  });
+  it('sanitizes HTML characters to prevent XSS attacks', () => {
+    const inputValue = '<script>alert("XSS attack");</script>';
+    const sanitizedValue = sanitizeHTML(inputValue);
+
+    expect(sanitizedValue).to.equal('&lt;script&gt;alert(&quot;XSS attack&quot;);&lt;/script&gt;');
+  });
+
+  it('provides new IsString() to allow only sanitized strings', () => {
+    let hasError;
+    const validator = new IsString();
+    expect(IsString.validatorName).to.equal('IsString');
+
+    hasError = validator.execute('foo');
+    expect(hasError).to.be.false;
+
+    hasError = validator.execute('<script>alert("XSS attack");</script>');
+    expect(hasError).to.be.true;
   });
 });
