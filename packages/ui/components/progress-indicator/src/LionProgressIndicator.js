@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LitElement, nothing } from 'lit';
 import { getLocalizeManager, LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
+import { supportedLocales } from '../../localize/src/LocalizeConfig.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -26,60 +27,8 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
     return [
       {
         'lion-progress-indicator': /** @param {string} locale */ locale => {
-          switch (locale) {
-            case 'bg-BG':
-            case 'bg':
-              return import('@lion/ui/progress-indicator-translations/bg.js');
-            case 'cs-CZ':
-            case 'cs':
-              return import('@lion/ui/progress-indicator-translations/cs.js');
-            case 'de-DE':
-            case 'de':
-              return import('@lion/ui/progress-indicator-translations/de.js');
-            case 'en-AU':
-            case 'en-GB':
-            case 'en-US':
-            case 'en-PH':
-            case 'en':
-              return import('@lion/ui/progress-indicator-translations/en.js');
-            case 'es-ES':
-            case 'es':
-              return import('@lion/ui/progress-indicator-translations/es.js');
-            case 'fr-BE':
-            case 'fr-FR':
-            case 'fr':
-              return import('@lion/ui/progress-indicator-translations/fr.js');
-            case 'hu-HU':
-            case 'hu':
-              return import('@lion/ui/progress-indicator-translations/hu.js');
-            case 'it-IT':
-            case 'it':
-              return import('@lion/ui/progress-indicator-translations/it.js');
-            case 'nl-BE':
-            case 'nl-NL':
-            case 'nl':
-              return import('@lion/ui/progress-indicator-translations/nl.js');
-            case 'pl-PL':
-            case 'pl':
-              return import('@lion/ui/progress-indicator-translations/pl.js');
-            case 'ro-RO':
-            case 'ro':
-              return import('@lion/ui/progress-indicator-translations/ro.js');
-            case 'ru-RU':
-            case 'ru':
-              return import('@lion/ui/progress-indicator-translations/ru.js');
-            case 'sk-SK':
-            case 'sk':
-              return import('@lion/ui/progress-indicator-translations/sk.js');
-            case 'uk-UA':
-            case 'uk':
-              return import('@lion/ui/progress-indicator-translations/uk.js');
-            case 'zh-CN':
-            case 'zh':
-              return import('@lion/ui/progress-indicator-translations/zh.js');
-            default:
-              return import('@lion/ui/progress-indicator-translations/en.js');
-          }
+          const localeCode = supportedLocales[locale] || 'en';
+          return import(`@lion/ui/progress-indicator-translations/${localeCode}.js`);
         },
       },
     ];

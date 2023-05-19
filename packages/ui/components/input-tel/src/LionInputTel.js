@@ -7,7 +7,7 @@ import { liveFormatPhoneNumber } from './preprocessors.js';
 import { formatPhoneNumber } from './formatters.js';
 import { parsePhoneNumber } from './parsers.js';
 import { PhoneNumber } from './validators.js';
-import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
+import { supportedLocales } from '../../localize/src/LocalizeConfig.js';
 
 /**
  * @typedef {import('../types/index.js').RegionCode} RegionCode
@@ -30,10 +30,17 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     _phoneUtil: { type: Object, state: true },
   };
 
-  static localizeNamespaces = [
-    { 'lion-input-tel': localizeNamespaceLoader },
-    ...super.localizeNamespaces,
-  ];
+  static get localizeNamespaces() {
+    return [
+      {
+        'lion-input-tel': /** @param {string} locale */ locale => {
+          const localeCode = supportedLocales[locale] || 'en';
+          return import(`@lion/ui/input-tel-translations/${localeCode}.js`);
+        },
+      },
+      ...super.localizeNamespaces,
+    ];
+  }
 
   /**
    * Currently active region based on:

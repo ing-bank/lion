@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LitElement, html, css } from 'lit';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
+import { supportedLocales } from '../../localize/src/LocalizeConfig.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -40,46 +41,8 @@ export class LionPagination extends LocalizeMixin(LitElement) {
     return [
       {
         'lion-pagination': /** @param {string} locale */ locale => {
-          switch (locale) {
-            case 'bg-BG':
-              return import('@lion/ui/pagination-translations/bg.js');
-            case 'cs-CZ':
-              return import('@lion/ui/pagination-translations/cs.js');
-            case 'de-AT':
-            case 'de-DE':
-              return import('@lion/ui/pagination-translations/de.js');
-            case 'en-AU':
-            case 'en-GB':
-            case 'en-PH':
-            case 'en-US':
-              return import('@lion/ui/pagination-translations/en.js');
-            case 'es-ES':
-              return import('@lion/ui/pagination-translations/es.js');
-            case 'fr-FR':
-            case 'fr-BE':
-              return import('@lion/ui/pagination-translations/fr.js');
-            case 'hu-HU':
-              return import('@lion/ui/pagination-translations/hu.js');
-            case 'it-IT':
-              return import('@lion/ui/pagination-translations/it.js');
-            case 'nl-BE':
-            case 'nl-NL':
-              return import('@lion/ui/pagination-translations/nl.js');
-            case 'pl-PL':
-              return import('@lion/ui/pagination-translations/pl.js');
-            case 'ro-RO':
-              return import('@lion/ui/pagination-translations/ro.js');
-            case 'ru-RU':
-              return import('@lion/ui/pagination-translations/ru.js');
-            case 'sk-SK':
-              return import('@lion/ui/pagination-translations/sk.js');
-            case 'uk-UA':
-              return import('@lion/ui/pagination-translations/uk.js');
-            case 'zh-CN':
-              return import('@lion/ui/pagination-translations/zh.js');
-            default:
-              return import('@lion/ui/pagination-translations/en.js');
-          }
+          const localeCode = supportedLocales[locale] || 'en';
+          return import(`@lion/ui/pagination-translations/${localeCode}.js`);
         },
       },
       ...super.localizeNamespaces,

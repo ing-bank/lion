@@ -6,6 +6,7 @@ import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { css, html } from 'lit';
 import { makeMatchingTextBold, unmakeMatchingTextBold } from './utils/makeMatchingTextBold.js';
 import { MatchesOption } from './validators.js';
+import { supportedLocales } from '../../localize/src/LocalizeConfig.js';
 
 const matchA11ySpanReverseFns = new WeakMap();
 
@@ -85,61 +86,8 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
     return [
       {
         'lion-combobox': /** @param {string} locale */ locale => {
-          switch (locale) {
-            case 'bg-BG':
-            case 'bg':
-              return import('@lion/ui/combobox-translations/bg.js');
-            case 'cs-CZ':
-            case 'cs':
-              return import('@lion/ui/combobox-translations/cs.js');
-            case 'de-AT':
-            case 'de-DE':
-            case 'de':
-              return import('@lion/ui/combobox-translations/de.js');
-            case 'en-AU':
-            case 'en-GB':
-            case 'en-PH':
-            case 'en-US':
-            case 'en':
-              return import('@lion/ui/combobox-translations/en.js');
-            case 'es-ES':
-            case 'es':
-              return import('@lion/ui/combobox-translations/es.js');
-            case 'fr-FR':
-            case 'fr-BE':
-            case 'fr':
-              return import('@lion/ui/combobox-translations/fr.js');
-            case 'hu-HU':
-            case 'hu':
-              return import('@lion/ui/combobox-translations/hu.js');
-            case 'it-IT':
-            case 'it':
-              return import('@lion/ui/combobox-translations/it.js');
-            case 'nl-BE':
-            case 'nl-NL':
-            case 'nl':
-              return import('@lion/ui/combobox-translations/nl.js');
-            case 'pl-PL':
-            case 'pl':
-              return import('@lion/ui/combobox-translations/pl.js');
-            case 'ro-RO':
-            case 'ro':
-              return import('@lion/ui/combobox-translations/ro.js');
-            case 'ru-RU':
-            case 'ru':
-              return import('@lion/ui/combobox-translations/ru.js');
-            case 'sk-SK':
-            case 'sk':
-              return import('@lion/ui/combobox-translations/sk.js');
-            case 'uk-UA':
-            case 'uk':
-              return import('@lion/ui/combobox-translations/uk.js');
-            case 'zh-CN':
-            case 'zh':
-              return import('@lion/ui/combobox-translations/zh.js');
-            default:
-              return import('@lion/ui/combobox-translations/en.js');
-          }
+          const localeCode = supportedLocales[locale] || 'en';
+          return import(`@lion/ui/combobox-translations/${localeCode}.js`);
         },
       },
       ...super.localizeNamespaces,
