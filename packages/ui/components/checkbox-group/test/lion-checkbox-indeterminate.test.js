@@ -1,6 +1,7 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
+import sinon from 'sinon';
 import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox-indeterminate.js';
@@ -564,6 +565,7 @@ describe('<lion-checkbox-indeterminate>', () => {
       const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
         el.querySelector('lion-checkbox-indeterminate')
       );
+      const clock = sinon.useFakeTimers();
 
       expect(elIndeterminate.mixedState).to.be.true;
       expect(elIndeterminate.checked).to.be.false;
@@ -571,18 +573,21 @@ describe('<lion-checkbox-indeterminate>', () => {
 
       // @ts-ignore for testing purposes, we access this protected getter
       elIndeterminate._inputNode.click();
+      clock.tick(100);
       await elIndeterminate.updateComplete;
       expect(elIndeterminate.checked).to.be.true;
       expect(elIndeterminate.indeterminate).to.be.false;
 
       // @ts-ignore for testing purposes, we access this protected getter
       elIndeterminate._inputNode.click();
+      clock.tick(100);
       await elIndeterminate.updateComplete;
       expect(elIndeterminate.checked).to.be.false;
       expect(elIndeterminate.indeterminate).to.be.false;
 
       // @ts-ignore for testing purposes, we access this protected getter
       elIndeterminate._inputNode.click();
+      clock.tick(100);
       await elIndeterminate.updateComplete;
       expect(elIndeterminate.checked).to.be.false;
       expect(elIndeterminate.indeterminate).to.be.true;
@@ -605,22 +610,28 @@ describe('<lion-checkbox-indeterminate>', () => {
         Array.from(el.querySelectorAll('lion-checkbox'))
       );
 
+      const clock = sinon.useFakeTimers();
       expect(checkboxEls.map(checkboxEl => checkboxEl.checked)).to.eql([true, false, false]);
 
       // @ts-ignore for testing purposes, we access this protected getter
       elIndeterminate._inputNode.click();
+      clock.tick(100);
       await elIndeterminate.updateComplete;
       expect(checkboxEls.map(checkboxEl => checkboxEl.checked)).to.eql([true, true, true]);
 
       // @ts-ignore for testing purposes, we access this protected getter
       elIndeterminate._inputNode.click();
+      clock.tick(100);
       await elIndeterminate.updateComplete;
       expect(checkboxEls.map(checkboxEl => checkboxEl.checked)).to.eql([false, false, false]);
 
       // @ts-ignore for testing purposes, we access this protected getter
       elIndeterminate._inputNode.click();
+      clock.tick(100);
       await elIndeterminate.updateComplete;
       expect(checkboxEls.map(checkboxEl => checkboxEl.checked)).to.eql([true, false, false]);
+
+      clock.restore();
     });
 
     it('should no longer reach indeterminate state if the child boxes are all checked or all unchecked during indeterminate state', async () => {

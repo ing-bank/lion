@@ -207,7 +207,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
    * @protected
    */
   _onRequestToAddFormElement() {
-    this._setOwnCheckedState();
+    setTimeout(() => this._setOwnCheckedState(), 100);
   }
 
   constructor() {
