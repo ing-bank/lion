@@ -1086,7 +1086,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
         expect(input.modelValue).to.equal('Foo');
       });
 
-      it('clears interaction state', async () => {
+      it.only('clears interaction state', async () => {
         const el = /**  @type {FormGroup} */ (
           await fixture(html`<${tag} touched dirty>${inputSlots}</${tag}>`)
         );

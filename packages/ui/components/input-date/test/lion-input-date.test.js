@@ -67,7 +67,33 @@ describe('<lion-input-date>', () => {
     expect(el.validationStates.error).not.to.have.property('MaxDate');
   });
 
-  describe('locale', () => {
+  it('serializes to iso format', async () => {
+    const el = await fixture(html`
+      <lion-input-date .modelValue="${new Date('2000/12/15')}"></lion-input-date>
+    `);
+    expect(el.serializedValue).to.equal('2000-12-15');
+  });
+
+  // So new Date('2000/12/30') equals new Date('2000/12/30')
+  it.only('performs hasChanged check based on "equalsDate" check', async () => {
+    let callCount = 0;
+    const el = await fixture(html`
+      <lion-input-date
+        .modelValue="${new Date('2000/12/30')}"
+        @model-value-changed="${() => {
+          callCount += 1;
+        }}"
+      ></lion-input-date>
+    `);
+    callCount = 0;
+    el.modelValue = new Date('2000/12/30');
+
+    console.log(Array.from(el.constructor.elementProperties));
+
+    expect(callCount).to.equal(0);
+  });
+
+  describe('Localization', () => {
     it('uses formatOptions.locale', async () => {
       const el = await fixture(html`
         <lion-input-date
@@ -112,79 +138,74 @@ describe('<lion-input-date>', () => {
       await el.updateComplete;
       expect(el.formattedValue).to.equal('15/06/2017'); // should stay british
     });
+
+    describe('Timezones', async () => {
+      const dateAmsterdam = new Date(
+        new Date('2017/06/15').toLocaleString('en-US', { timeZone: 'Europe/Amsterdam' }),
+      );
+      const dateManila = new Date(
+        new Date('2017/06/15').toLocaleString('en-US', { timeZone: 'Asia/Manila' }),
+      );
+      const dateNewYork = new Date(
+        new Date('2017/06/15').toLocaleString('en-US', { timeZone: 'America/New_York' }),
+      );
+
+      it('works with different timezones', async () => {
+        const el = await fixture(html`
+          <lion-input-date .modelValue=${dateAmsterdam}></lion-input-date>
+        `);
+        expect(el.formattedValue).to.equal('15/06/2017', 'Europe/Amsterdam');
+
+        el.modelValue = dateManila;
+        expect(el.formattedValue).to.equal('15/06/2017', 'Asia/Manila');
+
+        el.modelValue = dateNewYork;
+        expect(el.formattedValue).to.equal('14/06/2017', 'America/New_York');
+      });
+
+      it('validators work with different timezones', async () => {
+        const el = await fixture(html`
+          <lion-input-date
+            .modelValue=${new Date('2017/06/15')}
+            .validators=${[new MinDate(new Date('2017/06/14'))]}
+          ></lion-input-date>
+        `);
+        expect(el.formattedValue).to.equal('15/06/2017', 'Europe/Amsterdam');
+        expect(el.hasFeedbackFor).not.to.include('error', 'Europe/Amsterdam');
+
+        el.modelValue = dateManila;
+        expect(el.formattedValue).to.equal('15/06/2017', 'Asia/Manila');
+        expect(el.hasFeedbackFor).not.to.include('error', 'Asia/Manila');
+
+        el.modelValue = dateNewYork;
+        expect(el.formattedValue).to.equal('14/06/2017', 'America/New_York');
+        expect(el.hasFeedbackFor).not.to.include('error', 'America/New_York');
+      });
+    });
   });
 
-  describe('timezones', async () => {
-    const dateAmsterdam = new Date(
-      new Date('2017/06/15').toLocaleString('en-US', { timeZone: 'Europe/Amsterdam' }),
-    );
-    const dateManila = new Date(
-      new Date('2017/06/15').toLocaleString('en-US', { timeZone: 'Asia/Manila' }),
-    );
-    const dateNewYork = new Date(
-      new Date('2017/06/15').toLocaleString('en-US', { timeZone: 'America/New_York' }),
-    );
-
-    it('works with different timezones', async () => {
+  describe('Accessibility', () => {
+    it('is accessible', async () => {
       const el = await fixture(html`
-        <lion-input-date .modelValue=${dateAmsterdam}></lion-input-date>
+        <lion-input-date><label slot="label">Label</label></lion-input-date>
       `);
-      expect(el.formattedValue).to.equal('15/06/2017', 'Europe/Amsterdam');
-
-      el.modelValue = dateManila;
-      expect(el.formattedValue).to.equal('15/06/2017', 'Asia/Manila');
-
-      el.modelValue = dateNewYork;
-      expect(el.formattedValue).to.equal('14/06/2017', 'America/New_York');
+      await expect(el).to.be.accessible();
     });
 
-    it('validators work with different timezones', async () => {
+    it('is accessible when readonly', async () => {
       const el = await fixture(html`
-        <lion-input-date
-          .modelValue=${new Date('2017/06/15')}
-          .validators=${[new MinDate(new Date('2017/06/14'))]}
-        ></lion-input-date>
+        <lion-input-date readonly .modelValue=${new Date('2017/06/15')}
+          ><label slot="label">Label</label></lion-input-date
+        >
       `);
-      expect(el.formattedValue).to.equal('15/06/2017', 'Europe/Amsterdam');
-      expect(el.hasFeedbackFor).not.to.include('error', 'Europe/Amsterdam');
-
-      el.modelValue = dateManila;
-      expect(el.formattedValue).to.equal('15/06/2017', 'Asia/Manila');
-      expect(el.hasFeedbackFor).not.to.include('error', 'Asia/Manila');
-
-      el.modelValue = dateNewYork;
-      expect(el.formattedValue).to.equal('14/06/2017', 'America/New_York');
-      expect(el.hasFeedbackFor).not.to.include('error', 'America/New_York');
+      await expect(el).to.be.accessible();
     });
-  });
 
-  it('is accessible', async () => {
-    const el = await fixture(html`
-      <lion-input-date><label slot="label">Label</label></lion-input-date>
-    `);
-    await expect(el).to.be.accessible();
-  });
-
-  it('is accessible when readonly', async () => {
-    const el = await fixture(html`
-      <lion-input-date readonly .modelValue=${new Date('2017/06/15')}
-        ><label slot="label">Label</label></lion-input-date
-      >
-    `);
-    await expect(el).to.be.accessible();
-  });
-
-  it('is accessible when disabled', async () => {
-    const el = await fixture(html`
-      <lion-input-date disabled><label slot="label">Label</label></lion-input-date>
-    `);
-    await expect(el).to.be.accessible();
-  });
-
-  it('serializes to iso format', async () => {
-    const el = await fixture(html`
-      <lion-input-date .modelValue="${new Date('2000/12/15')}"></lion-input-date>
-    `);
-    expect(el.serializedValue).to.equal('2000-12-15');
+    it('is accessible when disabled', async () => {
+      const el = await fixture(html`
+        <lion-input-date disabled><label slot="label">Label</label></lion-input-date>
+      `);
+      await expect(el).to.be.accessible();
+    });
   });
 });
