@@ -12,6 +12,7 @@ import {
 } from '@lion/ui/overlays.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
+import { IsDate } from '../../../exports/form-core.js';
 
 /**
  * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
@@ -373,10 +374,12 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    * The LionCalendar shouldn't know anything about the modelValue;
    * it can't handle Unparseable dates, but does handle 'undefined'
    * @param {?} modelValue
-   * @returns {Date|undefined} a 'guarded' modelValue
+   * @returns {Date} a 'guarded' modelValue
    */
   static __getSyncDownValue(modelValue) {
-    return modelValue instanceof Date ? modelValue : undefined;
+    const isDate = new IsDate();
+    const hasError = isDate.execute(modelValue);
+    return hasError ? undefined : modelValue;
   }
 
   /**
