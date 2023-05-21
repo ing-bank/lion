@@ -360,6 +360,16 @@ describe('<lion-input-datepicker>', () => {
         expect(el.__calendarMaxDate.toString()).to.equal(new Date('2019/07/15').toString());
       });
 
+      it('should validate default value', async () => {
+        const myDate = new Date('30/01/2022');
+        const el = await fixture(html`
+          <lion-input-datepicker .modelValue="${myDate}"></lion-input-datepicker>
+        `);
+        expect(el.hasFeedbackFor).to.include('error');
+        expect(el.validationStates).to.have.property('error');
+        expect(el.validationStates.error).to.have.property('IsDate');
+      });
+
       /**
        * Not in scope:
        * - min/max attr (like platform has): could be added in future if observers needed
