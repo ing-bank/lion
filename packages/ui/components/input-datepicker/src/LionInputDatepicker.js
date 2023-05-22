@@ -4,6 +4,7 @@ import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
+import { IsDate } from '@lion/ui/form-core.js';
 import {
   OverlayMixin,
   withBottomSheetConfig,
@@ -12,7 +13,6 @@ import {
 } from '@lion/ui/overlays.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
-import { IsDate } from '@lion/ui/form-core.js';
 
 /**
  * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
