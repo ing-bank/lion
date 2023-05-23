@@ -83,7 +83,7 @@ Faulty prefilled input will be cleared
 
 ```js preview-story
 export const faultyPrefilled = () => html`
-  <lion-input-datepicker .modelValue="${new Date('30/01/2022')}">
+  <lion-input-datepicker label="Faulty prefiiled" .modelValue="${new Date('30/01/2022')}">
   </lion-input-datepicker>
 `;
 ```
