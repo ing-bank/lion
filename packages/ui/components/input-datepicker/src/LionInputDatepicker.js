@@ -12,7 +12,7 @@ import {
 } from '@lion/ui/overlays.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
-import { IsDate } from '../../../exports/form-core.js';
+import { IsDate } from '@lion/ui/form-core.js';
 
 /**
  * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
