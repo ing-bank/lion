@@ -572,7 +572,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      * @type {InputFile}
      */
     let fileObj;
-    for (const [i, selectedFile] of _newFiles.entries()) {
+    for (const selectedFile of _newFiles.values()) {
       // @ts-ignore
       fileObj = new FileHandle(selectedFile, this.fileLimit);
       if (fileObj.failedProp && fileObj.failedProp.length > 0) {
@@ -586,7 +586,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
             errorMessage: fileObj.validationFeedback[0].message,
           },
         ];
-        _newFiles.splice(i, 1); // to make sure only the error-free files are sent in the file-list-changed event
       } else {
         this.fileSelectResponse = [
           ...this.fileSelectResponse,
@@ -600,8 +599,14 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       this._handleErrors();
     }
 
-    if (_newFiles.length > 0) {
-      this._dispatchFileListChangeEvent(_newFiles);
+    // only send error-free files to file-list-changed event
+    const _successFiles = this._selectedFilesMetaData.filter(
+      ({ systemFile, status }) =>
+        _newFiles.includes(/** @type {InputFile} */ (systemFile)) && status === 'SUCCESS',
+    );
+
+    if (_successFiles.length > 0) {
+      this._dispatchFileListChangeEvent(_successFiles);
     }
   }
 

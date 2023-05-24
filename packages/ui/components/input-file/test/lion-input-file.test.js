@@ -78,7 +78,7 @@ describe('lion-input-file', () => {
 
     expect(fileListChangedEvent).to.exist;
     expect(fileListChangedEvent.detail.newFiles.length).to.equal(1);
-    expect(fileListChangedEvent.detail.newFiles[0].name).to.equal('foo.txt');
+    expect(fileListChangedEvent.detail.newFiles[0].systemFile.name).to.equal('foo.txt');
   });
 
   it('should select 1 file', async () => {
@@ -382,7 +382,7 @@ describe('lion-input-file', () => {
   });
 
   it('should send "file-list-changed" event if selecting files succeeded partially', async () => {
-    const el = await fixture(html`<lion-input-file max-file-size="2"></lion-input-file>`);
+    const el = await fixture(html`<lion-input-file multiple max-file-size="3"></lion-input-file>`);
 
     // Size of this file is 4 bytes
     const fileWrongSize = /** @type {InputFile} */ (new File(['foobar'], 'foobar.txt'));
@@ -393,7 +393,7 @@ describe('lion-input-file', () => {
 
     const fileListChangedEvent = await oneEvent(el, 'file-list-changed');
 
-    expect(el._selectedFilesMetaData.length).to.equal(1);
+    expect(el._selectedFilesMetaData.length).to.equal(2);
     expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
     expect(el.fileSelectResponse[0].status).to.equal('FAIL');
 
@@ -550,8 +550,8 @@ describe('lion-input-file', () => {
       expect(fileListChangedEvent1).to.exist;
       expect(el._selectedFilesMetaData.length).to.equal(4);
       expect(fileListChangedEvent1.detail.newFiles.length).to.equal(2);
-      expect(fileListChangedEvent1.detail.newFiles[0].name).to.equal('foo3.txt');
-      expect(fileListChangedEvent1.detail.newFiles[1].name).to.equal('foo4.txt');
+      expect(fileListChangedEvent1.detail.newFiles[0].systemFile.name).to.equal('foo3.txt');
+      expect(fileListChangedEvent1.detail.newFiles[1].systemFile.name).to.equal('foo4.txt');
     });
 
     it('should not allow duplicate files to be selected and show notification message', async () => {
@@ -570,7 +570,7 @@ describe('lion-input-file', () => {
 
       expect(fileListChangedEvent).to.exist;
       expect(fileListChangedEvent.detail.newFiles.length).to.equal(1);
-      expect(fileListChangedEvent.detail.newFiles[0].name).to.equal('foo.txt');
+      expect(fileListChangedEvent.detail.newFiles[0].systemFile.name).to.equal('foo.txt');
 
       const fileDuplicate = /** @type {InputFile} */ (
         new File(['foo'], 'foo.txt', {
@@ -583,6 +583,32 @@ describe('lion-input-file', () => {
       expect(el._selectedFilesMetaData.length).to.equal(1);
       expect(el.hasFeedbackFor).to.deep.equals(['info'], 'hasFeedbackFor');
       expect(el.showsFeedbackFor).to.deep.equals(['info'], 'showsFeedbackFor');
+    });
+
+    it('should add valid files and skip invalid ones', async () => {
+      const fileWrongSize = /** @type {InputFile} */ (new File(['foobar'], 'foobar.txt'));
+      const fileWrongType = /** @type {InputFile} */ (
+        new File(['foobar'], 'foobar.txt', {
+          type: 'xxxxx',
+        })
+      );
+
+      const el = await fixture(
+        html` <lion-input-file multiple max-file-size="3" accept=".txt"></lion-input-file> `,
+      );
+
+      setTimeout(() => {
+        _mimiSelectFile(el, [file, fileWrongSize, file2, fileWrongType]);
+      });
+
+      const fileListChangedEvent = await oneEvent(el, 'file-list-changed');
+      // filesListChanged(el, fileListChangedEvent);
+
+      expect(el._selectedFilesMetaData.length).to.equal(4);
+      expect(fileListChangedEvent).to.exist;
+      expect(fileListChangedEvent.detail.newFiles.length).to.equal(2);
+      expect(fileListChangedEvent.detail.newFiles[0].systemFile.name).to.equal('foo.txt');
+      expect(fileListChangedEvent.detail.newFiles[1].systemFile.name).to.equal('bar.txt');
     });
   });
 

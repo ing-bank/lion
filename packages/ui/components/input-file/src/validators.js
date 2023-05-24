@@ -75,6 +75,12 @@ export class FileValidation extends Validator {
     );
     return invalidFileSize > -1;
   }
+
+  // @todo: validation should be handled with ValidateMixin so overriding getMessage to return an empty string should
+  //        not be necessary anymore
+  static async getMessage() {
+    return '';
+  }
 }
 
 export class DuplicateFileNames extends Validator {
