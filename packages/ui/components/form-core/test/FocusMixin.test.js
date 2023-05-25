@@ -323,6 +323,39 @@ describe('FocusMixin', () => {
         spy4.restore();
         restoreMock4();
       });
+
+      it('has mirrors syncs autofocus on the focusable element when autofocus changes', async () => {
+        const el = /** @type {Focusable} */ (
+          await fixture(html`
+          <${tag}><input slot="input"></${tag}>
+        `)
+        );
+
+        // @ts-ignore [allow-protected] in test
+        const { _focusableNode } = el;
+
+        el.setAttribute('autofocus', '');
+        await el.updateComplete;
+        expect(_focusableNode.hasAttribute('autofocus')).to.be.true;
+
+        el.removeAttribute('autofocus');
+        await el.updateComplete;
+        expect(_focusableNode.hasAttribute('autofocus')).not.to.be.true;
+      });
+
+      it('has mirrors syncs autofocus on the focusable element when autofocus was set on render', async () => {
+        const el = /** @type {Focusable} */ (
+          await fixture(html`
+          <${tag} autofocus><input slot="input"></${tag}>
+        `)
+        );
+
+        // @ts-ignore [allow-protected] in test
+        const { _focusableNode } = el;
+
+        expect(el.hasAttribute('autofocus')).to.be.true;
+        expect(_focusableNode.hasAttribute('autofocus')).to.be.true;
+      });
     });
   });
 });
