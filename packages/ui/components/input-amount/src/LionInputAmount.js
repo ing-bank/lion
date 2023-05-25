@@ -31,6 +31,11 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
        * validators.
        */
       modelValue: Number,
+      /**
+       * The slot to put the currency display node in. Can be 'prefix', 'suffix', 'before' and 'after'.
+       * Default will be 'after'.
+       */
+      _currencyDisplayNodeSlot: { attribute: false },
       locale: { attribute: false },
     };
   }
@@ -38,7 +43,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   get slots() {
     return {
       ...super.slots,
-      after: () => {
+      [this._currencyDisplayNodeSlot]: () => {
         const el = document.createElement('span');
         // The data-label attribute will make sure that FormControl adds this to
         // input[aria-labelledby]
@@ -70,6 +75,8 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this.locale = undefined;
     this.__currencyDisplayNodeIsConnected = true;
     this.defaultValidators.push(new IsNumber());
+    /** @protected */
+    this._currencyDisplayNodeSlot = 'after';
   }
 
   connectedCallback() {
@@ -103,14 +110,14 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
   /**
    * Upon connecting slot mixin, we should check if
-   * the after slot was created by the slot mixin,
+   * the required slot was created by the slot mixin,
    * and if so, we should execute the currency changed flow
    * which evaluates whether the slot node should be
    * removed for invalid currencies
    */
   _connectSlotMixin() {
     super._connectSlotMixin();
-    if (this._isPrivateSlot('after')) {
+    if (this._isPrivateSlot(this._currencyDisplayNodeSlot)) {
       this._onCurrencyChanged({ currency: this.currency || null });
     }
   }
@@ -179,7 +186,9 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
    * @private
    */
   get __currencyDisplayNode() {
-    const node = Array.from(this.children).find(child => child.slot === 'after');
+    const node = Array.from(this.children).find(
+      child => child.slot === this._currencyDisplayNodeSlot,
+    );
     if (node) {
       this.__storedCurrencyDisplayNode = node;
     }
