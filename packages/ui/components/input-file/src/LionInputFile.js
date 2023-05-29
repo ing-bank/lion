@@ -57,7 +57,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         attribute: 'max-file-size',
       },
       multiple: Boolean,
-      uploadOnFormSubmit: {
+      uploadOnSelect: {
         type: Boolean,
         attribute: 'upload-on-form-submit',
       },
@@ -172,7 +172,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      */
     this.fileSelectResponse = [];
     this.__initialFileSelectResponse = this.fileSelectResponse;
-    this.uploadOnFormSubmit = true;
+    this.uploadOnSelect = false;
     this.multiple = false;
     this.enableDropZone = false;
     this.maxFileSize = MAX_FILE_SIZE;
@@ -399,7 +399,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       this._selectedFilesMetaData.forEach(file => {
         if (
           !this.fileSelectResponse.some(response => response.name === file.systemFile.name) &&
-          !this.uploadOnFormSubmit
+          this.uploadOnSelect
         ) {
           this.removeFileFromList(file);
         } else {
@@ -745,7 +745,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       return;
     }
     const { removedFile } = ev.detail;
-    if (this.uploadOnFormSubmit && removedFile) {
+    if (!this.uploadOnSelect && removedFile) {
       this.removeFileFromList(removedFile);
     }
 
