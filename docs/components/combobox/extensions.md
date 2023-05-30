@@ -1,4 +1,4 @@
-# Combobox >> Examples ||30
+# Combobox >> Extensions ||30
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

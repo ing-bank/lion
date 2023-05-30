@@ -1,4 +1,4 @@
-# Input Tel Dropdown >> Examples ||30
+# Input Tel Dropdown >> Extensions ||30
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
