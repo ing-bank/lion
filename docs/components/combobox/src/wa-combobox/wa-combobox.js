@@ -15,164 +15,162 @@ class WaOption extends LionOption {
     };
   }
 
-  static get styles() {
-    return [
-      ...super.styles,
-      css`
-        :host {
-          --background-default: white;
-          --background-default-active: gray;
-          --secondary: #777;
-          --secondary-lighter: #aaa;
-          --chatlist-icon: #aaa;
-          background-color: var(--background-default);
-          cursor: pointer;
-          color: rgb(74, 74, 74);
-          padding: 0;
-          transition: max-height 0.4s ease, opacity 0.3s ease;
-          max-height: 500px;
-        }
+  static styles = [
+    ...super.styles,
+    css`
+      :host {
+        --background-default: white;
+        --background-default-active: gray;
+        --secondary: #777;
+        --secondary-lighter: #aaa;
+        --chatlist-icon: #aaa;
+        background-color: var(--background-default);
+        cursor: pointer;
+        color: rgb(74, 74, 74);
+        padding: 0;
+        transition: max-height 0.4s ease, opacity 0.3s ease;
+        max-height: 500px;
+      }
 
-        :host([checked]) {
-          background-color: #eee;
-        }
+      :host([checked]) {
+        background-color: #eee;
+      }
 
-        :host(:hover) {
-          background-color: #f6f6f6;
-        }
+      :host(:hover) {
+        background-color: #f6f6f6;
+      }
 
-        .wa-option {
-          position: relative;
-          display: flex;
-          flex-direction: row;
-          height: 72px;
-          pointer-events: all;
-        }
+      .wa-option {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        height: 72px;
+        pointer-events: all;
+      }
 
-        .wa-option__image {
-          display: flex;
-          flex: none;
-          align-items: center;
-          margin-top: -1px;
-          padding: 0 15px 0 13px;
-        }
+      .wa-option__image {
+        display: flex;
+        flex: none;
+        align-items: center;
+        margin-top: -1px;
+        padding: 0 15px 0 13px;
+      }
 
-        .wa-option__image-inner {
-          position: relative;
-          overflow: hidden;
-          background-color: var(--avatar-background);
-          border-radius: 50%;
-          height: 49px;
-          width: 49px;
-        }
+      .wa-option__image-inner {
+        position: relative;
+        overflow: hidden;
+        background-color: var(--avatar-background);
+        border-radius: 50%;
+        height: 49px;
+        width: 49px;
+      }
 
-        .wa-option__image-inner img,
-        .wa-option__image-inner svg {
-          width: 100%;
-          height: 100%;
-        }
+      .wa-option__image-inner img,
+      .wa-option__image-inner svg {
+        width: 100%;
+        height: 100%;
+      }
 
-        .wa-option__image-inner-inner {
-          position: absolute;
-          top: 0;
-          z-index: 1;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 100%;
-          height: 100%;
-        }
+      .wa-option__image-inner-inner {
+        position: absolute;
+        top: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+      }
 
-        .wa-option__content {
-          display: flex;
-          flex-basis: auto;
-          flex-direction: column;
-          flex-grow: 1;
-          justify-content: center;
-          min-width: 0;
-          border-bottom: 1px solid #eee;
-          padding-right: 15px;
-        }
+      .wa-option__content {
+        display: flex;
+        flex-basis: auto;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: center;
+        min-width: 0;
+        border-bottom: 1px solid #eee;
+        padding-right: 15px;
+      }
 
-        .wa-option__content-row1 {
-          display: flex;
-          align-items: center;
-          line-height: normal;
-          text-align: left;
-        }
+      .wa-option__content-row1 {
+        display: flex;
+        align-items: center;
+        line-height: normal;
+        text-align: left;
+      }
 
-        .wa-option__content-row1-title {
-          display: flex;
-          flex-grow: 1;
-          overflow: hidden;
-          color: var(--primary-strong);
-          font-weight: 400;
-          font-size: 17px;
-          line-height: 21px;
-        }
+      .wa-option__content-row1-title {
+        display: flex;
+        flex-grow: 1;
+        overflow: hidden;
+        color: var(--primary-strong);
+        font-weight: 400;
+        font-size: 17px;
+        line-height: 21px;
+      }
 
-        .wa-option__content-row1-time {
-          line-height: 14px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          margin-left: 6px;
-          margin-top: 3px;
+      .wa-option__content-row1-time {
+        line-height: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-left: 6px;
+        margin-top: 3px;
 
-          flex: none;
-          max-width: 100%;
-          color: var(--secondary-lighter);
-          font-size: 12px;
-          line-height: 20px;
-        }
+        flex: none;
+        max-width: 100%;
+        color: var(--secondary-lighter);
+        font-size: 12px;
+        line-height: 20px;
+      }
 
-        .wa-option__content-row2 {
-          display: flex;
-          align-items: center;
-          min-height: 20px;
-          color: var(--secondary);
-          font-size: 13px;
-          line-height: 20px;
-          margin-top: 2px;
-          /* color: var(--secondary-stronger); */
-        }
+      .wa-option__content-row2 {
+        display: flex;
+        align-items: center;
+        min-height: 20px;
+        color: var(--secondary);
+        font-size: 13px;
+        line-height: 20px;
+        margin-top: 2px;
+        /* color: var(--secondary-stronger); */
+      }
 
-        .wa-option__content-row2-text {
-          flex-grow: 1;
-          overflow: hidden;
-          font-weight: 400;
-          font-size: 14px;
-          line-height: 20px;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
+      .wa-option__content-row2-text {
+        flex-grow: 1;
+        overflow: hidden;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 20px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
 
-        .wa-option__content-row2-text-inner {
-          display: flex;
-          align-items: flex-start;
-        }
+      .wa-option__content-row2-text-inner {
+        display: flex;
+        align-items: flex-start;
+      }
 
-        .wa-option__content-row2-text-inner-icon {
-          display: none;
-          flex: none;
-          color: var(--chatlist-icon);
-          vertical-align: top;
-          margin-right: 2px;
-        }
+      .wa-option__content-row2-text-inner-icon {
+        display: none;
+        flex: none;
+        color: var(--chatlist-icon);
+        vertical-align: top;
+        margin-right: 2px;
+      }
 
-        :host([is-user-text]) .wa-option__content-row2-text-inner-icon {
-          display: inline-block;
-        }
+      :host([is-user-text]) .wa-option__content-row2-text-inner-icon {
+        display: inline-block;
+      }
 
-        :host([is-user-text-read]) .wa-option__content-row2-text-inner-icon {
-          color: lightblue;
-        }
-        /*
+      :host([is-user-text-read]) .wa-option__content-row2-text-inner-icon {
+        color: lightblue;
+      }
+      /*
       .wa-option__content-row2-menu {
       } */
-      `,
-    ];
-  }
+    `,
+  ];
 
   render() {
     return html`<div class="wa-option">
@@ -285,59 +283,56 @@ class WaOption extends LionOption {
 customElements.define('wa-option', WaOption);
 
 class WaCombobox extends LionCombobox {
-  static get styles() {
-    return [
-      ...super.styles,
-      css`
-        :host {
-          font-family: SF Pro Text, SF Pro Icons, system, -apple-system, system-ui,
-            BlinkMacSystemFont, Helvetica Neue, Helvetica, Lucida Grande, Kohinoor Devanagari,
-            sans-serif;
-        }
+  static styles = [
+    ...super.styles,
+    css`
+      :host {
+        font-family: SF Pro Text, SF Pro Icons, system, -apple-system, system-ui, BlinkMacSystemFont,
+          Helvetica Neue, Helvetica, Lucida Grande, Kohinoor Devanagari, sans-serif;
+      }
 
-        .input-group__container {
-          display: flex;
-          border-bottom: none;
-        }
+      .input-group__container {
+        display: flex;
+        border-bottom: none;
+      }
 
-        * > ::slotted([role='listbox']) {
-          max-height: none;
-        }
+      * > ::slotted([role='listbox']) {
+        max-height: none;
+      }
 
-        * > ::slotted([slot='input']) {
-          font-size: 14px;
-        }
+      * > ::slotted([slot='input']) {
+        font-size: 14px;
+      }
 
-        .input-group {
-          padding: 15px;
-          background: #f6f6f6;
-        }
+      .input-group {
+        padding: 15px;
+        background: #f6f6f6;
+      }
 
-        .input-group__prefix {
-          margin-right: 20px;
-          color: #999;
-          display: flex;
-        }
+      .input-group__prefix {
+        margin-right: 20px;
+        color: #999;
+        display: flex;
+      }
 
-        .input-group__container {
-          border-radius: 18px;
-          background: white;
-          padding: 7px;
-          padding-left: 16px;
-        }
+      .input-group__container {
+        border-radius: 18px;
+        background: white;
+        padding: 7px;
+        padding-left: 16px;
+      }
 
-        /** Undo Popper */
-        #overlay-content-node-wrapper {
-          position: static !important;
-          width: auto !important;
-          transform: none !important;
+      /** Undo Popper */
+      #overlay-content-node-wrapper {
+        position: static !important;
+        width: auto !important;
+        transform: none !important;
 
-          /* height: 300px;
+        /* height: 300px;
           overflow: scroll; */
-        }
-      `,
-    ];
-  }
+      }
+    `,
+  ];
 
   get slots() {
     return {
@@ -360,7 +355,7 @@ class WaCombobox extends LionCombobox {
     /** @configure OverlayMixin */
     this.opened = true;
     /** @configure LionCombobox */
-    this.showAllOnEmpty = true;
+    this.showAllOnEmpty = false;
     /** @configure LionCombobox */
     this.rotateKeyboardNavigation = false;
   }

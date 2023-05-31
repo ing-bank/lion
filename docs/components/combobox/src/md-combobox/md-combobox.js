@@ -7,31 +7,29 @@ import './style/load-roboto.js';
 
 // TODO: insert ink wc here
 export class MdOption extends LionOption {
-  static get styles() {
-    return [
-      ...super.styles,
-      css`
-        :host {
-          position: relative;
-          padding: 8px;
-        }
+  static styles = [
+    ...super.styles,
+    css`
+      :host {
+        position: relative;
+        padding: 8px;
+      }
 
-        :host([focused]) {
-          background: lightgray;
-        }
+      :host([focused]) {
+        background: lightgray;
+      }
 
-        :host([active]) {
-          color: #1867c0 !important;
-          caret-color: #1867c0 !important;
-        }
+      :host([active]) {
+        color: #1867c0 !important;
+        caret-color: #1867c0 !important;
+      }
 
-        :host ::slotted(.md-highlight) {
-          color: rgba(0, 0, 0, 0.38);
-          background: #eee;
-        }
-      `,
-    ];
-  }
+      :host ::slotted(.md-highlight) {
+        color: rgba(0, 0, 0, 0.38);
+        background: #eee;
+      }
+    `,
+  ];
 
   /**
    * @override
@@ -67,23 +65,27 @@ export class MdOption extends LionOption {
 customElements.define('md-option', MdOption);
 
 export class MdCombobox extends MdFieldMixin(LionCombobox) {
-  static get styles() {
-    return [
-      ...super.styles,
-      css`
-        .input-group__container {
-          display: flex;
-          border-bottom: none;
-        }
+  static styles = [
+    ...super.styles,
+    css`
+      .input-group__container {
+        display: flex;
+        border-bottom: none;
+      }
 
-        * > ::slotted([role='listbox']) {
-          box-shadow: 0 4px 6px 0 rgba(32, 33, 36, 0.28);
-          padding-top: 8px;
-          padding-bottom: 8px;
-          top: 2px;
-        }
-      `,
-    ];
+      * > ::slotted([role='listbox']) {
+        box-shadow: 0 4px 6px 0 rgba(32, 33, 36, 0.28);
+        padding-top: 8px;
+        padding-bottom: 8px;
+        top: 2px;
+      }
+    `,
+  ];
+
+  constructor() {
+    super();
+
+    this.showAllOnEmpty = true;
   }
 }
 customElements.define('md-combobox', MdCombobox);

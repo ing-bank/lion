@@ -33,7 +33,7 @@ export const main = () => html`
 `;
 ```
 
-[...show more](./examples.md)
+[...show more](./extensions.md)
 
 ## Features
 

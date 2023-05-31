@@ -397,7 +397,10 @@ export class GoogleCombobox extends LionCombobox {
   get slots() {
     return {
       ...super.slots,
-      label: () => renderLitAsNode(html` <img alt="Google Search" src="${googleSearchLogoUrl}" />`),
+      label: () =>
+        renderLitAsNode(
+          html` <img alt="Google Search" src="${googleSearchLogoUrl}" style="width:auto; " />`,
+        ),
       prefix: () => renderLitAsNode(html` <span>${googleSearchIcon}</span> `),
       suffix: () =>
         renderLitAsNode(
