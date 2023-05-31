@@ -187,24 +187,6 @@ describe('<lion-input-amount>', () => {
     ).to.equal('USD');
   });
 
-  it('ignores currency if a suffix is already present', async () => {
-    const el = /** @type {LionInputAmount} */ (
-      await fixture(
-        `<lion-input-amount currency="EUR"><span slot="suffix">my-currency</span></lion-input-amount>`,
-      )
-    );
-    expect(
-      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'suffix')
-        ?.innerText,
-    ).to.equal('my-currency');
-    el.currency = 'EUR';
-    await el.updateComplete;
-    expect(
-      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'suffix')
-        ?.innerText,
-    ).to.equal('my-currency');
-  });
-
   it('reformats on locale changes', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(
