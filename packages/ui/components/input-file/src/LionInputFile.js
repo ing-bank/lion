@@ -46,7 +46,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       buttonLabel: { type: String, attribute: 'button-label' },
       maxFileSize: { type: Number, attribute: 'max-file-size' },
       enableDropZone: { type: Boolean, attribute: 'enable-drop-zone' },
-      uploadOnFormSubmit: { type: Boolean, attribute: 'upload-on-form-submit' },
+      uploadOnSelect: { type: Boolean, attribute: 'upload-on-select' },
       _fileSelectResponse: { type: Array, state: false },
       _selectedFilesMetaData: { type: Array, state: true },
     };
@@ -157,7 +157,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      */
     this.__initialFileSelectResponse = this._fileSelectResponse;
     // TODO: public default booleans are always false
-    this.uploadOnFormSubmit = true;
+    this.uploadOnSelect = false;
     this.multiple = false;
     this.enableDropZone = false;
     this.maxFileSize = MAX_FILE_SIZE;
@@ -405,7 +405,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       this._selectedFilesMetaData.forEach(file => {
         if (
           !this._fileSelectResponse.some(response => response.name === file.systemFile.name) &&
-          !this.uploadOnFormSubmit
+          this.uploadOnSelect
         ) {
           this.__removeFileFromList(file);
         } else {
@@ -575,7 +575,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      * @type {InputFile}
      */
     let fileObj;
-    for (const [i, selectedFile] of newFiles.entries()) {
+    for (const selectedFile of newFiles.values()) {
       // @ts-ignore
       fileObj = new FileHandle(selectedFile, this._acceptCriteria);
       if (fileObj.failedProp?.length) {
@@ -589,7 +589,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
             errorMessage: fileObj.validationFeedback[0].message,
           },
         ];
-        newFiles.splice(i, 1); // to make sure only the error-free files are sent in the file-list-changed event
       } else {
         this._fileSelectResponse = [
           ...this._fileSelectResponse,
@@ -603,8 +602,16 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       this._handleErrors();
     }
 
-    if (newFiles.length > 0) {
-      this._dispatchFileListChangeEvent(newFiles);
+    // only send error-free files to file-list-changed event
+    const _successFiles = this._selectedFilesMetaData
+      .filter(
+        ({ systemFile, status }) =>
+          newFiles.includes(/** @type {InputFile} */ (systemFile)) && status === 'SUCCESS',
+      )
+      .map(({ systemFile }) => /** @type {InputFile} */ (systemFile));
+
+    if (_successFiles.length > 0) {
+      this._dispatchFileListChangeEvent(_successFiles);
     }
   }
 
@@ -746,7 +753,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       return;
     }
     const { removedFile } = ev.detail;
-    if (this.uploadOnFormSubmit && removedFile) {
+    if (!this.uploadOnSelect && removedFile) {
       this.__removeFileFromList(removedFile);
     }
 

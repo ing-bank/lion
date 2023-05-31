@@ -12,7 +12,7 @@ loadDefaultFeedbackMessages();
 
 ## Features
 
-API calls to upload the selected files can be done in below two ways which is driven by `uploadOnFormSubmit` property
+API calls to upload the selected files can be done in below two ways which is driven by `uploadOnSelect` property
 
 - On `form` submit
 - On file selection
@@ -44,13 +44,13 @@ Boolean; setting to `true` allows selecting multiple files.
 
 Boolean; setting to `true` allows file upload through drag and drop.
 
-### uploadOnFormSubmit
+### uploadOnSelect
 
 Boolean;
 
-- Set to `true` when API calls for file upload needs to be done on form submit.
-- Set to `false` when API calls for file upload needs to be done on file selection
-- Default is `true`.
+- Set to `true` when API calls for file upload needs to be done on file selection
+- Set to `false` when API calls for file upload needs to be done on form submit.
+- Default is `false`.
 
 ### uploadResponse
 
@@ -300,7 +300,7 @@ export const withIngForm = () => {
 
 ### Without form submit
 
-Set `uploadOnFromSubmit` property to `false`. This option can be used when Server API calls are needed as soon as it is selected by the user.
+Set `uploadOnSelect` property to `true`. This option can be used when Server API calls are needed as soon as it is selected by the user.
 
 For this scenario, the list of files is displayed based on the `uploadResponse` property which needs to maintained by the consumers of this component
 
@@ -325,7 +325,7 @@ export const uploadWithoutFormSubmit = () => {
       label="Upload"
       name="upload"
       .multiple="${true}"
-      .uploadOnFormSubmit="${false}"
+      .uploadOnSelect="${true}"
       @file-removed="${ev => {
         ev.target.uploadResponse[
           ev.target.uploadResponse.findIndex(file => file.name === ev.detail.uploadResponse.name)

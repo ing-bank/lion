@@ -951,7 +951,7 @@ describe('lion-input-file', () => {
     });
   });
 
-  describe('uploadOnFormSubmit as false', () => {
+  describe('uploadOnSelect as true', () => {
     it('should not remove file on click of cross button and fire file-removed event', async () => {
       /**
        * @type {Partial<InputFile>}
@@ -964,7 +964,7 @@ describe('lion-input-file', () => {
       };
 
       const el = await fixture(html`
-        <lion-input-file .uploadOnFormSubmit="${false}"> </lion-input-file>
+        <lion-input-file .uploadOnSelect="${true}"> </lion-input-file>
       `);
 
       el.modelValue = [file];
@@ -1009,7 +1009,7 @@ describe('lion-input-file', () => {
       const el = await fixture(html`
         <lion-input-file
           label="Select"
-          .uploadOnFormSubmit="${false}"
+          .uploadOnSelect="${true}"
           ._fileSelectResponse="${[
             {
               name: 'file1.txt',
