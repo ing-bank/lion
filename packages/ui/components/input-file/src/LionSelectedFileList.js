@@ -24,13 +24,8 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
 
   static get properties() {
     return {
-      ...super.properties,
-      fileList: {
-        type: Array,
-      },
-      multiple: {
-        type: Boolean,
-      },
+      fileList: { type: Array },
+      multiple: { type: Boolean },
     };
   }
 
@@ -60,6 +55,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
 
   _enhanceLightDomA11y() {
     const fileFeedbackElementList = this.shadowRoot?.querySelectorAll('[id^="file-feedback"]');
+    // TODO: this will break as soon as a Subclasser changes the template ...
     const inputFileNode = this.parentNode?.parentNode;
     fileFeedbackElementList?.forEach(feedbackEl => {
       // Generic focus/blur handling that works for both Fields/FormGroups
@@ -73,17 +69,19 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
   }
 
   /**
+   * @protected
    * @param {InputFile} removedFile
    */
   _removeFile(removedFile) {
     this.dispatchEvent(
+      // TODO: do we need bubble and composed for an internal event that only LionInputFile should know about?
       new CustomEvent('file-remove-requested', {
-        composed: true,
-        bubbles: true,
+        // composed: true,
+        // bubbles: true,
         detail: {
           removedFile,
           status: removedFile.status,
-          fileSelectResponse: removedFile.response,
+          _fileSelectResponse: removedFile.response,
         },
       }),
     );
@@ -109,11 +107,11 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
   /**
    * @protected
    * @param {InputFile} file
-   * @return {TemplateResult}
+   * @return {TemplateResult|nothing}
    */
   // eslint-disable-next-line class-methods-use-this, no-unused-vars
-  _labelBeforeTemplate(file) {
-    return html`📄`;
+  _listItemBeforeTemplate(file) {
+    return nothing;
   }
 
   /**
@@ -123,7 +121,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
    * @return {TemplateResult}
    */
   // eslint-disable-next-line no-unused-vars
-  _labelAfterTemplate(file, fileUuid) {
+  _listItemAfterTemplate(file, fileUuid) {
     return html`
       <button
         class="selected__list__item__remove-button"
@@ -143,7 +141,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
    */
   // eslint-disable-next-line class-methods-use-this
   _removeButtonContentTemplate() {
-    return html`x`;
+    return html`✖️`;
   }
 
   /**
@@ -156,7 +154,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
     return html`
       <div class="selected__list__item" status="${file.status ? file.status.toLowerCase() : ''}">
         <div class="selected__list__item__label">
-          ${this._labelBeforeTemplate(file)}
+          ${this._listItemBeforeTemplate(file)}
           <span id="selected-list-item-label-${fileUuid}" class="selected__list__item__label__text">
             <span class="sr-only">${this.msgLit('lion-input-file:fileNameDescriptionLabel')}</span>
             ${file.downloadUrl && file.status !== 'LOADING'
@@ -173,7 +171,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
                 `
               : file.systemFile?.name}
           </span>
-          ${this._labelAfterTemplate(file, fileUuid)}
+          ${this._listItemAfterTemplate(file, fileUuid)}
         </div>
         ${file.status === 'FAIL' && file.validationFeedback
           ? html`
@@ -190,7 +188,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
   }
 
   render() {
-    return this.fileList && this.fileList.length > 0
+    return this.fileList?.length
       ? html`
           ${this.multiple
             ? html`

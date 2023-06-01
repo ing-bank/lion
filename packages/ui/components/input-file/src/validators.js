@@ -9,25 +9,31 @@ import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
  */
 
 /* eslint max-classes-per-file: ["error", 2] */
-export class FileValidation extends Validator {
-  static get validatorName() {
-    return 'FileValidation';
+export class IsAcceptedFile extends Validator {
+  static validatorName = 'IsAcceptedFile';
+
+  /**
+   * @param {number} fileFileSize
+   * @param {number} maxFileSize
+   */
+  static checkFileSize(fileFileSize, maxFileSize) {
+    return fileFileSize <= maxFileSize;
   }
 
   /**
-   * Syntactic sugar for getting the file extension
-   * @param {typeof File.name} fileName
-   * @return {string}
+   * Gets the extension of a file name
+   * @param {string} fileName like myFile.txt
+   * @return {string} like .txt
    */
-  // eslint-disable-next-line class-methods-use-this
-  _getExtension = fileName => fileName?.slice(fileName.lastIndexOf('.'));
+  static getExtension(fileName) {
+    return fileName?.slice(fileName.lastIndexOf('.'));
+  }
 
   /**
    * @param {string} extension
    * @param {string[]} allowedFileExtensions
    */
-  // eslint-disable-next-line class-methods-use-this
-  isExtensionAllowed(extension, allowedFileExtensions) {
+  static isExtensionAllowed(extension, allowedFileExtensions) {
     return allowedFileExtensions?.find(
       allowedExtension => allowedExtension.toUpperCase() === extension.toUpperCase(),
     );
@@ -37,41 +43,33 @@ export class FileValidation extends Validator {
    * @param {string} type
    * @param {string[]} allowedFileTypes
    */
-  // eslint-disable-next-line class-methods-use-this
-  isFileTypeAllowed(type, allowedFileTypes) {
+  static isFileTypeAllowed(type, allowedFileTypes) {
     return allowedFileTypes?.find(allowedType => allowedType.toUpperCase() === type.toUpperCase());
   }
 
   /**
-   * @param {number} fileFileSize
-   * @param {number} maxFileSize
-   */
-  // eslint-disable-next-line class-methods-use-this
-  checkFileSize(fileFileSize, maxFileSize) {
-    return fileFileSize <= maxFileSize;
-  }
-
-  /**
    * @param {Array<File>} modelValue array of file objects
-   * @param {*} params
+   * @param {{ allowedFileTypes: string[]; allowedFileExtensions: string[]; maxFileSize: number; }} params
    * @returns {Boolean}
    */
   execute(modelValue, params = this.param) {
     let isInvalidType;
     let isInvalidFileExt;
+
+    const ctor = /** @type {typeof IsAcceptedFile} */ (this.constructor);
     const { allowedFileTypes, allowedFileExtensions, maxFileSize } = params;
-    if (allowedFileTypes && allowedFileTypes.length !== 0) {
-      isInvalidType = modelValue.some(file => !this.isFileTypeAllowed(file.type, allowedFileTypes));
+    if (allowedFileTypes?.length) {
+      isInvalidType = modelValue.some(file => !ctor.isFileTypeAllowed(file.type, allowedFileTypes));
       return isInvalidType;
     }
-    if (allowedFileExtensions && allowedFileExtensions.length !== 0) {
+    if (allowedFileExtensions?.length) {
       isInvalidFileExt = modelValue.some(
-        file => !this.isExtensionAllowed(this._getExtension(file.name), allowedFileExtensions),
+        file => !ctor.isExtensionAllowed(ctor.getExtension(file.name), allowedFileExtensions),
       );
       return isInvalidFileExt;
     }
     const invalidFileSize = modelValue.findIndex(
-      file => !this.checkFileSize(file.size, maxFileSize),
+      file => !ctor.checkFileSize(file.size, maxFileSize),
     );
     return invalidFileSize > -1;
   }
@@ -84,9 +82,7 @@ export class FileValidation extends Validator {
 }
 
 export class DuplicateFileNames extends Validator {
-  static get validatorName() {
-    return 'DuplicateFileNames';
-  }
+  static validatorName = 'DuplicateFileNames';
 
   /**
    * @param {ValidatorParam} [param]
@@ -111,6 +107,8 @@ export class DuplicateFileNames extends Validator {
    */
   static async getMessage() {
     const localizeManager = getLocalizeManager();
+    // TODO: we need to make sure namespace is loaded
+    // TODO: keep Validators localize system agnostic
     return localizeManager.msg('lion-input-file:uploadTextDuplicateFileName');
   }
 }

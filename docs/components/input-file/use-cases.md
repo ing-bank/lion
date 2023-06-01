@@ -21,7 +21,7 @@ API calls to upload the selected files can be done in below two ways which is dr
 
 ```html
 <lion-input-file
-  .multiple="${true}"
+  multiple
   label="Attachments"
   help-text="Signature scan file"
   max-file-size="1024000"
@@ -109,7 +109,7 @@ export const basicFileUpload = () => {
     <lion-input-file
       label="Label"
       max-file-size="1024000"
-      .accept="${'.jpg,.svg,.xml,image/svg+xml'}"
+      accept=".jpg,.svg,.xml,image/svg+xml"
       @file-list-changed="${ev => {
         console.log('fileList', ev.detail.newFiles);
       }}"
@@ -125,7 +125,7 @@ export const basicFileUpload = () => {
 
 The `accept` attribute value is a string that defines the file types the file input should accept. This string is a comma-separated list of unique file type specifiers.
 
-For more info please checkout: <https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept>.
+For more info please consult the [MDN documentation for "accept"](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#accept).
 
 ```js preview-story
 export const acceptValidator = () => {
@@ -172,7 +172,7 @@ export const multipleFileUpload = () => {
     <lion-input-file
       label="Upload"
       name="upload"
-      .multiple="${true}"
+      multiple
       max-file-size="1024000"
       @file-removed="${ev => {
         console.log('removed file details', ev.detail);
@@ -206,7 +206,7 @@ export const prefilledState = () => {
     <lion-input-file
       label="Upload"
       name="myFiles"
-      .multiple="${true}"
+      multiple
       .validators="${[new Required()]}"
       .uploadResponse="${[
         {
@@ -275,7 +275,7 @@ export const withIngForm = () => {
       <lion-input-file
         label="Upload"
         name="upload"
-        .multiple=${true}
+        multiple
         .validators="${[new Required(), new FilenameLengthValidator({ maxFilenameLength: 20 })]}"
         .uploadResponse="${[
           {

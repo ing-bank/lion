@@ -1,10 +1,10 @@
 import { expect } from '@open-wc/testing';
-import { FileValidation } from '../src/validators.js';
+import { IsAcceptedFile } from '../src/validators.js';
 
-describe('lion-input-file: FileValidation', () => {
-  context('valid file type', () => {
+describe('lion-input-file: IsAcceptedFile', () => {
+  describe('valid file type', () => {
     it('should return false for allowed file extension .csv', async () => {
-      const fileTypeObj = new FileValidation();
+      const fileTypeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileTypeObj.execute([{ name: 'foo.csv' }], {
         allowedFileExtensions: ['.csv'],
@@ -14,7 +14,7 @@ describe('lion-input-file: FileValidation', () => {
     });
 
     it('should return false for allowed file extension .csv and .pdf', async () => {
-      const fileTypeObj = new FileValidation();
+      const fileTypeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileTypeObj.execute([{ name: 'foo.pdf' }], {
         allowedFileExtensions: ['.csv', '.pdf'],
@@ -24,7 +24,7 @@ describe('lion-input-file: FileValidation', () => {
     });
 
     it('should return true for not allowed file extension .csv and .pdf', async () => {
-      const fileTypeObj = new FileValidation();
+      const fileTypeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileTypeObj.execute([{ name: 'foo.pdf' }], {
         allowedFileExtensions: ['.txt'],
@@ -34,7 +34,7 @@ describe('lion-input-file: FileValidation', () => {
     });
 
     it('should return false for valid file type for single file', async () => {
-      const fileTypeObj = new FileValidation();
+      const fileTypeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileTypeObj.execute([{ type: 'foo' }], {
         allowedFileTypes: ['foo'],
@@ -44,7 +44,7 @@ describe('lion-input-file: FileValidation', () => {
     });
 
     it('should return false for valid file type for multiple file', async () => {
-      const fileTypeObj = new FileValidation();
+      const fileTypeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileTypeObj.execute([{ type: 'foo' }, { type: 'foo' }], {
         allowedFileTypes: ['foo'],
@@ -54,7 +54,7 @@ describe('lion-input-file: FileValidation', () => {
     });
 
     it('should return false if no file types are defined, and has small file size', async () => {
-      const fileTypeObj = new FileValidation();
+      const fileTypeObj = new IsAcceptedFile();
       const returnVal = fileTypeObj.execute(
         [
           // @ts-ignore ignore file typing
@@ -72,7 +72,7 @@ describe('lion-input-file: FileValidation', () => {
     });
 
     it('should return false for valid file type for multiple file and multiple allowed types', async () => {
-      const fileTypeObj = new FileValidation();
+      const fileTypeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileTypeObj.execute([{ type: 'foo' }, { type: 'bar' }], {
         allowedFileTypes: ['foo', 'bar'],
@@ -82,9 +82,9 @@ describe('lion-input-file: FileValidation', () => {
     });
   });
 
-  context('inValid file type', () => {
-    it('should return true for inValid file type for single file', async () => {
-      const fileTypeObj = new FileValidation();
+  describe('invalid file type', () => {
+    it('should return true for invalid file type for single file', async () => {
+      const fileTypeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileTypeObj.execute([{ type: 'bar' }], {
         allowedFileTypes: ['foo'],
@@ -93,8 +93,8 @@ describe('lion-input-file: FileValidation', () => {
       expect(returnVal).to.be.true;
     });
 
-    it('should return false for inValid file type for multiple file', async () => {
-      const fileTypeObj = new FileValidation();
+    it('should return false for invalid file type for multiple file', async () => {
+      const fileTypeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileTypeObj.execute([{ type: 'foo' }, { type: 'bar' }], {
         allowedFileTypes: ['foo'],
@@ -103,8 +103,8 @@ describe('lion-input-file: FileValidation', () => {
       expect(returnVal).to.be.true;
     });
 
-    it('should return false for inValid file type for multiple file and multiple allowed types', async () => {
-      const fileTypeObj = new FileValidation();
+    it('should return false for invalid file type for multiple file and multiple allowed types', async () => {
+      const fileTypeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileTypeObj.execute([{ type: 'foo' }, { type: 'pdf' }], {
         allowedFileTypes: ['foo', 'bar'],
@@ -113,8 +113,8 @@ describe('lion-input-file: FileValidation', () => {
       expect(returnVal).to.be.true;
     });
 
-    it('should return true for inValid file type for empty type', async () => {
-      const fileTypeObj = new FileValidation();
+    it('should return true for invalid file type for empty type', async () => {
+      const fileTypeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileTypeObj.execute([{ type: '' }], {
         allowedFileTypes: ['foo'],
@@ -124,9 +124,9 @@ describe('lion-input-file: FileValidation', () => {
     });
   });
 
-  context('valid file size', () => {
+  describe('valid file size', () => {
     it('should return false for valid file size for single file', async () => {
-      const fileSizeObj = new FileValidation();
+      const fileSizeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileSizeObj.execute([{ size: 5 }], {
         maxFileSize: 10,
@@ -136,7 +136,7 @@ describe('lion-input-file: FileValidation', () => {
     });
 
     it('should return false for valid file size for multiple file', async () => {
-      const fileSizeObj = new FileValidation();
+      const fileSizeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileSizeObj.execute([{ size: 5 }, { size: 9 }], {
         maxFileSize: 10,
@@ -146,9 +146,9 @@ describe('lion-input-file: FileValidation', () => {
     });
   });
 
-  context('inValid file size', () => {
-    it('should return true for inValid file size for single file', async () => {
-      const fileSizeObj = new FileValidation();
+  describe('invalid file size', () => {
+    it('should return true for invalid file size for single file', async () => {
+      const fileSizeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileSizeObj.execute([{ size: 5 }], {
         maxFileSize: 3,
@@ -157,8 +157,8 @@ describe('lion-input-file: FileValidation', () => {
       expect(returnVal).to.be.true;
     });
 
-    it('should return false for inValid file size for multiple file', async () => {
-      const fileSizeObj = new FileValidation();
+    it('should return false for invalid file size for multiple file', async () => {
+      const fileSizeObj = new IsAcceptedFile();
       // @ts-ignore ignore file typing
       const returnVal = fileSizeObj.execute([{ size: 5 }, { size: 9 }], {
         maxFileSize: 7,

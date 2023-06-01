@@ -61,7 +61,7 @@ describe('lion-selected-file-list', () => {
   };
 
   it('when empty show nothing', async () => {
-    const el = await fixture(html` <lion-selected-file-list></lion-selected-file-list> `);
+    const el = await fixture(html`<lion-selected-file-list></lion-selected-file-list>`);
     expect(el.children.length).to.equal(0);
   });
 
@@ -167,7 +167,7 @@ describe('lion-selected-file-list', () => {
       },
     });
     expect(removeFileEvent.detail.status).to.deep.equal('SUCCESS');
-    expect(removeFileEvent.detail.fileSelectResponse).to.deep.equal({
+    expect(removeFileEvent.detail._fileSelectResponse).to.deep.equal({
       name: 'foo.txt',
       status: 'SUCCESS',
     });
