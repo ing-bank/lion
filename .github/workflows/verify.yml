@@ -3,7 +3,7 @@ name: Verify changes
 on: pull_request
 
 jobs:
-  setup-common-steps:
+  init:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
