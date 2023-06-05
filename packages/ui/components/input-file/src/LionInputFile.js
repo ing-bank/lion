@@ -516,7 +516,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      */
     const selectedFileList = this.querySelector('[slot="selected-file-list"]');
     if (selectedFileList) {
-      console.log('handle a11y', selectedFileList);
       selectedFileList.setAttribute('id', `selected-file-list-${this._inputId}`);
       this.addToAriaDescribedBy(selectedFileList, { idPrefix: 'selected-file-list' });
     }

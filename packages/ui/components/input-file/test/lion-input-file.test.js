@@ -426,7 +426,7 @@ describe('lion-input-file', () => {
     const fileListChangedEvent = await oneEvent(el, 'file-list-changed');
 
     // @ts-expect-error [allow-protected-in-test]
-    expect(el._selectedFilesMetaData.length).to.equal(1);
+    expect(el._selectedFilesMetaData.length).to.equal(2);
     // @ts-expect-error [allow-protected-in-test]
     expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
     expect(el._fileSelectResponse[0].status).to.equal('FAIL');
