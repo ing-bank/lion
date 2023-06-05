@@ -27,6 +27,7 @@ const FocusMixinImplementation = superclass =>
       return {
         focused: { type: Boolean, reflect: true },
         focusedVisible: { type: Boolean, reflect: true, attribute: 'focused-visible' },
+        autofocus: { type: Boolean, reflect: true }, // Required in Lit to observe autofocus
       };
     }
 
@@ -47,6 +48,7 @@ const FocusMixinImplementation = superclass =>
        * @type {boolean}
        */
       this.focusedVisible = false;
+      this.autofocus = false;
     }
 
     /**
@@ -55,11 +57,37 @@ const FocusMixinImplementation = superclass =>
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
       this.__registerEventsForFocusMixin();
+      this.__syncAutofocusToFocusableElement();
     }
 
     disconnectedCallback() {
       super.disconnectedCallback();
       this.__teardownEventsForFocusMixin();
+    }
+
+    /**
+     * @param {import('lit').PropertyValues } changedProperties
+     */
+    updated(changedProperties) {
+      super.updated(changedProperties);
+      if (changedProperties.has('autofocus')) {
+        this.__syncAutofocusToFocusableElement();
+      }
+    }
+
+    /**
+     * @private
+     */
+    __syncAutofocusToFocusableElement() {
+      if (!this._focusableNode) {
+        return;
+      }
+
+      if (this.hasAttribute('autofocus')) {
+        this._focusableNode.setAttribute('autofocus', '');
+      } else {
+        this._focusableNode.removeAttribute('autofocus');
+      }
     }
 
     /**

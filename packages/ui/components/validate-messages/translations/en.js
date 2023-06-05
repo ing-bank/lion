@@ -18,6 +18,7 @@ export default {
       'Please enter a {fieldName} between {params.min, date, YYYYMMDD} and {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'This date is unavailable, please choose another one.',
     IsEmail: 'Please enter a valid {fieldName} in the format "name@example.com".',
+    MatchesOption: 'No matching results. Please try a different keyword or category.',
   },
   warning: {
     Required: 'Please enter a(n) {fieldName}.',
@@ -37,6 +38,7 @@ export default {
       'Please enter a {fieldName} between {params.min, date, YYYYMMDD} and {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'This date is unavailable, please choose another one.',
     IsEmail: 'Please enter a valid {fieldName} in the format "name@example.com".',
+    MatchesOption: 'No matching results. Please try a different keyword or category.',
   },
   success: {
     DefaultOk: 'Okay',

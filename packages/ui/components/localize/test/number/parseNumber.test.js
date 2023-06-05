@@ -80,18 +80,32 @@ describe('parseNumber()', () => {
     expect(parseNumber('1 234 56')).to.equal(123456);
   });
 
-  it('uses locale to parse amount if there is only one separator e.g. 1.234', () => {
+  it('uses heuristic to parse amount if there is only one separator e.g. 12.34 and amount of decimals is 2 or smaller', () => {
     localizeManager.locale = 'en-GB';
+    expect(parseNumber('12.3')).to.equal(12.3);
+    expect(parseNumber('12,3')).to.equal(12.3);
     expect(parseNumber('12.34')).to.equal(12.34);
-    expect(parseNumber('12,34')).to.equal(1234);
-    expect(parseNumber('1.234')).to.equal(1.234);
-    expect(parseNumber('1,234')).to.equal(1234);
+    expect(parseNumber('12,34')).to.equal(12.34);
 
     localizeManager.locale = 'nl-NL';
-    expect(parseNumber('12.34')).to.equal(1234);
+    expect(parseNumber('12.3')).to.equal(12.3);
+    expect(parseNumber('12,3')).to.equal(12.3);
+    expect(parseNumber('12.34')).to.equal(12.34);
     expect(parseNumber('12,34')).to.equal(12.34);
+  });
+
+  it('uses locale to parse amount if there is only one separator e.g. 1.234 and amount of decimals is bigger then 2', () => {
+    localizeManager.locale = 'en-GB';
+    expect(parseNumber('1.234')).to.equal(1.234);
+    expect(parseNumber('1,234')).to.equal(1234);
+    expect(parseNumber('1.2345')).to.equal(1.2345);
+    expect(parseNumber('1,2345')).to.equal(12345);
+
+    localizeManager.locale = 'nl-NL';
     expect(parseNumber('1.234')).to.equal(1234);
     expect(parseNumber('1,234')).to.equal(1.234);
+    expect(parseNumber('1.2345')).to.equal(12345);
+    expect(parseNumber('1,2345')).to.equal(1.2345);
   });
 
   it('returns numbers only if it can not be interpreted e.g. 1.234.567', () => {

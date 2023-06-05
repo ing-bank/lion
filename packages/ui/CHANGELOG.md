@@ -1,5 +1,48 @@
 # @lion/ui
 
+## 0.2.2
+
+### Patch Changes
+
+- 88e6ca03: [localize] parseNumbers as heuristic if there is only 1 separator and 2 or less decimals e.g. 12.34
+
+## 0.2.1
+
+### Patch Changes
+
+- 5b8d655f: OverlayController: fixed check to determine if native dialog is supported, fixed check to determine if user has moved focus while dialog is open, added test to assert if element specified in dialog config key `elementToFocusAfterHide` is in viewport when dialog is closed
+- a5f35158: feat(@lion/ui): add \_previousIconTemplate and \_nextIconTemplate to LionCalendar
+- ddea63b3: [combobox] update option list after clear
+- 12f18008: lion-calendar: when determining if user interacted with a day button we no longer examine event.target but event.composedPath()[0] since it otherwise fails in Firefox 111+
+
+## 0.2.0
+
+### Minor Changes
+
+- 183c86af: Changed spelling/grammar of the german error message for an invalid IBAN.
+
+### Patch Changes
+
+- adfa29a0: [switch] remove one of the two role="switch" (nested-interactive). Only leave it on the switch-button.
+- 0d4c42ab: [listbox] allow use of arrow keys when focus is not on listbox
+- 42a463ee: Set padding of <dialog> to 0 so it doesn't show a weird 1em width/height box due to user agent styles.
+- 3256892c: lion-switch: checked-changed event is no longer fired on element initialization when checked is set through attribute
+- 3f1c83a1: lion-accordion: changed selectors for invokers and content to only select slotted elements that are direct descendants. This is to prevent that slotted elements in accordion content and invokers are also selected and the amount of invokers and content is incorrect
+- a2b81b26: [combobox] Multiple improvements:
+
+  - Allow textbox values to be entered that do not match a listbox option, via `requireOptionMatch` flag.
+  - Added an `MatchesOption` validator to check if the value is matching an option.
+  - Exports combobox test helpers
+
+- 1f018baf: feat(@lion/ui): add \_invokerIconTemplate to LionInputDatepicker
+
+## 0.1.5
+
+### Patch Changes
+
+- 943618fd: [combobox] fix direct open and closing of the overlay on focus of empty input when `showAllOnEmpty`
+- 4226a014: [combobox] add translations
+
 ## 0.1.4
 
 ### Patch Changes

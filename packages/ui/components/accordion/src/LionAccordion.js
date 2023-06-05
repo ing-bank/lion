@@ -171,12 +171,12 @@ export class LionAccordion extends LitElement {
 
     const invokers = /** @type {HTMLElement[]} */ ([
       ...Array.from(existingInvokers),
-      ...Array.from(this.querySelectorAll('[slot="invoker"]')),
+      ...Array.from(this.querySelectorAll(':scope > [slot="invoker"]')),
     ]);
 
     const contents = /** @type {HTMLElement[]} */ ([
       ...Array.from(existingContent),
-      ...Array.from(this.querySelectorAll('[slot="content"]')),
+      ...Array.from(this.querySelectorAll(':scope > [slot="content"]')),
     ]);
 
     if (invokers.length !== contents.length) {

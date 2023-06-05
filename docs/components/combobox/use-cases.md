@@ -16,11 +16,30 @@ availability of the popup.
 import { LitElement, html, repeat } from '@mdjs/mdjs-preview';
 import { listboxData, listboxComplexData } from '../listbox/src/listboxData.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
+import { Required } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
 import './src/demo-selection-display.js';
 import { lazyRender } from './src/lazyRender.js';
 import levenshtein from './src/levenshtein.js';
+import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
+loadDefaultFeedbackMessages();
+```
+
+## Require option match
+
+By default `requireOptionMatch` is set to true, which means that the listbox is leading. The textbox is a helping aid to quickly select an option/options. Unmatching input values become Unparseable, with the `MatchesOption` set as a default validator.
+
+When `requireOptionMatch` is set to false the textbox is leading, with the listbox as an aid to supply suggestions, e.g. a search input. This means that all input values are allowed.
+
+```js preview-story
+export const optionMatch = () => html`
+  <lion-combobox name="search" label="Search" .requireOptionMatch=${false}>
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
+  </lion-combobox>
+`;
 ```
 
 ## Autocomplete
@@ -225,6 +244,22 @@ export const multipleChoice = () => html`
         (entry, i) =>
           html` <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option> `,
       ),
+    )}
+  </lion-combobox>
+`;
+```
+
+## Validation
+
+The combobox works with a `Required` validator to check if it is empty.
+
+By default the a check is made which makes sure the value matches an option. This only works if `requireOptionMatch` is set to true.
+
+```js preview-story
+export const validation = () => html`
+  <lion-combobox name="combo" label="Validation" .validators=${[new Required()]}>
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
     )}
   </lion-combobox>
 `;

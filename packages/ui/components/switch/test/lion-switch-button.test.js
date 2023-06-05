@@ -1,4 +1,4 @@
-import { expect, fixture as _fixture } from '@open-wc/testing';
+import { expect, fixture as _fixture, fixtureSync, elementUpdated } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-switch-button.js';
@@ -124,6 +124,20 @@ describe('lion-switch-button', () => {
     el.addEventListener('checked-changed', handlerSpy);
     el.checked = !el.checked;
     expect(handlerSpy.called).to.be.false;
+  });
+
+  it('should not dispatch "checked-changed" event if not initialized on update', async () => {
+    const handlerSpy = sinon.spy();
+    const elSync = /** @type {LionSwitchButton} */ (
+      fixtureSync(html`<lion-switch-button @checked-changed="${handlerSpy}" .checked=${true} />`)
+    );
+    expect(elSync.__initialized).to.be.false;
+    await elementUpdated(elSync);
+    expect(elSync.__initialized).to.be.true;
+    expect(handlerSpy.called).to.be.false;
+    elSync.checked = !elSync.checked;
+    await elementUpdated(elSync);
+    expect(handlerSpy.called).to.be.true;
   });
 
   describe('a11y', () => {

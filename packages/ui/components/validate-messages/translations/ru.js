@@ -18,6 +18,8 @@ export default {
       'Введите значение поля {fieldName} от {params.min, date, YYYYMMDD} до {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Эта дата недоступна, выберите другой вариант.',
     IsEmail: 'Введите действительное значение поля {fieldName} в формате «name@example.com».',
+    MatchesOption:
+      'Нет соответствующих результатов. Попробуйте указать другое ключевое слово или категорию.',
   },
   warning: {
     Required: 'Введите значение поля {fieldName}.',
@@ -37,6 +39,8 @@ export default {
       'Введите значение поля {fieldName} от {params.min, date, YYYYMMDD} до {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Эта дата недоступна, выберите другой вариант.',
     IsEmail: 'Введите действительное значение поля {fieldName} в формате «name@example.com».',
+    MatchesOption:
+      'Нет соответствующих результатов. Попробуйте указать другое ключевое слово или категорию.',
   },
   success: {
     DefaultOk: 'OK',

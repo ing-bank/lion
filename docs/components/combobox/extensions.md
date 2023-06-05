@@ -1,4 +1,4 @@
-# Combobox >> Examples ||30
+# Combobox >> Extensions ||30
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
@@ -46,48 +46,56 @@ export const Github = () => html`
 ## Whatsapp
 
 ```js preview-story
-export const Whatsapp = () => html`
-  <wa-combobox name="combo" label="Filter chats">
-    <wa-option
-      title="Barack Obama"
-      text="Yup, let's try that for now👍"
-      time="15:02"
-      is-user-text
-      is-user-text-read
-      image="https://pbs.twimg.com/profile_images/822547732376207360/5g0FC8XX_400x400.jpg"
-      .choiceValue=${'Barack Obama'}
-    ></wa-option>
-    <wa-option
-      title="Donald Trump"
-      text="Take care!"
-      time="14:59"
-      is-user-text
-      image="https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_400x400.jpg"
-      .choiceValue=${'Donald Trump'}
-    ></wa-option>
-    <wa-option
-      title="Joe Biden"
-      text="Hehe😅. You too, man, you too..."
-      time="yesterday"
-      image="https://pbs.twimg.com/profile_images/1308769664240160770/AfgzWVE7_400x400.jpg"
-      .choiceValue=${'Joe Biden'}
-    ></wa-option>
-    <wa-option
-      title="George W. Bush"
-      time="friday"
-      text="You bet I will. Let's catch up soon!"
-      image="https://pbs.twimg.com/profile_images/828483922266877954/ljYUWUCu_400x400.jpg"
-      .choiceValue=${'George W. Bush'}
-    ></wa-option>
-    <wa-option
-      title="Bill Clinton"
-      time="thursday"
-      text="Dude...😂 😂 😂"
-      image="https://pbs.twimg.com/profile_images/1239440892664086529/iY0Z83Dr_400x400.jpg"
-      .choiceValue=${'Bill Clinton'}
-    ></wa-option>
-  </wa-combobox>
-`;
+export const Whatsapp = () => {
+  const obamaImgUrl = new URL('../src/wa-combobox/assets/obama.jpeg', import.meta.url).href;
+  const trumpImgUrl = new URL('../src/wa-combobox/assets/trump.jpeg', import.meta.url).href;
+  const bidenImgUrl = new URL('../src/wa-combobox/assets/biden.jpeg', import.meta.url).href;
+  const bushImgUrl = new URL('../src/wa-combobox/assets/bush.jpeg', import.meta.url).href;
+  const clintonImgUrl = new URL('../src/wa-combobox/assets/clinton.jpeg', import.meta.url).href;
+
+  return html`
+    <wa-combobox name="combo" label="Filter chats">
+      <wa-option
+        title="Barack Obama"
+        text="Yup, let's try that for now👍"
+        time="15:02"
+        is-user-text
+        is-user-text-read
+        image="${obamaImgUrl}"
+        .choiceValue=${'Barack Obama'}
+      ></wa-option>
+      <wa-option
+        title="Donald Trump"
+        text="Take care!"
+        time="14:59"
+        is-user-text
+        image="${trumpImgUrl}"
+        .choiceValue=${'Donald Trump'}
+      ></wa-option>
+      <wa-option
+        title="Joe Biden"
+        text="Hehe😅. You too, man, you too..."
+        time="yesterday"
+        image="${bidenImgUrl}"
+        .choiceValue=${'Joe Biden'}
+      ></wa-option>
+      <wa-option
+        title="George W. Bush"
+        time="friday"
+        text="You bet I will. Let's catch up soon!"
+        image="${bushImgUrl}"
+        .choiceValue=${'George W. Bush'}
+      ></wa-option>
+      <wa-option
+        title="Bill Clinton"
+        time="thursday"
+        text="Dude...😂 😂 😂"
+        image="${clintonImgUrl}"
+        .choiceValue=${'Bill Clinton'}
+      ></wa-option>
+    </wa-combobox>
+  `;
+};
 ```
 
 **Whatsapp example shows:**

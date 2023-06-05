@@ -111,8 +111,3 @@ class MyOverlayComponent extends OverlayMixin(LitElement) {
 ## Rationales
 
 Please check the [system rationals](./rationale.md) folder, where we go more in-depth.
-
-### Aria roles
-
-- No `aria-controls` as support for it is not quite there yet
-- No `aria-haspopup`. People knowing the haspopup and hear about it don’t expect a dialog to open (at this moment in time) but expect a sub-menu. Until support for the dialog value has better implementation, it’s probably best to not use aria-haspopup on the element that opens the modal dialog.

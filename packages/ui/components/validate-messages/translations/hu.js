@@ -19,6 +19,7 @@ export default {
     IsDateDisabled: 'Ez a dátum nem áll rendelkezésre, válasszon egy másikat.',
     IsEmail:
       'Adjon meg egy érvényes {fieldName} értéket, a következő formátumban: „név@példa.com”.',
+    MatchesOption: 'Nincs egyező találat. Próbálkozzon másik kulcsszóval vagy kategóriával.',
   },
   warning: {
     Required: 'Továbbá adjon meg egy {fieldName} értéket.',
@@ -39,6 +40,7 @@ export default {
     IsDateDisabled: 'Ez a dátum nem áll rendelkezésre, válasszon egy másikat.',
     IsEmail:
       'Adjon meg egy érvényes {fieldName} értéket, a következő formátumban: „név@példa.com”.',
+    MatchesOption: 'Nincs egyező találat. Próbálkozzon másik kulcsszóval vagy kategóriával.',
   },
   success: {
     DefaultOk: 'Rendben',

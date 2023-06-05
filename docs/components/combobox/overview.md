@@ -33,11 +33,21 @@ export const main = () => html`
 `;
 ```
 
-[...show more](./examples.md)
+[...show more](./extensions.md)
 
 ## Features
 
-> tbd
+The combobox has many configurable properties to fine-tune its behaviour:
+
+- **Multiple choice** - Allows multiselection of options.
+- **requireOptionMatch**
+  - **true** (default) - The listbox is leading, the textbox is a helping aid to quickly select an option/options. Unmatching input values become Unparseable, with the `MatchesOption` set as a default validator.
+  - **false** - The textbox is leading, with the listbox as an aid to supply suggestions, e.g. a search input.
+- **Autocomplete** - When the autocompletion will happen: `none`, `list`, `inline` and `both`.
+- **Matchmode** - Which part of the value should match: `begin` and `all`.
+- **Show all on empty** - Shows the options list on empty.
+- **Selection follows focus** - When false the active/focused and checked/selected values will be kept track of independently.
+- **Rotate keyboard Navigation** - When false it won't rotate the navigation.
 
 ## Installation
 

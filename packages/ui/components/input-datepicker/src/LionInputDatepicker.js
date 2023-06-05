@@ -4,6 +4,7 @@ import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
+import { IsDate } from '@lion/ui/form-core.js';
 import {
   OverlayMixin,
   withBottomSheetConfig,
@@ -279,9 +280,17 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         aria-label="${this.msgLit('lion-input-datepicker:openDatepickerLabel')}"
         title="${this.msgLit('lion-input-datepicker:openDatepickerLabel')}"
       >
-        📅
+        ${this._invokerIconTemplate()}
       </button>
     `;
+  }
+
+  /**
+   * Subclassers can replace this with their custom extension invoker icon
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _invokerIconTemplate() {
+    return html`📅`;
   }
 
   _setupOverlayCtrl() {
@@ -365,10 +374,12 @@ export class LionInputDatepicker extends ScopedElementsMixin(
    * The LionCalendar shouldn't know anything about the modelValue;
    * it can't handle Unparseable dates, but does handle 'undefined'
    * @param {?} modelValue
-   * @returns {Date|undefined} a 'guarded' modelValue
+   * @returns {Date | undefined} a 'guarded' modelValue
    */
   static __getSyncDownValue(modelValue) {
-    return modelValue instanceof Date ? modelValue : undefined;
+    const isDate = new IsDate();
+    const hasError = isDate.execute(modelValue);
+    return hasError ? undefined : modelValue;
   }
 
   /**

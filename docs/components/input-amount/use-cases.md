@@ -20,15 +20,17 @@ export const negativeNumber = () => html`
 `;
 ```
 
-## Set currency suffix
+## Set currency label
 
-You can optionally set a currency suffix with the `currency` attribute.
+You can optionally set a currency label with the `currency` attribute, which is visible in the after slot by default.
 
 ```js preview-story
 export const currencySuffix = () => html`
   <lion-input-amount label="Price" currency="USD" .modelValue=${123456.78}></lion-input-amount>
 `;
 ```
+
+> The slot of the currency label can be overwritten by changing the `_currencyDisplayNodeSlot` protected property, it can be prefix, suffix, before and after.
 
 ## Force locale
 

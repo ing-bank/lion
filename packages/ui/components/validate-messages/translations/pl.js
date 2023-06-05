@@ -18,6 +18,7 @@ export default {
       'Proszę podać wartość {fieldName} między {params.min, date, YYYYMMDD} a {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Ta data jest niedostępna, wybierz inną.',
     IsEmail: 'Proszę podać prawidłowy {fieldName} w formacie „nazwa@example.com”.',
+    MatchesOption: 'Brak pasujących wyników. Spróbuj użyć innego słowa kluczowego lub kategorii.',
   },
   warning: {
     Required: 'Proszę również podać wartość {fieldName}.',
@@ -37,6 +38,7 @@ export default {
       'Proszę podać wartość {fieldName} między {params.min, date, YYYYMMDD} a {params.max, date, YYYYMMDD}.',
     IsDateDisabled: 'Ta data jest niedostępna, wybierz inną.',
     IsEmail: 'Proszę podać prawidłowy {fieldName} w formacie „nazwa@example.com”.',
+    MatchesOption: 'Brak pasujących wyników. Spróbuj użyć innego słowa kluczowego lub kategorii.',
   },
   success: {
     DefaultOk: 'Ok',

@@ -17,6 +17,7 @@ export default {
       '请在{params.min，date，YYYYMMDD}和{params.max，date，YYYYMMDD}之间输入{fieldName}。',
     IsDateDisabled: '此日期不可用，请选择其他日期。',
     IsEmail: '请输入格式为"name@example.com"的有效{fieldName}。',
+    MatchesOption: '无匹配结果。请尝试其他关键词或类别。',
   },
   warning: {
     Required: '請輸入{fieldName}。',
@@ -35,6 +36,7 @@ export default {
       '请在{params.min，date，YYYYMMDD}和{params.max，date，YYYYMMDD}之间输入{fieldName}。',
     IsDateDisabled: '此日期不可用，请选择其他日期。',
     IsEmail: '请输入格式为"name@example.com"的有效{fieldName}。',
+    MatchesOption: '无匹配结果。请尝试其他关键词或类别。',
   },
   success: {
     DefaultOk: '好的',

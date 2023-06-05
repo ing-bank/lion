@@ -523,9 +523,14 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         @click=${clickDateDelegation}
         ?disabled=${disabled}
       >
-        &lt;
+        ${this._previousIconTemplate()}
       </button>
     `;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  _previousIconTemplate() {
+    return html`&lt;`;
   }
 
   /**
@@ -554,9 +559,14 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         @click=${clickDateDelegation}
         ?disabled=${disabled}
       >
-        &gt;
+        ${this._nextIconTemplate()}
       </button>
     `;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  _nextIconTemplate() {
+    return html`&gt;`;
   }
 
   /**
@@ -743,7 +753,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const isDayButton = /** @param {HTMLElement} el */ el =>
       el.classList.contains('calendar__day-button');
 
-    const el = /** @type {HTMLElement & { date: Date }} */ (ev.target);
+    const el = /** @type {HTMLElement & { date: Date }} */ (ev.composedPath()[0]);
     if (isDayButton(el)) {
       this.__dateSelectedByUser(el.date);
     }

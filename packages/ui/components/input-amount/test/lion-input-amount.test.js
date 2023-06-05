@@ -3,13 +3,12 @@ import { html } from 'lit';
 import { localize } from '@lion/ui/localize.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
-import { formatAmount, parseAmount } from '@lion/ui/input-amount.js';
+import { LionInputAmount, formatAmount, parseAmount } from '@lion/ui/input-amount.js';
 
 import '@lion/ui/define/lion-input-amount.js';
 
 /**
  * @typedef {import('../../input/src/LionInput.js').LionInput} LionInput
- * @typedef {import('../src/LionInputAmount.js').LionInputAmount} LionInputAmount
  */
 
 describe('<lion-input-amount>', () => {
@@ -187,24 +186,6 @@ describe('<lion-input-amount>', () => {
     ).to.equal('USD');
   });
 
-  it('ignores currency if a suffix is already present', async () => {
-    const el = /** @type {LionInputAmount} */ (
-      await fixture(
-        `<lion-input-amount currency="EUR"><span slot="suffix">my-currency</span></lion-input-amount>`,
-      )
-    );
-    expect(
-      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'suffix')
-        ?.innerText,
-    ).to.equal('my-currency');
-    el.currency = 'EUR';
-    await el.updateComplete;
-    expect(
-      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'suffix')
-        ?.innerText,
-    ).to.equal('my-currency');
-  });
-
   it('reformats on locale changes', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(
@@ -273,6 +254,24 @@ describe('<lion-input-amount>', () => {
     expect(currLabel).to.equal(mySlotLabel);
     expect(currLabel?.id).to.equal('123');
     expect(currLabel?.innerText).to.equal('EUR');
+  });
+
+  it('can override the currency label slot', async () => {
+    customElements.define(
+      'my-input-amount',
+      class extends LionInputAmount {
+        constructor() {
+          super();
+          // Put the currency label in the suffix slot
+          this._currencyDisplayNodeSlot = 'suffix';
+        }
+      },
+    );
+    const el = await fixture(html`<my-input-amount currency="EUR"></my-input-amount>`);
+    expect(
+      /** @type {HTMLElement[]} */ (Array.from(el.children)).find(child => child.slot === 'suffix')
+        ?.innerText,
+    ).to.equal('EUR');
   });
 
   describe('Accessibility', () => {

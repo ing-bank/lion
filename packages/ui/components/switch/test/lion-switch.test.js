@@ -10,7 +10,7 @@ import '@lion/ui/define/lion-switch.js';
 /**
  * @typedef {import('../src/LionSwitchButton.js').LionSwitchButton} LionSwitchButton
  * @typedef {import('lit').TemplateResult} TemplateResult
- * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('@lion/ui/types/form-core.js').FormControlHost} FormControlHost
  */
 
 const IsTrue = class extends Validator {
@@ -215,10 +215,25 @@ describe('lion-switch', () => {
     expect(el.showsFeedbackFor).to.eql(['info']);
   });
 
-  it('should not cause error by setting an attribute in the constructor', async () => {
-    const div = await fixture(html`<div></div>`);
-    const el = /** @type {LionSwitch} */ (document.createElement('lion-switch'));
-    div.appendChild(el);
-    expect(el.role).to.equal('switch');
+  describe('Accessibility', () => {
+    it('passes axe a11y audit', async () => {
+      const el = await fixture(html`<lion-switch name="hi" label="My label"></lion-switch>`);
+      await expect(el).to.be.accessible();
+
+      el.checked = true;
+      await el.updateComplete;
+      await expect(el).to.be.accessible();
+    });
+
+    it('passes axe a11y audit when disabled', async () => {
+      const el = await fixture(
+        html`<lion-switch name="hi" label="My label" disabled></lion-switch>`,
+      );
+      await expect(el).to.be.accessible();
+
+      el.checked = true;
+      await el.updateComplete;
+      await expect(el).to.be.accessible();
+    });
   });
 });

@@ -18,23 +18,21 @@ You can set the full `modelValue` for each option, which includes the checked pr
 
 The main feature of this rich select that makes it rich, is that your options can contain HTML.
 
-```js preview-story
-export const optionsWithHTML = () => html`
-  <lion-select-rich label="Favorite color" name="color">
-    <lion-option .choiceValue="${'red'}">
-      <p style="color: red;">I am red</p>
-      <p>and multi Line</p>
-    </lion-option>
-    <lion-option .choiceValue="${'hotpink'}" checked>
-      <p style="color: hotpink;">I am hotpink</p>
-      <p>and multi Line</p>
-    </lion-option>
-    <lion-option .choiceValue="${'teal'}">
-      <p style="color: teal;">I am teal</p>
-      <p>and multi Line</p>
-    </lion-option>
-  </lion-select-rich>
-`;
+```html preview-story
+<lion-select-rich label="Favorite color" name="color">
+  <lion-option .choiceValue="${'red'}">
+    <p style="color: red;">I am red</p>
+    <p>and multi Line</p>
+  </lion-option>
+  <lion-option .choiceValue="${'hotpink'}" checked>
+    <p style="color: hotpink;">I am hotpink</p>
+    <p>and multi Line</p>
+  </lion-option>
+  <lion-option .choiceValue="${'teal'}">
+    <p style="color: teal;">I am teal</p>
+    <p>and multi Line</p>
+  </lion-option>
+</lion-select-rich>
 ```
 
 ## Many Options with Scrolling
@@ -84,14 +82,12 @@ This will block the user from opening the select.
 
 The readonly attribute is delegated to the invoker for disabling opening the overlay, and for styling purposes.
 
-```js preview-story
-export const readOnlyPrefilled = () => html`
-  <lion-select-rich label="Read-only select" readonly name="color">
-    <lion-option .choiceValue=${'red'}>Red</lion-option>
-    <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-  </lion-select-rich>
-`;
+```html preview-story
+<lion-select-rich label="Read-only select" readonly name="color">
+  <lion-option .choiceValue=${'red'}>Red</lion-option>
+  <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+  <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+</lion-select-rich>
 ```
 
 ## Disabled Select
@@ -100,26 +96,22 @@ You can set the `disabled` attribute to disable either specific options or the e
 
 If you disable the entire select, the disabled attribute is also delegated to the invoker, similar to readonly.
 
-```js preview-story
-export const disabledSelect = () => html`
-  <lion-select-rich label="Disabled select" disabled name="color">
-    <lion-option .choiceValue=${'red'}>Red</lion-option>
-    <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-  </lion-select-rich>
-`;
+```html preview-story
+<lion-select-rich label="Disabled select" disabled name="color">
+  <lion-option .choiceValue=${'red'}>Red</lion-option>
+  <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+  <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+</lion-select-rich>
 ```
 
-```js preview-story
-export const disabledOption = () => html`
-  <lion-select-rich label="Disabled options" name="color">
-    <lion-option .choiceValue=${'red'} disabled>Red</lion-option>
-    <lion-option .choiceValue=${'blue'}>Blue</lion-option>
-    <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
-    <lion-option .choiceValue=${'green'}>Green</lion-option>
-    <lion-option .choiceValue=${'teal'} disabled>Teal</lion-option>
-  </lion-select-rich>
-`;
+```html preview-story
+<lion-select-rich label="Disabled options" name="color">
+  <lion-option .choiceValue=${'red'} disabled>Red</lion-option>
+  <lion-option .choiceValue=${'blue'}>Blue</lion-option>
+  <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
+  <lion-option .choiceValue=${'green'}>Green</lion-option>
+  <lion-option .choiceValue=${'teal'} disabled>Teal</lion-option>
+</lion-select-rich>
 ```
 
 ## Render options
@@ -141,10 +133,9 @@ export const renderOptions = ({ shadowRoot }) => {
       2,
     );
   }
-  const mv = { value: obj, checked: false };
   return html`
     <lion-select-rich label="Credit Card" name="color" @model-value-changed=${showOutput}>
-      ${objs.map(obj => html` <lion-option .modelValue=${mv}>${obj.label}</lion-option> `)}
+      ${objs.map(obj => html` <lion-option .choiceValue=${obj}>${obj.label}</lion-option> `)}
     </lion-select-rich>
     <p>Full value:</p>
     <pre id="demoRenderOutput"></pre>
@@ -159,19 +150,17 @@ By default, it will choose based on the user Operating System, but it can be for
 
 This changes the keyboard interaction.
 
-```js preview-story
-export const interactionMode = () => html`
-  <lion-select-rich label="Mac mode" name="color" interaction-mode="mac">
-    <lion-option .choiceValue=${'red'}>Red</lion-option>
-    <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-  </lion-select-rich>
-  <lion-select-rich label="Windows/Linux mode" name="color" interaction-mode="windows/linux">
-    <lion-option .choiceValue=${'red'}>Red</lion-option>
-    <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
-  </lion-select-rich>
-`;
+```html preview-story
+<lion-select-rich label="Mac mode" name="color" interaction-mode="mac">
+  <lion-option .choiceValue=${'red'}>Red</lion-option>
+  <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+  <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+</lion-select-rich>
+<lion-select-rich label="Windows/Linux mode" name="color" interaction-mode="windows/linux">
+  <lion-option .choiceValue=${'red'}>Red</lion-option>
+  <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
+  <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+</lion-select-rich>
 ```
 
 ## Checked index & value
@@ -195,7 +184,7 @@ export const checkedIndexAndValue = ({ shadowRoot }) => html`
       type="number"
       @change=${e => {
         const selectEl = shadowRoot.querySelector('#checkedRichSelect');
-        selectEl.checkedIndex = e.target.value;
+        selectEl.checkedIndex = Number(e.target.value);
       }}
     />
   </div>
@@ -232,14 +221,12 @@ However, this allows the user to explicitly select this option.
 Often, you may want a placeholder that appears initially, but cannot be selected explicitly by the user.
 For this you can use `has-no-default-selected` attribute.
 
-```js preview-story
-export const noDefaultSelection = () => html`
+```html preview-story
   <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
     <lion-option .choiceValue=${'red'}>Red</lion-option>
     <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
     <lion-option .choiceValue=${'teal'}>Teal</lion-option>
   </lion-select-rich>
-`;
 ```
 
 > By default, the placeholder is completely empty in the `LionSelectInvoker`,
@@ -249,12 +236,10 @@ export const noDefaultSelection = () => html`
 
 If there is a single option rendered, then `singleOption` property is set to `true` on `lion-select-rich` and invoker as well. Invoker also gets `single-option` which can be used to having desired templating and styling. As in here the arrow is not displayed for single option
 
-```js preview-story
-export const singleOption = () => html`
-  <lion-select-rich label="Single Option" name="color">
-    <lion-option .choiceValue=${'red'}>Red</lion-option>
-  </lion-select-rich>
-`;
+```html preview-story
+<lion-select-rich label="Single Option" name="color">
+  <lion-option .choiceValue=${'red'}>Red</lion-option>
+</lion-select-rich>
 ```
 
 When adding/removing options the `singleOption` will only be `true` when there is exactly one option.

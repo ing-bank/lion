@@ -1,8 +1,11 @@
 import { browserDetection } from '@lion/ui/core.js';
+import { Unparseable } from '@lion/ui/form-core.js';
 import { LionListbox } from '@lion/ui/listbox.js';
+import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { css, html } from 'lit';
 import { makeMatchingTextBold, unmakeMatchingTextBold } from './utils/makeMatchingTextBold.js';
+import { MatchesOption } from './validators.js';
 
 const matchA11ySpanReverseFns = new WeakMap();
 
@@ -11,12 +14,12 @@ const matchA11ySpanReverseFns = new WeakMap();
 // on Listbox or ListNavigationWithActiveDescendantMixin
 
 /**
- * @typedef {import('../../listbox/src/LionOption.js').LionOption} LionOption
- * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
- * @typedef {import('../../overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig
- * @typedef {import('../../core/types/SlotMixinTypes.js').SlotsMap} SlotsMap
- * @typedef {import('../../form-core/types/choice-group/ChoiceInputMixinTypes.js').ChoiceInputHost} ChoiceInputHost
- * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('@lion/ui/listbox.js').LionOption} LionOption
+ * @typedef {import('@lion/ui/listbox.js').LionOptions} LionOptions
+ * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
+ * @typedef {import('@lion/ui/types/core.js').SlotsMap} SlotsMap
+ * @typedef {import('@lion/ui/types/form-core.js').ChoiceInputHost} ChoiceInputHost
+ * @typedef {import('@lion/ui/types/form-core.js').FormControlHost} FormControlHost
  * @typedef {import('../types/SelectionDisplay.js').SelectionDisplay} SelectionDisplay
  */
 
@@ -24,7 +27,7 @@ const matchA11ySpanReverseFns = new WeakMap();
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
  */
-export class LionCombobox extends OverlayMixin(LionListbox) {
+export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
   /** @type {any} */
   static get properties() {
     return {
@@ -36,6 +39,9 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       showAllOnEmpty: {
         type: Boolean,
         attribute: 'show-all-on-empty',
+      },
+      requireOptionMatch: {
+        type: Boolean,
       },
       __shouldAutocompleteNextUpdate: Boolean,
     };
@@ -75,6 +81,125 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     ];
   }
 
+  static get localizeNamespaces() {
+    return [
+      {
+        'lion-combobox': /** @param {string} locale */ locale => {
+          switch (locale) {
+            case 'bg-BG':
+            case 'bg':
+              return import('@lion/ui/combobox-translations/bg.js');
+            case 'cs-CZ':
+            case 'cs':
+              return import('@lion/ui/combobox-translations/cs.js');
+            case 'de-AT':
+            case 'de-DE':
+            case 'de':
+              return import('@lion/ui/combobox-translations/de.js');
+            case 'en-AU':
+            case 'en-GB':
+            case 'en-PH':
+            case 'en-US':
+            case 'en':
+              return import('@lion/ui/combobox-translations/en.js');
+            case 'es-ES':
+            case 'es':
+              return import('@lion/ui/combobox-translations/es.js');
+            case 'fr-FR':
+            case 'fr-BE':
+            case 'fr':
+              return import('@lion/ui/combobox-translations/fr.js');
+            case 'hu-HU':
+            case 'hu':
+              return import('@lion/ui/combobox-translations/hu.js');
+            case 'it-IT':
+            case 'it':
+              return import('@lion/ui/combobox-translations/it.js');
+            case 'nl-BE':
+            case 'nl-NL':
+            case 'nl':
+              return import('@lion/ui/combobox-translations/nl.js');
+            case 'pl-PL':
+            case 'pl':
+              return import('@lion/ui/combobox-translations/pl.js');
+            case 'ro-RO':
+            case 'ro':
+              return import('@lion/ui/combobox-translations/ro.js');
+            case 'ru-RU':
+            case 'ru':
+              return import('@lion/ui/combobox-translations/ru.js');
+            case 'sk-SK':
+            case 'sk':
+              return import('@lion/ui/combobox-translations/sk.js');
+            case 'uk-UA':
+            case 'uk':
+              return import('@lion/ui/combobox-translations/uk.js');
+            case 'zh-CN':
+            case 'zh':
+              return import('@lion/ui/combobox-translations/zh.js');
+            default:
+              return import('@lion/ui/combobox-translations/en.js');
+          }
+        },
+      },
+      ...super.localizeNamespaces,
+    ];
+  }
+
+  /**
+   * @override ChoiceGroupMixin
+   */
+  // @ts-ignore
+  get modelValue() {
+    const choiceGroupModelValue = super.modelValue;
+    if (choiceGroupModelValue !== '') {
+      return choiceGroupModelValue;
+    }
+    // Since the FormatMixin can't be applied to a [FormGroup](https://github.com/ing-bank/lion/blob/master/packages/ui/components/form-core/src/form-group/FormGroupMixin.js)
+    // atm, we treat it in a way analogue to InteractionStateMixin (basically same apis, w/o Mixin applied).
+    // Hence, modelValue has no reactivity by default and we need to call parser manually here...
+    return this.parser(this.value);
+  }
+
+  // Duplicating from ChoiceGroupMixin, because you cannot independently inherit/override getter + setter.
+  // If you override one, gotta override the other, they go in pairs.
+  /**
+   * @override ChoiceGroupMixin
+   */
+  set modelValue(value) {
+    super.modelValue = value;
+  }
+
+  /**
+   * We define the value getter/setter below as also defined in LionField (via FormatMixin).
+   * Since FormatMixin is meant for Formgroups/ChoiceGroup it's not applied on Combobox;
+   * Combobox is somewhat of a hybrid between a ChoiceGroup and LionField, therefore we copy over
+   * some of the LionField members to align with its interface.
+   *
+   * The view value. Will be delegated to `._inputNode.value`
+   */
+  get value() {
+    return this._inputNode?.value || this.__value || '';
+  }
+
+  /** @param {string} value */
+  set value(value) {
+    // if not yet connected to dom can't change the value
+    if (this._inputNode) {
+      this._inputNode.value = value;
+      /** @type {string | undefined} */
+      this.__value = undefined;
+    } else {
+      this.__value = value;
+    }
+  }
+
+  reset() {
+    super.reset();
+    // @ts-ignore _initialModelValue comes from ListboxMixin
+    this.value = this._initialModelValue;
+  }
+
   /**
    * @enhance FormControlMixin - add slot[name=selection-display]
    * @protected
@@ -94,9 +219,12 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line class-methods-use-this
   _overlayListboxTemplate() {
-    // TODO: Localize the aria-label
     return html`
-      <div id="overlay-content-node-wrapper" role="dialog" aria-label="Combobox options popup">
+      <div
+        id="overlay-content-node-wrapper"
+        role="dialog"
+        aria-label="${this.msgLit(`lion-combobox:optionsPopup`)}"
+      >
         <slot name="listbox"></slot>
       </div>
       <slot id="options-outlet"></slot>
@@ -187,7 +315,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    * @protected
    */
   get _inputNode() {
-    if (this._ariaVersion === '1.1') {
+    if (this._ariaVersion === '1.1' && this._comboboxNode) {
       return /** @type {HTMLInputElement} */ (this._comboboxNode.querySelector('input'));
     }
     return /** @type {HTMLInputElement} */ (this._comboboxNode);
@@ -258,7 +386,11 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
      * By default, the listbox closes on empty, similar to wai-aria example and <datalist>
      */
     this.showAllOnEmpty = false;
-
+    /**
+     * If set to false, the value is allowed to not match any of the options.
+     * We set the default to true for backwards compatibility
+     */
+    this.requireOptionMatch = true;
     /**
      * @configure ListboxMixin: the wai-aria pattern and <datalist> rotate
      */
@@ -267,7 +399,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
      * @configure ListboxMixin: the wai-aria pattern and <datalist> have selection follow focus
      */
     this.selectionFollowsFocus = true;
-
+    this.defaultValidators.push(new MatchesOption());
     /**
      * For optimal support, we allow aria v1.1 on newer browsers
      * @type {'1.1'|'1.0'}
@@ -354,6 +486,18 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
   }
 
   /**
+   * Converts viewValue to modelValue
+   * @param {string} value - viewValue: the formatted value inside <input>
+   * @returns {*} modelValue
+   */
+  parser(value) {
+    if (this.requireOptionMatch && this.checkedIndex === -1 && value !== '') {
+      return new Unparseable(value);
+    }
+    return value;
+  }
+
+  /**
    * When textbox value doesn't match checkedIndex anymore, update accordingly...
    * @protected
    */
@@ -363,7 +507,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     if (!this.multipleChoice && !autoselect && checkedElement) {
       const textboxValue = this._getTextboxValueFromOption(checkedElement);
       if (!this._inputNode.value.startsWith(textboxValue)) {
-        this.checkedIndex = -1;
+        this.setCheckedIndex(-1);
       }
     }
   }
@@ -410,6 +554,15 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
     if (typeof this._selectionDisplayNode?.onComboboxElementUpdated === 'function') {
       this._selectionDisplayNode.onComboboxElementUpdated(changedProperties);
+    }
+
+    if (changedProperties.has('requireOptionMatch') || changedProperties.has('multipleChoice')) {
+      if (!this.requireOptionMatch && this.multipleChoice) {
+        // TODO implement !requireOptionMatch and multipleChoice flow
+        throw new Error(
+          "multipleChoice and requireOptionMatch=false can't be used at the same time (yet).",
+        );
+      }
     }
   }
 
@@ -488,7 +641,13 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
    */
   // eslint-disable-next-line class-methods-use-this
   _getTextboxValueFromOption(option) {
-    return option.choiceValue;
+    if (option) {
+      return option.choiceValue;
+    }
+    if (this.modelValue instanceof Unparseable) {
+      return this.modelValue.viewValue;
+    }
+    return this.modelValue;
   }
 
   /**
@@ -745,7 +904,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
           if (isInlineAutoFillCandidate) {
             const textboxValue = this._getTextboxValueFromOption(option);
-            const stringValues = typeof textboxValue === 'string' && typeof curValue === 'string';
+            const stringValues =
+              textboxValue && typeof textboxValue === 'string' && typeof curValue === 'string';
             const beginsWith =
               stringValues && textboxValue.toLowerCase().indexOf(curValue.toLowerCase()) === 0;
             // We only can do proper inline autofilling when the beginning of the word matches
@@ -793,7 +953,8 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
     // [7]. If no autofill took place, we are left with the previously matched option; correct this
     if (autoselect && !hasAutoFilled && !this.multipleChoice) {
       // This means there is no match for checkedIndex
-      this.checkedIndex = -1;
+      this.setCheckedIndex(-1);
+      this.modelValue = this.parser(inputValue);
     }
 
     // [8]. These values will help computing autofill intentions next autocomplete cycle
@@ -856,6 +1017,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
       ...withDropdownConfig(),
       elementToFocusAfterHide: undefined,
       invokerNode: this._comboboxNode,
+      visibilityTriggerFunction: undefined,
     });
   }
 
@@ -1020,6 +1182,7 @@ export class LionCombobox extends OverlayMixin(LionListbox) {
 
   clear() {
     super.clear();
-    this._inputNode.value = '';
+    this.value = '';
+    this.__shouldAutocompleteNextUpdate = true;
   }
 }

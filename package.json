@@ -41,7 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.10.1",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
-    "@changesets/cli": "^2.22.0",
+    "@changesets/cli": "^2.26.1",
     "@custom-elements-manifest/analyzer": "^0.5.7",
     "@open-wc/building-rollup": "^1.2.1",
     "@open-wc/eslint-config": "^7.0.0",
@@ -111,6 +111,18 @@
       "maxSize": "20 kB"
     }
   ],
+  "comments": {
+    "overrides": {
+      "sharp": [
+        "Version of 'sharp' package we get via '@rocket/cli' is too old to be built on a Mac.",
+        "But updating package '@rocket-cli' causes our portal to break. Reason unknown.",
+        "So, we override the sharp version in here until '@rocket-cli' can be updated."
+      ]
+    }
+  },
+  "overrides": {
+    "sharp": "^0.29.x"
+  },
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
