@@ -482,10 +482,10 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   /**
    * @override
-   * @param {Event} ev
+   * @param {Event=} ev
    * @protected
    */
-  // @ts-expect-error
+
   _onChange(ev) {
     // Here, we take over the responsibility of InteractionStateMixin, as _leaveEvent is not the best trigger in this case.
     // Giving feedback right after the file dialog is closed results in best UX.
@@ -493,7 +493,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     // Here, we connect ourselves to the FormatMixin flow...
     // TODO: should we call super._onChange(ev) here instead?
     this._onUserInputChanged();
-    this._processFiles(/** @type {HTMLInputElement & {files:InputFile[]}} */ (ev.target)?.files);
+    this._processFiles(/** @type {HTMLInputElement & {files:InputFile[]}} */ (ev?.target)?.files);
   }
 
   /**

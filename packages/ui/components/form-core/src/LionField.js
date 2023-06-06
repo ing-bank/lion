@@ -72,7 +72,7 @@ export class LionField extends FormControlMixin(
 
   /**
    * Dispatches custom bubble event
-   * @param {Event} ev
+   * @param {Event=} ev
    * @protected
    */
   // eslint-disable-next-line no-unused-vars
