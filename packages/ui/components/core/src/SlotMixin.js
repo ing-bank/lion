@@ -83,6 +83,7 @@ const SlotMixinImplementation = superclass =>
         slotName,
         shouldRerender: true,
       });
+      // TODO: this is deprecated, remove later
       slotFunctionResult.afterRender?.();
     }
 

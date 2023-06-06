@@ -74,7 +74,6 @@ class MyAccessibleControl extends SlotMixin(LitElement) {
      'rerenderable-slot': () => {
        return {
          template: html`<w-c>${this.litProperty}</w-c>`,
-         afterRender: () => { /** sync some state */ },
        }
      },
      // undefined (conditional slot)
@@ -104,15 +103,12 @@ A `SlotRerenderObject` looks like this:
 
 ```ts
 {
- template: TemplateResult;
- afterRender?: Function;
-};
+  template: TemplateResult;
+}
 ```
 
-It is meant for complex templates that need rerenders. Normally - when rendering into shadow dom via `LitElement.render` - we get rerenders
-"for free" via [property effects](https://lit.dev/docs/components/properties/#when-properties-change).
-When we configure `SlotFunctionResult` to return a `SlotRerenderObject`, we get the same behavior for light dom.
-For this rerendering to work predictably (no focus and other interaction issues), the slot will be created with a wrapper div.
+It is meant for complex templates that need rerenders and are bound to the [reactive update cycle](https://lit.dev/docs/components/lifecycle/#reactive-update-cycle). The same lifecycle hooks (for instance `updated`) can be used as with templates rendered to the shadow root (via the regular render function).
+For rerendering to work predictably (no focus and other interaction issues), the slot will be created within a wrapper div.
 
 ### Undefined
 

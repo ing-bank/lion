@@ -383,7 +383,7 @@ describe('SlotMixin', () => {
       expect(slot.tagName).to.equal('SPAN');
     });
 
-    it('supports afterRender logic (type "{ template:TemplateResults; afterRender: Function}" )', async () => {
+    it('supports (deprecated) afterRender logic (type "{ template:TemplateResults; afterRender: Function}" )', async () => {
       let varThatProvesAfterRenderIsCalled = 'not called';
 
       const tag = defineCE(
