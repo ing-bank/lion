@@ -3,23 +3,18 @@ name: Verify changes
 on: pull_request
 
 jobs:
-  init:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-      - uses: google/wireit@setup-github-actions-caching/v1
-
   verify:
     name: Verify changes
     runs-on: ubuntu-latest
-    needs: init
     steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
+      - uses: actions/checkout@v2
+
       - name: Sanity check
         run: node ./scripts/lock-scan.js
 
       - name: Setup Node 16.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: 16.x
 
@@ -35,10 +30,12 @@ jobs:
   browser-tests:
     name: Browser tests
     runs-on: ubuntu-latest
-    needs: init
     steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
+      - uses: actions/checkout@v2
+
       - name: Setup Node 16.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: 16.x
 
@@ -52,15 +49,17 @@ jobs:
 
   node-tests:
     name: Node tests
-    needs: init
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node-version: [16.x]
         os: [ubuntu-latest]
     steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
+      - uses: actions/checkout@v2
+
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -79,10 +78,11 @@ jobs:
         node-version: [16.x]
         os: [windows-latest]
     steps:
-      - needs: init
+      - uses: google/wireit@setup-github-actions-caching/v1
+      - uses: actions/checkout@v2
 
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
 
