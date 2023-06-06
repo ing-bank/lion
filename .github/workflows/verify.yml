@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - uses: google/wireit@setup-github-actions-caching/v1
 
   verify:
@@ -19,7 +19,7 @@ jobs:
         run: node ./scripts/lock-scan.js
 
       - name: Setup Node 16.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: 16.x
 
@@ -38,7 +38,7 @@ jobs:
     needs: init
     steps:
       - name: Setup Node 16.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: 16.x
 
@@ -60,7 +60,7 @@ jobs:
         os: [ubuntu-latest]
     steps:
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -72,17 +72,16 @@ jobs:
 
   # Note this is a duplicate of the matrix (so we have 2 1x1 matrices). Up for improvement...
   node-tests-windows:
-    name: Node tests
+    name: Node tests windows
+    needs: init
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node-version: [16.x]
         os: [windows-latest]
     steps:
-      - needs: init
-
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
 
