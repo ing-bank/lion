@@ -9,9 +9,9 @@ import { FormControlHost } from '../FormControlMixinTypes.js';
 import { SyncUpdatableHost } from '../utils/SyncUpdatableMixinTypes.js';
 import { Validator } from '../../src/validate/Validator.js';
 
-type FeedbackMessage = {
+export type FeedbackMessage = {
   message: string | Node;
-  type: string;
+  type: ValidationType | string;
   validator?: Validator;
 };
 

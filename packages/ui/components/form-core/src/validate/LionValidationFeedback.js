@@ -3,10 +3,7 @@ import { html, LitElement } from 'lit';
 /**
  * @typedef {import('./Validator.js').Validator} Validator
  * @typedef {import('lit').TemplateResult} TemplateResult
- * @typedef {Object} messageMap
- * @property {string | Node} message
- * @property {string} type
- * @property {Validator} [validator]
+ * @typedef {import('../../types/validate/ValidateMixinTypes.js').FeedbackMessage} FeedbackMessage
  */
 
 /**
@@ -47,7 +44,7 @@ export class LionValidationFeedback extends LitElement {
       if (this.currentType === 'success') {
         this.removeMessage = window.setTimeout(() => {
           this.removeAttribute('type');
-          /** @type {messageMap[]} */
+          /** @type {FeedbackMessage[]} */
           this.feedbackData = [];
         }, 3000);
       }

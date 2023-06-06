@@ -51,5 +51,5 @@ Support for this `exports` field was added to TypeScript 4.7 so for that reason,
 
 ### A new changelog
 
-`@lion/ui` has [a new single CHANGELOG.md]( https://github.com/ing-bank/lion/blob/master/packages/ui/CHANGELOG.md) in `/packages/ui` for the whole package. The older individual changelogs can be
+`@lion/ui` has [a new single CHANGELOG.md](https://github.com/ing-bank/lion/blob/master/packages/ui/CHANGELOG.md) in `/packages/ui` for the whole package. The older individual changelogs can be
 found in the `/packages/ui/_legacy-changelogs` folder.

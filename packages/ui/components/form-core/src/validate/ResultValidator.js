@@ -1,7 +1,7 @@
 import { Validator } from './Validator.js';
 
 /**
- * @desc Instead of evaluating the result of a regular validator, a ResultValidator looks
+ * Instead of evaluating the result of a regular Validator, a ResultValidator looks
  * at the total result of regular Validators. Instead of an execute function, it uses a
  * 'executeOnResults' Validator.
  * ResultValidators cannot be async, and should not contain an execute method.

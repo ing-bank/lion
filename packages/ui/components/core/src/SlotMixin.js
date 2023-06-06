@@ -90,8 +90,8 @@ const SlotMixinImplementation = superclass =>
      * Here we rerender slots defined with a `SlotRerenderObject`
      * @param {import('lit-element').PropertyValues } changedProperties
      */
-    updated(changedProperties) {
-      super.updated(changedProperties);
+    update(changedProperties) {
+      super.update(changedProperties);
 
       if (this.__slotsThatNeedRerender.size) {
         for (const slotName of Array.from(this.__slotsThatNeedRerender)) {

@@ -1,29 +1,31 @@
-import { LitElement, html } from 'lit';
-import { Required, MinLength } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-form.js';
-import '@lion/ui/define/lion-fieldset.js';
-import '@lion/ui/define/lion-input.js';
-import '@lion/ui/define/lion-input-date.js';
-import '@lion/ui/define/lion-input-datepicker.js';
-import '@lion/ui/define/lion-input-amount.js';
-import '@lion/ui/define/lion-input-iban.js';
-import '@lion/ui/define/lion-input-email.js';
-import '@lion/ui/define/lion-input-tel.js';
-import '@lion/ui/define/lion-input-tel-dropdown.js';
+import '@lion/ui/define/lion-button-reset.js';
+import '@lion/ui/define/lion-button-submit.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
-import '@lion/ui/define/lion-radio-group.js';
-import '@lion/ui/define/lion-radio.js';
-import '@lion/ui/define/lion-select.js';
-import '@lion/ui/define/lion-select-rich.js';
+import '@lion/ui/define/lion-combobox.js';
+import '@lion/ui/define/lion-fieldset.js';
+import '@lion/ui/define/lion-form.js';
+import '@lion/ui/define/lion-input-amount.js';
+import '@lion/ui/define/lion-input-date.js';
+import '@lion/ui/define/lion-input-datepicker.js';
+import '@lion/ui/define/lion-input-email.js';
+import '@lion/ui/define/lion-input-file.js';
+import '@lion/ui/define/lion-input-iban.js';
+import '@lion/ui/define/lion-input-range.js';
+import '@lion/ui/define/lion-input-stepper.js';
+import '@lion/ui/define/lion-input-tel-dropdown.js';
+import '@lion/ui/define/lion-input-tel.js';
+import '@lion/ui/define/lion-input.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-combobox.js';
-import '@lion/ui/define/lion-input-range.js';
-import '@lion/ui/define/lion-textarea.js';
-import '@lion/ui/define/lion-button.js';
+import '@lion/ui/define/lion-radio-group.js';
+import '@lion/ui/define/lion-radio.js';
+import '@lion/ui/define/lion-select-rich.js';
+import '@lion/ui/define/lion-select.js';
 import '@lion/ui/define/lion-switch.js';
-import '@lion/ui/define/lion-input-stepper.js';
+import '@lion/ui/define/lion-textarea.js';
+import { MinLength, Required } from '@lion/ui/form-core.js';
+import { html, LitElement } from 'lit';
 
 export class UmbrellaForm extends LitElement {
   get _lionFormNode() {
@@ -83,6 +85,7 @@ export class UmbrellaForm extends LitElement {
           <lion-input-amount name="money" label="Money"></lion-input-amount>
           <lion-input-iban name="iban" label="Iban"></lion-input-iban>
           <lion-input-email name="email" label="Email"></lion-input-email>
+          <lion-input-file name="file" label="File"></lion-input-file>
           <lion-input-tel name="tel" label="Telephone Number"></lion-input-tel>
           <lion-input-tel-dropdown
             name="tel-dropdown"
@@ -151,7 +154,7 @@ export class UmbrellaForm extends LitElement {
             .validators="${[new Required()]}"
           >
             <lion-checkbox
-              .choiceValue="agreed"
+              .choiceValue="${'agreed'}"
               label="I blindly accept all terms and conditions"
             ></lion-checkbox>
           </lion-checkbox-group>

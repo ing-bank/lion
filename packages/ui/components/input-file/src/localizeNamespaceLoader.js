@@ -1,0 +1,75 @@
+/* eslint-disable import/no-extraneous-dependencies */
+export const localizeNamespaceLoader = /** @param {string} locale */ locale => {
+  switch (locale) {
+    case 'bg-BG':
+      return import('@lion/ui/input-file-translations/bg-BG.js');
+    case 'bg':
+      return import('@lion/ui/input-file-translations/bg.js');
+    case 'cs-CZ':
+      return import('@lion/ui/input-file-translations/cs-CZ.js');
+    case 'cs':
+      return import('@lion/ui/input-file-translations/cs.js');
+    case 'de-DE':
+      return import('@lion/ui/input-file-translations/de-DE.js');
+    case 'de':
+      return import('@lion/ui/input-file-translations/de.js');
+    case 'en-AU':
+      return import('@lion/ui/input-file-translations/en-AU.js');
+    case 'en-GB':
+      return import('@lion/ui/input-file-translations/en-GB.js');
+    case 'en-US':
+      return import('@lion/ui/input-file-translations/en-US.js');
+    case 'en-PH':
+    case 'en':
+      return import('@lion/ui/input-file-translations/en.js');
+    case 'es-ES':
+      return import('@lion/ui/input-file-translations/es-ES.js');
+    case 'es':
+      return import('@lion/ui/input-file-translations/es.js');
+    case 'fr-FR':
+      return import('@lion/ui/input-file-translations/fr-FR.js');
+    case 'fr-BE':
+      return import('@lion/ui/input-file-translations/fr-BE.js');
+    case 'fr':
+      return import('@lion/ui/input-file-translations/fr.js');
+    case 'hu-HU':
+      return import('@lion/ui/input-file-translations/hu-HU.js');
+    case 'hu':
+      return import('@lion/ui/input-file-translations/hu.js');
+    case 'it-IT':
+      return import('@lion/ui/input-file-translations/it-IT.js');
+    case 'it':
+      return import('@lion/ui/input-file-translations/it.js');
+    case 'nl-BE':
+      return import('@lion/ui/input-file-translations/nl-BE.js');
+    case 'nl-NL':
+      return import('@lion/ui/input-file-translations/nl-NL.js');
+    case 'nl':
+      return import('@lion/ui/input-file-translations/nl.js');
+    case 'pl-PL':
+      return import('@lion/ui/input-file-translations/pl-PL.js');
+    case 'pl':
+      return import('@lion/ui/input-file-translations/pl.js');
+    case 'ro-RO':
+      return import('@lion/ui/input-file-translations/ro-RO.js');
+    case 'ro':
+      return import('@lion/ui/input-file-translations/ro.js');
+    case 'ru-RU':
+      return import('@lion/ui/input-file-translations/ru-RU.js');
+    case 'ru':
+      return import('@lion/ui/input-file-translations/ru.js');
+    case 'sk-SK':
+      return import('@lion/ui/input-file-translations/sk-SK.js');
+    case 'sk':
+      return import('@lion/ui/input-file-translations/sk.js');
+    case 'uk-UA':
+      return import('@lion/ui/input-file-translations/uk-UA.js');
+    case 'uk':
+      return import('@lion/ui/input-file-translations/uk.js');
+    case 'zh-CN':
+    case 'zh':
+      return import('@lion/ui/input-file-translations/zh.js');
+    default:
+      return import('@lion/ui/input-file-translations/en.js');
+  }
+};
