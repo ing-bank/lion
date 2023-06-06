@@ -72,15 +72,14 @@ jobs:
 
   # Note this is a duplicate of the matrix (so we have 2 1x1 matrices). Up for improvement...
   node-tests-windows:
-    name: Node tests
+    name: Node tests windows
+    needs: init
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         node-version: [16.x]
         os: [windows-latest]
     steps:
-      - needs: init
-
       - name: Setup Node ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
