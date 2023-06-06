@@ -122,7 +122,7 @@ describe('lion-selected-file-list', () => {
      * @type {HTMLButtonElement | null | undefined}
      */
     const removeButton = el.shadowRoot?.querySelector('.selected__list__item__remove-button');
-    const removeFileSpy = sinon.spy(el, '_removeFile');
+    const removeFileSpy = sinon.spy(el, /** @type {keyof LionSelectedFileList} */ ('_removeFile'));
     removeButton?.click();
     expect(removeFileSpy).have.been.calledOnce;
     removeFileSpy.restore();
