@@ -26,8 +26,7 @@ API calls to upload the selected files can be done in below two ways which is dr
   help-text="Signature scan file"
   max-file-size="1024000"
   accept="application/PDF"
-  upload-on-form-submit
-  .uploadResponse="${uploadResponse}"
+  upload-on-select
 >
 </lion-input-file>
 ```
@@ -51,29 +50,6 @@ Boolean;
 - Set to `true` when API calls for file upload needs to be done on file selection
 - Set to `false` when API calls for file upload needs to be done on form submit.
 - Default is `false`.
-
-### uploadResponse
-
-An array of the file-specific data to display the feedback of fileUpload
-
-Data structure for uploadResponse array:
-
-```js
-[
-  {
-    name: 'file1.txt', // name of uploaded file
-    status: '', // SUCCESS | FAIL | LOADING
-    errorMessage: '', // custom error message to be displayed
-    id: '', // unique id for future execution reference
-  },
-  {
-    name: 'file2.txt', // name of uploaded file
-    status: '', // SUCCESS | FAIL | LOADING
-    errorMessage: '', // custom error message to be displayed
-    id: '', // unique id for future execution reference
-  },
-];
-```
 
 ## Events
 
@@ -189,134 +165,25 @@ export const multipleFileUpload = () => {
 };
 ```
 
-### Pre-filled state
-
-The pre-filled state of the file upload component shows the files that were being assigned by the user initially.
-
-On every reload of page, the file upload component reverts to the initial state and using the `uploadResponse` property, shows the names(not links) of previously assigned files.
-
-**Note:**
-
-- the list of prefilled files will not be available in `modelValue` or `serializedValue`. This is because value cannot be assigned to native `input` with type `file`
-- Only `Required` validation (if set on `lion-file-input`) is triggered for files which are prefilled.
-
-```js preview-story
-export const prefilledState = () => {
-  return html`
-    <lion-input-file
-      label="Upload"
-      name="myFiles"
-      multiple
-      .validators="${[new Required()]}"
-      .uploadResponse="${[
-        {
-          name: 'file1.txt',
-          status: 'SUCCESS',
-          errorMessage: '',
-          id: '132',
-        },
-        {
-          name: 'file2.txt',
-          status: 'SUCCESS',
-          errorMessage: '',
-          id: 'abcd',
-        },
-      ]}"
-    >
-    </lion-input-file>
-  `;
-};
-```
-
-### With form submit
-
-**Note:** When `lion-input-file` is prefilled, the list of prefilled files will not be available in `modelValue` or `serializedValue`. This is because value cannot be assigned to native `input` with type `file`.
-
-```js preview-story
-const myFormReset = ev => {
-  const input = ev.target.querySelector('lion-input-file');
-  input.reset();
-  console.log(input.modelValue);
-};
-
-const myFormSubmit = ev => {
-  ev.preventDefault();
-  const input = ev.target.querySelector('lion-input-file');
-  console.log(input.hasFeedbackFor);
-  console.log(input.serializedValue);
-  return false;
-};
-
-export const withIngForm = () => {
-  class FilenameLengthValidator extends Validator {
-    static get validatorName() {
-      return 'FilenameLengthValidator';
-    }
-
-    static getMessage(data) {
-      return `Filename length should not exceed ${data.params.maxFilenameLength} characters`;
-    }
-
-    // eslint-disable-next-line class-methods-use-this
-    checkFilenameLength(val, allowedFileNameLength) {
-      return val <= allowedFileNameLength;
-    }
-
-    execute(modelVal, { maxFilenameLength }) {
-      const invalidFileIndex = modelVal.findIndex(
-        file => !this.checkFilenameLength(file.name.length, maxFilenameLength),
-      );
-      return invalidFileIndex > -1;
-    }
-  }
-
-  return html`
-    <form @submit="${myFormSubmit}" @reset="${myFormReset}">
-      <lion-input-file
-        label="Upload"
-        name="upload"
-        multiple
-        .validators="${[new Required(), new FilenameLengthValidator({ maxFilenameLength: 20 })]}"
-        .uploadResponse="${[
-          {
-            name: 'file1.zip',
-            status: 'SUCCESS',
-            id: '132',
-          },
-          {
-            name: 'file2.zip',
-            status: 'SUCCESS',
-            id: 'abcd',
-          },
-        ]}"
-      >
-      </lion-input-file>
-      <button type="reset">Reset</button>
-      <button>Upload</button>
-    </form>
-  `;
-};
-```
-
 ### Without form submit
 
 Set `uploadOnSelect` property to `true`. This option can be used when Server API calls are needed as soon as it is selected by the user.
 
-For this scenario, the list of files is displayed based on the `uploadResponse` property which needs to maintained by the consumers of this component
+For this scenario, the list of files is displayed based on the `_fileSelectResponse` property which needs to maintained by the consumers of this component
 
 Below is the flow:
 
 #### When user uploads new file(s)
 
 1. `file-list-changed` event is fired from component with the newly added files
-2. Initiate the request to your backend API and set the status of the relevant files to `LOADING` in `uploadResponse` property
-3. Once the API request in completed, set the status of relevant files to `SUCCESS` or `FAIL` in `uploadResponse` property
+2. Initiate the request to your backend API and set the status of the relevant files to `LOADING` in `_fileSelectResponse` property
+3. Once the API request in completed, set the status of relevant files to `SUCCESS` or `FAIL` in `_fileSelectResponse` property
 
 #### When user deletes a file
 
 1. `file-removed` event is fired from component with the deleted file
-2. Initiate the delete request to your backend API and set the status of the relevant files as `LOADING` in `uploadResponse` property
-3. Once the API request in completed, delete the file object from `uploadResponse` property
+2. Initiate the delete request to your backend API and set the status of the relevant files as `LOADING` in `_fileSelectResponse` property
+3. Once the API request in completed, delete the file object from `_fileSelectResponse` property
 
 ```js preview-story
 export const uploadWithoutFormSubmit = () => {
@@ -324,40 +191,48 @@ export const uploadWithoutFormSubmit = () => {
     <lion-input-file
       label="Upload"
       name="upload"
-      .multiple="${true}"
-      .uploadOnSelect="${true}"
+      multiple
+      upload-on-select
       @file-removed="${ev => {
-        ev.target.uploadResponse[
-          ev.target.uploadResponse.findIndex(file => file.name === ev.detail.uploadResponse.name)
+        ev.target._fileSelectResponse[
+          ev.target._fileSelectResponse.findIndex(
+            file => file.name === ev.detail._fileSelectResponse.name,
+          )
         ].status = 'LOADING';
-        ev.target.uploadResponse = [...ev.target.uploadResponse]; // update uploadResponse after API calls are completed
+        ev.target._fileSelectResponse = [...ev.target._fileSelectResponse]; // update _fileSelectResponse after API calls are completed
         setTimeout(() => {
-          ev.target.uploadResponse[
-            ev.target.uploadResponse.findIndex(file => file.name === ev.detail.uploadResponse.name)
+          ev.target._fileSelectResponse[
+            ev.target._fileSelectResponse.findIndex(
+              file => file.name === ev.detail._fileSelectResponse.name,
+            )
           ] = {};
-          ev.target.uploadResponse = [...ev.target.uploadResponse]; // update uploadResponse after API calls are completed
+          ev.target._fileSelectResponse = [...ev.target._fileSelectResponse]; // update _fileSelectResponse after API calls are completed
         }, 1000);
       }}"
       @file-list-changed="${ev => {
         if (!ev.detail.newFiles[0]) {
           return;
         }
-        ev.target.uploadResponse[
-          ev.target.uploadResponse.findIndex(file => file.name === ev.detail.newFiles[0].name)
+        ev.target._fileSelectResponse[
+          ev.target._fileSelectResponse.findIndex(file => file.name === ev.detail.newFiles[0].name)
         ].status = 'LOADING';
-        ev.target.uploadResponse = [...ev.target.uploadResponse]; // update uploadResponse after API calls are completed
+        ev.target._fileSelectResponse = [...ev.target._fileSelectResponse]; // update _fileSelectResponse after API calls are completed
 
         if (ev.detail.newFiles[1]) {
-          ev.target.uploadResponse[
-            ev.target.uploadResponse.findIndex(file => file.name === ev.detail.newFiles[1].name)
+          ev.target._fileSelectResponse[
+            ev.target._fileSelectResponse.findIndex(
+              file => file.name === ev.detail.newFiles[1].name,
+            )
           ].status = 'LOADING';
-          ev.target.uploadResponse = [...ev.target.uploadResponse]; // update uploadResponse after API calls are completed
+          ev.target._fileSelectResponse = [...ev.target._fileSelectResponse]; // update _fileSelectResponse after API calls are completed
         }
         setTimeout(() => {
-          ev.target.uploadResponse[
-            ev.target.uploadResponse.findIndex(file => file.name === ev.detail.newFiles[0].name)
+          ev.target._fileSelectResponse[
+            ev.target._fileSelectResponse.findIndex(
+              file => file.name === ev.detail.newFiles[0].name,
+            )
           ].status = 'SUCCESS';
-          ev.target.uploadResponse = [...ev.target.uploadResponse]; // update uploadResponse after API calls are completed
+          ev.target._fileSelectResponse = [...ev.target._fileSelectResponse]; // update _fileSelectResponse after API calls are completed
         }, 3000);
 
         setTimeout(() => {
@@ -367,14 +242,16 @@ export const uploadWithoutFormSubmit = () => {
               status: 'FAIL',
               errorMessage: 'error from server',
             };
-            ev.target.uploadResponse[
-              ev.target.uploadResponse.findIndex(file => file.name === ev.detail.newFiles[1].name)
+            ev.target._fileSelectResponse[
+              ev.target._fileSelectResponse.findIndex(
+                file => file.name === ev.detail.newFiles[1].name,
+              )
             ] = {
               name: ev.detail.newFiles[1].name,
               status: 'FAIL',
               errorMessage: 'error from server',
             };
-            ev.target.uploadResponse = [...ev.target.uploadResponse];
+            ev.target._fileSelectResponse = [...ev.target._fileSelectResponse];
           }
         }, 3000);
       }}"
@@ -399,7 +276,7 @@ export const dragAndDrop = () => {
       accept=".png"
       max-file-size="1024000"
       enable-drop-zone
-      .multiple="${true}"
+      multiple
       .validators="${[new Required()]}"
     >
     </lion-input-file>
