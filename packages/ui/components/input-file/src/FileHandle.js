@@ -1,7 +1,7 @@
-import { IsAcceptedFile } from './validators.js';
+import { IsAllowedFile } from './validators.js';
 
 /**
- * @typedef {import('../types/input-file.js').SystemFile} SystemFile
+ * @typedef {import('../types/index.js').SystemFile} SystemFile
  */
 
 // Do these global constants add value? They are only used in this file
@@ -30,15 +30,15 @@ export const UPLOAD_FILE_STATUS = {
 export class FileHandle {
   /**
    * @param {SystemFile} systemFile
-   * @param {{ allowedFileTypes: Array<string>; allowedFileExtensions: Array<string>; maxFileSize: number; }} _acceptCriteria
+   * @param {{ allowedFileTypes: Array<string>; allowedFileExtensions: Array<string>; maxFileSize: number; }} _allowedFileCriteria
    */
-  constructor(systemFile, _acceptCriteria) {
+  constructor(systemFile, _allowedFileCriteria) {
     /**
      * @type {Array<string>}
      */
     this.failedProp = [];
     this.systemFile = systemFile;
-    this._acceptCriteria = _acceptCriteria;
+    this._allowedFileCriteria = _allowedFileCriteria;
     this.uploadFileStatus();
     if (this.failedProp.length === 0) {
       this.createDownloadUrl(systemFile);
@@ -59,26 +59,31 @@ export class FileHandle {
   // TODO: seems to suggest upload is going on...
   // checks the file size and type to set failedProp property
   uploadFileStatus() {
-    if (this._acceptCriteria.allowedFileExtensions.length) {
+    if (this._allowedFileCriteria.allowedFileExtensions.length) {
       const fileExtension = this._getFileNameExtension(this.systemFile.name);
       if (
-        !IsAcceptedFile.isExtensionAllowed(
+        !IsAllowedFile.isExtensionAllowed(
           fileExtension,
-          this._acceptCriteria.allowedFileExtensions,
+          this._allowedFileCriteria.allowedFileExtensions,
         )
       ) {
         this.status = UPLOAD_FILE_STATUS.fail;
         this.failedProp.push(FILE_FAILED_PROP.type);
       }
-    } else if (this._acceptCriteria.allowedFileTypes.length) {
+    } else if (this._allowedFileCriteria.allowedFileTypes.length) {
       const fileType = this.systemFile.type;
-      if (!IsAcceptedFile.isFileTypeAllowed(fileType, this._acceptCriteria.allowedFileTypes)) {
+      if (!IsAllowedFile.isFileTypeAllowed(fileType, this._allowedFileCriteria.allowedFileTypes)) {
         this.status = UPLOAD_FILE_STATUS.fail;
         this.failedProp.push(FILE_FAILED_PROP.type);
       }
     }
 
-    if (IsAcceptedFile.checkFileSize(this.systemFile.size, this._acceptCriteria.maxFileSize)) {
+    if (
+      IsAllowedFile.isBelowOrEqualToMaxSize(
+        this.systemFile.size,
+        this._allowedFileCriteria.maxFileSize,
+      )
+    ) {
       if (this.status !== UPLOAD_FILE_STATUS.fail) {
         this.status = UPLOAD_FILE_STATUS.pass;
       }

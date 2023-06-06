@@ -4,7 +4,7 @@ import sinon from 'sinon';
 
 /**
  * @typedef {import('../src/LionSelectedFileList.js').LionSelectedFileList} LionSelectedFileList
- * @typedef {import('../types/input-file.js').InputFile} InputFile
+ * @typedef {import('../types/index.js').InputFile} InputFile
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionSelectedFileList>} */ (

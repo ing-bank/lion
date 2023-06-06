@@ -5,9 +5,9 @@ import { expect, fixture as _fixture, html, oneEvent } from '@open-wc/testing';
 import sinon from 'sinon';
 
 /**
- * @typedef {import('../src/LionInputFile.js.bk').LionInputFile} LionInputFile
- * @typedef {import('../types/input-file.js').InputFile} InputFile
- * @typedef {import('../types/input-file.js').SystemFile} SystemFile
+ * @typedef {import('../src/LionInputFile.js').LionInputFile} LionInputFile
+ * @typedef {import('../types/index.js').InputFile} InputFile
+ * @typedef {import('../types/index.js').SystemFile} SystemFile
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputFile>} */ (_fixture);
@@ -66,7 +66,7 @@ describe('lion-input-file', () => {
     expect(_inputNode.type).to.equal('file');
   });
 
-  it('should add single file and dispatch "file-list-changed" event with newly added file', async () => {
+  it('adds single file and dispatch "file-list-changed" event with newly added file', async () => {
     const el = await fixture(html`<lion-input-file></lion-input-file>`);
 
     const fileListChangedEventPromise = oneEvent(el, 'file-list-changed');
@@ -81,7 +81,8 @@ describe('lion-input-file', () => {
     expect(fileListChangedEvent.detail.newFiles[0].name).to.equal('foo.txt');
   });
 
-  it('should select 1 file', async () => {
+  // TODO: we actually test whether a method is called on change
+  it('selects 1 file', async () => {
     const el = await fixture(html`<lion-input-file></lion-input-file>`);
     // @ts-expect-error [allow-protected-in-test]
     const processedFilesSpy = sinon.spy(el, '_processFiles');
@@ -92,7 +93,9 @@ describe('lion-input-file', () => {
     processedFilesSpy.restore();
   });
 
-  it('should retain selected file when "Cancel" button is clicked in system file explorer dialog', async () => {
+  // TODO: what is the purpose of this test?
+  // Should the list view not always correspond with the value?
+  it('retains selected file when "Cancel" button is clicked in system file explorer dialog', async () => {
     const el = await fixture(html`<lion-input-file></lion-input-file>`);
 
     mimicSelectFile(el, [file]);
@@ -110,7 +113,7 @@ describe('lion-input-file', () => {
     expect(el._fileViewList.length).to.equal(1);
   });
 
-  it('has an attribute focused when focused', async () => {
+  it('has an attribute "focused" when button is focused', async () => {
     const el = await fixture(html` <lion-input-file label="Select"></lion-input-file> `);
 
     // @ts-expect-error [allow-protected-in-test]
@@ -124,7 +127,7 @@ describe('lion-input-file', () => {
     expect(el.hasAttribute('focused')).to.be.false;
   });
 
-  it('should set touched property true on change', async () => {
+  it('sets touched property true on change', async () => {
     const el = await fixture(html` <lion-input-file label="Select"></lion-input-file> `);
     expect(el.touched).to.be.false;
 
@@ -133,7 +136,7 @@ describe('lion-input-file', () => {
     expect(el.touched).to.be.true;
   });
 
-  it('should replace previous file when new file is selected', async () => {
+  it('replaces previous file when new file is selected', async () => {
     const el = await fixture(html`<lion-input-file></lion-input-file>`);
 
     mimicSelectFile(el, [file]);
@@ -151,14 +154,15 @@ describe('lion-input-file', () => {
     expect(el._fileViewList[0].systemFile.name).to.equal('bar.txt');
   });
 
-  describe('invalid file types', async () => {
+  describe('Invalid file types', async () => {
     const fileWrongType = /** @type {InputFile} */ (
       new File(['foobar'], 'foobar.txt', {
         type: 'xxxxx',
       })
     );
 
-    it('should not be added to the selected list', async () => {
+    // TODO: it seems that it IS actually added? (do we mean it's marked as failed?)
+    it('will not be added to the selected list', async () => {
       const el = await fixture(html`
         <lion-input-file label="Select" accept="text/plain"></lion-input-file>
       `);
@@ -177,113 +181,116 @@ describe('lion-input-file', () => {
       expect(el._fileSelectResponse[0].status).to.equal('FAIL');
     });
 
-    it('error message should use main type when "/*" is used', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept="text/*"></lion-input-file>
-      `);
+    describe('Error messages', () => {
+      it('for "/*" uses main type ("text")', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept="text/*"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please select a(n) text file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.deep.equal('Please select a(n) text file with max 500MB.');
+        });
       });
-    });
 
-    it('error message should use main type when "text/plain" is used', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept="text/plain"></lion-input-file>
-      `);
+      it('for "text/plain", uses main type ("text")', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept="text/plain"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please select a(n) text file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.deep.equal('Please select a(n) text file with max 500MB.');
+        });
       });
-    });
 
-    it('error message should use sub type when e.g. "text/html" is used', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept="text/html"></lion-input-file>
-      `);
+      it('for "text/html", uses sub type ("html")', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept="text/html"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please select a(n) .html file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.deep.equal('Please select a(n) .html file with max 500MB.');
+        });
       });
-    });
 
-    it('error message should use the first sub type when e.g. "image/svg+xml" is used', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept="image/svg+xml"></lion-input-file>
-      `);
+      it('for "image/svg+xml", uses first sub type (".svg")', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept="image/svg+xml"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please select a(n) .svg file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.deep.equal('Please select a(n) .svg file with max 500MB.');
+        });
       });
-    });
 
-    it('can reflect multiple types in the error message', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept="text/html, text/csv"></lion-input-file>
-      `);
+      it('can reflect multiple types', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept="text/html, text/csv"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please select a .html or .csv file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.equal('Please select a .html or .csv file with max 500MB.');
+        });
       });
-    });
 
-    it('can reflect multiple types in the error message also with a space " "', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept="text/html,text/csv"></lion-input-file>
-      `);
+      it('can reflect multiple types, also with a space " "', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept="text/html,text/csv"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please select a .html or .csv file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.deep.equal('Please select a .html or .csv file with max 500MB.');
+        });
       });
-    });
 
-    it('can reflect multiple types in the error message with preference to extensions', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept=".jpg,image/svg+xml"></lion-input-file>
-      `);
+      it('can reflect multiple types with preference to extensions', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept=".jpg,image/svg+xml"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.deep.equal('Please select a(n) .jpg file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.deep.equal('Please select a(n) .jpg file with max 500MB.');
+        });
       });
     });
   });
 
-  describe('invalid file extensions', async () => {
+  describe('Invalid file extensions', async () => {
     const fileWrongType = /** @type {InputFile} */ (
       new File(['foobar'], 'foobar.txt', {
         type: 'xxxxx',
       })
     );
 
-    it('should not be added to the selected list', async () => {
+    // TODO: it seems that it IS actually added? (do we mean it's marked as failed?)
+    it('will not be added to the selected list', async () => {
       const el = await fixture(html`
         <lion-input-file label="Select" accept=".jpg, .png, .pdf"></lion-input-file>
       `);
@@ -302,68 +309,71 @@ describe('lion-input-file', () => {
       expect(el._fileSelectResponse[0].status).to.equal('FAIL');
     });
 
-    it('error message should add the file extension to the validator message', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept=".jpg"></lion-input-file>
-      `);
+    describe('Error messages', () => {
+      it('adds the file extension', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept=".jpg"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please select a(n) .jpg file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.equal('Please select a(n) .jpg file with max 500MB.');
+        });
       });
-    });
 
-    it('error message should add all file extensions to the validator message', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept=".jpg, .png, .pdf"></lion-input-file>
-      `);
+      it('adds all file extensions', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept=".jpg, .png, .pdf"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
+        });
       });
-    });
 
-    it('error message should add all file extensions to the validator message also works without spaces " "', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept=".jpg,.png,.pdf"></lion-input-file>
-      `);
+      it('adds all file extensions, also works without spaces " "', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept=".jpg,.png,.pdf"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
+        });
       });
-    });
 
-    it('error message should add all file extensions to the validator message also works without dots "."', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept="jpg, png, pdf"></lion-input-file>
-      `);
+      it('adds all file extensions, also works without dots "."', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" accept="jpg, png, pdf"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongType]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
+        });
       });
     });
   });
 
-  describe('invalid file sizes', async () => {
+  describe('Invalid file sizes', async () => {
     // Size of this file is 4 bytes
     const fileWrongSize = /** @type {InputFile} */ (new File(['foobar'], 'foobar.txt'));
 
-    it('should not be added to the selected list', async () => {
+    // TODO: it seems that it IS actually added? (do we mean it's marked as failed?)
+    it('will not be added to the selected list', async () => {
       const el = await fixture(html` <lion-input-file max-file-size="2"></lion-input-file> `);
 
       mimicSelectFile(el, [fileWrongSize]);
@@ -380,40 +390,44 @@ describe('lion-input-file', () => {
       expect(el._fileSelectResponse[0].status).to.equal('FAIL');
     });
 
-    it('error message should show only the max file size if no type/extension restrictions are defined', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" max-file-size="2"></lion-input-file>
-      `);
+    describe('Error messages', () => {
+      it('shows only the max file size if no type/extension restrictions are defined', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" max-file-size="2"></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongSize]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongSize]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please select a file with max 2 bytes.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.equal('Please select a file with max 2 bytes.');
+        });
       });
-    });
 
-    it('error message should show the correct max file size if type/extension restrictions are defined', async () => {
-      const el = await fixture(html`
-        <lion-input-file
-          label="Select"
-          max-file-size="2"
-          accept=".jpg, .png, .pdf"
-        ></lion-input-file>
-      `);
+      it('shows the correct max file size if type/extension restrictions are defined', async () => {
+        const el = await fixture(html`
+          <lion-input-file
+            label="Select"
+            max-file-size="2"
+            accept=".jpg, .png, .pdf"
+          ></lion-input-file>
+        `);
 
-      mimicSelectFile(el, [fileWrongSize]);
-      await el.updateComplete;
+        mimicSelectFile(el, [fileWrongSize]);
+        await el.updateComplete;
 
-      // @ts-expect-error [allow-protected-in-test]
-      el._fileViewList[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 2 bytes.');
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileViewList[0].validationFeedback?.forEach(error => {
+          expect(error.message).to.equal(
+            'Please select a .jpg, .png or .pdf file with max 2 bytes.',
+          );
+        });
       });
     });
   });
 
-  it('should send "file-list-changed" event if selecting files succeeded partially', async () => {
+  it('sends "file-list-changed" event if selecting files succeeded partially', async () => {
     const el = await fixture(html`<lion-input-file max-file-size="2"></lion-input-file>`);
 
     // Size of this file is 4 bytes
@@ -434,7 +448,7 @@ describe('lion-input-file', () => {
     expect(fileListChangedEvent.detail.newFiles.length).to.equal(1);
   });
 
-  it('should update downloadurl for successful files', async () => {
+  it('updates downloadUrl for successful files', async () => {
     const el = await fixture(html`<lion-input-file></lion-input-file>`);
 
     setTimeout(() => {
@@ -447,7 +461,7 @@ describe('lion-input-file', () => {
     expect(el._fileViewList[0].downloadUrl).to.exist;
   });
 
-  describe('format', () => {
+  describe('Format', () => {
     it('modelValue is an array of files', async () => {
       const el = await fixture(html` <lion-input-file name="select"></lion-input-file> `);
 
@@ -527,10 +541,10 @@ describe('lion-input-file', () => {
     });
   });
 
-  describe('multiple file select', () => {
-    it('should add multiple files', async () => {
+  describe('Multiple file select', () => {
+    it('adds multiple files', async () => {
       const el = await fixture(html`
-        <lion-input-file label="Select" .multiple="${true}"> </lion-input-file>
+        <lion-input-file label="Select" multiple> </lion-input-file>
       `);
 
       mimicSelectFile(el, [file, file2]);
@@ -548,8 +562,8 @@ describe('lion-input-file', () => {
       expect(el._fileSelectResponse[1].name).to.equal('bar.txt');
     });
 
-    it('should add new files and retain previous files', async () => {
-      const el = await fixture(html` <lion-input-file .multiple="${true}"></lion-input-file> `);
+    it('adds new files and retains previous files', async () => {
+      const el = await fixture(html` <lion-input-file multiple></lion-input-file> `);
 
       setTimeout(() => {
         mimicSelectFile(el, [file, file2]);
@@ -571,7 +585,7 @@ describe('lion-input-file', () => {
       expect(el._fileViewList.length).to.equal(4);
     });
 
-    it('should add multiple files and dispatch file-list-changed event ONLY with newly added file', async () => {
+    it('adds multiple files and dispatch file-list-changed event ONLY with newly added file', async () => {
       const el = await fixture(html` <lion-input-file .multiple="${true}"></lion-input-file> `);
 
       setTimeout(() => {
@@ -595,8 +609,8 @@ describe('lion-input-file', () => {
       expect(fileListChangedEvent1.detail.newFiles[1].name).to.equal('foo4.txt');
     });
 
-    it('should not allow duplicate files to be selected and show notification message', async () => {
-      const el = await fixture(html` <lion-input-file .multiple="${true}"></lion-input-file> `);
+    it('disallows duplicate files to be selected and show notification message', async () => {
+      const el = await fixture(html` <lion-input-file multiple></lion-input-file> `);
 
       setTimeout(() => {
         mimicSelectFile(el, [file]);
@@ -630,7 +644,7 @@ describe('lion-input-file', () => {
     });
   });
 
-  describe('status and error', () => {
+  describe('Status and error', () => {
     /**
      * @type {LionInputFile}
      */
@@ -690,7 +704,7 @@ describe('lion-input-file', () => {
     });
   });
 
-  describe('validations when used with lion-form', () => {
+  describe('Validations when used with lion-form', () => {
     it('should throw error with Required validator', async () => {
       const el = await fixture(html`
         <lion-input-file
@@ -764,7 +778,7 @@ describe('lion-input-file', () => {
     });
   });
 
-  describe('file select component with prefilled state', () => {
+  describe('File select component with prefilled state', () => {
     /**
      * @type {LionInputFile}
      */
@@ -807,6 +821,7 @@ describe('lion-input-file', () => {
       expect(el._fileViewList[1].validationFeedback[0].message).to.equal('something went wrong');
     });
 
+    // TODO: test by triggering a click on the cross button
     it('should remove file on click of cross button', async () => {
       /**
        * @type {Partial<InputFile>}
@@ -886,7 +901,7 @@ describe('lion-input-file', () => {
     });
   });
 
-  describe('drag and drop', () => {
+  describe('Drag and drop', () => {
     /**
      * @type {LionInputFile}
      */
@@ -949,7 +964,7 @@ describe('lion-input-file', () => {
     });
   });
 
-  describe('liveUpload', () => {
+  describe('uploadOnSelect', () => {
     it('should not remove file on click of cross button and fire file-removed event', async () => {
       /**
        * @type {Partial<InputFile>}
@@ -961,7 +976,9 @@ describe('lion-input-file', () => {
         response: { name: 'foo.txt', status: 'SUCCESS' },
       };
 
-      const el = await fixture(html` <lion-input-file .liveUpload="${true}"> </lion-input-file> `);
+      const el = await fixture(
+        html` <lion-input-file .uploadOnSelect="${true}"> </lion-input-file> `,
+      );
 
       el.modelValue = [file];
       mimicSelectFile(el, [file]);
@@ -1005,7 +1022,7 @@ describe('lion-input-file', () => {
       const el = await fixture(html`
         <lion-input-file
           label="Select"
-          live-upload
+          upload-on-select
           ._fileSelectResponse="${[
             {
               name: 'file1.txt',
@@ -1086,7 +1103,7 @@ describe('lion-input-file', () => {
       await expect(el).to.be.accessible();
     });
 
-    describe('has correct aria-roles', async () => {
+    describe('Aria roles', async () => {
       it('select-button has aria-labelledby set to itself and the label', async () => {
         const el = await fixture(html` <lion-input-file label="Select"></lion-input-file> `);
         // @ts-expect-error [allow-protected-in-test]

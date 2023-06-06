@@ -14,12 +14,16 @@ export declare class DisabledHost {
    */
   public retractRequestToBeDisabled(): void;
 
-  private __internalSetDisabled(value: boolean): void;
   protected _requestedToBeDisabled: boolean;
+
+  // private __internalSetDisabled(value: boolean): void;
 }
 
 export declare function DisabledMixinImplementation<T extends Constructor<LitElement>>(
   superclass: T,
-): T & Constructor<DisabledHost> & Pick<typeof DisabledHost, keyof typeof DisabledHost>;
+): T &
+  Constructor<DisabledHost> &
+  Pick<typeof DisabledHost, keyof typeof DisabledHost> &
+  Pick<typeof LitElement, keyof typeof LitElement>;
 
 export type DisabledMixin = typeof DisabledMixinImplementation;

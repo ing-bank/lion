@@ -9,8 +9,8 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
- * @typedef {import('../types/input-file.js').InputFile} InputFile
- * @typedef {import('../types/input-file.js').SystemFile} SystemFile
+ * @typedef {import('../types/index.js').InputFile} InputFile
+ * @typedef {import('../types/index.js').SystemFile} SystemFile
  */
 
 export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitElement)) {

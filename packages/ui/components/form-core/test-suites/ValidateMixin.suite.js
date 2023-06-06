@@ -305,12 +305,10 @@ export function runValidateMixinSuite(customConfig) {
 
       it('finally checks for ResultValidators: creates TotalValidationResult', async () => {
         class MyResult extends ResultValidator {
-          static get validatorName() {
-            return 'ResultValidator';
-          }
+          static validatorName = 'MyResult';
         }
 
-        let el = /** @type {ValidateElement} */ (
+        const el = /** @type {ValidateElement} */ (
           await fixture(html`
           <${tag}
             .validators=${[new AlwaysValid(), new MyResult()]}>
@@ -322,28 +320,30 @@ export function runValidateMixinSuite(customConfig) {
         // @ts-ignore [allow-private] in test
         const syncSpy = sinon.spy(el, '__executeSyncValidators');
         // @ts-ignore [allow-private] in test
-        const resultSpy2 = sinon.spy(el, '__executeResultValidators');
+        const resultSpy = sinon.spy(el, '__executeMetaValidators');
 
         el.modelValue = 'nonEmpty';
-        expect(syncSpy.calledBefore(resultSpy2)).to.be.true;
+        expect(syncSpy.calledBefore(resultSpy)).to.be.true;
 
-        el = await fixture(html`
+        const el2 = /** @type {ValidateElement} */ (
+          await fixture(html`
           <${tag}
             .validators=${[new AsyncAlwaysValid(), new MyResult()]}>
             ${lightDom}
           </${tag}>
-        `);
+        `)
+        );
 
         // @ts-ignore [allow-private] in test
-        const asyncSpy = sinon.spy(el, '__executeAsyncValidators');
+        const asyncSpy = sinon.spy(el2, '__executeAsyncValidators');
         // @ts-ignore [allow-private] in test
-        const resultSpy = sinon.spy(el, '__executeResultValidators');
+        const resultSpy2 = sinon.spy(el2, '__executeMetaValidators');
 
-        el.modelValue = 'nonEmpty';
-        expect(resultSpy.callCount).to.equal(1);
+        el2.modelValue = 'nonEmpty';
+        expect(resultSpy2.callCount).to.equal(1);
         expect(asyncSpy.callCount).to.equal(1);
-        await el.validateComplete;
-        expect(resultSpy.callCount).to.equal(2);
+        await el2.validateComplete;
+        expect(resultSpy2.callCount).to.equal(2);
       });
 
       describe('Finalization', () => {

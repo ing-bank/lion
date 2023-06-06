@@ -150,7 +150,16 @@ const FormControlMixinImplementation = superclass =>
      * @protected
      */
     get _feedbackNode() {
-      return /** @type {LionValidationFeedback} */ (this.__getDirectSlotChild('feedback'));
+      return this._feedbackNodes?.[0];
+    }
+
+    /**
+     * Elements where validation feedback will be rendered to.
+     * Notice a component can have multiple feedback outlets, for
+     * @protected
+     */
+    get _feedbackNodes() {
+      return /** @type {LionValidationFeedback[]} */ (this.__getDirectSlotChilds('feedback'));
     }
 
     constructor() {
@@ -822,6 +831,16 @@ const FormControlMixinImplementation = superclass =>
      */
     __getDirectSlotChild(slotName) {
       return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
+        el => el.slot === slotName,
+      );
+    }
+
+    /**
+     * @param {string} slotName
+     * @return {HTMLElement[] | undefined}
+     */
+    __getDirectSlotChilds(slotName) {
+      return /** @type {HTMLElement[]} */ (Array.from(this.children)).filter(
         el => el.slot === slotName,
       );
     }

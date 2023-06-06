@@ -5,10 +5,10 @@ import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorConfig} ValidatorConfig
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorParam} ValidatorParam
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorOutcome} ValidatorOutcome
- * @typedef {import('../types/input-file.js').AcceptCriteria} AcceptCriteria
- * @typedef {import('../types/input-file.js').AcceptCategory} AcceptCategory
- * @typedef {import('../types/input-file.js').ModelValueFile} ModelValueFile
- * @typedef {import('../types/input-file.js').ValidatorOutcomeOfIsAcceptedFile} ValidatorOutcomeOfIsAcceptedFile
+ * @typedef {import('../types/index.js').AllowedFileCriteria} AllowedFileCriteria
+ * @typedef {import('../types/index.js').AllowedFileCategory} AllowedFileCategory
+ * @typedef {import('../types/index.js').ModelValueFile} ModelValueFile
+ * @typedef {import('../types/index.js').ValidatorOutcomeOfIsAllowedFile} ValidatorOutcomeOfIsAllowedFile
  */
 
 // /**
@@ -40,16 +40,8 @@ import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 // }
 
 /* eslint max-classes-per-file: ["error", 2] */
-export class IsAcceptedFile extends Validator {
-  static validatorName = 'IsAcceptedFile';
-
-  /**
-   * @param {number} fileFileSize
-   * @param {number} maxFileSize
-   */
-  static checkFileSize(fileFileSize, maxFileSize) {
-    return fileFileSize <= maxFileSize;
-  }
+export class IsAllowedFile extends Validator {
+  static validatorName = 'IsAllowedFile';
 
   /**
    * Gets the extension of a file name
@@ -61,12 +53,23 @@ export class IsAcceptedFile extends Validator {
   }
 
   /**
+   * @param {number} fileFileSize
+   * @param {number} maxFileSize
+   */
+  static isBelowOrEqualToMaxSize(fileFileSize, maxFileSize) {
+    return !maxFileSize || fileFileSize <= maxFileSize;
+  }
+
+  /**
    * @param {string} extension
    * @param {string[]} allowedFileExtensions
    */
   static isExtensionAllowed(extension, allowedFileExtensions) {
-    return allowedFileExtensions?.find(
-      allowedExtension => allowedExtension.toUpperCase() === extension.toUpperCase(),
+    return (
+      !allowedFileExtensions?.length ||
+      allowedFileExtensions?.find(
+        allowedExtension => allowedExtension.toUpperCase() === extension.toUpperCase(),
+      )
     );
   }
 
@@ -75,55 +78,55 @@ export class IsAcceptedFile extends Validator {
    * @param {string[]} allowedFileTypes
    */
   static isFileTypeAllowed(type, allowedFileTypes) {
-    return allowedFileTypes?.find(allowedType => allowedType.toUpperCase() === type.toUpperCase());
+    return (
+      !allowedFileTypes?.length ||
+      allowedFileTypes?.find(allowedType => allowedType.toUpperCase() === type.toUpperCase())
+    );
   }
 
   /**
-   * @param {File[]} modelValue array of file objects
-   * @param {AcceptCriteria} acceptCriteria
-   * @returns {ValidatorOutcomeOfIsAcceptedFile|false}
+   * @param {ModelValueFile[]} modelValueFiles array of file objects
+   * @param {AllowedFileCriteria} AllowedFileCriteria
+   * @returns {ValidatorOutcomeOfIsAllowedFile[]|false}
    */
-  execute(modelValue, acceptCriteria = this.param) {
+  execute(modelValueFiles, AllowedFileCriteria = this.param) {
     /**
      * The array that will be returned by the execute function in case there are
      * errors found in any of the accept criteria categories ('type'|'extension'|'size')
-     * @type {ValidatorOutcomeOfIsAcceptedFile}
+     * @type {ValidatorOutcomeOfIsAllowedFile[]}
      */
     const outcomeForAllFiles = [];
-    const ctor = /** @type {typeof IsAcceptedFile} */ (this.constructor);
+    const ctor = /** @type {typeof IsAllowedFile} */ (this.constructor);
 
-    /**
-     * @param {AcceptCategory} acceptCategory
-     * @param {File[]} filesInvalidForCategory
-     */
-    const addValidatorOutcomeForCategory = (acceptCategory, filesInvalidForCategory) => {
-      for (const f of filesInvalidForCategory) {
-        // Did we already add this file for a different AcceptCategory?
-        const foundItem = outcomeForAllFiles.find(o => o.name === f.name && o.size === f.size);
-        const item = foundItem || { ...f, validatorOutcome: [] };
-        item.validatorOutcome.push({ name: acceptCategory, acceptCriteria });
+    /** @type {ValidatorOutcomeOfIsAllowedFile['id'][]} */
+    const foundIds = [];
+    for (const f of modelValueFiles) {
+      /** @type {ValidatorOutcomeOfIsAllowedFile} */
+      const file = {
+        id: f.meta?.id,
+        outcome: { failedOn: [] },
+        meta: { AllowedFileCriteria, file: f },
+      };
+
+      if (foundIds.includes(file.id)) {
+        file.outcome.failedOn.push('duplicate');
+      } else {
+        foundIds.push(file.id);
       }
-    };
 
-    if (acceptCriteria.allowedFileTypes?.length) {
-      const filesWithInvalidType = modelValue.filter(
-        f => !ctor.isFileTypeAllowed(f.type, acceptCriteria.allowedFileTypes),
-      );
-      addValidatorOutcomeForCategory('type', filesWithInvalidType);
+      if (!ctor.isFileTypeAllowed(f.type, AllowedFileCriteria.types)) {
+        file.outcome.failedOn.push('type');
+      }
+      if (!ctor.isExtensionAllowed(ctor.getExtension(f.name), AllowedFileCriteria.extensions)) {
+        file.outcome.failedOn.push('extension');
+      }
+      if (!ctor.isBelowOrEqualToMaxSize(f.size, AllowedFileCriteria.size)) {
+        file.outcome.failedOn.push('size');
+      }
+      if (file.outcome.failedOn.length) {
+        outcomeForAllFiles.push(file);
+      }
     }
-
-    if (acceptCriteria.allowedFileExtensions?.length) {
-      const filesWithInvalidExt = modelValue.filter(
-        f =>
-          !ctor.isExtensionAllowed(ctor.getExtension(f.name), acceptCriteria.allowedFileExtensions),
-      );
-      addValidatorOutcomeForCategory('extension', filesWithInvalidExt);
-    }
-
-    const filesWithInvalidSize = modelValue.filter(
-      file => !ctor.checkFileSize(file.size, acceptCriteria.maxFileSize),
-    );
-    addValidatorOutcomeForCategory('size', filesWithInvalidSize);
 
     if (!outcomeForAllFiles.length) {
       return false;
@@ -132,13 +135,14 @@ export class IsAcceptedFile extends Validator {
     return outcomeForAllFiles;
   }
 }
-export class DuplicateFileNames extends Validator {
-  static validatorName = 'DuplicateFileNames';
+
+export class HasDuplicateFiles extends Validator {
+  static validatorName = 'HasDuplicateFiles';
 
   type = 'info';
 
   /**
-   * @param {InputFile[]} modelValue
+   * @param {ModelValueFile[]} modelValue
    * @param {ValidatorParam} [params]
    * @returns {ValidatorOutcome|Promise<ValidatorOutcome>}
    */

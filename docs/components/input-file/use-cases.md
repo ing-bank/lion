@@ -12,7 +12,7 @@ loadDefaultFeedbackMessages();
 
 ## Features
 
-API calls to upload the selected files can be done in below two ways which is driven by `liveUpload` property
+API calls to upload the selected files can be done in below two ways which is driven by `uploadOnSelect` property
 
 - On `form` submit
 - On file selection
@@ -26,7 +26,7 @@ API calls to upload the selected files can be done in below two ways which is dr
   help-text="Signature scan file"
   max-file-size="1024000"
   accept="application/PDF"
-  live-upload
+  upload-on-select
   .uploadResponse="${uploadResponse}"
 >
 </lion-input-file>
@@ -44,7 +44,7 @@ Boolean; setting to `true` allows selecting multiple files.
 
 Boolean; setting to `true` allows file upload through drag and drop.
 
-### liveUpload
+### uploadOnSelect
 
 Boolean;
 
@@ -325,7 +325,7 @@ export const uploadWithoutFormSubmit = () => {
       label="Upload"
       name="upload"
       multiple
-      live-upload
+      upload-on-select
       @file-removed="${ev => {
         ev.target.uploadResponse[
           ev.target.uploadResponse.findIndex(file => file.name === ev.detail.uploadResponse.name)
@@ -397,7 +397,7 @@ export const dragAndDrop = () => {
       label="Upload"
       name="myFiles"
       enable-drop-zone
-      .multiple="${true}"
+      multiple
       .validators="${[new Required()]}"
     >
     </lion-input-file>

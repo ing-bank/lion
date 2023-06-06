@@ -4,7 +4,7 @@ import { getAllFieldsAndFormGroups } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
 /**
  * @typedef {import('../../form-core/src/LionField.js').LionField} LionField
- * @typedef {import('../../input-file/types/input-file.js').InputFile} InputFile
+ * @typedef {import('../../input-file/types/index.js').InputFile} InputFile
  * @typedef {import('../../button/src/LionButton.js').LionButton} LionButton
  * @typedef {import('./helpers/umbrella-form.js').UmbrellaForm} UmbrellaForm
  */

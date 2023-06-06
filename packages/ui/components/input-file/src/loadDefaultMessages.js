@@ -1,14 +1,14 @@
-import { IsAcceptedFile } from './validators.js';
+import { IsAllowedFile } from './validators.js';
 // import { loc } from './validators.js';
 
 /**
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorConfig} ValidatorConfig
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorParam} ValidatorParam
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorOutcome} ValidatorOutcome
- * @typedef {import('../types/input-file.js').AcceptCriteria} AcceptCriteria
- * @typedef {import('../types/input-file.js').AcceptCategory} AcceptCategory
- * @typedef {import('../types/input-file.js').ModelValueFile} ModelValueFile
- * @typedef {import('../types/input-file.js').ValidatorOutcomeOfIsAcceptedFile} ValidatorOutcomeOfIsAcceptedFile
+ * @typedef {import('../types/index.js').AllowedFileCriteria} AllowedFileCriteria
+ * @typedef {import('../types/index.js').AllowedFileCategory} AllowedFileCategory
+ * @typedef {import('../types/index.js').ModelValueFile} ModelValueFile
+ * @typedef {import('../types/index.js').ValidatorOutcomeOfIsAllowedFile} ValidatorOutcomeOfIsAllowedFile
  */
 
 /**
@@ -27,27 +27,27 @@ function formatBytes(bytes, decimals = 2) {
 }
 
 /**
- * @param {AcceptCriteria} acceptCriteria
+ * @param {AllowedFileCriteria} AllowedFileCriteria
  * @protected
  */
 /* eslint-disable no-param-reassign */
-function getValidatorMessage(acceptCriteria) {
+function getValidatorMessage(AllowedFileCriteria) {
   // fileHandle.validationFeedback = [];
-  const maxFileSizeFormatted = formatBytes(acceptCriteria.maxFileSize);
+  const maxFileSizeFormatted = formatBytes(AllowedFileCriteria.maxFileSize);
 
   /** @type {string[]} */
   let array = [];
   let arrayLength = 0;
   let lastItem;
 
-  if (acceptCriteria.allowedFileExtensions.length) {
-    array = acceptCriteria.allowedFileExtensions;
+  if (AllowedFileCriteria.allowedFileExtensions.length) {
+    array = AllowedFileCriteria.allowedFileExtensions;
     // eslint-disable-next-line no-return-assign
     array = array.map(item => (item = `.${item}`));
     lastItem = array.pop();
     arrayLength = array.length;
-  } else if (acceptCriteria.allowedFileTypes.length) {
-    for (const mimeTypeString of acceptCriteria.allowedFileTypes) {
+  } else if (AllowedFileCriteria.allowedFileTypes.length) {
+    for (const mimeTypeString of AllowedFileCriteria.allowedFileTypes) {
       if (mimeTypeString.endsWith('/*')) {
         array.push(mimeTypeString.slice(0, -2));
       } else if (mimeTypeString === 'text/plain') {
@@ -85,11 +85,9 @@ function getValidatorMessage(acceptCriteria) {
   }
 }
 
-IsAcceptedFile.getMessage = async data => {
+IsAllowedFile.getMessage = async data => {
   await forMessagesToBeReady();
   const { type, outcome } = data;
-
-  for (cons)
 
   // if (outcome === 'too-long') {
   //   // TODO: get max-length of country and use MaxLength validator
