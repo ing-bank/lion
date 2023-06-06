@@ -167,7 +167,7 @@ describe('lion-selected-file-list', () => {
       },
     });
     expect(removeFileEvent.detail.status).to.deep.equal('SUCCESS');
-    expect(removeFileEvent.detail._fileSelectResponse).to.deep.equal({
+    expect(removeFileEvent.detail.uploadResponse).to.deep.equal({
       name: 'foo.txt',
       status: 'SUCCESS',
     });

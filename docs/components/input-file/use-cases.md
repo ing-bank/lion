@@ -26,8 +26,7 @@ API calls to upload the selected files can be done in below two ways which is dr
   help-text="Signature scan file"
   max-file-size="1024000"
   accept="application/PDF"
-  upload-on-form-submit
-  .uploadResponse="${uploadResponse}"
+  upload-on-select
 >
 </lion-input-file>
 ```
@@ -316,7 +315,7 @@ Below is the flow:
 
 1. `file-removed` event is fired from component with the deleted file
 2. Initiate the delete request to your backend API and set the status of the relevant files as `LOADING` in `uploadResponse` property
-3. Once the API request in completed, delete the file object from `uploadResponse` property
+3. Once the API request is completed, delete the file object from `uploadResponse` property
 
 ```js preview-story
 export const uploadWithoutFormSubmit = () => {
@@ -324,8 +323,8 @@ export const uploadWithoutFormSubmit = () => {
     <lion-input-file
       label="Upload"
       name="upload"
-      .multiple="${true}"
-      .uploadOnSelect="${true}"
+      multiple
+      upload-on-select
       @file-removed="${ev => {
         ev.target.uploadResponse[
           ev.target.uploadResponse.findIndex(file => file.name === ev.detail.uploadResponse.name)
@@ -399,7 +398,7 @@ export const dragAndDrop = () => {
       accept=".png"
       max-file-size="1024000"
       enable-drop-zone
-      .multiple="${true}"
+      multiple
       .validators="${[new Required()]}"
     >
     </lion-input-file>
