@@ -13,7 +13,7 @@ import { DuplicateFileNames, IsAcceptedFile } from './validators.js';
  * @typedef {import('lit').RenderOptions} RenderOptions
  * @typedef {import('../types/input-file.js').InputFile} InputFile
  * @typedef {import('../types/input-file.js').SystemFile} SystemFile
- * @typedef {import('../types/input-file.js').FileSelectResponse} FileSelectResponse
+ * @typedef {import('../types/input-file.js').UploadResponse} UploadResponse
  */
 
 /**
@@ -47,7 +47,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       maxFileSize: { type: Number, attribute: 'max-file-size' },
       enableDropZone: { type: Boolean, attribute: 'enable-drop-zone' },
       uploadOnSelect: { type: Boolean, attribute: 'upload-on-select' },
-      _fileSelectResponse: { type: Array, state: false },
+      uploadResponse: { type: Array, state: false },
       _selectedFilesMetaData: { type: Array, state: true },
     };
   }
@@ -148,14 +148,14 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      */
     this._selectedFilesMetaData = [];
     /**
-     * @type {FileSelectResponse[]}
+     * @type {UploadResponse[]}
      */
     // TODO: make readonly?
-    this._fileSelectResponse = [];
+    this.uploadResponse = [];
     /**
      * @private
      */
-    this.__initialFileSelectResponse = this._fileSelectResponse;
+    this.__initialUploadResponse = this.uploadResponse;
     // TODO: public default booleans are always false
     this.uploadOnSelect = false;
     this.multiple = false;
@@ -178,7 +178,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
   connectedCallback() {
     super.connectedCallback();
-    this.__initialFileSelectResponse = this._fileSelectResponse;
+    this.__initialUploadResponse = this.uploadResponse;
 
     this._inputNode.addEventListener('change', this._onChange);
     this._inputNode.addEventListener('click', this._onClick);
@@ -237,7 +237,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   reset() {
     super.reset();
     this._selectedFilesMetaData = [];
-    this._fileSelectResponse = this.__initialFileSelectResponse;
+    this.uploadResponse = this.__initialUploadResponse;
     this.modelValue = [];
     // TODO: find out why it stays dirty
     this.dirty = false;
@@ -250,7 +250,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   clear() {
     this._selectedFilesMetaData = [];
-    this._fileSelectResponse = [];
+    this.uploadResponse = [];
     this.modelValue = [];
   }
 
@@ -383,9 +383,9 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
      *   1. It is invoked from the file-removed event handler.
      *   2. There is a mismatch between the selected files and files on UI.
      */
-    if (changedProperties.has('_fileSelectResponse')) {
+    if (changedProperties.has('uploadResponse')) {
       if (this._selectedFilesMetaData.length === 0) {
-        this._fileSelectResponse.forEach(preResponse => {
+        this.uploadResponse.forEach(preResponse => {
           const file = {
             systemFile: {
               name: preResponse.name,
@@ -404,12 +404,12 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       }
       this._selectedFilesMetaData.forEach(file => {
         if (
-          !this._fileSelectResponse.some(response => response.name === file.systemFile.name) &&
+          !this.uploadResponse.some(response => response.name === file.systemFile.name) &&
           this.uploadOnSelect
         ) {
           this.__removeFileFromList(file);
         } else {
-          this._fileSelectResponse.forEach(response => {
+          this.uploadResponse.forEach(response => {
             if (response.name === file.systemFile.name) {
               // eslint-disable-next-line no-param-reassign
               file.response = response;
@@ -567,7 +567,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     const newFiles = this.__computeNewAddedFiles(Array.from(selectedFiles));
     if (!this.multiple && newFiles.length > 0) {
       this._selectedFilesMetaData = [];
-      this._fileSelectResponse = [];
+      this.uploadResponse = [];
     }
 
     /**
@@ -579,8 +579,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       fileObj = new FileHandle(selectedFile, this._acceptCriteria);
       if (fileObj.failedProp?.length) {
         this._handleErroredFiles(fileObj);
-        this._fileSelectResponse = [
-          ...this._fileSelectResponse,
+        this.uploadResponse = [
+          ...this.uploadResponse,
           {
             name: fileObj.systemFile.name,
             status: 'FAIL',
@@ -589,8 +589,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
           },
         ];
       } else {
-        this._fileSelectResponse = [
-          ...this._fileSelectResponse,
+        this.uploadResponse = [
+          ...this.uploadResponse,
           {
             name: fileObj.systemFile.name,
             status: 'SUCCESS',
@@ -773,7 +773,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         detail: {
           removedFile,
           status: removedFile.status,
-          _fileSelectResponse: removedFile.response,
+          uploadResponse: removedFile.response,
         },
       }),
     );
