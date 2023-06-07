@@ -14,7 +14,7 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputFile
 
 const filesListChanged = (/** @type {LionInputFile} */ el, /** @type { CustomEvent } */ ev) => {
   // eslint-disable-next-line no-param-reassign
-  el._fileSelectResponse = [...ev.detail.newFiles];
+  el.uploadResponse = [...ev.detail.newFiles];
 };
 
 function mimicSelectFile(
@@ -74,7 +74,7 @@ describe('lion-input-file', () => {
     const fileListChangedEvent = await fileListChangedEventPromise;
     // @ts-expect-error [allow-protected-in-tests]
     expect(el._selectedFilesMetaData.length).to.equal(1);
-    expect(el._fileSelectResponse.length).to.equal(1);
+    expect(el.uploadResponse.length).to.equal(1);
 
     expect(fileListChangedEvent).to.exist;
     expect(fileListChangedEvent.detail.newFiles.length).to.equal(1);
@@ -100,7 +100,7 @@ describe('lion-input-file', () => {
     await el.updateComplete;
     // @ts-expect-error [allow-protected-in-test]
     expect(el._selectedFilesMetaData.length).to.equal(1);
-    expect(el._fileSelectResponse.length).to.equal(1);
+    expect(el.uploadResponse.length).to.equal(1);
 
     // when cancel is clicked, native input value is blank which means modelValue is blank
     el.modelValue = [];
@@ -174,7 +174,7 @@ describe('lion-input-file', () => {
       expect(el._selectedFilesMetaData[0].validationFeedback).to.exist;
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
-      expect(el._fileSelectResponse[0].status).to.equal('FAIL');
+      expect(el.uploadResponse[0].status).to.equal('FAIL');
     });
 
     it('error message should use main type when "/*" is used', async () => {
@@ -299,7 +299,7 @@ describe('lion-input-file', () => {
       expect(el._selectedFilesMetaData[0].validationFeedback).to.exist;
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
-      expect(el._fileSelectResponse[0].status).to.equal('FAIL');
+      expect(el.uploadResponse[0].status).to.equal('FAIL');
     });
 
     it('error message should add the file extension to the validator message', async () => {
@@ -377,7 +377,7 @@ describe('lion-input-file', () => {
       expect(el._selectedFilesMetaData[0].validationFeedback).to.exist;
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
-      expect(el._fileSelectResponse[0].status).to.equal('FAIL');
+      expect(el.uploadResponse[0].status).to.equal('FAIL');
     });
 
     it('error message should show only the max file size if no type/extension restrictions are defined', async () => {
@@ -429,7 +429,7 @@ describe('lion-input-file', () => {
     expect(el._selectedFilesMetaData.length).to.equal(2);
     // @ts-expect-error [allow-protected-in-test]
     expect(el._selectedFilesMetaData[0].status).to.equal('FAIL');
-    expect(el._fileSelectResponse[0].status).to.equal('FAIL');
+    expect(el.uploadResponse[0].status).to.equal('FAIL');
 
     expect(fileListChangedEvent.detail.newFiles.length).to.equal(1);
   });
@@ -543,9 +543,9 @@ describe('lion-input-file', () => {
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData[1].systemFile.name).to.equal('bar.txt');
 
-      expect(el._fileSelectResponse.length).to.equal(2);
-      expect(el._fileSelectResponse[0].name).to.equal('foo.txt');
-      expect(el._fileSelectResponse[1].name).to.equal('bar.txt');
+      expect(el.uploadResponse.length).to.equal(2);
+      expect(el.uploadResponse[0].name).to.equal('foo.txt');
+      expect(el.uploadResponse[1].name).to.equal('bar.txt');
     });
 
     it('should add new files and retain previous files', async () => {
@@ -664,10 +664,10 @@ describe('lion-input-file', () => {
       el = await fixture(html`<lion-input-file accept="text/plain"></lion-input-file>`);
     });
 
-    it('should set _fileSelectResponse data to _selectedFilesMetaData for rendering error and status', async () => {
+    it('should set uploadResponse data to _selectedFilesMetaData for rendering error and status', async () => {
       mimicSelectFile(el, [file]);
 
-      el._fileSelectResponse = [{ name: 'foo.txt', status: 'LOADING', errorMessage: '500' }];
+      el.uploadResponse = [{ name: 'foo.txt', status: 'LOADING', errorMessage: '500' }];
 
       await el.updateComplete;
 
@@ -735,8 +735,8 @@ describe('lion-input-file', () => {
       expect(el.hasFeedbackFor.includes('error')).to.be.true;
     });
 
-    it('reset method should remove File from modelValue but keep _fileSelectResponse', async () => {
-      const _fileSelectResponse = [
+    it('reset method should remove File from modelValue but keep uploadResponse', async () => {
+      const uploadResponse = [
         {
           name: 'file1.txt',
           status: 'SUCCESS',
@@ -745,14 +745,11 @@ describe('lion-input-file', () => {
         },
       ];
       const el = await fixture(html`
-        <lion-input-file
-          label="Select"
-          ._fileSelectResponse="${_fileSelectResponse}"
-        ></lion-input-file>
+        <lion-input-file label="Select" .uploadResponse="${uploadResponse}"></lion-input-file>
       `);
 
       // @ts-expect-error [allow-protected-in-test]
-      el._fileSelectResponse = _fileSelectResponse;
+      el.uploadResponse = uploadResponse;
       await el.updateComplete;
 
       mimicSelectFile(el, [file]);
@@ -762,11 +759,11 @@ describe('lion-input-file', () => {
       expect(el.modelValue).to.deep.equal([]);
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData).to.deep.equal([]);
-      expect(el._fileSelectResponse).to.deep.equal(_fileSelectResponse);
+      expect(el.uploadResponse).to.deep.equal(uploadResponse);
     });
 
-    it('clear method should remove File from modelValue and _fileSelectResponse', async () => {
-      const _fileSelectResponse = [
+    it('clear method should remove File from modelValue and uploadResponse', async () => {
+      const uploadResponse = [
         {
           name: 'file1.txt',
           status: 'SUCCESS',
@@ -777,7 +774,7 @@ describe('lion-input-file', () => {
       const el = await fixture(html` <lion-input-file label="Select"></lion-input-file> `);
 
       // @ts-expect-error [allow-protected-in-test]
-      el._fileSelectResponse = _fileSelectResponse;
+      el.uploadResponse = uploadResponse;
 
       setTimeout(() => {
         mimicSelectFile(el, [file]);
@@ -785,7 +782,7 @@ describe('lion-input-file', () => {
       await oneEvent(el, 'file-list-changed');
       await el.clear();
       expect(el.modelValue).to.deep.equal([]);
-      expect(el._fileSelectResponse).to.deep.equal([]);
+      expect(el.uploadResponse).to.deep.equal([]);
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData).to.deep.equal([]);
     });
@@ -796,7 +793,7 @@ describe('lion-input-file', () => {
      * @type {LionInputFile}
      */
     let el;
-    const _fileSelectResponse = [
+    const uploadResponse = [
       {
         name: 'file1.txt',
         status: 'SUCCESS',
@@ -816,12 +813,12 @@ describe('lion-input-file', () => {
       `);
 
       // @ts-expect-error [allow-protected-in-test]
-      el._fileSelectResponse = _fileSelectResponse;
+      el.uploadResponse = uploadResponse;
 
       await el.updateComplete;
     });
 
-    it('should update the _selectedFilesMetaData according to _fileSelectResponse', () => {
+    it('should update the _selectedFilesMetaData according to uploadResponse', () => {
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData.length).to.equal(2);
       // @ts-expect-error [allow-protected-in-test]
@@ -862,7 +859,7 @@ describe('lion-input-file', () => {
           detail: {
             removedFile,
             status: removedFile.status,
-            _fileSelectResponse: removedFile.response,
+            uploadResponse: removedFile.response,
           },
         }),
       );
@@ -874,7 +871,7 @@ describe('lion-input-file', () => {
       removeFileSpy.restore();
     });
 
-    it('should fire file-removed event with _fileSelectResponse in the details', async () => {
+    it('should fire file-removed event with uploadResponse in the details', async () => {
       /**
        * @type {Partial<InputFile>}
        */
@@ -908,7 +905,7 @@ describe('lion-input-file', () => {
         },
       });
       expect(removeFileEvent.detail.status).to.deep.equal('FAIL');
-      expect(removeFileEvent.detail._fileSelectResponse).to.deep.equal({
+      expect(removeFileEvent.detail.uploadResponse).to.deep.equal({
         name: 'file2.txt',
         status: 'FAIL',
       });
@@ -1026,14 +1023,14 @@ describe('lion-input-file', () => {
         },
       });
       expect(removeFileEvent.detail.status).to.deep.equal('SUCCESS');
-      expect(removeFileEvent.detail._fileSelectResponse).to.deep.equal({
+      expect(removeFileEvent.detail.uploadResponse).to.deep.equal({
         name: 'foo.txt',
         status: 'SUCCESS',
       });
     });
 
-    it('should remove file from displayed list if not available in _fileSelectResponse array', async () => {
-      const _fileSelectResponse = [
+    it('should remove file from displayed list if not available in uploadResponse array', async () => {
+      const uploadResponse = [
         {
           name: 'file1.txt',
           status: 'SUCCESS',
@@ -1052,13 +1049,13 @@ describe('lion-input-file', () => {
       `);
 
       // @ts-expect-error [allow-protected-in-test]
-      el._fileSelectResponse = _fileSelectResponse;
+      el.uploadResponse = uploadResponse;
 
       await el.updateComplete;
       // assertion for displayed file list to be same
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData.length).to.equal(2);
-      el._fileSelectResponse = [
+      el.uploadResponse = [
         {
           name: 'file1.txt',
           status: 'SUCCESS',
@@ -1084,7 +1081,7 @@ describe('lion-input-file', () => {
     });
 
     it('is accessible when a file is selected', async () => {
-      const _fileSelectResponse = [
+      const uploadResponse = [
         {
           name: 'file1.txt',
           status: 'SUCCESS',
@@ -1095,13 +1092,13 @@ describe('lion-input-file', () => {
       const el = await fixture(html` <lion-input-file label="Select"></lion-input-file>`);
 
       // @ts-expect-error [allow-protected-in-test]
-      el._fileSelectResponse = _fileSelectResponse;
+      el.uploadResponse = uploadResponse;
 
       await expect(el).to.be.accessible();
     });
 
     it('is accessible with an selected file and disabled', async () => {
-      const _fileSelectResponse = [
+      const uploadResponse = [
         {
           name: 'file1.txt',
           status: 'SUCCESS',
@@ -1113,7 +1110,7 @@ describe('lion-input-file', () => {
       const el = await fixture(html` <lion-input-file label="Select" disabled></lion-input-file> `);
 
       // @ts-expect-error [allow-protected-in-test]
-      el._fileSelectResponse = _fileSelectResponse;
+      el.uploadResponse = uploadResponse;
 
       await expect(el).to.be.accessible();
     });
@@ -1134,7 +1131,7 @@ describe('lion-input-file', () => {
       });
 
       it('select-button has aria-describedby set to the help-text, selected list and the feedback message', async () => {
-        const _fileSelectResponse = [
+        const uploadResponse = [
           {
             name: 'file1.txt',
             status: 'SUCCESS',
@@ -1147,7 +1144,7 @@ describe('lion-input-file', () => {
         `);
 
         // @ts-expect-error [allow-protected-in-test]
-        el._fileSelectResponse = _fileSelectResponse;
+        el.uploadResponse = uploadResponse;
 
         // @ts-expect-error [allow-protected-in-test]
         expect(el._buttonNode?.getAttribute('aria-describedby')).to.contain(
