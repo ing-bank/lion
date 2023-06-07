@@ -180,7 +180,6 @@ export class LionInputTelDropdown extends LionInputTel {
 
         return {
           template: templates.dropdown(this._templateDataDropdown),
-          afterRender: this.__syncRegionWithDropdown,
         };
       },
     };
@@ -274,9 +273,7 @@ export class LionInputTelDropdown extends LionInputTel {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    if (changedProperties.has('activeRegion')) {
-      this.__syncRegionWithDropdown();
-    }
+    this.__syncRegionWithDropdown();
 
     if (changedProperties.has('disabled') || changedProperties.has('readOnly')) {
       if (this.disabled || this.readOnly) {

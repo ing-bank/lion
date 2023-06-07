@@ -6,7 +6,10 @@ import { TemplateResult, LitElement } from 'lit';
  */
 export type SlotRerenderObject = {
   template: TemplateResult;
-  /* Add logic that will be performed after the render */
+  /**
+   * Add logic that will be performed after the render
+   * @deprecated
+   */
   afterRender?: Function;
 };
 
