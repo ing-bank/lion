@@ -1,5 +1,20 @@
 # @lion/ui
 
+## 0.3.0
+
+### Minor Changes
+
+- e310c08a: fix: LionInputDatePicker enters an endless loop on InvalidDate modelValue
+- d2de984f: [input-file] Create input-file component
+- 68934217: fix(ui): align light dom with internal [reactivity cycle of LitElement/ReactiveElement](https://lit.dev/docs/components/lifecycle/#reactive-update-cycle).
+  Since light dom render is now aligned inside `update` instead of `updated` (like it already was for shadow dom),
+  we can rely on the fact that all dom (light and shadow) has rendered inside our `updated` loop.
+
+### Patch Changes
+
+- bdc74556: Allow customization of currency label's slot in Input Amount
+- 2683a730: [FocusMixin] now syncs autofocus between host and the focusable node.
+
 ## 0.2.2
 
 ### Patch Changes
