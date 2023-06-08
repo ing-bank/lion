@@ -13,6 +13,7 @@ import {
   nextFrame,
   unsafeStatic,
 } from '@open-wc/testing';
+import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { getListboxMembers } from '../../../exports/listbox-test-helpers.js';
 
@@ -673,12 +674,41 @@ export function runListboxMixinSuite(customConfig = {}) {
             mimicKeyPress(_listboxNode, 'Enter');
             expect(options[1].checked).to.be.true;
           });
+
+          it('submits form on [Enter] when inputNode is an instance of HTMLInputNode', async () => {
+            const submitSpy = sinon.spy(e => e.preventDefault());
+            const el = /** @type {HTMLFormElement}  */ (
+              await _fixture(html`
+              <form @submit=${submitSpy}>
+                <${tag} name="foo">
+                  <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
+                  <${optionTag} .choiceValue="${'Bla'}">Bla</${optionTag}>
+                  <${optionTag} .choiceValue="${'Chard'}">Chard</${optionTag}>
+                </${tag}>
+                <button type="submit">submit</button>
+              </form>
+            `)
+            );
+            const listbox = /** @type {LionListbox} */ (el.querySelector('[name="foo"]'));
+            const { _inputNode } = getListboxMembers(listbox);
+            if (!(_inputNode instanceof HTMLInputElement)) {
+              return;
+            }
+            await listbox.updateComplete;
+            // @ts-ignore allow protected members in tests
+
+            _inputNode.focus();
+            await sendKeys({
+              press: 'Enter',
+            });
+            expect(submitSpy.callCount).to.equal(1);
+          });
         });
 
         describe('Space', () => {
           it('selects active option when "_listboxReceivesNoFocus" is true', async () => {
             // When listbox is not focusable (in case of a combobox), the user should be allowed
-            // to enter a space in the focusable element (texbox)
+            // to enter a space in the focusable element (textbox)
             const el = /** @type {LionListbox} */ (
               await fixture(html`
                 <${tag} opened name="foo" ._listboxReceivesNoFocus="${false}" autocomplete="none" show-all-on-empty>

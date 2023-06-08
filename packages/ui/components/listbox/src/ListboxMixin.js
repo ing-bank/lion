@@ -294,7 +294,6 @@ const ListboxMixinImplementation = superclass =>
        * @protected
        */
       this._repropagationRole = 'choice-group'; // configures FormControlMixin
-
       /**
        * When listbox is coupled to a textbox (in case we are dealing with a combobox),
        * spaces should not select an element (they need to be put in the textbox)
@@ -612,7 +611,9 @@ const ListboxMixinImplementation = superclass =>
           if (key === ' ' && this._listboxReceivesNoFocus) {
             return;
           }
-          ev.preventDefault();
+          if (key === ' ') {
+            ev.preventDefault();
+          }
           if (!this.formElements[this.activeIndex]) {
             return;
           }
