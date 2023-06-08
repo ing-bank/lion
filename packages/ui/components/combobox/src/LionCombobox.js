@@ -406,7 +406,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
      * @protected
      */
     this._ariaVersion = browserDetection.isChromium ? '1.1' : '1.0';
-
     /**
      * @configure ListboxMixin
      * @protected
@@ -1072,6 +1071,9 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
         this._setTextboxValue('');
         break;
       case 'Enter':
+        if (this.multipleChoice && this.opened) {
+          ev.preventDefault();
+        }
         if (!this.formElements[this.activeIndex]) {
           return;
         }

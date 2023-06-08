@@ -12,6 +12,7 @@ import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
 import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { sendKeys } from '@web/test-runner-commands';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
 
@@ -2677,6 +2678,61 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(true);
       mimicKeyPress(visibleOptions[1], 'Enter');
       expect(el.opened).to.equal(true);
+    });
+
+    it('submits form on [Enter] when listbox is closed', async () => {
+      const submitSpy = sinon.spy(e => e.preventDefault());
+      const el = /** @type {HTMLFormElement}  */ (
+        await fixture(html`
+          <form @submit=${submitSpy}>
+            <lion-combobox name="foo" multiple-choice>
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+            <button type="submit">submit</button>
+          </form>
+        `)
+      );
+      const combobox = /** @type {LionCombobox} */ (el.querySelector('[name="foo"]'));
+      const { _inputNode } = getComboboxMembers(combobox);
+      await combobox.updateComplete;
+      _inputNode.focus();
+      await sendKeys({
+        press: 'Enter',
+      });
+      if (_inputNode instanceof HTMLInputElement) {
+        expect(submitSpy.callCount).to.equal(1);
+      }
+    });
+
+    it('does not submit form on [Enter] when listbox is opened', async () => {
+      const submitSpy = sinon.spy(e => e.preventDefault());
+      const el = /** @type {HTMLFormElement}  */ (
+        await fixture(html`
+          <form @submit=${submitSpy}>
+            <lion-combobox name="foo" multiple-choice>
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+            <button type="submit">submit</button>
+          </form>
+        `)
+      );
+      const combobox = /** @type {LionCombobox} */ (el.querySelector('[name="foo"]'));
+      const { _inputNode } = getComboboxMembers(combobox);
+      combobox.opened = true;
+      await combobox.updateComplete;
+      _inputNode.focus();
+      await sendKeys({
+        press: 'Enter',
+      });
+      if (_inputNode instanceof HTMLInputElement) {
+        expect(submitSpy.callCount).to.equal(0);
+      }
     });
   });
 
