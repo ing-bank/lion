@@ -68,6 +68,7 @@
     "@yarnpkg/lockfile": "^1.1.0",
     "babel-polyfill": "^6.26.0",
     "bundlesize": "^1.0.0-beta.2",
+    "cem-plugin-vs-code-custom-data-generator": "^1.4.1",
     "chai": "^4.2.0",
     "chalk": "^4.1.0",
     "concurrently": "^5.2.0",
