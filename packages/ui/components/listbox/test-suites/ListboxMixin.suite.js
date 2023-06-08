@@ -692,7 +692,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             const listbox = /** @type {LionListbox} */ (el.querySelector('[name="foo"]'));
             const { _inputNode } = getListboxMembers(listbox);
             await listbox.updateComplete;
-            if (!_inputNode instanceof HTMLInputElement) {
+            if (!(_inputNode instanceof HTMLInputElement)) {
               return;
             }
             // @ts-ignore allow protected members in tests
