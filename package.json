@@ -38,6 +38,9 @@
     "packages/*",
     "packages-node/*"
   ],
+  "dependencies": {
+    "changeset": "^0.2.6"
+  },
   "devDependencies": {
     "@babel/core": "^7.10.1",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
