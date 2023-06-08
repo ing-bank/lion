@@ -2702,9 +2702,7 @@ describe('lion-combobox', () => {
       await sendKeys({
         press: 'Enter',
       });
-      if (_inputNode instanceof HTMLInputElement) {
-        expect(submitSpy.callCount).to.equal(1);
-      }
+      expect(submitSpy.callCount).to.equal(1);
     });
 
     it('does not submit form on [Enter] when listbox is opened', async () => {
