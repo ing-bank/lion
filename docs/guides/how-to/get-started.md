@@ -75,3 +75,16 @@ You can also use the lion elements directly, although this is likely not a commo
 
 <lion-input name="firstName" label="First name"></lion-input>
 ```
+
+### Code Completion for VS Code
+
+The @lion/ui package includes a file named vscode.html-custom-data.json that allows you to define custom elements to be recognized by Visual Studio Code. This enables code completion for @lion/ui components. To activate this feature, follow these steps after having installed `@lion/ui`:
+
+1. Navigate to the root of your project
+2. Add the following to root level of object in file `.vscode/settings.json` (create file if it doesn't exist):
+
+```json
+  "html.customData": ["./node_modules/@lion/ui/vscode.html-custom-data.json"]
+```
+
+3. Restart your Visual Studio Code for the changes to take effect.
