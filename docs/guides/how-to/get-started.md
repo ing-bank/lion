@@ -22,8 +22,22 @@ npm init @open-wc
 
 ### Install lion packages
 
+To get started with consuming lion's UI components install package `@lion/ui` as follows:
+
 ```bash
-npm i @lion/<package-name>
+npm i @lion/ui
+```
+
+You can install lion's ajax package with:
+
+```bash
+npm i @lion/ajax
+```
+
+You can install lion's singleton-manager package with:
+
+```bash
+npm i --save singleton-manager
 ```
 
 ### Extend a Web Component
