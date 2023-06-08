@@ -701,9 +701,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             await sendKeys({
               press: 'Enter',
             });
-            if (_inputNode instanceof HTMLInputElement) {
-              expect(submitSpy.callCount).to.equal(1);
-            }
+            expect(submitSpy.callCount).to.equal(1);
           });
         });
 
