@@ -14,6 +14,7 @@ import '@lion/ui/define/lion-input-date.js';
 export const isADate = () => html`
   <lion-input-date label="IsDate" .modelValue=${new Date('foo')}> </lion-input-date>
 `;
+}
 ```
 
 ## With minimum date
