@@ -2,12 +2,6 @@ import { expect } from '@open-wc/testing';
 import { getLocalizeManager, formatNumber } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
-// TODO: This is broken only in Safari 13.1.2 Wait till ci is on 13.1.3 and remove
-const isSafari = (() => {
-  const ua = navigator.userAgent.toLowerCase();
-  return ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1;
-})();
-
 const currencyCode = /** @param {string} currency */ currency => ({
   style: 'currency',
   currencyDisplay: 'code',
@@ -278,19 +272,17 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
     });
 
     describe('en-AU', () => {
-      // TODO: This is broken only in Safari 13.1.2 Wait till ci is on 13.1.3 and remove
-      if (isSafari) {
-        return;
-      }
-
       it('supports basics', () => {
         localizeManager.locale = 'en-AU';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('EUR 123,456.79');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('USD 123,456.79');
         expect(formatNumber(123456.789, currencyCode('JPY'))).to.equal('JPY 123,457');
-        expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€123,456.79'); // TODO: fix
-        expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$123,456.79'); // TODO: fix
-        expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('¥123,457'); // TODO: fix
+        expect(formatNumber(123456.789, currencySymbol('EUR'))).to.equal('€123,456.79');
+        expect(formatNumber(-123456.789, currencySymbol('EUR'))).to.equal('−€123,456.79');
+        expect(formatNumber(123456.789, currencySymbol('USD'))).to.equal('$123,456.79');
+        expect(formatNumber(-123456.789, currencySymbol('USD'))).to.equal('−$123,456.79');
+        expect(formatNumber(123456.789, currencySymbol('JPY'))).to.equal('¥123,457');
+        expect(formatNumber(-123456.789, currencySymbol('JPY'))).to.equal('−¥123,457');
       });
     });
 
@@ -319,11 +311,6 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
     });
 
     describe('nl-BE', () => {
-      // TODO: This is broken only in Safari 13.1.2 Wait till ci is on 13.1.3 and remove
-      if (isSafari) {
-        return;
-      }
-
       it('supports basics', () => {
         localizeManager.locale = 'nl-BE';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
@@ -349,10 +336,6 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
 
     describe('fr-BE', () => {
       it('supports basics', () => {
-        // TODO: This test is broken on Safari, check and fix when the intl change is permanent
-        if (isSafari) {
-          return;
-        }
         localizeManager.locale = 'fr-BE';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123 456,79 EUR');
         expect(formatNumber(123456.789, currencyCode('USD'))).to.equal('123 456,79 USD');
@@ -397,11 +380,6 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
     });
 
     describe('tr-TR', () => {
-      // TODO: This is broken only in Safari 13.1.2 Wait till ci is on 13.1.3 and remove
-      if (isSafari) {
-        return;
-      }
-
       it('supports basics', () => {
         localizeManager.locale = 'tr-TR';
         expect(formatNumber(123456.789, currencyCode('EUR'))).to.equal('123.456,79 EUR');
