@@ -1,12 +1,12 @@
 import { getGroupSeparator } from '../../getGroupSeparator.js';
 import { forceAddGroupSeparators } from './forceAddGroupSeparators.js';
 import { forceCurrencyToEnd } from './forceCurrencyToEnd.js';
+import { forceNoSpaceBetweenCurrencySymbolAndNumber } from './forceNoSpaceBetweenCurrencySymbolAndNumber.js';
 import { forceNormalSpaces } from './forceNormalSpaces.js';
 import { forceSpaceBetweenCurrencyCodeAndNumber } from './forceSpaceBetweenCurrencyCodeAndNumber.js';
-import { forceYenSymbol } from './forceYenSymbol.js';
 import { forceSpaceInsteadOfZeroForGroup } from './forceSpaceInsteadOfZeroForGroup.js';
 import { forceTryCurrencyCode } from './forceTryCurrencyCode.js';
-import { forceENAUSymbols } from './forceENAUSymbols.js';
+import { forceFRBESymbols, forceSymbols } from './forceSymbols.js';
 
 /**
  * Normalizes function "formatNumberToParts"
@@ -33,18 +33,24 @@ export function normalizeIntl(formattedParts, options = {}, _locale) {
     if (_locale === 'en-GB' || _locale === 'en-US' || _locale === 'en-AU' || _locale === 'en-PH') {
       normalize = forceSpaceBetweenCurrencyCodeAndNumber(normalize, options);
     }
-    // Force missing Japanese Yen symbol
+    if (_locale === 'en-AU') {
+      normalize = forceSymbols(normalize, options, ['EUR', 'USD', 'JPY']);
+      normalize = forceNoSpaceBetweenCurrencySymbolAndNumber(normalize, options);
+    }
+    if (_locale === 'en-PH') {
+      normalize = forceSymbols(normalize, options, ['USD', 'JPY']);
+    }
     if (_locale === 'fr-FR' || _locale === 'fr-BE') {
-      normalize = forceYenSymbol(normalize, options);
+      normalize = forceSymbols(normalize, options, ['JPY']);
+    }
+    if (_locale === 'fr-BE') {
+      normalize = forceFRBESymbols(normalize, options, ['USD']);
     }
     if (_locale === 'tr-TR') {
       normalize = forceTryCurrencyCode(normalize, options);
       if (options.currencyDisplay === 'code') {
         normalize = forceCurrencyToEnd(normalize);
       }
-    }
-    if (_locale === 'en-AU') {
-      normalize = forceENAUSymbols(normalize, options);
     }
   }
   return normalize;
