@@ -1,0 +1,10 @@
+export { runChoiceGroupMixinSuite } from './choice-group/ChoiceGroupMixin.suite.js';
+export { runChoiceInputMixinSuite } from './choice-group/ChoiceInputMixin.suite.js';
+export { runFormGroupMixinSuite } from './form-group/FormGroupMixin.suite.js';
+export { runFormGroupMixinInputSuite } from './form-group/FormGroupMixin-input.suite.js';
+export { runFormatMixinSuite } from './FormatMixin.suite.js';
+export { runRegistrationSuite } from './FormRegistrationMixins.suite.js';
+export { runInteractionStateMixinSuite } from './InteractionStateMixin.suite.js';
+export { runNativeTextFieldMixinSuite } from './NativeTextFieldMixin.suite.js';
+export { runValidateMixinSuite } from './ValidateMixin.suite.js';
+export { runValidateMixinFeedbackPart } from './ValidateMixinFeedbackPart.suite.js';
