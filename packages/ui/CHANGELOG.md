@@ -1,5 +1,14 @@
 # @lion/ui
 
+## 0.3.1
+
+### Patch Changes
+
+- 7ec90dcb: add CheckboxIndeterminate test suite
+- 1ea5730a: [localize] align currency symbol usage for all browsers
+- 33c0ff13: Added vs-code json file to enable auto-completion
+- dbc3fc2d: [combobox] submits form on [Enter]
+
 ## 0.3.0
 
 ### Minor Changes
