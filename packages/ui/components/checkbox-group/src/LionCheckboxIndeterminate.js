@@ -13,7 +13,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         :host .choice-field__nested-checkboxes {
           display: block;
         }
-        ::slotted([slot='checkbox']) {
+        ::slotted(*) {
           padding-left: 8px;
         }
       `,
@@ -198,7 +198,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
   _afterTemplate() {
     return html`
       <div class="choice-field__nested-checkboxes">
-        <slot name="checkbox"></slot>
+        <slot></slot>
       </div>
     `;
   }
