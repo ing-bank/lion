@@ -11,14 +11,12 @@ import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
 ```
 
-```js preview-story
-export const main = () => html`
-  <lion-checkbox-group name="scientists[]" label="Favorite scientists">
-    <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-    <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-    <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
-  </lion-checkbox-group>
-`;
+```html preview-story
+<lion-checkbox-group name="scientists[]" label="Favorite scientists">
+  <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
+  <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
+  <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+</lion-checkbox-group>
 ```
 
 > Make sure that the checkbox-group also has a name attribute, this is necessary for our [form](../form/overview.md)'s serialization result.
@@ -36,5 +34,6 @@ npm i --save @lion/ui
 
 ```js
 import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox-indeterminate.js';
 import '@lion/ui/define/lion-checkbox.js';
 ```
