@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable max-classes-per-file */
 
 import { MaxLength as LionMaxLength, MinLength as LionMinLength } from '@lion/ui/form-core.js';
 import { html } from 'lit';
