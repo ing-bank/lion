@@ -75,8 +75,6 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
   _removeFile(removedFile) {
     this.dispatchEvent(
       new CustomEvent('file-remove-requested', {
-        composed: true,
-        bubbles: true,
         detail: {
           removedFile,
           status: removedFile.status,

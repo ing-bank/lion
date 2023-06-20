@@ -176,16 +176,17 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     this.__duplicateFileNamesValidator = new DuplicateFileNames({ show: false });
   }
 
+  get _fileListNode() {
+    return Array.from(this.children).find(child => child.slot === 'selected-file-list')
+      ?.children[0];
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this.__initialUploadResponse = this.uploadResponse;
 
     this._inputNode.addEventListener('change', this._onChange);
     this._inputNode.addEventListener('click', this._onClick);
-    this.addEventListener(
-      'file-remove-requested',
-      /** @type {EventListener} */ (this._onRemoveFile),
-    );
   }
 
   disconnectedCallback() {
@@ -347,6 +348,13 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       this.__setupDragDropEventListeners();
       this.setAttribute('drop-zone', '');
     }
+
+    console.log(this._fileListNode);
+
+    /** @type {LionSelectedFileList} */ (this._fileListNode).addEventListener(
+      'file-remove-requested',
+      /** @type {EventListener} */ (this._onRemoveFile),
+    );
   }
 
   /**
