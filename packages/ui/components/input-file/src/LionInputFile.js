@@ -349,7 +349,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       this.setAttribute('drop-zone', '');
     }
 
-    console.log(this._fileListNode);
 
     /** @type {LionSelectedFileList} */ (this._fileListNode).addEventListener(
       'file-remove-requested',
