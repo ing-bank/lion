@@ -855,8 +855,6 @@ describe('lion-input-file', () => {
       // @ts-expect-error [allow-protected-in-test]
       el._fileListNode.dispatchEvent(
         new CustomEvent('file-remove-requested', {
-          composed: true,
-          bubbles: true,
           detail: {
             removedFile,
             status: removedFile.status,
