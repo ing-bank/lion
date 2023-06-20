@@ -176,9 +176,14 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     this.__duplicateFileNamesValidator = new DuplicateFileNames({ show: false });
   }
 
+  /**
+   * @protected
+   * @type {LionSelectedFileList}
+   */
   get _fileListNode() {
-    return Array.from(this.children).find(child => child.slot === 'selected-file-list')
-      ?.children[0];
+    return /** @type {LionSelectedFileList} */ (
+      Array.from(this.children).find(child => child.slot === 'selected-file-list')?.children[0]
+    );
   }
 
   connectedCallback() {
@@ -187,21 +192,12 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
     this._inputNode.addEventListener('change', this._onChange);
     this._inputNode.addEventListener('click', this._onClick);
-
-    this._fileListNode.addEventListener(
-      'file-remove-requested',
-      /** @type {EventListener} */ (this._onRemoveFile),
-    );
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this._inputNode.removeEventListener('change', this._onChange);
     this._inputNode.removeEventListener('click', this._onClick);
-    this.removeEventListener(
-      'file-remove-requested',
-      /** @type {EventListener} */ (this._onRemoveFile),
-    );
   }
 
   /**
