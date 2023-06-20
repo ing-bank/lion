@@ -133,6 +133,14 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   /**
    * @protected
    */
+  get _fileListNode() {
+    return Array.from(this.children).find(child => child.slot === 'selected-file-list')
+      ?.children[0];
+  }
+
+  /**
+   * @protected
+   */
   // TODO: no need to check anymore? https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/draggable
   // eslint-disable-next-line class-methods-use-this
   get _isDragAndDropSupported() {

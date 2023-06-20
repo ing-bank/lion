@@ -808,9 +808,7 @@ describe('lion-input-file', () => {
     ];
 
     beforeEach(async () => {
-      el = await fixture(html`
-        <lion-input-file name="myFiles" multiple="${true}"> </lion-input-file>
-      `);
+      el = await fixture(html` <lion-input-file name="myFiles" multiple> </lion-input-file> `);
 
       // @ts-expect-error [allow-protected-in-test]
       el.uploadResponse = uploadResponse;
@@ -851,11 +849,9 @@ describe('lion-input-file', () => {
       expect(el._selectedFilesMetaData.length).to.equal(2);
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData[1].systemFile.name).to.equal('file2.txt');
-
-      el.dispatchEvent(
+      // @ts-expect-error [allow-protected-in-test]
+      el._fileListNode.dispatchEvent(
         new CustomEvent('file-remove-requested', {
-          composed: true,
-          bubbles: true,
           detail: {
             removedFile,
             status: removedFile.status,
