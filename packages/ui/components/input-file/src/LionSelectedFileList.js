@@ -74,10 +74,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
    */
   _removeFile(removedFile) {
     this.dispatchEvent(
-      // TODO: do we need bubble and composed for an internal event that only LionInputFile should know about?
       new CustomEvent('file-remove-requested', {
-        // composed: true,
-        // bubbles: true,
         detail: {
           removedFile,
           status: removedFile.status,
