@@ -852,7 +852,8 @@ describe('lion-input-file', () => {
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData[1].systemFile.name).to.equal('file2.txt');
 
-      el.dispatchEvent(
+      // @ts-expect-error [allow-protected-in-test]
+      el._fileListNode.dispatchEvent(
         new CustomEvent('file-remove-requested', {
           composed: true,
           bubbles: true,
