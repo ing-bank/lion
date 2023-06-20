@@ -187,7 +187,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
     this._inputNode.addEventListener('change', this._onChange);
     this._inputNode.addEventListener('click', this._onClick);
-    
+
     this._fileListNode.addEventListener(
       'file-remove-requested',
       /** @type {EventListener} */ (this._onRemoveFile),
