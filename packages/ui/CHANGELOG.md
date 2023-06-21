@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.3.2
+
+### Patch Changes
+
+- 259e0dd4: lion-selected-filelist: removed composed: true and bubbles: true and set eventlistener directly on lion-selected-file-list inside lion-input-file
+
 ## 0.3.1
 
 ### Patch Changes
