@@ -6,8 +6,8 @@ import sinon from 'sinon';
 
 /**
  * @typedef {import('../src/LionInputFile.js').LionInputFile} LionInputFile
- * @typedef {import('../types/input-file.js').InputFile} InputFile
- * @typedef {import('../types/input-file.js').SystemFile} SystemFile
+ * @typedef {import('../types/index.ts').InputFile} InputFile
+ * @typedef {import('../types/index.ts').SystemFile} SystemFile
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputFile>} */ (_fixture);

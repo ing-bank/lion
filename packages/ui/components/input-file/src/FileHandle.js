@@ -1,7 +1,7 @@
 import { IsAcceptedFile } from './validators.js';
 
 /**
- * @typedef {import('../types/input-file.js').SystemFile} SystemFile
+ * @typedef {import('../types/index.ts').SystemFile} SystemFile
  */
 
 // Do these global constants add value? They are only used in this file

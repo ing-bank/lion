@@ -5,7 +5,7 @@ import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorConfig} ValidatorConfig
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorParam} ValidatorParam
  * @typedef {import('../../form-core/types/validate/validate.js').ValidatorOutcome} ValidatorOutcome
- * @typedef {import('../types/input-file.js').InputFile} InputFile
+ * @typedef {import('../types/index.ts').InputFile} InputFile
  */
 
 /* eslint max-classes-per-file: ["error", 2] */

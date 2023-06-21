@@ -11,9 +11,9 @@ import { DuplicateFileNames, IsAcceptedFile } from './validators.js';
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {import('lit').RenderOptions} RenderOptions
- * @typedef {import('../types/input-file.js').InputFile} InputFile
- * @typedef {import('../types/input-file.js').SystemFile} SystemFile
- * @typedef {import('../types/input-file.js').UploadResponse} UploadResponse
+ * @typedef {import('../types/index.ts').InputFile} InputFile
+ * @typedef {import('../types/index.ts').SystemFile} SystemFile
+ * @typedef {import('../types/index.ts').UploadResponse} UploadResponse
  */
 
 /**

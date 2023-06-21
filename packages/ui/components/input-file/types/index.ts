@@ -1,6 +1,6 @@
 import { FeedbackMessage } from "../../form-core/types/validate/ValidateMixinTypes.js";
 
-type FileBasics = {
+export type FileBasics = {
   name: string;
   /** size in bytes */
   size: number;
