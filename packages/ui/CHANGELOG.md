@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.3.3
+
+### Patch Changes
+
+- ecf853db: fixed exporting types of lion-input-file
+
 ## 0.3.2
 
 ### Patch Changes
