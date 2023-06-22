@@ -427,13 +427,15 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
               // eslint-disable-next-line no-param-reassign
               file.validationFeedback = [
                 {
-                  type: response.errorMessage?.length > 0 ? 'error' : 'success',
-                  message: response.errorMessage,
+                  type:
+                    typeof response.errorMessage === 'string' && response.errorMessage?.length > 0
+                      ? 'error'
+                      : 'success',
+                  message: response.errorMessage ?? '',
                 },
               ];
             }
           });
-          // this._selectedFilesMetaData = [...this._selectedFilesMetaData];
         }
       });
     }
