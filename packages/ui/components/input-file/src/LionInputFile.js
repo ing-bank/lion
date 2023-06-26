@@ -47,6 +47,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       maxFileSize: { type: Number, attribute: 'max-file-size' },
       enableDropZone: { type: Boolean, attribute: 'enable-drop-zone' },
       uploadOnSelect: { type: Boolean, attribute: 'upload-on-select' },
+      isDragging: { type: Boolean, attribute: 'is-dragging', reflect: true },
       uploadResponse: { type: Array, state: false },
       _selectedFilesMetaData: { type: Array, state: true },
     };
@@ -300,11 +301,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         (/** @type {Event} */ ev) => {
           ev.preventDefault();
           ev.stopPropagation();
-          if (eventName !== 'dragleave') {
-            this.setAttribute('is-dragging', '');
-          } else {
-            this.removeAttribute('is-dragging');
-          }
+          this.isDragging = eventName !== 'dragleave';
         },
         false,
       );
@@ -316,7 +313,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         if (ev.target === this._inputNode) {
           ev.preventDefault();
         }
-        this.removeAttribute('is-dragging');
+        this.isDragging = false;
       },
       false,
     );
@@ -436,6 +433,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
               ];
             }
           });
+          // this._selectedFilesMetaData = [...this._selectedFilesMetaData];
         }
       });
     }
@@ -468,7 +466,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   _processDroppedFiles(ev) {
     ev.preventDefault();
-    this.removeAttribute('is-dragging');
+    this.isDragging = false;
 
     const isDraggingMultipleWhileNotSupported =
       ev.dataTransfer && ev.dataTransfer.items.length > 1 && !this.multiple;
