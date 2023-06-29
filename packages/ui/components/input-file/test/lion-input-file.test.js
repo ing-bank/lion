@@ -927,12 +927,14 @@ describe('lion-input-file', () => {
     it('should set "is-dragging" on dragenter', async () => {
       const dropzone = el.shadowRoot?.querySelector('.input-file__drop-zone');
       dropzone?.dispatchEvent(new Event('dragenter', { bubbles: true }));
+      await el.updateComplete;
       expect(el.hasAttribute('is-dragging')).to.equal(true);
     });
 
     it('should set "is-dragging" on dragover', async () => {
       const dropzone = el.shadowRoot?.querySelector('.input-file__drop-zone');
       dropzone?.dispatchEvent(new Event('dragover', { bubbles: true }));
+      await el.updateComplete;
       expect(el.hasAttribute('is-dragging')).to.equal(true);
     });
 
@@ -942,6 +944,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       dropzone?.dispatchEvent(new Event('dragleave', { bubbles: true }));
+      await el.updateComplete;
       expect(el.hasAttribute('is-dragging')).to.equal(false);
     });
 
@@ -951,6 +954,7 @@ describe('lion-input-file', () => {
       await el.updateComplete;
 
       window.dispatchEvent(new Event('drop', { bubbles: true }));
+      await el.updateComplete;
       expect(el.hasAttribute('is-dragging')).to.equal(false);
     });
 
