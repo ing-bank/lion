@@ -6,6 +6,7 @@ import { MinMaxDate, IsDateDisabled } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { formatDate } from '@lion/ui/localize.js';
 import '@lion/ui/define/lion-input-datepicker.js';
+loadDefaultFeedbackMessages();
 ```
 
 ## Minimum and maximum date
@@ -35,6 +36,7 @@ export const disableSpecificDates = () => html`
   <lion-input-datepicker
     label="IsDateDisabled"
     help-text="You're not allowed to choose any 15th."
+    .modelValue=${new Date('2023/06/15')}
     .validators=${[new IsDateDisabled(d => d.getDate() === 15)]}
   ></lion-input-datepicker>
 `;

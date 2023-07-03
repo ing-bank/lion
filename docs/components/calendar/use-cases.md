@@ -190,3 +190,42 @@ export const combinedDisabledDates = () => {
   `;
 };
 ```
+
+### Finding enabled dates
+
+The next available date may be multiple days/month in the future/past.
+For that we offer convenient helpers as
+
+- `findNextEnabledDate()`
+- `findPreviousEnabledDate()`
+- `findNearestEnabledDate()`
+
+```js preview-story
+export const findingEnabledDates = () => {
+  function getCalendar(ev) {
+    return ev.target.parentElement.querySelector('.js-calendar');
+  }
+  return html`
+    <style>
+      .demo-calendar {
+        border: 1px solid #adadad;
+        box-shadow: 0 0 16px #ccc;
+        max-width: 500px;
+      }
+    </style>
+    <lion-calendar
+      class="demo-calendar js-calendar"
+      .disableDates=${day => day.getDay() === 6 || day.getDay() === 0}
+    ></lion-calendar>
+    <button @click="${ev => getCalendar(ev).focusDate(getCalendar(ev).findNextEnabledDate())}">
+      focus findNextEnabledDate
+    </button>
+    <button @click="${ev => getCalendar(ev).focusDate(getCalendar(ev).findPreviousEnabledDate())}">
+      focus findPreviousEnabledDate
+    </button>
+    <button @click="${ev => getCalendar(ev).focusDate(getCalendar(ev).findNearestEnabledDate())}">
+      focus findNearestEnabledDate
+    </button>
+  `;
+};
+```
