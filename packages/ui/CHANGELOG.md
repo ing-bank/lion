@@ -1,5 +1,17 @@
 # @lion/ui
 
+## 0.3.4
+
+### Patch Changes
+
+- b44bfc5d: [calendar] updates:
+
+  - Enables focus to disabled dates to make it more reasonable for screen readers
+  - Do not automatically force selection of a valid date
+  - Add helper functions to find next/previous/nearest enabled date
+
+- 137a1b6c: lion-input-file: added isDragging property
+
 ## 0.3.3
 
 ### Patch Changes
