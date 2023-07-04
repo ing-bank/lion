@@ -14,6 +14,7 @@ export declare interface Day {
   tabindex?: string;
   ariaPressed?: string;
   ariaCurrent?: string | undefined;
+  disabledInfo?: string | undefined;
 }
 
 export declare interface Week {
