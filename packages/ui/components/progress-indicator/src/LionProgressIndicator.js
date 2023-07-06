@@ -148,7 +148,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
         this._resetAriaValueAttributes();
         this._setDefaultLabel();
       }
-    } else {
+    } else if (this.min < this.max) {
       if (changedProperties.has('value')) {
         if (!this.value || typeof this.value !== 'number') {
           this.removeAttribute('value');
@@ -177,6 +177,8 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
           this.value = this.max;
         }
       }
+    } else {
+      throw new Error('min greater than max');
     }
   }
 
