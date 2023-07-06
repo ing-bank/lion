@@ -221,6 +221,13 @@ describe('Ajax', () => {
       }
       expect(thrown).to.be.true;
     });
+
+    it('doesnt throw on empty response', async () => {
+      fetchStub.returns(Promise.resolve(new Response('', responseInit())));
+
+      const { response } = await ajax.fetchJson('/foo');
+      expect(response.ok);
+    });
   });
 
   describe('request and response interceptors', () => {
