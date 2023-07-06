@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.1.4
+
+### Patch Changes
+
+- fd93cc0c: fix: avoid JSON.parsing empty responses
+
 ## 1.1.3
 
 ### Patch Changes
