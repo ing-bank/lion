@@ -1,5 +1,6 @@
 import { html, LitElement, css } from 'lit';
 import { browserDetection, DisabledWithTabIndexMixin } from '@lion/ui/core.js';
+import { hostMinimumClickArea } from '../../../shared-styles/host-minimum-click-area.js';
 
 const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' || e.key === 'Enter';
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
@@ -40,6 +41,7 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
 
   static get styles() {
     return [
+      hostMinimumClickArea,
       css`
         :host {
           position: relative;
@@ -56,22 +58,6 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
           -webkit-user-select: none;
           -moz-user-select: none;
           -ms-user-select: none;
-        }
-
-        :host::before {
-          content: '';
-
-          /* center vertically and horizontally */
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-
-          /* Minimum click area to meet [WCAG Success Criterion 2.5.5 Target Size (Enhanced)](https://www.w3.org/TR/WCAG22/#target-size-enhanced) */
-          min-height: 44px;
-          min-width: 44px;
-          width: 100%;
-          height: 100%;
         }
 
         .button-content {

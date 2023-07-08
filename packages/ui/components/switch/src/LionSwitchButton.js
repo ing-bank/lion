@@ -1,5 +1,6 @@
 import { html, css, LitElement } from 'lit';
 import { DisabledWithTabIndexMixin } from '@lion/ui/core.js';
+import { hostMinimumClickArea } from '../../../shared-styles/host-minimum-click-area.js';
 
 export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
   static get properties() {
@@ -17,23 +18,20 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
   static get styles() {
     return [
+      hostMinimumClickArea,
       css`
         :host {
-          display: inline-block;
           position: relative;
+          display: inline-block;
           width: 36px;
           height: 16px;
           outline: 0;
+          background: #eee;
+          cursor: pointer;
         }
 
         :host([hidden]) {
           display: none;
-        }
-
-        .btn {
-          position: relative;
-          height: 100%;
-          outline: 0;
         }
 
         :host(:focus:not([disabled])) .switch-button__thumb {
@@ -41,34 +39,22 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
           outline: 2px solid #bde4ff;
         }
 
-        .switch-button__track {
-          background: #eee;
-          width: 100%;
-          height: 100%;
-        }
-
         .switch-button__thumb {
-          background: #ccc;
+          display: block;
           width: 50%;
           height: 100%;
-          position: absolute;
-          top: 0;
+          background: #ccc;
         }
 
         :host([checked]) .switch-button__thumb {
-          right: 0;
+          transform: translateX(100%);
         }
       `,
     ];
   }
 
   render() {
-    return html`
-      <div class="btn">
-        <div class="switch-button__track"></div>
-        <div class="switch-button__thumb"></div>
-      </div>
-    `;
+    return html` <span class="switch-button__thumb"><slot></slot></span> `;
   }
 
   constructor() {
