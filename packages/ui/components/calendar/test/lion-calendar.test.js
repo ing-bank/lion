@@ -1280,11 +1280,25 @@ describe('<lion-calendar>', () => {
         expect(previousMonthDayObjs[2].cellIndex).to.equal(2);
         expect(previousMonthDayObjs[2].monthday).to.equal(31);
 
-        expect(nextMonthDayObjs.length).to.equal(2);
+        expect(nextMonthDayObjs.length).to.equal(9);
         expect(nextMonthDayObjs[0].cellIndex).to.equal(5);
         expect(nextMonthDayObjs[0].monthday).to.equal(1);
         expect(nextMonthDayObjs[1].cellIndex).to.equal(6);
         expect(nextMonthDayObjs[1].monthday).to.equal(2);
+        expect(nextMonthDayObjs[2].cellIndex).to.equal(0);
+        expect(nextMonthDayObjs[2].monthday).to.equal(3);
+        expect(nextMonthDayObjs[3].cellIndex).to.equal(1);
+        expect(nextMonthDayObjs[3].monthday).to.equal(4);
+        expect(nextMonthDayObjs[4].cellIndex).to.equal(2);
+        expect(nextMonthDayObjs[4].monthday).to.equal(5);
+        expect(nextMonthDayObjs[5].cellIndex).to.equal(3);
+        expect(nextMonthDayObjs[5].monthday).to.equal(6);
+        expect(nextMonthDayObjs[6].cellIndex).to.equal(4);
+        expect(nextMonthDayObjs[6].monthday).to.equal(7);
+        expect(nextMonthDayObjs[7].cellIndex).to.equal(5);
+        expect(nextMonthDayObjs[7].monthday).to.equal(8);
+        expect(nextMonthDayObjs[8].cellIndex).to.equal(6);
+        expect(nextMonthDayObjs[8].monthday).to.equal(9);
       });
 
       it('renders days for next months in the last month of the year', async () => {
@@ -1294,11 +1308,25 @@ describe('<lion-calendar>', () => {
           `),
         );
         const { nextMonthDayObjs } = elObj;
-        expect(nextMonthDayObjs.length).to.equal(2);
+        expect(nextMonthDayObjs.length).to.equal(9);
         expect(nextMonthDayObjs[0].cellIndex).to.equal(5);
         expect(nextMonthDayObjs[0].monthday).to.equal(1);
         expect(nextMonthDayObjs[1].cellIndex).to.equal(6);
         expect(nextMonthDayObjs[1].monthday).to.equal(2);
+        expect(nextMonthDayObjs[2].cellIndex).to.equal(0);
+        expect(nextMonthDayObjs[2].monthday).to.equal(3);
+        expect(nextMonthDayObjs[3].cellIndex).to.equal(1);
+        expect(nextMonthDayObjs[3].monthday).to.equal(4);
+        expect(nextMonthDayObjs[4].cellIndex).to.equal(2);
+        expect(nextMonthDayObjs[4].monthday).to.equal(5);
+        expect(nextMonthDayObjs[5].cellIndex).to.equal(3);
+        expect(nextMonthDayObjs[5].monthday).to.equal(6);
+        expect(nextMonthDayObjs[6].cellIndex).to.equal(4);
+        expect(nextMonthDayObjs[6].monthday).to.equal(7);
+        expect(nextMonthDayObjs[7].cellIndex).to.equal(5);
+        expect(nextMonthDayObjs[7].monthday).to.equal(8);
+        expect(nextMonthDayObjs[8].cellIndex).to.equal(6);
+        expect(nextMonthDayObjs[8].monthday).to.equal(9);
       });
 
       it('renders days for previous months in the first month of the year', async () => {
