@@ -110,7 +110,9 @@ export const ArrowMixinImplementation = superclass =>
 
     /** @protected */
     _arrowNodeTemplate() {
-      return html` <div class="arrow" data-popper-arrow>${this._arrowTemplate()}</div> `;
+      return html`
+        <div class="arrow" aria-hidden="true" data-popper-arrow>${this._arrowTemplate()}</div>
+      `;
     }
 
     /** @protected */
