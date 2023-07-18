@@ -124,9 +124,10 @@ export class Ajax {
    *
    * @param {RequestInfo} info
    * @param {RequestInit & Partial<CacheRequestExtension>} [init]
+   * @param {Boolean} [parseErrorResponse]
    * @returns {Promise<Response>}
    */
-  async fetch(info, init) {
+  async fetch(info, init, parseErrorResponse = false) {
     const request = /** @type {CacheRequest} */ (new Request(info, { ...init }));
     request.cacheOptions = init?.cacheOptions;
     request.params = init?.params;
@@ -137,7 +138,11 @@ export class Ajax {
       const response = /** @type {CacheResponse} */ (interceptedRequestOrResponse);
       response.request = request;
       if (isFailedResponse(interceptedRequestOrResponse)) {
-        throw new AjaxFetchError(request, response);
+        throw new AjaxFetchError(
+          request,
+          response,
+          parseErrorResponse ? await this.__attemptParseFailedResponseBody(response) : undefined,
+        );
       }
       // prevent network request, return cached response
       return response;
@@ -149,7 +154,11 @@ export class Ajax {
     const interceptedResponse = await this.__interceptResponse(response);
 
     if (isFailedResponse(interceptedResponse)) {
-      throw new AjaxFetchError(request, interceptedResponse);
+      throw new AjaxFetchError(
+        request,
+        response,
+        parseErrorResponse ? await this.__attemptParseFailedResponseBody(response) : undefined,
+      );
     }
     return interceptedResponse;
   }
@@ -163,8 +172,7 @@ export class Ajax {
    *
    * @param {RequestInfo} info
    * @param {LionRequestInit} [init]
-   * @template T
-   * @returns {Promise<{ response: Response, body: T }>}
+   * @returns {Promise<{ response: Response, body: string|Object }>}
    */
   async fetchJson(info, init) {
     const lionInit = {
@@ -183,7 +191,18 @@ export class Ajax {
 
     // typecast LionRequestInit back to RequestInit
     const jsonInit = /** @type {RequestInit} */ (lionInit);
-    const response = await this.fetch(info, jsonInit);
+    const response = await this.fetch(info, jsonInit, true);
+
+    const body = await this.__parseBody(response);
+
+    return { response, body };
+  }
+
+  /**
+   * @param {Response} response
+   * @returns {Promise<string|Object>}
+   */
+  async __parseBody(response) {
     let responseText = await response.text();
 
     const { jsonPrefix } = this.__config;
@@ -191,7 +210,6 @@ export class Ajax {
       responseText = responseText.substring(jsonPrefix.length);
     }
 
-    /** @type {any} */
     let body = responseText;
 
     if (
@@ -207,8 +225,21 @@ export class Ajax {
     } else {
       body = responseText;
     }
+    return body;
+  }
 
-    return { response, body };
+  /**
+   * @param {Response} response
+   * @returns {Promise<string|Object|undefined>}
+   */
+  async __attemptParseFailedResponseBody(response) {
+    let body;
+    try {
+      body = await this.__parseBody(response);
+    } catch (e) {
+      // no need to throw/log, failed responses often don't have a body
+    }
+    return body;
   }
 
   /**

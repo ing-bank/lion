@@ -139,6 +139,25 @@ describe('Ajax', () => {
       }
       expect(thrown).to.be.true;
     });
+
+    it('throws on 4xx responses, will allow parsing response manually', async () => {
+      ajax.addRequestInterceptor(async () => new Response('my response', { status: 400 }));
+
+      let thrown = false;
+      try {
+        await ajax.fetch('/foo');
+      } catch (e) {
+        // https://github.com/microsoft/TypeScript/issues/20024 open issue, can't type catch clause in param
+        const _e = /** @type {AjaxFetchError} */ (e);
+        expect(_e).to.be.an.instanceOf(AjaxFetchError);
+        expect(_e.request).to.be.an.instanceOf(Request);
+        expect(_e.response).to.be.an.instanceOf(Response);
+        const body = await _e.response.text();
+        expect(body).to.equal('my response');
+        thrown = true;
+      }
+      expect(thrown).to.be.true;
+    });
   });
 
   describe('fetchJson', () => {
@@ -181,6 +200,24 @@ describe('Ajax', () => {
       });
       const response = await ajax.fetchJson('/foo');
       expect(response.body).to.eql({ a: 1, b: 2 });
+    });
+
+    it('throws on 4xx responses, but still attempts parsing response body when using fetchJson', async () => {
+      ajax.addRequestInterceptor(async () => new Response('my response', { status: 400 }));
+
+      let thrown = false;
+      try {
+        await ajax.fetchJson('/foo');
+      } catch (e) {
+        // https://github.com/microsoft/TypeScript/issues/20024 open issue, can't type catch clause in param
+        const _e = /** @type {AjaxFetchError} */ (e);
+        expect(_e).to.be.an.instanceOf(AjaxFetchError);
+        expect(_e.request).to.be.an.instanceOf(Request);
+        expect(_e.response).to.be.an.instanceOf(Response);
+        expect(_e.body).to.equal('my response');
+        thrown = true;
+      }
+      expect(thrown).to.be.true;
     });
 
     describe('given a request body', () => {
