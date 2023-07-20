@@ -178,7 +178,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
         }
       }
     } else {
-      throw new Error('min greater than max');
+      throw new Error(`progress-indicator min value (${this.min}) should always be smaller than max value (${this.max})`);
     }
   }
 
