@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.3.5
+
+### Patch Changes
+
+- 5eafa1ff: hide overlay arrow from screen readers
+
 ## 0.3.4
 
 ### Patch Changes

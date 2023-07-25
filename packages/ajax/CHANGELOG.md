@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.2.0
+
+### Minor Changes
+
+- 7a875ef1: Parses response body automatically for fetchJson failed responses. Add test for reading out the response body in cases of a failed response in regular fetch call.
+
 ## 1.1.4
 
 ### Patch Changes
