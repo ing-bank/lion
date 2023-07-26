@@ -424,7 +424,7 @@ export class LionAccordion extends LitElement {
    * @private
    */
   __toggleExpanded(value) {
-    const { expanded } = this;
+    const expanded = [...this.expanded];
     const index = expanded.indexOf(value);
 
     if (index === -1) {

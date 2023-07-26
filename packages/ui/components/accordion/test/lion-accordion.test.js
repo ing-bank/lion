@@ -80,6 +80,14 @@ describe('<lion-accordion>', () => {
       ).to.equal('invoker 1');
     });
 
+    it('updates expanded with a new array when an invoker is clicked', async () => {
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
+      const invokers = getInvokers(el);
+      const oldExpanded = el.expanded;
+      invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
+      expect(el.expanded).to.not.equal(oldExpanded);
+    });
+
     it('has [expanded] on current expanded invoker which serves as styling hook', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = getInvokers(el);
