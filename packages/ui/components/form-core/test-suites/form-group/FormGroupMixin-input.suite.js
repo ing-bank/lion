@@ -313,7 +313,7 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
     });
 
     // TODO: wait for updated on disconnected to be fixed: https://github.com/lit/lit/issues/1901
-    it.skip(`cleans up feedback message belonging to fieldset  on disconnect`, async () => {
+    it.skip(`cleans up feedback message belonging to fieldset on disconnect`, async () => {
       const el = await childAriaFixture('feedback');
       await childAriaTest(el, { cleanupPhase: true });
     });

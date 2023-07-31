@@ -77,7 +77,7 @@ export function runValidateMixinSuite(customConfig) {
         const stub = sinon.stub(console, 'error');
         const el = /** @type {ValidateElement} */ (await fixture(html`<${tag}></${tag}>`));
         const errorMessage =
-          'Validators array only accepts class instances of Validator. Type "array" found. This may be caused by having multiple installations of @lion/form-core.';
+          'Validators array only accepts class instances of Validator. Type "array" found. This may be caused by having multiple installations of "@lion/ui/form-core.js".';
         expect(() => {
           // @ts-expect-error putting the wrong value on purpose
           el.validators = [[new Required()]];
@@ -85,7 +85,7 @@ export function runValidateMixinSuite(customConfig) {
         expect(stub.args[0][0]).to.equal(errorMessage);
 
         const errorMessage2 =
-          'Validators array only accepts class instances of Validator. Type "string" found. This may be caused by having multiple installations of @lion/form-core.';
+          'Validators array only accepts class instances of Validator. Type "string" found. This may be caused by having multiple installations of "@lion/ui/form-core.js".';
         expect(() => {
           // @ts-expect-error because we purposely put a wrong type
           el.validators = ['required'];
@@ -322,7 +322,7 @@ export function runValidateMixinSuite(customConfig) {
         // @ts-ignore [allow-private] in test
         const syncSpy = sinon.spy(el, '__executeSyncValidators');
         // @ts-ignore [allow-private] in test
-        const resultSpy2 = sinon.spy(el, '__executeResultValidators');
+        const resultSpy2 = sinon.spy(el, '__executeMetaValidators');
 
         el.modelValue = 'nonEmpty';
         expect(syncSpy.calledBefore(resultSpy2)).to.be.true;
@@ -337,7 +337,7 @@ export function runValidateMixinSuite(customConfig) {
         // @ts-ignore [allow-private] in test
         const asyncSpy = sinon.spy(el, '__executeAsyncValidators');
         // @ts-ignore [allow-private] in test
-        const resultSpy = sinon.spy(el, '__executeResultValidators');
+        const resultSpy = sinon.spy(el, '__executeMetaValidators');
 
         el.modelValue = 'nonEmpty';
         expect(resultSpy.callCount).to.equal(1);
@@ -853,6 +853,34 @@ export function runValidateMixinSuite(customConfig) {
         expect(alwaysInvalidSpy.callCount).to.equal(0); // __isRequired returned false (invalid)
         el.modelValue = 'foo';
         expect(alwaysInvalidSpy.callCount).to.equal(1); // __isRequired returned true (valid)
+      });
+
+      it('does not prevent other Validators from being called when input is empty, but at least one Validator has "executesOnEmpty"', async () => {
+        class AlwaysInvalidExecutingOnEmpty extends Validator {
+          static validatorName = 'AlwaysInvalidExecutingOnEmpty';
+
+          static executesOnEmpty = true;
+
+          execute() {
+            return true;
+          }
+        }
+        const alwaysInvalidExecutingOnEmpty = new AlwaysInvalidExecutingOnEmpty();
+        const aalwaysInvalidExecutingOnEmptySpy = sinon.spy(
+          alwaysInvalidExecutingOnEmpty,
+          'execute',
+        );
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag}
+            .validators=${[new Required(), alwaysInvalidExecutingOnEmpty]}
+            .modelValue=${''}
+          >${lightDom}</${tag}>
+        `)
+        );
+        expect(aalwaysInvalidExecutingOnEmptySpy.callCount).to.equal(1);
+        el.modelValue = 'foo';
+        expect(aalwaysInvalidExecutingOnEmptySpy.callCount).to.equal(2);
       });
 
       it('adds [aria-required="true"] to "._inputNode"', async () => {

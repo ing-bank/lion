@@ -8,7 +8,7 @@ import { AsyncQueue } from '../utils/AsyncQueue.js';
 import { pascalCase } from '../utils/pascalCase.js';
 import { SyncUpdatableMixin } from '../utils/SyncUpdatableMixin.js';
 import { LionValidationFeedback } from './LionValidationFeedback.js';
-import { ResultValidator } from './ResultValidator.js';
+import { ResultValidator as MetaValidator } from './ResultValidator.js';
 import { Unparseable } from './Unparseable.js';
 import { Validator } from './Validator.js';
 import { Required } from './validators/Required.js';
@@ -20,6 +20,7 @@ import { FormControlMixin } from '../FormControlMixin.js';
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidateMixin} ValidateMixin
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidationType} ValidationType
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHost
+ * @typedef {import('../../types/validate/index.js').ValidatorOutcome} ValidatorOutcome
  * @typedef {typeof import('../../types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHostConstructor
  * @typedef {{validator:Validator; outcome:boolean|string}} ValidationResultEntry
  * @typedef {{[type:string]: {[validatorName:string]:boolean|string}}} ValidationStates
@@ -31,6 +32,15 @@ import { FormControlMixin } from '../FormControlMixin.js';
  */
 function arrayDiff(array1 = [], array2 = []) {
   return array1.filter(x => !array2.includes(x)).concat(array2.filter(x => !array1.includes(x)));
+}
+
+/**
+ * When the modelValue can't be created by FormatMixin.parser, still allow all validators
+ * to give valuable feedback to the user based on the current viewValue.
+ * @param {any} modelValue
+ */
+function getValueForValidators(modelValue) {
+  return modelValue instanceof Unparseable ? modelValue.viewValue : modelValue;
 }
 
 /**
@@ -46,17 +56,13 @@ export const ValidateMixinImplementation = superclass =>
     SyncUpdatableMixin(DisabledMixin(SlotMixin(ScopedElementsMixin(superclass)))),
   ) {
     static get scopedElements() {
-      const scopedElementsCtor =
-        /** @type {typeof import('@open-wc/scoped-elements/types.js').ScopedElementsHost} */ (
-          super.constructor
-        );
       return {
-        ...scopedElementsCtor.scopedElements,
+        // @ts-ignore
+        ...super.scopedElements,
         'lion-validation-feedback': LionValidationFeedback,
       };
     }
 
-    /** @type {any} */
     static get properties() {
       return {
         validators: { attribute: false },
@@ -93,8 +99,8 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
-     * @overridable
      * Adds "._feedbackNode" as described below
+     * @public
      */
     get slots() {
       /**
@@ -229,7 +235,7 @@ export const ValidateMixinImplementation = superclass =>
       this.__asyncValidationResult = [];
 
       /**
-       * Aggregated result from sync Validators, async Validators and ResultValidators
+       * Aggregated result from sync Validators, async Validators and MetaValidators
        * @type {ValidationResultEntry[]}
        * @private
        */
@@ -242,6 +248,7 @@ export const ValidateMixinImplementation = superclass =>
       this.__prevValidationResult = [];
 
       /**
+       * The shown validation result depends on the visibility of the feedback messages
        * @type {ValidationResultEntry[]}
        * @private
        */
@@ -279,7 +286,7 @@ export const ValidateMixinImplementation = superclass =>
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
-      this.__validateInitialized = true;
+      this.__isValidateInitialized = true;
       this.validate();
       if (this._repropagationRole !== 'child') {
         this.addEventListener('model-value-changed', () => {
@@ -360,8 +367,8 @@ export const ValidateMixinImplementation = superclass =>
      * Executions are scheduled and awaited and the 'async results' are merged with the
      * 'sync results'.
      *
-     * - b) there are ResultValidators. After steps a1, a2, or a3 are finished, the holistic
-     * ResultValidators (evaluating the total result of the 'regular' (a1, a2 and a3) validators)
+     * - b) there are MetaValidators. After steps a1, a2, or a3 are finished, the holistic
+     * MetaValidators (evaluating the total result of the 'regular' (a1, a2 and a3) validators)
      * will be run...
      *
      * Situations a2 and a3 are not mutually exclusive and can be triggered within one `validate()`
@@ -369,14 +376,27 @@ export const ValidateMixinImplementation = superclass =>
      *
      * @param {{ clearCurrentResult?: boolean }} opts
      */
-    async validate({ clearCurrentResult } = {}) {
+    async validate({ clearCurrentResult = false } = {}) {
+      /**
+       * Allows Application Developer to wait for (async) validation
+       * @example
+       * ```js
+       * await el.validateComplete;
+       * ```
+       * @type {Promise<boolean>}
+       */
+      this.validateComplete = new Promise(resolve => {
+        this.__validateCompleteResolve = resolve;
+      });
+
       if (this.disabled) {
         this.__clearValidationResults();
-        this.__finishValidation({ source: 'sync', hasAsync: true });
+        this.__finishValidationPass();
         this._updateFeedbackComponent();
         return;
       }
-      if (!this.__validateInitialized) {
+      // We don't validate before firstUpdated has run
+      if (!this.__isValidateInitialized) {
         return;
       }
 
@@ -394,131 +414,144 @@ export const ValidateMixinImplementation = superclass =>
      * @desc step a1-3 + b (as explained in `validate()`)
      */
     async __executeValidators() {
-      /**
-       * Allows Application Developer to wait for (async) validation
-       * @example
-       * ```js
-       * await el.validateComplete;
-       * ```
-       * @type {Promise<boolean>}
-       */
-      this.validateComplete = new Promise(resolve => {
-        this.__validateCompleteResolve = resolve;
-      });
-
-      // When the modelValue can't be created by FormatMixin.parser, still allow all validators
-      // to give valuable feedback to the user based on the current viewValue.
-      const value =
-        this.modelValue instanceof Unparseable ? this.modelValue.viewValue : this.modelValue;
-
-      /** @type {Validator | undefined} */
-      const requiredValidator = this._allValidators.find(v => v instanceof Required);
+      const value = getValueForValidators(this.modelValue);
 
       /**
-       * 1. Handle the 'exceptional' Required validator:
-       * - the validatity is dependent on the formControl type and therefore determined
-       * by the formControl.__isEmpty method. Basically, the Required Validator is a means
-       * to trigger formControl.__isEmpty.
-       * - when __isEmpty returns true, the input was empty. This means we need to stop
+       * Handle the 'mutually exclusive' Required validator:
+       *
+       * About the Required Validator:
+       * - the validity is dependent on the formControls' modelValue and therefore determined
+       * by the formControl._isEmpty method. Basically, the Required Validator is a means
+       * to trigger formControl._isEmpty().
+       *
+       * About the empty state:
+       * - when _isEmpty returns true, the modelValue is considered empty. This means we need to stop
        * validation here, because all other Validators' execute functions assume the
        * value is not empty (there would be nothing to validate).
+       *
        */
-      // TODO: Try to remove this when we have a single lion form core package, because then we can
-      // depend on FormControlMixin directly, and _isEmpty will always be an existing method on the prototype then
+
       const isEmpty = this.__isEmpty(value);
+
+      this.__syncValidationResult = [];
       if (isEmpty) {
+        const requiredValidator = this._allValidators.find(v => v instanceof Required);
         if (requiredValidator) {
           this.__syncValidationResult = [{ validator: requiredValidator, outcome: true }];
         }
-        this.__finishValidation({ source: 'sync' });
-        return;
+        // TODO: get rid of _isFormOrFieldset in a breaking future update.
+        // For now, We should keep forms and fieldsets backwards compatible...
+        const validatorsThatShouldRunOnEmpty = this._allValidators.filter(
+          v => v.constructor.executesOnEmpty,
+        );
+        const shouldHaltValidationOnEmpty =
+          !validatorsThatShouldRunOnEmpty.length && !this._isFormOrFieldset;
+
+        if (shouldHaltValidationOnEmpty) {
+          this.__finishValidationPass({
+            syncValidationResult: this.__syncValidationResult,
+          });
+          return;
+        }
       }
 
-      // Separate Validators in sync and async
-      const /** @type {Validator[]} */ filteredValidators = this._allValidators.filter(
-          v => !(v instanceof ResultValidator) && !(v instanceof Required),
-        );
-      const /** @type {Validator[]} */ syncValidators = filteredValidators.filter(v => {
-          const vCtor = /** @type {typeof Validator} */ (v.constructor);
-          return !vCtor.async;
-        });
-      const /** @type {Validator[]} */ asyncValidators = filteredValidators.filter(v => {
-          const vCtor = /** @type {typeof Validator} */ (v.constructor);
-          return vCtor.async;
-        });
+      const metaValidators = /** @type {MetaValidator[]} */ [];
+      const syncValidators = /** @type {Validator[]} */ [];
+      const asyncValidators = /** @type {Validator[]} */ [];
+
+      for (const v of this._allValidators) {
+        if (v instanceof MetaValidator) {
+          metaValidators.push(v);
+        } else if (v instanceof Required) {
+          // syncValidators.unshift(v);
+          // Required validator was already handled
+        } else if (/** @type {typeof Validator} */ (v.constructor).async) {
+          asyncValidators.push(v);
+        } else {
+          syncValidators.push(v);
+        }
+      }
+
+      const hasAsync = Boolean(asyncValidators.length);
 
       /**
        * 2. Synchronous validators
        */
-      this.__executeSyncValidators(syncValidators, value, {
-        hasAsync: Boolean(asyncValidators.length),
+
+      this.__syncValidationResult = [
+        // This could eventually contain the Required Validator
+        ...this.__syncValidationResult,
+        ...this.__executeSyncValidators(syncValidators, value),
+      ];
+      // Finish the first (synchronous) pass
+      this.__finishValidationPass({
+        syncValidationResult: this.__syncValidationResult,
+        metaValidators,
       });
 
       /**
        * 3. Asynchronous validators
        */
-      await this.__executeAsyncValidators(asyncValidators, value);
+      if (hasAsync) {
+        // Add a hint in the ui that we're waiting for async validation
+        this.isPending = true;
+        this.__asyncValidationResult = await this.__executeAsyncValidators(asyncValidators, value);
+        this.isPending = false;
+        // Now finish the second (asynchronous) pass (including both sync and async results)
+        this.__finishValidationPass({
+          syncValidationResult: this.__syncValidationResult,
+          asyncValidationResult: this.__asyncValidationResult,
+          metaValidators,
+        });
+        this.__validateCompleteResolve?.(true);
+      } else {
+        this.__validateCompleteResolve?.(true);
+      }
     }
 
     /**
-     * step a2 (as explained in `validate()`): calls `__finishValidation`
+     * step a2 (as explained in `validate()`): calls `__finishValidationPass`
      * @param {Validator[]} syncValidators
      * @param {unknown} value
-     * @param {{ hasAsync: boolean }} opts
      * @private
      */
-    __executeSyncValidators(syncValidators, value, { hasAsync }) {
-      if (syncValidators.length) {
-        this.__syncValidationResult = syncValidators
-          .map(v => ({
-            validator: v,
-            // TODO: fix this type - ts things this is not a FormControlHost?
-            // @ts-ignore
-            outcome: /** @type {boolean|string} */ (v.execute(value, v.param, { node: this })),
-          }))
-          .filter(v => Boolean(v.outcome));
-      }
-      this.__finishValidation({ source: 'sync', hasAsync });
+    __executeSyncValidators(syncValidators, value) {
+      return syncValidators
+        .map(v => ({
+          validator: v,
+          // TODO: fix this type - ts things this is not a FormControlHost?
+          // @ts-ignore
+          outcome: /** @type {boolean|string} */ (v.execute(value, v.param, { node: this })),
+        }))
+        .filter(v => Boolean(v.outcome));
     }
 
     /**
-     * step a3 (as explained in `validate()`), calls __finishValidation
-     * @param {Validator[]} asyncValidators all Validators except required and ResultValidators
+     * step a3 (as explained in `validate()`), calls __finishValidationPass
+     * @param {Validator[]} asyncValidators all Validators except required and MetaValidators
      * @param {?} value
      * @private
      */
     async __executeAsyncValidators(asyncValidators, value) {
-      if (asyncValidators.length) {
-        this.isPending = true;
-        const resultPromises = asyncValidators.map(v => v.execute(value, v.param, { node: this }));
-        const asyncExecutionResults = await Promise.all(resultPromises);
+      const outcomePromises = asyncValidators.map(v => v.execute(value, v.param, { node: this }));
+      const asyncExecutionResults = await Promise.all(outcomePromises);
 
-        this.__asyncValidationResult = asyncExecutionResults
-          .map((r, i) => ({
-            validator: asyncValidators[i],
-            outcome: /** @type {boolean|string} */ (asyncExecutionResults[i]),
-          }))
-          .filter(v => Boolean(v.outcome));
-
-        this.__finishValidation({ source: 'async' });
-        this.isPending = false;
-      }
+      return asyncExecutionResults
+        .map((r, i) => ({
+          validator: asyncValidators[i],
+          outcome: /** @type {boolean|string} */ (asyncExecutionResults[i]),
+        }))
+        .filter(v => Boolean(v.outcome));
     }
 
     /**
-     * step b (as explained in `validate()`), called by __finishValidation
+     * step b (as explained in `validate()`), called by __finishValidationPass
      * @param {{validator: Validator;outcome: boolean | string;}[]} regularValidationResult result of steps 1-3
+     * @param {MetaValidator[]} metaValidators
      * @private
      */
-    __executeResultValidators(regularValidationResult) {
-      const resultValidators = /** @type {ResultValidator[]} */ (
-        this._allValidators.filter(v => {
-          const vCtor = /** @type {typeof Validator} */ (v.constructor);
-          return !vCtor.async && v instanceof ResultValidator;
-        })
-      );
-
-      if (!resultValidators.length) {
+    __executeMetaValidators(regularValidationResult, metaValidators) {
+      if (!metaValidators.length) {
         return [];
       }
 
@@ -529,7 +562,7 @@ export const ValidateMixinImplementation = superclass =>
       }
 
       // Map everything to Validator[] for backwards compatibility
-      return resultValidators
+      return metaValidators
         .map(v => ({
           validator: v,
           outcome: /** @type {boolean|string} */ (
@@ -546,19 +579,35 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
+     * A 'pass' is a single run of the validation process, which will be triggered in these cases:
+     * - on clear or disable
+     * - on sync validation
+     * - on async validation (can depend on server response)
+     *
+     * This method inishes a pass by adding the properties to the instance:
+     * - validationStates
+     * - hasFeedbackFor
+     *
+     * It sends a private event validate-performed, which is received by parent Formgroups.
+     *
      * @param {object} options
-     * @param {'sync'|'async'} options.source
-     * @param {boolean} [options.hasAsync] whether async validators are configured in this run.
+     * @param {ValidationResultEntry[]} [options.syncValidationResult]
+     * @param {ValidationResultEntry[]} [options.asyncValidationResult]
+     * @param {MetaValidator[]} [options.metaValidators] MetaValidators to be executed
      * @private
      * If not, we have nothing left to wait for.
      */
-    __finishValidation({ source, hasAsync }) {
-      const syncAndAsyncOutcome = [...this.__syncValidationResult, ...this.__asyncValidationResult];
-      // if we have any ResultValidators left, now is the time to run them...
-      const resultOutCome = /** @type {ValidationResultEntry[]} */ (
-        this.__executeResultValidators(syncAndAsyncOutcome)
+    __finishValidationPass({
+      syncValidationResult = [],
+      asyncValidationResult = [],
+      metaValidators = [],
+    } = {}) {
+      const syncAndAsyncOutcome = [...syncValidationResult, ...asyncValidationResult];
+      // if we have any MetaValidators left, now is the time to run them...
+      const metaOutCome = /** @type {ValidationResultEntry[]} */ (
+        this.__executeMetaValidators(syncAndAsyncOutcome, metaValidators)
       );
-      this.__validationResult = [...resultOutCome, ...syncAndAsyncOutcome];
+      this.__validationResult = [...metaOutCome, ...syncAndAsyncOutcome];
 
       const ctor = /** @type {ValidateHostConstructor} */ (this.constructor);
 
@@ -567,13 +616,13 @@ export const ValidateMixinImplementation = superclass =>
         (acc, type) => ({ ...acc, [type]: {} }),
         {},
       );
-      this.__validationResult.forEach(({ validator, outcome }) => {
+      for (const { validator, outcome } of this.__validationResult) {
         if (!validationStates[validator.type]) {
           validationStates[validator.type] = {};
         }
         const vCtor = /** @type {typeof Validator} */ (validator.constructor);
         validationStates[validator.type][vCtor.validatorName] = outcome;
-      });
+      }
       this.validationStates = validationStates;
 
       this.hasFeedbackFor = [
@@ -581,11 +630,6 @@ export const ValidateMixinImplementation = superclass =>
       ];
       /** private event that should be listened to by LionFieldSet */
       this.dispatchEvent(new Event('validate-performed', { bubbles: true }));
-      if (source === 'async' || !hasAsync) {
-        if (this.__validateCompleteResolve) {
-          this.__validateCompleteResolve(true);
-        }
-      }
     }
 
     /**
@@ -611,51 +655,49 @@ export const ValidateMixinImplementation = superclass =>
      */
     __setupValidators() {
       const events = ['param-changed', 'config-changed'];
-      if (this.__prevValidators) {
-        this.__prevValidators.forEach(v => {
-          events.forEach(e => {
-            if (v.removeEventListener) {
-              v.removeEventListener(e, this._onValidatorUpdated);
-            }
-          });
-          v.onFormControlDisconnect(
-            /** @type {import('../../types/FormControlMixinTypes.js').FormControlHost} */ (
-              /** @type {unknown} */ (this)
-            ),
-          );
-        });
+
+      for (const validatorToCleanup of this.__prevValidators || []) {
+        for (const eventToCleanup of events) {
+          validatorToCleanup.removeEventListener?.(eventToCleanup, this._onValidatorUpdated);
+        }
+        validatorToCleanup.onFormControlDisconnect(
+          /** @type {import('../../types/FormControlMixinTypes.js').FormControlHost} */ (
+            /** @type {unknown} */ (this)
+          ),
+        );
       }
-      this._allValidators.forEach(v => {
-        if (!(v instanceof Validator)) {
+
+      for (const validatorToSetup of this._allValidators) {
+        if (!(validatorToSetup instanceof Validator)) {
           // throws in constructor are not visible to end user so we do both
-          const errorType = Array.isArray(v) ? 'array' : typeof v;
-          const errorMessage = `Validators array only accepts class instances of Validator. Type "${errorType}" found. This may be caused by having multiple installations of @lion/form-core.`;
+          const errorType = Array.isArray(validatorToSetup) ? 'array' : typeof validatorToSetup;
+          const errorMessage = `Validators array only accepts class instances of Validator. Type "${errorType}" found. This may be caused by having multiple installations of "@lion/ui/form-core.js".`;
           // eslint-disable-next-line no-console
           console.error(errorMessage, this);
           throw new Error(errorMessage);
         }
         const ctor = /** @type {ValidateHostConstructor} */ (this.constructor);
-        if (ctor.validationTypes.indexOf(v.type) === -1) {
-          const vCtor = /** @type {typeof Validator} */ (v.constructor);
+        const vCtor = /** @type {typeof Validator} */ (validatorToSetup.constructor);
+        if (ctor.validationTypes.indexOf(validatorToSetup.type) === -1) {
           // throws in constructor are not visible to end user so we do both
-          const errorMessage = `This component does not support the validator type "${v.type}" used in "${vCtor.validatorName}". You may change your validators type or add it to the components "static get validationTypes() {}".`;
+          const errorMessage = `This component does not support the validator type "${validatorToSetup.type}" used in "${vCtor.validatorName}". You may change your validators type or add it to the components "static get validationTypes() {}".`;
           // eslint-disable-next-line no-console
           console.error(errorMessage, this);
           throw new Error(errorMessage);
         }
-        /** Updated the code to fix issue #1607 to sync the calendar date with validators params
-         *  Here _onValidatorUpdated is responsible for responding to the event
+
+        /**
+         * Updated the code to fix issue #1607 to sync the calendar date with validators params
+         * Here _onValidatorUpdated is responsible for responding to the event
          */
-        events.forEach(eventName => {
-          if (v.addEventListener) {
-            v.addEventListener(eventName, e => {
-              // @ts-ignore for making validator param dynamic
-              this._onValidatorUpdated(e, { validator: v });
-            });
-          }
-        });
-        v.onFormControlConnect(this);
-      });
+        for (const eventToSetup of events) {
+          validatorToSetup.addEventListener?.(eventToSetup, e => {
+            // @ts-ignore for making validator param dynamic
+            this._onValidatorUpdated(e, { validator: validatorToSetup });
+          });
+        }
+        validatorToSetup.onFormControlConnect(this);
+      }
       this.__prevValidators = this._allValidators;
     }
 
@@ -759,7 +801,7 @@ export const ValidateMixinImplementation = superclass =>
           }
 
           const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);
-          _feedbackNode.feedbackData = messageMap.length ? messageMap : [];
+          _feedbackNode.feedbackData = messageMap || [];
         });
       } else {
         this.__feedbackQueue.add(async () => {
@@ -827,12 +869,7 @@ export const ValidateMixinImplementation = superclass =>
      * @protected
      */
     _hasFeedbackVisibleFor(type) {
-      return (
-        this.hasFeedbackFor &&
-        this.hasFeedbackFor.includes(type) &&
-        this.shouldShowFeedbackFor &&
-        this.shouldShowFeedbackFor.includes(type)
-      );
+      return this.hasFeedbackFor?.includes(type) && this.shouldShowFeedbackFor?.includes(type);
     }
 
     /**
