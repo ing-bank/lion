@@ -215,6 +215,8 @@ describe('Ajax', () => {
         expect(_e.request).to.be.an.instanceOf(Request);
         expect(_e.response).to.be.an.instanceOf(Response);
         expect(_e.body).to.equal('my response');
+        const bodyFromResponse = await _e.response.text();
+        expect(bodyFromResponse).to.equal('my response');
         thrown = true;
       }
       expect(thrown).to.be.true;
