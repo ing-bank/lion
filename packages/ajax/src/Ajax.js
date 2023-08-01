@@ -203,7 +203,8 @@ export class Ajax {
    * @returns {Promise<string|Object>}
    */
   async __parseBody(response) {
-    let responseText = await response.text();
+    // clone the response, so the consumer can also read it out manually as well
+    let responseText = await response.clone().text();
 
     const { jsonPrefix } = this.__config;
     if (typeof jsonPrefix === 'string' && responseText.startsWith(jsonPrefix)) {
