@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.2.1
+
+### Patch Changes
+
+- 9cdac8e9: Clone response before reading and parsing the body.
+
 ## 1.2.0
 
 ### Minor Changes
