@@ -432,22 +432,30 @@ export const ValidateMixinImplementation = superclass =>
        */
 
       const isEmpty = this.__isEmpty(value);
-
       this.__syncValidationResult = [];
+
+      /**
+       * So we can have the following scenarios:
+       * - we're empty
+       *   - we have a single value (we are an 'endpoint') => we want to halt execution, because validation only makes sense when we have a value
+       *     - 1. we have Required => we fill .__syncValidationResult and finish validation, because we have a value to validate
+       *     - 2. we don't have Required => we stop validation
+       *   - we have a group of values (object/array) => we want to continue execution, because the constellation of the object (even though the individual endpoints are empty) might be interesting for validation.
+       *     - 3. we have Required => we fill .__syncValidationResult and continue validation (so we can add more to .__syncValidationResult)
+       *     - 4. we don't have Required => we continue validation
+       *  - we're not empty
+       *    - we have a single value or group of values
+       *     - 5. we may have Required, but if we have it will not be 'active' => we continue execution, because we have a value to validate
+       */
+
       if (isEmpty) {
+        const hasSingleValue = !(/** @type {*  & ValidateHost} */ (this)._isFormOrFieldset);
         const requiredValidator = this._allValidators.find(v => v instanceof Required);
         if (requiredValidator) {
           this.__syncValidationResult = [{ validator: requiredValidator, outcome: true }];
         }
-        // TODO: get rid of _isFormOrFieldset in a breaking future update.
-        // For now, We should keep forms and fieldsets backwards compatible...
-        const validatorsThatShouldRunOnEmpty = this._allValidators.filter(
-          v => v.constructor.executesOnEmpty,
-        );
-        const shouldHaltValidationOnEmpty =
-          !validatorsThatShouldRunOnEmpty.length && !this._isFormOrFieldset;
 
-        if (shouldHaltValidationOnEmpty) {
+        if (hasSingleValue) {
           this.__finishValidationPass({
             syncValidationResult: this.__syncValidationResult,
           });
@@ -463,7 +471,6 @@ export const ValidateMixinImplementation = superclass =>
         if (v instanceof MetaValidator) {
           metaValidators.push(v);
         } else if (v instanceof Required) {
-          // syncValidators.unshift(v);
           // Required validator was already handled
         } else if (/** @type {typeof Validator} */ (v.constructor).async) {
           asyncValidators.push(v);
