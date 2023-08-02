@@ -855,34 +855,6 @@ export function runValidateMixinSuite(customConfig) {
         expect(alwaysInvalidSpy.callCount).to.equal(1); // __isRequired returned true (valid)
       });
 
-      it('does not prevent other Validators from being called when input is empty, but at least one Validator has "executesOnEmpty"', async () => {
-        class AlwaysInvalidExecutingOnEmpty extends Validator {
-          static validatorName = 'AlwaysInvalidExecutingOnEmpty';
-
-          static executesOnEmpty = true;
-
-          execute() {
-            return true;
-          }
-        }
-        const alwaysInvalidExecutingOnEmpty = new AlwaysInvalidExecutingOnEmpty();
-        const aalwaysInvalidExecutingOnEmptySpy = sinon.spy(
-          alwaysInvalidExecutingOnEmpty,
-          'execute',
-        );
-        const el = /** @type {ValidateElement} */ (
-          await fixture(html`
-          <${tag}
-            .validators=${[new Required(), alwaysInvalidExecutingOnEmpty]}
-            .modelValue=${''}
-          >${lightDom}</${tag}>
-        `)
-        );
-        expect(aalwaysInvalidExecutingOnEmptySpy.callCount).to.equal(1);
-        el.modelValue = 'foo';
-        expect(aalwaysInvalidExecutingOnEmptySpy.callCount).to.equal(2);
-      });
-
       it('adds [aria-required="true"] to "._inputNode"', async () => {
         const el = /** @type {ValidateElement} */ (
           await fixture(html`

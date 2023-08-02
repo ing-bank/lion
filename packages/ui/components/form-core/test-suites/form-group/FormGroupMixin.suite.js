@@ -589,9 +589,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
         // initially the group is invalid
         expect(el.validationStates.error.Required).to.be.true;
         el.formElements.fieldA.modelValue = 'foo';
-        // If at least one child is filled, the group is valid
+        // if at least one child is filled, the group is valid
         expect(el.validationStates.error.Required).to.be.undefined;
-        // // initially the group is invalid
+        // make Required trigger error state again
         el.formElements.fieldA.modelValue = '';
         expect(el.validationStates.error.Required).to.be.true;
       });

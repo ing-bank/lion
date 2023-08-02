@@ -589,12 +589,7 @@ const FormGroupMixinImplementation = superclass =>
      * @override FormControlMixin
      */
     _isEmpty() {
-      for (const el of this.formElements) {
-        if (!el._isEmpty?.()) {
-          return false;
-        }
-      }
-      return true;
+      return this.formElements.every(el => el._isEmpty?.());
     }
   };
 
