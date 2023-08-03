@@ -13,6 +13,7 @@ import {
 } from '@lion/ui/overlays.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
+import { getFormattedDate } from '../test-helpers/getFormattedDate.js';
 
 /**
  * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
@@ -79,6 +80,11 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         attribute: 'calendar-heading',
       },
       /**
+       * Format of the date.
+       * Default is dd/MM/yyyy.
+       */
+      dateFormat: { type: String, attribute: false },
+      /**
        * The slot to put the invoker button in. Can be 'prefix', 'suffix', 'before' and 'after'.
        * Default will be 'suffix'.
        */
@@ -110,12 +116,8 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   /**
    * @param {Date} date
    */
-  // eslint-disable-next-line class-methods-use-this
   _formatDate(date) {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = String(date.getFullYear());
-    return `${day}/${month}/${year}`;
+    return getFormattedDate(this.dateFormat, date);
   }
 
   get slots() {
@@ -152,6 +154,8 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     this.__invokerId = this.__createUniqueIdForA11y();
     /** @protected */
     this._calendarInvokerSlot = 'suffix';
+    /** @protected */
+    this.dateFormat = this.dateFormat || 'dd/MM/yyyy';
 
     // Configuration flags for subclassers
     /** @protected */
@@ -389,6 +393,8 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         this.modelValue = selectedDate;
       }
 
+      // eslint-disable-next-line no-console
+      console.log('formattedValue', this.formattedValue);
       this._isHandlingUserInput = false;
       this._isHandlingCalendarUserInput = false;
     }
