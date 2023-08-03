@@ -89,3 +89,13 @@ export const faultyPrefilled = () => html`
   </lion-input-datepicker>
 `;
 ```
+
+## Date Format Provided
+
+Formats date based on provided format
+
+```js preview-story
+export const formattedDate2 = () => html`
+  <lion-input-datepicker label="Select Date" .dateFormat="${'MM-dd-yyyy'}"> </lion-input-datepicker>
+`;
+```
