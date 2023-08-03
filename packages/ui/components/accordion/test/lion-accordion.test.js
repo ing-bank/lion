@@ -213,6 +213,17 @@ describe('<lion-accordion>', () => {
       el.focusedIndex = 1;
       expect(spy).to.have.been.calledOnce;
     });
+
+    it('tabbing sets the focusedIndex correctly', async () => {
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
+      const invokers = getInvokers(el);
+      el.focusedIndex = 0;
+      expect(el.focusedIndex).to.equal(0);
+      invokers[2].firstElementChild?.dispatchEvent(new Event('focusin'));
+      expect(el.focusedIndex).to.equal(2);
+      invokers[1].firstElementChild?.dispatchEvent(new Event('focusin'));
+      expect(el.focusedIndex).to.equal(1);
+    });
   });
 
   describe('Accordion Contents (slot=content)', () => {
