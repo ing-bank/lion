@@ -1192,6 +1192,35 @@ describe('<lion-calendar>', () => {
             expect(elObj.activeYear).to.equal('2000');
             expect(elObj.focusedDayObj?.monthday).to.equal(26);
           });
+
+          it('disabled dates cannot be select', async () => {
+            const actSelectedDate = new Date('2000/10/12');
+
+            const el = await fixture(html`
+              <lion-calendar
+                .selectedDate="${actSelectedDate}"
+                .minDate="${new Date('2000/10/12')}"
+              >
+              </lion-calendar>
+            `);
+            const elObj = new CalendarObject(el);
+            expect(elObj.activeMonth).to.equal('October');
+            expect(elObj.activeYear).to.equal('2000');
+
+            el.__contentWrapperElement?.dispatchEvent(
+              new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
+            );
+            await el.updateComplete;
+            expect(elObj.activeMonth).to.equal('October');
+            expect(elObj.activeYear).to.equal('2000');
+            expect(elObj.focusedDayObj?.monthday).to.equal(11);
+
+            el.__contentWrapperElement?.dispatchEvent(
+              new KeyboardEvent('keydown', { key: 'Enter' }),
+            );
+            await el.updateComplete;
+            expect(el.selectedDate).to.equal(actSelectedDate);
+          });
         });
       });
 
