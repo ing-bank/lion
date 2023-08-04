@@ -256,6 +256,9 @@ export class LionAccordion extends LitElement {
    */
   __createInvokerFocusHandler(index) {
     return () => {
+      if (index === this.focusedIndex) {
+        return;
+      }
       this.focusedIndex = index;
     };
   }
