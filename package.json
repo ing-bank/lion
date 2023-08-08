@@ -10,6 +10,14 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^2.9.4"
+    "@astrojs/lit": "^2.1.0",
+    "@webcomponents/template-shadowroot": "^0.2.1",
+    "astro": "^2.10.1",
+    "lit": "^2.8.0",
+    "astro-seo": "^0.7.5"
+  },
+  "imports": {
+    "#components/*": "./src/components/*",
+    "#layouts/*": "./src/layouts/*"
   }
 }

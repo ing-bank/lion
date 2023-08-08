@@ -1,0 +1,64 @@
+---
+import { getCollection } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import ComponentLayout from "../../layouts/partials/ComponentPartial.astro";
+
+export async function getStaticPaths() {
+  const compEntries = await getCollection("component");
+  return compEntries.map((entry) => ({
+    params: { component: entry.data.name },
+    props: { entry },
+  }));
+}
+
+const storiesEntries = await getCollection("story");
+const currentComponentData = Astro.props.entry.data;
+
+const stories = storiesEntries.filter(
+  (entry) => entry.data.component === currentComponentData.name
+);
+
+const storiesForCurrentComponent = [];
+
+for (const story of stories) {
+  const storyWithContent = {
+    ...story,
+    _rendered: await story.render(),
+  };
+  storiesForCurrentComponent.push(storyWithContent);
+}
+
+// 1. add description
+// 2. add modifier/configurator demo
+// 3. add api table:
+//   - slots
+//   - props/attrs
+//   - events
+//   - methods
+//   - parts
+// 4. examples (link api table as well)
+// 5. extensions
+// 6. rationale
+// 7. component context (fit in architecture/relationship to other components and systems)
+// 8. resources
+
+const { entry, frontmatter } = Astro.props;
+// const { Content } = await entry.render();
+---
+
+<MainLayout title={entry.slug}>
+  <ComponentLayout frontmatter={entry.data}>
+    <h1>{currentComponentData.name}</h1>
+    <p>{currentComponentData.description}</p>
+
+    {
+      storiesForCurrentComponent.map((story) => (
+        <article>
+          <h2>{story.data.title}</h2>
+          <p>{story.data.description}</p>
+          <story._rendered.Content />
+        </article>
+      ))
+    }
+  </ComponentLayout>
+</MainLayout>
