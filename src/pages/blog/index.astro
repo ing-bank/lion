@@ -2,17 +2,17 @@
 import { getCollection } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 
-const components = await getCollection("blog");
+const blogs = await getCollection("blog");
 ---
 
 <MainLayout>
   <div class="ui-portal-collection">
     {
-      components.map((comp) => (
+      blogs.map((blog) => (
         <article class="ui-portal-card">
-          <h2>{comp.data.name}</h2>
-          <p>{comp.data.description}</p>
-          <a href={"components/" + comp.slug}>View comp</a>
+          <h2>{blog.data.title}</h2>
+          <p>{blog.data.description}</p>
+          <a href={"blog/" + blog.slug}>View blog</a>
         </article>
       ))
     }

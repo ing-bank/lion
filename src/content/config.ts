@@ -43,9 +43,18 @@ const blog = defineCollection({
         "For SEO reasons, please keep the description under 160 characters."
       ),
     date: z.date(),
-    tags: z.enum(["accessibility", "button"]),
+    tags: z.enum([
+      "accessibility",
+      "ux",
+      "platform",
+      "design",
+      "development",
+      "lit",
+    ]),
     published: z.boolean(),
-    // author: z.enum(["author1", "author2"]),
+    author: z
+      .enum(["Erik Kroes", "Konstantinos Norgias", "Danny Moerkerke"])
+      .optional(),
   }),
 });
 
