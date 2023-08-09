@@ -1,27 +1,25 @@
 import { z, defineCollection } from "astro:content";
 
 const component = defineCollection({
-  // slug: ({id, defaultSlug}) => {
-  //   return customSlugFunc(id);
-  // },
   schema: z.object({
-    name: z
-      .string()
-      .max(60, "For SEO reasons, please keep the title under 60 characters."),
+    name: z.string().max(60),
     description: z.string(),
-    // .max(
-    //   160,
-    //   "For SEO reasons, please keep the description under 160 characters."
-    // ),
-    // date: z.date(),
-    // a draft component is not yet published
     draft: z.boolean().optional(),
     systems: z
+      // control is a replacement of core here. It's like a superset of formcontrol, for all interactive ui components
       .enum(["form", "overlay", "localize", "icon", "control"])
       .optional(),
-    // author: z.enum(["author1", "author2"]),
   }),
 });
+
+// On component page, based on static analysis via ce analyzer, also gather:
+// - dependencies:
+//   - superclasses/mixins
+//   - systems
+//   - composition
+
+// - resources:
+//  -
 
 const story = defineCollection({
   schema: z.object({
