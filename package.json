@@ -13,11 +13,10 @@
     "@astrojs/lit": "^2.1.0",
     "@webcomponents/template-shadowroot": "^0.2.1",
     "astro": "^2.10.1",
-    "lit": "^2.8.0",
-    "astro-seo": "^0.7.5"
+    "astro-seo": "^0.7.5",
+    "lit": "^2.8.0"
   },
-  "imports": {
-    "#components/*": "./src/components/*",
-    "#layouts/*": "./src/layouts/*"
+  "devDependencies": {
+    "globby": "^13.2.2"
   }
 }
