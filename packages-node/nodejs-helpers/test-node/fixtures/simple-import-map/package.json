@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "name": "simple-import-map",
+  "author": "ing-bank",
+  "type": "module",
+  "exports": {
+    "./__icon-backwards-compatibility/icons/*": "./components/icon/icons/*",
+    "./__icon-backwards-compatibility/oj-icons/*": "./components/icon/oj-icons/*"
+  },
+  "imports": {
+    "#icon/oj-icons/*": "./components/icon/oj-icons/*",
+    "#icon/oj-sun-icons/*": "./components/icon/oj-sun-icons/*"
+  }
+}

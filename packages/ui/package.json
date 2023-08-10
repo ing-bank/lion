@@ -29,19 +29,23 @@
     "./docs/*": "./docs/*"
   },
   "files": [
+    "*.js",
     "components",
     "custom-elements.json",
     "dist-types",
     "docs",
-    "exports"
+    "exports",
+    "!custom-elements-manifest.config.js"
   ],
   "scripts": {
+    "create-npm-publish-docs": "node ./scripts/create-docs-for-npm-publish.js",
     "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
     "debug": "cd ../../ && npm run debug",
     "debug:firefox": "cd ../../ && npm run debug:firefox",
     "debug:webkit": "cd ../../ && npm run debug:webkit",
+    "generate-lion-exports": "node ./scripts/generate-lion-exports.js",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
-    "prepublishOnly": "npm run types && node ./scripts/create-docs-for-npm-publish.js && npm run publish-docs && npm run custom-elements-manifest",
+    "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-lion-exports",
     "test": "cd ../../ && npm run test:browser",
     "types": "wireit",
     "types-check-only": "tsc --project tsconfig-check-only.json",
