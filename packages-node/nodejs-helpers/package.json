@@ -1,0 +1,61 @@
+{
+  "name": "@lion/nodejs-helpers",
+  "version": "0.0.0",
+  "description": "Node.js helpers that could be useful to extenders of lion",
+  "license": "MIT",
+  "author": "ing-bank",
+  "homepage": "https://github.com/ing-bank/lion/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ing-bank/lion.git",
+    "directory": "packages-node/nodejs-helpers"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist-types/src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "main": "index.js",
+  "files": [
+    "dist-types",
+    "src"
+  ],
+  "scripts": {
+    "test": "npm run test:node",
+    "test:node": "mocha 'test-node/**/*.test.js'",
+    "test:watch": "npm run test:node -- --watch",
+    "types": "wireit"
+  },
+  "dependencies": {
+    "@babel/generator": "^7.22.5",
+    "@babel/parser": "^7.22.5",
+    "@babel/traverse": "^7.22.5",
+    "@babel/types": "^7.22.5",
+    "es-module-lexer": "^0.3.6",
+    "globby": "^13.2.0",
+    "prettier": "^2.8.8"
+  },
+  "keywords": [
+    "lion-tools",
+    "nodejs-helpers"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "wireit": {
+    "types": {
+      "command": "tsc --build --pretty",
+      "files": [
+        "src",
+        "test-node",
+        "types",
+        "tsconfig.json"
+      ],
+      "output": [
+        "dist-types/**"
+      ]
+    }
+  }
+}
