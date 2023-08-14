@@ -1,8 +1,7 @@
 ---
 import { getCollection } from "astro:content";
-import MainLayout from "../../layouts/MainLayout.astro";
-import ComponentLayout from "../../layouts/partials/ComponentPartial.astro";
-import { UiPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
+import MainLayout from "../../../layouts/MainLayout.astro";
+import ComponentLayout from "../../../layouts/partials/ComponentPartial.astro";
 
 export async function getStaticPaths() {
   const compEntries = await getCollection("component");
@@ -19,32 +18,15 @@ const demos = demoEntries.filter(
   (entry) => entry.data.component === currentComponentData.name
 );
 
-// TODO: refactor to make more readable/generic
-
-const getAnchorTitle = (rawTitle) => {
-  return rawTitle.split(/\s/g).join("-").toLowerCase();
-};
-
 const demosForCurrentComponent = [];
+
 for (const demo of demos) {
-  const demoWithContent = { ...demo, _rendered: await demo.render() };
+  const demoWithContent = {
+    ...demo,
+    _rendered: await demo.render(),
+  };
   demosForCurrentComponent.push(demoWithContent);
 }
-
-const inPageNavData = [
-  {
-    name: currentComponentData.name,
-    url: getAnchorTitle(currentComponentData.name),
-  },
-  {
-    name: "Examples",
-    url: "#examples",
-    children: demosForCurrentComponent.map((entry) => ({
-      name: entry.data.title,
-      url: `#${getAnchorTitle(entry.data.title)}`,
-    })),
-  },
-];
 
 // 1. add description
 // 2. add modifier/configurator demo
@@ -66,16 +48,13 @@ const { entry, frontmatter } = Astro.props;
 
 <MainLayout title={entry.slug}>
   <ComponentLayout frontmatter={entry.data}>
-    <UiPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
-    <h1 id={getAnchorTitle(currentComponentData.name)}>
-      {currentComponentData.name}
-    </h1>
+    <h1>{currentComponentData.name}</h1>
     <p>{currentComponentData.description}</p>
 
     {
       demosForCurrentComponent.map((demo) => (
         <article>
-          <h2 id={getAnchorTitle(demo.data.title)}>{demo.data.title}</h2>
+          <h2>{demo.data.title}</h2>
           <p>{demo.data.description}</p>
           <demo._rendered.Content />
         </article>

@@ -5,7 +5,7 @@ description: All accordion panels are collapsed by default.
 ---
 
 ```html preview-story
-<lion-accordion>
+<lion-accordion expanded="[0]">
   <h3 slot="invoker">
     <button>Sensory Factors</button>
   </h3>

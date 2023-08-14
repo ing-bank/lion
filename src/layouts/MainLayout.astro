@@ -1,4 +1,5 @@
 ---
+import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
 import { UiPortalFooter } from "../components/ui-portal-footer.js";
 import { UiPortalNav } from "../components/ui-portal-nav.js";
@@ -8,15 +9,18 @@ const canonicalURL = new URL(Astro.url.pathname, site).toString();
 const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
 const { title } = Astro.props;
 
+const compEntries = await getCollection("component");
+const compNames = compEntries.map((entry) => entry.data.name);
+
 const navData = [
   { name: "home", url: "/" },
   {
     name: "components",
     url: "/components",
-    children: [
-      { name: "accordion", url: "/components/accordion" },
-      { name: "button", url: "/components/button" },
-    ],
+    children: compNames.map((compName) => ({
+      name: compName,
+      url: `/components/${compName}`,
+    })),
   },
   { name: "develop", url: "/develop" },
   { name: "design", url: "/design" },

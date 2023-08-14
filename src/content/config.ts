@@ -7,21 +7,35 @@ const component = defineCollection({
     draft: z.boolean().optional(),
     systems: z
       // control is a replacement of core here. It's like a superset of formcontrol, for all interactive ui components
-      .enum(["form", "overlay", "localize", "icon", "control"])
+      .enum(["formControl", "overlay", "localize", "icon", "control"])
       .optional(),
+    // On component page, based on static analysis via ce analyzer, also gather:
+    // - dependencies:
+    //   - superclasses/mixins
+    //   - systems
+    //   - composition
+    //   - platformDependencies: relation to platform entities (components or apis)
+
+    dependencies: z.array(z.string()).optional(),
+    resources: z.array(z.string()).optional(),
   }),
 });
 
-// On component page, based on static analysis via ce analyzer, also gather:
-// - dependencies:
-//   - superclasses/mixins
-//   - systems
-//   - composition
+// - Case studies:
 
-// - resources:
-//  -
+// - resources (in):
+//  - Open UI
+//  - WICG
+//  - WHATWG
+//  - W3C/WAI-ARIA
+//  - MDN
+//  - Gecko / Chromium / Webkit
+//  - Baseline
+//  - Interop
 
-const story = defineCollection({
+//
+
+const demo = defineCollection({
   schema: z.object({
     component: z.enum(["accordion", "button"]),
     title: z.string(),
@@ -58,4 +72,12 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { component, story, blog };
+const system = defineCollection({
+  schema: z.object({
+    name: z.string(),
+    description: z.string(),
+    components: z.array(z.string()),
+  }),
+});
+
+export const collections = { component, demo, blog, system };

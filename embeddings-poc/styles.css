@@ -1,0 +1,58 @@
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3rem;
+  padding: 2rem;
+}
+
+.inputs {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  flex-direction: row;
+  gap: 2rem;
+  align-self: stretch;
+}
+
+@media only screen and (max-width: 600px) {
+  .inputs {
+    flex-direction: column;
+  }
+}
+
+.output {
+  font-weight: 100;
+  font-family: sans-serif;
+  font-size: 18pt;
+}
+
+h1 {
+  font-family: sans-serif;
+  font-weight: 300;
+  font-size: 24pt;
+  margin: 0;
+  text-align: center;
+}
+
+textarea {
+  width: 100%;
+  min-height: 10rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  font-family: sans-serif;
+  font-size: 12pt;
+  border: 1px solid #aaa;
+}
+
+button {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-family: sans-serif;
+  font-size: 12pt;
+}
