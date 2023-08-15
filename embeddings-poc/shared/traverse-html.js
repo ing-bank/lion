@@ -6,9 +6,7 @@ const createdPaths = new WeakMap();
 
 function pathify(node, context) {
   const alreadyCreatedPath = createdPaths.get(node);
-  console.log("//// pathify running..nodeName:", node.nodeName);
   if (alreadyCreatedPath) {
-    console.log(">>", alreadyCreatedPath);
     return alreadyCreatedPath;
   }
 
@@ -23,12 +21,9 @@ function pathify(node, context) {
     },
   };
   if (context?.parentNode) {
-    console.log("context.parentNode.nodeName-->", context.parentNode.nodeName);
     path.parent = pathify(context.parentNode);
   }
   createdPaths.set(node, path);
-  console.log("CREATED PATHS:", createdPaths);
-
   return path;
 }
 
@@ -38,18 +33,29 @@ function pathify(node, context) {
  * @param {object} visitor Will be executed for every node
  */
 export function traverseHtml(curNode, visitor, context = {}) {
+  const allPotentialMatchers = [];
+  for (const [visitorKeys, fn] of Object.entries(visitor)) {
+    const splitted = visitorKeys.split("|");
+    for (const visitorKey of splitted) {
+      allPotentialMatchers.push({ fn, visitorKey });
+    }
+  }
+  const applicableFns = allPotentialMatchers.filter(
+    ({ visitorKey }) => visitorKey === curNode.nodeName
+  );
+
   // Match...
-  if (visitor[curNode.nodeName]) {
-    visitor[curNode.nodeName](pathify(curNode, context));
+  for (const applicableFn of applicableFns) {
+    applicableFn.fn(pathify(curNode, context));
   }
 
   let { childNodes } = curNode;
-  if (curNode.nodeName === 'template') {
+  if (curNode.nodeName === "template") {
     childNodes = curNode.content.childNodes;
   }
 
   if (!context.stopped && childNodes) {
-    childNodes.forEach(childNode => {
+    childNodes.forEach((childNode) => {
       if (!context.stopped) {
         traverseHtml(childNode, visitor, { ...context, parentNode: curNode });
       }

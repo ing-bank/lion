@@ -1,0 +1,569 @@
+<!doctype html>
+
+<html lang="en-GB" dir="ltr">
+
+
+  
+    <head>
+  
+    <script src="/_merged_assets/scoped-custom-element-registry.min.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Providence Analytics: Analyzer: Lion</title>
+<meta property="og:title" content="Providence Analytics: Analyzer: Lion"/>
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="/fundamentals/node-tools/providence-analytics/analyzer/"/>
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system"/>
+<meta property="og:description" content="Fundamental white label web components for building your design system"/>
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/_merged_assets/_static/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/_merged_assets/_static/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/_merged_assets/_static/icons/favicon-16x16.png">
+<link rel="manifest" href="/_merged_assets/webmanifest.json">
+<link rel="mask-icon" href="/_merged_assets/_static/icons/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion"/>
+<meta property="og:type" content="website"/>
+
+<meta property="og:image" content="."/>
+<meta property="og:url" content="/fundamentals/node-tools/providence-analytics/analyzer/"/>
+
+<meta name="twitter:card" content="summary_large_image"/>
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional"
+  rel="stylesheet"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional"
+  rel="stylesheet"
+/>
+
+  
+    <link rel="stylesheet" href="/_merged_assets/variables.css">
+<link rel="stylesheet" href="/_merged_assets/layout.css">
+<link rel="stylesheet" href="/_merged_assets/markdown.css">
+<link rel="stylesheet" href="/_merged_assets/style.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/search/noscript.css"></noscript>
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="/_merged_assets/rocket-blog.css">
+  
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewbox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="/_merged_assets/logo.svg" alt="Lion Logo" />
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+           active 
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="/_merged_assets/logo.svg" alt="Lion Logo" />
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item">
+<a href="/fundamentals/systems/">Systems</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/">Core</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/SlotMixin/">SlotMixin</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/model-value/">ModelValue</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/formatting-and-parsing/">Formatting and Parsing</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/interaction-states/">Interaction States</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/validate/">Validate</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/styling/">Styling</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/">Localize</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/localize/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/text/">Translate Text</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/numbers/">Format Numbers</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/dates/">Format Dates</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/rationale/">Rationale</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/icon/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/">Overlays</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/overlays/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/configuration/">Configuration</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/">Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/">Helpers</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/helpers/action-logger/">Action Logger</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/">Ajax</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/ajax/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/">Singleton Manager</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-fail/">Example Fail</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-success/">Example Success</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-complex/">Example Complex</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/node-tools/">Node Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/">Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/">Babel Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/">Publish Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/node-tools/providence-analytics/">Providence Analytics</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/overview/">Overview</a>
+
+</li>
+<li class="menu-item current">
+<a href="/fundamentals/node-tools/providence-analytics/analyzer/">Analyzer</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#public-api" class="anchor">Public api</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#phases" class="anchor">Phases</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#targets-and-references" class="anchor">Targets and references</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#types" class="anchor">Types</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#database" class="anchor">Database</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#analyzer-helpers" class="anchor">Analyzer helpers</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#post-processors" class="anchor">Post processors</a>
+  </li>
+</ul>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/dashboard/">Dashboard</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/LocalConfiguration/">Local configuration</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/QueryResult/">QueryResult</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/">Remark Extend</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/overview/">Overview</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/">Rationales</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/rationales/accessibility/">Accessibility</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/side-effects/">Side Effects</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/versioning/">Versioning Lion</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/TypeScript/">TypeScript</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr/> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="providence-analytics-analyzer"><a class="anchor" href="#providence-analytics-analyzer"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Providence Analytics: Analyzer</h1>
+<p>Analyzers form the core of Providence. They contain predefined queries based on AST traversal/analysis.
+A few examples are:</p>
+<ul>
+<li>find-imports</li>
+<li>find-exports</li>
+<li>match-imports</li>
+</ul>
+<p>An analyzer will give back a <a href="../../../../fundamentals/node-tools/providence-analytics/QueryResult/">QueryResult</a> that will be written to the file system by Providence.
+All analyzers need to extend from the <code>Analyzer</code> base class, found in <code>src/program/analyzers/helpers</code>.</p>
+<h2 id="public-api"><a class="anchor" href="#public-api"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Public api</h2>
+<p>Providence has the following configuration api:</p>
+<ul>
+<li>name (string)</li>
+<li>requiresReference (boolean)
+An analyzer will always need a targetProjectPath and can optionally have a referenceProjectPath.
+In the latter case, it needs to have <code>requiresReference: true</code> configured.</li>
+</ul>
+<p>During AST traversal, the following api can be consulted</p>
+<ul>
+<li><code>.targetData</code></li>
+<li><code>.referenceData</code></li>
+<li><code>.identifier</code></li>
+</ul>
+<h2 id="phases"><a class="anchor" href="#phases"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Phases</h2>
+<h3 id="prepare-phase"><a class="anchor" href="#prepare-phase"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Prepare phase</h3>
+<p>In this phase, all preparations will be done to run the analysis. Providence is designed to be performant and therefore will first look if it finds an already existing, cached result for the current setup.</p>
+<h3 id="traverse-phase"><a class="anchor" href="#traverse-phase"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Traverse phase</h3>
+<p>The ASTs are created for all projects involved and the data are extracted into a QueryOutput. This output can optionally be post processed.</p>
+<h3 id="finalize-phase"><a class="anchor" href="#finalize-phase"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Finalize phase</h3>
+<p>The data are normalized and written to the filesystem in JSON format.</p>
+<h2 id="targets-and-references"><a class="anchor" href="#targets-and-references"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Targets and references</h2>
+<p>Every Analyzer needs a targetProjectPath. A targetProjectPath is a file path String that.</p>
+<h2 id="types"><a class="anchor" href="#types"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Types</h2>
+<p>We can roughly distinguish two types of analyzers: those that require a reference and those that don't require a reference.</p>
+<h2 id="database"><a class="anchor" href="#database"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Database</h2>
+<p>In order to share data across multiple machines, results are written to the filesystem in a
+"machine agnostic" way. They can be shared through git and serve as a local database.</p>
+<h3 id="caching"><a class="anchor" href="#caching"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Caching</h3>
+<p>In order to make caching possible, Providence creates an "identifier": a hash from the combination of project versions + Analyzer configuration. When an identifier already exists in the filesystem, the result can be read from cache. This increases performance and helps mitigate memory problems that can occur when handling large amounts of data in a batch.</p>
+<h2 id="analyzer-helpers"><a class="anchor" href="#analyzer-helpers"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Analyzer helpers</h2>
+<p>Inside the folder './src/program/analyzers', a folder 'helpers' is found.
+Helpers are created specifically for use within analyzers and have knowledge about
+the context of the analyzer (knowledge about an AST and/or QueryResult structure).</p>
+<p>Generic functionality (that can be applied in any context) can be found in './src/program/utils'.</p>
+<h2 id="post-processors"><a class="anchor" href="#post-processors"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Post processors</h2>
+<p>Post processors are imported by analyzers and act on their outputs. They can be enabled via the configuration of an analyzer. They can be found in './src/program/analyzers/post-processors'. For instance: transform the output of analyzer 'find-imports' by sorting on specifier instead of the default (entry). Other than most configurations of analyzers, post processors act on the total result of all analyzed files instead of just one file/ ast entry.</p>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/fundamentals/node-tools/providence-analytics/analyzer.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  <script type="module" src="/_merged_assets/scripts/init-navigation.js"></script>
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  </body>
+</html>

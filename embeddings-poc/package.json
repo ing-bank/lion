@@ -5,11 +5,13 @@
   "type": "module",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generateEmbeddingsForPortal": "node ./prepublish-embeddings/generateEmbeddingsForPortal.js",
+    "start": "npm run generateEmbeddingsForPortal && npx @web/dev-server --node-resolve"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@xenova/transformers": "^2.5.2",
     "globby": "^13.2.2",
     "parse5": "^7.1.2"
   }

@@ -1,30 +1,32 @@
-import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.3.0";
-import { getDotProduct } from "./shared/getDotProduct.js";
+import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.5.2';
+import { getDotProduct } from './shared/getDotProduct.js';
 
-const input1 = document.getElementById("input1");
-const input2 = document.getElementById("input2");
-const generateButton = document.getElementById("generate-button");
-const output = document.getElementById("output");
-
-const generateEmbeddings = await pipeline(
-  "feature-extraction",
-  "Xenova/all-MiniLM-L6-v2"
-);
+const input1 = document.getElementById('input1');
+const generateButton = document.getElementById('generate-button');
+const output = document.getElementById('output');
+const generateEmbeddings = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
+const siteData = await (await fetch('test.json')).json();
 
 generateButton.disabled = false;
 
-generateButton.addEventListener("click", async () => {
+generateButton.addEventListener('click', async () => {
+  output.innerText = '';
+  generateButton.disabled = true;
+
   const output1 = await generateEmbeddings(input1.value, {
-    pooling: "mean",
+    pooling: 'mean',
     normalize: true,
   });
 
-  const output2 = await generateEmbeddings(input2.value, {
-    pooling: "mean",
-    normalize: true,
-  });
+  const outputs = [];
 
-  const similarity = getDotProduct(output1.data, output2.data);
+  for (const result of siteData.results.slice(0, 500)) {
+    const similarity = getDotProduct(output1.data, result.embedding);
+    outputs.push({ url: result.url, similarity, text: result.text });
+  }
 
-  output.innerText = similarity;
+  const top10 = outputs.sort((a, b) => b.similarity - a.similarity).slice(0, 10);
+
+  output.innerText = JSON.stringify(top10, null, 2);
+  generateButton.disabled = false;
 });

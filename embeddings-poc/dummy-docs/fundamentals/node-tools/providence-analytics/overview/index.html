@@ -1,0 +1,728 @@
+<!doctype html>
+
+<html lang="en-GB" dir="ltr">
+
+
+  
+    <head>
+  
+    <script src="/_merged_assets/scoped-custom-element-registry.min.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Providence Analytics: Overview: Lion</title>
+<meta property="og:title" content="Providence Analytics: Overview: Lion"/>
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="/fundamentals/node-tools/providence-analytics/overview/"/>
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system"/>
+<meta property="og:description" content="Fundamental white label web components for building your design system"/>
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/_merged_assets/_static/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/_merged_assets/_static/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/_merged_assets/_static/icons/favicon-16x16.png">
+<link rel="manifest" href="/_merged_assets/webmanifest.json">
+<link rel="mask-icon" href="/_merged_assets/_static/icons/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion"/>
+<meta property="og:type" content="website"/>
+
+<meta property="og:image" content="."/>
+<meta property="og:url" content="/fundamentals/node-tools/providence-analytics/overview/"/>
+
+<meta name="twitter:card" content="summary_large_image"/>
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional"
+  rel="stylesheet"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional"
+  rel="stylesheet"
+/>
+
+  
+    <link rel="stylesheet" href="/_merged_assets/variables.css">
+<link rel="stylesheet" href="/_merged_assets/layout.css">
+<link rel="stylesheet" href="/_merged_assets/markdown.css">
+<link rel="stylesheet" href="/_merged_assets/style.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/search/noscript.css"></noscript>
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="/_merged_assets/rocket-blog.css">
+  
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewbox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="/_merged_assets/logo.svg" alt="Lion Logo" />
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+           active 
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="/_merged_assets/logo.svg" alt="Lion Logo" />
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item">
+<a href="/fundamentals/systems/">Systems</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/">Core</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/SlotMixin/">SlotMixin</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/model-value/">ModelValue</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/formatting-and-parsing/">Formatting and Parsing</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/interaction-states/">Interaction States</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/validate/">Validate</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/styling/">Styling</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/">Localize</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/localize/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/text/">Translate Text</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/numbers/">Format Numbers</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/dates/">Format Dates</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/rationale/">Rationale</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/icon/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/">Overlays</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/overlays/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/configuration/">Configuration</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/">Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/">Helpers</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/helpers/action-logger/">Action Logger</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/">Ajax</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/ajax/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/">Singleton Manager</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-fail/">Example Fail</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-success/">Example Success</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-complex/">Example Complex</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/node-tools/">Node Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/">Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/">Babel Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/">Publish Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/node-tools/providence-analytics/">Providence Analytics</a>
+<ul><li class="menu-item current">
+<a href="/fundamentals/node-tools/providence-analytics/overview/">Overview</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#setup" class="anchor">Setup</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#setup-dashboard" class="anchor">Setup: Dashboard</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#setup-about-result-output" class="anchor">Setup: about result output</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#conceptual-overview" class="anchor">Conceptual overview</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#flow-inside-providence" class="anchor">Flow inside providence</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#queries" class="anchor">Queries</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#analyzer-query" class="anchor">Analyzer Query</a>
+  </li>
+</ul>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/analyzer/">Analyzer</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/dashboard/">Dashboard</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/LocalConfiguration/">Local configuration</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/QueryResult/">QueryResult</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/">Remark Extend</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/overview/">Overview</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/">Rationales</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/rationales/accessibility/">Accessibility</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/side-effects/">Side Effects</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/versioning/">Versioning Lion</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/TypeScript/">TypeScript</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr/> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="providence-analytics-overview"><a class="anchor" href="#providence-analytics-overview"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Providence Analytics: Overview</h1>
+<p>Providence is the 'All Seeing Eye' that generates usage statistics by analyzing code.
+It measures the effectivity and popularity of your software.
+With just a few commands you can measure the impact for (breaking) changes, making
+your release process more stable and predictable.</p>
+<p>Providence can be used as a dev dependency in a project for which metrics
+can be generated via analyzers (see below).
+For instance for a repo "lion-based-ui" that extends @lion/* we can answer questions like:</p>
+<ul>
+<li>
+<p><strong>Which subsets of my product are popular?</strong>
+Which exports of reference project @lion/form-core are consumed by target project "lion-based-ui"?</p>
+</li>
+<li>
+<p><strong>How do sub classers consume/override my product?</strong>
+Which classes / webcomponents inside target project "lion-based-ui" extend from reference project <code>@lion/\*</code>?
+Which of the methods within those classes are overridden?</p>
+</li>
+<li>
+<p>etc...</p>
+</li>
+</ul>
+<p>All the above results can be shown in a dashboard (see below), which allows to sort exports from reference project (@lion) based on popularity, category, consumer etc.
+The dashboard allows to aggregate data from many target projects as well and will show you on a detailed (file) level how those components are being consumed by which projects.</p>
+<h2 id="setup"><a class="anchor" href="#setup"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Setup</h2>
+<h3 id="install-providence"><a class="anchor" href="#install-providence"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Install providence</h3>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> i --save-dev providence-analytics
+</code></pre>
+<h3 id="add-a-providence-script-to-packagejson"><a class="anchor" href="#add-a-providence-script-to-packagejson"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Add a providence script to package.json</h3>
+<pre><code class="language-json">"scripts": {
+  "providence:match-imports": "providence analyze match-imports -r 'node_modules/@lion/ui/*.js'",
+}
+</code></pre>
+<blockquote>
+<p>The example above illustrates how to run the "match-imports" analyzer for reference project 'lion-based-ui'. Note that it is possible to run other analyzers and configurations supported by providence as well. For a full overview of cli options, run <code>npx providence --help</code>. All supported analyzers will be viewed when running <code>npx providence analyze</code></p>
+</blockquote>
+<p>You are now ready to use providence in your project. All
+data will be stored in json files in the folder <code>./providence-output</code></p>
+<p>
+      <figure>
+        <picture>
+<source type="image/avif" srcset="/images/358f6892-600.avif 600w" sizes="(min-width: 1024px) 820px, calc(100vw - 40px)">
+<source type="image/jpeg" srcset="/images/358f6892-600.jpeg 600w" sizes="(min-width: 1024px) 820px, calc(100vw - 40px)">
+          <img
+            alt="CLI" rocket-image="responsive"
+            src="/images/358f6892-600.jpeg"
+            
+            
+            width="600"
+            height="203"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+      <figcaption>CLI</figcaption>
+</figure>
+    </p>
+<h2 id="setup-dashboard"><a class="anchor" href="#setup-dashboard"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Setup: Dashboard</h2>
+<h3 id="add-providencedashboard-script-to-packagejson"><a class="anchor" href="#add-providencedashboard-script-to-packagejson"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Add "providence:dashboard" script to package.json</h3>
+<pre class="language-js"><code class="language-js"><span class="token operator">...</span>
+<span class="token string-property property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span>
+    <span class="token string-property property">"providence:dashboard"</span><span class="token operator">:</span> <span class="token string">"providence dashboard"</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="add-providenceconfjs"><a class="anchor" href="#add-providenceconfjs"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Add providence.conf.js</h3>
+<pre class="language-js"><code class="language-js"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">referenceCollections</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token string-property property">'lion-based-ui-collection'</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+      <span class="token string">'./node_modules/lion-based-ui/packages/x'</span><span class="token punctuation">,</span>
+      <span class="token string">'./node_modules/lion-based-ui/packages/y'</span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre>
+<p>Run <code>npm run providence:dashboard</code></p>
+<p>
+      <figure>
+        <picture>
+<source type="image/avif" srcset="/images/66ef112a-480.avif 480w" sizes="(min-width: 1024px) 820px, calc(100vw - 40px)">
+<source type="image/jpeg" srcset="/images/66ef112a-480.jpeg 480w" sizes="(min-width: 1024px) 820px, calc(100vw - 40px)">
+          <img
+            alt="dashboard" rocket-image="responsive"
+            src="/images/66ef112a-480.jpeg"
+            
+            
+            width="480"
+            height="443"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+      <figcaption>dashboard</figcaption>
+</figure>
+    </p>
+<h2 id="setup-about-result-output"><a class="anchor" href="#setup-about-result-output"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Setup: about result output</h2>
+<p>All output files will be stored in <code>./providence-output</code>.
+This means they will be committed to git, so your colleagues don't have to
+rerun the analysis (for large projects with many dependencies this can be time consuming)
+and can directly start the dashboard usage metrics.
+Also, note that the files serve as cache (they are stored with hashes based on project version and analyzer configuration). This means that an interrupted analysis can be
+resumed later on.</p>
+<h2 id="conceptual-overview"><a class="anchor" href="#conceptual-overview"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Conceptual overview</h2>
+<p>Providence performs queries on one or more search targets.
+These search targets consist of one or more software projects (javascript/html repositories)</p>
+<p>The diagram below shows how <code>providenceMain</code> function can be used from an external context.</p>
+<mdjs-story mdjs-story-name="providenceFlow"></mdjs-story>
+<h2 id="flow-inside-providence"><a class="anchor" href="#flow-inside-providence"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Flow inside providence</h2>
+<p>The diagram below depicts the flow inside the <code>providenceMain</code> function.
+It uses:</p>
+<ul>
+<li>InputDataService
+Used to create a data structure based on a folder (for instance the search target or
+the references root). The structure creates entries for every file, which get enriched with code,
+ast results, query results etc. Returns <code>InputData</code> object.</li>
+<li>QueryService
+Requires a <code>queryConfig</code> and <code>InputData</code> object. It will perform a query (grep search or ast analysis)
+and returns a <code>QueryResult</code>.
+It also contains helpers for the creation of a <code>queryConfig</code></li>
+<li>ReportService
+The result gets outputted to the user. Currently, a log to the console and/or a dump to a json file
+are available as output formats.</li>
+</ul>
+<mdjs-story mdjs-story-name="providenceInternalFlow"></mdjs-story>
+<h2 id="queries"><a class="anchor" href="#queries"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Queries</h2>
+<p>Providence requires a queries as input.
+Queries are defined as objects and can be of two types:</p>
+<ul>
+<li>feature-query</li>
+<li>ast-analyzer</li>
+</ul>
+<p>A <code>QueryConfig</code> is required as input to run the <code>providenceMain</code> function.
+This object specifies the type of query and contains the relevant meta
+information that will later be outputted in the <code>QueryResult</code> (the JSON object that
+the <code>providenceMain</code> function returns.)</p>
+<h2 id="analyzer-query"><a class="anchor" href="#analyzer-query"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Analyzer Query</h2>
+<p>Analyzer queries are also created via <code>QueryConfig</code>s.</p>
+<p>Analyzers can be described as predefined queries that use AST traversal.</p>
+<p>Run:</p>
+<pre class="language-bash"><code class="language-bash">providence analyze
+</code></pre>
+<p>Now you will get a list of all predefined analyzers:</p>
+<ul>
+<li>find-imports</li>
+<li>find-exports</li>
+<li>find-classes</li>
+<li>match-imports</li>
+<li>match-subclasses</li>
+<li>etc...</li>
+</ul>
+<p>
+      <figure>
+        <picture>
+<source type="image/avif" srcset="/images/41546857-600.avif 600w" sizes="(min-width: 1024px) 820px, calc(100vw - 40px)">
+<source type="image/jpeg" srcset="/images/41546857-600.jpeg 600w" sizes="(min-width: 1024px) 820px, calc(100vw - 40px)">
+          <img
+            alt="Analyzer query" rocket-image="responsive"
+            src="/images/41546857-600.jpeg"
+            
+            
+            width="600"
+            height="388"
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+      <figcaption>Analyzer query</figcaption>
+</figure>
+    </p>
+<!--
+## Running providence from its own repo
+
+### How to add a new search target project
+
+```bash
+git submodule add <git-url> ./providence-input-data/search-targets/<project-name>
+```
+
+### How to add a reference project
+
+By adding a reference project, you can automatically see how code in your reference project is
+used across the search target projects.
+Under the hood, this automatically creates a set of queries for you.
+
+```bash
+git submodule add <git-url> ./providence-input-data/references/<project-name>
+```
+
+### Updating submodules
+
+Please run:
+
+```bash
+git submodule update --init --recursive
+```
+
+### Removing submodules
+
+Please run:
+
+```bash
+sh ./rm-submodule.sh <path/to/submodule>
+```
+-->
+        <script type="module" src="/fundamentals/node-tools/providence-analytics/overview/__mdjs-stories.js" mdjs-setup></script>
+      
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/fundamentals/node-tools/providence-analytics/overview.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  <script type="module" src="/_merged_assets/scripts/init-navigation.js"></script>
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+  
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  </body>
+</html>
