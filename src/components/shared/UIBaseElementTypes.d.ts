@@ -96,6 +96,16 @@ export interface UIBaseElementInterface extends LitElement {
    * }
    * ```
    *
+   * ## How do I supply my own visual identity?
+   *
+   * There's three levels of customization:
+   *
+   * 1. Theme CSS properties of the default 'mnml' theme (when you want to change colors, spacings, border radii etc. and don't have an already existing design system)
+   * 2. Decorate templates for existing components (when you have an existing design system, but want to re-use complete compositions built from lion components)
+   *   - via `MyComponent.templates` constructor property
+   *   - via `myComponentInstance.template` instance property
+   * 3. Extend the component and provide your own templates (when you have an existing design system and want to create your own set of components)
+   *
    * ## What about scoped elements?
    * We assume this is used in conjunction with ScopedElementsMixin. When a specific component is used, do:
    *
