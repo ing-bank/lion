@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 import ComponentLayout from "../../layouts/partials/ComponentPartial.astro";
-import { UiPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
+import { UIPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
 
 export async function getStaticPaths() {
   const compEntries = await getCollection("component");
@@ -66,7 +66,7 @@ const { entry, frontmatter } = Astro.props;
 
 <MainLayout title={entry.slug}>
   <ComponentLayout frontmatter={entry.data}>
-    <UiPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
+    <UIPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
     <h1 id={getAnchorTitle(currentComponentData.name)}>
       {currentComponentData.name}
     </h1>

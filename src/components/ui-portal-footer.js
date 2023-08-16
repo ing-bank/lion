@@ -2,7 +2,7 @@ import { LitElement, html, nothing, css } from "lit";
 
 const tagName = "ui-portal-footer";
 
-export class UiPortalFooter extends LitElement {
+export class UIPortalFooter extends LitElement {
   static properties = {
     footerData: { type: Array, attribute: "footer-data" },
   };
@@ -41,4 +41,4 @@ export class UiPortalFooter extends LitElement {
   }
 }
 
-customElements.define(tagName, UiPortalFooter);
+customElements.define(tagName, UIPortalFooter);

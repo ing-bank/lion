@@ -17,6 +17,14 @@
     "lit": "^2.8.0"
   },
   "devDependencies": {
-    "globby": "^13.2.2"
+    "globby": "^13.2.2",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "arrowParens": "avoid",
+    "trailingComma": "all"
   }
 }

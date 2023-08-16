@@ -1,7 +1,7 @@
 import { LitElement, html, nothing } from "lit";
 const tagName = "ui-portal-inpage-nav";
 
-export class UiPortalInpageNav extends LitElement {
+export class UIPortalInpageNav extends LitElement {
   static properties = {
     navData: { type: Array, attribute: "nav-data" },
   };
@@ -31,4 +31,4 @@ export class UiPortalInpageNav extends LitElement {
   }
 }
 
-customElements.define(tagName, UiPortalInpageNav);
+customElements.define(tagName, UIPortalInpageNav);

@@ -1,7 +1,7 @@
 import { LitElement, html, nothing } from "lit";
-const tagName = "ui-portal-nav";
+const tagName = "ui-portal-main-nav";
 
-export class UiPortalNav extends LitElement {
+export class UiPortalMainNav extends LitElement {
   static properties = {
     navData: { type: Array, attribute: "nav-data" },
   };
@@ -31,4 +31,4 @@ export class UiPortalNav extends LitElement {
   }
 }
 
-customElements.define(tagName, UiPortalNav);
+customElements.define(tagName, UiPortalMainNav);

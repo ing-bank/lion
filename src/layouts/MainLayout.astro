@@ -1,8 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
-import { UiPortalFooter } from "../components/ui-portal-footer.js";
-import { UiPortalNav } from "../components/ui-portal-nav.js";
+import { UIPortalFooter } from "../components/ui-portal-footer.js";
+import { UiPortalMainNav } from "../components/ui-portal-main-nav.js";
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -106,13 +106,13 @@ const footerData = [
   </head>
   <body class="ui-portal-grid">
     <div class="ui-portal-grid__nav">
-      <UiPortalNav nav-data={JSON.stringify(navData)} />
+      <UiPortalMainNav nav-data={JSON.stringify(navData)} />
     </div>
     <main class="ui-portal-grid__main">
       <slot />
     </main>
     <div class="ui-portal-grid__footer">
-      <UiPortalFooter footer-data={JSON.stringify(footerData)} />
+      <UIPortalFooter footer-data={JSON.stringify(footerData)} />
     </div>
     <style is:global>
       /* Improve Page speed */
