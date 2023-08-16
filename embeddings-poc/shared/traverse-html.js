@@ -30,32 +30,44 @@ function pathify(node, context) {
 /**
  * Creates an api similar to Babel traverse for parse5 trees
  * @param {Parse5AstNode} curNode Node to start from. Will loop over its children
- * @param {object} visitor Will be executed for every node
+ * @param {Record<string,function>} visitor Will be executed for every node
  */
 export function traverseHtml(curNode, visitor, context = {}) {
-  const allPotentialMatchers = [];
+  /**
+   * Prepare multiple potential visitor matches...
+   * Say, we have a visitor object like this:
+   * {
+   *   h1: function fnA(p5Path) {...},
+   *   'h1|h2': function fnB((p5Path) {...},
+   * }
+   * Our curNode.nodeName is 'h1', so we need to match both 'h1' and 'h1|h2'.
+   *
+   * We will end up with an array like this: [{nodeName: 'h1', fn: fnA}, {nodeName: 'h1', fn: fnB}, {nodeName: 'h2', fn: fnB}}]
+   * In this traversal round, we will execute fnA and fnB once, bceause curNode.nodeName is 'h1'.
+   * @type {{fn: function, nodeName: string}[]}
+   */
+  const visitorFnsByNodeName = [];
   for (const [visitorKeys, fn] of Object.entries(visitor)) {
-    const splitted = visitorKeys.split("|");
-    for (const visitorKey of splitted) {
-      allPotentialMatchers.push({ fn, visitorKey });
+    const nodeNames = visitorKeys.split('|');
+    for (const nodeName of nodeNames) {
+      visitorFnsByNodeName.push({ fn, nodeName });
     }
   }
-  const applicableFns = allPotentialMatchers.filter(
-    ({ visitorKey }) => visitorKey === curNode.nodeName
-  );
 
   // Match...
-  for (const applicableFn of applicableFns) {
-    applicableFn.fn(pathify(curNode, context));
+  for (const { nodeName, fn } of visitorFnsByNodeName) {
+    if (nodeName === curNode.nodeName) {
+      fn(pathify(curNode, context));
+    }
   }
 
-  let { childNodes } = curNode;
-  if (curNode.nodeName === "template") {
+  const { childNodes } = curNode;
+  if (curNode.nodeName === 'template') {
     childNodes = curNode.content.childNodes;
   }
 
   if (!context.stopped && childNodes) {
-    childNodes.forEach((childNode) => {
+    childNodes.forEach(childNode => {
       if (!context.stopped) {
         traverseHtml(childNode, visitor, { ...context, parentNode: curNode });
       }

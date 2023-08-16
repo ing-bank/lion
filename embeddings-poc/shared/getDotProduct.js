@@ -1,5 +1,4 @@
 export function getDotProduct(a, b) {
-  console.log({ a, b });
   if (a.length !== b.length) {
     throw new Error('Both arguments must have the same length');
   }

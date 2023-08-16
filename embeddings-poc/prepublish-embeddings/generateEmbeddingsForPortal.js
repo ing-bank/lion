@@ -52,10 +52,6 @@ function getTextUnderHeading(p5Path) {
   return textForEmbedding.join('\n');
 }
 
-function normalizeEmbeddingForComparisonWithRealTimeEmbedding(embedding) {
-  return embedding.map(value => Math.round(value * 1000) / 1000);
-}
-
 // Loops over all html files of given dir
 async function generateEmbeddingsForPortal({ cwd = path.join(process.cwd(), 'dummy-docs') } = {}) {
   const files = await globby(['./**/*.html'], { cwd });
