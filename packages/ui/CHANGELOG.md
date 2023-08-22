@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.4.0-prerelease-bypass-export-map.0
+
+### Minor Changes
+
+- Bypass the requirement to support export & import map to consume @lion/ui
+
 ## 0.3.5
 
 ### Patch Changes
