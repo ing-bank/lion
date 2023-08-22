@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.4.0
+
+### Minor Changes
+
+- d9e8ba95: Bypass the requirement to support export & import map to consume @lion/ui
+
 ## 0.3.5
 
 ### Patch Changes
