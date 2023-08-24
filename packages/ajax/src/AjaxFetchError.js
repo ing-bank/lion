@@ -6,6 +6,7 @@ export class AjaxFetchError extends Error {
    */
   constructor(request, response, body) {
     super(`Fetch request to ${request.url} failed.`);
+    this.name = 'AjaxFetchError';
     this.request = request;
     this.response = response;
     this.body = body;
