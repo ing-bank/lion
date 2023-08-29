@@ -579,4 +579,24 @@ describe('Ajax', () => {
       expect(errors.includes(/** @type {Error} */ (err).message)).to.be.true;
     });
   });
+
+  describe('AjaxFetchError', () => {
+    it('has the name AjaxFetchError', () => {
+      const error = new AjaxFetchError(new Request('/foobar'), new Response('foobar'), 'foobar');
+
+      expect(error.name).to.be.equal('AjaxFetchError');
+    });
+
+    it("displays the request failure text in it's message", () => {
+      const error = new AjaxFetchError(
+        new Request('/foobar'),
+        new Response('foobar', { status: 418, statusText: "I'm a teapot" }),
+        'foobar',
+      );
+
+      expect(error.message).to.include('http://localhost:8000/foobar');
+      expect(error.message).to.include('418');
+      expect(error.message).to.include("I'm a teapot");
+    });
+  });
 });
