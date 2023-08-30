@@ -1,5 +1,5 @@
 {
-  "mode": "pre",
+  "mode": "exit",
   "tag": "prerelease-bypass-export-map",
   "initialVersions": {
     "babel-plugin-extend-docs": "0.5.3",
