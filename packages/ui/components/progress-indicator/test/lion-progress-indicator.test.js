@@ -149,7 +149,9 @@ describe('lion-progress-indicator', () => {
       const el = await fixture(
         html`<lion-progress-indicator value="30"></lion-progress-indicator> `,
       );
-      el.setAttribute('value', '');
+      // when the attribute is defined, lit set the property to Number(attributeValue)
+      // this means, setting the value to an empty string will be valid because Number('') is 0
+      el.setAttribute('value', 'invalid-value');
       await el.updateComplete;
       expect(el.indeterminate).to.be.true;
       await el.updateComplete;
@@ -157,6 +159,21 @@ describe('lion-progress-indicator', () => {
       expect(el.hasAttribute('aria-valuemin')).to.be.false;
       expect(el.hasAttribute('aria-valuemax')).to.be.false;
       expect(el.getAttribute('aria-label')).to.equal('Loading');
+    });
+
+    it('can update value to 0', async () => {
+      const el = await fixture(
+        html`<lion-progress-indicator value="0"></lion-progress-indicator> `,
+      );
+      await el.updateComplete;
+      expect(el.indeterminate).to.be.false;
+    });
+
+    // empty string will be converted to 0 by lit because value is declared as number
+    it('can update value to 0 if the set value is empty string', async () => {
+      const el = await fixture(html`<lion-progress-indicator value=""></lion-progress-indicator> `);
+      await el.updateComplete;
+      expect(el.indeterminate).to.be.false;
     });
   });
 

@@ -150,7 +150,7 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
       }
     } else {
       if (changedProperties.has('value')) {
-        if (!this.value || typeof this.value !== 'number') {
+        if ((!this.value && this.value !== 0) || typeof this.value !== 'number') {
           this.removeAttribute('value');
         } else if (this.value < this.min) {
           this.value = this.min;
