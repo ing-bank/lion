@@ -1,9 +1,9 @@
-import { LitElement, html, nothing } from "lit";
-const tagName = "ui-portal-inpage-nav";
+import { LitElement, html, nothing } from 'lit';
+const tagName = 'ui-portal-inpage-nav';
 
 export class UIPortalInpageNav extends LitElement {
   static properties = {
-    navData: { type: Array, attribute: "nav-data" },
+    navData: { type: Array, attribute: 'nav-data' },
   };
 
   constructor() {
@@ -12,20 +12,16 @@ export class UIPortalInpageNav extends LitElement {
   }
 
   render() {
-    return html`
-      <nav>${this._renderNavLevel({ children: this.navData })}</nav>
-    `;
+    return html` <nav>${this._renderNavLevel({ children: this.navData })}</nav> `;
   }
 
   _renderNavLevel({ children }) {
     return html`<ul>
       ${children.map(
-        (item) => html`<li>
+        item => html`<li>
           <a href="${item.url}">${item.name}</a>
-          ${item.children?.length
-            ? this._renderNavLevel({ children: item.children })
-            : nothing}
-        </li>`
+          ${item.children?.length ? this._renderNavLevel({ children: item.children }) : nothing}
+        </li>`,
       )}
     </ul>`;
   }

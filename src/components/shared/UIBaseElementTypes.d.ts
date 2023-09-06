@@ -61,9 +61,9 @@ export interface UIBaseElementInterface extends LitElement {
    * static templates = {
    *   ...
    *   dropdown: (templateData) => {
-   *     const { refDirectives } = templateData;
+   *     const { directives } = templateData;
    *
-   *     return html`<select ${refDirectives.dropdown()}>...</select>`;
+   *     return html`<select ${directives.dropdown()}>...</select>`;
    *   },
    * }
    * ```
@@ -86,10 +86,10 @@ export interface UIBaseElementInterface extends LitElement {
    * static templates = {
    *   ...
    *   dropdown: (templateData) => {
-   *     const { refDirectives, data } = templateData;
+   *     const { directives, data } = templateData;
    *
    *     return html`
-   *       <select ${refDirectives.dropdown()}>
+   *       <select ${directives.dropdown()}>
    *         ${data.itemList.map((item) => html`<option>${item}</<option>`)}
    *       </select>`;
    *   },
@@ -117,7 +117,9 @@ export interface UIBaseElementInterface extends LitElement {
    * ```
    *
    * ## About accessibility
-   * Since
+   * As stated above, we guarantee accessibility in two ways:
+   * - behavior and labels ref directives
+   * - semantics via markup. Via tests we should verify that the AOM tree remains as intended.
    */
   templates: Templates;
   /**
