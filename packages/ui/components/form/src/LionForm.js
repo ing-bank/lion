@@ -3,18 +3,6 @@ import { LionFieldset } from '@lion/ui/fieldset.js';
 /* eslint import/no-extraneous-dependencies: ["error", {"peerDependencies": true}] */
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 
-const appInsights = new ApplicationInsights(
-    {
-        config: {
-            instrumentationKey: '41c2886d-21bc-4038-9eb2-1d7c19387afd',
-            autoTrackPageVisitTime: true,
-            loggingLevelConsole: 2,
-            loggingLevelTelemetry: 2,
-            enableSessionStorageBuffer: false,
-        }
-    }
-)
-
 const throwFormNodeError = () => {
   throw new Error(
     'No form node found. Did you put a <form> element inside your custom-form element?',
@@ -38,9 +26,18 @@ export class LionForm extends LionFieldset {
 
 
   firstUpdated(){
-    this.throwFormNodeError()
-    appInsights.loadAppInsights();
-    appInsights.trackPageView();
+    this.appInsights = new ApplicationInsights(
+      {
+        config: {
+          instrumentationKey: '41c2886d-21bc-4038-9eb2-1d7c19387afd',
+          autoTrackPageVisitTime: true,
+          loggingLevelConsole: 2,
+          loggingLevelTelemetry: 2,
+          enableSessionStorageBuffer: false,
+        }
+      }
+    );
+    this.appInsights.loadAppInsights();
   }
 
   connectedCallback() {
@@ -65,6 +62,7 @@ export class LionForm extends LionFieldset {
       // Firefox requires cancelable flag, otherwise we cannot preventDefault
       // Firefox still runs default handlers for untrusted events :\
       this._formNode.dispatchEvent(new Event('submit', { cancelable: true }));
+      this.appInsights.trackEvent({name: 'form submitted'})
     } else {
       throwFormNodeError();
     }
@@ -79,10 +77,12 @@ export class LionForm extends LionFieldset {
     ev.stopPropagation();
     this.submitGroup();
     this.dispatchEvent(new Event('submit', { bubbles: true }));
+    this.appInsights.trackEvent({name: 'form submitted'})
   }
 
   reset() {
     if (this._formNode) {
+      this.appInsights.trackEvent({name: 'form reset'})
       this._formNode.reset();
     } else {
       throwFormNodeError();
@@ -98,6 +98,7 @@ export class LionForm extends LionFieldset {
     ev.stopPropagation();
     this.resetGroup();
     this.dispatchEvent(new Event('reset', { bubbles: true }));
+    this.appInsights.trackEvent({name: 'form reset'})
   }
 
   /** @private */
