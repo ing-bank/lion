@@ -46,4 +46,19 @@ describe('createMonth', () => {
       }),
     );
   });
+
+  it('creates exactly 6 weeks in every months', () => {
+    expect(compareMonth(createMonth(new Date('2026/02/12')))).to.deep.equal(
+      compareMonth({
+        weeks: [
+          createWeek(new Date('2026/02/01'), { firstDayOfWeek: 0 }),
+          createWeek(new Date('2026/02/08'), { firstDayOfWeek: 0 }),
+          createWeek(new Date('2026/02/15'), { firstDayOfWeek: 0 }),
+          createWeek(new Date('2026/02/22'), { firstDayOfWeek: 0 }),
+          createWeek(new Date('2026/03/01'), { firstDayOfWeek: 0 }),
+          createWeek(new Date('2026/03/08'), { firstDayOfWeek: 0 }),
+        ],
+      }),
+    );
+  });
 });
