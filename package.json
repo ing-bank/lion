@@ -15,7 +15,7 @@
     "format:prettier": "prettier \"**/*.{js,md}\" \"packages/*/package.json\" \"package.json\" --write",
     "postinstall": "npx patch-package && npm run custom-elements-manifest",
     "lint": "run-p lint:*",
-    "lint:eslint": "eslint --ext .js,.html .",
+    "lint:eslint": "eslint --ext .html .",
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md}'",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "npm run types",
@@ -40,6 +40,7 @@
     "packages-node/*"
   ],
   "dependencies": {
+    "@microsoft/applicationinsights-web": "^3.0.2",
     "changeset": "^0.2.6"
   },
   "devDependencies": {

@@ -1,4 +1,19 @@
+// @ts-nocheck
 import { LionFieldset } from '@lion/ui/fieldset.js';
+/* eslint import/no-extraneous-dependencies: ["error", {"peerDependencies": true}] */
+import { ApplicationInsights } from '@microsoft/applicationinsights-web';
+
+const appInsights = new ApplicationInsights(
+    {
+        config: {
+            instrumentationKey: '41c2886d-21bc-4038-9eb2-1d7c19387afd',
+            autoTrackPageVisitTime: true,
+            loggingLevelConsole: 2,
+            loggingLevelTelemetry: 2,
+            enableSessionStorageBuffer: false,
+        }
+    }
+)
 
 const throwFormNodeError = () => {
   throw new Error(
@@ -19,6 +34,13 @@ export class LionForm extends LionFieldset {
     this._submit = this._submit.bind(this);
     /** @protected */
     this._reset = this._reset.bind(this);
+  }
+
+
+  firstUpdated(){
+    this.throwFormNodeError()
+    appInsights.loadAppInsights();
+    appInsights.trackPageView();
   }
 
   connectedCallback() {
