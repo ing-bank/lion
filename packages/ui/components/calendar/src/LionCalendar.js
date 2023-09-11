@@ -250,7 +250,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   focusCentralDate() {
-    const button = /** @type {HTMLElement} */ (this.shadowRoot?.querySelector('[tabindex="0"]'));
+    const datesTable = /** @type {HTMLElement} */ (
+      this.shadowRoot?.querySelector('#js-content-wrapper')
+    );
+    const button = /** @type {HTMLElement} */ (datesTable.querySelector('[tabindex="0"]'));
     button.focus();
     this.__focusedDate = this.centralDate;
   }
