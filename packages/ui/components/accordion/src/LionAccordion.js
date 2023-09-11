@@ -10,6 +10,7 @@ import { uuid } from '@lion/ui/core.js';
  * @property {HTMLElement} content content node
  * @property {(event: Event) => unknown} clickHandler executed on click event
  * @property {(event: Event) => unknown} keydownHandler executed on keydown event
+ * @property {(event: Event) => unknown} focusHandler executed on focusin event
  */
 
 /**
@@ -197,6 +198,7 @@ export class LionAccordion extends LitElement {
         content,
         clickHandler: this.__createInvokerClickHandler(index),
         keydownHandler: this.__handleInvokerKeydown.bind(this),
+        focusHandler: this.__createInvokerFocusHandler(index),
       };
       this._setupContent(entry);
       this._setupInvoker(entry);
@@ -245,6 +247,19 @@ export class LionAccordion extends LitElement {
     return () => {
       this.focusedIndex = index;
       this.__toggleExpanded(index);
+    };
+  }
+
+  /**
+   * @param {number} index
+   * @private
+   */
+  __createInvokerFocusHandler(index) {
+    return () => {
+      if (index === this.focusedIndex) {
+        return;
+      }
+      this.focusedIndex = index;
     };
   }
 
@@ -304,7 +319,7 @@ export class LionAccordion extends LitElement {
    * @protected
    */
   _setupInvoker(entry) {
-    const { invoker, uid, index, clickHandler, keydownHandler } = entry;
+    const { invoker, uid, index, clickHandler, keydownHandler, focusHandler } = entry;
     invoker.style.setProperty('order', `${index + 1}`);
     const firstChild = invoker.firstElementChild;
     if (firstChild) {
@@ -312,6 +327,7 @@ export class LionAccordion extends LitElement {
       firstChild.setAttribute('aria-controls', `content-${uid}`);
       firstChild.addEventListener('click', clickHandler);
       firstChild.addEventListener('keydown', keydownHandler);
+      firstChild.addEventListener('focusin', focusHandler);
     }
   }
 
@@ -320,13 +336,14 @@ export class LionAccordion extends LitElement {
    * @protected
    */
   _cleanInvoker(entry) {
-    const { invoker, clickHandler, keydownHandler } = entry;
+    const { invoker, clickHandler, keydownHandler, focusHandler } = entry;
     const firstChild = invoker.firstElementChild;
     if (firstChild) {
       firstChild.removeAttribute('id');
       firstChild.removeAttribute('aria-controls');
       firstChild.removeEventListener('click', clickHandler);
       firstChild.removeEventListener('keydown', keydownHandler);
+      firstChild.removeEventListener('focusin', focusHandler);
     }
   }
 
