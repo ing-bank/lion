@@ -323,6 +323,29 @@ describe('<lion-input-datepicker>', () => {
         expect(elObj.calendarEl.maxDate).to.equal(myMaxDate);
       });
 
+      it('does not converts MaxDate validator to "maxDate" property if validator type other then "error"', async () => {
+        const myMaxDate = new Date('2030/06/15');
+        const tagName = 'custom-input-datepicker';
+        if (!customElements.get(tagName)) {
+          customElements.define(
+            tagName,
+            class CustomInputDatepicker extends LionInputDatepicker {
+              static get validationTypes() {
+                return [...super.validationTypes, 'warning'];
+              }
+            },
+          );
+        }
+        const el = await fixture(html`
+          <custom-input-datepicker .validators=${[new MaxDate(myMaxDate, { type: 'warning' })]}>
+          </custom-input-datepicker>
+        `);
+        const elObj = new DatepickerInputObject(el);
+        await elObj.openCalendar();
+
+        expect(elObj.calendarEl.maxDate).to.be.undefined;
+      });
+
       it('should sync MinDate validator param with Calendar MinDate', async () => {
         const myMinDateValidator = new MinDate(new Date('2020/02/02'));
         const el = await fixture(html`

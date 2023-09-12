@@ -424,14 +424,14 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     // we need to extract minDate, maxDate, minMaxDate and disabledDates validators
     validators.forEach(v => {
       const vctor = /** @type {typeof import('@lion/ui/form-core.js').Validator} */ (v.constructor);
-      if (vctor.validatorName === 'MinDate') {
+      if (vctor.validatorName === 'MinDate' && v.type === 'error') {
         this.__calendarMinDate = v.param;
-      } else if (vctor.validatorName === 'MaxDate') {
+      } else if (vctor.validatorName === 'MaxDate' && v.type === 'error') {
         this.__calendarMaxDate = v.param;
-      } else if (vctor.validatorName === 'MinMaxDate') {
+      } else if (vctor.validatorName === 'MinMaxDate' && v.type === 'error') {
         this.__calendarMinDate = v.param.min;
         this.__calendarMaxDate = v.param.max;
-      } else if (vctor.validatorName === 'IsDateDisabled') {
+      } else if (vctor.validatorName === 'IsDateDisabled' && v.type === 'error') {
         this.__calendarDisableDates = v.param;
       }
     });
