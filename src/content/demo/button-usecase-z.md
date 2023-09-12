@@ -4,6 +4,8 @@ title: Default Button
 description: Bla bla
 ---
 
-```html preview-story
-<lion-button> Lorem </lion-button>
+```js preview-story
+export const main = () => html` <lion-button>Default11</lion-button> `;
 ```
+
+<script type="module" src="/button-preview.js" mdjs-setup></script>
