@@ -221,7 +221,7 @@ describe('<lion-calendar>', () => {
       expect(isSameDate(el.centralDate, new Date('2019/06/15'))).to.be.true;
     });
 
-    it('sends event "user-selected-date-changed" when user selects a date', async () => {
+    it('sends event "user-selected-date-changed" when user selects a date via mouse', async () => {
       const dateChangedSpy = sinon.spy();
       const el = await fixture(html`
         <lion-calendar
@@ -239,7 +239,7 @@ describe('<lion-calendar>', () => {
       ).to.equal(true);
     });
 
-    it('doesn\'t send event "user-selected-date-changed" when user selects a disabled date', async () => {
+    it('doesn\'t send event "user-selected-date-changed" when user selects a disabled date via mouse', async () => {
       const dateChangedSpy = sinon.spy();
       const disable15th = /** @param {Date} d */ d => d.getDate() === 15;
       const el = await fixture(html`
@@ -252,6 +252,57 @@ describe('<lion-calendar>', () => {
       const elObj = new CalendarObject(el);
       elObj.getDayEl(15).click();
       await el.updateComplete;
+      expect(dateChangedSpy.called).to.equal(false);
+      expect(isSameDate(/** @type {Date} */ (el.selectedDate), new Date('2000/12/12'))).to.be.true;
+    });
+
+    it.skip('sends event "user-selected-date-changed" when user selects a date via [Enter]', async () => {
+      /**
+       * TODO fix me
+       * The dispatchEvent of [Enter] should has to be on contentWrapperElement to be called
+       * But to get "selected" a check is done if the action comes from a button.
+       */
+      const dateChangedSpy = sinon.spy();
+      const el = await fixture(html`
+        <lion-calendar
+          .selectedDate="${new Date('2000/10/12')}"
+          @user-selected-date-changed="${dateChangedSpy}"
+        ></lion-calendar>
+      `);
+      const elObj = new CalendarObject(el);
+
+      el.__contentWrapperElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+      await el.updateComplete;
+      expect(elObj.activeMonth).to.equal('October');
+      expect(elObj.activeYear).to.equal('2000');
+      expect(elObj.focusedDayObj?.monthday).to.equal(11);
+
+      el.__contentWrapperElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await el.updateComplete;
+      expect(isSameDate(/** @type {Date} */ (el.selectedDate), new Date('2000/10/11'))).to.be.true;
+      expect(dateChangedSpy.called).to.equal(true);
+    });
+
+    it('doesn\'t send event "user-selected-date-changed" when user selects a disabled date via [Enter]', async () => {
+      const dateChangedSpy = sinon.spy();
+      const el = await fixture(html`
+        <lion-calendar
+          .selectedDate="${new Date('2000/10/12')}"
+          .minDate="${new Date('2000/10/12')}"
+          @user-selected-date-changed="${dateChangedSpy}"
+        ></lion-calendar>
+      `);
+      const elObj = new CalendarObject(el);
+
+      el.__contentWrapperElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+      await el.updateComplete;
+      expect(elObj.activeMonth).to.equal('October');
+      expect(elObj.activeYear).to.equal('2000');
+      expect(elObj.focusedDayObj?.monthday).to.equal(11);
+
+      el.__contentWrapperElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      await el.updateComplete;
+      expect(isSameDate(/** @type {Date} */ (el.selectedDate), new Date('2000/10/12'))).to.be.true;
       expect(dateChangedSpy.called).to.equal(false);
     });
 

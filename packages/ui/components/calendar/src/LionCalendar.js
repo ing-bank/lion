@@ -838,7 +838,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   __dayButtonSelection(el) {
-    if (isDayButton(el)) {
+    if (isDayButton(el) && !isDisabledDayButton(el)) {
       this.__dateSelectedByUser(el.date);
     }
   }
