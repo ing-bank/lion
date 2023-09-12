@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.2.2
+
+### Patch Changes
+
+- 275f49eb: Preserve error name and enrich it with the response status
+
 ## 1.2.1
 
 ### Patch Changes

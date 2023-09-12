@@ -1,5 +1,24 @@
 # @lion/ui
 
+## 0.4.0
+
+### Minor Changes
+
+- a3738b50: Bypass the requirement to support export & import map to consume @lion/ui
+
+### Patch Changes
+
+- ebe13e14: fix: undefined document.body
+- b0a74f28: fix(progress-indicator): accept 0 as a valid value
+- b89d889f: Render exactly 6 weeks in every months.
+- 9b9485db: [calendar] focusCentralDate function should only use buttons inside the dates table
+- d1f92a3a: Make disabled date buttons not selectable via keyboard navigation in LionCalendar.
+- d597c077: [localize] with localizeNameSpaces type
+- 6ccfb278: [input-datepicker] only disable dates is the validator type is "error"
+- 4cc72b12: feat: allow Required validator on Fieldset and Form;
+- cecf5ed5: lion-accordion now replaces expanded with a copy when it changes on click of an invoker button.
+- 857d47a9: Handle focusin event in invokers in LionAccordion. Fix tabbing issues.
+
 ## 0.4.0-prerelease-bypass-export-map.0
 
 ### Minor Changes
