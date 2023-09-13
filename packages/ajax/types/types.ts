@@ -11,12 +11,12 @@ export interface LionRequestInit extends Omit<RequestInit, 'body'> {
 }
 
 export interface AjaxConfig {
-  addAcceptLanguage: boolean;
-  addCaching: boolean;
-  xsrfCookieName: string | null;
-  xsrfHeaderName: string | null;
-  cacheOptions: CacheOptionsWithIdentifier;
-  jsonPrefix: string;
+  addAcceptLanguage?: boolean;
+  addCaching?: boolean;
+  xsrfCookieName?: string | null;
+  xsrfHeaderName?: string | null;
+  cacheOptions?: CacheOptionsWithIdentifier;
+  jsonPrefix?: string;
 }
 
 export type RequestInterceptor = (request: Request) => Promise<Request | Response>;
@@ -46,7 +46,7 @@ export interface CacheOptions {
 }
 
 export interface CacheOptionsWithIdentifier extends CacheOptions {
-  getCacheIdentifier: () => string;
+  getCacheIdentifier?: () => string;
 }
 
 export interface ValidatedCacheOptions extends CacheOptions {
