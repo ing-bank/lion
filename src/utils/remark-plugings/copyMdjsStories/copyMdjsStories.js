@@ -1,13 +1,13 @@
-import * as path from 'path';
-import * as fs from 'fs';
+const path = require('path');
+const fs = require('fs');
 
 function copyMdjsStories() {
-
   /**
    * @param {Node} tree
    * @param {VFileOptions} file
    */
   async function transformer(tree, file) {    
+    console.log('99911 resolve: ', require.resolve("@lion/ui/define/lion-button.js"));
     const setupJsCode = file.data.setupJsCode;
     if (!setupJsCode) {
         return tree;
@@ -34,4 +34,7 @@ function copyMdjsStories() {
   return transformer;
 }
 
-export default copyMdjsStories;
+module.exports = {
+  copyMdjsStories,
+};
+
