@@ -21,3 +21,6 @@ pnpm-debug.log*
 .DS_Store
 
 .astro
+
+# generated __mdjs-stories.js files
+public/mdjs-stories
