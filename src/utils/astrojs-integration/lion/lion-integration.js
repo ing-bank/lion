@@ -1,6 +1,6 @@
 export default function() {
     return { 
-        name: '@lion/integration', 
+        name: '@astrojs/lion', 
         hooks: {
             "astro:config:setup": ({ updateConfig, injectScript }) => {              
               updateConfig({
