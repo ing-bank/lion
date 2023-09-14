@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.4.1
+
+### Patch Changes
+
+- a58d8ce0: export more type definitions
+
 ## 0.4.0
 
 ### Minor Changes

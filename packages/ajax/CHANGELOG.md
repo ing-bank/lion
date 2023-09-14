@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.2.3
+
+### Patch Changes
+
+- 55e445c2: fix: export ajax types
+
 ## 1.2.2
 
 ### Patch Changes
