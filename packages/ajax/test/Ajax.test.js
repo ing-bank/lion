@@ -72,7 +72,10 @@ describe('Ajax', () => {
       // TODO: fix AjaxConfig types => e.g. create FullAjaxConfig with everything "mandatory" and then AjaxConfig (= Partial of it) for user
       // @ts-ignore
       const ajax1 = new Ajax(config);
-      const defaultCacheIdentifierFunction = ajax1.options?.cacheOptions?.getCacheIdentifier;
+
+      const defaultCacheIdentifierFunction = /** @type {() =>  void} */ (
+        ajax1.options?.cacheOptions?.getCacheIdentifier
+      );
       // Then
       expect(defaultCacheIdentifierFunction).not.to.be.undefined;
       expect(defaultCacheIdentifierFunction).to.be.a('function');

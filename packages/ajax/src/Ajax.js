@@ -72,14 +72,19 @@ export class Ajax {
       this.addRequestInterceptor(createXsrfRequestInterceptor(xsrfCookieName, xsrfHeaderName));
     }
 
-    const { cacheOptions } = this.__config;
-    if (cacheOptions.useCache || this.__config.addCaching) {
-      const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
-        cacheOptions.getCacheIdentifier,
-        cacheOptions,
-      );
-      this.addRequestInterceptor(cacheRequestInterceptor);
-      this.addResponseInterceptor(cacheResponseInterceptor);
+    // eslint-disable-next-line prefer-destructuring
+    const cacheOptions = /** @type {import('@lion/ajax').CacheOptionsWithIdentifier} */ (
+      this.__config.cacheOptions
+    );
+    if ((cacheOptions && cacheOptions.useCache) || this.__config.addCaching) {
+      if (cacheOptions.getCacheIdentifier) {
+        const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
+          cacheOptions.getCacheIdentifier,
+          cacheOptions,
+        );
+        this.addRequestInterceptor(cacheRequestInterceptor);
+        this.addResponseInterceptor(cacheResponseInterceptor);
+      }
     }
   }
 
