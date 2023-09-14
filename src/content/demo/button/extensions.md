@@ -8,7 +8,7 @@ description: Description for button Extensions
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import './extensions/bootstrap-button.mjs';
+import '/components/button/extensions/bootstrap-button.mjs';
 ```
 
 ## Bootstrap button

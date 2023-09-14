@@ -9,7 +9,7 @@ description: Description for button Examples
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-button.js';
-import iconSvg from './src/icon.svg.js';
+import iconSvg from '/components/button/src/icon.svg.js';
 ```
 
 ## Icon button
