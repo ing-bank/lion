@@ -13,4 +13,3 @@ import '@lion/ui/define/lion-button.js';
 export const main = () => html` <lion-button>Default</lion-button> `;
 ```
 
-<script type="module" src="/mdjs-stories/button-preview.js" mdjs-setup></script>

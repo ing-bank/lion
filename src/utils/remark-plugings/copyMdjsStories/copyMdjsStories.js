@@ -10,7 +10,6 @@ function copyMdjsStories() {
    * @param {VFileOptions} file
    */
   async function transformer(tree, file) {    
-    console.log('99911 resolve: ', require.resolve("@lion/ui/define/lion-button.js"));
     const setupJsCode = file.data.setupJsCode;
     if (!setupJsCode) {
         return tree;
@@ -18,7 +17,9 @@ function copyMdjsStories() {
 
     const currentMarkdownFile = file.history[0];
     const pwd = file.cwd;
-    const publicDir = `${pwd}/public/mdjs-stories`
+    const mdJsStoriesUrlPath = '/mdjs-stories';
+    const mdJsStoriesDir = `${pwd}/public${mdJsStoriesUrlPath}`;
+    const mdJsStoriesFileName = '__mdjs-stories.js';
     let parsedPath = '';
 
     if (currentMarkdownFile) {
@@ -27,14 +28,16 @@ function copyMdjsStories() {
     }
 
     const parsedSetupJsCode = await processImports(setupJsCode);
-    const newFolder = `${publicDir}/${parsedPath}`;
-    const newName = path.join(newFolder, '__mdjs-stories.js');    
+    const newFolder = `${mdJsStoriesDir}/${parsedPath}`;
+    const newName = path.join(newFolder, mdJsStoriesFileName);    
     await fs.promises.mkdir(newFolder, { recursive: true });
     await fs.promises.writeFile(newName, parsedSetupJsCode, 'utf8');
 
-    console.log('tree: ', JSON.stringify(tree, null, '\t'));
-
-    // TODO write back to md file <script type="module" src="${scriptUrl}__mdjs-stories.js" mdjs-setup></script>
+    mdjsStoriesJsNode = {
+			type: 'html',
+			value: `<script type="module" src="${mdJsStoriesUrlPath}/${parsedPath}/${mdJsStoriesFileName}" mdjs-setup></script>`
+    }
+    tree.children.push(mdjsStoriesJsNode);
 
     return tree;
   }
