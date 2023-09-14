@@ -22,4 +22,3 @@ export default defineConfig({
   markdown: {  
     remarkPlugins: [mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
   }});
-  
