@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import lit from "@astrojs/lit";
+import { remarkExtend } from 'remark-extend';
 import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
 import lionIntegration from './src/utils/astrojs-integration/lion/lion-integration.js'
 import { copyMdjsStories } from './src/utils/remark-plugings/copyMdjsStories/index.js';
@@ -20,5 +21,5 @@ const mdjsSetupConfig = {
 export default defineConfig({
   integrations: [lit(), lionIntegration()],
   markdown: {  
-    remarkPlugins: [mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
+    remarkPlugins: [remarkExtend, mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
   }});

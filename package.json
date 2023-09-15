@@ -11,17 +11,19 @@
   },
   "dependencies": {
     "@astrojs/lit": "^2.1.0",
+    "@lion/ui": "^0.4.0-prerelease-bypass-export-map.0",
+    "@mdjs/core": "^0.9.5",
     "@webcomponents/template-shadowroot": "^0.2.1",
     "astro": "^3.0.0",
     "astro-seo": "^0.7.5",
+    "ing-web": "^3.6.0",
     "lit": "^2.8.0",
-    "@lion/ui": "^0.4.0-prerelease-bypass-export-map.0",
-    "@mdjs/core": "^0.9.5"
+    "remark-extend": "^0.5.1"
   },
   "devDependencies": {
-    "globby": "^13.2.2",
     "eslint": "^8.37.0",
-    "eslint-config-prettier": "^8.8.0"
+    "eslint-config-prettier": "^8.8.0",
+    "globby": "^13.2.2"
   },
   "prettier": {
     "printWidth": 100,

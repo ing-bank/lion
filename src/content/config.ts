@@ -37,7 +37,7 @@ const component = defineCollection({
 
 const demo = defineCollection({
   schema: z.object({
-    component: z.enum(["accordion", "button", "calendar"]),
+    component: z.enum(["accordion", "button", "calendar", "button-from-ing-web"]),
     title: z.string(),
     description: z.string(),
   }),
