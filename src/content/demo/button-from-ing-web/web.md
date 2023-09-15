@@ -11,9 +11,9 @@ import { html } from 'ing-web/lit-2.js';
 import { css } from 'ing-web/_lit-1-and-2-component-helpers.js';
 import { orange, indigo, sky } from 'ing-web/style.js';
 import { tooltipComponentStyle } from 'ing-web/_deprecated.js';
-import '#define/ing-button.js';
-import '#define/ing-icon.js';
-import '#define/ing-tooltip.js';
+import 'ing-web/button.js';
+import 'ing-web/icon.js';
+import 'ing-web/tooltip.js';
 
 const buttonDemoStyle = css`
   ${tooltipComponentStyle}

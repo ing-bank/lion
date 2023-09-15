@@ -59,16 +59,15 @@ async function processImports(source) {
       newSource += source.substring(lastPos, importObj.s);
       const importSrc = source.substring(importObj.s, importObj.e);
 
-      if (importSrc.startsWith('@mdjs') || importSrc.startsWith('@lion')) {
-        newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
+      if (importSrc.startsWith('.')) {
+        console.error(`!!! Update md file so that it doesn't contain relative imports`);
       } else if (importSrc === `'@mdjs/mdjs-preview/define'`) {
         newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;
       } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
         newSource += `'${nodeModulesText}/@mdjs/mdjs-story/src/define.js'`;
-      } 
-      // TODO Write a parser for relative paths like "import './lion-calendar.js';"
+      }
       else {
-        newSource += importSrc;
+        newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
       } 
 
       lastPos = importObj.e;
