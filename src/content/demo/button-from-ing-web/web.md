@@ -829,11 +829,27 @@ export const stickyButton = () => {
 ```
 
 ```js ::importBlock('@lion/ui/docs/components/button/use-cases.md', '## With click handler')
-
+module.exports.replace = node => {
+  if (node.value) {    
+    let newValue = node.value;
+    newValue = newValue.replace(/<lion-button/gs, '<ing-button');
+    newValue = newValue.replace(/<\/lion-button>/gs, '<\/ing-button>');
+    node.value = newValue;
+  }
+  return node;
+};
 ```
 
 ```js ::importBlock('@lion/ui/docs/components/button/use-cases.md', '## Disabled button')
-
+module.exports.replace = node => {
+  if (node.value) {    
+    let newValue = node.value;
+    newValue = newValue.replace(/<lion-button/gs, '<ing-button');
+    newValue = newValue.replace(/<\/lion-button>/gs, '<\/ing-button>');
+    node.value = newValue;
+  }
+  return node;
+};
 ```
 
 ## Icon Position
@@ -926,13 +942,10 @@ Important notes:
 
 ```js ::importBlockContent('@lion/ui/docs/components/button/use-cases.md', '## Considerations')
 module.exports.replace = node => {
-  console.log('111 importBlockContent');
   if (node.value) {    
-    console.log('node.value: ', JSON.stringify(node.value, null, '\t'))
     let newValue = node.value;
     newValue = newValue.replace(/<lion-button>/gs, '<ing-button>');
     node.value = newValue;
-    console.log('new value: ', newValue);
   }
   return node;
 };
