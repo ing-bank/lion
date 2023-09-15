@@ -19,7 +19,7 @@ export default function() {
                         'ing-web/_deprecated.js',
                         'ing-web/button.js',
                         'ing-web/icon.js',
-                        'ing-web/tooltip.js'
+                        'ing-web/tooltip.js',
                         // button from ing-web END
                     ],
                   },

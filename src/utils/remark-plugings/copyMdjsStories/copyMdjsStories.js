@@ -65,8 +65,10 @@ async function processImports(source) {
         newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;
       } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
         newSource += `'${nodeModulesText}/@mdjs/mdjs-story/src/define.js'`;
-      }
-      else {
+      } else if (importSrc.startsWith('/')) {
+        console.log('importSrc: ', importSrc);
+        newSource += importSrc;
+      } else {
         newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
       } 
 

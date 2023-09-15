@@ -14,6 +14,9 @@ import { tooltipComponentStyle } from 'ing-web/_deprecated.js';
 import 'ing-web/button.js';
 import 'ing-web/icon.js';
 import 'ing-web/tooltip.js';
+import { IngButton } from 'ing-web/button.js';
+customElements.define('ing-button', IngButton);
+
 
 const buttonDemoStyle = css`
   ${tooltipComponentStyle}
@@ -923,10 +926,13 @@ Important notes:
 
 ```js ::importBlockContent('@lion/ui/docs/components/button/use-cases.md', '## Considerations')
 module.exports.replace = node => {
-  if (node.value) {
+  console.log('111 importBlockContent');
+  if (node.value) {    
+    console.log('node.value: ', JSON.stringify(node.value, null, '\t'))
     let newValue = node.value;
     newValue = newValue.replace(/<lion-button>/gs, '<ing-button>');
     node.value = newValue;
+    console.log('new value: ', newValue);
   }
   return node;
 };
