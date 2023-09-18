@@ -48,6 +48,15 @@ Feel free to check [our documentation](https://docs.astro.build) or jump into ou
 
 # How Astro-Lion integration works
 
+We need to write custom Astro integration to be able to use `@lion/ui`, `@mdjs` and `ing-web` packages by Astro at runtime inside `<script>` tags.
+At the moment `src/utils/astrojs-integration/lion/lion-integration.js` is the integration configuration which keeps an array of all js files which are requested directly by a `<script>` tag. Whenever we need to add a new file from `node_module` we need to update the configuration array so Astro copies the files final dist directory. Otherwise files are not reachable at runtime.
+
+# MdJs current limitations
+* There should be just one md file source per route. That is if there are multiple `md` files combined by Astro the component examples won't works propertly. F.e. if migrating a button component from Lion directly then there are multiple md files like `examples.md`, `extensions.md`, `overview.md`, etc. All those should be merged into one file.
+* Assets and extensions can't be stored at the component directory. They need to be moved to `/public`
+* Relative imports should be updated
+* Astro integration configuration need to be updated with all entry points
+
 # How to migrate components documentation 
 
 ## Lion Portal
