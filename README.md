@@ -51,7 +51,7 @@ Feel free to check [our documentation](https://docs.astro.build) or jump into ou
 # How to migrate components documentation 
 
 ## Lion Portal
-For the sake of the example let's migrate a button component from https://github.com/ing-bank/lion/tree/master/docs/components/button. Here are the steps:
+In this section there are steps for migrating a component directly from `https://github.com/ing-bank/lion/tree/master/docs` to Astro portal. For the sake of the example let's migrate a button component from https://github.com/ing-bank/lion/tree/master/docs/components/button. Here are the steps:
 
 * Migrate assets and extensions
     * In this repo create a directory called `public/components/button`. The name should match the component directory name. Note files in `/public` directory are going to be available at runtime by URL  `host:port/`. F.e. `public/components/button/src/icon.svg.js` is available by URL `host:port/components/button/src/icon.svg.js`
@@ -87,3 +87,25 @@ For the sake of the example let's migrate a button component from https://github
     * Go throught every `md` file in `src/content/demo/button` and`js`, `mdjs` file in `public/components/button/`, 
     * Copy the js file name that are imported and then 
     * Add those file name into Astro-Lion integration here: `src/utils/astrojs-integration/lion/lion-integration.js`
+
+## Ing-web Portal
+* Follow all the steps from `Lion Portal` section but for components located in `https://dev.azure.com/INGCDaaS/IngOne/_git/P00019-ing-web?path=/docs/components`
+* Replace all relative imports that refer to a package in `node_modules` as follows: replace `import '#define/ing-button.js';` with `import 'ing-web/button.js';`
+* Identify all cases when a documentation from `@lion/ui` is extended, f.e. look for ` ```js ::importBlock` code block and check if the component on the portal renders correctly at runtime. If it doesn't there is a chance that Rocket portal is replacing lion related component HTML tags to Ing-web related. To mitigate it we need to add a replacement feature in the `md` file. F.e. examine this peice of code from `/docs/components/button/web.md` :
+    ```
+    ```js ::importBlock('@lion/ui/docs/components/button/use-cases.md', '## With click handler') ```
+    ``` 
+    If you run this piece of code as is on Astro it will show an example from lion using `lion-button` component. At the moment Rocket is replacing `lion-button` with `ing-button` on the fly. So we need to do the replacement as well. We do it by providing the replacement code into the ` ```js ::importBlock` block as follows:
+    ```
+    ```js ::importBlock('@lion/ui/docs/components/button/use-cases.md', '## With click handler')
+        module.exports.replace = node => {
+        if (node.value) {    
+            let newValue = node.value;
+            newValue = newValue.replace(/<lion-button/gs, '<ing-button');
+            newValue = newValue.replace(/<\/lion-button>/gs, '<\/ing-button>');
+            node.value = newValue;
+        }
+        return node;
+        }; 
+        ```    
+    ```
