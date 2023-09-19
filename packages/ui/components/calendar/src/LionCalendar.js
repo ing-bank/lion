@@ -799,7 +799,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    * @private
    */
   __clickDateDelegation(ev) {
-    const el = /** @type {HTMLElement & { date: Date }} */ (ev.target);
+    const el = /** @type {HTMLElement & { date: Date }} */ (ev.composedPath()[0]);
     if (isDayButton(el) && !isDisabledDayButton(el)) {
       this.__dateSelectedByUser(el.date);
     }
@@ -866,7 +866,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     switch (ev.key) {
       case ' ':
       case 'Enter':
-        this.__dayButtonSelection(/** @type {HTMLElement & { date: Date }} */ (ev.target));
+        this.__dayButtonSelection(
+          /** @type {HTMLElement & { date: Date }} */ (ev.composedPath()[0]),
+        );
         break;
       case 'ArrowUp':
         this.__modifyDate(-7, { dateType: '__focusedDate', type: 'Date' });
