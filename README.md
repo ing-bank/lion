@@ -123,4 +123,4 @@ In this section there are steps for migrating a component directly from `https:/
    * Copy the assets and extensions into /public
    * Change the relative imports to /public
    * Resolve #define
-* In the current setup the ing-web is installed as a dependency into node_modules. Instead it should be refered as from a source code in `packages/ing-web`
+* In the current setup the ing-web is installed as a dependency as is referred as `into node_modules/ing-web`. Instead it should be refered as `packages/ing-web`
