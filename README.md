@@ -118,3 +118,9 @@ In this section there are steps for migrating a component directly from `https:/
         }; 
         ```    
     ```
+## Futher improvements
+* In theory with automation scripts it is possible just to copy/paste a doc directory into the root of the project (1 time) from ing-web project and let the build script do the following:
+   * Copy the assets and extensions into /public
+   * Change the relative imports to /public
+   * Resolve #define
+* In the current setup the ing-web is installed as a dependency into node_modules. Instead it should be refered as from a source code in `packages/ing-web`
