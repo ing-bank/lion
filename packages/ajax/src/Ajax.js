@@ -175,9 +175,10 @@ export class Ajax {
    *  - Deserializing response payload as JSON
    *  - Adding the correct Content-Type and Accept headers
    *
+   * @template T
    * @param {RequestInfo} info
    * @param {LionRequestInit} [init]
-   * @returns {Promise<{ response: Response, body: string|Object }>}
+   * @returns {Promise<{ response: Response, body: string | T }>}
    */
   async fetchJson(info, init) {
     const lionInit = {
@@ -204,8 +205,9 @@ export class Ajax {
   }
 
   /**
+   * @template T
    * @param {Response} response
-   * @returns {Promise<string|Object>}
+   * @returns {Promise<string|T>}
    */
   async __parseBody(response) {
     // clone the response, so the consumer can also read it out manually as well
