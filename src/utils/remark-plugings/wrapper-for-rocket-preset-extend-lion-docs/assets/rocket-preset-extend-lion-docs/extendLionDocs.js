@@ -68,16 +68,14 @@ export async function extendLionDocs({
     { extendDocsConfig }
   ];
 
-  // const remarkExtendPlugin = [
-  //   remarkExtendPkg.remarkExtend,
-  //   { globalReplaceFunction }
-  // ];
-
-  const remarkExtendPlugin = remarkExtendPkg.remarkExtend;
+  const remarkExtendPlugin = [
+    remarkExtendPkg.remarkExtend,
+    { globalReplaceFunction }
+  ];
 
   return [
-    //remarkUrlToLocalPlugin,
-    //remarkExtendLionDocsTransformJsPlugin,
+    remarkUrlToLocalPlugin,
+    remarkExtendLionDocsTransformJsPlugin,
     remarkExtendPlugin
   ]
 }
