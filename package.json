@@ -7,7 +7,8 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "postinstall": "./src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/copy.sh"
   },
   "dependencies": {
     "@astrojs/lit": "^2.1.0",

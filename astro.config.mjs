@@ -44,6 +44,7 @@ export default defineConfig({
     // astro-poc2/node_modules/vite/dist/node/chunks/dep-df561101.js:43799
     // const err = new Error('The server is being restarted or closed. Request is outdated');
     // ```
+    // Note, if this erorr is still present, as a workaround try adding 'esnext' to node_modules/vite/dist/node/constants.js -> ESBUILD_MODULES_TARGET
     build: {
       target: 'esnext'
     },
