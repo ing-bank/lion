@@ -57,6 +57,16 @@ At the moment `src/utils/astrojs-integration/lion/lion-integration.js` is the in
 * Relative imports should be updated
 * Astro integration configuration need to be updated with all entry points
 
+# Migration of ing-bank/lion/packages-node
+
+## `rocket-preset-extend-lion-docs`
+* It is not possible to use `rocket-preset-extend-lion-docs` out of the box. The reason is that its code relies on some Rocket specific global JS variable names (f.e. `plugins` variable in node_modules/plugins-manager/src/addPlugin.js). Also it specifies the order among existing plugins to inject the its internal plugins (see more for details https://github.com/ing-bank/lion/blob/master/packages-node/rocket-preset-extend-lion-docs/preset/extendLionDocs.js#L66). We can't reuse that order. Same applies to the dependent `remarkUrlToLocal` plugin. To integrate `rocket-preset-extend-lion-docs` the following steps were done:
+    * `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/assets` contains the patched files taken from the original plugins. Then during the installation those files are copied to `node_modules`. The script for copying is defined in `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/copy.sh` and it is currently triggered by `postinstall` command in `package.json`
+    * `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js` contains a copy of `P00019-ing-web/rocket.config.mjs`. That is configuration setup where we specify the replacement rules. F.e here we specify that `<lion-` should be changed to `<ing-button`.
+## `remark-extend`
+`remark-extend` is setup by `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js`
+
+
 # How to migrate components documentation 
 
 ## Lion Portal
@@ -100,27 +110,13 @@ In this section there are steps for migrating a component directly from `https:/
 ## Ing-web Portal
 * Follow all the steps from `Lion Portal` section but for components located in `https://dev.azure.com/INGCDaaS/IngOne/_git/P00019-ing-web?path=/docs/components`
 * Replace all relative imports that refer to a package in `node_modules` as follows: replace `import '#define/ing-button.js';` with `import 'ing-web/button.js';`
-* Identify all cases when a documentation from `@lion/ui` is extended, f.e. look for ` ```js ::importBlock` code block and check if the component on the portal renders correctly at runtime. If it doesn't there is a chance that Rocket portal is replacing lion related component HTML tags to Ing-web related. To mitigate it we need to add a replacement feature in the `md` file. F.e. examine this peice of code from `/docs/components/button/web.md` :
-    ```
-    ```js ::importBlock('@lion/ui/docs/components/button/use-cases.md', '## With click handler') ```
-    ``` 
-    If you run this piece of code as is on Astro it will show an example from lion using `lion-button` component. At the moment Rocket is replacing `lion-button` with `ing-button` on the fly. So we need to do the replacement as well. We do it by providing the replacement code into the ` ```js ::importBlock` block as follows:
-    ```
-    ```js ::importBlock('@lion/ui/docs/components/button/use-cases.md', '## With click handler')
-        module.exports.replace = node => {
-        if (node.value) {    
-            let newValue = node.value;
-            newValue = newValue.replace(/<lion-button/gs, '<ing-button');
-            newValue = newValue.replace(/<\/lion-button>/gs, '<\/ing-button>');
-            node.value = newValue;
-        }
-        return node;
-        }; 
-        ```    
-    ```
 ## Futher improvements
-* In theory with automation scripts it is possible just to copy/paste a doc directory into the root of the project (1 time) from ing-web project and let the build script do the following:
-   * Copy the assets and extensions into /public
-   * Change the relative imports to /public
-   * Resolve #define
-* In the current setup the ing-web is installed as a dependency as is referred as `node_modules/ing-web`. Instead it should be refered as `packages/ing-web`
+* Propose the solution where the existing `docs` directory is kept untouched (or almost untouched) and via the build script all the files are copied to the structure Astro requires. That way we can keep the relative paths and it will make the development experience almost the same as now
+    * Note. Consider the `watch` feature. Whenever any file inside `docs` is changed, Astro rerender those changes as it happens now on Rocket
+    * Note. `docs` might be put into `content` directory. Then every md file should be provided with the proper tas, such as: `component`, `category` (Development, Changelog, Design), `platform` (web, ios, android). Those are required to render based on secondary navigation input (category + platform)
+* In the current setup the ing-web is installed as a dependency as is referred as `node_modules/ing-web`. Should it instead be refered as `packages/ing-web`
+* Update `rocket-preset-extend-lion-docs` and `remarkUrlToLocal` properly. See details in the `Migration of ing-bank/lion/packages-node` section.
+* With the current limitation of having one `md` file per route, consider combining file mantually for the same route. F.e. on lion there is directory `docs/components/button`. That one contains multiple `md` files. And all those are for web platform. Consider combining those to one `web.md` file. The proposal assumes that there will be docs for the multiple platforms and then the doc for Design and Changelog.
+    * As a consiquence update the way in-page navigation (right side menu) works. It shdould be updated as follows:
+        * Build the menu dynamically based on `H2` tags found on the page
+        * Write a `remark` plugin or reuse existing one to add anchor tags with IDs for every `##` hearder

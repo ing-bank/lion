@@ -1,7 +1,5 @@
-console.log('111 extendLionDocs imported 1');
-import { extendLionDocs } from './assets/rocket-preset-extend-lion-docs/extendLionDocs.js';
 
-console.log('111 extendLionDocs imported');
+import { extendLionDocs } from './assets/rocket-preset-extend-lion-docs/extendLionDocs.js';
 
 // Almost completely copied from P00019-ing-web/rocket.config.mjs. See "UPDATED" comment for more details
 export const extendLionDocsInstance = await extendLionDocs({
