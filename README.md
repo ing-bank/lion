@@ -110,7 +110,8 @@ In this section there are steps for migrating a component directly from `https:/
 ## Ing-web Portal
 * Follow all the steps from `Lion Portal` section but for components located in `https://dev.azure.com/INGCDaaS/IngOne/_git/P00019-ing-web?path=/docs/components`
 * Replace all relative imports that refer to a package in `node_modules` as follows: replace `import '#define/ing-button.js';` with `import 'ing-web/button.js';`
-## Futher improvements
+
+# Futher improvements
 * Propose the solution where the existing `docs` directory is kept untouched (or almost untouched) and via the build script all the files are copied to the structure Astro requires. That way we can keep the relative paths and it will make the development experience almost the same as now
     * Note. Consider the `watch` feature. Whenever any file inside `docs` is changed, Astro rerender those changes as it happens now on Rocket
     * Note. `docs` might be put into `content` directory. Then every md file should be provided with the proper tas, such as: `component`, `category` (Development, Changelog, Design), `platform` (web, ios, android). Those are required to render based on secondary navigation input (category + platform)
@@ -120,3 +121,4 @@ In this section there are steps for migrating a component directly from `https:/
     * As a consiquence update the way in-page navigation (right side menu) works. It shdould be updated as follows:
         * Build the menu dynamically based on `H2` tags found on the page
         * Write a `remark` plugin or reuse existing one to add anchor tags with IDs for every `##` hearder
+* `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js` contains some replacement pattern based on the URLs used in Rocket. We need to review those replacements according to our new endpoints 
