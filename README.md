@@ -122,3 +122,4 @@ In this section there are steps for migrating a component directly from `https:/
         * Build the menu dynamically based on `H2` tags found on the page
         * Write a `remark` plugin or reuse existing one to add anchor tags with IDs for every `##` hearder
 * `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js` contains some replacement pattern based on the URLs used in Rocket. We need to review those replacements according to our new endpoints 
+* What is `docs/components/button/status.mjs` and how we reuse it?
