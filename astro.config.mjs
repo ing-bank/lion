@@ -22,7 +22,10 @@ const mdjsSetupConfig = {
 export default defineConfig({
   integrations: [lit(), lionIntegration()],
   markdown: {  
+    // ing-web
     remarkPlugins: [...extendLionDocsInstance, mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
+    // lion
+    //remarkPlugins: [remarkExtend, mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
   },
   vite: {
     // the fix is copied from https://github.com/withastro/astro/issues/5517#issuecomment-1337328843.
