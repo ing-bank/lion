@@ -75,7 +75,7 @@ export async function extendLionDocs({
 
   return [
     remarkUrlToLocalPlugin,
+    remarkExtendPlugin,
     remarkExtendLionDocsTransformJsPlugin,
-    remarkExtendPlugin
   ]
 }

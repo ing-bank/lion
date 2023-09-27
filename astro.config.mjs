@@ -4,9 +4,7 @@ import { remarkExtend } from 'remark-extend';
 import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
 import lionIntegration from './src/utils/astrojs-integration/lion/lion-integration.js'
 import { copyMdjsStories } from './src/utils/remark-plugings/copyMdjsStories/index.js';
-//console.log('111 before extendLionDocsInstance');
-//import { extendLionDocsInstance } from './src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js';
-//console.log('11 extendLionDocsInstance: ', extendLionDocsInstance)
+import { extendLionDocsInstance } from './src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js';
 
 const mdjsSetupConfig = {
   simulationSettings: {
@@ -24,8 +22,7 @@ const mdjsSetupConfig = {
 export default defineConfig({
   integrations: [lit(), lionIntegration()],
   markdown: {  
-    //remarkPlugins: [...extendLionDocsInstance, mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
-    remarkPlugins: [remarkExtend, mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
+    remarkPlugins: [...extendLionDocsInstance, mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
   },
   vite: {
     // the fix is copied from https://github.com/withastro/astro/issues/5517#issuecomment-1337328843.
