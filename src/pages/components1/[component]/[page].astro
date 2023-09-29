@@ -9,7 +9,7 @@ export async function getStaticPaths() {
   return componentPageEntries.map((entry) => ({    
     params: { 
       component: entry.data.component, 
-      // components/component-name/[web,ios,android,design]
+      // components/component-name/[web,ios,android,design,changelog]
       page: entry.data.platform ? entry.data.platform : 
         ((entry.data.category === 'design' || entry.data.category === 'changelog') ? entry.data.category : null)
     },
@@ -18,15 +18,14 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-console.log('Astro.params', Astro.params)
 let config: any = {
   component: entry.data.component
 };
 if (entry.data.platform) {
   config.platform = entry.data.platform;
-} else if (entry.data.category === 'design') {
+} else if (entry.data.category === 'design' || entry.data.category === 'changelog') {
   config.category = entry.data.category;
-}
+} 
 
 const componentEntry = getComponentEntry(config);
 const componentGlobs = await Astro.glob('/src/content/docs/components1/**/*.md');
