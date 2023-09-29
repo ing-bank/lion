@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
 import { UiPortalMainNav } from "../components/ui-portal-main-nav.js";
+import { componentInfoEntries } from '../content';
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -11,6 +12,7 @@ const { title } = Astro.props;
 
 const compEntries = await getCollection("component");
 const compNames = compEntries.map((entry) => entry.data.name);
+const comp1Names = componentInfoEntries.map((entry) => entry.data.component);
 
 const navData = [
   { name: "home", url: "/" },
@@ -22,6 +24,14 @@ const navData = [
       url: `/components/${compName}`,
     })),
   },
+  {
+    name: "components1",
+    url: "/components1",
+    children: comp1Names.map((compName) => ({
+      name: compName,
+      url: `/components1/${compName}`,
+    })),
+  },  
   { name: "develop", url: "/develop" },
   { name: "design", url: "/design" },
   { name: "extend", url: "/extend" },

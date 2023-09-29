@@ -1,0 +1,13 @@
+---
+import { componentInfoEntries, getInfoParentSlug } from '../../../content';
+
+export async function getStaticPaths() {
+  return componentInfoEntries.map((entry) => ({
+    params: { component: entry.data.component },
+    props: { entry },
+  }));
+}
+
+let redirectPath = `${getInfoParentSlug(Astro.props.entry)}/${Astro.props.entry.data.defaultSlug}`;
+---
+<meta http-equiv="refresh" content={`0;url=/${redirectPath}`} />
