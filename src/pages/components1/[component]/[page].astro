@@ -3,6 +3,7 @@ import { componentPageEntries, getComponentEntry, getComponentGlob } from '../..
 import MainLayout from "../../../layouts/MainLayout.astro";
 import ComponentLayout from "../../../layouts/partials/ComponentPartial.astro";
 import { UIPortalInpageNav } from "../../../components/ui-portal-inpage-nav.js";
+import { UIPortalCategories } from "../../../components/ui-portal-categories.js";
 
 export async function getStaticPaths() {
   return componentPageEntries.map((entry) => ({    
@@ -31,7 +32,6 @@ const componentEntry = getComponentEntry(config);
 const componentGlobs = await Astro.glob('/src/content/docs/components1/**/*.md');
 const componentGlob = getComponentGlob(componentGlobs, config);
 const headers = componentGlob.getHeadings().filter(header => header.depth === 2);
-console.log('componentGlob headers: ', headers);
 const { Content } = await componentEntry.render();
 const inPageNavData = headers.map(header => ({
   name: header.text,
@@ -41,6 +41,7 @@ const inPageNavData = headers.map(header => ({
 
 <MainLayout title={entry.slug}>
   <ComponentLayout frontmatter={entry.data}>
+    <UIPortalCategories entry-data={entry}/>
     <UIPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
     <Content/>
   </ComponentLayout>
