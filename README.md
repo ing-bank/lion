@@ -46,6 +46,31 @@ All commands are run from the root of the project, from a terminal:
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
 
+# Current state of the POC
+## Example of migrated Lion components
+There are components taken from Lion and migrated to Astro as if we were migrating Lion from Rocket to Astro portal.
+These components are migrated:
+
+* `/components/button`
+* `components/calendar`
+* `components/accordion` - partially migrated. It doesn't work correctly because multiple md pages related to accordion are merged together by a code in an `astro`` file.
+
+To check out those components uncomment `remarkPlugins:` related to `lion` in `astro.config.mjs` and comment out the `remarkPlugins:` related to `ing-web`.
+## Example of migrated component from Ing-web
+`components/button-from-ing-web` is a component migrated from Ing-web repo. To check it out, follow this steps: 
+* comment out `remarkPlugins:` related to `lion` in `astro.config.mjs` and uncomment the `remarkPlugins:` related to `ing-web`.
+* run `npm install` so it runs `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/copy.sh` in as a `postinstall` phase.
+## Proposal for the new skeleton
+`components1/button/` is a proposal for the new skeleton. Here are key points about the new structure:
+* Removes the code where multiple `md` files are combined by an `astro` file. It is required so `mdjs` works correctly 
+* Added a new collection called `docs`. It is a similar approach Astro follows itself on for their doc website. 
+    * This collection file structure matches the files structure on Lion/Ing-web. That is we copy/paste `docs` directory into `content` directory. It will allow us to keep similar relative paths in md files and their dependencies.
+* Implemented POC for secondary navigation. That is tabs with `Design`, `Development`, `Changelog` and buttons (`web`, `ios`, `android`) added in the `Development` tab.
+* Introduced a new file called `info.md` which does what at the moment `component` collection does. It serves the following purpose:
+    * Provide the component description, title, name, category, platform
+    * Allows to specify the default `slug`. This was implemented for cases when some Tabs or Platforms are missing. When we navigate to `components1/button/`, it redirects to the default slug. f.e. to `components1/button/web` or `components1/button/desing`.
+* If there are missing md files for some tabs or missing platform implementation, then the secondary navigation adjust dynamically. f.e. rename web.md to _web.md and the button for `web` disappears. Or rename changelog.md to _changelog.md and the tab for changelog disappers. 
+
 # How Astro-Lion integration works
 
 We need to write custom Astro integration to be able to use `@lion/ui`, `@mdjs` and `ing-web` packages by Astro at runtime inside `<script>` tags.
