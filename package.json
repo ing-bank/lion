@@ -128,7 +128,7 @@
     }
   },
   "overrides": {
-    "sharp": "^0.29.x"
+    "sharp": "^0.31.x"
   },
   "prettier": {
     "printWidth": 100,
