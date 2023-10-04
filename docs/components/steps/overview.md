@@ -20,10 +20,8 @@ export const main = () => html`
         Previous
       </button>
       Step 2
-      <button type="button" @click=${ev => ev.target.parentElement.controller.next()}>
-        Next
-      </button></lion-step
-    >
+      <button type="button" @click=${ev => ev.target.parentElement.controller.next()}>Next</button>
+    </lion-step>
     <lion-step>
       <button type="button" @click=${ev => ev.target.parentElement.controller.previous()}>
         Previous
