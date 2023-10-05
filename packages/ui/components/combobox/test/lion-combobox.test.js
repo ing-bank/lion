@@ -1613,7 +1613,7 @@ describe('lion-combobox', () => {
     it('filters options correctly when changing the middle of the word', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
-          <lion-combobox name="foo" autocomplete="inline">
+          <lion-combobox name="foo" autocomplete="both">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
