@@ -1610,6 +1610,35 @@ describe('lion-combobox', () => {
       expect(el.checkedIndex).to.equal(0);
     });
 
+    it('filters options correctly when changing the middle of the word', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" autocomplete="inline">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      mimicUserTyping(el, 'chard');
+      await el.updateComplete; // Char
+      expect(el.activeIndex).to.equal(1);
+      expect(el.checkedIndex).to.equal(1);
+
+      await mimicUserTypingAdvanced(el, ['ArrowLeft', 'Backspace']); // Chr
+      await el.updateComplete;
+
+      expect(getFilteredOptionValues(el)).to.eql([]);
+      await mimicUserTypingAdvanced(el, ['i', 'c', 'o']); // Chicor
+      await el.updateComplete;
+
+      expect(el.activeIndex).to.equal(2);
+      expect(el.checkedIndex).to.equal(2);
+      expect(getFilteredOptionValues(el)).to.eql(['Chicory']);
+    });
+
     it('computation of "user intends autofill" works correctly afer autofill', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
