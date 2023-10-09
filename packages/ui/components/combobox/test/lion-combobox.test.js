@@ -1630,8 +1630,7 @@ describe('lion-combobox', () => {
 
       expect(getFilteredOptionValues(el)).to.eql(['Chard']);
 
-      _inputNode.selectionStart = 3;
-      _inputNode.selectionEnd = 3;
+      _inputNode.setSelectionRange(3, 3);
       await mimicUserTypingAdvanced(el, ['Backspace', 'i', 'c', 'o']);
       await el.updateComplete; // Chicor
 
