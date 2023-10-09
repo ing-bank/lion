@@ -1613,7 +1613,7 @@ describe('lion-combobox', () => {
     it('filters options correctly when changing the middle of the word', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
-          <lion-combobox name="foo" autocomplete="both">
+          <lion-combobox name="foo" autocomplete="list" match-mode="all">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -1622,20 +1622,20 @@ describe('lion-combobox', () => {
         `)
       );
 
-      mimicUserTyping(el, 'chard');
+      const { _inputNode } = getComboboxMembers(el);
+
+      mimicUserTyping(el, 'char');
+      expect(_inputNode.value).to.equal('char');
       await el.updateComplete; // Char
-      expect(el.activeIndex).to.equal(1);
-      expect(el.checkedIndex).to.equal(1);
 
-      await mimicUserTypingAdvanced(el, ['ArrowLeft', 'Backspace']); // Chr
-      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['Chard']);
 
-      expect(getFilteredOptionValues(el)).to.eql([]);
-      await mimicUserTypingAdvanced(el, ['i', 'c', 'o']); // Chicor
-      await el.updateComplete;
+      _inputNode.selectionStart = 3;
+      _inputNode.selectionEnd = 3;
+      await mimicUserTypingAdvanced(el, ['Backspace', 'i', 'c', 'o']);
+      await el.updateComplete; // Chicor
 
-      expect(el.activeIndex).to.equal(2);
-      expect(el.checkedIndex).to.equal(2);
+      expect(_inputNode.value).to.equal('chicor');
       expect(getFilteredOptionValues(el)).to.eql(['Chicory']);
     });
 
