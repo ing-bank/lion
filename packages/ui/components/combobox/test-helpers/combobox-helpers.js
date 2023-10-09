@@ -75,26 +75,20 @@ export async function mimicUserTypingAdvanced(el, values) {
       if (key === 'Backspace') {
         if (hasSelection) {
           _inputNode.value =
-            _inputNode.value.slice(0, selectionStart) +
-            _inputNode.value.slice(selectionEnd);
+            _inputNode.value.slice(0, selectionStart) + _inputNode.value.slice(selectionEnd);
           cursorPosition = selectionStart;
         } else if (cursorPosition > 0) {
           _inputNode.value =
-            _inputNode.value.slice(0, cursorPosition - 1) +
-            _inputNode.value.slice(cursorPosition);
+            _inputNode.value.slice(0, cursorPosition - 1) + _inputNode.value.slice(cursorPosition);
           cursorPosition -= 1;
         }
       } else if (hasSelection) {
         _inputNode.value =
-          _inputNode.value.slice(0, selectionStart) +
-          key +
-          _inputNode.value.slice(selectionEnd);
+          _inputNode.value.slice(0, selectionStart) + key + _inputNode.value.slice(selectionEnd);
         cursorPosition = selectionStart + key.length;
       } else {
         _inputNode.value =
-          _inputNode.value.slice(0, cursorPosition) +
-          key +
-          _inputNode.value.slice(cursorPosition);
+          _inputNode.value.slice(0, cursorPosition) + key + _inputNode.value.slice(cursorPosition);
         cursorPosition += 1;
       }
 
