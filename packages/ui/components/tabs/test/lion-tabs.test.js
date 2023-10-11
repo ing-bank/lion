@@ -75,6 +75,14 @@ describe('<lion-tabs>', () => {
       expect(spy).to.have.been.calledOnce;
     });
 
+    it('does not send event "before-selected-changed" when selectedIndex is set programmatically', async () => {
+      const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+      const spy = sinon.spy();
+      el.addEventListener('before-selected-changed', spy);
+      el.selectedIndex = 1;
+      expect(spy).to.not.have.been.calledOnce;
+    });
+
     it('logs warning if unequal amount of tabs and panels', async () => {
       const stub = sinon.stub(console, 'warn');
       await fixture(html`
@@ -344,6 +352,44 @@ describe('<lion-tabs>', () => {
       // 3 is disabled, same for 0, so should go to 1
       tabs[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
       expect(el.selectedIndex).to.equal(1);
+    });
+
+    describe('when interacted with it sends "before-selected-changed" event', () => {
+      it('and sets new selectedIndex if event default action was not prevented', async () => {
+        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const beforeSelectedChangedSpy = sinon.spy();
+        const selectedChangedSpy = sinon.spy();
+
+        el.addEventListener('before-selected-changed', beforeSelectedChangedSpy);
+        el.addEventListener('selected-changed', selectedChangedSpy);
+
+        const tabs = el.querySelectorAll('[slot=tab]');
+        tabs[1].dispatchEvent(new Event('click'));
+        expect(selectedChangedSpy).to.have.been.calledOnce;
+        expect(beforeSelectedChangedSpy).to.have.been.calledWithMatch({
+          cancelable: true,
+          detail: { selectedIndex: 1 },
+        });
+        expect(el.selectedIndex).to.equal(1);
+      });
+
+      it('and does not set new selectedIndex if event default action was prevented', async () => {
+        const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+        const beforeSelectedChangedSpy = sinon.spy(e => e.preventDefault());
+        const selectedChangedSpy = sinon.spy();
+
+        el.addEventListener('before-selected-changed', beforeSelectedChangedSpy);
+        el.addEventListener('selected-changed', selectedChangedSpy);
+
+        const tabs = el.querySelectorAll('[slot=tab]');
+        tabs[1].dispatchEvent(new Event('click'));
+        expect(selectedChangedSpy).to.not.have.been.called;
+        expect(beforeSelectedChangedSpy).to.have.been.calledWithMatch({
+          cancelable: true,
+          detail: { selectedIndex: 1 },
+        });
+        expect(el.selectedIndex).to.equal(0);
+      });
     });
   });
 
