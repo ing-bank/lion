@@ -119,7 +119,7 @@ export function adoptStyle(renderRoot, style, { teardown = false } = {}) {
   if (!teardown) {
     // @ts-ignore
     // eslint-disable-next-line no-param-reassign
-    renderRoot.adoptedStyleSheets.push(sheet);
+    renderRoot.adoptedStyleSheets = [...renderRoot.adoptedStyleSheets, sheet];
   } else if (renderRoot.adoptedStyleSheets.includes(sheet)) {
     renderRoot.adoptedStyleSheets.splice(renderRoot.adoptedStyleSheets.indexOf(sheet), 1);
   }
