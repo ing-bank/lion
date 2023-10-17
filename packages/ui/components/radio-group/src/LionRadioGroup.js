@@ -23,7 +23,7 @@ export class LionRadioGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement))
         child.reset();
         // If the value was initially checked save this
         if (child.checked) {
-          initValue = child.value;
+          initValue = child.choiceValue;
         }
       }
     });
