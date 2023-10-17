@@ -50,7 +50,7 @@ describe('<lion-radio-group>', () => {
       expect(el.modelValue).to.deep.equal('female');
     });
 
-    it('restores default values if changes were made', async () => {
+    it('restores default values if changes were made to a group containing options with formatters', async () => {
       const formatter = /** @type {(modelValue: { value: string}) => string} */ modelValue =>
         modelValue.value.charAt(0);
       const el = await fixture(html`
