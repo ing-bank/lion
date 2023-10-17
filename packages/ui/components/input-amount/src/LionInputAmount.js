@@ -159,6 +159,9 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     if (currency) {
       if (!this.__currencyDisplayNodeIsConnected) {
         this.appendChild(this.__currencyDisplayNode);
+        this.addToAriaLabelledBy(this.__currencyDisplayNode, {
+          idPrefix: this._currencyDisplayNodeSlot,
+        });
         this.__currencyDisplayNodeIsConnected = true;
       }
       this.__currencyDisplayNode.textContent = this.__currencyLabel;
@@ -182,11 +185,11 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
   }
 
   /**
-   * @returns the current currency display node
+   * @returns {HTMLElement | undefined} the current currency display node
    * @private
    */
   get __currencyDisplayNode() {
-    const node = Array.from(this.children).find(
+    const node = /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
       child => child.slot === this._currencyDisplayNodeSlot,
     );
     if (node) {

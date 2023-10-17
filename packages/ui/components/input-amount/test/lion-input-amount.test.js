@@ -308,6 +308,27 @@ describe('<lion-input-amount>', () => {
       expect(_inputNode.getAttribute('aria-labelledby')).to.contain(label?.id);
     });
 
+    it('adds currency id to aria-labelledby of input when currency switches from undefined', async () => {
+      const el = /** @type {LionInputAmount} */ (
+        await fixture(`<lion-input-amount></lion-input-amount>`)
+      );
+
+      el.currency = 'EUR';
+
+      let resolved = await el.updateComplete;
+      while (!resolved) {
+        resolved = await el.updateComplete;
+      }
+
+      const label = /** @type {HTMLElement[]} */ (Array.from(el.children)).find(
+        child => child.slot === 'after',
+      );
+      const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
+
+      expect(label?.id).not.equal('');
+      expect(_inputNode.getAttribute('aria-labelledby')).to.contain(label?.id);
+    });
+
     it('adds an aria-label to currency slot', async () => {
       const el = /** @type {LionInputAmount} */ (
         await fixture(`<lion-input-amount currency="EUR"></lion-input-amount>`)
