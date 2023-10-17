@@ -1,0 +1,18 @@
+---
+import MainLayout from "../../layouts/MainLayout.astro";
+import { componentInfoEntries, getInfoParentSlug } from '../../content';
+---
+
+<MainLayout>
+  <div class="ui-portal-collection">
+    {
+      componentInfoEntries.map((comp) => (
+        <article class="ui-portal-card">
+          <h2>{comp.data.component}</h2>
+          <p>{comp.data.description}</p>
+          <a href={`/${getInfoParentSlug(comp)}`}>View comp</a>
+        </article>
+      ))
+    }
+  </div>
+</MainLayout>

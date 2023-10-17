@@ -1,20 +1,8 @@
----
-parts:
-  - Button
-  - Extensions
-title: 'Button: Extensions'
-eleventyNavigation:
-  key: 'Button: Extensions'
-  order: 90
-  parent: Button
-  title: Extensions
----
-
-# Button: Extensions
+# Button >> Extensions ||90
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import './extensions/bootstrap-button.mjs';
+import './extensions/bootstrap-button.js';
 ```
 
 ## Bootstrap button
