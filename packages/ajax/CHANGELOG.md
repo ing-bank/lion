@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.3.0
+
+### Minor Changes
+
+- 0952647d: make return type for `fetchJson` generic
+
 ## 1.2.3
 
 ### Patch Changes
