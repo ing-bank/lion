@@ -1,0 +1,35 @@
+---
+import * as path from 'path';
+import { componentInfoEntries, getComponentEntries } from '../../content';
+import MainLayout from "../../layouts/MainLayout.astro";
+import ComponentLayout from "../../layouts/partials/ComponentPartial.astro";
+import { UIPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
+import { getPages, getInPageNavData, getPagesByDir, getPathForMdjsStroriesFile } from '../../utils/pages/render-entries.ts';
+
+export async function getStaticPaths() {
+  return componentInfoEntries.map((entry) => ({    
+    params: { 
+      component: entry.data.component     
+    },
+    props: { entry }
+  }));
+}
+
+const { entry } = Astro.props;
+const urlPath = path.dirname(entry.slug);
+const pages = await getPagesByDir(urlPath);
+const pathForMdjsStroriesFile = await getPathForMdjsStroriesFile(true, urlPath);
+---
+
+<MainLayout title={entry.slug}>
+  <ComponentLayout frontmatter={entry.data}>
+    <UIPortalInpageNav nav-data={JSON.stringify(getInPageNavData(pages, urlPath))} />
+    {
+      pages.map((page) => (
+          <page.Content />        
+      ))
+    }
+    <script is:inline src="/docs/_assets/scoped-custom-element-registry.min.js"></script>
+    {pathForMdjsStroriesFile && <script type="module" src={pathForMdjsStroriesFile} mdjs-setup></script>}
+  </ComponentLayout>
+</MainLayout>

@@ -1,0 +1,88 @@
+---
+import { glob } from 'glob'
+import * as fs from 'fs';
+import * as process from 'process';
+import MainLayout from '../../layouts/MainLayout.astro';
+import { UIPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
+import * as path from 'path';
+import { fundamentalsEntries, allPages } from '../../content';
+import { blogEntries } from '../../content';
+import { guideEntries } from '../../content';
+import { maxDepthForNonComponentsNavigation } from '../../../config.mjs';
+import { getPages, getInPageNavData, getPagesByDir, getPathForMdjsStroriesFile } from '../../utils/pages/render-entries.ts';
+
+export async function getStaticPaths() {
+  const fundamentalsArr = fundamentalsEntries.map(entry => ({
+    params: { 
+      top: 'fundamentals',
+      slug: entry.slug.split('fundamentals/')[1] 
+    },
+    props: { entry },
+  }));
+
+  const blogArr = blogEntries.map(entry => ({
+    params: { 
+      top: 'blog',
+      slug: entry.slug.split('blog/')[1] 
+    },
+    props: { entry },
+  }));
+
+  const guideArr = guideEntries .map(entry => ({
+    params: { 
+      top: 'guides',
+      slug: entry.slug.split('guides/')[1] 
+    },
+    props: { entry },
+  }));
+
+  const dirArr = allPages
+    .filter(entry => {
+      const separator = '/';
+      const dirPath = path.dirname(entry.slug);
+      const dirParts = dirPath.split(separator);
+
+      return dirParts.length >= maxDepthForNonComponentsNavigation && dirParts[0] !== 'components';      
+    })
+    .map(entry => {
+      const separator = '/';
+      const dirPath = path.dirname(entry.slug);
+      const dirParts = dirPath.split(separator);
+      dirParts.splice(maxDepthForNonComponentsNavigation);
+      const result = {
+        params: { 
+          top: dirParts.shift(),
+          slug: dirParts.join(separator) 
+        },
+      };
+      return result;
+    });
+
+    const uniqueDirArr = [];
+    dirArr.forEach(route => {
+      if (!uniqueDirArr.find(uniqueRoute => uniqueRoute.params.top === route.params.top && uniqueRoute.params.slug === route.params.slug)) {
+        uniqueDirArr.push(route);
+      }
+    });
+
+  return [...fundamentalsArr, ...blogArr, ...guideArr, ...dirArr];
+}
+
+const { entry } = Astro.props;
+
+// URL path as a base for in-page navigation. It is used to add anchors to. F.e. "host://urlPath#header1"
+const urlPath = entry ? entry.slug : path.join(Astro.params.top, Astro.params.slug);
+const pages = entry ? await getPages([entry]) : await getPagesByDir(urlPath);
+const pathForMdjsStroriesFile = await getPathForMdjsStroriesFile(!entry, urlPath);
+---
+
+<MainLayout title={entry?.slug}>
+  <UIPortalInpageNav nav-data={JSON.stringify(getInPageNavData(pages, urlPath))} />
+  {
+    pages.map((page) => (
+        <page.Content />        
+    ))
+  }
+  <script is:inline src="/docs/_assets/scoped-custom-element-registry.min.js"></script>
+  {pathForMdjsStroriesFile && <script type="module" src={pathForMdjsStroriesFile} mdjs-setup></script>}
+</MainLayout>

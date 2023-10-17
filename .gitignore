@@ -1,6 +1,15 @@
+# build output
+dist/
+# generated types
+.astro/
+
+.astro
+
+# generated __mdjs-stories.js files
+public/docs
+
 ## editors
 /.idea
-## disable this line one commit before changing contents that should be shared
 /.vscode
 /*.code-workspace
 /.history
@@ -44,16 +53,7 @@ local.log
 ## browserstack
 browserstack.err
 
-## Rocket ignore files (need to be the full relative path to the folders)
-docs/_merged_data/
-docs/_merged_assets/
-docs/_merged_includes/
-docs/**/api-table.md
-
 debug.log
-
-_site
-_site-dev
 
 ## generated test fiels
 __output
@@ -63,4 +63,4 @@ __output
 packages/ui/new-exports/
 packages/ui/test-exports/
 
-
+src/content/docs

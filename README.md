@@ -26,32 +26,58 @@
 </p>
 
 <p align="center">
-  <a href="https://lion.js.org">Website</a>
+  <a href="https://lion-web.netlify.app">Website</a>
   ·
-  <a href="https://lion.js.org/fundamentals/">Fundamentals</a>
+  <a href="https://lion-web.netlify.app/fundamentals/">Fundamentals</a>
   ·
-  <a href="https://lion.js.org/guides/">Guides</a>
+  <a href="https://lion-web.netlify.app/guides/">Guides</a>
   ·
-  <a href="https://lion.js.org/components/">Components</a>
+  <a href="https://lion-web.netlify.app/components/">Components</a>
   ·
-  <a href="https://lion.js.org/blog/">Blog</a>
+  <a href="https://lion-web.netlify.app/blog/">Blog</a>
 </p>
 
-**Lion is a set of highly performant, accessible, and flexible Web Components.**
+**Lion is a set of highly performant, accessible and flexible Web Components.!**
 
 They provide an unopinionated, white-label layer that can be extended to your own layer of components.
 
 - **High Performance:** Focused on great performance in all relevant browsers with a minimal number of dependencies.
 - **Accessibility:** Aimed at compliance with the WCAG 2.2 AA standard to create components that are accessible for everybody.
 - **Flexibility:** Provides solutions through Web Components and JavaScript classes which can be used, adopted and extended to fit all needs.
-- **Modern Code:** Lion is distributed as pure ES modules.
-- **Exposes functions/classes and Web Components:** Ships a functionality in its most appropriate form.
+- **Modern Code:** Lion is distributes as pure es modules.
+- **Exposes functions/classes and Web Components:** Ships a functionality in it's most appropriate form.
 
-> Note: Our demo examples might look simple and not very stylish. This is on purpose. They are designed to be basic so you can easily add your own styles to them to match your intended design, without dealing with styles that are already there.
+> Note: Our demos may look a little bland but that is on purpose. They only come with functional stylings.
+> This makes sense as the main use case is to extend those components and if you do you do not want to override existing stylings.
 
 <p align="center">
-  <a href="https://lion.js.org/guides/"><strong>Explore the Lion Guides&nbsp;&nbsp;▶</strong></a>
+  <a href="https://lion-web.netlify.app/guides/"><strong>Explore the Lion Guides&nbsp;&nbsp;▶</strong></a>
 </p>
+
+## Astro migration
+
+- Keep using `/docs` on the root level as we used it in the `master` branch. The documentation is copied into Astro related directories on `npm run start` and when when anything in `/docs` is updated.
+- Replace manually all references to assets in all `md` files so that we imply that the path is produced from the directory where the md file is located. F.e. `new URL('../src/wa-combobox/assets/obama.jpeg', import.meta.url).href;` should `new URL('./src/wa-combobox/assets/obama.jpeg', import.meta.url).href;`. Note double dot is replaced with one dot. See [this PR](https://github.com/ing-bank/lion/pull/2125/files#diff-403b1e0ab54d51dcfe54248e847498e492da00383d8b33a4087994ab9035a22c) for the reference.
+- Rename all `*.mjs` files to `*.js` ones if they are used by `mdjs` examples
+
+### Astro how to
+
+- To start in dev mode run `nmm run start`
+- To start in production mode:
+  - Run `npm run build`
+  - Run `npm run preview`
+
+### Issues which are not caused by the migration (not to be fixed now)
+
+- There is a browser console error on [collapsible page](http://localhost:4321/components/collapsible):
+
+  ```
+  __mdjs-stories--use-cases.js:40 Uncaught TypeError: shadowRoot.getElementById is not a function
+  ```
+
+  Note. There is the same error on master. This issue is not caused by the migration
+
+### TODO
 
 ## How to install
 
@@ -113,7 +139,7 @@ You can also use the lion elements directly, although this is likely not a commo
 
 ## Issues
 
-If you encounter an issue with any of the packages we are offering please open a [new bug issue](https://github.com/ing-bank/lion/issues/new?assignees=&labels=&template=bug_report.md&title=). Be sure to include a description of the expected and the current behavior - additionally adding a [reproduction](https://webcomponents.dev/edit/kpZmz1CJN580OaXsk56f?pm=1) always helps.
+If you encounter an issue with any of the packages we are offering please open a [new bug issue](https://github.com/ing-bank/lion/issues/new?assignees=&labels=&template=bug_report.md&title=). Be sure to include a description of the expected and the current behavior - additional adding a [reproduction](https://webcomponents.dev/edit/kpZmz1CJN580OaXsk56f?pm=1) always helps.
 
 ## Feature requests
 
@@ -158,7 +184,7 @@ This means you only have to apply your own Design System: by delivering styles, 
 
 ## Coding guidelines
 
-Check out our [coding guidelines](https://lion.js.org/guides/principles/definitions-and-terms/) for more detailed information.
+Check out our [coding guidelines](https://lion-web.netlify.app/guides/principles/definitions-and-terms/) for more detailed information.
 
 ## How to contribute
 
