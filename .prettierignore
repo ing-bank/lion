@@ -1,8 +1,6 @@
 coverage/
 CHANGELOG.md
 bundlesize/
-_site
-_site-dev
 .history
 
 /docs/_assets/scoped-custom-element-registry.min.js
