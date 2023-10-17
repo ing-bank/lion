@@ -849,7 +849,9 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
    * @protected
    */
   _handleAutocompletion() {
-    const hasSelection = this._inputNode.value.length !== this._inputNode.selectionStart;
+    const isSelectionEmpty = this._inputNode.selectionStart === this._inputNode.selectionEnd;
+    const hasSelection =
+      !isSelectionEmpty && this._inputNode.value.length !== this._inputNode.selectionStart;
 
     const inputValue = this._inputNode.value;
     const inputSelectionStart = this._inputNode.selectionStart;
