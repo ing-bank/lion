@@ -1,0 +1,158 @@
+---
+import { getCollection } from "astro:content";
+import { SEO } from "astro-seo";
+import { UIPortalFooter } from "../components/ui-portal-footer.js";
+import { UiPortalMainNav } from "../components/ui-portal-main-nav.js";
+import { componentInfoEntries } from '../content';
+
+const site = Astro.site || Astro.url.origin;
+const canonicalURL = new URL(Astro.url.pathname, site).toString();
+const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
+const { title } = Astro.props;
+
+const compNames = componentInfoEntries.map((entry) => entry.data.component);
+
+const navData = [
+  { name: "home", url: "/" },
+  {
+    name: "components",
+    url: "/components",
+    children: compNames.map((compName) => ({
+      name: compName,
+      url: `/components/${compName}`,
+    })),
+  },
+  { name: "develop", url: "/develop" },
+  { name: "design", url: "/design" },
+  { name: "extend", url: "/extend" },
+  { name: "blog", url: "/blog" },
+];
+
+const footerData = [
+  {
+    name: "discover",
+    children: [
+      {
+        name: "blog",
+        url: "/blog",
+      },
+      {
+        name: "help and feedback",
+        url: "https://github.com/ing-bank/lion/issues",
+      },
+    ],
+  },
+  {
+    name: "follow",
+    children: [
+      {
+        name: "github",
+        url: "https://github.com/ing-bank/lion",
+      },
+      {
+        name: "slack",
+        url: "/about/slack/",
+      },
+    ],
+  },
+  {
+    name: "support",
+    children: [
+      {
+        name: "contribute",
+        url: "https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md",
+      },
+    ],
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <link
+      href="http://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        font-size: 16px;
+      }
+    </style>
+
+    <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
+    <SEO
+      title={title}
+      description="High quality UI web components"
+      canonical={canonicalURL}
+      openGraph={{
+        basic: {
+          url: canonicalURL,
+          type: "website",
+          title: "Lion",
+          image: resolvedImageWithDomain,
+        },
+        image: {
+          alt: "Lion Homepage screen",
+        },
+      }}
+    />
+  </head>
+  <body class="ui-portal-grid">
+    <div class="ui-portal-grid__nav">
+      <UiPortalMainNav nav-data={JSON.stringify(navData)} />
+    </div>
+    <main class="ui-portal-grid__main">
+      <slot />
+    </main>
+    <div class="ui-portal-grid__footer">
+      <UIPortalFooter footer-data={JSON.stringify(footerData)} />
+    </div>
+    <style is:global>
+      /* Improve Page speed */
+      /* https://css-tricks.com/almanac/properties/c/content-visibility/ */
+      img {
+        content-visibility: auto;
+      }
+
+      .ui-portal-grid {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        grid-template-rows: 80vh 20vh;
+        grid-template-areas:
+          "nav main"
+          "nav footer";
+      }
+
+      .ui-portal-grid__nav {
+        grid-area: nav;
+      }
+
+      .ui-portal-grid__main {
+        grid-area: main;
+      }
+
+      .ui-portal-grid__footer {
+        grid-area: footer;
+      }
+
+      .ui-portal-collection {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+      }
+
+      .ui-portal-card {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+    </style>
+  </body>
+</html>

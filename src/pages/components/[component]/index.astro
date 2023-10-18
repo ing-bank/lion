@@ -1,0 +1,29 @@
+---
+import { componentInfoEntries, getInfoParentSlug } from '../../../content';
+
+export async function getStaticPaths() {
+  return componentInfoEntries.map((entry) => ({
+    params: { component: entry.data.component },
+    props: { entry },
+  }));
+}
+
+let redirectPath = `${getInfoParentSlug(Astro.props.entry)}/${Astro.props.entry.data.defaultSlug}`;
+let componentPath = `${getInfoParentSlug(Astro.props.entry)}`;
+let defaultSlug = `${Astro.props.entry.data.defaultSlug}`;
+---
+<script define:vars={{ componentPath, defaultSlug}}>
+  
+  const userPreferredComponentSlug = localStorage.getItem('userPreferredComponentSlug');
+  userPreferredComponentSlugRefined = (
+    userPreferredComponentSlug === 'web' ||
+    userPreferredComponentSlug === 'ios' ||
+    userPreferredComponentSlug === 'android' ||
+    userPreferredComponentSlug === 'design' ||
+    userPreferredComponentSlug === 'changelog') ? userPreferredComponentSlug : null;
+
+  window.location.href = `/${componentPath}/${userPreferredComponentSlugRefined || defaultSlug}`;
+</script>
+
+</script>
+<!-- <meta http-equiv="refresh" content={`0;url=/${redirectPath}`} /> -->

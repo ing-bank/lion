@@ -54,6 +54,72 @@ They provide an unopinionated, white-label layer that can be extended to your ow
   <a href="https://lion-web.netlify.app/guides/"><strong>Explore the Lion Guides&nbsp;&nbsp;▶</strong></a>
 </p>
 
+## Astro migration
+
+### How to migrate a button component (overview.md page only at this moment)
+
+- Copy `docs/components/button` to `src/content/docs/components`
+- Create an emty file: `src/content/docs/components/button/info.md`
+- At the very beginning of `src/content/docs/components/button/info.md` add the following:
+
+  ```
+  ---
+  component: button
+  title: Button title
+  description: Button Description
+  type: component-info
+  defaultSlug: web
+  ---
+  ```
+
+  where
+
+  - the `component` value should match the folder name
+  - `title` and `description` could be random
+  - `type` must be `component-info`
+  - `defaultSlug` must be `web`
+
+- At the very beginning of `src/content/docs/components/button/overview.md` add the following:
+
+  ```
+  ---
+  component: button
+  category: development
+  platform: web
+  type: component-development
+  ---
+  ```
+
+  where
+
+  - the `component` value should match the folder name
+  - the rest of properties/values should always stay as in the example
+
+- Delete (temporarily) other md files for a component:
+  - `src/content/docs/components/button/examples.md`
+  - `src/content/docs/components/button/extensions.md`
+  - `src/content/docs/components/button/index.md`
+  - `src/content/docs/components/button/use-cases.md`
+- Temporarily get rid of `packages/*` as workspaces
+  - Remove `"packages/*",` from `"workspaces": [` in `package.json`. That is a temporary hack to make `require.resolve` fetch files from `node_modules/lion/ui` and not resolving `@lion/ui` as `packages/ui`. We need this until find out how to copy those files to `/public` programmatically
+  - Install `@lion/ui` as a dependency
+- Remove imports related to `ing-web` in `src/utils/astrojs-integration/lion/lion-integration.mjs`
+- Remove `ing-web` related `remarkPlugins` in `astro.config.mjs`
+
+### TODO
+
+- Add `packages/*` back to workspaces in `package.json`
+  - Make the rollup config copy the files from `packages/ui` into `/public`
+  - Uninstall `@lion/ui` as a dependency
+- Write one time script for `Lion` migration which adds frontmatter to `md` files
+  - `index.md` is to be ignored
+  - `info.md` is to be added
+- `rocket-preset-extend-lion-docs` should be updates
+  - `Rocket` name should gone
+  - Export methods: `remarkExtendLionDocsTransformJs`, `remarkUrlToLocal`, `generateExtendDocsConfig` so those could be used in
+    `src/utils/remark-plugings/copyMdjsStories/copyMdjsStories.js`
+  - See what `copy.sh` does in POC project to replicate the same here
+
 ## How to install
 
 ```bash
