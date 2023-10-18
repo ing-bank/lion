@@ -49,6 +49,35 @@ describe('<lion-radio-group>', () => {
       await el.updateComplete;
       expect(el.modelValue).to.deep.equal('female');
     });
+
+    it('restores default values if changes were made to a group containing options with formatters', async () => {
+      const formatter = /** @type {(modelValue: { value: string}) => string} */ modelValue =>
+        modelValue.value.charAt(0);
+      const el = await fixture(html`
+        <lion-radio-group name="gender" label="Gender">
+          <lion-radio label="Male" .formatter=${formatter} .choiceValue=${'male'}></lion-radio>
+          <lion-radio
+            label="Female"
+            .formatter=${formatter}
+            .modelValue=${{ value: 'female', checked: true }}
+          ></lion-radio>
+          <lion-radio label="Other" .formatter=${formatter} .choiceValue=${'other'}></lion-radio>
+        </lion-radio-group>
+      `);
+      el.formElements[0].checked = true;
+      expect(el.modelValue).to.deep.equal('male');
+
+      el.resetGroup();
+      expect(el.modelValue).to.deep.equal('female');
+
+      el.formElements[2].checked = true;
+      expect(el.modelValue).to.deep.equal('other');
+
+      el.resetGroup();
+      await el.formElements[1].updateComplete;
+      await el.updateComplete;
+      expect(el.modelValue).to.deep.equal('female');
+    });
   });
 
   it('should have role = radiogroup', async () => {
