@@ -1,3 +1,13 @@
+# build output
+dist/
+# generated types
+.astro/
+
+.astro
+
+# generated __mdjs-stories.js files
+public/mdjs-stories
+
 ## editors
 /.idea
 /.vscode

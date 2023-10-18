@@ -3,13 +3,14 @@
   "name": "@lion/root",
   "license": "MIT",
   "scripts": {
-    "build": "rocket build",
+    "build": "astro build",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
     "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present",
     "debug": "web-test-runner --watch --config web-test-runner-chrome.config.mjs",
     "debug:firefox": "web-test-runner --watch --config web-test-runner-firefox.config.mjs",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
+    "dev": "astro dev",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
     "format:prettier": "prettier \"**/*.{js,md}\" \"packages/*/package.json\" \"package.json\" --write",
@@ -21,11 +22,10 @@
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
+    "preview": "astro preview",
     "release": "changeset publish",
     "rm-all-node_modules": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules",
-    "rocket:build": "rocket build",
-    "rocket:build:start": "web-dev-server --root-dir _site --open",
-    "start": "rocket start",
+    "start": "astro dev",
     "test": "run-p test:browser test:node",
     "test:browser": "web-test-runner --coverage",
     "test:browserstack": "web-test-runner --config ./web-test-runner-browserstack.config.js",
@@ -36,10 +36,14 @@
     "types-check-only": "npm run types-check-only --workspaces --if-present"
   },
   "workspaces": [
-    "packages/*",
     "packages-node/*"
   ],
   "dependencies": {
+    "@astrojs/lit": "^3.0.2",
+    "@lion/ui": "0.4.1",
+    "@mdjs/core": "^0.20.0",
+    "astro": "^3.3.1",
+    "astro-seo": "^0.8.0",
     "changeset": "^0.2.6"
   },
   "devDependencies": {
@@ -51,10 +55,6 @@
     "@open-wc/eslint-config": "^7.0.0",
     "@open-wc/testing": "^3.1.2",
     "@open-wc/testing-helpers": "^2.1.2",
-    "@rocket/blog": "^0.4.0",
-    "@rocket/cli": "^0.10.1",
-    "@rocket/launch": "^0.6.0",
-    "@rocket/search": "^0.5.1",
     "@types/chai-as-promised": "^7.1.5",
     "@types/chai-dom": "^0.0.8",
     "@types/convert-source-map": "^1.5.1",
@@ -118,15 +118,6 @@
       "maxSize": "20 kB"
     }
   ],
-  "comments": {
-    "overrides": {
-      "sharp": [
-        "Version of 'sharp' package we get via '@rocket/cli' is too old to be built on a Mac.",
-        "But updating package '@rocket-cli' causes our portal to break. Reason unknown.",
-        "So, we override the sharp version in here until '@rocket-cli' can be updated."
-      ]
-    }
-  },
   "overrides": {
     "sharp": "^0.31.x"
   },
