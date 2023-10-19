@@ -1,0 +1,49 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { fundamentalsEntries } from '../../content';
+import { blogEntries } from '../../content';
+import { guideEntries } from '../../content';
+
+
+export async function getStaticPaths() {
+  const fundamentalsArr = fundamentalsEntries.map(entry => ({
+    params: { 
+      top: 'fundamentals',
+      slug: entry.slug.split('fundamentals/')[1] 
+    },
+    props: { entry },
+  }));
+
+  const blogArr = blogEntries.map(entry => ({
+    params: { 
+      top: 'blog',
+      slug: entry.slug.split('blog/')[1] 
+    },
+    props: { entry },
+  }));
+
+  const guideArr = guideEntries .map(entry => ({
+    params: { 
+      top: 'guides',
+      slug: entry.slug.split('guides/')[1] 
+    },
+    props: { entry },
+  }));
+
+  return [...fundamentalsArr, ...blogArr, ...guideArr];
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const blogData = Astro.props.entry.data;
+---
+
+<MainLayout title={entry.slug}>
+  {blogData.title}
+  {blogData.description}
+  {blogData.date}
+  {blogData.tags}
+  {blogData.author}
+  <Content />
+</MainLayout>

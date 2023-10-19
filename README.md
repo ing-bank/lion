@@ -106,8 +106,24 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 - Remove imports related to `ing-web` in `src/utils/astrojs-integration/lion/lion-integration.mjs`
 - Remove `ing-web` related `remarkPlugins` in `astro.config.mjs`
 
+### How to migrate a `blog` page (accessibility.md)
+
+- Copy `docs/blog/accessibility.md` into `src/content/docs/blog`
+- Add `title` and `description` to `accessibility.md`'s frontmatter. Note it is already done for blog items
+
+### How to migrate a `fundamentals` page (accessibility.md)
+
+- Copy `docs/fundamentals/rationales/accessibility.md` into `src/content/docs/fundamentals/rationales`
+- Add `title` and `description` to `accessibility.md`'s frontmatter
+
+### How to migrate a `guides` page (create-a-custom-field.md)
+
+- Copy `docs/guides/how-to/create-a-custom-field.md` into `src/content/docs/guides/how-to/create-a-custom-field.md`
+- Add `title` and `description` to `create-a-custom-field.md`'s frontmatter
+
 ### TODO
 
+- For the `[component]` page fix `Web` and `Development` links
 - Add `packages/*` back to workspaces in `package.json`
   - Make the rollup config copy the files from `packages/ui` into `/public`
   - Uninstall `@lion/ui` as a dependency

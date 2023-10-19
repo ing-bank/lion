@@ -8,5 +8,8 @@
   "no-trailing-punctuation": {
     "punctuation": ".,;。，；：！"
   },
-  "ol-prefix": false
+  "ol-prefix": false,
+  "MD025": {
+    "front_matter_title": ""
+  }  
 }
