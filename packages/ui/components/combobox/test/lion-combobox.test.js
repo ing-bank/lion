@@ -453,6 +453,32 @@ describe('lion-combobox', () => {
       expect(el2._inputNode.value).to.equal('');
     });
 
+    it('correctly emits event with an empty value when clear() is called', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(
+          html`<lion-combobox>
+            <lion-option .choiceValue=${'red'}>Red</lion-option>
+            <lion-option .choiceValue=${'green'}>Green</lion-option>
+            <lion-option .choiceValue=${'blue'}>Blue</lion-option>
+          </lion-combobox>`,
+        )
+      );
+
+      el.modelValue = 'red';
+      await el.updateComplete;
+
+      el.addEventListener('model-value-changed', ({ target }) => {
+        expect(target).to.not.be.null;
+
+        const { modelValue, value } = /** @type {LionCombobox} */ (target);
+        expect(value).to.equal('');
+        expect(modelValue).to.equal('');
+      });
+
+      el.clear();
+      await el.updateComplete;
+    });
+
     it('updates option list after clear()', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`

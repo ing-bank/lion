@@ -1,5 +1,14 @@
 # @lion/ui
 
+## 0.4.2
+
+### Patch Changes
+
+- b1320a9a: avoid calling push in iterable object to avoid error loading overlays in old chromium versions
+- dcf3a4b0: Fix search issues when modifying the middle of the input word in LionCombobox.
+- be36bf3b: Fix accessibility currency linking to label after setting currency from undefined in LionInputAmount.
+- 63a8e725: lion-calendar: when determining if user interacted with a day button, use event.composedPath()[0] instead of event.target to fix Firefox 111+ issue
+
 ## 0.4.1
 
 ### Patch Changes
