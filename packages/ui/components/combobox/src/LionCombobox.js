@@ -382,10 +382,16 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceMixin(L
     super.checkedIndex = index;
   }
 
+  /**
+   * @returns {boolean}
+   */
   get requireOptionMatch() {
     return !this.allowCustomChoice;
   }
 
+  /**
+   * @param {boolean} value
+   */
   set requireOptionMatch(value) {
     this.allowCustomChoice = !value;
   }
