@@ -25,7 +25,7 @@ export class DemoSelectionDisplay extends LitElement {
        * Can be used to visually indicate the next
        */
       removeChipOnNextBackspace: Boolean,
-      selectedElements: Array,
+      selectedChoices: Array,
     };
   }
 
@@ -72,12 +72,6 @@ export class DemoSelectionDisplay extends LitElement {
     return this.comboboxElement._inputNode;
   }
 
-  _computeSelectedElements() {
-    const { formElements, checkedIndex } = /** @type {LionCombobox} */ (this.comboboxElement);
-    const checkedIndexes = Array.isArray(checkedIndex) ? checkedIndex : [checkedIndex];
-    return formElements.filter((_, i) => checkedIndexes.includes(i));
-  }
-
   get multipleChoice() {
     return this.comboboxElement?.multipleChoice;
   }
@@ -85,7 +79,7 @@ export class DemoSelectionDisplay extends LitElement {
   constructor() {
     super();
 
-    this.selectedElements = [];
+    this.selectedChoices = [];
 
     /** @type {EventListener} */
     this.__textboxOnKeyup = this.__textboxOnKeyup.bind(this);
@@ -110,29 +104,8 @@ export class DemoSelectionDisplay extends LitElement {
    */
   onComboboxElementUpdated(changedProperties) {
     if (changedProperties.has('modelValue')) {
-      this.selectedElements = this._computeSelectedElements();
+      this.selectedChoices = this.comboboxElement.modelValue;
     }
-  }
-
-  /**
-   * Whenever selectedElements are updated, makes sure that latest added elements
-   * are shown latest, and deleted elements respect existing order of chips.
-   */
-  __reorderChips() {
-    const { selectedElements } = this;
-    if (this.__prevSelectedEls) {
-      const addedEls = selectedElements.filter(e => !this.__prevSelectedEls.includes(e));
-      const deletedEls = this.__prevSelectedEls.filter(e => !selectedElements.includes(e));
-      if (addedEls.length) {
-        this.selectedElements = [...this.__prevSelectedEls, ...addedEls];
-      } else if (deletedEls.length) {
-        deletedEls.forEach(delEl => {
-          this.__prevSelectedEls.splice(this.__prevSelectedEls.indexOf(delEl), 1);
-        });
-        this.selectedElements = this.__prevSelectedEls;
-      }
-    }
-    this.__prevSelectedEls = this.selectedElements;
   }
 
   /**
@@ -143,7 +116,7 @@ export class DemoSelectionDisplay extends LitElement {
   _selectedElementTemplate(option, highlight) {
     return html`
       <span class="selection-chip ${highlight ? 'selection-chip--highlighted' : ''}">
-        ${option.value}
+        ${option}
       </span>
     `;
   }
@@ -154,9 +127,9 @@ export class DemoSelectionDisplay extends LitElement {
     }
     return html`
       <div class="combobox__selection">
-        ${this.selectedElements.map((option, i) => {
+        ${this.selectedChoices.map((option, i) => {
           const highlight = Boolean(
-            this.removeChipOnNextBackspace && i === this.selectedElements.length - 1,
+            this.removeChipOnNextBackspace && i === this.selectedChoices.length - 1,
           );
           return this._selectedElementTemplate(option, highlight);
         })}
@@ -174,8 +147,8 @@ export class DemoSelectionDisplay extends LitElement {
   __textboxOnKeyup(ev) {
     if (ev.key === 'Backspace') {
       if (!this._inputNode.value) {
-        if (this.removeChipOnNextBackspace && this.selectedElements.length) {
-          this.selectedElements[this.selectedElements.length - 1].checked = false;
+        if (this.removeChipOnNextBackspace && this.selectedChoices.length) {
+          this.comboboxElement.modelValue = this.selectedChoices.slice(0, -1);
         }
         this.removeChipOnNextBackspace = true;
       }

@@ -1,5 +1,5 @@
 import { browserDetection } from '@lion/ui/core.js';
-import { Unparseable } from '@lion/ui/form-core.js';
+import { Unparseable, CustomChoiceMixin } from '@lion/ui/form-core.js';
 import { LionListbox } from '@lion/ui/listbox.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
@@ -27,7 +27,7 @@ const matchA11ySpanReverseFns = new WeakMap();
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
  */
-export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
+export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceMixin(LionListbox))) {
   /** @type {any} */
   static get properties() {
     return {
@@ -364,6 +364,34 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
     return this._inputNode;
   }
 
+  /**
+   * @type {number | number[]}
+   */
+  // @ts-ignore
+  get checkedIndex() {
+    return super.checkedIndex;
+  }
+
+  /**
+   * @deprecated
+   * This setter exists for backwards compatibility of single choice groups.
+   * A setter api would be confusing for a multipleChoice group. Use `setCheckedIndex` instead.
+   * @param {number|number[]} index
+   */
+  set checkedIndex(index) {
+    super.checkedIndex = index;
+  }
+
+  // Gui-TODO: deprecate
+  get requireOptionMatch() {
+    return !this.allowCustomChoice;
+  }
+
+  // Gui-TODO: deprecate
+  set requireOptionMatch(value) {
+    this.allowCustomChoice = !value;
+  }
+
   constructor() {
     super();
     /**
@@ -454,6 +482,16 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
     if (this._selectionDisplayNode) {
       this._selectionDisplayNode.comboboxElement = this;
     }
+  }
+
+  /**
+   * If an array is passed for multiple-choice, it will check the indexes in array, and uncheck the rest
+   * If a number is passed, the item with the passed index is checked without unchecking others
+   * For single choice, __onChildCheckedChanged we ensure that we uncheck siblings
+   * @param {number|number[]} index
+   */
+  setCheckedIndex(index) {
+    super.setCheckedIndex(index);
   }
 
   /**
@@ -553,15 +591,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
 
     if (typeof this._selectionDisplayNode?.onComboboxElementUpdated === 'function') {
       this._selectionDisplayNode.onComboboxElementUpdated(changedProperties);
-    }
-
-    if (changedProperties.has('requireOptionMatch') || changedProperties.has('multipleChoice')) {
-      if (!this.requireOptionMatch && this.multipleChoice) {
-        // TODO implement !requireOptionMatch and multipleChoice flow
-        throw new Error(
-          "multipleChoice and requireOptionMatch=false can't be used at the same time (yet).",
-        );
-      }
     }
   }
 
@@ -1065,25 +1094,51 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
    * @protected
    */
   _listboxOnKeyDown(ev) {
-    super._listboxOnKeyDown(ev);
     const { key } = ev;
     switch (key) {
       case 'Escape':
         this.opened = false;
-        this._setTextboxValue('');
+        if (this.requireOptionMatch) {
+          super._listboxOnKeyDown(ev);
+          this._setTextboxValue('');
+        }
+        break;
+      case 'Delete':
+        if (this.requireOptionMatch) {
+          super._listboxOnKeyDown(ev);
+        } else {
+          this.opened = false;
+        }
         break;
       case 'Enter':
         if (this.multipleChoice && this.opened) {
           ev.preventDefault();
         }
-        if (!this.formElements[this.activeIndex]) {
-          return;
+
+        if (
+          !this.requireOptionMatch &&
+          this.multipleChoice &&
+          (!this.formElements[this.activeIndex] ||
+            this.formElements[this.activeIndex].hasAttribute('aria-hidden') ||
+            !this.opened)
+        ) {
+          ev.preventDefault();
+          this.modelValue = [...this.modelValue, this._inputNode.value];
+
+          this._inputNode.value = '';
+          this.opened = false;
+        } else {
+          super._listboxOnKeyDown(ev);
+          this._inputNode.value = '';
         }
         if (!this.multipleChoice) {
           this.opened = false;
         }
         break;
-      /* no default */
+      default: {
+        super._listboxOnKeyDown(ev);
+        break;
+      }
     }
   }
 
@@ -1110,12 +1165,14 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
    */
   // eslint-disable-next-line no-unused-vars
   _syncToTextboxMultiple(modelValue, oldModelValue = []) {
-    const diff = modelValue.filter(x => !oldModelValue.includes(x));
-    const newValue = this.formElements
-      .filter(option => diff.includes(option.choiceValue))
-      .map(option => this._getTextboxValueFromOption(option))
-      .join(' ');
-    this._setTextboxValue(newValue); // or last selected value?
+    if (this.requireOptionMatch) {
+      const diff = modelValue.filter(x => !oldModelValue.includes(x));
+      const newValue = this.formElements
+        .filter(option => diff.includes(option.choiceValue))
+        .map(option => this._getTextboxValueFromOption(option))
+        .join(' ');
+      this._setTextboxValue(newValue); // or last selected value?
+    }
   }
 
   /**
