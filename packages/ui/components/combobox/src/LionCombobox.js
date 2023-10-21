@@ -382,12 +382,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceMixin(L
     super.checkedIndex = index;
   }
 
-  // Gui-TODO: deprecate
   get requireOptionMatch() {
     return !this.allowCustomChoice;
   }
 
-  // Gui-TODO: deprecate
   set requireOptionMatch(value) {
     this.allowCustomChoice = !value;
   }
