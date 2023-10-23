@@ -10,8 +10,8 @@ More on this topic can be found in the online panel discussion [Web Components, 
 
 ## Shadow roots and accessibility
 
-Since our components and applications consist of multiple shadow roots that need to be able to reference each other, designing accessible components takes extra strategy and planning.
-A practical example: all form components inside a form need to be able to lay accessible relations for presenting feedback messages via the screen reader. For this, they need consistent designs so that all form components are interoperable. So, light dom needs to be leveraged until the [AOM specification](https://wicg.github.io/aom/explainer.html) is implemented.
+Since our components and applications consist of multiple shadow roots that need to be able to reference each other, architecting accessible components takes extra strategy and planning.
+A practical example: all form controls inside a fieldset need to be able to lay accessible id relations to their parent (the fieldset). In other words, id relations should be cross component (which usually means cross shadow root). Scenarios like these require consistent architecture, allowing all form components to be interoperable. In general, light dom needs to be leveraged until a solution for cross root aria is available. For a deeper understanding of the topic, be sure to view these [slides about cross root aria](/_merged_assets/_static/crossRootAriaLion.pdf).
 
 ## Some details about the form system
 
