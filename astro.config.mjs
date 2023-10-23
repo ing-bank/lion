@@ -1,8 +1,8 @@
-import { defineConfig } from "astro/config";
-import lit from "@astrojs/lit";
+import { defineConfig } from 'astro/config';
+import lit from '@astrojs/lit';
 import { remarkExtend } from 'remark-extend';
 import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
-import lionIntegration from './src/utils/astrojs-integration/lion/lion-integration.js'
+import lionIntegration from './src/utils/astrojs-integration/lion/lion-integration.js';
 import { copyMdjsStories } from './src/utils/remark-plugings/copyMdjsStories/index.js';
 import { extendLionDocsInstance } from './src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js';
 
@@ -21,9 +21,14 @@ const mdjsSetupConfig = {
 // https://astro.build/config
 export default defineConfig({
   integrations: [lit(), lionIntegration()],
-  markdown: {  
+  markdown: {
     // ing-web
-    remarkPlugins: [...extendLionDocsInstance, mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
+    remarkPlugins: [
+      /*...extendLionDocsInstance,*/ mdjsParse,
+      mdjsStoryParse,
+      [mdjsSetupCode, mdjsSetupConfig],
+      copyMdjsStories,
+    ],
     // lion
     //remarkPlugins: [mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
   },
@@ -36,7 +41,7 @@ export default defineConfig({
     // 6 │ await init;
     // ```
     optimizeDeps: {
-      exclude: ['rocket-preset-extend-lion-docs']
+      exclude: ['rocket-preset-extend-lion-docs'],
     },
     // Fix taken from https://github.com/vitejs/vite/issues/6985#issuecomment-1044375490.
     // It throws an error otherwise:
