@@ -1,0 +1,48 @@
+---
+import { componentInfoEntries, getComponentEntry, getComponentGlob } from '../../content';
+import MainLayout from "../../layouts/MainLayout.astro";
+import ComponentLayout from "../../layouts/partials/ComponentPartial.astro";
+import { UIPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
+
+export async function getStaticPaths() {
+  return componentInfoEntries.map((entry) => ({    
+    params: { 
+      component: entry.data.component     
+    },
+    props: { entry }
+  }));
+}
+
+const { entry } = Astro.props;
+let config: any = {
+  component: entry.data.component,
+  // TODO remove this and update getComponentGlob so that it returns all found entities.
+  // Then we'll be able to extract headings for each of md file for the particular component
+  type: 'component-development' 
+};
+
+// TODO here we need to concatenate multiple files under the component folder, excluding info.md
+// At this moment there is only one file with such config in the "button" folder. That is why it works now
+// TODO update getComponentEntry to getComponentEntries (plural). So that it gives all md files which we can render
+// and then concatenate
+const componentEntry = getComponentEntry(config);
+const componentGlobs = await Astro.glob('/src/content/docs/components/**/*.md');
+const componentGlob = getComponentGlob(componentGlobs, config);
+const headers = componentGlob.getHeadings().filter(header => header.depth === 2);
+console.log('headers: ', componentGlob.getHeadings());
+const { Content } = await componentEntry.render();
+const inPageNavData = headers.map(header => ({
+  name: header.text,
+  url: `/${componentEntry.slug}#${header.slug}`
+}));
+
+console.log('inPageNavData: ', inPageNavData)
+---
+
+<MainLayout title={entry.slug}>
+  <ComponentLayout frontmatter={entry.data}>
+    <UIPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
+    <Content/>
+  </ComponentLayout>
+</MainLayout>
+  
