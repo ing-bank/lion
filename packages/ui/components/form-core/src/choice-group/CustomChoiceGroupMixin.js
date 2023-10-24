@@ -41,7 +41,7 @@ const CustomChoiceGroupMixinImplementation = superclass =>
     set modelValue(value) {
       super.modelValue = value;
 
-      if (value === null || value === undefined) {
+      if (value === null || value === undefined || value === '') {
         // @ts-ignore
         this._customChoices = new Set();
       } else if (this.allowCustomChoice) {
@@ -181,6 +181,11 @@ const CustomChoiceGroupMixinImplementation = superclass =>
      */
     _isEmpty() {
       return super._isEmpty() && this._customChoices.size === 0;
+    }
+
+    clear() {
+      this._customChoices = new Set();
+      super.clear();
     }
   };
 

@@ -8,7 +8,7 @@ import {
   aTimeout,
   defineCE,
   expect,
-  fixture as _fixture,
+  fixture,
   html,
   nextFrame,
   unsafeStatic,
@@ -23,8 +23,6 @@ import { getListboxMembers } from '../../../exports/listbox-test-helpers.js';
  * @typedef {import('../../select-rich/src/LionSelectInvoker.js').LionSelectInvoker} LionSelectInvoker
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
-
-const fixture = /** @type {(arg: TemplateResult) => Promise<LionListbox>} */ (_fixture);
 
 /**
  * @param {HTMLElement} el
@@ -678,7 +676,7 @@ export function runListboxMixinSuite(customConfig = {}) {
           it('submits form on [Enter] when inputNode is an instance of HTMLInputNode', async () => {
             const submitSpy = sinon.spy(e => e.preventDefault());
             const el = /** @type {HTMLFormElement}  */ (
-              await _fixture(html`
+              await fixture(html`
               <form @submit=${submitSpy}>
                 <${tag} name="foo">
                   <${optionTag} .choiceValue="${'Artichoke'}">Artichoke</${optionTag}>
@@ -1651,7 +1649,7 @@ export function runListboxMixinSuite(customConfig = {}) {
           elm.formElements.filter(fel => elm._listboxNode.contains(fel)).length ===
           elm.formElements.length;
 
-        const el = /** @type {MyEl} */ (await _fixture(html`<${wrappingTag}></${wrappingTag}>`));
+        const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
 
         expect(choiceVals(el.withMap)).to.eql(el.options);
         expect(el.withMap.formElements.length).to.equal(2);
@@ -1717,7 +1715,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       const wrappingTag = unsafeStatic(tagName);
 
       it('calls "_onListboxContentChanged" after externally changing options', async () => {
-        const el = /** @type {MyEl} */ (await _fixture(html`<${wrappingTag}></${wrappingTag}>`));
+        const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
         await el.listbox.registrationComplete;
         // @ts-ignore [allow-protected] in test
         const spy = sinon.spy(el.listbox, '_onListboxContentChanged');

@@ -3,7 +3,14 @@ import { LitElement } from 'lit';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
-import { FormGroupMixin, CustomChoiceGroupMixin } from '@lion/ui/form-core.js';
+import { FormGroupMixin, CustomChoiceGroupMixin, ChoiceInputMixin } from '@lion/ui/form-core.js';
+import { LionInput } from '@lion/ui/input.js';
+
+class CustomChoiceGroup extends CustomChoiceGroupMixin(FormGroupMixin(LitElement)) {}
+customElements.define('custom-choice-input-group', CustomChoiceGroup);
+
+class ChoiceInput extends ChoiceInputMixin(LionInput) {}
+customElements.define('custom-choice-input', ChoiceInput);
 
 class CustomChoiceGroupAllowCustom extends CustomChoiceGroupMixin(FormGroupMixin(LitElement)) {
   constructor() {

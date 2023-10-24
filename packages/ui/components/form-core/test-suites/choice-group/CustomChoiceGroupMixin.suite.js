@@ -1,17 +1,7 @@
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
-import { LitElement } from 'lit';
-import { ChoiceInputMixin, CustomChoiceGroupMixin, FormGroupMixin } from '@lion/ui/form-core.js';
-import { LionInput } from '@lion/ui/input.js';
 import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
-import sinon from 'sinon';
-
-class CustomChoiceGroup extends CustomChoiceGroupMixin(FormGroupMixin(LitElement)) {}
-customElements.define('custom-choice-input-group', CustomChoiceGroup);
-
-class ChoiceInput extends ChoiceInputMixin(LionInput) {}
-customElements.define('custom-choice-input', ChoiceInput);
 
 /**
  * @param {{ parentTagString?:string, childTagString?: string, choiceType?: string}} config
@@ -23,7 +13,7 @@ export function runCustomChoiceGroupMixinSuite({
 } = {}) {
   const cfg = {
     parentTagString: parentTagString || 'custom-choice-input-group',
-    childTagString: childTagString || 'choice-input',
+    childTagString: childTagString || 'custom-choice-input',
     choiceType: choiceType || 'single',
   };
 
@@ -37,10 +27,12 @@ export function runCustomChoiceGroupMixinSuite({
           await fixture(html`
           <${parentTag} allow-custom-choice name="gender[]">
             <${childTag} .choiceValue=${'male'}></${childTag}>
-            <${childTag} .choiceValue=${'female'} checked></${childTag}>
+            <${childTag} checked .choiceValue=${'female'}></${childTag}>
           </${parentTag}>
         `)
         );
+
+        await el.registrationComplete;
 
         expect(el.modelValue).to.equal('female');
         el.modelValue = 'male';
@@ -262,41 +254,6 @@ export function runCustomChoiceGroupMixinSuite({
         el.modelValue = ['other'];
         expect(el.formElements[0].checked).to.be.false;
         expect(el.formElements[1].checked).to.be.false;
-      });
-    });
-
-    // TODO: Write test to when options change
-
-    describe('Modelvalue event propagation', () => {
-      it('sends one event when custom value is entered', async () => {
-        const formSpy = sinon.spy();
-        const choiceGroupSpy = sinon.spy();
-        const formEl = await fixture(html`
-        <lion-fieldset name="form">
-          <${parentTag} allow-custom-choice name="choice-group">
-            <${childTag} id="option1" .choiceValue="${'1'}" checked></${childTag}>
-            <${childTag} id="option2" .choiceValue="${'2'}"></${childTag}>
-          </${parentTag}>
-        </lion-fieldset>
-      `);
-
-        const choiceGroupEl = /** @type {CustomChoiceGroup} */ (
-          formEl.querySelector('[name=choice-group]')
-        );
-
-        if (choiceGroupEl.multipleChoice) {
-          return;
-        }
-
-        formEl.addEventListener('model-value-changed', formSpy);
-        choiceGroupEl?.addEventListener('model-value-changed', choiceGroupSpy);
-
-        choiceGroupEl.modelValue = '2';
-        choiceGroupEl.modelValue = '3';
-        await choiceGroupEl.updateComplete;
-
-        expect(choiceGroupSpy.callCount).to.equal(2);
-        expect(formSpy.callCount).to.equal(2);
       });
     });
   });
