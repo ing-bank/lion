@@ -3,7 +3,28 @@ const fs = require('fs');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { init, parse } = require('es-module-lexer');
 
+let visit;
+(async () => {
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  const result = await import('unist-util-visit');
+  visit = result.visit;
+})();
+
 const nodeModulesText = '/node_modules';
+const mdJsStoriesFileName = '__mdjs-stories.js';
+let pathToMdDirectoryInPublic = '';
+
+/**
+ * @param {UnistNode} _node
+ */
+async function nodeCodeVisitor(_node, index, parent) {
+  if (parent.type === 'heading' && parent.depth === 1) {
+    const parts = pathToMdDirectoryInPublic.split('/');
+    parts.pop();
+    const componentDirectory = parts.join('/');
+    await fs.promises.writeFile(`${componentDirectory}/${mdJsStoriesFileName}`, '', 'utf8');
+  }
+}
 
 /**
  * @param {string} source
@@ -48,6 +69,7 @@ function copyMdjsStories() {
    */
   async function transformer(tree, file) {
     const { setupJsCode } = file.data;
+
     if (!setupJsCode) {
       return tree;
     }
@@ -56,7 +78,6 @@ function copyMdjsStories() {
     const pwd = file.cwd;
     const mdJsStoriesUrlPath = '/mdjs-stories';
     const mdJsStoriesDir = `${pwd}/public${mdJsStoriesUrlPath}`;
-    const mdJsStoriesFileName = '__mdjs-stories.js';
     let parsedPath = '';
 
     if (currentMarkdownFile) {
@@ -66,16 +87,20 @@ function copyMdjsStories() {
     }
 
     const parsedSetupJsCode = await processImports(setupJsCode);
-    const newFolder = `${mdJsStoriesDir}/${parsedPath}`;
-    const newName = path.join(newFolder, mdJsStoriesFileName);
-    await fs.promises.mkdir(newFolder, { recursive: true });
+    pathToMdDirectoryInPublic = `${mdJsStoriesDir}/${parsedPath}`;
+    const newName = path.join(pathToMdDirectoryInPublic, mdJsStoriesFileName);
+    await fs.promises.mkdir(pathToMdDirectoryInPublic, { recursive: true });
     await fs.promises.writeFile(newName, parsedSetupJsCode, 'utf8');
 
     const mdjsStoriesJsNode = {
       type: 'html',
-      value: `<script type="module" src="${mdJsStoriesUrlPath}/${parsedPath}/${mdJsStoriesFileName}" mdjs-setup></script>`,
+      value: `<script type="module" src="${pathToMdDirectoryInPublic}/${mdJsStoriesFileName}" mdjs-setup></script>`,
     };
     tree.children.push(mdjsStoriesJsNode);
+
+    // unifiedjs expects node changes to be made on the given node...
+    await init;
+    visit(tree, 'text', nodeCodeVisitor);
 
     return tree;
   }

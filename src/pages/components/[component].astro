@@ -29,14 +29,11 @@ const componentEntry = getComponentEntry(config);
 const componentGlobs = await Astro.glob('/src/content/docs/components/**/*.md');
 const componentGlob = getComponentGlob(componentGlobs, config);
 const headers = componentGlob.getHeadings().filter(header => header.depth === 2);
-console.log('headers: ', componentGlob.getHeadings());
 const { Content } = await componentEntry.render();
 const inPageNavData = headers.map(header => ({
   name: header.text,
   url: `/${componentEntry.slug}#${header.slug}`
 }));
-
-console.log('inPageNavData: ', inPageNavData)
 ---
 
 <MainLayout title={entry.slug}>

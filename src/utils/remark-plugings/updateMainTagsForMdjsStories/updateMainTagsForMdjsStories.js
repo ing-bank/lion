@@ -1,0 +1,68 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { init, parse } = require('es-module-lexer');
+
+let visit;
+(async () => {
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  const result = await import('unist-util-visit');
+  visit = result.visit;
+})();
+
+let parsedPath = '';
+
+/**
+ * @param {string} code
+ * @param {{type: StoryTypes}} options
+ * @returns {Story}
+ */
+function extractStoryData(code, { type = 'js' } = { type: 'js' }) {
+  const parsed = parse(code);
+  const key = parsed[1][0];
+  const name = key;
+  return { key, name, code, type };
+}
+
+/**
+ * @param {UnistNode} _node
+ */
+const nodeCodeVisitor = _node => {
+  const node = /** @type {UnistNode & {[key: string]: unknown}} */ (_node);
+  if (node.lang === 'js' && node.meta === 'preview-story' && typeof node.value === 'string') {
+    const storyData = extractStoryData(node.value);
+    const mainTagName = storyData.name;
+    const parts = parsedPath.split('/');
+    let mdFileName = parts[parts.length - 1];
+    mdFileName = mdFileName.replaceAll('-', '_');
+    node.value = node.value.replace(mainTagName, `${mainTagName}__${mdFileName}`);
+  }
+};
+
+function updateMainTagsForMdjsStories() {
+  /**
+   * @param {Node} tree
+   * @param {VFileOptions} file
+   */
+  async function transformer(tree, file) {
+    // console.log('tree: ', JSON.stringify(tree, null, " "));
+    const currentMarkdownFile = file.history[0];
+
+    if (currentMarkdownFile) {
+      const leftSideParsedPath = currentMarkdownFile.split('src/content/')[1];
+      // eslint-disable-next-line prefer-destructuring
+      parsedPath = leftSideParsedPath.split('.md')[0];
+    }
+
+    // unifiedjs expects node changes to be made on the given node...
+    await init;
+    // @ts-ignore
+    visit(tree, 'code', nodeCodeVisitor);
+
+    return tree;
+  }
+
+  return transformer;
+}
+
+module.exports = {
+  updateMainTagsForMdjsStories,
+};

@@ -6,6 +6,7 @@
     "build": "astro build",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
+    "clean": "rm -rf ./public/mdjs-stories",
     "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present",
     "debug": "web-test-runner --watch --config web-test-runner-chrome.config.mjs",
     "debug:firefox": "web-test-runner --watch --config web-test-runner-firefox.config.mjs",
