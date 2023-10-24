@@ -1074,11 +1074,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     switch (key) {
       case 'Escape':
         this.opened = false;
-        if (this.requireOptionMatch) {
-          super._listboxOnKeyDown(ev);
-          this._setTextboxValue('');
-        }
+        super._listboxOnKeyDown(ev);
+        this._setTextboxValue('');
         break;
+      case 'Backspace':
       case 'Delete':
         if (this.requireOptionMatch) {
           super._listboxOnKeyDown(ev);

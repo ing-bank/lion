@@ -72,15 +72,18 @@ export async function mimicUserTypingAdvanced(el, values) {
       const selectionEnd = _inputNode.selectionEnd || 0;
       const hasSelection = selectionStart !== selectionEnd;
 
-      if (key === 'Backspace') {
+      if (key === 'Backspace' || key === 'Delete') {
         if (hasSelection) {
           _inputNode.value =
             _inputNode.value.slice(0, selectionStart) + _inputNode.value.slice(selectionEnd);
           cursorPosition = selectionStart;
-        } else if (cursorPosition > 0) {
+        } else if (cursorPosition > 0 && key === 'Backspace') {
           _inputNode.value =
             _inputNode.value.slice(0, cursorPosition - 1) + _inputNode.value.slice(cursorPosition);
           cursorPosition -= 1;
+        } else if (cursorPosition < _inputNode.value.length && key === 'Delete') {
+          _inputNode.value =
+            _inputNode.value.slice(0, cursorPosition) + _inputNode.value.slice(cursorPosition + 1);
         }
       } else if (hasSelection) {
         _inputNode.value =

@@ -645,7 +645,7 @@ describe('lion-combobox', () => {
       expect(el.formElements[0].checked).to.be.false;
     });
 
-    it('allows multi-choice when requireOptionMatch is false', async () => {
+    it('allows custom selections when multi-choice when requireOptionMatch is false', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox
@@ -669,48 +669,60 @@ describe('lion-combobox', () => {
       expect(el.modelValue).to.eql(['Chard']);
       expect(el.checkedIndex).to.eql([1]);
 
-      // If the input matches with an option, select the option
-      mimicUserTyping(el, 'Artichoke');
+      mimicUserTyping(el, 'Foo');
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
 
-      expect(el.modelValue).to.eql(['Artichoke', 'Chard']);
-      expect(el.checkedIndex).to.eql([0, 1]);
+      expect(el.modelValue).to.eql(['Chard', 'Foo']);
+      expect(el.checkedIndex).to.eql([1]);
+
+      mimicUserTyping(el, 'Bar');
+      await el.updateComplete;
+      mimicKeyPress(_inputNode, 'Enter');
+      await el.updateComplete;
+    });
+
+    it('allows manyu custom selections when multi-choice when requireOptionMatch is false', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox
+            name="foo"
+            multiple-choice
+            .validators=${[new Required()]}
+            autocomplete="none"
+          >
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      el.requireOptionMatch = false;
+      await el.updateComplete;
+
+      const { _inputNode } = getComboboxMembers(el);
 
       mimicUserTyping(el, 'Foo');
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
 
-      expect(el.modelValue).to.eql(['Artichoke', 'Chard', 'Foo']);
-      expect(el.checkedIndex).to.eql([0, 1]);
+      expect(el.modelValue).to.eql(['Foo']);
+      expect(el.checkedIndex).to.eql([]);
 
       mimicUserTyping(el, 'Bar');
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
 
-      expect(el.modelValue).to.eql(['Artichoke', 'Chard', 'Foo', 'Bar']);
-      expect(el.checkedIndex).to.eql([0, 1]);
-
-      mimicUserTyping(el, 'Chard');
-      await el.updateComplete;
-      mimicKeyPress(_inputNode, 'Enter');
-      await el.updateComplete;
-
-      expect(el.modelValue).to.eql(['Artichoke', 'Chard', 'Foo', 'Bar']);
-      expect(el.checkedIndex).to.eql([0, 1]);
-
-      mimicUserTyping(el, 'Art');
-      await el.updateComplete;
-      mimicKeyPress(_inputNode, 'Enter');
-      await el.updateComplete;
-
-      expect(el.modelValue).to.eql(['Artichoke', 'Chard', 'Foo', 'Bar', 'Art']);
+      expect(el.modelValue).to.eql(['Foo', 'Bar']);
+      expect(el.checkedIndex).to.eql([]);
     });
 
-    it('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both"', async () => {
+    it('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", without selecting similar values', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox
@@ -737,41 +749,67 @@ describe('lion-combobox', () => {
       await el.updateComplete;
 
       expect(el.modelValue).to.eql(['Artist']);
+    });
 
+    it('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox
+            name="foo"
+            multiple-choice
+            .requireOptionMatch=${false}
+            autocomplete="both"
+          >
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      await el.updateComplete;
+
+      const { _inputNode } = getComboboxMembers(el);
       mimicUserTyping(el, 'Art');
       await el.updateComplete;
-      mimicKeyPress(_inputNode, 'Backspace');
+      await mimicUserTypingAdvanced(el, ['Backspace']);
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
 
-      expect(el.modelValue).to.eql(['Artist', 'Art']);
+      expect(el.modelValue).to.eql(['Art']);
+    });
+
+    it('allows new custom options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocompleted values using Delete', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox
+            name="foo"
+            multiple-choice
+            .requireOptionMatch=${false}
+            autocomplete="both"
+          >
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      await el.updateComplete;
+
+      const { _inputNode } = getComboboxMembers(el);
       el.modelValue = [];
 
       mimicUserTyping(el, 'Art');
       await el.updateComplete;
-      mimicKeyPress(_inputNode, 'Delete');
+      await mimicUserTypingAdvanced(el, ['Delete']);
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
       expect(el.modelValue).to.eql(['Art']);
-
-      mimicUserTyping(el, 'Ar');
-      await el.updateComplete;
-      mimicKeyPress(_inputNode, 'Escape');
-      await el.updateComplete;
-      expect(el.value).to.equal('Ar');
-
-      mimicUserTyping(el, 'A');
-      await el.updateComplete;
-      mimicKeyPress(_inputNode, 'ArrowDown');
-      await el.updateComplete;
-      mimicKeyPress(_inputNode, 'ArrowDown');
-      await el.updateComplete;
-      mimicKeyPress(_inputNode, 'Enter');
-      await el.updateComplete;
-      expect(el.modelValue).to.eql(['Chard', 'Art']);
-      expect(el.value).to.equal('');
     });
   });
 
