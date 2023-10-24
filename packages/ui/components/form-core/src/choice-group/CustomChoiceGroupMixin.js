@@ -126,7 +126,7 @@ const CustomChoiceGroupMixinImplementation = superclass =>
       /**
        * @private
        */
-      this.__firstModelUpdate = false;
+      this.__initialized = false;
     }
 
     /**
@@ -158,14 +158,21 @@ const CustomChoiceGroupMixinImplementation = superclass =>
         changedProperties.has('modelValue') &&
         JSON.stringify(this.modelValue) !== JSON.stringify(changedProperties.get('modelValue'))
       ) {
-        if (!this.__firstModelUpdate) {
-          this.__firstModelUpdate = true;
+        if (!this.__initialized) {
+          this.__initialized = true;
           return;
         }
 
+        /** @event model-value-changed */
         this.dispatchEvent(
-          new Event('model-value-changed', {
+          /** @privateEvent model-value-changed: FormControl redispatches it as public event */
+          new CustomEvent('model-value-changed', {
             bubbles: true,
+            detail: /** @type { ModelValueEventDetails } */ (
+              /** @type {unknown} */ ({
+                formPath: [this],
+              })
+            ),
           }),
         );
       }
