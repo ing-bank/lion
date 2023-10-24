@@ -37,7 +37,7 @@ export function runCustomChoiceGroupMixinSuite({
   const parentTag = unsafeStatic(cfg.parentTagString);
   const childTag = unsafeStatic(cfg.childTagString);
 
-  describe(`ChoiceGroupMixin: ${cfg.parentTagString}`, () => {
+  describe(`CustomChoiceGroupMixin: ${cfg.parentTagString}`, () => {
     if (cfg.choiceType === 'single') {
       it('has a single modelValue representing a custom value', async () => {
         const el = /** @type {CustomChoiceGroup} */ (
