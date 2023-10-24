@@ -168,11 +168,9 @@ const CustomChoiceGroupMixinImplementation = superclass =>
           /** @privateEvent model-value-changed: FormControl redispatches it as public event */
           new CustomEvent('model-value-changed', {
             bubbles: true,
-            detail: /** @type { ModelValueEventDetails } */ (
-              /** @type {unknown} */ ({
-                formPath: [this],
-              })
-            ),
+            detail: {
+              formPath: [this],
+            },
           }),
         );
       }
