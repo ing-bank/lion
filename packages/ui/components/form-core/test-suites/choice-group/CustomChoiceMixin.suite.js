@@ -4,7 +4,7 @@ import '@lion/ui/define/lion-checkbox.js';
 import { LitElement } from 'lit';
 import {
   ChoiceInputMixin,
-  CustomChoiceMixin,
+  CustomChoiceGroupMixin,
   FormGroupMixin,
   ChoiceGroupMixin,
 } from '@lion/ui/form-core.js';
@@ -12,7 +12,9 @@ import { LionInput } from '@lion/ui/input.js';
 import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 
-class CustomChoiceGroup extends CustomChoiceMixin(ChoiceGroupMixin(FormGroupMixin(LitElement))) {}
+class CustomChoiceGroup extends CustomChoiceGroupMixin(
+  ChoiceGroupMixin(FormGroupMixin(LitElement)),
+) {}
 customElements.define('custom-choice-input-group', CustomChoiceGroup);
 
 class ChoiceInput extends ChoiceInputMixin(LionInput) {}
@@ -21,7 +23,11 @@ customElements.define('custom-choice-input', ChoiceInput);
 /**
  * @param {{ parentTagString?:string, childTagString?: string, choiceType?: string}} config
  */
-export function runCustomChoiceMixinSuite({ parentTagString, childTagString, choiceType } = {}) {
+export function runCustomChoiceGroupMixinSuite({
+  parentTagString,
+  childTagString,
+  choiceType,
+} = {}) {
   const cfg = {
     parentTagString: parentTagString || 'custom-choice-input-group',
     childTagString: childTagString || 'choice-input',

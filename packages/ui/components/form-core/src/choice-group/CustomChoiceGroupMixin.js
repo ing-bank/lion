@@ -2,8 +2,8 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ChoiceGroupMixin } from './ChoiceGroupMixin.js';
 
 /**
- * @typedef {import('../../types/choice-group/CustomChoiceMixinTypes.js').CustomChoiceMixin} CustomChoiceMixin
- * @typedef {import('../../types/choice-group/CustomChoiceMixinTypes.js').CustomChoiceHost} CustomChoiceHost
+ * @typedef {import('../../types/choice-group/CustomChoiceGroupMixinTypes.js').CustomChoiceGroupMixin} CustomChoiceGroupMixin
+ * @typedef {import('../../types/choice-group/CustomChoiceGroupMixinTypes.js').CustomChoiceGroupHost} CustomChoiceGroupHost
  */
 
 /**
@@ -17,12 +17,12 @@ function normalizeArray(value) {
 /**
  * Extends the ChoiceGroupMixin to add optional support for custom user choices without altering the initial choice list.
  *
- * @type {CustomChoiceMixin}
+ * @type {CustomChoiceGroupMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const CustomChoiceMixinImplementation = superclass =>
+const CustomChoiceGroupMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
-  class CustomChoiceMixin extends ChoiceGroupMixin(superclass) {
+  class CustomChoiceGroupMixin extends ChoiceGroupMixin(superclass) {
     static get properties() {
       return {
         allowCustomChoice: {
@@ -179,4 +179,4 @@ const CustomChoiceMixinImplementation = superclass =>
     }
   };
 
-export const CustomChoiceMixin = dedupeMixin(CustomChoiceMixinImplementation);
+export const CustomChoiceGroupMixin = dedupeMixin(CustomChoiceGroupMixinImplementation);

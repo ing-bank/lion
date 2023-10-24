@@ -49,6 +49,6 @@ export { LionValidationFeedback } from '../components/form-core/src/validate/Lio
 
 export { ChoiceGroupMixin } from '../components/form-core/src/choice-group/ChoiceGroupMixin.js';
 export { ChoiceInputMixin } from '../components/form-core/src/choice-group/ChoiceInputMixin.js';
-export { CustomChoiceMixin } from '../components/form-core/src/choice-group/CustomChoiceMixin.js';
+export { CustomChoiceGroupMixin } from '../components/form-core/src/choice-group/CustomChoiceGroupMixin.js';
 
 export { FormGroupMixin } from '../components/form-core/src/form-group/FormGroupMixin.js';

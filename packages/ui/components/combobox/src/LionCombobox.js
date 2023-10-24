@@ -1,5 +1,5 @@
 import { browserDetection } from '@lion/ui/core.js';
-import { Unparseable, CustomChoiceMixin } from '@lion/ui/form-core.js';
+import { Unparseable, CustomChoiceGroupMixin } from '@lion/ui/form-core.js';
 import { LionListbox } from '@lion/ui/listbox.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
@@ -27,7 +27,7 @@ const matchA11ySpanReverseFns = new WeakMap();
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
  */
-export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceMixin(LionListbox))) {
+export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMixin(LionListbox))) {
   /** @type {any} */
   static get properties() {
     return {
@@ -365,24 +365,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceMixin(L
   }
 
   /**
-   * @type {number | number[]}
-   */
-  // @ts-ignore
-  get checkedIndex() {
-    return super.checkedIndex;
-  }
-
-  /**
-   * @deprecated
-   * This setter exists for backwards compatibility of single choice groups.
-   * A setter api would be confusing for a multipleChoice group. Use `setCheckedIndex` instead.
-   * @param {number|number[]} index
-   */
-  set checkedIndex(index) {
-    super.checkedIndex = index;
-  }
-
-  /**
    * @returns {boolean}
    */
   get requireOptionMatch() {
@@ -486,16 +468,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceMixin(L
     if (this._selectionDisplayNode) {
       this._selectionDisplayNode.comboboxElement = this;
     }
-  }
-
-  /**
-   * If an array is passed for multiple-choice, it will check the indexes in array, and uncheck the rest
-   * If a number is passed, the item with the passed index is checked without unchecking others
-   * For single choice, __onChildCheckedChanged we ensure that we uncheck siblings
-   * @param {number|number[]} index
-   */
-  setCheckedIndex(index) {
-    super.setCheckedIndex(index);
   }
 
   /**

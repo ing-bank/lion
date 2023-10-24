@@ -3,7 +3,7 @@ import { LitElement } from 'lit';
 
 import { ChoiceGroupHost } from './ChoiceGroupMixinTypes.js';
 
-export declare class CustomChoiceHost {
+export declare class CustomChoiceGroupHost {
   allowCustomChoice: boolean;
   get modelValue(): any;
   set modelValue(value: any);
@@ -15,13 +15,13 @@ export declare class CustomChoiceHost {
   protected _isEmpty(): boolean;
 }
 
-export declare function CustomChoiceImplementation<T extends Constructor<LitElement>>(
+export declare function CustomChoiceGroupImplementation<T extends Constructor<LitElement>>(
   superclass: T,
 ): T &
-  Constructor<CustomChoiceHost> &
-  Pick<typeof CustomChoiceHost, keyof typeof CustomChoiceHost> &
+  Constructor<CustomChoiceGroupHost> &
+  Pick<typeof CustomChoiceGroupHost, keyof typeof CustomChoiceGroupHost> &
   Constructor<ChoiceGroupHost> &
   Pick<typeof ChoiceGroupHost, keyof typeof ChoiceGroupHost> &
   Pick<typeof LitElement, keyof typeof LitElement>;
 
-export type CustomChoiceMixin = typeof CustomChoiceImplementation;
+export type CustomChoiceGroupMixin = typeof CustomChoiceGroupImplementation;
