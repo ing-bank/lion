@@ -4,6 +4,11 @@ import '@lion/ui/define/lion-checkbox.js';
 import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
 
 /**
+ *
+ * @typedef {import('../../test/choice-group/CustomChoiceGroupMixin.test.js').CustomChoiceGroup} CustomChoiceGroup
+ */
+
+/**
  * @param {{ parentTagString?:string, childTagString?: string, choiceType?: string}} config
  */
 export function runCustomChoiceGroupMixinSuite({

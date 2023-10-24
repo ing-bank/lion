@@ -6,7 +6,7 @@ import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
 
-class CustomChoiceGroup extends CustomChoiceGroupMixin(FormGroupMixin(LitElement)) {}
+export class CustomChoiceGroup extends CustomChoiceGroupMixin(FormGroupMixin(LitElement)) {}
 customElements.define('custom-choice-input-group', CustomChoiceGroup);
 
 class ChoiceInput extends ChoiceInputMixin(LionInput) {}
