@@ -1110,7 +1110,9 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
           this.opened = false;
         } else {
           super._listboxOnKeyDown(ev);
-          this._inputNode.value = '';
+          if (this.requireOptionMatch) {
+            this._inputNode.value = '';
+          }
         }
         if (!this.multipleChoice) {
           this.opened = false;

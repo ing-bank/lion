@@ -592,6 +592,35 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('Foo');
     });
 
+    it("doesn't select any similar options after using delete when requireOptionMatch is false", async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" .validators=${[new Required()]}>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      el.requireOptionMatch = false;
+      const { _inputNode } = getComboboxMembers(el);
+
+      mimicUserTyping(el, 'Art');
+      await el.updateComplete;
+
+      await mimicUserTypingAdvanced(el, ['Delete']);
+      await el.updateComplete;
+      await el.updateComplete;
+
+      mimicKeyPress(_inputNode, 'Enter');
+      await el.updateComplete;
+
+      expect(el.checkedIndex).to.equal(-1);
+      expect(el.modelValue).to.equal('Art');
+      expect(_inputNode.value).to.equal('Art');
+    });
+
     it("when removing a letter it won't select the option", async () => {
       // We don't autocomplete when characters are removed
       const el = /** @type {LionCombobox} */ (
