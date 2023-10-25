@@ -12,6 +12,9 @@ export declare class CustomChoiceGroupHost {
   get formattedValue(): string;
   set formattedValue(value: string);
 
+  clear(): void;
+  parser(value: string | string[]): string | string[];
+
   protected _isEmpty(): boolean;
 }
 

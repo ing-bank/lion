@@ -506,14 +506,20 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
 
   /**
    * Converts viewValue to modelValue
-   * @param {string} value - viewValue: the formatted value inside <input>
+   * @override CustomChoiceGroupMixin
+   * @param {string|string[]} value - viewValue: the formatted value inside <input>
    * @returns {*} modelValue
    */
   parser(value) {
-    if (this.requireOptionMatch && this.checkedIndex === -1 && value !== '') {
+    if (
+      this.requireOptionMatch &&
+      this.checkedIndex === -1 &&
+      value !== '' &&
+      !Array.isArray(value)
+    ) {
       return new Unparseable(value);
     }
-    return value;
+    return super.parser(value);
   }
 
   /**
@@ -1104,7 +1110,8 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
             !this.opened)
         ) {
           ev.preventDefault();
-          this.modelValue = [...this.modelValue, this._inputNode.value];
+
+          this.modelValue = this.parser([...this.modelValue, this._inputNode.value]);
 
           this._inputNode.value = '';
           this.opened = false;

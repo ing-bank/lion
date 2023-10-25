@@ -568,6 +568,33 @@ describe('lion-combobox', () => {
       expect(el.showsFeedbackFor).to.include('error', 'showsFeedbackFor');
     });
 
+    it('ignores empty string modelValue inputs', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice autocomplete="none">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      el.requireOptionMatch = false;
+      await el.updateComplete;
+      const { _inputNode } = getComboboxMembers(el);
+
+      mimicKeyPress(_inputNode, 'Enter');
+      await el.updateComplete;
+      expect(el.modelValue).to.eql([]);
+
+      mimicUserTyping(el, ' ');
+      await el.updateComplete;
+      mimicKeyPress(_inputNode, 'Enter');
+      await el.updateComplete;
+      expect(el.modelValue).to.eql([]);
+    });
+
     it('allows a value outside of the option list when requireOptionMatch is false', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`

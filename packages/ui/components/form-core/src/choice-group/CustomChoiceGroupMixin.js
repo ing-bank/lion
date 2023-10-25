@@ -187,6 +187,18 @@ const CustomChoiceGroupMixinImplementation = superclass =>
       this._customChoices = new Set();
       super.clear();
     }
+
+    /**
+     * @param {string|string[]} value
+     * @returns {*}
+     */
+    parser(value) {
+      if (this.allowCustomChoice && Array.isArray(value)) {
+        return value.filter(v => v.trim() !== '');
+      }
+
+      return value;
+    }
   };
 
 export const CustomChoiceGroupMixin = dedupeMixin(CustomChoiceGroupMixinImplementation);
