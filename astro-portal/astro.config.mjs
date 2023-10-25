@@ -1,7 +1,7 @@
-import { defineConfig } from "astro/config";
-import lit from "@astrojs/lit";
+import { defineConfig } from 'astro/config';
+import lit from '@astrojs/lit';
 import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
-import lionIntegration from './src/utils/astrojs-integration/lion/lion-integration.mjs'
+import lionIntegration from './src/utils/astrojs-integration/lion/lion-integration.mjs';
 import { copyMdjsStories } from './src/utils/remark-plugings/copyMdjsStories/index.js';
 
 const mdjsSetupConfig = {
@@ -19,7 +19,7 @@ const mdjsSetupConfig = {
 // https://astro.build/config
 export default defineConfig({
   integrations: [lit(), lionIntegration()],
-  markdown: {  
+  markdown: {
     remarkPlugins: [mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
   },
   vite: {
@@ -31,7 +31,7 @@ export default defineConfig({
     // 6 │ await init;
     // ```
     optimizeDeps: {
-      exclude: ['rocket-preset-extend-lion-docs']
+      exclude: ['rocket-preset-extend-lion-docs'],
     },
     // Fix taken from https://github.com/vitejs/vite/issues/6985#issuecomment-1044375490.
     // It throws an error otherwise:

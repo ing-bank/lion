@@ -1,10 +1,12 @@
 import path from 'path';
 // @ts-ignore
 import remarkExtendPkg from 'remark-extend';
-// eslint-disable-next-line import/named
 import {
+  // eslint-disable-next-line import/named
   remarkExtendLionDocsTransformJs,
+  // eslint-disable-next-line import/named
   remarkUrlToLocal,
+  // eslint-disable-next-line import/named
   generateExtendDocsConfig,
 } from 'rocket-preset-extend-lion-docs';
 
