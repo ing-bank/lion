@@ -34,12 +34,23 @@ const inPageNavData = headers.map(header => ({
   name: header.text,
   url: `/${componentEntry.slug}#${header.slug}`
 }));
+
+// docs/components/button/overview
+const componentEntrySlug =  componentEntry.slug;
+const componentEntrySlugArr = componentEntry.slug.split('/');
+// docs/components/button
+componentEntrySlugArr.pop();
+const componentDirectory = componentEntrySlugArr.join('/');
+
+
 ---
 
 <MainLayout title={entry.slug}>
   <ComponentLayout frontmatter={entry.data}>
     <UIPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
     <Content/>
+    <!-- <script type="module" src="{`/public/mdjs-stories/docs/${componentDirectory}/__mdjs-stories.js`}" mdjs-setup></script> -->
+    <script type="module" src={`/public/mdjs-stories/docs/${componentDirectory}/__mdjs-stories.js`} mdjs-setup></script>
   </ComponentLayout>
 </MainLayout>
   

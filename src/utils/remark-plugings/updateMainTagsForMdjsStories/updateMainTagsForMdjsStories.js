@@ -37,13 +37,19 @@ const nodeCodeVisitor = _node => {
   }
 };
 
+// const cleanMdjsDirectoryInPublic = (file) => {
+//   const cwd = file.cwd;
+//   const mdJsStoriesUrlPath = '/mdjs-stories';
+//   const mdJsStoriesDir = `${cwd}/public${mdJsStoriesUrlPath}`;
+//   fs.rmSync(mdJsStoriesDir, { recursive: true, force: true });
+// }
+
 function updateMainTagsForMdjsStories() {
   /**
    * @param {Node} tree
    * @param {VFileOptions} file
    */
   async function transformer(tree, file) {
-    // console.log('tree: ', JSON.stringify(tree, null, " "));
     const currentMarkdownFile = file.history[0];
 
     if (currentMarkdownFile) {
@@ -51,6 +57,8 @@ function updateMainTagsForMdjsStories() {
       // eslint-disable-next-line prefer-destructuring
       parsedPath = leftSideParsedPath.split('.md')[0];
     }
+
+    // cleanMdjsDirectoryInPublic(file);
 
     // unifiedjs expects node changes to be made on the given node...
     await init;

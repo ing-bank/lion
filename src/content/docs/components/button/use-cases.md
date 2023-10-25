@@ -113,4 +113,3 @@ To get this particular implicit form submission to work, having a native button 
 Therefore, not only do we flash a native button on the form to delegate `<lion-button-submit>` trigger to `<button>`
 and thereby trigger form submission, we **also** add a native `button` inside the `<lion-button-submit>`
 whose `type` property is synchronized with the type of the `<lion-button-submit>`.
-

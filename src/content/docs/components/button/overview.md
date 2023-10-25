@@ -10,8 +10,8 @@ type: component-development
 A button web component that is easily stylable and accessible.
 
 ```js script
-import { html } from "@mdjs/mdjs-preview";
-import "@lion/ui/define/lion-button.js";
+import { html } from '@mdjs/mdjs-preview';
+import '@lion/ui/define/lion-button.js';
 ```
 
 ```js preview-story
@@ -31,11 +31,7 @@ npm i --save @lion/ui
 ```
 
 ```js
-import {
-  LionButton,
-  LionButtonReset,
-  LionButtonSubmit,
-} from "@lion/ui/button.js";
+import { LionButton, LionButtonReset, LionButtonSubmit } from '@lion/ui/button.js';
 // or
-import "@lion/ui/define/lion-button.js";
+import '@lion/ui/define/lion-button.js';
 ```
