@@ -105,23 +105,27 @@ function copyMdjsStories() {
       parsedPath = leftSideParsedPath.split('.md')[0];
     }
 
+    // console.log('\n\n setupJsCode: ', setupJsCode);
     const parsedSetupJsCode = await processImports(setupJsCode);
     pathToMdDirectoryInPublic = `${mdJsStoriesDir}/${parsedPath}`;
     const newName = path.join(pathToMdDirectoryInPublic, mdJsStoriesFileName);
     await fs.promises.mkdir(pathToMdDirectoryInPublic, { recursive: true });
+    // console.log('\n\n parsedSetupJsCode: ', parsedSetupJsCode);
     await fs.promises.writeFile(newName, parsedSetupJsCode, 'utf8');
 
     const parts = pathToMdDirectoryInPublic.split('/');
     parts.pop();
-    // const componentDirectoryInPublic = parts.join('/');
-    // const commonMdjsStoriesFileName = `${componentDirectoryInPublic}/${mdJsStoriesFileName}`;
-    // const relativeUrl = commonMdjsStoriesFileName.substring(commonMdjsStoriesFileName.indexOf('/public/'));
+    const componentDirectoryInPublic = parts.join('/');
+    const commonMdjsStoriesFileName = `${componentDirectoryInPublic}/${mdJsStoriesFileName}`;
+    const relativeUrl = commonMdjsStoriesFileName.substring(
+      commonMdjsStoriesFileName.indexOf('/public/'),
+    );
 
-    // const mdjsStoriesJsNode = {
-    //   type: 'html',
-    //   value: `<script type="module" src="${relativeUrl}" mdjs-setup></script>`,
-    // };
-    // tree.children.push(mdjsStoriesJsNode);
+    const mdjsStoriesJsNode = {
+      type: 'html',
+      value: `<script type="module" src="${relativeUrl}" mdjs-setup></script>`,
+    };
+    tree.children.push(mdjsStoriesJsNode);
 
     // unifiedjs expects node changes to be made on the given node...
     await init;
