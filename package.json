@@ -22,7 +22,7 @@
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
-    "patch-node-modules": "./src/utils/patches/copy.sh",
+    "patch-node-modules": "./src/utils/patches/patch.sh",
     "prepare": "husky install",
     "preview": "astro preview",
     "release": "changeset publish",

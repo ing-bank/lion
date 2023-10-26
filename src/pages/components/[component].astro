@@ -49,7 +49,6 @@ const componentDirectory = componentEntrySlugArr.join('/');
   <ComponentLayout frontmatter={entry.data}>
     <UIPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
     <Content/>
-    <!-- <script type="module" src="{`/public/mdjs-stories/docs/${componentDirectory}/__mdjs-stories.js`}" mdjs-setup></script> -->
     <script type="module" src={`/public/mdjs-stories/docs/${componentDirectory}/__mdjs-stories.js`} mdjs-setup></script>
   </ComponentLayout>
 </MainLayout>

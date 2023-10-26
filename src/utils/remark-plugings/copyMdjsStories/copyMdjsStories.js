@@ -12,36 +12,6 @@ let visit;
 
 const nodeModulesText = '/node_modules';
 const mdJsStoriesFileName = '__mdjs-stories.js';
-let pathToMdDirectoryInPublic = '';
-let currentMarkdownFile = '';
-
-/**
- * @param {UnistNode} _node
- */
-async function nodeCodeVisitor(_node, index, parent) {
-  if (parent.type === 'heading' && parent.depth === 1) {
-    const parts = pathToMdDirectoryInPublic.split('/');
-    const mdFileDirectoryName = parts.pop();
-    const componentDirectoryInPublic = parts.join('/');
-    const commonMdjsStoriesFileName = `${componentDirectoryInPublic}/${mdJsStoriesFileName}`;
-    let commonMdjsStoriesContent = '';
-    try {
-      commonMdjsStoriesContent = fs.readFileSync(commonMdjsStoriesFileName).toString();
-    } catch (ex) {
-      // noop. File is not yet created for the component
-    }
-
-    const exportCmd = `export * from './${mdFileDirectoryName}/${mdJsStoriesFileName}' \n`;
-
-    if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
-      await fs.promises.writeFile(
-        commonMdjsStoriesFileName,
-        commonMdjsStoriesContent + exportCmd,
-        'utf8',
-      );
-    }
-  }
-}
 
 /**
  * @param {string} source
@@ -85,15 +55,44 @@ function copyMdjsStories() {
    * @param {VFileOptions} file
    */
   async function transformer(tree, file) {
-    const { setupJsCode } = file.data;
+    let pathToMdDirectoryInPublic = '';
+    let currentMarkdownFile = '';
 
+    /**
+     * @param {UnistNode} _node
+     */
+    async function nodeCodeVisitor(_node, index, parent) {
+      if (parent.type === 'heading' && parent.depth === 1) {
+        const parts = pathToMdDirectoryInPublic.split('/');
+        const mdFileDirectoryName = parts.pop();
+        const componentDirectoryInPublic = parts.join('/');
+        const commonMdjsStoriesFileName = `${componentDirectoryInPublic}/${mdJsStoriesFileName}`;
+        let commonMdjsStoriesContent = '';
+        try {
+          commonMdjsStoriesContent = fs.readFileSync(commonMdjsStoriesFileName).toString();
+        } catch (ex) {
+          // noop. File is not yet created for the component
+        }
+
+        const exportCmd = `export * from './${mdFileDirectoryName}/${mdJsStoriesFileName}' \n`;
+
+        if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
+          await fs.promises.writeFile(
+            commonMdjsStoriesFileName,
+            commonMdjsStoriesContent + exportCmd,
+            'utf8',
+          );
+        }
+      }
+    }
+
+    const { setupJsCode } = file.data;
     if (!setupJsCode) {
       return tree;
     }
 
     // eslint-disable-next-line prefer-destructuring
     currentMarkdownFile = file.history[0];
-    console.log('currentMarkdownFile: ', currentMarkdownFile);
     const { cwd } = file;
     const mdJsStoriesUrlPath = '/mdjs-stories';
     const mdJsStoriesDir = `${cwd}/public${mdJsStoriesUrlPath}`;
@@ -105,27 +104,11 @@ function copyMdjsStories() {
       parsedPath = leftSideParsedPath.split('.md')[0];
     }
 
-    // console.log('\n\n setupJsCode: ', setupJsCode);
     const parsedSetupJsCode = await processImports(setupJsCode);
     pathToMdDirectoryInPublic = `${mdJsStoriesDir}/${parsedPath}`;
     const newName = path.join(pathToMdDirectoryInPublic, mdJsStoriesFileName);
     await fs.promises.mkdir(pathToMdDirectoryInPublic, { recursive: true });
-    // console.log('\n\n parsedSetupJsCode: ', parsedSetupJsCode);
     await fs.promises.writeFile(newName, parsedSetupJsCode, 'utf8');
-
-    const parts = pathToMdDirectoryInPublic.split('/');
-    parts.pop();
-    const componentDirectoryInPublic = parts.join('/');
-    const commonMdjsStoriesFileName = `${componentDirectoryInPublic}/${mdJsStoriesFileName}`;
-    const relativeUrl = commonMdjsStoriesFileName.substring(
-      commonMdjsStoriesFileName.indexOf('/public/'),
-    );
-
-    const mdjsStoriesJsNode = {
-      type: 'html',
-      value: `<script type="module" src="${relativeUrl}" mdjs-setup></script>`,
-    };
-    tree.children.push(mdjsStoriesJsNode);
 
     // unifiedjs expects node changes to be made on the given node...
     await init;

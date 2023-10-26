@@ -8,8 +8,6 @@ let visit;
   visit = result.visit;
 })();
 
-let parsedPath = '';
-
 /**
  * @param {string} code
  * @param {{type: StoryTypes}} options
@@ -22,29 +20,24 @@ function extractStoryData(code, { type = 'js' } = { type: 'js' }) {
   return { key, name, code, type };
 }
 
-/**
- * @param {UnistNode} _node
- */
-const nodeCodeVisitor = _node => {
-  const node = /** @type {UnistNode & {[key: string]: unknown}} */ (_node);
-  if (node.lang === 'js' && node.meta === 'preview-story' && typeof node.value === 'string') {
-    const storyData = extractStoryData(node.value);
-    const mainTagName = storyData.name;
-    const parts = parsedPath.split('/');
-    let mdFileName = parts[parts.length - 1];
-    mdFileName = mdFileName.replaceAll('-', '_');
-    node.value = node.value.replace(mainTagName, `${mainTagName}__${mdFileName}`);
-  }
-};
-
-// const cleanMdjsDirectoryInPublic = (file) => {
-//   const cwd = file.cwd;
-//   const mdJsStoriesUrlPath = '/mdjs-stories';
-//   const mdJsStoriesDir = `${cwd}/public${mdJsStoriesUrlPath}`;
-//   fs.rmSync(mdJsStoriesDir, { recursive: true, force: true });
-// }
-
 function updateMainTagsForMdjsStories() {
+  let parsedPath = '';
+
+  /**
+   * @param {UnistNode} _node
+   */
+  const nodeCodeVisitor = _node => {
+    const node = /** @type {UnistNode & {[key: string]: unknown}} */ (_node);
+    if (node.lang === 'js' && node.meta === 'preview-story' && typeof node.value === 'string') {
+      const storyData = extractStoryData(node.value);
+      const mainTagName = storyData.name;
+      const parts = parsedPath.split('/');
+      let mdFileName = parts[parts.length - 1];
+      mdFileName = mdFileName.replaceAll('-', '_');
+      node.value = node.value.replace(mainTagName, `${mainTagName}__${mdFileName}`);
+    }
+  };
+
   /**
    * @param {Node} tree
    * @param {VFileOptions} file
@@ -57,8 +50,6 @@ function updateMainTagsForMdjsStories() {
       // eslint-disable-next-line prefer-destructuring
       parsedPath = leftSideParsedPath.split('.md')[0];
     }
-
-    // cleanMdjsDirectoryInPublic(file);
 
     // unifiedjs expects node changes to be made on the given node...
     await init;
