@@ -15,7 +15,7 @@
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
     "format:prettier": "prettier \"**/*.{js,md}\" \"packages/*/package.json\" \"package.json\" --write",
-    "postinstall": "npx patch-package && npm run custom-elements-manifest && patch-node-modules",
+    "postinstall": "npx patch-package && npm run custom-elements-manifest && npm run patch-node-modules",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .js,.html .",
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md}'",
