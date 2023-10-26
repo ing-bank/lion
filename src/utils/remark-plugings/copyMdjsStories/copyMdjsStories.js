@@ -3,7 +3,15 @@ const fs = require('fs');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { init, parse } = require('es-module-lexer');
 
+let visit;
+(async () => {
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  const result = await import('unist-util-visit');
+  visit = result.visit;
+})();
+
 const nodeModulesText = '/node_modules';
+const mdJsStoriesFileName = '__mdjs-stories.js';
 
 /**
  * @param {string} source
@@ -47,16 +55,47 @@ function copyMdjsStories() {
    * @param {VFileOptions} file
    */
   async function transformer(tree, file) {
+    let pathToMdDirectoryInPublic = '';
+    let currentMarkdownFile = '';
+
+    /**
+     * @param {UnistNode} _node
+     */
+    async function nodeCodeVisitor(_node, index, parent) {
+      if (parent.type === 'heading' && parent.depth === 1) {
+        const parts = pathToMdDirectoryInPublic.split('/');
+        const mdFileDirectoryName = parts.pop();
+        const componentDirectoryInPublic = parts.join('/');
+        const commonMdjsStoriesFileName = `${componentDirectoryInPublic}/${mdJsStoriesFileName}`;
+        let commonMdjsStoriesContent = '';
+        try {
+          commonMdjsStoriesContent = fs.readFileSync(commonMdjsStoriesFileName).toString();
+        } catch (ex) {
+          // noop. File is not yet created for the component
+        }
+
+        const exportCmd = `export * from './${mdFileDirectoryName}/${mdJsStoriesFileName}' \n`;
+
+        if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
+          await fs.promises.writeFile(
+            commonMdjsStoriesFileName,
+            commonMdjsStoriesContent + exportCmd,
+            'utf8',
+          );
+        }
+      }
+    }
+
     const { setupJsCode } = file.data;
     if (!setupJsCode) {
       return tree;
     }
 
-    const currentMarkdownFile = file.history[0];
-    const pwd = file.cwd;
+    // eslint-disable-next-line prefer-destructuring
+    currentMarkdownFile = file.history[0];
+    const { cwd } = file;
     const mdJsStoriesUrlPath = '/mdjs-stories';
-    const mdJsStoriesDir = `${pwd}/public${mdJsStoriesUrlPath}`;
-    const mdJsStoriesFileName = '__mdjs-stories.js';
+    const mdJsStoriesDir = `${cwd}/public${mdJsStoriesUrlPath}`;
     let parsedPath = '';
 
     if (currentMarkdownFile) {
@@ -66,16 +105,14 @@ function copyMdjsStories() {
     }
 
     const parsedSetupJsCode = await processImports(setupJsCode);
-    const newFolder = `${mdJsStoriesDir}/${parsedPath}`;
-    const newName = path.join(newFolder, mdJsStoriesFileName);
-    await fs.promises.mkdir(newFolder, { recursive: true });
+    pathToMdDirectoryInPublic = `${mdJsStoriesDir}/${parsedPath}`;
+    const newName = path.join(pathToMdDirectoryInPublic, mdJsStoriesFileName);
+    await fs.promises.mkdir(pathToMdDirectoryInPublic, { recursive: true });
     await fs.promises.writeFile(newName, parsedSetupJsCode, 'utf8');
 
-    const mdjsStoriesJsNode = {
-      type: 'html',
-      value: `<script type="module" src="${mdJsStoriesUrlPath}/${parsedPath}/${mdJsStoriesFileName}" mdjs-setup></script>`,
-    };
-    tree.children.push(mdjsStoriesJsNode);
+    // unifiedjs expects node changes to be made on the given node...
+    await init;
+    visit(tree, 'text', nodeCodeVisitor);
 
     return tree;
   }

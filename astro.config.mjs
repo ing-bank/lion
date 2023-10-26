@@ -3,6 +3,7 @@ import lit from "@astrojs/lit";
 import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
 import lionIntegration from './src/utils/astrojs-integration/lion/lion-integration.mjs'
 import { copyMdjsStories } from './src/utils/remark-plugings/copyMdjsStories/index.js';
+import { updateMainTagsForMdjsStories } from './src/utils/remark-plugings/updateMainTagsForMdjsStories/index.js';
 
 const mdjsSetupConfig = {
   simulationSettings: {
@@ -20,7 +21,7 @@ const mdjsSetupConfig = {
 export default defineConfig({
   integrations: [lit(), lionIntegration()],
   markdown: {  
-    remarkPlugins: [mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
+    remarkPlugins: [updateMainTagsForMdjsStories, mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
   },
   vite: {
     // the fix is copied from https://github.com/withastro/astro/issues/5517#issuecomment-1337328843.
