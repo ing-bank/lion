@@ -16,7 +16,7 @@ export const fundamentalsEntries = allPages.filter(isFundamentalsEntry);
 export const getInfoParentSlug = entry => entry.slug.split('/info')[0];
 
 
-export const getComponentEntry = (config) => {
+export const getComponentEntries = (config) => {
   return componentPageEntries.filter(componentEntry => {
     let match = true;
     Object.keys(config).forEach(key => {
@@ -28,19 +28,5 @@ export const getComponentEntry = (config) => {
     if (match) {
       return true;
     }    
-  })[0];
-}
-export const getComponentGlob = (globArray, config) => {
-  return globArray.filter(componentGlob => {
-    let match = true;
-    Object.keys(config).forEach(key => {
-      if (componentGlob.frontmatter[key] !== config[key]) {
-        match = false;
-      }
-    });
-
-    if (match) {
-      return true;
-    }    
-  })[0];
+  });
 }
