@@ -1,5 +1,1 @@
-const { copyMdjsStories } = require('./copyMdjsStories');
-
-module.exports = {
-    copyMdjsStories
-};
+export { copyMdjsStories } from './copyMdjsStories.js';

@@ -5,6 +5,25 @@ import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
 import lionIntegration from './src/utils/astrojs-integration/lion/lion-integration.js';
 import { copyMdjsStories } from './src/utils/remark-plugings/copyMdjsStories/index.js';
 import { extendLionDocsInstance } from './src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js';
+// import rollup from 'astro-rollup';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { globby } from 'globby';
+
+const publicJsFiles = await globby('public/**/*.js');
+const publicMdFilesObj = Object.fromEntries(
+  publicJsFiles.map(file => [
+    // This remove `src/` as well as the file extension from each
+    // file, so e.g. src/nested/foo.js becomes nested/foo
+    path.relative('public', file.slice(0, file.length - path.extname(file).length)),
+    // This expands the relative paths to absolute paths, so e.g.
+    // src/nested/foo becomes /project/src/nested/foo.js
+    fileURLToPath(new URL(file, import.meta.url)),
+  ]),
+);
+
+console.log('publicMdFilesObj: ', publicMdFilesObj);
 
 const mdjsSetupConfig = {
   simulationSettings: {
@@ -18,6 +37,8 @@ const mdjsSetupConfig = {
   },
 };
 
+console.log(import.meta.env.MODE);
+
 // https://astro.build/config
 export default defineConfig({
   integrations: [lit(), lionIntegration()],
@@ -27,7 +48,7 @@ export default defineConfig({
       /*...extendLionDocsInstance,*/ mdjsParse,
       mdjsStoryParse,
       [mdjsSetupCode, mdjsSetupConfig],
-      copyMdjsStories,
+      [copyMdjsStories, { mode: import.meta.env.MODE }],
     ],
     // lion
     //remarkPlugins: [mdjsParse, mdjsStoryParse, [mdjsSetupCode, mdjsSetupConfig], copyMdjsStories],
@@ -41,8 +62,9 @@ export default defineConfig({
     // 6 │ await init;
     // ```
     optimizeDeps: {
-      exclude: ['rocket-preset-extend-lion-docs'],
+      exclude: ['rocket-preset-extend-lion-docs', 'lit'],
     },
+
     // Fix taken from https://github.com/vitejs/vite/issues/6985#issuecomment-1044375490.
     // It throws an error otherwise:
     // ```
@@ -53,5 +75,34 @@ export default defineConfig({
     // build: {
     //   target: 'esnext'
     // },
+
+    build: {
+      rollupOptions: {
+        input: publicMdFilesObj,
+        // output: {
+        //   dir: 'kist',
+        //   format: 'esm',
+        //   entryFileNames: '[name]/__mdjs-stories.js',
+        // },
+        plugins: [
+          {
+            name: 'q-d',
+            resolveId: importee => {
+              console.log('importee: ', importee);
+              return null;
+            },
+            load(id) {
+              console.log('id: ', id);
+
+              if (id === 'virtual-module') {
+                // the source code for "virtual-module"
+                return 'export default "This is virtual!"';
+              }
+              return null; // other ids should be handled as usually
+            },
+          },
+        ],
+      },
+    },
   },
 });

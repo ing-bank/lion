@@ -22,6 +22,7 @@
     "rocket-preset-extend-lion-docs": "^0.4.0"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "globby": "^13.2.2"

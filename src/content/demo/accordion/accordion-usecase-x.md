@@ -5,8 +5,8 @@ description: All accordion panels are collapsed by default.
 ---
 
 ```js script
+import '@lion/ui/define/lion-accordion.js';
 import { html } from 'lit';
-// import '@lion/ui/define/lion-accordion.js';
 ```
 
 ```html preview-story
