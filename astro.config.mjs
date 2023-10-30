@@ -62,7 +62,7 @@ export default defineConfig({
     // 6 │ await init;
     // ```
     optimizeDeps: {
-      exclude: ['rocket-preset-extend-lion-docs', 'lit'],
+      exclude: ['rocket-preset-extend-lion-docs'],
     },
 
     // Fix taken from https://github.com/vitejs/vite/issues/6985#issuecomment-1044375490.
@@ -76,33 +76,33 @@ export default defineConfig({
     //   target: 'esnext'
     // },
 
-    build: {
-      rollupOptions: {
-        input: publicMdFilesObj,
-        // output: {
-        //   dir: 'kist',
-        //   format: 'esm',
-        //   entryFileNames: '[name]/__mdjs-stories.js',
-        // },
-        plugins: [
-          {
-            name: 'q-d',
-            resolveId: importee => {
-              console.log('importee: ', importee);
-              return null;
-            },
-            load(id) {
-              console.log('id: ', id);
+    // build: {
+    //   rollupOptions: {
+    //     input: publicMdFilesObj,
+    //     // output: {
+    //     //   dir: 'kist',
+    //     //   format: 'esm',
+    //     //   entryFileNames: '[name]/__mdjs-stories.js',
+    //     // },
+    //     plugins: [
+    //       {
+    //         name: 'q-d',
+    //         resolveId: importee => {
+    //           console.log('importee: ', importee);
+    //           return null;
+    //         },
+    //         load(id) {
+    //           console.log('id: ', id);
 
-              if (id === 'virtual-module') {
-                // the source code for "virtual-module"
-                return 'export default "This is virtual!"';
-              }
-              return null; // other ids should be handled as usually
-            },
-          },
-        ],
-      },
-    },
+    //           if (id === 'virtual-module') {
+    //             // the source code for "virtual-module"
+    //             return 'export default "This is virtual!"';
+    //           }
+    //           return null; // other ids should be handled as usually
+    //         },
+    //       },
+    //     ],
+    //   },
+    // },
   },
 });

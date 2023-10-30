@@ -1,8 +1,10 @@
 import path from 'path';
 import fs from 'fs';
 import { init, parse } from 'es-module-lexer';
+import { createRequire } from 'module';
 
 const nodeModulesText = '/node_modules';
+const require = createRequire(import.meta.url);
 
 export function copyMdjsStories({ mode } = {}) {
   /**
@@ -50,7 +52,7 @@ export function copyMdjsStories({ mode } = {}) {
  * @param {string} inputPath
  */
 async function processImports(source, mode) {
-  if (mode !== 'developmen') return source;
+  if (mode !== 'development') return source;
 
   // return source;
   if (source !== '' && source.includes('import')) {
