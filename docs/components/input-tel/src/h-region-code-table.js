@@ -96,7 +96,14 @@ export class HRegionCodeTable extends LitElement {
             regionMeta => regionMeta.regionCode,
             ({ regionCode, countryCode, flagSymbol, nameForLocale }) =>
               html` <tr>
-                <td align="left"><span aria-hidden="true">${flagSymbol}</span> ${nameForLocale}</td>
+                <td align="left">
+                  <span aria-hidden="true">
+                    <svg width="16" height="16">
+                      <text dy=".7em">${flagSymbol}</text>
+                    </svg>
+                  </span>
+                  ${nameForLocale}
+                </td>
                 <td align="right">${regionCode}</td>
                 <td align="right">${countryCode}</td>
               </tr>`,
