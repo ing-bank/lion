@@ -1,4 +1,4 @@
-import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.5.2';
+import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.7.0';
 import { getDotProduct } from './shared/getDotProduct.js';
 
 const input1 = document.getElementById('input1');
@@ -6,6 +6,8 @@ const generateButton = document.getElementById('generate-button');
 const output = document.getElementById('output');
 const generateEmbeddings = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
 const siteData = await (await fetch('test.json')).json();
+
+import { render, html } from 'lit';
 
 generateButton.disabled = false;
 
@@ -27,6 +29,22 @@ generateButton.addEventListener('click', async () => {
 
   const top10 = outputs.sort((a, b) => b.similarity - a.similarity).slice(0, 10);
 
-  output.innerText = JSON.stringify(top10, null, 2);
+  output.innerHTML = '';
+
+  // output.innerText = JSON.stringify(top10, null, 2);
+  top10.forEach(entry => {
+    const resultNode = document.createElement('div');
+    const tpl = html`<div class="entry">
+      <a href="https://lion-web.netlify.app/${entry.url}">
+        ${entry.text}
+        <div style="margin-top: 4px; font-weight:bold;"><small>${entry.url}</small></div>
+      </a>
+    </div>`;
+    render(tpl, resultNode);
+    output.appendChild(resultNode.firstElementChild);
+  });
+
+  output.classList.remove('hidden');
+
   generateButton.disabled = false;
 });

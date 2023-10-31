@@ -7,12 +7,27 @@
 
   <body>
     <div class="container">
-      <h1>Generate embeddings in the browser</h1>
-      <div class="inputs">
-        <textarea id="input1">That is a happy person</textarea>
+      <div style="width: 600px; position: relative; margin-top: 24px">
+        <h1><span style="font-weight: bold">embedding</span> search in lion portal</h1>
+
+        <div style="display: flex; height: 60px; margin-top: 12px">
+          <textarea id="input1"></textarea>
+          <button id="generate-button" disabled>search</button>
+        </div>
+
+        <div
+          id="output"
+          class="output hidden"
+          style="
+            position: absolute;
+            left: 0;
+            background: white;
+            border: 1px solid #ccc;
+            overflow: scroll;
+            margin-top: -1px;
+          "
+        ></div>
       </div>
-      <button id="generate-button" disabled>Calculate Similarity</button>
-      <div id="output" class="output"></div>
     </div>
   </body>
 </html>

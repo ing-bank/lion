@@ -29,7 +29,8 @@
 .output {
   font-weight: 100;
   font-family: sans-serif;
-  font-size: 18pt;
+  font-size: 16px;
+  width: 100%;
 }
 
 h1 {
@@ -37,14 +38,11 @@ h1 {
   font-weight: 300;
   font-size: 24pt;
   margin: 0;
-  text-align: center;
 }
 
 textarea {
   width: 100%;
-  min-height: 10rem;
   padding: 1rem;
-  border-radius: 1rem;
   font-family: sans-serif;
   font-size: 12pt;
   border: 1px solid #aaa;
@@ -52,7 +50,33 @@ textarea {
 
 button {
   padding: 1rem;
-  border-radius: 0.5rem;
   font-family: sans-serif;
   font-size: 12pt;
+}
+
+.hidden {
+  display: none;
+}
+
+.entry {
+  padding: 24px;
+  border-bottom: 1px solid #eee;
+}
+
+.entry a {
+  text-decoration: none;
+  color: #000;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  display: inline-block;
+}
+
+.entry a:hover {
+  text-decoration: underline;
+}
+
+.entry:hover {
+  background-color: #eee;
 }
