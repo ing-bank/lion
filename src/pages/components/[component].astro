@@ -14,12 +14,7 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-let config: any = {
-  component: entry.data.component,
-  type: 'component-development' 
-};
-
-const componentEntries = getComponentEntries(config);
+const componentEntries = getComponentEntries(entry.data.component);
 const inPageNavData = [];
 const contents = [];
 
