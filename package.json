@@ -6,6 +6,7 @@
     "build": "rocket build",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
+    "convert-svgs": "node scripts/convertSvgsToJsModules.js",
     "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present",
     "debug": "web-test-runner --watch --config web-test-runner-chrome.config.mjs",
     "debug:firefox": "web-test-runner --watch --config web-test-runner-firefox.config.mjs",
@@ -21,6 +22,7 @@
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
+    "prepare-flags": "convert-svgs && npm run update-flags",
     "release": "changeset publish",
     "rm-all-node_modules": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules",
     "rocket:build": "rocket build",
@@ -33,7 +35,8 @@
     "test:screenshots": "rimraf screenshots/.diff/ && rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
     "types": "npm run types --workspaces --if-present",
-    "types-check-only": "npm run types-check-only --workspaces --if-present"
+    "types-check-only": "npm run types-check-only --workspaces --if-present",
+    "update-flags": "node scripts/updateFlagExports.js"
   },
   "workspaces": [
     "packages/*",

@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { ScopedStylesController } from '@lion/ui/core.js';
+import { getFlagSvg } from '@lion/ui/input-tel-dropdown.js';
 import { regionMetaList } from '../../select-rich/src/regionMetaList.js';
 
 export class HRegionCodeTable extends LitElement {
@@ -62,6 +63,29 @@ export class HRegionCodeTable extends LitElement {
         border-left: none;
         border-right: none;
       }
+      .${scope} .flag-and-text {
+        display: flex;
+        align-items: center;
+        height: 22px;
+      }
+
+      .${scope} .flag-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 32px;
+        height: 32px;
+      }
+
+      .${scope} .flag-icon svg {
+        max-width: 100%;
+        max-height: 100%;
+      }
+
+      .${scope} .region-name {
+        line-height: 22px;
+        margin-left: 8px;
+      }
     `;
   }
 
@@ -94,19 +118,16 @@ export class HRegionCodeTable extends LitElement {
           ${repeat(
             finalRegionMetaList,
             regionMeta => regionMeta.regionCode,
-            ({ regionCode, countryCode, flagSymbol, nameForLocale }) =>
-              html` <tr>
-                <td align="left">
-                  <span aria-hidden="true">
-                    <svg width="16" height="16">
-                      <text dy=".7em">${flagSymbol}</text>
-                    </svg>
-                  </span>
-                  ${nameForLocale}
-                </td>
-                <td align="right">${regionCode}</td>
-                <td align="right">${countryCode}</td>
-              </tr>`,
+            regionMeta => html` <tr>
+              <td align="left">
+                <div class="flag-and-text">
+                  <span class="flag-icon">${getFlagSvg(regionMeta.regionCode)}</span>
+                  <span class="region-name">${regionMeta.nameForLocale}</span>
+                </div>
+              </td>
+              <td align="right">${regionMeta.regionCode}</td>
+              <td align="right">${regionMeta.countryCode}</td>
+            </tr>`,
           )}
         </tbody>
       </table>

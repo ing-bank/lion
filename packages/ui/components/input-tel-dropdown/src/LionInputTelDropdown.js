@@ -3,7 +3,7 @@ import { ref, createRef } from 'lit/directives/ref.js';
 
 import { LionInputTel } from '@lion/ui/input-tel.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { getFlagSymbol } from './getFlagSymbol.js';
+import { getFlagSvg } from './getFlagSvg.js';
 
 /**
  * Note: one could consider to implement LionInputTelDropdown as a
@@ -21,6 +21,7 @@ import { getFlagSymbol } from './getFlagSymbol.js';
 /**
  * @typedef {import('lit/directives/ref.js').Ref} Ref
  * @typedef {import('lit').RenderOptions} RenderOptions
+ * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {import('../../form-core/types/FormatMixinTypes.js').FormatHost} FormatHost
  * @typedef {import('../../input-tel/types/index.js').RegionCode} RegionCode
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
@@ -416,7 +417,7 @@ export class LionInputTelDropdown extends LionInputTel {
       const countryCode =
         this._phoneUtil && this._phoneUtil.getCountryCodeForRegionCode(regionCode);
 
-      const flagSymbol = getFlagSymbol(regionCode);
+      const flagSymbol = getFlagSvg(regionCode);
 
       const destinationList = this.preferredRegions.includes(regionCode)
         ? this.__regionMetaListPreferred
