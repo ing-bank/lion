@@ -231,7 +231,7 @@ This will:
 > Please note that the lion-combobox-selection-display below is not exposed and only serves
 > as an example. The selection part of a multiselect combobox is not yet accessible. Please keep
 > in mind that for now, as a Subclasser, you would have to take care of this part yourself.
-> Also keep in mind that the combobox organizes the selected list by it's original index in the option list
+> Also keep in mind that the combobox organizes the selected list by its original index in the option list
 
 ```js preview-story
 export const multipleChoice = () => html`

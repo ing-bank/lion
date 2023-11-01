@@ -321,7 +321,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   get _inputNode() {
     if (this._ariaVersion === '1.1' && this._comboboxNode) {
       return /** @type {HTMLInputElement} */ (
-        this._comboboxNode.querySelector('input') ?? this._comboboxNode
+        this._comboboxNode.querySelector('input') || this._comboboxNode
       );
     }
     return /** @type {HTMLInputElement} */ (this._comboboxNode);
