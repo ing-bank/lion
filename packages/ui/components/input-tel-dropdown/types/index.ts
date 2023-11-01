@@ -3,6 +3,10 @@ import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { OverlayController } from '../../overlays/src/OverlayController.js';
 
+/**
+ * @typedef {import('lit').TemplateResult} TemplateResult
+ */
+
 type RefTemplateData = {
   ref?: { value?: HTMLElement };
   props?: { [key: string]: any };
@@ -15,7 +19,7 @@ export type RegionMeta = {
   regionCode: RegionCode;
   nameForRegion?: string;
   nameForLocale?: string;
-  flagSymbol: string;
+  flagSymbol: TemplateResult | string;
 };
 
 export type OnDropdownChangeEvent = Event & {
