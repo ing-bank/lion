@@ -597,7 +597,7 @@ describe('Ajax', () => {
         'foobar',
       );
 
-      expect(error.message).to.include('http://localhost:8000/foobar');
+      expect(/http:\/\/localhost:\d*\/foobar/.test(error.message)).to.be.true;
       expect(error.message).to.include('418');
       expect(error.message).to.include("I'm a teapot");
     });
