@@ -77,14 +77,18 @@ async function copyDocs(currentPath = '') {
       }
       await copyDocs(path.join(currentPath, file));
     } else {
-      await fs.mkdir(path.join(contentDocsPath, currentPath), { recursive: true });
-      await fs.copyFile(sourceDocsFilePath, contentDocsFilePath);
-      const fileContent = await fs.readFile(contentDocsFilePath, 'utf8');
+      if (path.extname(file) === '.md' && file !== 'index.md') {
+        await fs.mkdir(path.join(contentDocsPath, currentPath), { recursive: true });
+        await fs.copyFile(sourceDocsFilePath, contentDocsFilePath);
 
-      if (path.extname(file) === '.md') {
-        const parentComponent = path.basename(currentPath);
-        const updatedFileContent = `${createComponentMdFrontmatter(parentComponent)}${fileContent}`;
-        await fs.writeFile(contentDocsFilePath, updatedFileContent);
+        if (contentDocsFilePath.includes('/components')) {
+          const fileContent = await fs.readFile(contentDocsFilePath, 'utf8');
+          const parentComponent = path.basename(currentPath);
+          const updatedFileContent = `${createComponentMdFrontmatter(
+            parentComponent,
+          )}${fileContent}`;
+          await fs.writeFile(contentDocsFilePath, updatedFileContent);
+        }
       }
       if (path.extname(file) !== '.md') {
         await fs.mkdir(path.join(publicDocsPath, currentPath), { recursive: true });

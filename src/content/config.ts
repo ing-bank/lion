@@ -10,9 +10,16 @@ const anySchema = z.object({
   any: z.string().optional(),  
 });
 
-export const docsCollectionSchema = z.union([
+const blogSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  published: z.boolean(),
+});
+
+export const docsCollectionSchema = z.union([  
+  blogSchema,
 	componentSchema,
-  anySchema
+  anySchema,    
 ]);
 
 const docs = defineCollection({
