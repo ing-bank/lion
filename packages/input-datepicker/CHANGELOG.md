@@ -1,8 +1,15 @@
 # Change Log
 
+## 0.22.7
+
+### Patch Changes
+
+- Updated dependencies [60312054]
+  - @lion/overlays@0.27.5
+
 ## 0.22.6
 
-Manually depend on "-legacy.{x}" deps (the "inbetween versions" of packages that never  got a minor bump after we moved to lit2)
+Manually depend on "-legacy.{x}" deps (the "inbetween versions" of packages that never got a minor bump after we moved to lit2)
 
 ## 0.22.5
 

@@ -1,10 +1,16 @@
 # Change Log
 
+## 0.7.8
+
+### Patch Changes
+
+- @lion/combobox@0.6.7
+- @lion/input-datepicker@0.22.7
+- @lion/select-rich@0.25.6
 
 ## 0.7.7
 
-Manually depend on "-legacy.{x}" deps (the "inbetween versions" of packages that never  got a minor bump after we moved to lit2)
-
+Manually depend on "-legacy.{x}" deps (the "inbetween versions" of packages that never got a minor bump after we moved to lit2)
 
 ## 0.7.6
 
