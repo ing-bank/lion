@@ -1,6 +1,6 @@
 {
   "name": "@lion/form-integrations",
-  "version": "0.7.7",
+  "version": "0.7.8",
   "description": "The Form System allows you to create complex forms with various validation in an easy way",
   "license": "MIT",
   "author": "ing-bank",
@@ -34,7 +34,7 @@
   "dependencies": {
     "@lion/button": "0.12.4",
     "@lion/checkbox-group": "0.17.5",
-    "@lion/combobox": "0.6.6",
+    "@lion/combobox": "0.6.7",
     "@lion/core": "0.17.4",
     "@lion/fieldset": "0.19.1-legacy.1",
     "@lion/form": "0.11.6",
@@ -42,7 +42,7 @@
     "@lion/input": "0.14.5",
     "@lion/input-amount": "0.13.5",
     "@lion/input-date": "0.12.1-legacy.1",
-    "@lion/input-datepicker": "0.22.6",
+    "@lion/input-datepicker": "0.22.7",
     "@lion/input-email": "0.13.1-legacy.1",
     "@lion/input-iban": "0.15.5",
     "@lion/input-range": "0.10.0-legacy.1",
@@ -51,7 +51,7 @@
     "@lion/localize": "0.19.4",
     "@lion/radio-group": "0.17.4",
     "@lion/select": "0.13.4",
-    "@lion/select-rich": "0.25.5",
+    "@lion/select-rich": "0.25.6",
     "@lion/switch": "0.16.5",
     "@lion/textarea": "0.12.5",
     "@lion/validate-messages": "0.6.5"

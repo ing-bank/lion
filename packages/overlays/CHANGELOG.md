@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.27.5
+
+### Patch Changes
+
+- 60312054: fix(overlays): fix OverlayController being added to a target that is already removed
+
 ## 0.27.4
 
 ### Patch Changes
