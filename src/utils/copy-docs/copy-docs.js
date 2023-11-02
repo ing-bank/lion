@@ -12,7 +12,6 @@ const publicDocsPath = 'publicDocs';
 const rootPath = process.cwd();
 
 async function processImportsForFile(source, filePath) {
-  const nodeModulesText = '/node_modules';
   if (source !== '' && source.includes('import')) {
     let newSource = '';
     let lastPos = 0;
@@ -27,27 +26,14 @@ async function processImportsForFile(source, filePath) {
       } else {
         const nodeModulesLocation = findNodeModules(filePath)[0];
         const nodeModulesLocation1 = path.join(filePath, nodeModulesLocation);
-
-        if (importSrc === 'page-a/page-a.js') {
-          newSource +=
-            nodeModulesText +
-            require
-              .resolve(
-                '/Users/ai09al/ing/lion/docs/fundamentals/tools/singleton-manager/example-complex/node_modules/page-a/page-a.js',
-              )
-              .split(nodeModulesText)[1];
+        const resolvedImportPath = require.resolve(importSrc, { paths: [nodeModulesLocation1] });
+        const lastNodeModulesDirectoryIndex = resolvedImportPath.lastIndexOf('nodeModulesText');
+        const nodeModulesPath = resolvedImportPath.substring(0, lastNodeModulesDirectoryIndex);
+        const dependencyPath = resolvedImportPath.substring(lastNodeModulesDirectoryIndex);
+        if (nodeModulesPath === rootPath) {
+          newSource += dependencyPath;
         } else {
-          // newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
-          // console.log('require.resolve(importSrc): ', require.resolve(importSrc));
-          const resolvedImportPath = require.resolve(importSrc, { paths: [nodeModulesLocation1] });
-          const lastNodeModulesDirectoryIndex = resolvedImportPath.lastIndexOf('nodeModulesText');
-          const nodeModulesPath = resolvedImportPath.substring(0, lastNodeModulesDirectoryIndex);
-          const dependencyPath = resolvedImportPath.substring(lastNodeModulesDirectoryIndex);
-          if (nodeModulesPath === rootPath) {
-            newSource += dependencyPath;
-          } else {
-            newSource += resolvedImportPath.split(rootPath)[1];
-          }
+          newSource += resolvedImportPath.split(rootPath)[1];
         }
       }
 
