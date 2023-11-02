@@ -10,7 +10,7 @@ import { ChoiceGroupMixin } from './ChoiceGroupMixin.js';
  * @param {any|any[]} value
  * @returns {any[]}
  */
-function normalizeArray(value) {
+function ensureArray(value) {
   return Array.isArray(value) ? value : [value];
 }
 
@@ -47,7 +47,7 @@ const CustomChoiceGroupMixinImplementation = superclass =>
       } else if (this.allowCustomChoice) {
         const old = this.modelValue;
         // @ts-ignore
-        this._customChoices = new Set(normalizeArray(value));
+        this._customChoices = new Set(ensureArray(value));
         this.requestUpdate('modelValue', old);
       }
     }
@@ -66,7 +66,7 @@ const CustomChoiceGroupMixinImplementation = superclass =>
         const old = this.modelValue;
         // Convert formattedValue to modelValue to store as custom choices, or fall back to the input value
         this._customChoices = new Set(
-          normalizeArray(value).map(
+          ensureArray(value).map(
             val => this.formElements.find(el => el.formattedValue === val)?.modelValue || val,
           ),
         );
@@ -88,7 +88,7 @@ const CustomChoiceGroupMixinImplementation = superclass =>
         const old = this.modelValue;
         // Convert serializedValue to modelValue to store as custom choices, or fall back to the input value
         this._customChoices = new Set(
-          normalizeArray(value).map(
+          ensureArray(value).map(
             val => this.formElements.find(el => el.serializedValue === val)?.modelValue || val,
           ),
         );
@@ -122,11 +122,6 @@ const CustomChoiceGroupMixinImplementation = superclass =>
        * @protected
        */
       this._customChoices = new Set();
-
-      /**
-       * @private
-       */
-      this.__initialized = false;
     }
 
     /**
@@ -140,7 +135,7 @@ const CustomChoiceGroupMixinImplementation = superclass =>
       }
 
       if (this.multipleChoice) {
-        return [...normalizeArray(values), ...this.customChoices];
+        return [...ensureArray(values), ...this.customChoices];
       }
 
       if (values === '') {
@@ -158,8 +153,7 @@ const CustomChoiceGroupMixinImplementation = superclass =>
         changedProperties.has('modelValue') &&
         JSON.stringify(this.modelValue) !== JSON.stringify(changedProperties.get('modelValue'))
       ) {
-        if (!this.__initialized) {
-          this.__initialized = true;
+        if (!this.hasUpdated) {
           return;
         }
 
