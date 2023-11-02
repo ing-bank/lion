@@ -64,5 +64,4 @@ __output
 packages/ui/new-exports/
 packages/ui/test-exports/
 
-contentDocs
-publicDocs
+src/content/docs
