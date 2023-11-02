@@ -7,8 +7,8 @@ const findNodeModules = require('find-node-modules');
 const { init, parse } = require('es-module-lexer');
 
 const sourceDocsPath = 'docs';
-const contentDocsPath = 'contentDocs';
-const publicDocsPath = 'publicDocs';
+const contentDocsPath = 'src/content/docs';
+const publicDocsPath = 'public/docs';
 const rootPath = process.cwd();
 
 async function processImportsForFile(source, filePath) {
@@ -105,7 +105,7 @@ async function processImports(currentPath = '') {
       if (!file.startsWith('_')) {
         await processImports(path.join(currentPath, file));
       }
-    } else {
+    } else if (!file.includes('__mdjs-stories')) {
       const fileContent = await fs.readFile(publicDocsFilePath, 'utf8');
       const fileExtName = path.extname(file);
 
