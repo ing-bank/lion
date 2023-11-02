@@ -28,8 +28,7 @@ async function processImports(source) {
       const importSrc = source.substring(importObj.s, importObj.e);
 
       if (importSrc.startsWith('.')) {
-        // eslint-disable-next-line no-console
-        console.error(`!!! Update md file so that it doesn't contain relative imports`);
+        // noop
       } else if (importSrc === `'@mdjs/mdjs-preview/define'`) {
         newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;
       } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
