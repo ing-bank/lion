@@ -166,7 +166,8 @@ export const OverlayMixinImplementation = superclass =>
       // we do a setup after every connectedCallback as firstUpdated will only be called once
       this.__needsSetup = true;
       this.updateComplete.then(() => {
-        if (this.__needsSetup) {
+        // The overlay can already be removed during the update, so let's make sure it is still connected
+        if (this.__needsSetup && this.isConnected) {
           this._setupOverlayCtrl();
         }
         this.__needsSetup = false;
@@ -174,9 +175,8 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     disconnectedCallback() {
-      if (super.disconnectedCallback) {
-        super.disconnectedCallback();
-      }
+      super.disconnectedCallback();
+
       if (this._overlayCtrl) {
         this._teardownOverlayCtrl();
       }
