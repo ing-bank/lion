@@ -1,3 +1,4 @@
+src
 # build output
 dist/
 # generated types
@@ -65,4 +66,3 @@ packages/ui/test-exports/
 
 contentDocs
 publicDocs
-src/content/docs/
