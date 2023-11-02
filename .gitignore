@@ -65,4 +65,4 @@ packages/ui/test-exports/
 
 contentDocs
 publicDocs
-src/content/docs/*
+src/content/docs/
