@@ -16,17 +16,6 @@ export const fundamentalsEntries = allPages.filter(isFundamentalsEntry);
 export const getInfoParentSlug = entry => entry.slug.split('/info')[0];
 
 
-export const getComponentEntries = (config) => {
-  return componentPageEntries.filter(componentEntry => {
-    let match = true;
-    Object.keys(config).forEach(key => {
-      if (componentEntry.data[key] !== config[key]) {
-        match = false;
-      }
-    });
-
-    if (match) {
-      return true;
-    }    
-  });
+export const getComponentEntries = (componentName) => {
+  return componentPageEntries.filter(componentEntry => componentEntry.data.component === componentName);
 }

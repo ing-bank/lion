@@ -11,7 +11,8 @@ let visit;
 })();
 
 const nodeModulesText = '/node_modules';
-const mdJsStoriesFileName = '__mdjs-stories.js';
+const mdJsStoriesFileNameWithoutExtension = '__mdjs-stories';
+const mdJsStoriesFileName = `${mdJsStoriesFileNameWithoutExtension}.js`;
 
 /**
  * @param {string} source
@@ -28,8 +29,7 @@ async function processImports(source) {
       const importSrc = source.substring(importObj.s, importObj.e);
 
       if (importSrc.startsWith('.')) {
-        // eslint-disable-next-line no-console
-        console.error(`!!! Update md file so that it doesn't contain relative imports`);
+        newSource += importSrc;
       } else if (importSrc === `'@mdjs/mdjs-preview/define'`) {
         newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;
       } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
@@ -57,16 +57,14 @@ function copyMdjsStories() {
   async function transformer(tree, file) {
     let pathToMdDirectoryInPublic = '';
     let currentMarkdownFile = '';
+    let currentMarkdownFileMdJsStoryName = '';
 
     /**
      * @param {UnistNode} _node
      */
     async function nodeCodeVisitor(_node, index, parent) {
       if (parent.type === 'heading' && parent.depth === 1) {
-        const parts = pathToMdDirectoryInPublic.split('/');
-        const mdFileDirectoryName = parts.pop();
-        const componentDirectoryInPublic = parts.join('/');
-        const commonMdjsStoriesFileName = `${componentDirectoryInPublic}/${mdJsStoriesFileName}`;
+        const commonMdjsStoriesFileName = `${pathToMdDirectoryInPublic}/${mdJsStoriesFileName}`;
         let commonMdjsStoriesContent = '';
         try {
           commonMdjsStoriesContent = fs.readFileSync(commonMdjsStoriesFileName).toString();
@@ -74,7 +72,7 @@ function copyMdjsStories() {
           // noop. File is not yet created for the component
         }
 
-        const exportCmd = `export * from './${mdFileDirectoryName}/${mdJsStoriesFileName}' \n`;
+        const exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}' \n`;
 
         if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
           await fs.promises.writeFile(
@@ -94,19 +92,21 @@ function copyMdjsStories() {
     // eslint-disable-next-line prefer-destructuring
     currentMarkdownFile = file.history[0];
     const { cwd } = file;
-    const mdJsStoriesUrlPath = '/mdjs-stories';
-    const mdJsStoriesDir = `${cwd}/public${mdJsStoriesUrlPath}`;
+    const publicDir = `${cwd}/public`;
     let parsedPath = '';
 
     if (currentMarkdownFile) {
       const leftSideParsedPath = currentMarkdownFile.split('src/content/')[1];
       // eslint-disable-next-line prefer-destructuring
-      parsedPath = leftSideParsedPath.split('.md')[0];
+      parsedPath = path.dirname(leftSideParsedPath);
     }
 
     const parsedSetupJsCode = await processImports(setupJsCode);
-    pathToMdDirectoryInPublic = `${mdJsStoriesDir}/${parsedPath}`;
-    const newName = path.join(pathToMdDirectoryInPublic, mdJsStoriesFileName);
+    pathToMdDirectoryInPublic = `${publicDir}/${parsedPath}`;
+    currentMarkdownFileMdJsStoryName = `${mdJsStoriesFileNameWithoutExtension}--${
+      path.basename(currentMarkdownFile).split('.md')[0]
+    }.js`;
+    const newName = path.join(pathToMdDirectoryInPublic, currentMarkdownFileMdJsStoryName);
     await fs.promises.mkdir(pathToMdDirectoryInPublic, { recursive: true });
     await fs.promises.writeFile(newName, parsedSetupJsCode, 'utf8');
 

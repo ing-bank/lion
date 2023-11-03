@@ -6,7 +6,7 @@ dist/
 .astro
 
 # generated __mdjs-stories.js files
-public/mdjs-stories
+public/docs
 
 ## editors
 /.idea
@@ -62,3 +62,5 @@ __output
 ## generate-package-exports tests
 packages/ui/new-exports/
 packages/ui/test-exports/
+
+src/content/docs
