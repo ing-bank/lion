@@ -64,9 +64,7 @@ function copyMdjsStories() {
      */
     async function nodeCodeVisitor(_node, index, parent) {
       if (parent.type === 'heading' && parent.depth === 1) {
-        const parts = pathToMdDirectoryInPublic.split('/');
-        const componentDirectoryInPublic = parts.join('/');
-        const commonMdjsStoriesFileName = `${componentDirectoryInPublic}/${mdJsStoriesFileName}`;
+        const commonMdjsStoriesFileName = `${pathToMdDirectoryInPublic}/${mdJsStoriesFileName}`;
         let commonMdjsStoriesContent = '';
         try {
           commonMdjsStoriesContent = fs.readFileSync(commonMdjsStoriesFileName).toString();

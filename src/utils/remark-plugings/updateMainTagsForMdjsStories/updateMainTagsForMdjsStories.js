@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { init, parse } = require('es-module-lexer');
+const path = require('path');
 
 let visit;
 (async () => {
@@ -31,8 +32,7 @@ function updateMainTagsForMdjsStories() {
     if (node.lang === 'js' && node.meta === 'preview-story' && typeof node.value === 'string') {
       const storyData = extractStoryData(node.value);
       const mainTagName = storyData.name;
-      const parts = parsedPath.split('/');
-      let mdFileName = parts[parts.length - 1];
+      let mdFileName = path.basename(parsedPath);
       mdFileName = mdFileName.replaceAll('-', '_');
       node.value = node.value.replace(mainTagName, `${mainTagName}__${mdFileName}`);
     }
