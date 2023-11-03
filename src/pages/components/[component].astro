@@ -1,4 +1,5 @@
 ---
+import * as path from 'path';
 import { componentInfoEntries, getComponentEntries } from '../../content';
 import MainLayout from "../../layouts/MainLayout.astro";
 import ComponentLayout from "../../layouts/partials/ComponentPartial.astro";
@@ -40,11 +41,7 @@ const parseEntries = async () => {
 await parseEntries();
 
 const getPathForComponentMdjsStrories = () => {
-  // components/component_name/overview
-  const componentEntrySlugArr = componentEntries[0].slug.split('/');
-  // components/component_name
-  componentEntrySlugArr.pop();
-  const componentDirectory = componentEntrySlugArr.join('/');
+  const componentDirectory = path.dirname(componentEntries[0].slug);
   return `/public/docs/${componentDirectory}/__mdjs-stories.js`;
 } 
 ---

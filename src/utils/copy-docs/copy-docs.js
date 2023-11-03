@@ -5,45 +5,55 @@ const process = require('process');
 const findNodeModules = require('find-node-modules');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { init, parse } = require('es-module-lexer');
+const childProcess = require('child_process');
 
 const sourceDocsPath = 'docs';
-const contentDocsPath = 'src/content/docs';
-const publicDocsPath = 'public/docs';
+const contentPathForDocs = 'src/content';
+const contentDocsPath = `${contentPathForDocs}/docs`;
+const publicPathForDocs = 'public';
+const publicDocsPath = `${publicPathForDocs}/docs`;
 const rootPath = process.cwd();
 
-async function processImportsForFile(source, filePath) {
-  if (source !== '' && source.includes('import')) {
-    let newSource = '';
-    let lastPos = 0;
-    await init;
-    const [imports] = parse(source);
-    for (const importObj of imports) {
-      newSource += source.substring(lastPos, importObj.s);
-      const importSrc = source.substring(importObj.s, importObj.e);
-
-      if (importSrc.startsWith('.') || importSrc === 'import.meta') {
-        // noop
-      } else {
-        const nodeModulesLocation = findNodeModules(filePath)[0];
-        const nodeModulesLocation1 = path.join(filePath, nodeModulesLocation);
-        const resolvedImportPath = require.resolve(importSrc, { paths: [nodeModulesLocation1] });
-        const lastNodeModulesDirectoryIndex = resolvedImportPath.lastIndexOf('nodeModulesText');
-        const nodeModulesPath = resolvedImportPath.substring(0, lastNodeModulesDirectoryIndex);
-        const dependencyPath = resolvedImportPath.substring(lastNodeModulesDirectoryIndex);
-        if (nodeModulesPath === rootPath) {
-          newSource += dependencyPath;
-        } else {
-          newSource += resolvedImportPath.split(rootPath)[1];
-        }
-      }
-
-      lastPos = importObj.e;
-    }
-    newSource += source.substring(lastPos, source.length);
-    return newSource;
+async function processImportsForFile(filePath) {
+  if (filePath.includes('__mdjs-stories')) {
+    return;
   }
+  const source = await fs.readFile(filePath, 'utf8');
+  if (source === '' || !source.includes('import')) {
+    return;
+  }
+  const fileExtName = path.extname(filePath);
+  if (fileExtName !== '.js' && fileExtName !== '.mjs' && fileExtName !== '.ts') {
+    return;
+  }
+  let newSource = '';
+  let lastPos = 0;
+  await init;
+  const [imports] = parse(source);
+  for (const importObj of imports) {
+    newSource += source.substring(lastPos, importObj.s);
+    const importSrc = source.substring(importObj.s, importObj.e);
 
-  return source;
+    if (importSrc.startsWith('.') || importSrc === 'import.meta') {
+      // noop
+    } else {
+      const nodeModulesLocation = findNodeModules(filePath)[0];
+      const nodeModulesLocation1 = path.join(filePath, nodeModulesLocation);
+      const resolvedImportPath = require.resolve(importSrc, { paths: [nodeModulesLocation1] });
+      const lastNodeModulesDirectoryIndex = resolvedImportPath.lastIndexOf('nodeModulesText');
+      const nodeModulesPath = resolvedImportPath.substring(0, lastNodeModulesDirectoryIndex);
+      const dependencyPath = resolvedImportPath.substring(lastNodeModulesDirectoryIndex);
+      if (nodeModulesPath === rootPath) {
+        newSource += dependencyPath;
+      } else {
+        newSource += resolvedImportPath.split(rootPath)[1];
+      }
+    }
+
+    lastPos = importObj.e;
+  }
+  newSource += source.substring(lastPos, source.length);
+  await fs.writeFile(filePath, newSource);
 }
 
 const createComponentMdFrontmatter = componentName => `---
@@ -98,6 +108,30 @@ async function copyDocs(currentPath = '') {
   }
 }
 
+async function copyDocsByFileArray(files) {
+  for (const file of files) {
+    const currentPath = path.dirname(file);
+    const contentDocsFilePath = path.join(contentPathForDocs, file);
+    const publicDocsFilePath = path.join(publicPathForDocs, file);
+    if (path.extname(file) === '.md' && file !== 'index.md') {
+      await fs.mkdir(path.join(contentPathForDocs, currentPath), { recursive: true });
+      await fs.copyFile(file, contentDocsFilePath);
+
+      if (file.includes('/components')) {
+        const fileContent = await fs.readFile(contentDocsFilePath, 'utf8');
+        const parentComponent = path.basename(currentPath);
+        const updatedFileContent = `${createComponentMdFrontmatter(parentComponent)}${fileContent}`;
+        await fs.writeFile(contentDocsFilePath, updatedFileContent);
+      }
+    }
+    if (path.extname(file) !== '.md') {
+      await fs.mkdir(path.join(publicPathForDocs, currentPath), { recursive: true });
+      await fs.copyFile(file, publicDocsFilePath);
+      await processImportsForFile(publicDocsFilePath);
+    }
+  }
+}
+
 async function processImports(currentPath = '') {
   const files = await fs.readdir(path.join(publicDocsPath, currentPath));
 
@@ -109,19 +143,24 @@ async function processImports(currentPath = '') {
       if (!file.startsWith('_')) {
         await processImports(path.join(currentPath, file));
       }
-    } else if (!file.includes('__mdjs-stories')) {
-      const fileContent = await fs.readFile(publicDocsFilePath, 'utf8');
-      const fileExtName = path.extname(file);
-
-      if (fileExtName === '.js' || fileExtName === '.mjs' || fileExtName === '.ts') {
-        const parsedFile = await processImportsForFile(fileContent, publicDocsFilePath);
-        await fs.writeFile(publicDocsFilePath, parsedFile.toString());
-      }
+    } else {
+      await processImportsForFile(publicDocsFilePath);
     }
   }
+}
+
+async function watch() {
+  const diffStr = childProcess.execSync('git diff --name-only "docs"').toString();
+  const diffArr = diffStr.split('\n').filter(value => value);
+  if (diffArr.length) {
+    // eslint-disable-next-line no-console
+    console.log('Files have been changed: ', diffArr);
+  }
+  await copyDocsByFileArray(diffArr);
 }
 
 module.exports = {
   copyDocs,
   processImports,
+  watch,
 };

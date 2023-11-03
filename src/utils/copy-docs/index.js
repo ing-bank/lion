@@ -1,6 +1,7 @@
-const { copyDocs, processImports } = require('./copy-docs.js');
+const { copyDocs, processImports, watch } = require('./copy-docs.js');
 
 module.exports = {
   copyDocs,
   processImports,
+  watch,
 };
