@@ -56,85 +56,47 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
 ## Astro migration
 
-### How to migrate a button component (overview.md page only at this moment)
-
-- Copy `docs/components/button` to `src/content/docs/components`
-- Create an emty file: `src/content/docs/components/button/info.md`
-- At the very beginning of `src/content/docs/components/button/info.md` add the following:
-
-  ```
-  ---
-  component: button
-  title: Button title
-  description: Button Description
-  type: component-info
-  defaultSlug: web
-  ---
-  ```
-
-  where
-
-  - the `component` value should match the folder name
-  - `title` and `description` could be random
-  - `type` must be `component-info`
-  - `defaultSlug` must be `web`
-
-- At the very beginning of `src/content/docs/components/button/overview.md` add the following:
-
-  ```
-  ---
-  component: button
-  category: development
-  platform: web
-  type: component-development
-  ---
-  ```
-
-  where
-
-  - the `component` value should match the folder name
-  - the rest of properties/values should always stay as in the example
-
-- Delete (temporarily) other md files for a component:
-  - `src/content/docs/components/button/examples.md`
-  - `src/content/docs/components/button/extensions.md`
-  - `src/content/docs/components/button/index.md`
-  - `src/content/docs/components/button/use-cases.md`
-- Temporarily get rid of `packages/*` as workspaces
-  - Remove `"packages/*",` from `"workspaces": [` in `package.json`. That is a temporary hack to make `require.resolve` fetch files from `node_modules/lion/ui` and not resolving `@lion/ui` as `packages/ui`. We need this until find out how to copy those files to `/public` programmatically
-  - Install `@lion/ui` as a dependency
-- Remove imports related to `ing-web` in `src/utils/astrojs-integration/lion/lion-integration.mjs`
-- Remove `ing-web` related `remarkPlugins` in `astro.config.mjs`
-
-### How to migrate a `blog` page (accessibility.md)
-
-- Copy `docs/blog/accessibility.md` into `src/content/docs/blog`
-- Add `title` and `description` to `accessibility.md`'s frontmatter. Note it is already done for blog items
-
-### How to migrate a `fundamentals` page (accessibility.md)
-
-- Copy `docs/fundamentals/rationales/accessibility.md` into `src/content/docs/fundamentals/rationales`
-- Add `title` and `description` to `accessibility.md`'s frontmatter
-
-### How to migrate a `guides` page (create-a-custom-field.md)
-
-- Copy `docs/guides/how-to/create-a-custom-field.md` into `src/content/docs/guides/how-to/create-a-custom-field.md`
-- Add `title` and `description` to `create-a-custom-field.md`'s frontmatter
+Keep using `/docs` on the root level as we used it in the `master` branch. The documentation is copied into Astro related directories on `npm run start` and when when anything in `/docs` is updated.
 
 ### TODO
 
-- For the `[component]` page fix `Web` and `Development` links
 - Add `packages/*` back to workspaces in `package.json`
   - Make the rollup config copy the files from `packages/ui` into `/public`
   - Uninstall `@lion/ui` as a dependency
-- Write one time script for `Lion` migration which adds frontmatter to `md` files
-  - `index.md` is to be ignored
-  - `info.md` is to be added
-- `rocket-preset-extend-lion-docs` should be updates
-  - `Rocket` name should gone
-  - Export methods: `remarkExtendLionDocsTransformJs`, `remarkUrlToLocal`, `generateExtendDocsConfig` so those could be used in
-    `src/utils/remark-plugings/copyMdjsStories/copyMdjsStories.js`
-  - See what `copy.sh` does in POC project to replicate the same here
+- Fix FOUC (flash of unstyled text) when navigating to the component page. F.e. visit the [button page](http://localhost:4322/components/button) and
+  notice that the example components are not loaded right away. Hence the page is "blinking" when rendering
+- Visit [combobox page](http://localhost:4322/components/combobox). There is an error:
+
+  ```
+  Failed to parse Markdown file "/Users/ai09al/ing/lion/src/content/docs/components/combobox/extensions.md":
+  Cannot find module 'import.meta'
+  ```
+
+- Visit [accordion page]. There is an error in the browser console:
+
+  ```
+  You are trying to re-register the "lion-accordion" custom element with a different class via ScopedElementsMixin
+  ```
+
+- Fix the code so that assets refered from inside `md` files directly are loaded correctly. F.e. visit [localize/text page](http://localhost:4322/fundamentals/systems/localize/text) and see the error:
+
+  ```
+  lion/src/content/docs/fundamentals/systems/localize/text.md":
+  Cannot find module './assets/${locale}.js'
+  ```
+
+- Fiex the browser console error on [collapsible page](http://localhost:4322/components/collapsible):
+
+  ```
+  __mdjs-stories--use-cases.js:40 Uncaught TypeError: shadowRoot.getElementById is not a function
+  ```
+
+- Fix the error with [drawer page](http://localhost:4322/components/drawer). Relativly imported assets doesn't work correctly in some cases:
+
+  ```
+  lion/src/content/docs/components/drawer/overview.md":
+  Cannot find module ''../icon/assets/iconset-misc.js''
+  ```
 
 ## How to install
 
