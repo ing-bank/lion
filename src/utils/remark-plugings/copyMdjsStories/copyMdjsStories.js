@@ -27,15 +27,14 @@ async function processImports(source) {
     for (const importObj of imports) {
       newSource += source.substring(lastPos, importObj.s);
       const importSrc = source.substring(importObj.s, importObj.e);
+      const isDyncamicImport = importObj.d > -1;
 
-      if (importSrc.startsWith('.')) {
+      if (importSrc.startsWith('.') || importSrc.startsWith('/') || isDyncamicImport) {
         newSource += importSrc;
       } else if (importSrc === `'@mdjs/mdjs-preview/define'`) {
         newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;
       } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
         newSource += `'${nodeModulesText}/@mdjs/mdjs-story/src/define.js'`;
-      } else if (importSrc.startsWith('/')) {
-        newSource += importSrc;
       } else {
         newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
       }
