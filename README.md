@@ -66,13 +66,6 @@ They provide an unopinionated, white-label layer that can be extended to your ow
   - Uninstall `@lion/ui` as a dependency
 - Fix FOUC (flash of unstyled text) when navigating to the component page. F.e. visit the [button page](http://localhost:4322/components/button) and
   notice that the example components are not loaded right away. Hence the page is "blinking" when rendering
-- Visit [combobox page](http://localhost:4322/components/combobox). There is an error:
-
-  ```
-  Failed to parse Markdown file "/Users/ai09al/ing/lion/src/content/docs/components/combobox/extensions.md":
-  Cannot find module 'import.meta'
-  ```
-
 - Fix the browser console error on [collapsible page](http://localhost:4322/components/collapsible):
 
   ```
@@ -85,8 +78,33 @@ They provide an unopinionated, white-label layer that can be extended to your ow
   IconManager.js?v=8cca74f1:22 Uncaught Error: An icon resolver has already been registered for namespace: lion
   ```
 
-- Navigate to the [combobox page](http://localhost:4322/components/combobox). See that loading assets like `assets/obama.jpeg`. The import
-  comes from docs/components/combobox/extensions.md
+- Fix import loding from inside md files. Navigate to [ing-open-sources-lion](http://localhost:4322/blog/ing-open-sources-lion), [formatting-and-parsing](http://localhost:4322/fundamentals/systems/form/formatting-and-parsing) The build error appears:
+
+  ```
+  4:43:56 PM [vite] Error when evaluating SSR module /Users/ai09al/ing/lion/src/content/docs/blog/ing-open-sources-lion.md: failed to import "./images/ing-open-sources-lion-side-by-side.png"
+  |- ImageNotFound: Could not find requested image `./images/ing-open-sources-lion-side-by-side.png`. Does it exist?
+  ```
+
+  It seems `vite` tries to resolve the paths in `md`s instead of letting them as they are.
+
+- Navigate to [providence-analytics/overview](http://localhost:4322/fundamentals/node-tools/providence-analytics/overview). The corresponding md file could be found by docs/fundamentals/node-tools/providence-analytics/overview.md. It contains notation like this: `![CLI](./assets/provicli.gif 'CLI')`. Which throws an error:
+
+  ```
+  ImageNotFound: Could not find requested image `./assets/provicli.gif`. Does it exist?
+  ```
+
+- Navigate to [overlays/configuration](http://localhost:4322/fundamentals/systems/overlays/configuration). There are errors in the browser console:
+
+  ```
+  Uncaught (in promise) ReferenceError: withDropdownConfig is not defined
+  ```
+
+- Navigate to [ajax/overview](http://localhost:4322/fundamentals/tools/ajax/overview), [ajax/use-cases](http://localhost:4322/fundamentals/tools/ajax/use-cases). There are errors in the build console:
+
+  ```
+  Failed to parse Markdown file "/Users/ai09al/ing/lion/src/content/docs/fundamentals/tools/ajax/overview.md":
+  Cannot find module '@lion/ajax'
+  ```
 
 ## How to install
 
