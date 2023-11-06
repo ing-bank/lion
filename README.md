@@ -72,13 +72,7 @@ Keep using `/docs` on the root level as we used it in the `master` branch. The d
   Cannot find module 'import.meta'
   ```
 
-- Visit [accordion page]. There is an error in the browser console:
-
-  ```
-  You are trying to re-register the "lion-accordion" custom element with a different class via ScopedElementsMixin
-  ```
-
-- Fiex the browser console error on [collapsible page](http://localhost:4322/components/collapsible):
+- Fix the browser console error on [collapsible page](http://localhost:4322/components/collapsible):
 
   ```
   __mdjs-stories--use-cases.js:40 Uncaught TypeError: shadowRoot.getElementById is not a function
