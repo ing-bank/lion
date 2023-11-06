@@ -40,9 +40,9 @@ const parseEntries = async () => {
 
 await parseEntries();
 
-const getPathForComponentMdjsStrories = () => {
-  const componentDirectory = path.dirname(componentEntries[0].slug);
-  return `/public/docs/${componentDirectory}/__mdjs-stories.js`;
+const getPathMdjsStroriesFile = (entry) => {
+  const mdjsStroriesFileDirectory = path.dirname(entry.slug);
+  return `/public/docs/${mdjsStroriesFileDirectory}/__mdjs-stories.js`;
 } 
 ---
 
@@ -54,7 +54,7 @@ const getPathForComponentMdjsStrories = () => {
           <content.Content />        
       ))
     }
-    <script type="module" src={getPathForComponentMdjsStrories()} mdjs-setup></script>
+    <script type="module" src={getPathMdjsStroriesFile(componentEntries[0])} mdjs-setup></script>
   </ComponentLayout>
 </MainLayout>
   
