@@ -145,31 +145,6 @@ const CustomChoiceGroupMixinImplementation = superclass =>
       return values;
     }
 
-    /** @param {import('lit').PropertyValues} changedProperties */
-    updated(changedProperties) {
-      super.updated(changedProperties);
-
-      if (
-        changedProperties.has('modelValue') &&
-        JSON.stringify(this.modelValue) !== JSON.stringify(changedProperties.get('modelValue'))
-      ) {
-        if (!this.hasUpdated) {
-          return;
-        }
-
-        /** @event model-value-changed */
-        this.dispatchEvent(
-          /** @privateEvent model-value-changed: FormControl redispatches it as public event */
-          new CustomEvent('model-value-changed', {
-            bubbles: true,
-            detail: {
-              formPath: [this],
-            },
-          }),
-        );
-      }
-    }
-
     /**
      * @protected
      */
