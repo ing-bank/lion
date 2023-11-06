@@ -56,7 +56,8 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
 ## Astro migration
 
-Keep using `/docs` on the root level as we used it in the `master` branch. The documentation is copied into Astro related directories on `npm run start` and when when anything in `/docs` is updated.
+- Keep using `/docs` on the root level as we used it in the `master` branch. The documentation is copied into Astro related directories on `npm run start` and when when anything in `/docs` is updated.
+- Replace manually all references to assets in all `md` files so that we imply that the path is produced from the directory where the md file is located. F.e. `new URL('../src/wa-combobox/assets/obama.jpeg', import.meta.url).href;` should `new URL('./src/wa-combobox/assets/obama.jpeg', import.meta.url).href;`. Note double dot is replaced with one dot. See this PR for the reference.
 
 ### TODO
 
@@ -78,11 +79,10 @@ Keep using `/docs` on the root level as we used it in the `master` branch. The d
   __mdjs-stories--use-cases.js:40 Uncaught TypeError: shadowRoot.getElementById is not a function
   ```
 
-- Fix the error with [drawer page](http://localhost:4322/components/drawer). Relativly imported assets doesn't work correctly in some cases:
+- Fix the error for `icon resolver`. See [components/icon](http://localhost:4322/components/icon) and [drawer page](http://localhost:4322/components/drawer):
 
   ```
-  lion/src/content/docs/components/drawer/overview.md":
-  Cannot find module ''../icon/assets/iconset-misc.js''
+  IconManager.js?v=8cca74f1:22 Uncaught Error: An icon resolver has already been registered for namespace: lion
   ```
 
 - Navigate to the [combobox page](http://localhost:4322/components/combobox). See that loading assets like `assets/obama.jpeg`. The import
