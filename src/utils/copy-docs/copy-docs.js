@@ -33,9 +33,15 @@ async function processImportsForFile(filePath) {
   for (const importObj of imports) {
     newSource += source.substring(lastPos, importObj.s);
     const importSrc = source.substring(importObj.s, importObj.e);
+    const isDyncamicImport = importObj.d > -1;
 
-    if (importSrc.startsWith('.') || importSrc === 'import.meta') {
-      // noop
+    if (
+      importSrc.startsWith('.') ||
+      importSrc.startsWith('/') ||
+      isDyncamicImport ||
+      importSrc.startsWith('import.')
+    ) {
+      newSource += importSrc;
     } else {
       const nodeModulesLocation = findNodeModules(filePath)[0];
       const nodeModulesLocation1 = path.join(filePath, nodeModulesLocation);

@@ -29,7 +29,12 @@ async function processImports(source) {
       const importSrc = source.substring(importObj.s, importObj.e);
       const isDyncamicImport = importObj.d > -1;
 
-      if (importSrc.startsWith('.') || importSrc.startsWith('/') || isDyncamicImport) {
+      if (
+        importSrc.startsWith('.') ||
+        importSrc.startsWith('/') ||
+        isDyncamicImport ||
+        importSrc.startsWith('import.')
+      ) {
         newSource += importSrc;
       } else if (importSrc === `'@mdjs/mdjs-preview/define'`) {
         newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;

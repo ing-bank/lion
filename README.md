@@ -85,6 +85,9 @@ Keep using `/docs` on the root level as we used it in the `master` branch. The d
   Cannot find module ''../icon/assets/iconset-misc.js''
   ```
 
+- Navigate to the [combobox page](http://localhost:4322/components/combobox). See that loading assets like `assets/obama.jpeg`. The import
+  comes from docs/components/combobox/extensions.md
+
 ## How to install
 
 ```bash
