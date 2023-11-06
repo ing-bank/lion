@@ -26,6 +26,7 @@ const entries = Astro.props.entries;
       entries.map((entry) => (
         <article class="ui-portal-card">
           <h2>{entry.data.title}</h2>
+          <p>{entry.slug}</p>
           <p>{entry.data.description}</p>
           <a href={entry.slug}>View blog</a>
         </article>

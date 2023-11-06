@@ -78,13 +78,6 @@ Keep using `/docs` on the root level as we used it in the `master` branch. The d
   You are trying to re-register the "lion-accordion" custom element with a different class via ScopedElementsMixin
   ```
 
-- Fix the code so that assets refered from inside `md` files directly are loaded correctly. F.e. visit [localize/text page](http://localhost:4322/fundamentals/systems/localize/text) and see the error:
-
-  ```
-  lion/src/content/docs/fundamentals/systems/localize/text.md":
-  Cannot find module './assets/${locale}.js'
-  ```
-
 - Fiex the browser console error on [collapsible page](http://localhost:4322/components/collapsible):
 
   ```
