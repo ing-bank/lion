@@ -33,12 +33,12 @@ async function processImportsForFile(filePath) {
   for (const importObj of imports) {
     newSource += source.substring(lastPos, importObj.s);
     const importSrc = source.substring(importObj.s, importObj.e);
-    const isDyncamicImport = importObj.d > -1;
+    const isDynamicImport = importObj.d > -1;
 
     if (
       importSrc.startsWith('.') ||
       importSrc.startsWith('/') ||
-      isDyncamicImport ||
+      isDynamicImport ||
       importSrc.startsWith('import.')
     ) {
       newSource += importSrc;
