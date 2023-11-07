@@ -41,12 +41,11 @@
     "watch": "npm-watch"
   },
   "workspaces": [
+    "packages/*",
     "packages-node/*"
   ],
   "dependencies": {
     "@astrojs/lit": "^3.0.2",
-    "@lion/ajax": "^1.2.3",
-    "@lion/ui": "0.4.1",
     "@mdjs/core": "^0.20.0",
     "astro": "^3.3.1",
     "astro-seo": "^0.8.0",

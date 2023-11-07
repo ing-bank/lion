@@ -41,7 +41,13 @@ async function processImports(source) {
       } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
         newSource += `'${nodeModulesText}/@mdjs/mdjs-story/src/define.js'`;
       } else {
-        newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
+        const resolvedPath = require.resolve(importSrc);
+        const packagesPath = '/packages/';
+        if (resolvedPath.includes(packagesPath)) {
+          newSource += resolvedPath;
+        } else {
+          newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
+        }
       }
 
       lastPos = importObj.e;

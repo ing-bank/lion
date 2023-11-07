@@ -59,6 +59,22 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 - Keep using `/docs` on the root level as we used it in the `master` branch. The documentation is copied into Astro related directories on `npm run start` and when when anything in `/docs` is updated.
 - Replace manually all references to assets in all `md` files so that we imply that the path is produced from the directory where the md file is located. F.e. `new URL('../src/wa-combobox/assets/obama.jpeg', import.meta.url).href;` should `new URL('./src/wa-combobox/assets/obama.jpeg', import.meta.url).href;`. Note double dot is replaced with one dot. See [this PR](https://github.com/ing-bank/lion/pull/2125/files#diff-403b1e0ab54d51dcfe54248e847498e492da00383d8b33a4087994ab9035a22c) for the reference.
 
+### Issues which are not caused by the migration (not to be fixed now)
+
+- There is a browser console error on [collapsible page](http://localhost:4321/components/collapsible):
+
+  ```
+  __mdjs-stories--use-cases.js:40 Uncaught TypeError: shadowRoot.getElementById is not a function
+  ```
+
+  Note. There is the same error on master. This issue is not caused by the migration
+
+- There is a browser console error when navigating to [ajax/overview](http://localhost:4321/fundamentals/tools/ajax/overview):
+
+  ```
+  __mdjs-stories--overview.js:19 Uncaught TypeError: createCacheInterceptors is not a function or its return value is not iterable
+  ```
+
 ### TODO
 
 - Add `packages/*` back to workspaces in `package.json`
