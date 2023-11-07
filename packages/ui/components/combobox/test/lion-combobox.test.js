@@ -1304,7 +1304,7 @@ describe('lion-combobox', () => {
       ]);
     });
 
-    it('doesnt autocomplete when there is no match for "mak"', async () => {
+    it('does not autocomplete on [Enter] when textbox content does not match options', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo">
@@ -1323,7 +1323,7 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('Mak');
     });
 
-    it('doesnt autocomplete when there is no match for "mo"', async () => {
+    it('does not autocomplete on [Enter] when textbox content does not match options and content was cleared via [Backspace]', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo">
