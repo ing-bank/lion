@@ -44,8 +44,6 @@ const getPathMdjsStroriesFile = (entry) => {
   const mdjsStroriesFileDirectory = path.dirname(entry.slug);
   return `/public/docs/${mdjsStroriesFileDirectory}/__mdjs-stories.js`;
 } 
-
-const getScopedCustomElementRegistryFilePath = () => '/docs/_assets/scoped-custom-element-registry.min.js';
 ---
 
 <MainLayout title={entry.slug}>
@@ -56,7 +54,6 @@ const getScopedCustomElementRegistryFilePath = () => '/docs/_assets/scoped-custo
           <content.Content />        
       ))
     }
-    <script src={getScopedCustomElementRegistryFilePath()}"></script>
     <script type="module" src={getPathMdjsStroriesFile(componentEntries[0])} mdjs-setup></script>
   </ComponentLayout>
 </MainLayout>

@@ -78,6 +78,9 @@ function copyMdjsStories() {
 
         const exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}' \n`;
 
+        if (commonMdjsStoriesContent === '') {
+          commonMdjsStoriesContent = `import '/public/docs/_assets/scoped-custom-element-registry.min.js'\n`;
+        }
         if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
           await fs.promises.writeFile(
             commonMdjsStoriesFileName,
