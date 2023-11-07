@@ -77,10 +77,6 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
 ### TODO
 
-- Add `packages/*` back to workspaces in `package.json`
-  - Make the rollup config copy the files from `packages/ui` into `/public`
-  - Uninstall `@lion/ui` as a dependency
-  - Uninstall `@lion/ajax` as a dependency
 - Fix FOUC (flash of unstyled text) when navigating to the component page. F.e. visit the [button page](http://localhost:4322/components/button) and
   notice that the example components are not loaded right away. Hence the page is "blinking" when rendering
 
