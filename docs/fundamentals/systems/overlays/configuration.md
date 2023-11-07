@@ -4,6 +4,7 @@
 import { html } from '@mdjs/mdjs-preview';
 import './assets/demo-el-using-overlaymixin.mjs';
 import './assets/applyDemoOverlayStyles.mjs';
+import { withDropdownConfig, withTooltipConfig } from '@lion/ui/overlays.js';
 ```
 
 The `OverlayController` has many configuration options.
