@@ -1330,6 +1330,47 @@ describe('lion-combobox', () => {
       ]);
     });
 
+    it('does not autocomplete on [Enter] when textbox content does not match options', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Mango'}">Mango</lion-option>
+            <lion-option .choiceValue="${'Lemon'}">Lemon</lion-option>
+            <lion-option .choiceValue="${'Apple'}">Apple</lion-option>
+          </lion-combobox>
+        `)
+      );
+      const { _inputNode } = getComboboxMembers(el);
+      mimicUserTypingAdvanced(el, ['m', 'a', 'k']);
+      await el.updateComplete;
+      mimicKeyPress(_inputNode, 'Enter');
+      await el.updateComplete;
+      await el.updateComplete;
+      expect(_inputNode.value).to.equal('Mak');
+    });
+
+    it('does not autocomplete on [Enter] when textbox content does not match options and content was cleared via [Backspace]', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Mango'}">Mango</lion-option>
+            <lion-option .choiceValue="${'Lemon'}">Lemon</lion-option>
+            <lion-option .choiceValue="${'Apple'}">Apple</lion-option>
+          </lion-combobox>
+        `)
+      );
+      const { _inputNode } = getComboboxMembers(el);
+      mimicUserTypingAdvanced(el, ['m', 'o', 'Backspace', 'Backspace', 'm', 'o']);
+      await el.updateComplete;
+      await el.updateComplete;
+      await el.updateComplete;
+      await el.updateComplete;
+      mimicKeyPress(_inputNode, 'Enter');
+      await el.updateComplete;
+      await el.updateComplete;
+      expect(_inputNode.value).to.equal('Mo');
+    });
+
     it('does not filter options when autocomplete is "inline"', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`

@@ -955,6 +955,9 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(LionListbox)) {
     if (autoselect && !hasAutoFilled && !this.multipleChoice) {
       // This means there is no match for checkedIndex
       this.setCheckedIndex(-1);
+      if (prevValue !== curValue) {
+        this.activeIndex = -1;
+      }
       this.modelValue = this.parser(inputValue);
     }
 
