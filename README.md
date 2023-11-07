@@ -69,14 +69,15 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
   Note. There is the same error on master. This issue is not caused by the migration
 
+- There is a browser console error when navigating to [ajax/overview](http://localhost:4321/fundamentals/tools/ajax/overview):
+
+  ```
+  __mdjs-stories--overview.js:19 Uncaught TypeError: createCacheInterceptors is not a function or its return value is not iterable
+  ```
+
 ### TODO
 
-- Add `packages/*` back to workspaces in `package.json`
-  - Make the rollup config copy the files from `packages/ui` into `/public`
-  - Uninstall `@lion/ui` as a dependency
-  - Uninstall `@lion/ajax` as a dependency
-- Fix FOUC (flash of unstyled text) when navigating to the component page. F.e. visit the [button page](http://localhost:4322/components/button) and
-  notice that the example components are not loaded right away. Hence the page is "blinking" when rendering
+- Fix FOUC (flash of unstyled text) when navigating to the component page. F.e. visit the [button page](http://localhost:4322/components/button) and notice that the example components are not loaded right away. Hence the page is "blinking" when rendering. We need to explore why on master the page is loaded quicly and on Astro slowly. Is it because of bundling? Because of the fact that we concatenate multiple pages? How do we handle this? Adding a loader animation, bundling, etc.?
 
 - Fix the error for `icon resolver`. See [components/icon](http://localhost:4322/components/icon) and [drawer page](http://localhost:4322/components/drawer):
 
