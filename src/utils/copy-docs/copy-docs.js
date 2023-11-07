@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs/promises');
 const process = require('process');
 // eslint-disable-next-line import/no-extraneous-dependencies
+const imageExtensions = require('image-extensions');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const findNodeModules = require('find-node-modules');
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { init, parse } = require('es-module-lexer');
@@ -93,7 +95,10 @@ async function copyDocs(currentPath = '') {
       }
       await copyDocs(path.join(currentPath, file));
     } else {
-      if (path.extname(file) === '.md' && file !== 'index.md') {
+      if (
+        (path.extname(file) === '.md' && file !== 'index.md') ||
+        imageExtensions.includes(path.extname(file).split('.')[1])
+      ) {
         await fs.mkdir(path.join(contentDocsPath, currentPath), { recursive: true });
         await fs.copyFile(sourceDocsFilePath, contentDocsFilePath);
 

@@ -79,15 +79,6 @@ They provide an unopinionated, white-label layer that can be extended to your ow
   IconManager.js?v=8cca74f1:22 Uncaught Error: An icon resolver has already been registered for namespace: lion
   ```
 
-- Fix import loding from inside md files. Navigate to [ing-open-sources-lion](http://localhost:4322/blog/ing-open-sources-lion), [formatting-and-parsing](http://localhost:4322/fundamentals/systems/form/formatting-and-parsing) The build error appears:
-
-  ```
-  4:43:56 PM [vite] Error when evaluating SSR module /Users/ai09al/ing/lion/src/content/docs/blog/ing-open-sources-lion.md: failed to import "./images/ing-open-sources-lion-side-by-side.png"
-  |- ImageNotFound: Could not find requested image `./images/ing-open-sources-lion-side-by-side.png`. Does it exist?
-  ```
-
-  It seems `vite` tries to resolve the paths in `md`s instead of letting them as they are.
-
 - Navigate to [providence-analytics/overview](http://localhost:4322/fundamentals/node-tools/providence-analytics/overview). The corresponding md file could be found by docs/fundamentals/node-tools/providence-analytics/overview.md. It contains notation like this: `![CLI](./assets/provicli.gif 'CLI')`. Which throws an error:
 
   ```
