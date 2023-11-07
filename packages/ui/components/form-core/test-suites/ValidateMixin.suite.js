@@ -9,6 +9,7 @@ import {
 } from '@lion/ui/form-core-test-helpers.js';
 import sinon from 'sinon';
 import {
+  EqualsLength,
   MaxLength,
   MinLength,
   Required,
@@ -776,6 +777,32 @@ export function runValidateMixinSuite(customConfig) {
           { validator: resultV, outcome: true },
           { validator, outcome: true },
         ]);
+      });
+    });
+
+    describe('getMessages with custom HTML', () => {
+      it('will render HTML for lion-validation-feedback', async () => {
+        const messageHtmlId = 'test123';
+        const messageHtml = `<div id="test123">test</div>`;
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag}
+            .validators="${[
+              new EqualsLength(4, { getMessage: () => html`<div id="test123">test</div>` }),
+            ]}" })]}"
+            .modelValue="${'123'}"            
+            label="Custom message for validator instance"
+          ></${tag}>
+        `)
+        );
+        expect(el.validationStates.error.EqualsLength).to.be.true;
+        expect(el.hasFeedbackFor).to.deep.equal(['error']);
+        const { _feedbackNode } = getFormControlMembers(el);
+        await el.updateComplete;
+        await el.updateComplete;
+        const messageHtmlNode = _feedbackNode.shadowRoot?.querySelector(`#${messageHtmlId}`);
+        expect(messageHtmlNode?.outerHTML).to.equal(messageHtml);
+        expect(messageHtmlNode?.tagName).to.equal('DIV');
       });
     });
 
