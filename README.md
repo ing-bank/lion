@@ -64,6 +64,7 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 - Add `packages/*` back to workspaces in `package.json`
   - Make the rollup config copy the files from `packages/ui` into `/public`
   - Uninstall `@lion/ui` as a dependency
+  - Uninstall `@lion/ajax` as a dependency
 - Fix FOUC (flash of unstyled text) when navigating to the component page. F.e. visit the [button page](http://localhost:4322/components/button) and
   notice that the example components are not loaded right away. Hence the page is "blinking" when rendering
 - Fix the browser console error on [collapsible page](http://localhost:4322/components/collapsible):
@@ -97,13 +98,6 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
   ```
   Uncaught (in promise) ReferenceError: withDropdownConfig is not defined
-  ```
-
-- Navigate to [ajax/overview](http://localhost:4322/fundamentals/tools/ajax/overview), [ajax/use-cases](http://localhost:4322/fundamentals/tools/ajax/use-cases). There are errors in the build console:
-
-  ```
-  Failed to parse Markdown file "/Users/ai09al/ing/lion/src/content/docs/fundamentals/tools/ajax/overview.md":
-  Cannot find module '@lion/ajax'
   ```
 
 ## How to install
