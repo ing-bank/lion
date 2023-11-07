@@ -83,11 +83,6 @@ They provide an unopinionated, white-label layer that can be extended to your ow
   - Uninstall `@lion/ajax` as a dependency
 - Fix FOUC (flash of unstyled text) when navigating to the component page. F.e. visit the [button page](http://localhost:4322/components/button) and
   notice that the example components are not loaded right away. Hence the page is "blinking" when rendering
-- Fix the browser console error on [collapsible page](http://localhost:4322/components/collapsible):
-
-  ```
-  __mdjs-stories--use-cases.js:40 Uncaught TypeError: shadowRoot.getElementById is not a function
-  ```
 
 - Fix the error for `icon resolver`. See [components/icon](http://localhost:4322/components/icon) and [drawer page](http://localhost:4322/components/drawer):
 
@@ -95,17 +90,7 @@ They provide an unopinionated, white-label layer that can be extended to your ow
   IconManager.js?v=8cca74f1:22 Uncaught Error: An icon resolver has already been registered for namespace: lion
   ```
 
-- Navigate to [providence-analytics/overview](http://localhost:4322/fundamentals/node-tools/providence-analytics/overview). The corresponding md file could be found by docs/fundamentals/node-tools/providence-analytics/overview.md. It contains notation like this: `![CLI](./assets/provicli.gif 'CLI')`. Which throws an error:
-
-  ```
-  ImageNotFound: Could not find requested image `./assets/provicli.gif`. Does it exist?
-  ```
-
-- Navigate to [overlays/configuration](http://localhost:4322/fundamentals/systems/overlays/configuration). There are errors in the browser console:
-
-  ```
-  Uncaught (in promise) ReferenceError: withDropdownConfig is not defined
-  ```
+  Note. The reason for this error is caused by the fact that `addIconResolver` is set in two different files: `docs/components/icon/index.md` and `docs/components/icon/use-cases.md` and then those are concatenated. TODO we need to change the code so that pages there are no conflicts. At the same time we want the code to be complete and serve as a good example for users. That is we might want to keep `addIconResolver` in both examples and think of a solution that will keep the code as is, but allows multiple instances of lion on the same page?
 
 ## How to install
 
