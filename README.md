@@ -77,8 +77,7 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
 ### TODO
 
-- Fix FOUC (flash of unstyled text) when navigating to the component page. F.e. visit the [button page](http://localhost:4322/components/button) and
-  notice that the example components are not loaded right away. Hence the page is "blinking" when rendering
+- Fix FOUC (flash of unstyled text) when navigating to the component page. F.e. visit the [button page](http://localhost:4322/components/button) and notice that the example components are not loaded right away. Hence the page is "blinking" when rendering. We need to explore why on master the page is loaded quicly and on Astro slowly. Is it because of bundling? Because of the fact that we concatenate multiple pages? How do we handle this? Adding a loader animation, bundling, etc.?
 
 - Fix the error for `icon resolver`. See [components/icon](http://localhost:4322/components/icon) and [drawer page](http://localhost:4322/components/drawer):
 
