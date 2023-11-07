@@ -346,7 +346,7 @@ export const emailValidator = () => html`
 `;
 ```
 
-### Override Default Messages With Custom Text
+### Override default messages with custom text
 
 To get default validation messages you need to import and call the `loadDefaultFeedbackMessages` function once in your application.
 
@@ -374,7 +374,7 @@ export const defaultMessages = () => html`
 `;
 ```
 
-### Override Default Messages With Custom HTML
+### Override default messages with custom HTML
 
 Similarly to overriding the default messages with a custom text it is possible to override the messages with a custom HTML.
 
