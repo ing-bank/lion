@@ -22,7 +22,7 @@ const contents = [];
 const convertHeadingsToInPageNavData = (headings, componentEntry) => {
   return headings.map(header => ({
       name: header.text,
-      url: `/${componentEntry.slug}#${header.slug}`
+      url: `/${path.dirname(componentEntry.slug)}#${header.slug}`
     }));
 };
 
@@ -30,10 +30,10 @@ const parseEntries = async () => {
   for (const componentEntry of componentEntries) {
     const { Content, headings } = await componentEntry.render();
     contents.push({Content});
-    const headersH1 = headings.filter(header => header.depth === 1);
-    const entryInPageNavData = convertHeadingsToInPageNavData(headersH1, componentEntry)[0];
     const headersH2 = headings.filter(header => header.depth === 2);
-    entryInPageNavData.children = convertHeadingsToInPageNavData(headersH2, componentEntry);
+    const entryInPageNavData = convertHeadingsToInPageNavData(headersH2, componentEntry)[0];
+    const headersH3 = headings.filter(header => header.depth === 3);
+    entryInPageNavData.children = convertHeadingsToInPageNavData(headersH3, componentEntry);
     inPageNavData.push(entryInPageNavData);
   }
 };
