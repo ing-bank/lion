@@ -57,14 +57,6 @@ export class LionIcon extends LitElement {
         type: String,
         attribute: 'icon-id',
       },
-      /**
-       * @private
-       */
-      role: {
-        type: String,
-        attribute: 'role',
-        reflect: true,
-      },
     };
   }
 
@@ -101,7 +93,6 @@ export class LionIcon extends LitElement {
 
   constructor() {
     super();
-    this.role = 'img';
     this.ariaLabel = '';
     this.iconId = '';
     /**
@@ -131,6 +122,7 @@ export class LionIcon extends LitElement {
     // ensures that aria-hidden is set if there is no aria-label attribute
     this._onLabelChanged();
     super.connectedCallback();
+    this.setAttribute('role', 'img');
   }
 
   /**

@@ -165,6 +165,7 @@ export const runRegistrationSuite = customConfig => {
     it('works for components that have a delayed render', async () => {
       class PerformUpdate extends FormRegistrarMixin(LitElement) {
         async performUpdate() {
+          // eslint-disable-next-line no-promise-executor-return
           await new Promise(resolve => setTimeout(() => resolve(undefined), 10));
           await super.performUpdate();
         }
@@ -359,6 +360,7 @@ export const runRegistrationSuite = customConfig => {
         const delayedPortalString = defineCE(
           class extends FormRegistrarPortalMixin(LitElement) {
             async performUpdate() {
+              // eslint-disable-next-line no-promise-executor-return
               await new Promise(resolve => setTimeout(() => resolve(undefined), 10));
               await super.performUpdate();
             }

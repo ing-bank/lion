@@ -2,9 +2,7 @@
 import { Validator } from '@lion/ui/form-core.js';
 
 export class AlwaysInvalid extends Validator {
-  static get validatorName() {
-    return 'AlwaysInvalid';
-  }
+  static validatorName = 'AlwaysInvalid';
 
   execute() {
     const showMessage = true;

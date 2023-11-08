@@ -4,10 +4,6 @@ import { DisabledWithTabIndexMixin } from '@lion/ui/core.js';
 export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
   static get properties() {
     return {
-      role: {
-        type: String,
-        reflect: true,
-      },
       checked: {
         type: Boolean,
         reflect: true,
@@ -76,7 +72,6 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     // inputNode = this, which always requires a value prop
     this.value = '';
 
-    this.role = 'switch';
     this.checked = false;
     this.__initialized = false;
     /** @protected */
@@ -89,6 +84,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
   connectedCallback() {
     super.connectedCallback();
+    this.setAttribute('role', 'switch');
     this.setAttribute('aria-checked', `${this.checked}`);
     this.addEventListener('click', this._toggleChecked);
     this.addEventListener('keydown', this.__handleKeydown);

@@ -19,10 +19,14 @@ describe('<lion-input-range>', () => {
       <lion-input-range .modelValue=${75} unit="${`%`}"></lion-input-range>
     `);
     expect(
-      /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('.input-range__value')).innerText,
+      /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('.input-range__value')
+      ).innerText,
     ).to.equal('75');
     expect(
-      /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('.input-range__unit')).innerText,
+      /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelector('.input-range__unit')
+      ).innerText,
     ).to.equal('%');
   });
 
@@ -30,12 +34,14 @@ describe('<lion-input-range>', () => {
     const el = await fixture(`<lion-input-range min="100" max="200"></lion-input-range>`);
     expect(el.shadowRoot?.querySelectorAll('.input-range__limits span').length).to.equal(2);
     expect(
-      /** @type {HTMLElement} */ (el.shadowRoot?.querySelectorAll('.input-range__limits span')[0])
-        .innerText,
+      /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('.input-range__limits span')[0]
+      ).innerText,
     ).to.equal(el.min.toString());
     expect(
-      /** @type {HTMLElement} */ (el.shadowRoot?.querySelectorAll('.input-range__limits span')[1])
-        .innerText,
+      /** @type {HTMLElement} */ (
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('.input-range__limits span')[1]
+      ).innerText,
     ).to.equal(el.max.toString());
   });
 

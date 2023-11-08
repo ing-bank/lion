@@ -185,10 +185,12 @@ describe('lion-icon', () => {
     try {
       icons.addIconResolver(
         'foo',
+        // eslint-disable-next-line no-promise-executor-return
         () => new Promise(resolve => setTimeout(() => resolve(heartSvg), 10)),
       );
       icons.addIconResolver(
         'bar',
+        // eslint-disable-next-line no-promise-executor-return
         () => new Promise(resolve => setTimeout(() => resolve(hammerSvg), 4)),
       );
       const el = await fixture(html`<lion-icon icon-id="foo:lorem:ipsum"></lion-icon>`);

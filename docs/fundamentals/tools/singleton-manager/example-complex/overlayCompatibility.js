@@ -1,4 +1,4 @@
-import { OverlaysManager , OverlaysManager as OverlaysManager2 } from 'overlays';
+import { OverlaysManager, OverlaysManager as OverlaysManager2 } from 'overlays';
 import { singletonManager } from 'singleton-manager';
 
 let compatibleManager1;

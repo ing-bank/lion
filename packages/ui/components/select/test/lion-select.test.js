@@ -60,7 +60,7 @@ describe('lion-select', () => {
     expect(lionSelect.formattedValue).to.equal('');
 
     const select = /** @type {HTMLSlotElement} */ (
-      lionSelect.shadowRoot?.querySelector('slot[name=input]')
+      /** @type {ShadowRoot} */ (lionSelect.shadowRoot).querySelector('slot[name=input]')
     ).assignedElements()[0];
     const options = select.querySelectorAll('option');
     options[1].textContent = 'Item 2';
