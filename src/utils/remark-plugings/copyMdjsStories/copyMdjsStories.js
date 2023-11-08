@@ -13,6 +13,7 @@ let visit;
 const nodeModulesText = '/node_modules';
 const mdJsStoriesFileNameWithoutExtension = '__mdjs-stories';
 const mdJsStoriesFileName = `${mdJsStoriesFileNameWithoutExtension}.js`;
+const isDistBuild = true;
 
 /**
  * @param {string} source
@@ -28,7 +29,6 @@ async function processImports(source) {
       newSource += source.substring(lastPos, importObj.s);
       const importSrc = source.substring(importObj.s, importObj.e);
       const isDynamicImport = importObj.d > -1;
-      console.log('importSrc: ', importSrc);
 
       if (
         importSrc.startsWith('.') ||
@@ -47,7 +47,7 @@ async function processImports(source) {
         const resolvedPath = require.resolve(importSrc);
         const packagesPath = '/packages/';
         if (resolvedPath.includes(packagesPath)) {
-          newSource += resolvedPath;
+          newSource += packagesPath + resolvedPath.split(packagesPath)[1];
         } else {
           newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
         }
@@ -85,10 +85,20 @@ function copyMdjsStories() {
           // noop. File is not yet created for the component
         }
 
-        const exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}' \n`;
+        let exportCmd;
+        if (isDistBuild) {
+          exportCmd = `import './${currentMarkdownFileMdJsStoryName}' \n`;
+        } else {
+          exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}' \n`;
+        }
 
         if (commonMdjsStoriesContent === '') {
-          commonMdjsStoriesContent = `import '/public/docs/_assets/scoped-custom-element-registry.min.js'\n`;
+          if (isDistBuild) {
+            commonMdjsStoriesContent = `import '../../_assets/scoped-custom-element-registry.min.js';
+import '../../../mdjs-extra.js';\n`;
+          } else {
+            commonMdjsStoriesContent = `import '/public/docs/_assets/scoped-custom-element-registry.min.js'\n`;
+          }
         }
         if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
           await fs.promises.writeFile(
@@ -117,7 +127,12 @@ function copyMdjsStories() {
       parsedPath = path.dirname(leftSideParsedPath);
     }
 
-    const parsedSetupJsCode = await processImports(setupJsCode);
+    let parsedSetupJsCode;
+    if (isDistBuild) {
+      parsedSetupJsCode = await setupJsCode;
+    } else {
+      parsedSetupJsCode = await processImports(setupJsCode);
+    }
     pathToMdDirectoryInPublic = `${publicDir}/${parsedPath}`;
     currentMarkdownFileMdJsStoryName = `${mdJsStoriesFileNameWithoutExtension}--${
       path.basename(currentMarkdownFile).split('.md')[0]

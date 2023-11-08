@@ -47,6 +47,8 @@
   "dependencies": {
     "@astrojs/lit": "^3.0.2",
     "@mdjs/core": "^0.20.0",
+    "@rollup/plugin-commonjs": "^24.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.6",
     "astro": "^3.3.1",
     "astro-seo": "^0.8.0",
     "changeset": "^0.2.6",
