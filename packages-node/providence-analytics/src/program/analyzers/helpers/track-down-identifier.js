@@ -39,16 +39,16 @@ function isExternalProject(source, projectName) {
  * Other than with import, no binding is created for MyClass by Babel(?)
  * This means 'path.scope.getBinding('MyClass')' returns undefined
  * and we have to find a different way to retrieve this value.
- * @param {SwcPath} astPath Babel ast traversal path
+ * @param {SwcPath} swcPath Babel ast traversal path
  * @param {IdentifierName} identifierName the name that should be tracked (and that exists inside scope of astPath)
  */
-function getBindingAndSourceReexports(astPath, identifierName) {
+function getBindingAndSourceReexports(swcPath, identifierName) {
   // Get to root node of file and look for exports like `export { identifierName } from 'src';`
   let source;
   let bindingType;
   let bindingPath;
 
-  let curPath = astPath;
+  let curPath = swcPath;
   while (curPath.parentPath) {
     curPath = curPath.parentPath;
   }

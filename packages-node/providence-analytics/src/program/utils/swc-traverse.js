@@ -71,6 +71,7 @@ export function getPathFromNode(node) {
  * @returns {SwcPath}
  */
 function createSwcPath(node, parent, stop, scope) {
+  /** @type {SwcPath} */
   const swcPath = {
     node,
     parent,
@@ -78,9 +79,9 @@ function createSwcPath(node, parent, stop, scope) {
     // TODO: "pre-traverse" the missing scope parts instead via getter that adds refs and bindings for current scope
     scope,
     parentPath: parent ? getPathFromNode(parent) : null,
-    get(/** @type {string} */ name) {
-      const swcPathForNode = getPathFromNode(node[name]);
-      if (node[name] && !swcPathForNode) {
+    get(/** @type {string} */ id) {
+      const swcPathForNode = getPathFromNode(node[id]);
+      if (node[id] && !swcPathForNode) {
         // throw new Error(
         //   `[swcTraverse]: Use {needsAdvancedPaths: true} to find path for node: ${node[name]}`,
         // );

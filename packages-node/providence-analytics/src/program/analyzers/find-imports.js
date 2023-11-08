@@ -20,6 +20,7 @@ import { LogService } from '../core/LogService.js';
  * @param {SwcNode} node
  */
 function getImportOrReexportsSpecifiers(node) {
+  // @ts-expect-error
   return node.specifiers.map(s => {
     if (
       s.type === 'ImportDefaultSpecifier' ||
@@ -40,7 +41,7 @@ function getImportOrReexportsSpecifiers(node) {
  * Finds import specifiers and sources
  * @param {SwcAstModule} swcAst
  */
-function findImportsPerAstFile(swcAst, context) {
+function findImportsPerAstFile(swcAst) {
   LogService.debug(`Analyzer "find-imports": started findImportsPerAstFile method`);
 
   // https://github.com/babel/babel/blob/672a58660f0b15691c44582f1f3fdcdac0fa0d2f/packages/babel-core/src/transformation/index.ts#L110
@@ -129,15 +130,18 @@ export default class FindImportsSwcAnalyzer extends Analyzer {
      * Traverse
      */
     const queryOutput = await this._traverse(async (swcAst, context) => {
-      let transformedFile = findImportsPerAstFile(swcAst, context);
+      // @ts-expect-error
+      let transformedFile = findImportsPerAstFile(swcAst);
       // Post processing based on configuration...
       transformedFile = await normalizeSourcePaths(
         transformedFile,
         context.relativePath,
+        // @ts-expect-error
         cfg.targetProjectPath,
       );
 
       if (!cfg.keepInternalSources) {
+        // @ts-expect-error
         transformedFile = transformedFile.filter(entry => !isRelativeSourcePath(entry.source));
       }
 

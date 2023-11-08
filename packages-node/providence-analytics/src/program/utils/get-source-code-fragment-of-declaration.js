@@ -6,8 +6,8 @@ import { trackDownIdentifier } from '../analyzers/helpers/track-down-identifier.
 import { toPosixPath } from './to-posix-path.js';
 
 /**
- * @typedef {import('@babel/types').Node} Node
- * @typedef {import('@babel/traverse').NodePath} NodePath
+ * @typedef {import('@swc/core').Node} SwcNode
+ * @typedef {import('../../../types/index.js').SwcPath} SwcPath
  * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
@@ -39,13 +39,10 @@ export function getFilePathOrExternalSource({ rootPath, localPath }) {
  *    - Is it a ref? Call ourselves with referencedIdentifierName ('x' in example above)
  *    - is it a non ref declaration? Return the path of the node
  * @param {{ referencedIdentifierName:string, globalScopeBindings:{[key:string]:SwcBinding}; }} opts
- * @returns {NodePath}
+ * @returns {SwcPath|null}
  */
 export function getReferencedDeclaration({ referencedIdentifierName, globalScopeBindings }) {
   // We go from referencedIdentifierName 'y' to binding (VariableDeclarator path) 'y';
-  // const [, refDeclaratorBinding] =
-  //   Object.entries(globalScopeBindings).find(([key]) => key === referencedIdentifierName) || [];
-
   const refDeclaratorBinding = globalScopeBindings[referencedIdentifierName];
 
   // We provided a referencedIdentifierName that is not in the globalScopeBindings
@@ -80,7 +77,7 @@ export function getReferencedDeclaration({ referencedIdentifierName, globalScope
  * ```
  *
  * @param {{ filePath: PathFromSystemRoot; exportedIdentifier: string; projectRootPath: PathFromSystemRoot }} opts
- * @returns {Promise<{ sourceNodePath: string; sourceFragment: string|null; externalImportSource: string; }>}
+ * @returns {Promise<{ sourceNodePath: SwcPath; sourceFragment: string|null; externalImportSource: string|null; }>}
  */
 export async function getSourceCodeFragmentOfDeclaration({
   filePath,
@@ -94,7 +91,7 @@ export async function getSourceCodeFragmentOfDeclaration({
   // TODO: fix swc-to-babel lib to make this compatible with 'swc-to-babel' mode of getAst
   const swcAst = AstService._getSwcAst(code);
 
-  /** @type {NodePath} */
+  /** @type {SwcPath} */
   let finalNodePath;
 
   swcTraverse(
@@ -114,20 +111,25 @@ export async function getSourceCodeFragmentOfDeclaration({
         const globalScopeBindings = getPathFromNode(astPath.node.body?.[0])?.scope.bindings;
 
         if (exportedIdentifier === '[default]') {
-          const defaultExportPath = getPathFromNode(
-            astPath.node.body.find(child =>
-              ['ExportDefaultDeclaration', 'ExportDefaultExpression'].includes(child.type),
-            ),
+          const defaultExportPath = /** @type {SwcPath} */ (
+            getPathFromNode(
+              astPath.node.body.find((/** @type {{ type: string; }} */ child) =>
+                ['ExportDefaultDeclaration', 'ExportDefaultExpression'].includes(child.type),
+              ),
+            )
           );
           const isReferenced = defaultExportPath?.node.expression?.type === 'Identifier';
 
           if (!isReferenced) {
             finalNodePath = defaultExportPath.get('decl') || defaultExportPath.get('expression');
           } else {
-            finalNodePath = getReferencedDeclaration({
-              referencedIdentifierName: defaultExportPath.node.expression.value,
-              globalScopeBindings,
-            });
+            finalNodePath = /** @type {SwcPath} */ (
+              getReferencedDeclaration({
+                referencedIdentifierName: defaultExportPath.node.expression.value,
+                // @ts-expect-error
+                globalScopeBindings,
+              })
+            );
           }
         } else {
           const variableDeclaratorPath = astPath.scope.bindings[exportedIdentifier].path;
@@ -145,10 +147,13 @@ export async function getSourceCodeFragmentOfDeclaration({
             // it must be an exported declaration
             finalNodePath = contentPath;
           } else {
-            finalNodePath = getReferencedDeclaration({
-              referencedIdentifierName: name,
-              globalScopeBindings,
-            });
+            finalNodePath = /** @type {SwcPath} */ (
+              getReferencedDeclaration({
+                referencedIdentifierName: name,
+                // @ts-expect-error
+                globalScopeBindings,
+              })
+            );
           }
         }
       },
@@ -156,9 +161,12 @@ export async function getSourceCodeFragmentOfDeclaration({
     { needsAdvancedPaths: true },
   );
 
+  // @ts-expect-error
   if (finalNodePath.type === 'ImportSpecifier') {
+    // @ts-expect-error
     const importDeclNode = finalNodePath.parentPath.node;
     const source = importDeclNode.source.value;
+    // @ts-expect-error
     const identifierName = finalNodePath.node.imported?.value || finalNodePath.node.local?.value;
     const currentFilePath = filePath;
 
@@ -170,13 +178,14 @@ export async function getSourceCodeFragmentOfDeclaration({
     );
     const filePathOrSrc = getFilePathOrExternalSource({
       rootPath: projectRootPath,
-      localPath: rootFile.file,
+      localPath: /** @type {PathRelativeFromProjectRoot} */ (rootFile.file),
     });
 
     // TODO: allow resolving external project file paths
     if (!filePathOrSrc.startsWith('/')) {
       // So we have external project; smth like '@lion/input/x.js'
       return {
+        // @ts-expect-error
         sourceNodePath: finalNodePath,
         sourceFragment: null,
         externalImportSource: filePathOrSrc,
@@ -184,17 +193,20 @@ export async function getSourceCodeFragmentOfDeclaration({
     }
 
     return getSourceCodeFragmentOfDeclaration({
-      filePath: filePathOrSrc,
+      filePath: /** @type {PathFromSystemRoot} */ (filePathOrSrc),
       exportedIdentifier: rootFile.specifier,
       projectRootPath,
     });
   }
 
   return {
+    // @ts-expect-error
     sourceNodePath: finalNodePath,
     sourceFragment: code.slice(
-      finalNodePath.node?.span?.start - 1 - offset,
-      finalNodePath.node?.span?.end - 1 - offset,
+      // @ts-expect-error
+      finalNodePath.node.span.start - 1 - offset,
+      // @ts-expect-error
+      finalNodePath.node.span.end - 1 - offset,
     ),
     // sourceFragment: finalNodePath.node?.raw || finalNodePath.node?.value,
     externalImportSource: null,

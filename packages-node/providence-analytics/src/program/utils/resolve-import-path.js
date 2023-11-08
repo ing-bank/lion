@@ -1,4 +1,4 @@
-import { isBuiltin } from 'node:module';
+import { isBuiltin } from 'module';
 import path from 'path';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { LogService } from '../core/LogService.js';

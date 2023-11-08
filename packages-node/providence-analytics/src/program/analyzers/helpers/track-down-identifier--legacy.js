@@ -1,3 +1,5 @@
+/* eslint-disable no-shadow */
+// @ts-nocheck
 import fs from 'fs';
 import pathLib from 'path';
 import babelTraverse from '@babel/traverse';

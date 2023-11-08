@@ -301,23 +301,23 @@ describe('Analyzer "find-exports"', async () => {
         },
       );
 
-      const findExportsCategoryQueryObj = await QueryService.getQueryConfigFromAnalyzer(
-        'find-exports',
-        {
-          metaConfig: {
-            categoryConfig: [
-              {
-                project: 'my-project',
-                categories: {
-                  fooCategory: localFilePath => localFilePath.startsWith('./foo'),
-                  barCategory: localFilePath => localFilePath.startsWith('./packages/bar'),
-                  testCategory: localFilePath => localFilePath.includes('/test/'),
-                },
-              },
-            ],
-          },
-        },
-      );
+      // const findExportsCategoryQueryObj = await QueryService.getQueryConfigFromAnalyzer(
+      //   'find-exports',
+      //   {
+      //     metaConfig: {
+      //       categoryConfig: [
+      //         {
+      //           project: 'my-project',
+      //           categories: {
+      //             fooCategory: localFilePath => localFilePath.startsWith('./foo'),
+      //             barCategory: localFilePath => localFilePath.startsWith('./packages/bar'),
+      //             testCategory: localFilePath => localFilePath.includes('/test/'),
+      //           },
+      //         },
+      //       ],
+      //     },
+      //   },
+      // );
 
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
