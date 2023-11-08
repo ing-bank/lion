@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow, no-param-reassign */
 import { isRelativeSourcePath } from '../utils/relative-source-path.js';
 import { swcTraverse } from '../utils/swc-traverse.js';
+import { getAssertionType } from '../utils/get-assertion-type.js';
 import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
 import { Analyzer } from '../core/Analyzer.js';
 import { LogService } from '../core/LogService.js';
@@ -57,8 +58,9 @@ function findImportsPerAstFile(swcAst) {
       }
       const source = node.source.value;
       const entry = /** @type {Partial<FindImportsAnalyzerEntry>} */ ({ importSpecifiers, source });
-      if (node.asserts) {
-        entry.assertionType = node.asserts.properties[0].value?.value;
+      const assertionType = getAssertionType(node);
+      if (assertionType) {
+        entry.assertionType = getAssertionType(node);
       }
       transformedFile.push(entry);
     },
@@ -69,8 +71,9 @@ function findImportsPerAstFile(swcAst) {
       const importSpecifiers = getImportOrReexportsSpecifiers(node);
       const source = node.source.value;
       const entry = /** @type {Partial<FindImportsAnalyzerEntry>} */ ({ importSpecifiers, source });
-      if (node.asserts) {
-        entry.assertionType = node.asserts.properties[0].value?.value;
+      const assertionType = getAssertionType(node);
+      if (assertionType) {
+        entry.assertionType = assertionType;
       }
       transformedFile.push(entry);
     },

@@ -2,7 +2,7 @@
 import fs from 'fs';
 import pathLib from 'path';
 import sinon from 'sinon';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { expect } from 'chai';
 import { it } from 'mocha';
 import fetch from 'node-fetch';
@@ -21,8 +21,12 @@ const fixturesPath = pathLib.join(__dirname, 'fixtures');
 const mockedResponsesPath = pathLib.join(__dirname, 'fixtures/dashboard-responses');
 const mockedOutputPath = pathLib.join(__dirname, 'fixtures/providence-output');
 
+/**
+ * @param {string} url
+ */
 async function getConf(url) {
-  const { default: providenceConf } = await import(url);
+  const { href } = pathToFileURL(url);
+  const { default: providenceConf } = await import(href);
   const providenceConfRaw = fs.readFileSync(url, 'utf8');
   return { providenceConf, providenceConfRaw };
 }

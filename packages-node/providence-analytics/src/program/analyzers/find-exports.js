@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow, no-param-reassign */
 import path from 'path';
 import { swcTraverse } from '../utils/swc-traverse.js';
+import { getAssertionType } from '../utils/get-assertion-type.js';
 import { Analyzer } from '../core/Analyzer.js';
 import { trackDownIdentifier } from './helpers/track-down-identifier.js';
 import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
@@ -171,8 +172,9 @@ function findExportsPerAstFile(swcAst, { skipFileImports }) {
     const localMap = getLocalNameSpecifiers(astPath.node);
     const source = astPath.node.source?.value;
     const entry = { exportSpecifiers, localMap, source, __tmp: { astPath } };
-    if (astPath.node.asserts) {
-      entry.assertionType = astPath.node.asserts.properties[0].value?.value;
+    const assertionType = getAssertionType(astPath.node);
+    if (assertionType) {
+      entry.assertionType = assertionType;
     }
     transformedFile.push(entry);
   };
