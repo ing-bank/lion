@@ -25,7 +25,7 @@ export declare class ChoiceGroupHost {
     filterFn?: (el: FormControl, property?: string) => boolean,
   ): void;
   protected _throwWhenInvalidChildModelValue(child: FormControlHost): void;
-  protected _isEmpty(): void;
+  protected _isEmpty(): boolean;
   protected _checkSingleChoiceElements(ev: Event): void;
   protected _getCheckedElements(): ChoiceInputHost[];
   protected _setCheckedElements(value: any, check: boolean): void;

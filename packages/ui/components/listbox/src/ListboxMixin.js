@@ -196,22 +196,6 @@ const ListboxMixinImplementation = superclass =>
       return this._listboxNode;
     }
 
-    /**
-     * @override ChoiceGroupMixin
-     */
-    get serializedValue() {
-      return this.modelValue;
-    }
-
-    // Duplicating from FormGroupMixin, because you cannot independently inherit/override getter + setter.
-    // If you override one, gotta override the other, they go in pairs.
-    /**
-     * @override ChoiceGroupMixin
-     */
-    set serializedValue(value) {
-      super.serializedValue = value;
-    }
-
     get activeIndex() {
       return this.formElements.findIndex(el => el.active === true);
     }
@@ -473,6 +457,7 @@ const ListboxMixinImplementation = superclass =>
     }
 
     clear() {
+      super.clear();
       this.setCheckedIndex(-1);
       this.resetInteractionState();
     }

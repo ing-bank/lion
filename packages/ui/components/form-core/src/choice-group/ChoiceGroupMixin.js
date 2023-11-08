@@ -169,6 +169,7 @@ const ChoiceGroupMixinImplementation = superclass =>
     /** @param {import('lit').PropertyValues} changedProperties */
     updated(changedProperties) {
       super.updated(changedProperties);
+
       if (changedProperties.has('name') && this.name !== changedProperties.get('name')) {
         this.formElements.forEach(child => {
           // eslint-disable-next-line no-param-reassign

@@ -55,6 +55,7 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
           </${parentTag}>
         `)
         );
+
         expect(el.modelValue).to.equal('female');
         el.formElements[0].checked = true;
         expect(el.modelValue).to.equal('male');
