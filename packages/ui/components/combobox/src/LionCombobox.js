@@ -1,13 +1,12 @@
 import { browserDetection } from '@lion/ui/core.js';
 import { Unparseable } from '@lion/ui/form-core.js';
-import { CustomChoiceGroupMixin } from '../../form-core/src/choice-group/CustomChoiceGroupMixin.js';
-
 import { LionListbox } from '@lion/ui/listbox.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { css, html } from 'lit';
 import { makeMatchingTextBold, unmakeMatchingTextBold } from './utils/makeMatchingTextBold.js';
 import { MatchesOption } from './validators.js';
+import { CustomChoiceGroupMixin } from '../../form-core/src/choice-group/CustomChoiceGroupMixin.js';
 
 const matchA11ySpanReverseFns = new WeakMap();
 
