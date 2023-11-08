@@ -28,6 +28,7 @@ async function processImports(source) {
       newSource += source.substring(lastPos, importObj.s);
       const importSrc = source.substring(importObj.s, importObj.e);
       const isDynamicImport = importObj.d > -1;
+      console.log('importSrc: ', importSrc);
 
       if (
         importSrc.startsWith('.') ||
@@ -35,11 +36,13 @@ async function processImports(source) {
         isDynamicImport ||
         importSrc.startsWith('import.')
       ) {
-        newSource += importSrc;
-      } else if (importSrc === `'@mdjs/mdjs-preview/define'`) {
-        newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;
-      } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
-        newSource += `'${nodeModulesText}/@mdjs/mdjs-story/src/define.js'`;
+        if (importSrc === `'@mdjs/mdjs-preview/define'`) {
+          newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;
+        } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
+          newSource += `'${nodeModulesText}/@mdjs/mdjs-story/src/define.js'`;
+        } else {
+          newSource += importSrc;
+        }
       } else {
         const resolvedPath = require.resolve(importSrc);
         const packagesPath = '/packages/';
