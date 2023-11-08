@@ -1118,9 +1118,8 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
           this.opened = false;
         } else {
           super._listboxOnKeyDown(ev);
-          if (this.requireOptionMatch) {
-            this._inputNode.value = '';
-          }
+          // TODO: should we clear the input value here when allowCustomChoice is false?
+          // For now, we don't...
         }
         if (!this.multipleChoice) {
           this.opened = false;
