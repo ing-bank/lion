@@ -8,4 +8,3 @@ export { runInteractionStateMixinSuite } from '../components/form-core/test-suit
 export { runNativeTextFieldMixinSuite } from '../components/form-core/test-suites/NativeTextFieldMixin.suite.js';
 export { runValidateMixinSuite } from '../components/form-core/test-suites/ValidateMixin.suite.js';
 export { runValidateMixinFeedbackPart } from '../components/form-core/test-suites/ValidateMixinFeedbackPart.suite.js';
-export { runCustomChoiceGroupMixinSuite } from '../components/form-core/test-suites/choice-group/CustomChoiceGroupMixin.suite.js';

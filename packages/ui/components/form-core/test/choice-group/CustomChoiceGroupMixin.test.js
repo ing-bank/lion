@@ -1,6 +1,7 @@
-import { ChoiceInputMixin, CustomChoiceGroupMixin, FormGroupMixin } from '@lion/ui/form-core.js';
+import { ChoiceInputMixin, FormGroupMixin } from '@lion/ui/form-core.js';
+import { CustomChoiceGroupMixin } from '../../src/choice-group/CustomChoiceGroupMixin.js';
 import { LionInput } from '@lion/ui/input.js';
-import { runCustomChoiceGroupMixinSuite } from '@lion/ui/form-core-test-suites.js';
+import { runCustomChoiceGroupMixinSuite } from '../../test-suites/choice-group/CustomChoiceGroupMixin.suite.js';
 import { LitElement } from 'lit';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';

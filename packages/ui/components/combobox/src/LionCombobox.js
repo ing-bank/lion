@@ -1,5 +1,7 @@
 import { browserDetection } from '@lion/ui/core.js';
-import { Unparseable, CustomChoiceGroupMixin } from '@lion/ui/form-core.js';
+import { Unparseable } from '@lion/ui/form-core.js';
+import { CustomChoiceGroupMixin } from '../../form-core/src/choice-group/CustomChoiceGroupMixin.js';
+
 import { LionListbox } from '@lion/ui/listbox.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';

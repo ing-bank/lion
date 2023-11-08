@@ -1,5 +1,5 @@
 import { runListboxMixinSuite } from '@lion/ui/listbox-test-suites.js';
-import { runCustomChoiceGroupMixinSuite } from '@lion/ui/form-core-test-suites.js';
+import { runCustomChoiceGroupMixinSuite } from '../../form-core/test-suites/choice-group/CustomChoiceGroupMixin.suite.js';
 import '@lion/ui/define/lion-combobox.js';
 
 runListboxMixinSuite({ tagString: 'lion-combobox' });
