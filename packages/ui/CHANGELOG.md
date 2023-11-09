@@ -1,5 +1,18 @@
 # @lion/ui
 
+## 0.5.0
+
+### Minor Changes
+
+- 7f644cd7: feat: [combobox] add `allow-custom-choice` (former requireOptionMatch=false) and make it compatible with `multiple-choice`
+
+### Patch Changes
+
+- be4e25a1: fix: [combobox] single choice with `allow-custom-choice`(former requireOptionMatch=false) doesn't clear selection
+- e923ba40: fix: [radio-group] resetting a radio-group containing options with formatters doesn't check the default value
+- 7235a4f7: fix: [combobox] model-value-changed event emitted when clearing a combobox sends stale value
+- c459ded9: fix: [combobox] autocomplete feature for the lion-combobox component. It used to autoselect a wrong item
+
 ## 0.4.2
 
 ### Patch Changes
