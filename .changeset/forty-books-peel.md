@@ -2,4 +2,4 @@
 '@lion/ui': minor
 ---
 
-fix: Resetting a radio-group containing options with formatters doesn't check the default value
+fix: resetting a radio-group containing options with formatters doesn't check the default value

@@ -5,7 +5,7 @@
 Many improvements:
 
 - rewritten from babel to swc
-- swc traversal tool with babel
+- swcTraverse tool, compatible with babel traverse api
 - increased performance
 - better windows compatibility
 
