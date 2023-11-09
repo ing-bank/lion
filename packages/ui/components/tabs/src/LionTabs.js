@@ -346,6 +346,13 @@ export class LionTabs extends LitElement {
   }
 
   /**
+   * @return {number}
+   */
+  get selectedIndex() {
+    return this.__selectedIndex || 0;
+  }
+
+  /**
    * @param {number} value The new index
    */
   set selectedIndex(value) {
@@ -369,13 +376,6 @@ export class LionTabs extends LitElement {
     this.__updateSelected(true);
     this.dispatchEvent(new Event('selected-changed'));
     this.requestUpdate('selectedIndex', stale);
-  }
-
-  /**
-   * @return {number}
-   */
-  get selectedIndex() {
-    return this.__selectedIndex || 0;
   }
 
   /** @protected */

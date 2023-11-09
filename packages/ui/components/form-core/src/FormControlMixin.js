@@ -381,7 +381,7 @@ const FormControlMixinImplementation = superclass =>
      * Also, contents of id references that will be put in the <lion-field>._ariaDescribedby property
      * from an external context, will be read by a screen reader.
      * @param {string} attrName
-     * @param {HTMLElement[]} nodes
+     * @param {Element[]} nodes
      * @param {boolean|undefined} reorder
      */
     __reflectAriaAttr(attrName, nodes, reorder) {

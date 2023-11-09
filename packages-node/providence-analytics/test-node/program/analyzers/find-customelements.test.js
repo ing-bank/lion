@@ -1,53 +1,29 @@
-const { expect } = require('chai');
-const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/services/QueryService.js');
-const {
-  mockProject,
-  restoreMockedProjects,
-  getEntry,
-} = require('../../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../test-helpers/mock-log-service-helpers.js');
+import { expect } from 'chai';
+import { it } from 'mocha';
+import { providence } from '../../../src/program/providence.js';
+import { QueryService } from '../../../src/program/core/QueryService.js';
+import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';
+import { mockProject, getEntry } from '../../../test-helpers/mock-project-helpers.js';
+import FindCustomelementsAnalyzer from '../../../src/program/analyzers/find-customelements.js';
 
-const findCustomelementsQueryConfig =
-  QueryService.getQueryConfigFromAnalyzer('find-customelements');
-const _providenceCfg = {
-  targetProjectPaths: ['/fictional/project'], // defined in mockProject
-};
+/**
+ * @typedef {import('../../../types/index.js').ProvidenceConfig} ProvidenceConfig
+ */
 
-describe('Analyzer "find-customelements"', () => {
-  const queryResults = [];
+setupAnalyzerTest();
 
-  const cacheDisabledInitialValue = QueryService.cacheDisabled;
-
-  before(() => {
-    QueryService.cacheDisabled = true;
-  });
-
-  after(() => {
-    QueryService.cacheDisabled = cacheDisabledInitialValue;
-  });
-
-  beforeEach(() => {
-    suppressNonCriticalLogs();
-    mockWriteToJson(queryResults);
-  });
-
-  afterEach(() => {
-    restoreSuppressNonCriticalLogs();
-    restoreMockedProjects();
-    restoreWriteToJson(queryResults);
-  });
+describe('Analyzer "find-customelements"', async () => {
+  const findCustomelementsQueryConfig = await QueryService.getQueryConfigFromAnalyzer(
+    FindCustomelementsAnalyzer,
+  );
+  /** @type {Partial<ProvidenceConfig>} */
+  const _providenceCfg = {
+    targetProjectPaths: ['/fictional/project'], // defined in mockProject
+  };
 
   it(`stores the tagName of a custom element`, async () => {
     mockProject([`customElements.define('custom-el', class extends HTMLElement {});`]);
-    await providence(findCustomelementsQueryConfig, _providenceCfg);
+    const queryResults = await providence(findCustomelementsQueryConfig, _providenceCfg);
     const queryResult = queryResults[0];
     const firstEntry = getEntry(queryResult);
     expect(firstEntry.result[0].tagName).to.equal('custom-el');
@@ -61,7 +37,7 @@ describe('Analyzer "find-customelements"', () => {
         window.customElements.define('custom-el3', class extends HTMLElement {});
       })();`,
     ]);
-    await providence(findCustomelementsQueryConfig, _providenceCfg);
+    const queryResults = await providence(findCustomelementsQueryConfig, _providenceCfg);
     const queryResult = queryResults[0];
     const firstEntry = getEntry(queryResult);
     const secondEntry = getEntry(queryResult, 1);
@@ -79,7 +55,7 @@ describe('Analyzer "find-customelements"', () => {
         customElements.define('custom-el', CustomEl);
       `,
     });
-    await providence(findCustomelementsQueryConfig, _providenceCfg);
+    const queryResults = await providence(findCustomelementsQueryConfig, _providenceCfg);
     const queryResult = queryResults[0];
     const firstEntry = getEntry(queryResult);
     expect(firstEntry.result[0].rootFile).to.eql({
@@ -90,7 +66,7 @@ describe('Analyzer "find-customelements"', () => {
 
   it(`stores "[inline]" constructors`, async () => {
     mockProject([`customElements.define('custom-el', class extends HTMLElement {});`]);
-    await providence(findCustomelementsQueryConfig, _providenceCfg);
+    const queryResults = await providence(findCustomelementsQueryConfig, _providenceCfg);
     const queryResult = queryResults[0];
     const firstEntry = getEntry(queryResult);
     expect(firstEntry.result[0].constructorIdentifier).to.equal('[inline]');
@@ -99,7 +75,7 @@ describe('Analyzer "find-customelements"', () => {
 
   it(`stores "[current]" rootFile`, async () => {
     mockProject([`customElements.define('custom-el', class extends HTMLElement {});`]);
-    await providence(findCustomelementsQueryConfig, _providenceCfg);
+    const queryResults = await providence(findCustomelementsQueryConfig, _providenceCfg);
     const queryResult = queryResults[0];
     const firstEntry = getEntry(queryResult);
     expect(firstEntry.result[0].rootFile.file).to.equal('[current]');
@@ -113,7 +89,7 @@ describe('Analyzer "find-customelements"', () => {
         customElements.define('custom-el', CustomEl);
       `,
     });
-    await providence(findCustomelementsQueryConfig, _providenceCfg);
+    const queryResults = await providence(findCustomelementsQueryConfig, _providenceCfg);
     const queryResult = queryResults[0];
     const firstEntry = getEntry(queryResult);
     expect(firstEntry.result[0].constructorIdentifier).to.equal('CustomEl');
@@ -130,7 +106,7 @@ describe('Analyzer "find-customelements"', () => {
       customElements.define('tag-3', class extends HTMLElement {});
       `,
     ]);
-    await providence(findCustomelementsQueryConfig, _providenceCfg);
+    const queryResults = await providence(findCustomelementsQueryConfig, _providenceCfg);
     const queryResult = queryResults[0];
     const firstEntry = getEntry(queryResult);
     const secondEntry = getEntry(queryResult, 1);

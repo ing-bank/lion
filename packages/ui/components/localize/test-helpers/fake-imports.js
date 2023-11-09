@@ -56,5 +56,6 @@ export async function fakeImport(path, ms = 0) {
       setTimeout(() => resolveOrReject(result, resolve, reject), ms);
     });
   }
+  // eslint-disable-next-line no-promise-executor-return
   return new Promise((resolve, reject) => resolveOrReject(result, resolve, reject));
 }

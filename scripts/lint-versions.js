@@ -50,6 +50,10 @@ function compareVersions(versionsA, versionsB) {
   let output = '';
   const newVersions = { ...versionsA };
   Object.keys(versionsB).forEach(dep => {
+    // we accept different versions of glob for node packages
+    if (dep === 'glob') {
+      return;
+    }
     if (versionsA[dep] && versionsB[dep] && versionsA[dep] !== versionsB[dep]) {
       if (!semver.satisfies(versionsA[dep], versionsB[dep])) {
         // if version doesn't satisfy range, check if they are both ranges,

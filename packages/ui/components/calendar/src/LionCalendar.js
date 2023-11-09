@@ -815,7 +815,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     ) {
       this.__focusedDate = /** @type {HTMLButtonElement & { date: Date }} */ (
         this.shadowRoot?.activeElement
-      ).date;
+      )?.date;
     }
   }
 

@@ -1,29 +1,40 @@
 /* eslint-disable no-shadow, no-param-reassign */
-const pathLib = require('path');
-const { default: traverse } = require('@babel/traverse');
-const { Analyzer } = require('./helpers/Analyzer.js');
-const { trackDownIdentifier } = require('./helpers/track-down-identifier.js');
-const { normalizeSourcePaths } = require('./helpers/normalize-source-paths.js');
-const { getReferencedDeclaration } = require('../utils/get-source-code-fragment-of-declaration.js');
-
-const { LogService } = require('../services/LogService.js');
+import path from 'path';
+import { swcTraverse } from '../utils/swc-traverse.js';
+import { getAssertionType } from '../utils/get-assertion-type.js';
+import { Analyzer } from '../core/Analyzer.js';
+import { trackDownIdentifier } from './helpers/track-down-identifier.js';
+import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
+import { getReferencedDeclaration } from '../utils/get-source-code-fragment-of-declaration.js';
+import { LogService } from '../core/LogService.js';
 
 /**
+ * @typedef {import("@swc/core").Module} SwcAstModule
+ * @typedef {import("@swc/core").Node} SwcNode
+ * @typedef {import("@swc/core").VariableDeclaration} SwcVariableDeclaration
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
+ * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindExportsAnalyzerEntry} FindExportsAnalyzerEntry
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../types/index.js').SwcScope} SwcScope
+ * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
+ * @typedef {import('../../../types/index.js').SwcPath} SwcPath
+ * @typedef {import('../../../types/index.js').SwcVisitor} SwcVisitor
  * @typedef {import('./helpers/track-down-identifier.js').RootFile} RootFile
  * @typedef {object} RootFileMapEntry
  * @typedef {string} currentFileSpecifier this is the local name in the file we track from
  * @typedef {RootFile} rootFile contains file(filePath) and specifier
  * @typedef {RootFileMapEntry[]} RootFileMap
- *
  * @typedef {{ exportSpecifiers:string[]; localMap: object; source:string, __tmp: { path:string } }} FindExportsSpecifierObj
  */
 
 /**
- * @param {FindExportsSpecifierObj[]} transformedEntry
+ * @param {FindExportsSpecifierObj[]} transformedFile
  */
-async function trackdownRoot(transformedEntry, relativePath, projectPath) {
-  const fullCurrentFilePath = pathLib.resolve(projectPath, relativePath);
-  for (const specObj of transformedEntry) {
+async function trackdownRoot(transformedFile, relativePath, projectPath) {
+  const fullCurrentFilePath = path.resolve(projectPath, relativePath);
+  for (const specObj of transformedFile) {
     /** @type {RootFileMap} */
     const rootFileMap = [];
     if (specObj.exportSpecifiers[0] === '[file]') {
@@ -79,191 +90,169 @@ async function trackdownRoot(transformedEntry, relativePath, projectPath) {
     }
     specObj.rootFileMap = rootFileMap;
   }
-  return transformedEntry;
+  return transformedFile;
 }
 
-function cleanup(transformedEntry) {
-  transformedEntry.forEach(specObj => {
+function cleanup(transformedFile) {
+  transformedFile.forEach(specObj => {
     if (specObj.__tmp) {
       delete specObj.__tmp;
     }
   });
-  return transformedEntry;
+  return transformedFile;
 }
 
 /**
+ * @param {*} node
  * @returns {string[]}
  */
 function getExportSpecifiers(node) {
   // handles default [export const g = 4];
   if (node.declaration) {
     if (node.declaration.declarations) {
-      return [node.declaration.declarations[0].id.name];
+      return [node.declaration.declarations[0].id.value];
     }
-    if (node.declaration.id) {
-      return [node.declaration.id.name];
+    if (node.declaration.identifier) {
+      return [node.declaration.identifier.value];
     }
   }
 
   // handles (re)named specifiers [export { x (as y)} from 'y'];
-  return node.specifiers.map(s => {
-    let specifier;
+  return (node.specifiers || []).map(s => {
     if (s.exported) {
       // { x as y }
-      specifier = s.exported.name;
-    } else {
-      // { x }
-      specifier = s.local.name;
+      return s.exported.value === 'default' ? '[default]' : s.exported.value;
     }
-    return specifier;
+    // { x }
+    return s.orig.value;
   });
 }
 
 /**
- * @returns {object[]}
+ * @returns {{local:string;exported:string;}|undefined[]}
  */
 function getLocalNameSpecifiers(node) {
-  return node.specifiers
+  return (node.declaration?.declarations || node.specifiers || [])
     .map(s => {
-      if (s.exported && s.local && s.exported.name !== s.local.name) {
+      if (s.exported && s.orig && s.exported.value !== s.orig.value) {
         return {
           // if reserved keyword 'default' is used, translate it into 'providence keyword'
-          local: s.local.name === 'default' ? '[default]' : s.local.name,
-          exported: s.exported.name,
+          local: s.orig.value === 'default' ? '[default]' : s.orig.value,
+          exported: s.exported.value,
         };
       }
       return undefined;
     })
-    .filter(s => s);
+    .filter(Boolean);
 }
 
 const isImportingSpecifier = pathOrNode =>
   pathOrNode.type === 'ImportDefaultSpecifier' || pathOrNode.type === 'ImportSpecifier';
 
 /**
- * @desc Finds import specifiers and sources for a given ast result
- * @param {BabelAst} ast
+ * Finds import specifiers and sources for a given ast result
+ * @param {SwcAstModule} swcAst
  * @param {FindExportsConfig} config
  */
-function findExportsPerAstEntry(ast, { skipFileImports }) {
-  LogService.debug(`Analyzer "find-exports": started findExportsPerAstEntry method`);
+function findExportsPerAstFile(swcAst, { skipFileImports }) {
+  LogService.debug(`Analyzer "find-exports": started findExportsPerAstFile method`);
 
   // Visit AST...
 
-  /** @type {FindExportsSpecifierObj} */
-  const transformedEntry = [];
+  /** @type {FindExportsSpecifierObj[]} */
+  const transformedFile = [];
   // Unfortunately, we cannot have async functions in babel traverse.
   // Therefore, we store a temp reference to path that we use later for
   // async post processing (tracking down original export Identifier)
+  /** @type {{[key:string]:SwcBinding}} */
   let globalScopeBindings;
 
-  traverse(ast, {
-    Program: {
-      enter(babelPath) {
-        const body = babelPath.get('body');
-        if (body.length) {
-          globalScopeBindings = body[0].scope.bindings;
-        }
-      },
-    },
-    ExportNamedDeclaration(path) {
-      const exportSpecifiers = getExportSpecifiers(path.node);
-      const localMap = getLocalNameSpecifiers(path.node);
-      const source = path.node.source?.value;
-      const entry = { exportSpecifiers, localMap, source, __tmp: { path } };
-      if (path.node.assertions?.length) {
-        entry.assertionType = path.node.assertions[0].value?.value;
+  const exportHandler = (/** @type {SwcPath} */ astPath) => {
+    const exportSpecifiers = getExportSpecifiers(astPath.node);
+    const localMap = getLocalNameSpecifiers(astPath.node);
+    const source = astPath.node.source?.value;
+    const entry = { exportSpecifiers, localMap, source, __tmp: { astPath } };
+    const assertionType = getAssertionType(astPath.node);
+    if (assertionType) {
+      entry.assertionType = assertionType;
+    }
+    transformedFile.push(entry);
+  };
+
+  const exportDefaultHandler = (/** @type {SwcPath} */ astPath) => {
+    const exportSpecifiers = ['[default]'];
+    let source;
+    // Is it an inline declaration like "export default class X {};" ?
+    if (
+      astPath.node.decl?.type === 'Identifier' ||
+      astPath.node.expression?.type === 'Identifier'
+    ) {
+      // It is a reference to an identifier like "export { x } from 'y';"
+      const importOrDeclPath = getReferencedDeclaration({
+        referencedIdentifierName: astPath.node.decl?.value || astPath.node.expression.value,
+        globalScopeBindings,
+      });
+      if (isImportingSpecifier(importOrDeclPath)) {
+        source = importOrDeclPath.parentPath.node.source.value;
       }
-      transformedEntry.push(entry);
+    }
+    transformedFile.push({ exportSpecifiers, source, __tmp: { astPath } });
+  };
+
+  /** @type {SwcVisitor} */
+  const visitor = {
+    Module({ scope }) {
+      globalScopeBindings = scope.bindings;
     },
-    ExportDefaultDeclaration(defaultExportPath) {
-      const exportSpecifiers = ['[default]'];
-      let source;
-      if (defaultExportPath.node.declaration?.type !== 'Identifier') {
-        source = defaultExportPath.node.declaration.name;
-      } else {
-        const importOrDeclPath = getReferencedDeclaration({
-          referencedIdentifierName: defaultExportPath.node.declaration.name,
-          globalScopeBindings,
-        });
-        if (isImportingSpecifier(importOrDeclPath)) {
-          source = importOrDeclPath.parentPath.node.source.value;
-        }
-      }
-      transformedEntry.push({ exportSpecifiers, source, __tmp: { path: defaultExportPath } });
-    },
-  });
+    ExportDeclaration: exportHandler,
+    ExportNamedDeclaration: exportHandler,
+    ExportDefaultDeclaration: exportDefaultHandler,
+    ExportDefaultExpression: exportDefaultHandler,
+  };
+
+  swcTraverse(swcAst, visitor, { needsAdvancedPaths: true });
 
   if (!skipFileImports) {
     // Always add an entry for just the file 'relativePath'
     // (since this also can be imported directly from a search target project)
-    transformedEntry.push({
+    transformedFile.push({
       exportSpecifiers: ['[file]'],
       // source: relativePath,
     });
   }
 
-  return transformedEntry;
+  return transformedFile;
 }
 
-class FindExportsAnalyzer extends Analyzer {
-  constructor() {
-    super();
-    this.name = 'find-exports';
-  }
+export default class FindExportsAnalyzer extends Analyzer {
+  static analyzerName = /** @type {AnalyzerName} */ ('find-exports');
+
+  static requiredAst = /** @type {AnalyzerAst} */ ('swc');
 
   /**
-   * @desc Finds export specifiers and sources
-   * @param {FindExportsConfig} customConfig
+   * @typedef FindExportsConfig
+   * @property {boolean} [onlyInternalSources=false]
+   * @property {boolean} [skipFileImports=false] Instead of both focusing on specifiers like
+   * [import {specifier} 'lion-based-ui/foo.js'], and [import 'lion-based-ui/foo.js'] as a result,
+   * not list file exports
    */
-  async execute(customConfig = {}) {
-    /**
-     * @typedef FindExportsConfig
-     * @property {boolean} [onlyInternalSources=false]
-     * @property {boolean} [skipFileImports=false] Instead of both focusing on specifiers like
-     * [import {specifier} 'lion-based-ui/foo.js'], and [import 'lion-based-ui/foo.js'] as a result,
-     * not list file exports
-     */
-    const cfg = {
+  get config() {
+    return {
       targetProjectPath: null,
       skipFileImports: false,
-      ...customConfig,
+      ...this._customConfig,
     };
+  }
 
-    /**
-     * Prepare
-     */
-    const analyzerResult = this._prepare(cfg);
-    if (analyzerResult) {
-      return analyzerResult;
-    }
+  static async analyzeFile(ast, { relativePath, analyzerCfg }) {
+    const projectPath = analyzerCfg.targetProjectPath;
 
-    /**
-     * Traverse
-     */
-    const projectPath = cfg.targetProjectPath;
+    let transformedFile = findExportsPerAstFile(ast, analyzerCfg);
 
-    const traverseEntryFn = async (ast, { relativePath }) => {
-      let transformedEntry = findExportsPerAstEntry(ast, cfg);
+    transformedFile = await normalizeSourcePaths(transformedFile, relativePath, projectPath);
+    transformedFile = await trackdownRoot(transformedFile, relativePath, projectPath);
+    transformedFile = cleanup(transformedFile);
 
-      transformedEntry = await normalizeSourcePaths(transformedEntry, relativePath, projectPath);
-      transformedEntry = await trackdownRoot(transformedEntry, relativePath, projectPath);
-      transformedEntry = cleanup(transformedEntry);
-
-      return { result: transformedEntry };
-    };
-
-    const queryOutput = await this._traverse({
-      traverseEntryFn,
-      filePaths: cfg.targetFilePaths,
-      projectPath: cfg.targetProjectPath,
-    });
-
-    /**
-     * Finalize
-     */
-    return this._finalize(queryOutput, cfg);
+    return { result: transformedFile };
   }
 }
-
-module.exports = FindExportsAnalyzer;

@@ -115,6 +115,7 @@ export class LionDrawer extends LionCollapsible {
     const prop = this.position === 'top' ? 'height' : 'width';
 
     contentNode.style.setProperty(prop, /** @type {string} */ (min));
+    // eslint-disable-next-line no-promise-executor-return
     await new Promise(resolve => requestAnimationFrame(() => resolve(true)));
     contentNode.style.setProperty(prop, /** @type {string} */ (max));
     await this._waitForTransition({ contentNode });

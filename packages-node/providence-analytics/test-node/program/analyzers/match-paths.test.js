@@ -1,46 +1,18 @@
-const { expect } = require('chai');
-const { providence } = require('../../../src/program/providence.js');
-const { QueryService } = require('../../../src/program/services/QueryService.js');
-const { InputDataService } = require('../../../src/program/services/InputDataService.js');
-const {
-  mockTargetAndReferenceProject,
-  restoreMockedProjects,
-} = require('../../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../../test-helpers/mock-log-service-helpers.js');
+import { expect } from 'chai';
+import { it } from 'mocha';
+import { providence } from '../../../src/program/providence.js';
+import { QueryService } from '../../../src/program/core/QueryService.js';
+import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';
+import { mockTargetAndReferenceProject } from '../../../test-helpers/mock-project-helpers.js';
+import MatchPathsAnalyzer from '../../../src/program/analyzers/match-paths.js';
 
-describe('Analyzer "match-paths"', () => {
-  const originalReferenceProjectPaths = InputDataService.referenceProjectPaths;
-  const queryResults = [];
-  const cacheDisabledInitialValue = QueryService.cacheDisabled;
+/**
+ * @typedef {import('../../../types/index.js').ProvidenceConfig} ProvidenceConfig
+ */
 
-  before(() => {
-    QueryService.cacheDisabled = true;
-    suppressNonCriticalLogs();
-  });
+setupAnalyzerTest();
 
-  after(() => {
-    QueryService.cacheDisabled = cacheDisabledInitialValue;
-    restoreSuppressNonCriticalLogs();
-  });
-
-  beforeEach(() => {
-    InputDataService.referenceProjectPaths = [];
-    mockWriteToJson(queryResults);
-  });
-
-  afterEach(() => {
-    InputDataService.referenceProjectPaths = originalReferenceProjectPaths;
-    restoreWriteToJson(queryResults);
-    restoreMockedProjects();
-  });
-
+describe('Analyzer "match-paths"', async () => {
   const referenceProject = {
     path: '/importing/target/project/node_modules/reference-project',
     name: 'reference-project',
@@ -142,7 +114,8 @@ describe('Analyzer "match-paths"', () => {
     ],
   };
 
-  const matchPathsQueryConfig = QueryService.getQueryConfigFromAnalyzer('match-paths');
+  const matchPathsQueryConfig = await QueryService.getQueryConfigFromAnalyzer(MatchPathsAnalyzer);
+  /** @type {Partial<ProvidenceConfig>} */
   const _providenceCfg = {
     targetProjectPaths: [searchTargetProject.path],
     referenceProjectPaths: [referenceProject.path],
@@ -213,7 +186,7 @@ describe('Analyzer "match-paths"', () => {
 
     it(`outputs an array result with from/to classes and paths`, async () => {
       mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-      await providence(matchPathsQueryConfig, _providenceCfg);
+      const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       expect(queryResult.queryOutput).to.eql(expectedMatches);
     });
@@ -256,7 +229,7 @@ describe('Analyzer "match-paths"', () => {
 
       it(`identifies all "from" and "to" classes`, async () => {
         mockTargetAndReferenceProject(targetProj, refProj);
-        await providence(matchPathsQueryConfig, _providenceCfg);
+        const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         expect(queryResult.queryOutput[0].variable.from).to.equal('RefClass');
         expect(queryResult.queryOutput[0].variable.to).to.equal('TargetClass');
@@ -264,7 +237,7 @@ describe('Analyzer "match-paths"', () => {
 
       it(`identifies all "from" and "to" paths`, async () => {
         mockTargetAndReferenceProject(targetProj, refProj);
-        await providence(matchPathsQueryConfig, _providenceCfg);
+        const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         expect(queryResult.queryOutput[0].variable.paths[0]).to.eql({
           from: './index.js',
@@ -288,7 +261,7 @@ describe('Analyzer "match-paths"', () => {
 
         it(`gives back "to" path closest to root`, async () => {
           mockTargetAndReferenceProject(targetProjWithMultipleExports, refProj);
-          await providence(matchPathsQueryConfig, _providenceCfg);
+          const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
           const queryResult = queryResults[0];
           expect(queryResult.queryOutput[0].variable.paths[0]).to.eql({
             from: './index.js',
@@ -321,7 +294,7 @@ describe('Analyzer "match-paths"', () => {
             ],
           };
           mockTargetAndReferenceProject(targetProjWithMultipleExportsAndMainEntry, refProj);
-          await providence(matchPathsQueryConfig, _providenceCfg);
+          const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
           const queryResult = queryResults[0];
           expect(queryResult.queryOutput[0].variable.paths[0]).to.eql({
             from: './index.js',
@@ -332,7 +305,7 @@ describe('Analyzer "match-paths"', () => {
 
       it(`prefixes project paths`, async () => {
         mockTargetAndReferenceProject(targetProj, refProj);
-        await providence(matchPathsQueryConfig, _providenceCfg);
+        const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         const unprefixedPaths = queryResult.queryOutput[0].variable.paths[0];
         expect(unprefixedPaths).to.eql({ from: './index.js', to: './target-src/TargetClass.js' });
@@ -361,7 +334,7 @@ describe('Analyzer "match-paths"', () => {
           ],
         };
         mockTargetAndReferenceProject(targetProjMultipleTargetExtensions, refProj);
-        await providence(matchPathsQueryConfig, _providenceCfg);
+        const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         expect(queryResult.queryOutput[0].variable.paths[0]).to.eql({
           from: './index.js',
@@ -429,10 +402,13 @@ describe('Analyzer "match-paths"', () => {
           ],
         };
         mockTargetAndReferenceProject(targetProjMultipleTargetExtensions, refProj);
-        const matchPathsQueryConfigFilter = QueryService.getQueryConfigFromAnalyzer('match-paths', {
-          prefix: { from: 'ref', to: 'target' },
-        });
-        await providence(matchPathsQueryConfigFilter, _providenceCfg);
+        const matchPathsQueryConfigFilter = await QueryService.getQueryConfigFromAnalyzer(
+          MatchPathsAnalyzer,
+          {
+            prefix: { from: 'ref', to: 'target' },
+          },
+        );
+        const queryResults = await providence(matchPathsQueryConfigFilter, _providenceCfg);
         const queryResult = queryResults[0];
         expect(queryResult.queryOutput[0].variable.paths[0]).to.eql({
           from: './index.js',
@@ -537,7 +513,7 @@ describe('Analyzer "match-paths"', () => {
 
     it(`outputs an array result with from/to tag names and paths`, async () => {
       mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-      await providence(matchPathsQueryConfig, _providenceCfg);
+      const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       expect(queryResult.queryOutput[0].tag).to.eql(expectedMatches[0]);
       expect(queryResult.queryOutput[1].tag).to.eql(expectedMatches[1]);
@@ -597,7 +573,7 @@ describe('Analyzer "match-paths"', () => {
         referenceProjectPaths: ['/their-components'],
       };
 
-      await providence(
+      const queryResults = await providence(
         { ...matchPathsQueryConfig, prefix: { from: 'their', to: 'my' } },
         providenceCfg,
       );
@@ -621,7 +597,7 @@ describe('Analyzer "match-paths"', () => {
     describe('Features', () => {
       it(`identifies all "from" and "to" tagnames`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-        await providence(matchPathsQueryConfig, _providenceCfg);
+        const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         expect(queryResult.queryOutput[0].tag.from).to.equal('el-1');
         expect(queryResult.queryOutput[0].tag.to).to.equal('extended-el-1');
@@ -629,7 +605,7 @@ describe('Analyzer "match-paths"', () => {
 
       it(`identifies all "from" and "to" paths`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-        await providence(matchPathsQueryConfig, _providenceCfg);
+        const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         expect(queryResult.queryOutput[0].tag.paths[0]).to.eql({
           from: './customelementDefinitions.js',
@@ -639,7 +615,7 @@ describe('Analyzer "match-paths"', () => {
 
       it(`prefixes project paths`, async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
-        await providence(matchPathsQueryConfig, _providenceCfg);
+        const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         expect(queryResult.queryOutput[0].tag.paths[1]).to.eql({
           from: 'reference-project/customelementDefinitions.js',
@@ -758,7 +734,7 @@ describe('Analyzer "match-paths"', () => {
 
     it(`outputs a "name", "variable" and "tag" entry`, async () => {
       mockTargetAndReferenceProject(searchTargetProjectFull, referenceProjectFull);
-      await providence(matchPathsQueryConfig, _providenceCfg);
+      const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       expect(queryResult.queryOutput).to.eql(expectedMatchesFull);
     });

@@ -1,0 +1,53 @@
+diff --git a/node_modules/swc-to-babel/lib/swc/index.js b/node_modules/swc-to-babel/lib/swc/index.js
+index ab285b3..a58a61d 100644
+--- a/node_modules/swc-to-babel/lib/swc/index.js
++++ b/node_modules/swc-to-babel/lib/swc/index.js
+@@ -143,6 +143,15 @@ module.exports.ClassMethod = (path) => {
+         key,
+     });
+ 
++    if (node.kind === 'getter') {
++        node.kind = 'get';
++    }
++    if (node.kind === 'setter') {
++        node.kind = 'set';
++    }
++
++    node.static = node.isStatic;
++    
+     delete path.node.isStatic;
+     delete path.node.accessibility;
+     delete path.node.isAbstract;
+@@ -301,7 +310,7 @@ module.exports.TSIndexedAccessType = (path) => {
+ module.exports.ImportDeclaration = ({node}) => {
+     const {typeOnly} = node;
+     
+-    node.assertions = node.asserts || [];
++    node.assertions = node.asserts?.properties || [];
+     node.importKind = typeOnly ? 'type' : 'value';
+     
+     delete node.asserts;
+@@ -340,9 +349,10 @@ module.exports.convertGetterSetter = ({node}) => {
+ };
+ 
+ module.exports.ExportDefaultDeclaration = ({node}) => {
+-    node.declaration = node.decl;
++    // node.declaration may have been already provided by convertExportDefaultExpression
++    node.declaration = node.declaration || node.decl;
+     node.exportKind = 'value';
+-    node.assertions = [];
++    node.assertions = node.asserts?.properties || [];
+     
+     delete node.decl;
+ };
+@@ -350,8 +360,8 @@ module.exports.ExportDefaultDeclaration = ({node}) => {
+ module.exports.ExportNamedDeclaration = ({node}) => {
+     const {typeOnly} = node;
+     
+-    node.assertions = [];
+-    node.source = null;
++    node.assertions = node.asserts?.properties || [];
++    // node.source = null;
+     node.specifiers = node.specifiers || [];
+     
+     node.exportKind = typeOnly ? 'type' : 'value';
