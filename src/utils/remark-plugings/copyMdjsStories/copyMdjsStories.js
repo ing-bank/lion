@@ -87,9 +87,9 @@ function copyMdjsStories() {
 
         let exportCmd;
         if (isDistBuild) {
-          exportCmd = `import './${currentMarkdownFileMdJsStoryName}' \n`;
+          exportCmd = `import './${currentMarkdownFileMdJsStoryName}';\n`;
         } else {
-          exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}' \n`;
+          exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}';\n`;
         }
 
         if (commonMdjsStoriesContent === '') {
@@ -101,11 +101,7 @@ import '../../../mdjs-extra.js';\n`;
           }
         }
         if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
-          await fs.promises.writeFile(
-            commonMdjsStoriesFileName,
-            commonMdjsStoriesContent + exportCmd,
-            'utf8',
-          );
+          fs.writeFileSync(commonMdjsStoriesFileName, commonMdjsStoriesContent + exportCmd, 'utf8');
         }
       }
     }

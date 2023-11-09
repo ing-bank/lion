@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "astro build",
+    "build-dist": "npm run build-docs && npm run build && npx rollup dist/docs/components/button/__mdjs-stories.js --config rollup.config-test.js --dir dist/docs/components/button/ && npm run preview",
     "build-docs": "npm run clean && node -e 'require(\"./src/utils/copy-docs\").copyDocs()' ",
     "build-docs:watch": "node -e 'require(\"./src/utils/copy-docs\").watch()'",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
