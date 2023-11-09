@@ -1,8 +1,7 @@
 const { execSync } = require('child_process');
 const fs = require('fs');
-const path = require('path');
 
-const distComponents = 'dist/docs/components';
+const distDocs = 'dist/docs';
 
 const getAllFiles = (dirPath, arrayOfFiles) => {
   const files = fs.readdirSync(dirPath);
@@ -15,11 +14,8 @@ const getAllFiles = (dirPath, arrayOfFiles) => {
       // eslint-disable-next-line no-param-reassign
       arrayOfFiles = getAllFiles(`${dirPath}/${file}`, arrayOfFiles);
     } else if (file === '__mdjs-stories.js') {
-      const parentDirectoryName = path.basename(dirPath);
-      // console.log('parentDirectoryName: ', parentDirectoryName);
-      // console.log('file: ', file);
       execSync(
-        `npx rollup ${distComponents}/${parentDirectoryName}/__mdjs-stories.js --config rollup.config-test.js --dir ${distComponents}/${parentDirectoryName}/`,
+        `npx rollup ${dirPath}/__mdjs-stories.js --config rollup.config-test.js --dir ${dirPath}/`,
       );
     }
   });
@@ -28,7 +24,7 @@ const getAllFiles = (dirPath, arrayOfFiles) => {
 };
 
 const postBuildDist = () => {
-  getAllFiles(distComponents);
+  getAllFiles(distDocs);
 };
 
 module.exports = {

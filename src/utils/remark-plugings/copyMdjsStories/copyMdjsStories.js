@@ -87,15 +87,25 @@ function copyMdjsStories() {
 
         let exportCmd;
         if (isDistBuild) {
-          exportCmd = `import './${currentMarkdownFileMdJsStoryName}';\n`;
+          exportCmd = `import('./${currentMarkdownFileMdJsStoryName}');\n`;
         } else {
           exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}';\n`;
         }
 
         if (commonMdjsStoriesContent === '') {
           if (isDistBuild) {
-            commonMdjsStoriesContent = `import '../../_assets/scoped-custom-element-registry.min.js';
-import '../../../mdjs-extra.js';\n`;
+            let scopedElementRegistry = '';
+            try {
+              scopedElementRegistry = fs
+                .readFileSync('docs/_assets/scoped-custom-element-registry.min.js')
+                .toString();
+            } catch (ex) {
+              console.log('docs/_assets/scoped-custom-element-registry.min.js does not exist!');
+            }
+
+            commonMdjsStoriesContent = `${scopedElementRegistry} \n\n
+  import('@mdjs/mdjs-preview/define');
+  import('@mdjs/mdjs-story/define');\n`;
           } else {
             commonMdjsStoriesContent = `import '/public/docs/_assets/scoped-custom-element-registry.min.js'\n`;
           }
