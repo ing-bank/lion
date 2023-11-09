@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "astro build",
-    "build-docs": "npm run clean && node -e 'require(\"./src/utils/copy-docs\").copyDocs()' && node -e 'require(\"./src/utils/copy-docs\").processImports()'",
+    "build-docs": "npm run clean && node -e 'require(\"./src/utils/copy-docs\").copyDocs()' ",
     "build-docs:watch": "node -e 'require(\"./src/utils/copy-docs\").watch()'",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",

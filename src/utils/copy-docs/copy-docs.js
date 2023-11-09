@@ -138,7 +138,7 @@ async function copyDocsByFileArray(files) {
     if (path.extname(file) !== '.md') {
       await fs.mkdir(path.join(publicPathForDocs, currentPath), { recursive: true });
       await fs.copyFile(file, publicDocsFilePath);
-      await processImportsForFile(publicDocsFilePath);
+      // await processImportsForFile(publicDocsFilePath);
     }
   }
 }
