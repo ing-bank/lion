@@ -26,22 +26,6 @@ import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 loadDefaultFeedbackMessages();
 ```
 
-## Require option match
-
-By default `requireOptionMatch` is set to true, which means that the listbox is leading. The textbox is a helping aid to quickly select an option/options. Unmatching input values become Unparseable, with the `MatchesOption` set as a default validator.
-
-When `requireOptionMatch` is set to false the textbox is leading, with the listbox as an aid to supply suggestions, e.g. a search input. This means that all input values are allowed.
-
-```js preview-story
-export const optionMatch = () => html`
-  <lion-combobox name="search" label="Search" .requireOptionMatch=${false}>
-    ${lazyRender(
-      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
-    )}
-  </lion-combobox>
-`;
-```
-
 ## Autocomplete
 
 Below you will find an overview of all possible `autocomplete` behaviors and how they correspond
@@ -257,7 +241,7 @@ Alternatively, the multi-choice flag can be combined with .requireMultipleMatch=
 
 ```js preview-story
 export const multipleCustomizableChoice = () => html`
-  <lion-combobox name="combo" label="Multiple" .requireOptionMatch=${false} multiple-choice>
+  <lion-combobox name="combo" label="Multiple" allow-custom-choice multiple-choice>
     <demo-selection-display
       slot="selection-display"
       style="display: contents;"
@@ -272,11 +256,25 @@ export const multipleCustomizableChoice = () => html`
 `;
 ```
 
+## Allow custom choice
+
+By default `allow-custom-choice` is set to false.
+This means that the textbox value must correspond with one of the options in the listbox.
+When set to true, the textbox value will be leading.
+
+```js preview-story
+export const optionMatch = () => html`
+  <lion-combobox name="search" label="Search" allow-custom-choice>
+    ${lazyRender(
+      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
+    )}
+  </lion-combobox>
+`;
+```
+
 ## Validation
 
-The combobox works with a `Required` validator to check if it is empty.
-
-By default the a check is made which makes sure the value matches an option. This only works if `requireOptionMatch` is set to true.
+The combobox works with a `Required` validator to check if it is empty. By default a check is made which makes sure the value matches an option.
 
 ```js preview-story
 export const validation = () => html`

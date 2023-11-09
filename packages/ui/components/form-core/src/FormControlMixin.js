@@ -32,20 +32,18 @@ const FormControlMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class FormControlMixin extends FormRegisteringMixin(DisabledMixin(SlotMixin(superclass))) {
     /** @type {any} */
-    static get properties() {
-      return {
-        name: { type: String, reflect: true },
-        readOnly: { type: Boolean, attribute: 'readonly', reflect: true },
-        label: String, // FIXME: { attribute: false } breaks a bunch of tests, but shouldn't...
-        labelSrOnly: { type: Boolean, attribute: 'label-sr-only', reflect: true },
-        helpText: { type: String, attribute: 'help-text' },
-        modelValue: { attribute: false },
-        _ariaLabelledNodes: { attribute: false },
-        _ariaDescribedNodes: { attribute: false },
-        _repropagationRole: { attribute: false },
-        _isRepropagationEndpoint: { attribute: false },
-      };
-    }
+    static properties = {
+      name: { type: String, reflect: true },
+      readOnly: { type: Boolean, attribute: 'readonly', reflect: true },
+      label: String, // FIXME: { attribute: false } breaks a bunch of tests, but shouldn't...
+      labelSrOnly: { type: Boolean, attribute: 'label-sr-only', reflect: true },
+      helpText: { type: String, attribute: 'help-text' },
+      modelValue: { attribute: false },
+      _ariaLabelledNodes: { attribute: false },
+      _ariaDescribedNodes: { attribute: false },
+      _repropagationRole: { attribute: false },
+      _isRepropagationEndpoint: { attribute: false },
+    };
 
     /**
      * The label text for the input node.
@@ -158,15 +156,15 @@ const FormControlMixinImplementation = superclass =>
 
       /**
        * The name the element will be registered with to the .formElements collection
-       * of the parent. Also, it serves as the key of key/value pairs in
-       *  modelValue/serializedValue objects
+       * of the parent having FormRegistrarMixin. Also, it serves as the key of key/value pairs in
+       * modelValue/serializedValue/formattedValue objects of the parent.
        * @type {string}
        */
       this.name = '';
 
       /**
        * A Boolean attribute which, if present, indicates that the user should not be able to edit
-       * the value of the input. The difference between disabled and readonly is that read-only
+       * the value of the input. The difference between disabled and readOnly is that read-only
        * controls can still function, whereas disabled controls generally do not function as
        * controls until they are enabled.
        * (From: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly)
@@ -206,7 +204,7 @@ const FormControlMixinImplementation = superclass =>
        * - For a number input: a formatted String '1.234,56' will be converted to a Number:
        *   1234.56
        */
-      // TODO: we can probably set this up properly once propert effects run from firstUpdated
+      // TODO: we can probably set this up properly once property effects run from firstUpdated
       // this.modelValue = undefined;
       /**
        * Unique id that can be used in all light dom
@@ -235,9 +233,8 @@ const FormControlMixinImplementation = superclass =>
 
       /**
        * By default, a field with _repropagationRole 'choice-group' will act as an
-       * 'endpoint'. This means it will be considered as an individual field: for
-       * a select, individual options will not be part of the formPath. They
-       * will.
+       * 'endpoint'. This means it will be considered an individual field: for
+       * a select, individual options will not be part of the formPath.
        * Similarly, components that (a11y wise) need to be fieldsets, but 'interaction wise'
        * (from Application Developer perspective) need to be more like fields
        * (think of an amount-input with a currency select box next to it), can set this
@@ -280,7 +277,7 @@ const FormControlMixinImplementation = superclass =>
         this.__reflectAriaAttr(
           'aria-labelledby',
           this._ariaLabelledNodes,
-          this.__reorderAriaLabelledNodes,
+          this.__shouldReorderAriaLabelledNodes,
         );
       }
 
@@ -288,7 +285,7 @@ const FormControlMixinImplementation = superclass =>
         this.__reflectAriaAttr(
           'aria-describedby',
           this._ariaDescribedNodes,
-          this.__reorderAriaDescribedNodes,
+          this.__shouldReorderAriaDescribedNodes,
         );
       }
 
@@ -311,7 +308,10 @@ const FormControlMixinImplementation = superclass =>
       }
     }
 
-    /** @protected */
+    /**
+     * @enhanceable
+     * @protected
+     */
     _triggerInitialModelValueChangedEvent() {
       this._dispatchInitialModelValueChangedEvent();
     }
@@ -362,17 +362,19 @@ const FormControlMixinImplementation = superclass =>
     _enhanceLightDomA11yForAdditionalSlots(
       additionalSlots = ['prefix', 'suffix', 'before', 'after'],
     ) {
-      additionalSlots.forEach(additionalSlot => {
+      for (const additionalSlot of additionalSlots) {
         const element = this.__getDirectSlotChild(additionalSlot);
-        if (element) {
-          if (element.hasAttribute('data-label')) {
-            this.addToAriaLabelledBy(element, { idPrefix: additionalSlot });
-          }
-          if (element.hasAttribute('data-description')) {
-            this.addToAriaDescribedBy(element, { idPrefix: additionalSlot });
-          }
+        if (!element) {
+          // eslint-disable-next-line no-continue
+          continue;
         }
-      });
+        if (element.hasAttribute('data-label')) {
+          this.addToAriaLabelledBy(element, { idPrefix: additionalSlot });
+        }
+        if (element.hasAttribute('data-description')) {
+          this.addToAriaDescribedBy(element, { idPrefix: additionalSlot });
+        }
+      }
     }
 
     /**
@@ -382,20 +384,20 @@ const FormControlMixinImplementation = superclass =>
      * from an external context, will be read by a screen reader.
      * @param {string} attrName
      * @param {Element[]} nodes
-     * @param {boolean|undefined} reorder
+     * @param {boolean} shouldReorder
      */
-    __reflectAriaAttr(attrName, nodes, reorder) {
-      if (this._inputNode) {
-        if (reorder) {
-          const insideNodes = nodes.filter(n => this.contains(n));
-          const outsideNodes = nodes.filter(n => !this.contains(n));
-
-          // eslint-disable-next-line no-param-reassign
-          nodes = [...getAriaElementsInRightDomOrder(insideNodes), ...outsideNodes];
-        }
-        const string = nodes.map(n => n.id).join(' ');
-        this._inputNode.setAttribute(attrName, string);
+    __reflectAriaAttr(attrName, nodes, shouldReorder = false) {
+      if (!this._inputNode) {
+        return;
       }
+      if (shouldReorder) {
+        const insideNodes = nodes.filter(n => this.contains(n));
+        const outsideNodes = nodes.filter(n => !this.contains(n));
+        // eslint-disable-next-line no-param-reassign
+        nodes = [...getAriaElementsInRightDomOrder(insideNodes), ...outsideNodes];
+      }
+      const string = nodes.map(n => n.id).join(' ');
+      this._inputNode.setAttribute(attrName, string);
     }
 
     /**
@@ -762,14 +764,15 @@ const FormControlMixinImplementation = superclass =>
      * @param {{idPrefix?:string; reorder?: boolean}} customConfig
      */
     addToAriaLabelledBy(element, { idPrefix = '', reorder = true } = {}) {
+      if (this._ariaLabelledNodes.includes(element)) {
+        return;
+      }
       // eslint-disable-next-line no-param-reassign
       element.id = element.id || `${idPrefix}-${this._inputId}`;
-      if (!this._ariaLabelledNodes.includes(element)) {
-        this._ariaLabelledNodes = [...this._ariaLabelledNodes, element];
-        // This value will be read when we need to reflect to attr
-        /** @type {boolean} */
-        this.__reorderAriaLabelledNodes = Boolean(reorder);
-      }
+      this._ariaLabelledNodes = [...this._ariaLabelledNodes, element];
+      // This value will be read when we need to reflect to attr
+      /** @type {boolean} */
+      this.__shouldReorderAriaLabelledNodes = Boolean(reorder);
     }
 
     /**
@@ -777,13 +780,14 @@ const FormControlMixinImplementation = superclass =>
      * @param {HTMLElement} element
      */
     removeFromAriaLabelledBy(element) {
-      if (this._ariaLabelledNodes.includes(element)) {
-        this._ariaLabelledNodes.splice(this._ariaLabelledNodes.indexOf(element), 1);
-        this._ariaLabelledNodes = [...this._ariaLabelledNodes];
-        // This value will be read when we need to reflect to attr
-        /** @type {boolean} */
-        this.__reorderAriaLabelledNodes = false;
+      if (!this._ariaLabelledNodes.includes(element)) {
+        return;
       }
+      this._ariaLabelledNodes.splice(this._ariaLabelledNodes.indexOf(element), 1);
+      this._ariaLabelledNodes = [...this._ariaLabelledNodes];
+      // This value will be read when we need to reflect to attr
+      /** @type {boolean} */
+      this.__shouldReorderAriaLabelledNodes = false;
     }
 
     /**
@@ -792,14 +796,15 @@ const FormControlMixinImplementation = superclass =>
      * @param {{idPrefix?:string; reorder?: boolean}} customConfig
      */
     addToAriaDescribedBy(element, { idPrefix = '', reorder = true } = {}) {
+      if (this._ariaDescribedNodes.includes(element)) {
+        return;
+      }
       // eslint-disable-next-line no-param-reassign
       element.id = element.id || `${idPrefix}-${this._inputId}`;
-      if (!this._ariaDescribedNodes.includes(element)) {
-        this._ariaDescribedNodes = [...this._ariaDescribedNodes, element];
-        // This value will be read when we need to reflect to attr
-        /** @type {boolean} */
-        this.__reorderAriaDescribedNodes = Boolean(reorder);
-      }
+      this._ariaDescribedNodes = [...this._ariaDescribedNodes, element];
+      // This value will be read when we need to reflect to attr
+      /** @type {boolean} */
+      this.__shouldReorderAriaDescribedNodes = Boolean(reorder);
     }
 
     /**
@@ -807,13 +812,14 @@ const FormControlMixinImplementation = superclass =>
      * @param {HTMLElement} element
      */
     removeFromAriaDescribedBy(element) {
-      if (this._ariaDescribedNodes.includes(element)) {
-        this._ariaDescribedNodes.splice(this._ariaDescribedNodes.indexOf(element), 1);
-        this._ariaDescribedNodes = [...this._ariaDescribedNodes];
-        // This value will be read when we need to reflect to attr
-        /** @type {boolean} */
-        this.__reorderAriaLabelledNodes = false;
+      if (!this._ariaDescribedNodes.includes(element)) {
+        return;
       }
+      this._ariaDescribedNodes.splice(this._ariaDescribedNodes.indexOf(element), 1);
+      this._ariaDescribedNodes = [...this._ariaDescribedNodes];
+      // This value will be read when we need to reflect to attr
+      /** @type {boolean} */
+      this.__shouldReorderAriaLabelledNodes = false;
     }
 
     /**
@@ -869,7 +875,7 @@ const FormControlMixinImplementation = superclass =>
       // (before stopImmediatePropagation is called below).
       this._onBeforeRepropagateChildrenValues(ev);
       // Normalize target, we also might get it from 'portals' (rich select)
-      const target = (ev.detail && ev.detail.element) || ev.target;
+      const target = ev.detail?.element || ev.target;
       const isEndpoint =
         this._isRepropagationEndpoint || this._repropagationRole === 'choice-group';
 
@@ -913,7 +919,7 @@ const FormControlMixinImplementation = superclass =>
       // Compute the formPath. Choice groups are regarded 'end points'
       let parentFormPath = [];
       if (!isEndpoint) {
-        parentFormPath = (ev.detail && ev.detail.formPath) || [target];
+        parentFormPath = ev.detail?.formPath || [target];
       }
       const formPath = [...parentFormPath, this];
 

@@ -100,7 +100,7 @@ describe('<lion-radio-group>', () => {
 
     el.formElements[1].focus();
     expect(el.touched).to.equal(false, 'initially, touched state is false');
-    /** @type {LionRadio} */ (el.children[1]).checked = true;
+    el.formElements[1].checked = true;
     expect(el.touched, `focused via a mouse click, group should be touched`).to.be.true;
   });
 

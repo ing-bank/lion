@@ -347,10 +347,10 @@ describe('lion-combobox', () => {
       expect(el.formElements[0].checked).to.be.true;
     });
 
-    it('sets modelValue to _inputNode.value if no option is selected when requireOptionMatch is false', async () => {
+    it('sets modelValue to _inputNode.value if no option is selected when allow-custom-choice is set', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
-          <lion-combobox name="foo" .modelValue="${'Artichoke'}" .requireOptionMatch="${false}">
+          <lion-combobox name="foo" .modelValue="${'Artichoke'}" allow-custom-choice>
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -580,7 +580,7 @@ describe('lion-combobox', () => {
         `)
       );
 
-      el.requireOptionMatch = false;
+      el.allowCustomChoice = true;
       await el.updateComplete;
       const { _inputNode } = getComboboxMembers(el);
 
@@ -595,7 +595,7 @@ describe('lion-combobox', () => {
       expect(el.modelValue).to.eql([]);
     });
 
-    it('allows a value outside of the option list when requireOptionMatch is false', async () => {
+    it('allows a value outside of the option list when allow-custom-choice is set', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" .validators=${[new Required()]}>
@@ -606,7 +606,7 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
-      el.requireOptionMatch = false;
+      el.allowCustomChoice = true;
       const { _inputNode } = getComboboxMembers(el);
       expect(el.checkedIndex).to.equal(0);
 
@@ -619,7 +619,7 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('Foo');
     });
 
-    it("doesn't select any similar options after using delete when requireOptionMatch is false", async () => {
+    it("doesn't select any similar options after using delete when allow-custom-choice is set", async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" .validators=${[new Required()]}>
@@ -630,7 +630,7 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
-      el.requireOptionMatch = false;
+      el.allowCustomChoice = true;
       const { _inputNode } = getComboboxMembers(el);
 
       mimicUserTyping(el, 'Art');
@@ -701,7 +701,7 @@ describe('lion-combobox', () => {
       expect(el.formElements[0].checked).to.be.false;
     });
 
-    it('allows custom selections when multi-choice when requireOptionMatch is false', async () => {
+    it('allows custom selections when multi-choice when allowCustomChoice is true', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox
@@ -718,7 +718,7 @@ describe('lion-combobox', () => {
         `)
       );
 
-      el.requireOptionMatch = false;
+      el.allowCustomChoice = true;
       await el.updateComplete;
 
       const { _inputNode } = getComboboxMembers(el);
@@ -739,7 +739,7 @@ describe('lion-combobox', () => {
       await el.updateComplete;
     });
 
-    it('allows manyu custom selections when multi-choice when requireOptionMatch is false', async () => {
+    it('allows manyu custom selections when multi-choice when allowCustomChoice is true', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox
@@ -756,7 +756,7 @@ describe('lion-combobox', () => {
         `)
       );
 
-      el.requireOptionMatch = false;
+      el.allowCustomChoice = true;
       await el.updateComplete;
 
       const { _inputNode } = getComboboxMembers(el);
@@ -778,15 +778,10 @@ describe('lion-combobox', () => {
       expect(el.checkedIndex).to.eql([]);
     });
 
-    it('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", without selecting similar values', async () => {
+    it('allows new options when multi-choice when allow-custom-choice and autocomplete="both", without selecting similar values', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
-          <lion-combobox
-            name="foo"
-            multiple-choice
-            .requireOptionMatch=${false}
-            autocomplete="both"
-          >
+          <lion-combobox name="foo" multiple-choice allow-custom-choice autocomplete="both">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -807,15 +802,10 @@ describe('lion-combobox', () => {
       expect(el.modelValue).to.eql(['Artist']);
     });
 
-    it('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async () => {
+    it('allows new options when multi-choice when allow-custom-choice and autocomplete="both", when deleting autocomplete values using Backspace', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
-          <lion-combobox
-            name="foo"
-            multiple-choice
-            .requireOptionMatch=${false}
-            autocomplete="both"
-          >
+          <lion-combobox name="foo" multiple-choice allow-custom-choice autocomplete="both">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -837,15 +827,10 @@ describe('lion-combobox', () => {
       expect(el.modelValue).to.eql(['Art']);
     });
 
-    it('allows new custom options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocompleted values using Delete', async () => {
+    it('allows new custom options when multi-choice when allow-custom-choice and autocomplete="both", when deleting autocompleted values using Delete', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
-          <lion-combobox
-            name="foo"
-            multiple-choice
-            .requireOptionMatch=${false}
-            autocomplete="both"
-          >
+          <lion-combobox name="foo" multiple-choice allow-custom-choice autocomplete="both">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>

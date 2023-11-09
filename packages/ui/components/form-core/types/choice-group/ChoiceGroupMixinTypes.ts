@@ -17,6 +17,12 @@ export declare class ChoiceGroupHost {
   addFormElement(child: FormControlHost, indexToInsertAt: number): void;
   clear(): void;
 
+  allowCustomChoice: boolean;
+
+  parser(value: string | string[]): string | string[];
+
+  protected _isEmpty(): boolean;
+
   protected _oldModelValue: any;
   protected _triggerInitialModelValueChangedEvent(): void;
   protected _getFromAllFormElementsFilter(el: FormControl, type: string): boolean;
@@ -30,6 +36,8 @@ export declare class ChoiceGroupHost {
   protected _getCheckedElements(): ChoiceInputHost[];
   protected _setCheckedElements(value: any, check: boolean): void;
   protected _onBeforeRepropagateChildrenValues(ev: Event): void;
+
+  protected _isSingleChoice: boolean;
 
   private __setChoiceGroupTouched(): void;
   private __delegateNameAttribute(child: FormControlHost): void;
