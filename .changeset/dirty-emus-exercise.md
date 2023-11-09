@@ -1,5 +1,5 @@
 ---
-'@lion/ui': minor
+'@lion/ui': patch
 ---
 
-fix: fixes single-choice, requireOptionMatch=false to not clear selection
+fix: [combobox] single choice with `allow-custom-choice`(former requireOptionMatch=false) doesn't clear selection

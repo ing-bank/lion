@@ -1,5 +1,5 @@
 ---
-'@lion/ui': minor
+'@lion/ui': patch
 ---
 
-fix: event emited when clearing a combobox sends stale value
+fix: [combobox] model-value-changed event emitted when clearing a combobox sends stale value

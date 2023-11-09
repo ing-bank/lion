@@ -1,5 +1,5 @@
 ---
-'@lion/ui': minor
+'@lion/ui': patch
 ---
 
-fix: resetting a radio-group containing options with formatters doesn't check the default value
+fix: [radio-group] resetting a radio-group containing options with formatters doesn't check the default value
