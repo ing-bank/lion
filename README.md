@@ -59,6 +59,13 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 - Keep using `/docs` on the root level as we used it in the `master` branch. The documentation is copied into Astro related directories on `npm run start` and when when anything in `/docs` is updated.
 - Replace manually all references to assets in all `md` files so that we imply that the path is produced from the directory where the md file is located. F.e. `new URL('../src/wa-combobox/assets/obama.jpeg', import.meta.url).href;` should `new URL('./src/wa-combobox/assets/obama.jpeg', import.meta.url).href;`. Note double dot is replaced with one dot. See [this PR](https://github.com/ing-bank/lion/pull/2125/files#diff-403b1e0ab54d51dcfe54248e847498e492da00383d8b33a4087994ab9035a22c) for the reference.
 
+### Astro how to
+
+- To start in dev mode run `nmm run start`
+- To start in production mode:
+  - Run `npm run build`
+  - Run `npm run preview`
+
 ### Issues which are not caused by the migration (not to be fixed now)
 
 - There is a browser console error on [collapsible page](http://localhost:4321/components/collapsible):
@@ -86,14 +93,6 @@ They provide an unopinionated, white-label layer that can be extended to your ow
   ```
 
   Note. The reason for this error is caused by the fact that `addIconResolver` is set in two different files: `docs/components/icon/index.md` and `docs/components/icon/use-cases.md` and then those are concatenated. TODO we need to change the code so that pages there are no conflicts. At the same time we want the code to be complete and serve as a good example for users. That is we might want to keep `addIconResolver` in both examples and think of a solution that will keep the code as is, but allows multiple instances of lion on the same page?
-
-- Fix the build.
-
-  - The button md files were removed but one
-  - copyMdjsStories.js was changed so that @mdjs/mdjs-preview is not imported at the runtime
-  - mdjs-extra.js is place where @mdjs/mdjs-preview inlined
-  - index.js is patched. It throws errors otherwise
-  - TODO. Revert deleted md files.
 
 - Check how `docs/guides/how-to` works. There are multiple pages which we do not concatenate. And all those create the only one common `__mdjs-stories.js` which they override. That is a bug
 
