@@ -45,5 +45,10 @@ export default defineConfig({
     // build: {
     //   target: 'esnext'
     // },
+    build: {
+      rollupOptions: {
+        external: /^lit/
+      }
+    }
   },
 });

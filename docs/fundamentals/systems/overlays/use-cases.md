@@ -11,9 +11,9 @@ import {
   withModalDialogConfig,
 } from '@lion/ui/overlays.js';
 
-import './assets/demo-el-using-overlaymixin.mjs';
-import './assets/demo-overlay-backdrop.mjs';
-import './assets/applyDemoOverlayStyles.mjs';
+import './assets/demo-el-using-overlaymixin.js';
+import './assets/demo-overlay-backdrop.js';
+import './assets/applyDemoOverlayStyles.js';
 import { ref, createRef } from 'lit/directives/ref.js';
 ```
 

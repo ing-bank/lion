@@ -13,6 +13,7 @@ let visit;
 const nodeModulesText = '/node_modules';
 const mdJsStoriesFileNameWithoutExtension = '__mdjs-stories';
 const mdJsStoriesFileName = `${mdJsStoriesFileNameWithoutExtension}.js`;
+const isDistBuild = process.env.PROD === 'true';
 
 /**
  * @param {string} source
@@ -35,16 +36,18 @@ async function processImports(source) {
         isDynamicImport ||
         importSrc.startsWith('import.')
       ) {
-        newSource += importSrc;
-      } else if (importSrc === `'@mdjs/mdjs-preview/define'`) {
-        newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;
-      } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
-        newSource += `'${nodeModulesText}/@mdjs/mdjs-story/src/define.js'`;
+        if (importSrc === `'@mdjs/mdjs-preview/define'`) {
+          newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;
+        } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
+          newSource += `'${nodeModulesText}/@mdjs/mdjs-story/src/define.js'`;
+        } else {
+          newSource += importSrc;
+        }
       } else {
         const resolvedPath = require.resolve(importSrc);
         const packagesPath = '/packages/';
         if (resolvedPath.includes(packagesPath)) {
-          newSource += resolvedPath;
+          newSource += packagesPath + resolvedPath.split(packagesPath)[1];
         } else {
           newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
         }
@@ -82,17 +85,35 @@ function copyMdjsStories() {
           // noop. File is not yet created for the component
         }
 
-        const exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}' \n`;
+        let exportCmd;
+        if (isDistBuild) {
+          exportCmd = `import('./${currentMarkdownFileMdJsStoryName}');\n`;
+        } else {
+          exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}';\n`;
+        }
 
         if (commonMdjsStoriesContent === '') {
-          commonMdjsStoriesContent = `import '/public/docs/_assets/scoped-custom-element-registry.min.js'\n`;
+          if (isDistBuild) {
+            let scopedElementRegistry = '';
+            try {
+              scopedElementRegistry = fs
+                .readFileSync('docs/_assets/scoped-custom-element-registry.min.js')
+                .toString();
+            } catch (ex) {
+              console.log('docs/_assets/scoped-custom-element-registry.min.js does not exist!');
+            }
+
+            commonMdjsStoriesContent = `${scopedElementRegistry} \n\n
+import('@mdjs/mdjs-preview/define');
+import('@mdjs/mdjs-story/define');\n`;
+          } else {
+            commonMdjsStoriesContent = `import '/public/docs/_assets/scoped-custom-element-registry.min.js'\n
+              import '${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js';\n
+              import '${nodeModulesText}/@mdjs/mdjs-story/src/define.js'\n`;
+          }
         }
         if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
-          await fs.promises.writeFile(
-            commonMdjsStoriesFileName,
-            commonMdjsStoriesContent + exportCmd,
-            'utf8',
-          );
+          fs.writeFileSync(commonMdjsStoriesFileName, commonMdjsStoriesContent + exportCmd, 'utf8');
         }
       }
     }
@@ -114,7 +135,12 @@ function copyMdjsStories() {
       parsedPath = path.dirname(leftSideParsedPath);
     }
 
-    const parsedSetupJsCode = await processImports(setupJsCode);
+    let parsedSetupJsCode;
+    if (isDistBuild) {
+      parsedSetupJsCode = await setupJsCode;
+    } else {
+      parsedSetupJsCode = await processImports(setupJsCode);
+    }
     pathToMdDirectoryInPublic = `${publicDir}/${parsedPath}`;
     currentMarkdownFileMdJsStoryName = `${mdJsStoriesFileNameWithoutExtension}--${
       path.basename(currentMarkdownFile).split('.md')[0]

@@ -20,6 +20,9 @@ function cleanupRocketMetadata() {
       if (parent.type === 'heading') {
         if (parent.depth === 1) {
           const splitByOrder = _node.value.split('||');
+          if (splitByOrder.length === 1) {
+            return;
+          }
           const order = splitByOrder[1].trim();
           if (!order) {
             return;
