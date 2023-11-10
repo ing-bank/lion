@@ -15,6 +15,7 @@ const contentDocsPath = `${contentPathForDocs}/docs`;
 const publicPathForDocs = 'public';
 const publicDocsPath = `${publicPathForDocs}/docs`;
 const rootPath = process.cwd();
+const isDistBuild = process.env.PROD === 'true';
 
 async function processImportsForFile(filePath) {
   if (filePath.includes('__mdjs-stories')) {
@@ -138,12 +139,15 @@ async function copyDocsByFileArray(files) {
     if (path.extname(file) !== '.md') {
       await fs.mkdir(path.join(publicPathForDocs, currentPath), { recursive: true });
       await fs.copyFile(file, publicDocsFilePath);
-      // await processImportsForFile(publicDocsFilePath);
+      await processImportsForFile(publicDocsFilePath);
     }
   }
 }
 
 async function processImports(currentPath = '') {
+  if (isDistBuild) {
+    return;
+  }
   const files = await fs.readdir(path.join(publicDocsPath, currentPath));
 
   for (const file of files) {

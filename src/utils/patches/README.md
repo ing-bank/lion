@@ -26,3 +26,7 @@ Astro does not call [mdjsParse](https://github.com/modernweb-dev/rocket/blob/%40
 - [Shared variables](https://github.com/modernweb-dev/rocket/blob/%40mdjs/core%400.20.0/packages/mdjs-core/src/mdjsParse.js#L8) were moved under the `transformer` function
 
 This way the shared variables instantiated on every `transformer` function call.
+
+### mdjsSetupCode.js
+
+Dynamic `imports` for `@mdjs/mdjs-preview/define` and `@mdjs/mdjs-story/define` were removed. These imports are inlined into `__mdjs-story.js` by `copyMdjsStories.js` remark plugin. This is done to enable `dist` bundling.

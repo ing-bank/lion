@@ -13,7 +13,8 @@ let visit;
 const nodeModulesText = '/node_modules';
 const mdJsStoriesFileNameWithoutExtension = '__mdjs-stories';
 const mdJsStoriesFileName = `${mdJsStoriesFileNameWithoutExtension}.js`;
-const isDistBuild = true;
+const isDistBuild = process.env.PROD === 'true';
+console.log('isDistBuild: ', isDistBuild);
 
 /**
  * @param {string} source
@@ -104,9 +105,12 @@ function copyMdjsStories() {
             }
 
             commonMdjsStoriesContent = `${scopedElementRegistry} \n\n
-  import('@mdjs/mdjs-preview/define');
-  import('@mdjs/mdjs-story/define');\n`;
+import('@mdjs/mdjs-preview/define');
+import('@mdjs/mdjs-story/define');\n`;
           } else {
+            //             commonMdjsStoriesContent = `import '/public/docs/_assets/scoped-custom-element-registry.min.js'\n
+            // import '${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js';\n
+            // import '${nodeModulesText}/@mdjs/mdjs-story/src/define.js'\n`;
             commonMdjsStoriesContent = `import '/public/docs/_assets/scoped-custom-element-registry.min.js'\n`;
           }
         }
