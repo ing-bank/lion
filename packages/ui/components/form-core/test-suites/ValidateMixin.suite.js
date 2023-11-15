@@ -9,6 +9,7 @@ import {
 } from '@lion/ui/form-core-test-helpers.js';
 import sinon from 'sinon';
 import {
+  EqualsLength,
   MaxLength,
   MinLength,
   Required,
@@ -77,7 +78,7 @@ export function runValidateMixinSuite(customConfig) {
         const stub = sinon.stub(console, 'error');
         const el = /** @type {ValidateElement} */ (await fixture(html`<${tag}></${tag}>`));
         const errorMessage =
-          'Validators array only accepts class instances of Validator. Type "array" found. This may be caused by having multiple installations of @lion/form-core.';
+          'Validators array only accepts class instances of Validator. Type "array" found. This may be caused by having multiple installations of "@lion/ui/form-core.js".';
         expect(() => {
           // @ts-expect-error putting the wrong value on purpose
           el.validators = [[new Required()]];
@@ -85,7 +86,7 @@ export function runValidateMixinSuite(customConfig) {
         expect(stub.args[0][0]).to.equal(errorMessage);
 
         const errorMessage2 =
-          'Validators array only accepts class instances of Validator. Type "string" found. This may be caused by having multiple installations of @lion/form-core.';
+          'Validators array only accepts class instances of Validator. Type "string" found. This may be caused by having multiple installations of "@lion/ui/form-core.js".';
         expect(() => {
           // @ts-expect-error because we purposely put a wrong type
           el.validators = ['required'];
@@ -322,7 +323,7 @@ export function runValidateMixinSuite(customConfig) {
         // @ts-ignore [allow-private] in test
         const syncSpy = sinon.spy(el, '__executeSyncValidators');
         // @ts-ignore [allow-private] in test
-        const resultSpy2 = sinon.spy(el, '__executeResultValidators');
+        const resultSpy2 = sinon.spy(el, '__executeMetaValidators');
 
         el.modelValue = 'nonEmpty';
         expect(syncSpy.calledBefore(resultSpy2)).to.be.true;
@@ -337,7 +338,7 @@ export function runValidateMixinSuite(customConfig) {
         // @ts-ignore [allow-private] in test
         const asyncSpy = sinon.spy(el, '__executeAsyncValidators');
         // @ts-ignore [allow-private] in test
-        const resultSpy = sinon.spy(el, '__executeResultValidators');
+        const resultSpy = sinon.spy(el, '__executeMetaValidators');
 
         el.modelValue = 'nonEmpty';
         expect(resultSpy.callCount).to.equal(1);
@@ -776,6 +777,32 @@ export function runValidateMixinSuite(customConfig) {
           { validator: resultV, outcome: true },
           { validator, outcome: true },
         ]);
+      });
+    });
+
+    describe('getMessages with custom HTML', () => {
+      it('will render HTML for lion-validation-feedback', async () => {
+        const messageHtmlId = 'test123';
+        const messageHtml = `<div id="test123">test</div>`;
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag}
+            .validators="${[
+              new EqualsLength(4, { getMessage: () => html`<div id="test123">test</div>` }),
+            ]}" })]}"
+            .modelValue="${'123'}"            
+            label="Custom message for validator instance"
+          ></${tag}>
+        `)
+        );
+        expect(el.validationStates.error.EqualsLength).to.be.true;
+        expect(el.hasFeedbackFor).to.deep.equal(['error']);
+        const { _feedbackNode } = getFormControlMembers(el);
+        await el.updateComplete;
+        await el.updateComplete;
+        const messageHtmlNode = _feedbackNode.shadowRoot?.querySelector(`#${messageHtmlId}`);
+        expect(messageHtmlNode?.outerHTML).to.equal(messageHtml);
+        expect(messageHtmlNode?.tagName).to.equal('DIV');
       });
     });
 

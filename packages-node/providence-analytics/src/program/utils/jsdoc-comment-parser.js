@@ -36,7 +36,7 @@
  *   console.log(tags);
  * }
  */
-class JsdocCommentParser {
+export default class JsdocCommentParser {
   /**
    * parse comment to tags.
    * @param {ASTNode} commentNode - comment node.
@@ -122,5 +122,3 @@ class JsdocCommentParser {
     }, '*\n');
   }
 }
-
-module.exports = JsdocCommentParser;

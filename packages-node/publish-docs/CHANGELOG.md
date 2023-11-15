@@ -1,5 +1,11 @@
 # publish-docs
 
+## 0.2.1
+
+### Patch Changes
+
+- 8bf54e66: code example is formatted correctly which is needed for code replacement and transformation functions on docs generation to work as intended
+
 ## 0.2.0
 
 ### Minor Changes

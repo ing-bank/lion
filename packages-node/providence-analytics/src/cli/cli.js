@@ -1,21 +1,35 @@
-const child_process = require('child_process'); // eslint-disable-line camelcase
-const pathLib = require('path');
-const commander = require('commander');
-const providenceModule = require('../program/providence.js');
-const { LogService } = require('../program/services/LogService.js');
-const { QueryService } = require('../program/services/QueryService.js');
-const { InputDataService } = require('../program/services/InputDataService.js');
-const promptModule = require('./prompt-analyzer-menu.js');
-const cliHelpers = require('./cli-helpers.js');
-const extendDocsModule = require('./launch-providence-with-extend-docs.js');
-const { toPosixPath } = require('../program/utils/to-posix-path.js');
+import child_process from 'child_process'; // eslint-disable-line camelcase
+import path from 'path';
+import fs from 'fs';
+import commander from 'commander';
+import { LogService } from '../program/core/LogService.js';
+import { QueryService } from '../program/core/QueryService.js';
+import { InputDataService } from '../program/core/InputDataService.js';
+import { toPosixPath } from '../program/utils/to-posix-path.js';
+import { getCurrentDir } from '../program/utils/get-current-dir.js';
+import { dashboardServer } from '../dashboard/server.js';
+import { _providenceModule } from '../program/providence.js';
+import { _cliHelpersModule } from './cli-helpers.js';
+import { _extendDocsModule } from './launch-providence-with-extend-docs.js';
+import { _promptAnalyzerMenuModule } from './prompt-analyzer-menu.js';
 
-const { extensionsFromCs, setQueryMethod, targetDefault, installDeps, spawnProcess } = cliHelpers;
+/**
+ * @typedef {import('../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../types/index.js').ProvidenceCliConf} ProvidenceCliConf
+ */
 
-const { version } = require('../../package.json');
+const { version } = JSON.parse(
+  fs.readFileSync(path.resolve(getCurrentDir(import.meta.url), '../../package.json'), 'utf8'),
+);
+const { extensionsFromCs, setQueryMethod, targetDefault, installDeps } = _cliHelpersModule;
 
-async function cli({ cwd, providenceConf } = {}) {
+/**
+ * @param {{cwd?:string; argv?: string[]; providenceConf?: Partial<ProvidenceCliConf>}} cfg
+ */
+export async function cli({ cwd = process.cwd(), providenceConf, argv = process.argv }) {
+  /** @type {(value: any) => void} */
   let resolveCli;
+  /** @type {(reason?: any) => void} */
   let rejectCli;
 
   const cliPromise = new Promise((resolve, reject) => {
@@ -35,7 +49,14 @@ async function cli({ cwd, providenceConf } = {}) {
   // TODO: change back to "InputDataService.getExternalConfig();" once full package ESM
   const externalConfig = providenceConf;
 
-  async function getQueryInputData(
+  /**
+   * @param {'search-query'|'feature-query'|'analyzer-query'} searchMode
+   * @param {{regexString: string}} regexSearchOptions
+   * @param {{queryString: string}} featureOptions
+   * @param {{name:AnalyzerName; config:object;promptOptionalConfig:object}} analyzerOptions
+   * @returns
+   */
+  async function getQueryConfigAndMeta(
     /* eslint-disable no-shadow */
     searchMode,
     regexSearchOptions,
@@ -57,11 +78,12 @@ async function cli({ cwd, providenceConf } = {}) {
     } else if (searchMode === 'analyzer-query') {
       let { name, config } = analyzerOptions;
       if (!name) {
-        const answers = await promptModule.promptAnalyzerMenu();
+        const answers = await _promptAnalyzerMenuModule.promptAnalyzerMenu();
+
         name = answers.analyzerName;
       }
       if (!config) {
-        const answers = await promptModule.promptAnalyzerConfigMenu(
+        const answers = await _promptAnalyzerMenuModule.promptAnalyzerConfigMenu(
           name,
           analyzerOptions.promptOptionalConfig,
         );
@@ -70,7 +92,7 @@ async function cli({ cwd, providenceConf } = {}) {
       // Will get metaConfig from ./providence.conf.js
       const metaConfig = externalConfig ? externalConfig.metaConfig : {};
       config = { ...config, metaConfig };
-      queryConfig = QueryService.getQueryConfigFromAnalyzer(name, config);
+      queryConfig = await QueryService.getQueryConfigFromAnalyzer(name, config);
       queryMethod = 'ast';
     } else {
       LogService.error('Please define a feature, analyzer or search');
@@ -80,7 +102,7 @@ async function cli({ cwd, providenceConf } = {}) {
   }
 
   async function launchProvidence() {
-    const { queryConfig, queryMethod } = await getQueryInputData(
+    const { queryConfig, queryMethod } = await getQueryConfigAndMeta(
       searchMode,
       regexSearchOptions,
       featureOptions,
@@ -99,7 +121,7 @@ async function cli({ cwd, providenceConf } = {}) {
      */
     let totalSearchTargets;
     if (commander.targetDependencies !== undefined) {
-      totalSearchTargets = await cliHelpers.appendProjectDependencyPaths(
+      totalSearchTargets = await _cliHelpersModule.appendProjectDependencyPaths(
         searchTargetPaths,
         commander.targetDependencies,
       );
@@ -112,7 +134,7 @@ async function cli({ cwd, providenceConf } = {}) {
     //   we do not test against ourselves...
     // -
 
-    providenceModule.providence(queryConfig, {
+    _providenceModule.providence(queryConfig, {
       gatherFilesConfig: {
         extensions: commander.extensions,
         allowlistMode: commander.allowlistMode,
@@ -130,11 +152,17 @@ async function cli({ cwd, providenceConf } = {}) {
       targetProjectRootPaths: searchTargetPaths,
       writeLogFile: commander.writeLogFile,
       skipCheckMatchCompatibility: commander.skipCheckMatchCompatibility,
+      measurePerformance: commander.measurePerf,
+      addSystemPathsInResult: commander.addSystemPaths,
+      fallbackToBabel: commander.fallbackToBabel,
     });
   }
 
+  /**
+   * @param {{update:boolean; deps:boolean;createVersionHistory:boolean}} options
+   */
   async function manageSearchTargets(options) {
-    const basePath = pathLib.join(__dirname, '../..');
+    const basePath = path.join(__dirname, '../..');
     if (options.update) {
       LogService.info('git submodule update --init --recursive');
 
@@ -153,15 +181,6 @@ async function cli({ cwd, providenceConf } = {}) {
     }
   }
 
-  async function runDashboard() {
-    const pathFromServerRootToDashboard = `${pathLib.relative(
-      process.cwd(),
-      pathLib.resolve(__dirname, '../../dashboard'),
-    )}`;
-
-    spawnProcess(`node ${pathFromServerRootToDashboard}/src/server.mjs`);
-  }
-
   commander
     .version(version, '-v, --version')
     .option('-e, --extensions [extensions]', 'extensions like "js,html"', extensionsFromCs, [
@@ -173,37 +192,37 @@ async function cli({ cwd, providenceConf } = {}) {
       '-t, --search-target-paths [targets]',
       `path(s) to project(s) on which analysis/querying should take place. Requires
     a list of comma seperated values relative to project root`,
-      v => cliHelpers.pathsArrayFromCs(v, cwd),
-      targetDefault(),
+      v => _cliHelpersModule.pathsArrayFromCs(v, cwd),
+      targetDefault(cwd),
     )
     .option(
       '-r, --reference-paths [references]',
       `path(s) to project(s) which serve as a reference (applicable for certain analyzers like
     'match-imports'). Requires a list of comma seperated values relative to
     project root (like 'node_modules/lion-based-ui, node_modules/lion-based-ui-labs').`,
-      v => cliHelpers.pathsArrayFromCs(v, cwd),
+      v => _cliHelpersModule.pathsArrayFromCs(v, cwd),
       InputDataService.referenceProjectPaths,
     )
     .option('-a, --allowlist [allowlist]', `allowlisted paths, like 'src/**/*, packages/**/*'`, v =>
-      cliHelpers.csToArray(v, cwd),
+      _cliHelpersModule.csToArray(v),
     )
     .option(
       '--allowlist-reference [allowlist-reference]',
       `allowed paths for reference, like 'src/**/*, packages/**/*'`,
-      v => cliHelpers.csToArray(v, cwd),
+      v => _cliHelpersModule.csToArray(v),
     )
     .option(
       '--search-target-collection [collection-name]',
       `path(s) to project(s) which serve as a reference (applicable for certain analyzers like
     'match-imports'). Should be a collection defined in providence.conf.js as paths relative to
     project root.`,
-      v => cliHelpers.pathsArrayFromCollectionName(v, 'search-target', externalConfig),
+      v => _cliHelpersModule.pathsArrayFromCollectionName(v, 'search-target', externalConfig),
     )
     .option(
       '--reference-collection [collection-name]',
       `path(s) to project(s) on which analysis/querying should take place. Should be a collection
     defined in providence.conf.js as paths relative to project root.`,
-      v => cliHelpers.pathsArrayFromCollectionName(v, 'reference', externalConfig),
+      v => _cliHelpersModule.pathsArrayFromCollectionName(v, 'reference', externalConfig),
     )
     .option('--write-log-file', `Writes all logs to 'providence.log' file`)
     .option(
@@ -232,6 +251,12 @@ async function cli({ cwd, providenceConf } = {}) {
     .option(
       '--skip-check-match-compatibility',
       `skips semver checks, handy for forward compatible libs or libs below v1`,
+    )
+    .option('--measure-perf', 'Logs the completion time in seconds')
+    .option('--add-system-paths', 'Adds system paths to results')
+    .option(
+      '--fallback-to-babel',
+      'Uses babel instead of swc. This will be slower, but guaranteed to be 100% compatible with @babel/generate and @babel/traverse',
     );
 
   commander
@@ -298,7 +323,7 @@ async function cli({ cwd, providenceConf } = {}) {
     .option(
       '--output-folder [output-folder]',
       `This is the file path where the result file "providence-extend-docs-data.json" will be written to`,
-      p => toPosixPath(pathLib.resolve(process.cwd(), p.trim())),
+      p => toPosixPath(path.resolve(process.cwd(), p.trim())),
       process.cwd(),
     )
     .action(options => {
@@ -311,7 +336,7 @@ async function cli({ cwd, providenceConf } = {}) {
         process.exit(1);
       }
       const prefixCfg = { from: options.prefixFrom, to: options.prefixTo };
-      extendDocsModule
+      _extendDocsModule
         .launchProvidenceWithExtendDocs({
           referenceProjectPaths: commander.referencePaths,
           prefixCfg,
@@ -346,12 +371,10 @@ async function cli({ cwd, providenceConf } = {}) {
       via providence.conf`,
     )
     .action(() => {
-      runDashboard();
+      dashboardServer.start();
     });
 
-  commander.parse(process.argv);
+  commander.parse(argv);
 
   await cliPromise;
 }
-
-module.exports = { cli };

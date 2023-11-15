@@ -346,7 +346,7 @@ export const emailValidator = () => html`
 `;
 ```
 
-### Override Default Messages
+### Override default messages with custom text
 
 To get default validation messages you need to import and call the `loadDefaultFeedbackMessages` function once in your application.
 
@@ -370,6 +370,22 @@ export const defaultMessages = () => html`
     ]}"
     .modelValue="${'way too much'}"
     label="Dynamic message for validator instance"
+  ></lion-input>
+`;
+```
+
+### Override default messages with custom HTML
+
+Similarly to overriding the default messages with a custom text it is possible to override the messages with a custom HTML.
+
+```js preview-story
+export const defaultMessagesWithCustomHtml = () => html`
+  <lion-input
+    .validators="${[
+      new EqualsLength(4, { getMessage: () => html`<div><b>Note</b> 4 chars please...</div>` }),
+    ]}"
+    .modelValue="${'123'}"
+    label="Custom message for validator instance"
   ></lion-input>
 `;
 ```

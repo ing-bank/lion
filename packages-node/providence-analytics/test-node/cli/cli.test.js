@@ -1,36 +1,24 @@
-const sinon = require('sinon');
-const pathLib = require('path');
-const { expect } = require('chai');
-const commander = require('commander');
-const {
-  mockProject,
-  restoreMockedProjects,
-  mockTargetAndReferenceProject,
-} = require('../../test-helpers/mock-project-helpers.js');
-const {
-  mockWriteToJson,
-  restoreWriteToJson,
-} = require('../../test-helpers/mock-report-service-helpers.js');
-const {
-  suppressNonCriticalLogs,
-  restoreSuppressNonCriticalLogs,
-} = require('../../test-helpers/mock-log-service-helpers.js');
-const { InputDataService } = require('../../src/program/services/InputDataService.js');
-const { QueryService } = require('../../src/program/services/QueryService.js');
-const providenceModule = require('../../src/program/providence.js');
-const extendDocsModule = require('../../src/cli/launch-providence-with-extend-docs.js');
-const cliHelpersModule = require('../../src/cli/cli-helpers.js');
-const { cli } = require('../../src/cli/cli.js');
-const promptAnalyzerModule = require('../../src/cli/prompt-analyzer-menu.js');
-const { toPosixPath } = require('../../src/program/utils/to-posix-path.js');
-const { getExtendDocsResults } = require('../../src/cli/launch-providence-with-extend-docs.js');
+/* eslint-disable no-unused-expressions */
+/* eslint-disable import/no-extraneous-dependencies */
+import sinon from 'sinon';
+import { expect } from 'chai';
+import { it } from 'mocha';
+import commander from 'commander';
+import { mockProject } from '../../test-helpers/mock-project-helpers.js';
+import { InputDataService } from '../../src/program/core/InputDataService.js';
+import { QueryService } from '../../src/program/core/QueryService.js';
+import { _providenceModule } from '../../src/program/providence.js';
+import { _cliHelpersModule } from '../../src/cli/cli-helpers.js';
+import { cli } from '../../src/cli/cli.js';
+import { _promptAnalyzerMenuModule } from '../../src/cli/prompt-analyzer-menu.js';
+import { memoizeConfig } from '../../src/program/utils/memoize.js';
+import { _extendDocsModule } from '../../src/cli/launch-providence-with-extend-docs.js';
+import { dashboardServer } from '../../src/dashboard/server.js';
+import { setupAnalyzerTest } from '../../test-helpers/setup-analyzer-test.js';
 
-const { pathsArrayFromCs, pathsArrayFromCollectionName, appendProjectDependencyPaths } =
-  cliHelpersModule;
-
-const queryResults = [];
-
-const rootDir = toPosixPath(pathLib.resolve(__dirname, '../../'));
+/**
+ * @typedef {import('../../types/index.js').QueryResult} QueryResult
+ */
 
 const externalCfgMock = {
   searchTargetCollections: {
@@ -48,28 +36,77 @@ const externalCfgMock = {
   },
 };
 
+setupAnalyzerTest();
+
+/**
+ * @param {string} args
+ * @param {string} cwd
+ */
 async function runCli(args, cwd) {
-  process.argv = [
+  const argv = [
     ...process.argv.slice(0, 2),
     ...args.split(' ').map(a => a.replace(/^("|')?(.*)("|')?$/, '$2')),
   ];
-  await cli({ cwd });
+  await cli({ argv, cwd });
 }
 
 describe('Providence CLI', () => {
+  const rootDir = '/mocked/path/example-project';
+
+  /** @type {sinon.SinonStub} */
   let providenceStub;
+  /** @type {sinon.SinonStub} */
   let promptCfgStub;
+  /** @type {sinon.SinonStub} */
   let iExtConfStub;
+  /** @type {sinon.SinonStub} */
   let promptStub;
+  /** @type {sinon.SinonStub} */
   let qConfStub;
 
   before(() => {
     // Prevent MaxListenersExceededWarning
     commander.setMaxListeners(100);
 
-    mockWriteToJson(queryResults);
-    suppressNonCriticalLogs();
+    /** @type {sinon.SinonStub} */
+    providenceStub = sinon.stub(_providenceModule, 'providence').returns(Promise.resolve());
 
+    /** @type {sinon.SinonStub} */
+    promptCfgStub = sinon
+      .stub(_promptAnalyzerMenuModule, 'promptAnalyzerConfigMenu')
+      .returns(Promise.resolve({ analyzerConfig: { con: 'fig' } }));
+
+    /** @type {sinon.SinonStub} */
+    iExtConfStub = sinon.stub(InputDataService, 'getExternalConfig').returns(externalCfgMock);
+
+    /** @type {sinon.SinonStub} */
+    promptStub = sinon
+      .stub(_promptAnalyzerMenuModule, 'promptAnalyzerMenu')
+      .returns(Promise.resolve({ analyzerName: 'match-analyzer-mock' }));
+
+    /** @type {sinon.SinonStub} */
+    qConfStub = sinon.stub(QueryService, 'getQueryConfigFromAnalyzer').returns(
+      // @ts-expect-error
+      Promise.resolve({
+        analyzer: {
+          name: 'match-analyzer-mock',
+          requiresReference: true,
+        },
+      }),
+    );
+  });
+
+  after(() => {
+    commander.setMaxListeners(10);
+
+    providenceStub.restore();
+    promptCfgStub.restore();
+    iExtConfStub.restore();
+    promptStub.restore();
+    qConfStub.restore();
+  });
+
+  beforeEach(() => {
     mockProject(
       {
         './src/OriginalComp.js': `export class OriginalComp {}`,
@@ -83,43 +120,7 @@ describe('Providence CLI', () => {
         projectPath: '/mocked/path/example-project',
       },
     );
-
-    providenceStub = sinon.stub(providenceModule, 'providence').returns(
-      new Promise(resolve => {
-        resolve();
-      }),
-    );
-
-    promptCfgStub = sinon
-      .stub(promptAnalyzerModule, 'promptAnalyzerConfigMenu')
-      .returns({ analyzerConfig: { con: 'fig' } });
-
-    iExtConfStub = sinon.stub(InputDataService, 'getExternalConfig').returns(externalCfgMock);
-
-    promptStub = sinon
-      .stub(promptAnalyzerModule, 'promptAnalyzerMenu')
-      .returns({ analyzerName: 'mock-analyzer' });
-
-    qConfStub = sinon.stub(QueryService, 'getQueryConfigFromAnalyzer').returns({
-      analyzer: {
-        name: 'mock-analyzer',
-        requiresReference: true,
-      },
-    });
-  });
-
-  after(() => {
-    commander.setMaxListeners(10);
-
-    restoreSuppressNonCriticalLogs();
-    restoreMockedProjects();
-    restoreWriteToJson();
-
-    providenceStub.restore();
-    promptCfgStub.restore();
-    iExtConfStub.restore();
-    promptStub.restore();
-    qConfStub.restore();
+    memoizeConfig.isCacheDisabled = true;
   });
 
   afterEach(() => {
@@ -130,38 +131,45 @@ describe('Providence CLI', () => {
     qConfStub.resetHistory();
   });
 
-  const analyzeCmd = 'analyze mock-analyzer';
+  const analyzeCmd = 'analyze match-analyzer-mock';
 
   it('calls providence', async () => {
-    await runCli(`${analyzeCmd} -t /mocked/path/example-project`);
+    await runCli(`${analyzeCmd} -t /mocked/path/example-project`, rootDir);
     expect(providenceStub.called).to.be.true;
   });
 
   it('creates a QueryConfig', async () => {
-    await runCli(`${analyzeCmd} -t /mocked/path/example-project`);
+    await runCli(`${analyzeCmd} -t /mocked/path/example-project`, rootDir);
     expect(qConfStub.called).to.be.true;
-    expect(qConfStub.args[0][0]).to.equal('mock-analyzer');
+    expect(qConfStub.args[0][0]).to.equal('match-analyzer-mock');
   });
 
   describe('Global options', () => {
+    const anyCmdThatAcceptsGlobalOpts = 'analyze match-analyzer-mock';
+
+    /** @type {sinon.SinonStub} */
     let pathsArrayFromCollectionStub;
+    /** @type {sinon.SinonStub} */
     let pathsArrayFromCsStub;
+    /** @type {sinon.SinonStub} */
     let appendProjectDependencyPathsStub;
 
     before(() => {
       pathsArrayFromCsStub = sinon
-        .stub(cliHelpersModule, 'pathsArrayFromCs')
+        .stub(_cliHelpersModule, 'pathsArrayFromCs')
         .returns(['/mocked/path/example-project']);
       pathsArrayFromCollectionStub = sinon
-        .stub(cliHelpersModule, 'pathsArrayFromCollectionName')
+        .stub(_cliHelpersModule, 'pathsArrayFromCollectionName')
         .returns(['/mocked/path/example-project']);
       appendProjectDependencyPathsStub = sinon
-        .stub(cliHelpersModule, 'appendProjectDependencyPaths')
-        .returns([
-          '/mocked/path/example-project',
-          '/mocked/path/example-project/node_modules/mock-dep-a',
-          '/mocked/path/example-project/bower_components/mock-dep-b',
-        ]);
+        .stub(_cliHelpersModule, 'appendProjectDependencyPaths')
+        .returns(
+          Promise.resolve([
+            '/mocked/path/example-project',
+            '/mocked/path/example-project/node_modules/mock-dep-a',
+            '/mocked/path/example-project/bower_components/mock-dep-b',
+          ]),
+        );
     });
 
     after(() => {
@@ -177,30 +185,33 @@ describe('Providence CLI', () => {
     });
 
     it('"-e --extensions"', async () => {
-      await runCli(`${analyzeCmd} -e bla,blu`);
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} -e bla,blu`, rootDir);
       expect(providenceStub.args[0][1].gatherFilesConfig.extensions).to.eql(['.bla', '.blu']);
 
       providenceStub.resetHistory();
 
-      await runCli(`${analyzeCmd} --extensions bla,blu`);
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} --extensions bla,blu`, rootDir);
       expect(providenceStub.args[0][1].gatherFilesConfig.extensions).to.eql(['.bla', '.blu']);
     });
 
     it('"-t --search-target-paths"', async () => {
-      await runCli(`${analyzeCmd} -t /mocked/path/example-project`, rootDir);
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} -t /mocked/path/example-project`, rootDir);
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
       expect(providenceStub.args[0][1].targetProjectPaths).to.eql(['/mocked/path/example-project']);
 
       pathsArrayFromCsStub.resetHistory();
       providenceStub.resetHistory();
 
-      await runCli(`${analyzeCmd} --search-target-paths /mocked/path/example-project`, rootDir);
+      await runCli(
+        `${anyCmdThatAcceptsGlobalOpts} --search-target-paths /mocked/path/example-project`,
+        rootDir,
+      );
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
       expect(providenceStub.args[0][1].targetProjectPaths).to.eql(['/mocked/path/example-project']);
     });
 
     it('"-r --reference-paths"', async () => {
-      await runCli(`${analyzeCmd} -r /mocked/path/example-project`, rootDir);
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} -r /mocked/path/example-project`, rootDir);
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
       expect(providenceStub.args[0][1].referenceProjectPaths).to.eql([
         '/mocked/path/example-project',
@@ -209,7 +220,10 @@ describe('Providence CLI', () => {
       pathsArrayFromCsStub.resetHistory();
       providenceStub.resetHistory();
 
-      await runCli(`${analyzeCmd} --reference-paths /mocked/path/example-project`, rootDir);
+      await runCli(
+        `${anyCmdThatAcceptsGlobalOpts} --reference-paths /mocked/path/example-project`,
+        rootDir,
+      );
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
       expect(providenceStub.args[0][1].referenceProjectPaths).to.eql([
         '/mocked/path/example-project',
@@ -217,13 +231,19 @@ describe('Providence CLI', () => {
     });
 
     it('"--search-target-collection"', async () => {
-      await runCli(`${analyzeCmd} --search-target-collection lion-collection`, rootDir);
+      await runCli(
+        `${anyCmdThatAcceptsGlobalOpts} --search-target-collection lion-collection`,
+        rootDir,
+      );
       expect(pathsArrayFromCollectionStub.args[0][0]).to.equal('lion-collection');
       expect(providenceStub.args[0][1].targetProjectPaths).to.eql(['/mocked/path/example-project']);
     });
 
     it('"--reference-collection"', async () => {
-      await runCli(`${analyzeCmd} --reference-collection lion-based-ui-collection`, rootDir);
+      await runCli(
+        `${anyCmdThatAcceptsGlobalOpts} --reference-collection lion-based-ui-collection`,
+        rootDir,
+      );
       expect(pathsArrayFromCollectionStub.args[0][0]).to.equal('lion-based-ui-collection');
       expect(providenceStub.args[0][1].referenceProjectPaths).to.eql([
         '/mocked/path/example-project',
@@ -231,7 +251,7 @@ describe('Providence CLI', () => {
     });
 
     it('"-a --allowlist"', async () => {
-      await runCli(`${analyzeCmd} -a mocked/**/*,rocked/*`, rootDir);
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} -a mocked/**/*,rocked/*`, rootDir);
       expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.eql([
         'mocked/**/*',
         'rocked/*',
@@ -239,7 +259,7 @@ describe('Providence CLI', () => {
 
       providenceStub.resetHistory();
 
-      await runCli(`${analyzeCmd} --allowlist mocked/**/*,rocked/*`, rootDir);
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} --allowlist mocked/**/*,rocked/*`, rootDir);
       expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.eql([
         'mocked/**/*',
         'rocked/*',
@@ -247,46 +267,49 @@ describe('Providence CLI', () => {
     });
 
     it('"--allowlist-reference"', async () => {
-      await runCli(`${analyzeCmd} --allowlist-reference mocked/**/*,rocked/*`, rootDir);
+      await runCli(
+        `${anyCmdThatAcceptsGlobalOpts} --allowlist-reference mocked/**/*,rocked/*`,
+        rootDir,
+      );
       expect(providenceStub.args[0][1].gatherFilesConfigReference.allowlist).to.eql([
         'mocked/**/*',
         'rocked/*',
       ]);
     });
 
-    it('--allowlist-mode', async () => {
-      await runCli(`${analyzeCmd} --allowlist-mode git`, rootDir);
+    it('"--allowlist-mode"', async () => {
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} --allowlist-mode git`, rootDir);
       expect(providenceStub.args[0][1].gatherFilesConfig.allowlistMode).to.equal('git');
     });
 
-    it('--allowlist-mode-reference', async () => {
-      await runCli(`${analyzeCmd} --allowlist-mode-reference npm`, rootDir);
+    it('"--allowlist-mode-reference"', async () => {
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} --allowlist-mode-reference npm`, rootDir);
       expect(providenceStub.args[0][1].gatherFilesConfigReference.allowlistMode).to.equal('npm');
     });
 
     it('"-D --debug"', async () => {
-      await runCli(`${analyzeCmd} -D`, rootDir);
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} -D`, rootDir);
       expect(providenceStub.args[0][1].debugEnabled).to.equal(true);
 
       providenceStub.resetHistory();
 
-      await runCli(`${analyzeCmd} --debug`, rootDir);
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} --debug`, rootDir);
       expect(providenceStub.args[0][1].debugEnabled).to.equal(true);
     });
 
-    it('--write-log-file"', async () => {
-      await runCli(`${analyzeCmd} --write-log-file`, rootDir);
+    it('"--write-log-file"', async () => {
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} --write-log-file`, rootDir);
       expect(providenceStub.args[0][1].writeLogFile).to.equal(true);
     });
 
-    it('--target-dependencies"', async () => {
-      await runCli(`${analyzeCmd}`, rootDir);
+    it('"--target-dependencies"', async () => {
+      await runCli(`${anyCmdThatAcceptsGlobalOpts}`, rootDir);
       expect(appendProjectDependencyPathsStub.called).to.be.false;
 
       appendProjectDependencyPathsStub.resetHistory();
       providenceStub.resetHistory();
 
-      await runCli(`${analyzeCmd} --target-dependencies`, rootDir);
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} --target-dependencies`, rootDir);
       expect(appendProjectDependencyPathsStub.called).to.be.true;
       expect(providenceStub.args[0][1].targetProjectPaths).to.eql([
         '/mocked/path/example-project',
@@ -295,14 +318,19 @@ describe('Providence CLI', () => {
       ]);
     });
 
-    it('--target-dependencies /^with-regex/"', async () => {
-      await runCli(`${analyzeCmd} --target-dependencies /^mock-/`, rootDir);
+    it('"--target-dependencies /^with-regex/"', async () => {
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} --target-dependencies /^mock-/`, rootDir);
       expect(appendProjectDependencyPathsStub.args[0][1]).to.equal('/^mock-/');
     });
 
     it('"--skip-check-match-compatibility"', async () => {
-      await runCli(`${analyzeCmd} --skip-check-match-compatibility`, rootDir);
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} --skip-check-match-compatibility`, rootDir);
       expect(providenceStub.args[0][1].skipCheckMatchCompatibility).to.equal(true);
+    });
+
+    it('"--fallback-to-babel"', async () => {
+      await runCli(`${anyCmdThatAcceptsGlobalOpts} --fallback-to-babel`, rootDir);
+      expect(providenceStub.args[0][1].fallbackToBabel).to.equal(true);
     });
   });
 
@@ -325,19 +353,19 @@ describe('Providence CLI', () => {
         });
 
         it('"-c --config"', async () => {
-          await runCli(`analyze mock-analyzer -c {"a":"2"}`, rootDir);
-          expect(qConfStub.args[0][0]).to.equal('mock-analyzer');
+          await runCli(`analyze match-analyzer-mock -c {"a":"2"}`, rootDir);
+          expect(qConfStub.args[0][0]).to.equal('match-analyzer-mock');
           expect(qConfStub.args[0][1]).to.eql({ a: '2', metaConfig: {} });
 
           qConfStub.resetHistory();
 
-          await runCli(`analyze mock-analyzer --config {"a":"2"}`, rootDir);
-          expect(qConfStub.args[0][0]).to.equal('mock-analyzer');
+          await runCli(`analyze match-analyzer-mock --config {"a":"2"}`, rootDir);
+          expect(qConfStub.args[0][0]).to.equal('match-analyzer-mock');
           expect(qConfStub.args[0][1]).to.eql({ a: '2', metaConfig: {} });
         });
 
         it('calls "promptAnalyzerConfigMenu" without config given', async () => {
-          await runCli(`analyze mock-analyzer`, rootDir);
+          await runCli(`analyze match-analyzer-mock`, rootDir);
           expect(promptCfgStub.called).to.be.true;
         });
       });
@@ -348,12 +376,22 @@ describe('Providence CLI', () => {
 
     describe('Manage', () => {});
 
+    describe('Dashboard', () => {
+      /** @type {sinon.SinonStub} */
+      const startStub = sinon.stub(dashboardServer, 'start');
+      it('spawns a dashboard', async () => {
+        runCli(`dashboard`, rootDir);
+        expect(startStub.called).to.be.true;
+      });
+    });
+
     describe('Extend docs', () => {
+      /** @type {sinon.SinonStub} */
       let extendDocsStub;
 
       before(() => {
         extendDocsStub = sinon
-          .stub(extendDocsModule, 'launchProvidenceWithExtendDocs')
+          .stub(_extendDocsModule, 'launchProvidenceWithExtendDocs')
           .returns(Promise.resolve());
       });
 
@@ -389,361 +427,10 @@ describe('Providence CLI', () => {
           extensions: ['.bla'],
           allowlist: ['al'],
           allowlistReference: ['alr'],
-          cwd: undefined,
+          cwd: '/mocked/path/example-project',
           skipCheckMatchCompatibility: true,
         });
       });
-    });
-  });
-});
-
-describe('CLI helpers', () => {
-  describe('pathsArrayFromCs', () => {
-    it('allows absolute paths', async () => {
-      expect(pathsArrayFromCs('/mocked/path/example-project', rootDir)).to.eql([
-        '/mocked/path/example-project',
-      ]);
-    });
-
-    it('allows relative paths', async () => {
-      expect(
-        pathsArrayFromCs('./test-helpers/project-mocks/importing-target-project', rootDir),
-      ).to.eql([`${rootDir}/test-helpers/project-mocks/importing-target-project`]);
-      expect(
-        pathsArrayFromCs('test-helpers/project-mocks/importing-target-project', rootDir),
-      ).to.eql([`${rootDir}/test-helpers/project-mocks/importing-target-project`]);
-    });
-
-    it('allows globs', async () => {
-      expect(pathsArrayFromCs('test-helpers/project-mocks*', rootDir)).to.eql([
-        `${rootDir}/test-helpers/project-mocks`,
-        `${rootDir}/test-helpers/project-mocks-analyzer-outputs`,
-      ]);
-    });
-
-    it('allows multiple comma separated paths', async () => {
-      const paths =
-        'test-helpers/project-mocks*, ./test-helpers/project-mocks/importing-target-project,/mocked/path/example-project';
-      expect(pathsArrayFromCs(paths, rootDir)).to.eql([
-        `${rootDir}/test-helpers/project-mocks`,
-        `${rootDir}/test-helpers/project-mocks-analyzer-outputs`,
-        `${rootDir}/test-helpers/project-mocks/importing-target-project`,
-        '/mocked/path/example-project',
-      ]);
-    });
-  });
-
-  describe('pathsArrayFromCollectionName', () => {
-    it('gets collections from external target config', async () => {
-      expect(
-        pathsArrayFromCollectionName('lion-collection', 'search-target', externalCfgMock, rootDir),
-      ).to.eql(
-        externalCfgMock.searchTargetCollections['lion-collection'].map(p =>
-          toPosixPath(pathLib.join(rootDir, p)),
-        ),
-      );
-    });
-
-    it('gets collections from external reference config', async () => {
-      expect(
-        pathsArrayFromCollectionName(
-          'lion-based-ui-collection',
-          'reference',
-          externalCfgMock,
-          rootDir,
-        ),
-      ).to.eql(
-        externalCfgMock.referenceCollections['lion-based-ui-collection'].map(p =>
-          toPosixPath(pathLib.join(rootDir, p)),
-        ),
-      );
-    });
-  });
-
-  describe('appendProjectDependencyPaths', () => {
-    before(() => {
-      mockWriteToJson(queryResults);
-      suppressNonCriticalLogs();
-
-      mockProject(
-        {
-          './src/OriginalComp.js': `export class OriginalComp {}`,
-          './src/inbetween.js': `export { OriginalComp as InBetweenComp } from './OriginalComp.js'`,
-          './index.js': `export { InBetweenComp as MyComp } from './src/inbetween.js'`,
-          './node_modules/dependency-a/index.js': '',
-          './bower_components/dependency-b/index.js': '',
-        },
-        {
-          projectName: 'example-project',
-          projectPath: '/mocked/path/example-project',
-        },
-      );
-    });
-
-    it('adds bower and node dependencies', async () => {
-      const result = await appendProjectDependencyPaths(['/mocked/path/example-project']);
-      expect(result).to.eql([
-        '/mocked/path/example-project/node_modules/dependency-a',
-        '/mocked/path/example-project/bower_components/dependency-b',
-        '/mocked/path/example-project',
-      ]);
-    });
-
-    it('allows a regex filter', async () => {
-      const result = await appendProjectDependencyPaths(
-        ['/mocked/path/example-project'],
-        '/^dependency-/',
-      );
-      expect(result).to.eql([
-        '/mocked/path/example-project/node_modules/dependency-a',
-        '/mocked/path/example-project/bower_components/dependency-b',
-        '/mocked/path/example-project',
-      ]);
-
-      const result2 = await appendProjectDependencyPaths(['/mocked/path/example-project'], '/b$/');
-      expect(result2).to.eql([
-        '/mocked/path/example-project/bower_components/dependency-b',
-        '/mocked/path/example-project',
-      ]);
-    });
-
-    it('allows to filter out only npm or bower deps', async () => {
-      const result = await appendProjectDependencyPaths(['/mocked/path/example-project'], null, [
-        'npm',
-      ]);
-      expect(result).to.eql([
-        '/mocked/path/example-project/node_modules/dependency-a',
-        '/mocked/path/example-project',
-      ]);
-
-      const result2 = await appendProjectDependencyPaths(['/mocked/path/example-project'], null, [
-        'bower',
-      ]);
-      expect(result2).to.eql([
-        '/mocked/path/example-project/bower_components/dependency-b',
-        '/mocked/path/example-project',
-      ]);
-    });
-  });
-
-  describe('Extend docs', () => {
-    afterEach(() => {
-      restoreMockedProjects();
-    });
-    it('rewrites monorepo package paths when analysis is run from monorepo root', async () => {
-      const theirProjectFiles = {
-        './package.json': JSON.stringify({
-          name: 'their-components',
-          version: '1.0.0',
-        }),
-        './src/TheirButton.js': `export class TheirButton extends HTMLElement {}`,
-        './src/TheirTooltip.js': `export class TheirTooltip extends HTMLElement {}`,
-        './their-button.js': `
-            import { TheirButton } from './src/TheirButton.js';
-
-            customElements.define('their-button', TheirButton);
-          `,
-        './demo.js': `
-          import { TheirTooltip } from './src/TheirTooltip.js';
-          import './their-button.js';
-        `,
-      };
-
-      const myProjectFiles = {
-        './package.json': JSON.stringify({
-          name: '@my/root',
-          workspaces: ['packages/*', 'another-folder/my-tooltip'],
-          dependencies: {
-            'their-components': '1.0.0',
-          },
-        }),
-        // Package 1: @my/button
-        './packages/button/package.json': JSON.stringify({
-          name: '@my/button',
-        }),
-        './packages/button/src/MyButton.js': `
-            import { TheirButton } from 'their-components/src/TheirButton.js';
-
-            export class MyButton extends TheirButton {}
-            `,
-        './packages/button/src/my-button.js': `
-          import { MyButton } from './MyButton.js';
-
-          customElements.define('my-button', MyButton);
-        `,
-
-        // Package 2: @my/tooltip
-        './packages/tooltip/package.json': JSON.stringify({
-          name: '@my/tooltip',
-        }),
-        './packages/tooltip/src/MyTooltip.js': `
-          import { TheirTooltip } from 'their-components/src/TheirTooltip.js';
-
-          export class MyTooltip extends TheirTooltip {}
-          `,
-      };
-
-      const theirProject = {
-        path: '/my-components/node_modules/their-components',
-        name: 'their-components',
-        files: Object.entries(theirProjectFiles).map(([file, code]) => ({ file, code })),
-      };
-
-      const myProject = {
-        path: '/my-components',
-        name: 'my-components',
-        files: Object.entries(myProjectFiles).map(([file, code]) => ({ file, code })),
-      };
-
-      mockTargetAndReferenceProject(theirProject, myProject);
-
-      const result = await getExtendDocsResults({
-        referenceProjectPaths: [theirProject.path],
-        prefixCfg: { from: 'their', to: 'my' },
-        extensions: ['.js'],
-        cwd: '/my-components',
-      });
-
-      expect(result).to.eql([
-        {
-          name: 'TheirButton',
-          variable: {
-            from: 'TheirButton',
-            to: 'MyButton',
-            paths: [
-              {
-                from: './src/TheirButton.js',
-                to: '@my/button/src/MyButton.js', // rewritten from './packages/button/src/MyButton.js',
-              },
-              {
-                from: 'their-components/src/TheirButton.js',
-                to: '@my/button/src/MyButton.js', // rewritten from './packages/button/src/MyButton.js',
-              },
-            ],
-          },
-          tag: {
-            from: 'their-button',
-            to: 'my-button',
-            paths: [
-              {
-                from: './their-button.js',
-                to: '@my/button/src/my-button.js', // rewritten from './packages/button/src/MyButton.js',
-              },
-              {
-                from: 'their-components/their-button.js',
-                to: '@my/button/src/my-button.js', // rewritten from './packages/button/src/MyButton.js',
-              },
-            ],
-          },
-        },
-        {
-          name: 'TheirTooltip',
-          variable: {
-            from: 'TheirTooltip',
-            to: 'MyTooltip',
-            paths: [
-              {
-                from: './src/TheirTooltip.js',
-                to: '@my/tooltip/src/MyTooltip.js', // './packages/tooltip/src/MyTooltip.js',
-              },
-              {
-                from: 'their-components/src/TheirTooltip.js',
-                to: '@my/tooltip/src/MyTooltip.js', // './packages/tooltip/src/MyTooltip.js',
-              },
-            ],
-          },
-        },
-      ]);
-    });
-
-    it('does not check for match compatibility (target and reference) in monorepo targets', async () => {
-      // ===== REFERENCE AND TARGET PROJECTS =====
-
-      const theirProjectFiles = {
-        './package.json': JSON.stringify({
-          name: 'their-components',
-          version: '1.0.0',
-        }),
-        './src/TheirButton.js': `export class TheirButton extends HTMLElement {}`,
-      };
-
-      // This will be detected as being a monorepo
-      const monoProjectFiles = {
-        './package.json': JSON.stringify({
-          name: '@mono/root',
-          workspaces: ['packages/*'],
-          dependencies: {
-            'their-components': '1.0.0',
-          },
-        }),
-        // Package: @mono/button
-        './packages/button/package.json': JSON.stringify({
-          name: '@mono/button',
-        }),
-      };
-
-      // This will be detected as NOT being a monorepo
-      const nonMonoProjectFiles = {
-        './package.json': JSON.stringify({
-          name: 'non-mono',
-          dependencies: {
-            'their-components': '1.0.0',
-          },
-        }),
-      };
-
-      const theirProject = {
-        path: '/their-components',
-        name: 'their-components',
-        files: Object.entries(theirProjectFiles).map(([file, code]) => ({ file, code })),
-      };
-
-      const monoProject = {
-        path: '/mono-components',
-        name: 'mono-components',
-        files: Object.entries(monoProjectFiles).map(([file, code]) => ({ file, code })),
-      };
-
-      const nonMonoProject = {
-        path: '/non-mono-components',
-        name: 'non-mono-components',
-        files: Object.entries(nonMonoProjectFiles).map(([file, code]) => ({ file, code })),
-      };
-
-      // ===== TESTS =====
-
-      const providenceStub = sinon.stub(providenceModule, 'providence').returns(
-        new Promise(resolve => {
-          resolve([]);
-        }),
-      );
-
-      // ===== mono =====
-
-      mockTargetAndReferenceProject(theirProject, monoProject);
-      await getExtendDocsResults({
-        referenceProjectPaths: ['/their-components'],
-        prefixCfg: { from: 'their', to: 'my' },
-        extensions: ['.js'],
-        cwd: '/mono-components',
-      });
-
-      expect(providenceStub.args[0][1].skipCheckMatchCompatibility).to.equal(true);
-      providenceStub.resetHistory();
-      restoreMockedProjects();
-
-      // ===== non mono =====
-
-      mockTargetAndReferenceProject(theirProject, nonMonoProject);
-      await getExtendDocsResults({
-        referenceProjectPaths: ['/their-components'],
-        prefixCfg: { from: 'their', to: 'my' },
-        extensions: ['.js'],
-        cwd: '/non-mono-components',
-      });
-      expect(providenceStub.args[0][1].skipCheckMatchCompatibility).to.equal(false);
-
-      providenceStub.restore();
     });
   });
 });

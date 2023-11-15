@@ -1,13 +1,19 @@
-const { expect } = require('chai');
-const {
+import { expect } from 'chai';
+import { it } from 'mocha';
+import {
   mockProject,
   restoreMockedProjects,
   mockTargetAndReferenceProject,
-} = require('../../../test-helpers/mock-project-helpers.js');
-const { resolveImportPath } = require('../../../src/program/utils/resolve-import-path.js');
+} from '../../../test-helpers/mock-project-helpers.js';
+import { resolveImportPath } from '../../../src/program/utils/resolve-import-path.js';
+import { memoizeConfig } from '../../../src/program/utils/memoize.js';
 
 describe('resolveImportPath', () => {
+  beforeEach(() => {
+    memoizeConfig.isCacheDisabled = true;
+  });
   afterEach(() => {
+    memoizeConfig.isCacheDisabled = false;
     restoreMockedProjects();
   });
 
@@ -107,6 +113,25 @@ describe('resolveImportPath', () => {
 
     const foundPath = await resolveImportPath('ref/x', '/target/a.js');
     expect(foundPath).to.equal('/target/node_modules/ref/packages/x/index.js');
+  });
+
+  it(`resolves native node modules`, async () => {
+    mockProject(
+      {
+        './src/someFile.js': `
+       import { readFile } from 'fs';
+
+       export const x = readFile('/path/to/someOtherFile.js');
+      `,
+      },
+      {
+        projectName: 'my-project',
+        projectPath: '/my/project',
+      },
+    );
+
+    const foundPath = await resolveImportPath('fs', '/my/project/someFile.js');
+    expect(foundPath).to.equal('[node-builtin]');
   });
 
   /**

@@ -1,5 +1,6 @@
 /**
- * @typedef {import('../../types/analyzers').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../../types/index.js').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
  */
 
 /**
@@ -35,7 +36,7 @@
  *
  * @param {FindExportsAnalyzerResult} exportsAnalyzerResult
  */
-function transformIntoIterableFindExportsOutput(exportsAnalyzerResult) {
+export function transformIntoIterableFindExportsOutput(exportsAnalyzerResult) {
   /** @type {IterableFindExportsAnalyzerEntry[]} */
   const iterableEntries = [];
 
@@ -62,6 +63,3 @@ function transformIntoIterableFindExportsOutput(exportsAnalyzerResult) {
   }
   return iterableEntries;
 }
-module.exports = {
-  transformIntoIterableFindExportsOutput,
-};

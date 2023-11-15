@@ -517,7 +517,11 @@ export function runValidateMixinFeedbackPart() {
             .submitted=${true}
             .validators=${[constructorValidator]}
             .modelValue=${'cat'}
-            .fieldName=${new Promise(resolve => resolve('myField'))}
+            .fieldName=${new Promise(
+              (
+                resolve, // eslint-disable-next-line no-promise-executor-return
+              ) => resolve('myField'),
+            )}
           >${lightDom}</${tag}>
         `)
         );
@@ -537,6 +541,7 @@ export function runValidateMixinFeedbackPart() {
 
       it('".getMessage()" gets .fieldName defined on Validator config', async () => {
         const constructorValidator = new MinLength(4, {
+          // eslint-disable-next-line no-promise-executor-return
           fieldName: new Promise(resolve => resolve('myFieldViaCfg')),
         });
         const ctorValidator = /** @type {typeof MinLength} */ (constructorValidator.constructor);
@@ -548,7 +553,11 @@ export function runValidateMixinFeedbackPart() {
             .submitted=${true}
             .validators=${[constructorValidator]}
             .modelValue=${'cat'}
-            .fieldName=${new Promise(resolve => resolve('myField'))}
+            .fieldName=${new Promise(
+              (
+                resolve, // eslint-disable-next-line no-promise-executor-return
+              ) => resolve('myField'),
+            )}
           >${lightDom}</${tag}>
         `)
         );

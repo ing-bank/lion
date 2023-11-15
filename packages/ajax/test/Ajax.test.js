@@ -72,7 +72,10 @@ describe('Ajax', () => {
       // TODO: fix AjaxConfig types => e.g. create FullAjaxConfig with everything "mandatory" and then AjaxConfig (= Partial of it) for user
       // @ts-ignore
       const ajax1 = new Ajax(config);
-      const defaultCacheIdentifierFunction = ajax1.options?.cacheOptions?.getCacheIdentifier;
+
+      const defaultCacheIdentifierFunction = /** @type {() =>  void} */ (
+        ajax1.options?.cacheOptions?.getCacheIdentifier
+      );
       // Then
       expect(defaultCacheIdentifierFunction).not.to.be.undefined;
       expect(defaultCacheIdentifierFunction).to.be.a('function');
@@ -139,6 +142,25 @@ describe('Ajax', () => {
       }
       expect(thrown).to.be.true;
     });
+
+    it('throws on 4xx responses, will allow parsing response manually', async () => {
+      ajax.addRequestInterceptor(async () => new Response('my response', { status: 400 }));
+
+      let thrown = false;
+      try {
+        await ajax.fetch('/foo');
+      } catch (e) {
+        // https://github.com/microsoft/TypeScript/issues/20024 open issue, can't type catch clause in param
+        const _e = /** @type {AjaxFetchError} */ (e);
+        expect(_e).to.be.an.instanceOf(AjaxFetchError);
+        expect(_e.request).to.be.an.instanceOf(Request);
+        expect(_e.response).to.be.an.instanceOf(Response);
+        const body = await _e.response.text();
+        expect(body).to.equal('my response');
+        thrown = true;
+      }
+      expect(thrown).to.be.true;
+    });
   });
 
   describe('fetchJson', () => {
@@ -183,6 +205,26 @@ describe('Ajax', () => {
       expect(response.body).to.eql({ a: 1, b: 2 });
     });
 
+    it('throws on 4xx responses, but still attempts parsing response body when using fetchJson', async () => {
+      ajax.addRequestInterceptor(async () => new Response('my response', { status: 400 }));
+
+      let thrown = false;
+      try {
+        await ajax.fetchJson('/foo');
+      } catch (e) {
+        // https://github.com/microsoft/TypeScript/issues/20024 open issue, can't type catch clause in param
+        const _e = /** @type {AjaxFetchError} */ (e);
+        expect(_e).to.be.an.instanceOf(AjaxFetchError);
+        expect(_e.request).to.be.an.instanceOf(Request);
+        expect(_e.response).to.be.an.instanceOf(Response);
+        expect(_e.body).to.equal('my response');
+        const bodyFromResponse = await _e.response.text();
+        expect(bodyFromResponse).to.equal('my response');
+        thrown = true;
+      }
+      expect(thrown).to.be.true;
+    });
+
     describe('given a request body', () => {
       it('encodes the request body as json', async () => {
         await ajax.fetchJson('/foo', { method: 'POST', body: { a: 1, b: 2 } });
@@ -220,6 +262,13 @@ describe('Ajax', () => {
         thrown = true;
       }
       expect(thrown).to.be.true;
+    });
+
+    it('doesnt throw on empty response', async () => {
+      fetchStub.returns(Promise.resolve(new Response('', responseInit())));
+
+      const { response } = await ajax.fetchJson('/foo');
+      expect(response.ok);
     });
   });
 
@@ -531,6 +580,26 @@ describe('Ajax', () => {
       ];
 
       expect(errors.includes(/** @type {Error} */ (err).message)).to.be.true;
+    });
+  });
+
+  describe('AjaxFetchError', () => {
+    it('has the name AjaxFetchError', () => {
+      const error = new AjaxFetchError(new Request('/foobar'), new Response('foobar'), 'foobar');
+
+      expect(error.name).to.be.equal('AjaxFetchError');
+    });
+
+    it("displays the request failure text in it's message", () => {
+      const error = new AjaxFetchError(
+        new Request('/foobar'),
+        new Response('foobar', { status: 418, statusText: "I'm a teapot" }),
+        'foobar',
+      );
+
+      expect(/http:\/\/localhost:\d*\/foobar/.test(error.message)).to.be.true;
+      expect(error.message).to.include('418');
+      expect(error.message).to.include("I'm a teapot");
     });
   });
 });

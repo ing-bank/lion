@@ -56,3 +56,7 @@ _site-dev
 ## generated test fiels
 __output
 .wireit
+
+## generate-package-exports tests
+packages/ui/new-exports/
+packages/ui/test-exports/

@@ -2,7 +2,7 @@
  * @param {string|object} inputValue
  * @returns {number}
  */
-function getHash(inputValue) {
+export function getHash(inputValue) {
   if (typeof inputValue === 'object') {
     // eslint-disable-next-line no-param-reassign
     inputValue = JSON.stringify(inputValue);
@@ -14,5 +14,3 @@ function getHash(inputValue) {
     0,
   );
 }
-
-module.exports = getHash;

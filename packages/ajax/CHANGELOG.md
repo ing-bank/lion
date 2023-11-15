@@ -1,5 +1,41 @@
 # Change Log
 
+## 1.3.0
+
+### Minor Changes
+
+- 0952647d: make return type for `fetchJson` generic
+
+## 1.2.3
+
+### Patch Changes
+
+- 55e445c2: fix: export ajax types
+
+## 1.2.2
+
+### Patch Changes
+
+- 275f49eb: Preserve error name and enrich it with the response status
+
+## 1.2.1
+
+### Patch Changes
+
+- 9cdac8e9: Clone response before reading and parsing the body.
+
+## 1.2.0
+
+### Minor Changes
+
+- 7a875ef1: Parses response body automatically for fetchJson failed responses. Add test for reading out the response body in cases of a failed response in regular fetch call.
+
+## 1.1.4
+
+### Patch Changes
+
+- fd93cc0c: fix: avoid JSON.parsing empty responses
+
 ## 1.1.3
 
 ### Patch Changes

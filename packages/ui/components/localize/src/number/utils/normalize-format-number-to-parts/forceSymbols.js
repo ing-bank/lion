@@ -17,6 +17,7 @@ const CURRENCY_CODE_SYMBOL_MAP = {
  * @param {string[]} currencyScope
  * @returns {FormatNumberPart[]}
  */
+// eslint-disable-next-line default-param-last
 export function forceSymbols(formattedParts, { currency, currencyDisplay } = {}, currencyScope) {
   const result = formattedParts;
   if (
@@ -44,6 +45,7 @@ export function forceSymbols(formattedParts, { currency, currencyDisplay } = {},
  */
 export function forceFRBESymbols(
   formattedParts,
+  // eslint-disable-next-line default-param-last
   { currency, currencyDisplay } = {},
   currencyScope,
 ) {

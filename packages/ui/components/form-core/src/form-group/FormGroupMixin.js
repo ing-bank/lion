@@ -584,6 +584,13 @@ const FormGroupMixinImplementation = superclass =>
       }
       this.__unlinkParentMessages(el);
     }
+
+    /**
+     * @override FormControlMixin
+     */
+    _isEmpty() {
+      return this.formElements.every(el => el._isEmpty?.());
+    }
   };
 
 export const FormGroupMixin = dedupeMixin(FormGroupMixinImplementation);

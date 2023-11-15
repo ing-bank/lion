@@ -12,6 +12,6 @@ describe('lion-options', () => {
         <lion-options .registrationTarget=${registrationTargetEl}></lion-options>
       `)
     );
-    expect(el.role).to.equal('listbox');
+    expect(el.getAttribute('role')).to.equal('listbox');
   });
 });

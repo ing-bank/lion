@@ -1,5 +1,76 @@
 # @lion/ui
 
+## 0.5.0
+
+### Minor Changes
+
+- 7f644cd7: feat: [combobox] add `allow-custom-choice` (former requireOptionMatch=false) and make it compatible with `multiple-choice`
+
+### Patch Changes
+
+- be4e25a1: fix: [combobox] single choice with `allow-custom-choice`(former requireOptionMatch=false) doesn't clear selection
+- e923ba40: fix: [radio-group] resetting a radio-group containing options with formatters doesn't check the default value
+- 7235a4f7: fix: [combobox] model-value-changed event emitted when clearing a combobox sends stale value
+- c459ded9: fix: [combobox] autocomplete feature for the lion-combobox component. It used to autoselect a wrong item
+
+## 0.4.2
+
+### Patch Changes
+
+- b1320a9a: avoid calling push in iterable object to avoid error loading overlays in old chromium versions
+- dcf3a4b0: Fix search issues when modifying the middle of the input word in LionCombobox.
+- be36bf3b: Fix accessibility currency linking to label after setting currency from undefined in LionInputAmount.
+- 63a8e725: lion-calendar: when determining if user interacted with a day button, use event.composedPath()[0] instead of event.target to fix Firefox 111+ issue
+
+## 0.4.1
+
+### Patch Changes
+
+- a58d8ce0: export more type definitions
+
+## 0.4.0
+
+### Minor Changes
+
+- a3738b50: Bypass the requirement to support export & import map to consume @lion/ui
+
+### Patch Changes
+
+- ebe13e14: fix: undefined document.body
+- b0a74f28: fix(progress-indicator): accept 0 as a valid value
+- b89d889f: Render exactly 6 weeks in every months.
+- 9b9485db: [calendar] focusCentralDate function should only use buttons inside the dates table
+- d1f92a3a: Make disabled date buttons not selectable via keyboard navigation in LionCalendar.
+- d597c077: [localize] with localizeNameSpaces type
+- 6ccfb278: [input-datepicker] only disable dates is the validator type is "error"
+- 4cc72b12: feat: allow Required validator on Fieldset and Form;
+- cecf5ed5: lion-accordion now replaces expanded with a copy when it changes on click of an invoker button.
+- 857d47a9: Handle focusin event in invokers in LionAccordion. Fix tabbing issues.
+
+## 0.4.0-prerelease-bypass-export-map.0
+
+### Minor Changes
+
+- Bypass the requirement to support export & import map to consume @lion/ui
+
+## 0.3.5
+
+### Patch Changes
+
+- 5eafa1ff: hide overlay arrow from screen readers
+
+## 0.3.4
+
+### Patch Changes
+
+- b44bfc5d: [calendar] updates:
+
+  - Enables focus to disabled dates to make it more reasonable for screen readers
+  - Do not automatically force selection of a valid date
+  - Add helper functions to find next/previous/nearest enabled date
+
+- 137a1b6c: lion-input-file: added isDragging property
+
 ## 0.3.3
 
 ### Patch Changes

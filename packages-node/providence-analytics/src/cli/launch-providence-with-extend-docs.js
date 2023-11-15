@@ -1,14 +1,31 @@
 /* eslint-disable import/no-extraneous-dependencies */
-const fs = require('fs');
-const pathLib = require('path');
-const { performance } = require('perf_hooks');
-const providenceModule = require('../program/providence.js');
-const { QueryService } = require('../program/services/QueryService.js');
-const { InputDataService } = require('../program/services/InputDataService.js');
-const { LogService } = require('../program/services/LogService.js');
-const { flatten } = require('./cli-helpers.js');
+import fs from 'fs';
+import pathLib from 'path';
+import { performance } from 'perf_hooks';
+import { _providenceModule } from '../program/providence.js';
+import { QueryService } from '../program/core/QueryService.js';
+import { InputDataService } from '../program/core/InputDataService.js';
+import { LogService } from '../program/core/LogService.js';
+import { flatten } from './cli-helpers.js';
+import MatchPathsAnalyzer from '../program/analyzers/match-paths.js';
 
-async function getExtendDocsResults({
+/**
+ * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../types/index.js').GatherFilesConfig} GatherFilesConfig
+ */
+
+/**
+ * @param {{
+ *  referenceProjectPaths: PathFromSystemRoot[];
+ *  prefixCfg:{from:string;to:string};
+ *  extensions:GatherFilesConfig['extensions'];
+ *  allowlist?:string[];
+ *  allowlistReference?:string[];
+ *  cwd:PathFromSystemRoot
+ * }} opts
+ * @returns
+ */
+export async function getExtendDocsResults({
   referenceProjectPaths,
   prefixCfg,
   extensions,
@@ -18,11 +35,11 @@ async function getExtendDocsResults({
 }) {
   const monoPkgs = InputDataService.getMonoRepoPackages(cwd);
 
-  const results = await providenceModule.providence(
-    QueryService.getQueryConfigFromAnalyzer('match-paths', { prefix: prefixCfg }),
+  const results = await _providenceModule.providence(
+    await QueryService.getQueryConfigFromAnalyzer(MatchPathsAnalyzer, { prefix: prefixCfg }),
     {
       gatherFilesConfig: {
-        extensions: extensions || ['.js'],
+        extensions: extensions || /** @type {GatherFilesConfig['extensions']} */ (['.js']),
         allowlist: allowlist || ['!coverage', '!test'],
       },
       gatherFilesConfigReference: {
@@ -31,7 +48,7 @@ async function getExtendDocsResults({
       },
       queryMethod: 'ast',
       report: false,
-      targetProjectPaths: [pathLib.resolve(cwd)],
+      targetProjectPaths: [cwd],
       referenceProjectPaths,
       // For mono repos, a match between root package.json and ref project will not exist.
       // Disable this check, so it won't be a blocker for extendin docs
@@ -45,7 +62,7 @@ async function getExtendDocsResults({
 
   /**
    * @param {string} pathStr ./packages/lea-tabs/lea-tabs.js
-   * @param {string[]} pkgs ['packages/lea-tabs', ...]
+   * @param {{path:string;name:string}[]} pkgs ['packages/lea-tabs', ...]
    */
   function replaceToMonoRepoPath(pathStr, pkgs) {
     let result = pathStr;
@@ -82,7 +99,11 @@ async function getExtendDocsResults({
   return queryOutputs;
 }
 
-async function launchProvidenceWithExtendDocs({
+/**
+ *
+ * @param {*} opts
+ */
+export async function launchProvidenceWithExtendDocs({
   referenceProjectPaths,
   prefixCfg,
   outputFolder,
@@ -118,7 +139,7 @@ async function launchProvidenceWithExtendDocs({
   LogService.info(`"extend-docs" completed in ${Math.round((t1 - t0) / 1000)} seconds`);
 }
 
-module.exports = {
+export const _extendDocsModule = {
   launchProvidenceWithExtendDocs,
   getExtendDocsResults,
 };

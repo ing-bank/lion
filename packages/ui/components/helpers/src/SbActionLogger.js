@@ -5,6 +5,7 @@ import { css, html, LitElement, render } from 'lit';
 export class SbActionLogger extends LitElement {
   static get properties() {
     return {
+      // eslint-disable-next-line lit/no-native-attributes
       title: { type: String, reflect: true },
       simple: { type: Boolean, reflect: true },
       __logCounter: { type: Number },

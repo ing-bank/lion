@@ -17,6 +17,7 @@ import { forceFRBESymbols, forceSymbols } from './forceSymbols.js';
  * @param {string} _locale
  * @returns {FormatNumberPart[]}
  */
+// eslint-disable-next-line default-param-last
 export function normalizeIntl(formattedParts, options = {}, _locale) {
   let normalize = forceNormalSpaces(formattedParts);
   // Dutch and Belgian currency must be moved to end of number

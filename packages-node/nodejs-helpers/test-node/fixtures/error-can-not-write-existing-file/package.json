@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "error-can-not-overwrite-existing-file",
+  "author": "ing-bank",
+  "type": "module",
+  "exports": {
+    "./combobox.js": "./exports/combobox.js"
+  }
+}

@@ -63,39 +63,36 @@ export function mimicKeyPress(el, key) {
 export async function mimicUserTypingAdvanced(el, values) {
   const { _inputNode } = getComboboxMembers(el);
   _inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
+  let cursorPosition = _inputNode.selectionStart || 0;
 
   for (const key of values) {
     // eslint-disable-next-line no-await-in-loop, no-loop-func
     await new Promise(resolve => {
-      const hasSelection = _inputNode.selectionStart !== _inputNode.selectionEnd;
+      const selectionStart = _inputNode.selectionStart || 0;
+      const selectionEnd = _inputNode.selectionEnd || 0;
+      const hasSelection = selectionStart !== selectionEnd;
 
-      if (key === 'Backspace') {
+      if (key === 'Backspace' || key === 'Delete') {
         if (hasSelection) {
           _inputNode.value =
-            _inputNode.value.slice(
-              0,
-              _inputNode.selectionStart ? _inputNode.selectionStart : undefined,
-            ) +
-            _inputNode.value.slice(
-              _inputNode.selectionEnd ? _inputNode.selectionEnd : undefined,
-              _inputNode.value.length,
-            );
-        } else {
-          _inputNode.value = _inputNode.value.slice(0, -1);
+            _inputNode.value.slice(0, selectionStart) + _inputNode.value.slice(selectionEnd);
+          cursorPosition = selectionStart;
+        } else if (cursorPosition > 0 && key === 'Backspace') {
+          _inputNode.value =
+            _inputNode.value.slice(0, cursorPosition - 1) + _inputNode.value.slice(cursorPosition);
+          cursorPosition -= 1;
+        } else if (cursorPosition < _inputNode.value.length && key === 'Delete') {
+          _inputNode.value =
+            _inputNode.value.slice(0, cursorPosition) + _inputNode.value.slice(cursorPosition + 1);
         }
       } else if (hasSelection) {
         _inputNode.value =
-          _inputNode.value.slice(
-            0,
-            _inputNode.selectionStart ? _inputNode.selectionStart : undefined,
-          ) +
-          key +
-          _inputNode.value.slice(
-            _inputNode.selectionEnd ? _inputNode.selectionEnd : undefined,
-            _inputNode.value.length,
-          );
+          _inputNode.value.slice(0, selectionStart) + key + _inputNode.value.slice(selectionEnd);
+        cursorPosition = selectionStart + key.length;
       } else {
-        _inputNode.value += key;
+        _inputNode.value =
+          _inputNode.value.slice(0, cursorPosition) + key + _inputNode.value.slice(cursorPosition);
+        cursorPosition += 1;
       }
 
       mimicKeyPress(_inputNode, key);

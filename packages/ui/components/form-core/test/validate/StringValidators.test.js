@@ -124,7 +124,7 @@ describe('String Validation', () => {
     isEnabled = validator.execute('#LionRests');
     expect(isEnabled).to.be.true;
 
-    validator = new Pattern(new RegExp('#LionRocks'));
+    validator = new Pattern(/#LionRocks/);
     isEnabled = validator.execute('Some string #LionRocks');
     expect(isEnabled).to.be.false;
 

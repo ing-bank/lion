@@ -14,4 +14,8 @@ export { FormRegistrarHost } from '../../components/form-core/types/registration
 export { ElementWithParentFormGroup } from '../../components/form-core/types/registration/FormRegistrarMixinTypes.js';
 export { FormRegistrarPortalHost } from '../../components/form-core/types/registration/FormRegistrarPortalMixinTypes.js';
 export { SyncUpdatableHost } from '../../components/form-core/types/utils/SyncUpdatableMixinTypes.js';
-export { ValidateHost, ValidationType, FeedbackMessage } from '../../components/form-core/types/validate/ValidateMixinTypes.js';
+export {
+  ValidateHost,
+  ValidationType,
+  FeedbackMessage,
+} from '../../components/form-core/types/validate/ValidateMixinTypes.js';

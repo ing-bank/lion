@@ -103,9 +103,6 @@ async function preloadPopper() {
   return /** @type {* & Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
 }
 
-// @ts-expect-error [external]: CSS not yet typed
-const supportsCSSTypedObject = window.CSS?.number && document.body.attributeStyleMap?.set;
-
 /**
  * OverlayController is the fundament for every single type of overlay. With the right
  * configuration, it can be used to build (modal) dialogs, tooltips, dropdowns, popovers,
@@ -808,7 +805,8 @@ export class OverlayController extends EventTarget {
           document.body.clientHeight - /** @type {number} */ (this.__bodyClientHeight);
         const newMarginRight = this.__bodyMarginRight + scrollbarWidth;
         const newMarginBottom = this.__bodyMarginBottom + scrollbarHeight;
-        if (supportsCSSTypedObject) {
+        // @ts-expect-error [external]: CSS not yet typed
+        if (window.CSS?.number && document.body.attributeStyleMap?.set) {
           // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
           document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
           // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet

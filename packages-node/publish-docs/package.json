@@ -1,6 +1,6 @@
 {
   "name": "publish-docs",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A tool that copies and processes your documentation (in a monorepo) so it can be published/shipped with your package.",
   "license": "MIT",
   "author": "ing-bank",
@@ -11,6 +11,10 @@
     "directory": "packages-node/publish-docs"
   },
   "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./docs/*": "./docs/*"
+  },
   "bin": {
     "publish-docs": "src/cli.js"
   },
@@ -37,9 +41,5 @@
   ],
   "publishConfig": {
     "access": "public"
-  },
-  "exports": {
-    ".": "./index.js",
-    "./docs/*": "./docs/*"
   }
 }

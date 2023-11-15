@@ -13,7 +13,7 @@ export function forceAddGroupSeparators(formattedParts, groupSeparator) {
   let integerPart;
 
   for (let i = 0; i < formattedParts.length; i += 1) {
-    if (formattedParts[i].type === 'integer') {
+    if (formattedParts[i].type === 'integer' && formattedParts[i].value.length > 3) {
       firstPart = formattedParts.splice(0, i);
       integerPart = formattedParts.splice(0, 1);
     }
@@ -66,6 +66,8 @@ export function forceAddGroupSeparators(formattedParts, groupSeparator) {
     if (firstPart) {
       concatArray = firstPart.concat(numberArray, formattedParts);
     }
+  } else {
+    return formattedParts;
   }
   return concatArray;
 }

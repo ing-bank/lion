@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "searchType": "ast-analyzer",
+    "analyzerMeta": {
+      "name": "match-subclasses",
+      "requiredAst": "babel",
+      "identifier": "%40lion%2Finput_0.15.7_+_%40lion%2Fform-core_0.15.4__-1212823364",
+      "targetProject": {
+        "mainEntry": "./index.js",
+        "name": "@lion/input",
+        "version": "0.15.7",
+        "commitHash": "[not-a-git-root]"
+      },
+      "referenceProject": {
+        "mainEntry": "./index.js",
+        "name": "@lion/form-core",
+        "version": "0.15.4",
+        "commitHash": "[not-a-git-root]"
+      },
+      "configuration": {
+        "gatherFilesConfig": {
+          "extensions": [
+            ".js",
+            ".html"
+          ]
+        },
+        "gatherFilesConfigReference": {
+          "extensions": [
+            ".js",
+            ".html"
+          ]
+        },
+        "skipCheckMatchCompatibility": false,
+        "metaConfig": {
+          "categoryConfig": [
+            {
+              "project": "@lion/overlays",
+              "majorVersion": 1,
+              "categories": {}
+            }
+          ]
+        }
+      }
+    }
+  },
+  "queryOutput": [
+    {
+      "exportSpecifier": {
+        "name": "LionField",
+        "project": "@lion/form-core",
+        "filePath": "./index.js",
+        "id": "LionField::./index.js::@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/input",
+          "files": [
+            {
+              "file": "./src/LionInput.js",
+              "identifier": "LionInput"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "name": "NativeTextFieldMixin",
+        "project": "@lion/form-core",
+        "filePath": "./index.js",
+        "id": "NativeTextFieldMixin::./index.js::@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/input",
+          "files": [
+            {
+              "file": "./src/LionInput.js",
+              "identifier": "LionInput"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "exportSpecifier": {
+        "name": "Validator",
+        "project": "@lion/form-core",
+        "filePath": "./index.js",
+        "id": "Validator::./index.js::@lion/form-core"
+      },
+      "matchesPerProject": [
+        {
+          "project": "@lion/input",
+          "files": [
+            {
+              "file": "./test/lion-input.test.js",
+              "identifier": "null"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

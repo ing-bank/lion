@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "simple-export-map",
+  "author": "ing-bank",
+  "type": "module",
+  "exports": {
+    "./*": {
+      "default": "./exports/*"
+    }
+  }
+}

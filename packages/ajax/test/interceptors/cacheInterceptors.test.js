@@ -25,6 +25,7 @@ describe('cache interceptors', () => {
    */
   const returnResponseOnTick = (timeout, i) =>
     new Promise(resolve =>
+      // eslint-disable-next-line no-promise-executor-return
       window.setTimeout(() => resolve(new Response(`mock response ${i}`)), timeout),
     );
 

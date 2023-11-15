@@ -80,6 +80,14 @@ describe('<lion-accordion>', () => {
       ).to.equal('invoker 1');
     });
 
+    it('updates expanded with a new array when an invoker is clicked', async () => {
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
+      const invokers = getInvokers(el);
+      const oldExpanded = el.expanded;
+      invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
+      expect(el.expanded).to.not.equal(oldExpanded);
+    });
+
     it('has [expanded] on current expanded invoker which serves as styling hook', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = getInvokers(el);
@@ -212,6 +220,17 @@ describe('<lion-accordion>', () => {
       el.addEventListener('focused-changed', spy);
       el.focusedIndex = 1;
       expect(spy).to.have.been.calledOnce;
+    });
+
+    it('tabbing sets the focusedIndex correctly', async () => {
+      const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
+      const invokers = getInvokers(el);
+      el.focusedIndex = 0;
+      expect(el.focusedIndex).to.equal(0);
+      invokers[2].firstElementChild?.dispatchEvent(new Event('focusin'));
+      expect(el.focusedIndex).to.equal(2);
+      invokers[1].firstElementChild?.dispatchEvent(new Event('focusin'));
+      expect(el.focusedIndex).to.equal(1);
     });
   });
 

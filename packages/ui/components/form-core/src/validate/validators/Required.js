@@ -45,7 +45,7 @@ export class Required extends Validator {
   /**
    * @param {FormControlHost & HTMLElement} formControl
    */
-  // @ts-ignore [allow-protected] we are allowed to know FormControl protcected props in form-core
+  // @ts-ignore [allow-protected] we are allowed to know FormControl protected props in form-core
   // eslint-disable-next-line class-methods-use-this
   onFormControlConnect({ _inputNode: inputNode }) {
     if (inputNode) {
@@ -61,7 +61,7 @@ export class Required extends Validator {
   /**
    * @param {FormControlHost & HTMLElement} formControl
    */
-  // @ts-ignore [allow-protected] we are allowed to know FormControl protcected props in form-core
+  // @ts-ignore [allow-protected] we are allowed to know FormControl protected props in form-core
   // eslint-disable-next-line class-methods-use-this
   onFormControlDisconnect({ _inputNode: inputNode }) {
     if (inputNode) {

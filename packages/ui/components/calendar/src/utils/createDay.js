@@ -16,6 +16,7 @@ export function createDay(
     today = false,
     future = false,
     disabled = false,
+    disabledInfo = '',
   } = {},
 ) {
   return {
@@ -34,5 +35,6 @@ export function createDay(
     tabindex: '-1',
     ariaPressed: 'false',
     ariaCurrent: undefined,
+    disabledInfo,
   };
 }

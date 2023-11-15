@@ -231,10 +231,33 @@ This will:
 > Please note that the lion-combobox-selection-display below is not exposed and only serves
 > as an example. The selection part of a multiselect combobox is not yet accessible. Please keep
 > in mind that for now, as a Subclasser, you would have to take care of this part yourself.
+> Also keep in mind that the combobox organizes the selected list by its original index in the option list
 
 ```js preview-story
 export const multipleChoice = () => html`
   <lion-combobox name="combo" label="Multiple" multiple-choice>
+    <demo-selection-display
+      slot="selection-display"
+      style="display: contents;"
+    ></demo-selection-display>
+    ${lazyRender(
+      listboxData.map(
+        (entry, i) =>
+          html` <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option> `,
+      ),
+    )}
+  </lion-combobox>
+`;
+```
+
+Alternatively, the multi-choice flag can be combined with .requireMultipleMatch=false to allow users to enter their own options.
+
+> Note that the non-matching items will be displayed in the end of the list in the order that were entered. Since those have no index
+> in the option list, they don't have a representing value in the checkedIndex property.
+
+```js preview-story
+export const multipleCustomizableChoice = () => html`
+  <lion-combobox name="combo" label="Multiple" .requireOptionMatch=${false} multiple-choice>
     <demo-selection-display
       slot="selection-display"
       style="display: contents;"

@@ -198,7 +198,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
     let count = 3; // max tasks to wait for
     // @ts-ignore this property is added by webcomponentsjs polyfill for old browsers
     while (count !== 0 && !this.__shady_native_contains(this._inputNode)) {
-      // eslint-disable-next-line no-await-in-loop
+      // eslint-disable-next-line no-await-in-loop, no-promise-executor-return
       await new Promise(resolve => setTimeout(resolve));
       count -= 1;
     }

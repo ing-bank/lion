@@ -62,6 +62,20 @@ describe('ArrowMixin', () => {
     expect(window.getComputedStyle(arrowNode).getPropertyValue('display')).to.equal('block');
   });
 
+  it('hides for screen readers', async () => {
+    const el = /** @type {ArrowTest} */ (
+      await fixture(html`
+        <arrow-test>
+          <div slot="content">This is a tooltip</div>
+          <button slot="invoker">Tooltip button</button>
+        </arrow-test>
+      `)
+    );
+
+    const arrowNode = /** @type {Element} */ (el._arrowNode);
+    expect(arrowNode.getAttribute('aria-hidden')).to.equal('true');
+  });
+
   it('hides the arrow when has-arrow is false', async () => {
     const el = /** @type {ArrowTest} */ (
       await fixture(html`

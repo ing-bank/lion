@@ -163,7 +163,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
 
       it('requests update for modelValue when checkedIndex changes', async () => {
-        const el = await fixture(html`
+        const el = /** @type {LionListbox} */ await fixture(html`
           <${tag} name="gender" .modelValue=${'other'}>
             <${optionTag} .choiceValue=${'male'}></${optionTag}>
             <${optionTag} .choiceValue=${'female'}></${optionTag}>

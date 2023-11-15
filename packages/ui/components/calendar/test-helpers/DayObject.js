@@ -34,7 +34,7 @@ export class DayObject {
    */
 
   get isDisabled() {
-    return this.buttonEl.hasAttribute('disabled');
+    return this.buttonEl.getAttribute('aria-disabled') === 'true';
   }
 
   get isSelected() {
@@ -54,7 +54,7 @@ export class DayObject {
   }
 
   get monthday() {
-    return Number(this.buttonEl.textContent);
+    return Number(this.buttonEl.children[0].textContent);
   }
 
   /**
@@ -63,7 +63,7 @@ export class DayObject {
 
   get weekdayNameShort() {
     const weekdayEls = Array.from(
-      /** @type {HTMLElement} */ (this.el.parentElement?.parentElement).querySelectorAll(
+      /** @type {HTMLElement} */ (this.el.parentElement?.parentElement)?.querySelectorAll(
         '.calendar__day-cell',
       ),
     );
@@ -73,7 +73,7 @@ export class DayObject {
 
   get weekdayNameLong() {
     const weekdayEls = Array.from(
-      /** @type {HTMLElement} */ (this.el.parentElement?.parentElement).querySelectorAll(
+      /** @type {HTMLElement} */ (this.el.parentElement?.parentElement)?.querySelectorAll(
         '.calendar__day-cell',
       ),
     );

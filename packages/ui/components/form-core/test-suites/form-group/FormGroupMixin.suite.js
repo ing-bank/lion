@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-import { IsNumber, LionField, Validator, FormGroupMixin } from '@lion/ui/form-core.js';
+import { IsNumber, Required, LionField, Validator, FormGroupMixin } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 
@@ -577,6 +577,25 @@ export function runFormGroupMixinSuite(cfg = {}) {
         expect(el.validationStates.error).to.deep.equal({});
       });
 
+      it('works with Required', async () => {
+        const el = /**  @type {FormGroup} */ (
+          await fixture(html`
+        <${tag} name="myGroup" .validators="${[new Required()]}">
+          <${childTag} name="fieldA"></${childTag}>
+          <${childTag} name="fieldB"></${childTag}>
+        </${tag}>
+      `)
+        );
+        // initially the group is invalid
+        expect(el.validationStates.error.Required).to.be.true;
+        el.formElements.fieldA.modelValue = 'foo';
+        // if at least one child is filled, the group is valid
+        expect(el.validationStates.error.Required).to.be.undefined;
+        // make Required trigger error state again
+        el.formElements.fieldA.modelValue = '';
+        expect(el.validationStates.error.Required).to.be.true;
+      });
+
       it('validates on children (de)registration', async () => {
         class HasEvenNumberOfChildren extends Validator {
           static get validatorName() {
@@ -1129,9 +1148,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
 
       it('has correct validation afterwards', async () => {
         class IsCat extends Validator {
-          static get validatorName() {
-            return 'IsCat';
-          }
+          static validatorName = 'IsCat';
 
           /**
            * @param {string} value
@@ -1142,9 +1159,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
           }
         }
         class ColorContainsA extends Validator {
-          static get validatorName() {
-            return 'ColorContainsA';
-          }
+          static validatorName = 'ColorContainsA';
 
           /**
            * @param {{ [x:string]:any }} value

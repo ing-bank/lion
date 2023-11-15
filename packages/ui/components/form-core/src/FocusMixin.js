@@ -27,6 +27,7 @@ const FocusMixinImplementation = superclass =>
       return {
         focused: { type: Boolean, reflect: true },
         focusedVisible: { type: Boolean, reflect: true, attribute: 'focused-visible' },
+        // eslint-disable-next-line lit/no-native-attributes
         autofocus: { type: Boolean, reflect: true }, // Required in Lit to observe autofocus
       };
     }
@@ -55,6 +56,7 @@ const FocusMixinImplementation = superclass =>
      * @param {import('lit').PropertyValues } changedProperties
      */
     firstUpdated(changedProperties) {
+      // eslint-disable-next-line lit/no-native-attributes
       super.firstUpdated(changedProperties);
       this.__registerEventsForFocusMixin();
       this.__syncAutofocusToFocusableElement();

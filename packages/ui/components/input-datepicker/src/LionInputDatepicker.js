@@ -96,8 +96,26 @@ export class LionInputDatepicker extends ScopedElementsMixin(
 
       __calendarDisableDates: {
         attribute: false,
+        type: Array,
       },
     };
+  }
+
+  _inputFormatter = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts;
+
+  /**
+   * @param {Date} date
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _formatDate(date) {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear());
+    return `${day}/${month}/${year}`;
   }
 
   get slots() {
@@ -346,6 +364,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   }
 
   /**
+   * Triggered when a user selects a date from the calendar overlay
    * @param {{ target: { selectedDate: Date }}} opts
    */
   _onCalendarUserSelectedChanged({ target: { selectedDate } }) {
@@ -355,8 +374,21 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     if (this._syncOnUserSelect) {
       // Synchronize new selectedDate value to input
       this._isHandlingUserInput = true;
-      this._isHandlingCalendarUserInput = true;
-      this.modelValue = selectedDate;
+
+      if (
+        Array.isArray(this.__calendarDisableDates) &&
+        this.__calendarDisableDates.includes(selectedDate)
+      ) {
+        // If the selected date is disabled, reset the values
+        this.value = '';
+        this.formattedValue = '';
+        this.modelValue = undefined;
+      } else {
+        this.formattedValue = this._formatDate(selectedDate);
+        this.value = this.formattedValue;
+        this.modelValue = selectedDate;
+      }
+
       this._isHandlingUserInput = false;
       this._isHandlingCalendarUserInput = false;
     }
@@ -392,14 +424,14 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     // we need to extract minDate, maxDate, minMaxDate and disabledDates validators
     validators.forEach(v => {
       const vctor = /** @type {typeof import('@lion/ui/form-core.js').Validator} */ (v.constructor);
-      if (vctor.validatorName === 'MinDate') {
+      if (vctor.validatorName === 'MinDate' && v.type === 'error') {
         this.__calendarMinDate = v.param;
-      } else if (vctor.validatorName === 'MaxDate') {
+      } else if (vctor.validatorName === 'MaxDate' && v.type === 'error') {
         this.__calendarMaxDate = v.param;
-      } else if (vctor.validatorName === 'MinMaxDate') {
+      } else if (vctor.validatorName === 'MinMaxDate' && v.type === 'error') {
         this.__calendarMinDate = v.param.min;
         this.__calendarMaxDate = v.param.max;
-      } else if (vctor.validatorName === 'IsDateDisabled') {
+      } else if (vctor.validatorName === 'IsDateDisabled' && v.type === 'error') {
         this.__calendarDisableDates = v.param;
       }
     });

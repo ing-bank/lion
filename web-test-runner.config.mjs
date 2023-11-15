@@ -17,17 +17,6 @@ const packages = fs
       )
       .map(dir => ({ name: dir, path: `packages/ui/components/${dir}/test` })),
   );
-// .filter(x => x.endsWith('-dropdown'))
-// .concat(
-//   fs
-//     .readdirSync('packages/helpers')
-//     .filter(
-//       dir =>
-//         fs.statSync(`packages/helpers/${dir}`).isDirectory() &&
-//         fs.existsSync(`packages/helpers/${dir}/test`),
-//     )
-//     .map(dir => `helpers/${dir}`),
-// );
 
 export default {
   nodeResolve: true,
