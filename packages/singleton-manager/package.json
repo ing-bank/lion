@@ -35,6 +35,7 @@
     "start:singleton": "es-dev-server -c demo/singleton/server.js",
     "start:singleton-complex": "es-dev-server -c demo/singleton-complex/server.js",
     "test": "cd ../../ && npm run test:browser -- --group singleton-manager",
+    "test:node": "mocha test-node",
     "types": "wireit"
   },
   "keywords": [

@@ -2,8 +2,8 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist-types",
-    "rootDir": ".",
+    "rootDir": "."
   },
-  "include": ["src", "test", "types"],
+  "include": ["src", "test", "test-node", "test-suites", "types"],
   "exclude": ["dist-types"]
 }
