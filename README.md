@@ -85,14 +85,6 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
 ### TODO
 
-- Fix the error for `icon resolver`. See [components/icon](http://localhost:4322/components/icon) and [drawer page](http://localhost:4322/components/drawer):
-
-  ```
-  IconManager.js?v=8cca74f1:22 Uncaught Error: An icon resolver has already been registered for namespace: lion
-  ```
-
-  Note. The reason for this error is caused by the fact that `addIconResolver` is set in two different files: `docs/components/icon/index.md` and `docs/components/icon/use-cases.md` and then those are concatenated. TODO we need to change the code so that pages there are no conflicts. At the same time we want the code to be complete and serve as a good example for users. That is we might want to keep `addIconResolver` in both examples and think of a solution that will keep the code as is, but allows multiple instances of lion on the same page?
-
 ## How to install
 
 ```bash
