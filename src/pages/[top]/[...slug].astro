@@ -41,7 +41,7 @@ const blogData = Astro.props.entry.data;
 
 const getPathMdjsStroriesFile = (entry) => {
   const mdjsStroriesFileDirectory = path.dirname(entry.slug);
-  return `/public/docs/${mdjsStroriesFileDirectory}/__mdjs-stories.js`;
+  return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories.js`;
 } 
 ---
 
@@ -52,5 +52,6 @@ const getPathMdjsStroriesFile = (entry) => {
   {blogData.tags}
   {blogData.author}
   <Content />
+  <script is:inline src="/docs/_assets/scoped-custom-element-registry.min.js"></script>
   <script type="module" src={getPathMdjsStroriesFile(entry)} mdjs-setup></script>
 </MainLayout>
