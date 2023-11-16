@@ -68,11 +68,8 @@ async function processImportsForFile(filePath) {
 const createComponentMdFrontmatter = (componentName, order) => {
   const componentFrontmatter = `---
 component: ${componentName}`;
-  const orderFrontmatter = order
-    ? `
-order: ${order}`
-    : '';
-  return `${componentFrontmatter + orderFrontmatter}\n---\n\n\``;
+  const orderFrontmatter = order ? `\norder: ${order}` : '';
+  return `${componentFrontmatter + orderFrontmatter}\n---\n\n`;
 };
 
 async function createInfoMd(componentDirectoryPath) {
