@@ -91,34 +91,13 @@ function copyMdjsStories() {
         } else {
           exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}';\n`;
         }
-
-        if (commonMdjsStoriesContent === '') {
-          if (isDistBuild) {
-            let scopedElementRegistry = '';
-            try {
-              scopedElementRegistry = fs
-                .readFileSync('docs/_assets/scoped-custom-element-registry.min.js')
-                .toString();
-            } catch (ex) {
-              console.log('docs/_assets/scoped-custom-element-registry.min.js does not exist!');
-            }
-
-            commonMdjsStoriesContent = `${scopedElementRegistry} \n\n
-import('@mdjs/mdjs-preview/define');
-import('@mdjs/mdjs-story/define');\n`;
-          } else {
-            commonMdjsStoriesContent = `import '/public/docs/_assets/scoped-custom-element-registry.min.js'\n
-              import '${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js';\n
-              import '${nodeModulesText}/@mdjs/mdjs-story/src/define.js'\n`;
-          }
-        }
         if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
           fs.writeFileSync(commonMdjsStoriesFileName, commonMdjsStoriesContent + exportCmd, 'utf8');
         }
       }
     }
 
-    const { setupJsCode } = file.data;
+    let { setupJsCode } = file.data;
     if (!setupJsCode) {
       return tree;
     }
@@ -136,10 +115,15 @@ import('@mdjs/mdjs-story/define');\n`;
     }
 
     let parsedSetupJsCode;
+    // This is move out off @mdjs/core/src/mdjsSetupCode.js
+    const initialImprorts = `
+import '@mdjs/mdjs-preview/define';
+import '@mdjs/mdjs-story/define'; \n`;
+    setupJsCode = initialImprorts + setupJsCode;
     if (isDistBuild) {
-      parsedSetupJsCode = await setupJsCode;
+      parsedSetupJsCode += await setupJsCode;
     } else {
-      parsedSetupJsCode = await processImports(setupJsCode);
+      parsedSetupJsCode += await processImports(setupJsCode);
     }
     pathToMdDirectoryInPublic = `${publicDir}/${parsedPath}`;
     currentMarkdownFileMdJsStoryName = `${mdJsStoriesFileNameWithoutExtension}--${
