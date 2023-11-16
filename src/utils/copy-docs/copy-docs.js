@@ -65,9 +65,12 @@ async function processImportsForFile(filePath) {
   await fs.writeFile(filePath, newSource);
 }
 
-const createComponentMdFrontmatter = componentName => `---
-component: ${componentName}
----\n\n`;
+const createComponentMdFrontmatter = (componentName, order) => {
+  const componentFrontmatter = `---
+component: ${componentName}`;
+  const orderFrontmatter = order ? `\norder: ${order}` : '';
+  return `${componentFrontmatter + orderFrontmatter}\n---\n\n`;
+};
 
 async function createInfoMd(componentDirectoryPath) {
   const componentName = path.basename(componentDirectoryPath);
@@ -79,6 +82,12 @@ description: ${componentName} description
   const infoMdFilePath = path.join(componentDirectoryPath, 'info.md');
   await fs.mkdir(componentDirectoryPath, { recursive: true });
   await fs.writeFile(infoMdFilePath, infoMd);
+}
+
+function getOrder(fileContent) {
+  const orderRegexp = /#.+\|\|(\d+)/gm;
+  const match = fileContent.matchAll(orderRegexp);
+  return [...match]?.[0]?.[1];
 }
 
 async function copyDocs(currentPath = '') {
@@ -103,11 +112,13 @@ async function copyDocs(currentPath = '') {
         await fs.mkdir(path.join(contentDocsPath, currentPath), { recursive: true });
         await fs.copyFile(sourceDocsFilePath, contentDocsFilePath);
 
-        if (contentDocsFilePath.includes('/components')) {
+        if (contentDocsFilePath.includes('/components') && path.extname(file) === '.md') {
           const fileContent = await fs.readFile(contentDocsFilePath, 'utf8');
           const parentComponent = path.basename(currentPath);
+          const order = getOrder(fileContent);
           const updatedFileContent = `${createComponentMdFrontmatter(
             parentComponent,
+            order,
           )}${fileContent}`;
           await fs.writeFile(contentDocsFilePath, updatedFileContent);
         }

@@ -19,26 +19,36 @@ const componentEntries = getComponentEntries(entry.data.component);
 const inPageNavData = [];
 const contents = [];
 
-const convertHeadingsToInPageNavData = (headings, componentEntry) => {
+const convertHeadingsToInPageNavData = (headings, componentSlug) => {
   return headings.map(header => ({
       name: header.text,
-      url: `/${path.dirname(componentEntry.slug)}#${header.slug}`
+      url: `/${path.dirname(componentSlug)}#${header.slug}`
     }));
 };
 
 const parseEntries = async () => {
   for (const componentEntry of componentEntries) {
-    const { Content, headings } = await componentEntry.render();
-    contents.push({Content});
-    const headersH2 = headings.filter(header => header.depth === 2);
-    const entryInPageNavData = convertHeadingsToInPageNavData(headersH2, componentEntry)[0];
-    const headersH3 = headings.filter(header => header.depth === 3);
-    entryInPageNavData.children = convertHeadingsToInPageNavData(headersH3, componentEntry);
+    const { Content, headings, remarkPluginFrontmatter } = await componentEntry.render();
+    const order = remarkPluginFrontmatter.order;
+    const slug = componentEntry.slug;
+    contents.push({Content, headings, order, slug});    
+  }
+};
+
+const updateHeadings = (contentItems) => {
+  for (const contentItem of contentItems) {
+    const headersH2 = contentItem.headings.filter(header => header.depth === 2);
+    const entryInPageNavData = convertHeadingsToInPageNavData(headersH2, contentItem.slug)[0];
+    const headersH3 = contentItem.headings.filter(header => header.depth === 3);
+    entryInPageNavData.children = convertHeadingsToInPageNavData(headersH3, contentItem.slug);
     inPageNavData.push(entryInPageNavData);
   }
 };
 
 await parseEntries();
+contents.sort((a, b) => a.order < b.order ? -1 : 1);
+updateHeadings(contents);
+
 
 const getPathMdjsStroriesFile = (entry) => {
   const mdjsStroriesFileDirectory = path.dirname(entry.slug);
@@ -50,7 +60,7 @@ const getPathMdjsStroriesFile = (entry) => {
   <ComponentLayout frontmatter={entry.data}>
     <UIPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
     {
-      contents.map((content) => (        
+      contents.map((content) => (
           <content.Content />        
       ))
     }
@@ -58,4 +68,3 @@ const getPathMdjsStroriesFile = (entry) => {
     <script is:inline type="module" src={getPathMdjsStroriesFile(componentEntries[0])} mdjs-setup></script>
   </ComponentLayout>
 </MainLayout>
-  
