@@ -32,7 +32,7 @@ export default {
     MaxNumber: 'Geben Sie für {fieldName} einen Wert unter {params} ein.',
     MinMaxNumber:
       'Geben Sie für {fieldName} einen Wert zwischen {params.min} und {params.max} ein.',
-    IsDate: 'Bitte geben Sie ein gültige Datum ein (TT.MM.JJJJ).',
+    IsDate: 'Bitte geben Sie ein gültiges Datum ein (TT.MM.JJJJ).',
     MinDate: 'Geben Sie für {fieldName} einen Wert ein, der nach {params, date, YYYYMMDD} liegt.',
     MaxDate: 'Geben Sie für {fieldName} einen Wert ein, der vor {params, date, YYYYMMDD} liegt.',
     MinMaxDate:
