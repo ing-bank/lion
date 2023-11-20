@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
-import { UiPortalMainNav } from "../components/ui-portal-main-nav.js";
+import { UIPortalMainNav } from "../components/ui-portal-main-nav.js";
 import { componentInfoEntries } from '../content';
 
 const site = Astro.site || Astro.url.origin;
@@ -14,29 +14,79 @@ const compEntries = await getCollection("component");
 const compNames = compEntries.map((entry) => entry.data.name);
 const comp1Names = componentInfoEntries.map((entry) => entry.data.component);
 
+/**
+ * @typedef {{name: string; url: string; active?:boolean; hasActiveChild?: boolean; iconId?: string; children?: NavItemData[]}} NavItem
+ */
+
+ /** @type {NavItem[]} */
 const navData = [
-  { name: "home", url: "/" },
+  { name: "home", url: "/", iconId: 'lion:portal:home' },
   {
     name: "components",
     url: "/components",
+    iconId: 'lion:portal:deployedCode',
     children: compNames.map((compName) => ({
       name: compName,
       url: `/components/${compName}`,
     })),
   },
-  {
-    name: "components1",
-    url: "/components1",
-    children: comp1Names.map((compName) => ({
-      name: compName,
-      url: `/components1/${compName}`,
-    })),
-  },  
-  { name: "develop", url: "/develop" },
-  { name: "design", url: "/design" },
-  { name: "extend", url: "/extend" },
-  { name: "blog", url: "/blog" },
+  // {
+  //   name: "components1",
+  //   url: "/components1",
+  //   iconId: 'lion:portal:deployedCode',
+  //   children: comp1Names.map((compName) => ({
+  //     name: compName,
+  //     url: `/components1/${compName}`,
+  //   })),
+  // },  
+  { name: "develop", url: "/develop",    iconId: 'lion:portal:sdk' },
+  { name: "design", url: "/design", iconId: 'lion:portal:stylusNote'  },
+  { name: "extend", url: "/extend", iconId: 'lion:portal:deployedCodeAccount'  },
+  { name: "blog", url: "/blog", iconId: 'lion:portal:newsmode'},
 ];
+
+
+
+/** @type WeakMap<{NavItem},{NavItem}> */
+const itemParents = new WeakMap();
+
+function _setParentsActive(navItem) {
+  const parentItem = itemParents.get(navItem);
+  if (parentItem) {
+    parentItem.hasActiveChild = true;
+    _setParentsActive(parentItem);
+  }
+}
+
+function setParents(navData, parentItem = null) {
+  for (const navItem of navData) {
+    if (parentItem) {
+      itemParents.set(navItem, parentItem);
+    }
+    if (navItem.children?.length) {
+      setParents(navItem.children, navItem);
+    }
+  }
+}
+
+let activeItem;
+function setActive(navData, currentUrl) {
+  if(activeItem) return;
+
+  for (const navItem of navData) {
+    if(currentUrl === navItem.url) {
+      navItem.active = true;
+      activeItem = navItem;
+    }
+    if (navItem.children?.length) {
+      setActive(navItem.children, currentUrl);
+    }
+  }
+}
+
+setParents(navData);
+setActive(navData, Astro.url.pathname);
+_setParentsActive(activeItem);
 
 const footerData = [
   {
@@ -84,17 +134,23 @@ const footerData = [
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <link
+
+    <link href="/styles/open-props@1.6.11.min.css" rel="stylesheet" type="text/css">
+    <link href="/styles/global.css" rel="stylesheet" type="text/css">
+
+    <!-- <link
       href="http://fonts.googleapis.com/css?family=Roboto"
       rel="stylesheet"
       type="text/css"
     />
+
+
     <style>
       body {
         font-family: "Roboto", sans-serif;
         font-size: 16px;
       }
-    </style>
+    </style> -->
 
     <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
     <SEO
@@ -116,7 +172,7 @@ const footerData = [
   </head>
   <body class="ui-portal-grid">
     <div class="ui-portal-grid__nav">
-      <UiPortalMainNav nav-data={JSON.stringify(navData)} />
+      <UIPortalMainNav client:load nav-data={JSON.stringify(navData)} />
     </div>
     <main class="ui-portal-grid__main">
       <slot />
@@ -133,8 +189,8 @@ const footerData = [
 
       .ui-portal-grid {
         display: grid;
-        grid-template-columns: 300px 1fr;
-        grid-template-rows: 80vh 20vh;
+        grid-template-columns: min-content 1fr;
+        /* grid-template-rows: 80vh 20vh; */
         grid-template-areas:
           "nav main"
           "nav footer";
