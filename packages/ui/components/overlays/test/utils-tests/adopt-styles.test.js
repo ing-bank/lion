@@ -1,4 +1,5 @@
 import { expect } from '@open-wc/testing';
+import { browserDetection } from '@lion/ui/core.js';
 import { css } from 'lit';
 import sinon from 'sinon';
 import {
@@ -160,6 +161,66 @@ describe('adoptStyle()', () => {
 
         cleanupShadowHost();
       });
+    });
+  });
+});
+
+describe('Fallback when IOS user open overlay', () => {
+  it('adds a "traditional" stylesheet to the body', async () => {
+    const browserDetectionStub = sinon.stub(browserDetection, 'isIOS').value(true);
+
+    const myCssResult = css`
+      .check {
+        color: blue;
+      }
+    `;
+    const root = document;
+    adoptStyle(root, myCssResult);
+
+    const sheets = Array.from(document.body.querySelectorAll('style'));
+    const lastAddedSheet = sheets[sheets.length - 1];
+    expect(lastAddedSheet.textContent).to.equal(myCssResult.cssText);
+    browserDetectionStub.restore();
+  });
+
+  describe('Teardown', () => {
+    it('removes a "traditional" stylesheet from the shadowRoot', async () => {
+      const browserDetectionStub = sinon.stub(browserDetection, 'isIOS').value(true);
+
+      const { shadowHost, cleanupShadowHost } = createShadowHost();
+      const myCssResult = css`
+        .check {
+          color: blue;
+        }
+      `;
+      const root = /** @type {ShadowRoot} */ (shadowHost.shadowRoot);
+
+      adoptStyle(root, myCssResult);
+      const sheets1 = Array.from(root.querySelectorAll('style'));
+      const lastAddedSheet1 = sheets1[sheets1.length - 1];
+      expect(lastAddedSheet1.textContent).to.equal(myCssResult.cssText);
+      adoptStyle(root, myCssResult, { teardown: true });
+      const sheets2 = Array.from(root.querySelectorAll('style'));
+      const lastAddedSheet2 = sheets2[sheets2.length - 1];
+      expect(lastAddedSheet2?.textContent).to.not.equal(myCssResult.cssText);
+
+      const myCSSStyleSheet = new CSSStyleSheet();
+      myCSSStyleSheet.insertRule('.check { color: blue; }');
+
+      adoptStyle(root, myCSSStyleSheet);
+      const sheets3 = Array.from(root.querySelectorAll('style'));
+      const lastAddedSheet3 = sheets3[sheets3.length - 1];
+      expect(lastAddedSheet3.textContent).to.equal(
+        serializeConstructableStylesheet(myCSSStyleSheet),
+      );
+      adoptStyle(root, myCSSStyleSheet, { teardown: true });
+      const sheets4 = Array.from(root.querySelectorAll('style'));
+      const lastAddedSheet4 = sheets4[sheets4.length - 1];
+      expect(lastAddedSheet4?.textContent).to.not.equal(myCSSStyleSheet);
+
+      cleanupShadowHost();
+
+      browserDetectionStub.restore();
     });
   });
 });

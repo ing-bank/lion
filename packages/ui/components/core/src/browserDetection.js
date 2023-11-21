@@ -36,4 +36,12 @@ export const browserDetection = {
   isIOSChrome: checkChrome('ios'),
   isChromium: checkChrome('chromium'),
   isMac: navigator.appVersion.indexOf('Mac') !== -1,
+  isIOS: /iPhone|iPad|iPod/i.test(navigator.userAgent),
+  isMacSafari:
+    navigator.vendor &&
+    navigator.vendor.indexOf('Apple') > -1 &&
+    navigator.userAgent &&
+    navigator.userAgent.indexOf('CriOS') === -1 &&
+    navigator.userAgent.indexOf('FxiOS') === -1 &&
+    navigator.appVersion.indexOf('Mac') !== -1,
 };
