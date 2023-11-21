@@ -165,7 +165,7 @@ describe('adoptStyle()', () => {
   });
 });
 
-describe('Fallback when IOS user open overlay', () => {
+describe('Fallback when IOS user opens overlay', () => {
   it('adds a "traditional" stylesheet to the body', async () => {
     const browserDetectionStub = sinon.stub(browserDetection, 'isIOS').value(true);
 
