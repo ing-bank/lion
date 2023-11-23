@@ -85,12 +85,7 @@ function copyMdjsStories() {
           // noop. File is not yet created for the component
         }
 
-        let exportCmd;
-        if (isDistBuild) {
-          exportCmd = `import('./${currentMarkdownFileMdJsStoryName}');\n`;
-        } else {
-          exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}';\n`;
-        }
+        const exportCmd = `import('./${currentMarkdownFileMdJsStoryName}');\n`;
         if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
           fs.writeFileSync(commonMdjsStoriesFileName, commonMdjsStoriesContent + exportCmd, 'utf8');
         }

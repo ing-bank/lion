@@ -17,7 +17,6 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const componentEntries = getComponentEntries(entry.data.component);
 const inPageNavData = [];
-const contents = [];
 
 const convertHeadingsToInPageNavData = (headings, componentSlug) => {
   return headings.map(header => ({
@@ -26,13 +25,15 @@ const convertHeadingsToInPageNavData = (headings, componentSlug) => {
     }));
 };
 
-const parseEntries = async () => {
-  for (const componentEntry of componentEntries) {
+const parseEntries = async (entries) => {
+  const contents = [];
+  for (const componentEntry of entries) {
     const { Content, headings, remarkPluginFrontmatter } = await componentEntry.render();
     const order = remarkPluginFrontmatter.order;
     const slug = componentEntry.slug;
     contents.push({Content, headings, order, slug});    
   }
+  return contents;
 };
 
 const updateHeadings = (contentItems) => {
@@ -45,9 +46,14 @@ const updateHeadings = (contentItems) => {
   }
 };
 
-await parseEntries();
-contents.sort((a, b) => a.order < b.order ? -1 : 1);
-updateHeadings(contents);
+async function concatenateEntries(entries) {
+  const contents = await parseEntries(entries);
+  contents.sort((a, b) => a.order < b.order ? -1 : 1);
+  updateHeadings(contents);
+  return contents;
+}
+
+const pages = await concatenateEntries(componentEntries);
 
 
 const getPathMdjsStroriesFile = (entry) => {
@@ -60,8 +66,8 @@ const getPathMdjsStroriesFile = (entry) => {
   <ComponentLayout frontmatter={entry.data}>
     <UIPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
     {
-      contents.map((content) => (
-          <content.Content />        
+      pages.map((page) => (
+          <page.Content />        
       ))
     }
     <script is:inline src="/docs/_assets/scoped-custom-element-registry.min.js"></script>
