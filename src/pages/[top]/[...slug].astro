@@ -6,7 +6,6 @@ import { fundamentalsEntries, allPages } from '../../content';
 import { blogEntries } from '../../content';
 import { guideEntries } from '../../content';
 import { maxDepthForNonComponentsNavigation } from '../../../config.js';
-import * as fs from 'fs';
 
 let pages = [];
 const inPageNavData = [];
@@ -43,20 +42,27 @@ export async function getStaticPaths() {
       const dirPath = path.dirname(entry.slug);
       const dirParts = dirPath.split(separator);
 
-      return dirParts.length === maxDepthForNonComponentsNavigation && dirParts[0] !== 'components';      
+      return dirParts.length >= maxDepthForNonComponentsNavigation && dirParts[0] !== 'components';      
     })
     .map(entry => {
       const separator = '/';
       const dirPath = path.dirname(entry.slug);
       const dirParts = dirPath.split(separator);
+      dirParts.splice(maxDepthForNonComponentsNavigation);
       const result = {
         params: { 
           top: dirParts.shift(),
           slug: dirParts.join(separator) 
         },
-        props: { dirPath },
       };
       return result;
+    });
+
+    const uniqueDirArr = [];
+    dirArr.forEach(route => {
+      if (!uniqueDirArr.find(uniqueRoute => uniqueRoute.params.top === route.params.top && uniqueRoute.params.slug === route.params.slug)) {
+        uniqueDirArr.push(route);
+      }
     });
 
   return [...fundamentalsArr, ...blogArr, ...guideArr, ...dirArr];
