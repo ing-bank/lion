@@ -1,14 +1,15 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
+import { UIPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
 import * as path from 'path';
-import { fundamentalsEntries, componentPageEntries } from '../../content';
+import { fundamentalsEntries, allPages } from '../../content';
 import { blogEntries } from '../../content';
 import { guideEntries } from '../../content';
+import { maxDepthForNonComponentsNavigation } from '../../../config.js';
 import * as fs from 'fs';
 
-const maxDepthForNonComponentsNavigation = 3;
-let entries = [];
 let pages = [];
+const inPageNavData = [];
 
 
 export async function getStaticPaths() {
@@ -36,33 +37,43 @@ export async function getStaticPaths() {
     props: { entry },
   }));
 
-  return [...fundamentalsArr, ...blogArr, ...guideArr];
+  const dirArr = allPages
+    .filter(entry => {
+      const separator = '/';
+      const dirPath = path.dirname(entry.slug);
+      const dirParts = dirPath.split(separator);
+
+      return dirParts.length === maxDepthForNonComponentsNavigation && dirParts[0] !== 'components';      
+    })
+    .map(entry => {
+      const separator = '/';
+      const dirPath = path.dirname(entry.slug);
+      const dirParts = dirPath.split(separator);
+      const result = {
+        params: { 
+          top: dirParts.shift(),
+          slug: dirParts.join(separator) 
+        },
+        props: { dirPath },
+      };
+      return result;
+    });
+
+  return [...fundamentalsArr, ...blogArr, ...guideArr, ...dirArr];
 }
 
-const { entry } = Astro.props;
-const { Content } = await entry.render();
-const blogData = Astro.props.entry.data;
+const { entry, dirPath } = Astro.props;
 
-const inPageNavData = [];
+const renderDir = async (directoryPath) => {
+  const entries = getEntriesByDir(directoryPath);
+  return await concatenateEntries(entries);
+};
 
 const convertHeadingsToInPageNavData = (headings, componentSlug) => {
   return headings.map(header => ({
       name: header.text,
       url: `/${path.dirname(componentSlug)}#${header.slug}`
     }));
-};
-
-const getEntryMetaInfo = async (entry) => {
-  const result = {};
-  const { Content, headings, remarkPluginFrontmatter } = await entry.render();
-  const order = remarkPluginFrontmatter.order;
-  const slug = entry.slug;
-  const headersH2 = headings.filter(header => header.depth === 2);
-  const entryInPageNavData = convertHeadingsToInPageNavData(headersH2, slug)[0];
-  const headersH3 = headings.filter(header => header.depth === 3);
-  console.log('entryInPageNavData: ', entryInPageNavData);
-  entryInPageNavData.children = convertHeadingsToInPageNavData(headersH3, slug);
-  return {Content, entryInPageNavData}  
 };
 
 const parseEntries = async (entries) => {
@@ -81,7 +92,6 @@ const updateHeadings = (contentItems) => {
     const headersH2 = contentItem.headings.filter(header => header.depth === 2);
     const entryInPageNavData = convertHeadingsToInPageNavData(headersH2, contentItem.slug)[0];
     const headersH3 = contentItem.headings.filter(header => header.depth === 3);
-    console.log('entryInPageNavData: ', entryInPageNavData);
     entryInPageNavData.children = convertHeadingsToInPageNavData(headersH3, contentItem.slug);
     inPageNavData.push(entryInPageNavData);
   }
@@ -94,41 +104,27 @@ async function concatenateEntries(entries) {
   return contents;
 }
 
-const getChildEntries = (entry) => {
-  const dirname = path.dirname(entry.slug);  
-  return componentPageEntries.filter(childEntry => childEntry.slug.startsWith(dirname));
+const getEntriesByDir = (dirname) => {
+  return allPages.filter(childEntry => childEntry.slug.startsWith(dirname));
 };
 
+pages = entry ? await concatenateEntries([entry]) : await renderDir(dirPath);
 
-let entryMetaInfo;
-if (entry.slug.split('/').length === maxDepthForNonComponentsNavigation) {
-  entries = getChildEntries(entry);
-  if (entries.length === 0) {
-    entryMetaInfo = await getEntryMetaInfo(entry);
-  }
-  pages = await concatenateEntries(entries);
-}
 
 const getPathMdjsStroriesFile = (entry) => {
   const mdjsStroriesFileDirectory = path.dirname(entry.slug);
   return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories.js`;
 }
 
-const filename = 'public/test.txt';
-//fs.writeFileSync(filename, 'test1', 'utf8');
 ---
 
-<MainLayout title={entry.slug}>
-  {blogData.title}
-  {blogData.description}
-  {blogData.date}
-  {blogData.tags}
-  {blogData.author}
+<MainLayout title={entry?.slug}>
+  <UIPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
   {
-    entries.length ? pages.map((page) => (
+    pages.map((page) => (
         <page.Content />        
-    )) : <entryMetaInfo.Content />
+    ))
   }
   <script is:inline src="/docs/_assets/scoped-custom-element-registry.min.js"></script>
-  <script type="module" src={getPathMdjsStroriesFile(entry)} mdjs-setup></script>
+  <!-- <script type="module" src={getPathMdjsStroriesFile(entry)} mdjs-setup></script> -->
 </MainLayout>
