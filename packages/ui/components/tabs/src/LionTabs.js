@@ -371,6 +371,16 @@ export class LionTabs extends LitElement {
     if (value === -1) {
       return;
     }
+
+    const beforeSelectedChangedEvent = new CustomEvent('before-selected-changed', {
+      cancelable: true,
+      detail: { selectedIndex: value },
+    });
+    this.dispatchEvent(beforeSelectedChangedEvent);
+    if (beforeSelectedChangedEvent.defaultPrevented) {
+      return;
+    }
+
     const stale = this.__selectedIndex;
     this.__selectedIndex = value;
     this.__updateSelected(true);
