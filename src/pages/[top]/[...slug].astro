@@ -1,4 +1,6 @@
 ---
+import { glob } from 'glob'
+import * as process from 'process';
 import MainLayout from '../../layouts/MainLayout.astro';
 import { UIPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
 import * as path from 'path';
@@ -68,7 +70,7 @@ export async function getStaticPaths() {
   return [...fundamentalsArr, ...blogArr, ...guideArr, ...dirArr];
 }
 
-const { entry, dirPath } = Astro.props;
+const { entry } = Astro.props;
 
 const renderDir = async (directoryPath) => {
   const entries = getEntriesByDir(directoryPath);
@@ -88,7 +90,8 @@ const parseEntries = async (entries) => {
     const { Content, headings, remarkPluginFrontmatter } = await componentEntry.render();
     const order = remarkPluginFrontmatter.order;
     const slug = componentEntry.slug;
-    contents.push({Content, headings, order, slug});    
+    const content = {Content, headings, order, slug};
+    contents.push(content);
   }
   return contents;
 };
@@ -105,7 +108,7 @@ const updateHeadings = (contentItems) => {
 
 async function concatenateEntries(entries) {
   const contents = await parseEntries(entries);
-  contents.sort((a, b) => a.order < b.order ? -1 : 1);
+  //contents.sort((a, b) => a.order < b.order ? -1 : 1);
   updateHeadings(contents);
   return contents;
 }
@@ -114,8 +117,24 @@ const getEntriesByDir = (dirname) => {
   return allPages.filter(childEntry => childEntry.slug.startsWith(dirname));
 };
 
-pages = entry ? await concatenateEntries([entry]) : await renderDir(dirPath);
+const getMdjsStories = (dirPath) => {
+  return new Promise((resolve, reject) => {
+    console.log('process.cwd(): ', process.cwd());
+    const fullDirPath = path.join(process.cwd(), 'public/docs', dirPath);
+    glob(fullDirPath + '/**/__mdjs-stories--*.js', {}, (err, files)=>{
+      resolve(files);
+    })
+  });  
+};
 
+if (entry) {
+  pages = await concatenateEntries([entry]);
+} else {
+  const dirPath = path.join(Astro.params.top, Astro.params.slug);
+  pages = await renderDir(dirPath);
+  const files = await getMdjsStories(dirPath);
+  console.log('files: ', files);
+}
 
 const getPathMdjsStroriesFile = (entry) => {
   const mdjsStroriesFileDirectory = path.dirname(entry.slug);

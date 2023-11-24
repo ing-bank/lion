@@ -110,7 +110,7 @@ function copyMdjsStories() {
     }
 
     let parsedSetupJsCode;
-    // This is move out off @mdjs/core/src/mdjsSetupCode.js
+    // This is copied from @mdjs/core/src/mdjsSetupCode.js
     const initialImprorts = `
 import '@mdjs/mdjs-preview/define';
 import '@mdjs/mdjs-story/define'; \n`;
