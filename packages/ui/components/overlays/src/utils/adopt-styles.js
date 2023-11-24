@@ -1,3 +1,5 @@
+import { browserDetection } from '@lion/ui/core.js';
+
 // See: https://github.com/ing-bank/lion/issues/1880
 
 /**
@@ -106,7 +108,10 @@ export function adoptStyle(renderRoot, style, { teardown = false } = {}) {
     return;
   }
 
-  if (!_adoptStyleUtils.supportsAdoptingStyleSheets) {
+  // ios seems to have issues when using the adoptedStyleSheets where some styles are applied
+  // while others are ignored so the overlays are rendered incorrectly, to mitigate it we use
+  // traditional "stylesheet".
+  if (!_adoptStyleUtils.supportsAdoptingStyleSheets || browserDetection.isIOS) {
     adoptStyleWhenAdoptedStylesheetsNotSupported(renderRoot, style, { teardown });
     return;
   }
