@@ -68,6 +68,7 @@ export class LionCollapsible extends LitElement {
    * @param {import('lit').PropertyValues } changedProperties
    */
   updated(changedProperties) {
+    super.updated(changedProperties);
     if (changedProperties.has('opened')) {
       this.__openedChanged();
     }

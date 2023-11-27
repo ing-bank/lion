@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LionCalendar } from '@lion/ui/calendar.js';
+import { uuid } from '@lion/ui/core.js';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -149,7 +150,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   constructor() {
     super();
     /** @private */
-    this.__invokerId = this.__createUniqueIdForA11y();
+    this.__invokerId = uuid(this.localName);
     /** @protected */
     this._calendarInvokerSlot = 'suffix';
 
@@ -167,11 +168,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     this.__openCalendarOverlay = this.__openCalendarOverlay.bind(this);
     /** @protected */
     this._onCalendarUserSelectedChanged = this._onCalendarUserSelectedChanged.bind(this);
-  }
-
-  /** @private */
-  __createUniqueIdForA11y() {
-    return `${this.localName}-${Math.random().toString(36).substr(2, 10)}`;
   }
 
   /**

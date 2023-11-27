@@ -53,6 +53,7 @@ export class LionDrawer extends LionCollapsible {
    * @param {import('lit').PropertyValues } changedProperties
    */
   updated(changedProperties) {
+    super.updated(changedProperties);
     if (changedProperties.has('opened')) {
       this._openedChanged();
     }
