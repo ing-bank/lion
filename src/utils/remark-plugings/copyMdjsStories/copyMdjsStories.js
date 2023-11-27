@@ -76,7 +76,11 @@ function copyMdjsStories() {
      * @param {UnistNode} _node
      */
     async function nodeCodeVisitor(_node, index, parent) {
-      if (parent.type === 'heading' && parent.depth === 1) {
+      if (
+        parent.type === 'heading' &&
+        parent.depth === 1 &&
+        currentMarkdownFile.includes('/components')
+      ) {
         const commonMdjsStoriesFileName = `${pathToMdDirectoryInPublic}/${mdJsStoriesFileName}`;
         let commonMdjsStoriesContent = '';
         try {

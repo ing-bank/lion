@@ -1,5 +1,6 @@
 ---
 import { glob } from 'glob'
+import * as fs from 'fs';
 import * as process from 'process';
 import MainLayout from '../../layouts/MainLayout.astro';
 import { UIPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
@@ -11,6 +12,7 @@ import { maxDepthForNonComponentsNavigation } from '../../../config.js';
 
 let pages = [];
 const inPageNavData = [];
+let mdjsStoriesJsPath = ''
 
 
 export async function getStaticPaths() {
@@ -117,12 +119,13 @@ const getEntriesByDir = (dirname) => {
   return allPages.filter(childEntry => childEntry.slug.startsWith(dirname));
 };
 
-const getMdjsStories = (dirPath) => {
-  return new Promise((resolve, reject) => {
-    console.log('process.cwd(): ', process.cwd());
-    const fullDirPath = path.join(process.cwd(), 'public/docs', dirPath);
+const getMdjsStories = (fullDirPath) => {
+  return new Promise((resolve, reject) => {    
     glob(fullDirPath + '/**/__mdjs-stories--*.js', {}, (err, files)=>{
-      resolve(files);
+      const relativePaths = files.map(file => {
+        return path.relative(fullDirPath, file);
+      });
+      resolve(relativePaths);
     })
   });  
 };
@@ -132,13 +135,23 @@ if (entry) {
 } else {
   const dirPath = path.join(Astro.params.top, Astro.params.slug);
   pages = await renderDir(dirPath);
-  const files = await getMdjsStories(dirPath);
-  console.log('files: ', files);
+  const fullDirPath = path.join(process.cwd(), 'public/docs', dirPath);
+  const files = await getMdjsStories(fullDirPath);
+  let imports = '';
+  files.forEach(file => {
+    imports += `import('./${file}');\n`
+  });
+  mdjsStoriesJsPath = path.join(fullDirPath, '__mdjs-stories.js');
+  fs.writeFileSync(mdjsStoriesJsPath, imports, 'utf8');
+  console.log('imports: ', imports);
 }
 
-const getPathMdjsStroriesFile = (entry) => {
-  const mdjsStroriesFileDirectory = path.dirname(entry.slug);
-  return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories.js`;
+const getPathMdjsStroriesFile = () => {
+  if (entry) {
+    const mdjsStroriesFileDirectory = path.dirname(entry.slug);
+    return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories.js`;
+  } 
+  return '/docs' + mdjsStoriesJsPath.split('/docs')[1];
 }
 
 ---
@@ -151,5 +164,5 @@ const getPathMdjsStroriesFile = (entry) => {
     ))
   }
   <script is:inline src="/docs/_assets/scoped-custom-element-registry.min.js"></script>
-  <!-- <script type="module" src={getPathMdjsStroriesFile(entry)} mdjs-setup></script> -->
+  <script type="module" src={getPathMdjsStroriesFile()} mdjs-setup></script>
 </MainLayout>
