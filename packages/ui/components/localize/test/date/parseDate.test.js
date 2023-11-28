@@ -23,6 +23,12 @@ describe('parseDate()', () => {
     localizeTearDown();
   });
 
+  it('handles year correctly', () => {
+    expect(equalsDate(parseDate('1/11/1'), new Date('2001/11/01'))).to.equal(true);
+    expect(equalsDate(parseDate('1/11/49'), new Date('2049/11/01'))).to.equal(true);
+    expect(equalsDate(parseDate('1/11/50'), new Date('1950/11/01'))).to.equal(true);
+  });
+
   it('adds leading zeros', () => {
     expect(equalsDate(parseDate('1-1-1979'), new Date('1979/01/01'))).to.equal(true);
     expect(equalsDate(parseDate('1-11-1979'), new Date('1979/11/01'))).to.equal(true);
