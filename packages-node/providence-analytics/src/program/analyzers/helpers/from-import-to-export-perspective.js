@@ -1,3 +1,4 @@
+import path from 'path';
 import { isRelativeSourcePath } from '../../utils/relative-source-path.js';
 import { LogService } from '../../core/LogService.js';
 import { resolveImportPath } from '../../utils/resolve-import-path.js';
@@ -35,7 +36,10 @@ export async function fromImportToExportPerspective({ importee, importer, import
     return null;
   }
 
-  const absolutePath = await resolveImportPath(importee, importer);
+  const absolutePath = await resolveImportPath(importee, importer, {
+    modulePaths: [path.resolve(importeeProjectPath, '..')],
+  });
+
   if (!absolutePath) {
     return null;
   }
