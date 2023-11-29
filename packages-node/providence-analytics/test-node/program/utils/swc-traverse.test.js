@@ -113,6 +113,13 @@ describe('swcTraverse', () => {
       // TODO: also add case for Script
       expect(rootPath.node.type).to.equal('Module');
     });
+
+    it('does not fail on object prototype built-ins (like "toString")', async () => {
+      const code = `const { toString } = x;`;
+      const swcAst = await AstService._getSwcAst(code);
+
+      expect(swcTraverse(swcAst, {})).to.not.throw;
+    });
   });
 
   describe.skip('Paths', () => {
