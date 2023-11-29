@@ -353,6 +353,7 @@ export class LionTabs extends LitElement {
       return;
     }
     const stale = this.__selectedIndex;
+    /** @type {number | undefined} */
     this.__selectedIndex = value;
     this.__updateSelected(false);
     this.dispatchEvent(new Event('selected-changed'));
