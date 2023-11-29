@@ -75,6 +75,14 @@ describe('<lion-tabs>', () => {
       expect(spy).to.have.been.calledOnce;
     });
 
+    it('does not send event "selected-changed" after selecting currently selected tab', async () => {
+      const el = /** @type {LionTabs} */ (await fixture(basicTabs));
+      const spy = sinon.spy();
+      el.addEventListener('selected-changed', spy);
+      el.selectedIndex = 0;
+      expect(spy).not.to.have.been.calledOnce;
+    });
+
     it('logs warning if unequal amount of tabs and panels', async () => {
       const stub = sinon.stub(console, 'warn');
       await fixture(html`

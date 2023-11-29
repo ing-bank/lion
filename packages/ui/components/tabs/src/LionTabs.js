@@ -349,6 +349,9 @@ export class LionTabs extends LitElement {
    * @param {number} value The new index
    */
   set selectedIndex(value) {
+    if (value === this.__selectedIndex) {
+      return;
+    }
     const stale = this.__selectedIndex;
     this.__selectedIndex = value;
     this.__updateSelected(false);
