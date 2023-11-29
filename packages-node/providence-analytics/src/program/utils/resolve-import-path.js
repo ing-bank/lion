@@ -36,10 +36,10 @@ const fakePluginContext = {
  * name without an extension.
  * @param {SpecifierSource} importee source like '@lion/core' or '../helpers/index.js'
  * @param {PathFromSystemRoot} importer importing file, like '/my/project/importing-file.js'
- * @param {{customResolveOptions?: {preserveSymlinks:boolean}}} [opts] nodeResolve options
+ * @param {{customResolveOptions?: {preserveSymlinks:boolean}; modulePaths?: string[]}} [opts] nodeResolve options
  * @returns {Promise<PathFromSystemRoot|null|'[node-builtin]'>} the resolved file system path, like '/my/project/node_modules/@lion/core/index.js'
  */
-async function resolveImportPathFn(importee, importer, opts) {
+async function resolveImportPathFn(importee, importer, opts = {}) {
   if (isBuiltin(importee)) {
     return '[node-builtin]';
   }
@@ -49,7 +49,7 @@ async function resolveImportPathFn(importee, importer, opts) {
     // allow resolving polyfills for nodejs libs
     preferBuiltins: false,
     // extensions: ['.mjs', '.js', '.json', '.node'],
-    ...(opts || {}),
+    ...opts,
   });
 
   const preserveSymlinks =
