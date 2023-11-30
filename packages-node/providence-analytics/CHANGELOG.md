@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.15.1
+
+### Patch Changes
+
+- 7f6eb15a: feat: allow to resolve outside node_modules as well
+- 7f6eb15a: feat: do not throw on unparseable files, but allow to proceed run for rest of projects
+- 7f6eb15a: fix: swc-traverse does not fail on object proto builtins like "toString"
+- 292dcfc8: fix: corrected export path for MatchImportAnalyzer
+
 ## 0.15.0
 
 ### Minor Changes
