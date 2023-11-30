@@ -149,7 +149,7 @@ if (entry) {
 const getPathMdjsStroriesFile = () => {
   if (entry) {
     const mdjsStroriesFileDirectory = path.dirname(entry.slug);
-    return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories.js`;
+    return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories--${path.basename(entry.slug)}.js`;
   } 
   return '/docs' + mdjsStoriesJsPath.split('/docs')[1];
 }
