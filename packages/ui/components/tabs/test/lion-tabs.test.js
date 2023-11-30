@@ -80,7 +80,7 @@ describe('<lion-tabs>', () => {
       const spy = sinon.spy();
       el.addEventListener('selected-changed', spy);
       el.selectedIndex = 0;
-      expect(spy).not.to.have.been.calledOnce;
+      expect(spy).not.to.have.been.called;
     });
 
     it('logs warning if unequal amount of tabs and panels', async () => {
