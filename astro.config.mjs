@@ -75,8 +75,20 @@ export default defineConfig({
     // build: {
     //   target: 'esnext'
     // },
-
+    esbuild: {
+      pure: ['console', 'debugger'],
+    },
     build: {
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: false,
+          drop_debugger: false,
+        },
+        format: {
+          comments: false,
+        },
+      },
       rollupOptions: {
         input: publicMdFilesObj,
         // output: {

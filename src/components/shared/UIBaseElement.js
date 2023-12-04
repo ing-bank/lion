@@ -1,4 +1,4 @@
-import { LitElement, ReactiveElement } from 'lit';
+import { LitElement, ReactiveElement, css, unsafeCSS } from 'lit';
 
 // Why a controller instead of a @open-wc or @lit mixin?
 // - controllers are TS friendly (mixins aren't)
@@ -77,10 +77,9 @@ export class LayoutCtrl {
   container;
   resizeObserver;
   layouts;
-  layoutsContainer;
   currentLayout;
 
-  constructor(host, { layouts, layoutsContainer }) {
+  constructor(host, layouts) {
     (this.host = host).addController(this);
 
     if (!layouts || !Object.keys(layouts).length) {
@@ -88,30 +87,52 @@ export class LayoutCtrl {
     }
 
     this.layouts = layouts;
-    this.layoutsContainer = layoutsContainer;
+
+    // for (const [breakpoint, stylesForBreakpoint] of Object.entries(this.layouts)) {
+    //   // const stylesheet = new CSSStyleSheet();
+    //   // stylesheet.replaceSync(stylesForBreakpoint.cssText);
+    //   const ruleList = stylesForBreakpoint.cssText.match(/(.*){(.|\n)*?}/gm);
+    //   const result = [];
+    //   for (const rule of ruleList) {
+    //     result.push(rule.replace(/(.*)({(.|\n)*?})/, `:host([data-layout="${breakpoint}"]) $1$2`));
+    //   }
+
+    //   const x = css``;
+    //   x.cssText = result.join('\n');
+
+    //   host.constructor.styles.push(x);
+    // }
   }
 
-  hostConnected() {
-    // We only are interested in width, so we put resizeObserver on body.
-    this.resizeObserver = new ResizeObserver(entries => {
-      const newWidth = entries[0].contentBoxSize[0].inlineSize;
-      const layoutArrayOrdered = Object.entries(this.layouts).sort((a, b) => b[1] - a[1]);
-      const newLayout = layoutArrayOrdered.find(([, minWidth]) => newWidth >= minWidth)?.[0];
+  // hostUpdate() {
+  //   // this.host.setAttribute('data-layout', this.layouts[0]);
+  // }
 
-      // TODO: make nicer/more flexible
-      if (newLayout !== this.currentLayout) {
-        this.host.setAttribute('data-layout', newLayout);
-        this.currentLayout = newLayout;
-      }
-    });
-    this.container =
-      (this.layoutsContainer === globalThis ? document?.body : this.layoutsContainer) || this.host;
-    this.resizeObserver?.observe(this.container);
-  }
+  // hostConnected() {
+  //   // this.host.setAttribute('data-layout', this.layouts[0]);
 
-  hostDisconnected() {
-    this.resizeObserver?.unobserve(this.container);
-  }
+  //   // We only are interested in width, so we put resizeObserver on body.
+  //   this.container =
+  //     (this.layoutsConfig.container === globalThis
+  //       ? document?.body
+  //       : this.layoutsConfig.container) || this.host;
+  //   this.resizeObserver = new ResizeObserver(entries => {
+  //     const newWidth = entries[0].contentBoxSize[0].inlineSize;
+  //     const layoutArrayOrdered = Object.entries(this.layouts).sort((a, b) => b[0] - a[0]);
+  //     const newLayout = layoutArrayOrdered.find(([minWidth]) => newWidth >= minWidth)?.[0];
+
+  //     if (newLayout !== this.currentLayout) {
+  //       this.host.setAttribute('data-layout', newLayout);
+  //       this.currentLayout = newLayout;
+  //     }
+  //   });
+
+  //   this.resizeObserver?.observe(this.container);
+  // }
+
+  // hostDisconnected() {
+  //   this.resizeObserver?.unobserve(this.container);
+  // }
 }
 
 /**
@@ -135,6 +156,13 @@ export class UIBaseElement extends LitElement {
   get templateContext() {
     return {
       templates: this.templates,
+      data: {},
+      set: (key, val) => {
+        if (key in this.templateContext.data) {
+          this[key] = val;
+          this.requestUpdate(key);
+        }
+      },
     };
   }
 
@@ -147,10 +175,7 @@ export class UIBaseElement extends LitElement {
     //   );
     // }
 
-    this.layoutCtrl = new LayoutCtrl(this, {
-      layouts: this.layouts,
-      layoutsContainer: this.layoutsContainer,
-    });
+    this.layoutCtrl = new LayoutCtrl(this, this.constructor.layoutsConfig);
     this.scopedRegistryCtrl = new ScopedRegistryCtrl(this, this.scopedElements);
   }
 
@@ -159,7 +184,6 @@ export class UIBaseElement extends LitElement {
    */
   static provideStylesAndMarkup(provider) {
     this.styles = provider.styles(this.styles);
-    this.elementStyles = this.finalizeStyles(this.styles);
 
     if (provider.markup?.templates) {
       this.templates = provider.markup?.templates(this.templates);
@@ -170,10 +194,41 @@ export class UIBaseElement extends LitElement {
 
     if (provider.layouts) {
       this.layouts = provider.layouts(this.layouts);
+      const entries = Object.entries(this.layouts);
+      for (let i = 0; i < entries.length; i += 1) {
+        // const ruleList = stylesForBreakpoint.cssText.match(/(.*){(.|\n)*?}/gm);
+        // const result = [];
+        // for (const rule of ruleList) {
+        //   result.push(
+        //     rule.replace(/(.*)({(.|\n)*?})/, `:host([data-layout="${breakpoint}"]) $1$2`),
+        //   );
+        // }
+        // const x = css``;
+        // x.cssText = result.join('\n');
+        const [name, { styles, breakpoint, container, templateContext }] = entries[i];
+        const [nextName, next] = entries[i + 1] || [];
+
+        const queryType = container === globalThis ? 'media' : 'container';
+
+        this.styles.push(css`
+          @${unsafeCSS(queryType)} (${unsafeCSS(breakpoint)} <= width ${unsafeCSS(
+            next?.breakpoint ? `<= ${next?.breakpoint}` : '',
+          )}) {
+            ${styles}
+          }
+        `);
+
+        // else {
+        //   this.styles.push(css`
+        //     @container (min-width: ${unsafeCSS(breakpoint)}) {
+        //       ${styles}
+        //     }
+        //   `);
+        // }
+      }
     }
-    if (provider.layoutsContainer) {
-      this.layoutsContainer = provider.layoutsContainer(this.layoutsContainer);
-    }
+    this.elementStyles = this.finalizeStyles(this.styles);
+
     this.constructor.hasStylesAndMarkupProvided = true;
   }
 

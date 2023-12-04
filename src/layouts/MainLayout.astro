@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
-import { UIPortalMainNav } from "../components/ui-portal-main-nav.js";
+import { UIPortalMainNav, initNavData } from "../components/ui-portal-main-nav.js";
 import { componentInfoEntries } from '../content';
 
 const site = Astro.site || Astro.url.origin;
@@ -20,73 +20,37 @@ const comp1Names = componentInfoEntries.map((entry) => entry.data.component);
 
  /** @type {NavItem[]} */
 const navData = [
-  { name: "home", url: "/", iconId: 'lion:portal:home' },
+  { name: "home", url: "/", iconId: 'lion:portal:home', iconActiveId: 'lion:portal:homeFilled' },
   {
     name: "components",
-    url: "/components",
+    // url: "/components",
     iconId: 'lion:portal:deployedCode',
-    children: compNames.map((compName) => ({
-      name: compName,
-      url: `/components/${compName}`,
-    })),
+    iconActiveId: 'lion:portal:deployedCodeFilled',
+    children: [
+      { name: 'overview', url: "/components" },
+      ...compNames.map((compName) => ({
+        name: compName,
+        url: `/components/${compName}`,
+      }))
+    ],
   },
-  // {
-  //   name: "components1",
-  //   url: "/components1",
-  //   iconId: 'lion:portal:deployedCode',
-  //   children: comp1Names.map((compName) => ({
-  //     name: compName,
-  //     url: `/components1/${compName}`,
-  //   })),
-  // },  
-  { name: "develop", url: "/develop",    iconId: 'lion:portal:sdk' },
-  { name: "design", url: "/design", iconId: 'lion:portal:stylusNote'  },
-  { name: "extend", url: "/extend", iconId: 'lion:portal:deployedCodeAccount'  },
-  { name: "blog", url: "/blog", iconId: 'lion:portal:newsmode'},
+  {
+    name: "components1",
+    url: "/components1",
+    iconId: 'lion:portal:deployedCode',
+    children: comp1Names.map((compName) => ({
+      name: compName,
+      url: `/components1/${compName}`,
+    })),
+  },  
+  { name: "develop", url: "/develop", iconId: 'lion:portal:sdk', iconActiveId: 'lion:portal:sdkFilled' },
+  { name: "design", url: "/design", iconId: 'lion:portal:stylusNote', iconActiveId: 'lion:portal:stylusNoteFilled'  },
+  { name: "extend", url: "/extend", iconId: 'lion:portal:deployedCodeAccount', iconActiveId: 'lion:portal:deployedCodeAccountFilled'  },
+  { name: "blog", url: "/blog", iconId: 'lion:portal:newsmode', iconActiveId: 'lion:portal:newsmodeFilled'},
 ];
 
+initNavData(navData,  Astro.url.pathname);
 
-
-/** @type WeakMap<{NavItem},{NavItem}> */
-const itemParents = new WeakMap();
-
-function _setParentsActive(navItem) {
-  const parentItem = itemParents.get(navItem);
-  if (parentItem) {
-    parentItem.hasActiveChild = true;
-    _setParentsActive(parentItem);
-  }
-}
-
-function setParents(navData, parentItem = null) {
-  for (const navItem of navData) {
-    if (parentItem) {
-      itemParents.set(navItem, parentItem);
-    }
-    if (navItem.children?.length) {
-      setParents(navItem.children, navItem);
-    }
-  }
-}
-
-let activeItem;
-function setActive(navData, currentUrl) {
-  if(activeItem) return;
-
-  for (const navItem of navData) {
-    if(currentUrl === navItem.url) {
-      navItem.active = true;
-      activeItem = navItem;
-    }
-    if (navItem.children?.length) {
-      setActive(navItem.children, currentUrl);
-    }
-  }
-}
-
-setParents(navData);
-setActive(navData, Astro.url.pathname);
-_setParentsActive(activeItem);
 
 const footerData = [
   {
@@ -172,7 +136,7 @@ const footerData = [
   </head>
   <body class="ui-portal-grid">
     <div class="ui-portal-grid__nav">
-      <UIPortalMainNav client:load nav-data={JSON.stringify(navData)} />
+      <UIPortalMainNav xclient:load nav-data={JSON.stringify(navData)} />
     </div>
     <main class="ui-portal-grid__main">
       <slot />
