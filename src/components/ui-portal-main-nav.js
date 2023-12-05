@@ -194,24 +194,20 @@ export class UIPortalMainNavPartDirective extends AsyncDirective {
     });
   }
 
-  _setupIcon(part, { item, level }) {
-    const iconEl = part.element;
+  _setupIcon(part, { level }) {
+    const { element } = part;
+    setLevel(iconEl, { level });
+    assertLionIcon(element);
+    element.setAttribute('data-part', 'icon');
+  }
 
-    if (!this._hasFirstUpdated) {
-      setLevel(iconEl, { level });
-
-      iconEl.setAttribute('data-part', 'icon');
-    }
-
-    iconEl.setAttribute(
+  _updateIcon(part, { item }) {
+    const { element } = part;
+    element.setAttribute(
       'icon-id',
       item.active || item.hasActiveChild ? item.iconActiveId || item.iconId : item.iconId,
     );
   }
-
-  // _$initialize(...args) {
-  //   super._$initialize(...args);
-  // }
 
   setup(part, [name, localContext]) {
     switch (name) {
@@ -249,6 +245,9 @@ export class UIPortalMainNavPartDirective extends AsyncDirective {
     switch (name) {
       case 'listitem':
         this._updateListItem(part, localContext);
+        break;
+      case 'icon':
+        this._updateIcon(part, localContext);
         break;
     }
   }
