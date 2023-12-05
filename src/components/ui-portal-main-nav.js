@@ -1,10 +1,54 @@
-import { html, nothing, css } from 'lit';
+import { html, nothing, css, isServer } from 'lit';
 import { directive, AsyncDirective } from 'lit/async-directive.js';
 import { LionIcon } from '@lion/ui/icon.js';
 import { UIBaseElement } from './shared/UIBaseElement.js';
 import { addIconResolverForPortal } from './iconset-portal/addIconResolverForPortal.js';
 
 addIconResolverForPortal();
+
+function assertList(element) {
+  if (isServer) return;
+  if (!(element instanceof HTMLUListElement || element instanceof HTMLOListElement)) {
+    throw new Error(
+      '[UIPortalMainNavPartDirective.anchor] Please apply to HTMLUListElement (`<ul>`) | HTMLOListElement (`<ol>`)',
+    );
+  }
+}
+
+function assertListItem(element) {
+  if (isServer) return;
+  if (!(element instanceof HTMLLIElement)) {
+    throw new Error('[UIPortalMainNavPartDirective.anchor] Please apply to HTMLLIElement (`<li>`)');
+  }
+}
+
+function assertAnchor(element) {
+  if (isServer) return;
+  if (!(element instanceof HTMLAnchorElement)) {
+    throw new Error(
+      '[UIPortalMainNavPartDirective.anchor] Please apply to HTMLAnchorElement (`<a>`)',
+    );
+  }
+}
+
+function assertButton(element) {
+  if (isServer) return;
+  if (
+    !(element instanceof HTMLElement || element instanceof LionButton) ||
+    element.getAttribute('role') === 'button'
+  ) {
+    throw new Error(
+      '[UIPortalMainNavPartDirective.toggle-for-level] Please apply to HTMLButtonElement (`<button>`) | LionButton | `[role=button]`',
+    );
+  }
+}
+
+function assertLionIcon(element) {
+  if (isServer) return;
+  if (!(element instanceof LionIcon)) {
+    throw new Error('[UIPortalMainNavPartDirective.icon] Please apply to LionIcon');
+  }
+}
 
 export function initNavData(navData, activePath, shouldReset = false) {
   /** @type WeakMap<{NavItem},{NavItem}> */
@@ -72,115 +116,75 @@ function setLevel(el, { level }) {
 export class UIPortalMainNavPartDirective extends AsyncDirective {
   constructor() {
     super();
-
-    console.log('hmmm');
-
-    this._hasSetup = false;
+    this._hasFirstUpdated = false;
   }
 
   _setupLevel(part, { level, isToggleTarget }) {
-    const levelEl = part.element;
-
-    if (!this._hasSetup) {
-      setLevel(levelEl, { level });
-      levelEl.setAttribute('data-part', 'level');
-      levelEl.id = `level-${level}`;
-    }
-
+    const { element } = part;
+    setLevel(element, { level });
+    element.setAttribute('data-part', 'level');
+    element.setAttribute('id', `level-${level}`);
     if (isToggleTarget) {
-      levelEl.setAttribute('popover', '');
+      element.setAttribute('popover', '');
     }
   }
 
   _setupLevelBackBtn(part, { level, isToggleTarget }) {
     const { element } = part;
+    assertButton(element);
+    element.setAttribute('data-part', 'level-back-btn');
 
-    if (!this._hasSetup) {
-      element.setAttribute('data-part', 'level-back-btn');
-      element.addEventListener('click', ({}) => {
-        element.parentElement.hidePopover();
-      });
-    }
+    if (isServer) return;
+
+    element.addEventListener('click', ({}) => {
+      element.parentElement.hidePopover();
+    });
   }
 
   _setupList(part) {
-    if (this._hasSetup) return;
-
-    const listEl = part.element;
-    if (!(listEl instanceof HTMLUListElement || listEl instanceof HTMLOListElement)) {
-      throw new Error(
-        '[UIPortalMainNavPartDirective.anchor] Please apply to HTMLUListElement (`<ul>`) | HTMLOListElement (`<ol>`)',
-      );
-    }
-
-    listEl.setAttribute('data-part', 'list');
+    const { element } = part;
+    assertList(element);
+    element.setAttribute('data-part', 'list');
   }
 
-  _setupListitem(part, { item }) {
-    const listItemEl = part.element;
+  _setupListitem(part) {
+    const { element } = part;
+    assertListItem(element);
+    element.setAttribute('data-part', 'listitem');
+  }
 
-    if (!this._hasSetup) {
-      if (!(listItemEl instanceof HTMLLIElement)) {
-        throw new Error(
-          '[UIPortalMainNavPartDirective.anchor] Please apply to HTMLLIElement (`<li>`)',
-        );
-      }
-      listItemEl.setAttribute('data-part', 'listitem');
-    }
-
+  _updateListItem(part, { item }) {
+    const { element } = part;
     if (item.active) {
-      listItemEl.setAttribute('data-active', '');
+      element.setAttribute('data-active', '');
     }
-
     if (item.hasActiveChild) {
-      listItemEl.setAttribute('data-has-active-child', '');
+      element.setAttribute('data-has-active-child', '');
     }
   }
 
   _setupAnchor(part, { item, level }) {
-    if (this._hasSetup) return;
-
-    const anchorEl = part.element;
-
-    if (!this._hasSetup) {
-      setLevel(anchorEl, { level });
-      if (!(anchorEl instanceof HTMLAnchorElement)) {
-        throw new Error('[UIPortalMainNavPartDirective.anchor] Please apply to HTMLAnchorElement');
-      }
-      anchorEl.setAttribute('data-part', 'anchor');
-      anchorEl.href = item.url;
-    }
-
+    const { element } = part;
+    setLevel(element, { level });
+    assertAnchor(element);
+    element.setAttribute('data-part', 'anchor');
+    element.setAttribute('href', item.url);
     if (item.active) {
-      anchorEl.setAttribute('aria-current', 'page');
+      element.setAttribute('aria-current', 'page');
     }
   }
 
   _setupToggleForLevel(part, { context, level, item }) {
-    if (this._hasSetup) return;
+    const { element } = part;
+    assertButton(element);
 
-    const buttonEl = part.element;
-    setLevel(buttonEl, { level });
+    setLevel(element, { level });
+    element.setAttribute('data-part', 'toggle-for-level');
+    element.setAttribute('popovertarget', `level-${level + 1}`);
 
-    if (
-      !(buttonEl instanceof HTMLButtonElement || buttonEl instanceof LionButton) ||
-      buttonEl.getAttribute('role') === 'button'
-    ) {
-      throw new Error(
-        '[UIPortalMainNavPartDirective.toggle-for-level] Please apply to HTMLButtonElement (`<button>`) | LionButton | `[role=button]`',
-      );
-    }
+    if (isServer) return;
 
-    if (typeof level !== 'number') {
-      throw new Error(
-        '[UIPortalMainNavPartDirective.toggle-for-level] Please provide a level in localContext',
-      );
-    }
-
-    buttonEl.setAttribute('data-part', 'toggle-for-level');
-    buttonEl.setAttribute('popovertarget', `level-${level + 1}`);
-
-    buttonEl.addEventListener('click', () => {
+    element.addEventListener('click', () => {
       initNavData(context.data.navData, item.children[0].url, true);
       console.log('before requestUpdate');
       context.set('navData', context.data.navData);
@@ -193,13 +197,9 @@ export class UIPortalMainNavPartDirective extends AsyncDirective {
   _setupIcon(part, { item, level }) {
     const iconEl = part.element;
 
-    if (!this._hasSetup) {
+    if (!this._hasFirstUpdated) {
       setLevel(iconEl, { level });
-      if (!(iconEl instanceof LionIcon)) {
-        throw new Error(
-          '[UIPortalMainNavPartDirective.anchor] Please apply to HTMLLIElement (`<li>`)',
-        );
-      }
+
       iconEl.setAttribute('data-part', 'icon');
     }
 
@@ -213,9 +213,7 @@ export class UIPortalMainNavPartDirective extends AsyncDirective {
   //   super._$initialize(...args);
   // }
 
-  update(part, [name, localContext]) {
-    console.log('upp');
-
+  setup(part, [name, localContext]) {
     switch (name) {
       case 'level':
         this._setupLevel(part, localContext);
@@ -239,7 +237,20 @@ export class UIPortalMainNavPartDirective extends AsyncDirective {
         this._setupIcon(part, localContext);
         break;
     }
-    this._hasSetup = true;
+  }
+
+  update(part, options) {
+    if (!this._hasFirstUpdated) {
+      this.setup(part, options);
+    }
+    this._hasFirstUpdated = true;
+
+    const [name, localContext] = options;
+    switch (name) {
+      case 'listitem':
+        this._updateListItem(part, localContext);
+        break;
+    }
   }
 
   // render() {
@@ -324,16 +335,13 @@ const baseUINavMarkup = {
 
       // console.log('data.hasL1Open', data.hasL1Open);
 
-      // <div popover id="l1-wrapper" data-part="l1-wrapper">
-      //   ${templates.navLevel(context, { children: data.navData, level: 1 })}
-      // </div>
-
-      // ?data-has-l1-open="${data.hasL1Open}"
-
       return html`
-        <div data-part="root">
+        <div data-part="root" ?data-has-l1-open="${data.hasL1Open}">
           <nav data-part="nav">
             <button popovertarget="l1-wrapper" data-part="l1-invoker">Open Menu</button>
+            <div popover id="l1-wrapper" data-part="l1-wrapper">
+              ${templates.navLevel(context, { children: data.navData, level: 1 })}
+            </div>
           </nav>
         </div>
       `;
@@ -341,44 +349,44 @@ const baseUINavMarkup = {
     navLevel(context, { children, level, isToggleTarget }) {
       const { templates, part } = context;
 
-      // ${isToggleTarget
-      //   ? html`<button ${part('level-back-btn', { level })}>Back</button>`
-      //   : nothing}
-      // <ul ${part('list')}>
-      //   ${children.map(
-      //     item => html`<li ${part('listitem', { item })}>
-      //       ${templates.navItem(context, { item, level })}
-      //       ${item.children?.length
-      //         ? templates.navLevel(context, {
-      //             level: level + 1,
-      //             children: item.children,
-      //             isActive: item.active,
-      //             isToggleTarget: !item.url,
-      //           })
-      //         : nothing}
-      //     </li>`,
-      //   )}
-      // </ul>
-
-      return html`<div ${part('level', { level, isToggleTarget })}></div>`;
+      return html`<div ${part('level', { level, isToggleTarget })}>
+        ${isToggleTarget
+          ? html`<button ${part('level-back-btn', { level })}>Back</button>`
+          : nothing}
+        <ul ${part('list')}>
+          ${children.map(
+            item => html`<li ${part('listitem', { item })}>
+              ${templates.navItem(context, { item, level })}
+              ${item.children?.length
+                ? templates.navLevel(context, {
+                    level: level + 1,
+                    children: item.children,
+                    isActive: item.active,
+                    isToggleTarget: !item.url,
+                  })
+                : nothing}
+            </li>`,
+          )}
+        </ul>
+      </div>`;
     },
-    // navItem(context, { item, level }) {
-    //   const { part } = context;
+    navItem(context, { item, level }) {
+      const { part } = context;
 
-    //   if (item.url) {
-    //     return html`<a ${part('anchor', { item, level })}
-    //       >${level === 1
-    //         ? html`<lion-icon ${part('icon', { level, item })}></lion-icon>`
-    //         : nothing}<span>${item.name}</span></a
-    //     >`;
-    //   }
+      if (item.url) {
+        return html`<a ${part('anchor', { item, level })}
+          >${level === 1
+            ? html`<lion-icon ${part('icon', { level, item })}></lion-icon>`
+            : nothing}<span>${item.name}</span></a
+        >`;
+      }
 
-    //   return html`<button ${part('toggle-for-level', { context, level, item })}>
-    //     ${level === 1
-    //       ? html`<lion-icon ${part('icon', { level, item })}></lion-icon>`
-    //       : nothing}<span>${item.name}</span>
-    //   </button>`;
-    // },
+      return html`<button ${part('toggle-for-level', { context, level, item })}>
+        ${level === 1
+          ? html`<lion-icon ${part('icon', { level, item })}></lion-icon>`
+          : nothing}<span>${item.name}</span>
+      </button>`;
+    },
   }),
   scopedElements: () => ({
     'lion-icon': LionIcon,

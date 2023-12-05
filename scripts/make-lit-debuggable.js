@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { globby } from 'globby';
 
-const packageNames = ['lit-html'];
+const packageNames = ['lit'];
 
 for (const packageName of packageNames) {
   const location = path.resolve(process.cwd(), 'node_modules', packageName);

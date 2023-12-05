@@ -1,4 +1,5 @@
 ---
+import './debug-setup.js';
 import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
@@ -136,13 +137,13 @@ const footerData = [
   </head>
   <body class="ui-portal-grid">
     <div class="ui-portal-grid__nav">
-      <UIPortalMainNav xclient:load nav-data={JSON.stringify(navData)} />
+      <UIPortalMainNav client:load nav-data={JSON.stringify(navData)} />
     </div>
     <main class="ui-portal-grid__main">
       <slot />
     </main>
     <div class="ui-portal-grid__footer">
-      <UIPortalFooter footer-data={JSON.stringify(footerData)} />
+      <!-- <UIPortalFooter footer-data={JSON.stringify(footerData)} /> -->
     </div>
     <style is:global>
       /* Improve Page speed */
