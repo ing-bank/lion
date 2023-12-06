@@ -182,6 +182,36 @@ describe('lion-tooltip', () => {
       expect(el._overlayCtrl.isShown).to.equal(false);
     });
 
+    it('gets hidden when invoker gets disabled', async () => {
+      const el = /** @type {LionTooltip} */ (
+        await fixture(html`
+          <lion-tooltip>
+            <div slot="content">Hey there</div>
+            <button slot="invoker">Tooltip button</button>
+          </lion-tooltip>
+        `)
+      );
+      const invoker = /** @type {HTMLButtonElement} */ (
+        Array.from(el.children).find(child => child.slot === 'invoker')
+      );
+      const eventFocusIn = new Event('focusin');
+      invoker.dispatchEvent(eventFocusIn);
+      clock.tick(300);
+      await el.updateComplete;
+      // @ts-expect-error [allow-protected-in-tests]
+      expect(el._overlayCtrl.isShown).to.equal(true);
+
+      invoker.setAttribute('disabled', '');
+
+      const eventFocusOut = new Event('focusout');
+      invoker.dispatchEvent(eventFocusOut);
+      clock.tick(300);
+      await el.updateComplete;
+      await el.updateComplete; // webkit needs longer
+      // @ts-expect-error [allow-protected-in-tests]
+      expect(el._overlayCtrl.isShown).to.equal(false);
+    });
+
     it('contains html when specified in tooltip content body', async () => {
       const el = /** @type {LionTooltip} */ (
         await fixture(html`
