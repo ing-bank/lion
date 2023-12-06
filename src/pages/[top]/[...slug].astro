@@ -101,9 +101,14 @@ const parseEntries = async (entries) => {
 const updateHeadings = (contentItems) => {
   for (const contentItem of contentItems) {
     const headersH2 = contentItem.headings.filter(header => header.depth === 2);
+    if (headersH2.length === 0) {
+      continue;
+    }
     const entryInPageNavData = convertHeadingsToInPageNavData(headersH2, contentItem.slug)[0];
     const headersH3 = contentItem.headings.filter(header => header.depth === 3);
-    entryInPageNavData.children = convertHeadingsToInPageNavData(headersH3, contentItem.slug);
+    if (headersH3.length !== 0) {
+      entryInPageNavData.children = convertHeadingsToInPageNavData(headersH3, contentItem.slug);
+    }
     inPageNavData.push(entryInPageNavData);
   }
 };
@@ -141,9 +146,10 @@ if (entry) {
   files.forEach(file => {
     imports += `import('./${file}');\n`
   });
-  mdjsStoriesJsPath = path.join(fullDirPath, '__mdjs-stories.js');
-  fs.writeFileSync(mdjsStoriesJsPath, imports, 'utf8');
-  console.log('imports: ', imports);
+  if (imports) {
+    mdjsStoriesJsPath = path.join(fullDirPath, '__mdjs-stories.js');
+    fs.writeFileSync(mdjsStoriesJsPath, imports, 'utf8');
+  }    
 }
 
 const getPathMdjsStroriesFile = () => {
@@ -151,7 +157,10 @@ const getPathMdjsStroriesFile = () => {
     const mdjsStroriesFileDirectory = path.dirname(entry.slug);
     return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories--${path.basename(entry.slug)}.js`;
   } 
-  return '/docs' + mdjsStoriesJsPath.split('/docs')[1];
+  if (mdjsStoriesJsPath) {
+    return '/docs' + mdjsStoriesJsPath.split('/docs')[1];
+  }
+  return null;
 }
 
 ---
@@ -164,5 +173,5 @@ const getPathMdjsStroriesFile = () => {
     ))
   }
   <script is:inline src="/docs/_assets/scoped-custom-element-registry.min.js"></script>
-  <script type="module" src={getPathMdjsStroriesFile()} mdjs-setup></script>
+  {getPathMdjsStroriesFile() && <script type="module" src={getPathMdjsStroriesFile()} mdjs-setup></script>}
 </MainLayout>
