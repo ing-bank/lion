@@ -3,6 +3,8 @@ const { init } = require('es-module-lexer');
 const path = require('path');
 
 let isToBeConcatenated;
+let maxDepthForNonComponentsNavigation;
+let docsDirName;
 let visit;
 (async () => {
   // eslint-disable-next-line import/no-extraneous-dependencies
@@ -11,6 +13,8 @@ let visit;
 
   const config = await import('../../../../config.mjs');
   isToBeConcatenated = config.isToBeConcatenated;
+  maxDepthForNonComponentsNavigation = config.maxDepthForNonComponentsNavigation;
+  docsDirName = config.docsDirName;
 })();
 
 // function addOverviewTitleToIndexMd(tree, isIndexMd) {
@@ -41,6 +45,9 @@ function cleanupRocketMetadata() {
   async function transformer(tree, file) {
     const filePath = file.history[0];
     const isIndexMd = path.basename(filePath) === 'index-copy.md';
+    const filePathFromProjectRoot = filePath.split(docsDirName)[1];
+    const depthDelta =
+      path.dirname(filePathFromProjectRoot).split('/').length - maxDepthForNonComponentsNavigation;
 
     /**
      * @param {UnistNode} _node
@@ -57,11 +64,15 @@ function cleanupRocketMetadata() {
             _node.value = title;
           }
           if (isIndexMd) {
+            if (depthDelta > 0) {
+              // eslint-disable-next-line no-param-reassign
+              parent.depth += depthDelta;
+            }
             return;
           }
         }
         // eslint-disable-next-line no-param-reassign
-        parent.depth += 1;
+        parent.depth += 1 + depthDelta;
       }
     }
 

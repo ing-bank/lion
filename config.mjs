@@ -1,5 +1,5 @@
 export const maxDepthForNonComponentsNavigation = 2;
-const docsDirName = 'docs/';
+export const docsDirName = '/docs/';
 export const isToBeConcatenated = (path) => {
     if (path.includes('/components/')) {
         return true;
