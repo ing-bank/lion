@@ -113,9 +113,97 @@ const updateHeadings = (contentItems) => {
   }
 };
 
+const directoriesOrder = new Map();
+function getOrder(content, contents) {
+  const dir = path.dirname(content.slug);  
+  const dirIndex = path.join(dir, 'index-copy');
+  let dirOrder;
+  if (directoriesOrder.has(dir)) {
+    dirOrder = directoriesOrder.get(dir);    
+  } else {
+    dirOrder = contents.find(item => item.slug === dirIndex).order;
+    directoriesOrder.set(dir, dirOrder); 
+  }
+  return dirOrder;
+}
+
+function getContentsWithParentDepth(contents, parentDepth) {
+  return contents.filter(content => {
+    const dirDepth = path.dirname(content.slug).split('/').length;
+    return parentDepth === dirDepth;
+  });
+}
+
+function getUniqueParentDirs(contents) {
+  const dirs = new Set();
+  contents.forEach(content => {
+    dirs.add(path.dirname(content.slug));
+  });
+  return [...dirs];
+}
+
+function sortDirs(dirs, contents) {
+  dirs.sort((a, b) => {
+    const aDirOrder = contents.find(content => content.slug === path.join(a, 'index-copy')).order;
+    const bDirOrder = contents.find(content => content.slug === path.join(b, 'index-copy')).order;    
+    return aDirOrder < bDirOrder ? -1 : 1;
+  });
+}
+
+function sortDirectoriesForParentDepth(contents, parentDepth) {  
+  const reducedContents = getContentsWithParentDepth(contents, parentDepth);
+  const uniqueParentDirs = getUniqueParentDirs(reducedContents);
+  sortDirs(uniqueParentDirs, reducedContents);
+  contents.sort((a, b) => {
+    const aParentDir = path.dirname(a.slug);
+    const bParentDir = path.dirname(b.slug);
+    return uniqueParentDirs.indexOf(aParentDir) > uniqueParentDirs.indexOf(bParentDir) ? 1 : -1;
+  });  
+}
+
+function sortDirectories(contents) {
+  let parentDepth = maxDepthForNonComponentsNavigation + 1;
+  let hasParentWithDepth = contents.some(content => path.dirname(content.slug).split('/').length === parentDepth);
+
+  while(hasParentWithDepth) {
+    sortDirectoriesForParentDepth(contents, parentDepth);
+    parentDepth++;
+    hasParentWithDepth = contents.some(content => path.dirname(content.slug).split('/').length === parentDepth);
+  }  
+}
+
+function sort(contents) {
+  contents.sort((a, b) => {
+    // Get paths with fewer depth first
+    if (a.slug.split('/').length < b.slug.split('/').length) {
+      return -1;
+    } else if (a.slug.split('/').length > b.slug.split('/').length) {
+      return 1;
+    }
+    // same depth
+    else {
+      // same parent
+      if (path.dirname(a.slug) === path.dirname(b.slug)) {
+        if (path.basename(a.slug) === 'index-copy') {
+          return -1;
+        } else if (path.basename(b.slug) === 'index-copy') {
+          return 1;
+        } else {
+          return a.order < b.order ? -1 : 1;
+        }
+      }
+    }
+  });
+}
+
 async function concatenateEntries(entries) {
-  const contents = await parseEntries(entries);
-  //contents.sort((a, b) => a.order < b.order ? -1 : 1);
+  const contents = await parseEntries(entries);  
+  sortDirectories(contents);
+  sort(contents);
+  console.log('\n\n');
+  contents.forEach(content => {
+    console.log('content.slug: ', content.slug);
+  });
   updateHeadings(contents);
   return contents;
 }
