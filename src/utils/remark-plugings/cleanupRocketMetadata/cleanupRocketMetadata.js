@@ -13,26 +13,26 @@ let visit;
   isToBeConcatenated = config.isToBeConcatenated;
 })();
 
-function addOverviewTitleToIndexMd(tree, isIndexMd) {
-  let h1Index = null;
-  tree.children.forEach((item, index) => {
-    if (item.depth === 1 && item.type === 'heading' && isIndexMd) {
-      h1Index = index;
-    }
-  });
-  if (h1Index !== null) {
-    tree.children.splice(1, 0, {
-      type: 'heading',
-      depth: 2,
-      children: [
-        {
-          type: 'text',
-          value: 'Index',
-        },
-      ],
-    });
-  }
-}
+// function addOverviewTitleToIndexMd(tree, isIndexMd) {
+//   let h1Index = null;
+//   tree.children.forEach((item, index) => {
+//     if (item.depth === 1 && item.type === 'heading' && isIndexMd) {
+//       h1Index = index;
+//     }
+//   });
+//   if (h1Index !== null) {
+//     tree.children.splice(1, 0, {
+//       type: 'heading',
+//       depth: 2,
+//       children: [
+//         {
+//           type: 'text',
+//           value: 'Index',
+//         },
+//       ],
+//     });
+//   }
+// }
 
 function cleanupRocketMetadata() {
   /**
@@ -68,7 +68,7 @@ function cleanupRocketMetadata() {
     // unifiedjs expects node changes to be made on the given node...
     await init;
     visit(tree, 'text', nodeCodeVisitor);
-    addOverviewTitleToIndexMd(tree, isIndexMd);
+    // addOverviewTitleToIndexMd(tree, isIndexMd);
     return tree;
   }
 
