@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit';
 
-import 'page-a/page-a.js';
-import 'page-b/page-b.js';
+import 'page-c/page-c.js';
+import 'page-d/page-d.js';
 
 class DemoApp extends LitElement {
   constructor() {
@@ -83,9 +83,9 @@ class DemoApp extends LitElement {
           Page B
         </button>
       </nav>
-      ${this.page === 'A' ? html` <page-a></page-a> ` : html` <page-b></page-b> `}
+      ${this.page === 'A' ? html` <page-c></page-c> ` : html` <page-d></page-d> `}
     `;
   }
 }
 
-customElements.define('demo-app', DemoApp);
+customElements.define('demo-app-fail', DemoApp);

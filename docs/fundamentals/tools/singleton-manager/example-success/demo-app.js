@@ -2,8 +2,8 @@ import { LitElement, css, html } from 'lit';
 
 import './overlayCompatibility.js';
 
-import 'page-a/page-a.js';
-import 'page-b/page-b.js';
+import 'page-e/page-e.js';
+import 'page-f/page-f.js';
 
 class DemoApp extends LitElement {
   constructor() {
@@ -85,9 +85,9 @@ class DemoApp extends LitElement {
           Page B
         </button>
       </nav>
-      ${this.page === 'A' ? html` <page-a></page-a> ` : html` <page-b></page-b> `}
+      ${this.page === 'A' ? html` <page-e></page-e> ` : html` <page-f></page-f> `}
     `;
   }
 }
 
-customElements.define('demo-app', DemoApp);
+customElements.define('demo-app-success', DemoApp);

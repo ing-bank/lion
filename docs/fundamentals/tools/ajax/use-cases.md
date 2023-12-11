@@ -22,7 +22,7 @@ const cacheOptions = {
   maxAge: TEN_MINUTES,
 };
 
-const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
   getCacheIdentifier,
   cacheOptions,
 );
@@ -191,7 +191,7 @@ const globalCacheOptions = {
 // for instance when a current user is logged out
 const getCacheIdentifier = () => getActiveProfile().profileId;
 
-const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
   getCacheIdentifier,
   globalCacheOptions,
 );

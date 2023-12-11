@@ -77,12 +77,6 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
   Note. There is the same error on master. This issue is not caused by the migration
 
-- There is a browser console error when navigating to [ajax/overview](http://localhost:4321/fundamentals/tools/ajax/overview):
-
-  ```
-  __mdjs-stories--overview.js:19 Uncaught TypeError: createCacheInterceptors is not a function or its return value is not iterable
-  ```
-
 ### TODO
 
 ## How to install

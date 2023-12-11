@@ -56,13 +56,10 @@ function cleanupRocketMetadata() {
       if (parent.type === 'heading' && isToBeConcatenated(filePath)) {
         if (parent.depth === 1) {
           const splitByOrder = _node.value.split('||');
-          const order = splitByOrder[1]?.trim();
-          if (order) {
-            const splitByArrows = splitByOrder[0].split('>>');
-            const title = splitByArrows[splitByArrows.length - 1].trim();
-            // eslint-disable-next-line no-param-reassign
-            _node.value = title;
-          }
+          const splitByArrows = splitByOrder[0].split('>>');
+          const title = splitByArrows[splitByArrows.length - 1].trim();
+          // eslint-disable-next-line no-param-reassign
+          _node.value = title;
           if (isIndexMd) {
             if (depthDelta > 0) {
               // eslint-disable-next-line no-param-reassign

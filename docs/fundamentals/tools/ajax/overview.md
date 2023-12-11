@@ -60,7 +60,7 @@ const cacheOptions = {
   maxAge: TEN_MINUTES,
 };
 
-const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
   getCacheIdentifier,
   cacheOptions,
 );
