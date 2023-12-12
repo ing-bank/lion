@@ -75,7 +75,7 @@ function cleanupRocketMetadata() {
 
     // unifiedjs expects node changes to be made on the given node...
     await init;
-    visit(tree, 'text', nodeCodeVisitor);
+    visit(tree, ['text', 'inlineCode'], nodeCodeVisitor);
     // addOverviewTitleToIndexMd(tree, isIndexMd);
     return tree;
   }

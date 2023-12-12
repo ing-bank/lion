@@ -114,11 +114,11 @@ const updateHeadings = (contentItems) => {
       parentDirToNavDataMap.set(parentDirName, entryInPageNavData);
     } else {
       const headersH3 = contentItem.headings.filter(header => header.depth === 3);
-      console.log('headersH3: ', headersH3);
       if (headersH3.length !== 0) {
         const entryInPageNavData = parentDirToNavDataMap.get(parentDirName);
         if (entryInPageNavData) {
-          entryInPageNavData.children = convertHeadingsToInPageNavData(headersH3, contentItem.slug);
+          entryInPageNavData.children = entryInPageNavData.children || [];
+          entryInPageNavData.children = [...entryInPageNavData.children, ...convertHeadingsToInPageNavData(headersH3, contentItem.slug)];
         }
       }
     }
@@ -217,7 +217,6 @@ async function concatenateEntries(entries) {
     console.log('content.slug: ', content.slug);
   });
   updateHeadings(contents);
-  console.log('inPageNavData: ', inPageNavData);
   return contents;
 }
 
