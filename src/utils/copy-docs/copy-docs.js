@@ -139,7 +139,7 @@ async function copyDocs(currentPath = '') {
     const sourceDocsFilePath = path.join(sourceDocsPath, currentPath, file);
     const contentDocsFilePath =
       file === 'index.md'
-        ? path.join(contentDocsPath, currentPath, 'dir-base.md')
+        ? path.join(contentDocsPath, currentPath, 'dir-index.md')
         : path.join(contentDocsPath, currentPath, file);
     const publicDocsFilePath = path.join(publicDocsPath, currentPath, file);
     const stats = await fs.lstat(sourceDocsFilePath);

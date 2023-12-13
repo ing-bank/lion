@@ -134,7 +134,7 @@ const updateHeadings = (contentItems) => {
 const directoriesOrder = new Map();
 function getOrder(content, contents) {
   const dir = path.dirname(content.slug);  
-  const dirIndex = path.join(dir, 'dir-base');
+  const dirIndex = path.join(dir, 'dir-index');
   let dirOrder;
   if (directoriesOrder.has(dir)) {
     dirOrder = directoriesOrder.get(dir);    
@@ -162,8 +162,8 @@ function getUniqueParentDirs(contents) {
 
 function sortDirs(dirs, contents) {
   dirs.sort((a, b) => {
-    const aDirOrder = contents.find(content => content.slug === path.join(a, 'dir-base')).order;
-    const bDirOrder = contents.find(content => content.slug === path.join(b, 'dir-base')).order;    
+    const aDirOrder = contents.find(content => content.slug === path.join(a, 'dir-index')).order;
+    const bDirOrder = contents.find(content => content.slug === path.join(b, 'dir-index')).order;    
     return aDirOrder < bDirOrder ? -1 : 1;
   });
 }
@@ -214,9 +214,9 @@ function sort(contents) {
     else {
       // same parent
       if (path.dirname(a.slug) === path.dirname(b.slug)) {
-        if (path.basename(a.slug) === 'dir-base') {
+        if (path.basename(a.slug) === 'dir-index') {
           return -1;
-        } else if (path.basename(b.slug) === 'dir-base') {
+        } else if (path.basename(b.slug) === 'dir-index') {
           return 1;
         } else {
           return a.order < b.order ? -1 : 1;

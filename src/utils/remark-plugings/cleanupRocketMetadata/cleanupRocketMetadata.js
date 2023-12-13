@@ -44,7 +44,7 @@ function cleanupRocketMetadata() {
    */
   async function transformer(tree, file) {
     const filePath = file.history[0];
-    const isIndexMd = path.basename(filePath) === 'dir-base.md';
+    const isIndexMd = path.basename(filePath) === 'dir-index.md';
     const filePathFromProjectRoot = filePath.split(docsDirName)[1];
     const depthDelta =
       path.dirname(filePathFromProjectRoot).split('/').length - maxDepthForNonComponentsNavigation;
