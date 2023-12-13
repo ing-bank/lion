@@ -76,7 +76,6 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 
 const renderDir = async (directoryPath) => {
-  console.log('directoryPath: ', directoryPath);
   const entries = getEntriesByDir(directoryPath);
   return await concatenateEntries(entries);
 };
@@ -152,10 +151,16 @@ function getContentsWithParentDepth(contents, parentDepth) {
   });
 }
 
-function getUniqueParentDirs(contents) {
+function getSlugForParentDepth(slug, depth) {
+  const slugParts = slug.split('/');
+  const slugPartsForParentDepth = slugParts.slice(0, depth);
+  return slugPartsForParentDepth.join('/');
+}
+
+function getUniqueParentDirs(contents, parentDepth) {
   const dirs = new Set();
   contents.forEach(content => {
-    dirs.add(path.dirname(content.slug));
+    dirs.add(getSlugForParentDepth(content.slug, parentDepth));
   });
   return [...dirs];
 }
@@ -169,25 +174,22 @@ function sortDirs(dirs, contents) {
 }
 
 function sortDirectoriesForParentDepth(contents, parentDepth) {
-  console.log('\n\n contents.length: ', contents.length);
-  contents.forEach(content => {
-    console.log('content.slug 0: ', content.slug);
-  });
 
   const reducedContents = getContentsWithParentDepth(contents, parentDepth);
 
-  console.log('\n\n reducedContents.length: ', reducedContents.length);
-  reducedContents.forEach(content => {
-    console.log('content.slug 1: ', content.slug);
-  });
-  const uniqueParentDirs = getUniqueParentDirs(reducedContents);
-  console.log('uniqueParentDirs: ', uniqueParentDirs);
+  const uniqueParentDirs = getUniqueParentDirs(reducedContents, parentDepth);
 
   sortDirs(uniqueParentDirs, reducedContents);
   contents.sort((a, b) => {
-    const aParentDir = path.dirname(a.slug);
-    const bParentDir = path.dirname(b.slug);
-    return uniqueParentDirs.indexOf(aParentDir) > uniqueParentDirs.indexOf(bParentDir) ? 1 : -1;
+    const aParentDir = getSlugForParentDepth(a.slug, parentDepth);
+    const bParentDir = getSlugForParentDepth(b.slug, parentDepth);
+    if (uniqueParentDirs.indexOf(aParentDir) > uniqueParentDirs.indexOf(bParentDir)) {
+      return 1;
+    } else if (uniqueParentDirs.indexOf(aParentDir) < uniqueParentDirs.indexOf(bParentDir)) {
+      return -1;
+    } else {
+      return 0;
+    }    
   });  
 }
 
@@ -227,17 +229,9 @@ function sort(contents) {
 }
 
 async function concatenateEntries(entries) {
-  entries.forEach(entry => {
-    console.log('entry.slug: ', entry.slug);
-  });
-
   const contents = await parseEntries(entries);  
   sortDirectories(contents);
   sort(contents);
-  console.log('\n\n');
-  contents.forEach(content => {
-    console.log('content.slug: ', content.slug);
-  });
   updateHeadings(contents);
   return contents;
 }
@@ -245,9 +239,6 @@ async function concatenateEntries(entries) {
 const getEntriesByDir = (dirname) => {
   //return allPages.filter(childEntry => childEntry.slug.startsWith(dirname));
   return allPages.filter(childEntry => {
-    if (childEntry.slug === 'fundamentals/tools/helpers') {
-      console.log('childEntry: ', childEntry)
-    }
     return childEntry.slug.startsWith(dirname)});
 };
 
