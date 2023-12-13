@@ -76,6 +76,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 
 const renderDir = async (directoryPath) => {
+  console.log('directoryPath: ', directoryPath);
   const entries = getEntriesByDir(directoryPath);
   return await concatenateEntries(entries);
 };
@@ -109,7 +110,6 @@ const updateHeadings = (contentItems) => {
   for (const contentItem of contentItems) {
     const headersH2 = contentItem.headings.filter(header => header.depth === 2);
     const parentDirName = path.dirname(contentItem.slug);
-    console.log('contentItem.slug: ', contentItem.slug);
     if (headersH2.length !== 0) {      
       const entryInPageNavData = convertHeadingsToInPageNavData(headersH2, contentItem.slug)[0];
       const headersH3 = contentItem.headings.filter(header => header.depth === 3);
@@ -122,7 +122,6 @@ const updateHeadings = (contentItems) => {
       const headersH3 = contentItem.headings.filter(header => header.depth === 3);
       if (headersH3.length !== 0) {
         const entryInPageNavData = parentDirToNavDataMap.get(parentDirName);
-        console.log('entryInPageNavData: ', entryInPageNavData);
         if (entryInPageNavData) {
           entryInPageNavData.children = entryInPageNavData.children || [];
           entryInPageNavData.children = [...entryInPageNavData.children, ...convertHeadingsToInPageNavData(headersH3, contentItem.slug)];
@@ -135,7 +134,7 @@ const updateHeadings = (contentItems) => {
 const directoriesOrder = new Map();
 function getOrder(content, contents) {
   const dir = path.dirname(content.slug);  
-  const dirIndex = path.join(dir, 'index-copy');
+  const dirIndex = path.join(dir, 'dir-base');
   let dirOrder;
   if (directoriesOrder.has(dir)) {
     dirOrder = directoriesOrder.get(dir);    
@@ -149,7 +148,7 @@ function getOrder(content, contents) {
 function getContentsWithParentDepth(contents, parentDepth) {
   return contents.filter(content => {
     const dirDepth = path.dirname(content.slug).split('/').length;
-    return parentDepth === dirDepth;
+    return dirDepth >= parentDepth;
   });
 }
 
@@ -163,15 +162,27 @@ function getUniqueParentDirs(contents) {
 
 function sortDirs(dirs, contents) {
   dirs.sort((a, b) => {
-    const aDirOrder = contents.find(content => content.slug === path.join(a, 'index-copy')).order;
-    const bDirOrder = contents.find(content => content.slug === path.join(b, 'index-copy')).order;    
+    const aDirOrder = contents.find(content => content.slug === path.join(a, 'dir-base')).order;
+    const bDirOrder = contents.find(content => content.slug === path.join(b, 'dir-base')).order;    
     return aDirOrder < bDirOrder ? -1 : 1;
   });
 }
 
-function sortDirectoriesForParentDepth(contents, parentDepth) {  
+function sortDirectoriesForParentDepth(contents, parentDepth) {
+  console.log('\n\n contents.length: ', contents.length);
+  contents.forEach(content => {
+    console.log('content.slug 0: ', content.slug);
+  });
+
   const reducedContents = getContentsWithParentDepth(contents, parentDepth);
+
+  console.log('\n\n reducedContents.length: ', reducedContents.length);
+  reducedContents.forEach(content => {
+    console.log('content.slug 1: ', content.slug);
+  });
   const uniqueParentDirs = getUniqueParentDirs(reducedContents);
+  console.log('uniqueParentDirs: ', uniqueParentDirs);
+
   sortDirs(uniqueParentDirs, reducedContents);
   contents.sort((a, b) => {
     const aParentDir = path.dirname(a.slug);
@@ -203,9 +214,9 @@ function sort(contents) {
     else {
       // same parent
       if (path.dirname(a.slug) === path.dirname(b.slug)) {
-        if (path.basename(a.slug) === 'index-copy') {
+        if (path.basename(a.slug) === 'dir-base') {
           return -1;
-        } else if (path.basename(b.slug) === 'index-copy') {
+        } else if (path.basename(b.slug) === 'dir-base') {
           return 1;
         } else {
           return a.order < b.order ? -1 : 1;
@@ -216,6 +227,10 @@ function sort(contents) {
 }
 
 async function concatenateEntries(entries) {
+  entries.forEach(entry => {
+    console.log('entry.slug: ', entry.slug);
+  });
+
   const contents = await parseEntries(entries);  
   sortDirectories(contents);
   sort(contents);
@@ -228,7 +243,12 @@ async function concatenateEntries(entries) {
 }
 
 const getEntriesByDir = (dirname) => {
-  return allPages.filter(childEntry => childEntry.slug.startsWith(dirname));
+  //return allPages.filter(childEntry => childEntry.slug.startsWith(dirname));
+  return allPages.filter(childEntry => {
+    if (childEntry.slug === 'fundamentals/tools/helpers') {
+      console.log('childEntry: ', childEntry)
+    }
+    return childEntry.slug.startsWith(dirname)});
 };
 
 const getMdjsStories = (fullDirPath) => {
