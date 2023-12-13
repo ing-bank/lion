@@ -107,7 +107,7 @@ function createSwcPath(node, parent, stop, scope) {
  */
 function isBindingNode(parent, identifierValue) {
   if (parent.type === 'VariableDeclarator') {
-    // @ts-ignore
+    // @ts-expect-error
     return parent.id.value === identifierValue;
   }
   return [
@@ -120,10 +120,7 @@ function isBindingNode(parent, identifierValue) {
 }
 
 /**
- * Is the node:
- * - a declaration (like "const a = 1")?
- * - an import specifier (like "import { a } from 'b'")?
- * Handy to know if the parents of Identifiers mark a binding
+ * Is the node a reference to a binding (like "alert(a);")?
  * @param {SwcNode} parent
  */
 function isBindingRefNode(parent) {
@@ -184,7 +181,8 @@ function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
   }
   // In other cases, we are dealing with a reference that must be bound to a binding
   else if (isBindingRefNode(parent)) {
-    const binding = scope.bindings[node.value];
+    // eslint-disable-next-line no-prototype-builtins
+    const binding = scope.bindings.hasOwnProperty(node.value) && scope.bindings[node.value];
     if (binding) {
       binding.refs.push(parentPath);
     } else {
@@ -297,7 +295,7 @@ export function swcTraverse(swcAst, visitor, { needsAdvancedPaths = false } = {}
     const newOrCurScope = getNewScope(swcPath, scope, traversalContext) || scope;
     swcPath.scope = newOrCurScope;
     addPotentialBindingOrRefToScope(swcPath);
-    return { newOrCurScope, swcPath };
+    return { swcPath, newOrCurScope };
   };
 
   /**
@@ -355,6 +353,6 @@ export function swcTraverse(swcAst, visitor, { needsAdvancedPaths = false } = {}
     prepareTree(swcAst, null, initialScope, traversalContext);
   }
   visitTree(swcAst, null, initialScope, { hasPreparedTree: needsAdvancedPaths }, traversalContext);
-  // @ts-ignore
+  // @ts-expect-error
   traversalContext.visitOnExitFns.reverse().forEach(fn => fn());
 }

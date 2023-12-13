@@ -933,7 +933,7 @@ export class OverlayController extends EventTarget {
 
     if (this.elementToFocusAfterHide) {
       this.elementToFocusAfterHide.focus();
-      this.elementToFocusAfterHide.scrollIntoView({ block: 'center' });
+      this.elementToFocusAfterHide.scrollIntoView({ block: 'nearest' });
     } else {
       /** @type {HTMLElement} */ (this.__activeElementRightBeforeHide).blur();
     }

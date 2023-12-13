@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.7.0
+
+### Minor Changes
+
+- ef9b1e4c: add node/ssr support
+
 ## 1.6.1
 
 ### Patch Changes

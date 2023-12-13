@@ -1,6 +1,6 @@
 {
   "name": "singleton-manager",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "Manage singletons across multiple major versions so they converge to a single instance",
   "license": "MIT",
   "author": "ing-bank",
@@ -35,6 +35,7 @@
     "start:singleton": "es-dev-server -c demo/singleton/server.js",
     "start:singleton-complex": "es-dev-server -c demo/singleton-complex/server.js",
     "test": "cd ../../ && npm run test:browser -- --group singleton-manager",
+    "test:node": "mocha test-node",
     "types": "wireit"
   },
   "keywords": [

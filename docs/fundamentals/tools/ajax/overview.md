@@ -19,6 +19,111 @@ npm i --save @lion/ajax
 
 `Ajax` delegates all requests to fetch. `ajax.fetch` and `ajax.fetchJson` have the same function signature as `window.fetch`, you can use any online resource to learn more about fetch. [MDN](http://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) is a great start.
 
+## `ajax.fetch`
+
+The `fetch` method of `ajax` is a very small wrapper around native `window.fetch` and returns a native [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) object, the main differences with native `window.fetch` are:
+
+- it will use any caching options that you've configured in the `Ajax` class
+- it will throw on response statuses between 400 and 600 (native fetch doesn't throw)
+- it will run any interceptors that you've configured
+- it will add a XSRF header to the request if the XSRF cookie is present
+
+Otherwise, you can expect the same usage as from `window.fetch`. Here are some simple examples:
+
+```js
+// A simple GET request
+const response = await ajax.fetch('/api/foo');
+const data = await response.json(); // or .text(), .clone(), .formData(), etc
+```
+
+```js
+// A simple POST request
+const response = await ajax.fetch('/api/foo', {
+  method: 'POST',
+  body: JSON.stringify({ foo: 'bar' }),
+});
+```
+
+## `ajax.fetchJson`
+
+The `fetchJson` method of `ajax` has some additional features, added for convenience and ease of use. For example, the `fetchJson` method:
+
+- adds the `accept` header with a value of `application/json`
+- adds the `content-type` header with a value of `application/json`, if a request body is provided
+- automatically `JSON.stringifies` the request body, if one is provided
+- will attempt to parse the response body as JSON if available
+  - and also automatically remove a JSON prefix from the response body if one is configured
+
+> Note that instead of returning only a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response), `fetchJson` returns an object containing the [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) and a `JSON.parse`'d `body`
+
+```js
+// A simple GET request
+const { response, body } = await ajax.fetchJson('/api/foo');
+// body.foo === 'bar';
+```
+
+```js
+// A simple POST request
+const { response, body } = await ajax.fetchJson('/api/foo', {
+  method: 'POST',
+  body: { foo: 'bar' },
+});
+```
+
+## Interceptors
+
+Interceptors are functions that can be used to inspect or modify the [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) or `Response` objects of a network request.
+
+### Request interceptors
+
+A request interceptor is a function that takes a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object, and returns a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object, or a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) object, and runs _before_ the native `window.fetch` call is done, allowing you to modify or inspect a request before it's made.
+
+If you return a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) object, the response will be returned by the `fetch`
+or `fetchJson` methods, instead of passing the `Request` to the native `window.fetch` function.
+
+Returning a [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request):
+
+```js
+function addAcceptLanguage(request) {
+  request.headers.set('accept-language', 'EN_GB');
+  return request;
+}
+
+ajax.addRequestInterceptor(addAcceptLanguage);
+```
+
+Returning a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response):
+
+```js
+function interceptFooRequest(request) {
+  if (request.headers.get('foo')) {
+    return Response.json({ foo: 'bar' });
+  }
+
+  return request;
+}
+
+ajax.addRequestInterceptor(interceptFooRequest);
+```
+
+Request interceptors can be async and will be awaited.
+
+### Response interceptors
+
+A response interceptor is a function that takes a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) object, and returns a [`Response`](https://developer.mozilla.org/en-US/docs/Web/API/Response) object, and runs _after_ the native `window.fetch` call is done, allowing you to modify or inspect the response before it's returned by `fetch`/`fetchJson`.
+
+```js
+async function rewriteFoo(response) {
+  const body = await response.clone().text();
+
+  return new Response(body.replaceAll('foo', 'bar'), response);
+}
+
+ajax.addResponseInterceptor(rewriteFoo);
+```
+
+Response interceptors can be async and will be awaited.
+
 ## Ajax class options
 
 | Property                         | Type     | Default Value                                                      | Description                                                                                                                                     |
@@ -39,9 +144,9 @@ npm i --save @lion/ajax
 | cacheOptions.maxResponseSize     | number   | `undefined`                                                        | The maximum response size in bytes that will be stored to or retrieved from the cache                                                           |
 | cacheOptions.maxCacheSize        | number   | `undefined`                                                        | The maxiumum total size in bytes of the cache; when the cache gets larger it is truncated                                                       |
 
-## Usage
+## Caching
 
-```js script
+```js
 import { ajax, createCacheInterceptors } from '@lion/ajax';
 
 const getCacheIdentifier = () => {

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import semver from 'semver';
-import pathLib from 'path';
+import path from 'path';
 import { LogService } from './LogService.js';
 import { QueryService } from './QueryService.js';
 import { ReportService } from './ReportService.js';
@@ -33,9 +33,17 @@ async function analyzePerAstFile(projectData, astAnalysis, analyzerCfg) {
   for (const { file, ast, context: astContext } of projectData.entries) {
     const relativePath = getFilePathRelativeFromRoot(file, projectData.project.path);
     const context = { code: astContext.code, relativePath, projectData, analyzerCfg };
-    LogService.debug(`${pathLib.resolve(projectData.project.path, file)}`);
-    const { result, meta } = await astAnalysis(ast, context);
-    entries.push({ file: relativePath, meta, result });
+
+    const fullPath = path.resolve(projectData.project.path, file);
+    LogService.debug(`[analyzePerAstFile]: ${fullPath}`);
+
+    // We do a try and catch here, so that unparseable files do not block all metrics we're gathering in a run
+    try {
+      const { result, meta } = await astAnalysis(ast, context);
+      entries.push({ file: relativePath, meta, result });
+    } catch (e) {
+      LogService.error(`[analyzePerAstFile]: ${fullPath} throws: ${e}`);
+    }
   }
   const filteredEntries = entries.filter(({ result }) => Boolean(result.length));
   return filteredEntries;
@@ -137,15 +145,14 @@ const checkForMatchCompatibility = (
   /** @type {PathFromSystemRoot} */ referencePath,
   /** @type {PathFromSystemRoot} */ targetPath,
 ) => {
-  // const refFile = pathLib.resolve(referencePath, 'package.json');
   const referencePkg = InputDataService.getPackageJson(referencePath);
-  // const targetFile = pathLib.resolve(targetPath, 'package.json');
   const targetPkg = InputDataService.getPackageJson(targetPath);
 
   const allTargetDeps = [
     ...Object.entries(targetPkg?.devDependencies || {}),
     ...Object.entries(targetPkg?.dependencies || {}),
   ];
+
   const importEntry = allTargetDeps.find(([name]) => referencePkg?.name === name);
   if (!importEntry) {
     return { compatible: false, reason: 'no-dependency' };

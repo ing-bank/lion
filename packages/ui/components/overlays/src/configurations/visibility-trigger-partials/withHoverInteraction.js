@@ -32,15 +32,13 @@ export function withHoverInteraction({ delayIn = 0, delayOut = 300 }) {
        */
       function handleOpenClosed(event) {
         const { type } = event;
-        if (controller._hasDisabledInvoker()) {
-          return;
-        }
+
         clearTimeout(delayTimeout);
         isFocused = type === 'focusout' ? false : isFocused || type === 'focusin';
         isHovered = type === 'mouseleave' ? false : isHovered || type === 'mouseenter';
         const shouldOpen = isFocused || isHovered;
 
-        if (shouldOpen) {
+        if (shouldOpen && !controller._hasDisabledInvoker()) {
           delayTimeout = setTimeout(() => {
             controller.show();
           }, delayIn);

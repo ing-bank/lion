@@ -1,7 +1,8 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
+import sinon from 'sinon';
+import { browserDetection } from '@lion/ui/core.js';
 import { OverlayController, OverlaysManager } from '@lion/ui/overlays.js';
-import { _browserDetection } from '../src/OverlaysManager.js';
 
 /**
  * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
@@ -101,24 +102,24 @@ describe('OverlaysManager', () => {
   });
 
   describe('Browser/device edge cases', () => {
-    const isIOSOriginal = _browserDetection.isIOS;
-    const isMacSafariOriginal = _browserDetection.isMacSafari;
+    const isIOSDetectionStub = sinon.stub(browserDetection, 'isIOS');
+    const isMacSafariDetectionStub = sinon.stub(browserDetection, 'isMacSafari');
 
     function mockIOS() {
-      _browserDetection.isIOS = true;
-      _browserDetection.isMacSafari = false;
+      isIOSDetectionStub.value(true);
+      isMacSafariDetectionStub.value(false);
     }
 
     function mockMacSafari() {
       // When we are iOS
-      _browserDetection.isIOS = false;
-      _browserDetection.isMacSafari = true;
+      isIOSDetectionStub.value(false);
+      isMacSafariDetectionStub.value(true);
     }
 
     afterEach(() => {
       // Restore original values
-      _browserDetection.isIOS = isIOSOriginal;
-      _browserDetection.isMacSafari = isMacSafariOriginal;
+      isIOSDetectionStub.restore();
+      isMacSafariDetectionStub.restore();
     });
 
     describe('When initialized with "preventsScroll: true"', () => {
@@ -137,8 +138,8 @@ describe('OverlaysManager', () => {
         );
 
         // When we are not iOS nor MacSafari
-        _browserDetection.isIOS = false;
-        _browserDetection.isMacSafari = false;
+        isIOSDetectionStub.value(false);
+        isMacSafariDetectionStub.value(false);
 
         const dialog2 = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
         await dialog2.show();

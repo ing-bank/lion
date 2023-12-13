@@ -1,5 +1,5 @@
 import { html, LitElement, css } from 'lit';
-import { browserDetection, DisabledWithTabIndexMixin } from '@lion/ui/core.js';
+import { browserDetection, DisabledWithTabIndexMixin, uuid } from '@lion/ui/core.js';
 
 const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' || e.key === 'Enter';
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
@@ -124,7 +124,7 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
     this.type = 'button';
     this.active = false;
 
-    this._buttonId = `button-${Math.random().toString(36).substr(2, 10)}`;
+    this._buttonId = uuid('button');
     if (browserDetection.isIE11) {
       this.updateComplete.then(() => {
         if (!this.hasAttribute('aria-labelledby')) {

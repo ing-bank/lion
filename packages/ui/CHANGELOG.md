@@ -1,5 +1,19 @@
 # @lion/ui
 
+## 0.5.1
+
+### Patch Changes
+
+- 9b5edf30: [localize] parseDate by default to 2000 instead of 1900 when date is below 49
+- bf782223: do not run disabled property reflection unless it was part of the changeset in LionSwitchButton
+- 322b0652: Export isIOS and isMacSafari functions as part of browserDetection utility
+- 322b0652: Use traditional styleSheet on IOS for overlays
+- bf782223: reuse uuid function from the core in LionButton and LionInputDatepicker
+- bf782223: invoke parent class updated callback in LionCollapsible, LionDrawer and LionSwitchButton
+- cb25a603: fix: DE locale typo for validation messages
+- Updated dependencies [ef9b1e4c]
+  - singleton-manager@1.7.0
+
 ## 0.5.0
 
 ### Minor Changes
