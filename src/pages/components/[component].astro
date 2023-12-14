@@ -53,7 +53,15 @@ const updateHeadings = (contentItems) => {
 
 async function concatenateEntries(entries) {
   const contents = await parseEntries(entries);
-  contents.sort((a, b) => a.order < b.order ? -1 : 1);
+  contents.sort((a, b) => {
+    if (path.basename(a.slug) === 'dir-index') {
+        return -1;
+      } else if (path.basename(b.slug) === 'dir-index') {
+        return 1;
+      } else {
+        return a.order < b.order ? -1 : 1;
+      }
+  });
   updateHeadings(contents);
   return contents;
 }
