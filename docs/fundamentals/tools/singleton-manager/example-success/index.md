@@ -9,7 +9,7 @@ In this SPA (Single Page Application) demo you will be able to reproduce the sol
 
 With this solutions users can not break the app anymore.
 
-<demo-app>Loading App...</demo-app>
+<demo-app-success>Loading App...</demo-app-success>
 
 <div id="overlay-target" style="margin-top: 50px;"></div>
 

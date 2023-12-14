@@ -65,13 +65,6 @@ async function processImportsForFile(filePath) {
   await fs.writeFile(filePath, newSource);
 }
 
-const createComponentMdFrontmatter = (componentName, order) => {
-  const componentFrontmatter = `---
-component: ${componentName}`;
-  const orderFrontmatter = order ? `\norder: ${order}` : '';
-  return `${componentFrontmatter + orderFrontmatter}\n---\n\n`;
-};
-
 async function createInfoMd(componentDirectoryPath) {
   const componentName = path.basename(componentDirectoryPath);
   const infoMd = `---
@@ -82,6 +75,55 @@ description: ${componentName} description
   const infoMdFilePath = path.join(componentDirectoryPath, 'info.md');
   await fs.mkdir(componentDirectoryPath, { recursive: true });
   await fs.writeFile(infoMdFilePath, infoMd);
+}
+
+function getFrontmatter(text) {
+  const result = {};
+  if (!text.startsWith('---')) {
+    return result;
+  }
+  const frontmatterRegex = /---\n(.+?)\n---/gs;
+  const match = text.matchAll(frontmatterRegex);
+  const matchResult = [...match]?.[0]?.[1] || '';
+  if (matchResult) {
+    matchResult.split('\n').forEach(pair => {
+      const pairArr = pair.split(':');
+      const key = pairArr[0].trim();
+      const value = pairArr[1].trim();
+      result[key] = value;
+    });
+  }
+  return result;
+}
+
+function getContent(text) {
+  if (Object.keys(getFrontmatter(text)).length === 0) {
+    return text;
+  }
+  const frontmatterRegex = /---\n(.+?)\n---\n(.*)/gs;
+  const match = text.matchAll(frontmatterRegex);
+  return [...match]?.[0]?.[2] || text;
+}
+
+function frontmatterToString(frontmatter) {
+  const prefix = '---\n';
+  let result = prefix;
+  Object.keys(frontmatter).forEach(key => {
+    result += `${key}: ${frontmatter[key]}\n`;
+  });
+  if (result === prefix) {
+    return '';
+  }
+  return `${result}---\n\n`;
+}
+
+function addFrontmatter(fileContent, key, value) {
+  const frontmatter = getFrontmatter(fileContent);
+  const content = getContent(fileContent);
+  if (value) {
+    frontmatter[key] = value;
+  }
+  return frontmatterToString(frontmatter) + content;
 }
 
 function getOrder(fileContent) {
@@ -95,7 +137,10 @@ async function copyDocs(currentPath = '') {
 
   for (const file of files) {
     const sourceDocsFilePath = path.join(sourceDocsPath, currentPath, file);
-    const contentDocsFilePath = path.join(contentDocsPath, currentPath, file);
+    const contentDocsFilePath =
+      file === 'index.md'
+        ? path.join(contentDocsPath, currentPath, 'dir-index.md')
+        : path.join(contentDocsPath, currentPath, file);
     const publicDocsFilePath = path.join(publicDocsPath, currentPath, file);
     const stats = await fs.lstat(sourceDocsFilePath);
 
@@ -106,20 +151,20 @@ async function copyDocs(currentPath = '') {
       await copyDocs(path.join(currentPath, file));
     } else {
       if (
-        (path.extname(file) === '.md' && file !== 'index.md') ||
+        (path.extname(file) === '.md' && sourceDocsFilePath !== `${sourceDocsPath}/index.md`) ||
         imageExtensions.includes(path.extname(file).split('.')[1])
       ) {
         await fs.mkdir(path.join(contentDocsPath, currentPath), { recursive: true });
         await fs.copyFile(sourceDocsFilePath, contentDocsFilePath);
-
-        if (contentDocsFilePath.includes('/components') && path.extname(file) === '.md') {
+        if (path.extname(file) === '.md') {
           const fileContent = await fs.readFile(contentDocsFilePath, 'utf8');
-          const parentComponent = path.basename(currentPath);
+          let updatedFileContent = fileContent;
+          if (contentDocsFilePath.includes('/components')) {
+            const parentComponent = path.basename(currentPath);
+            updatedFileContent = addFrontmatter(fileContent, 'component', parentComponent);
+          }
           const order = getOrder(fileContent);
-          const updatedFileContent = `${createComponentMdFrontmatter(
-            parentComponent,
-            order,
-          )}${fileContent}`;
+          updatedFileContent = addFrontmatter(updatedFileContent, 'order', order);
           await fs.writeFile(contentDocsFilePath, updatedFileContent);
         }
       }
@@ -143,7 +188,10 @@ async function copyDocsByFileArray(files) {
       if (file.includes('/components')) {
         const fileContent = await fs.readFile(contentDocsFilePath, 'utf8');
         const parentComponent = path.basename(currentPath);
-        const updatedFileContent = `${createComponentMdFrontmatter(parentComponent)}${fileContent}`;
+        let updatedFileContent = fileContent;
+        updatedFileContent = addFrontmatter(fileContent, 'component', parentComponent);
+        const order = getOrder(fileContent);
+        updatedFileContent = addFrontmatter(updatedFileContent, 'order', order);
         await fs.writeFile(contentDocsFilePath, updatedFileContent);
       }
     }

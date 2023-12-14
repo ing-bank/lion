@@ -1,9 +1,19 @@
 ---
+import { glob } from 'glob'
+import * as fs from 'fs';
+import * as process from 'process';
 import MainLayout from '../../layouts/MainLayout.astro';
+import { UIPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
 import * as path from 'path';
-import { fundamentalsEntries } from '../../content';
+import { fundamentalsEntries, allPages } from '../../content';
 import { blogEntries } from '../../content';
 import { guideEntries } from '../../content';
+import { maxDepthForNonComponentsNavigation } from '../../../config.mjs';
+
+let pages = [];
+const inPageNavData = [];
+let mdjsStoriesJsPath = '';
+let dirPath;
 
 
 export async function getStaticPaths() {
@@ -31,27 +41,255 @@ export async function getStaticPaths() {
     props: { entry },
   }));
 
-  return [...fundamentalsArr, ...blogArr, ...guideArr];
+  const dirArr = allPages
+    .filter(entry => {
+      const separator = '/';
+      const dirPath = path.dirname(entry.slug);
+      const dirParts = dirPath.split(separator);
+
+      return dirParts.length >= maxDepthForNonComponentsNavigation && dirParts[0] !== 'components';      
+    })
+    .map(entry => {
+      const separator = '/';
+      const dirPath = path.dirname(entry.slug);
+      const dirParts = dirPath.split(separator);
+      dirParts.splice(maxDepthForNonComponentsNavigation);
+      const result = {
+        params: { 
+          top: dirParts.shift(),
+          slug: dirParts.join(separator) 
+        },
+      };
+      return result;
+    });
+
+    const uniqueDirArr = [];
+    dirArr.forEach(route => {
+      if (!uniqueDirArr.find(uniqueRoute => uniqueRoute.params.top === route.params.top && uniqueRoute.params.slug === route.params.slug)) {
+        uniqueDirArr.push(route);
+      }
+    });
+
+  return [...fundamentalsArr, ...blogArr, ...guideArr, ...dirArr];
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
 
-const blogData = Astro.props.entry.data;
+const renderDir = async (directoryPath) => {
+  const entries = getEntriesByDir(directoryPath);
+  return await concatenateEntries(entries);
+};
 
-const getPathMdjsStroriesFile = (entry) => {
-  const mdjsStroriesFileDirectory = path.dirname(entry.slug);
-  return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories.js`;
-} 
+const convertHeadingsToInPageNavData = (headings, componentSlug) => {
+  const arePagesConcatenated = !entry;
+  let mainPathPart = arePagesConcatenated ? dirPath : componentSlug;
+  return headings.map(header => {
+    const anchor = header.slug;
+    return {
+      name: header.text,
+      url: `/${mainPathPart}#${anchor}`
+    };
+  });
+};
+
+const parseEntries = async (entries) => {
+  const contents = [];
+  for (const componentEntry of entries) {
+    const { Content, headings, remarkPluginFrontmatter } = await componentEntry.render();
+    const order = remarkPluginFrontmatter.order;
+    const slug = componentEntry.slug;
+    const content = {Content, headings, order, slug};
+    contents.push(content);
+  }
+  return contents;
+};
+
+const updateHeadings = (contentItems) => {
+  const parentDirToNavDataMap = new Map();
+  for (const contentItem of contentItems) {
+    const headersH2 = contentItem.headings.filter(header => header.depth === 2);
+    const parentDirName = path.dirname(contentItem.slug);
+    if (headersH2.length !== 0) {      
+      const entryInPageNavData = convertHeadingsToInPageNavData(headersH2, contentItem.slug)[0];
+      const headersH3 = contentItem.headings.filter(header => header.depth === 3);
+      if (headersH3.length !== 0) {
+        entryInPageNavData.children = convertHeadingsToInPageNavData(headersH3, contentItem.slug);
+      }
+      inPageNavData.push(entryInPageNavData);
+      parentDirToNavDataMap.set(parentDirName, entryInPageNavData);
+    } else {
+      const headersH3 = contentItem.headings.filter(header => header.depth === 3);
+      if (headersH3.length !== 0) {
+        const entryInPageNavData = parentDirToNavDataMap.get(parentDirName);
+        if (entryInPageNavData) {
+          entryInPageNavData.children = entryInPageNavData.children || [];
+          entryInPageNavData.children = [...entryInPageNavData.children, ...convertHeadingsToInPageNavData(headersH3, contentItem.slug)];
+        }
+      }
+    }
+  }
+};
+
+const directoriesOrder = new Map();
+function getOrder(content, contents) {
+  const dir = path.dirname(content.slug);  
+  const dirIndex = path.join(dir, 'dir-index');
+  let dirOrder;
+  if (directoriesOrder.has(dir)) {
+    dirOrder = directoriesOrder.get(dir);    
+  } else {
+    dirOrder = contents.find(item => item.slug === dirIndex).order;
+    directoriesOrder.set(dir, dirOrder); 
+  }
+  return dirOrder;
+}
+
+function getContentsWithParentDepth(contents, parentDepth) {
+  return contents.filter(content => {
+    const dirDepth = path.dirname(content.slug).split('/').length;
+    return dirDepth >= parentDepth;
+  });
+}
+
+function getSlugForParentDepth(slug, depth) {
+  const slugParts = slug.split('/');
+  const slugPartsForParentDepth = slugParts.slice(0, depth);
+  return slugPartsForParentDepth.join('/');
+}
+
+function getUniqueParentDirs(contents, parentDepth) {
+  const dirs = new Set();
+  contents.forEach(content => {
+    dirs.add(getSlugForParentDepth(content.slug, parentDepth));
+  });
+  return [...dirs];
+}
+
+function sortDirs(dirs, contents) {
+  dirs.sort((a, b) => {
+    const aDirOrder = contents.find(content => content.slug === path.join(a, 'dir-index')).order;
+    const bDirOrder = contents.find(content => content.slug === path.join(b, 'dir-index')).order;    
+    return aDirOrder < bDirOrder ? -1 : 1;
+  });
+}
+
+function sortDirectoriesForParentDepth(contents, parentDepth) {
+
+  const reducedContents = getContentsWithParentDepth(contents, parentDepth);
+
+  const uniqueParentDirs = getUniqueParentDirs(reducedContents, parentDepth);
+
+  sortDirs(uniqueParentDirs, reducedContents);
+  contents.sort((a, b) => {
+    const aParentDir = getSlugForParentDepth(a.slug, parentDepth);
+    const bParentDir = getSlugForParentDepth(b.slug, parentDepth);
+    if (uniqueParentDirs.indexOf(aParentDir) > uniqueParentDirs.indexOf(bParentDir)) {
+      return 1;
+    } else if (uniqueParentDirs.indexOf(aParentDir) < uniqueParentDirs.indexOf(bParentDir)) {
+      return -1;
+    } else {
+      return 0;
+    }    
+  });  
+}
+
+function sortDirectories(contents) {
+  let parentDepth = maxDepthForNonComponentsNavigation + 1;
+  let hasParentWithDepth = contents.some(content => path.dirname(content.slug).split('/').length === parentDepth);
+
+  while(hasParentWithDepth) {
+    sortDirectoriesForParentDepth(contents, parentDepth);
+    parentDepth++;
+    hasParentWithDepth = contents.some(content => path.dirname(content.slug).split('/').length === parentDepth);
+  }  
+}
+
+function sort(contents) {
+  contents.sort((a, b) => {
+    // Get paths with fewer depth first
+    if (a.slug.split('/').length < b.slug.split('/').length) {
+      return -1;
+    } else if (a.slug.split('/').length > b.slug.split('/').length) {
+      return 1;
+    }
+    // same depth
+    else {
+      // same parent
+      if (path.dirname(a.slug) === path.dirname(b.slug)) {
+        if (path.basename(a.slug) === 'dir-index') {
+          return -1;
+        } else if (path.basename(b.slug) === 'dir-index') {
+          return 1;
+        } else {
+          return a.order < b.order ? -1 : 1;
+        }
+      }
+    }
+  });
+}
+
+async function concatenateEntries(entries) {
+  const contents = await parseEntries(entries);  
+  sortDirectories(contents);
+  sort(contents);
+  updateHeadings(contents);
+  return contents;
+}
+
+const getEntriesByDir = (dirname) => {
+  //return allPages.filter(childEntry => childEntry.slug.startsWith(dirname));
+  return allPages.filter(childEntry => {
+    return childEntry.slug.startsWith(dirname)});
+};
+
+const getMdjsStories = (fullDirPath) => {
+  return new Promise((resolve, reject) => {    
+    glob(fullDirPath + '/**/__mdjs-stories--*.js', {}, (err, files)=>{
+      const relativePaths = files.map(file => {
+        return path.relative(fullDirPath, file);
+      });
+      resolve(relativePaths);
+    })
+  });  
+};
+
+if (entry) {
+  pages = await concatenateEntries([entry]);
+} else {
+  dirPath = path.join(Astro.params.top, Astro.params.slug);
+  pages = await renderDir(dirPath);
+  const fullDirPath = path.join(process.cwd(), 'public/docs', dirPath);
+  const files = await getMdjsStories(fullDirPath);
+  let imports = '';
+  files.forEach(file => {
+    imports += `import('./${file}');\n`
+  });
+  if (imports) {
+    mdjsStoriesJsPath = path.join(fullDirPath, '__mdjs-stories.js');
+    fs.writeFileSync(mdjsStoriesJsPath, imports, 'utf8');
+  }    
+}
+
+const getPathMdjsStroriesFile = () => {
+  if (entry) {
+    const mdjsStroriesFileDirectory = path.dirname(entry.slug);
+    return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories--${path.basename(entry.slug)}.js`;
+  } 
+  if (mdjsStoriesJsPath) {
+    return '/docs' + mdjsStoriesJsPath.split('/docs')[1];
+  }
+  return null;
+}
+
 ---
 
-<MainLayout title={entry.slug}>
-  {blogData.title}
-  {blogData.description}
-  {blogData.date}
-  {blogData.tags}
-  {blogData.author}
-  <Content />
+<MainLayout title={entry?.slug}>
+  <UIPortalInpageNav nav-data={JSON.stringify(inPageNavData)} />
+  {
+    pages.map((page) => (
+        <page.Content />        
+    ))
+  }
   <script is:inline src="/docs/_assets/scoped-custom-element-registry.min.js"></script>
-  <script type="module" src={getPathMdjsStroriesFile(entry)} mdjs-setup></script>
+  {getPathMdjsStroriesFile() && <script type="module" src={getPathMdjsStroriesFile()} mdjs-setup></script>}
 </MainLayout>

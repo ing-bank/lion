@@ -1,0 +1,27 @@
+diff --git a/node_modules/@astrojs/markdown-remark/dist/rehype-collect-headings.js b/node_modules/@astrojs/markdown-remark/dist/rehype-collect-headings.js
+index 2f1ee5d..6865631 100644
+--- a/node_modules/@astrojs/markdown-remark/dist/rehype-collect-headings.js
++++ b/node_modules/@astrojs/markdown-remark/dist/rehype-collect-headings.js
+@@ -1,10 +1,13 @@
+ import Slugger from "github-slugger";
+ import { visit } from "unist-util-visit";
++import * as path from 'path';
+ import { InvalidAstroDataError, safelyGetAstroData } from "./frontmatter-injection.js";
+ const rawNodeTypes = /* @__PURE__ */ new Set(["text", "raw", "mdxTextExpression"]);
+ const codeTagNames = /* @__PURE__ */ new Set(["code", "pre"]);
+ function rehypeHeadingIds() {
+   return function(tree, file) {
++    const fileName = file.history[0];
++    const parentDirectoryName = path.basename(path.dirname(fileName));
+     const headings = [];
+     const slugger = new Slugger();
+     const isMDX = isMDXFile(file);
+@@ -52,7 +55,7 @@ function rehypeHeadingIds() {
+         let slug = slugger.slug(text);
+         if (slug.endsWith("-"))
+           slug = slug.slice(0, -1);        
+-        node.properties.id = slug;
++        node.properties.id = `${parentDirectoryName}-${slug}`;        
+       }
+       headings.push({ depth, slug: node.properties.id, text });
+     });

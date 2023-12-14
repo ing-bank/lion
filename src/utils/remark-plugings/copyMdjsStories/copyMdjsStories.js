@@ -76,7 +76,11 @@ function copyMdjsStories() {
      * @param {UnistNode} _node
      */
     async function nodeCodeVisitor(_node, index, parent) {
-      if (parent.type === 'heading' && parent.depth === 1) {
+      if (
+        parent.type === 'heading' &&
+        parent.depth === 1 &&
+        currentMarkdownFile.includes('/components')
+      ) {
         const commonMdjsStoriesFileName = `${pathToMdDirectoryInPublic}/${mdJsStoriesFileName}`;
         let commonMdjsStoriesContent = '';
         try {
@@ -85,12 +89,7 @@ function copyMdjsStories() {
           // noop. File is not yet created for the component
         }
 
-        let exportCmd;
-        if (isDistBuild) {
-          exportCmd = `import('./${currentMarkdownFileMdJsStoryName}');\n`;
-        } else {
-          exportCmd = `export * from './${currentMarkdownFileMdJsStoryName}';\n`;
-        }
+        const exportCmd = `import('./${currentMarkdownFileMdJsStoryName}');\n`;
         if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
           fs.writeFileSync(commonMdjsStoriesFileName, commonMdjsStoriesContent + exportCmd, 'utf8');
         }
@@ -115,7 +114,7 @@ function copyMdjsStories() {
     }
 
     let parsedSetupJsCode;
-    // This is move out off @mdjs/core/src/mdjsSetupCode.js
+    // This is copied from @mdjs/core/src/mdjsSetupCode.js
     const initialImprorts = `
 import '@mdjs/mdjs-preview/define';
 import '@mdjs/mdjs-story/define'; \n`;
