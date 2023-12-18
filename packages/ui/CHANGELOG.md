@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.6.0-alpha.0
+
+### Minor Changes
+
+- 83658742: Update to lit version 3
+
 ## 0.5.6
 
 ### Patch Changes
