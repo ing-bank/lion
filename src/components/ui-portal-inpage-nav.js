@@ -2,13 +2,9 @@ import { LitElement, html, nothing, css } from 'lit';
 const tagName = 'ui-portal-inpage-nav';
 
 function scrollInView(event) {
-  console.log('bbb', event);
-
   const link = event.currentTarget;
   const id = (link?.hash || '').substr(1);
   const isFragment = link?.hasAttribute('href') && link?.getAttribute('href').startsWith('#');
-
-  console.log({ isFragment });
 
   if (!link || !isFragment) {
     return;

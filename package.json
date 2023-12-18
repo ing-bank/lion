@@ -8,24 +8,43 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "postinstall": "npx patch-package && ./src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/copy.sh"
+    "postinstall": "npx patch-package && ./src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/copy.sh",
+    "test": "wtr src/**/*.test.js --node-resolve"
   },
   "dependencies": {
-    "@astrojs/lit": "^2.1.0",
+    "@astrojs/lit": "4.0.0",
     "@lion/ui": "^0.4.2",
     "@mdjs/core": "^0.9.5",
+    "@open-wc/scoped-elements": "^2.0.0",
     "@webcomponents/template-shadowroot": "^0.2.1",
-    "astro": "^3.0.0",
+    "astro": "^4.0.0",
     "astro-seo": "^0.7.5",
     "ing-web": "^3.6.0",
-    "lit": "^2.8.0",
+    "lit": "^3.0.0",
     "rocket-preset-extend-lion-docs": "^0.4.0"
   },
   "devDependencies": {
+    "@lit-labs/testing": "^0.2.3",
+    "@open-wc/testing": "^4.0.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@web/test-runner": "^0.18.0",
+    "@web/test-runner-visual-regression": "^0.9.0",
     "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "globby": "^13.2.2"
+  },
+  "overrides": {
+    "@lit/reactive-element": "^2.0.0",
+    "ing-web": {
+      "lit": "^3.0.0",
+      "lit-html": "^3.0.0",
+      "lit-element": "^4.0.0"
+    },
+    "@lion/ui": {
+      "lit": "^3.0.0",
+      "lit-html": "^3.0.0",
+      "lit-element": "^4.0.0"
+    }
   },
   "prettier": {
     "printWidth": 100,

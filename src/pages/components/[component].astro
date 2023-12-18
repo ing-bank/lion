@@ -60,13 +60,12 @@ const inPageNavData = [
 // 7. component context (fit in architecture/relationship to other components and systems)
 // 8. resources
 
-const { entry, frontmatter } = Astro.props;
+const { entry } = Astro.props;
 // const { Content } = await entry.render();
 ---
 
 <MainLayout title={entry.slug}>
-  <ComponentLayout frontmatter={entry.data}>
-    <div style="display:flex;flex-direction: row-reverse; padding: var(--size-6);">
+    <div style="display:flex; flex-direction: row-reverse;">
     <UIPortalInpageNav client:load nav-data={JSON.stringify(inPageNavData)} />
     <div>
     <h1 id={getAnchorTitle(currentComponentData.name)}>
@@ -85,5 +84,5 @@ const { entry, frontmatter } = Astro.props;
     }
     </div>
   </div>
-  </ComponentLayout>
+ 
 </MainLayout>

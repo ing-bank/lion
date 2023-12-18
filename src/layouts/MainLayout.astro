@@ -3,8 +3,7 @@ import './debug-setup.js';
 import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
-import { UIPortalMainNav, initNavData } from "../components/ui-portal-main-nav.js";
-import { componentInfoEntries } from '../content';
+import { UIPortalMainNav, initNavData } from "../components/UIPortalMainNav/ui-portal-main-nav.js";
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -13,50 +12,66 @@ const { title } = Astro.props;
 
 const compEntries = await getCollection("component");
 const compNames = compEntries.map((entry) => entry.data.name);
-const comp1Names = componentInfoEntries.map((entry) => entry.data.component);
-
-/**
- * @typedef {{name: string; url: string; active?:boolean; hasActiveChild?: boolean; iconId?: string; children?: NavItemData[]}} NavItem
- */
 
  /** @type {NavItem[]} */
-const navData = [
+let navData = {
+  // this is inital setup is optimized for desktop. Notice that it will be false for mobile
+  // Also notice this automatically implies that the content is automatically shown and the invoker is invisible
+  hideToggle: true,
+  items:[
   { name: "home", url: "/", iconId: 'lion:portal:home', iconActiveId: 'lion:portal:homeFilled' },
   {
     name: "components",
     // url: "/components",
     iconId: 'lion:portal:deployedCode',
     iconActiveId: 'lion:portal:deployedCodeFilled',
-    children: [
-      { name: 'overview', url: "/components" },
-      ...compNames.map((compName) => ({
-        name: compName,
-        url: `/components/${compName}`,
-      }))
-    ],
+    nextLevel: {
+      showVia: 'popover', // or disclosure, or none (heading)
+      // initialOpen: true,
+      items: [
+        { name: 'overview', url: "/components" },
+        ...compNames.map((compName) => ({
+          name: compName,
+          url: `/components/${compName}`,
+        })),
+        // {
+        //   name: 'zomezing', 
+        //   nextLevel: { showVia: 'disclosure', items: [{name: 'smth', url: `/components/zomezing/smth`}], }
+        // } ,
+      ],
+    }
   },
-  {
-    name: "components1",
-    url: "/components1",
-    iconId: 'lion:portal:deployedCode',
-    children: comp1Names.map((compName) => ({
-      name: compName,
-      url: `/components1/${compName}`,
-    })),
-  },  
+  // {
+  //   name: "components1",
+  //   // url: "/components1",
+  //   iconId: 'lion:portal:deployedCode',
+  //   iconActiveId: 'lion:portal:deployedCodeFilled',
+  //   nextLevel: {
+  //     items: [
+  //       { name: 'overview1', url: "/components1" },
+  //       ...compNames.map((compName) => ({
+  //         name: compName + '1',
+  //         url: `/components1/${compName}`,
+  //       }))
+  //     ],
+  //   }
+  // },  
   { name: "develop", url: "/develop", iconId: 'lion:portal:sdk', iconActiveId: 'lion:portal:sdkFilled' },
   { name: "design", url: "/design", iconId: 'lion:portal:stylusNote', iconActiveId: 'lion:portal:stylusNoteFilled'  },
   { name: "extend", url: "/extend", iconId: 'lion:portal:deployedCodeAccount', iconActiveId: 'lion:portal:deployedCodeAccountFilled'  },
   { name: "blog", url: "/blog", iconId: 'lion:portal:newsmode', iconActiveId: 'lion:portal:newsmodeFilled'},
-];
+  ]};
 
-initNavData(navData,  Astro.url.pathname);
+
+// navData = { items: [{ name: 'home', url: '/' }] };
+
+initNavData(navData,  { activePath: Astro.url.pathname });
 
 
 const footerData = [
   {
     name: "discover",
-    children: [
+    items: [
       {
         name: "blog",
         url: "/blog",
@@ -137,13 +152,15 @@ const footerData = [
   </head>
   <body class="ui-portal-grid">
     <div class="ui-portal-grid__nav">
-      <UIPortalMainNav client:load nav-data={JSON.stringify(navData)} />
+      <UIPortalMainNav client:only nav-data={JSON.stringify(navData)} />
     </div>
     <main class="ui-portal-grid__main">
-      <slot />
+      <div class="ui-portal-container">
+        <slot />
+      </div>
     </main>
     <div class="ui-portal-grid__footer">
-      <!-- <UIPortalFooter footer-data={JSON.stringify(footerData)} /> -->
+      <UIPortalFooter footer-data={JSON.stringify(footerData)} />
     </div>
     <style is:global>
       /* Improve Page speed */
@@ -183,6 +200,10 @@ const footerData = [
         flex-direction: column;
         padding: 1rem;
         border-radius: 0.5rem;
+      }
+
+      .ui-portal-container {
+        padding: var(--size-6);
       }
     </style>
   </body>

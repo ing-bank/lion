@@ -16,6 +16,12 @@ export { default as newsmode } from './icons/newsmode_FILL0_wght700_GRAD0_opsz48
 export { default as sdk } from './icons/sdk_FILL0_wght700_GRAD0_opsz48.svg.js';
 export { default as stylusNote } from './icons/stylus_note_FILL0_wght700_GRAD0_opsz48.svg.js';
 export { default as search } from './icons/search_FILL0_wght400_GRAD0_opsz48.svg.js';
+export { default as menu } from './icons/menu_FILL0_wght400_GRAD0_opsz48.svg.js';
+
+export { default as chevronLeft } from './icons/chevron_left_FILL0_wght400_GRAD0_opsz48.svg.js';
+export { default as chevronRight } from './icons/chevron_right_FILL0_wght400_GRAD0_opsz48.svg.js';
+export { default as expandLess } from './icons/expand_less_FILL0_wght400_GRAD0_opsz48.svg.js';
+export { default as expandMore } from './icons/expand_more_FILL0_wght400_GRAD0_opsz48.svg.js';
 
 export { default as architectureFilled } from './icons/architecture_FILL1_wght400_GRAD0_opsz48.svg.js';
 export { default as breakingNewsFilled } from './icons/breaking_news_FILL1_wght400_GRAD0_opsz48.svg.js';

@@ -1,15 +1,18 @@
-import { LitElement, ReactiveElement, css, unsafeCSS } from 'lit';
+import { LitElement, ReactiveElement, css, unsafeCSS, adoptStyles } from 'lit';
+import { createPartDirective } from './UIPartDirective.js';
+// import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 
 // Why a controller instead of a @open-wc or @lit mixin?
 // - controllers are TS friendly (mixins aren't)
 // - we don't want to force a polyfill for simple use cases of a ui lib (also for perf)
+// - we are compatible with lit ssr (right now the mixin fails, coiudl be fixed probably by using globalThis instead of window)
 // - more lightweight: no extra dep needed
 // - note that we still recommend @open-wc mixin v3 for our consumers
 export class ScopedRegistryCtrl {
   host;
   registry;
   /** When polyfill is not loaded, just proceed with one global registry */
-  supportsScopedRegistry = Boolean(globalThis.ShadowRoot?.prototype.createElement);
+  supportsScopedRegistry = false; // Boolean(globalThis.ShadowRoot?.prototype.createElement);
 
   constructor(host, scopedElements) {
     (this.host = host).addController(this);
@@ -38,33 +41,46 @@ export class ScopedRegistryCtrl {
 
     this.registry = new CustomElementRegistry();
     for (const [tagName, klass] of Object.entries(scopedElements)) {
-      console.log(tagName);
       this.registry.define(tagName, klass);
     }
 
-    const originalAttachShadow = host.prototype.attachShadow;
-    host.prototype.attachShadow = function (options) {
-      return originalAttachShadow({
-        ...options,
-        // The polyfill currently expects the registry to be passed as `customElements`
-        customElements: this.registry,
-        // But the proposal has moved forward, and renamed it to `registry`
-        // For backwards compatibility, we pass it as both
-        registry: this.registry,
-      });
+    const ctor = host.constructor;
+    const originalAttachShadow = ctor.prototype.attachShadow;
+    ctor.prototype.attachShadow = function (...args) {
+      return originalAttachShadow.call(
+        this,
+        {
+          ...args[0],
+          // The polyfill currently expects the registry to be passed as `customElements`
+          customElements: this.registry,
+          // But the proposal has moved forward, and renamed it to `registry`
+          // For backwards compatibility, we pass it as both
+          registry: this.registry,
+        },
+        ...args.slice(1),
+      );
     };
 
     if (!(host instanceof ReactiveElement)) return;
-    host.prototype.createRenderRoot = function () {
-      originalCreateRenderRoot();
+    const originalCreateRenderRoot = ctor.prototype.createRenderRoot;
+    ctor.prototype.createRenderRoot = function (...args) {
+      originalCreateRenderRoot.call(this, ...args);
       const { shadowRootOptions, elementStyles } = this.constructor;
-      const shadowRoot = this.attachShadow(shadowRootOptions);
-      this.renderOptions.creationScope = shadowRoot;
-      adoptStyles(shadowRoot, elementStyles);
-      this.renderOptions.renderBefore ??= shadowRoot.firstChild;
-      return shadowRoot;
+      const renderRoot = this.shadowRoot || this.attachShadow(shadowRootOptions);
+      this.renderOptions.creationScope = renderRoot;
+      adoptStyles(renderRoot, elementStyles);
+      this.renderOptions.renderBefore ??= renderRoot.firstChild;
+      // console.log('this.renderOptions', this.renderOptions);
+      return renderRoot;
     };
   }
+}
+
+/**
+ * Css string like '20px' or '20em' will be returned as number value (20)
+ */
+function cssToNum(cssString) {
+  return Number(cssString.replace(/[^-\d.]/g, ''));
 }
 
 /**
@@ -78,8 +94,9 @@ export class LayoutCtrl {
   resizeObserver;
   layouts;
   currentLayout;
+  onLayoutChange;
 
-  constructor(host, layouts) {
+  constructor(host, layouts, { onLayoutChange }) {
     (this.host = host).addController(this);
 
     if (!layouts || !Object.keys(layouts).length) {
@@ -87,52 +104,44 @@ export class LayoutCtrl {
     }
 
     this.layouts = layouts;
-
-    // for (const [breakpoint, stylesForBreakpoint] of Object.entries(this.layouts)) {
-    //   // const stylesheet = new CSSStyleSheet();
-    //   // stylesheet.replaceSync(stylesForBreakpoint.cssText);
-    //   const ruleList = stylesForBreakpoint.cssText.match(/(.*){(.|\n)*?}/gm);
-    //   const result = [];
-    //   for (const rule of ruleList) {
-    //     result.push(rule.replace(/(.*)({(.|\n)*?})/, `:host([data-layout="${breakpoint}"]) $1$2`));
-    //   }
-
-    //   const x = css``;
-    //   x.cssText = result.join('\n');
-
-    //   host.constructor.styles.push(x);
-    // }
+    this.onLayoutChange = onLayoutChange;
   }
 
   // hostUpdate() {
   //   // this.host.setAttribute('data-layout', this.layouts[0]);
   // }
 
-  // hostConnected() {
-  //   // this.host.setAttribute('data-layout', this.layouts[0]);
+  hostConnected() {
+    // this.host.setAttribute('data-layout', this.layouts[0]);
 
-  //   // We only are interested in width, so we put resizeObserver on body.
-  //   this.container =
-  //     (this.layoutsConfig.container === globalThis
-  //       ? document?.body
-  //       : this.layoutsConfig.container) || this.host;
-  //   this.resizeObserver = new ResizeObserver(entries => {
-  //     const newWidth = entries[0].contentBoxSize[0].inlineSize;
-  //     const layoutArrayOrdered = Object.entries(this.layouts).sort((a, b) => b[0] - a[0]);
-  //     const newLayout = layoutArrayOrdered.find(([minWidth]) => newWidth >= minWidth)?.[0];
+    // We only are interested in width, so we put resizeObserver on body.
+    // this.container =
+    //   (this.layoutsConfig.container === globalThis
+    //     ? document?.body
+    //     : this.layoutsConfig.container) || this.host;
 
-  //     if (newLayout !== this.currentLayout) {
-  //       this.host.setAttribute('data-layout', newLayout);
-  //       this.currentLayout = newLayout;
-  //     }
-  //   });
+    this.container = document.body;
+    this.resizeObserver = new ResizeObserver(entries => {
+      const newWidth = entries[0].contentBoxSize[0].inlineSize;
+      const layoutArrayOrdered = Object.entries(this.layouts).sort(
+        (layoutA, layoutB) => cssToNum(layoutB[1].breakpoint) - cssToNum(layoutA[1].breakpoint),
+      );
+      const newLayout = layoutArrayOrdered.find(
+        layout => newWidth >= cssToNum(layout[1].breakpoint),
+      )?.[0];
+      if (newLayout !== this.currentLayout) {
+        this.host.setAttribute('data-layout', newLayout);
+        this.currentLayout = newLayout;
+        this.onLayoutChange?.(this.layouts[newLayout]);
+      }
+    });
 
-  //   this.resizeObserver?.observe(this.container);
-  // }
+    this.resizeObserver?.observe(this.container);
+  }
 
-  // hostDisconnected() {
-  //   this.resizeObserver?.unobserve(this.container);
-  // }
+  hostDisconnected() {
+    this.resizeObserver?.unobserve(this.container);
+  }
 }
 
 /**
@@ -151,9 +160,21 @@ export class UIBaseElement extends LitElement {
   templates = this.constructor.templates;
   scopedElements = this.constructor.scopedElements;
   layouts = this.constructor.layouts;
-  layoutsContainer = this.constructor.layoutsContainer;
+  layoutCtrl;
+  scopedRegistryCtrl;
+  refs = {};
+  /** @type {WeakMap<UIBaseElement,object>} */
+  static contextStore = new WeakMap();
+
+  static _partDirective;
+
+  static properties = {
+    _rerenderToggle: { type: Boolean, state: true, attribute: false },
+  };
 
   get templateContext() {
+    // Note: we don't expose host here, to keep the contract minimal and predictable.
+    // All data exposed to the template should be explicitly provided via templateContext.
     return {
       templates: this.templates,
       data: {},
@@ -163,19 +184,26 @@ export class UIBaseElement extends LitElement {
           this.requestUpdate(key);
         }
       },
+      registerRef: (name, element, { isPartOfCollection = false } = {}) => {
+        if (isPartOfCollection) {
+          this.refs[name] = this.refs[name] || [];
+          this.refs[name].push(element);
+        } else {
+          this.refs[name] = element;
+        }
+      },
+      refs: this.refs,
     };
   }
 
   constructor() {
     super();
 
-    // if (!this.constructor.hasStylesAndMarkupProvided) {
-    //   throw new Error(
-    //     `Make sure to initialize "${this.constructor.name}.provideStylesAndTemplates(...)"`,
-    //   );
-    // }
-
-    this.layoutCtrl = new LayoutCtrl(this, this.constructor.layoutsConfig);
+    this.layoutCtrl = new LayoutCtrl(this, this.layouts, {
+      onLayoutChange: () => {
+        this._rerenderToggle = !this._rerenderToggle;
+      },
+    });
     this.scopedRegistryCtrl = new ScopedRegistryCtrl(this, this.scopedElements);
   }
 
@@ -188,6 +216,7 @@ export class UIBaseElement extends LitElement {
     if (provider.markup?.templates) {
       this.templates = provider.markup?.templates(this.templates);
     }
+
     if (provider.markup?.scopedElements) {
       this.scopedElements = provider.markup?.scopedElements(this.scopedElements);
     }
@@ -196,18 +225,8 @@ export class UIBaseElement extends LitElement {
       this.layouts = provider.layouts(this.layouts);
       const entries = Object.entries(this.layouts);
       for (let i = 0; i < entries.length; i += 1) {
-        // const ruleList = stylesForBreakpoint.cssText.match(/(.*){(.|\n)*?}/gm);
-        // const result = [];
-        // for (const rule of ruleList) {
-        //   result.push(
-        //     rule.replace(/(.*)({(.|\n)*?})/, `:host([data-layout="${breakpoint}"]) $1$2`),
-        //   );
-        // }
-        // const x = css``;
-        // x.cssText = result.join('\n');
         const [name, { styles, breakpoint, container, templateContext }] = entries[i];
         const [nextName, next] = entries[i + 1] || [];
-
         const queryType = container === globalThis ? 'media' : 'container';
 
         this.styles.push(css`
@@ -217,27 +236,28 @@ export class UIBaseElement extends LitElement {
             ${styles}
           }
         `);
-
-        // else {
-        //   this.styles.push(css`
-        //     @container (min-width: ${unsafeCSS(breakpoint)}) {
-        //       ${styles}
-        //     }
-        //   `);
-        // }
       }
     }
     this.elementStyles = this.finalizeStyles(this.styles);
-
-    this.constructor.hasStylesAndMarkupProvided = true;
   }
 
   render() {
-    const templates = this.templates;
+    const { templates } = this;
+    let { templateContext } = this;
+
+    // When layout just changed, it could be that our templateContext is different
+    const { currentLayout } = this.layoutCtrl;
+    if (this.layouts[currentLayout]?.templateContext) {
+      templateContext = this.layouts[currentLayout]?.templateContext(templateContext);
+    }
+
+    // Add an instance of the part directive that has access to the latest
+    // updated version of templateContext
+    templateContext.part = createPartDirective(this.constructor._partDirective, templateContext);
     if (!templates?.main) {
       return new Error('[UIBaseElement] Provide a main render function');
     }
 
-    return templates.main(this.templateContext);
+    return templates.main(templateContext);
   }
 }

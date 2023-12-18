@@ -37,8 +37,6 @@ const mdjsSetupConfig = {
   },
 };
 
-console.log('mode', import.meta.env.MODE);
-
 // https://astro.build/config
 export default defineConfig({
   integrations: [lit()],

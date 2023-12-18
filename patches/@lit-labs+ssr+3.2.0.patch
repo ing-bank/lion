@@ -1,0 +1,117 @@
+diff --git a/node_modules/@lit-labs/ssr/lib/element-renderer.js b/node_modules/@lit-labs/ssr/lib/element-renderer.js
+index 550651e..4723333 100644
+--- a/node_modules/@lit-labs/ssr/lib/element-renderer.js
++++ b/node_modules/@lit-labs/ssr/lib/element-renderer.js
+@@ -159,7 +159,7 @@ export class FallbackRenderer extends ElementRenderer {
+     }
+     setAttribute(name, value) {
+         // Browser turns all HTML attributes to lowercase.
+-        this._attributes[name.toLowerCase()] = value;
++        this._attributes[name.toLowerCase()] = `${value}`;
+     }
+     *renderAttributes() {
+         for (const [name, value] of Object.entries(this._attributes)) {
+@@ -167,6 +167,7 @@ export class FallbackRenderer extends ElementRenderer {
+                 yield ` ${name}`;
+             }
+             else {
++                console.log({value});
+                 yield ` ${name}="${escapeHtml(value)}"`;
+             }
+         }
+diff --git a/node_modules/@lit-labs/ssr/lib/lit-element-renderer.js b/node_modules/@lit-labs/ssr/lib/lit-element-renderer.js
+index d0fcbd4..d8df014 100644
+--- a/node_modules/@lit-labs/ssr/lib/lit-element-renderer.js
++++ b/node_modules/@lit-labs/ssr/lib/lit-element-renderer.js
+@@ -8,7 +8,10 @@ import { ReactiveElement } from 'lit';
+ import { _$LE } from 'lit-element/private-ssr-support.js';
+ import { ariaMixinAttributes, HYDRATE_INTERNALS_ATTR_PREFIX, } from '@lit-labs/ssr-dom-shim';
+ import { renderValue } from './render-value.js';
++
+ const { attributeToProperty, changedProperties } = _$LE;
++
++
+ /**
+  * ElementRenderer implementation for LitElements
+  */
+diff --git a/node_modules/@lit-labs/ssr/lib/render-value.js b/node_modules/@lit-labs/ssr/lib/render-value.js
+index 8c0d893..4998c4b 100644
+--- a/node_modules/@lit-labs/ssr/lib/render-value.js
++++ b/node_modules/@lit-labs/ssr/lib/render-value.js
+@@ -3,7 +3,7 @@ import { nothing, noChange } from 'lit';
+ import { PartType } from 'lit/directive.js';
+ import { isPrimitive, isTemplateResult, getDirectiveClass, TemplateResultType, isCompiledTemplateResult, } from 'lit/directive-helpers.js';
+ import { _$LH } from 'lit-html/private-ssr-support.js';
+-const { getTemplateHtml, marker, markerMatch, boundAttributeSuffix, overrideDirectiveResolve, setDirectiveClass, getAttributePartCommittedValue, resolveDirective, AttributePart, PropertyPart, BooleanAttributePart, EventPart, connectedDisconnectable, isIterable, } = _$LH;
++const { getTemplateHtml, marker, markerMatch, boundAttributeSuffix, overrideDirectiveResolve, setDirectiveClass, getAttributePartCommittedValue, resolveDirective, AttributePart, PropertyPart, BooleanAttributePart, EventPart, connectedDisconnectable, isIterable, ElementPart } = _$LH;
+ import { digestForTemplateResult } from '@lit-labs/ssr-client';
+ import { getElementRenderer, } from './element-renderer.js';
+ import { escapeHtml } from './util/escape-html.js';
+@@ -286,13 +286,26 @@ const getTemplateOpcodes = (result) => {
+                             });
+                         }
+                         else {
+-                            if (!hydratable) {
+-                                throw new Error(`Server-only templates don't support element parts, as their API does not currently give them any way to render anything on the server. Found in template:
+-    ${displayTemplateResult(result)}`);
+-                            }
++    //                         if (!hydratable) {
++    //                             throw new Error(`Server-only templates don't support element parts, as their API does not currently give them any way to render anything on the server. Found in template:
++    // ${displayTemplateResult(result)}`);
++    //                         }
++    //                         ops.push({
++    //                             type: 'element-part',
++    //                             index: nodeIndex,
++    //                         });
++
++                            const [, prefix, caseSensitiveName] = /([.?@])?(.*)/.exec(name);
++
+                             ops.push({
+                                 type: 'element-part',
+                                 index: nodeIndex,
++                                // added
++                                name: caseSensitiveName,
++                                ctor: ElementPart,
++                                strings,
++                                tagName: tagName.toUpperCase(),
++                                useCustomElementInstance: node.isDefinedCustomElement,
+                             });
+                         }
+                         skipTo(attrEndOffset);
+@@ -506,9 +519,33 @@ And the inner template was:
+                 break;
+             }
+             case 'element-part': {
+-                // We don't emit anything for element parts (since we only support
+-                // directives for now; since they can't render, we don't even bother
+-                // running them), but we still need to advance the part index
++               // 1: create an ElementPart
++               const statics = op.strings;
++               const part = new op.ctor(
++                   // Passing only object with tagName for the element is fine since the
++                   // directive only gets PartInfo without the node available in the
++                   // constructor
++                   { tagName: op.tagName }, op.name, statics, connectedDisconnectable(), {});
++               
++               // 2: create an instance (the element directive host) that will be responsible for capturing static attrs
++               const instance = getElementRenderer(renderInfo, op.tagName, op.ctor, op.staticAttributes);
++               // Make sure that, when we run the directive below, all calls to `setAttribute` are captured on the instance
++               part.element = instance;
++               part.options = { ...part.options, host: renderInfo.customElementHostStack[0].element};
++
++               // 3: create the directive instance, so we can run it
++               const value = part.strings === undefined ? result.values[partIndex] : result.values;
++               const elementDirectiveInstance = new value['_$litDirective$']();
++
++               // 4: call the update callback that contains.
++               // TODO: maybe do this in a different callback that is compatible with https://lit.dev/docs/ssr/authoring/!
++               // (right now, this overview seems to only apply for ChildPart directives)
++               // Maybe move logic to willUpdate instead? 
++               elementDirectiveInstance.update(part, value.values);
++
++               // SSR all static attrs that were just added in update callback
++               yield* instance.renderAttributes();
++
+                 partIndex++;
+                 break;
+             }

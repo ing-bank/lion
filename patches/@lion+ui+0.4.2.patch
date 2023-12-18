@@ -1,0 +1,46 @@
+diff --git a/node_modules/@lion/ui/components/core/src/browserDetection.js b/node_modules/@lion/ui/components/core/src/browserDetection.js
+index 8aa4171..78650b6 100644
+--- a/node_modules/@lion/ui/components/core/src/browserDetection.js
++++ b/node_modules/@lion/ui/components/core/src/browserDetection.js
+@@ -1,17 +1,23 @@
++import { isServer } from 'lit';
++
+ /**
+  * From https://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome
+  * @param {string} [flavor]
+  */
+ function checkChrome(flavor = 'google-chrome') {
+-  const isChromium = /** @type {window & { chrome?: boolean}} */ (window).chrome;
++  if (isServer) {
++    return flavor === 'google-chrome';
++  }
++  
++  const isChromium = /** @type {window & { chrome?: boolean}} */ (globalThis).chrome;
+   if (flavor === 'chromium') {
+     return isChromium;
+   }
+-  const winNav = window.navigator;
+-  const vendorName = winNav.vendor;
+-  const isOpera = typeof (/** @type {window & { opr?: boolean}} */ (window).opr) !== 'undefined';
+-  const isIEedge = winNav.userAgent.indexOf('Edge') > -1;
+-  const isIOSChrome = winNav.userAgent.match('CriOS');
++  const winNav = globalThis.navigator;
++  const vendorName = winNav?.vendor;
++  const isOpera = typeof (/** @type {window & { opr?: boolean}} */ (globalThis).opr) !== 'undefined';
++  const isIEedge = globalThis.userAgent?.indexOf('Edge') > -1;
++  const isIOSChrome = globalThis.userAgent?.match('CriOS');
+ 
+   if (flavor === 'ios') {
+     return isIOSChrome;
+@@ -31,9 +37,9 @@ function checkChrome(flavor = 'google-chrome') {
+ }
+ 
+ export const browserDetection = {
+-  isIE11: /Trident/.test(window.navigator.userAgent),
++  isIE11: /Trident/.test(globalThis.navigator?.userAgent),
+   isChrome: checkChrome(),
+   isIOSChrome: checkChrome('ios'),
+   isChromium: checkChrome('chromium'),
+-  isMac: navigator.appVersion.indexOf('Mac') !== -1,
++  isMac: navigator?.appVersion?.indexOf('Mac') !== -1,
+ };
