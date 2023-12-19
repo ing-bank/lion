@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - lit3
 
 jobs:
   release:
