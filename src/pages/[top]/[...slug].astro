@@ -73,7 +73,7 @@ const { entry } = Astro.props;
 // URL path as a base for in-page navigation. It is used to add anchors to. F.e. "host://urlPath#header1"
 const urlPath = entry ? entry.slug : path.join(Astro.params.top, Astro.params.slug);
 const pages = entry ? await getPages([entry]) : await getPagesByDir(urlPath);
-const pathForMdjsStroriesFile = await getPathForMdjsStroriesFile(entry?.slug, urlPath);
+const pathForMdjsStroriesFile = await getPathForMdjsStroriesFile(!entry, urlPath);
 ---
 
 <MainLayout title={entry?.slug}>
