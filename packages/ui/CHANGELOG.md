@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.6.0
+
+### Minor Changes
+
+- ed593130: Update to lit 3
+
 ## 0.5.2
 
 ### Patch Changes
