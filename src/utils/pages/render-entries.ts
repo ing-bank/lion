@@ -168,10 +168,14 @@ const getMdjsStories = (fullDirPath) => {
   });  
 };
 
-export async function getPathForMdjsStroriesFile(entrySlug, urlPath) {
-  if (entrySlug) {
-    const mdjsStroriesFileDirectory = path.dirname(entrySlug);
-    return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories--${path.basename(entrySlug)}.js`;
+/**
+ * @param {boolean} isUrlPathADirectory `True` if the `urlPath` paramter is a url path to a directory with multiple md files.
+ * `false` if the `urlPath` paramter is a url path to a single md file
+ */
+export async function getPathForMdjsStroriesFile(isUrlPathADirectory, urlPath) {
+  if (!isUrlPathADirectory) {
+    const mdjsStroriesFileDirectory = path.dirname(urlPath);
+    return `/docs/${mdjsStroriesFileDirectory}/__mdjs-stories--${path.basename(urlPath)}.js`;
   } 
   if (urlPath) {
     let mdjsStoriesJsPath = '';
