@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.6.0-alpha.0
+
+### Minor Changes
+
+- 2ef12dd1: Update to lit 3
+
 ## 0.5.2
 
 ### Patch Changes
