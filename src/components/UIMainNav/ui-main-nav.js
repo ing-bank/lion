@@ -1,6 +1,7 @@
 import { html, nothing, css, isServer } from 'lit';
 import { LionIcon } from '@lion/ui/icon.js';
 import { UIBaseElement } from '../shared/UIBaseElement.js';
+import { updateNavData } from './updateNavData.js';
 import { VisibilityToggleCtrl } from '../shared/VisibilityToggleCtrl.js';
 import { UIPartDirective } from '../shared/UIPartDirective.js';
 import {
@@ -21,59 +22,22 @@ import { addIconResolverForPortal } from '../iconset-portal/addIconResolverForPo
 
 addIconResolverForPortal();
 
-export function initNavData(navData, { activePath, activeItem, shouldReset = false } = {}) {
-  const parents = new WeakMap();
-  let shouldLookForReset = shouldReset;
-  // False when activePath or activeItem is provided
-  let hasActiveSet = !activePath && !activeItem;
-  // We will use this as a helper to prevent that we're resetting parents when we're not supposed to
-  let newActiveItem = null;
-  let lastParent = null;
-
-  const handleParents = (navItem, { action }) => {
-    const parent = parents.get(navItem);
-    if (parent) {
-      if (action === 'activate') {
-        parent.hasActiveChild = true;
-      } else if (action === 'reset') {
-        delete parent.hasActiveChild;
-        // In case we're resetting, we don't want to reset the parent of the new active item
-        if (newActiveItem === parent) return;
-      } else {
-        throw new Error(`[UIPortalMainNav]: Unknown action ${action}`);
-      }
-      handleParents(parent, { action });
+export class UIMainNavPartDirective extends UIPartDirective {
+  static setLevel(element, level) {
+    if (typeof level !== 'number') {
+      throw new Error('[UIMainNavPartDirective]: Please provide a level in localContext');
     }
-  };
+    element.setAttribute('data-level', level);
+  }
 
-  const loopLvl = level => {
-    for (const navItem of level.items) {
-      parents.set(navItem, lastParent);
-      if (shouldLookForReset && navItem.active) {
-        delete navItem.active;
-        handleParents(navItem, { action: 'reset' });
-        shouldLookForReset = false;
-      }
-      if ((activePath && navItem.url === activePath) || (activeItem && navItem === activeItem)) {
-        navItem.active = true;
-        handleParents(navItem, { action: 'activate' });
-        hasActiveSet = true;
-        newActiveItem = navItem;
-      }
-      if (hasActiveSet && !shouldLookForReset) {
-        break;
-      }
-      if (navItem.nextLevel) {
-        lastParent = navItem;
-        loopLvl(navItem.nextLevel);
-      }
-    }
-  };
+  /**
+   * Since l1-toggle can be dynamically rendered, we need to check it its toggle controller
+   * is already registered when the l1-invoker becomes available. (for instance when switching from desktop to mobile)
+   */
+  static getVisibilityToggleCtrlForInvoker({ invoker, host }) {
+    return Array.from(host.__controllers)?.find(ctrl => ctrl.invoker === invoker);
+  }
 
-  loopLvl(navData);
-}
-
-export class UIPortalMainNavPartDirective extends UIPartDirective {
   setup(part, [context, name, localContext]) {
     switch (name) {
       case 'root':
@@ -118,11 +82,6 @@ export class UIPortalMainNavPartDirective extends UIPartDirective {
       case 'l1-invoker':
         this._updateL1Invoker(part, { context, localContext });
         break;
-
-      // case 'level':
-      //   this._updateLevel(part, { context, localContext });
-      //   break;
-
       case 'listitem':
         this._updateListItem(part, { context, localContext });
         break;
@@ -130,21 +89,6 @@ export class UIPortalMainNavPartDirective extends UIPartDirective {
         this._updateIcon(part, { context, localContext });
         break;
     }
-  }
-
-  static setLevel(element, level) {
-    if (typeof level !== 'number') {
-      throw new Error('[UIPortalMainNavPartDirective]: Please provide a level in localContext');
-    }
-    element.setAttribute('data-level', level);
-  }
-
-  /**
-   * Since l1-toggle can be dynamically rendered, we need to check it its toggle controller
-   * is already registered when the l1-invoker becomes available. (for instance when switching from desktop to mobile)
-   */
-  static getVisibilityToggleCtrlForInvoker({ invoker, host }) {
-    return Array.from(host.__controllers)?.find(ctrl => ctrl.invoker === invoker);
   }
 
   _setupRoot({ element }, { context }) {
@@ -167,36 +111,11 @@ export class UIPortalMainNavPartDirective extends UIPartDirective {
   }
 
   // TODO: merge with all invokers....
-  _setupL1Invoker({ element, options }, { context, localContext }) {
+  _setupL1Invoker({ element }, { context }) {
     assertButton(element);
     element.setAttribute('data-part', 'l1-invoker');
-    // element.setAttribute('popovertarget', 'level-1');
     element.setAttribute('aria-label', context.translations.l1Invoker);
     context.registerRef('l1-invoker', element);
-
-    // if (isServer) return;
-
-    // const { level } = localContext;
-
-    // // In case we have l1 rendered on layout switch, make sure a controller is assigned
-    // const target = context.refs[level === 1 ? 'l1-invoker' : `invoker-for-level-l${level}`];
-    // const targetWasAlreadyRendered = Boolean(target);
-    // const hasCtrl = this.constructor.getVisibilityToggleCtrlForInvoker({
-    //   invoker: element,
-    //   host: options.host,
-    // });
-    // if (targetWasAlreadyRendered && !hasCtrl) {
-    //   new VisibilityToggleCtrl(options.host, {
-    //     invoker: element,
-    //     target,
-    //     level: 1,
-    //     visuallyHidden: true,
-    //     mode: 'popover',
-    //     initialOpen: false,
-    //   });
-    // }
-
-    // TODO: implement cleanups of controllers on disconnect of PartDirective (and host)
   }
 
   // TODO: merge with all invokers....
@@ -265,17 +184,6 @@ export class UIPortalMainNavPartDirective extends UIPartDirective {
     }
   }
 
-  // _updateLevel({ element, options }, { context, localContext }) {
-  //   // // TODO: maybe we should get element.contains(element.getRootNode().activeElement)
-  //   // // context.setSrVisibilityForLevel({ element, hasActiveChild, isFocused: false });
-  //   // if (localContext.level <= 1) return;
-  //   // if (!localContext.hasActiveChild) {
-  //   //   element.setAttribute('data-visually-hidden', '');
-  //   // } else {
-  //   //   element.removeAttribute?.('data-visually-hidden', '');
-  //   // }
-  // }
-
   _setupLevelBackBtn({ element }, { context, localContext }) {
     assertButton(element);
     this.constructor.setLevel(element, localContext.level);
@@ -301,7 +209,7 @@ export class UIPortalMainNavPartDirective extends UIPartDirective {
     context.registerRef(`list-item-l${localContext.level}`, element, { isPartOfCollection: true });
   }
 
-  _updateListItem({ element }, { context, localContext }) {
+  _updateListItem({ element }, { localContext }) {
     if (localContext.item.active) {
       element.setAttribute('data-active', '');
     }
@@ -323,7 +231,7 @@ export class UIPortalMainNavPartDirective extends UIPartDirective {
 
     // element.addEventListener('focus', () => {
     //   // Every state update should change navData and trigger a re-render
-    //   initNavData(context.data.navData, localContext.item.url, { shouldReset: true });
+    //   updateNavData(context.data.navData, localContext.item.url, { shouldReset: true });
     //   setTimeout(() => {
     //     context.set('navData', context.data.navData);
     //     context.set('hasL1Open', hasL1Open(context.data.navData));
@@ -343,7 +251,7 @@ export class UIPortalMainNavPartDirective extends UIPartDirective {
     // For invokers >= l1 we want to set them to get `active` state.
     element.addEventListener('click', async event => {
       // Every state update should change navData and trigger a re-render
-      initNavData(context.data.navData, {
+      updateNavData(context.data.navData, {
         // activePath: localContext.item.nextLevel.items[0].url,
         acitiveItem: localContext.item,
         shouldReset: true,
@@ -375,12 +283,12 @@ export class UIPortalMainNavPartDirective extends UIPartDirective {
 /**
  * @typedef {{name: string; url: string; active?:boolean; iconId?: string; items?: NavItemData[]}} NavItem
  */
-export class UIPortalMainNav extends UIBaseElement {
+export class UIMainNav extends UIBaseElement {
   static properties = {
     navData: { type: Array, attribute: 'nav-data' },
   };
 
-  static _partDirective = UIPortalMainNavPartDirective;
+  static _partDirective = UIMainNavPartDirective;
 
   constructor() {
     super();
@@ -397,7 +305,37 @@ export class UIPortalMainNav extends UIBaseElement {
         navData: this.navData,
         iconIdL1Invoker: 'lion:portal:menu',
       },
-      translations: { l1Invoker: 'Open main menu', levelBackBtn: 'Back' },
+      translations: { l1Invoker: 'Main menu', levelBackBtn: 'Back' },
+      /**
+       * It's very common that components switch layouts based on screen size.
+       * In this case, we want to stop current animations...
+       * Call this method during initialization of a new layout.
+       * @example
+       * ```js
+       * UIMainNav.provideStylesAndMarkup({
+       *   // ...,
+       *   layouts: () => ({
+       *     myLayout: {
+       *       // ...,
+       *       templateContext: context => {
+       *         const navData = {
+       *           ...context.data.navData,
+       *           // ...,
+       *         };
+       *         updateNavData(navData, { shouldReset: true });
+       *         context.closeMenu({ shouldPreventAnimations: true });
+       *         return {
+       *           ...context,
+       *           data: { ...context.data, navData },
+       *         };
+       *       },
+       *     // ...,
+       *    });
+       *    // ...,
+       * });
+       * ```
+       * @param {{shouldPreventAnimations: boolean}} options
+       */
       closeMenu: ({ shouldPreventAnimations }) => {
         if (shouldPreventAnimations) {
           this.setAttribute('data-prevent-animations', '');
@@ -411,11 +349,11 @@ export class UIPortalMainNav extends UIBaseElement {
           this.removeAttribute('data-prevent-animations');
         }
       },
-      host: this,
+      // host: this,
     };
   }
 }
-export const tagName = 'ui-portal-main-nav';
+export const tagName = 'ui-main-nav';
 
 /**
  * Base UI Nav templates contains an accessible base html that can be used for all kinds of navigations,
@@ -511,11 +449,6 @@ const baseUINavMarkup = {
  * Multiple columns, no l1 toggle
  */
 const desktopStyles = css`
-  /** on larger screens, we don't want a back button */
-  [data-part='level-back-btn'] {
-    display: none;
-  }
-
   [popovertarget='level-1'] {
     display: none;
   }
@@ -727,7 +660,7 @@ const mobileStyles = css`
   }
 `;
 
-UIPortalMainNav.provideStylesAndMarkup({
+UIMainNav.provideStylesAndMarkup({
   markup: baseUINavMarkup,
   styles: () => [sharedGlobalStyles, visibilityStyles, resetPopoverStyles, resetButtonStyles],
   layouts: () => ({
@@ -741,7 +674,7 @@ UIPortalMainNav.provideStylesAndMarkup({
           hideToggle: false,
           shouldHandleScrollLock: true,
         };
-        initNavData(navData, { shouldReset: true });
+        updateNavData(navData, { shouldReset: true });
         context.closeMenu({ shouldPreventAnimations: true });
         return {
           ...context,
@@ -768,4 +701,4 @@ UIPortalMainNav.provideStylesAndMarkup({
   }),
 });
 
-customElements.define(tagName, UIPortalMainNav);
+customElements.define(tagName, UIMainNav);

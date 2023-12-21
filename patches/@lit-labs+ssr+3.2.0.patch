@@ -1,24 +1,20 @@
 diff --git a/node_modules/@lit-labs/ssr/lib/element-renderer.js b/node_modules/@lit-labs/ssr/lib/element-renderer.js
-index 550651e..4723333 100644
+index 550651e..41e6495 100644
 --- a/node_modules/@lit-labs/ssr/lib/element-renderer.js
 +++ b/node_modules/@lit-labs/ssr/lib/element-renderer.js
-@@ -159,7 +159,7 @@ export class FallbackRenderer extends ElementRenderer {
+@@ -159,7 +159,11 @@ export class FallbackRenderer extends ElementRenderer {
      }
      setAttribute(name, value) {
          // Browser turns all HTML attributes to lowercase.
 -        this._attributes[name.toLowerCase()] = value;
 +        this._attributes[name.toLowerCase()] = `${value}`;
++    }
++    getAttribute(name) {
++        // Browser turns all HTML attributes to lowercase.
++        return this._attributes[name.toLowerCase()];
      }
      *renderAttributes() {
          for (const [name, value] of Object.entries(this._attributes)) {
-@@ -167,6 +167,7 @@ export class FallbackRenderer extends ElementRenderer {
-                 yield ` ${name}`;
-             }
-             else {
-+                console.log({value});
-                 yield ` ${name}="${escapeHtml(value)}"`;
-             }
-         }
 diff --git a/node_modules/@lit-labs/ssr/lib/lit-element-renderer.js b/node_modules/@lit-labs/ssr/lib/lit-element-renderer.js
 index d0fcbd4..d8df014 100644
 --- a/node_modules/@lit-labs/ssr/lib/lit-element-renderer.js

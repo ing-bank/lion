@@ -3,7 +3,8 @@ import './debug-setup.js';
 import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
-import { UIPortalMainNav, initNavData } from "../components/UIPortalMainNav/ui-portal-main-nav.js";
+import { UIMainNav } from "../components/UIMainNav/ui-main-nav.js";
+import { updateNavData } from "../components/UIMainNav/updateNavData.js";
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -65,7 +66,7 @@ let navData = {
 
 // navData = { items: [{ name: 'home', url: '/' }] };
 
-initNavData(navData,  { activePath: Astro.url.pathname });
+updateNavData(navData,  { activePath: Astro.url.pathname });
 
 
 const footerData = [
@@ -152,7 +153,7 @@ const footerData = [
   </head>
   <body class="ui-portal-grid">
     <div class="ui-portal-grid__nav">
-      <UIPortalMainNav client:only nav-data={JSON.stringify(navData)} />
+      <UIMainNav client:load nav-data={JSON.stringify(navData)} />
     </div>
     <main class="ui-portal-grid__main">
       <div class="ui-portal-container">
@@ -208,3 +209,4 @@ const footerData = [
     </style>
   </body>
 </html>
+../components/UIMainNav/ui-main-nav.js../components/UIMainNav/updateNavData.js

@@ -21,6 +21,8 @@ export class ScopedRegistryCtrl {
       return;
     }
 
+    console.log('this.supportsScopedRegistry', this.supportsScopedRegistry);
+
     if (!this.supportsScopedRegistry) {
       const alreadyInRegistry = (existingClass, newClass) => existingClass !== newClass;
       for (const [tagName, klass] of Object.entries(scopedElements)) {
@@ -70,7 +72,7 @@ export class ScopedRegistryCtrl {
       this.renderOptions.creationScope = renderRoot;
       adoptStyles(renderRoot, elementStyles);
       this.renderOptions.renderBefore ??= renderRoot.firstChild;
-      // console.log('this.renderOptions', this.renderOptions);
+      console.log('this.renderOptions', this.renderOptions);
       return renderRoot;
     };
   }
@@ -86,7 +88,7 @@ function cssToNum(cssString) {
 /**
  * This controller allows to switch layouts on different screen sizes.
  * Component authors can easily compose layouts and reuse them in different scenarios
- * For full ssr-support styles will be rendered to container queries.
+ * For full ssr-support styles will be rendered to container queries/media queries
  */
 export class LayoutCtrl {
   host;
@@ -154,8 +156,6 @@ export class LayoutCtrl {
 export class UIBaseElement extends LitElement {
   static styles = [];
   static templates = {};
-  /** @private */
-  static hasStylesAndMarkupProvided = false;
   /** @overridable */
   templates = this.constructor.templates;
   scopedElements = this.constructor.scopedElements;
@@ -201,7 +201,8 @@ export class UIBaseElement extends LitElement {
 
     this.layoutCtrl = new LayoutCtrl(this, this.layouts, {
       onLayoutChange: () => {
-        this._rerenderToggle = !this._rerenderToggle;
+        this.render();
+        // this._rerenderToggle = !this._rerenderToggle;
       },
     });
     this.scopedRegistryCtrl = new ScopedRegistryCtrl(this, this.scopedElements);
@@ -242,6 +243,8 @@ export class UIBaseElement extends LitElement {
   }
 
   render() {
+    console.log('rendering UIBaseElement');
+
     const { templates } = this;
     let { templateContext } = this;
 

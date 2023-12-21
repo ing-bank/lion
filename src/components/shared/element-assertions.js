@@ -1,10 +1,13 @@
+import { isServer } from 'lit';
+
 function isChildOf(ctorName, el) {
   let current = el;
   while (current) {
+    console.log(current.constructor.name, ctorName);
     if (current.constructor.name === ctorName) {
       return true;
     }
-    current = current.getPrototypeOf(current);
+    current = Object.getPrototypeOf(current);
   }
   return false;
 }
@@ -59,13 +62,17 @@ export function assertButton(el) {
     el.tagName === 'BUTTON' || isChildOf('LionButton', el) || el.getAttribute('role') === 'button';
   if (!isButton) {
     throw new Error(
-      '[UIPortalMainNavPartDirective.toggle-for-level] Please apply to HTMLButtonElement (`<button>`) | LionButton | `[role=button]`',
+      '[UIMainNavPartDirective.toggle-for-level] Please apply to HTMLButtonElement (`<button>`) | LionButton | `[role=button]`',
     );
   }
 }
 
 export function assertLionIcon(el) {
-  if (!isChildOf('LionIcon', el)) {
-    throw new Error('[UIPortalMainNavPartDirective.icon] Please apply to LionIcon');
-  }
+  if (isServer) return;
+
+  // We can only determine after hydration, so leave it for now...?
+  return;
+  // if (!isChildOf('LionIcon', el)) {
+  //   throw new Error('[UIMainNavPartDirective.icon] Please apply to LionIcon');
+  // }
 }
