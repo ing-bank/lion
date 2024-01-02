@@ -2,8 +2,6 @@
 import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
 import { UIMainNav } from '@portal-provide-design/provide-designs-and-export-components--side-effectful.js';
-// import '../design-providers/lionportal/provide-design--side-effectful.js';
-// import { UIMainNav } from "../components/UIMainNav/ui-main-nav.js";
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
 import { UIPageLayout } from "../components/UIPageLayout/ui-page-layout.js";
 import { updateNavData } from "../components/UIMainNav/updateNavData.js";
@@ -16,7 +14,9 @@ const { title } = Astro.props;
 const compEntries = await getCollection("component");
 const compNames = compEntries.map((entry) => entry.data.name);
 
- /** @type {NavItem[]} */
+import { type NavLevel } from "../components/UIMainNav/UIMainNav.types.js";
+
+ /** @type {NavLevel} */
 const navData = {
   // this is inital setup is optimized for desktop. Notice that it will be false for mobile
   // Also notice this automatically implies that the content is automatically shown and the invoker is invisible
@@ -28,7 +28,7 @@ const navData = {
     // url: "/components",
     iconId: 'lion:portal:deployedCode',
     iconActiveId: 'lion:portal:deployedCodeFilled',
-    nextLevel: {
+    nextLevel:  /** @type {NavLevel} */ ({
       showVia: 'popover', // or disclosure, or none (heading)
       // initialOpen: true,
       items: [
@@ -50,7 +50,7 @@ const navData = {
         //   nextLevel: { showVia: 'disclosure', items: [{name: 'smth', url: `/components/zomezing/smth`}], }
         // } ,
       ],
-    }
+    })
   },
   // {
   //   name: "components1",
@@ -73,9 +73,7 @@ const navData = {
   { name: "blog", url: "/blog", iconId: 'lion:portal:newsmode', iconActiveId: 'lion:portal:newsmodeFilled'},
   ]};
 
-
-// navData = { items: [{ name: 'home', url: '/' }] };
-
+// Make sure to update the activePath
 updateNavData(navData,  { activePath: Astro.url.pathname });
 
 
@@ -172,7 +170,7 @@ const footerData = [
 
   <body>
     <UIPageLayout>
-      <UIMainNav client:load slot="main-nav"  nav-data={JSON.stringify(navData)} />
+      <UIMainNav client:load slot="main-nav" nav-data={JSON.stringify(navData)} />
       <slot />
       <UIPortalFooter client:load slot="footer"footer-data={JSON.stringify(footerData)} />
     </UIPageLayout>

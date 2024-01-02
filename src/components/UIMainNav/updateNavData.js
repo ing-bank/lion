@@ -6,7 +6,7 @@
 /**
  * Updates active and hasActiveChild props of NavItems
  * @param {NavLevel} navData
- * @param {{activePath: string; activeItem: NavItem; shouldReset: boolean;}} options
+ * @param {{activePath?: string; activeItem?: NavItem; shouldRese?: boolean;}} options
  */
 export function updateNavData(navData, { activePath, activeItem, shouldReset = false } = {}) {
   const parents = new WeakMap();
