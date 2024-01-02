@@ -1,3 +1,5 @@
+// TODO: implement Proxy and keep original apis
+
 /**
  * Helper class for elements that temporarily fulfill a certain role, when placed in a context.
  * A concrete example: when a main navigation is used on desktop, it is a horizontal bar with menu items.

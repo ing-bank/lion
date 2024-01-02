@@ -25,7 +25,7 @@ for (const [fixture, fixtureMode] of [
     fixture,
     fixtureMode,
     fixtureConfig: {
-      modules: ['./ui-main-nav.js'],
+      modules: ['./UIMainNav.js'],
       base: 'http://localhost:8000/src/components/UIMainNav/',
     },
   });

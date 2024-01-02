@@ -80,7 +80,7 @@ export class VisibilityToggleCtrl {
 
     if (!isServer && !this._hasScrollLockStyles) {
       const styleTag = document.createElement('style');
-      styleTag.setAttribute('data-srcoll-lock-styles', '');
+      styleTag.setAttribute('data-scroll-lock-styles', '');
       styleTag.textContent = /** @type {CSSResult} */ (scrollLockStyles).cssText;
       document.head.appendChild(styleTag);
       // TODO: use overlay ctrl for this, since it has knowledge of all overlays

@@ -1,9 +1,11 @@
 ---
-import './debug-setup.js';
 import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
+import { UIMainNav } from '@portal-provide-design/provide-designs-and-export-components--side-effectful.js';
+// import '../design-providers/lionportal/provide-design--side-effectful.js';
+// import { UIMainNav } from "../components/UIMainNav/ui-main-nav.js";
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
-import { UIMainNav } from "../components/UIMainNav/ui-main-nav.js";
+import { UIPageLayout } from "../components/UIPageLayout/ui-page-layout.js";
 import { updateNavData } from "../components/UIMainNav/updateNavData.js";
 
 const site = Astro.site || Astro.url.origin;
@@ -15,7 +17,7 @@ const compEntries = await getCollection("component");
 const compNames = compEntries.map((entry) => entry.data.name);
 
  /** @type {NavItem[]} */
-let navData = {
+const navData = {
   // this is inital setup is optimized for desktop. Notice that it will be false for mobile
   // Also notice this automatically implies that the content is automatically shown and the invoker is invisible
   hideToggle: true,
@@ -34,6 +36,14 @@ let navData = {
         ...compNames.map((compName) => ({
           name: compName,
           url: `/components/${compName}`,
+        })),
+        ...compNames.map((compName) => ({
+          name: compName + '1',
+          url: `/components/${compName}1`,
+        })),
+        ...compNames.map((compName) => ({
+          name: compName + '2',
+          url: `/components/${compName}2`,
         })),
         // {
         //   name: 'zomezing', 
@@ -108,9 +118,17 @@ const footerData = [
 ];
 ---
 
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- <script>
+      import '../design-providers/lionportal/provide-design--side-effectful.js';
+    
+    </script> -->
+
+    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -151,62 +169,14 @@ const footerData = [
       }}
     />
   </head>
-  <body class="ui-portal-grid">
-    <div class="ui-portal-grid__nav">
-      <UIMainNav client:load nav-data={JSON.stringify(navData)} />
-    </div>
-    <main class="ui-portal-grid__main">
-      <div class="ui-portal-container">
-        <slot />
-      </div>
-    </main>
-    <div class="ui-portal-grid__footer">
-      <UIPortalFooter footer-data={JSON.stringify(footerData)} />
-    </div>
-    <style is:global>
-      /* Improve Page speed */
-      /* https://css-tricks.com/almanac/properties/c/content-visibility/ */
-      img {
-        content-visibility: auto;
-      }
 
-      .ui-portal-grid {
-        display: grid;
-        grid-template-columns: min-content 1fr;
-        /* grid-template-rows: 80vh 20vh; */
-        grid-template-areas:
-          "nav main"
-          "nav footer";
-      }
-
-      .ui-portal-grid__nav {
-        grid-area: nav;
-      }
-
-      .ui-portal-grid__main {
-        grid-area: main;
-      }
-
-      .ui-portal-grid__footer {
-        grid-area: footer;
-      }
-
-      .ui-portal-collection {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
-      }
-
-      .ui-portal-card {
-        display: flex;
-        flex-direction: column;
-        padding: 1rem;
-        border-radius: 0.5rem;
-      }
-
-      .ui-portal-container {
-        padding: var(--size-6);
-      }
-    </style>
+  <body>
+    <UIPageLayout>
+      <UIMainNav client:load slot="main-nav"  nav-data={JSON.stringify(navData)} />
+      <slot />
+      <UIPortalFooter client:load slot="footer"footer-data={JSON.stringify(footerData)} />
+    </UIPageLayout>
   </body>
+
 </html>
-../components/UIMainNav/ui-main-nav.js../components/UIMainNav/updateNavData.js
+../design-providers/lionportal/provide-designs--side-effectful.js../design-providers/lionportal/provide-design--side-effectful.js

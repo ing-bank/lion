@@ -1,10 +1,11 @@
-import { LitElement, html, nothing, css } from "lit";
+import { html, nothing, css } from 'lit';
+import { UIBaseElement } from './shared/UIBaseElement.js';
 
-const tagName = "ui-portal-footer";
+const tagName = 'ui-portal-footer';
 
-export class UIPortalFooter extends LitElement {
+export class UIPortalFooter extends UIBaseElement {
   static properties = {
-    footerData: { type: Array, attribute: "footer-data" },
+    footerData: { type: Array, attribute: 'footer-data' },
   };
 
   static styles = [
@@ -21,24 +22,36 @@ export class UIPortalFooter extends LitElement {
     this.footerData = [];
   }
 
-  render() {
-    return html`
-      <footer>${this._renderNavLevel({ children: this.footerData })}</footer>
-    `;
+  get templateContext() {
+    return {
+      ...super.templateContext,
+      data: {
+        footerData: this.footerData,
+      },
+    };
   }
 
-  _renderNavLevel({ children }) {
-    return html`<ul>
-      ${children.map(
-        (item) => html`<li>
-          <a href="${item.url}">${item.name}</a>
-          ${item.children?.length
-            ? this._renderNavLevel({ children: item.children })
-            : nothing}
-        </li>`
-      )}
-    </ul>`;
-  }
+  static templates = {
+    main(context) {
+      const { templates, data } = context;
+
+      return html` <footer>${templates.navLevel(context, { children: data.footerData })}</footer> `;
+    },
+    navLevel(context, { children }) {
+      const { templates } = context;
+
+      return html`<ul>
+        ${children.map(
+          item => html`<li>
+            <a href="${item.url}">${item.name}</a>
+            ${item.children?.length
+              ? templates.navLevel(context, { children: item.children })
+              : nothing}
+          </li>`,
+        )}
+      </ul>`;
+    },
+  };
 }
 
 customElements.define(tagName, UIPortalFooter);

@@ -1,0 +1,13 @@
+diff --git a/node_modules/@open-wc/scoped-elements/html-element.js b/node_modules/@open-wc/scoped-elements/html-element.js
+index 2132bbf..901ad3c 100644
+--- a/node_modules/@open-wc/scoped-elements/html-element.js
++++ b/node_modules/@open-wc/scoped-elements/html-element.js
+@@ -6,7 +6,7 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
+  */
+ 
+ const version = '3.0.0';
+-const versions = window.scopedElementsVersions || (window.scopedElementsVersions = []);
++const versions = globalThis.scopedElementsVersions || (globalThis.scopedElementsVersions = []);
+ if (!versions.includes(version)) {
+   versions.push(version);
+ }

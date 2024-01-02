@@ -14,14 +14,12 @@ export class ScopedRegistryCtrl {
   /** When polyfill is not loaded, just proceed with one global registry */
   supportsScopedRegistry = false; // Boolean(globalThis.ShadowRoot?.prototype.createElement);
 
-  constructor(host, scopedElements) {
+  constructor({ host, scopedElements }) {
     (this.host = host).addController(this);
 
     if (!scopedElements || !Object.keys(scopedElements).length) {
       return;
     }
-
-    console.log('this.supportsScopedRegistry', this.supportsScopedRegistry);
 
     if (!this.supportsScopedRegistry) {
       const alreadyInRegistry = (existingClass, newClass) => existingClass !== newClass;
@@ -72,7 +70,6 @@ export class ScopedRegistryCtrl {
       this.renderOptions.creationScope = renderRoot;
       adoptStyles(renderRoot, elementStyles);
       this.renderOptions.renderBefore ??= renderRoot.firstChild;
-      console.log('this.renderOptions', this.renderOptions);
       return renderRoot;
     };
   }
@@ -90,52 +87,45 @@ function cssToNum(cssString) {
  * Component authors can easily compose layouts and reuse them in different scenarios
  * For full ssr-support styles will be rendered to container queries/media queries
  */
-export class LayoutCtrl {
+export class DynamicLayoutCtrl {
   host;
   container;
   resizeObserver;
-  layouts;
+  dynamicLayouts;
   currentLayout;
   onLayoutChange;
 
-  constructor(host, layouts, { onLayoutChange }) {
+  constructor({ host, dynamicLayouts, onLayoutChange }) {
     (this.host = host).addController(this);
 
-    if (!layouts || !Object.keys(layouts).length) {
+    if (!dynamicLayouts || !Object.keys(dynamicLayouts).length) {
       return;
     }
 
-    this.layouts = layouts;
+    this.dynamicLayouts = dynamicLayouts;
     this.onLayoutChange = onLayoutChange;
+
+    // this.setNewLayout({ newWidth: globalThis?.innerWidth || 0 });
   }
 
   // hostUpdate() {
-  //   // this.host.setAttribute('data-layout', this.layouts[0]);
+  //   // this.host.setAttribute('data-layout', this.dynamicLayouts[0]);
   // }
 
   hostConnected() {
-    // this.host.setAttribute('data-layout', this.layouts[0]);
+    if (!this.dynamicLayouts) return;
+
+    // this.host.setAttribute('data-layout', this.dynamicLayouts[0]);
 
     // We only are interested in width, so we put resizeObserver on body.
     // this.container =
-    //   (this.layoutsConfig.container === globalThis
+    //   (this.dynamicLayoutsConfig.container === globalThis
     //     ? document?.body
-    //     : this.layoutsConfig.container) || this.host;
+    //     : this.dynamicLayoutsConfig.container) || this.host;
 
     this.container = document.body;
     this.resizeObserver = new ResizeObserver(entries => {
-      const newWidth = entries[0].contentBoxSize[0].inlineSize;
-      const layoutArrayOrdered = Object.entries(this.layouts).sort(
-        (layoutA, layoutB) => cssToNum(layoutB[1].breakpoint) - cssToNum(layoutA[1].breakpoint),
-      );
-      const newLayout = layoutArrayOrdered.find(
-        layout => newWidth >= cssToNum(layout[1].breakpoint),
-      )?.[0];
-      if (newLayout !== this.currentLayout) {
-        this.host.setAttribute('data-layout', newLayout);
-        this.currentLayout = newLayout;
-        this.onLayoutChange?.(this.layouts[newLayout]);
-      }
+      this.setNewLayout({ newWidth: entries[0].contentBoxSize[0].inlineSize });
     });
 
     this.resizeObserver?.observe(this.container);
@@ -143,6 +133,22 @@ export class LayoutCtrl {
 
   hostDisconnected() {
     this.resizeObserver?.unobserve(this.container);
+  }
+
+  setNewLayout({ newWidth }) {
+    // const newWidth = entries[0].contentBoxSize[0].inlineSize;
+    const layoutArrayOrdered = Object.entries(this.dynamicLayouts).sort(
+      ([, layoutA], [, layoutB]) => cssToNum(layoutB.breakpoint) - cssToNum(layoutA.breakpoint),
+    );
+
+    const newLayout = layoutArrayOrdered.find(
+      layout => newWidth >= cssToNum(layout[1].breakpoint),
+    )?.[0];
+    if (newLayout !== this.currentLayout) {
+      this.host.setAttribute('data-layout', newLayout);
+      this.currentLayout = newLayout;
+      this.onLayoutChange?.(this.dynamicLayouts[newLayout]);
+    }
   }
 }
 
@@ -159,8 +165,8 @@ export class UIBaseElement extends LitElement {
   /** @overridable */
   templates = this.constructor.templates;
   scopedElements = this.constructor.scopedElements;
-  layouts = this.constructor.layouts;
-  layoutCtrl;
+  dynamicLayouts = this.constructor.dynamicLayouts;
+  dynamicLayoutCtrl;
   scopedRegistryCtrl;
   refs = {};
   /** @type {WeakMap<UIBaseElement,object>} */
@@ -199,32 +205,44 @@ export class UIBaseElement extends LitElement {
   constructor() {
     super();
 
-    this.layoutCtrl = new LayoutCtrl(this, this.layouts, {
+    this.dynamicLayoutCtrl = new DynamicLayoutCtrl({
+      host: this,
+      dynamicLayouts: this.constructor.dynamicLayouts,
       onLayoutChange: () => {
-        this.render();
-        // this._rerenderToggle = !this._rerenderToggle;
+        this._forceRerender();
       },
     });
-    this.scopedRegistryCtrl = new ScopedRegistryCtrl(this, this.scopedElements);
+    this.scopedRegistryCtrl = new ScopedRegistryCtrl({
+      host: this,
+      scopedElements: this.scopedElements,
+    });
   }
 
   /**
    * @type {{styles: (currentStyles:CSSResultArray) => CSSResultArray; markup: { templates:(currentTemplates:Record<string,TemplateResult>) => Record<string,TemplateResult>}; scopedElements: () => Record<string, Class>}}
    */
-  static provideStylesAndMarkup(provider) {
-    this.styles = provider.styles(this.styles);
+  static provideDesign(provider) {
+    console.log('styles', provider.styles);
 
-    if (provider.markup?.templates) {
-      this.templates = provider.markup?.templates(this.templates);
+    if (provider.styles) {
+      this.styles = provider.styles(this.styles);
     }
 
-    if (provider.markup?.scopedElements) {
-      this.scopedElements = provider.markup?.scopedElements(this.scopedElements);
+    if (provider.templates) {
+      this.templates = provider.templates(this.templates);
     }
 
-    if (provider.layouts) {
-      this.layouts = provider.layouts(this.layouts);
-      const entries = Object.entries(this.layouts);
+    // Does our template contain other web components?
+    // If so, we need to register them in the scoped registry compatible with @open-wc/scoped-elements
+    if (provider.scopedElements) {
+      this.scopedElements = provider.scopedElements(this.scopedElements);
+    }
+
+    // Do we have a different appearance on different screen sizes? (for instance a main navigation that becomes a side menu on mobile)
+    // In this case, we add the styles in a container or media query, so that
+    if (provider.dynamicLayouts) {
+      this.dynamicLayouts = provider.dynamicLayouts(this.dynamicLayouts);
+      const entries = Object.entries(this.dynamicLayouts);
       for (let i = 0; i < entries.length; i += 1) {
         const [name, { styles, breakpoint, container, templateContext }] = entries[i];
         const [nextName, next] = entries[i + 1] || [];
@@ -242,21 +260,27 @@ export class UIBaseElement extends LitElement {
     this.elementStyles = this.finalizeStyles(this.styles);
   }
 
-  render() {
-    console.log('rendering UIBaseElement');
+  _forceRerender() {
+    this._rerenderToggle = !this._rerenderToggle;
+  }
 
+  render() {
     const { templates } = this;
     let { templateContext } = this;
 
     // When layout just changed, it could be that our templateContext is different
-    const { currentLayout } = this.layoutCtrl;
-    if (this.layouts[currentLayout]?.templateContext) {
-      templateContext = this.layouts[currentLayout]?.templateContext(templateContext);
+    const { currentLayout } = this.dynamicLayoutCtrl;
+
+    if (this.constructor.dynamicLayouts?.[currentLayout]?.templateContext) {
+      templateContext = this.dynamicLayouts[currentLayout]?.templateContext(templateContext);
     }
 
     // Add an instance of the part directive that has access to the latest
     // updated version of templateContext
-    templateContext.part = createPartDirective(this.constructor._partDirective, templateContext);
+    const partDirective = this.constructor._partDirective;
+    if (partDirective) {
+      templateContext.part = createPartDirective(partDirective, templateContext);
+    }
     if (!templates?.main) {
       return new Error('[UIBaseElement] Provide a main render function');
     }

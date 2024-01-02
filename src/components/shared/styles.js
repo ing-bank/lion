@@ -4,6 +4,15 @@ export const sharedGlobalStyles = css`
   * {
     box-sizing: border-box;
   }
+
+  :root {
+    --_color-focus: #ccc;
+  }
+
+  *:focus {
+    /* outline: none; */
+    background-color: var(--_color-focus);
+  }
 `;
 
 export const visibilityStyles = css`
