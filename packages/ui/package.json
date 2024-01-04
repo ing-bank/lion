@@ -61,7 +61,7 @@
   "dependencies": {
     "@bundled-es-modules/message-format": "^6.2.4",
     "@open-wc/dedupe-mixin": "^1.4.0",
-    "@open-wc/scoped-elements": "^2.1.4",
+    "@open-wc/scoped-elements": "^3.0.0",
     "@popperjs/core": "^2.11.8",
     "autosize": "^6.0.1",
     "awesome-phonenumber": "^6.4.0",
