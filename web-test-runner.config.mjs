@@ -18,6 +18,20 @@ const packages = fs
       .map(dir => ({ name: dir, path: `packages/ui/components/${dir}/test` })),
   );
 
+/**
+ * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}
+ *
+ */
+const testRunnerHtml = (testRunnerImport) =>
+  `\
+<html>
+  <head>
+    <script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
+    <script type="module" src="${testRunnerImport}"></script>
+  </head>
+</html>
+`;  
+
 export default {
   nodeResolve: true,
   coverageConfig: {
@@ -35,6 +49,7 @@ export default {
       timeout: '5000',
     },
   },
+  testRunnerHtml,
   browsers: [
     playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),

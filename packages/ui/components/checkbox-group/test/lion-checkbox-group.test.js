@@ -1,3 +1,4 @@
+import '@webcomponents/scoped-custom-element-registry';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { expect, fixture as _fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
