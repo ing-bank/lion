@@ -1,6 +1,6 @@
 import { LionField } from '@lion/ui/form-core.js';
 import { LocalizeMixin } from '@lion/ui/localize.js';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { FileHandle, MAX_FILE_SIZE } from './FileHandle.js';
