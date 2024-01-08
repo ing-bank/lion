@@ -1,3 +1,4 @@
+import '@webcomponents/scoped-custom-element-registry';
 import { LitElement } from 'lit';
 import {
   defineCE,

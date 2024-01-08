@@ -1,3 +1,4 @@
+import '@webcomponents/scoped-custom-element-registry';
 import { LitElement } from 'lit';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { defineCE, expect, fixture, html, triggerFocusFor, unsafeStatic } from '@open-wc/testing';

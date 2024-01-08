@@ -136,7 +136,7 @@ const ListboxMixinImplementation = superclass =>
         ...super.slots,
         input: () => {
           const lionOptions = /** @type {import('./LionOptions.js').LionOptions} */ (
-            this.createScopedElement('lion-options')
+            this.shadowRoot.createElement('lion-options')
           );
           lionOptions.setAttribute('data-tag-name', 'lion-options');
           lionOptions.registrationTarget = this;
