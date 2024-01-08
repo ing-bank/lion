@@ -1,7 +1,7 @@
 import '@webcomponents/scoped-custom-element-registry';
 import sinon from 'sinon';
 import { defineCE, expect, fixture, unsafeStatic, html } from '@open-wc/testing';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { SlotMixin } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
 

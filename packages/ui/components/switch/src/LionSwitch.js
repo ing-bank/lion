@@ -1,5 +1,5 @@
 import { css, html } from 'lit';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { ChoiceInputMixin, LionField } from '@lion/ui/form-core.js';
 import { LionSwitchButton } from './LionSwitchButton.js';
 
