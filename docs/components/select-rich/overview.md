@@ -10,12 +10,14 @@ Its implementation is based on the following Design pattern:
 import { LitElement, html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-select-rich.js';
 import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-listbox.js';
 ```
 
 ```html preview-story
-<lion-listbox name="favoriteFruit" label="Favorite fruit"> </lion-listbox>
-<lion-select-rich name="favoriteColor" label="Favorite color"> </lion-select-rich>
+<lion-select-rich name="favoriteColor" label="Favorite color">
+  <lion-option .choiceValue=${'red'}>Red</lion-option>
+  <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
+  <lion-option .choiceValue=${'blue'}>Blue</lion-option>
+</lion-select-rich>
 ```
 
 ## Features
