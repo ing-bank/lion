@@ -5,12 +5,6 @@ import { updateNavData } from './updateNavData.js';
 import { VisibilityToggleCtrl } from '../shared/VisibilityToggleCtrl.js';
 import { UIPartDirective } from '../shared/UIPartDirective.js';
 import {
-  sharedGlobalStyles,
-  visibilityStyles,
-  resetPopoverStyles,
-  resetButtonStyles,
-} from '../shared/styles.js';
-import {
   assertNav,
   assertList,
   assertListItem,
@@ -18,25 +12,6 @@ import {
   assertButton,
   assertLionIcon,
 } from '../shared/element-assertions.js';
-// This needs to be kept in client somehow when not imported via litel
-// import './lionportal-UIMainNav-provider/lionportal-UIMainNav-provider.js';
-import { designManager } from '../shared/designManager.js';
-
-// function getIconIds(navData) {
-//   const iconIds = [];
-//   for (const item of navData?.items || []) {
-//     if (item.iconId) {
-//       iconIds.push(item.iconId);
-//     }
-//     if (item.iconActiveId) {
-//       iconIds.push(item.iconActiveId);
-//     }
-//     if (item.nextLevel) {
-//       iconIds.push(...getIconIds(item.nextLevel));
-//     }
-//   }
-//   return iconIds;
-// }
 
 export class UIMainNavPartDirective extends UIPartDirective {
   setup(part, [context, name, localContext]) {
@@ -72,6 +47,8 @@ export class UIMainNavPartDirective extends UIPartDirective {
       case 'icon':
         ctor._setupIcon(part, { context, localContext });
         break;
+      default:
+        throw new Error(`Unknown part ${name}`);
     }
   }
 
@@ -223,6 +200,7 @@ export class UIMainNavPartDirective extends UIPartDirective {
   static _setupListitem({ element }, { context, localContext }) {
     assertListItem(element);
     element.setAttribute('data-part', 'listitem');
+    this.setLevel(element, localContext.level);
     context.registerRef(`list-item-l${localContext.level}`, element, { isPartOfCollection: true });
   }
 
@@ -272,7 +250,7 @@ export class UIMainNavPartDirective extends UIPartDirective {
       // Every state update should change navData and trigger a re-render
       updateNavData(context.data.navData, {
         // activePath: localContext.item.nextLevel.items[0].url,
-        acitiveItem: localContext.item,
+        activeItem: localContext.item,
         shouldReset: true,
       });
 
@@ -306,6 +284,8 @@ export class UIMainNav extends UIBaseElement {
   };
 
   static _partDirective = UIMainNavPartDirective;
+
+  static tagName = 'ui-main-nav';
 
   constructor() {
     super();
@@ -381,7 +361,7 @@ export class UIMainNav extends UIBaseElement {
    *
    */
   static templates = {
-    main(context) {
+    root(context) {
       const { data, templates, part } = context;
 
       return html`
@@ -442,11 +422,11 @@ export class UIMainNav extends UIBaseElement {
       const { data, part, templates } = context;
 
       return html`<div ${part('level', { level: 0 })}>
-        <slot name="level-0-before"></slot>
+        <div data-part="l0-before"><slot name="l0-before"></slot></div>
         <button ${part('l1-invoker', { levelConfig })}>
           ${templates.icon(context, { level: 0, item: { iconId: data.iconIdL1Invoker } })}
         </button>
-        <slot name="level-0-after"></slot>
+        <div data-part="l0-after"><slot name="l0-after"></slot></div>
       </div>`;
     },
     icon() {
@@ -455,102 +435,4 @@ export class UIMainNav extends UIBaseElement {
       return nothing;
     },
   };
-
-  static styles = [sharedGlobalStyles, visibilityStyles, resetPopoverStyles, resetButtonStyles];
 }
-// export const tagName = 'ui-main-nav';
-
-// /**
-//  * Base UI Nav templates contains an accessible base html that can be used for all kinds of navigations,
-//  * regardless of presentation: horizontally stacked, vertically stacked or a combination of both.
-//  * With or without collapsible levels, with or without overlays.
-//  * with any amount of nested levels.
-//  * @returns
-//  */
-// const baseUINavMarkup = {
-//   templates: () => ({
-//     main(context) {
-//       const { data, templates, part } = context;
-
-//       return html`
-//         <div ${part('root')}>
-//           <nav ${part('nav')}>
-//             ${templates.level0?.(context, { levelConfig: data.navData })}
-//             ${templates.navLevel(context, {
-//               levelConfig: data.navData,
-//               level: 1,
-//               isToggleTarget: true,
-//             })}
-//           </nav>
-//         </div>
-//       `;
-//     },
-//     navLevel(context, { levelConfig, level, isToggleTarget, hasActiveChild }) {
-//       const { templates, part, translations } = context;
-//       const hasBackButton = isToggleTarget && level > 1;
-
-//       return html`<div ${part('level', { levelConfig, level, isToggleTarget, hasActiveChild })}>
-//         ${hasBackButton
-//           ? html`<button ${part('level-back-btn', { level })}>
-//               ${templates.icon(context, { item: { iconId: 'lion:portal:chevronLeft' }, level: 0 })}
-//               ${translations.levelBackBtn}
-//             </button>`
-//           : nothing}
-//         <ul ${part('list', { level })}>
-//           ${levelConfig.items.map(
-//             item => html`<li ${part('listitem', { item, level })}>
-//               ${templates.navItem(context, { item, level })}
-//               ${item.nextLevel
-//                 ? templates.navLevel(context, {
-//                     levelConfig: item.nextLevel,
-//                     level: level + 1,
-//                     hasActiveChild: item.hasActiveChild,
-//                     isToggleTarget: !item.url,
-//                   })
-//                 : nothing}
-//             </li>`,
-//           )}
-//         </ul>
-//       </div>`;
-//     },
-//     navItem(context, { item, level }) {
-//       const { part, templates } = context;
-
-//       if (item.url) {
-//         return html`<a ${part('anchor', { item, level })}
-//           >${templates.icon(context, { item, level })}<span>${item.name}</span>
-//         </a>`;
-//       }
-
-//       return html`<button ${part('invoker-for-level', { item, level })}>
-//         ${templates.icon(context, { item, level })}<span>${item.name}</span>
-//       </button>`;
-//     },
-//     level0(context, { levelConfig }) {
-//       const { data, part, templates } = context;
-
-//       return html`<div ${part('level', { level: 0 })}>
-//         <slot name="level-0-before"></slot>
-//         <button ${part('l1-invoker', { levelConfig })}>
-//           ${templates.icon(context, { level: 0, item: { iconId: data.iconIdL1Invoker } })}
-//         </button>
-//         <slot name="level-0-after"></slot>
-//       </div>`;
-//     },
-//     icon(context, { item, level }) {
-//       const { part } = context;
-
-//       return item?.iconId
-//         ? html`<lion-icon ${part('icon', { item, level })}></lion-icon>`
-//         : nothing;
-//     },
-//   }),
-//   scopedElements: () => ({
-//     'lion-icon': LionIcon,
-//   }),
-// };
-
-// This seems to be the only way to make it compatible with lit astro integration atm
-// UIMainNav.provideDesign(designManager.getDesignFor('UIMainNav'));
-
-// customElements.define(tagName, UIMainNav);

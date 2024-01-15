@@ -1,19 +1,23 @@
 ---
 import { getCollection } from "astro:content";
-import MainLayout from "../../layouts/MainLayout.astro";
+import { UIPortalCard } from '@portal-provide-design/provide-designs-and-export-components--side-effectful.js';
 
+import MainLayout from "../../layouts/MainLayout.astro";
 const components = await getCollection("component");
 
 ---
 
 <MainLayout>
+  <h1>Components</h1>
+  <p>Orange Juice provides components and tools to help team work more efficiently, and to make ING’s platforms more cohesive.</p>
   <div class="ui-portal-collection">
     {
       components.map((comp) => (
-        <article class="ui-portal-card">
-          <h2>{comp.data.name}</h2>
-          <p>{comp.data.description}</p>
-          <a href={"components/" + comp.slug}>View comp</a>
+        <article>
+          <UIPortalCard href={"components/" + comp.slug}>
+            <div slot="heading">{comp.data.name}</div>
+            <p slot="content">{comp.data.description}</p>
+          </UIPortalCard>
         </article>
       ))
     }

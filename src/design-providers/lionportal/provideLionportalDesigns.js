@@ -1,10 +1,15 @@
 import { addIconResolverForPortal } from './iconset-portal/addIconResolverForPortal.js';
-import { provideDesignForUIPageLayout } from './UIPageLayout/provide.js';
-import { provideDesignForUIMainNav } from './UIMainNav/provide.js';
+import { getDesignForUIPageLayout } from './UIPageLayout/getDesign.js';
+import { getDesignForUIMainNav } from './UIMainNav/getDesign.js';
+import { getDesignForUIPortalCard } from './UIPortalCard/getDesign.js';
+import { UIMainNav } from '../../components/UIMainNav/UIMainNav.js';
+import { UIPageLayout } from '../../components/UIPageLayout/UIPageLayout.js';
+import { UIPortalCard } from '../../components/UIPortalCard/UIPortalCard.js';
 
 export function provideLionportalDesigns() {
   addIconResolverForPortal();
 
-  provideDesignForUIPageLayout();
-  provideDesignForUIMainNav();
+  UIPageLayout.provideDesign(getDesignForUIPageLayout());
+  UIMainNav.provideDesign(getDesignForUIMainNav());
+  UIPortalCard.provideDesign(getDesignForUIPortalCard());
 }

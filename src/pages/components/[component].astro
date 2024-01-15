@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
-import ComponentLayout from "../../layouts/partials/ComponentPartial.astro";
 import { UIPortalInpageNav } from "../../components/ui-portal-inpage-nav.js";
 
 export async function getStaticPaths() {
@@ -64,9 +63,8 @@ const { entry } = Astro.props;
 // const { Content } = await entry.render();
 ---
 
-<MainLayout title={entry.slug}>
-    <div style="display:flex; flex-direction: row-reverse;">
-    <UIPortalInpageNav client:load nav-data={JSON.stringify(inPageNavData)} />
+<MainLayout>
+    <UIPortalInpageNav slot="aside" client:load nav-data={JSON.stringify(inPageNavData)} />
     <div>
     <h1 id={getAnchorTitle(currentComponentData.name)}>
       {currentComponentData.name}
@@ -82,7 +80,6 @@ const { entry } = Astro.props;
         </article>
       ))
     }
-    </div>
   </div>
  
 </MainLayout>

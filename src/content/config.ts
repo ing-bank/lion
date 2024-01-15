@@ -1,4 +1,4 @@
-import { z, defineCollection } from "astro:content";
+import { z, defineCollection } from 'astro:content';
 
 const component = defineCollection({
   schema: z.object({
@@ -7,7 +7,7 @@ const component = defineCollection({
     draft: z.boolean().optional(),
     systems: z
       // control is a replacement of core here. It's like a superset of formcontrol, for all interactive ui components
-      .enum(["formControl", "overlay", "localize", "icon", "control"])
+      .enum(['formControl', 'overlay', 'localize', 'icon', 'control'])
       .optional(),
     // On component page, based on static analysis via ce analyzer, also gather:
     // - dependencies:
@@ -45,7 +45,7 @@ const componentInfoSchema = z.object({
 });
 
 const componentChangelogSchema = z.object({
-  component: z.string(),  
+  component: z.string(),
   category: z.literal('changelog'),
   type: z.literal('component-changelog'),
 });
@@ -64,19 +64,19 @@ const componentDevelopmentSchema = z.object({
 });
 
 export const docsCollectionSchema = z.union([
-	componentInfoSchema,
+  componentInfoSchema,
   componentChangelogSchema,
   componentDesignSchema,
-	componentDevelopmentSchema,
+  componentDevelopmentSchema,
 ]);
 
 const docs = defineCollection({
-	schema: docsCollectionSchema,  
+  schema: docsCollectionSchema,
 });
 
 const demo = defineCollection({
   schema: z.object({
-    component: z.enum(["accordion", "button", "calendar", "button-from-ing-web"]),
+    component: z.enum(['accordion', 'button', 'calendar', 'button-from-ing-web', 'input']),
     title: z.string(),
     description: z.string(),
   }),
@@ -84,30 +84,14 @@ const demo = defineCollection({
 
 const blog = defineCollection({
   schema: z.object({
-    title: z
-      .string()
-      .max(60, "For SEO reasons, please keep the title under 60 characters."),
+    title: z.string().max(60, 'For SEO reasons, please keep the title under 60 characters.'),
     description: z
       .string()
-      .max(
-        160,
-        "For SEO reasons, please keep the description under 160 characters."
-      ),
+      .max(160, 'For SEO reasons, please keep the description under 160 characters.'),
     date: z.date(),
-    tags: z.array(
-      z.enum([
-        "accessibility",
-        "ux",
-        "platform",
-        "design",
-        "development",
-        "lit",
-      ])
-    ),
+    tags: z.array(z.enum(['accessibility', 'ux', 'platform', 'design', 'development', 'lit'])),
     published: z.boolean(),
-    author: z
-      .enum(["Erik Kroes", "Konstantinos Norgias", "Danny Moerkerke"])
-      .optional(),
+    author: z.enum(['Erik Kroes', 'Konstantinos Norgias', 'Danny Moerkerke']).optional(),
   }),
 });
 
@@ -119,8 +103,10 @@ const system = defineCollection({
   }),
 });
 
-export const isComponentInfoEntry = (entry) => entry.data.type === 'component-info';
-export const isComponentPageEntry = (entry) => 
-  entry.data.type === 'component-development' || entry.data.type === 'component-changelog' || entry.data.type === 'component-design';
+export const isComponentInfoEntry = entry => entry.data.type === 'component-info';
+export const isComponentPageEntry = entry =>
+  entry.data.type === 'component-development' ||
+  entry.data.type === 'component-changelog' ||
+  entry.data.type === 'component-design';
 
 export const collections = { docs, component, demo, blog, system };

@@ -1,7 +1,7 @@
 import { isServer } from 'lit';
 import { browserDetection } from '@lion/ui/core.js';
 import { Resettable } from './Resettable.js';
-import { visibilityStyles, scrollLockStyles } from './styles.js';
+import { visibilityStyle, scrollLockStyle } from './styles.js';
 
 function supportsPopover() {
   // Just presume we have popover support on the server. We correct if needed via hydration...
@@ -70,10 +70,10 @@ export class VisibilityToggleCtrl {
 
     if (omitStyleDependecyCheck) {
       const hostStyles = this.host.constructor.elementStyles;
-      const hasvisibilityStyles = hostStyles.includes(visibilityStyles);
-      if (!hasvisibilityStyles) {
+      const hasvisibilityStyle = hostStyles.includes(visibilityStyle);
+      if (!hasvisibilityStyle) {
         throw new Error(
-          '[VisibilityToggleCtrl]: Missing `visibilityStyles` that provides [hidden] and [data-visually-hidden] rules',
+          '[VisibilityToggleCtrl]: Missing `visibilityStyle` that provides [hidden] and [data-visually-hidden] rules',
         );
       }
     }
@@ -81,7 +81,7 @@ export class VisibilityToggleCtrl {
     if (!isServer && !this._hasScrollLockStyles) {
       const styleTag = document.createElement('style');
       styleTag.setAttribute('data-scroll-lock-styles', '');
-      styleTag.textContent = /** @type {CSSResult} */ (scrollLockStyles).cssText;
+      styleTag.textContent = /** @type {CSSResult} */ (scrollLockStyle).cssText;
       document.head.appendChild(styleTag);
       // TODO: use overlay ctrl for this, since it has knowledge of all overlays
       this._hasScrollLockStyles = true;

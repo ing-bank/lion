@@ -1,0 +1,17 @@
+{
+  "extends": ["stylelint-config-standard", "stylelint-config-idiomatic-order"],
+  "plugins": [
+    "./packages-node/oj-tokens/src/tooling-web/stylelint-plugin-oj-tokens/oj-tokens.cjs",
+    "stylelint-use-logical-spec",
+    "stylelint-declaration-block-no-ignored-properties"
+  ],
+  "rules": {
+    "selector-class-pattern": null,
+    "oj/tokens": true,
+    "custom-property-pattern": null,
+    "liberty/use-logical-spec": null,
+    "plugin/declaration-block-no-ignored-properties": true,
+    "declaration-block-no-redundant-longhand-properties": null
+  },
+  "customSyntax": "postcss-lit"
+}

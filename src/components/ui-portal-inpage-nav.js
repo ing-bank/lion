@@ -42,6 +42,7 @@ export class UIPortalInpageNav extends LitElement {
         padding-top: var(--size-9);
         margin-right: var(--size-9);
         margin-left: var(--size-9);
+        margin-top: var(--size-14);
       }
 
       [data-part='list'] {
@@ -79,9 +80,7 @@ export class UIPortalInpageNav extends LitElement {
     return html`<ul data-part="list" data-level="${level}">
       ${children.map(
         item => html`<li data-part="listitem">
-          <a data-part="anchor" data-level="${level}" @click="${scrollInView}" href="${item.url}"
-            >${item.name}</a
-          >
+          <a data-part="anchor" data-level="${level}" href="${item.url}">${item.name}</a>
           ${item.children?.length
             ? this._renderNavLevel({ children: item.children, level: level + 1 })
             : nothing}

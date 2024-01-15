@@ -1,6 +1,46 @@
-import { LitElement, ReactiveElement, css, unsafeCSS, adoptStyles } from 'lit';
+import { LitElement, ReactiveElement, css, unsafeCSS, isServer } from 'lit';
 import { createPartDirective } from './UIPartDirective.js';
 // import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+
+/**
+ * Whether the current browser supports `adoptedStyleSheets`.
+ */
+export const supportsAdoptingStyleSheets =
+  globalThis.ShadowRoot &&
+  (globalThis.ShadyCSS === undefined || globalThis.ShadyCSS.nativeShadow) &&
+  'adoptedStyleSheets' in Document.prototype &&
+  'replace' in CSSStyleSheet.prototype;
+
+/**
+ * Applies the given styles to a `shadowRoot`. When Shadow DOM is
+ * available but `adoptedStyleSheets` is not, styles are appended to the
+ * `shadowRoot` to [mimic spec behavior](https://wicg.github.io/construct-stylesheets/#using-constructed-stylesheets).
+ * Note, when shimming is used, any styles that are subsequently placed into
+ * the shadowRoot should be placed *before* any shimmed adopted styles. This
+ * will match spec behavior that gives adopted sheets precedence over styles in
+ * shadowRoot.
+ *
+ * @param {ShadowRoot} renderRoot
+ * @param {CSSResultOrNative[]} styles
+ */
+export function adoptStyles(renderRoot, styles) {
+  if (supportsAdoptingStyleSheets && renderRoot.adoptedStyleSheets) {
+    renderRoot.adoptedStyleSheets = styles.map(s =>
+      s instanceof CSSStyleSheet ? s : s.styleSheet,
+    );
+  } else if (!isServer) {
+    // TODO: fix SSR
+    for (const s of styles) {
+      const style = document.createElement('style');
+      const nonce = globalThis['litNonce'];
+      if (nonce !== undefined) {
+        style.setAttribute('nonce', nonce);
+      }
+      style.textContent = s.cssText;
+      renderRoot.appendChild(style);
+    }
+  }
+}
 
 // Why a controller instead of a @open-wc or @lit mixin?
 // - controllers are TS friendly (mixins aren't)
@@ -161,16 +201,23 @@ export class DynamicLayoutCtrl {
  */
 export class UIBaseElement extends LitElement {
   static styles = [];
+  /** For a11y, we need to be able to add light styles sometimes. We scope them by default to host */
+  static lightStyles = [];
   static templates = {};
+  static templateContextProcessor;
   /** @overridable */
   templates = this.constructor.templates;
   scopedElements = this.constructor.scopedElements;
   dynamicLayouts = this.constructor.dynamicLayouts;
+  templateContextProcessor = this.constructor.templateContextProcessor;
   dynamicLayoutCtrl;
   scopedRegistryCtrl;
   refs = {};
   /** @type {WeakMap<UIBaseElement,object>} */
   static contextStore = new WeakMap();
+
+  /** @type {Array<UIBaseElement>} */
+  static _instances = [];
 
   static _partDirective;
 
@@ -216,48 +263,138 @@ export class UIBaseElement extends LitElement {
       host: this,
       scopedElements: this.scopedElements,
     });
+
+    // We need to keep track of all instances, so that we can force a rerender when the design changes
+    this.constructor._instances.push(this);
+  }
+
+  static _extractDataFromProvider(provider) {
+    const stylesFromProvider = [];
+    const lightStylesFromProvider = [];
+
+    let templates;
+    let scopedElements;
+    let dynamicLayouts;
+
+    if (provider.styles) {
+      stylesFromProvider.push(...provider.styles(this.styles));
+    }
+
+    // TODO: also allow in dynamic layouts, and add @scope({tagName})
+    if (provider.lightStyles) {
+      lightStylesFromProvider.push(...provider.lightStyles(this.lightStyles));
+    }
+
+    const templateContextProcessor = provider.templateContextProcessor;
+
+    if (provider.templates) {
+      templates = provider.templates(this.templates);
+    }
+
+    // Does our template contain other web components?
+    // If so, we need to register them in the scoped registry compatible with @open-wc/scoped-elements
+    if (provider.scopedElements) {
+      scopedElements = provider.scopedElements(this.scopedElements);
+    }
+
+    // Do we have a different appearance on different screen sizes? (for instance a main navigation that becomes a side menu on mobile)
+    // In this case, we add the styles in a container or media query, so that
+    if (provider.dynamicLayouts) {
+      dynamicLayouts = provider.dynamicLayouts(this.dynamicLayouts);
+      const entries = Object.entries(dynamicLayouts);
+      for (let i = 0; i < entries.length; i += 1) {
+        const [name, { styles, breakpoint, container, templateContextProcessor }] = entries[i];
+        const [nextName, next] = entries[i + 1] || [];
+        const queryType = container === globalThis ? 'media' : 'container';
+
+        for (const style of styles || []) {
+          stylesFromProvider.push(css`
+            @${unsafeCSS(queryType)} (${unsafeCSS(breakpoint)} <= width ${unsafeCSS(
+              next?.breakpoint ? `<= ${next?.breakpoint}` : '',
+            )}) {
+              ${style}
+            }
+          `);
+        }
+      }
+    }
+
+    return {
+      stylesFromProvider,
+      lightStylesFromProvider,
+      templates,
+      scopedElements,
+      dynamicLayouts,
+      templateContextProcessor,
+    };
+  }
+
+  static _initInstanceDesign(instance, styles, lightStyles) {
+    // Instead of using the inline styles from ssr output, we now use adopted styles (so we remove them now)
+    instance.shadowRoot?.querySelectorAll('style').forEach(style => style.remove());
+    adoptStyles(instance.shadowRoot, styles);
+    if (lightStyles) {
+      adoptStyles(instance, lightStyles);
+    }
+    // TODO: handle ScopedEls changed on the fly...
+    // rerender takes care of templates
+    instance._forceRerender();
   }
 
   /**
    * @type {{styles: (currentStyles:CSSResultArray) => CSSResultArray; markup: { templates:(currentTemplates:Record<string,TemplateResult>) => Record<string,TemplateResult>}; scopedElements: () => Record<string, Class>}}
    */
   static provideDesign(provider) {
-    console.log('styles', provider.styles);
+    const ctor = this;
+    const {
+      stylesFromProvider,
+      lightStylesFromProvider,
+      templates,
+      scopedElements,
+      templateContextProcessor,
+      dynamicLayouts,
+    } = ctor._extractDataFromProvider(provider);
 
-    if (provider.styles) {
-      this.styles = provider.styles(this.styles);
+    ctor.templates = templates || ctor.templates;
+    ctor.scopedElements = scopedElements || ctor.scopedElements;
+    ctor.templateContextProcessor = templateContextProcessor;
+    ctor.dynamicLayouts = dynamicLayouts;
+
+    // ctor.elementStyles = ctor.finalizeStyles([...ctor.styles, ...stylesFromProvider]);
+
+    // // Lit-ssr uses ctor.styles instead of ctor.elementStyles (used on client) for render.
+    // // Note that we only update ctor.styles in the server, allowing the client to run provideDesign, having
+    // // ctor.styles as a starting point.
+    // if (isServer) {
+    //   ctor.styles = ctor.elementStyles;
+    // }
+    ctor.styles = ctor.elementStyles = ctor.finalizeStyles([...stylesFromProvider]);
+
+    // If we call this method after instances have been created, we need to force a rerender for those instances
+    for (const instance of Array.from(ctor._instances)) {
+      ctor._initInstanceDesign(instance, ctor.elementStyles, lightStylesFromProvider);
     }
+  }
 
-    if (provider.templates) {
-      this.templates = provider.templates(this.templates);
-    }
+  provideDesign(provider) {
+    const ctor = this.constructor;
+    const {
+      stylesFromProvider,
+      lightStylesFromProvider,
+      templates,
+      scopedElements,
+      templateContextProcessor,
+      dynamicLayouts,
+    } = ctor._extractDataFromProvider(provider);
+    // 'shadow' on instance level (render method takes care of the rest)
+    this.templates = templates || this.templates;
+    this.scopedElements = scopedElements || this.scopedElements;
+    this.templateContextProcessor = templateContextProcessor;
+    this.dynamicLayouts = dynamicLayouts;
 
-    // Does our template contain other web components?
-    // If so, we need to register them in the scoped registry compatible with @open-wc/scoped-elements
-    if (provider.scopedElements) {
-      this.scopedElements = provider.scopedElements(this.scopedElements);
-    }
+    const elementStyles = ctor.finalizeStyles([...ctor.styles, ...stylesFromProvider]);
 
-    // Do we have a different appearance on different screen sizes? (for instance a main navigation that becomes a side menu on mobile)
-    // In this case, we add the styles in a container or media query, so that
-    if (provider.dynamicLayouts) {
-      this.dynamicLayouts = provider.dynamicLayouts(this.dynamicLayouts);
-      const entries = Object.entries(this.dynamicLayouts);
-      for (let i = 0; i < entries.length; i += 1) {
-        const [name, { styles, breakpoint, container, templateContext }] = entries[i];
-        const [nextName, next] = entries[i + 1] || [];
-        const queryType = container === globalThis ? 'media' : 'container';
-
-        this.styles.push(css`
-          @${unsafeCSS(queryType)} (${unsafeCSS(breakpoint)} <= width ${unsafeCSS(
-            next?.breakpoint ? `<= ${next?.breakpoint}` : '',
-          )}) {
-            ${styles}
-          }
-        `);
-      }
-    }
-    this.elementStyles = this.finalizeStyles(this.styles);
+    ctor._initInstanceDesign(this, elementStyles, lightStylesFromProvider);
   }
 
   _forceRerender() {
@@ -271,8 +408,13 @@ export class UIBaseElement extends LitElement {
     // When layout just changed, it could be that our templateContext is different
     const { currentLayout } = this.dynamicLayoutCtrl;
 
-    if (this.constructor.dynamicLayouts?.[currentLayout]?.templateContext) {
-      templateContext = this.dynamicLayouts[currentLayout]?.templateContext(templateContext);
+    if (this.templateContextProcessor) {
+      templateContext = this.templateContextProcessor(templateContext);
+    }
+
+    if (this.constructor.dynamicLayouts?.[currentLayout]?.templateContextProcessor) {
+      templateContext =
+        this.dynamicLayouts[currentLayout]?.templateContextProcessor(templateContext);
     }
 
     // Add an instance of the part directive that has access to the latest
@@ -281,10 +423,10 @@ export class UIBaseElement extends LitElement {
     if (partDirective) {
       templateContext.part = createPartDirective(partDirective, templateContext);
     }
-    if (!templates?.main) {
-      return new Error('[UIBaseElement] Provide a main render function');
+    if (!templates?.root) {
+      return new Error('[UIBaseElement] Provide a root render function');
     }
 
-    return templates.main(templateContext);
+    return templates.root(templateContext);
   }
 }

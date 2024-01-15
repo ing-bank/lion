@@ -3,7 +3,6 @@ import { isServer } from 'lit';
 function isChildOf(ctorName, el) {
   let current = el;
   while (current) {
-    console.log(current.constructor.name, ctorName);
     if (current.constructor.name === ctorName) {
       return true;
     }
@@ -62,8 +61,48 @@ export function assertButton(el) {
     el.tagName === 'BUTTON' || isChildOf('LionButton', el) || el.getAttribute('role') === 'button';
   if (!isButton) {
     throw new Error(
-      '[UIMainNavPartDirective.toggle-for-level] Please apply to HTMLButtonElement (`<button>`) | LionButton | `[role=button]`',
+      'Please apply to HTMLButtonElement (`<button>`) | LionButton | `[role=button]`',
     );
+  }
+}
+
+// Landmark asserts
+
+export function assertBannerLandmark(el) {
+  const isBanner = el.getAttribute('role') === 'banner';
+  if (!isBanner) {
+    throw new Error('Please apply to `[role=banner]`');
+  }
+}
+
+export function assertMainLandmark(el) {
+  const isMain = el.tagName === 'MAIN' || el.getAttribute('role') === 'main';
+  if (!isMain) {
+    throw new Error('Please apply to HTMLMainElement (`<main>`) | `[role=main]`');
+  }
+}
+
+export function assertContentinfoLandmark(el) {
+  const isContentInfo = el.getAttribute('role') === 'contentinfo';
+  if (!isContentInfo) {
+    throw new Error('Please apply to `[role=contentinfo]`');
+  }
+}
+
+export function assertComplementaryLandmark(el) {
+  const isContentInfo = el.getAttribute('role') === 'complementary';
+  if (!isContentInfo) {
+    throw new Error('Please apply to `[role=complementary]`');
+  }
+}
+
+export function assertPresentation(el) {
+  const roleAttr = el.getAttribute('role');
+  const isPresentation =
+    ['none', 'presentation'].includes(roleAttr) ||
+    (!roleAttr && ['DIV', 'SPAN'].includes(el.tagName));
+  if (!isPresentation) {
+    throw new Error('Please apply to an element without semantics"');
   }
 }
 

@@ -1,10 +1,11 @@
 ---
 import { getCollection } from "astro:content";
 import { SEO } from "astro-seo";
-import { UIMainNav } from '@portal-provide-design/provide-designs-and-export-components--side-effectful.js';
-import { UIPortalFooter } from "../components/ui-portal-footer.js";
-import { UIPageLayout } from "../components/UIPageLayout/ui-page-layout.js";
+import { UIMainNav, UIPageLayout } from '@portal-provide-design/provide-designs-and-export-components--side-effectful.js';
+import HeadPartial from '@portal-provide-design/head-partial.astro';
+import { UIPortalFooterContent } from "../components/UIPortalFooterContent/ui-portal-footer-content.js";
 import { updateNavData } from "../components/UIMainNav/updateNavData.js";
+
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -122,18 +123,18 @@ const footerData = [
 <html lang="en">
   <head>
     <!-- <script>
-      import '../design-providers/lionportal/provide-design--side-effectful.js';
-    
+      import './demo-switcher.js';
     </script> -->
 
-    
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
-    <link href="/styles/open-props@1.6.11.min.css" rel="stylesheet" type="text/css">
-    <link href="/styles/global.css" rel="stylesheet" type="text/css">
+    <!-- <link href="/styles/open-props@1.6.11.min.css" rel="stylesheet" type="text/css">
+    <link href="/styles/global.css" rel="stylesheet" type="text/css"> -->
+
+    <HeadPartial/>
 
     <!-- <link
       href="http://fonts.googleapis.com/css?family=Roboto"
@@ -169,12 +170,17 @@ const footerData = [
   </head>
 
   <body>
-    <UIPageLayout>
-      <UIMainNav client:load slot="main-nav" nav-data={JSON.stringify(navData)} />
+    
+    <!-- <demo-switcher active-set="lionportal"></demo-switcher> -->
+
+    <UIPageLayout  client:load>
+      <slot name="aside" slot="aside" />
+      <UIMainNav client:load slot="main-nav" nav-data={JSON.stringify(navData)}>
+        <a href="/" slot="l0-after">lion portal</a>
+      </UIMainNav>
       <slot />
-      <UIPortalFooter client:load slot="footer"footer-data={JSON.stringify(footerData)} />
+      <UIPortalFooterContent client:load slot="footer" footer-data={JSON.stringify(footerData)} />
     </UIPageLayout>
   </body>
 
 </html>
-../design-providers/lionportal/provide-designs--side-effectful.js../design-providers/lionportal/provide-design--side-effectful.js

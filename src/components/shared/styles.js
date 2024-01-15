@@ -1,12 +1,9 @@
 import { css } from 'lit';
 
-export const sharedGlobalStyles = css`
+// TODO: these should be moved to design-providers
+export const sharedGlobalStyle = css`
   * {
     box-sizing: border-box;
-  }
-
-  :root {
-    --_color-focus: #ccc;
   }
 
   *:focus {
@@ -15,13 +12,16 @@ export const sharedGlobalStyles = css`
   }
 `;
 
-export const visibilityStyles = css`
+// Utility styles
+
+export const visibilityStyle = css`
   /**
    * Apply this to an element that should be visually hidden but accessible to assistive technology. 
    * See https://www.scottohara.me/blog/2023/03/21/visually-hidden-hack.html
    * Note that since the visibility state should be animatable, it's advised to use javascript to toggle this attribute (on focus or on other triggers).
    */
-  [data-visually-hidden] {
+  [data-visually-hidden],
+  [data-visually-hidden-focusable]:not(:focus) {
     /* Although most libraries use 'position: absolute', this can cause render issues on browsers when this class is toggled on and off. */
     position: fixed;
     width: 1px;
@@ -40,7 +40,8 @@ export const visibilityStyles = css`
    * When a visibility toggle is configured as popover, we need to make sure the content of a closed popover is
    * available to assistive technology.
    */
-  [data-visually-hidden][popover]:not(:popover-open) {
+  [data-visually-hidden][popover]:not(:popover-open),
+  [data-visually-hidden-focusable][popover]:not(:popover-open) {
     display: block;
   }
 
@@ -53,7 +54,14 @@ export const visibilityStyles = css`
   }
 `;
 
-export const scrollLockStyles = css`
+// export const positionStyle = css`
+//   /** use this for ui that should float relative to window (as inline styles are bad practice and have high specificity) */
+//   [data-pos-fixed] {
+//     position: fixed;
+//   }
+// `;
+
+export const scrollLockStyle = css`
   body[data-scroll-lock] {
     overflow: hidden;
   }
@@ -68,7 +76,7 @@ export const scrollLockStyles = css`
   }
 `;
 
-export const resetPopoverStyles = css`
+export const resetPopoverStyle = css`
   [popover] {
     border: 0;
     margin: 0;
@@ -77,7 +85,7 @@ export const resetPopoverStyles = css`
 `;
 
 /** Makes native all buttons neutral */
-export const resetButtonStyles = css`
+export const resetButtonStyle = css`
   button {
     all: unset;
     outline: revert;

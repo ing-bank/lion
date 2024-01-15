@@ -1,0 +1,44 @@
+@font-face {
+  font-family: 'INGMe';
+  src: url('INGMe/Regular/INGMeWeb-Regular.woff2') format('woff2'),
+    url('INGMe/Regular/INGMeWeb-Regular.woff') format('woff'),
+    url('INGMe/Regular/INGMeWeb-Regular.ttf') format('truetype'),
+    url('INGMe/Regular/INGMeWeb-Regular.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'INGMe';
+  src: url('INGMe/Bold/INGMeWeb-Bold.woff2') format('woff2'),
+    url('INGMe/Bold/INGMeWeb-Bold.woff') format('woff'),
+    url('INGMe/Bold/INGMeWeb-Bold.ttf') format('truetype'),
+    url('INGMe/Bold/INGMeWeb-Bold.svg') format('svg');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'INGMeNarrow';
+  src: url('INGMe/Regular/INGMeNarrowWeb-Regular.woff2') format('woff2'),
+    url('INGMe/Regular/INGMeNarrowWeb-Regular.woff') format('woff'),
+    url('INGMe/Regular/INGMeNarrowWeb-Regular.ttf') format('truetype'),
+    url('INGMe/Regular/INGMeNarrowWeb-Regular.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'INGMeNarrow';
+  src: url('_merged_assets/_static/INGMe/Bold/INGMeNarrowWeb-Bold.woff2') format('woff2'),
+    url('_merged_assets/_static/INGMe/Bold/INGMeNarrowWeb-Bold.woff') format('woff'),
+    url('_merged_assets/_static/INGMe/Bold/INGMeNarrowWeb-Bold.ttf') format('truetype'),
+    url('_merged_assets/_static/INGMe/Bold/INGMeNarrowWeb-Bold.svg') format('svg');
+  font-weight: bold;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  font-family: INGMe;
+}
