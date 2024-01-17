@@ -1,4 +1,3 @@
-import '@webcomponents/scoped-custom-element-registry';
 import { LitElement } from 'lit';
 import { uuid } from '@lion/ui/core.js';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';

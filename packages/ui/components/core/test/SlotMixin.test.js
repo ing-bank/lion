@@ -1,4 +1,3 @@
-import '@webcomponents/scoped-custom-element-registry';
 import sinon from 'sinon';
 import { defineCE, expect, fixture, unsafeStatic, html } from '@open-wc/testing';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';

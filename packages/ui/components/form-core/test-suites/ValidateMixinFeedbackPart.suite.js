@@ -1,4 +1,3 @@
-import '@webcomponents/scoped-custom-element-registry';
 import { LitElement } from 'lit';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';

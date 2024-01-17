@@ -1,4 +1,3 @@
-import '@webcomponents/scoped-custom-element-registry';
 import { Required, ChoiceInputMixin } from '@lion/ui/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
 import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
