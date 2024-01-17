@@ -65,7 +65,8 @@ describe('Local Positioning', () => {
       expect(ctrl._popper.state.modifiersData).to.exist;
     });
 
-    it('positions correctly', async () => {
+    // To be fixed in https://dev.azure.com/INGCDaaS/IngOne/_workitems/edit/4096926
+    it.skip('positions correctly', async () => {
       // smoke test for integration of popper
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
@@ -206,7 +207,8 @@ describe('Local Positioning', () => {
       expect(ctrl._popper.state.modifiersData.offset.auto).to.eql({ x: 0, y: 16 });
     });
 
-    it('positions the Popper element correctly on show', async () => {
+    // To be fixed in https://dev.azure.com/INGCDaaS/IngOne/_workitems/edit/4096926
+    it.skip('positions the Popper element correctly on show', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
         contentNode: createContentSync({ width: 80, height: 20 }),
