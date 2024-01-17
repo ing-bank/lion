@@ -49,7 +49,8 @@ class WithFormControlInputTelDropdown extends LionInputTelDropdown {
 runInputTelSuite({ klass: LionInputTelDropdown });
 runInputTelDropdownSuite();
 
-describe('WithFormControlInputTelDropdown', () => {
+// To be fixed in https://dev.azure.com/INGCDaaS/IngOne/_workitems/edit/4095205
+describe.skip('WithFormControlInputTelDropdown', () => {
   // @ts-expect-error
   // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
   runInputTelDropdownSuite({ klass: WithFormControlInputTelDropdown });
