@@ -63,10 +63,10 @@
     "@open-wc/dedupe-mixin": "^1.4.0",
     "@open-wc/scoped-elements": "^3.0.0",
     "@popperjs/core": "^2.11.8",
-    "autosize": "6.0.1",
-    "awesome-phonenumber": "^6.2.0",
-    "ibantools": "^4.3.8",
-    "lit": "^3.1.0",
+    "autosize": "^6.0.1",
+    "awesome-phonenumber": "^6.4.0",
+    "ibantools": "^4.3.9",
+    "lit": "^3.1.1",
     "singleton-manager": "^1.7.0"
   },
   "keywords": [
@@ -78,9 +78,6 @@
     "access": "public"
   },
   "customElements": "custom-elements.json",
-  "overrides": {
-    "@open-wc/scoped-elements": "^3.0.0"
-  },
   "wireit": {
     "types": {
       "command": "tsc --build --pretty && npm run types-correct-after-build",

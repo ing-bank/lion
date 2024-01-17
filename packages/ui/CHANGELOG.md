@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- 2ef12dd1: Update to lit 3
+- 83658742: Update to lit version 3
 
 ## 0.5.2
 

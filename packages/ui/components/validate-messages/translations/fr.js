@@ -13,8 +13,8 @@ export default {
     MaxNumber: 'Veuillez indiquer un(e) {fieldName} inférieur(e) à {params}.',
     MinMaxNumber: 'Veuillez indiquer un(e) {fieldName} entre {params.min} et {params.max}.',
     IsDate: ' Veuillez entrer la date (JJ-MM-AAAA).',
-    MinDate: 'Veuillez indiquer un(e) {fieldName} après {params.min, date, YYYYMMDD}.',
-    MaxDate: 'Veuillez indiquer un(e) {fieldName} avant {params.max, date, YYYYMMDD}.',
+    MinDate: 'Veuillez indiquer un(e) {fieldName} après {params, date, YYYYMMDD}.',
+    MaxDate: 'Veuillez indiquer un(e) {fieldName} avant {params, date, YYYYMMDD}.',
     MinMaxDate:
       'Veuillez indiquer un(e) {fieldName} entre {params.min, date, YYYYMMDD} et {params.max, date, YYYYMMDD}.',
     IsDateDisabled: "Cette date n'est pas disponible, veuillez en choisir une autre.",
