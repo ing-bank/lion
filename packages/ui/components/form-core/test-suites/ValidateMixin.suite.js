@@ -1,4 +1,3 @@
-import '@webcomponents/scoped-custom-element-registry';
 import { LitElement } from 'lit';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import {

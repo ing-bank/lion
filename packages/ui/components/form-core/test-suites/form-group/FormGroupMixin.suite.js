@@ -1,4 +1,3 @@
-import '@webcomponents/scoped-custom-element-registry';
 import { LitElement } from 'lit';
 import { IsNumber, Required, LionField, Validator, FormGroupMixin } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-field.js';

@@ -1,4 +1,3 @@
-import '@webcomponents/scoped-custom-element-registry';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
