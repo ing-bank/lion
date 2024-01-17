@@ -1,3 +1,4 @@
+import '@webcomponents/scoped-custom-element-registry';
 import { LitElement } from 'lit';
 import { OverlayMixin } from '@lion/ui/overlays.js';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
