@@ -123,8 +123,7 @@
     }
   },
   "overrides": {
-    "sharp": "^0.29.x",
-    "@open-wc/scoped-elements": "^3.0.0"
+    "sharp": "^0.29.x"
   },
   "prettier": {
     "printWidth": 100,
