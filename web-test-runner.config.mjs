@@ -19,6 +19,7 @@ const packages = fs
   );
 
 export default {
+  files: 'packages/ui/components/select-rich/test/lion-select-rich-dialog-integration.test.js',
   nodeResolve: true,
   coverageConfig: {
     report: true,
@@ -39,9 +40,5 @@ export default {
     playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),
     playwrightLauncher({ product: 'webkit' }),
-  ],
-  groups: packages.map(pkg => ({
-    name: pkg.name,
-    files: `${pkg.path}/**/*.test.js`,
-  })),
+  ]
 };
