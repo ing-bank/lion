@@ -19,7 +19,7 @@ const packages = fs
   );
 
 export default {
-  files: 'packages/ui/components/select-rich/test/lion-select-rich-dialog-integration.test.js',
+  files: 'packages/ui/components/form-integrations/test/dialog-integrations.test.js',
   nodeResolve: true,
   coverageConfig: {
     report: true,

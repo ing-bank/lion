@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LionCalendar } from '@lion/ui/calendar.js';
 import { uuid } from '@lion/ui/core.js';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { LionInputDate } from '@lion/ui/input-date.js';

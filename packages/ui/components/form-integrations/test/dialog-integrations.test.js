@@ -1,4 +1,5 @@
 /* eslint-disable lit-a11y/no-autofocus */
+import '@webcomponents/scoped-custom-element-registry';
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 import { getAllTagNames } from './helpers/helpers.js';
