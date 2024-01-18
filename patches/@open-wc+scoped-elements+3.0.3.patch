@@ -1,0 +1,20 @@
+diff --git a/node_modules/@open-wc/scoped-elements/html-element.js b/node_modules/@open-wc/scoped-elements/html-element.js
+index 2132bbf..6a07a8e 100644
+--- a/node_modules/@open-wc/scoped-elements/html-element.js
++++ b/node_modules/@open-wc/scoped-elements/html-element.js
+@@ -57,7 +57,14 @@ const ScopedElementsMixinImplementation = superclass =>
+      */
+     attachShadow(options) {
+       const { scopedElements } = /** @type {typeof ScopedElementsHost} */ (this.constructor);
+-      if (!this.registry) {
++
++      const shouldCreateRegistry =
++        !this.registry ||
++        // @ts-ignore
++        (this.registry === this.constructor.__registry &&
++          !Object.prototype.hasOwnProperty.call(this.constructor, '__registry'));
++
++      if (shouldCreateRegistry) {
+         this.registry = new CustomElementRegistry();
+         for (const [tagName, klass] of Object.entries(scopedElements ?? {})) {
+           this.registry.define(tagName, klass);
