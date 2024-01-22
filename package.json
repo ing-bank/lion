@@ -13,7 +13,7 @@
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
     "format:prettier": "prettier \"**/*.{js,md}\" \"packages/*/package.json\" \"package.json\" --write",
-    "postinstall": "npx patch-package && npm run custom-elements-manifest",
+    "postinstall": "npx patch-package && npm run custom-elements-manifest && sh ./src/utils/patch-node-modules/copy.sh",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .js,.html .",
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md}'",
@@ -123,7 +123,8 @@
     }
   },
   "overrides": {
-    "sharp": "^0.29.x"
+    "sharp": "^0.29.x",
+    "@open-wc/scoped-elements": "^3.0.4"
   },
   "prettier": {
     "printWidth": 100,
