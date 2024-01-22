@@ -17,12 +17,16 @@ function mockScopedRegistry() {
     // Return an element that lit can use as render target
     return mockedRenderTarget;
   };
+  // @ts-expect-error wait for browser support
+  window.CustomElementRegistry = class {};
   return outputObj;
 }
 
 function unMockScopedRegistry() {
   // @ts-expect-error wait for browser support
   delete ShadowRoot.prototype.createElement;
+  // @ts-expect-error wait for browser support
+  delete window.CustomElementRegistry;
 }
 
 describe('SlotMixin', () => {
@@ -463,7 +467,7 @@ describe('SlotMixin', () => {
       unMockScopedRegistry();
     });
 
-    xit('does not scope elements when polyfill not loaded', async () => {
+    it('does not scope elements when polyfill not loaded', async () => {
       class ScopedEl extends LitElement {}
 
       const tagName = defineCE(

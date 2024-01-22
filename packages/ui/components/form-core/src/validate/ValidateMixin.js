@@ -116,7 +116,7 @@ export const ValidateMixinImplementation = superclass =>
         ...super.slots,
         feedback: () => {
           // @ts-ignore
-          const feedbackEl = this.shadowRoot.createElement('lion-validation-feedback');
+          const feedbackEl = this.createScopedElement('lion-validation-feedback');
           feedbackEl.setAttribute('data-tag-name', 'lion-validation-feedback');
           return feedbackEl;
         },

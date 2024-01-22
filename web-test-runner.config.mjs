@@ -49,7 +49,7 @@ export default {
       timeout: '5000',
     },
   },
-  testRunnerHtml,
+  //testRunnerHtml,
   browsers: [
     playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),
