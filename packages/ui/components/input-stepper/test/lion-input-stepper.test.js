@@ -12,7 +12,11 @@ const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputStep
 const defaultInputStepper = html`
   <lion-input-stepper name="year" label="Years"></lion-input-stepper>
 `;
-const inputStepperWithAttrs = html`<lion-input-stepper min="100" max="200"></lion-input-stepper>`;
+const inputStepperWithAttrs = html`<lion-input-stepper
+  step="10"
+  min="100"
+  max="200"
+></lion-input-stepper>`;
 
 describe('<lion-input-stepper>', () => {
   describe('Stepper', () => {
@@ -20,9 +24,64 @@ describe('<lion-input-stepper>', () => {
       const el = await fixture(defaultInputStepper);
       expect(el._inputNode.type).to.equal('text');
     });
+
+    it('has a default min and max of Infinity', async () => {
+      const el = await fixture(defaultInputStepper);
+      expect(el.getAttribute('min')).to.equal('Infinity');
+      expect(el.getAttribute('max')).to.equal('Infinity');
+    });
+
+    it('has a default step of 1', async () => {
+      const el = await fixture(defaultInputStepper);
+      expect(el.getAttribute('step')).to.equal('1');
+    });
+
+    it('can set a step with which the value increases', async () => {
+      const el = await fixture(defaultInputStepper);
+      el.step = 10;
+      await el.updateComplete;
+      expect(el.value).to.equal('');
+      expect(el.getAttribute('step')).to.equal('10');
+
+      const incrementButton = el.querySelector('[slot=suffix]');
+      incrementButton?.dispatchEvent(new Event('click'));
+      expect(el.value).to.equal('10');
+    });
   });
 
   describe('User interaction', () => {
+    it('should increment the value to 1 on [ArrowUp]', async () => {
+      const el = await fixture(defaultInputStepper);
+      expect(el.value).to.equal('');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+      await el.updateComplete;
+      expect(el.value).to.equal('1');
+    });
+
+    it('should increment the value to minValue on [ArrowUp] if value is below min', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      expect(el.value).to.equal('');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+      await el.updateComplete;
+      expect(el.value).to.equal('100');
+    });
+
+    it('should decrement the value to -1 on [ArrowDown]', async () => {
+      const el = await fixture(defaultInputStepper);
+      expect(el.value).to.equal('');
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await el.updateComplete;
+      expect(el.value).to.equal('-1');
+    });
+
+    it('should increment the value to minValue on [ArrowDown] if value is below min', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      el.modelValue = 600;
+      el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+      await el.updateComplete;
+      expect(el.value).to.equal('200');
+    });
+
     it('should increment the value to 1 on + button click', async () => {
       const el = await fixture(defaultInputStepper);
       expect(el.value).to.equal('');
@@ -174,14 +233,8 @@ describe('<lion-input-stepper>', () => {
       await expect(el).to.be.accessible();
     });
 
-    it('adds aria-valuemax and aria-valuemin when min and max are provided', async () => {
-      const el = await fixture(inputStepperWithAttrs);
-      expect(el).to.have.attribute('aria-valuemax', '200');
-      expect(el).to.have.attribute('aria-valuemin', '100');
-    });
-
     it('updates aria-valuenow when stepper is changed', async () => {
-      const el = await fixture(inputStepperWithAttrs);
+      const el = await fixture(defaultInputStepper);
       const incrementButton = el.querySelector('[slot=suffix]');
       incrementButton?.dispatchEvent(new Event('click'));
       expect(el).to.have.attribute('aria-valuenow', '1');

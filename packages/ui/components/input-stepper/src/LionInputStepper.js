@@ -1,6 +1,8 @@
 import { html, css, render } from 'lit';
+import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { LionInput } from '@lion/ui/input.js';
 import { IsNumber, MinNumber, MaxNumber } from '@lion/ui/form-core.js';
+import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('lit').RenderOptions} RenderOptions
@@ -11,7 +13,7 @@ import { IsNumber, MinNumber, MaxNumber } from '@lion/ui/form-core.js';
  *
  * @customElement lion-input-stepper
  */
-export class LionInputStepper extends LionInput {
+export class LionInputStepper extends LocalizeMixin(LionInput) {
   static get styles() {
     return [
       ...super.styles,
@@ -40,6 +42,11 @@ export class LionInputStepper extends LionInput {
       },
     };
   }
+
+  static localizeNamespaces = [
+    { 'lion-input-stepper': localizeNamespaceLoader },
+    ...super.localizeNamespaces,
+  ];
 
   /**
    * @returns {number}
@@ -82,9 +89,7 @@ export class LionInputStepper extends LionInput {
     this.addEventListener('keydown', this.__keyDownHandler);
     this._inputNode.setAttribute('inputmode', 'decimal');
     this._inputNode.setAttribute('autocomplete', 'off');
-    this.setAttribute('aria-label', this.label);
-    this.step = this.hasAttribute('step') ? this.step : 1;
-    this.__setAriaLabelsAndValidator();
+    this.__setDefaultValidators();
     this.__toggleSpinnerButtonsState();
   }
 
@@ -117,6 +122,14 @@ export class LionInputStepper extends LionInput {
       this._inputNode.step = `${this.step}`;
       this.values.step = this.step;
     }
+
+    if (changedProperties.has('_ariaLabelledNodes')) {
+      this.__reflectAriaAttrToSpinButton('aria-labelledby', this._ariaLabelledNodes);
+    }
+
+    if (changedProperties.has('_ariaDescribedNodes')) {
+      this.__reflectAriaAttrToSpinButton('aria-describedby', this._ariaDescribedNodes);
+    }
   }
 
   get slots() {
@@ -128,41 +141,47 @@ export class LionInputStepper extends LionInput {
   }
 
   /**
+   * Based on FormControlMixin __reflectAriaAttr()
+   *
+   * Will handle help text, validation feedback and character counter,
+   * prefix/suffix/before/after (if they contain data-description flag attr).
+   * Also, contents of id references that will be put in the <lion-field>._ariaDescribedby property
+   * from an external context, will be read by a screen reader.
+   * @param {string} attrName
+   * @param {Element[]} nodes
+   * @private
+   */
+  __reflectAriaAttrToSpinButton(attrName, nodes) {
+    const string = nodes.map(n => n.id).join(' ');
+    this.setAttribute(attrName, string);
+  }
+
+  /**
    * Set aria labels and apply validators
    * @private
    */
-  __setAriaLabelsAndValidator() {
-    const ariaAttributes = {
-      'aria-valuemax': this.values.max,
-      'aria-valuemin': this.values.min,
-    };
-
-    const minMaxValidators = /** @type {(MaxNumber | MinNumber)[]} */ (
-      Object.entries(ariaAttributes)
-        .map(([key, val]) => {
-          if (val !== Infinity) {
-            this.setAttribute(key, `${val}`);
-            return key === 'aria-valuemax' ? new MaxNumber(val) : new MinNumber(val);
-          }
-          return null;
-        })
-        .filter(validator => validator !== null)
+  __setDefaultValidators() {
+    const validators = /** @type {(IsNumber| MaxNumber | MinNumber)[]} */ (
+      [
+        new IsNumber(),
+        this.min !== Infinity ? new MinNumber(this.min) : null,
+        this.max !== Infinity ? new MaxNumber(this.max) : null,
+      ].filter(validator => validator !== null)
     );
-    const validators = [new IsNumber(), ...minMaxValidators];
     this.defaultValidators.push(...validators);
   }
 
   /**
    * Update values on keyboard arrow up and down event
-   * @param {KeyboardEvent} e - keyboard event
+   * @param {KeyboardEvent} ev - keyboard event
    * @private
    */
-  __keyDownHandler(e) {
-    if (e.key === 'ArrowUp') {
+  __keyDownHandler(ev) {
+    if (ev.key === 'ArrowUp') {
       this.__increment();
     }
 
-    if (e.key === 'ArrowDown') {
+    if (ev.key === 'ArrowDown') {
       this.__decrement();
     }
   }
@@ -177,6 +196,9 @@ export class LionInputStepper extends LionInput {
     const incrementButton = this.__getSlot('suffix');
     const disableIncrementor = this.currentValue >= max && max !== Infinity;
     const disableDecrementor = this.currentValue <= min && min !== Infinity;
+    if (disableDecrementor || disableIncrementor) {
+      this._inputNode.focus();
+    }
     decrementButton[disableDecrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
     incrementButton[disableIncrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
     this.setAttribute('aria-valuenow', `${this.currentValue}`);
@@ -201,10 +223,10 @@ export class LionInputStepper extends LionInput {
    * @private
    */
   __increment() {
-    const { step, max } = this.values;
+    const { step, min, max } = this.values;
     const newValue = this.currentValue + step;
     if (newValue <= max || max === Infinity) {
-      this.value = `${newValue}`;
+      this.value = newValue < min && min !== Infinity ? `${min}` : `${newValue}`;
       this.__toggleSpinnerButtonsState();
       this._proxyInputEvent();
     }
@@ -215,10 +237,10 @@ export class LionInputStepper extends LionInput {
    * @private
    */
   __decrement() {
-    const { step, min } = this.values;
+    const { step, min, max } = this.values;
     const newValue = this.currentValue - step;
     if (newValue >= min || min === Infinity) {
-      this.value = `${newValue}`;
+      this.value = newValue > max && max !== Infinity ? `${max}` : `${newValue}`;
       this.__toggleSpinnerButtonsState();
       this._proxyInputEvent();
     }
@@ -301,9 +323,8 @@ export class LionInputStepper extends LionInput {
         ?disabled=${this.disabled || this.readOnly}
         @click=${this.__decrement}
         @blur=${this.__boundOnLeaveButton}
-        tabindex="-1"
         type="button"
-        aria-label="decrement"
+        aria-label="${this.msgLit('lion-input-stepper:decrease')}"
       >
         ${this._decrementorSignTemplate()}
       </button>
@@ -321,9 +342,8 @@ export class LionInputStepper extends LionInput {
         ?disabled=${this.disabled || this.readOnly}
         @click=${this.__increment}
         @blur=${this.__boundOnLeaveButton}
-        tabindex="-1"
         type="button"
-        aria-label="increment"
+        aria-label="${this.msgLit('lion-input-stepper:increase')}"
       >
         ${this._incrementorSignTemplate()}
       </button>
