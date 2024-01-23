@@ -1,3 +1,8 @@
+/*
+ * ING: This file is taken from @open-wc/scoped-elements@v3 and patched to make polyfill not mandatory.
+ * All the changes are taken from @open-wc/scoped-elements@v3
+ */ 
+
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { adoptStyles } from 'lit';
 import { ScopedElementsMixin as BaseScopedElementsMixin } from './html-element.js';
@@ -34,17 +39,11 @@ const ScopedElementsMixinImplementation = superclass =>
         // @ts-ignore
         this.renderOptions.creationScope = createdRoot;
       }
-      // // @ts-ignore
-      // this.renderOptions.creationScope = shadowRoot;
 
       if (createdRoot instanceof ShadowRoot) {
         adoptStyles(createdRoot, elementStyles);
         this.renderOptions.renderBefore = this.renderOptions.renderBefore || createdRoot.firstChild;
       }
-
-      // adoptStyles(shadowRoot, elementStyles);
-
-      // this.renderOptions.renderBefore ??= shadowRoot.firstChild;
 
       return createdRoot;
     }

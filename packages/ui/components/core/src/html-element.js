@@ -1,3 +1,8 @@
+/*
+ * ING: This file is taken from @open-wc/scoped-elements@v3 and patched to make polyfill not mandatory.
+ * All the changes are taken from @open-wc/scoped-elements@v3
+ */ 
+
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
 /**
