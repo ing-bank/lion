@@ -1,20 +1,15 @@
 /*
  * ING: This file is taken from @open-wc/scoped-elements@v3 and patched to make polyfill not mandatory.
  * All the changes are taken from @open-wc/scoped-elements@v3
- */ 
+ */
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
+import { ScopedElementsMixin as BaseScopedElementsMixin } from '@open-wc/scoped-elements/html-element.js';
 
 /**
  * @typedef {import('./types.js').ScopedElementsHost} ScopedElementsHost
  * @typedef {import('./types.js').ScopedElementsMap} ScopedElementsMap
  */
-
-const version = '3.0.0';
-const versions = window.scopedElementsVersions || (window.scopedElementsVersions = []);
-if (!versions.includes(version)) {
-  versions.push(version);
-}
 
 // @ts-ignore
 const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
@@ -26,39 +21,7 @@ const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
  */
 const ScopedElementsMixinImplementation = superclass =>
   /** @type {ScopedElementsHost} */
-  class ScopedElementsHost extends superclass {
-    /**
-     * Obtains the scoped elements definitions map if specified.
-     *
-     * @type {ScopedElementsMap=}
-     */
-    static scopedElements;
-
-    static get scopedElementsVersion() {
-      return version;
-    }
-
-    /** @type {CustomElementRegistry=} */
-    static __registry;
-
-    /**
-     * Obtains the CustomElementRegistry associated to the ShadowRoot.
-     *
-     * @returns {CustomElementRegistry=}
-     */
-    get registry() {
-      return /** @type {typeof ScopedElementsHost} */ (this.constructor).__registry;
-    }
-
-    /**
-     * Set the CustomElementRegistry associated to the ShadowRoot
-     *
-     * @param {CustomElementRegistry} registry
-     */
-    set registry(registry) {
-      /** @type {typeof ScopedElementsHost} */ (this.constructor).__registry = registry;
-    }
-
+  class ScopedElementsHost extends BaseScopedElementsMixin(superclass) {
     createScopedElement(tagName) {
       const root = supportsScopedRegistry ? this.shadowRoot : document;
       // @ts-ignore polyfill to support createElement on shadowRoot is loaded
