@@ -28,9 +28,6 @@
     "./validate-messages-translations/*": "./components/validate-messages/translations/*",
     "./docs/*": "./docs/*"
   },
-  "overrides": {
-    "@open-wc/scoped-elements": "^3.0.4"
-  },
   "files": [
     "*.js",
     "components",
