@@ -1,6 +1,6 @@
 import { css, html } from 'lit';
-import { ScopedElementsMixin } from '../../core/src/lit-element.js';
 import { ChoiceInputMixin, LionField } from '@lion/ui/form-core.js';
+import { ScopedElementsMixin } from '../../core/src/lit-element.js';
 import { LionSwitchButton } from './LionSwitchButton.js';
 
 export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {

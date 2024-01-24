@@ -1,7 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { LionCalendar } from '@lion/ui/calendar.js';
 import { uuid } from '@lion/ui/core.js';
-import { ScopedElementsMixin } from '../../core/src/lit-element.js';
 import { html, css } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
@@ -13,6 +12,7 @@ import {
   ArrowMixin,
 } from '@lion/ui/overlays.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
+import { ScopedElementsMixin } from '../../core/src/lit-element.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**

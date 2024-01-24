@@ -1,8 +1,8 @@
 import { css, html } from 'lit';
 import { SlotMixin, uuid } from '@lion/ui/core.js';
-import { ScopedElementsMixin } from '../../core/src/lit-element.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/ui/form-core.js';
+import { ScopedElementsMixin } from '../../core/src/lit-element.js';
 import { LionOptions } from './LionOptions.js';
 
 // TODO: extract ListNavigationWithActiveDescendantMixin that can be reused in [role="menu"]

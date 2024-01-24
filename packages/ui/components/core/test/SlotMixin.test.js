@@ -1,4 +1,3 @@
-import '@webcomponents/scoped-custom-element-registry';
 import sinon from 'sinon';
 import { defineCE, expect, fixture, unsafeStatic, html } from '@open-wc/testing';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
@@ -11,7 +10,7 @@ import { LitElement } from 'lit';
 
 const createElementNative = ShadowRoot.prototype.createElement;
 function mockScopedRegistry() {
-  const outputObj = { createElementCallCount: 0 };  
+  const outputObj = { createElementCallCount: 0 };
   // @ts-expect-error wait for browser support
   ShadowRoot.prototype.createElement = (tagName, options) => {
     outputObj.createElementCallCount += 1;

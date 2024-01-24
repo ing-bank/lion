@@ -1,7 +1,7 @@
 /*
  * ING: This file is taken from @open-wc/scoped-elements@v3 and patched to make polyfill not mandatory.
  * All the changes are taken from @open-wc/scoped-elements@v3
- */ 
+ */
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { adoptStyles } from 'lit';
@@ -31,9 +31,9 @@ const ScopedElementsMixinImplementation = superclass =>
     createRenderRoot() {
       const { shadowRootOptions, elementStyles } = /** @type {TypeofLitElement} */ (
         this.constructor
-      );      
+      );
 
-      //const shadowRoot = this.attachShadow(shadowRootOptions);
+      // const shadowRoot = this.attachShadow(shadowRootOptions);
       const createdRoot = this.attachShadow(shadowRootOptions);
       if (supportsScopedRegistry) {
         // @ts-ignore

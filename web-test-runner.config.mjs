@@ -23,14 +23,14 @@ const packages = fs
  *
  */
 const testRunnerHtml = (testRunnerImport) =>
-  `\
+`
 <html>
   <head>
     <script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
     <script type="module" src="${testRunnerImport}"></script>
   </head>
 </html>
-`;  
+`;
 
 export default {
   nodeResolve: true,
@@ -49,7 +49,7 @@ export default {
       timeout: '5000',
     },
   },
-  //testRunnerHtml,
+  testRunnerHtml,
   browsers: [
     playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),
