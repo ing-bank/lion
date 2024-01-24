@@ -47,7 +47,10 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
           box-sizing: border-box;
           vertical-align: middle;
           line-height: 24px;
-          background-color: #eee; /* minimal styling to make it recognizable as btn */
+          background-color: var(
+            --bg-primary,
+            #eee
+          ); /* minimal styling to make it recognizable as btn */
           padding: 8px; /* padding to fix with min-height */
           outline: none; /* focus style handled below */
           cursor: default; /* we should always see the default arrow, never a caret */
@@ -84,7 +87,7 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
         :host(:focus:not([disabled])),
         :host(:focus-visible) {
           /* if you extend, please overwrite */
-          outline: 2px solid #bde4ff;
+          outline: 3px solid var(--border-focus, #bde4ff);
         }
 
         /* Hide focus styles if they're not needed, for example,
@@ -95,13 +98,13 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
 
         :host(:hover) {
           /* if you extend, please overwrite */
-          background: #f4f6f7;
+          background: var(--bg-hover, #f4f6f7);
         }
 
         :host(:active), /* keep native :active to render quickly where possible */
         :host([active]) /* use custom [active] to fix IE11 */ {
           /* if you extend, please overwrite */
-          background: gray;
+          background: var(--bg-active, #adadad);
         }
 
         :host([hidden]) {
@@ -111,9 +114,9 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
         :host([disabled]) {
           pointer-events: none;
           /* if you extend, please overwrite */
-          background: lightgray;
-          color: #adadad;
-          fill: #adadad;
+          background: var(--bg-disabled, lightgray);
+          color: var(--fg-disabled, #adadad);
+          fill: var(--fg-disabled, #adadad);
         }
       `,
     ];

@@ -80,7 +80,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
           display: block;
           overflow: auto;
           z-index: 1;
-          background: white;
+          background: var(--bg-default, white);
         }
       `,
     ];

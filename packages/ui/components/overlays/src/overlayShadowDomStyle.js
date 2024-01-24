@@ -82,7 +82,7 @@ export const overlayShadowDomStyle = css`
     width: 100%;
     height: 100%;
     z-index: -1;
-    background-color: #333333;
+    background-color: var(--bg-backdrop, #333333);
     display: none;
   }
 

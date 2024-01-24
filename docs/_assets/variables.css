@@ -24,4 +24,40 @@ html {
   --secondary-font-family: 'Montserrat', sans-serif;
   --monospace-font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier',
     monospace;
+
+
+  /* --color-primary: #f0e130;
+  --color-secondary: #303ff0;
+  --color-tertiary: #a7adf9; */
+
+  /* --color-primary: #8f7325;
+  --color-secondary: #25418F;
+  --color-tertiary: #5E7ED5; */
+
+
+  --color-primary: #999;
+  --color-secondary: #555;
+  --color-tertiary: #ddd;
+  
+  --color-white: white;
+  --color-gray200: #ddd;
+  --color-gray400: #999;
+  --color-gray600: #555;
+  --color-gray800: #222;
+
+  --bg-default: var(--color-white);
+  --bg-primary: var(--color-primary);
+  --bg-secondary: var(--color-secondary);
+  --fg-default: var(--color-gray800);
+  --fg-secondary: var(--color-gray600);
+  --border-default: var(--color-gray400);
+
+  --bg-hover: var(--color-tertiary);
+  --bg-active: var(--color-gray200);
+  --border-focus: var(--color-secondary);
+
+  --bg-disabled: var(--color-gray200);
+  --fg-disabled: var(--color-gray400);
+
+  --bg-backdrop: var(--color-gray800);
 }

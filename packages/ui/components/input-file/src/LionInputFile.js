@@ -881,7 +881,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
           position: relative;
           flex-direction: column;
           align-items: center;
-          border: dashed 2px black;
+          border: dashed 2px var(--border-default, black);
           padding: 24px 0;
         }
       `,

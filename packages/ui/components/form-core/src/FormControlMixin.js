@@ -697,12 +697,11 @@ const FormControlMixinImplementation = superclass =>
 
           :host([disabled]) .form-field__label ::slotted(*),
           :host([disabled]) .form-field__help-text ::slotted(*) {
-            color: var(--disabled-text-color, #767676);
+            color: var(--fg-disabled, #767676);
           }
 
           :host([label-sr-only]) .form-field__label {
             position: absolute;
-            top: 0;
             width: 1px;
             height: 1px;
             overflow: hidden;
@@ -729,7 +728,7 @@ const FormControlMixinImplementation = superclass =>
 
           /***** {state} :disabled *****/
           :host([disabled]) .input-group ::slotted([slot='input']) {
-            color: var(--disabled-text-color, #767676);
+            color: var(--fg-disabled, #767676);
           }
 
           /***********************

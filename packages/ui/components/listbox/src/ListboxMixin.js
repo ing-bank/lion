@@ -99,7 +99,7 @@ const ListboxMixinImplementation = superclass =>
           }
 
           :host([disabled]) {
-            color: #adadad;
+            color: var(--fg-disabled, #adadad);
           }
 
           :host([orientation='horizontal']) ::slotted([role='listbox']) {

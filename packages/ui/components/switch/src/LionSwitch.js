@@ -13,7 +13,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
         }
 
         :host([disabled]) {
-          color: #adadad;
+          color: var(--fg-disabled, #adadad);
         }
       `,
     ];

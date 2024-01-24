@@ -1,5 +1,4 @@
 /* eslint-disable max-classes-per-file */
-// @ts-expect-error [external]: https://github.com/jackmoore/autosize/pull/384 wait for this, then we can switch to just 'autosize'; and then types will work!
 import autosize from 'autosize/src/autosize.js';
 import { LionField, NativeTextFieldMixin } from '@lion/ui/form-core.js';
 import { css } from 'lit';

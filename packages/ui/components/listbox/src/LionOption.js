@@ -33,7 +33,7 @@ export class LionOption extends DisabledMixin(
       css`
         :host {
           display: block;
-          background-color: white;
+          background-color: var(--bg-default, white);
           padding: 4px;
           cursor: default;
         }
@@ -42,19 +42,20 @@ export class LionOption extends DisabledMixin(
           display: none;
         }
 
-        :host(:hover) {
-          background-color: #eee;
-        }
         :host([active]) {
-          background-color: #ddd;
+          background-color: var(--bg-active, #ddd);
         }
 
         :host([checked]) {
-          background-color: #bde4ff;
+          background-color: var(--bg-primary, #bde4ff);
+        }
+
+        :host(:hover) {
+          background-color: var(--bg-hover, #eee);
         }
 
         :host([disabled]) {
-          color: #adadad;
+          color: var(--fg-disabled, #adadad);
         }
       `,
     ];
