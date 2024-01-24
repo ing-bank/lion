@@ -1,23 +1,26 @@
 /*
- * ING: This file is taken from @open-wc/scoped-elements@v3 and patched to make polyfill not mandatory.
- * All the changes are taken from @open-wc/scoped-elements@v3
+ * ING: This file is combination of '@open-wc/scoped-elements/lit-element.js' and '@open-wc/scoped-elements/html-element.js'.
+ * It extends and modifies the original classes to make polyfill not mandatory.
  */
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { ScopedElementsMixin as BaseScopedElementsMixin } from '@open-wc/scoped-elements/html-element.js';
+import { adoptStyles } from 'lit';
+import { ScopedElementsMixin as BaseScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 
 /**
- * @typedef {import('./types.js').ScopedElementsHost} ScopedElementsHost
- * @typedef {import('./types.js').ScopedElementsMap} ScopedElementsMap
+ * @typedef {import('lit').CSSResultOrNative} CSSResultOrNative
+ * @typedef {import('lit').LitElement} LitElement
+ * @typedef {typeof import('lit').LitElement} TypeofLitElement
+ * @typedef {import('@open-wc/dedupe-mixin').Constructor<LitElement>} LitElementConstructor
+
  */
 
 // @ts-ignore
 const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
 
 /**
- * @template {import('./types.js').Constructor<HTMLElement>} T
+ * @template {LitElementConstructor} T
  * @param {T} superclass
- * @return {T & import('./types.js').Constructor<ScopedElementsHost>}
  */
 const ScopedElementsMixinImplementation = superclass =>
   /** @type {ScopedElementsHost} */
@@ -81,7 +84,7 @@ const ScopedElementsMixinImplementation = superclass =>
         }
       }
 
-      return super.attachShadow({
+      return Element.prototype.attachShadow.call(this, {
         ...options,
         // The polyfill currently expects the registry to be passed as `customElements`
         customElements: this.registry,
@@ -89,6 +92,26 @@ const ScopedElementsMixinImplementation = superclass =>
         // For backwards compatibility, we pass it as both
         registry: this.registry,
       });
+    }
+
+    createRenderRoot() {
+      const { shadowRootOptions, elementStyles } = /** @type {TypeofLitElement} */ (
+        this.constructor
+      );
+
+      // const shadowRoot = this.attachShadow(shadowRootOptions);
+      const createdRoot = this.attachShadow(shadowRootOptions);
+      if (supportsScopedRegistry) {
+        // @ts-ignore
+        this.renderOptions.creationScope = createdRoot;
+      }
+
+      if (createdRoot instanceof ShadowRoot) {
+        adoptStyles(createdRoot, elementStyles);
+        this.renderOptions.renderBefore = this.renderOptions.renderBefore || createdRoot.firstChild;
+      }
+
+      return createdRoot;
     }
   };
 

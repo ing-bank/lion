@@ -4,7 +4,7 @@ import { LocalizeMixin } from '@lion/ui/localize.js';
 import { css, html, LitElement, nothing } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { ScopedElementsMixin } from '../../core/src/lit-element.js';
+import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
