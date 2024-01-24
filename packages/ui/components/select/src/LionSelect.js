@@ -57,6 +57,11 @@ class LionFieldWithSelect extends LionField {
  * @customElement lion-select
  */
 export class LionSelect extends LionFieldWithSelect {
+  // eslint-disable-next-line class-methods-use-this
+  get operationMode() {
+    return 'select';
+  }
+
   connectedCallback() {
     super.connectedCallback();
     this._inputNode.addEventListener('change', this._proxyChangeEvent);

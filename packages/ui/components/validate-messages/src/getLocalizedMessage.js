@@ -7,6 +7,11 @@
 let pendingPromise;
 
 /**
+ * @param {string} string
+ */
+const capitalize = string => (string && string[0].toUpperCase() + string.slice(1)) || '';
+
+/**
  * @param {{localize: LocalizeManager}} opts
  */
 export async function loadValidateNamespace({ localize }) {
@@ -105,7 +110,13 @@ export async function loadValidateNamespace({ localize }) {
 export const getLocalizedMessage = async ({ data, localize }) => {
   await loadValidateNamespace({ localize });
   if (data) {
-    return localize.msg(`lion-validate:${data.type}.${data.name}`, data);
+    const operationMode =
+      data.formControl?.operationMode !== 'enter' && data.name === 'Required'
+        ? capitalize(data.formControl?.operationMode)
+        : undefined;
+    const validatorName = operationMode ? `_${data.name}${operationMode}` : data.name;
+
+    return localize.msg(`lion-validate:${data.type}.${validatorName}`, data);
   }
   return '';
 };

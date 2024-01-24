@@ -17,6 +17,8 @@ export type FeedbackMessage = {
 
 export type ValidationType = 'error' | 'warning' | 'info' | 'success' | string;
 
+export type OperationMode = 'enter' | 'select' | 'upload';
+
 export declare class ValidateHost {
   /**
    * Used by Application Developers to add Validators to a FormControl.

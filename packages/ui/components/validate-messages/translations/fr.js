@@ -1,6 +1,8 @@
 export default {
   error: {
     Required: 'Veuillez également indiquer un(e) {fieldName}.',
+    _RequiredUpload: 'Veuillez télécharger un(e) {fieldName}.',
+    _RequiredSelect: 'Veuillez également sélectionner un(e) {fieldName}.',
     EqualsLength:
       'Veuillez saisir un(e) {fieldName} correct(e) comptant précisément {params} caractères.',
     MinLength: 'Veuillez indiquer un(e) {fieldName} correct(e) (au moins {params}).',
@@ -24,6 +26,8 @@ export default {
   },
   warning: {
     Required: 'Veuillez également indiquer un(e) {fieldName}.',
+    _RequiredUpload: 'Veuillez télécharger un(e) {fieldName}.',
+    _RequiredSelect: 'Veuillez également sélectionner un(e) {fieldName}.',
     EqualsLength:
       'Veuillez saisir un(e) {fieldName} correct(e) comptant précisément {params} caractères.',
     MinLength: 'Veuillez indiquer un(e) {fieldName} correct(e) (au moins {params}).',

@@ -1,6 +1,8 @@
 export default {
   error: {
     Required: '{fieldName} muss ausgefüllt werden.',
+    _RequiredUpload: 'Bitte laden Sie ein/e/n {fieldName} hoch.',
+    _RequiredSelect: 'Wählen Sie auch einen Wert für {fieldName} aus.',
     EqualsLength: 'Geben Sie einen korrekten Wert für {fieldName} mit exakt {params} Zeichen ein.',
     MinLength: 'Du musst mindestens {params} Zeichen eingeben.',
     MaxLength: 'Du kannst maximal {params} Zeichen eingeben.',
@@ -23,6 +25,8 @@ export default {
   },
   warning: {
     Required: '{fieldName} sollte ausgefüllt werden.',
+    _RequiredUpload: 'Bitte laden Sie ein/e/n {fieldName} hoch.',
+    _RequiredSelect: 'Wählen Sie auch einen Wert für {fieldName} aus.',
     EqualsLength: 'Geben Sie einen korrekten Wert für {fieldName} mit exakt {params} Zeichen ein.',
     MinLength: 'Du solltest mindestens {params} Zeichen eingeben.',
     MaxLength: 'Du kannst maximal {params} Zeichen eingeben.',

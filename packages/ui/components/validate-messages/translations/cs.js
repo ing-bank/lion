@@ -1,6 +1,8 @@
 export default {
   error: {
     Required: 'Zadejte rovněž {fieldName}.',
+    _RequiredUpload: 'Nahrajte {fieldname}.',
+    _RequiredSelect: 'Vyberte rovněž {fieldname}.',
     EqualsLength: 'Zadejte správné {fieldName}, přesně {params} znaků.',
     MinLength: 'Zadejte správné {fieldName} (alespoň {params}).',
     MaxLength: 'Zadejte správné {fieldName} (až {params} znaků).',
@@ -21,6 +23,8 @@ export default {
   },
   warning: {
     Required: 'Zadejte rovněž {fieldName}.',
+    _RequiredUpload: 'Nahrajte {fieldname}.',
+    _RequiredSelect: 'Vyberte rovněž {fieldname}.',
     EqualsLength: 'Zadejte správné {fieldName}, přesně {params} znaků.',
     MinLength: 'Zadejte správné {fieldName} (alespoň {params}).',
     MaxLength: 'Zadejte správné {fieldName} (až {params} znaků).',
