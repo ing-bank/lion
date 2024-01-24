@@ -1,6 +1,8 @@
 export default {
   error: {
     Required: 'Introduceți un/o {fieldName}.',
+    _RequiredUpload: 'Încărcaţi un {fieldName}.',
+    _RequiredSelect: 'Selectați un/o {fieldName}.',
     EqualsLength: 'Introduceți un/o {fieldName} corect(ă) de exact {params} (de) caractere.',
     MinLength: 'Introduceți un/o {fieldName} corect(ă) (cel puțin {params}).',
     MaxLength: 'Introduceți un/o {fieldName} corect(ă) (până la {params} (de) caractere).',
@@ -23,6 +25,8 @@ export default {
   },
   warning: {
     Required: 'Introduceți un/o {fieldName}.',
+    _RequiredUpload: 'Încărcaţi un {fieldName}.',
+    _RequiredSelect: 'Selectați un/o {fieldName}.',
     EqualsLength: 'Introduceți un/o {fieldName} corect(ă) de exact {params} (de) caractere.',
     MinLength: 'Introduceți un/o {fieldName} corect(ă) (cel puțin {params}).',
     MaxLength: 'Introduceți un/o {fieldName} corect(ă) (până la {params} (de) caractere).',

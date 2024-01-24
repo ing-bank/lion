@@ -1,6 +1,7 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { FormRegistrarMixin } from '../registration/FormRegistrarMixin.js';
 import { InteractionStateMixin } from '../InteractionStateMixin.js';
+import { ValidateMixin } from '../validate/ValidateMixin.js';
 
 /**
  * @typedef {import('../../types/choice-group/ChoiceGroupMixinTypes.js').ChoiceGroupMixin} ChoiceGroupMixin
@@ -8,6 +9,7 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  * @typedef {import('../../types/registration/FormRegistrarMixinTypes.js').ElementWithParentFormGroup} ElementWithParentFormGroup
  * @typedef {import('../../types/form-group/FormGroupMixinTypes.js').FormControl} FormControl
  * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes.js').ChoiceInputHost} ChoiceInputHost
+ * @typedef {import('../validate/Validator.js').Validator} Validator
  */
 
 /**
@@ -22,7 +24,9 @@ import { InteractionStateMixin } from '../InteractionStateMixin.js';
  */
 const ChoiceGroupMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
-  class ChoiceGroupMixin extends FormRegistrarMixin(InteractionStateMixin(superclass)) {
+  class ChoiceGroupMixin extends FormRegistrarMixin(
+    ValidateMixin(InteractionStateMixin(superclass)),
+  ) {
     /** @type {any} */
     static get properties() {
       return {
@@ -121,6 +125,11 @@ const ChoiceGroupMixinImplementation = superclass =>
       } else {
         this._setCheckedElements(value, checkCondition);
       }
+    }
+
+    get operationMode() {
+      // @ts-ignore
+      return this._repropagationRole === 'choice-group' ? 'select' : 'enter';
     }
 
     constructor() {

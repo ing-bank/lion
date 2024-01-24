@@ -1,6 +1,8 @@
 export default {
   error: {
     Required: 'Uveďte aj {fieldName}.',
+    _RequiredUpload: 'Nahrajte pole {fieldName}.',
+    _RequiredSelect: 'Vyberte aj hodnotu v poli {fieldname}.',
     EqualsLength: 'Do poľa {fieldName} zadajte platnú hodnotu v dĺžke presne {params} znaky/-ov.',
     MinLength: 'Uveďte správne {fieldName} (najmenej {params}).',
     MaxLength: 'Uveďte správne {fieldName} (maximálne {params} znakov).',
@@ -21,6 +23,8 @@ export default {
   },
   warning: {
     Required: 'Uveďte aj {fieldName}.',
+    _RequiredUpload: 'Nahrajte pole {fieldName}.',
+    _RequiredSelect: 'Vyberte aj hodnotu v poli {fieldname}.',
     EqualsLength: 'Do poľa {fieldName} zadajte platnú hodnotu v dĺžke presne {params} znaky/-ov.',
     MinLength: 'Uveďte správne {fieldName} (najmenej {params}).',
     MaxLength: 'Uveďte správne {fieldName} (maximálne {params} znakov).',

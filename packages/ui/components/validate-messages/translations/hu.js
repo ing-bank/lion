@@ -1,6 +1,8 @@
 export default {
   error: {
     Required: 'Továbbá adjon meg egy {fieldName} értéket.',
+    _RequiredUpload: 'Töltsön fel egy {fieldName} elemet.',
+    _RequiredSelect: 'Továbbá válasszon ki egy {fieldname} értéket.',
     EqualsLength: 'Adjon meg egy helyes {fieldName} értéket (pontosan {params} karakter).',
     MinLength: 'Adjon meg egy helyes {fieldName} értéket (legalább {params}).',
     MaxLength: 'Adjon meg egy helyes {fieldName} értéket (legfeljebb {params} karakter).',
@@ -23,6 +25,8 @@ export default {
   },
   warning: {
     Required: 'Továbbá adjon meg egy {fieldName} értéket.',
+    _RequiredUpload: 'Töltsön fel egy {fieldName} elemet.',
+    _RequiredSelect: 'Továbbá válasszon ki egy {fieldname} értéket.',
     EqualsLength: 'Adjon meg egy helyes {fieldName} értéket (pontosan {params} karakter).',
     MinLength: 'Adjon meg egy helyes {fieldName} értéket (legalább {params}).',
     MaxLength: 'Adjon meg egy helyes {fieldName} értéket (legfeljebb {params} karakter).',

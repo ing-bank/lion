@@ -215,6 +215,11 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  get operationMode() {
+    return 'upload';
+  }
+
   get _acceptCriteria() {
     /** @type {string[]} */
     let allowedFileTypes = [];

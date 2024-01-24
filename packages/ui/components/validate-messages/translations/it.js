@@ -1,6 +1,8 @@
 export default {
   error: {
     Required: 'Inserire anche un(a) {fieldName}.',
+    _RequiredUpload: 'Caricare un {fieldName}.',
+    _RequiredSelect: 'Selezionare anche un(a) {fieldname}.',
     EqualsLength: 'Inserire un(a) {fieldName} corretto(a) di esattamente {params} caratteri.',
     MinLength: 'Inserire un(a) {fieldName} corretto(a) (almeno {params}).',
     MaxLength: 'Inserire un(a) {fieldName} corretto(a) (fino a {params} caratteri).',
@@ -23,6 +25,8 @@ export default {
   },
   warning: {
     Required: 'Inserire anche un(a) {fieldName}.',
+    _RequiredUpload: 'Caricare un {fieldName}.',
+    _RequiredSelect: 'Selezionare anche un(a) {fieldname}.',
     EqualsLength: 'Inserire un(a) {fieldName} corretto(a) di esattamente {params} caratteri.',
     MinLength: 'Inserire un(a) {fieldName} corretto(a) (almeno {params}).',
     MaxLength: 'Inserire un(a) {fieldName} corretto(a) (fino a {params} caratteri).',

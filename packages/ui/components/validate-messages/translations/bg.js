@@ -1,6 +1,8 @@
 export default {
   error: {
     Required: 'Моля, въведете също {fieldName}.',
+    _RequiredUpload: 'Моля, качете {fieldName}.',
+    _RequiredSelect: 'Wählen Sie auch einen Wert für {fieldName} aus.',
     EqualsLength: 'Моля, въведете правилно {fieldName} от точно {params} знака.',
     MinLength: 'Моля, въведете правилен {fieldName} (поне {params}).',
     MaxLength: 'Моля, въведете правилен {fieldName} (до {params} знака).',
@@ -22,6 +24,8 @@ export default {
   },
   warning: {
     Required: 'Моля, въведете също {fieldName}.',
+    _RequiredUpload: 'Моля, качете {fieldName}.',
+    _RequiredSelect: 'Wählen Sie auch einen Wert für {fieldName} aus.',
     EqualsLength: 'Моля, въведете правилно {fieldName} от точно {params} знака.',
     MinLength: 'Моля, въведете правилен {fieldName} (поне {params}).',
     MaxLength: 'Моля, въведете правилен {fieldName} (до {params} знака).',

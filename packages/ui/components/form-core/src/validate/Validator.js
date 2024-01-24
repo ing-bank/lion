@@ -27,12 +27,15 @@ export class Validator extends EventTarget {
     this.__param = param;
     /** @type {ValidatorConfig} */
     this.__config = config || {};
-    /** @type {ValidationType} */
-    this.type = config?.type || 'error'; // Default type supported by ValidateMixin
+    /**
+     * Default type supported by ValidateMixin
+     * @type {ValidationType}
+     */
+    this.type = config?.type || 'error';
   }
 
   /**
-   * The name under which validation results get registered. For convience and predictability, this
+   * The name under which validation results get registered. For convenience and predictability, this
    * should always be the same as the constructor name (since it will be obfuscated in js builds,
    * we need to provide it separately).
    * @type {ValidatorName}

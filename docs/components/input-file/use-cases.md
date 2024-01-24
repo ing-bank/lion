@@ -106,7 +106,7 @@ When file has to be uploaded as soon as it is selected by the user. Use `file-li
 export const basicFileUpload = () => {
   return html`
     <lion-input-file
-      label="Label"
+      label="Passport"
       max-file-size="1024000"
       accept=".jpg,.svg,.xml,image/svg+xml"
       @file-list-changed="${ev => {
@@ -131,7 +131,7 @@ export const acceptValidator = () => {
   return html`
     <lion-input-file
       accept=".jpg,.svg,.xml,image/svg+xml"
-      label="Upload"
+      label="Passport"
       enable-drop-zone
       @file-list-changed="${ev => {
         console.log(ev.detail.newFiles);
@@ -151,7 +151,7 @@ export const sizeValidator = () => {
   return html`
     <lion-input-file
       max-file-size="2048"
-      label="Upload"
+      label="Passport"
       @file-list-changed="${ev => {
         console.log(ev.detail.newFiles);
       }}"
@@ -169,7 +169,7 @@ When file has to be uploaded as soon as it is selected by the user. Use `file-li
 export const multipleFileUpload = () => {
   return html`
     <lion-input-file
-      label="Upload"
+      label="Passport"
       name="upload"
       multiple
       max-file-size="1024000"
@@ -203,7 +203,7 @@ On every reload of page, the file upload component reverts to the initial state 
 export const prefilledState = () => {
   return html`
     <lion-input-file
-      label="Upload"
+      label="Passport"
       name="myFiles"
       multiple
       .validators="${[new Required()]}"
@@ -272,7 +272,7 @@ export const withIngForm = () => {
   return html`
     <form @submit="${myFormSubmit}" @reset="${myFormReset}">
       <lion-input-file
-        label="Upload"
+        label="Passport"
         name="upload"
         multiple
         .validators="${[new Required(), new FilenameLengthValidator({ maxFilenameLength: 20 })]}"
@@ -321,7 +321,7 @@ Below is the flow:
 export const uploadWithoutFormSubmit = () => {
   return html`
     <lion-input-file
-      label="Upload"
+      label="Passport"
       name="upload"
       multiple
       upload-on-select
@@ -393,7 +393,7 @@ Drag and drop the files to be uploaded to the server.
 export const dragAndDrop = () => {
   return html`
     <lion-input-file
-      label="Upload"
+      label="Passport"
       name="myFiles"
       accept=".png"
       max-file-size="1024000"

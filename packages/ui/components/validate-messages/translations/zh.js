@@ -1,6 +1,8 @@
 export default {
   error: {
     Required: '請輸入{fieldName}。',
+    _RequiredUpload: '请上传 {fieldName}。',
+    _RequiredSelect: '请选择一个 {fieldName}。',
     EqualsLength: '請輸入正確的{fieldName}長度為{params}個字符。',
     MinLength: '請輸入正確的{fieldName}（長度至少{params}個字符）​​。',
     MaxLength: '請輸入正確的{fieldName}（長度最多{params}個字符）​​。',
@@ -21,6 +23,8 @@ export default {
   },
   warning: {
     Required: '請輸入{fieldName}。',
+    _RequiredUpload: '请上传 {fieldName}。',
+    _RequiredSelect: '请选择一个 {fieldName}。',
     EqualsLength: '請輸入正確的{fieldName}長度為{params}個字符。',
     MinLength: '請輸入正確的{fieldName}（長度至少{params}個字符）​​。',
     MaxLength: '請輸入正確的{fieldName}（長度最多{params}個字符）​​。',

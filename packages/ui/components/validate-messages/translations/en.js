@@ -1,6 +1,8 @@
 export default {
   error: {
     Required: 'Please enter a(n) {fieldName}.',
+    _RequiredUpload: 'Please upload a(n) {fieldName}.',
+    _RequiredSelect: 'Please select a(n) {fieldName}.',
     EqualsLength: 'Please enter a correct {fieldName} of exactly {params} characters.',
     MinLength: 'Please enter a correct {fieldName} (at least {params} characters).',
     MaxLength: 'Please enter a correct {fieldName} (up to {params} characters).',
@@ -22,8 +24,10 @@ export default {
   },
   warning: {
     Required: 'Please enter a(n) {fieldName}.',
+    _RequiredUpload: 'Please upload a(n) {fieldName}.',
+    _RequiredSelect: 'Please select a(n) {fieldName}.',
     EqualsLength: 'Please enter a correct {fieldName} of exactly {params} characters.',
-    MinLength: 'Please enter a correct {fieldName} (at least {params}).',
+    MinLength: 'Please enter a correct {fieldName} (at least {params} characters).',
     MaxLength: 'Please enter a correct {fieldName} (up to {params} characters).',
     MinMaxLength:
       'Please enter a correct {fieldName} (between {params.min} and {params.max} characters).',

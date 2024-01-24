@@ -20,6 +20,7 @@ import { FormControlMixin } from '../FormControlMixin.js';
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidateMixin} ValidateMixin
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidationType} ValidationType
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHost
+ * @typedef {import('../../types/validate/ValidateMixinTypes.js').OperationMode} OperationMode
  * @typedef {import('../../types/validate/index.js').ValidatorOutcome} ValidatorOutcome
  * @typedef {typeof import('../../types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHostConstructor
  * @typedef {{validator:Validator; outcome:boolean|string}} ValidationResultEntry
@@ -96,6 +97,15 @@ export const ValidateMixinImplementation = superclass =>
      */
     static get validationTypes() {
       return ['error'];
+    }
+
+    /**
+     * Types of input interaction of the FormControl (for instance 'enter'|'select'|'upload')
+     * @overridable
+     * @type {OperationMode}
+     */
+    get operationMode() {
+      return 'enter';
     }
 
     /**
