@@ -7,7 +7,8 @@ apply ScopedElementsMixin to make sure it uses the right version of this interna
 
 ```js
 import { LitElement, html } from '@lion/ui/core.js';
-import { ScopedElementsMixin, LitElement, html } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+import { html, LitElement } from 'lit';
 
 import { LionInput } from '@lion/ui/input.js';
 import { LionButton } from '@lion/ui/button.js';
@@ -91,12 +92,12 @@ In a less complex case, we might just want to add a child node to the dom.
 
 ```js
 import { LitElement  } from 'lit';
-import { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 
 ...
 
 __getLightDomNode() {
-  return document.createElement(getScopedTagName('lion-input', this.constructor.scopedElements));
+  return document.createElement('lion-input', this.constructor.scopedElements);
 }
 ```
 

@@ -4,7 +4,7 @@
 import { Required, Validator } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { html } from '@mdjs/mdjs-preview';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { LitElement } from 'lit';
 import '@lion/ui/define/lion-input-file.js';
 loadDefaultFeedbackMessages();
