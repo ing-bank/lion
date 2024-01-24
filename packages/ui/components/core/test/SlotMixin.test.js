@@ -8,6 +8,7 @@ import { LitElement } from 'lit';
  * @typedef {import('../types/SlotMixinTypes.js').SlotHost} SlotHost
  */
 
+// @ts-ignore
 const createElementNative = ShadowRoot.prototype.createElement;
 function mockScopedRegistry() {
   const outputObj = { createElementCallCount: 0 };
@@ -464,6 +465,7 @@ describe('SlotMixin', () => {
     });
 
     it('does not scope elements when polyfill not loaded', async () => {
+      // @ts-expect-error
       ShadowRoot.prototype.createElement = null;
       class ScopedEl extends LitElement {}
 

@@ -8,11 +8,13 @@ import { adoptStyles } from 'lit';
 import { ScopedElementsMixin as BaseScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 
 /**
+ * @typedef {import('../../form-core/types/validate/ValidateMixinTypes.js').ScopedElementsHost} ScopedElementsHost
+ * @typedef {import('../../form-core/types/validate/ValidateMixinTypes.js').ScopedElementsMap} ScopedElementsMap
  * @typedef {import('lit').CSSResultOrNative} CSSResultOrNative
  * @typedef {import('lit').LitElement} LitElement
  * @typedef {typeof import('lit').LitElement} TypeofLitElement
  * @typedef {import('@open-wc/dedupe-mixin').Constructor<LitElement>} LitElementConstructor
-
+ * @typedef {import('@open-wc/dedupe-mixin').Constructor<ScopedElementsHost>} ScopedElementsHostConstructor
  */
 
 // @ts-ignore
@@ -25,7 +27,7 @@ const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
 const ScopedElementsMixinImplementation = superclass =>
   /** @type {ScopedElementsHost} */
   class ScopedElementsHost extends BaseScopedElementsMixin(superclass) {
-    createScopedElement(tagName) {
+    createScopedElement(/** @type {string} */ tagName) {
       const root = supportsScopedRegistry ? this.shadowRoot : document;
       // @ts-ignore polyfill to support createElement on shadowRoot is loaded
       return root.createElement(tagName);
@@ -63,6 +65,7 @@ const ScopedElementsMixinImplementation = superclass =>
      * @returns {ShadowRoot}
      */
     attachShadow(options) {
+      // @ts-ignore
       const { scopedElements } = /** @type {typeof ScopedElementsHost} */ (this.constructor);
 
       const shouldCreateRegistry =
@@ -78,6 +81,7 @@ const ScopedElementsMixinImplementation = superclass =>
        * This is important specifically for superclasses/inheritance
        */
       if (shouldCreateRegistry) {
+        // @ts-ignore
         this.registry = supportsScopedRegistry ? new CustomElementRegistry() : customElements;
         for (const [tagName, klass] of Object.entries(scopedElements ?? {})) {
           this.defineScopedElement(tagName, klass);
