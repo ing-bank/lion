@@ -61,12 +61,12 @@
   "dependencies": {
     "@bundled-es-modules/message-format": "^6.2.4",
     "@open-wc/dedupe-mixin": "^1.4.0",
-    "@open-wc/scoped-elements": "^3.0.4",
+    "@open-wc/scoped-elements": "^3.0.5",
     "@popperjs/core": "^2.11.8",
     "autosize": "^6.0.1",
     "awesome-phonenumber": "^6.4.0",
     "ibantools": "^4.3.9",
-    "lit": "^3.1.1",
+    "lit": "^3.1.2",
     "singleton-manager": "^1.7.0"
   },
   "keywords": [
