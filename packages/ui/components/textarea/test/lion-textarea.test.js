@@ -98,7 +98,7 @@ describe('<lion-textarea>', () => {
     expect(hightWith1Line < hightWith5TextLines).to.equal(true);
   });
 
-  // To be fixed in  https://dev.azure.com/INGCDaaS/IngOne/_workitems/edit/4096171
+  // TODO: To be fixed in 4096171
   it.skip(`starts growing when content is bigger than "rows"
     'and stops growing after property "maxRows" is reached`, async () => {
     const el = await fixture(`<lion-textarea></lion-textarea>`);
@@ -121,7 +121,7 @@ describe('<lion-textarea>', () => {
   });
 
   // TODO: make test simpler => no reduce please (also update autosize npm dependency to latest version)
-  // To be fixed in  https://dev.azure.com/INGCDaaS/IngOne/_workitems/edit/4096171
+  // TODO: To be fixed in 4096171
   it.skip('stops growing after property "maxRows" is reached when there was an initial value', async () => {
     const el = await fixture(html`<lion-textarea .modelValue="${'1\n2\n3'}"></lion-textarea>`);
 

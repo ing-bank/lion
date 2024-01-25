@@ -1,6 +1,6 @@
 /*
- * ING: This file is combination of '@open-wc/scoped-elements/lit-element.js' and '@open-wc/scoped-elements/html-element.js'.
- * It extends and modifies the original classes to make polyfill not mandatory.
+ * Lion: This file is combination of '@open-wc/scoped-elements@v3/lit-element.js' and '@open-wc/scoped-elements@v3/html-element.js'.
+ * Then on top of those, some code from '@open-wc/scoped-elements@v2' is brought to to make polyfill not mandatory.
  */
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
