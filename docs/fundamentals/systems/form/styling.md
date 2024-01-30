@@ -17,7 +17,6 @@ export const label = () => html`
   <style>
     .u-sr-only {
       position: absolute;
-      top: 0;
       width: 1px;
       height: 1px;
       overflow: hidden;
@@ -37,65 +36,61 @@ export const label = () => html`
 `;
 ```
 
-## Prefix
+## Input additions
+
+When using an addition to the input you could add `data-label` to add the content connected to the input via `aria-labelledby` or add `data-description` to connect it via the `aria-describedby` when the content is relevant for the screen-reader user to fill in the form field. This won't be necessary for a search icon, since that should already be clear via the label, but it is relevant in case a unit is added behind the input field.
+
+### Prefix
 
 The prefix is used for addons to the input like a minus button in the `input-stepper`.
 
-```js preview-story
-export const prefix = () => html`
-  <lion-input label="Prefix">
-    <div slot="prefix">[prefix]</div>
-  </lion-input>
-`;
+```html preview-story
+<lion-input label="Prefix">
+  <div slot="prefix" data-description>[prefix]</div>
+</lion-input>
 ```
 
-## Suffix
+### Suffix
 
 The suffix can be used for addons to the input like a calculator, datepicker or addressbook.
 In these cases a button with an icon is used.
 
-```js preview-story
-export const suffix = () => html`
-  <lion-input label="Suffix">
-    <div slot="suffix">[suffix]</div>
-  </lion-input>
-`;
+```html preview-story
+<lion-input label="Suffix">
+  <div slot="suffix" data-description>[suffix]</div>
+</lion-input>
 ```
 
-## Before
+### Before
 
 > Before slot does not have an active use case yet.
 
-```js preview-story
-export const before = () => html`
-  <lion-input label="Before">
-    <div slot="before">[before]</div>
-  </lion-input>
-`;
+```html preview-story
+<lion-input label="Before">
+  <div slot="before" data-description>[before]</div>
+</lion-input>
 ```
 
-## After
+### After
 
-```js preview-story
-export const after = () => html`
-  <lion-input label="Amount">
-    <div slot="after">EUR</div>
-  </lion-input>
-  <lion-input label="Percentage">
-    <div slot="after">%</div>
-  </lion-input>
-`;
+The after is mostly used to add a unit to the input field, such as a currency or percentage.
+
+```html preview-story
+<lion-input label="Amount">
+  <div slot="after" data-description>EUR</div>
+</lion-input>
+<lion-input label="Percentage">
+  <div slot="after" data-description>%</div>
+</lion-input>
 ```
 
 ### Examples
 
 Due to our custom inputs being Web Components, it is possible to put HTML content inside an input. For example if you want to add a button as a prefix or suffix.
 
-```js preview-story
-export const ButtonsWithFields = () => html`
-  <lion-input label="Prefix and suffix">
-    <lion-button slot="prefix">prefix</lion-button>
-    <lion-button slot="suffix">suffix</lion-button>
-  </lion-input>
-`;
+```html preview-story
+<lion-input label="Prefix and suffix">
+  <lion-button slot="prefix">prefix</lion-button>
+  <lion-button slot="suffix">suffix</lion-button>
+</lion-input>
 ```
