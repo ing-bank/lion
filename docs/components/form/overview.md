@@ -11,14 +11,25 @@ A web component that enhances the functionality of the native `form` component.
 It is designed to interact with (instances of) the [form controls](../../fundamentals/systems/form/overview.md).
 
 ```js preview-story
-export const main = () => html`
-  <lion-form>
-    <form>
-      <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-      <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
-    </form>
-  </lion-form>
-`;
+export const main = () => {
+  const submitHandler = ev => {
+    const formData = ev.target.serializedValue;
+    console.log('formData', formData);
+    fetch('/api/foo/', {
+      method: 'POST',
+      body: JSON.stringify(formData),
+    });
+  };
+  return html`
+    <lion-form @submit=${submitHandler}>
+      <form @submit=${ev => ev.preventDefault()}>
+        <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
+        <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+        <button>Submit</button>
+      </form>
+    </lion-form>
+  `;
+};
 ```
 
 ## Features
