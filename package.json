@@ -52,7 +52,7 @@
     "@open-wc/testing": "^3.1.7",
     "@open-wc/testing-helpers": "^2.2.0",
     "@rocket/blog": "^0.4.0",
-    "@rocket/cli": "^0.10.2",
+    "@rocket/cli": "^0.21.0",
     "@rocket/launch": "^0.6.0",
     "@rocket/search": "^0.5.1",
     "@types/chai-as-promised": "^7.1.5",
