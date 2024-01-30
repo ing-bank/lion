@@ -193,8 +193,8 @@ describe('OverlayController', () => {
       });
     });
 
-    describe('Offline content', () => {
-      it('throws when passing a content node that was created "offline"', async () => {
+    describe('Unconnected content', () => {
+      it('throws when passing a content node that was not connected to dom', async () => {
         const contentNode = document.createElement('div');
         const createOverlayController = () => {
           new OverlayController({
@@ -207,7 +207,7 @@ describe('OverlayController', () => {
         );
       });
 
-      it('succeeds when passing a content node that was created "online"', async () => {
+      it('succeeds when passing a content node that was connected to dom', async () => {
         const contentNode = /** @type {HTMLElement} */ (fixtureSync('<div>'));
         const overlay = new OverlayController({
           ...withLocalTestConfig(),
