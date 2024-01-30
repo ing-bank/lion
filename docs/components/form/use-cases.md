@@ -10,32 +10,28 @@ import '@lion/ui/define/lion-form.js';
 
 ## Submit & Reset
 
-To submit a form, use a regular button (or `LionButtonSubmit`) somewhere inside the native `<form>`.
+To submit a form, use a regular `<button>` (or `<lion-button-submit>`) somewhere inside the native `<form>`.
 
-Then, add a `submit` handler on the `lion-form`.
+Then, add a `submit` handler on the `<lion-form>`.
 
 You can use this event to do your own (pre-)submit logic, like getting the serialized form data and sending it to a backend API.
 
 Another example is checking if the form has errors, and focusing the first field with an error.
 
-To fire a submit from JavaScript, select the `lion-form` element and call `.submit()`.
+To fire a submit from JavaScript, select the `<lion-form>` element and call `.submit()`.
 
 ```js preview-story
 export const formSubmit = () => {
   loadDefaultFeedbackMessages();
   const submitHandler = ev => {
-    if (ev.target.hasFeedbackFor.includes('error')) {
-      const firstFormElWithError = ev.target.formElements.find(el =>
-        el.hasFeedbackFor.includes('error'),
-      );
-      firstFormElWithError.focus();
-      return;
-    }
     const formData = ev.target.serializedValue;
-    fetch('/api/foo/', {
-      method: 'POST',
-      body: JSON.stringify(formData),
-    });
+    console.log('formData', formData);
+    if (!ev.target.hasFeedbackFor?.includes('error')) {
+      fetch('/api/foo/', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+      });
+    }
   };
   const submitViaJS = ev => {
     // Call submit on the lion-form element, in your own code you should use
