@@ -11,9 +11,9 @@ When no range or step is defined, it can go infinite with default step value as 
 
 ```js preview-story
 export const defaultMode = () => html`
-  <label>How old is the existence?</label>
   <lion-input-stepper name="year">
-    <div slot="after">In Billion Years</div>
+    <label slot="label">How old is the existence?</label>
+    <div slot="after" data-label>In Billion Years</div>
   </lion-input-stepper>
 `;
 ```

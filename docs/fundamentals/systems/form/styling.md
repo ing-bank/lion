@@ -64,25 +64,29 @@ export const suffix = () => html`
 
 ## Before
 
+When using a the `slot="before"` make sure to add `data-label` to add the content connected to the input via `aria-labelledby` or add `data-description` to connect it via the `aria-describedby`.
+
 > Before slot does not have an active use case yet.
 
 ```js preview-story
 export const before = () => html`
   <lion-input label="Before">
-    <div slot="before">[before]</div>
+    <div slot="before" data-label>[before]</div>
   </lion-input>
 `;
 ```
 
 ## After
 
+When using a the `slot="after"` make sure to add `data-label` to add the content connected to the input via `aria-labelledby` or add `data-description` to connect it via the `aria-describedby`.
+
 ```js preview-story
 export const after = () => html`
   <lion-input label="Amount">
-    <div slot="after">EUR</div>
+    <div slot="after" data-label>EUR</div>
   </lion-input>
   <lion-input label="Percentage">
-    <div slot="after">%</div>
+    <div slot="after" data-label>%</div>
   </lion-input>
 `;
 ```
