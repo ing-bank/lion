@@ -3,7 +3,7 @@ import { html } from 'lit/static-html.js';
 import { LitElement } from 'lit';
 import { DisabledController } from '@lion/ui/core.js';
 
-describe('DisabledMixin', () => {
+describe('DisabledController', () => {
   class CanBeDisabled extends LitElement {
     disabledController = new DisabledController(this, value => this.setDisabled(value));
 
