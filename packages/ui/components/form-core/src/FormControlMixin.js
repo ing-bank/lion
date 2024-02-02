@@ -1,4 +1,4 @@
-import { SlotMixin, DisabledMixin, uuid } from '@lion/ui/core.js';
+import { SlotMixin, uuid, DisabledController } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { css, html, nothing } from 'lit';
 import { getAriaElementsInRightDomOrder } from './utils/getAriaElementsInRightDomOrder.js';
@@ -30,7 +30,7 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
 const FormControlMixinImplementation = superclass =>
   // eslint-disable-next-line no-shadow, no-unused-vars
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
-  class FormControlMixin extends FormRegisteringMixin(DisabledMixin(SlotMixin(superclass))) {
+  class FormControlMixin extends FormRegisteringMixin(SlotMixin(superclass)) {
     /** @type {any} */
     static get properties() {
       return {
@@ -40,12 +40,15 @@ const FormControlMixinImplementation = superclass =>
         labelSrOnly: { type: Boolean, attribute: 'label-sr-only', reflect: true },
         helpText: { type: String, attribute: 'help-text' },
         modelValue: { attribute: false },
+        disabled: { type: Boolean, reflect: true },
         _ariaLabelledNodes: { attribute: false },
         _ariaDescribedNodes: { attribute: false },
         _repropagationRole: { attribute: false },
         _isRepropagationEndpoint: { attribute: false },
       };
     }
+
+    disabledController = new DisabledController(this, value => this.setDisabled(value));
 
     /**
      * The label text for the input node.
@@ -194,6 +197,8 @@ const FormControlMixinImplementation = superclass =>
        */
       this.helpText = '';
 
+      this.disabled = false;
+
       /**
        * The model value is the result of the parser function(when available).
        * It should be considered as the internal value used for validation and reasoning/logic.
@@ -309,6 +314,15 @@ const FormControlMixinImplementation = superclass =>
           }),
         );
       }
+    }
+
+    /**
+     *
+     *
+     * @param {boolean} value
+     */
+    setDisabled(value) {
+      this.disabled = value;
     }
 
     /** @protected */
