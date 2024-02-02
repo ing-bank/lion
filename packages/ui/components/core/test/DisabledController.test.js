@@ -22,7 +22,6 @@ describe('DisabledController', () => {
     }
 
     /**
-     *
      * @param {Boolean} value
      * @memberof CanBeDisabled
      */

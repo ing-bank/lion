@@ -47,6 +47,10 @@ export class DisabledController {
     this.__isUserSettingDisabled = true;
   }
 
+  /**
+   * Throw an error if the disabled property is missing on the host
+   * @memberof DisabledController
+   */
   hostConnected() {
     const hostHasDisabled = 'disabled' in this.host;
     if (!hostHasDisabled) {
