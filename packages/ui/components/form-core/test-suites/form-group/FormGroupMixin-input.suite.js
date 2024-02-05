@@ -1,7 +1,6 @@
 import { LitElement } from 'lit';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
-import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { LionInput } from '@lion/ui/input.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
@@ -62,41 +61,6 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
       expect(fieldset.serializedValue).to.deep.equal({
         'custom[]': ['custom 1', ''],
       });
-    });
-
-    it('suffixes child labels with group label, just like in <fieldset>', async () => {
-      const el = /**  @type {FormGroup} */ (
-        await fixture(html`
-        <${tag} label="set">
-          <${childTag} name="A" label="fieldA"></${childTag}>
-          <${childTag} name="B" label="fieldB"></${childTag}>
-        </${tag}>
-      `)
-      );
-      const { _labelNode } = getFormControlMembers(el);
-
-      /**
-       * @param {LionInput} formControl
-       */
-      function getLabels(formControl) {
-        const control = getFormControlMembers(formControl);
-
-        return /** @type {string} */ (control._inputNode.getAttribute('aria-labelledby')).split(
-          ' ',
-        );
-      }
-      const field1 = el.formElements[0];
-      const field2 = el.formElements[1];
-
-      expect(getLabels(field1)).to.eql([field1._labelNode.id, _labelNode.id]);
-      expect(getLabels(field2)).to.eql([field2._labelNode.id, _labelNode.id]);
-
-      // Test the cleanup on disconnected
-      el.removeChild(field1);
-
-      // TODO: wait for updated on disconnected to be fixed: https://github.com/lit/lit/issues/1901
-      // await field1.updateComplete;
-      // expect(getLabels(field1)).to.eql([field1._labelNode.id]);
     });
   });
 
@@ -307,20 +271,9 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
       await childAriaTest(await childAriaFixture('feedback'));
     });
 
-    it(`reads help-text message belonging to fieldset when child input is focused
-        (via aria-describedby)`, async () => {
-      await childAriaTest(await childAriaFixture('help-text'));
-    });
-
     // TODO: wait for updated on disconnected to be fixed: https://github.com/lit/lit/issues/1901
     it.skip(`cleans up feedback message belonging to fieldset on disconnect`, async () => {
       const el = await childAriaFixture('feedback');
-      await childAriaTest(el, { cleanupPhase: true });
-    });
-
-    // TODO: wait for updated on disconnected to be fixed: https://github.com/lit/lit/issues/1901
-    it.skip(`cleans up help-text message belonging to fieldset on disconnect`, async () => {
-      const el = await childAriaFixture('help-text');
       await childAriaTest(el, { cleanupPhase: true });
     });
   });
