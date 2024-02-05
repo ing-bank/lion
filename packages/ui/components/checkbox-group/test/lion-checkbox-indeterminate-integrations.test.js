@@ -1,4 +1,7 @@
 import '@lion/ui/define/lion-checkbox-indeterminate.js';
+import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox.js';
+
 import { runChoiceInputMixinSuite } from '@lion/ui/form-core-test-suites.js';
 import { runCheckboxIndeterminateSuite } from '../test-suites/CheckboxIndeterminate.suite.js';
 
