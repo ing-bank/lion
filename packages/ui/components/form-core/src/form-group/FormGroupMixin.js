@@ -46,7 +46,7 @@ const FormGroupMixinImplementation = superclass =>
     }
 
     /**
-     * The host element with role group (or radigroup or form) containing neccessary aria attributes
+     * The host element with role group (or radio-group or form) containing necessary aria attributes
      * @protected
      */
     get _inputNode() {
@@ -478,7 +478,7 @@ const FormGroupMixinImplementation = superclass =>
 
     /**
      * Traverses the _parentFormGroup tree, and gathers all aria description elements
-     * (feedback and helptext) that should be provided to children.
+     * (feedback) that should be provided to children.
      *
      * In the example below, when the input for 'street' has focus, a screenreader user
      * would hear the #group-error.
@@ -503,7 +503,9 @@ const FormGroupMixinImplementation = superclass =>
         const descriptionElements = parent._getAriaDescriptionElements();
         const orderedEls = getAriaElementsInRightDomOrder(descriptionElements, { reverse: true });
         orderedEls.forEach(el => {
-          this.__descriptionElementsInParentChain.add(el);
+          if (el.getAttribute('slot') === 'feedback') {
+            this.__descriptionElementsInParentChain.add(el);
+          }
         });
         // Also check if the newly added child needs to refer grandparents
         parent = parent._parentFormGroup;
@@ -549,9 +551,6 @@ const FormGroupMixinImplementation = superclass =>
       this.__linkParentMessages(child);
       this.validate({ clearCurrentResult: true });
 
-      if (typeof child.addToAriaLabelledBy === 'function' && this._labelNode) {
-        child.addToAriaLabelledBy(this._labelNode, { reorder: false });
-      }
       if (!child.modelValue) {
         const pVals = this.__pendingValues;
         if (pVals.modelValue && pVals.modelValue[child.name]) {
