@@ -1356,6 +1356,24 @@ export function runFormGroupMixinSuite(cfg = {}) {
         expect(el.hasAttribute('aria-labelledby')).to.equal(true);
         expect(el.getAttribute('aria-labelledby')).contains(label.id);
       });
+
+      it('sets an aria-describedby to its children from element with slot="feedback"', async () => {
+        const el = /**  @type {FormGroup} */ (
+          await fixture(html`
+            <${tag}>
+              <label slot="label">My Label</label>
+              <div slot="feedback">My Feedback</div>
+              ${inputSlots}
+            </${tag}>
+          `)
+        );
+        const feedback = /** @type {HTMLElement} */ (
+          Array.from(el.children).find(child => child.slot === 'feedback')
+        );
+        expect(el.formElements[0]._inputNode.getAttribute('aria-describedby')).contains(
+          feedback.id,
+        );
+      });
     });
 
     describe('Dynamically rendered children', () => {
@@ -1395,7 +1413,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
       const dynamicChildrenTag = unsafeStatic(dynamicChildrenTagString);
 
       it(`when rendering children right from the start, sets their values correctly
-      based on prefilled model/seriazedValue`, async () => {
+      based on prefilled model/serializedValue`, async () => {
         const el = /** @type {DynamicCWrapper} */ (
           await fixture(html`
           <${dynamicChildrenTag}
@@ -1430,7 +1448,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
       });
 
       it(`when rendering children delayed, sets their values
-      correctly based on prefilled model/seriazedValue`, async () => {
+      correctly based on prefilled model/serializedValue`, async () => {
         const el = /** @type {DynamicCWrapper} */ (
           await fixture(html`
           <${dynamicChildrenTag} .modelValue="${{ firstName: 'foo', lastName: 'bar' }}">
@@ -1463,7 +1481,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
       });
 
       it(`when rendering children partly delayed, sets their values correctly based on
-      prefilled model/seriazedValue`, async () => {
+      prefilled model/serializedValue`, async () => {
         const el = /** @type {DynamicCWrapper} */ (
           await fixture(html`
         <${dynamicChildrenTag} .fields="${['firstName']}" .modelValue="${{
