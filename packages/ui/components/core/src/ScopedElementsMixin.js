@@ -62,7 +62,7 @@ const ScopedElementsMixinImplementation = superclass =>
      * @param {typeof HTMLElement} klass
      */
     defineScopedElement(tagName, klass) {
-      // @ts-expect-error
+      // @ts-ignore
       const registeredClass = this.registry.get(tagName);
       if (registeredClass && supportsScopedRegistry === false && registeredClass !== klass) {
         // eslint-disable-next-line no-console
@@ -78,10 +78,10 @@ const ScopedElementsMixinImplementation = superclass =>
         );
       }
       if (!registeredClass) {
-        // @ts-expect-error
+        // @ts-ignore
         return this.registry.define(tagName, klass);
       }
-      // @ts-expect-error
+      // @ts-ignore
       return this.registry.get(tagName);
     }
 
@@ -90,12 +90,12 @@ const ScopedElementsMixinImplementation = superclass =>
      * @returns {ShadowRoot}
      */
     attachShadow(options) {
-      // @ts-expect-error
+      // @ts-ignore
       const { scopedElements } = /** @type {typeof ScopedElementsHost} */ (this.constructor);
 
       const shouldCreateRegistry =
         !this.registry ||
-        // @ts-expect-error
+        // @ts-ignore
         (this.registry === this.constructor.__registry &&
           !Object.prototype.hasOwnProperty.call(this.constructor, '__registry'));
 
@@ -106,6 +106,7 @@ const ScopedElementsMixinImplementation = superclass =>
        * This is important specifically for superclasses/inheritance
        */
       if (shouldCreateRegistry) {
+        // @ts-ignore
         this.registry = supportsScopedRegistry ? new CustomElementRegistry() : customElements;
         for (const [tagName, klass] of Object.entries(scopedElements ?? {})) {
           this.defineScopedElement(tagName, klass);
