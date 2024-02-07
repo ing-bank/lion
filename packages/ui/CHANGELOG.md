@@ -1,11 +1,14 @@
 # @lion/ui
 
-
 ## 0.6.0-alpha.1
 
 ### Minor Changes
 
 - Moved to scoped-elements v3
+
+### Patch Changes
+
+- [validation-messages] get correct validation min and max dates in French
 
 ## 0.6.0-alpha.0
 
