@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable import/no-extraneous-dependencies */
 import { html, LitElement, css } from 'lit';
-import { OverlayMixin } from '@lion/ui/overlays.js';
+import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { LionButton } from '@lion/ui/button.js';
 
 /**
@@ -12,6 +12,7 @@ class DemoElUsingOverlayMixin extends OverlayMixin(LitElement) {
   _defineOverlayConfig() {
     return /** @type {OverlayConfig} */ ({
       placementMode: 'global',
+      ...withDropdownConfig(),
     });
   }
 

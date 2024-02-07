@@ -1,9 +1,9 @@
 /* eslint-disable class-methods-use-this, camelcase, no-param-reassign, max-classes-per-file */
 import { SlotMixin, DisabledMixin } from '@lion/ui/core.js';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // TODO: make form-core independent from localize
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { ScopedElementsMixin } from '../../../core/src/ScopedElementsMixin.js';
 import { AsyncQueue } from '../utils/AsyncQueue.js';
 import { pascalCase } from '../utils/pascalCase.js';
 import { SyncUpdatableMixin } from '../utils/SyncUpdatableMixin.js';
