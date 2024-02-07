@@ -1,5 +1,12 @@
 # @lion/ui
 
+
+## 0.6.0-alpha.1
+
+### Minor Changes
+
+- Moved to scoped-elements v3
+
 ## 0.6.0-alpha.0
 
 ### Minor Changes
