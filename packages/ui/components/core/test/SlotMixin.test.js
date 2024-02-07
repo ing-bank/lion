@@ -8,25 +8,22 @@ import { LitElement } from 'lit';
  * @typedef {import('../types/SlotMixinTypes.js').SlotHost} SlotHost
  */
 
-const mockedRenderTarget = document.createElement('div');
+// @ts-ignore
+const createElementNative = ShadowRoot.prototype.createElement;
 function mockScopedRegistry() {
   const outputObj = { createElementCallCount: 0 };
   // @ts-expect-error wait for browser support
-  ShadowRoot.prototype.createElement = () => {
+  ShadowRoot.prototype.createElement = (tagName, options) => {
     outputObj.createElementCallCount += 1;
     // Return an element that lit can use as render target
-    return mockedRenderTarget;
+    return createElementNative(tagName, options);
   };
-  // @ts-expect-error wait for browser support
-  window.CustomElementRegistry = class {};
   return outputObj;
 }
 
 function unMockScopedRegistry() {
   // @ts-expect-error wait for browser support
-  delete ShadowRoot.prototype.createElement;
-  // @ts-expect-error wait for browser support
-  delete window.CustomElementRegistry;
+  ShadowRoot.prototype.createElement = createElementNative;
 }
 
 describe('SlotMixin', () => {
@@ -545,6 +542,8 @@ describe('SlotMixin', () => {
     });
 
     it('does not scope elements when polyfill not loaded', async () => {
+      // @ts-expect-error
+      ShadowRoot.prototype.createElement = null;
       class ScopedEl extends LitElement {}
 
       const tagName = defineCE(
@@ -582,6 +581,7 @@ describe('SlotMixin', () => {
 
       document.body.removeChild(renderTarget);
       docSpy.restore();
+      unMockScopedRegistry();
     });
   });
 });

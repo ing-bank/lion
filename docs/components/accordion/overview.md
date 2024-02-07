@@ -8,7 +8,7 @@ import { html as previewHtml } from '@mdjs/mdjs-preview';
 
 ```js preview-story
 import { html, LitElement } from 'lit';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { LionAccordion } from '@lion/ui/accordion.js';
 
 class MyComponent extends ScopedElementsMixin(LitElement) {
@@ -83,7 +83,7 @@ npm i --save @lion/ui
 
 ```js
 import { html, LitElement } from 'lit';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { LionAccordion } from '@lion/ui/accordion.js';
 
 class MyComponent extends ScopedElementsMixin(LitElement) {

@@ -1,6 +1,5 @@
 import { LitElement } from 'lit';
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { ScopedElementsHost } from '@open-wc/scoped-elements/types.js';
 
 import { DisabledHost } from '../../../core/types/DisabledMixinTypes.js';
 import { SlotHost } from '../../../core/types/SlotMixinTypes.js';
@@ -214,6 +213,20 @@ export declare class ValidateHost {
   private __setupValidators(): void;
   private __isEmpty(v: unknown): boolean;
   private __getFeedbackMessages(validators: Validator[]): Promise<FeedbackMessage[]>;
+}
+
+export type ScopedElementsMap = {
+  [key: string]: typeof HTMLElement;
+};
+export declare class ScopedElementsHost {
+  /**
+   * Obtains the scoped elements definitions map
+   */
+  static scopedElements: ScopedElementsMap;
+  /**
+   * Obtains the CustomElementRegistry
+   */
+  registry?: CustomElementRegistry;
 }
 
 export declare function ValidateImplementation<T extends Constructor<LitElement>>(
