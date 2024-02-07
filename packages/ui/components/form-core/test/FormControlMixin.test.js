@@ -198,6 +198,21 @@ describe('FormControlMixin', () => {
       expect(descriptionIdsBefore).to.equal(descriptionIdsAfter);
     });
 
+    it('sets aria-disabled on inputNode based on disabled property', async () => {
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
+          <${tag}>${inputSlot}</${tag}>
+      `)
+      );
+      const { _inputNode } = getFormControlMembers(el);
+      expect(_inputNode.hasAttribute('aria-disabled')).to.be.true;
+      expect(_inputNode.getAttribute('aria-disabled')).to.equal('false');
+
+      el.disabled = true;
+
+      expect(_inputNode.getAttribute('aria-disabled')).to.equal('false');
+    });
+
     it('clicking the label should call `_onLabelClick`', async () => {
       const spy = sinon.spy();
       const el = /** @type {FormControlMixinClass} */ (
