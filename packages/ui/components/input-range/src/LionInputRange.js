@@ -1,8 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { css, html } from 'lit';
+import { LocalizeMixin, formatNumber } from '@lion/ui/localize-no-side-effects.js';
 import { ScopedStylesController } from '@lion/ui/core.js';
 import { LionInput } from '@lion/ui/input.js';
-import { formatNumber } from '@lion/ui/localize-no-side-effects.js';
+import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('lit').CSSResult} CSSResult
@@ -13,7 +14,7 @@ import { formatNumber } from '@lion/ui/localize-no-side-effects.js';
  *
  * @customElement `lion-input-range`
  */
-export class LionInputRange extends LionInput {
+export class LionInputRange extends LocalizeMixin(LionInput) {
   /** @type {any} */
   static get properties() {
     return {
@@ -40,6 +41,11 @@ export class LionInputRange extends LionInput {
     };
   }
 
+  static localizeNamespaces = [
+    { 'lion-input-range': localizeNamespaceLoader },
+    ...super.localizeNamespaces,
+  ];
+
   /**
    * @param {CSSResult} scope
    */
@@ -52,6 +58,26 @@ export class LionInputRange extends LionInput {
         outline: none;
       }
     `;
+  }
+
+  static get styles() {
+    return [
+      super.styles,
+      css`
+        .sr-only {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip-path: inset(100%);
+          clip: rect(1px, 1px, 1px, 1px);
+          white-space: nowrap;
+          border: 0;
+          margin: 0;
+          padding: 0;
+        }
+      `,
+    ];
   }
 
   get _inputNode() {
@@ -130,8 +156,14 @@ export class LionInputRange extends LionInput {
         ${!this.noMinMaxLabels
           ? html`
               <div class="input-range__limits">
-                <span>${formatNumber(this.min)}</span>
-                <span>${formatNumber(this.max)}</span>
+                <div>
+                  <span class="sr-only">${this.msgLit('lion-input-range:minimum')} </span
+                  >${formatNumber(this.min)}
+                </div>
+                <div>
+                  <span class="sr-only">${this.msgLit('lion-input-range:maximum')} </span
+                  >${formatNumber(this.max)}
+                </div>
               </div>
             `
           : ''}
