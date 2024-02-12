@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.5.3
+
+### Patch Changes
+
+- 69c9da8f: [validation-messages] get correct validation min and max dates in French
+
 ## 0.5.2
 
 ### Patch Changes
