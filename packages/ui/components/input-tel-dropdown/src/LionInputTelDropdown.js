@@ -324,7 +324,10 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   _onDropdownValueChange(event) {
     const isInitializing = event.detail?.initialize || !this._phoneUtil;
-    const dropdownValue = /** @type {RegionCode} */ (event.target.modelValue || event.target.value);
+    const dropdownElement = event.target;
+    const dropdownValue = /** @type {RegionCode} */ (
+      dropdownElement.modelValue || dropdownElement.value
+    );
 
     if (isInitializing || this.activeRegion === dropdownValue) {
       return;
@@ -355,8 +358,13 @@ export class LionInputTelDropdown extends LionInputTel {
     }
 
     // Put focus on text box
-    const overlayController = event.target._overlayCtrl;
-    if (overlayController?.isShown) {
+    //
+    // A LionSelectRich with interactionMode set on windows/linux
+    // will set each item on arrow key up/down to activeElement
+    // which causes the focus to jump every time to the inputNode
+    const overlayController = dropdownElement._overlayCtrl;
+    // @ts-ignore interactionMode only exists on LionSelectRich not on HTMLSelectElement
+    if (overlayController?.isShown && dropdownElement.interactionMode !== 'windows/linux') {
       setTimeout(() => {
         this._inputNode.focus();
       });
