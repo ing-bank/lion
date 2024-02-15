@@ -441,7 +441,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
           this._selectedFilesMetaData = [...this._selectedFilesMetaData];
         }
       });
-
       this._updateUploadButtonDescription();
     }
   }
@@ -730,14 +729,33 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @protected
    */
   _updateUploadButtonDescription() {
+    const erroneousFilesNames = [];
+    let errorMessage;
+
+    this._selectedFilesMetaData.forEach(file => {
+      if (file.status === 'FAIL') {
+        errorMessage = file.validationFeedback ? file.validationFeedback[0].message.toString() : '';
+        erroneousFilesNames.push(file.systemFile.name);
+      }
+    });
+
     const selectedFiles = this.querySelector('[slot="after"]');
     if (selectedFiles) {
       if (!this._selectedFilesMetaData || this._selectedFilesMetaData.length === 0) {
-        selectedFiles.textContent = 'No file chosen';
+        selectedFiles.textContent = this.msgLit('lion-input-file:noFilesSelected');
       } else if (this._selectedFilesMetaData.length === 1) {
-        selectedFiles.textContent = this._selectedFilesMetaData[0].systemFile.name || '1 file';
+        selectedFiles.textContent = errorMessage || this._selectedFilesMetaData[0].systemFile.name;
       } else {
-        selectedFiles.textContent = `${this._selectedFilesMetaData.length} files`;
+        selectedFiles.textContent = `${this.msgLit('lion-input-file:numberOfFiles', {
+          numberOfFiles: this._selectedFilesMetaData.length,
+        })} ${
+          errorMessage
+            ? this.msgLit('lion-input-file:generalValidatorMessage', {
+                validatorMessage: errorMessage,
+                listOfErroneousFiles: erroneousFilesNames.join(', '),
+              })
+            : ''
+        }`;
       }
     }
   }

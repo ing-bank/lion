@@ -9,4 +9,7 @@ export default {
   selectTextDuplicateFileName: 'A file with same filename was already present.',
   selectTextMultipleFile: 'Select files',
   selectTextSingleFile: 'Select file',
+  noFilesSelected: 'No files selected.',
+  numberOfFiles: '{numberOfFiles} files.',
+  generalValidatorMessage: '"{validatorMessage}", for {listOfErroneousFiles}.',
 };

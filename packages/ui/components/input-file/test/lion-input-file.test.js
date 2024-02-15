@@ -1133,7 +1133,7 @@ describe('lion-input-file', () => {
         );
       });
 
-      it('select-button has aria-describedby set to the help-text, selected list and the feedback message', async () => {
+      it('select-button has aria-describedby set to the help-text, after and the feedback message', async () => {
         const uploadResponse = [
           {
             name: 'file1.txt',
@@ -1159,11 +1159,72 @@ describe('lion-input-file', () => {
           // @ts-expect-error [allow-protected-in-test]
           `feedback-${el._inputId}`,
         );
-        await el.updateComplete;
-        // @ts-expect-error [allow-protected-in-test]
         expect(el._buttonNode?.getAttribute('aria-describedby')).to.contain(
           // @ts-expect-error [allow-protected-in-test]
-          `selected-file-list-${el._inputId}`,
+          `after-${el._inputId}`,
+        );
+      });
+
+      it('after contains upload name of file when SUCCESS', async () => {
+        const uploadResponse = [
+          {
+            name: 'file1.txt',
+            status: 'SUCCESS',
+            errorMessage: '',
+            downloadUrl: '/downloadFile',
+          },
+        ];
+        const el = await fixture(html` <lion-input-file label="Select"></lion-input-file> `);
+
+        expect(el.querySelector('[slot="after"]').textContent).to.equal('No files selected.');
+
+        el.uploadResponse = uploadResponse;
+        await el.updateComplete;
+        expect(el.querySelector('[slot="after"]').textContent).to.equal('file1.txt');
+      });
+
+      it('after contains upload validator message of file when FAIL', async () => {
+        const uploadResponse = [
+          {
+            name: 'file1.txt',
+            status: 'FAIL',
+            errorMessage: 'something went wrong',
+            downloadUrl: '/downloadFile',
+          },
+        ];
+        const el = await fixture(html` <lion-input-file label="Select"></lion-input-file> `);
+
+        expect(el.querySelector('[slot="after"]').textContent).to.equal('No files selected.');
+
+        el.uploadResponse = uploadResponse;
+        await el.updateComplete;
+        expect(el.querySelector('[slot="after"]').textContent).to.equal('something went wrong');
+      });
+
+      it('after contains upload status of files when multiple files have been uploaded', async () => {
+        const uploadResponse = [
+          {
+            name: 'file1.txt',
+            status: 'SUCCESS',
+            errorMessage: '',
+            downloadUrl: '/downloadFile',
+          },
+          {
+            name: 'file2.txt',
+            status: 'FAIL',
+            errorMessage: 'something went wrong',
+            downloadUrl: '/downloadFile',
+          },
+        ];
+        const el = await fixture(html`
+          <lion-input-file label="Select" multiple></lion-input-file>
+        `);
+
+        el.uploadResponse = uploadResponse;
+
+        await el.updateComplete;
+        expect(el.querySelector('[slot="after"]').textContent.trim()).to.equal(
+          '2 files. "something went wrong", for file2.txt.',
         );
       });
     });
