@@ -2,5 +2,4 @@
 '@lion/ui': patch
 ---
 
-[form-core] remove fieldset label from input-field aria-labelledby
-[form-core] remove fieldset help-text from input-field aria-describedby
+[form-core] remove fieldset label/helpt-text from input-field aria-labelledby/aria-describedby. See https://github.com/ing-bank/lion/issues/1576
