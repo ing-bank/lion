@@ -24,6 +24,7 @@
     "./input-file-translations/*": "./components/input-file/translations/*",
     "./input-iban-translations/*": "./components/input-iban/translations/*",
     "./input-range-translations/*": "./components/input-range/translations/*",
+    "./input-stepper-translations/*": "./components/input-stepper/translations/*",
     "./input-tel-translations/*": "./components/input-tel/translations/*",
     "./overlays-translations/*": "./components/overlays/translations/*",
     "./validate-messages-translations/*": "./components/validate-messages/translations/*",

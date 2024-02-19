@@ -4,16 +4,16 @@ A web component that enables the user to increase and decrease a numeric value b
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
+import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import '@lion/ui/define/lion-input-stepper.js';
+loadDefaultFeedbackMessages();
 ```
 
-```js preview-story
-export const main = () => html`
-  <lion-input-stepper max="5" min="0" name="count">
-    <label slot="label">RSVP</label>
-    <div slot="help-text">Max. 5 guests</div>
-  </lion-input-stepper>
-`;
+```html preview-story
+<lion-input-stepper max="5" min="0" name="count">
+  <label slot="label">RSVP</label>
+  <div slot="help-text">Max. 5 guests</div>
+</lion-input-stepper>
 ```
 
 ## Features
