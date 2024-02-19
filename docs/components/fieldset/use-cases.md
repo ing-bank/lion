@@ -4,7 +4,6 @@
 import { html } from '@mdjs/mdjs-preview';
 import { localize } from '@lion/ui/localize.js';
 import { MinLength, Validator, Required } from '@lion/ui/form-core.js';
-import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 
 import '@lion/ui/define/lion-input.js';
 import '@lion/ui/define/lion-fieldset.js';
