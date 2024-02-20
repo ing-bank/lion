@@ -94,6 +94,7 @@ describe('loadDefaultFeedbackMessagesNoSideEffects', () => {
     expect(await getMessage({ fieldName: 'user name' })).to.equal('Please enter a(n) user name.');
 
     localizeManager.locale = 'de-DE';
+    await localizeManager.loadingComplete;
     expect(await getMessage({ fieldName: 'Password' })).to.equal(
       'Password muss ausgefüllt werden.',
     );
