@@ -64,11 +64,11 @@ const LocalizeMixinImplementation = superclass =>
      * hook into LitElement to only render once all translations are loaded
      * @returns {Promise.<void>}
      */
-    async performUpdate() {
+    async scheduleUpdate() {
       if (Object.getPrototypeOf(this).constructor.waitForLocalizeNamespaces) {
         await this.localizeNamespacesLoaded;
       }
-      super.performUpdate();
+      super.scheduleUpdate();
     }
 
     connectedCallback() {
