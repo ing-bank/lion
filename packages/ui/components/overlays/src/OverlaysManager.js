@@ -92,6 +92,14 @@ export class OverlaysManager {
     }
     this.__shownList.unshift(ctrlToShow);
 
+    if (this.shownList.length >= 2) {
+      this.shownList.forEach((ctrl, index) => {
+        if (index > 0) {
+          this.__shownList[index].blockEscKeyHandler = true;
+        }
+      });
+    }
+
     // make sure latest shown ctrl is visible
     Array.from(this.__shownList)
       .reverse()
@@ -109,6 +117,11 @@ export class OverlaysManager {
       throw new Error('could not find controller to hide');
     }
     this.__shownList = this.shownList.filter(ctrl => ctrl !== ctrlToHide);
+    setTimeout(() => {
+      if (this.shownList.length > 0) {
+        this.__shownList[0].blockEscKeyHandler = false;
+      }
+    });
   }
 
   teardown() {

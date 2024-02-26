@@ -606,6 +606,30 @@ describe('OverlayController', () => {
         await aTimeout(0);
         expect(ctrl.isShown).to.be.true;
       });
+
+      it('hides only one overlay when [escape] is pressed', async () => {
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnEsc: true,
+        });
+        const ctrl2 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnEsc: true,
+        });
+
+        await ctrl1.show();
+        await ctrl2.show();
+        expect(ctrl1.manager.shownList.length).to.equal(2);
+        expect(ctrl1.blockEscKeyHandler).to.be.true;
+        expect(ctrl2.blockEscKeyHandler).to.be.false;
+
+        ctrl2.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        await aTimeout(0);
+        expect(ctrl2.isShown).to.be.false;
+        expect(ctrl1.isShown).to.be.true;
+        expect(ctrl1.manager.shownList.length).to.equal(1);
+        expect(ctrl1.blockEscKeyHandler).to.be.false;
+      });
     });
 
     describe('hidesOnOutsideEsc', () => {
@@ -628,6 +652,30 @@ describe('OverlayController', () => {
         await ctrl.show();
         ctrl.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
         expect(ctrl.isShown).to.be.true;
+      });
+
+      it('hides all overlays when [escape] is pressed on outside element', async () => {
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideEsc: true,
+        });
+        const ctrl2 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideEsc: true,
+        });
+
+        await ctrl1.show();
+        await ctrl2.show();
+        expect(ctrl1.manager.shownList.length).to.equal(2);
+        expect(ctrl1.blockEscKeyHandler).to.be.true;
+        expect(ctrl2.blockEscKeyHandler).to.be.false;
+
+        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        await aTimeout(0);
+        expect(ctrl2.isShown).to.be.false;
+        expect(ctrl1.isShown).to.be.true;
+        expect(ctrl1.manager.shownList.length).to.equal(1);
+        expect(ctrl1.blockEscKeyHandler).to.be.false;
       });
     });
 
