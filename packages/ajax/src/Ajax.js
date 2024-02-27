@@ -69,8 +69,10 @@ export class Ajax {
     }
 
     const { xsrfCookieName, xsrfHeaderName, xsrfTrustedOrigins } = this.__config;
-    if (xsrfCookieName && xsrfHeaderName && xsrfTrustedOrigins) {
-      this.addRequestInterceptor(createXsrfRequestInterceptor(xsrfCookieName, xsrfHeaderName, xsrfTrustedOrigins));
+    if (xsrfCookieName && xsrfHeaderName) {
+      this.addRequestInterceptor(
+        createXsrfRequestInterceptor(xsrfCookieName, xsrfHeaderName, xsrfTrustedOrigins),
+      );
     }
 
     // eslint-disable-next-line prefer-destructuring
@@ -281,7 +283,7 @@ export class Ajax {
     for (const intercept of this._responseInterceptors) {
       // In this instance we actually do want to await for each sequence
       // eslint-disable-next-line no-await-in-loop
-      interceptedResponse = await intercept(/** @type {CacheResponse} */(interceptedResponse));
+      interceptedResponse = await intercept(/** @type {CacheResponse} */ (interceptedResponse));
     }
     return interceptedResponse;
   }
