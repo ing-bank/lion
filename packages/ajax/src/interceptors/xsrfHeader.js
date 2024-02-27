@@ -26,12 +26,10 @@ function resolveURL(url) {
 /**
  * Determine if two URLs share the same origin.
  *
- * @param {string| object} url1 - First URL to compare as a string or a normalized URL in the form of
- *     a dictionary object returned by `urlResolve()`.
- * @param {string | object} url2 - Second URL to compare as a string or a normalized URL in the form
- *     of a dictionary object returned by `urlResolve()`.
+ * @param {string| object} url1 - First URL to compare as a string or a normalized URL
+ * @param {string | object} url2 - Second URL to compare as a string or a normalized URL
  *
- * @returns {boolean} - True if both URLs have the same origin, and false otherwise.
+ * @returns {boolean} - true if both URLs have the same origin, and false otherwise.
  */
 function urlsAreSameOrigin(url1, url2) {
   const parsedUrl1 = resolveURL(url1);
