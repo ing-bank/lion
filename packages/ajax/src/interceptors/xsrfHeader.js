@@ -26,7 +26,7 @@ function resolveURL(url) {
 /**
  * Determine if two URLs share the same origin.
  *
- * @param {string| object} url1 - First URL to compare as a string or a normalized URL
+ * @param {string | object} url1 - First URL to compare as a string or a normalized URL
  * @param {string | object} url2 - Second URL to compare as a string or a normalized URL
  *
  * @returns {boolean} - true if both URLs have the same origin, and false otherwise.
