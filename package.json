@@ -63,7 +63,7 @@
     "@types/istanbul-reports": "^3.0.1",
     "@types/mocha": "^10.0.1",
     "@types/prettier": "^2.7.2",
-    "@web/dev-server": "^0.1.37",
+    "@web/dev-server": "^0.4.2",
     "@web/dev-server-legacy": "^0.1.7",
     "@web/test-runner": "^0.15.2",
     "@web/test-runner-browserstack": "^0.5.1",

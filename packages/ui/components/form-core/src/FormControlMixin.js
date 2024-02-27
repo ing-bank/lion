@@ -276,6 +276,10 @@ const FormControlMixinImplementation = superclass =>
     updated(changedProperties) {
       super.updated(changedProperties);
 
+      if (changedProperties.has('disabled')) {
+        this._inputNode?.setAttribute('aria-disabled', this.disabled.toString());
+      }
+
       if (changedProperties.has('_ariaLabelledNodes')) {
         this.__reflectAriaAttr(
           'aria-labelledby',
@@ -390,8 +394,20 @@ const FormControlMixinImplementation = superclass =>
           const insideNodes = nodes.filter(n => this.contains(n));
           const outsideNodes = nodes.filter(n => !this.contains(n));
 
+          const insideSlots = insideNodes.map(n => n.assignedSlot || n);
+          const orderedInsideSlots = [...getAriaElementsInRightDomOrder(insideSlots)];
+          /** @type {Element[]} */
+          const orderedInsideNodes = [];
+          orderedInsideSlots.forEach(assignedNode => {
+            insideNodes.forEach(node => {
+              // @ts-ignore
+              if (assignedNode.name === node.slot) {
+                orderedInsideNodes.push(node);
+              }
+            });
+          });
           // eslint-disable-next-line no-param-reassign
-          nodes = [...getAriaElementsInRightDomOrder(insideNodes), ...outsideNodes];
+          nodes = [...orderedInsideNodes, ...outsideNodes];
         }
         const string = nodes.map(n => n.id).join(' ');
         this._inputNode.setAttribute(attrName, string);

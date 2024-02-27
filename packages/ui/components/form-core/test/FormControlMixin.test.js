@@ -198,6 +198,21 @@ describe('FormControlMixin', () => {
       expect(descriptionIdsBefore).to.equal(descriptionIdsAfter);
     });
 
+    it('sets aria-disabled on inputNode based on disabled property', async () => {
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
+          <${tag}>${inputSlot}</${tag}>
+      `)
+      );
+      const { _inputNode } = getFormControlMembers(el);
+      expect(_inputNode.hasAttribute('aria-disabled')).to.be.true;
+      expect(_inputNode.getAttribute('aria-disabled')).to.equal('false');
+
+      el.disabled = true;
+
+      expect(_inputNode.getAttribute('aria-disabled')).to.equal('false');
+    });
+
     it('clicking the label should call `_onLabelClick`', async () => {
       const spy = sinon.spy();
       const el = /** @type {FormControlMixinClass} */ (
@@ -349,19 +364,18 @@ describe('FormControlMixin', () => {
         );
       });
 
-      it('sorts internal elements, and allows opt-out', async () => {
+      it('sorts internal elements based on assigned slots, and allows opt-out', async () => {
         const wrapper = await fixture(html`
-        <div id="wrapper">
-          <${tag}>
-            <input slot="input" id="myInput" />
-            <label slot="label" id="internalLabel">Added to label by default</label>
-            <div slot="help-text" id="internalDescription">
-              Added to description by default
-            </div>
-          </${tag}>
-          <div id="externalLabelB">should go after input internals</div>
-          <div id="externalDescriptionB">should go after input internals</div>
-        </div>`);
+          <div id="wrapper">
+            <${tag}>
+              <input slot="input" id="myInput" />
+              <label slot="label" id="internalLabel">Added to label by default</label>
+              <div slot="help-text" id="internalDescription">
+                Added to description by default
+              </div>
+            </${tag}>
+          </div>
+        `);
         const el = /** @type {FormControlMixinClass} */ (wrapper.querySelector(tagString));
         const { _inputNode } = getFormControlMembers(el);
 
@@ -370,28 +384,14 @@ describe('FormControlMixin', () => {
         // A real life scenario would be for instance when
         // a Field or FormGroup would be extended and an extra slot would be added in the template
         const myInput = /** @type {HTMLElement} */ (wrapper.querySelector('#myInput'));
+        const internalLabel = /** @type {HTMLElement} */ (wrapper.querySelector('#internalLabel'));
+        const internalDescription = /** @type {HTMLElement} */ (
+          wrapper.querySelector('#internalDescription')
+        );
+
         el.addToAriaLabelledBy(myInput);
         await el.updateComplete;
         el.addToAriaDescribedBy(myInput);
-        await el.updateComplete;
-
-        expect(
-          /** @type {string} */ (_inputNode.getAttribute('aria-labelledby')).split(' '),
-        ).to.eql(['myInput', 'internalLabel']);
-        expect(
-          /** @type {string} */ (_inputNode.getAttribute('aria-describedby')).split(' '),
-        ).to.eql(['myInput', 'internalDescription']);
-
-        // cleanup
-        el.removeFromAriaLabelledBy(myInput);
-        await el.updateComplete;
-        el.removeFromAriaDescribedBy(myInput);
-        await el.updateComplete;
-
-        // opt-out of reorder
-        el.addToAriaLabelledBy(myInput, { reorder: false });
-        await el.updateComplete;
-        el.addToAriaDescribedBy(myInput, { reorder: false });
         await el.updateComplete;
 
         expect(
@@ -400,6 +400,25 @@ describe('FormControlMixin', () => {
         expect(
           /** @type {string} */ (_inputNode.getAttribute('aria-describedby')).split(' '),
         ).to.eql(['internalDescription', 'myInput']);
+
+        // cleanup
+        el.removeFromAriaLabelledBy(internalLabel);
+        await el.updateComplete;
+        el.removeFromAriaDescribedBy(internalDescription);
+        await el.updateComplete;
+
+        // opt-out of reorder
+        el.addToAriaLabelledBy(internalLabel, { reorder: false });
+        await el.updateComplete;
+        el.addToAriaDescribedBy(internalDescription, { reorder: false });
+        await el.updateComplete;
+
+        expect(
+          /** @type {string} */ (_inputNode.getAttribute('aria-labelledby')).split(' '),
+        ).to.eql(['myInput', 'internalLabel']);
+        expect(
+          /** @type {string} */ (_inputNode.getAttribute('aria-describedby')).split(' '),
+        ).to.eql(['myInput', 'internalDescription']);
       });
 
       it('respects provided order for external elements', async () => {

@@ -197,17 +197,32 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
   // eslint-disable-next-line class-methods-use-this
   _afterTemplate() {
     return html`
-      <div class="choice-field__nested-checkboxes">
+      <div class="choice-field__nested-checkboxes" role="list">
         <slot></slot>
       </div>
     `;
   }
 
   /**
+   * @param {Event} ev
    * @protected
    */
-  _onRequestToAddFormElement() {
+  _onRequestToAddFormElement(ev) {
+    if (!(/** @type {HTMLElement} */ (ev.target).hasAttribute('role'))) {
+      /** @type {HTMLElement} */ (ev.target)?.setAttribute('role', 'listitem');
+    }
     this._setOwnCheckedState();
+  }
+
+  /**
+   * @param {Event} ev
+   * @protected
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _onRequestToRemoveFormElement(ev) {
+    if (/** @type {HTMLElement} */ (ev.target).getAttribute('role') === 'listitem') {
+      /** @type {HTMLElement} */ (ev.target)?.removeAttribute('role');
+    }
   }
 
   constructor() {

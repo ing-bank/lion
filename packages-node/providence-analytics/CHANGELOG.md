@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.15.2
+
+### Patch Changes
+
+- 5b64da8a: fix: update @web/dev-server version
+
 ## 0.15.1
 
 ### Patch Changes

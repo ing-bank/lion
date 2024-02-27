@@ -35,14 +35,14 @@ describe('<lion-input-range>', () => {
     expect(el.shadowRoot?.querySelectorAll('.input-range__limits span').length).to.equal(2);
     expect(
       /** @type {HTMLElement} */ (
-        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('.input-range__limits span')[0]
-      ).innerText,
-    ).to.equal(el.min.toString());
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('.input-range__limits > div')[0]
+      ).textContent?.trim(),
+    ).to.equal(`Minimum ${el.min.toString()}`);
     expect(
       /** @type {HTMLElement} */ (
-        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('.input-range__limits span')[1]
-      ).innerText,
-    ).to.equal(el.max.toString());
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('.input-range__limits > div')[1]
+      ).textContent?.trim(),
+    ).to.equal(`Maximum ${el.max.toString()}`);
   });
 
   it('update min and max attributes when min and max property change', async () => {

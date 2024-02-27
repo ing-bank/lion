@@ -163,20 +163,20 @@ export const runRegistrationSuite = customConfig => {
     });
 
     it('works for components that have a delayed render', async () => {
-      class PerformUpdate extends FormRegistrarMixin(LitElement) {
-        async performUpdate() {
+      class ScheduleUpdate extends FormRegistrarMixin(LitElement) {
+        async scheduleUpdate() {
           // eslint-disable-next-line no-promise-executor-return
           await new Promise(resolve => setTimeout(() => resolve(undefined), 10));
-          await super.performUpdate();
+          await super.scheduleUpdate();
         }
 
         render() {
           return html`<slot></slot>`;
         }
       }
-      const tagWrapperString = defineCE(PerformUpdate);
+      const tagWrapperString = defineCE(ScheduleUpdate);
       const tagWrapper = unsafeStatic(tagWrapperString);
-      const el = /** @type {PerformUpdate} */ (
+      const el = /** @type {ScheduleUpdate} */ (
         await fixture(html`
         <${tagWrapper}>
           <${childTag}></${childTag}>
@@ -359,10 +359,10 @@ export const runRegistrationSuite = customConfig => {
       it('works for portals that have a delayed render', async () => {
         const delayedPortalString = defineCE(
           class extends FormRegistrarPortalMixin(LitElement) {
-            async performUpdate() {
+            async scheduleUpdate() {
               // eslint-disable-next-line no-promise-executor-return
               await new Promise(resolve => setTimeout(() => resolve(undefined), 10));
-              await super.performUpdate();
+              await super.scheduleUpdate();
             }
 
             render() {

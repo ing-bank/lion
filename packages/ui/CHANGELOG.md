@@ -1,5 +1,19 @@
 # @lion/ui
 
+## 0.5.3
+
+### Patch Changes
+
+- 69c9da8f: [validation-messages] get correct validation min and max dates in French
+
+## 0.5.2
+
+### Patch Changes
+
+- d997e523: [tooltip] hide tooltip if the invoker gets disabled
+- c80bca7c: Fix scroll behavior when closing an overlay
+- db96e8cc: fix(tabs): set selectedIndex only if value differ from previous value
+
 ## 0.5.1
 
 ### Patch Changes
