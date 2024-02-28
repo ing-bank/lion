@@ -436,15 +436,13 @@ describe('Ajax', () => {
 
     it('should set the XSRF header if origin is in the trusted origin list', async () => {
       const customAjax = new Ajax({
-        xsrfCookieName: 'CSRF-TOKEN',
-        xsrfHeaderName: 'X-CSRF-TOKEN',
         xsrfTrustedOrigins: ['https://api.localhost'],
       });
 
-      await customAjax.fetch('https://api.localhost:8000/foo', { method: 'POST' });
+      await customAjax.fetch('https://api.localhost/foo', { method: 'POST' });
 
       const request = fetchStub.getCall(0).args[0];
-      expect(request.headers.get('X-XSRF-TOKEN')).to.be.null;
+      expect(request.headers.get('X-XSRF-TOKEN')).to.equal('1234');
     });
   });
 
