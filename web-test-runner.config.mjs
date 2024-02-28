@@ -36,9 +36,9 @@ export default {
     },
   },
   browsers: [
-
+    playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),
-    
+    playwrightLauncher({ product: 'webkit' }),
   ],
   groups: packages.map(pkg => ({
     name: pkg.name,
