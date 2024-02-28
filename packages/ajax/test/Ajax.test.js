@@ -46,6 +46,7 @@ describe('Ajax', () => {
         addCaching: false,
         xsrfCookieName: 'XSRF-TOKEN',
         xsrfHeaderName: 'X-XSRF-TOKEN',
+        xsrfTrustedOrigins: [],
         jsonPrefix: ")]}',",
         cacheOptions: {
           useCache: true,
@@ -386,7 +387,7 @@ describe('Ajax', () => {
     });
 
     it('XSRF token header is set based on cookie', async () => {
-      await ajax.fetch('/foo');
+      await ajax.fetch('/foo', { method: 'POST' });
 
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.get('X-XSRF-TOKEN')).to.equal('1234');
@@ -394,7 +395,7 @@ describe('Ajax', () => {
 
     it('XSRF behavior can be disabled', async () => {
       const customAjax = new Ajax({ xsrfCookieName: null, xsrfHeaderName: null });
-      await customAjax.fetch('/foo');
+      await customAjax.fetch('/foo', { method: 'POST' });
       await ajax.fetch('/foo');
 
       const request = fetchStub.getCall(0).args[0];
@@ -406,10 +407,44 @@ describe('Ajax', () => {
         xsrfCookieName: 'CSRF-TOKEN',
         xsrfHeaderName: 'X-CSRF-TOKEN',
       });
-      await customAjax.fetch('/foo');
+      await customAjax.fetch('/foo', { method: 'POST' });
 
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.get('X-CSRF-TOKEN')).to.equal('5678');
+    });
+
+    it('should not set the XSRF header when a non updating method is used', async () => {
+      await ajax.fetch('/foo', { method: 'GET' });
+
+      const request = fetchStub.getCall(0).args[0];
+      expect(request.headers.get('X-XSRF-TOKEN')).to.be.null;
+    });
+
+    it('should not set the XSRF header if the url is from a different origin', async () => {
+      await ajax.fetch('https://api.localhost:8000/foo', { method: 'POST' });
+
+      const request = fetchStub.getCall(0).args[0];
+      expect(request.headers.get('X-XSRF-TOKEN')).to.be.null;
+    });
+
+    it('should set the XSRF header if origin is the same', async () => {
+      await ajax.fetch('/foo', { method: 'POST' });
+
+      const request = fetchStub.getCall(0).args[0];
+      expect(request.headers.get('X-XSRF-TOKEN')).to.equal('1234');
+    });
+
+    it('should set the XSRF header if origin is in the trusted origin list', async () => {
+      const customAjax = new Ajax({
+        xsrfCookieName: 'CSRF-TOKEN',
+        xsrfHeaderName: 'X-CSRF-TOKEN',
+        xsrfTrustedOrigins: ['https://api.localhost'],
+      });
+
+      await customAjax.fetch('https://api.localhost:8000/foo', { method: 'POST' });
+
+      const request = fetchStub.getCall(0).args[0];
+      expect(request.headers.get('X-XSRF-TOKEN')).to.be.null;
     });
   });
 
