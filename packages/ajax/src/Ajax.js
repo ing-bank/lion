@@ -50,6 +50,7 @@ export class Ajax {
       addCaching: false,
       xsrfCookieName: 'XSRF-TOKEN',
       xsrfHeaderName: 'X-XSRF-TOKEN',
+      xsrfTrustedOrigins: [],
       jsonPrefix: '',
       ...config,
       cacheOptions: {
@@ -67,9 +68,11 @@ export class Ajax {
       this.addRequestInterceptor(acceptLanguageRequestInterceptor);
     }
 
-    const { xsrfCookieName, xsrfHeaderName } = this.__config;
-    if (xsrfCookieName && xsrfHeaderName) {
-      this.addRequestInterceptor(createXsrfRequestInterceptor(xsrfCookieName, xsrfHeaderName));
+    const { xsrfCookieName, xsrfHeaderName, xsrfTrustedOrigins } = this.__config;
+    if (xsrfCookieName && xsrfHeaderName && xsrfTrustedOrigins) {
+      this.addRequestInterceptor(
+        createXsrfRequestInterceptor(xsrfCookieName, xsrfHeaderName, xsrfTrustedOrigins),
+      );
     }
 
     // eslint-disable-next-line prefer-destructuring

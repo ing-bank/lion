@@ -23,16 +23,16 @@ describe('getCookie()', () => {
 
 describe('createXsrfRequestInterceptor()', () => {
   it('adds the xsrf token header to the request', () => {
-    const interceptor = createXsrfRequestInterceptor('XSRF-TOKEN', 'X-XSRF-TOKEN', {
+    const interceptor = createXsrfRequestInterceptor('XSRF-TOKEN', 'X-XSRF-TOKEN', [], {
       cookie: 'XSRF-TOKEN=foo',
     });
-    const request = new Request('/foo/');
+    const request = new Request('/foo/', { method: 'POST' });
     interceptor(request);
     expect(request.headers.get('X-XSRF-TOKEN')).to.equal('foo');
   });
 
   it('does not set anything if the cookie is not there', () => {
-    const interceptor = createXsrfRequestInterceptor('XSRF-TOKEN', 'X-XSRF-TOKEN', {
+    const interceptor = createXsrfRequestInterceptor('XSRF-TOKEN', 'X-XSRF-TOKEN', [], {
       cookie: 'XXSRF-TOKEN=foo',
     });
     const request = new Request('/foo/');

@@ -16,6 +16,7 @@ export interface AjaxConfig {
   xsrfCookieName?: string | null;
   xsrfHeaderName?: string | null;
   cacheOptions?: CacheOptionsWithIdentifier;
+  xsrfTrustedOrigins?: string[] | null;
   jsonPrefix?: string;
 }
 
