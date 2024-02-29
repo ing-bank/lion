@@ -35,6 +35,7 @@ import { ScopedElementsMixin as OpenWcLitScopedElementsMixin } from '@open-wc/sc
  * @typedef {typeof import('lit').LitElement} TypeofLitElement
  * @typedef {import('@open-wc/dedupe-mixin').Constructor<LitElement>} LitElementConstructor
  * @typedef {import('@open-wc/dedupe-mixin').Constructor<ScopedElementsHost>} ScopedElementsHostConstructor
+ * @typedef {import('./types.js').ScopedElementsHostV2Constructor} ScopedElementsHostV2Constructor
  */
 
 const supportsScopedRegistry = Boolean(
@@ -45,6 +46,7 @@ const supportsScopedRegistry = Boolean(
 /**
  * @template {LitElementConstructor} T
  * @param {T} superclass
+ * @return {T & ScopedElementsHostConstructor & ScopedElementsHostV2Constructor}
  */
 const ScopedElementsMixinImplementation = superclass =>
   /** @type {ScopedElementsHost} */
