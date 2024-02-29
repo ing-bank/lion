@@ -1,3 +1,5 @@
+// Note. This file is a partial copy of https://github.com/open-wc/open-wc/blob/scoped-elements-v2/packages/scoped-elements/src/types.d.ts
+
 import { Constructor } from '@open-wc/dedupe-mixin';
 
 export declare class ScopedElementsHostV2 {
