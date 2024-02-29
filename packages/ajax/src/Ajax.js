@@ -69,7 +69,7 @@ export class Ajax {
     }
 
     const { xsrfCookieName, xsrfHeaderName, xsrfTrustedOrigins } = this.__config;
-    if (xsrfCookieName && xsrfHeaderName) {
+    if (xsrfCookieName && xsrfHeaderName && xsrfTrustedOrigins) {
       this.addRequestInterceptor(
         createXsrfRequestInterceptor(xsrfCookieName, xsrfHeaderName, xsrfTrustedOrigins),
       );

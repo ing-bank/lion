@@ -3,11 +3,11 @@
  */
 
 /**
-* Parse a URL to discover its components
-*
-* @param {String | object} url The URL to be parsed
-* @returns {{protocol: string, host: string }}
-*/
+ * Parse a URL to discover its components
+ *
+ * @param {String | {protocol: string, host: string }} url The URL to be parsed
+ * @returns {{protocol: string, host: string }}
+ */
 function resolveURL(url) {
   if (typeof url !== 'string') {
     return url;
@@ -26,8 +26,8 @@ function resolveURL(url) {
 /**
  * Determine if two URLs share the same origin.
  *
- * @param {string | object} url1 - First URL to compare as a string or a normalized URL
- * @param {string | object} url2 - Second URL to compare as a string or a normalized URL
+ * @param {string | {protocol: string, host: string }} url1 - First URL to compare as a string or a normalized URL
+ * @param {string | {protocol: string, host: string }} url2 - Second URL to compare as a string or a normalized URL
  *
  * @returns {boolean} - true if both URLs have the same origin, and false otherwise.
  */
@@ -35,20 +35,19 @@ function urlsAreSameOrigin(url1, url2) {
   const parsedUrl1 = resolveURL(url1);
   const parsedUrl2 = resolveURL(url2);
 
-  return (parsedUrl1.protocol === parsedUrl2.protocol &&
-    parsedUrl1.host === parsedUrl2.host);
+  return parsedUrl1.protocol === parsedUrl2.protocol && parsedUrl1.host === parsedUrl2.host;
 }
 
 /**
-* Check if the URL provided has the same origin as the one used.
-* Or if it is for a trusted XSRF origin.
-*
-* @param {String} requestURL The requestedURL
-* @param {string[]} xsrfTrustedOrigins List of allowed origins
-* @returns {boolean} true if it is the same origin, else false
-*/
+ * Check if the URL provided has the same origin as the one used.
+ * Or if it is for a trusted XSRF origin.
+ *
+ * @param {String} requestURL The requestedURL
+ * @param {string[]} xsrfTrustedOrigins List of allowed origins
+ * @returns {boolean} true if it is the same origin, else false
+ */
 function isURLTrustedOrSameOrigin(requestURL, xsrfTrustedOrigins) {
-  const parsed = (typeof requestURL === 'string') ? resolveURL(requestURL) : requestURL;
+  const parsed = typeof requestURL === 'string' ? resolveURL(requestURL) : requestURL;
   const originURL = resolveURL(window.location.href);
   const parsedAllowedOriginUrls = [originURL].concat(xsrfTrustedOrigins.map(resolveURL));
 
@@ -74,7 +73,12 @@ export function getCookie(name, _document = document) {
  * @param {Document | { cookie: string }} _document overwriteable for testing
  * @returns {RequestInterceptor}
  */
-export function createXsrfRequestInterceptor(cookieName, headerName, xsrfTrustedOrigins, _document = document) {
+export function createXsrfRequestInterceptor(
+  cookieName,
+  headerName,
+  xsrfTrustedOrigins,
+  _document = document,
+) {
   /**
    * @param {Request} request
    */
@@ -92,4 +96,3 @@ export function createXsrfRequestInterceptor(cookieName, headerName, xsrfTrusted
 
   return xsrfRequestInterceptor;
 }
-
