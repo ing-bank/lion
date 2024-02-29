@@ -45,6 +45,7 @@ const supportsScopedRegistry = Boolean(
 /**
  * @template {LitElementConstructor} T
  * @param {T} superclass
+ * @return {T & ScopedElementsHostConstructor & import('./types.js').ScopedElementsHostV2Constructor}
  */
 const ScopedElementsMixinImplementation = superclass =>
   /** @type {ScopedElementsHost} */

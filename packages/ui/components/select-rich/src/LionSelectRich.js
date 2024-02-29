@@ -2,8 +2,7 @@ import { LionListbox } from '@lion/ui/listbox.js';
 import { html } from 'lit';
 import { SlotMixin, browserDetection } from '@lion/ui/core.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
-// import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
 
 /**
