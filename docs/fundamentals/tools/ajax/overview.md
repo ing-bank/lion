@@ -7,7 +7,7 @@
 - Supports caching, so a request can be prevented from reaching to network, by returning the cached response.
 - Supports JSON with `ajax.fetchJSON` by automatically serializing request body and deserializing response payload as JSON, and adding the correct Content-Type and Accept headers.
 - Adds accept-language header to requests based on application language
-- Adds XSRF header to request if the cookie is present
+- Adds XSRF header to request if the cookie is present and the request is for a mutable action (POST/PUT/PATCH/DELETE) and if the origin is the same as current origin or the request origin is in the xsrfTrustedOrigins list.
 
 ## Installation
 
@@ -132,6 +132,7 @@ Response interceptors can be async and will be awaited.
 | addCaching                       | boolean  | `false`                                                            | Whether to add the cache interceptor and start storing responses in the cache, even if `cacheOptions.useCache` is `false`                       |
 | xsrfCookieName                   | string   | `"XSRF-TOKEN"`                                                     | The name for the Cross Site Request Forgery cookie                                                                                              |
 | xsrfHeaderName                   | string   | `"X-XSRF-TOKEN"`                                                   | The name for the Cross Site Request Forgery header                                                                                              |
+| xsrfTrustedOrigins               | string[] | []                                                                 | List of trusted origins, the XSRF header will also be added if the origin is in this list.                                                      |
 | jsonPrefix                       | string   | `""`                                                               | The prefix to add to add to responses for the `.fetchJson` functions                                                                            |
 | cacheOptions.useCache            | boolean  | `false`                                                            | Whether to use the default cache interceptors to cache requests                                                                                 |
 | cacheOptions.getCacheIdentifier  | function | a function returning the string `_default`                         | A function to determine the cache that should be used for each request; used to make sure responses for one session are not used in the next    |
