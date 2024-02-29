@@ -3,7 +3,7 @@
  */
 
 /**
-* Parse a URL to discover it's components
+* Parse a URL to discover its components
 *
 * @param {String | object} url The URL to be parsed
 * @returns {{protocol: string, host: string }}
@@ -12,8 +12,8 @@ function resolveURL(url) {
   if (typeof url !== 'string') {
     return url;
   }
-  let href = url;
-  let urlParsingNode = document.createElement('a');
+  const href = url;
+  const urlParsingNode = document.createElement('a');
   urlParsingNode.setAttribute('href', href);
 
   // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
