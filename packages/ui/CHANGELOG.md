@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.6.0-alpha.4
+
+### Patch Changes
+- [input-stepper] fix the toggling of the disabled state for the buttons
+- [core] update types for ScopedElementsMixin
+
 ## 0.6.0-alpha.3
 
 BREAKING:
