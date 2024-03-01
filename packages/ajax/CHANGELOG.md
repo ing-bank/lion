@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.0.1
+
+### Patch Changes
+
+- b9b8ab9d: add documentation for xsrfTrustedOrigins
+
 ## 2.0.0
 
 ### Major Changes
