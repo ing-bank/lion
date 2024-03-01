@@ -1,5 +1,39 @@
 # @lion/ui
 
+## 0.6.0
+
+### Minor Changes
+
+- aeab467c: [input-stepper] a11y enhancement & added translations
+
+### Patch Changes
+
+- aeab467c: [checkbox-group] add role="list" and role="listitem" to checkbox-indeterminate and its children
+- aeab467c: migrate deprecated `performUpdate` api to `scheduleUpdate`
+- aeab467c: [form-core]: set aria-disabled next to the disabled attribute for NVDA screen reader
+- aeab467c: [form-core] remove fieldset label/helpt-text from input-field aria-labelledby/aria-describedby. See https://github.com/ing-bank/lion/issues/1576
+- aeab467c: [input-range] add screen-reader labels for minimum and maximum value
+- aeab467c: feat: split validate-messages-no-side-effects methods, so they can be bundled along with entrypoints.
+
+  For optimized bundling, it's reccommended to load feedback messages per entrypoint. For instance, when you only use form-core in your app:
+
+  ```js
+  import { LionInputTel } from '@lion/ui/input-tel.js';
+  import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+  import { loadInputTelMessagesNoSideEffects } from '@lion/ui/validate-messages-no-side-effects.js';
+
+  export class MyInputTel extends LionInputTel {
+    constructor() {
+      super();
+      loadInputTelMessagesNoSideEffects({ localize: getLocalizeManager() });
+    }
+  }
+  ```
+
+  This prevents you from loading unused entrypoints like input-tel (which loads a full phone validation library) etc.
+
+- aeab467c: [form-core] order aria-labelledby and aria-describedby based on slot order instead of dom order
+
 ## 0.5.3
 
 ### Patch Changes
