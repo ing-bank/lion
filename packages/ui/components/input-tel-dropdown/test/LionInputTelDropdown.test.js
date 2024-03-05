@@ -4,10 +4,10 @@ import { repeat } from 'lit/directives/repeat.js';
 import { ref } from 'lit/directives/ref.js';
 
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
+import { LionOption } from '@lion/ui/listbox.js';
+import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { runInputTelDropdownSuite } from '@lion/ui/input-tel-dropdown-test-suites.js';
-
-import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-select-rich.js';
+import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -16,7 +16,16 @@ import '@lion/ui/define/lion-select-rich.js';
  * @typedef {import('../types/index.js').RegionMeta} RegionMeta
  */
 
-class WithFormControlInputTelDropdown extends LionInputTelDropdown {
+class WithFormControlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdown) {
+  /**
+   * @configure ScopedElementsMixin
+   */
+  static scopedElements = {
+    ...super.scopedElements,
+    'lion-select-rich': LionSelectRich,
+    'lion-option': LionOption,
+  };
+
   static templates = {
     ...(super.templates || {}),
     /**
@@ -49,8 +58,7 @@ class WithFormControlInputTelDropdown extends LionInputTelDropdown {
 runInputTelSuite({ klass: LionInputTelDropdown });
 runInputTelDropdownSuite();
 
-// TODO: To be fixed in 4095205
-describe.skip('WithFormControlInputTelDropdown', () => {
+describe('WithFormControlInputTelDropdown', () => {
   // @ts-expect-error
   // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
   runInputTelDropdownSuite({ klass: WithFormControlInputTelDropdown });
