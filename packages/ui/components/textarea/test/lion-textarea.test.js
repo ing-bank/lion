@@ -12,11 +12,6 @@ import '@lion/ui/define/lion-textarea.js';
 
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionTextarea>} */ (_fixture);
 
-const isFirefox = (() => {
-  const ua = navigator.userAgent.toLowerCase();
-  return ua.indexOf('firefox') !== -1 && ua.indexOf('safari') === -1 && ua.indexOf('chrome') === -1;
-})();
-
 function hasBrowserResizeSupport() {
   const textarea = document.createElement('textarea');
   return textarea.style.resize !== undefined;
@@ -98,10 +93,9 @@ describe('<lion-textarea>', () => {
     expect(hightWith1Line < hightWith5TextLines).to.equal(true);
   });
 
-  // TODO: To be fixed in 4096171
-  it.skip(`starts growing when content is bigger than "rows"
+  it(`starts growing when content is bigger than "rows"
     'and stops growing after property "maxRows" is reached`, async () => {
-    const el = await fixture(`<lion-textarea></lion-textarea>`);
+    const el = await fixture(html`<lion-textarea></lion-textarea>`);
     return [1, 2, 3, 4, 5, 6, 7, 8].reduce(async (heightPromise, i) => {
       const oldHeight = await heightPromise;
       el.modelValue += '\n';
@@ -120,11 +114,9 @@ describe('<lion-textarea>', () => {
     }, Promise.resolve(0));
   });
 
-  // TODO: make test simpler => no reduce please (also update autosize npm dependency to latest version)
-  // TODO: To be fixed in 4096171
-  it.skip('stops growing after property "maxRows" is reached when there was an initial value', async () => {
-    const el = await fixture(html`<lion-textarea .modelValue="${'1\n2\n3'}"></lion-textarea>`);
-
+  // TODO: make test simpler => no reduce please
+  it('stops growing after property "maxRows" is reached when there was an initial value', async () => {
+    const el = await fixture(html` <lion-textarea .modelValue="${'1\n2\n3'}"></lion-textarea> `);
     return [4, 5, 6, 7, 8].reduce(async (heightPromise, i) => {
       const oldHeight = await heightPromise;
       el.modelValue += `\n`;
@@ -133,10 +125,7 @@ describe('<lion-textarea>', () => {
 
       if (i > el.maxRows) {
         // stop growing
-        // TODO: fails on Firefox => fix it
-        if (!isFirefox) {
-          expect(newHeight).to.equal(oldHeight);
-        }
+        expect(newHeight).to.equal(oldHeight);
       } else if (i > el.rows) {
         // growing normally
         expect(newHeight >= oldHeight).to.equal(true);

@@ -55,6 +55,7 @@
     "@rocket/cli": "^0.10.2",
     "@rocket/launch": "^0.6.0",
     "@rocket/search": "^0.5.1",
+    "@types/autosize": "^4.0.3",
     "@types/chai-as-promised": "^7.1.5",
     "@types/chai-dom": "^0.0.8",
     "@types/convert-source-map": "^1.5.2",

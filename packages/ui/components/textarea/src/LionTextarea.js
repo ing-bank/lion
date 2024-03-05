@@ -1,6 +1,5 @@
 /* eslint-disable max-classes-per-file */
-// @ts-expect-error [external]: https://github.com/jackmoore/autosize/pull/384 wait for this, then we can switch to just 'autosize'; and then types will work!
-import autosize from 'autosize/src/autosize.js';
+import autosize from 'autosize';
 import { LionField, NativeTextFieldMixin } from '@lion/ui/form-core.js';
 import { css } from 'lit';
 
@@ -155,6 +154,7 @@ export class LionTextarea extends NativeTextFieldMixin(LionFieldWithTextArea) {
       ...super.styles,
       css`
         .input-group__container > .input-group__input ::slotted(.form-control) {
+          box-sizing: content-box;
           overflow-x: hidden; /* for FF adds height to the TextArea to reserve place for scroll-bars */
         }
 
