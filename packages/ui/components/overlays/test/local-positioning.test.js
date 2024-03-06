@@ -90,7 +90,7 @@ describe('Local Positioning', () => {
       `);
       await ctrl.show();
 
-      // TODO: fails on Firefox => fix it
+      // TODO: test fails on Firefox, but looks fine in browser => try again in a later version and investigate when persists (or move to anchor positioning when available in all browsers)
       if (!isFirefox) {
         expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
           'translate(70px, -508px)',
