@@ -1,6 +1,6 @@
 # @lion/ui
 
-## 0.6.0
+## 0.5.4
 
 ### Minor Changes
 
