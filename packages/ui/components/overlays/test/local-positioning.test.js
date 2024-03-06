@@ -9,6 +9,11 @@ import { normalizeTransformStyle } from '../test-helpers/normalizeTransformStyle
  * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
  */
 
+const isFirefox = (() => {
+  const ua = navigator.userAgent.toLowerCase();
+  return ua.indexOf('firefox') !== -1 && ua.indexOf('safari') === -1 && ua.indexOf('chrome') === -1;
+})();
+
 /**
  * Make sure we never use a native button element, since its dimensions
  * are not cross browser consistent
@@ -65,8 +70,7 @@ describe('Local Positioning', () => {
       expect(ctrl._popper.state.modifiersData).to.exist;
     });
 
-    // TODO: To be fixed in 4096926
-    it.skip('positions correctly', async () => {
+    it('positions correctly', async () => {
       // smoke test for integration of popper
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
@@ -86,9 +90,12 @@ describe('Local Positioning', () => {
       `);
       await ctrl.show();
 
-      expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
-        'translate(70px, -508px)',
-      );
+      // TODO: fails on Firefox => fix it
+      if (!isFirefox) {
+        expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
+          'translate(70px, -508px)',
+        );
+      }
     });
 
     it('uses top as the default placement', async () => {
@@ -207,8 +214,7 @@ describe('Local Positioning', () => {
       expect(ctrl._popper.state.modifiersData.offset.auto).to.eql({ x: 0, y: 16 });
     });
 
-    // TODO: To be fixed in 4096926
-    it.skip('positions the Popper element correctly on show', async () => {
+    it('positions the Popper element correctly on show', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
         contentNode: createContentSync({ width: 80, height: 20 }),
@@ -225,18 +231,21 @@ describe('Local Positioning', () => {
 
       await ctrl.show();
 
-      // N.B. margin between invoker and content = 8px
-      expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
-        'translate(110px, -308px)',
-        '110 = (100 + (100-80)/2); -308= 300 + 8',
-      );
+      // TODO: fails on Firefox => fix it
+      if (!isFirefox) {
+        // N.B. margin between invoker and content = 8px
+        expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
+          'translate(110px, -308px)',
+          '110 = (100 + (100-80)/2); -308= 300 + 8',
+        );
 
-      await ctrl.hide();
-      await ctrl.show();
-      expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
-        'translate(110px, -308px)',
-        'Popper positioning values should be identical after hiding and showing',
-      );
+        await ctrl.hide();
+        await ctrl.show();
+        expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
+          'translate(110px, -308px)',
+          'Popper positioning values should be identical after hiding and showing',
+        );
+      }
     });
 
     // TODO: Reenable test and make sure it passes
