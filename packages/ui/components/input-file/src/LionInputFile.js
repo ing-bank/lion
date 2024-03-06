@@ -433,6 +433,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
               ];
             }
           });
+          // TODO: add a unit test for this
           this._selectedFilesMetaData = [...this._selectedFilesMetaData];
         }
       });
