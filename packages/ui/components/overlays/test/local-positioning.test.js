@@ -2,17 +2,13 @@
 import { expect, fixture, fixtureSync } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import { OverlayController } from '@lion/ui/overlays.js';
+import { browserDetection } from '@lion/ui/core.js';
 import { normalizeTransformStyle } from '../test-helpers/normalizeTransformStyle.js';
 
 /**
  * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
  */
-
-const isFirefox = (() => {
-  const ua = navigator.userAgent.toLowerCase();
-  return ua.indexOf('firefox') !== -1 && ua.indexOf('safari') === -1 && ua.indexOf('chrome') === -1;
-})();
 
 /**
  * Make sure we never use a native button element, since its dimensions
@@ -91,11 +87,13 @@ describe('Local Positioning', () => {
       await ctrl.show();
 
       // TODO: test fails on Firefox, but looks fine in browser => try again in a later version and investigate when persists (or move to anchor positioning when available in all browsers)
-      if (!isFirefox) {
-        expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
-          'translate(70px, -508px)',
-        );
+      if (browserDetection.isFirefox) {
+        return;
       }
+
+      expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
+        'translate(70px, -508px)',
+      );
     });
 
     it('uses top as the default placement', async () => {
@@ -231,21 +229,23 @@ describe('Local Positioning', () => {
 
       await ctrl.show();
 
-      // TODO: fails on Firefox => fix it
-      if (!isFirefox) {
-        // N.B. margin between invoker and content = 8px
-        expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
-          'translate(110px, -308px)',
-          '110 = (100 + (100-80)/2); -308= 300 + 8',
-        );
-
-        await ctrl.hide();
-        await ctrl.show();
-        expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
-          'translate(110px, -308px)',
-          'Popper positioning values should be identical after hiding and showing',
-        );
+      // TODO: test fails on Firefox, but looks fine in browser => try again in a later version and investigate when persists (or move to anchor positioning when available in all browsers)
+      if (browserDetection.isFirefox) {
+        return;
       }
+
+      // N.B. margin between invoker and content = 8px
+      expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
+        'translate(110px, -308px)',
+        '110 = (100 + (100-80)/2); -308= 300 + 8',
+      );
+
+      await ctrl.hide();
+      await ctrl.show();
+      expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
+        'translate(110px, -308px)',
+        'Popper positioning values should be identical after hiding and showing',
+      );
     });
 
     // TODO: Reenable test and make sure it passes
