@@ -95,7 +95,7 @@ export class OverlaysManager {
     if (this.shownList.length >= 2) {
       this.shownList.forEach((ctrl, index) => {
         if (index > 0) {
-          this.__shownList[index].blockEscKeyHandler = true;
+          this.__shownList[index]._blocksEscKeyHandler = true;
         }
       });
     }
@@ -116,10 +116,12 @@ export class OverlaysManager {
     if (!this.list.find(ctrl => ctrlToHide === ctrl)) {
       throw new Error('could not find controller to hide');
     }
+    // eslint-disable-next-line no-param-reassign
+    ctrlToHide._blocksEscKeyHandler = false;
     this.__shownList = this.shownList.filter(ctrl => ctrl !== ctrlToHide);
     setTimeout(() => {
-      if (this.shownList.length > 0) {
-        this.__shownList[0].blockEscKeyHandler = false;
+      if (this.__shownList.length > 0) {
+        this.__shownList[0]._blocksEscKeyHandler = false;
       }
     });
   }

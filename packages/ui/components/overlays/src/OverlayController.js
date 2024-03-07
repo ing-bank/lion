@@ -121,7 +121,7 @@ export class OverlayController extends EventTarget {
     /** @private */
     this.__sharedConfig = config;
 
-    this.blockEscKeyHandler = false;
+    this._blocksEscKeyHandler = false;
 
     /** @private */
     this.__activeElementRightBeforeHide = null;
@@ -1128,9 +1128,12 @@ export class OverlayController extends EventTarget {
     }
   }
 
-  /** @private */
-  __escKeyHandler(/** @type {KeyboardEvent} */ ev) {
-    if (ev.key === 'Escape' && !this.blockEscKeyHandler) {
+  /**
+   * @param {KeyboardEvent} ev
+   * @private
+   */
+  __escKeyHandler(ev) {
+    if (ev.key === 'Escape' && !this._blocksEscKeyHandler) {
       this.hide();
     }
   }
@@ -1159,6 +1162,8 @@ export class OverlayController extends EventTarget {
    */
   _handleHidesOnOutsideEsc({ phase }) {
     if (phase === 'show') {
+      this.__escKeyHandler = (/** @type {KeyboardEvent} */ ev) =>
+        ev.key === 'Escape' && this.hide();
       document.addEventListener('keyup', this.__escKeyHandler);
     } else if (phase === 'hide') {
       document.removeEventListener('keyup', this.__escKeyHandler);

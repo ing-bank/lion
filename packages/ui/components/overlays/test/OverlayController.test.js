@@ -620,15 +620,16 @@ describe('OverlayController', () => {
         await ctrl1.show();
         await ctrl2.show();
         expect(ctrl1.manager.shownList.length).to.equal(2);
-        expect(ctrl1.blockEscKeyHandler).to.be.true;
-        expect(ctrl2.blockEscKeyHandler).to.be.false;
+        expect(ctrl1._blocksEscKeyHandler).to.be.true;
+        expect(ctrl2._blocksEscKeyHandler).to.be.false;
 
         ctrl2.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
         await aTimeout(0);
         expect(ctrl2.isShown).to.be.false;
         expect(ctrl1.isShown).to.be.true;
         expect(ctrl1.manager.shownList.length).to.equal(1);
-        expect(ctrl1.blockEscKeyHandler).to.be.false;
+        await aTimeout(0);
+        expect(ctrl1._blocksEscKeyHandler).to.be.false;
       });
     });
 
@@ -667,15 +668,15 @@ describe('OverlayController', () => {
         await ctrl1.show();
         await ctrl2.show();
         expect(ctrl1.manager.shownList.length).to.equal(2);
-        expect(ctrl1.blockEscKeyHandler).to.be.true;
-        expect(ctrl2.blockEscKeyHandler).to.be.false;
+        expect(ctrl1._blocksEscKeyHandler).to.be.true;
+        expect(ctrl2._blocksEscKeyHandler).to.be.false;
 
         document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
         await aTimeout(0);
         expect(ctrl2.isShown).to.be.false;
-        expect(ctrl1.isShown).to.be.true;
-        expect(ctrl1.manager.shownList.length).to.equal(1);
-        expect(ctrl1.blockEscKeyHandler).to.be.false;
+        expect(ctrl1.isShown).to.be.false;
+        expect(ctrl1.manager.shownList.length).to.equal(0);
+        expect(ctrl1._blocksEscKeyHandler).to.be.false;
       });
     });
 

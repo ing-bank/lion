@@ -14,6 +14,7 @@ export const withModalDialogConfig = () =>
     preventsScroll: true,
     trapsKeyboardFocus: true,
     hidesOnEsc: true,
+    hidesOnOutsideEsc: false,
     handlesAccessibility: true,
     ...withClickInteraction(),
   });
