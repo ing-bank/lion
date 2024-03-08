@@ -1,5 +1,14 @@
 # @lion/ui
 
+## 0.5.5
+
+### Patch Changes
+
+- e72fd6d6: [form-core] add operationMode to ValidateMixin, to create specific select and upload required messages
+- 36bf8c6f: Uncommented a previously commented line since this is probably a mistake and breaks functionality
+- 91fad701: fix: only use elementToFocusAfterHide when provided as HTMLElement
+- cf616e1e: [input-tel-dropdown] prevent jumping to input field on each arrow key in windows/linux
+
 ## 0.5.4
 
 ### Minor Changes
