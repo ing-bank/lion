@@ -1,6 +1,6 @@
 {
   "name": "@lion/dialog",
-  "version": "0.12.5",
+  "version": "0.12.6",
   "description": "Show relative overlay content on click, as a webcomponent",
   "license": "MIT",
   "author": "ing-bank",
@@ -38,7 +38,7 @@
   ],
   "dependencies": {
     "@lion/core": "0.17.4",
-    "@lion/overlays": "0.27.5"
+    "@lion/overlays": "0.27.6"
   },
   "keywords": [
     "dialog",

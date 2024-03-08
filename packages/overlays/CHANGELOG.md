@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.27.6
+
+### Patch Changes
+
+- f76f4b36: fix: only use elementToFocusAfterHide when provided as HTMLElement
+
 ## 0.27.5
 
 ### Patch Changes
