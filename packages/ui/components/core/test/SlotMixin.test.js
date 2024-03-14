@@ -437,7 +437,6 @@ describe('SlotMixin', () => {
         class extends ScopedElementsMixin(SlotMixin(LitElement)) {
           static get scopedElements() {
             return {
-              // @ts-expect-error
               ...super.scopedElements,
               'scoped-elm': ScopedEl,
             };
@@ -473,7 +472,6 @@ describe('SlotMixin', () => {
         class extends ScopedElementsMixin(SlotMixin(LitElement)) {
           static get scopedElements() {
             return {
-              // @ts-expect-error
               ...super.scopedElements,
               'scoped-el': ScopedEl,
             };
