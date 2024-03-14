@@ -26,9 +26,10 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { adoptStyles } from 'lit';
 import { ScopedElementsMixin as OpenWcLitScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+// eslint-disable-next-line no-unused-vars
+import { ScopedElementsHost } from './types.js';
 
 /**
- * @typedef {import('@open-wc/scoped-elements/lit-element.js').ScopedElementsHost} ScopedElementsHost
  * @typedef {import('../../form-core/types/validate/ValidateMixinTypes.js').ScopedElementsMap} ScopedElementsMap
  * @typedef {import('lit').CSSResultOrNative} CSSResultOrNative
  * @typedef {import('lit').LitElement} LitElement
@@ -46,11 +47,10 @@ const supportsScopedRegistry = Boolean(
 /**
  * @template {LitElementConstructor} T
  * @param {T} superclass
- * @return {T & ScopedElementsHostConstructor & ScopedElementsHostV2Constructor}
+ * @return {T & ScopedElementsHostConstructor & ScopedElementsHostV2Constructor & typeof ScopedElementsHost}
  */
 const ScopedElementsMixinImplementation = superclass =>
-  /** @type {ScopedElementsHost} */
-  class ScopedElementsHost extends OpenWcLitScopedElementsMixin(superclass) {
+  class ScopedElementsHostChild extends OpenWcLitScopedElementsMixin(superclass) {
     createScopedElement(/** @type {string} */ tagName) {
       const root = supportsScopedRegistry ? this.shadowRoot : document;
       // @ts-expect-error polyfill to support createElement on shadowRoot is loaded

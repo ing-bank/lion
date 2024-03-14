@@ -125,7 +125,6 @@ const ListboxMixinImplementation = superclass =>
 
     static get scopedElements() {
       return {
-        // @ts-expect-error [external] fix types scopedElements
         ...super.scopedElements,
         'lion-options': LionOptions,
       };
