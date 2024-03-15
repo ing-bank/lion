@@ -1,5 +1,18 @@
 # @lion/ui
 
+## 0.6.0-alpha.5
+
+### Minor Changes
+
+- [core] allow SlotRerenderObject to first render on connectedCallback via `firstRenderOnConnected`
+
+### Patch Changes
+- [input-tel-dropdown] use ScopedElementsMixin in to run test-suite with select-rich
+- [core] add Firefox to browserDetection
+- [overlays] skip local-positioning tests for Firefox, and added a todo to fix later
+- [textarea] set box-sizing in tests to make it work cross browser
+
+
 ## 0.6.0-alpha.4
 
 ### Patch Changes
