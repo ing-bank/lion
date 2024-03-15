@@ -195,6 +195,11 @@ const SlotMixinImplementation = superclass =>
         } else if (isRerenderConfig(slotFunctionResult)) {
           // Rerenderable slots are scheduled in the "updated loop"
           this.__slotsThatNeedRerender.add(slotName);
+
+          // For backw. compat, we allow a first render on connectedCallback
+          if (slotFunctionResult.firstRenderOnConnected) {
+            this.__rerenderSlot(slotName);
+          }
         } else {
           throw new Error(
             `Slot "${slotName}" configured inside "get slots()" (in prototype) of ${this.constructor.name} may return these types: TemplateResult | Node | {template:TemplateResult, afterRender?:function} | undefined.

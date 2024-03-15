@@ -104,6 +104,13 @@ A `SlotRerenderObject` looks like this:
 ```ts
 {
   template: TemplateResult;
+  /**
+   * For backward compat with traditional light render methods,
+   * it might be needed to have slot contents available in `connectedCallback`.
+   * Only enable this for existing components that rely on light content availability in connectedCallback.
+   * For new components, please align with ReactiveElement/LitElement reactive cycle callbacks.
+   */
+  firstRenderOnConnected?: boolean;
 }
 ```
 
