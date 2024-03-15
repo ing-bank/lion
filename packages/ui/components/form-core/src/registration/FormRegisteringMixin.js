@@ -28,6 +28,7 @@ const FormRegisteringMixinImplementation = superclass =>
        * @type {FormRegistrarHost | undefined}
        */
       this._parentFormGroup = undefined;
+      this.allowCrossRootRegistration = false;
     }
 
     connectedCallback() {
@@ -36,6 +37,7 @@ const FormRegisteringMixinImplementation = superclass =>
         new CustomEvent('form-element-register', {
           detail: { element: this },
           bubbles: true,
+          composed: Boolean(this.allowCrossRootRegistration),
         }),
       );
     }
