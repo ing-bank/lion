@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { defineCE, expect, fixture, unsafeStatic, html } from '@open-wc/testing';
+import { defineCE, expect, fixture, fixtureSync, unsafeStatic, html } from '@open-wc/testing';
 import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { SlotMixin } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
@@ -299,6 +299,83 @@ describe('SlotMixin', () => {
 
       expect(document.activeElement).to.equal(el._focusableNode);
       expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+    });
+
+    describe('firstRenderOnConnected (for backwards compatibility)', () => {
+      it('does render on connected when firstRenderOnConnected:true', async () => {
+        // Start with elem that does not render on connectedCallback
+        const tag = defineCE(
+          // @ts-expect-error
+          class extends SlotMixin(LitElement) {
+            static properties = { currentValue: Number };
+
+            constructor() {
+              super();
+              this.currentValue = 0;
+            }
+
+            get slots() {
+              return {
+                ...super.slots,
+                template: () => ({
+                  firstRenderOnConnected: true,
+                  template: html`<span>${this.currentValue}</span> `,
+                }),
+              };
+            }
+
+            render() {
+              return html`<slot name="template"></slot>`;
+            }
+
+            get _templateNode() {
+              return /** @type HTMLSpanElement */ (
+                Array.from(this.children).find(elm => elm.slot === 'template')
+              );
+            }
+          },
+        );
+        const el = /** @type {* & SlotHost} */ (fixtureSync(`<${tag}></${tag}>`));
+        expect(el._templateNode.slot).to.equal('template');
+        expect(el._templateNode.textContent?.trim()).to.equal('0');
+      });
+
+      it('does not render on connected when firstRenderOnConnected:false', async () => {
+        // Start with elem that does not render on connectedCallback
+        const tag = defineCE(
+          // @ts-expect-error
+          class extends SlotMixin(LitElement) {
+            static properties = { currentValue: Number };
+
+            constructor() {
+              super();
+              this.currentValue = 0;
+            }
+
+            get slots() {
+              return {
+                ...super.slots,
+                template: () => ({ template: html`<span>${this.currentValue}</span> ` }),
+              };
+            }
+
+            render() {
+              return html`<slot name="template"></slot>`;
+            }
+
+            get _templateNode() {
+              return /** @type HTMLSpanElement */ (
+                Array.from(this.children).find(elm => elm.slot === 'template')
+              );
+            }
+          },
+        );
+        const el = /** @type {* & SlotHost} */ (fixtureSync(`<${tag}></${tag}>`));
+        expect(el._templateNode).to.be.undefined;
+        await el.updateComplete;
+        expect(el._templateNode.slot).to.equal('template');
+        expect(el._templateNode.textContent?.trim()).to.equal('0');
+      });
     });
   });
 
