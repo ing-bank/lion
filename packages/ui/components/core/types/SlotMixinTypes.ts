@@ -8,9 +8,16 @@ export type SlotRerenderObject = {
   template: TemplateResult;
   /**
    * Add logic that will be performed after the render
-   * @deprecated
+   * @deprecated use regular ReactiveElement/LitElement reactive cycle callbacks instead
    */
   afterRender?: Function;
+  /**
+   * For backward compat with traditional light render methods,
+   * it might be needed to have slot contents available in `connectedCallback`.
+   * Only enable this for existing components that rely on light content availability in connectedCallback.
+   * For new components, please align with ReactiveElement/LitElement reactive cycle callbacks.
+   */
+  firstRenderOnConnected?: boolean;
 };
 
 export type SlotFunctionResult = TemplateResult | Element | SlotRerenderObject | undefined;
