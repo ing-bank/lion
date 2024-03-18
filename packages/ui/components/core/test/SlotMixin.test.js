@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 import { defineCE, expect, fixture, fixtureSync, unsafeStatic, html } from '@open-wc/testing';
-// @ts-expect-error
 import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { SlotMixin } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
@@ -516,6 +515,7 @@ describe('SlotMixin', () => {
         class extends ScopedElementsMixin(SlotMixin(LitElement)) {
           static get scopedElements() {
             return {
+              // @ts-expect-error
               ...super.scopedElements,
               'scoped-elm': ScopedEl,
             };
@@ -548,10 +548,10 @@ describe('SlotMixin', () => {
       class ScopedEl extends LitElement {}
 
       const tagName = defineCE(
-        // @ts-expect-error
         class extends ScopedElementsMixin(SlotMixin(LitElement)) {
           static get scopedElements() {
             return {
+              // @ts-expect-error
               ...super.scopedElements,
               'scoped-el': ScopedEl,
             };

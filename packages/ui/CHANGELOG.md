@@ -7,6 +7,7 @@
 - [core] allow SlotRerenderObject to first render on connectedCallback via `firstRenderOnConnected`
 
 ### Patch Changes
+- [tests] fix type errors for SlotMixin.test.js
 - [input-tel-dropdown] use ScopedElementsMixin in to run test-suite with select-rich
 - [core] add Firefox to browserDetection
 - [overlays] skip local-positioning tests for Firefox, and added a todo to fix later
