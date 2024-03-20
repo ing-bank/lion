@@ -40,6 +40,7 @@
     "packages-node/*"
   ],
   "dependencies": {
+    "@open-wc/scoped-elements": "file:open-wc-scoped-elements-3.0.6.tgz",
     "changeset": "^0.2.6"
   },
   "devDependencies": {
@@ -124,7 +125,10 @@
     }
   },
   "overrides": {
-    "sharp": "^0.29.x"
+    "sharp": "^0.29.x",
+    "@lion/ui": {
+      "@open-wc/scoped-elements": "file:open-wc-scoped-elements-3.0.6.tgz"
+    }
   },
   "prettier": {
     "printWidth": 100,

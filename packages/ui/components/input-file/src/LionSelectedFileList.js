@@ -16,7 +16,6 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitElement)) {
   static get scopedElements() {
     return {
-      // @ts-expect-error [external] fix types scopedElements
       ...super.scopedElements,
       'lion-validation-feedback': LionValidationFeedback,
     };
