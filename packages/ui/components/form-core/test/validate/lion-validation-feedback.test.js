@@ -73,4 +73,32 @@ describe('lion-validation-feedback', () => {
 
     clock.restore();
   });
+
+  it('shares to the user the type of validation feedback', async () => {
+    const el = /** @type {LionValidationFeedback} */ (
+      await fixture(html`<lion-validation-feedback></lion-validation-feedback>`)
+    );
+
+    el.feedbackData = [{ message: 'hello', type: 'error', validator: new AlwaysInvalid() }];
+    await el.updateComplete;
+
+    const validationFeedbackType = el.querySelector('.validation-feedback__type');
+    expect(validationFeedbackType.textContent).to.equal('Error');
+
+    el.feedbackData = [{ message: 'hello', type: 'info', validator: new AlwaysInvalid() }];
+    await el.updateComplete;
+
+    expect(validationFeedbackType.textContent).to.equal('Info');
+  });
+
+  describe('accessibility', () => {
+    it('passes a11y audit when with a message', async () => {
+      const el = /** @type {LionValidationFeedback} */ (
+        await fixture(html`<lion-validation-feedback></lion-validation-feedback>`)
+      );
+      el.feedbackData = [{ message: 'hello', type: 'error', validator: new AlwaysInvalid() }];
+      await el.updateComplete;
+      await expect(el).to.be.accessible();
+    });
+  });
 });

@@ -1,4 +1,6 @@
-import { html, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
+import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
+import { localizeNamespaceLoader } from '../localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('./Validator.js').Validator} Validator
@@ -6,15 +8,42 @@ import { html, LitElement } from 'lit';
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').FeedbackMessage} FeedbackMessage
  */
 
+const capitalize = string => `${string[0].toUpperCase()}${string.slice(1)}`;
+
 /**
  * @desc Takes care of accessible rendering of error messages
  * Should be used in conjunction with FormControl having ValidateMixin applied
  */
-export class LionValidationFeedback extends LitElement {
+export class LionValidationFeedback extends LocalizeMixin(LitElement) {
+// export class LionValidationFeedback extends LitElement {
   static get properties() {
     return {
       feedbackData: { attribute: false },
     };
+  }
+
+  static localizeNamespaces = [
+    { 'lion-form-core': localizeNamespaceLoader },
+    ...super.localizeNamespaces,
+  ];
+
+  static get styles() {
+    return [
+      css`
+        .validation-feedback__type {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip-path: inset(100%);
+          clip: rect(1px, 1px, 1px, 1px);
+          white-space: nowrap;
+          border: 0;
+          margin: 0;
+          padding: 0;
+        }
+      `,
+    ];
   }
 
   /**
@@ -64,3 +93,8 @@ export class LionValidationFeedback extends LitElement {
     `;
   }
 }
+
+
+{/* <div class="validation-feedback__type">${this.msgLit(
+  `lion-form-core:validation${capitalize(type)}`,
+)}</div> */}

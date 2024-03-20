@@ -108,6 +108,8 @@ describe('lion-selected-file-list', () => {
     `);
     const fileItems = el.shadowRoot?.querySelectorAll('.selected__list__item');
     const feedback = fileItems ? fileItems[0].querySelector('lion-validation-feedback') : undefined;
+    await el.updateComplete;
+
     // @ts-ignore
     expect(feedback).to.exist;
     expect(feedback).shadowDom.to.equal('foobar');
