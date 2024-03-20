@@ -18,8 +18,7 @@
     },
     "./calendar-translations/*": "./components/calendar/translations/*",
     "./combobox-translations/*": "./components/combobox/translations/*",
-    "./pagination-translations/*": "./components/pagination/translations/*",
-    "./progress-indicator-translations/*": "./components/progress-indicator/translations/*",
+    "./form-core-translations/*": "./components/form-core/translations/*",
     "./input-datepicker-translations/*": "./components/input-datepicker/translations/*",
     "./input-file-translations/*": "./components/input-file/translations/*",
     "./input-iban-translations/*": "./components/input-iban/translations/*",
@@ -27,6 +26,8 @@
     "./input-stepper-translations/*": "./components/input-stepper/translations/*",
     "./input-tel-translations/*": "./components/input-tel/translations/*",
     "./overlays-translations/*": "./components/overlays/translations/*",
+    "./pagination-translations/*": "./components/pagination/translations/*",
+    "./progress-indicator-translations/*": "./components/progress-indicator/translations/*",
     "./validate-messages-translations/*": "./components/validate-messages/translations/*",
     "./docs/*": "./docs/*"
   },

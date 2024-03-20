@@ -195,6 +195,9 @@ describe('<lion-input-amount>', () => {
     expect(el.formattedValue).to.equal('123.45');
     localize.locale = 'nl-NL';
     await el.updateComplete;
+    // TODO find out why the localize needs to be loaded for the feedbackNode
+    // @ts-ignore [allow-protected] in test
+    await el._feedbackNode.localizeNamespacesLoaded;
     expect(el.formattedValue).to.equal('123,45');
   });
 
