@@ -16,6 +16,7 @@ export const main = () => html`
     <form>
       <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
       <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+      <lion-button>Submit</lion-button>
     </form>
   </lion-form>
 `;
