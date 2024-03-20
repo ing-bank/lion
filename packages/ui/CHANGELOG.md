@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.5.6
+
+### Patch Changes
+
+- e6b8dd14: [@lion/ui]: Fix "Multiple versions of Lit loaded." by pinning `@open-wc/scoped-elements` version.
+- 8b7cc43f: feat: allow SlotRerenderObject to first render on connectedCallback via `firstRenderOnConnected`
+
 ## 0.5.5
 
 ### Patch Changes
