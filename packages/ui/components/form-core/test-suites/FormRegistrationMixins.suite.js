@@ -261,7 +261,7 @@ export const runRegistrationSuite = customConfig => {
       it('dispatches the form-element-register event with compose true if allowCrossRootRegistration is set', async () => {
         const el = /** @type {RegistrarClass} */ (
           await fixture(html`
-            <${parentTag} .allowCrossRootRegistration="${true}">
+            <${parentTag} allow-cross-root-registration>
               <${childTag}></${childTag}>
             </${parentTag}>
           `)
@@ -269,7 +269,6 @@ export const runRegistrationSuite = customConfig => {
         const eventSpy = sinon.spy();
         el.addEventListener('form-element-register', eventSpy);
         el.connectedCallback();
-
         expect(eventSpy).to.have.been.calledOnce;
         expect(eventSpy.getCall(0).args[0].composed).to.equal(true);
       });
