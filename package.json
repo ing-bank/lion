@@ -21,7 +21,7 @@
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
-    "release": "changeset publish --tag lit3-alpha",
+    "release": "changeset publish --tag lit3-beta",
     "rm-all-node_modules": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules",
     "rocket:build": "rocket build",
     "rocket:build:start": "web-dev-server --root-dir _site --open",

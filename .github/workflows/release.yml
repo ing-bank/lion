@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - lit3-alpha
+      - lit3-beta
 
 jobs:
   release:
