@@ -1,5 +1,21 @@
 # @lion/ui
 
+## 0.6.0
+
+### Minor Changes
+
+- beta release with:
+  - Update to lit version 3
+  - Moved to scoped-elements v3
+  
+## 0.6.0-beta.0
+
+### Minor Changes
+
+- beta release with:
+  - Update to lit version 3
+  - Moved to scoped-elements v3
+
 ## 0.6.0-alpha.5
 
 ### Minor Changes

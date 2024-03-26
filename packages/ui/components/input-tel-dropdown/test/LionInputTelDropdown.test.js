@@ -6,6 +6,7 @@ import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 import { LionOption } from '@lion/ui/listbox.js';
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { runInputTelDropdownSuite } from '@lion/ui/input-tel-dropdown-test-suites.js';
+import { mimicUserChangingDropdown } from '@lion/ui/input-tel-dropdown-test-helpers.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 
 /**
