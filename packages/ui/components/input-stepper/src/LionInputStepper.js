@@ -196,7 +196,10 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     const incrementButton = this.__getSlot('suffix');
     const disableIncrementor = this.currentValue >= max && max !== Infinity;
     const disableDecrementor = this.currentValue <= min && min !== Infinity;
-    if (disableDecrementor || disableIncrementor) {
+    if (
+      (disableDecrementor && decrementButton === document.activeElement) ||
+      (disableIncrementor && incrementButton === document.activeElement)
+    ) {
       this._inputNode.focus();
     }
     decrementButton[disableDecrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');

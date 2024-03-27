@@ -9,7 +9,7 @@ import '@lion/ui/define/lion-switch.js';
 
 ```js preview-story
 import { html, LitElement } from 'lit';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { LionSwitch } from '@lion/ui/switch.js';
 
 class MyComponent extends ScopedElementsMixin(LitElement) {
@@ -51,7 +51,7 @@ npm i --save @lion/ui
 
 ```js
 import { html, LitElement } from 'lit';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { LionSwitch } from '@lion/ui/switch.js';
 
 class MyComponent extends ScopedElementsMixin(LitElement) {

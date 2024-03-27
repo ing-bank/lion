@@ -30,6 +30,8 @@ import '@lion/ui/define/lion-select.js';
 import '@lion/ui/define/lion-select-rich.js';
 import '@lion/ui/define/lion-switch.js';
 import '@lion/ui/define/lion-textarea.js';
+import '@lion/ui/define/lion-button-submit.js';
+import '@lion/ui/define/lion-button-reset.js';
 import { MinLength, Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 ```
@@ -39,7 +41,6 @@ import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 ```js preview-story
 export const main = () => {
   loadDefaultFeedbackMessages();
-  Required.getMessage = () => 'Please enter a value';
   return html`
     <lion-form>
       <form>
@@ -47,11 +48,13 @@ export const main = () => {
           <lion-input
             name="firstName"
             label="First Name"
+            .fieldName="${'first name'}"
             .validators="${[new Required()]}"
           ></lion-input>
           <lion-input
             name="lastName"
             label="Last Name"
+            .fieldName="${'last name'}"
             .validators="${[new Required()]}"
           ></lion-input>
         </lion-fieldset>
@@ -70,6 +73,7 @@ export const main = () => {
         <lion-textarea
           name="bio"
           label="Biography"
+          .fieldName="${'value'}"
           .validators="${[new Required(), new MinLength(10)]}"
           help-text="Please enter at least 10 characters"
         ></lion-textarea>
@@ -82,6 +86,7 @@ export const main = () => {
           label="What do you like?"
           name="checkers"
           .validators="${[new Required()]}"
+          .fieldName="${'value'}"
         >
           <lion-checkbox .choiceValue=${'foo'} label="I like foo"></lion-checkbox>
           <lion-checkbox .choiceValue=${'bar'} label="I like bar"></lion-checkbox>
@@ -90,6 +95,7 @@ export const main = () => {
         <lion-radio-group
           name="dinosaurs"
           label="Favorite dinosaur"
+          .fieldName="${'dinosaur'}"
           .validators="${[new Required()]}"
         >
           <lion-radio .choiceValue=${'allosaurus'} label="allosaurus"></lion-radio>
@@ -136,18 +142,23 @@ export const main = () => {
           label="Input range"
         ></lion-input-range>
         <lion-checkbox-group
-          .multipleChoice="${false}"
           name="terms"
-          .validators="${[new Required()]}"
+          .validators="${[
+            new Required('', {
+              getMessage: () => `Please accept our terms.`,
+            }),
+          ]}"
         >
-          <lion-checkbox label="I blindly accept all terms and conditions"></lion-checkbox>
+          <lion-checkbox
+            .choiceValue="${'true'}"
+            label="I blindly accept all terms and conditions"
+          ></lion-checkbox>
         </lion-checkbox-group>
         <lion-switch name="notifications" label="Notifications"></lion-switch>
         <lion-input-stepper max="5" min="0" name="rsvp">
           <label slot="label">RSVP</label>
           <div slot="help-text">Max. 5 guests</div>
         </lion-input-stepper>
-        <lion-textarea name="comments" label="Comments"></lion-textarea>
         <div class="buttons">
           <lion-button-submit>Submit</lion-button-submit>
           <lion-button-reset

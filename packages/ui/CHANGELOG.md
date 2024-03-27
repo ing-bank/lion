@@ -1,5 +1,27 @@
 # @lion/ui
 
+## 0.6.0
+
+BREAKING:
+- [form] set focus to the first erroneous form element on submit (mildly breaking, since it could conflict with custom focus management)
+- Update to lit version 3
+- Moved to scoped-elements v3
+
+### Patch Changes
+- [input-tel-dropdown] use ScopedElementsMixin in to run test-suite with select-rich
+- [core] add Firefox to browserDetection
+- [textarea] set box-sizing in tests to make it work cross browser
+- [input-stepper] fix the toggling of the disabled state for the buttons
+- [core] update types for ScopedElementsMixin
+- [form-core] order aria-labelledby and aria-describedby based on slot order instead of dom order
+- [input-range] add screen-reader labels for minimum and maximum value
+- [form-core] remove fieldset label/helpt-text from input-field aria-labelledby/aria-describedby. See https://github.com/ing-bank/lion/issues/1576
+- [validation-messages] get correct validation min and max dates in French
+- [form-core]: set aria-disabled next to the disabled attribute for NVDA screen reader
+- [input-stepper] a11y enhancement & added translations
+- [checkbox-group] add role="list" and role="listitem" to checkbox-indeterminate and its children
+
+
 ## 0.5.6
 
 ### Patch Changes

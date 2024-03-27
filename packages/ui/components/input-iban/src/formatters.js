@@ -11,5 +11,6 @@ export function formatIBAN(modelValue) {
   if (!modelValue) {
     return '';
   }
+  // @ts-ignore should not return null
   return friendlyFormatIBAN(modelValue);
 }

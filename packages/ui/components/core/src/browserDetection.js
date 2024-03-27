@@ -35,6 +35,7 @@ export const browserDetection = {
   isChrome: checkChrome(),
   isIOSChrome: checkChrome('ios'),
   isChromium: checkChrome('chromium'),
+  isFirefox: navigator.userAgent.toLowerCase().indexOf('firefox') > -1,
   isMac: navigator.appVersion.indexOf('Mac') !== -1,
   isIOS: /iPhone|iPad|iPod/i.test(navigator.userAgent),
   isMacSafari:

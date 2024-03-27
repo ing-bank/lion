@@ -1,5 +1,9 @@
 import { LionFieldset } from '@lion/ui/fieldset.js';
 
+/**
+ * @typedef {import('../../form-core/types/registration/FormRegistrarMixinTypes.js').FormRegistrarHost} FormRegistrarHost
+ */
+
 const throwFormNodeError = () => {
   throw new Error(
     'No form node found. Did you put a <form> element inside your custom-form element?',
@@ -57,6 +61,10 @@ export class LionForm extends LionFieldset {
     ev.stopPropagation();
     this.submitGroup();
     this.dispatchEvent(new Event('submit', { bubbles: true }));
+
+    if (this.hasFeedbackFor?.includes('error')) {
+      this._setFocusOnFirstErroneousFormElement(this);
+    }
   }
 
   reset() {
@@ -76,6 +84,22 @@ export class LionForm extends LionFieldset {
     ev.stopPropagation();
     this.resetGroup();
     this.dispatchEvent(new Event('reset', { bubbles: true }));
+  }
+
+  /**
+   * @param {FormRegistrarHost} element
+   * @protected
+   */
+  _setFocusOnFirstErroneousFormElement(element) {
+    const firstFormElWithError =
+      element.formElements.find(child => child.hasFeedbackFor.includes('error')) ||
+      element.formElements[0];
+
+    if (firstFormElWithError.formElements?.length > 0) {
+      this._setFocusOnFirstErroneousFormElement(firstFormElWithError);
+    } else {
+      firstFormElWithError._focusableNode.focus();
+    }
   }
 
   /** @private */
