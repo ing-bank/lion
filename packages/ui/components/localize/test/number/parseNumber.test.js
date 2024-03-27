@@ -159,6 +159,13 @@ describe('parseNumber()', () => {
       expect(parseNumber('-1,234,56')).to.equal(-123456);
       expect(parseNumber('-1 234 56')).to.equal(-123456);
     });
+
+    it('ignores extra minus signs e.g. --1', () => {
+      expect(parseNumber('--1.234.56')).to.equal(-123456);
+      expect(parseNumber('-−1,234,56')).to.equal(-123456);
+      expect(parseNumber('−-1 234 56')).to.equal(-123456);
+      expect(parseNumber('−−1 234 56')).to.equal(-123456);
+    });
   });
 
   it('ignores non-number characters and returns undefined', () => {

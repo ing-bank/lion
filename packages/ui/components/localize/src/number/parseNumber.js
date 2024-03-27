@@ -87,6 +87,20 @@ function parseHeuristic(value) {
 }
 
 /**
+ * Removes extra minus signs following the first occurrence.
+ * @param {string} value String to be parsed as a number
+ */
+function dropExtraMinus(value) {
+  if (!value.includes('-')) {
+    return value;
+  }
+  const index = value.indexOf('-');
+  const beforeMinus = value.substring(0, index);
+  const afterMinus = value.substring(index + 1);
+  return `${beforeMinus}-${afterMinus.replace(/-/g, '')}`;
+}
+
+/**
  * Parses a number string and returns the best possible javascript number.
  * For edge cases it may use locale to give the best possible assumption.
  *
@@ -115,7 +129,7 @@ export function parseNumber(value, options) {
   if (!matchedInput) {
     return undefined;
   }
-  const cleanedInput = matchedInput.join('');
+  const cleanedInput = dropExtraMinus(matchedInput.join(''));
   const parseMode = getParseMode(cleanedInput, options);
   switch (parseMode) {
     case 'unparseable': {
