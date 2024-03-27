@@ -259,31 +259,26 @@ export const runRegistrationSuite = customConfig => {
 
     describe('FormRegisteringMixin', () => {
       it('dispatches the form-element-register event with compose true if allowCrossRootRegistration is set', async () => {
-        const el = /** @type {RegistrarClass} */ (
+        const eventSpy = sinon.spy();
+        /** @type {RegisteringClass} */ (
           await fixture(html`
-            <${parentTag} allow-cross-root-registration>
-              <${childTag}></${childTag}>
-            </${parentTag}>
+            <${childTag}
+              @form-element-register=${eventSpy}
+              allow-cross-root-registration
+            >
+            </${childTag}>
           `)
         );
-        const eventSpy = sinon.spy();
-        el.addEventListener('form-element-register', eventSpy);
-        el.connectedCallback();
         expect(eventSpy).to.have.been.calledOnce;
         expect(eventSpy.getCall(0).args[0].composed).to.equal(true);
       });
       it('dispatches the form-element-register event with compose false if allowCrossRootRegistration is not set', async () => {
-        const el = /** @type {RegistrarClass} */ (
+        const eventSpy = sinon.spy();
+        /** @type {RegisteringClass} */ (
           await fixture(html`
-            <${parentTag}>
-              <${childTag}></${childTag}>
-            </${parentTag}>
+            <${childTag} @form-element-register=${eventSpy}></${childTag}>
           `)
         );
-        const eventSpy = sinon.spy();
-        el.addEventListener('form-element-register', eventSpy);
-        el.connectedCallback();
-
         expect(eventSpy).to.have.been.calledOnce;
         expect(eventSpy.getCall(0).args[0].composed).to.equal(false);
       });
