@@ -92,6 +92,14 @@ export class OverlaysManager {
     }
     this.__shownList.unshift(ctrlToShow);
 
+    if (this.shownList.length >= 2) {
+      this.shownList.forEach((ctrl, index) => {
+        if (index > 0) {
+          this.__shownList[index]._blocksEscKeyHandler = true;
+        }
+      });
+    }
+
     // make sure latest shown ctrl is visible
     Array.from(this.__shownList)
       .reverse()
@@ -108,7 +116,14 @@ export class OverlaysManager {
     if (!this.list.find(ctrl => ctrlToHide === ctrl)) {
       throw new Error('could not find controller to hide');
     }
+    // eslint-disable-next-line no-param-reassign
+    ctrlToHide._blocksEscKeyHandler = false;
     this.__shownList = this.shownList.filter(ctrl => ctrl !== ctrlToHide);
+    setTimeout(() => {
+      if (this.__shownList.length > 0) {
+        this.__shownList[0]._blocksEscKeyHandler = false;
+      }
+    });
   }
 
   teardown() {

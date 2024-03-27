@@ -121,6 +121,8 @@ export class OverlayController extends EventTarget {
     /** @private */
     this.__sharedConfig = config;
 
+    this._blocksEscKeyHandler = false;
+
     /** @private */
     this.__activeElementRightBeforeHide = null;
 
@@ -294,7 +296,7 @@ export class OverlayController extends EventTarget {
   }
 
   /**
-   * Hides other overlays when mutiple are opened (currently exclusive to globalOverlayController)
+   * Hides other overlays when multiple are opened (currently exclusive to globalOverlayController)
    * @type {boolean}
    */
   get isBlocking() {
@@ -302,7 +304,7 @@ export class OverlayController extends EventTarget {
   }
 
   /**
-   * Hides other overlays when mutiple are opened (currently exclusive to globalOverlayController)
+   * Hides other overlays when multiple are opened (currently exclusive to globalOverlayController)
    * @type {boolean}
    */
   get preventsScroll() {
@@ -326,7 +328,7 @@ export class OverlayController extends EventTarget {
   }
 
   /**
-   * Hides the overlay when clicking next to it, exluding invoker
+   * Hides the overlay when clicking next to it, excluding invoker
    * @type {boolean}
    */
   get hidesOnOutsideClick() {
@@ -419,7 +421,7 @@ export class OverlayController extends EventTarget {
    * @param {number} value
    */
   set elevation(value) {
-    // @ts-expect-error find out why config would/could be undfined
+    // @ts-expect-error find out why config would/could be undefined
     this.__wrappingDialogNode.style.zIndex = `${this.config.zIndex + value}`;
   }
 
@@ -874,7 +876,7 @@ export class OverlayController extends EventTarget {
   }
 
   /**
-   * Method to be overriden by subclassers
+   * Method to be overridden by subclassers
    *
    * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} hideConfig
    */
@@ -1126,9 +1128,14 @@ export class OverlayController extends EventTarget {
     }
   }
 
-  /** @private */
-  __escKeyHandler(/** @type {KeyboardEvent} */ ev) {
-    return ev.key === 'Escape' && this.hide();
+  /**
+   * @param {KeyboardEvent} ev
+   * @private
+   */
+  __escKeyHandler(ev) {
+    if (ev.key === 'Escape' && !this._blocksEscKeyHandler) {
+      this.hide();
+    }
   }
 
   /**
