@@ -2,46 +2,17 @@
 
 ## 0.6.0
 
-### Minor Changes
-
-- beta release with:
-  - Update to lit version 3
-  - Moved to scoped-elements v3
-  
-## 0.6.0-beta.0
-
-### Minor Changes
-
-- beta release with:
-  - Update to lit version 3
-  - Moved to scoped-elements v3
-
-## 0.6.0-alpha.5
-
-### Minor Changes
-
-- [core] allow SlotRerenderObject to first render on connectedCallback via `firstRenderOnConnected`
+BREAKING:
+- [form] set focus to the first erroneous form element on submit (mildly breaking, since it could conflict with custom focus management)
+- Update to lit version 3
+- Moved to scoped-elements v3
 
 ### Patch Changes
 - [input-tel-dropdown] use ScopedElementsMixin in to run test-suite with select-rich
 - [core] add Firefox to browserDetection
-- [overlays] skip local-positioning tests for Firefox, and added a todo to fix later
 - [textarea] set box-sizing in tests to make it work cross browser
-
-
-## 0.6.0-alpha.4
-
-### Patch Changes
 - [input-stepper] fix the toggling of the disabled state for the buttons
 - [core] update types for ScopedElementsMixin
-
-## 0.6.0-alpha.3
-
-BREAKING:
-- [form] set focus to the first erroneous form element on submit (mildly breaking, since it could conflict with custom focus management)
-
-
-### Patch Changes
 - [form-core] order aria-labelledby and aria-describedby based on slot order instead of dom order
 - [input-range] add screen-reader labels for minimum and maximum value
 - [form-core] remove fieldset label/helpt-text from input-field aria-labelledby/aria-describedby. See https://github.com/ing-bank/lion/issues/1576
@@ -50,22 +21,6 @@ BREAKING:
 - [input-stepper] a11y enhancement & added translations
 - [checkbox-group] add role="list" and role="listitem" to checkbox-indeterminate and its children
 
-
-## 0.6.0-alpha.1
-
-### Minor Changes
-
-- Moved to scoped-elements v3
-
-### Patch Changes
-
-- [validation-messages] get correct validation min and max dates in French
-
-## 0.6.0-alpha.0
-
-### Minor Changes
-
-- 83658742: Update to lit version 3
 
 ## 0.5.6
 
