@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.15.3
+
+### Patch Changes
+
+- 3737c492: fix: allow compatibility with node 16
+
 ## 0.15.2
 
 ### Patch Changes
