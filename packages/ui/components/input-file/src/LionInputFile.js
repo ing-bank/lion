@@ -84,6 +84,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
             .multiple=${this.multiple}
           ></lion-selected-file-list>
         `,
+        renderAsDirectHostChild: true,
       }),
     };
   }
@@ -183,7 +184,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   get _fileListNode() {
     return /** @type {LionSelectedFileList} */ (
-      Array.from(this.children).find(child => child.slot === 'selected-file-list')?.children[0]
+      Array.from(this.children).find(child => child.slot === 'selected-file-list')
     );
   }
 

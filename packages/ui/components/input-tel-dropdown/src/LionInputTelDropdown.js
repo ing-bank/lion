@@ -180,6 +180,7 @@ export class LionInputTelDropdown extends LionInputTel {
 
         return {
           template: templates.dropdown(this._templateDataDropdown),
+          renderAsDirectHostChild: Boolean,
         };
       },
     };
