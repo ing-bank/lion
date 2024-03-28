@@ -22,8 +22,8 @@ const packages = fs
  * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}
  *
  */
-const testRunnerHtml = (testRunnerImport) =>
-`
+const testRunnerHtml = testRunnerImport =>
+  `
 <html>
   <head>
     <script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
@@ -38,10 +38,10 @@ export default {
     report: true,
     reportDir: 'coverage',
     threshold: {
-      statements: 90,
-      branches: 65,
-      functions: 80,
-      lines: 90,
+      statements: 95,
+      functions: 95,
+      branches: 95,
+      lines: 95,
     },
   },
   testFramework: {
