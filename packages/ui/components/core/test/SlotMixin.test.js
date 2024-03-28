@@ -208,6 +208,7 @@ describe('SlotMixin', () => {
               ...super.slots,
               'focusable-node': () => ({
                 template: html`<input /> `,
+                renderAsDirectHostChild: false,
               }),
             };
           }
@@ -225,7 +226,6 @@ describe('SlotMixin', () => {
         },
       );
       const el = /** @type {* & SlotHost} */ (await fixture(`<${tag}></${tag}>`));
-
       el._focusableNode.focus();
       expect(document.activeElement).to.equal(el._focusableNode);
 
@@ -281,6 +281,69 @@ describe('SlotMixin', () => {
             return /** @type HTMLSpanElement */ (
               Array.from(this.children).find(elm => elm.slot === 'focusable-node')
                 ?.firstElementChild
+            );
+          }
+        },
+      );
+      const el = /** @type {* & SlotHost} */ (await fixture(`<${tagName}></${tagName}>`));
+
+      el._focusableNode._buttonNode.focus();
+
+      expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+
+      el.currentValue = 1;
+      await el.updateComplete;
+
+      expect(document.activeElement).to.equal(el._focusableNode);
+      expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+    });
+
+    it('allows for rerendering complex shadow root into slot as a direct child', async () => {
+      const complexSlotTagName = defineCE(
+        class extends LitElement {
+          render() {
+            return html`
+              <input />
+              <button>I will be focused</button>
+            `;
+          }
+
+          get _buttonNode() {
+            // @ts-expect-error
+            return this.shadowRoot.querySelector('button');
+          }
+        },
+      );
+
+      const complexSlotTag = unsafeStatic(complexSlotTagName);
+
+      const tagName = defineCE(
+        // @ts-expect-error
+        class extends SlotMixin(LitElement) {
+          static properties = { currentValue: Number };
+
+          constructor() {
+            super();
+            this.currentValue = 0;
+          }
+
+          get slots() {
+            return {
+              ...super.slots,
+              'focusable-node': () => ({
+                template: html`<${complexSlotTag}> </${complexSlotTag}> `,
+                renderAsDirectHostChild: true,
+              }),
+            };
+          }
+
+          render() {
+            return html`<slot name="focusable-node"></slot>`;
+          }
+
+          get _focusableNode() {
+            return /** @type HTMLSpanElement */ (
+              Array.from(this.children).find(elm => elm.slot === 'focusable-node')
             );
           }
         },

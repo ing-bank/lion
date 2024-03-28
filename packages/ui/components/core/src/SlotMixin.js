@@ -1,18 +1,37 @@
 /* eslint-disable class-methods-use-this */
+import { isTemplateResult } from 'lit/directive-helpers.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { render } from 'lit';
-import { isTemplateResult } from 'lit/directive-helpers.js';
 
 /**
- * @typedef {import('../types/SlotMixinTypes.js').SlotMixin} SlotMixin
- * @typedef {import('../types/SlotMixinTypes.js').SlotsMap} SlotsMap
+ * @typedef {{renderBefore:Comment; renderTargetThatRespectsShadowRootScoping: HTMLDivElement}} RenderMetaObj
  * @typedef {import('../types/SlotMixinTypes.js').SlotFunctionResult} SlotFunctionResult
  * @typedef {import('../types/SlotMixinTypes.js').SlotRerenderObject} SlotRerenderObject
+ * @typedef {import('../types/SlotMixinTypes.js').SlotMixin} SlotMixin
+ * @typedef {import('../types/SlotMixinTypes.js').SlotsMap} SlotsMap
  * @typedef {import('lit').LitElement} LitElement
  */
 
-const isRerenderConfig = (/** @type {SlotFunctionResult} */ o) =>
-  !Array.isArray(o) && typeof o === 'object' && 'template' in o;
+/**
+ * @param {SlotFunctionResult} slotFunctionResult
+ * @returns {'template-result'|'node'|'slot-rerender-object'|null}
+ */
+function determineSlotFunctionResultType(slotFunctionResult) {
+  if (slotFunctionResult instanceof Node) {
+    return 'node';
+  }
+  if (isTemplateResult(slotFunctionResult)) {
+    return 'template-result';
+  }
+  if (
+    !Array.isArray(slotFunctionResult) &&
+    typeof slotFunctionResult === 'object' &&
+    'template' in slotFunctionResult
+  ) {
+    return 'slot-rerender-object';
+  }
+  return null;
+}
 
 /**
  * All intricacies involved in managing light dom can be delegated to SlotMixin. Amongst others, it automatically:
@@ -45,8 +64,8 @@ const SlotMixinImplementation = superclass =>
        * so that all interactions work as intended and no focus issues can arise (which would be the case
        * when (cloned) nodes of a render outcome would be moved around)
        * @private
-       * @type { Map<string, HTMLDivElement> } */
-      this.__scopedRenderRoots = new Map();
+       * @type { Map<string, RenderMetaObj> } */
+      this.__renderMetaPerSlot = new Map();
       /**
        * @private
        * @type {Set<string>}
@@ -79,9 +98,9 @@ const SlotMixinImplementation = superclass =>
     __rerenderSlot(slotName) {
       const slotFunctionResult = /** @type {SlotRerenderObject} */ (this.slots[slotName]());
       this.__renderTemplateInScopedContext({
+        renderAsDirectHostChild: slotFunctionResult.renderAsDirectHostChild,
         template: slotFunctionResult.template,
         slotName,
-        shouldRerender: true,
       });
       // TODO: this is deprecated, remove later
       slotFunctionResult.afterRender?.();
@@ -94,14 +113,8 @@ const SlotMixinImplementation = superclass =>
     update(changedProperties) {
       super.update(changedProperties);
 
-      if (this.__slotsThatNeedRerender.size) {
-        for (const slotName of Array.from(this.__slotsThatNeedRerender)) {
-          this.__rerenderSlot(slotName);
-        }
-      }
-
-      if (this.__isFirstSlotUpdate) {
-        this.__isFirstSlotUpdate = false;
+      for (const slotName of this.__slotsThatNeedRerender) {
+        this.__rerenderSlot(slotName);
       }
     }
 
@@ -110,32 +123,59 @@ const SlotMixinImplementation = superclass =>
      * @param {object} opts
      * @param {import('lit').TemplateResult} opts.template
      * @param {string} opts.slotName
-     * @param {boolean} [opts.shouldRerender] false when TemplateResult, true when SlotRerenderObject
+     * @param {boolean} [opts.renderAsDirectHostChild] when false, the render parent (wrapper div) will be kept in the light dom
+     * @returns {void}
      */
-    __renderTemplateInScopedContext({ template, slotName, shouldRerender }) {
-      // @ts-expect-error wait for browser support
-      const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
-      const registryRoot = supportsScopedRegistry ? this.shadowRoot : document;
-
-      let renderTarget;
-      // Reuse the existing offline renderTargets for results consistent with that of rendering to one target (shadow dom)
-      if (this.__scopedRenderRoots.has(slotName)) {
-        renderTarget = this.__scopedRenderRoots.get(slotName);
-      } else {
+    __renderTemplateInScopedContext({ template, slotName, renderAsDirectHostChild }) {
+      const isFirstRender = !this.__renderMetaPerSlot.has(slotName);
+      if (isFirstRender) {
         // @ts-expect-error wait for browser support
-        renderTarget = registryRoot.createElement('div');
-        if (shouldRerender) {
-          renderTarget.slot = slotName;
-          this.appendChild(renderTarget);
+        const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
+        const registryRoot = supportsScopedRegistry ? this.shadowRoot || document : document;
+
+        // @ts-expect-error wait for browser support
+        const renderTargetThatRespectsShadowRootScoping = registryRoot.createElement('div');
+        const startComment = document.createComment(`_start_slot_${slotName}_`);
+        const endComment = document.createComment(`_end_slot_${slotName}_`);
+
+        renderTargetThatRespectsShadowRootScoping.appendChild(startComment);
+        renderTargetThatRespectsShadowRootScoping.appendChild(endComment);
+
+        // Providing all options breaks Safari; keep host and creationScope
+        const { creationScope, host } = this.renderOptions;
+        render(template, renderTargetThatRespectsShadowRootScoping, {
+          renderBefore: endComment,
+          creationScope,
+          host,
+        });
+
+        if (renderAsDirectHostChild) {
+          const nodes = Array.from(renderTargetThatRespectsShadowRootScoping.childNodes);
+          this.__appendNodes({ nodes, renderParent: this, slotName });
+        } else {
+          renderTargetThatRespectsShadowRootScoping.slot = slotName;
+          this.appendChild(renderTargetThatRespectsShadowRootScoping);
         }
-        this.__scopedRenderRoots.set(slotName, renderTarget);
+
+        this.__renderMetaPerSlot.set(slotName, {
+          renderTargetThatRespectsShadowRootScoping,
+          renderBefore: endComment,
+        });
+
+        return;
       }
 
-      // Providing all options breaks Safari; keep host and creationScope
-      const { creationScope, host } = this.renderOptions;
-      render(template, renderTarget, { creationScope, host });
+      // Rerender
+      const { renderBefore, renderTargetThatRespectsShadowRootScoping } =
+        /** @type {RenderMetaObj} */ (this.__renderMetaPerSlot.get(slotName));
 
-      return renderTarget;
+      const rerenderTarget = renderAsDirectHostChild
+        ? this
+        : renderTargetThatRespectsShadowRootScoping;
+
+      // Providing all options breaks Safari: we keep host and creationScope
+      const { creationScope, host } = this.renderOptions;
+      render(template, rerenderTarget, { creationScope, host, renderBefore });
     }
 
     /**
@@ -145,13 +185,8 @@ const SlotMixinImplementation = superclass =>
      * which can be used as a render target for most
      * @param {string} options.slotName For the first render, it's best to use slotName
      */
-    __appendNodesForOneTimeRender({ nodes, renderParent = this, slotName }) {
+    __appendNodes({ nodes, renderParent = this, slotName }) {
       for (const node of nodes) {
-        if (!(node instanceof Node)) {
-          return;
-        }
-        // Here, we add the slot name to the node that is an element
-        // (ignoring helper comment nodes that might be in our nodes array)
         if (node instanceof Element && slotName && slotName !== '') {
           node.setAttribute('slot', slotName);
         }
@@ -182,29 +217,36 @@ const SlotMixinImplementation = superclass =>
           this.__privateSlots.add(slotName);
         }
 
-        if (isTemplateResult(slotFunctionResult)) {
-          const renderTarget = this.__renderTemplateInScopedContext({
-            template: slotFunctionResult,
-            slotName,
-          });
-          const nodes = Array.from(renderTarget.childNodes);
-          this.__appendNodesForOneTimeRender({ nodes, renderParent: this, slotName });
-        } else if (slotFunctionResult instanceof Node) {
-          const nodes = [/** @type {Node} */ (slotFunctionResult)];
-          this.__appendNodesForOneTimeRender({ nodes, renderParent: this, slotName });
-        } else if (isRerenderConfig(slotFunctionResult)) {
-          // Rerenderable slots are scheduled in the "updated loop"
-          this.__slotsThatNeedRerender.add(slotName);
+        const slotFunctionResultType = determineSlotFunctionResultType(slotFunctionResult);
 
-          // For backw. compat, we allow a first render on connectedCallback
-          if (slotFunctionResult.firstRenderOnConnected) {
-            this.__rerenderSlot(slotName);
-          }
-        } else {
-          throw new Error(
-            `Slot "${slotName}" configured inside "get slots()" (in prototype) of ${this.constructor.name} may return these types: TemplateResult | Node | {template:TemplateResult, afterRender?:function} | undefined.
-            You provided: ${slotFunctionResult}`,
-          );
+        switch (slotFunctionResultType) {
+          case 'template-result':
+            this.__renderTemplateInScopedContext({
+              template: /** @type {import('lit').TemplateResult} */ (slotFunctionResult),
+              renderAsDirectHostChild: true,
+              slotName,
+            });
+            break;
+          case 'node':
+            this.__appendNodes({
+              nodes: [/** @type {Node} */ (slotFunctionResult)],
+              renderParent: this,
+              slotName,
+            });
+            break;
+          case 'slot-rerender-object':
+            // Rerenderable slots are scheduled in the "update loop"
+            this.__slotsThatNeedRerender.add(slotName);
+            // For backw. compat, we allow a first render on connectedCallback
+            if (/** @type {SlotRerenderObject} */ (slotFunctionResult).firstRenderOnConnected) {
+              this.__rerenderSlot(slotName);
+            }
+            break;
+          default:
+            throw new Error(
+              `Slot "${slotName}" configured inside "get slots()" (in prototype) of ${this.constructor.name} may return these types: TemplateResult | Node | {template:TemplateResult, afterRender?:function} | undefined.
+              You provided: ${slotFunctionResult}`,
+            );
         }
       }
     }

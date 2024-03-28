@@ -215,7 +215,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
       it('renders to prefix slot in light dom', async () => {
         const el = await fixture(html` <${tag} .allowedRegions="${['DE']}"></${tag}> `);
         const prefixSlot = /** @type {HTMLElement} */ (
-          /** @type {HTMLElement} */ (el.refs.dropdown.value).parentElement
+          /** @type {HTMLElement} */ (el.refs.dropdown.value)
         );
         expect(prefixSlot.getAttribute('slot')).to.equal('prefix');
         expect(prefixSlot.slot).to.equal('prefix');

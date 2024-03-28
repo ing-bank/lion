@@ -18,6 +18,14 @@ export type SlotRerenderObject = {
    * For new components, please align with ReactiveElement/LitElement reactive cycle callbacks.
    */
   firstRenderOnConnected?: boolean;
+  /**
+   * This is recommended to set to true always, as its behavior is usually desired and more in line with slot nodes that
+   * are not configured as rerenderable.
+   * For backward compatibility, it is set to false by default.
+   * When not configured, content is wrapped in a div (this can be problematic for ::slotted css selectors and for
+   * querySelectors that expect [slot=x] to have some semantic or (presentational) value).
+   */
+  renderAsDirectHostChild?: boolean;
 };
 
 export type SlotFunctionResult = TemplateResult | Element | SlotRerenderObject | undefined;
