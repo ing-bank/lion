@@ -477,7 +477,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   // TODO: rename to _onKeyUp in v1
   __onKeyUp(ev) {
-    if (this.disabled) {
+    if (this.disabled || this.readOnly) {
       return;
     }
 

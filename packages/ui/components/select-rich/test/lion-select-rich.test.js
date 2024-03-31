@@ -329,6 +329,21 @@ describe('lion-select-rich', () => {
       expect(elSingleoption.opened).to.be.false;
     });
 
+    it('stays closed with [ArrowUp] or [ArrowDown] key in readonly mode', async () => {
+      const elReadOnly = await fixture(html`
+        <lion-select-rich readonly>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20} checked>Item 2</lion-option>
+        </lion-select-rich>
+      `);
+
+      elReadOnly.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+      expect(elReadOnly.opened).to.be.false;
+
+      elReadOnly.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      expect(elReadOnly.opened).to.be.false;
+    });
+
     it('sets inheritsReferenceWidth to min by default', async () => {
       const el = await fixture(html`
         <lion-select-rich name="favoriteColor" label="Favorite color">
