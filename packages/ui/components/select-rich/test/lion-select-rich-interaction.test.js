@@ -1,4 +1,4 @@
-import { expect, triggerBlurFor, triggerFocusFor, fixture } from '@open-wc/testing';
+import { expect, triggerBlurFor, triggerFocusFor, fixture, aTimeout } from '@open-wc/testing';
 import { Required } from '@lion/ui/form-core.js';
 import { html } from 'lit/static-html.js';
 import { browserDetection } from '@lion/ui/core.js';
@@ -201,6 +201,8 @@ describe('lion-select-rich interactions', () => {
       );
       const { invoker } = getNodes(el);
       invoker.click();
+      // Without waiting, el.opened will be always false, as toggling is async
+      await aTimeout(500);
       expect(el.opened).to.be.false;
     });
 
