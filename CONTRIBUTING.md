@@ -36,6 +36,9 @@ npm run test
 
 # Portal
 npm run start
+
+# Commit
+npm run commit
 ```
 
 Create a Pull Request:
