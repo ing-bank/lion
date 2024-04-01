@@ -3,7 +3,7 @@
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import { IsCountryIBAN, IsNotCountryIBAN } from '@lion/ui/input-iban.js';
+import { IsCountryIBAN, IsIBAN, IsNotCountryIBAN } from '@lion/ui/input-iban.js';
 import '@lion/ui/define/lion-input-iban.js';
 ```
 
@@ -97,6 +97,25 @@ export const blacklistedCountry = () => {
     <small>
       Demo instructions: Try <code>RO 89 RZBR 6997 3728 4864 5577</code> and watch it fail
     </small>
+  `;
+};
+```
+
+## Custom Error Message
+
+By default, we validate the input to ensure the IBAN is valid. To use other than the default validation message, you can override `IsIBAN.getMessage()` method.
+
+```js preview-story
+export const customErrorMessage = () => {
+  loadDefaultFeedbackMessages();
+  IsIBAN.getMessage = async () => 'Invalid IBAN!';
+
+  return html`
+    <lion-input-iban
+      .modelValue=${'NL20INGB0001234567XXXX'}
+      name="iban"
+      label="IBAN"
+    ></lion-input-iban>
   `;
 };
 ```
