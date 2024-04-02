@@ -1,13 +1,22 @@
 # @lion/ui
 
+## 0.6.1
+
+### Patch Changes
+
+- 37deecd2: Added support for cross-root registration by adding a flag to composed property of form-element-register event.
+- f0333bbc: [core/SlotMixin] allow to (re)render scoped elements as direct light dom child
+
 ## 0.6.0
 
 BREAKING:
+
 - [form] set focus to the first erroneous form element on submit (mildly breaking, since it could conflict with custom focus management)
 - Update to lit version 3
 - Moved to scoped-elements v3
 
 ### Patch Changes
+
 - [input-tel-dropdown] use ScopedElementsMixin in to run test-suite with select-rich
 - [core] add Firefox to browserDetection
 - [textarea] set box-sizing in tests to make it work cross browser
@@ -20,7 +29,6 @@ BREAKING:
 - [form-core]: set aria-disabled next to the disabled attribute for NVDA screen reader
 - [input-stepper] a11y enhancement & added translations
 - [checkbox-group] add role="list" and role="listitem" to checkbox-indeterminate and its children
-
 
 ## 0.5.6
 
