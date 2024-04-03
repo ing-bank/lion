@@ -4,16 +4,15 @@ import { ChoiceInputMixin } from './ChoiceInputMixin.js';
 import { LionInput } from '../../../input/src/LionInput.js';
 
 /**
- * @typedef {import('../../types/choice-group/ChoiceInputMixinTypes.js').ChoiceInputMixin} ChoiceUserInputMixin
  * @typedef {import('../FormControlMixin.js').HTMLElementWithValue} HTMLElementWithValue
  */
 
 /**
- * @type {ChoiceUserInputMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const ChoiceUserInputMixinImplementation = superclass =>
   class ChoiceUserInputMixin extends ChoiceInputMixin(superclass) {
+    /** @type {(mutationHandler: (mutation: MutationRecord) => void) => MutationObserver} */
     static createMutationObserver = mutationHandler =>
       new MutationObserver(mutations => {
         const mutation = mutations.find(
@@ -41,16 +40,20 @@ const ChoiceUserInputMixinImplementation = superclass =>
       super.connectedCallback();
 
       this.shadowRoot?.addEventListener('slotchange', e => {
-        if (e.target?.name === 'user-input') {
+        if (/** @type {{ target: HTMLSlotElement | null }} */ (e).target?.name === 'user-input') {
           this.__syncChoiceValueToUserValue();
           this._listenToUserInput();
           if (this._userInputSlotNode) {
-            this._userInputSlotNode.dataset.checked = this.checked.toString();
+            /** @type {HTMLElement} */ (this._userInputSlotNode).dataset.checked =
+              this.checked.toString();
           }
         }
       });
     }
 
+    /**
+     * @override
+     */
     // eslint-disable-next-line class-methods-use-this
     _afterLabel() {
       return html`<slot name="user-input"></slot>`;
@@ -70,7 +73,8 @@ const ChoiceUserInputMixinImplementation = superclass =>
           this._focusToUserInput();
         }
         if (this._userInputSlotNode) {
-          this._userInputSlotNode.dataset.checked = this.checked.toString();
+          /** @type {HTMLElement} */ (this._userInputSlotNode).dataset.checked =
+            this.checked.toString();
         }
       }
     }
@@ -105,7 +109,7 @@ const ChoiceUserInputMixinImplementation = superclass =>
 
       if (slot?.tagName === 'INPUT') {
         this.__userInputType = 'native';
-        this.__userInputNode = slot;
+        this.__userInputNode = /** @type {HTMLInputElement} */ (slot);
         return;
       }
 
@@ -119,11 +123,11 @@ const ChoiceUserInputMixinImplementation = superclass =>
 
     _getUserValue() {
       if (this.__userInputType === 'lioninput') {
-        return this._userInputNode.modelValue;
+        return /** @type { LionInput } */ (this._userInputNode).modelValue;
       }
 
       if (this.__userInputType === 'native') {
-        return this._userInputNode.value;
+        return /** @type { HTMLElementWithValue } */ (this._userInputNode).value;
       }
 
       return undefined;
@@ -148,10 +152,10 @@ const ChoiceUserInputMixinImplementation = superclass =>
       this._userInputNode?.focus();
     }
 
-    /** @type HTMLElement | null */
     get _userInputSlotNode() {
-      /** @type HTMLSlotElement */
-      return this.shadowRoot?.querySelector('slot[name="user-input"]')?.assignedElements()?.[0];
+      return /** @type {HTMLSlotElement | null} */ (
+        this.shadowRoot?.querySelector('slot[name="user-input"]')
+      )?.assignedElements()?.[0];
     }
 
     __syncUserValueToChoiceValue() {

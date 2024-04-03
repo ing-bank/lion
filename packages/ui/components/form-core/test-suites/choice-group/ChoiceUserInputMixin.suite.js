@@ -15,10 +15,13 @@ class ChoiceInput extends ChoiceUserInputMixin(LionInput) {
 }
 customElements.define('choice-group-user-input', ChoiceInput);
 
-const getChoiceUserInputMembers = el => ({
-  ...getInputMembers(el),
-  _userInputNode: el._userInputNode,
-  _userInputSlotNode: el._userInputSlotNode,
+const getChoiceUserInputMembers = (/** @type {ChoiceInput} */ el) => ({
+  // @ts-ignore
+  ...getInputMembers(/** @type {LionInput} */ (el)),
+  // @ts-ignore
+  _userInputNode: /** @type { HTMLInputElement | LionInput } */ (el._userInputNode),
+  // @ts-ignore
+  _userInputSlotNode: /** @type { HTMLElement } */ (el._userInputSlotNode),
 });
 
 /**
@@ -50,7 +53,8 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
         )
       );
 
-      const userValue = getChoiceUserInputMembers(el)._userInputNode.modelValue;
+      const userValue = /** @type {LionInput} */ (getChoiceUserInputMembers(el)._userInputNode)
+        .modelValue;
       expect(userValue.valueOf()).to.equal(date.valueOf());
     });
 
@@ -95,7 +99,7 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
       const el = /** @type {ChoiceInput} */ (
         await fixture(html`
           <${tag}
-            @model-value-changed="${(/** @type {CustomEvent} */ event) => {
+            @model-value-changed=${(/** @type {CustomEvent} */ event) => {
               isTriggeredByUser = event.detail.isTriggeredByUser;
             }}
           >
@@ -151,7 +155,7 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
         connectedCallback() {
           super.connectedCallback();
           const observer = ChoiceInput.createMutationObserver(spy);
-          observer.observe(this.shadowRoot?.host, { attributes: true });
+          observer.observe(/** @type {ShadowRoot} */ (this.shadowRoot).host, { attributes: true });
         }
       }
       customElements.define('checked-aware-user-input', CheckedAwareUserInput);
