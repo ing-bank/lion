@@ -10,8 +10,8 @@ import { LionInput } from '../../../input/src/LionInput.js';
 /**
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-const ChoiceUserInputMixinImplementation = superclass =>
-  class ChoiceUserInputMixin extends ChoiceInputMixin(superclass) {
+const CustomChoiceInputMixinImplementation = superclass =>
+  class CustomChoiceInputMixin extends ChoiceInputMixin(superclass) {
     /** @type {(mutationHandler: (mutation: MutationRecord) => void) => MutationObserver} */
     static createMutationObserver = mutationHandler =>
       new MutationObserver(mutations => {
@@ -188,4 +188,4 @@ const ChoiceUserInputMixinImplementation = superclass =>
     __userInputNode = null;
   };
 
-export const ChoiceUserInputMixin = dedupeMixin(ChoiceUserInputMixinImplementation);
+export const CustomChoiceInputMixin = dedupeMixin(CustomChoiceInputMixinImplementation);

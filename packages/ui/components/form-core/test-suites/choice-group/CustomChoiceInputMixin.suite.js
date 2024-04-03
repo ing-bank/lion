@@ -4,10 +4,10 @@ import '@lion/ui/define/lion-input.js';
 import { expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 
 import sinon from 'sinon';
-import { ChoiceUserInputMixin } from '../../src/choice-group/ChoiceUserInputMixin.js';
+import { CustomChoiceInputMixin } from '../../src/choice-group/CustomChoiceInputMixin.js';
 import { getInputMembers } from '../../../input/test-helpers/getInputMembers.js';
 
-class ChoiceInput extends ChoiceUserInputMixin(LionInput) {
+class ChoiceInput extends CustomChoiceInputMixin(LionInput) {
   constructor() {
     super();
     this.type = 'radio';
@@ -15,7 +15,7 @@ class ChoiceInput extends ChoiceUserInputMixin(LionInput) {
 }
 customElements.define('choice-group-user-input', ChoiceInput);
 
-const getChoiceUserInputMembers = (/** @type {ChoiceInput} */ el) => ({
+const getCustomChoiceInputMembers = (/** @type {ChoiceInput} */ el) => ({
   // @ts-ignore
   ...getInputMembers(/** @type {LionInput} */ (el)),
   // @ts-ignore
@@ -28,19 +28,19 @@ const getChoiceUserInputMembers = (/** @type {ChoiceInput} */ el) => ({
  * @param {{ tagString?:string, tagType?: string}} config
  * @deprecated
  */
-export function runChoiceUserInputMixinSuite({ tagString } = {}) {
+export function runCustomChoiceInputMixinSuite({ tagString } = {}) {
   const cfg = {
     tagString: tagString || 'choice-group-input',
   };
 
   const tag = unsafeStatic(cfg.tagString);
-  describe(`ChoiceUserInputMixin: ${tagString}`, () => {
+  describe(`CustomChoiceInputMixin: ${tagString}`, () => {
     it('syncs choiceValue to user value', async () => {
       const el = /** @type {ChoiceInput} */ (
         await fixture(html`<${tag} .choiceValue=${'foo'}></${tag}>`)
       );
 
-      const userValue = getChoiceUserInputMembers(el)._userInputNode.value;
+      const userValue = getCustomChoiceInputMembers(el)._userInputNode.value;
       expect(userValue).to.equal('foo');
     });
 
@@ -53,7 +53,7 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
         )
       );
 
-      const userValue = /** @type {LionInput} */ (getChoiceUserInputMembers(el)._userInputNode)
+      const userValue = /** @type {LionInput} */ (getCustomChoiceInputMembers(el)._userInputNode)
         .modelValue;
       expect(userValue.valueOf()).to.equal(date.valueOf());
     });
@@ -63,7 +63,7 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
         await fixture(html`<${tag} .choiceValue=${'foo'}></${tag}>`)
       );
 
-      const userInput = getChoiceUserInputMembers(el)._userInputNode;
+      const userInput = getCustomChoiceInputMembers(el)._userInputNode;
       userInput.value = 'bar';
       userInput?.dispatchEvent(new Event('input', { bubbles: true }));
 
@@ -87,7 +87,7 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
       el.checked = true;
       expect(counter).to.equal(1);
 
-      const userInput = getChoiceUserInputMembers(el)._userInputNode;
+      const userInput = getCustomChoiceInputMembers(el)._userInputNode;
       userInput.value = 'bar';
       userInput.dispatchEvent(new Event('input', { bubbles: true }));
 
@@ -108,7 +108,7 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
       );
       el.checked = true;
 
-      const userInput = getChoiceUserInputMembers(el)._userInputNode;
+      const userInput = getCustomChoiceInputMembers(el)._userInputNode;
       userInput.value = 'bar';
       userInput.dispatchEvent(new Event('input', { bubbles: true }));
 
@@ -120,9 +120,9 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
         await fixture(html`<${tag} .choiceValue=${'foo'}></${tag}>`)
       );
 
-      getChoiceUserInputMembers(el)._inputNode.click();
+      getCustomChoiceInputMembers(el)._inputNode.click();
 
-      const userInput = getChoiceUserInputMembers(el)._userInputNode;
+      const userInput = getCustomChoiceInputMembers(el)._userInputNode;
       expect(document.activeElement === userInput).to.be.true;
     });
 
@@ -133,7 +133,7 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
 
       expect(el.checked).to.be.false;
 
-      const userInput = getChoiceUserInputMembers(el)._userInputNode;
+      const userInput = getCustomChoiceInputMembers(el)._userInputNode;
       userInput?.focus();
 
       expect(el.checked).to.be.true;
@@ -142,7 +142,7 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
     it('update data-checked attribute of the user-input slot according to the checked state', async () => {
       const el = /** @type {ChoiceInput} */ (await fixture(html`<${tag}></${tag}>`));
 
-      const userInputSlot = getChoiceUserInputMembers(el)._userInputSlotNode;
+      const userInputSlot = getCustomChoiceInputMembers(el)._userInputSlotNode;
       expect(userInputSlot.dataset.checked).to.equal('false');
 
       el.checked = true;
@@ -166,7 +166,7 @@ export function runChoiceUserInputMixinSuite({ tagString } = {}) {
 
       el.checked = true;
 
-      const userInputSlot = getChoiceUserInputMembers(el)._userInputSlotNode;
+      const userInputSlot = getCustomChoiceInputMembers(el)._userInputSlotNode;
       expect(userInputSlot.dataset.checked).to.equal('true');
 
       expect(spy).to.have.been.calledOnce;

@@ -1,5 +1,5 @@
 import { LionInput } from '@lion/ui/input.js';
-import { ChoiceUserInputMixin } from '../../form-core/src/choice-group/ChoiceUserInputMixin.js';
+import { CustomChoiceInputMixin } from '../../form-core/src/choice-group/CustomChoiceInputMixin.js';
 
 /**
  * Lion-radio-with-user-value can be used inside a lion-radio-group.
@@ -25,7 +25,7 @@ import { ChoiceUserInputMixin } from '../../form-core/src/choice-group/ChoiceUse
  *
  * @customElement lion-radio-with-user-value
  */
-export class LionRadioWithUserValue extends ChoiceUserInputMixin(LionInput) {
+export class LionRadioWithUserValue extends CustomChoiceInputMixin(LionInput) {
   connectedCallback() {
     super.connectedCallback();
     this.type = 'radio';
