@@ -1,6 +1,5 @@
 import { LitElement } from 'lit';
 import { LionOption } from '@lion/ui/listbox.js';
-import { getListboxMembers } from '@lion/ui/listbox-test-helpers.js';
 import { OverlayController } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { LionSelectInvoker, LionSelectRich } from '@lion/ui/select-rich.js';
@@ -17,25 +16,13 @@ import {
   nextFrame,
   unsafeStatic,
 } from '@open-wc/testing';
+import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
 
 /**
  * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
  * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
  * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
-
-/**
- * @param { LionSelectRich } el
- */
-function getSelectRichMembers(el) {
-  const obj = getListboxMembers(el);
-  // eslint-disable-next-line no-return-assign
-  return {
-    ...obj,
-    // @ts-ignore [allow-protected] in test
-    ...{ _invokerNode: el._invokerNode, _overlayCtrl: el._overlayCtrl },
-  };
-}
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
