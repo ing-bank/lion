@@ -16,7 +16,7 @@ import {
   nextFrame,
   unsafeStatic,
 } from '@open-wc/testing';
-import { getSelectRichMembers } from '../test-helpers/getSelectRichMembers.js';
+import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
 
 /**
  * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions

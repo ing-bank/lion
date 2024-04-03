@@ -7,7 +7,7 @@ import '@lion/ui/define/lion-option.js';
 
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
-import { getSelectRichMembers } from '../test-helpers/getSelectRichMembers.js';
+import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
 
 /**
  * @typedef {import('../src/LionSelectRich.js').LionSelectRich} LionSelectRich
