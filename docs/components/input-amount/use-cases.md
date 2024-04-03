@@ -74,8 +74,6 @@ export const forceDigits = () => html`
 
 This example will show the error message by prefilling it with a faulty `modelValue`.
 
-> If there is 1 or more digit in the input, it will ignore invalid characters instead of showing an error feedback message.
-
 ```js preview-story
 export const faultyPrefilled = () => html`
   <lion-input-amount

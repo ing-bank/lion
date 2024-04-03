@@ -30,10 +30,15 @@ function round(value, decimals) {
  * @param {FormatOptions} [givenOptions] Locale Options
  */
 export function parseAmount(value, givenOptions) {
+  const unmatchedInput = value.match(/[^0-9,.\- ]/g);
+  if (unmatchedInput) {
+    return undefined;
+  }
+
   const number = parseNumber(value, givenOptions);
 
-  if (typeof number !== 'number') {
-    return number;
+  if (typeof number !== 'number' || Number.isNaN(number) || number?.toString().includes('e')) {
+    return undefined;
   }
 
   /** @type {FormatOptions} */

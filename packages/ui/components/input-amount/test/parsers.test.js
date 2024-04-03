@@ -1,6 +1,5 @@
 import { expect } from '@open-wc/testing';
 import { localize } from '@lion/ui/localize.js';
-
 import { parseAmount } from '@lion/ui/input-amount.js';
 
 describe('parseAmount()', async () => {
@@ -31,5 +30,17 @@ describe('parseAmount()', async () => {
   it('with no currency keeps all decimals', async () => {
     localize.locale = 'en-GB';
     expect(parseAmount('1.015')).to.equal(1.015);
+  });
+
+  it('returns undefined if a invalid value is entered', async () => {
+    localize.locale = 'en-GB';
+    expect(parseAmount('foo')).to.equal(undefined);
+    expect(parseAmount('foo1')).to.equal(undefined);
+    expect(parseAmount('--1')).to.equal(undefined);
+  });
+
+  it('returns undefined if the value is too big', async () => {
+    localize.locale = 'en-GB';
+    expect(parseAmount('999999999999999999999,42')).to.equal(undefined);
   });
 });
