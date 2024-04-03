@@ -36,6 +36,7 @@ export declare class ChoiceInputHost {
   protected requestUpdate(name: string, oldValue: any): void;
   protected _choiceGraphicTemplate(): TemplateResult;
   protected _afterTemplate(): TemplateResult;
+  protected _afterLabel(): TemplateResult;
   protected _preventDuplicateLabelClick(ev: Event): void;
   protected _syncNameToParentFormGroup(): void;
   protected _toggleChecked(ev: Event): void;
