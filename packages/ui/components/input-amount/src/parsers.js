@@ -11,7 +11,8 @@ import { parseNumber, getFractionDigits } from '@lion/ui/localize-no-side-effect
  * @return {number} new value with rounded up decimals
  */
 function round(value, decimals) {
-  if (typeof decimals === 'undefined') {
+  const numberContainsExponent = value?.toString().includes('e');
+  if (typeof decimals === 'undefined' || numberContainsExponent) {
     return Number(value);
   }
   return Number(`${Math.round(Number(`${value}e${decimals}`))}e-${decimals}`);
@@ -31,13 +32,15 @@ function round(value, decimals) {
  */
 export function parseAmount(value, givenOptions) {
   const unmatchedInput = value.match(/[^0-9,.\- ]/g);
-  if (unmatchedInput) {
+  // for the full paste behavior documentation:
+  // ./docs/components/input-amount/use-cases.md#paste-behavior
+  if (unmatchedInput && givenOptions?.mode !== 'pasted') {
     return undefined;
   }
 
   const number = parseNumber(value, givenOptions);
 
-  if (typeof number !== 'number' || Number.isNaN(number) || number?.toString().includes('e')) {
+  if (typeof number !== 'number' || Number.isNaN(number)) {
     return undefined;
   }
 
