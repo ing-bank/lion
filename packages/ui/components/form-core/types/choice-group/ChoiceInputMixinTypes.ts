@@ -1,6 +1,7 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement, TemplateResult, CSSResultArray } from 'lit';
 import { FormatHost } from '../FormatMixinTypes.js';
+import { SlotHost } from '../../../core/types/SlotMixinTypes.js';
 
 export interface ChoiceInputModelValue {
   checked: boolean;
@@ -57,6 +58,7 @@ export declare function ChoiceInputImplementation<T extends Constructor<LitEleme
 ): T &
   Constructor<ChoiceInputHost> &
   Pick<typeof ChoiceInputHost, keyof typeof ChoiceInputHost> &
+  Constructor<SlotHost> &
   Constructor<FormatHost> &
   Pick<typeof FormatHost, keyof typeof FormatHost> &
   Pick<typeof LitElement, keyof typeof LitElement>;
