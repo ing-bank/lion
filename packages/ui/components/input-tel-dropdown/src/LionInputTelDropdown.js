@@ -364,10 +364,12 @@ export class LionInputTelDropdown extends LionInputTel {
     // will set each item on arrow key up/down to activeElement
     // which causes the focus to jump every time to the inputNode
     const overlayController = dropdownElement._overlayCtrl;
-    // @ts-ignore interactionMode only exists on LionSelectRich not on HTMLSelectElement
-    if (overlayController?.isShown && dropdownElement.interactionMode !== 'windows/linux') {
+    if (overlayController?.isShown) {
       setTimeout(() => {
-        this._inputNode.focus();
+        // The value is selected and the dropdown popup is closed
+        if (!overlayController?.isShown) {
+          this._inputNode.focus();
+        }
       });
     }
   }
