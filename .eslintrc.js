@@ -48,4 +48,7 @@ module.exports = {
       [path.resolve('./scripts/eslint-resolver.cjs')]: {},
     },
   },
+  env: {
+    es2020: true,
+  },
 };
