@@ -178,6 +178,6 @@ export const feedbackVisibility = () => html`
 
 ## Resetting
 
-In some situations, resetting the interaction state might be desired, e.g., to clear an entire form or a single input field from errors. 
+In some situations, resetting the interaction state might be desired, e.g., to clear an entire form or a single input field from errors.
 
 In those cases, using the `resetInteractionState` on a field or a form resets its respective interaction state without resetting the modelValue.
