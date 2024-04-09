@@ -82,6 +82,10 @@ export const main = () => {
         <lion-input-email name="email" label="Email"></lion-input-email>
         <lion-input-file name="file" label="File"></lion-input-file>
         <lion-input-tel name="tel" label="Telephone number"></lion-input-tel>
+        <lion-input-tel-dropdown
+          name="tel-dropdown"
+          label="Telephone number"
+        ></lion-input-tel-dropdown>
         <lion-checkbox-group
           label="What do you like?"
           name="checkers"

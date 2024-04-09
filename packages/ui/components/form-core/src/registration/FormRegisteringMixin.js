@@ -23,6 +23,10 @@ const FormRegisteringMixinImplementation = superclass =>
     constructor() {
       super();
       /**
+       * In case the form component should not register itself, set this property to true
+       */
+      this.preventRegistration = false;
+      /**
        * The registrar this FormControl registers to, Usually a descendant of FormGroup or
        * ChoiceGroup
        * @type {FormRegistrarHost | undefined}
@@ -45,13 +49,15 @@ const FormRegisteringMixinImplementation = superclass =>
 
     connectedCallback() {
       super.connectedCallback();
-      this.dispatchEvent(
-        new CustomEvent('form-element-register', {
-          detail: { element: this },
-          bubbles: true,
-          composed: Boolean(this.allowCrossRootRegistration),
-        }),
-      );
+      if (!this.preventRegistration) {
+        this.dispatchEvent(
+          new CustomEvent('form-element-register', {
+            detail: { element: this },
+            bubbles: true,
+            composed: Boolean(this.allowCrossRootRegistration),
+          }),
+        );
+      }
     }
 
     disconnectedCallback() {

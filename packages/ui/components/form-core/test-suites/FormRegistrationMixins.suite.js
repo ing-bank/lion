@@ -286,6 +286,7 @@ export const runRegistrationSuite = customConfig => {
         expect(eventSpy.getCall(0).args[0].composed).to.equal(true);
         expect(el.formElements).to.deep.equal([el.shadowRoot?.querySelector('#child')]);
       });
+
       it('dispatches the form-element-register event with compose true if allowCrossRootRegistration is set', async () => {
         const eventSpy = sinon.spy();
         /** @type {RegisteringClass} */ (
@@ -300,6 +301,7 @@ export const runRegistrationSuite = customConfig => {
         expect(eventSpy).to.have.been.calledOnce;
         expect(eventSpy.getCall(0).args[0].composed).to.equal(true);
       });
+
       it('dispatches the form-element-register event with compose false if allowCrossRootRegistration is not set', async () => {
         const eventSpy = sinon.spy();
         /** @type {RegisteringClass} */ (
@@ -310,7 +312,29 @@ export const runRegistrationSuite = customConfig => {
         expect(eventSpy).to.have.been.calledOnce;
         expect(eventSpy.getCall(0).args[0].composed).to.equal(false);
       });
+
+      it('will not dispatch form-element-register event when it has "preventRegistration" set', async () => {
+        class BlockingFormElement extends FormRegisteringMixin(LitElement) {
+          constructor() {
+            super();
+            this.preventRegistration = true;
+          }
+        }
+        const tagBlockingChildString = defineCE(BlockingFormElement);
+        const blockingChildTag = unsafeStatic(tagBlockingChildString);
+        const eventSpy = sinon.spy();
+        /** @type {RegisteringClass} */ (
+          await fixture(html`
+            <${blockingChildTag}
+              @form-element-register=${eventSpy}
+            >
+            </${blockingChildTag}>
+          `)
+        );
+        expect(eventSpy).not.to.have.been.calledOnce;
+      });
     });
+
     describe('FormRegistrarPortalMixin', () => {
       it('forwards registrations to the .registrationTarget', async () => {
         const el = /** @type {RegistrarClass} */ (
