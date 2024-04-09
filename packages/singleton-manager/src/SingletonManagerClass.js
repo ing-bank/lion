@@ -5,7 +5,6 @@ const sym = Symbol.for('lion::SingletonManagerClassStorage');
  * In the future, we can just use globalThis directly
  * (for now, we're backwards compatible with browsers that still only use window, since we don't know all contexts singleton-manager is used in).
  */
-// eslint-disable-next-line no-undef
 const globalThisOrWindow = globalThis || window;
 export class SingletonManagerClass {
   constructor() {
