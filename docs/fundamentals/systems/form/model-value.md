@@ -33,3 +33,12 @@ For more information about parsing and the Unparseable type, see [Formatting and
   element' (for instance a lion-input) to a top element (for instance lion-form). An example path
   could be [lionForm, lionFieldset, lionInput]
 - `initialize`: whether this is the first time the event is fired (on first render of the FormControl)
+
+### Resetting
+
+Resetting a form can be done by two different methods.
+
+- `resetGroup()`: resets every form field to its initial/prefilled value and interaction state
+- `clearGroup()`: clears every form field, disregarding its initial/prefilled value and interaction state
+
+Both methods do so by calling `reset|resetGroup` or `clear|clearGroup` on each `LionField` found in the form.
