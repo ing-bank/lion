@@ -246,6 +246,15 @@ Please specify .groupSeparator / .decimalSeparator on the formatOptions object t
     });
   });
 
+  // TODO: make it work with big numbers, e.g. make use of BigInt
+  it.skip('can handle big numbers', async () => {
+    expect(formatNumber(1e21)).to.equal('1,000,000,000,000,000,000,000');
+    // eslint-disable-next-line no-loss-of-precision
+    expect(formatNumber(999999999999999999999.42)).to.equal('999,999,999,999,999,999,999.42');
+    // eslint-disable-next-line no-loss-of-precision
+    expect(formatNumber(12345678987654321.42)).to.equal('12,345,678,987,654,321.42');
+  });
+
   describe('normalization', () => {
     describe('en-GB', () => {
       it('supports basics', () => {
