@@ -4,7 +4,7 @@ A web component based on the generic text input field. Its purpose is to provide
 
 For formatting, we use [Intl NumberFormat](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat) with some overrides.
 
-For parsing user input, we provide our own parser that takes into account a number of heuristics, locale.
+For parsing user input, we provide our own parser that takes into account locale, a number of heuristics and allows for pasting amount strings like 'EUR 100,00'.
 Valid characters are digits and separators. Formatting happens on-blur.
 
 If there are no valid characters in the input whatsoever, it will provide an error feedback.
