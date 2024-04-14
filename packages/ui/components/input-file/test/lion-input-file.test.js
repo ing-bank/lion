@@ -637,9 +637,9 @@ describe('lion-input-file', () => {
         })
       );
 
-      const el = await fixture(
-        html` <lion-input-file multiple max-file-size="3" accept=".txt"></lion-input-file> `,
-      );
+      const el = await fixture(html`
+        <lion-input-file multiple max-file-size="3" accept=".txt"></lion-input-file>
+      `);
 
       setTimeout(() => {
         mimicSelectFile(el, [file, fileWrongSize, file2, fileWrongType]);

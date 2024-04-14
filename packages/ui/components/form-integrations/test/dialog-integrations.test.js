@@ -17,10 +17,12 @@ import '@lion/ui/define/lion-radio.js';
 // Test umbrella form inside dialog
 describe('Form inside dialog Integrations', () => {
   it('Successfully registers all form components inside a dialog', async () => {
-    const el = /** @type {LionDialog} */ await fixture(html` <lion-dialog>
-      <button slot="invoker">Open Dialog</button>
-      <umbrella-form slot="content"></umbrella-form>
-    </lion-dialog>`);
+    const el = /** @type {LionDialog} */ await fixture(
+      html` <lion-dialog>
+        <button slot="invoker">Open Dialog</button>
+        <umbrella-form slot="content"></umbrella-form>
+      </lion-dialog>`,
+    );
 
     // @ts-ignore
     const formEl = /** @type {LionForm} */ (el._overlayCtrl.contentNode._lionFormNode);

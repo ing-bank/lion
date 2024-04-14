@@ -444,9 +444,9 @@ describe('lion-select-rich', () => {
     });
 
     it('adds focus to element with [role=listbox] when trapsKeyboardFocus is true', async () => {
-      const el = await fixture(
-        html` <lion-select-rich .config=${{ trapsKeyboardFocus: true }}></lion-select-rich> `,
-      );
+      const el = await fixture(html`
+        <lion-select-rich .config=${{ trapsKeyboardFocus: true }}></lion-select-rich>
+      `);
       const { _listboxNode } = getSelectRichMembers(el);
       expect(document.activeElement).to.not.equal(_listboxNode);
 

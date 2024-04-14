@@ -123,8 +123,15 @@ export class GhCombobox extends LionCombobox {
         /** @configure LionCombobox */
 
         :host {
-          font-family: apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif,
-            Apple Color Emoji, Segoe UI Emoji;
+          font-family:
+            apple-system,
+            BlinkMacSystemFont,
+            Segoe UI,
+            Helvetica,
+            Arial,
+            sans-serif,
+            Apple Color Emoji,
+            Segoe UI Emoji;
           font-size: 14px;
         }
 

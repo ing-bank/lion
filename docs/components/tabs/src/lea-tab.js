@@ -10,7 +10,10 @@ export class LeaTab extends LitElement {
         text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5);
         color: #fff;
         float: left;
-        font: bold 12px/35px 'Lucida sans', Arial, Helvetica;
+        font:
+          bold 12px/35px 'Lucida sans',
+          Arial,
+          Helvetica;
         height: 35px;
         padding: 0 30px;
         text-decoration: none;
@@ -23,7 +26,9 @@ export class LeaTab extends LitElement {
 
       :host(:focus) {
         border-radius: 4px;
-        box-shadow: 0 0 8px #9fcaea, 0 0 0 1px #559bd1;
+        box-shadow:
+          0 0 8px #9fcaea,
+          0 0 0 1px #559bd1;
 
         /* outline: 0; */
       }

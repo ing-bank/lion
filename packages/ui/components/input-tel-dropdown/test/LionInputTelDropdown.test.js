@@ -46,8 +46,9 @@ class WithFormControlInputTelDropdown extends ScopedElementsMixin(LionInputTelDr
           ${repeat(
             data.regionMetaList,
             regionMeta => regionMeta.regionCode,
-            regionMeta =>
-              html` <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option> `,
+            regionMeta => html`
+              <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option>
+            `,
           )}
         </lion-select-rich>
       `;
@@ -86,8 +87,9 @@ describe('WithFormControlInputTelDropdown', () => {
               ${repeat(
                 data.regionMetaList,
                 regionMeta => regionMeta.regionCode,
-                regionMeta =>
-                  html` <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option> `,
+                regionMeta => html`
+                  <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option>
+                `,
               )}
             </lion-select-rich>
           `;
@@ -96,14 +98,12 @@ describe('WithFormControlInputTelDropdown', () => {
     }
     customElements.define('input-tel-dropdown-mac', InputTelDropdownMac);
     const el = /** @type {LionInputTelDropdown} */ (
-      await fixture(
-        html`
-          <input-tel-dropdown-mac
-            .allowedRegions="${['NL', 'BE']}"
-            .modelValue="${'+31612345678'}"
-          ></input-tel-dropdown-mac>
-        `,
-      )
+      await fixture(html`
+        <input-tel-dropdown-mac
+          .allowedRegions="${['NL', 'BE']}"
+          .modelValue="${'+31612345678'}"
+        ></input-tel-dropdown-mac>
+      `)
     );
     const dropdownElement = el.refs.dropdown.value;
     // @ts-expect-error [allow-protected-in-tests]
@@ -140,8 +140,9 @@ describe('WithFormControlInputTelDropdown', () => {
               ${repeat(
                 data.regionMetaList,
                 regionMeta => regionMeta.regionCode,
-                regionMeta =>
-                  html` <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option> `,
+                regionMeta => html`
+                  <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option>
+                `,
               )}
             </lion-select-rich>
           `;
@@ -150,14 +151,12 @@ describe('WithFormControlInputTelDropdown', () => {
     }
     customElements.define('input-tel-dropdown-windows', InputTelDropdownWindows);
     const el = /** @type {LionInputTelDropdown} */ (
-      await fixture(
-        html`
-          <input-tel-dropdown-windows
-            .allowedRegions="${['NL', 'BE']}"
-            .modelValue="${'+31612345678'}"
-          ></input-tel-dropdown-windows>
-        `,
-      )
+      await fixture(html`
+        <input-tel-dropdown-windows
+          .allowedRegions="${['NL', 'BE']}"
+          .modelValue="${'+31612345678'}"
+        ></input-tel-dropdown-windows>
+      `)
     );
     const dropdownElement = el.refs.dropdown.value;
     // @ts-expect-error [allow-protected-in-tests]

@@ -15,9 +15,8 @@ import MatchImportsAnalyzer from '../../../src/program/analyzers/match-imports.j
 setupAnalyzerTest();
 //
 describe('Analyzer "match-imports"', async () => {
-  const matchImportsQueryConfig = await QueryService.getQueryConfigFromAnalyzer(
-    MatchImportsAnalyzer,
-  );
+  const matchImportsQueryConfig =
+    await QueryService.getQueryConfigFromAnalyzer(MatchImportsAnalyzer);
   /** @type {Partial<ProvidenceConfig>} */
   const _providenceCfg = {
     targetProjectPaths: ['/importing/target/project'],

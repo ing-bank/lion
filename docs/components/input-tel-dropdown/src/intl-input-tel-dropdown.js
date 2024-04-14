@@ -46,9 +46,15 @@ export class IntlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdo
         border-radius: 4px;
         -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
         box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
-        -webkit-transition: border-color ease-in-out 0.15s, -webkit-box-shadow ease-in-out 0.15s;
-        -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-        transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+        -webkit-transition:
+          border-color ease-in-out 0.15s,
+          -webkit-box-shadow ease-in-out 0.15s;
+        -o-transition:
+          border-color ease-in-out 0.15s,
+          box-shadow ease-in-out 0.15s;
+        transition:
+          border-color ease-in-out 0.15s,
+          box-shadow ease-in-out 0.15s;
       }
 
       .input-group__input {
@@ -64,8 +70,12 @@ export class IntlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdo
       :host([focused]) .input-group__container {
         border-color: #66afe9;
         outline: 0;
-        -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
-        box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
+        -webkit-box-shadow:
+          inset 0 1px 1px rgb(0 0 0 / 8%),
+          0 0 8px rgb(102 175 233 / 60%);
+        box-shadow:
+          inset 0 1px 1px rgb(0 0 0 / 8%),
+          0 0 8px rgb(102 175 233 / 60%);
       }
     `,
   ];

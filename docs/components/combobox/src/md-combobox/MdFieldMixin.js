@@ -48,7 +48,8 @@ export const MdFieldMixin = dedupeMixin(
               transform: perspective(100px);
               -ms-transform: none;
               transform-origin: 0 0;
-              transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+              transition:
+                transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
                 color 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
                 width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
               /* z-index: 1; */
@@ -205,7 +206,9 @@ export const MdFieldMixin = dedupeMixin(
               background-position: 50%;
               transform: scale(10, 10);
               opacity: 0;
-              transition: transform 0.25s, opacity 0.5s;
+              transition:
+                transform 0.25s,
+                opacity 0.5s;
             }
 
             .input-group__container > .input-group__prefix ::slotted(button:active)::after,
@@ -288,7 +291,8 @@ export const MdFieldMixin = dedupeMixin(
               visibility: visible;
               opacity: 1;
               transform: scaleX(1);
-              transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+              transition:
+                transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
                 opacity 0.1s cubic-bezier(0.25, 0.8, 0.25, 1),
                 background-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             }

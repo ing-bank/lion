@@ -242,8 +242,9 @@ export const multipleChoice = () => html`
     ></demo-selection-display>
     ${lazyRender(
       listboxData.map(
-        (entry, i) =>
-          html` <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option> `,
+        (entry, i) => html`
+          <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option>
+        `,
       ),
     )}
   </lion-combobox>
@@ -264,8 +265,9 @@ export const multipleCustomizableChoice = () => html`
     ></demo-selection-display>
     ${lazyRender(
       listboxData.map(
-        (entry, i) =>
-          html` <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option> `,
+        (entry, i) => html`
+          <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option>
+        `,
       ),
     )}
   </lion-combobox>
@@ -434,23 +436,23 @@ const onModelValueChanged = event => {
   console.log(`event.target.modelValue: ${JSON.stringify(event.target.modelValue)}`);
 };
 
-export const complexObjectChoiceValue = () => html` <complex-object-combobox
-  name="combo"
-  label="Display only the label once selected"
-  @model-value-changed="${onModelValueChanged}"
->
-  ${lazyRender(
-    listboxComplexData.map(
-      entry =>
-        html`
+export const complexObjectChoiceValue = () =>
+  html` <complex-object-combobox
+    name="combo"
+    label="Display only the label once selected"
+    @model-value-changed="${onModelValueChanged}"
+  >
+    ${lazyRender(
+      listboxComplexData.map(
+        entry => html`
           <lion-option .choiceValue="${entry.label}">
             <div data-key>${entry.label}</div>
             <small>${entry.description}</small>
           </lion-option>
         `,
-    ),
-  )}
-</complex-object-combobox>`;
+      ),
+    )}
+  </complex-object-combobox>`;
 ```
 
 ## Listbox compatibility

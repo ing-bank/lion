@@ -25,8 +25,17 @@ export class SbActionLogger extends LitElement {
 
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
           display: block;
-          font-family: 'Nunito Sans', -apple-system, '.SFNSText-Regular', 'San Francisco',
-            BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          font-family:
+            'Nunito Sans',
+            -apple-system,
+            '.SFNSText-Regular',
+            'San Francisco',
+            BlinkMacSystemFont,
+            'Segoe UI',
+            'Helvetica Neue',
+            Helvetica,
+            Arial,
+            sans-serif;
         }
 
         .header__info {

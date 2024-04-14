@@ -1485,9 +1485,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
         const el = /** @type {DynamicCWrapper} */ (
           await fixture(html`
         <${dynamicChildrenTag} .fields="${['firstName']}" .modelValue="${{
-            firstName: 'foo',
-            lastName: 'bar',
-          }}">
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
         </${dynamicChildrenTag}>
       `)
         );
@@ -1503,9 +1503,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
         const el2 = /** @type {DynamicCWrapper} */ (
           await fixture(html`
         <${dynamicChildrenTag} .fields="${['firstName']}" .serializedValue="${{
-            firstName: 'foo',
-            lastName: 'bar',
-          }}">
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
         </${dynamicChildrenTag}>
       `)
         );
@@ -1530,9 +1530,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
         const el = /** @type {DynamicCWrapper} */ (
           await fixture(html`
         <${dynamicChildrenTag} .fields="${['firstName']}" .modelValue="${{
-            firstName: 'foo',
-            lastName: 'bar',
-          }}">
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
         </${dynamicChildrenTag}>
       `)
         );
@@ -1551,9 +1551,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
         const el2 = /** @type {DynamicCWrapper} */ (
           await fixture(html`
         <${dynamicChildrenTag} .fields="${['firstName']}" .serializedValue="${{
-            firstName: 'foo',
-            lastName: 'bar',
-          }}">
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
         </${dynamicChildrenTag}>
       `)
         );
@@ -1574,9 +1574,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
         const el = /** @type {DynamicCWrapper} */ (
           await fixture(html`
         <${dynamicChildrenTag}  .modelValue="${{
-            firstName: 'foo',
-            lastName: 'bar',
-          }}">
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
         </${dynamicChildrenTag}>
       `)
         );
@@ -1595,9 +1595,9 @@ export function runFormGroupMixinSuite(cfg = {}) {
         const el2 = /** @type {DynamicCWrapper} */ (
           await fixture(html`
         <${dynamicChildrenTag} .serializedValue="${{
-            firstName: 'foo',
-            lastName: 'bar',
-          }}">
+          firstName: 'foo',
+          lastName: 'bar',
+        }}">
         </${dynamicChildrenTag}>
       `)
         );

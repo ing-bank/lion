@@ -42,11 +42,10 @@ This connects the logger element to the trigger.
 
 ```html
 <div>To log: <code>Hello, World!</code></div>
-<button
-  @click=${e => {
-    e.target.parentElement.querySelector('#logger-${uid}').log('Hello, World!')
-  }}
->Click this button</button>
+<button @click="${e" ="">
+  { e.target.parentElement.querySelector('#logger-${uid}').log('Hello, World!') }} >Click this
+  button
+</button>
 <sb-action-logger id="logger-${uid}"></sb-action-logger>
 ```
 

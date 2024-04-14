@@ -208,8 +208,8 @@ describe('<lion-form>', () => {
       <lion-form>
         <form>
           <${childTag} name="firstName" .modelValue=${'Foo'} .validators=${[
-      new Required(),
-    ]}></${childTag}>
+            new Required(),
+          ]}></${childTag}>
           <${childTag} name="lastName" .validators=${[new Required()]}></${childTag}>
           <button type="submit">submit</button>
         </form>
@@ -229,8 +229,8 @@ describe('<lion-form>', () => {
         <form>
           <lion-fieldset name="name">
             <${childTag} name="firstName" .modelValue=${'Foo'} .validators=${[
-      new Required(),
-    ]}></${childTag}>
+              new Required(),
+            ]}></${childTag}>
             <${childTag} name="lastName" .validators=${[new Required()]}></${childTag}>
           </lion-fieldset>
           <button type="submit">submit</button>
