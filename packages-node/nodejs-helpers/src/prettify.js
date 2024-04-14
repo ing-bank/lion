@@ -58,7 +58,7 @@ const getPrettierParser = fileExtension => {
  * @returns {Promise<string>}
  * @throws ERROR_UNSUPPORTED_FILE_EXTENSION
  */
-export const prettify = async (text, fileExtension = 'js', options = {}) => {
+export const prettify = (text, fileExtension = 'js', options = {}) => {
   const parser = getPrettierParser(fileExtension);
   const textToFormat = parser === 'html' ? removeEmptyLines(text) : text;
   /** @type PrettierOptions */
@@ -68,5 +68,5 @@ export const prettify = async (text, fileExtension = 'js', options = {}) => {
     singleQuote: true,
     ...options,
   };
-  return await prettier.format(textToFormat, prettierOptions);
+  return prettier.format(textToFormat, prettierOptions);
 };
