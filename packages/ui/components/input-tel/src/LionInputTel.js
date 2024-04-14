@@ -2,12 +2,13 @@ import { Unparseable } from '@lion/ui/form-core.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { LionInput } from '@lion/ui/input.js';
 
-import { PhoneUtilManager } from './PhoneUtilManager.js';
 import { liveFormatPhoneNumber } from './preprocessors.js';
 import { formatPhoneNumber } from './formatters.js';
 import { parsePhoneNumber } from './parsers.js';
 import { PhoneNumber } from './validators.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
+
+import countryCodes from './country-codes.json' with {type: 'json'}
 
 /**
  * @typedef {import('../types/index.js').RegionCode} RegionCode
@@ -318,8 +319,16 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     const value = !(this.modelValue instanceof Unparseable)
       ? this.modelValue
       : this.value.match(regex)?.join('');
-    const regionDerivedFromValue =
-      value && this._phoneUtil && this._phoneUtil.parsePhoneNumber(value).regionCode;
+
+    regionDerivedFromValue = countryCodes.sort((a,b) => {
+      if (a.dial_code > b.dial_code) {
+        return -1;
+      } else if (a.dial_code < b.dial_code) {
+        return 1;
+      }
+      return 0;
+    })
+    .find(countryCode => value.startsWith(countryCode.dial_code)).code;
 
     if (regionDerivedFromValue && this._allowedOrAllRegions.includes(regionDerivedFromValue)) {
       this._setActiveRegion(regionDerivedFromValue);
