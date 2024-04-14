@@ -194,7 +194,7 @@ describe('components import other components and native + 3rd party imports', ()
         'utf-8',
       );
       // Then
-      expect(prettify(adjustedCode)).to.equal(prettify(expectedCode));
+      expect(await prettify(adjustedCode)).to.equal(await prettify(expectedCode));
     }
   });
 
@@ -216,7 +216,7 @@ describe('components import other components and native + 3rd party imports', ()
       );
 
       // Then
-      expect(prettify(adjustedCode)).to.equal(prettify(expectedCode));
+      expect(await prettify(adjustedCode)).to.equal(await prettify(expectedCode));
     }
   });
 });

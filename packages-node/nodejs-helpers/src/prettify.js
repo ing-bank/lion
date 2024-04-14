@@ -48,17 +48,17 @@ const getPrettierParser = fileExtension => {
  * Prettifies text using the prettier.
  * - Supported file extensions are: js | cjs | mjs | md | html | json | css | yaml | yml
  * @example
- *   prettify('some js code');
- *   prettify('<html>some html</html>', 'html');
- *   prettify('some-markdown', 'md', {printWidth: 120});
+ *   await prettify('some js code');
+ *   await prettify('<html>some html</html>', 'html');
+ *   await prettify('some-markdown', 'md', {printWidth: 120});
  * @param {string} text
  * @param {string} fileExtension ['js']
  * @param {PrettierOptions} [options] [{ printWidth = 100, singleQuote = true }]
  * @see {@link https://prettier.io/docs/en/options.html}
- * @returns {string}
+ * @returns {Promise<string>}
  * @throws ERROR_UNSUPPORTED_FILE_EXTENSION
  */
-export const prettify = (text, fileExtension = 'js', options = {}) => {
+export const prettify = async (text, fileExtension = 'js', options = {}) => {
   const parser = getPrettierParser(fileExtension);
   const textToFormat = parser === 'html' ? removeEmptyLines(text) : text;
   /** @type PrettierOptions */
@@ -68,5 +68,5 @@ export const prettify = (text, fileExtension = 'js', options = {}) => {
     singleQuote: true,
     ...options,
   };
-  return prettier.format(textToFormat, prettierOptions);
+  return await prettier.format(textToFormat, prettierOptions);
 };

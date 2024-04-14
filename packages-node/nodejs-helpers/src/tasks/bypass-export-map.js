@@ -115,7 +115,7 @@ const generateAdjustedExportFile = async (fileName, exportsDir, outputDir) => {
   const initialCode = await readFile(inputPath, 'utf-8');
   const adjustImportExportVisitor = getAdjustImportExportVisitor(exportsDir, outputDir);
   const adjustedCode = transformCode(initialCode, adjustImportExportVisitor);
-  return writeFile(outputPath, prettify(adjustedCode));
+  return writeFile(outputPath, await prettify(adjustedCode));
 };
 
 /**

@@ -58,8 +58,8 @@ describe('Bypass import map task', () => {
     // Then
     if (process.platform !== 'win32') {
       // FIXME: skipping test for windows case
-      expect(prettify(adjustedCodeArrowDown)).to.equal(prettify(expectedCodeArrowDown));
-      expect(prettify(adjustedCodeArrowUp)).to.equal(prettify(expectedCodeArrowUp));
+      expect(await prettify(adjustedCodeArrowDown)).to.equal(await prettify(expectedCodeArrowDown));
+      expect(await prettify(adjustedCodeArrowUp)).to.equal(await prettify(expectedCodeArrowUp));
     }
   });
 
@@ -101,8 +101,8 @@ describe('Bypass import map task', () => {
     // Then
     if (process.platform !== 'win32') {
       // FIXME: skipping test for windows case
-      expect(prettify(adjustedCodeArrowDown)).to.equal(prettify(expectedCodeArrowDown));
-      expect(prettify(adjustedCodeArrowUp)).to.equal(prettify(expectedCodeArrowUp));
+      expect(await prettify(adjustedCodeArrowDown)).to.equal(await prettify(expectedCodeArrowDown));
+      expect(await prettify(adjustedCodeArrowUp)).to.equal(await prettify(expectedCodeArrowUp));
     }
   });
 });
