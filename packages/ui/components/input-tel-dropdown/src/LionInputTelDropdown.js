@@ -100,6 +100,7 @@ export class LionInputTelDropdown extends LionInputTel {
             localizeManager.msg('lion-input-tel:suggestedCountries'),
         },
       },
+      input: this._inputNode,
     };
 
     return {
@@ -356,19 +357,6 @@ export class LionInputTelDropdown extends LionInputTel {
           this.modelValue = this._callParser(this.value.replace(valueObj[0], `+${countryCode}`));
         }
       }
-    }
-
-    // Put focus on text box
-    //
-    // A LionSelectRich with interactionMode set on windows/linux
-    // will set each item on arrow key up/down to activeElement
-    // which causes the focus to jump every time to the inputNode
-    const overlayController = dropdownElement._overlayCtrl;
-    // @ts-ignore interactionMode only exists on LionSelectRich not on HTMLSelectElement
-    if (overlayController?.isShown && dropdownElement.interactionMode !== 'windows/linux') {
-      setTimeout(() => {
-        this._inputNode.focus();
-      });
     }
   }
 
