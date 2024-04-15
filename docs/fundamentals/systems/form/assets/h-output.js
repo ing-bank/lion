@@ -128,8 +128,7 @@ export class HelperOutput extends LitElement {
     return html`<span title="${resultText}">${resultText}</span>`;
   }
 
-  constructor() {
-    super();
+  connectedCallback() {
     this.title = 'States';
   }
 

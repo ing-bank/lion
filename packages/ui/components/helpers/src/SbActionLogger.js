@@ -126,9 +126,12 @@ export class SbActionLogger extends LitElement {
 
   constructor() {
     super();
+    this.__logCounter = 0;
+  }
+
+  connectedCallback() {
     this.title = 'Action Logger';
     this.simple = false;
-    this.__logCounter = 0;
   }
 
   get loggerEl() {
