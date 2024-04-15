@@ -58,7 +58,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.6",
-    "@types/prettier": "^2.7.3",
+    "@types/prettier": "^3.0.0",
     "@web/dev-server-legacy": "^0.1.7",
     "@web/test-runner": "^0.18.1",
     "@web/test-runner-browserstack": "^0.7.1",
