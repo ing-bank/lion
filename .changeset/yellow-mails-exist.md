@@ -1,5 +1,5 @@
 ---
-'@lion/nodejs-helpers': major
+'@lion/nodejs-helpers': minor
 ---
 
 Update underlying code-formatter prettier to major version 3 and updated the prettify API accordingly.
