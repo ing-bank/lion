@@ -8,7 +8,7 @@ import { parsePhoneNumber } from './parsers.js';
 import { PhoneNumber } from './validators.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
-import countryCodes from './country-codes.json' with {type: 'json'}
+import countryCodes from './country-codes.js';
 
 /**
  * @typedef {import('../types/index.js').RegionCode} RegionCode
@@ -28,7 +28,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     formatStrategy: { type: String, attribute: 'format-strategy' },
     formatCountryCodeStyle: { type: String, attribute: 'format-country-code-style' },
     activeRegion: { type: String },
-    _phoneUtil: { type: Object, state: true },
   };
 
   static localizeNamespaces = [
@@ -53,38 +52,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
   set activeRegion(v) {}
 
   /**
-   * Type of phone number, derived from textbox value. Enum with values:
-   * -'fixed-line'
-   * -'fixed-line-or-mobile'
-   * -'mobile'
-   * -'pager'
-   * -'personal-number'
-   * -'premium-rate'
-   * -'shared-cost'
-   * -'toll-free'
-   * -'uan'
-   * -'voip'
-   * -'unknown'
-   * See https://www.npmjs.com/package/awesome-phonenumber
-   * @readonly
-   * @property {PhoneNumberTypes|undefined} activePhoneNumberTypes
-   */
-  get activePhoneNumberType() {
-    let pn;
-    try {
-      pn =
-        this._phoneUtil &&
-        this._phoneUtil.parsePhoneNumber(this.modelValue, { regionCode: this.activeRegion });
-      // eslint-disable-next-line no-empty
-    } catch (_) {}
-    return pn?.type || 'unknown';
-  }
-
-  // @ts-ignore read only
-  // eslint-disable-next-line class-methods-use-this, no-empty-function
-  set activePhoneNumberType(v) {}
-
-  /**
    * Protected setter for activeRegion, only meant for subclassers
    * @protected
    * @param {RegionCode|undefined} newValue
@@ -101,21 +68,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
    * @type {RegionCode[]}
    */
   get _allowedOrAllRegions() {
-    return (
-      (this.allowedRegions?.length
-        ? this.allowedRegions
-        : this._phoneUtil?.getSupportedRegionCodes()) || []
-    );
-  }
-
-  /**
-   * @property _phoneUtilLoadComplete
-   * @protected
-   * @type {Promise<PhoneNumber>}
-   */
-  // eslint-disable-next-line class-methods-use-this
-  get _phoneUtilLoadComplete() {
-    return PhoneUtilManager.loadComplete;
+    return this.allowedRegions;
   }
 
   /**
@@ -162,20 +115,8 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     /**  @configures ValidateMixin */
     this.defaultValidators.push(this.__isPhoneNumberValidatorInstance);
 
-    // Expose awesome-phonenumber lib for Subclassers
-    /**
-     * @protected
-     * @type {AwesomePhoneNumber|null}
-     */
-    this._phoneUtil = PhoneUtilManager.isLoaded
-      ? /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil)
-      : null;
-
-    if (!PhoneUtilManager.isLoaded) {
-      PhoneUtilManager.loadComplete.then(() => {
-        this._onPhoneNumberUtilReady();
-      });
-    }
+    this._calculateValues({ source: null });
+    this.__calculateActiveRegion();
   }
 
   /**
@@ -293,18 +234,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
   }
 
   /**
-   * @protected
-   */
-  _onPhoneNumberUtilReady() {
-    // This should trigger a rerender in shadow dom
-    this._phoneUtil = /** @type {AwesomePhoneNumber} */ (PhoneUtilManager.PhoneUtil);
-    // This should trigger a rerender in light dom
-    // Format when libPhoneNumber is loaded
-    this._calculateValues({ source: null });
-    this.__calculateActiveRegion();
-  }
-
-  /**
    * @private
    */
   __calculateActiveRegion() {
@@ -320,15 +249,17 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
       ? this.modelValue
       : this.value.match(regex)?.join('');
 
-    regionDerivedFromValue = countryCodes.sort((a,b) => {
-      if (a.dial_code > b.dial_code) {
-        return -1;
-      } else if (a.dial_code < b.dial_code) {
-        return 1;
-      }
-      return 0;
-    })
-    .find(countryCode => value.startsWith(countryCode.dial_code)).code;
+    const regionDerivedFromValue = countryCodes
+      ?.sort((a, b) => {
+        if (a.dial_code > b.dial_code) {
+          return -1;
+        }
+        if (a.dial_code < b.dial_code) {
+          return 1;
+        }
+        return 0;
+      })
+      .find(countryCode => value.startsWith(countryCode.dial_code))?.code;
 
     if (regionDerivedFromValue && this._allowedOrAllRegions.includes(regionDerivedFromValue)) {
       this._setActiveRegion(regionDerivedFromValue);
