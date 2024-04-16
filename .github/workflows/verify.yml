@@ -8,18 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: google/wireit@setup-github-actions-caching/v1
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Sanity check
         run: node ./scripts/lock-scan.js
 
-      - name: Setup Node 16.x
-        uses: actions/setup-node@v1
+      - name: Setup Node 18.x
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 18.x
 
       - name: Install Dependencies
-        run: npm install --ci
+        run: npm ci
 
       - name: Lint
         run: npm run lint
@@ -32,15 +32,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: google/wireit@setup-github-actions-caching/v1
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Setup Node 16.x
-        uses: actions/setup-node@v1
+      - name: Setup Node 18.x
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 18.x
 
       - name: Install Dependencies
-        run: npm install --ci
+        run: npm ci
 
       - uses: microsoft/playwright-github-action@v1
 
@@ -52,19 +52,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
         os: [ubuntu-latest]
     steps:
       - uses: google/wireit@setup-github-actions-caching/v1
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Install Dependencies
-        run: npm install --ci
+        run: npm ci
 
       - name: Test
         run: npm run test:node
@@ -75,19 +75,19 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
         os: [windows-latest]
     steps:
       - uses: google/wireit@setup-github-actions-caching/v1
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Install Dependencies
-        run: npm install --ci
+        run: npm ci
 
       - name: Test
         run: npm run test:node
