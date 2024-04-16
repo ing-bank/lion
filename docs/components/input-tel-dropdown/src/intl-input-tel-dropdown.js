@@ -83,6 +83,7 @@ export class IntlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdo
           ${ref(refs?.dropdown?.ref)}
           label="${refs?.dropdown?.labels?.country}"
           label-sr-only
+          .config="${{ elementToFocusAfterHide: refs?.input }}"
           @model-value-changed="${refs?.dropdown?.listeners['model-value-changed']}"
           style="${refs?.dropdown?.props?.style}"
         >

@@ -152,6 +152,8 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
                 props: { style: 'height: 100%;' },
                 ref: { value: dropdownNode },
               },
+              // @ts-expect-error [allow-protected]
+              input: el._inputNode,
             },
           }),
         );

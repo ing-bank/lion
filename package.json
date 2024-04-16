@@ -46,6 +46,7 @@
     "@custom-elements-manifest/analyzer": "^0.8.0",
     "@open-wc/building-rollup": "^1.10.0",
     "@open-wc/eslint-config": "^10.0.0",
+    "@open-wc/scoped-elements": "^3.0.5",
     "@open-wc/testing": "^3.1.7",
     "@open-wc/testing-helpers": "^2.2.0",
     "@rocket/blog": "^0.4.0",

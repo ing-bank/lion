@@ -36,6 +36,7 @@ export type TemplateDataForDropdownInputTel = {
       };
       labels: { selectCountry: string };
     };
+    input: HTMLInputElement;
   };
   data: {
     activeRegion: string | undefined;
