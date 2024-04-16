@@ -285,7 +285,7 @@ export class GhCombobox extends LionCombobox {
   render() {
     return html`
       <slot name="selection-display"></slot>
-      <div id="overlay-content-node-wrapper" role="dialog">
+      <div id="overlay-content-node-wrapper" role="dialog" aria-label="branches and tags">
         <div class="gh-combobox">
           <div class="form-field__group-one">
             <div class="gh-section-wrapper">${this._groupOneTemplate()}</div>
