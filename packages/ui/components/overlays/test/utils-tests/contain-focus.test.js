@@ -25,7 +25,7 @@ function simulateTabInWindow(elToRecieveFocus) {
 
 const interactionElementsNode = renderLitAsNode(html`
   <div>
-    <button id="el1"></button>
+    <button id="el1">Button</button>
     <a id="el2" href="#">foo</a>
     <div id="el3" tabindex="0"></div>
     <input id="el4" />
@@ -50,7 +50,7 @@ const lightDomAutofocusTemplate = html`
     <button id="outside-1">outside 1</button>
 
     <div id="rootElement">
-      <button id="el1"></button>
+      <button id="el1">Button</button>
       <a id="el2" href="#">foo</a>
       <div id="el3" tabindex="0"></div>
       <input id="el4" autofocus />

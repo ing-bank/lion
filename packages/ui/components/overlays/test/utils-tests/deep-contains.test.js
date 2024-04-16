@@ -17,7 +17,7 @@ describe('deepContains()', () => {
       await fixture(html`
         <div id="light">
           ${shadowElement}
-          <button id="light-el-1"></button>
+          <button id="light-el-1">Button</button>
         </div>
       `)
     );
@@ -65,7 +65,7 @@ describe('deepContains()', () => {
       await fixture(html`
         <div id="light">
           ${shadowElement} ${shadowElement2}
-          <button id="light-el-1"></button>
+          <button id="light-el-1">Button</button>
         </div>
       `)
     );
@@ -101,7 +101,7 @@ describe('deepContains()', () => {
       await fixture(html`
         <div id="light">
           ${shadowElement}
-          <button id="light-el-1"></button>
+          <button id="light-el-1">Button</button>
         </div>
       `)
     );

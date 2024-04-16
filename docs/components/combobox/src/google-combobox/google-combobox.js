@@ -347,7 +347,7 @@ export class GoogleCombobox extends LionCombobox {
    */
   _overlayListboxTemplate() {
     return html`
-      <div id="overlay-content-node-wrapper" role="dialog">
+      <div id="overlay-content-node-wrapper" role="dialog" aria-label="search predictions">
         <slot name="listbox"></slot>
         ${this._googleSearchBtnsTemplate()}
         <div class="google-search-report"><a href="#">Report inappropriate predictions</a></div>

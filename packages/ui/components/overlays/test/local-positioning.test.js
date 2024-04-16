@@ -75,7 +75,7 @@ describe('Local Positioning', () => {
         ),
         invokerNode: /** @type {HTMLElement} */ (
           fixtureSync(html`
-            <div role="button" style="width: 20px; height: 10px; background: orange;"></div>
+            <div role="button" style="width: 20px; height: 10px; background: orange;">Button</div>
           `)
         ),
       });
@@ -104,11 +104,9 @@ describe('Local Positioning', () => {
         ),
         invokerNode: /** @type {HTMLElement} */ (
           fixtureSync(html`
-            <div
-              role="button"
-              style="width: 100px; height: 20px;"
-              @click=${() => ctrl.show()}
-            ></div>
+            <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}>
+              Button
+            </div>
           `)
         ),
       });
@@ -129,11 +127,9 @@ describe('Local Positioning', () => {
         ),
         invokerNode: /** @type {HTMLElement} */ (
           fixtureSync(html`
-            <div
-              role="button"
-              style="width: 100px; height: 20px;"
-              @click=${() => ctrl.show()}
-            ></div>
+            <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}>
+              Button
+            </div>
           `)
         ),
         popperConfig: {
@@ -185,11 +181,9 @@ describe('Local Positioning', () => {
         ),
         invokerNode: /** @type {HTMLElement} */ (
           fixtureSync(html`
-            <div
-              role="button"
-              style="width: 100px; height: 20px;"
-              @click=${() => ctrl.show()}
-            ></div>
+            <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}>
+              Button
+            </div>
           `)
         ),
         popperConfig: {
@@ -257,11 +251,9 @@ describe('Local Positioning', () => {
         ),
         invokerNode: /** @type {HTMLElement} */ (
           fixtureSync(html`
-            <div
-              role="button"
-              style="width: 100px; height: 20px;"
-              @click=${() => ctrl.show()}
-            ></div>
+            <div role="button" style="width: 100px; height: 20px;" @click=${() => ctrl.show()}>
+              Button
+            </div>
           `)
         ),
         popperConfig: {

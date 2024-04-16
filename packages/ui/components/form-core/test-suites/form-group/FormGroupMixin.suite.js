@@ -666,7 +666,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
 
         await triggerFocusFor(hobbyInputNode);
         await triggerFocusFor(genderInputNode);
-        const button = /**  @type {FormGroup} */ (await fixture(html`<button></button>`));
+        const button = /**  @type {FormGroup} */ (await fixture(html`<button>Button</button>`));
         button.focus();
 
         expect(el.touched).to.be.true;
