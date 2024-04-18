@@ -1,5 +1,18 @@
 # @lion/ui
 
+## 0.7.0
+
+### Minor Changes
+
+- 3cef9164: [select-rich] fix readonly keyboard interaction
+- 3cef9164: [select-rich] export getSelectRichMembers test helper
+
+### Patch Changes
+
+- 3cef9164: [input-amount] returns Unparseable as a modelValue if a wrong value has been entered
+- 3cef9164: [core] allow browserDetection to be run in ssr context
+- 3cef9164: [lion-input-tel-dropdown] Focus input fieled after dropdown menu is closed
+
 ## 0.6.1
 
 ### Patch Changes
