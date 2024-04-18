@@ -503,7 +503,7 @@ describe('Ajax', () => {
       expect(customAjax._responseInterceptors.length).to.equal(1);
     });
 
-    describe('caching interceptors', async () => {
+    describe('Caching interceptors: synchronous getCacheIdentifier tests', async () => {
       /**
        * @type {Ajax}
        */
@@ -528,6 +528,30 @@ describe('Ajax', () => {
         expect(await secondResponse.text()).to.equal('mock response');
         expect(secondResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
         expect(secondResponse.headers.get('Content-Type')).to.equal('application/json');
+      });
+
+      it('resets the cache if the cache ID changes', async () => {
+        /* Three calls to the same endpoint should result in a 
+        single fetchStubCall due to caching */
+        await customAjax.fetch('/foo');
+        await customAjax.fetch('/foo');
+        await customAjax.fetch('/foo');
+        expect(fetchStub.callCount).to.equal(1);
+
+        newCacheId();
+        await customAjax.fetch('/foo');
+
+        /* The newCacheId call should reset the cache, thereby adding an
+        extra call to the fetchStub call count. */
+        expect(fetchStub.callCount).to.equal(2);
+      });
+
+      it('Completes pending requests when the cache ID changes', async () => {
+        const requestOne = customAjax.fetch('/foo').then(() => 'completedRequestOne');
+        newCacheId();
+        const requestTwo = customAjax.fetch('/foo').then(() => 'completedRequestTwo');
+        expect(await requestOne).to.equal('completedRequestOne');
+        expect(await requestTwo).to.equal('completedRequestTwo');
       });
 
       it('works with fetchJson', async () => {

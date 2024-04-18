@@ -96,6 +96,12 @@ const createCacheRequestInterceptor =
     if (pendingRequest) {
       // there is another concurrent request, wait for it to finish
       await pendingRequest;
+
+      // If session ID changes while waiting for the pending request to complete,
+      // then do not read the cache.
+      if (!isCurrentSessionId(request.cacheSessionId)) {
+        return request;
+      }
     }
 
     const cachedResponse = ajaxCache.get(requestId, { maxAge, maxResponseSize });
