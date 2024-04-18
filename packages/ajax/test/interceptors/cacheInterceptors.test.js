@@ -21,6 +21,8 @@ let ajax;
 /**
  * @typedef {import('../../types/types.js').CacheOptions} CacheOptions
  * @typedef {import('../../types/types.js').RequestIdFunction} RequestIdFunction
+ * @typedef {import('../../types/types.js').RequestInterceptor} RequestInterceptor
+ * @typedef {import('../../types/types.js').ResponseInterceptor} ResponseInterceptor
  */
 
 describe('cache interceptors', () => {
@@ -41,6 +43,8 @@ describe('cache interceptors', () => {
   /** @type {Response} */
   let mockResponse;
   const getCacheIdentifier = () => String(cacheId);
+  const getCacheIdentifierAsync = () => Promise.resolve(String(cacheId));
+
   /** @type {sinon.SinonSpy} */
   let ajaxRequestSpy;
 
@@ -55,6 +59,16 @@ describe('cache interceptors', () => {
 
   /**
    * @param {Ajax} ajaxInstance
+   * @param {RequestInterceptor} cacheRequestInterceptor
+   * @param {ResponseInterceptor} cacheResponseInterceptor
+   */
+  const assignInterceptors = (ajaxInstance, cacheRequestInterceptor, cacheResponseInterceptor) => {
+    ajaxInstance._requestInterceptors.push(cacheRequestInterceptor);
+    ajaxInstance._responseInterceptors.push(cacheResponseInterceptor);
+  };
+
+  /**
+   * @param {Ajax} ajaxInstance
    * @param {CacheOptions} options
    */
   const addCacheInterceptors = (ajaxInstance, options) => {
@@ -63,8 +77,25 @@ describe('cache interceptors', () => {
       options,
     );
 
-    ajaxInstance._requestInterceptors.push(cacheRequestInterceptor);
-    ajaxInstance._responseInterceptors.push(cacheResponseInterceptor);
+    assignInterceptors(ajaxInstance, cacheRequestInterceptor, cacheResponseInterceptor);
+  };
+
+  /**
+   * @param {Ajax} ajaxInstance
+   * @param {CacheOptions} options
+   * @param {() => string|Promise<string>} customGetCacheIdentifier
+   */
+  const addCacheInterceptorsWithCustomGetCacheIdentifier = (
+    ajaxInstance,
+    options,
+    customGetCacheIdentifier,
+  ) => {
+    const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
+      customGetCacheIdentifier,
+      options,
+    );
+
+    assignInterceptors(ajaxInstance, cacheRequestInterceptor, cacheResponseInterceptor);
   };
 
   beforeEach(() => {
@@ -147,6 +178,28 @@ describe('cache interceptors', () => {
       cacheId = '';
 
       addCacheInterceptors(ajax, { useCache: true });
+      await ajax
+        .fetch('/test')
+        .then(() => expect.fail('fetch should not resolve here'))
+        .catch(
+          /** @param {Error} err */ err => {
+            expect(err.message).to.equal('Invalid cache identifier');
+          },
+        )
+        .finally(() => {});
+      cacheId = cacheSessionId;
+    });
+
+    it('validates an async cache identifier function', async () => {
+      const cacheSessionId = cacheId;
+      // @ts-ignore needed for test
+      cacheId = '';
+
+      addCacheInterceptorsWithCustomGetCacheIdentifier(
+        ajax,
+        { useCache: true },
+        getCacheIdentifierAsync,
+      );
       await ajax
         .fetch('/test')
         .then(() => expect.fail('fetch should not resolve here'))
