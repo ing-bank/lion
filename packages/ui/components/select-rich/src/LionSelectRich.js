@@ -485,6 +485,13 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       return;
     }
 
+    this._isHandlingUserInput = true;
+    setTimeout(() => {
+      // Since we can't control when subclasses are done handling keyboard input, we
+      // schedule a timeout to reset _isHandlingUserInput
+      this._isHandlingUserInput = false;
+    });
+
     const { key } = ev;
     switch (key) {
       case 'ArrowUp':
