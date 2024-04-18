@@ -47,7 +47,7 @@ export interface CacheOptions {
 }
 
 export interface CacheOptionsWithIdentifier extends CacheOptions {
-  getCacheIdentifier?: () => string;
+  getCacheIdentifier?: () => string|Promise<string>;
 }
 
 export interface ValidatedCacheOptions extends CacheOptions {

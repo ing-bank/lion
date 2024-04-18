@@ -59,14 +59,16 @@ const isResponseSizeSupported = (responseSize, maxResponseSize) => {
 
 /**
  * Request interceptor to return relevant cached requests
- * @param {function(): string} getCacheId used to invalidate cache if identifier is changed
+ * @param {function(): string|Promise<string>} getCacheId used to invalidate cache if identifier is changed
  * @param {CacheOptions} globalCacheOptions
  * @returns {RequestInterceptor}
  */
 const createCacheRequestInterceptor =
   (getCacheId, globalCacheOptions) => /** @param {CacheRequest} request */ async request => {
     validateCacheOptions(request.cacheOptions);
-    const cacheSessionId = getCacheId();
+    const getCacheIdResult = getCacheId();
+    const isPromise = typeof getCacheIdResult !== 'string' && 'then' in getCacheIdResult;
+    const cacheSessionId = isPromise ? await getCacheIdResult : getCacheIdResult;
     resetCacheSession(cacheSessionId); // cacheSessionId is used to bind the cache to the current session
 
     const cacheOptions = extendCacheOptions({
@@ -159,7 +161,7 @@ const createCacheResponseInterceptor = globalCacheOptions => async responseParam
 
 /**
  * Response interceptor to cache relevant requests
- * @param {function(): string} getCacheId used to invalidate cache if identifier is changed
+ * @param {function(): string|Promise<string>} getCacheId used to invalidate cache if identifier is changed
  * @param {CacheOptions} globalCacheOptions
  * @returns {{cacheRequestInterceptor: RequestInterceptor, cacheResponseInterceptor: ResponseInterceptor}}
  */
