@@ -106,9 +106,15 @@ describe('lion-select-rich interactions', () => {
         });
       }
 
+      let isTriggeredByUser;
       const el = /** @type {LionSelectRich} */ (
         await fixture(html`
-          <lion-select-rich interaction-mode="windows/linux">
+          <lion-select-rich
+            interaction-mode="windows/linux"
+            @model-value-changed="${(/** @type {CustomEvent} */ event) => {
+              isTriggeredByUser = event.detail.isTriggeredByUser;
+            }}"
+          >
             <lion-options slot="input">
               <lion-option .choiceValue=${10}>Item 1</lion-option>
               <lion-option .choiceValue=${20}>Item 2</lion-option>
@@ -125,10 +131,14 @@ describe('lion-select-rich interactions', () => {
       el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
       expect(el.checkedIndex).to.equal(1);
       expectOnlyGivenOneOptionToBeChecked(options, 1);
+      expect(isTriggeredByUser).to.be.true;
+
+      isTriggeredByUser = false;
 
       el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
       expect(el.checkedIndex).to.equal(0);
       expectOnlyGivenOneOptionToBeChecked(options, 0);
+      expect(isTriggeredByUser).to.be.true;
     });
 
     it('checkes a value with [character] keys while listbox unopened', async () => {
