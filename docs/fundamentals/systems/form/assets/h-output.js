@@ -128,7 +128,9 @@ export class HelperOutput extends LitElement {
     return html`<span title="${resultText}">${resultText}</span>`;
   }
 
-  connectedCallback() {
+  constructor() {
+    super();
+    // eslint-disable-next-line wc/no-constructor-attributes
     this.title = 'States';
   }
 

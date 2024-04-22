@@ -126,12 +126,10 @@ export class SbActionLogger extends LitElement {
 
   constructor() {
     super();
-    this.__logCounter = 0;
-  }
-
-  connectedCallback() {
+    // eslint-disable-next-line wc/no-constructor-attributes
     this.title = 'Action Logger';
     this.simple = false;
+    this.__logCounter = 0;
   }
 
   get loggerEl() {
