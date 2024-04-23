@@ -126,6 +126,7 @@ export class SbActionLogger extends LitElement {
 
   constructor() {
     super();
+    // eslint-disable-next-line wc/no-constructor-attributes
     this.title = 'Action Logger';
     this.simple = false;
     this.__logCounter = 0;
