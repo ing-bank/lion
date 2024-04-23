@@ -21,7 +21,7 @@ export class LionInputDate extends LocalizeMixin(LionInput) {
     /**
      * @param {string} value
      */
-    this.parser = value => (value === '' ? undefined : parseDate(value));
+    this.parser = value => (value === '' ? undefined : parseDate(value, this.formatOptions));
     this.formatter = formatDate;
     this.defaultValidators.push(new IsDate());
     // Just explicitly make clear we shouldn't use type 'date'

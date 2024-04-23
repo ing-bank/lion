@@ -51,11 +51,18 @@ describe('parseDate()', () => {
     expect(equalsDate(parseDate('14.12.1976 r.'), new Date('1976/12/14'))).to.equal(true);
   });
 
-  it('handles different locales', () => {
+  it('handles different locales globally set', () => {
     localizeManager.locale = 'en-GB';
     expect(equalsDate(parseDate('31-12-1976'), new Date('1976/12/31'))).to.equal(true);
     localizeManager.locale = 'en-US';
     expect(equalsDate(parseDate('12-31-1976'), new Date('1976/12/31'))).to.equal(true);
+  });
+
+  it('handles different locales as option', () => {
+    const optionEnGb = { locale: 'en-GB' };
+    expect(equalsDate(parseDate('31-12-1976', optionEnGb), new Date('1976/12/31'))).to.equal(true);
+    const optionEnUs = { locale: 'en-US' };
+    expect(equalsDate(parseDate('12-31-1976', optionEnUs), new Date('1976/12/31'))).to.equal(true);
   });
 
   it('handles timezones of the browser and parsed date correctly', () => {

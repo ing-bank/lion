@@ -3,6 +3,10 @@ import { getLocalizeManager } from '../getLocalizeManager.js';
 import { addLeadingZero } from './utils/addLeadingZero.js';
 
 /**
+ * @typedef {import('../../types/LocalizeMixinTypes.js').FormatDateOptions} FormatDateOptions
+ */
+
+/**
  * @param {function} fn
  */
 const memoize = fn => {
@@ -26,15 +30,16 @@ const memoizedGetDateFormatBasedOnLocale = memoize(getDateFormatBasedOnLocale);
  * To parse a date into the right format
  *
  * @param {string} dateString
+ * @param {FormatDateOptions} [options] Intl options are available
  * @returns {Date | undefined}
  */
-export function parseDate(dateString) {
+export function parseDate(dateString, options) {
   const localizeManager = getLocalizeManager();
 
   const stringToParse = addLeadingZero(dateString);
   let parsedString;
 
-  switch (memoizedGetDateFormatBasedOnLocale(localizeManager.locale)) {
+  switch (memoizedGetDateFormatBasedOnLocale(options?.locale || localizeManager.locale)) {
     case 'day-month-year':
       parsedString = `${stringToParse.slice(6, 10)}/${stringToParse.slice(
         3,
