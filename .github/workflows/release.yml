@@ -28,17 +28,6 @@ jobs:
       - name: Install Dependencies
         run: npm install --ci
 
-      - name: Creating .npmrc
-        run: |
-          cat << EOF > "$HOME/.npmrc"
-            //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          EOF
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Npm login
-        run: npm login
-
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
