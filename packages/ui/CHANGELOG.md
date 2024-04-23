@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.7.1
+
+### Patch Changes
+
+- 3a1482f7: Fix [ArrowUp]/[ArrowDown] not registering as user interaction when done directly on the select-rich component
+- a53ded7e: [localize] make use of formatDate locale option to parse the date correctly, which prevents day and month jumping in the input-amount when e.g. en-GB is used on the html tag and en-US is used to format the date.
+
 ## 0.7.0
 
 ### Minor Changes
