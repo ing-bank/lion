@@ -501,6 +501,18 @@ describe('lion-select-rich', () => {
       _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
       expect(el.opened).to.be.false;
     });
+
+    it('does not close the listbox with [Tab] key once opened when trapsKeyboardFocus is true', async () => {
+      const el = await fixture(
+        html`
+          <lion-select-rich opened .config=${{ trapsKeyboardFocus: true }}> </lion-select-rich>
+        `,
+      );
+      // tab can only be caught via keydown
+      const { _listboxNode } = getSelectRichMembers(el);
+      _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+      expect(el.opened).to.be.true;
+    });
   });
 
   describe('Mouse navigation', () => {
