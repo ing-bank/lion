@@ -541,6 +541,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     switch (key) {
       case 'Tab':
         // Tab can only be caught in keydown
+        if (this._overlayCtrl.config.trapsKeyboardFocus === true) {
+          return;
+        }
         this.opened = false;
         break;
       case 'Escape':
