@@ -1,5 +1,13 @@
 # Change Log
 
+## 2.0.2
+
+### Patch Changes
+
+- c5ffe9cf: Allow getCacheIdentifier to be asynchronous
+- df8bf58f: Reset cache and pending requests when cache session ID changes
+- a8105ec2: Add caching tests for when getCacheIdentifier is asynchronous
+
 ## 2.0.1
 
 ### Patch Changes
