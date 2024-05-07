@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.7.2
+
+### Patch Changes
+
+- 36f0bbce: [select-rich] only close the overlay on tab when trapsKeyboardFocus is false
+
 ## 0.7.1
 
 ### Patch Changes
