@@ -1,5 +1,6 @@
-import path from 'path';
 import { pathToFileURL } from 'url';
+import path from 'path';
+
 import { fsAdapter } from './fs-adapter.js';
 
 /**

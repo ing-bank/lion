@@ -1,15 +1,17 @@
 import path from 'path';
+
 import babelTraversePkg from '@babel/traverse';
+
+import { trackDownIdentifier } from './track-down-identifier.js';
 import { AstService } from '../core/AstService.js';
-import { trackDownIdentifier } from '../analyzers/helpers/track-down-identifier.js';
 import { toPosixPath } from './to-posix-path.js';
 import { fsAdapter } from './fs-adapter.js';
 
 /**
- * @typedef {import('@babel/types').Node} Node
- * @typedef {import('@babel/traverse').NodePath} NodePath
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('@babel/traverse').NodePath} NodePath
+ * @typedef {import('@babel/types').Node} Node
  */
 
 /**

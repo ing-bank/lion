@@ -4,7 +4,7 @@ import pathLib from 'path';
 import FindClassesAnalyzer from './find-classes.js';
 import FindExportsAnalyzer from './find-exports.js';
 import { Analyzer } from '../core/Analyzer.js';
-import { fromImportToExportPerspective } from './helpers/from-import-to-export-perspective.js';
+import { fromImportToExportPerspective } from '../utils/from-import-to-export-perspective.js';
 
 /**
  * @typedef {import('../../../types/index.js').FindClassesAnalyzerResult} FindClassesAnalyzerResult

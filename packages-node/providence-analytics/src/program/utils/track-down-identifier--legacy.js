@@ -1,18 +1,23 @@
+/* eslint-disable no-shadow */
+// @ts-nocheck
 import path from 'path';
-import { swcTraverse } from '../../utils/swc-traverse.js';
-import { isRelativeSourcePath, toRelativeSourcePath } from '../../utils/relative-source-path.js';
-import { InputDataService } from '../../core/InputDataService.js';
-import { resolveImportPath } from '../../utils/resolve-import-path.js';
-import { AstService } from '../../core/AstService.js';
-import { memoize } from '../../utils/memoize.js';
-import { fsAdapter } from '../../utils/fs-adapter.js';
+
+import babelTraverse from '@babel/traverse';
+
+import { isRelativeSourcePath, toRelativeSourcePath } from './relative-source-path.js';
+import { InputDataService } from '../core/InputDataService.js';
+import { resolveImportPath } from './resolve-import-path.js';
+import { AstService } from '../core/AstService.js';
+import { LogService } from '../core/LogService.js';
+import { fsAdapter } from './fs-adapter.js';
+import { memoize } from './memoize.js';
 
 /**
  * @typedef {import('../../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../../../types/index.js').SpecifierSource} SpecifierSource
  * @typedef {import('../../../../types/index.js').IdentifierName} IdentifierName
  * @typedef {import('../../../../types/index.js').RootFile} RootFile
- * @typedef {import('../../../../types/index.js').SwcPath} SwcPath
+ * @typedef {import('@babel/traverse').NodePath} NodePath
  */
 
 /**
@@ -39,28 +44,25 @@ function isExternalProject(source, projectName) {
  * Other than with import, no binding is created for MyClass by Babel(?)
  * This means 'path.scope.getBinding('MyClass')' returns undefined
  * and we have to find a different way to retrieve this value.
- * @param {SwcPath} swcPath Babel ast traversal path
+ * @param {NodePath} astPath Babel ast traversal path
  * @param {IdentifierName} identifierName the name that should be tracked (and that exists inside scope of astPath)
  */
-function getBindingAndSourceReexports(swcPath, identifierName) {
+function getBindingAndSourceReexports(astPath, identifierName) {
   // Get to root node of file and look for exports like `export { identifierName } from 'src';`
   let source;
   let bindingType;
   let bindingPath;
 
-  let curPath = swcPath;
+  let curPath = astPath;
   while (curPath.parentPath) {
     curPath = curPath.parentPath;
   }
   const rootPath = curPath;
-
-  swcTraverse(rootPath.node, {
+  rootPath.traverse({
     ExportSpecifier(astPath) {
       // eslint-disable-next-line arrow-body-style
       const found =
-        astPath.node.orig?.value === identifierName ||
-        astPath.node.exported?.value === identifierName ||
-        astPath.node.local?.value === identifierName;
+        astPath.node.exported.name === identifierName || astPath.node.local.name === identifierName;
       if (found) {
         bindingPath = astPath;
         bindingType = 'ExportSpecifier';
@@ -80,7 +82,7 @@ function getBindingAndSourceReexports(swcPath, identifierName) {
  * We might be an import that was locally renamed.
  * Since we are traversing, we are interested in the imported name. Or in case of a re-export,
  * the local name.
- * @param {SwcPath} astPath Babel ast traversal path
+ * @param {NodePath} astPath Babel ast traversal path
  * @param {string} identifierName the name that should be tracked (and that exists inside scope of astPath)
  * @returns {{ source:string, importedIdentifierName:string }}
  */
@@ -88,7 +90,7 @@ export function getImportSourceFromAst(astPath, identifierName) {
   let source;
   let importedIdentifierName;
 
-  const binding = astPath.scope.bindings[identifierName];
+  const binding = astPath.scope.getBinding(identifierName);
   let bindingType = binding?.path.type;
   let bindingPath = binding?.path;
   const matchingTypes = ['ImportSpecifier', 'ImportDefaultSpecifier', 'ExportSpecifier'];
@@ -105,7 +107,7 @@ export function getImportSourceFromAst(astPath, identifierName) {
     importedIdentifierName = '[default]';
   } else if (source) {
     const { node } = bindingPath;
-    importedIdentifierName = node.orig?.value || node.imported?.value || node.local?.value;
+    importedIdentifierName = (node.imported && node.imported.name) || node.local.name;
   }
 
   return { source, importedIdentifierName };
@@ -175,26 +177,17 @@ async function trackDownIdentifierFn(
 
   const resolvedSourcePath = await resolveImportPath(source, currentFilePath);
 
-  // if (resolvedSourcePath === null) {
-  //   LogService.error(`[trackDownIdentifier] ${resolvedSourcePath} not found`);
-
-  // }
-  // if (resolvedSourcePath === '[node-builtin]') {
-  //   LogService.error(`[trackDownIdentifier] ${resolvedSourcePath} not found`);
-  // }
-
+  LogService.debug(`[trackDownIdentifier] ${resolvedSourcePath}`);
   const allowedJsModuleExtensions = ['.mjs', '.js'];
-  if (
-    !allowedJsModuleExtensions.includes(path.extname(/** @type {string} */ (resolvedSourcePath)))
-  ) {
+  if (!allowedJsModuleExtensions.includes(path.extname(resolvedSourcePath))) {
     // We have an import assertion
     return /** @type { RootFile } */ {
-      file: toRelativeSourcePath(/** @type {string} */ (resolvedSourcePath), rootPath),
+      file: toRelativeSourcePath(resolvedSourcePath, rootPath),
       specifier: '[default]',
     };
   }
-  const code = fsAdapter.fs.readFileSync(/** @type {string} */ (resolvedSourcePath), 'utf8');
-  const swcAst = AstService._getSwcAst(code);
+  const code = fsAdapter.fs.readFileSync(resolvedSourcePath, 'utf8');
+  const babelAst = AstService.getAst(code, 'swc-to-babel', { filePath: resolvedSourcePath });
 
   const shouldLookForDefaultExport = identifierName === '[default]';
 
@@ -202,111 +195,96 @@ async function trackDownIdentifierFn(
   let exportMatch;
   let pendingTrackDownPromise;
 
-  const handleExportDefaultDeclOrExpr = astPath => {
-    if (!shouldLookForDefaultExport) {
-      return;
-    }
-
-    let newSource;
-    if (
-      astPath.node.expression?.type === 'Identifier' ||
-      astPath.node.declaration?.type === 'Identifier'
-    ) {
-      newSource = getImportSourceFromAst(astPath, astPath.node.expression.value).source;
-    }
-
-    if (newSource) {
-      pendingTrackDownPromise = trackDownIdentifier(
-        newSource,
-        '[default]',
-        /** @type {PathFromSystemRoot} */ (resolvedSourcePath),
-        rootPath,
-        projectName,
-        depth + 1,
-      );
-    } else {
-      // We found our file!
-      rootSpecifier = identifierName;
-      rootFilePath = toRelativeSourcePath(
-        /** @type {PathFromSystemRoot} */ (resolvedSourcePath),
-        rootPath,
-      );
-    }
-    astPath.stop();
-  };
-  const handleExportDeclOrNamedDecl = {
-    enter(astPath) {
-      if (reexportMatch || shouldLookForDefaultExport) {
+  babelTraverse.default(babelAst, {
+    ExportDefaultDeclaration(astPath) {
+      if (!shouldLookForDefaultExport) {
         return;
       }
 
-      // Are we dealing with a re-export ?
-      if (astPath.node.specifiers?.length) {
-        exportMatch = astPath.node.specifiers.find(
-          s => s.orig?.value === identifierName || s.exported?.value === identifierName,
-        );
-
-        if (exportMatch) {
-          const localName = exportMatch.orig.value;
-          let newSource;
-          if (astPath.node.source) {
-            /**
-             * @example
-             * export { x } from 'y'
-             */
-            newSource = astPath.node.source.value;
-          } else {
-            /**
-             * @example
-             * import { x } from 'y'
-             * export { x }
-             */
-            newSource = getImportSourceFromAst(astPath, identifierName).source;
-
-            if (!newSource || newSource === '[current]') {
-              /**
-               * @example
-               * const x = 12;
-               * export { x }
-               */
-              return;
-            }
-          }
-          reexportMatch = true;
-          pendingTrackDownPromise = trackDownIdentifier(
-            newSource,
-            localName,
-            resolvedSourcePath,
-            rootPath,
-            projectName,
-            depth + 1,
-          );
-          astPath.stop();
-        }
+      let newSource;
+      if (astPath.node.declaration.type === 'Identifier') {
+        newSource = getImportSourceFromAst(astPath, astPath.node.declaration.name).source;
       }
-    },
-    exit(astPath) {
-      if (!reexportMatch) {
-        // We didn't find a re-exported Identifier, that means the reference is declared
-        // in current file...
+
+      if (newSource) {
+        pendingTrackDownPromise = trackDownIdentifier(
+          newSource,
+          '[default]',
+          resolvedSourcePath,
+          rootPath,
+          projectName,
+          depth + 1,
+        );
+      } else {
+        // We found our file!
         rootSpecifier = identifierName;
         rootFilePath = toRelativeSourcePath(resolvedSourcePath, rootPath);
-
-        if (exportMatch) {
-          astPath.stop();
-        }
       }
+      astPath.stop();
     },
-  };
+    ExportNamedDeclaration: {
+      enter(astPath) {
+        if (reexportMatch || shouldLookForDefaultExport) {
+          return;
+        }
 
-  const visitor = {
-    ExportDefaultDeclaration: handleExportDefaultDeclOrExpr,
-    ExportDefaultExpression: handleExportDefaultDeclOrExpr,
-    ExportNamedDeclaration: handleExportDeclOrNamedDecl,
-    ExportDeclaration: handleExportDeclOrNamedDecl,
-  };
+        // Are we dealing with a re-export ?
+        if (astPath.node.specifiers?.length) {
+          exportMatch = astPath.node.specifiers.find(s => s.exported.name === identifierName);
 
-  swcTraverse(swcAst, visitor, { needsAdvancedPaths: true });
+          if (exportMatch) {
+            const localName = exportMatch.local.name;
+            let newSource;
+            if (astPath.node.source) {
+              /**
+               * @example
+               * export { x } from 'y'
+               */
+              newSource = astPath.node.source.value;
+            } else {
+              /**
+               * @example
+               * import { x } from 'y'
+               * export { x }
+               */
+              newSource = getImportSourceFromAst(astPath, identifierName).source;
+
+              if (!newSource || newSource === '[current]') {
+                /**
+                 * @example
+                 * const x = 12;
+                 * export { x }
+                 */
+                return;
+              }
+            }
+            reexportMatch = true;
+            pendingTrackDownPromise = trackDownIdentifier(
+              newSource,
+              localName,
+              resolvedSourcePath,
+              rootPath,
+              projectName,
+              depth + 1,
+            );
+            astPath.stop();
+          }
+        }
+      },
+      exit(astPath) {
+        if (!reexportMatch) {
+          // We didn't find a re-exported Identifier, that means the reference is declared
+          // in current file...
+          rootSpecifier = identifierName;
+          rootFilePath = toRelativeSourcePath(resolvedSourcePath, rootPath);
+
+          if (exportMatch) {
+            astPath.stop();
+          }
+        }
+      },
+    },
+  });
 
   if (pendingTrackDownPromise) {
     // We can't handle promises inside Babel traverse, so we do it here...
@@ -321,7 +299,7 @@ async function trackDownIdentifierFn(
 trackDownIdentifier = memoize(trackDownIdentifierFn);
 
 /**
- * @param {SwcPath} astPath
+ * @param {NodePath} astPath
  * @param {string} identifierNameInScope
  * @param {PathFromSystemRoot} fullCurrentFilePath
  * @param {PathFromSystemRoot} projectPath

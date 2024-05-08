@@ -1,21 +1,22 @@
 import path from 'path';
+
+import { trackDownIdentifier } from './track-down-identifier.js';
 import { swcTraverse, getPathFromNode } from './swc-traverse.js';
 import { AstService } from '../core/AstService.js';
-import { trackDownIdentifier } from '../analyzers/helpers/track-down-identifier.js';
 import { toPosixPath } from './to-posix-path.js';
 import { fsAdapter } from './fs-adapter.js';
 
 /**
- * @typedef {import('@swc/core').Node} SwcNode
- * @typedef {import('../../../types/index.js').SwcPath} SwcPath
- * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
+ * @typedef {import('../../../types/index.js').SwcPath} SwcPath
+ * @typedef {import('@swc/core').Node} SwcNode
  */
 
 /**
  * @param {{rootPath:PathFromSystemRoot; localPath:PathRelativeFromProjectRoot}} opts
- * @returns
+ * @returns {PathRelativeFromProjectRoot}
  */
 export function getFilePathOrExternalSource({ rootPath, localPath }) {
   if (!localPath.startsWith('.')) {
@@ -23,7 +24,9 @@ export function getFilePathOrExternalSource({ rootPath, localPath }) {
     // but we give a 100% score if from and to are same here..
     return localPath;
   }
-  return toPosixPath(path.resolve(rootPath, localPath));
+  return /** @type {PathRelativeFromProjectRoot} */ (
+    toPosixPath(path.resolve(rootPath, localPath))
+  );
 }
 
 /**
@@ -80,9 +83,9 @@ export function getReferencedDeclaration({ referencedIdentifierName, globalScope
  * @returns {Promise<{ sourceNodePath: SwcPath; sourceFragment: string|null; externalImportSource: string|null; }>}
  */
 export async function getSourceCodeFragmentOfDeclaration({
-  filePath,
   exportedIdentifier,
   projectRootPath,
+  filePath,
 }) {
   const code = fsAdapter.fs.readFileSync(filePath, 'utf8');
 

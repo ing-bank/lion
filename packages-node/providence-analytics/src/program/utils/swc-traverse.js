@@ -1,13 +1,13 @@
 /**
+ * @typedef {import('../../../types/index.js').SwcTraversalContext} SwcTraversalContext
+ * @typedef {import('@swc/core').VariableDeclarator} SwcVariableDeclarator
+ * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
+ * @typedef {import('../../../types/index.js').SwcVisitor} SwcVisitor
+ * @typedef {import('../../../types/index.js').SwcScope} SwcScope
+ * @typedef {import('../../../types/index.js').SwcPath} SwcPath
+ * @typedef {import('@swc/core').Identifier} SwcIdentifierNode
  * @typedef {import('@swc/core').Module} SwcAstModule
  * @typedef {import('@swc/core').Node} SwcNode
- * @typedef {import('@swc/core').VariableDeclarator} SwcVariableDeclarator
- * @typedef {import('@swc/core').Identifier} SwcIdentifierNode
- * @typedef {import('../../../types/index.js').SwcPath} SwcPath
- * @typedef {import('../../../types/index.js').SwcScope} SwcScope
- * @typedef {import('../../../types/index.js').SwcVisitor} SwcVisitor
- * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
- * @typedef {import('../../../types/index.js').SwcTraversalContext} SwcTraversalContext
  */
 
 /**

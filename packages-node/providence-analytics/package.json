@@ -30,8 +30,8 @@
     "postinstall": "npx patch-package",
     "match-lion-imports": "npm run providence -- analyze match-imports --search-target-collection @lion-targets --reference-collection @lion-references --measure-perf --skip-check-match-compatibility",
     "providence": "node --max-old-space-size=8192 ./src/cli/index.js",
-    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "prepublishOnly": "npm run publish-docs",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "test:node": "npm run test:node:unit && npm run test:node:e2e",
     "test:node:e2e": "mocha './test-node/**/*.e2e.js' --timeout 60000",
     "test:node:unit": "mocha './{test-node,src}/**/*.test.js'"
@@ -43,20 +43,19 @@
     "@babel/types": "^7.24.5",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@swc/core": "^1.5.5",
-    "@web/dev-server": "^0.4.4",
     "commander": "^2.20.3",
-    "inquirer": "^9.2.20",
-    "lit-element": "^4.0.5",
     "parse5": "^7.1.2",
     "semver": "^7.6.1",
-    "swc-to-babel": "^1.26.0"
+    "swc-to-babel": "^3.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.3.16",
     "@types/inquirer": "^9.0.7",
     "@types/mocha": "^10.0.6",
+    "@web/dev-server": "^0.4.4",
     "@web/dev-server-core": "^0.7.1",
     "globby": "^14.0.1",
+    "lit-element": "^4.0.5",
     "mock-fs": "^5.2.0",
     "mock-require": "^3.0.3"
   },
@@ -71,6 +70,9 @@
     "semver",
     "software"
   ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "publishConfig": {
     "access": "public"
   }

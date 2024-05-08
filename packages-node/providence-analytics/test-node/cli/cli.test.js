@@ -1,19 +1,17 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable import/no-extraneous-dependencies */
-import sinon from 'sinon';
+import commander from 'commander';
 import { expect } from 'chai';
 import { it } from 'mocha';
-import commander from 'commander';
+import sinon from 'sinon';
+
 import { mockProject } from '../../test-helpers/mock-project-helpers.js';
 import { InputDataService } from '../../src/program/core/InputDataService.js';
 import { QueryService } from '../../src/program/core/QueryService.js';
 import { _providenceModule } from '../../src/program/providence.js';
 import { _cliHelpersModule } from '../../src/cli/cli-helpers.js';
 import { cli } from '../../src/cli/cli.js';
-import { _promptAnalyzerMenuModule } from '../../src/cli/prompt-analyzer-menu.js';
 import { memoize } from '../../src/program/utils/memoize.js';
-import { _extendDocsModule } from '../../src/cli/launch-providence-with-extend-docs.js';
-import { dashboardServer } from '../../src/dashboard/server.js';
 import { setupAnalyzerTest } from '../../test-helpers/setup-analyzer-test.js';
 
 /**
@@ -56,11 +54,7 @@ describe('Providence CLI', () => {
   /** @type {sinon.SinonStub} */
   let providenceStub;
   /** @type {sinon.SinonStub} */
-  let promptCfgStub;
-  /** @type {sinon.SinonStub} */
   let iExtConfStub;
-  /** @type {sinon.SinonStub} */
-  let promptStub;
   /** @type {sinon.SinonStub} */
   let qConfStub;
 
@@ -72,17 +66,7 @@ describe('Providence CLI', () => {
     providenceStub = sinon.stub(_providenceModule, 'providence').returns(Promise.resolve());
 
     /** @type {sinon.SinonStub} */
-    promptCfgStub = sinon
-      .stub(_promptAnalyzerMenuModule, 'promptAnalyzerConfigMenu')
-      .returns(Promise.resolve({ analyzerConfig: { con: 'fig' } }));
-
-    /** @type {sinon.SinonStub} */
     iExtConfStub = sinon.stub(InputDataService, 'getExternalConfig').returns(externalCfgMock);
-
-    /** @type {sinon.SinonStub} */
-    promptStub = sinon
-      .stub(_promptAnalyzerMenuModule, 'promptAnalyzerMenu')
-      .returns(Promise.resolve({ analyzerName: 'match-analyzer-mock' }));
 
     /** @type {sinon.SinonStub} */
     qConfStub = sinon.stub(QueryService, 'getQueryConfigFromAnalyzer').returns(
@@ -100,9 +84,7 @@ describe('Providence CLI', () => {
     commander.setMaxListeners(10);
 
     providenceStub.restore();
-    promptCfgStub.restore();
     iExtConfStub.restore();
-    promptStub.restore();
     qConfStub.restore();
   });
 
@@ -126,9 +108,7 @@ describe('Providence CLI', () => {
 
   afterEach(() => {
     providenceStub.resetHistory();
-    promptCfgStub.resetHistory();
     iExtConfStub.resetHistory();
-    promptStub.resetHistory();
     qConfStub.resetHistory();
   });
 
@@ -355,16 +335,6 @@ describe('Providence CLI', () => {
       });
 
       describe('Options', () => {
-        it('"-o --prompt-optional-config"', async () => {
-          await runCli(`analyze -o`, rootDir);
-          expect(promptStub.called).to.be.true;
-
-          promptStub.resetHistory();
-
-          await runCli(`analyze --prompt-optional-config`, rootDir);
-          expect(promptStub.called).to.be.true;
-        });
-
         it('"-c --config"', async () => {
           await runCli(`analyze match-analyzer-mock -c {"a":"2"}`, rootDir);
           expect(qConfStub.args[0][0]).to.equal('match-analyzer-mock');
@@ -375,73 +345,6 @@ describe('Providence CLI', () => {
           await runCli(`analyze match-analyzer-mock --config {"a":"2"}`, rootDir);
           expect(qConfStub.args[0][0]).to.equal('match-analyzer-mock');
           expect(qConfStub.args[0][1]).to.deep.equal({ a: '2', metaConfig: {} });
-        });
-
-        it('calls "promptAnalyzerConfigMenu" without config given', async () => {
-          await runCli(`analyze match-analyzer-mock`, rootDir);
-          expect(promptCfgStub.called).to.be.true;
-        });
-      });
-    });
-
-    describe.skip('Query', () => {});
-    describe.skip('Search', () => {});
-
-    describe('Manage', () => {});
-
-    describe('Dashboard', () => {
-      /** @type {sinon.SinonStub} */
-      const startStub = sinon.stub(dashboardServer, 'start');
-      it('spawns a dashboard', async () => {
-        runCli(`dashboard`, rootDir);
-        expect(startStub.called).to.be.true;
-      });
-    });
-
-    describe('Extend docs', () => {
-      /** @type {sinon.SinonStub} */
-      let extendDocsStub;
-
-      before(() => {
-        extendDocsStub = sinon
-          .stub(_extendDocsModule, 'launchProvidenceWithExtendDocs')
-          .returns(Promise.resolve());
-      });
-
-      after(() => {
-        extendDocsStub.restore();
-      });
-
-      afterEach(() => {
-        extendDocsStub.resetHistory();
-      });
-
-      it('allows configuration', async () => {
-        await runCli(
-          [
-            'extend-docs',
-            '-t /xyz',
-            '-r /xyz/x',
-            '--prefix-from pfrom --prefix-to pto',
-            '--output-folder /outp',
-            '--extensions bla',
-            '--allowlist al --allowlist-reference alr',
-          ].join(' '),
-          rootDir,
-        );
-        expect(extendDocsStub.called).to.be.true;
-        expect(extendDocsStub.args[0][0]).to.deep.equal({
-          referenceProjectPaths: ['/xyz/x'],
-          prefixCfg: {
-            from: 'pfrom',
-            to: 'pto',
-          },
-          outputFolder: '/outp',
-          extensions: ['.bla'],
-          allowlist: ['al'],
-          allowlistReference: ['alr'],
-          cwd: '/mocked/path/example-project',
-          skipCheckMatchCompatibility: true,
         });
       });
     });

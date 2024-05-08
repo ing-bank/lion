@@ -1,5 +1,5 @@
 import path from 'path';
-import { getHash } from '../utils/get-hash.js';
+import { hash } from '../utils/hash.js';
 import { fsAdapter } from '../utils/fs-adapter.js';
 
 import { memoize } from '../utils/memoize.js';
@@ -27,7 +27,7 @@ function createResultIdentifier(searchP, cfg, refP) {
   // why encodeURIComponent: filters out slashes for path names for stuff like @lion/button
   const format = (/** @type {Project} */ p) =>
     `${encodeURIComponent(p.name)}_${p.version || (p.commitHash && p.commitHash.slice(0, 5))}`;
-  const cfgHash = getHash(cfg);
+  const cfgHash = hash(cfg);
   return `${format(searchP)}${refP ? `_+_${format(refP)}` : ''}__${cfgHash}`;
 }
 

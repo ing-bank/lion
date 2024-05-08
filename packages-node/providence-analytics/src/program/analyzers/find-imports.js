@@ -1,20 +1,20 @@
 /* eslint-disable no-shadow, no-param-reassign */
-import { isRelativeSourcePath } from '../utils/relative-source-path.js';
-import { swcTraverse } from '../utils/swc-traverse.js';
-import { getAssertionType } from '../utils/get-assertion-type.js';
 import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
-import { Analyzer } from '../core/Analyzer.js';
+import { isRelativeSourcePath } from '../utils/relative-source-path.js';
+import { getAssertionType } from '../utils/get-assertion-type.js';
+import { swcTraverse } from '../utils/swc-traverse.js';
 import { LogService } from '../core/LogService.js';
+import { Analyzer } from '../core/Analyzer.js';
 
 /**
- * @typedef {import("@swc/core").Module} SwcAstModule
- * @typedef {import("@swc/core").Node} SwcNode
- * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
- * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
- * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
- * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
+ * @typedef {import("@swc/core").Module} SwcAstModule
+ * @typedef {import("@swc/core").Node} SwcNode
  */
 
 /**

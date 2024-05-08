@@ -4,7 +4,7 @@ import pathLib from 'path';
 import FindImportsAnalyzer from './find-imports.js';
 import FindExportsAnalyzer from './find-exports.js';
 import { Analyzer } from '../core/Analyzer.js';
-import { fromImportToExportPerspective } from './helpers/from-import-to-export-perspective.js';
+import { fromImportToExportPerspective } from '../utils/from-import-to-export-perspective.js';
 import { transformIntoIterableFindExportsOutput } from './helpers/transform-into-iterable-find-exports-output.js';
 import { transformIntoIterableFindImportsOutput } from './helpers/transform-into-iterable-find-imports-output.js';
 

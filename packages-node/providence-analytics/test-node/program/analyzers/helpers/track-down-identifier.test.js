@@ -1,13 +1,14 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
+
+import { setupAnalyzerTest } from '../../../../test-helpers/setup-analyzer-test.js';
+import { mockProject } from '../../../../test-helpers/mock-project-helpers.js';
 import { swcTraverse } from '../../../../src/program/utils/swc-traverse.js';
+import { AstService } from '../../../../src/program/core/AstService.js';
 import {
   trackDownIdentifier,
   trackDownIdentifierFromScope,
-} from '../../../../src/program/analyzers/helpers/track-down-identifier.js';
-import { AstService } from '../../../../src/program/core/AstService.js';
-import { mockProject } from '../../../../test-helpers/mock-project-helpers.js';
-import { setupAnalyzerTest } from '../../../../test-helpers/setup-analyzer-test.js';
+} from '../../../../src/program/utils/track-down-identifier.js';
 
 /**
  * @typedef {import('@babel/traverse').NodePath} NodePath

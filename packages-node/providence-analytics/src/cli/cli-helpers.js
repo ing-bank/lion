@@ -1,10 +1,11 @@
 /* eslint-disable no-shadow */
-import path from 'path';
 import child_process from 'child_process'; // eslint-disable-line camelcase
+import path from 'path';
+
 import { globbySync } from 'globby'; // eslint-disable-line import/no-extraneous-dependencies
 import { optimisedGlob } from '../program/utils/optimised-glob.js';
-import { LogService } from '../program/core/LogService.js';
 import { toPosixPath } from '../program/utils/to-posix-path.js';
+import { LogService } from '../program/core/LogService.js';
 import { fsAdapter } from '../program/utils/fs-adapter.js';
 
 /**
@@ -195,31 +196,6 @@ export async function appendProjectDependencyPaths(
   return depProjectPaths.concat(rootPaths).map(toPosixPath);
 }
 
-/**
- * Will install all npm and bower deps, so an analysis can be performed on them as well.
- * Relevant when '--target-dependencies' is supplied.
- * @param {string[]} searchTargetPaths
- */
-export async function installDeps(searchTargetPaths) {
-  for (const targetPath of searchTargetPaths) {
-    LogService.info(`Installing npm dependencies for ${path.basename(targetPath)}`);
-    try {
-      await spawnProcess('npm i --no-progress', { cwd: targetPath });
-    } catch (e) {
-      // @ts-expect-error
-      LogService.error(e);
-    }
-
-    LogService.info(`Installing bower dependencies for ${path.basename(targetPath)}`);
-    try {
-      await spawnProcess(`bower i --production --force-latest`, { cwd: targetPath });
-    } catch (e) {
-      // @ts-expect-error
-      LogService.error(e);
-    }
-  }
-}
-
 export const _cliHelpersModule = {
   appendProjectDependencyPaths,
   pathsArrayFromCollectionName,
@@ -228,7 +204,6 @@ export const _cliHelpersModule = {
   setQueryMethod,
   targetDefault,
   spawnProcess,
-  installDeps,
   csToArray,
   flatten,
 };

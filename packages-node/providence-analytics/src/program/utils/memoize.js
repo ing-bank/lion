@@ -58,6 +58,7 @@ memoize.disableCaching = () => {
 };
 /**
  * Once testing is done, it is possible to restore caching.
+ * @param {boolean} [initialValue]
  */
 memoize.restoreCaching = initialValue => {
   shouldCache = initialValue || true;
