@@ -39,7 +39,7 @@ describe('trackdownIdentifier', () => {
     const rootPath = '/my/project';
 
     const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: './src/declarationOfMyClass.js',
       specifier: 'MyClass',
     });
@@ -71,7 +71,7 @@ describe('trackdownIdentifier', () => {
     const rootPath = '/my/project';
 
     const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: './src/declarationOfMyClass.js',
       specifier: 'MyClass',
     });
@@ -105,7 +105,7 @@ describe('trackdownIdentifier', () => {
     const rootPath = '/my/project';
 
     const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: './src/declarationOfMyClass.js',
       specifier: '[default]',
     });
@@ -131,7 +131,7 @@ describe('trackdownIdentifier', () => {
     const rootPath = '/my/project';
 
     const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: '@external/source',
       specifier: '[default]',
     });
@@ -162,7 +162,7 @@ describe('trackdownIdentifier', () => {
     const rootPath = '/my/project';
 
     const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: './MyClass.js',
       specifier: '[default]',
     });
@@ -201,7 +201,7 @@ describe('trackdownIdentifier', () => {
       rootPath,
       projectName,
     );
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: './MyClass.js',
       specifier: '[default]',
     });
@@ -232,7 +232,7 @@ describe('trackdownIdentifier', () => {
     const rootPath = '/my/project';
 
     const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: './src/declarationOfMyNumber.js',
       specifier: 'myNumber',
     });
@@ -260,7 +260,7 @@ describe('trackdownIdentifier', () => {
     const rootPath = '/my/project';
 
     const rootFile = await trackDownIdentifier(source, identifierName, currentFilePath, rootPath);
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: './packages/accordion/IngAccordionContent.js',
       specifier: 'IngAccordionContent',
     });
@@ -277,7 +277,7 @@ describe('trackdownIdentifier', () => {
       currentFilePath2,
       rootPath2,
     );
-    expect(rootFile2).to.eql({
+    expect(rootFile2).to.deep.equal({
       file: './packages/accordion/IngAccordionInvokerButton.js',
       specifier: 'IngAccordionInvokerButton',
     });
@@ -321,7 +321,7 @@ describe('trackDownIdentifierFromScope', () => {
       fullCurrentFilePath,
       projectPath,
     );
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: '[current]',
       specifier: 'MyClass',
     });
@@ -372,7 +372,7 @@ describe('trackDownIdentifierFromScope', () => {
       fullCurrentFilePath,
       projectPath,
     );
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: './src/declarationOfMyClass.js',
       specifier: 'MyClass',
     });
@@ -420,7 +420,7 @@ describe('trackDownIdentifierFromScope', () => {
       fullCurrentFilePath,
       projectPath,
     );
-    expect(rootFile).to.eql({
+    expect(rootFile).to.deep.equal({
       file: './src/classes.js',
       specifier: 'El1',
     });

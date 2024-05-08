@@ -26,7 +26,7 @@ describe('Analyzer "find-exports"', async () => {
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstResult = getEntry(queryResults[0]).result[0];
 
-      expect(firstResult.exportSpecifiers).to.eql(['x']);
+      expect(firstResult.exportSpecifiers).to.deep.equal(['x']);
       expect(firstResult.source).to.be.undefined;
     });
 
@@ -34,7 +34,7 @@ describe('Analyzer "find-exports"', async () => {
       mockProject([`export default class X {}`]);
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstResult = getEntry(queryResults[0]).result[0];
-      expect(firstResult.exportSpecifiers).to.eql(['[default]']);
+      expect(firstResult.exportSpecifiers).to.deep.equal(['[default]']);
       expect(firstResult.source).to.be.undefined;
     });
 
@@ -43,7 +43,7 @@ describe('Analyzer "find-exports"', async () => {
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstResult = getEntry(queryResults[0]).result[0];
 
-      expect(firstResult.exportSpecifiers).to.eql(['[default]']);
+      expect(firstResult.exportSpecifiers).to.deep.equal(['[default]']);
       expect(firstResult.source).to.be.undefined;
     });
 
@@ -56,7 +56,7 @@ describe('Analyzer "find-exports"', async () => {
 
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstResult = getEntry(queryResults[0]).result[0];
-      expect(firstResult).to.eql({
+      expect(firstResult).to.deep.equal({
         exportSpecifiers: ['[default]'],
         source: undefined,
         rootFileMap: [
@@ -68,7 +68,7 @@ describe('Analyzer "find-exports"', async () => {
       });
 
       const secondEntry = getEntry(queryResults[0], 1);
-      expect(secondEntry.result[0]).to.eql({
+      expect(secondEntry.result[0]).to.deep.equal({
         exportSpecifiers: ['namedExport'],
         source: './file-with-default-export.js',
         localMap: [{ exported: 'namedExport', local: '[default]' }],
@@ -128,7 +128,7 @@ describe('Analyzer "find-exports"', async () => {
       expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
       expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('[default]');
       expect(firstEntry.result[0].source).to.equal('./styles.css');
-      expect(firstEntry.result[0].rootFileMap[0]).to.eql({
+      expect(firstEntry.result[0].rootFileMap[0]).to.deep.equal({
         currentFileSpecifier: '[default]',
         rootFile: {
           file: './styles.css',
@@ -147,7 +147,7 @@ describe('Analyzer "find-exports"', async () => {
       expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
       expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('[default]');
       expect(firstEntry.result[0].source).to.equal('./styles.css');
-      expect(firstEntry.result[0].rootFileMap[0]).to.eql({
+      expect(firstEntry.result[0].rootFileMap[0]).to.deep.equal({
         currentFileSpecifier: '[default]',
         rootFile: {
           file: './styles.css',
@@ -161,7 +161,7 @@ describe('Analyzer "find-exports"', async () => {
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstEntry = getEntry(queryResults[0]);
       // This info will be relevant later to identify 'transitive' relations
-      expect(firstEntry.result[0].localMap).to.eql([
+      expect(firstEntry.result[0].localMap).to.deep.equal([
         {
           local: 'x',
           exported: 'y',
@@ -174,7 +174,7 @@ describe('Analyzer "find-exports"', async () => {
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstEntry = getEntry(queryResults[0]);
       expect(firstEntry.result[0].exportSpecifiers.length).to.equal(2);
-      expect(firstEntry.result[0].exportSpecifiers).to.eql(['x', 'y']);
+      expect(firstEntry.result[0].exportSpecifiers).to.deep.equal(['x', 'y']);
       expect(firstEntry.result[0].source).to.equal('my/source');
     });
 
@@ -190,7 +190,7 @@ describe('Analyzer "find-exports"', async () => {
       const secondEntry = getEntry(queryResults[0], 1);
       const thirdEntry = getEntry(queryResults[0], 2);
 
-      expect(firstEntry.result[0].rootFileMap).to.eql([
+      expect(firstEntry.result[0].rootFileMap).to.deep.equal([
         {
           currentFileSpecifier: 'MyComp', // this is the local name in the file we track from
           rootFile: {
@@ -199,20 +199,20 @@ describe('Analyzer "find-exports"', async () => {
           },
         },
       ]);
-      expect(secondEntry.result[0].rootFileMap).to.eql([
-        {
-          currentFileSpecifier: 'InBetweenComp',
-          rootFile: {
-            file: './src/OriginalComp.js',
-            specifier: 'OriginalComp',
-          },
-        },
-      ]);
-      expect(thirdEntry.result[0].rootFileMap).to.eql([
+      expect(secondEntry.result[0].rootFileMap).to.deep.equal([
         {
           currentFileSpecifier: 'OriginalComp',
           rootFile: {
             file: '[current]',
+            specifier: 'OriginalComp',
+          },
+        },
+      ]);
+      expect(thirdEntry.result[0].rootFileMap).to.deep.equal([
+        {
+          currentFileSpecifier: 'InBetweenComp',
+          rootFile: {
+            file: './src/OriginalComp.js',
             specifier: 'OriginalComp',
           },
         },
@@ -236,7 +236,7 @@ describe('Analyzer "find-exports"', async () => {
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstEntry = getEntry(queryResults[0]);
 
-      expect(firstEntry.result[0].rootFileMap).to.eql([
+      expect(firstEntry.result[0].rootFileMap).to.deep.equal([
         {
           currentFileSpecifier: '[default]',
           rootFile: {
@@ -252,7 +252,7 @@ describe('Analyzer "find-exports"', async () => {
       mockProject([`// some comment here...`]);
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const firstEntry = getEntry(queryResults[0]);
-      expect(firstEntry.result[0].exportSpecifiers).to.eql(['[file]']);
+      expect(firstEntry.result[0].exportSpecifiers).to.deep.equal(['[file]']);
       expect(firstEntry.result[0].source).to.equal(undefined);
     });
   });
@@ -322,10 +322,10 @@ describe('Analyzer "find-exports"', async () => {
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const [firstEntry, secondEntry, thirdEntry] = getEntries(queryResult);
-      expect(firstEntry.meta.categories).to.eql(['fooCategory']);
+      expect(firstEntry.meta.categories).to.deep.equal(['fooCategory']);
       // not mutually exclusive...
-      expect(secondEntry.meta.categories).to.eql(['barCategory', 'testCategory']);
-      expect(thirdEntry.meta.categories).to.eql([]);
+      expect(secondEntry.meta.categories).to.deep.equal(['barCategory', 'testCategory']);
+      expect(thirdEntry.meta.categories).to.deep.equal([]);
     });
   });
 });

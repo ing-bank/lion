@@ -25,7 +25,7 @@ describe('Analyzer "find-classes"', async () => {
     mockProject([`class EmptyClass {}`]);
     const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
     const firstEntry = getEntry(queryResults[0]);
-    expect(firstEntry.result).to.eql([
+    expect(firstEntry.result).to.deep.equal([
       {
         name: 'EmptyClass',
         isMixin: false,
@@ -41,7 +41,7 @@ describe('Analyzer "find-classes"', async () => {
     mockProject([`const m = superclass => class MyMixin extends superclass {}`]);
     const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
     const firstEntry = getEntry(queryResults[0]);
-    expect(firstEntry.result).to.eql([
+    expect(firstEntry.result).to.deep.equal([
       {
         name: 'MyMixin',
         superClasses: [
@@ -72,7 +72,7 @@ describe('Analyzer "find-classes"', async () => {
     });
     const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
     const firstEntry = getEntry(queryResults[0]);
-    expect(firstEntry.result[1].superClasses).to.eql([
+    expect(firstEntry.result[1].superClasses).to.deep.equal([
       {
         isMixin: true,
         name: 'Mixin',
@@ -109,7 +109,7 @@ describe('Analyzer "find-classes"', async () => {
       ]);
       const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
       const firstEntry = getEntry(queryResults[0]);
-      expect(firstEntry.result[0].members.methods).to.eql([
+      expect(firstEntry.result[0].members.methods).to.deep.equal([
         {
           accessType: 'public',
           name: 'method',
@@ -145,7 +145,7 @@ describe('Analyzer "find-classes"', async () => {
       ]);
       const queryResults = await providence(findClassesQueryConfig, _providenceCfg);
       const firstEntry = getEntry(queryResults[0]);
-      expect(firstEntry.result[0].members.props).to.eql([
+      expect(firstEntry.result[0].members.props).to.deep.equal([
         {
           accessType: 'public',
           kind: ['get', 'set'],

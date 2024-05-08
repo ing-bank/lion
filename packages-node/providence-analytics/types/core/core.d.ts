@@ -1,4 +1,5 @@
 import { File } from '@babel/types';
+import Vol from 'memfs';
 
 /**
  * The name of a variable in a local context. Examples:
@@ -152,6 +153,8 @@ export interface ProjectInputDataWithAstMeta extends ProjectInputDataWithMeta {
  */
 export type AnyMatchString = string;
 
+export type FsAdapter = Vol;
+
 export type ProvidenceConfig = {
   /* Whether analyzer should be run or a grep should be performed */
   queryMethod: 'ast' | 'grep';
@@ -169,6 +172,7 @@ export type ProvidenceConfig = {
   writeLogFile: boolean;
   skipCheckMatchCompatibility: boolean;
   fallbackToBabel: boolean;
+  fs: FsAdapter;
 };
 
 /**
@@ -182,6 +186,7 @@ export type PackageJson = {
   devDependencies?: { [dependency: string]: string };
   workspaces?: string[];
   main?: string;
+  exports?: { [key: string]: string };
 };
 
 export type LernaJson = {

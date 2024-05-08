@@ -6,14 +6,14 @@ import {
   mockTargetAndReferenceProject,
 } from '../../../test-helpers/mock-project-helpers.js';
 import { resolveImportPath } from '../../../src/program/utils/resolve-import-path.js';
-import { memoizeConfig } from '../../../src/program/utils/memoize.js';
+import { memoize } from '../../../src/program/utils/memoize.js';
 
 describe('resolveImportPath', () => {
   beforeEach(() => {
-    memoizeConfig.isCacheDisabled = true;
+    memoize.disableCaching();
   });
   afterEach(() => {
-    memoizeConfig.isCacheDisabled = false;
+    memoize.restoreCaching();
     restoreMockedProjects();
   });
 

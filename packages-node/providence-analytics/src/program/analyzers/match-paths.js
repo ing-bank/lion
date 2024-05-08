@@ -198,7 +198,6 @@ function getVariablePaths(
 }
 
 /**
- *
  * @param {FindCustomelementsAnalyzerResult} targetFindCustomelementsResult
  * @param {FindCustomelementsAnalyzerResult} refFindCustomelementsResult
  * @param {FindExportsAnalyzerResult} refFindExportsResult
@@ -240,8 +239,10 @@ function getTagPaths(
       if (!matchSubclassSpecifierRootFile) {
         return false;
       }
+
       const sameRoot = entry.rootFile.file === matchSubclassSpecifierRootFile.file;
       const sameIdentifier = entry.rootFile.specifier === matchSubclassEntry.exportSpecifier.name;
+
       return sameRoot && sameIdentifier;
     });
     if (refPathMatch) {
@@ -274,11 +275,11 @@ function matchPathsPostprocess(
   /** @type {AnalyzerQueryResult} */
   const resultsArray = [];
 
-  targetMatchSubclassesResult.queryOutput.forEach(matchSubclassEntry => {
+  for (const matchSubclassEntry of targetMatchSubclassesResult.queryOutput) {
     const fromClass = matchSubclassEntry.exportSpecifier.name;
 
-    matchSubclassEntry.matchesPerProject.forEach(projectMatch => {
-      projectMatch.files.forEach(({ identifier: toClass, file: targetMatchedFile }) => {
+    for (const projectMatch of matchSubclassEntry.matchesPerProject) {
+      for (const { identifier: toClass, file: targetMatchedFile } of projectMatch.files) {
         const resultEntry = {
           name: fromClass,
         };
@@ -293,7 +294,7 @@ function matchPathsPostprocess(
           refProjectName,
         );
 
-        if (paths && paths.length) {
+        if (paths?.length) {
           resultEntry.variable = {
             from: fromClass,
             to: toClass,
@@ -324,9 +325,9 @@ function matchPathsPostprocess(
         if (resultEntry.variable || resultEntry.tag) {
           resultsArray.push(resultEntry);
         }
-      });
-    });
-  });
+      }
+    }
+  }
 
   return resultsArray;
 }
@@ -394,7 +395,7 @@ export default class MatchPathsAnalyzer extends Analyzer {
     /**
      * Prepare
      */
-    const analyzerResult = this._prepare(cfg);
+    const analyzerResult = await this._prepare(cfg);
     if (analyzerResult) {
       return analyzerResult;
     }

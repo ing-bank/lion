@@ -54,9 +54,8 @@ async function analyzePerAstFile(projectData, astAnalysis, analyzerCfg) {
  * @param {object[]|object} data
  */
 function posixify(data) {
-  if (!data) {
-    return;
-  }
+  if (!data) return;
+
   if (Array.isArray(data)) {
     data.forEach(posixify);
   } else if (typeof data === 'object') {
@@ -212,7 +211,7 @@ export class Analyzer {
    * @param {AnalyzerConfig} cfg
    * @returns {CachedAnalyzerResult|undefined}
    */
-  _prepare(cfg) {
+  async _prepare(cfg) {
     LogService.debug(`Analyzer "${this.name}": started _prepare method`);
     /** @type {typeof Analyzer} */ (this.constructor).__unwindProvidedResults(cfg);
 
@@ -281,14 +280,14 @@ export class Analyzer {
      * Get reference and search-target data
      */
     if (!cfg.targetProjectResult) {
-      this.targetData = InputDataService.createDataObject(
+      this.targetData = await InputDataService.createDataObject(
         [cfg.targetProjectPath],
         cfg.gatherFilesConfig,
       );
     }
 
     if (cfg.referenceProjectPath) {
-      this.referenceData = InputDataService.createDataObject(
+      this.referenceData = await InputDataService.createDataObject(
         [cfg.referenceProjectPath],
         cfg.gatherFilesConfigReference || cfg.gatherFilesConfig,
       );
@@ -333,7 +332,7 @@ export class Analyzer {
         if (!projectPath) {
           LogService.error(`[Analyzer._traverse]: you must provide a projectPath`);
         }
-        finalTargetData = InputDataService.createDataObject([
+        finalTargetData = await InputDataService.createDataObject([
           {
             project: {
               name: projectName || '[n/a]',
@@ -366,7 +365,7 @@ export class Analyzer {
     /**
      * Prepare
      */
-    const cachedAnalyzerResult = this._prepare(cfg);
+    const cachedAnalyzerResult = await this._prepare(cfg);
     if (cachedAnalyzerResult) {
       return cachedAnalyzerResult;
     }

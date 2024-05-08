@@ -60,7 +60,7 @@ describe('swcTraverse', () => {
       };
       swcTraverse(swcAst, visitor);
 
-      expect(foundTypes).to.eql([
+      expect(foundTypes).to.deep.equal([
         'Module',
         'ImportDeclaration',
         'ImportDefaultSpecifier',
@@ -166,7 +166,7 @@ describe('swcTraverse', () => {
         expect(declaratorPaths[2].scope.id).to.equal(2);
 
         expect(declaratorPaths[0].node.id.value).to.equal('globalScope');
-        expect(Object.keys(declaratorPaths[0].scope.bindings)).to.eql([
+        expect(Object.keys(declaratorPaths[0].scope.bindings)).to.deep.equal([
           'globalScope',
           'alsoGlobalScope',
         ]);
@@ -180,8 +180,8 @@ describe('swcTraverse', () => {
           declaratorPaths[3].node,
         );
 
-        expect(Object.keys(declaratorPaths[1].scope.bindings)).to.eql(['middleScope']);
-        expect(Object.keys(declaratorPaths[2].scope.bindings)).to.eql(['deepestScope']);
+        expect(Object.keys(declaratorPaths[1].scope.bindings)).to.deep.equal(['middleScope']);
+        expect(Object.keys(declaratorPaths[2].scope.bindings)).to.deep.equal(['deepestScope']);
       });
 
       it('creates scopes for nested FunctionDeclaration', async () => {
@@ -336,7 +336,7 @@ describe('swcTraverse', () => {
         };
         swcTraverse(swcAst, visitor, { needsAdvancedPaths: true });
 
-        expect(Object.keys(declaratorPaths[0].scope.bindings)).to.eql([
+        expect(Object.keys(declaratorPaths[0].scope.bindings)).to.deep.equal([
           'globalScope',
           'alsoGlobalScope',
         ]);
@@ -370,12 +370,12 @@ describe('swcTraverse', () => {
         };
         swcTraverse(swcAst, visitor, { needsAdvancedPaths: true });
 
-        expect(Object.keys(declaratorPaths[0].scope.bindings)).to.eql([
+        expect(Object.keys(declaratorPaths[0].scope.bindings)).to.deep.equal([
           'globalScope',
           'stillGlobalScope',
         ]);
-        expect(Object.keys(declaratorPaths[1].scope.bindings)).to.eql(['middleScope']);
-        expect(Object.keys(declaratorPaths[2].scope.bindings)).to.eql(['insideFnScope']);
+        expect(Object.keys(declaratorPaths[1].scope.bindings)).to.deep.equal(['middleScope']);
+        expect(Object.keys(declaratorPaths[2].scope.bindings)).to.deep.equal(['insideFnScope']);
       });
     });
 
@@ -420,8 +420,10 @@ describe('swcTraverse', () => {
       expect(babelScopes.length).to.equal(swcScopes.length);
       for (let i = 0; i < babelScopes.length; i += 1) {
         expect(babelScopes[i].uid - babelRootScopeIdOffset).to.equal(swcScopes[i].id);
-        expect(Object.keys(babelScopes[i].bindings)).to.eql(Object.keys(swcScopes[i].bindings));
-        // expect(babelScopes[i].references).to.eql(swcResults[i].references);
+        expect(Object.keys(babelScopes[i].bindings)).to.deep.equal(
+          Object.keys(swcScopes[i].bindings),
+        );
+        // expect(babelScopes[i].references).to.deep.equal(swcResults[i].references);
       }
     }
 

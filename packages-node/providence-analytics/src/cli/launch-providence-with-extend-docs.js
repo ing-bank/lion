@@ -1,6 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import fs from 'fs';
-import pathLib from 'path';
+import path from 'path';
 import { performance } from 'perf_hooks';
 import { _providenceModule } from '../program/providence.js';
 import { QueryService } from '../program/core/QueryService.js';
@@ -8,6 +7,7 @@ import { InputDataService } from '../program/core/InputDataService.js';
 import { LogService } from '../program/core/LogService.js';
 import { flatten } from './cli-helpers.js';
 import MatchPathsAnalyzer from '../program/analyzers/match-paths.js';
+import { fsAdapter } from '../program/utils/fs-adapter.js';
 
 /**
  * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
@@ -33,7 +33,7 @@ export async function getExtendDocsResults({
   allowlistReference,
   cwd,
 }) {
-  const monoPkgs = InputDataService.getMonoRepoPackages(cwd);
+  const monoPkgs = await InputDataService.getMonoRepoPackages(cwd);
 
   const results = await _providenceModule.providence(
     await QueryService.getQueryConfigFromAnalyzer(MatchPathsAnalyzer, { prefix: prefixCfg }),
@@ -71,7 +71,7 @@ export async function getExtendDocsResults({
       const normalizedP = `./${p}`;
       if (pathStr.startsWith(normalizedP)) {
         const localPath = pathStr.replace(normalizedP, ''); // 'lea-tabs.js'
-        result = `${name}/${localPath}`; // 'lea-tabs/lea-tabs.js'
+        result = path.join(name, localPath); // 'lea-tabs/lea-tabs.js'
         return true;
       }
       return false;
@@ -124,12 +124,12 @@ export async function launchProvidenceWithExtendDocs({
   });
 
   // Write results
-  const outputFilePath = pathLib.join(outputFolder, 'providence-extend-docs-data.json');
+  const outputFilePath = path.join(outputFolder, 'providence-extend-docs-data.json');
 
-  if (fs.existsSync(outputFilePath)) {
-    fs.unlinkSync(outputFilePath);
+  if (fsAdapter.fs.existsSync(outputFilePath)) {
+    fsAdapter.fs.unlinkSync(outputFilePath);
   }
-  fs.writeFile(outputFilePath, JSON.stringify(queryOutputs, null, 2), err => {
+  fsAdapter.fs.writeFile(outputFilePath, JSON.stringify(queryOutputs, null, 2), err => {
     if (err) {
       throw err;
     }

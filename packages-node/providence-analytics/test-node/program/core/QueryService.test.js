@@ -14,7 +14,7 @@ describe('QueryService', () => {
     describe('Retrieving QueryConfig', () => {
       it('"getQueryConfigFromRegexSearchString"', async () => {
         const result = QueryService.getQueryConfigFromRegexSearchString('x');
-        expect(result).to.eql({ type: 'search', regexString: 'x' });
+        expect(result).to.deep.equal({ type: 'search', regexString: 'x' });
 
         expect(() => {
           // @ts-expect-error
@@ -25,7 +25,7 @@ describe('QueryService', () => {
       describe('"getQueryConfigFromFeatureString"', () => {
         it('with tag, attr-key and attr-value', async () => {
           const result = QueryService.getQueryConfigFromFeatureString('tg-icon[size=xs]');
-          expect(result).to.eql({
+          expect(result).to.deep.equal({
             type: 'feature',
             feature: {
               name: 'size',
@@ -41,7 +41,7 @@ describe('QueryService', () => {
 
         it('with only tag', async () => {
           const result = QueryService.getQueryConfigFromFeatureString('tg-icon');
-          expect(result).to.eql({
+          expect(result).to.deep.equal({
             type: 'feature',
             feature: {
               tag: 'tg-icon',
@@ -52,7 +52,7 @@ describe('QueryService', () => {
 
         it('with only attr-key', async () => {
           const result = QueryService.getQueryConfigFromFeatureString('[attr]');
-          expect(result).to.eql({
+          expect(result).to.deep.equal({
             type: 'feature',
             feature: {
               name: 'attr',
@@ -68,7 +68,7 @@ describe('QueryService', () => {
 
         it('with only attr-key and attr-value', async () => {
           const result = QueryService.getQueryConfigFromFeatureString('[attr=x]');
-          expect(result).to.eql({
+          expect(result).to.deep.equal({
             type: 'feature',
             feature: {
               name: 'attr',
@@ -85,7 +85,7 @@ describe('QueryService', () => {
         describe('With partial value', async () => {
           it('with tag, attr-key and attr-value', async () => {
             const result = QueryService.getQueryConfigFromFeatureString('tg-icon*[size*=xs*]');
-            expect(result).to.eql({
+            expect(result).to.deep.equal({
               type: 'feature',
               feature: {
                 name: 'size',
@@ -101,7 +101,7 @@ describe('QueryService', () => {
 
           it('with only tag', async () => {
             const result = QueryService.getQueryConfigFromFeatureString('tg-icon*');
-            expect(result).to.eql({
+            expect(result).to.deep.equal({
               type: 'feature',
               feature: {
                 tag: 'tg-icon',
@@ -112,7 +112,7 @@ describe('QueryService', () => {
 
           it('with only attr-key', async () => {
             const result = QueryService.getQueryConfigFromFeatureString('[attr*]');
-            expect(result).to.eql({
+            expect(result).to.deep.equal({
               type: 'feature',
               feature: {
                 name: 'attr',
@@ -128,7 +128,7 @@ describe('QueryService', () => {
 
           it('with only attr-key and attr-value', async () => {
             const result = QueryService.getQueryConfigFromFeatureString('[attr*=x*]');
-            expect(result).to.eql({
+            expect(result).to.deep.equal({
               type: 'feature',
               feature: {
                 name: 'attr',
@@ -158,7 +158,7 @@ describe('QueryService', () => {
             'find-imports',
             myAnalyzerCfg,
           );
-          expect(result).to.eql({
+          expect(result).to.deep.equal({
             type: 'ast-analyzer',
             analyzerName: 'find-imports',
             analyzerConfig: myAnalyzerCfg,
@@ -171,7 +171,7 @@ describe('QueryService', () => {
             /** @type {* & Analyzer} */ (DummyAnalyzer),
             myAnalyzerCfg,
           );
-          expect(result).to.eql({
+          expect(result).to.deep.equal({
             type: 'ast-analyzer',
             analyzerName: 'find-dummy-analyzer',
             analyzerConfig: myAnalyzerCfg,
@@ -186,7 +186,7 @@ describe('QueryService', () => {
     //     it('with FeatureConfig', async () => {
     //       const featureCfg = QueryService.getQueryConfigFromFeatureString('tg-icon[size=xs]');
     //       const result = QueryService.grepSearch(featureCfg);
-    //       expect(result).to.eql({
+    //       expect(result).to.deep.equal({
     //         type: 'ast-analyzer',
     //         analyzerName: 'find-imports',
     //         analyzerConfig: { x: 'y' },

@@ -1,7 +1,8 @@
 import child_process from 'child_process'; // eslint-disable-line camelcase
 import path from 'path';
-import fs from 'fs';
+
 import commander from 'commander';
+
 import { LogService } from '../program/core/LogService.js';
 import { QueryService } from '../program/core/QueryService.js';
 import { InputDataService } from '../program/core/InputDataService.js';
@@ -12,6 +13,7 @@ import { _providenceModule } from '../program/providence.js';
 import { _cliHelpersModule } from './cli-helpers.js';
 import { _extendDocsModule } from './launch-providence-with-extend-docs.js';
 import { _promptAnalyzerMenuModule } from './prompt-analyzer-menu.js';
+import { fsAdapter } from '../program/utils/fs-adapter.js';
 
 /**
  * @typedef {import('../../types/index.js').AnalyzerName} AnalyzerName
@@ -19,7 +21,10 @@ import { _promptAnalyzerMenuModule } from './prompt-analyzer-menu.js';
  */
 
 const { version } = JSON.parse(
-  fs.readFileSync(path.resolve(getCurrentDir(import.meta.url), '../../package.json'), 'utf8'),
+  fsAdapter.fs.readFileSync(
+    path.resolve(getCurrentDir(import.meta.url), '../../package.json'),
+    'utf8',
+  ),
 );
 const { extensionsFromCs, setQueryMethod, targetDefault, installDeps } = _cliHelpersModule;
 

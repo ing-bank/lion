@@ -1,4 +1,3 @@
-import fs from 'fs';
 import path from 'path';
 import inquirer from 'inquirer';
 import traverse from '@babel/traverse';
@@ -7,6 +6,7 @@ import { AstService } from '../program/core/AstService.js';
 import { LogService } from '../program/core/LogService.js';
 import JsdocCommentParser from '../program/utils/jsdoc-comment-parser.js';
 import { getCurrentDir } from '../program/utils/get-current-dir.js';
+import { fsAdapter } from '../program/utils/fs-adapter.js';
 
 /**
  * @typedef {import('../../types/index.js').TargetDepsObj} TargetDepsObj
@@ -42,7 +42,7 @@ function getPropsFromParsedJsDoc(jsdoc) {
  * @param {PathFromSystemRoot} file
  */
 function getAnalyzerOptions(file) {
-  const code = fs.readFileSync(file, 'utf8');
+  const code = fsAdapter.fs.readFileSync(file, 'utf8');
   const babelAst = AstService.getAst(code, 'swc-to-babel', { filePath: file });
 
   let commentNode;
@@ -74,7 +74,7 @@ function getAnalyzerOptions(file) {
  * @param {PathFromSystemRoot} dir
  * @param {boolean} [shouldGetOptions]
  */
-function gatherAnalyzers(dir, shouldGetOptions) {
+async function gatherAnalyzers(dir, shouldGetOptions) {
   return InputDataService.gatherFilesFromDir(dir, { depth: 0 }).map(file => {
     const analyzerObj = { file, name: path.basename(file, '.js') };
     if (shouldGetOptions) {
@@ -98,7 +98,7 @@ export async function promptAnalyzerConfigMenu(
     path.resolve(getCurrentDir(import.meta.url), '../program/analyzers')
   ),
 ) {
-  const menuOptions = gatherAnalyzers(dir, true);
+  const menuOptions = await gatherAnalyzers(dir, true);
   const analyzer = menuOptions.find(o => o.name === analyzerName);
   if (!analyzer) {
     LogService.error(`[promptAnalyzerConfigMenu] analyzer "${analyzerName}" not found.`);

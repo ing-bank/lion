@@ -1,10 +1,12 @@
 import { builtinModules } from 'module';
 import path from 'path';
+
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import { LogService } from '../core/LogService.js';
-import { memoize } from './memoize.js';
-import { toPosixPath } from './to-posix-path.js';
+
 import { isRelativeSourcePath } from './relative-source-path.js';
+import { LogService } from '../core/LogService.js';
+import { toPosixPath } from './to-posix-path.js';
+import { memoize } from './memoize.js';
 
 /**
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot

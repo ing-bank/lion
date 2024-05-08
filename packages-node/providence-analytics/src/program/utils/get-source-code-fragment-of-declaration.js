@@ -1,9 +1,9 @@
-import fs from 'fs';
 import path from 'path';
 import { swcTraverse, getPathFromNode } from './swc-traverse.js';
 import { AstService } from '../core/AstService.js';
 import { trackDownIdentifier } from '../analyzers/helpers/track-down-identifier.js';
 import { toPosixPath } from './to-posix-path.js';
+import { fsAdapter } from './fs-adapter.js';
 
 /**
  * @typedef {import('@swc/core').Node} SwcNode
@@ -84,7 +84,7 @@ export async function getSourceCodeFragmentOfDeclaration({
   exportedIdentifier,
   projectRootPath,
 }) {
-  const code = fs.readFileSync(filePath, 'utf8');
+  const code = fsAdapter.fs.readFileSync(filePath, 'utf8');
 
   // compensate for swc span bug: https://github.com/swc-project/swc/issues/1366#issuecomment-1516539812
   const offset = AstService._getSwcOffset();

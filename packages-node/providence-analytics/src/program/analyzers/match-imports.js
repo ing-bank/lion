@@ -192,14 +192,11 @@ export default class MatchImportsAnalyzer extends Analyzer {
     /**
      * Prepare
      */
-    const cachedAnalyzerResult = this._prepare(cfg);
+    const cachedAnalyzerResult = await this._prepare(cfg);
     if (cachedAnalyzerResult) {
       return cachedAnalyzerResult;
     }
 
-    /**
-     * Traverse
-     */
     let { referenceProjectResult } = cfg;
     if (!referenceProjectResult) {
       const findExportsAnalyzer = new FindExportsAnalyzer();
@@ -222,6 +219,9 @@ export default class MatchImportsAnalyzer extends Analyzer {
       });
     }
 
+    /**
+     * Traverse
+     */
     const queryOutput = await matchImportsPostprocess(
       referenceProjectResult,
       targetProjectResult,

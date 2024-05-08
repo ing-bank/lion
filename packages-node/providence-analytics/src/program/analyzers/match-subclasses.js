@@ -312,7 +312,7 @@ export default class MatchSubclassesAnalyzer extends Analyzer {
     /**
      * Prepare
      */
-    const analyzerResult = this._prepare(cfg);
+    const analyzerResult = await this._prepare(cfg);
     if (analyzerResult) {
       return analyzerResult;
     }

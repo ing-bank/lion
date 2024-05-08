@@ -11,7 +11,7 @@ import { _providenceModule } from '../../src/program/providence.js';
 import { _cliHelpersModule } from '../../src/cli/cli-helpers.js';
 import { cli } from '../../src/cli/cli.js';
 import { _promptAnalyzerMenuModule } from '../../src/cli/prompt-analyzer-menu.js';
-import { memoizeConfig } from '../../src/program/utils/memoize.js';
+import { memoize } from '../../src/program/utils/memoize.js';
 import { _extendDocsModule } from '../../src/cli/launch-providence-with-extend-docs.js';
 import { dashboardServer } from '../../src/dashboard/server.js';
 import { setupAnalyzerTest } from '../../test-helpers/setup-analyzer-test.js';
@@ -120,7 +120,8 @@ describe('Providence CLI', () => {
         projectPath: '/mocked/path/example-project',
       },
     );
-    memoizeConfig.isCacheDisabled = true;
+    // memoizeConfig.isCacheDisabled = true;
+    memoize.disableCaching();
   });
 
   afterEach(() => {
@@ -186,18 +187,26 @@ describe('Providence CLI', () => {
 
     it('"-e --extensions"', async () => {
       await runCli(`${anyCmdThatAcceptsGlobalOpts} -e bla,blu`, rootDir);
-      expect(providenceStub.args[0][1].gatherFilesConfig.extensions).to.eql(['.bla', '.blu']);
+      expect(providenceStub.args[0][1].gatherFilesConfig.extensions).to.deep.equal([
+        '.bla',
+        '.blu',
+      ]);
 
       providenceStub.resetHistory();
 
       await runCli(`${anyCmdThatAcceptsGlobalOpts} --extensions bla,blu`, rootDir);
-      expect(providenceStub.args[0][1].gatherFilesConfig.extensions).to.eql(['.bla', '.blu']);
+      expect(providenceStub.args[0][1].gatherFilesConfig.extensions).to.deep.equal([
+        '.bla',
+        '.blu',
+      ]);
     });
 
     it('"-t --search-target-paths"', async () => {
       await runCli(`${anyCmdThatAcceptsGlobalOpts} -t /mocked/path/example-project`, rootDir);
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
-      expect(providenceStub.args[0][1].targetProjectPaths).to.eql(['/mocked/path/example-project']);
+      expect(providenceStub.args[0][1].targetProjectPaths).to.deep.equal([
+        '/mocked/path/example-project',
+      ]);
 
       pathsArrayFromCsStub.resetHistory();
       providenceStub.resetHistory();
@@ -207,13 +216,15 @@ describe('Providence CLI', () => {
         rootDir,
       );
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
-      expect(providenceStub.args[0][1].targetProjectPaths).to.eql(['/mocked/path/example-project']);
+      expect(providenceStub.args[0][1].targetProjectPaths).to.deep.equal([
+        '/mocked/path/example-project',
+      ]);
     });
 
     it('"-r --reference-paths"', async () => {
       await runCli(`${anyCmdThatAcceptsGlobalOpts} -r /mocked/path/example-project`, rootDir);
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
-      expect(providenceStub.args[0][1].referenceProjectPaths).to.eql([
+      expect(providenceStub.args[0][1].referenceProjectPaths).to.deep.equal([
         '/mocked/path/example-project',
       ]);
 
@@ -225,7 +236,7 @@ describe('Providence CLI', () => {
         rootDir,
       );
       expect(pathsArrayFromCsStub.args[0][0]).to.equal('/mocked/path/example-project');
-      expect(providenceStub.args[0][1].referenceProjectPaths).to.eql([
+      expect(providenceStub.args[0][1].referenceProjectPaths).to.deep.equal([
         '/mocked/path/example-project',
       ]);
     });
@@ -236,7 +247,9 @@ describe('Providence CLI', () => {
         rootDir,
       );
       expect(pathsArrayFromCollectionStub.args[0][0]).to.equal('lion-collection');
-      expect(providenceStub.args[0][1].targetProjectPaths).to.eql(['/mocked/path/example-project']);
+      expect(providenceStub.args[0][1].targetProjectPaths).to.deep.equal([
+        '/mocked/path/example-project',
+      ]);
     });
 
     it('"--reference-collection"', async () => {
@@ -245,14 +258,14 @@ describe('Providence CLI', () => {
         rootDir,
       );
       expect(pathsArrayFromCollectionStub.args[0][0]).to.equal('lion-based-ui-collection');
-      expect(providenceStub.args[0][1].referenceProjectPaths).to.eql([
+      expect(providenceStub.args[0][1].referenceProjectPaths).to.deep.equal([
         '/mocked/path/example-project',
       ]);
     });
 
     it('"-a --allowlist"', async () => {
       await runCli(`${anyCmdThatAcceptsGlobalOpts} -a mocked/**/*,rocked/*`, rootDir);
-      expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.eql([
+      expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.deep.equal([
         'mocked/**/*',
         'rocked/*',
       ]);
@@ -260,7 +273,7 @@ describe('Providence CLI', () => {
       providenceStub.resetHistory();
 
       await runCli(`${anyCmdThatAcceptsGlobalOpts} --allowlist mocked/**/*,rocked/*`, rootDir);
-      expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.eql([
+      expect(providenceStub.args[0][1].gatherFilesConfig.allowlist).to.deep.equal([
         'mocked/**/*',
         'rocked/*',
       ]);
@@ -271,7 +284,7 @@ describe('Providence CLI', () => {
         `${anyCmdThatAcceptsGlobalOpts} --allowlist-reference mocked/**/*,rocked/*`,
         rootDir,
       );
-      expect(providenceStub.args[0][1].gatherFilesConfigReference.allowlist).to.eql([
+      expect(providenceStub.args[0][1].gatherFilesConfigReference.allowlist).to.deep.equal([
         'mocked/**/*',
         'rocked/*',
       ]);
@@ -311,7 +324,7 @@ describe('Providence CLI', () => {
 
       await runCli(`${anyCmdThatAcceptsGlobalOpts} --target-dependencies`, rootDir);
       expect(appendProjectDependencyPathsStub.called).to.be.true;
-      expect(providenceStub.args[0][1].targetProjectPaths).to.eql([
+      expect(providenceStub.args[0][1].targetProjectPaths).to.deep.equal([
         '/mocked/path/example-project',
         '/mocked/path/example-project/node_modules/mock-dep-a',
         '/mocked/path/example-project/bower_components/mock-dep-b',
@@ -355,13 +368,13 @@ describe('Providence CLI', () => {
         it('"-c --config"', async () => {
           await runCli(`analyze match-analyzer-mock -c {"a":"2"}`, rootDir);
           expect(qConfStub.args[0][0]).to.equal('match-analyzer-mock');
-          expect(qConfStub.args[0][1]).to.eql({ a: '2', metaConfig: {} });
+          expect(qConfStub.args[0][1]).to.deep.equal({ a: '2', metaConfig: {} });
 
           qConfStub.resetHistory();
 
           await runCli(`analyze match-analyzer-mock --config {"a":"2"}`, rootDir);
           expect(qConfStub.args[0][0]).to.equal('match-analyzer-mock');
-          expect(qConfStub.args[0][1]).to.eql({ a: '2', metaConfig: {} });
+          expect(qConfStub.args[0][1]).to.deep.equal({ a: '2', metaConfig: {} });
         });
 
         it('calls "promptAnalyzerConfigMenu" without config given', async () => {
@@ -417,7 +430,7 @@ describe('Providence CLI', () => {
           rootDir,
         );
         expect(extendDocsStub.called).to.be.true;
-        expect(extendDocsStub.args[0][0]).to.eql({
+        expect(extendDocsStub.args[0][0]).to.deep.equal({
           referenceProjectPaths: ['/xyz/x'],
           prefixCfg: {
             from: 'pfrom',

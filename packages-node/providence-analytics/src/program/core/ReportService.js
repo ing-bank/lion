@@ -1,17 +1,18 @@
-import fs from 'fs';
-import pathLib from 'path';
+import path from 'path';
 import { getHash } from '../utils/get-hash.js';
-// import { memoize } from '../utils/memoize.js';
-const memoize = fn => fn;
+import { fsAdapter } from '../utils/fs-adapter.js';
+
+import { memoize } from '../utils/memoize.js';
+// const memoize = fn => fn;
 
 /**
- * @typedef {import('../../../types/index.js').Project} Project
- * @typedef {import('../../../types/index.js').ProjectName} ProjectName
  * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').ProjectName} ProjectName
  * @typedef {import('../../../types/index.js').QueryResult} QueryResult
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').Project} Project
  */
 
 /**
@@ -57,20 +58,20 @@ export class ReportService {
     outputPath = this.outputPath,
   ) {
     const output = JSON.stringify(queryResult, null, 2);
-    if (!fs.existsSync(outputPath)) {
-      fs.mkdirSync(outputPath);
+    if (!fsAdapter.fs.existsSync(outputPath)) {
+      fsAdapter.fs.mkdirSync(outputPath);
     }
     const { name } = queryResult.meta.analyzerMeta;
     const filePath = this._getResultFileNameAndPath(name, identifier);
 
-    fs.writeFileSync(filePath, output, { flag: 'w' });
+    fsAdapter.fs.writeFileSync(filePath, output, { flag: 'w' });
   }
 
   /**
    * @type {string}
    */
   static get outputPath() {
-    return this.__outputPath || pathLib.join(process.cwd(), '/providence-output');
+    return this.__outputPath || path.join(process.cwd(), '/providence-output');
   }
 
   static set outputPath(p) {
@@ -93,7 +94,10 @@ export class ReportService {
     let cachedResult;
     try {
       cachedResult = JSON.parse(
-        fs.readFileSync(this._getResultFileNameAndPath(analyzerName, identifier), 'utf-8'),
+        fsAdapter.fs.readFileSync(
+          this._getResultFileNameAndPath(analyzerName, identifier),
+          'utf-8',
+        ),
       );
       // eslint-disable-next-line no-empty
     } catch (_) {}
@@ -107,7 +111,7 @@ export class ReportService {
    */
   static _getResultFileNameAndPath(name, identifier) {
     return /** @type {PathFromSystemRoot} */ (
-      pathLib.join(this.outputPath, `${name || 'query'}_-_${identifier}.json`)
+      path.join(this.outputPath, `${name || 'query'}_-_${identifier}.json`)
     );
   }
 
@@ -117,15 +121,15 @@ export class ReportService {
    */
   static writeEntryToSearchTargetDepsFile(depProj, rootProjectMeta) {
     const rootProj = `${rootProjectMeta.name}#${rootProjectMeta.version}`;
-    const filePath = pathLib.join(this.outputPath, 'search-target-deps-file.json');
+    const filePath = path.join(this.outputPath, 'search-target-deps-file.json');
     let file = {};
     try {
-      file = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+      file = JSON.parse(fsAdapter.fs.readFileSync(filePath, 'utf-8'));
       // eslint-disable-next-line no-empty
     } catch (_) {}
     const deps = [...(file[rootProj] || []), depProj];
     file[rootProj] = [...new Set(deps)];
-    fs.writeFileSync(filePath, JSON.stringify(file, null, 2), { flag: 'w' });
+    fsAdapter.fs.writeFileSync(filePath, JSON.stringify(file, null, 2), { flag: 'w' });
   }
 }
 ReportService.createIdentifier = memoize(ReportService.createIdentifier);

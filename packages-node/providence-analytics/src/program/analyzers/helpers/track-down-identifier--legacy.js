@@ -1,6 +1,5 @@
 /* eslint-disable no-shadow */
 // @ts-nocheck
-import fs from 'fs';
 import pathLib from 'path';
 import babelTraverse from '@babel/traverse';
 import { isRelativeSourcePath, toRelativeSourcePath } from '../../utils/relative-source-path.js';
@@ -9,6 +8,7 @@ import { resolveImportPath } from '../../utils/resolve-import-path.js';
 import { AstService } from '../../core/AstService.js';
 import { LogService } from '../../core/LogService.js';
 import { memoize } from '../../utils/memoize.js';
+import { fsAdapter } from '../../utils/fs-adapter.js';
 
 /**
  * @typedef {import('../../../../types/index.js').RootFile} RootFile
@@ -23,7 +23,7 @@ import { memoize } from '../../utils/memoize.js';
  * @param {string} projectName
  */
 function isSelfReferencingProject(source, projectName) {
-  return source.startsWith(`${projectName}`);
+  return source.split('/')[0] === projectName;
 }
 
 /**
@@ -184,7 +184,7 @@ async function trackDownIdentifierFn(
       specifier: '[default]',
     };
   }
-  const code = fs.readFileSync(resolvedSourcePath, 'utf8');
+  const code = fsAdapter.fs.readFileSync(resolvedSourcePath, 'utf8');
   const babelAst = AstService.getAst(code, 'swc-to-babel', { filePath: resolvedSourcePath });
 
   const shouldLookForDefaultExport = identifierName === '[default]';

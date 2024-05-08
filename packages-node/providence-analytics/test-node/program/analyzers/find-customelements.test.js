@@ -58,7 +58,7 @@ describe('Analyzer "find-customelements"', async () => {
     const queryResults = await providence(findCustomelementsQueryConfig, _providenceCfg);
     const queryResult = queryResults[0];
     const firstEntry = getEntry(queryResult);
-    expect(firstEntry.result[0].rootFile).to.eql({
+    expect(firstEntry.result[0].rootFile).to.deep.equal({
       file: './src/CustomEl.js',
       specifier: 'CustomEl',
     });

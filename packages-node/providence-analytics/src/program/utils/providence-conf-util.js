@@ -1,6 +1,6 @@
-import pathLib from 'path';
-import fs from 'fs';
+import path from 'path';
 import { pathToFileURL } from 'url';
+import { fsAdapter } from './fs-adapter.js';
 
 /**
  * @typedef {import('../../../types/index.js').ProvidenceCliConf} ProvidenceCliConf
@@ -10,12 +10,12 @@ import { pathToFileURL } from 'url';
  * @returns {Promise<{providenceConf:Partial<ProvidenceCliConf>;providenceConfRaw:string}|null>}
  */
 async function getConf() {
-  const confPathWithoutExtension = `${pathLib.join(process.cwd(), 'providence.conf')}`;
+  const confPathWithoutExtension = `${path.join(process.cwd(), 'providence.conf')}`;
   let confPathFound;
   try {
-    if (fs.existsSync(`${confPathWithoutExtension}.js`)) {
+    if (fsAdapter.fs.existsSync(`${confPathWithoutExtension}.js`)) {
       confPathFound = `${confPathWithoutExtension}.js`;
-    } else if (fs.existsSync(`${confPathWithoutExtension}.mjs`)) {
+    } else if (fsAdapter.fs.existsSync(`${confPathWithoutExtension}.mjs`)) {
       confPathFound = `${confPathWithoutExtension}.mjs`;
     }
   } catch (_) {
@@ -36,7 +36,7 @@ async function getConf() {
     );
   }
 
-  const providenceConfRaw = fs.readFileSync(confPathFound, 'utf8');
+  const providenceConfRaw = fsAdapter.fs.readFileSync(confPathFound, 'utf8');
   return { providenceConf, providenceConfRaw };
 }
 
