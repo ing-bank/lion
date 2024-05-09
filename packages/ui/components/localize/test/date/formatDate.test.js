@@ -187,7 +187,7 @@ describe('formatDate', () => {
       'ru-RU': 'суббота, 12 октября',
       'sk-SK': 'sobota 12. októbra',
       'tr-TR': '12 Ekim Cumartesi',
-      'uk-UA': 'суботу, 12 жовтня',
+      'uk-UA': 'субота, 12 жовтня',
       'zh-CN': '10月12日星期六',
       'zh-Hans': '10月12日星期六',
       'zh-Hans-CN': '10月12日星期六',

@@ -1,7 +1,8 @@
+import path from 'path';
+
 import { globby } from 'globby';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { expect } from 'chai';
-// import { vol } from 'memfs';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import mockFs from 'mock-fs';
 
@@ -12,7 +13,7 @@ const measurePerf = process.argv.includes('--measure-perf');
 /**
  * @param {*} patterns
  * @param {*} options
- * @returns
+ * @returns {string[]}
  */
 async function runOptimisedGlobAndCheckGlobbyParity(patterns, options) {
   performance.mark('start-optimisedGlob');
@@ -45,7 +46,6 @@ async function runOptimisedGlobAndCheckGlobbyParity(patterns, options) {
 describe('optimisedGlob', () => {
   const testCfg = {
     cwd: '/fakeFs',
-    // fs: vol,
   };
 
   beforeEach(() => {
@@ -70,13 +70,10 @@ describe('optimisedGlob', () => {
 
       '/fakeFs/my/.hiddenFile.js': 'content',
     };
-
-    // vol.fromJSON(fakeFs);
     mockFs(fakeFs);
   });
 
   afterEach(() => {
-    // vol.reset();
     mockFs.restore();
   });
 
@@ -179,7 +176,7 @@ describe('optimisedGlob', () => {
       ]);
     });
 
-    it('accepts nedgated globs, like ["my/folder/**/some/file.js", "!my/folder/*/some/file.js"]', async () => {
+    it('accepts negative globs, like ["my/folder/**/some/file.js", "!my/folder/*/some/file.js"]', async () => {
       const files = await runOptimisedGlobAndCheckGlobbyParity(
         ['my/folder/**/some/file.js', '!my/folder/*/some/file.js'],
         testCfg,
@@ -200,10 +197,18 @@ describe('optimisedGlob', () => {
         absolute: true,
       });
 
-      expect(files).to.deep.equal([
-        '/fakeFs/my/folder/lvl1/some/file.d.ts',
-        '/fakeFs/my/folder/lvl1/some/file.js',
-      ]);
+      if (process.platform === 'win32') {
+        const driveLetter = path.win32.resolve(testCfg.cwd).slice(0, 1).toUpperCase();
+        expect(files).to.deep.equal([
+          `${driveLetter}:/fakeFs/my/folder/lvl1/some/file.d.ts`,
+          `${driveLetter}:/fakeFs/my/folder/lvl1/some/file.js`,
+        ]);
+      } else {
+        expect(files).to.deep.equal([
+          '/fakeFs/my/folder/lvl1/some/file.d.ts',
+          '/fakeFs/my/folder/lvl1/some/file.js',
+        ]);
+      }
     });
 
     it('"cwd" changes relative starting point of glob', async () => {

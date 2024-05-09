@@ -245,8 +245,8 @@ describe('InputDataService', () => {
         const globOutput = await InputDataService.gatherFilesFromDir('/fictional/project');
         expect(globOutput).to.deep.equal([
           '/fictional/project/index.js',
-          '/fictional/project/nested/node_modules/pkg/x.js',
           '/fictional/project/nested/bower_components/pkg/y.js',
+          '/fictional/project/nested/node_modules/pkg/x.js',
         ]);
       });
 
@@ -381,8 +381,8 @@ describe('InputDataService', () => {
             });
             expect(globOutput).to.deep.equal([
               '/fictional/project/file.add.js',
-              '/fictional/project/src/y.js',
               '/fictional/project/docs/x.js',
+              '/fictional/project/src/y.js',
             ]);
           });
 
@@ -406,8 +406,8 @@ build/
               allowlistMode: 'git',
             });
             expect(globOutput).to.deep.equal([
-              '/fictional/project/shall/pass.js',
               '/fictional/project/keep/it.js',
+              '/fictional/project/shall/pass.js',
             ]);
           });
 
@@ -426,8 +426,8 @@ build/
               allowlistMode: 'all',
             });
             expect(globOutput).to.deep.equal([
-              '/fictional/project/src/file.js',
               '/fictional/project/dist/bundle.js',
+              '/fictional/project/src/file.js',
             ]);
           });
 
@@ -523,8 +523,8 @@ build/
 
         expect(exportMapPaths).to.deep.equal([
           { internal: './internal-path.js', exposed: './exposed-path.js' },
-          { internal: './internal/folder-b/path.js', exposed: './external/folder-b/path.js' },
           { internal: './internal/folder-a/path.js', exposed: './external/folder-a/path.js' },
+          { internal: './internal/folder-b/path.js', exposed: './external/folder-b/path.js' },
         ]);
       });
 
@@ -599,8 +599,8 @@ build/
           packageRootPath: '/my/proj',
         });
         expect(exportMapPaths).to.deep.equal([
-          { exposed: './exposed-folder/folder-b/file.js', internal: './folder-b/file.js' },
           { exposed: './exposed-folder/folder-a/file.js', internal: './folder-a/file.js' },
+          { exposed: './exposed-folder/folder-b/file.js', internal: './folder-b/file.js' },
         ]);
       });
 

@@ -33,7 +33,6 @@ export function extensionsFromCs(v) {
 }
 
 /**
- *
  * @param {*} m
  * @returns
  */
@@ -139,13 +138,14 @@ async function readPackageTree(targetPath, matcher, mode) {
   const folderName = mode === 'npm' ? 'node_modules' : 'bower_components';
   const potentialPaths = await optimisedGlob(`${folderName}/**/*`, {
     onlyDirectories: true,
+    fs: fsAdapter.fs,
     cwd: targetPath,
     absolute: true,
-    fs: fsAdapter.fs,
   });
   const matchingPaths = potentialPaths.filter(potentialPath => {
-    // only dirs that are direct children of node_modules. So '**/node_modules/a' will match, but '**/node_modules/a/b' won't
-    const [, projectName] = potentialPath.match(new RegExp(`^.*/${folderName}/([^/]*)$`)) || [];
+    // Only dirs that are direct children of node_modules. So '**/node_modules/a' will match, but '**/node_modules/a/b' won't
+    const [, projectName] =
+      toPosixPath(potentialPath).match(new RegExp(`^.*/${folderName}/([^/]*)$`)) || [];
     return matcher ? matcher(projectName) : true;
   });
   return matchingPaths;

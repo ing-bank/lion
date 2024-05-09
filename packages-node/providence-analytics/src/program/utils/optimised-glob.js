@@ -5,22 +5,18 @@ import path from 'path';
 
 import { toPosixPath } from './to-posix-path.js';
 
-const [nodeMajor] = process.versions.node.split('.').map(Number);
-
-if (nodeMajor < 18) {
-  throw new Error('[optimisedGlob] Node.js version 18 or higher is required');
-}
-
 /**
- * @typedef {import('memfs').Volume|nodeFs} FsLike
+ * @typedef {nodeFs} FsLike
  * @typedef {{onlyDirectories:boolean;onlyFiles:boolean;deep:number;suppressErrors:boolean;fs: FsLike;cwd:string;absolute:boolean;extglob:boolean;}} FastGlobtions
  */
 
+const [nodeMajor] = process.versions.node.split('.').map(Number);
+
 /**
  * @param {string} glob
- * @param {string} [providedOpts]
- * @param {boolean} [globstar=true] if true, '/foo/*' => '^\/foo\/[^/]*$' (not allowing folders inside *), else '/foo/*' => '^\/foo\/.*$'
- * @param {boolean} [extglob=true] if true, supports so called "extended" globs (like bash) and single character matching, matching ranges of characters, group matching etc.
+ * @param {object} [providedOpts]
+ * @param {boolean} [providedOpts.globstar=true] if true, '/foo/*' => '^\/foo\/[^/]*$' (not allowing folders inside *), else '/foo/*' => '^\/foo\/.*$'
+ * @param {boolean} [providedOpts.extglob=true] if true, supports so called "extended" globs (like bash) and single character matching, matching ranges of characters, group matching etc.
  * @returns {RegExp}
  */
 export function parseGlobToRegex(glob, providedOpts) {
@@ -130,23 +126,36 @@ const cache = {};
 
 /**
  * @param {string} startPath
- * @param {{fs?:FsLike}} providedOptions
- * @returns {Promise<nodeFs.Dirent[]>|nodeFs.Dirent[]}
+ * @param {{fs?:FsLike, dirents?:nodeFs.Dirent[]}} providedOptions
+ * @returns {Promise<nodeFs.Dirent[]>}
  */
-function getAllFilesFromStartPath(fullStartPath, { fs = /** @type {* & FsLike} */ (nodeFs) } = {}) {
-  if (isCacheEnabled && cache[fullStartPath]) return cache[fullStartPath];
+async function getAllFilesFromStartPath(
+  startPath,
+  { fs = /** @type {* & FsLike} */ (nodeFs), dirents = [] } = {},
+) {
+  if (isCacheEnabled && cache[startPath]) return cache[startPath];
 
-  return new Promise((resolve, reject) => {
-    fs.promises
-      .readdir(fullStartPath, { withFileTypes: true, recursive: true })
-      .then((/** @type {* & nodeFs.Dirent[]} */ files) => {
-        cache[fullStartPath] = files;
-        resolve(files);
-      })
-      .catch(e => {
-        reject(e);
-      });
-  });
+  // Older node doesn't support recursive option
+  if (nodeMajor < 18) {
+    /** @type {nodeFs.Dirent[]} */
+    const direntsForLvl = await fs.promises.readdir(startPath, { withFileTypes: true });
+    for (const dirent of direntsForLvl) {
+      // @ts-ignore
+      dirent.parentPath = startPath;
+      dirents.push(dirent);
+
+      if (dirent.isDirectory()) {
+        const subDir = path.join(startPath, dirent.name);
+        await getAllFilesFromStartPath(subDir, { fs, dirents });
+      }
+    }
+    return /** @type {nodeFs.Dirent[]} */ (dirents);
+  }
+
+  // @ts-expect-error
+  dirents.push(...(await fs.promises.readdir(startPath, { withFileTypes: true, recursive: true })));
+  cache[startPath] = dirents;
+  return dirents;
 }
 
 /**
@@ -216,8 +225,8 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
 
       const allDirEntsRelativeToCwd = allDirentsRelativeToStartPath.map(dirent => ({
         // @ts-expect-error
-        relativeToCwdPath: toPosixPath(path.join(dirent.path, dirent.name)).replace(
-          `${options.cwd}/`,
+        relativeToCwdPath: toPosixPath(path.join(dirent.parentPath, dirent.name)).replace(
+          `${toPosixPath(options.cwd)}/`,
           '',
         ),
 
@@ -252,10 +261,14 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
   }
 
   if (options.absolute) {
-    filteredPaths = filteredPaths.map(f => path.posix.join(options.cwd, f));
+    console.debug({ 'options.cwd': options.cwd, filteredPathsBefore: filteredPaths });
+    filteredPaths = filteredPaths.map(f => toPosixPath(path.join(options.cwd, f)));
+    console.debug({ filteredPathsAfterAbso: filteredPaths });
+
     if (process.platform === 'win32') {
       const driveLetter = path.win32.resolve(options.cwd).slice(0, 1).toUpperCase();
       filteredPaths = filteredPaths.map(f => `${driveLetter}:${f}`);
+      console.debug({ filteredPathsAfterWin32: filteredPaths });
     }
   }
 

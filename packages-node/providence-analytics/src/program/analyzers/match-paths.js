@@ -109,7 +109,6 @@ function getClosestToRootTargetPath(targetPaths, targetExportsResult) {
 }
 
 /**
- *
  * @param {FindExportsAnalyzerResult} targetExportsResult
  * @param {FindExportsAnalyzerResult} refFindExportsResult
  * @param {string} targetMatchedFile file where `toClass` from match-subclasses is defined

@@ -1,4 +1,5 @@
 import path from 'path';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { startDevServer } from '@web/dev-server';
 import { ReportService } from '../program/core/ReportService.js';
 import { providenceConfUtil } from '../program/utils/providence-conf-util.js';

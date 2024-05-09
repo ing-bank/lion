@@ -1,4 +1,4 @@
-import toBabel from 'swc-to-babel';
+import toBabel from '../../../inlined-swc-to-babel/lib/swc-to-babel.cjs';
 
 /**
  * @typedef {import('@babel/types').File} File

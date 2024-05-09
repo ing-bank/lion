@@ -62,6 +62,11 @@ export function normalizeIntlDate(str, locale = '', { weekday, year, month, day 
         return `${match[1]}, ${match[3]} ${match[2]}`;
       }
     }
+
+    if (locale === 'uk-UA') {
+      // суботу => субота
+      return result.replace('суботу', 'субота');
+    }
   } else if (weekday === 'long' && month === 'long' && day === '2-digit') {
     if (result.indexOf(',') === -1 && locale.startsWith('en-')) {
       // Saturday 12 October 2023 -> Saturday, 12 October 2023

@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import path from 'path';
+
 import { isRelativeSourcePath } from '../../utils/relative-source-path.js';
 import { resolveImportPath } from '../../utils/resolve-import-path.js';
 import { toPosixPath } from '../../utils/to-posix-path.js';

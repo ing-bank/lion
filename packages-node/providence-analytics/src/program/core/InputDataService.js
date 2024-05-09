@@ -206,14 +206,14 @@ function normalizeLocalPathWithDotSlash(localPathWithoutDotSlash) {
 }
 
 /**
- * @param {{valObjOrStr:object|string;nodeResolveMode:string}} opts
+ * @param {{valObjOrStr:object|string|null;nodeResolveMode:string}} opts
  * @returns {string|null}
  */
 function getStringOrObjectValOfExportMapEntry({ valObjOrStr, nodeResolveMode }) {
   if (typeof valObjOrStr !== 'object') {
     return valObjOrStr;
   }
-  if (!valObjOrStr[nodeResolveMode]) {
+  if (!valObjOrStr?.[nodeResolveMode]) {
     // This is allowed: it makes sense to have an entrypoint on the root for typescript, not for others
     return null;
   }
@@ -232,9 +232,11 @@ export class InputDataService {
    * Create an array of ProjectData
    * @param {(PathFromSystemRoot|ProjectInputData)[]} projectPaths
    * @param {Partial<GatherFilesConfig>} gatherFilesConfig
-   * @returns {ProjectInputDataWithMeta[]}
+   * @returns {Promise<ProjectInputDataWithMeta[]>}
    */
   static async createDataObject(projectPaths, gatherFilesConfig = {}) {
+    console.debug('[createDataObject]');
+
     /** @type {ProjectInputData[]} */
     const inputData = [];
     for (const projectPathOrObj of projectPaths) {
@@ -256,7 +258,6 @@ export class InputDataService {
         }),
       });
     }
-    // @ts-ignore
     return this._addMetaToProjectsData(inputData);
   }
 
@@ -473,6 +474,8 @@ export class InputDataService {
    * @returns {Promise<PathFromSystemRoot[]>} result list of file paths
    */
   static async gatherFilesFromDir(startPath, customConfig = {}) {
+    console.debug('[gatherFilesFromDir]');
+
     const cfg = {
       ...this.defaultGatherFilesConfig,
       ...customConfig,
@@ -498,12 +501,19 @@ export class InputDataService {
       if (!pkgJson?.exports) {
         LogService.error(`No exports found in package.json of ${startPath}`);
       }
-      const exposedAndInternalPaths = await this.getPathsFromExportMap(pkgJson?.exports, {
-        packageRootPath: startPath,
-      });
-      return exposedAndInternalPaths
-        .map(p => p.internal)
-        .filter(p => cfg.extensions.includes(`${path.extname(p)}`));
+      if (pkgJson?.exports) {
+        const exposedAndInternalPaths = await this.getPathsFromExportMap(pkgJson?.exports, {
+          packageRootPath: startPath,
+        });
+        return /** @type {PathFromSystemRoot[]} */ (
+          exposedAndInternalPaths
+            // TODO: path.resolve(startPath, p.internal)?
+            .map(p => p.internal)
+            .filter(p =>
+              cfg.extensions.includes(/** @type {`.${string}`} */ (`${path.extname(p)}`)),
+            )
+        );
+      }
     }
 
     /** @type {string[]} */
@@ -571,7 +581,6 @@ export class InputDataService {
     return /** @type {PathFromSystemRoot[]} */ (filteredGlobRes.map(toPosixPath));
   }
 
-  // TODO: use modern web config helper
   /**
    * Allows the user to provide a providence.conf.js file in its repository root
    */
@@ -584,7 +593,7 @@ export class InputDataService {
   /**
    * Gives back all monorepo package paths
    * @param {PathFromSystemRoot} rootPath
-   * @  returns {ProjectNameAndPath[]|undefined}
+   * @returns {ProjectNameAndPath[]|undefined}
    */
   static async getMonoRepoPackages(rootPath) {
     // [1] Look for npm/yarn workspaces
@@ -606,7 +615,7 @@ export class InputDataService {
    * @param {object} opts
    * @param {'default'|'development'|string} [opts.nodeResolveMode='default']
    * @param {string} opts.packageRootPath
-   * @returns {Promise<{internalExportMapPaths:string[]; exposedExportMapPaths:string[]}>}
+   * @returns {Promise<{internal:string; exposed:string}[]>}
    */
   static async getPathsFromExportMap(exports, { nodeResolveMode = 'default', packageRootPath }) {
     const exportMapPaths = [];

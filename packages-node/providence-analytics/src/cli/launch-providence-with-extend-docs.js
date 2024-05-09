@@ -1,13 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import path from 'path';
 import { performance } from 'perf_hooks';
-import { _providenceModule } from '../program/providence.js';
-import { QueryService } from '../program/core/QueryService.js';
+import path from 'path';
+
 import { InputDataService } from '../program/core/InputDataService.js';
-import { LogService } from '../program/core/LogService.js';
-import { flatten } from './cli-helpers.js';
 import MatchPathsAnalyzer from '../program/analyzers/match-paths.js';
+import { toPosixPath } from '../program/utils/to-posix-path.js';
+import { QueryService } from '../program/core/QueryService.js';
+import { _providenceModule } from '../program/providence.js';
+import { LogService } from '../program/core/LogService.js';
 import { fsAdapter } from '../program/utils/fs-adapter.js';
+import { flatten } from './cli-helpers.js';
 
 /**
  * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
@@ -27,10 +29,10 @@ import { fsAdapter } from '../program/utils/fs-adapter.js';
  */
 export async function getExtendDocsResults({
   referenceProjectPaths,
-  prefixCfg,
-  extensions,
-  allowlist,
   allowlistReference,
+  extensions,
+  prefixCfg,
+  allowlist,
   cwd,
 }) {
   const monoPkgs = await InputDataService.getMonoRepoPackages(cwd);
@@ -71,7 +73,7 @@ export async function getExtendDocsResults({
       const normalizedP = `./${p}`;
       if (pathStr.startsWith(normalizedP)) {
         const localPath = pathStr.replace(normalizedP, ''); // 'lea-tabs.js'
-        result = path.join(name, localPath); // 'lea-tabs/lea-tabs.js'
+        result = toPosixPath(path.join(name, localPath)); // 'lea-tabs/lea-tabs.js'
         return true;
       }
       return false;

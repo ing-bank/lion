@@ -1,5 +1,5 @@
 /* eslint-disable no-continue */
-import pathLib from 'path';
+import path from 'path';
 /* eslint-disable no-shadow, no-param-reassign */
 import FindClassesAnalyzer from './find-classes.js';
 import FindExportsAnalyzer from './find-exports.js';
@@ -126,7 +126,7 @@ async function matchSubclassesPostprocess(
         const importProjectPath = cfg.targetProjectPath;
         for (const { result, file } of targetClassesAnalyzerResult.queryOutput) {
           const importerFilePath = /** @type {PathFromSystemRoot} */ (
-            pathLib.resolve(importProjectPath, file)
+            path.resolve(importProjectPath, file)
           );
           for (const classEntryResult of result) {
             /**

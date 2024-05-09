@@ -9,9 +9,7 @@ function checkChrome(flavor = 'google-chrome') {
     return flavor === 'google-chrome';
   }
 
-  const isChromium =
-    /** @type {window & { chrome?: boolean}} */ (globalThis).chrome ||
-    globalThis.navigator.userAgent.indexOf('Chrome') > -1;
+  const isChromium = /** @type {window & { chrome?: boolean}} */ (globalThis).chrome;
 
   if (flavor === 'chromium') {
     return isChromium;
@@ -50,12 +48,11 @@ export const browserDetection = {
   isFirefox: globalThis.navigator?.userAgent.toLowerCase().indexOf('firefox') > -1,
   isMac: globalThis.navigator?.appVersion?.indexOf('Mac') !== -1,
   isIOS: /iPhone|iPad|iPod/i.test(globalThis.navigator?.userAgent),
-  isMacSafari: Boolean(
+  isMacSafari:
     globalThis.navigator?.vendor &&
-      globalThis.navigator?.vendor.indexOf('Apple') > -1 &&
-      globalThis.navigator?.userAgent &&
-      globalThis.navigator?.userAgent.indexOf('CriOS') === -1 &&
-      globalThis.navigator?.userAgent.indexOf('FxiOS') === -1 &&
-      globalThis.navigator?.appVersion.indexOf('Mac') !== -1,
-  ),
+    globalThis.navigator?.vendor.indexOf('Apple') > -1 &&
+    globalThis.navigator?.userAgent &&
+    globalThis.navigator?.userAgent.indexOf('CriOS') === -1 &&
+    globalThis.navigator?.userAgent.indexOf('FxiOS') === -1 &&
+    globalThis.navigator?.appVersion.indexOf('Mac') !== -1,
 };

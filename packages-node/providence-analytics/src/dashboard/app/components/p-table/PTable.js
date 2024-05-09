@@ -1,4 +1,4 @@
-// eslint-disable-next-line max-classes-per-file
+// eslint-disable-next-line max-classes-per-file, import/no-extraneous-dependencies
 import { LitElement, html, css } from 'lit-element';
 import { DecorateMixin } from '../../utils/DecorateMixin.js';
 

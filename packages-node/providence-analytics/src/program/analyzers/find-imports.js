@@ -60,7 +60,7 @@ function findImportsPerAstFile(swcAst) {
       const entry = /** @type {Partial<FindImportsAnalyzerEntry>} */ ({ importSpecifiers, source });
       const assertionType = getAssertionType(node);
       if (assertionType) {
-        entry.assertionType = getAssertionType(node);
+        entry.assertionType = assertionType;
       }
       transformedFile.push(entry);
     },

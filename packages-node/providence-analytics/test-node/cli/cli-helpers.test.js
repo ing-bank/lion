@@ -4,15 +4,15 @@ import { fileURLToPath } from 'url';
 import pathLib from 'path';
 
 import { expect } from 'chai';
-import sinon from 'sinon';
 import { it } from 'mocha';
+import sinon from 'sinon';
 
 import { getExtendDocsResults } from '../../src/cli/launch-providence-with-extend-docs.js';
 import { setupAnalyzerTest } from '../../test-helpers/setup-analyzer-test.js';
 import { toPosixPath } from '../../src/program/utils/to-posix-path.js';
 import { _providenceModule } from '../../src/program/providence.js';
-import { memoize } from '../../src/program/utils/memoize.js';
 import { _cliHelpersModule } from '../../src/cli/cli-helpers.js';
+import { memoize } from '../../src/program/utils/memoize.js';
 import {
   mockTargetAndReferenceProject,
   restoreMockedProjects,

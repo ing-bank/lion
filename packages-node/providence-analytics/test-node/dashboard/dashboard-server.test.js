@@ -33,6 +33,13 @@ async function getConf(url) {
 }
 
 describe('Dashboard Server', () => {
+  const [nodeMajor] = process.versions.node.split('.').map(Number);
+
+  if (nodeMajor < 18) {
+    // Skipping tests for now, since nopde < 18 will be phased out and we want to use native fetch...
+    return;
+  }
+
   /** @type {string} */
   let host;
   /** @type {DevServer} */

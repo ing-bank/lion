@@ -51,20 +51,4 @@ module.exports = {
   env: {
     es2020: true,
   },
-  // ignores: [
-  //   'node_modules',
-  //   'coverage/',
-  //   'bundlesize/',
-  //   '.history/',
-  //   'storybook-static/',
-  //   '*.d.ts',
-  //   '_site-dev',
-  //   '_site',
-  //   'docs/_merged_*',
-  //   'patches/',
-
-  //   '/docs/_assets/scoped-custom-element-registry.min.js',
-  //   '/docs/_assets/scoped-custom-element-registry.min.js.map',
-  //   '/docs/_merged_assets/scoped-custom-element-registry.min.js',
-  // ],
 };

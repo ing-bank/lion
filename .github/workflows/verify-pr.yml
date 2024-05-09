@@ -1,0 +1,73 @@
+name: Verify changes
+
+on: pull_request
+
+jobs:
+  verify:
+    name: Verify changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
+      - uses: actions/checkout@v4
+
+      - name: Sanity check
+        run: node ./scripts/lock-scan.mjs
+
+      - name: Setup Node 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install --ci
+
+      - name: Lint
+        run: npm run lint
+
+      # - name: Bundlesize
+      #   run: npm run bundlesize
+
+  browser-tests:
+    name: Browser tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
+      - uses: actions/checkout@v4
+
+      - name: Setup Node 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install --ci
+
+      - uses: microsoft/playwright-github-action@v1
+
+      - name: Test
+        run: npm run test:browser
+
+  node-tests:
+    name: Node tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: google/wireit@setup-github-actions-caching/v1
+      - uses: actions/checkout@v4
+
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install --ci --force
+
+      - name: Test
+        run: npm run test:node
