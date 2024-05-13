@@ -48,6 +48,25 @@ const FormControlMixinImplementation = superclass =>
     }
 
     /**
+     * Name attribute for the control.
+     * @type {string}
+     */
+    get name() {
+      return this.__name || '';
+    }
+
+    /**
+     * Converts values provided for the `name` attribute to string type.
+     * Mimicks the native `input` behavior.
+     * @param {string} newName
+     */
+    set name(newName) {
+      const oldName = this.name;
+      this.__name = newName.toString();
+      this.requestUpdate('name', oldName);
+    }
+
+    /**
      * The label text for the input node.
      * When no light dom defined via [slot=label], this value will be used.
      * @type {string}

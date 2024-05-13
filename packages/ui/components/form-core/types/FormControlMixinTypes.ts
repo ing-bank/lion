@@ -78,7 +78,7 @@ export declare class FormControlHost {
    * of the parent. Also, it serves as the key of key/value pairs in
    *  modelValue/serializedValue objects
    */
-  name: string;
+  // name: string;
 
   /**
    * The model value is the result of the parser function(when available).
@@ -94,6 +94,9 @@ export declare class FormControlHost {
    */
   get modelValue(): any | Unparseable;
   set modelValue(value: any | Unparseable);
+
+  get name(): string;
+  set name(arg: string);
 
   /**
    * The label text for the input node.
@@ -236,6 +239,7 @@ export declare class FormControlHost {
   protected _onBeforeRepropagateChildrenValues(ev: CustomEvent): void;
   protected _repropagationCondition(target: FormControlHost): boolean;
 
+  private __name: string;
   private __helpText: string | undefined;
   private __label: string;
   private __fieldName: string | undefined;
