@@ -74,13 +74,6 @@ export declare class FormControlHost {
   readOnly: boolean;
 
   /**
-   * The name the element will be registered with to the .formElements collection
-   * of the parent. Also, it serves as the key of key/value pairs in
-   *  modelValue/serializedValue objects
-   */
-  // name: string;
-
-  /**
    * The model value is the result of the parser function(when available).
    * It should be considered as the internal value used for validation and reasoning/logic.
    * The model value is 'ready for consumption' by the outside world (think of a Date
@@ -95,6 +88,11 @@ export declare class FormControlHost {
   get modelValue(): any | Unparseable;
   set modelValue(value: any | Unparseable);
 
+  /**
+   * The name the element will be registered with to the .formElements collection
+   * of the parent. Also, it serves as the key of key/value pairs in
+   *  modelValue/serializedValue objects
+   */
   get name(): string;
   set name(arg: any);
 
