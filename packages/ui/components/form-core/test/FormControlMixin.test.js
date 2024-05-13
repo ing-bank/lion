@@ -30,6 +30,26 @@ describe('FormControlMixin', () => {
     expect(el).not.to.be.displayed;
   });
 
+  it('converts the name to a string type', async () => {
+    const elAttr = /** @type {FormControlMixinClass} */ (
+      await fixture(html`
+      <${tag} name="${5}">${inputSlot}</${tag}>
+    `)
+    );
+
+    expect(elAttr.name).to.be.a('string');
+    expect(elAttr.name).to.equal('5', 'as an attribute');
+
+    const elProp = /** @type {FormControlMixinClass} */ (
+      await fixture(html`
+      <${tag} .name=${5}>${inputSlot}</${tag}>
+    `)
+    );
+
+    expect(elProp.name).to.be.a('string');
+    expect(elProp.name).to.equal('5', 'as a property');
+  });
+
   describe('Label and helpText api', () => {
     it('has a label', async () => {
       const elAttr = /** @type {FormControlMixinClass} */ (

@@ -96,7 +96,7 @@ export declare class FormControlHost {
   set modelValue(value: any | Unparseable);
 
   get name(): string;
-  set name(arg: string);
+  set name(arg: any);
 
   /**
    * The label text for the input node.
