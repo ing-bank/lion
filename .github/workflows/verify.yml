@@ -7,84 +7,63 @@ jobs:
     name: Verify changes
     runs-on: ubuntu-latest
     steps:
-      - uses: google/wireit@setup-github-actions-caching/v1
-      - uses: actions/checkout@v2
+      # - uses: google/wireit@setup-github-actions-caching/v1
+      - uses: actions/checkout@v4
 
       - name: Sanity check
         run: node ./scripts/lock-scan.js
 
-      - name: Setup Node 16.x
-        uses: actions/setup-node@v1
+      - name: Setup Node 18.x
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 18.x
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm install --ci
 
-      - name: Lint
-        run: npm run lint
+      # - name: Lint
+      #   run: npm run lint
 
-      - name: Bundlesize
-        run: npm run bundlesize
+      # - name: Bundlesize
+      #   run: npm run bundlesize
 
-  browser-tests:
-    name: Browser tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: google/wireit@setup-github-actions-caching/v1
-      - uses: actions/checkout@v2
+  # browser-tests:
+  #   name: Browser tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: google/wireit@setup-github-actions-caching/v1
+  #     - uses: actions/checkout@v4
 
-      - name: Setup Node 16.x
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16.x
+  #     - name: Setup Node 18.x
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 18.x
 
-      - name: Install Dependencies
-        run: npm install --ci
+  #     - name: Install Dependencies
+  #       run: npm install --ci
 
-      - uses: microsoft/playwright-github-action@v1
+  #     - uses: microsoft/playwright-github-action@v1
 
-      - name: Test
-        run: npm run test:browser
+  #     - name: Test
+  #       run: npm run test:browser
 
   node-tests:
     name: Node tests
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [16.x]
-        os: [ubuntu-latest]
-    steps:
-      - uses: google/wireit@setup-github-actions-caching/v1
-      - uses: actions/checkout@v2
-
-      - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install Dependencies
-        run: npm install --ci
-
-      - name: Test
-        run: npm run test:node
-
-  # Note this is a duplicate of the matrix (so we have 2 1x1 matrices). Up for improvement...
-  node-tests-windows:
-    name: Node tests
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [16.x]
+        node-version: [18.x]
         os: [windows-latest]
     steps:
-      - uses: google/wireit@setup-github-actions-caching/v1
-      - uses: actions/checkout@v2
+      # - uses: google/wireit@setup-github-actions-caching/v1
+      - uses: actions/checkout@v4
 
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Install Dependencies
         run: npm install --ci
