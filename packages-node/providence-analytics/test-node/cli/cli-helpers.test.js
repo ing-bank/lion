@@ -52,22 +52,22 @@ describe('CLI helpers', () => {
 
   describe('pathsArrayFromCs', () => {
     it('allows absolute paths', async () => {
-      expect(pathsArrayFromCs('/mocked/path/example-project', rootDir)).to.deep.equal([
+      expect(await pathsArrayFromCs('/mocked/path/example-project', rootDir)).to.deep.equal([
         '/mocked/path/example-project',
       ]);
     });
 
     it('allows relative paths', async () => {
       expect(
-        pathsArrayFromCs('./test-helpers/project-mocks/importing-target-project', rootDir),
+        await pathsArrayFromCs('./test-helpers/project-mocks/importing-target-project', rootDir),
       ).to.deep.equal([`${rootDir}/test-helpers/project-mocks/importing-target-project`]);
       expect(
-        pathsArrayFromCs('test-helpers/project-mocks/importing-target-project', rootDir),
+        await pathsArrayFromCs('test-helpers/project-mocks/importing-target-project', rootDir),
       ).to.deep.equal([`${rootDir}/test-helpers/project-mocks/importing-target-project`]);
     });
 
     it('allows globs', async () => {
-      expect(pathsArrayFromCs('test-helpers/project-mocks*', rootDir)).to.deep.equal([
+      expect(await pathsArrayFromCs('test-helpers/project-mocks*', rootDir)).to.deep.equal([
         `${rootDir}/test-helpers/project-mocks`,
         `${rootDir}/test-helpers/project-mocks-analyzer-outputs`,
       ]);
@@ -76,7 +76,7 @@ describe('CLI helpers', () => {
     it('allows multiple comma separated paths', async () => {
       const paths =
         'test-helpers/project-mocks*, ./test-helpers/project-mocks/importing-target-project,/mocked/path/example-project';
-      expect(pathsArrayFromCs(paths, rootDir)).to.deep.equal([
+      expect(await pathsArrayFromCs(paths, rootDir)).to.deep.equal([
         `${rootDir}/test-helpers/project-mocks`,
         `${rootDir}/test-helpers/project-mocks-analyzer-outputs`,
         `${rootDir}/test-helpers/project-mocks/importing-target-project`,
@@ -88,7 +88,12 @@ describe('CLI helpers', () => {
   describe('pathsArrayFromCollectionName', () => {
     it('gets collections from external target config', async () => {
       expect(
-        pathsArrayFromCollectionName('lion-collection', 'search-target', externalCfgMock, rootDir),
+        await pathsArrayFromCollectionName(
+          'lion-collection',
+          'search-target',
+          externalCfgMock,
+          rootDir,
+        ),
       ).to.deep.equal(
         externalCfgMock.searchTargetCollections['lion-collection'].map(p =>
           toPosixPath(pathLib.join(rootDir, p)),
@@ -98,7 +103,7 @@ describe('CLI helpers', () => {
 
     it('gets collections from external reference config', async () => {
       expect(
-        pathsArrayFromCollectionName(
+        await pathsArrayFromCollectionName(
           'lion-based-ui-collection',
           'reference',
           externalCfgMock,

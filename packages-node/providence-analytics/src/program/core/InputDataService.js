@@ -235,8 +235,6 @@ export class InputDataService {
    * @returns {Promise<ProjectInputDataWithMeta[]>}
    */
   static async createDataObject(projectPaths, gatherFilesConfig = {}) {
-    console.debug('[createDataObject]');
-
     /** @type {ProjectInputData[]} */
     const inputData = [];
     for (const projectPathOrObj of projectPaths) {
@@ -474,8 +472,6 @@ export class InputDataService {
    * @returns {Promise<PathFromSystemRoot[]>} result list of file paths
    */
   static async gatherFilesFromDir(startPath, customConfig = {}) {
-    console.debug('[gatherFilesFromDir]');
-
     const cfg = {
       ...this.defaultGatherFilesConfig,
       ...customConfig,

@@ -140,7 +140,7 @@ async function getAllFilesFromStartPath(
     /** @type {nodeFs.Dirent[]} */
     const direntsForLvl = await fs.promises.readdir(startPath, { withFileTypes: true });
     for (const dirent of direntsForLvl) {
-      // @ts-ignore
+      // @ts-expect-error
       dirent.parentPath = startPath;
       dirents.push(dirent);
 
@@ -261,14 +261,11 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
   }
 
   if (options.absolute) {
-    console.debug({ 'options.cwd': options.cwd, filteredPathsBefore: filteredPaths });
     filteredPaths = filteredPaths.map(f => toPosixPath(path.join(options.cwd, f)));
-    console.debug({ filteredPathsAfterAbso: filteredPaths });
 
     if (process.platform === 'win32') {
       const driveLetter = path.win32.resolve(options.cwd).slice(0, 1).toUpperCase();
       filteredPaths = filteredPaths.map(f => `${driveLetter}:${f}`);
-      console.debug({ filteredPathsAfterWin32: filteredPaths });
     }
   }
 

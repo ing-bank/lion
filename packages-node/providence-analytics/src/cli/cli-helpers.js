@@ -2,7 +2,6 @@
 import child_process from 'child_process'; // eslint-disable-line camelcase
 import path from 'path';
 
-import { globbySync } from 'globby'; // eslint-disable-line import/no-extraneous-dependencies
 import { optimisedGlob } from '../program/utils/optimised-glob.js';
 import { toPosixPath } from '../program/utils/to-posix-path.js';
 import { LogService } from '../program/core/LogService.js';
@@ -46,25 +45,29 @@ export function setQueryMethod(m) {
 }
 
 /**
- * @param {string} t
- * @returns {string[]|undefined}
+ * @param {string} targets
+ * @returns {Promise<string[]|undefined>}
  */
-export function pathsArrayFromCs(t, cwd = process.cwd()) {
-  if (!t) {
-    return undefined;
-  }
+export async function pathsArrayFromCs(targets, cwd = process.cwd()) {
+  if (!targets) return undefined;
 
-  return flatten(
-    t.split(',').map(t => {
-      if (t.startsWith('/')) {
-        return t;
-      }
-      if (t.includes('*')) {
-        return globbySync(t, { cwd, absolute: true, onlyFiles: false }).map(toPosixPath);
-      }
-      return toPosixPath(path.resolve(cwd, t.trim()));
-    }),
-  );
+  const resultPaths = [];
+
+  for (const t of targets.split(',')) {
+    if (t.startsWith('/')) {
+      resultPaths.push(t);
+      continue; // eslint-disable-line no-continue
+    }
+    if (t.includes('*')) {
+      const x = (await optimisedGlob(t, { cwd, absolute: true, onlyFiles: false })).map(
+        toPosixPath,
+      );
+      resultPaths.push(...x);
+      continue; // eslint-disable-line no-continue
+    }
+    resultPaths.push(toPosixPath(path.resolve(cwd, t.trim())));
+  }
+  return resultPaths;
 }
 
 /**
@@ -72,9 +75,9 @@ export function pathsArrayFromCs(t, cwd = process.cwd()) {
  * @param {'search-target'|'reference'} collectionType collection type
  * @param {{searchTargetCollections: {[repo:string]:string[]}; referenceCollections:{[repo:string]:string[]}}} [eCfg] external configuration. Usually providence.conf.js
  * @param {string} [cwd]
- * @returns {string[]|undefined}
+ * @returns {Promise<string[]|undefined>}
  */
-export function pathsArrayFromCollectionName(
+export async function pathsArrayFromCollectionName(
   name,
   collectionType = 'search-target',
   eCfg = undefined,
