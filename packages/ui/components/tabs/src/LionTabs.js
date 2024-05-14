@@ -19,6 +19,16 @@ function setupPanel({ el, uid }) {
   el.setAttribute('id', `panel-${uid}`);
   el.setAttribute('role', 'tabpanel');
   el.setAttribute('aria-labelledby', `button-${uid}`);
+  /**
+   * Facilitates navigation to panel content for assistive technology users.
+   *
+   * Focusable tab panel elements are recommended if any panels in a set contain
+   * content where the first element in the panel is not focusable.
+   * https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/
+   */
+  if (!el.hasAttribute('tabindex')) {
+    el.setAttribute('tabindex', '0');
+  }
 }
 
 /**
