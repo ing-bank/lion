@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import pathLib from 'path';
+import path from 'path';
 import { expect } from 'chai';
 import { it } from 'mocha';
 import { appendProjectDependencyPaths } from '../../src/cli/cli-helpers.js';
@@ -15,13 +15,13 @@ describe('CLI helpers against filesystem', () => {
   describe('appendProjectDependencyPaths', () => {
     it('allows a regex filter', async () => {
       const targetFilePath = toPosixPath(
-        pathLib.resolve(
+        path.resolve(
           getCurrentDir(import.meta.url),
           '../../test-helpers/project-mocks/importing-target-project',
         ),
       );
       const result = await appendProjectDependencyPaths([targetFilePath], '/^dep-/');
-      expect(result).to.eql([
+      expect(result).to.deep.equal([
         `${targetFilePath}/node_modules/dep-a`,
         // in windows, it should not add `${targetFilePath}/node_modules/my-dep-b`,
         targetFilePath,

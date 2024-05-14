@@ -1,42 +1,37 @@
-/* eslint-disable no-param-reassign */
-import fs from 'fs';
-import pathLib from 'path';
 import child_process from 'child_process'; // eslint-disable-line camelcase
-import glob from 'glob';
-import anymatch from 'anymatch';
-// @ts-expect-error
-import isNegatedGlob from 'is-negated-glob';
+import path from 'path';
+
+import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
+import { optimisedGlob } from '../utils/optimised-glob.js';
+import { toPosixPath } from '../utils/to-posix-path.js';
+import { fsAdapter } from '../utils/fs-adapter.js';
+import { memoize } from '../utils/memoize.js';
 import { LogService } from './LogService.js';
 import { AstService } from './AstService.js';
-import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
-import { toPosixPath } from '../utils/to-posix-path.js';
-import { memoize } from '../utils/memoize.js';
-
-// const memoize = fn => fn;
 
 /**
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
- * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
+ * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').AnalyzerQueryConfig} AnalyzerQueryConfig
+ * @typedef {import('../../../types/index.js').FeatureQueryConfig} FeatureQueryConfig
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').SearchQueryConfig} SearchQueryConfig
+ * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
+ * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
+ * @typedef {{path:PathFromSystemRoot; name:ProjectName}} ProjectNameAndPath
  * @typedef {import('../../../types/index.js').PathRelative} PathRelative
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').QueryConfig} QueryConfig
  * @typedef {import('../../../types/index.js').QueryResult} QueryResult
- * @typedef {import('../../../types/index.js').FeatureQueryConfig} FeatureQueryConfig
- * @typedef {import('../../../types/index.js').SearchQueryConfig} SearchQueryConfig
- * @typedef {import('../../../types/index.js').AnalyzerQueryConfig} AnalyzerQueryConfig
- * @typedef {import('../../../types/index.js').Feature} Feature
- * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
- * @typedef {import('../../../types/index.js').Analyzer} Analyzer
- * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
- * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
- * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
- * @typedef {import('../../../types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
- * @typedef {import('../../../types/index.js').Project} Project
  * @typedef {import('../../../types/index.js').ProjectName} ProjectName
  * @typedef {import('../../../types/index.js').PackageJson} PackageJson
- * @typedef {{path:PathFromSystemRoot; name:ProjectName}} ProjectNameAndPath
+ * @typedef {import('../../../types/index.js').Analyzer} Analyzer
+ * @typedef {import('../../../types/index.js').Project} Project
+ * @typedef {import('../../../types/index.js').Feature} Feature
  */
 
 /**
@@ -45,13 +40,13 @@ import { memoize } from '../utils/memoize.js';
  */
 const getPackageJson = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
   try {
-    const fileContent = fs.readFileSync(`${rootPath}/package.json`, 'utf8');
+    const fileContent = fsAdapter.fs.readFileSync(`${rootPath}/package.json`, 'utf8');
     return JSON.parse(fileContent);
   } catch (_) {
     try {
       // For testing purposes, we allow to have a package.mock.json that contains 'fictional'
       // packages (like 'exporting-ref-project') not on npm registry
-      const fileContent = fs.readFileSync(`${rootPath}/package.mock.json`, 'utf8');
+      const fileContent = fsAdapter.fs.readFileSync(`${rootPath}/package.mock.json`, 'utf8');
       return JSON.parse(fileContent);
     } catch (__) {
       return undefined;
@@ -65,7 +60,7 @@ const getPackageJson = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
  */
 const getLernaJson = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
   try {
-    const fileContent = fs.readFileSync(`${rootPath}/lerna.json`, 'utf8');
+    const fileContent = fsAdapter.fs.readFileSync(`${rootPath}/lerna.json`, 'utf8');
     return JSON.parse(fileContent);
   } catch (_) {
     return undefined;
@@ -73,34 +68,31 @@ const getLernaJson = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
 });
 
 /**
- * @typedef {(list:PathFromSystemRoot[]|string[], rootPath:PathFromSystemRoot) => ProjectNameAndPath[]} GetPathsFromGlobListFn
+ * @typedef {(list:PathFromSystemRoot[]|string[], rootPath:PathFromSystemRoot) => Promise<ProjectNameAndPath[]>} GetPathsFromGlobListFn
  * @type {GetPathsFromGlobListFn}
  */
 const getPathsFromGlobList = memoize(
-  (
+  async (
     /** @type {PathFromSystemRoot[]|string[]} */ list,
     /** @type {PathFromSystemRoot} */ rootPath,
   ) => {
     /** @type {string[]} */
     const results = [];
-    list.forEach(pathOrGlob => {
-      if (!pathOrGlob.endsWith('/')) {
-        // eslint-disable-next-line no-param-reassign
-        pathOrGlob = `${pathOrGlob}/`;
-      }
-
+    for (const pathOrGlob of list) {
       if (pathOrGlob.includes('*')) {
-        const globResults = glob.sync(pathOrGlob, { cwd: rootPath, absolute: false });
-        globResults.forEach(r => {
-          results.push(r);
+        const globResults = await optimisedGlob(pathOrGlob, {
+          cwd: rootPath,
+          absolute: false,
+          onlyFiles: false,
         });
+        results.push(...globResults);
       } else {
         results.push(pathOrGlob);
       }
-    });
+    }
     return results.map(pkgPath => {
-      const packageRoot = pathLib.resolve(rootPath, pkgPath);
-      const basename = pathLib.basename(pkgPath);
+      const packageRoot = path.resolve(rootPath, pkgPath);
+      const basename = path.basename(pkgPath);
       const pkgJson = getPackageJson(/** @type {PathFromSystemRoot} */ (packageRoot));
       const name = /** @type {ProjectName} */ ((pkgJson && pkgJson.name) || basename);
       return { name, path: /** @type {PathFromSystemRoot} */ (pkgPath) };
@@ -114,7 +106,7 @@ const getPathsFromGlobList = memoize(
  */
 const getGitignoreFile = memoize((/** @type {PathFromSystemRoot} */ rootPath) => {
   try {
-    return fs.readFileSync(`${rootPath}/.gitignore`, 'utf8');
+    return fsAdapter.fs.readFileSync(`${rootPath}/.gitignore`, 'utf8');
   } catch (_) {
     return undefined;
   }
@@ -131,6 +123,7 @@ const getGitIgnorePaths = memoize((/** @type {PathFromSystemRoot} */ rootPath) =
   }
 
   const entries = fileContent.split('\n').filter(entry => {
+    // eslint-disable-next-line no-param-reassign
     entry = entry.trim();
     if (entry.startsWith('#')) {
       return false;
@@ -143,15 +136,19 @@ const getGitIgnorePaths = memoize((/** @type {PathFromSystemRoot} */ rootPath) =
 
   // normalize entries to be compatible with anymatch
   const normalizedEntries = entries.map(entry => {
+    // eslint-disable-next-line no-param-reassign
     entry = toPosixPath(entry);
 
     if (entry.startsWith('/')) {
+      // eslint-disable-next-line no-param-reassign
       entry = entry.slice(1);
     }
     const isFile = entry.indexOf('.') > 0; // index of 0 means hidden file.
     if (entry.endsWith('/')) {
+      // eslint-disable-next-line no-param-reassign
       entry += '**';
     } else if (!isFile) {
+      // eslint-disable-next-line no-param-reassign
       entry += '/**';
     }
     return entry;
@@ -190,30 +187,6 @@ function ensureArray(v) {
 }
 
 /**
- * @param {string|string[]} patterns
- * @param {Partial<{keepDirs:boolean;root:string}>} [options]
- *
- * @typedef {(patterns:string|string[], opts: {keepDirs?:boolean;root:string}) => string[]} MultiGlobSyncFn
- * @type {MultiGlobSyncFn}
- */
-const multiGlobSync = memoize(
-  (/** @type {string|string[]} */ patterns, { keepDirs = false, root } = {}) => {
-    patterns = ensureArray(patterns);
-    const res = new Set();
-    patterns.forEach(pattern => {
-      const files = glob.sync(pattern, { root });
-      files.forEach(filePath => {
-        if (fs.lstatSync(filePath).isDirectory() && !keepDirs) {
-          return;
-        }
-        res.add(filePath);
-      });
-    });
-    return Array.from(res);
-  },
-);
-
-/**
  * @param {string} localPathWithDotSlash
  * @returns {string}
  */
@@ -233,14 +206,14 @@ function normalizeLocalPathWithDotSlash(localPathWithoutDotSlash) {
 }
 
 /**
- * @param {{valObjOrStr:object|string;nodeResolveMode:string}} opts
+ * @param {{valObjOrStr:object|string|null;nodeResolveMode:string}} opts
  * @returns {string|null}
  */
 function getStringOrObjectValOfExportMapEntry({ valObjOrStr, nodeResolveMode }) {
   if (typeof valObjOrStr !== 'object') {
     return valObjOrStr;
   }
-  if (!valObjOrStr[nodeResolveMode]) {
+  if (!valObjOrStr?.[nodeResolveMode]) {
     // This is allowed: it makes sense to have an entrypoint on the root for typescript, not for others
     return null;
   }
@@ -259,29 +232,30 @@ export class InputDataService {
    * Create an array of ProjectData
    * @param {(PathFromSystemRoot|ProjectInputData)[]} projectPaths
    * @param {Partial<GatherFilesConfig>} gatherFilesConfig
-   * @returns {ProjectInputDataWithMeta[]}
+   * @returns {Promise<ProjectInputDataWithMeta[]>}
    */
-  static createDataObject(projectPaths, gatherFilesConfig = {}) {
+  static async createDataObject(projectPaths, gatherFilesConfig = {}) {
     /** @type {ProjectInputData[]} */
-    const inputData = projectPaths.map(projectPathOrObj => {
+    const inputData = [];
+    for (const projectPathOrObj of projectPaths) {
       if (typeof projectPathOrObj === 'object') {
         // ProjectInputData was provided already manually
-        return projectPathOrObj;
+        inputData.push(projectPathOrObj);
+        continue; // eslint-disable-line no-continue
       }
 
       const projectPath = projectPathOrObj;
-      return {
+      inputData.push({
         project: /** @type {Project} */ ({
-          name: pathLib.basename(projectPath),
+          name: path.basename(projectPath),
           path: projectPath,
         }),
-        entries: this.gatherFilesFromDir(projectPath, {
+        entries: await this.gatherFilesFromDir(projectPath, {
           ...this.defaultGatherFilesConfig,
           ...gatherFilesConfig,
         }),
-      };
-    });
-    // @ts-ignore
+      });
+    }
     return this._addMetaToProjectsData(inputData);
   }
 
@@ -333,7 +307,7 @@ export class InputDataService {
     let commitHash;
     let isGitRepo;
     try {
-      isGitRepo = fs.lstatSync(pathLib.resolve(projectPath, '.git')).isDirectory();
+      isGitRepo = fsAdapter.fs.lstatSync(path.resolve(projectPath, '.git')).isDirectory();
       // eslint-disable-next-line no-empty
     } catch (_) {}
 
@@ -372,7 +346,7 @@ export class InputDataService {
         projectObj.entries.forEach(entry => {
           let code;
           try {
-            code = fs.readFileSync(entry, 'utf8');
+            code = fsAdapter.fs.readFileSync(entry, 'utf8');
           } catch (e) {
             LogService.error(`Could not find "${entry}"`);
           }
@@ -380,7 +354,7 @@ export class InputDataService {
             toPosixPath(entry),
             toPosixPath(projectObj.project.path),
           );
-          if (pathLib.extname(file) === '.html') {
+          if (path.extname(file) === '.html') {
             const extractedScripts = AstService.getScriptsFromHtml(/** @type {string} */ (code));
             // eslint-disable-next-line no-shadow
             extractedScripts.forEach((code, i) => {
@@ -409,19 +383,16 @@ export class InputDataService {
     if (this.__targetProjectPaths) {
       return this.__targetProjectPaths;
     }
-    const submoduleDir = pathLib.resolve(
-      __dirname,
-      '../../../providence-input-data/search-targets',
-    );
+    const submoduleDir = path.resolve(__dirname, '../../../providence-input-data/search-targets');
     let dirs;
     try {
-      dirs = fs.readdirSync(submoduleDir);
+      dirs = fsAdapter.fs.readdirSync(submoduleDir);
     } catch (_) {
       return [];
     }
     return dirs
-      .map(dir => /** @type {PathFromSystemRoot} */ (pathLib.join(submoduleDir, dir)))
-      .filter(dirPath => fs.lstatSync(dirPath).isDirectory());
+      .map(dir => /** @type {PathFromSystemRoot} */ (path.join(submoduleDir, dir)))
+      .filter(dirPath => fsAdapter.fs.lstatSync(dirPath).isDirectory());
   }
 
   static set targetProjectPaths(v) {
@@ -438,11 +409,11 @@ export class InputDataService {
 
     let dirs;
     try {
-      const referencesDir = pathLib.resolve(__dirname, '../../../providence-input-data/references');
-      dirs = fs.readdirSync(referencesDir);
+      const referencesDir = path.resolve(__dirname, '../../../providence-input-data/references');
+      dirs = fsAdapter.fs.readdirSync(referencesDir);
       dirs = dirs
-        .map(dir => pathLib.join(referencesDir, dir))
-        .filter(dirPath => fs.lstatSync(dirPath).isDirectory());
+        .map(dir => path.join(referencesDir, dir))
+        .filter(dirPath => fsAdapter.fs.lstatSync(dirPath).isDirectory());
       // eslint-disable-next-line no-empty
     } catch (_) {}
     return /** @type {PathFromSystemRoot[]} */ (dirs);
@@ -457,31 +428,31 @@ export class InputDataService {
    */
   static get defaultGatherFilesConfig() {
     return {
-      extensions: ['.js'],
       allowlist: ['!node_modules/**', '!bower_components/**', '!**/*.conf.js', '!**/*.config.js'],
+      extensions: ['.js'],
       depth: Infinity,
     };
   }
 
   /**
-   * @param {PathFromSystemRoot} startPath
-   * @param {GatherFilesConfig} cfg
-   * @param {boolean} withoutDepth
+   * @protected
+   * @param {number} depth
+   * @param {string[]} extensions
+   * @returns {string}
    */
-  static getGlobPattern(startPath, cfg, withoutDepth = false) {
-    // if startPath ends with '/', remove
-    let globPattern = startPath.replace(/\/$/, '');
-    if (process.platform === 'win32') {
-      globPattern = globPattern.replace(/^.:/, '').replace(/\\/g, '/');
+  static _getDefaultGlobDepthPattern(depth = Infinity, extensions = ['.js']) {
+    // `.{${cfg.extensions.map(e => e.slice(1)).join(',')},}`;
+    const extensionsGlobPart = `.{${extensions.map(extension => extension.slice(1)).join(',')},}`;
+    if (depth === Infinity) {
+      return `**/*${extensionsGlobPart}`;
     }
-    if (!withoutDepth) {
-      if (typeof cfg.depth === 'number' && cfg.depth !== Infinity) {
-        globPattern += `/*`.repeat(cfg.depth + 1);
-      } else {
-        globPattern += `/**/*`;
-      }
+    if (depth > 1) {
+      return `${`/*`.repeat(depth + 1)}${extensionsGlobPart}`;
     }
-    return { globPattern };
+    if (depth === 0) {
+      return `*${extensionsGlobPart}`;
+    }
+    return '';
   }
 
   /**
@@ -498,9 +469,9 @@ export class InputDataService {
    * Gets an array of files for given extension
    * @param {PathFromSystemRoot} startPath - local filesystem path
    * @param {Partial<GatherFilesConfig>} customConfig - configuration object
-   * @returns {PathFromSystemRoot[]} result list of file paths
+   * @returns {Promise<PathFromSystemRoot[]>} result list of file paths
    */
-  static gatherFilesFromDir(startPath, customConfig = {}) {
+  static async gatherFilesFromDir(startPath, customConfig = {}) {
     const cfg = {
       ...this.defaultGatherFilesConfig,
       ...customConfig,
@@ -523,88 +494,89 @@ export class InputDataService {
 
     if (cfg.allowlistMode === 'export-map') {
       const pkgJson = getPackageJson(startPath);
-      if (!pkgJson.exports) {
+      if (!pkgJson?.exports) {
         LogService.error(`No exports found in package.json of ${startPath}`);
       }
-      const exposedAndInternalPaths = this.getPathsFromExportMap(pkgJson.exports, {
-        packageRootPath: startPath,
-      });
-      return exposedAndInternalPaths
-        .map(p => p.internal)
-        .filter(p => cfg.extensions.includes(`${pathLib.extname(p)}`));
+      if (pkgJson?.exports) {
+        const exposedAndInternalPaths = await this.getPathsFromExportMap(pkgJson?.exports, {
+          packageRootPath: startPath,
+        });
+        return /** @type {PathFromSystemRoot[]} */ (
+          exposedAndInternalPaths
+            // TODO: path.resolve(startPath, p.internal)?
+            .map(p => p.internal)
+            .filter(p =>
+              cfg.extensions.includes(/** @type {`.${string}`} */ (`${path.extname(p)}`)),
+            )
+        );
+      }
     }
 
     /** @type {string[]} */
-    let gitIgnorePaths = [];
+    const negativeGitGlobs = [];
     /** @type {string[]} */
-    let npmPackagePaths = [];
+    const npmGlobs = [];
     const allowlistMode = cfg.allowlistMode || this._determineAllowListMode(startPath);
 
     if (allowlistMode === 'git') {
-      gitIgnorePaths = getGitIgnorePaths(startPath);
+      negativeGitGlobs.push(
+        ...getGitIgnorePaths(startPath).map(gitIgnorePath => `!${gitIgnorePath}`),
+      );
     } else if (allowlistMode === 'npm') {
-      npmPackagePaths = getNpmPackagePaths(startPath);
-    }
-    const removeFilter = gitIgnorePaths;
-    const keepFilter = npmPackagePaths;
-
-    cfg.allowlist.forEach(allowEntry => {
-      const { negated, pattern } = isNegatedGlob(allowEntry);
-      if (negated) {
-        removeFilter.push(pattern);
-      } else {
-        keepFilter.push(allowEntry);
-      }
-    });
-
-    let { globPattern } = this.getGlobPattern(startPath, cfg);
-    globPattern += `.{${cfg.extensions.map(e => e.slice(1)).join(',')},}`;
-    const globRes = multiGlobSync(globPattern);
-
-    let filteredGlobRes;
-    if (removeFilter.length || keepFilter.length) {
-      filteredGlobRes = globRes.filter(filePath => {
-        const localFilePath = toPosixPath(filePath).replace(`${toPosixPath(startPath)}/`, '');
-        // @ts-expect-error
-        let shouldRemove = removeFilter.length && anymatch(removeFilter, localFilePath);
-        // @ts-expect-error
-        let shouldKeep = keepFilter.length && anymatch(keepFilter, localFilePath);
-
-        if (shouldRemove && shouldKeep) {
-          // Contradicting configs: the one defined by end user takes highest precedence
-          // If the match came from allowListMode, it loses.
-          // @ts-expect-error
-          if (allowlistMode === 'git' && anymatch(gitIgnorePaths, localFilePath)) {
-            // shouldRemove was caused by .gitignore, shouldKeep by custom allowlist
-            shouldRemove = false;
-            // @ts-expect-error
-          } else if (allowlistMode === 'npm' && anymatch(npmPackagePaths, localFilePath)) {
-            // shouldKeep was caused by npm "files", shouldRemove by custom allowlist
-            shouldKeep = false;
-          }
-        }
-
-        if (removeFilter.length && shouldRemove) {
-          return false;
-        }
-        if (!keepFilter.length) {
-          return true;
-        }
-        return shouldKeep;
-      });
+      npmGlobs.push(...getNpmPackagePaths(startPath));
     }
 
-    if (!filteredGlobRes || !filteredGlobRes.length) {
+    const combinedGlobs = [...cfg.allowlist, ...npmGlobs, ...negativeGitGlobs];
+    const hasProvidedPositiveGlob = cfg.allowlist.some(glob => !glob.startsWith('!'));
+
+    // We need to expand
+    const shouldLookForAllFilesInProject =
+      allowlistMode === 'all' || (!npmGlobs.length && !hasProvidedPositiveGlob);
+    if (shouldLookForAllFilesInProject) {
+      combinedGlobs.push(this._getDefaultGlobDepthPattern(cfg.depth, cfg.extensions));
+    }
+
+    const globbyCfg = {
+      expandDirectories: false,
+      onlyFiles: true,
+      absolute: true,
+      cwd: startPath,
+    };
+    let filteredGlobRes = await optimisedGlob(combinedGlobs, globbyCfg);
+
+    // Unfortunatly, globby does not correctly remove the negated globs,
+    // so we have to do it manually
+    const negatedGlobs = combinedGlobs.filter(p => p.startsWith('!'));
+    if (negatedGlobs.length) {
+      const subtract = await optimisedGlob(
+        negatedGlobs.map(p => p.slice(1)),
+        globbyCfg,
+      );
+      // eslint-disable-next-line no-shadow
+      filteredGlobRes = filteredGlobRes.filter(file => !subtract.includes(file));
+    }
+
+    // Make sure we don't delete to much by giving customConfig.allowlist priority
+    if (customConfig.allowlist?.length) {
+      const customResults = await optimisedGlob(customConfig.allowlist, globbyCfg);
+      filteredGlobRes = Array.from(new Set([...filteredGlobRes, ...customResults]));
+    }
+
+    // Filter by extension (in the future: use globs exclusively for this?)
+    if (cfg.extensions.length) {
+      filteredGlobRes = filteredGlobRes.filter(glob =>
+        cfg.extensions.some(ext => glob.endsWith(ext)),
+      );
+    }
+
+    if (!filteredGlobRes?.length) {
       LogService.warn(`No files found for path '${startPath}'`);
       return [];
     }
 
-    // reappend startPath
-    // const res = filteredGlobRes.map(f => pathLib.resolve(startPath, f));
     return /** @type {PathFromSystemRoot[]} */ (filteredGlobRes.map(toPosixPath));
   }
 
-  // TODO: use modern web config helper
   /**
    * Allows the user to provide a providence.conf.js file in its repository root
    */
@@ -619,7 +591,7 @@ export class InputDataService {
    * @param {PathFromSystemRoot} rootPath
    * @returns {ProjectNameAndPath[]|undefined}
    */
-  static getMonoRepoPackages(rootPath) {
+  static async getMonoRepoPackages(rootPath) {
     // [1] Look for npm/yarn workspaces
     const pkgJson = getPackageJson(rootPath);
     if (pkgJson?.workspaces) {
@@ -639,9 +611,9 @@ export class InputDataService {
    * @param {object} opts
    * @param {'default'|'development'|string} [opts.nodeResolveMode='default']
    * @param {string} opts.packageRootPath
-   * @returns {Promise<{internalExportMapPaths:string[]; exposedExportMapPaths:string[]}>}
+   * @returns {Promise<{internal:string; exposed:string}[]>}
    */
-  static getPathsFromExportMap(exports, { nodeResolveMode = 'default', packageRootPath }) {
+  static async getPathsFromExportMap(exports, { nodeResolveMode = 'default', packageRootPath }) {
     const exportMapPaths = [];
 
     for (const [key, valObjOrStr] of Object.entries(exports)) {
@@ -672,25 +644,24 @@ export class InputDataService {
       const valueToUseForGlob = stripDotSlashFromLocalPath(resolvedVal).replace('*', '**/*');
 
       // Generate all possible entries via glob, first strip './'
-      const internalExportMapPathsForKeyRaw = glob.sync(valueToUseForGlob, {
+      const internalExportMapPathsForKeyRaw = await optimisedGlob(valueToUseForGlob, {
         cwd: packageRootPath,
-        nodir: true,
+        onlyFiles: true,
       });
 
       const exposedExportMapPathsForKeyRaw = internalExportMapPathsForKeyRaw.map(pathInside => {
         // Say we have "exports": { "./*.js": "./src/*.js" }
         // => internalExportMapPathsForKey: ['./src/a.js', './src/b.js']
         // => exposedExportMapPathsForKey: ['./a.js', './b.js']
-        const [, variablePart] = pathInside.match(
-          new RegExp(valueToUseForGlob.replace('*', '(.*)')),
-        );
+        const [, variablePart] =
+          pathInside.match(new RegExp(valueToUseForGlob.replace('*', '(.*)'))) || [];
         return resolvedKey.replace('*', variablePart);
       });
-      const internalExportMapPathsForKey = internalExportMapPathsForKeyRaw.map(filePath =>
-        normalizeLocalPathWithDotSlash(filePath),
+      const internalExportMapPathsForKey = internalExportMapPathsForKeyRaw.map(
+        normalizeLocalPathWithDotSlash,
       );
-      const exposedExportMapPathsForKey = exposedExportMapPathsForKeyRaw.map(filePath =>
-        normalizeLocalPathWithDotSlash(filePath),
+      const exposedExportMapPathsForKey = exposedExportMapPathsForKeyRaw.map(
+        normalizeLocalPathWithDotSlash,
       );
 
       exportMapPaths.push(
@@ -704,9 +675,6 @@ export class InputDataService {
     return exportMapPaths;
   }
 }
-// TODO: Remove memoizeConfig.isCacheDisabled  this once whole providence uses cacheConfig instead of
-// memoizeConfig.isCacheDisabled
-// InputDataService.cacheDisabled = memoizeConfig.isCacheDisabled;
 
 InputDataService.getProjectMeta = memoize(InputDataService.getProjectMeta);
 InputDataService.gatherFilesFromDir = memoize(InputDataService.gatherFilesFromDir);

@@ -1,10 +1,11 @@
 /* eslint-disable no-shadow */
-import pathLib from 'path';
 import child_process from 'child_process'; // eslint-disable-line camelcase
-import glob from 'glob';
-import readPackageTree from '../program/utils/read-package-tree-with-bower-support.js';
-import { LogService } from '../program/core/LogService.js';
+import path from 'path';
+
+import { optimisedGlob } from '../program/utils/optimised-glob.js';
 import { toPosixPath } from '../program/utils/to-posix-path.js';
+import { LogService } from '../program/core/LogService.js';
+import { fsAdapter } from '../program/utils/fs-adapter.js';
 
 /**
  * @param {any[]} arr
@@ -31,7 +32,6 @@ export function extensionsFromCs(v) {
 }
 
 /**
- *
  * @param {*} m
  * @returns
  */
@@ -45,29 +45,29 @@ export function setQueryMethod(m) {
 }
 
 /**
- * @param {string} t
- * @returns {string[]|undefined}
+ * @param {string} targets
+ * @returns {Promise<string[]|undefined>}
  */
-export function pathsArrayFromCs(t, cwd = process.cwd()) {
-  if (!t) {
-    return undefined;
-  }
+export async function pathsArrayFromCs(targets, cwd = process.cwd()) {
+  if (!targets) return undefined;
 
-  return flatten(
-    t.split(',').map(t => {
-      if (t.startsWith('/')) {
-        return t;
-      }
-      if (t.includes('*')) {
-        if (!t.endsWith('/')) {
-          // eslint-disable-next-line no-param-reassign
-          t = `${t}/`;
-        }
-        return glob.sync(t, { cwd, absolute: true }).map(toPosixPath);
-      }
-      return toPosixPath(pathLib.resolve(cwd, t.trim()));
-    }),
-  );
+  const resultPaths = [];
+
+  for (const t of targets.split(',')) {
+    if (t.startsWith('/')) {
+      resultPaths.push(t);
+      continue; // eslint-disable-line no-continue
+    }
+    if (t.includes('*')) {
+      const x = (await optimisedGlob(t, { cwd, absolute: true, onlyFiles: false })).map(
+        toPosixPath,
+      );
+      resultPaths.push(...x);
+      continue; // eslint-disable-line no-continue
+    }
+    resultPaths.push(toPosixPath(path.resolve(cwd, t.trim())));
+  }
+  return resultPaths;
 }
 
 /**
@@ -75,9 +75,9 @@ export function pathsArrayFromCs(t, cwd = process.cwd()) {
  * @param {'search-target'|'reference'} collectionType collection type
  * @param {{searchTargetCollections: {[repo:string]:string[]}; referenceCollections:{[repo:string]:string[]}}} [eCfg] external configuration. Usually providence.conf.js
  * @param {string} [cwd]
- * @returns {string[]|undefined}
+ * @returns {Promise<string[]|undefined>}
  */
-export function pathsArrayFromCollectionName(
+export async function pathsArrayFromCollectionName(
   name,
   collectionType = 'search-target',
   eCfg = undefined,
@@ -133,6 +133,49 @@ export function targetDefault(cwd) {
 }
 
 /**
+ * @param {string} targetPath
+ * @param {((s:string) => boolean)|null} matcher
+ * @param {'npm'|'bower'} [mode]
+ */
+async function readPackageTree(targetPath, matcher, mode) {
+  const folderName = mode === 'npm' ? 'node_modules' : 'bower_components';
+  const potentialPaths = await optimisedGlob(`${folderName}/**/*`, {
+    onlyDirectories: true,
+    fs: fsAdapter.fs,
+    cwd: targetPath,
+    absolute: true,
+  });
+  const matchingPaths = potentialPaths.filter(potentialPath => {
+    // Only dirs that are direct children of node_modules. So '**/node_modules/a' will match, but '**/node_modules/a/b' won't
+    const [, projectName] =
+      toPosixPath(potentialPath).match(new RegExp(`^.*/${folderName}/([^/]*)$`)) || [];
+    return matcher ? matcher(projectName) : true;
+  });
+  return matchingPaths;
+}
+
+/**
+ * @param {string|undefined} matchPattern
+ */
+function getMatcher(matchPattern) {
+  if (!matchPattern) return null;
+
+  const isValidMatchPattern = matchPattern.startsWith('/') && matchPattern.endsWith('/');
+  if (!isValidMatchPattern) {
+    LogService.error(
+      `[appendProjectDependencyPaths] Please provide a matchPattern enclosed by '/'. Found: ${matchPattern}`,
+    );
+    return null;
+  }
+
+  return (/** @type {string} */ d) => {
+    const reString = matchPattern.slice(1, -1);
+    const result = new RegExp(reString).test(d);
+    LogService.debug(`[appendProjectDependencyPaths]: /${reString}/.test(${d} => ${result})`);
+    return result;
+  };
+}
+/**
  * Returns all sub projects matching condition supplied in matchFn
  * @param {string[]} rootPaths all search-target project paths
  * @param {string} [matchPattern] base for RegExp
@@ -143,82 +186,27 @@ export async function appendProjectDependencyPaths(
   matchPattern,
   modes = ['npm', 'bower'],
 ) {
-  let matchFn;
-  if (matchPattern) {
-    if (matchPattern.startsWith('/') && matchPattern.endsWith('/')) {
-      matchFn = (/** @type {any} */ _, /** @type {string} */ d) => {
-        const reString = matchPattern.slice(1, -1);
-        const result = new RegExp(reString).test(d);
-        LogService.debug(`[appendProjectDependencyPaths]: /${reString}/.test(${d} => ${result})`);
-        return result;
-      };
-    } else {
-      LogService.error(
-        `[appendProjectDependencyPaths] Please provide a matchPattern enclosed by '/'. Found: ${matchPattern}`,
-      );
-    }
-  }
+  const matcher = getMatcher(matchPattern);
+
   /** @type {string[]} */
   const depProjectPaths = [];
   for (const targetPath of rootPaths) {
     for (const mode of modes) {
-      await readPackageTree(
-        targetPath,
-        matchFn,
-        (/** @type {string | undefined} */ err, /** @type {{ children: any[]; }} */ tree) => {
-          if (err) {
-            throw new Error(err);
-          }
-          const paths = tree.children.map(child => child.realpath);
-          depProjectPaths.push(...paths);
-        },
-        mode,
-      );
+      depProjectPaths.push(...(await readPackageTree(targetPath, matcher, mode)));
     }
   }
-  // Write all data to {outputPath}/projectDeps.json
-  // const projectDeps = {};
-  // rootPaths.forEach(rootP => {
-  //   depProjectPaths.filter(depP => depP.startsWith(rootP)).;
-  // });
 
   return depProjectPaths.concat(rootPaths).map(toPosixPath);
 }
 
-/**
- * Will install all npm and bower deps, so an analysis can be performed on them as well.
- * Relevant when '--target-dependencies' is supplied.
- * @param {string[]} searchTargetPaths
- */
-export async function installDeps(searchTargetPaths) {
-  for (const targetPath of searchTargetPaths) {
-    LogService.info(`Installing npm dependencies for ${pathLib.basename(targetPath)}`);
-    try {
-      await spawnProcess('npm i --no-progress', { cwd: targetPath });
-    } catch (e) {
-      // @ts-expect-error
-      LogService.error(e);
-    }
-
-    LogService.info(`Installing bower dependencies for ${pathLib.basename(targetPath)}`);
-    try {
-      await spawnProcess(`bower i --production --force-latest`, { cwd: targetPath });
-    } catch (e) {
-      // @ts-expect-error
-      LogService.error(e);
-    }
-  }
-}
-
 export const _cliHelpersModule = {
-  csToArray,
-  extensionsFromCs,
-  setQueryMethod,
-  pathsArrayFromCs,
-  targetDefault,
   appendProjectDependencyPaths,
-  spawnProcess,
-  installDeps,
   pathsArrayFromCollectionName,
+  extensionsFromCs,
+  pathsArrayFromCs,
+  setQueryMethod,
+  targetDefault,
+  spawnProcess,
+  csToArray,
   flatten,
 };

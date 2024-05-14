@@ -702,8 +702,10 @@ describe('Ajax', () => {
 
       const errors = [
         "Failed to execute 'fetch' on 'Window': The user aborted a request.", // chromium
+        'signal is aborted without reason', // newer chromium (?)
         'The operation was aborted. ', // firefox
         'Request signal is aborted', // webkit
+        'The operation was aborted.', // newer webkit
       ];
 
       expect(errors.includes(/** @type {Error} */ (err).message)).to.be.true;

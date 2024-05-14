@@ -126,6 +126,5 @@ export class AstService {
 /**
  * This option can be used as a last resort when an swc AST combined with swc-to-babel, is backwards incompatible
  * (for instance when @babel/generator expects a different ast structure and fails).
- * Analyzers should use guarded-swc-to-babel util.
  */
 AstService.fallbackToBabel = false;

@@ -1,7 +1,8 @@
 import { runInputTelSuite } from '@lion/ui/input-tel-test-suites.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { ref } from 'lit/directives/ref.js';
-import { aTimeout, expect, fixture, html } from '@open-wc/testing';
+import { html } from 'lit';
+import { aTimeout, expect, fixture } from '@open-wc/testing';
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 import { LionOption } from '@lion/ui/listbox.js';
 import { LionSelectRich } from '@lion/ui/select-rich.js';

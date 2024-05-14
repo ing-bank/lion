@@ -1,20 +1,22 @@
 /* eslint-disable no-shadow */
 // @ts-nocheck
-import fs from 'fs';
-import pathLib from 'path';
+import path from 'path';
+
 import babelTraverse from '@babel/traverse';
-import { isRelativeSourcePath, toRelativeSourcePath } from '../../utils/relative-source-path.js';
-import { InputDataService } from '../../core/InputDataService.js';
-import { resolveImportPath } from '../../utils/resolve-import-path.js';
-import { AstService } from '../../core/AstService.js';
-import { LogService } from '../../core/LogService.js';
-import { memoize } from '../../utils/memoize.js';
+
+import { isRelativeSourcePath, toRelativeSourcePath } from './relative-source-path.js';
+import { InputDataService } from '../core/InputDataService.js';
+import { resolveImportPath } from './resolve-import-path.js';
+import { AstService } from '../core/AstService.js';
+import { LogService } from '../core/LogService.js';
+import { fsAdapter } from './fs-adapter.js';
+import { memoize } from './memoize.js';
 
 /**
- * @typedef {import('../../../../types/index.js').RootFile} RootFile
+ * @typedef {import('../../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../../../types/index.js').SpecifierSource} SpecifierSource
  * @typedef {import('../../../../types/index.js').IdentifierName} IdentifierName
- * @typedef {import('../../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../../types/index.js').RootFile} RootFile
  * @typedef {import('@babel/traverse').NodePath} NodePath
  */
 
@@ -23,7 +25,7 @@ import { memoize } from '../../utils/memoize.js';
  * @param {string} projectName
  */
 function isSelfReferencingProject(source, projectName) {
-  return source.startsWith(`${projectName}`);
+  return source.split('/')[0] === projectName;
 }
 
 /**
@@ -177,14 +179,14 @@ async function trackDownIdentifierFn(
 
   LogService.debug(`[trackDownIdentifier] ${resolvedSourcePath}`);
   const allowedJsModuleExtensions = ['.mjs', '.js'];
-  if (!allowedJsModuleExtensions.includes(pathLib.extname(resolvedSourcePath))) {
+  if (!allowedJsModuleExtensions.includes(path.extname(resolvedSourcePath))) {
     // We have an import assertion
     return /** @type { RootFile } */ {
       file: toRelativeSourcePath(resolvedSourcePath, rootPath),
       specifier: '[default]',
     };
   }
-  const code = fs.readFileSync(resolvedSourcePath, 'utf8');
+  const code = fsAdapter.fs.readFileSync(resolvedSourcePath, 'utf8');
   const babelAst = AstService.getAst(code, 'swc-to-babel', { filePath: resolvedSourcePath });
 
   const shouldLookForDefaultExport = identifierName === '[default]';

@@ -25,7 +25,7 @@ describe('Analyzer "find-imports"', async () => {
       const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
-      expect(firstEntry.result[0].importSpecifiers).to.eql(['[file]']);
+      expect(firstEntry.result[0].importSpecifiers).to.deep.equal(['[file]']);
       expect(firstEntry.result[0].source).to.equal('imported/source');
     });
 
@@ -128,7 +128,7 @@ describe('Analyzer "find-imports"', async () => {
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
       // This info will be relevant later to identify transitive relations
-      expect(firstEntry.result[0].localMap[0]).to.eql({
+      expect(firstEntry.result[0].localMap[0]).to.deep.equal({
         local: 'y',
         imported: 'x',
       });
@@ -332,7 +332,7 @@ describe('Analyzer "find-imports"', async () => {
       // Should be normalized source...?
       expect(queryResult.queryOutput[0].source).to.equal('@external/source.js');
       expect(queryResult.queryOutput[0].id).to.equal('x::@external/source.js');
-      expect(queryResult.queryOutput[0].dependents).to.eql([
+      expect(queryResult.queryOutput[0].dependents).to.deep.equal([
         'fictional-project/file1.js',
         'fictional-project/file2.js',
       ]);

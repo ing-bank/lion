@@ -1,6 +1,8 @@
 import fs from 'fs';
 import { playwrightLauncher } from '@web/test-runner-playwright';
 
+const devMode = process.argv.includes('--dev-mode');
+
 const packages = fs
   .readdirSync('packages')
   .filter(
@@ -33,7 +35,7 @@ const testRunnerHtml = testRunnerImport =>
 `;
 
 export default {
-  nodeResolve: true,
+  nodeResolve: { exportConditions: [devMode && 'development'] },
   coverageConfig: {
     report: true,
     reportDir: 'coverage',

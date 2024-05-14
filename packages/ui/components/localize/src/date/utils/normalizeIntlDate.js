@@ -21,7 +21,6 @@ export function normalizeIntlDate(str, locale = '', { weekday, year, month, day 
   }
 
   const result = dateString.join('');
-
   // Normalize webkit date formatting without year
   if (!year && weekday === 'long' && month === 'long' && day === '2-digit') {
     const CHINESE_LOCALES = [
@@ -43,7 +42,7 @@ export function normalizeIntlDate(str, locale = '', { weekday, year, month, day 
       return result.replace(' ', '');
     }
 
-    if (result.indexOf(',') === -1 && locale === 'en-GB') {
+    if ((result.indexOf(',') === -1 && locale === 'en-GB') || locale === 'en-AU') {
       // Saturday 12 October -> Saturday, 12 October
       const match = result.match(/^(\w*) (\d*) (\w*)$/);
       if (match !== null) {
@@ -62,6 +61,18 @@ export function normalizeIntlDate(str, locale = '', { weekday, year, month, day 
       if (match !== null) {
         return `${match[1]}, ${match[3]} ${match[2]}`;
       }
+    }
+
+    if (locale === 'uk-UA') {
+      // суботу => субота
+      return result.replace('суботу', 'субота');
+    }
+  } else if (weekday === 'long' && month === 'long' && day === '2-digit') {
+    if (result.indexOf(',') === -1 && locale.startsWith('en-')) {
+      // Saturday 12 October 2023 -> Saturday, 12 October 2023
+      const [, _weekDayName, _monthDayNumber, _monthName, _year] =
+        result.match(/^(\w*) (\d*) (\w*) (\d*)$/) || [];
+      return `${_weekDayName}, ${_monthDayNumber} ${_monthName} ${_year}`;
     }
   }
 

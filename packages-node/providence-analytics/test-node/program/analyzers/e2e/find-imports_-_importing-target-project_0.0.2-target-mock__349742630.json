@@ -3,7 +3,7 @@
     "searchType": "ast-analyzer",
     "analyzerMeta": {
       "name": "find-imports",
-      "requiredAst": "swc-to-babel",
+      "requiredAst": "swc",
       "identifier": "importing-target-project_0.0.2-target-mock__349742630",
       "targetProject": {
         "mainEntry": "./target-src/match-imports/root-level-imports.js",

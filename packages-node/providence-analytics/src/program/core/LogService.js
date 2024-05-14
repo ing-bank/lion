@@ -1,5 +1,5 @@
-import pathLib from 'path';
-import fs from 'fs';
+import path from 'path';
+import { fsAdapter } from '../utils/fs-adapter.js';
 
 const { log } = console;
 
@@ -111,14 +111,14 @@ export class LogService {
   }
 
   static writeLogFile() {
-    const filePath = pathLib.join(process.cwd(), 'providence.log');
+    const filePath = path.join(process.cwd(), 'providence.log');
     let file = `[log ${new Date()}]\n`;
     // @ts-ignore
     this._logHistory.forEach(l => {
       file += `${l}\n`;
     });
     file += `[/log ${new Date()}]\n\n`;
-    fs.writeFileSync(filePath, file, { flag: 'a' });
+    fsAdapter.fs.writeFileSync(filePath, file, { flag: 'a' });
     // @ts-ignore
     this._logHistory = [];
   }

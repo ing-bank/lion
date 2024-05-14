@@ -29,12 +29,12 @@
     "types": "wireit"
   },
   "dependencies": {
-    "@babel/generator": "^7.22.5",
-    "@babel/parser": "^7.22.5",
-    "@babel/traverse": "^7.23.2",
-    "@babel/types": "^7.22.5",
-    "es-module-lexer": "^0.3.6",
-    "globby": "^13.2.0",
+    "@babel/generator": "^7.24.4",
+    "@babel/parser": "^7.24.4",
+    "@babel/traverse": "^7.24.1",
+    "@babel/types": "^7.24.0",
+    "es-module-lexer": "^0.3.26",
+    "globby": "^14.0.1",
     "prettier": "^2.8.8"
   },
   "keywords": [

@@ -59,6 +59,7 @@ class MdRipple extends LitElement {
   }
 
   disconnectedCallback() {
+    super.disconnectedCallback();
     this.removeEventListener('mousedown', this.__onRipple);
   }
 

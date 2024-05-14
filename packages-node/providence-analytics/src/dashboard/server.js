@@ -1,9 +1,10 @@
-import fs from 'fs';
-import pathLib from 'path';
+import path from 'path';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { startDevServer } from '@web/dev-server';
 import { ReportService } from '../program/core/ReportService.js';
 import { providenceConfUtil } from '../program/utils/providence-conf-util.js';
 import { getCurrentDir } from '../program/utils/get-current-dir.js';
+import { fsAdapter } from '../program/utils/fs-adapter.js';
 
 /**
  * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
@@ -25,7 +26,7 @@ async function getCachedProvidenceResults({
    */
   let outputFilePaths;
   try {
-    outputFilePaths = fs.readdirSync(resultsPath);
+    outputFilePaths = fsAdapter.fs.readdirSync(resultsPath);
   } catch (_) {
     throw new Error(`Please make sure providence results can be found in ${resultsPath}`);
   }
@@ -33,7 +34,9 @@ async function getCachedProvidenceResults({
   const resultFiles = {};
   let searchTargetDeps;
   outputFilePaths.forEach(fileName => {
-    const content = JSON.parse(fs.readFileSync(pathLib.join(resultsPath, fileName), 'utf-8'));
+    const content = JSON.parse(
+      fsAdapter.fs.readFileSync(path.join(resultsPath, fileName), 'utf-8'),
+    );
     if (fileName === 'search-target-deps-file.json') {
       searchTargetDeps = content;
     } else {
@@ -62,8 +65,8 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
    */
   function getPackageJson(projectPath) {
     try {
-      const file = pathLib.resolve(projectPath, 'package.json');
-      return JSON.parse(fs.readFileSync(file, 'utf8'));
+      const file = path.resolve(projectPath, 'package.json');
+      return JSON.parse(fsAdapter.fs.readFileSync(file, 'utf8'));
     } catch (_) {
       return null;
     }
@@ -85,7 +88,7 @@ function createMiddleWares({ providenceConf, providenceConfRaw, searchTargetDeps
     return res;
   }
 
-  const pathFromServerRootToHere = `/${pathLib.relative(
+  const pathFromServerRootToHere = `/${path.relative(
     process.cwd(),
     getCurrentDir(import.meta.url),
   )}`;
@@ -148,13 +151,13 @@ export async function createDashboardServerConfig() {
   // Needed for dev purposes (we call it from ./packages-node/providence-analytics/ instead of ./)
   // Allows es-dev-server to find the right moduleDirs
   const fromPackageRoot = process.argv.includes('--serve-from-package-root');
-  const moduleRoot = fromPackageRoot ? pathLib.resolve(process.cwd(), '../../') : process.cwd();
+  const moduleRoot = fromPackageRoot ? path.resolve(process.cwd(), '../../') : process.cwd();
 
   return {
-    appIndex: pathLib.resolve(getCurrentDir(import.meta.url), 'index.html'),
+    appIndex: path.resolve(getCurrentDir(import.meta.url), 'index.html'),
     rootDir: moduleRoot,
     nodeResolve: true,
-    moduleDirs: pathLib.resolve(moduleRoot, 'node_modules'),
+    moduleDirs: path.resolve(moduleRoot, 'node_modules'),
     watch: false,
     open: true,
     middleware: createMiddleWares({

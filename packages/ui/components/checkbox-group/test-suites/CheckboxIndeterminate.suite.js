@@ -40,8 +40,11 @@ export function runCheckboxIndeterminateSuite(customConfig) {
   let childTag;
 
   before(async () => {
+    // @ts-expect-error
     tag = unsafeStatic(cfg.tagString);
+    // @ts-expect-error
     groupTag = unsafeStatic(cfg.groupTagString);
+    // @ts-expect-error
     childTag = unsafeStatic(cfg.childTagString);
   });
 

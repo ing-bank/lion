@@ -1,22 +1,24 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable import/no-extraneous-dependencies */
-import sinon from 'sinon';
-import pathLib from 'path';
 import { fileURLToPath } from 'url';
+import pathLib from 'path';
+
 import { expect } from 'chai';
 import { it } from 'mocha';
-import {
-  mockProject,
-  restoreMockedProjects,
-  mockTargetAndReferenceProject,
-} from '../../test-helpers/mock-project-helpers.js';
+import sinon from 'sinon';
+
+import { getExtendDocsResults } from '../../src/cli/launch-providence-with-extend-docs.js';
+import { setupAnalyzerTest } from '../../test-helpers/setup-analyzer-test.js';
+import { toPosixPath } from '../../src/program/utils/to-posix-path.js';
 import { _providenceModule } from '../../src/program/providence.js';
 import { _cliHelpersModule } from '../../src/cli/cli-helpers.js';
-import { toPosixPath } from '../../src/program/utils/to-posix-path.js';
-import { memoizeConfig } from '../../src/program/utils/memoize.js';
-import { getExtendDocsResults } from '../../src/cli/launch-providence-with-extend-docs.js';
+import { memoize } from '../../src/program/utils/memoize.js';
+import {
+  mockTargetAndReferenceProject,
+  restoreMockedProjects,
+  mockProject,
+} from '../../test-helpers/mock-project-helpers.js';
 import { AstService } from '../../src/index.js';
-import { setupAnalyzerTest } from '../../test-helpers/setup-analyzer-test.js';
 
 /**
  * @typedef {import('../../types/index.js').QueryResult} QueryResult
@@ -50,22 +52,22 @@ describe('CLI helpers', () => {
 
   describe('pathsArrayFromCs', () => {
     it('allows absolute paths', async () => {
-      expect(pathsArrayFromCs('/mocked/path/example-project', rootDir)).to.eql([
+      expect(await pathsArrayFromCs('/mocked/path/example-project', rootDir)).to.deep.equal([
         '/mocked/path/example-project',
       ]);
     });
 
     it('allows relative paths', async () => {
       expect(
-        pathsArrayFromCs('./test-helpers/project-mocks/importing-target-project', rootDir),
-      ).to.eql([`${rootDir}/test-helpers/project-mocks/importing-target-project`]);
+        await pathsArrayFromCs('./test-helpers/project-mocks/importing-target-project', rootDir),
+      ).to.deep.equal([`${rootDir}/test-helpers/project-mocks/importing-target-project`]);
       expect(
-        pathsArrayFromCs('test-helpers/project-mocks/importing-target-project', rootDir),
-      ).to.eql([`${rootDir}/test-helpers/project-mocks/importing-target-project`]);
+        await pathsArrayFromCs('test-helpers/project-mocks/importing-target-project', rootDir),
+      ).to.deep.equal([`${rootDir}/test-helpers/project-mocks/importing-target-project`]);
     });
 
     it('allows globs', async () => {
-      expect(pathsArrayFromCs('test-helpers/project-mocks*', rootDir)).to.eql([
+      expect(await pathsArrayFromCs('test-helpers/project-mocks*', rootDir)).to.deep.equal([
         `${rootDir}/test-helpers/project-mocks`,
         `${rootDir}/test-helpers/project-mocks-analyzer-outputs`,
       ]);
@@ -74,7 +76,7 @@ describe('CLI helpers', () => {
     it('allows multiple comma separated paths', async () => {
       const paths =
         'test-helpers/project-mocks*, ./test-helpers/project-mocks/importing-target-project,/mocked/path/example-project';
-      expect(pathsArrayFromCs(paths, rootDir)).to.eql([
+      expect(await pathsArrayFromCs(paths, rootDir)).to.deep.equal([
         `${rootDir}/test-helpers/project-mocks`,
         `${rootDir}/test-helpers/project-mocks-analyzer-outputs`,
         `${rootDir}/test-helpers/project-mocks/importing-target-project`,
@@ -86,8 +88,13 @@ describe('CLI helpers', () => {
   describe('pathsArrayFromCollectionName', () => {
     it('gets collections from external target config', async () => {
       expect(
-        pathsArrayFromCollectionName('lion-collection', 'search-target', externalCfgMock, rootDir),
-      ).to.eql(
+        await pathsArrayFromCollectionName(
+          'lion-collection',
+          'search-target',
+          externalCfgMock,
+          rootDir,
+        ),
+      ).to.deep.equal(
         externalCfgMock.searchTargetCollections['lion-collection'].map(p =>
           toPosixPath(pathLib.join(rootDir, p)),
         ),
@@ -96,13 +103,13 @@ describe('CLI helpers', () => {
 
     it('gets collections from external reference config', async () => {
       expect(
-        pathsArrayFromCollectionName(
+        await pathsArrayFromCollectionName(
           'lion-based-ui-collection',
           'reference',
           externalCfgMock,
           rootDir,
         ),
-      ).to.eql(
+      ).to.deep.equal(
         externalCfgMock.referenceCollections['lion-based-ui-collection'].map(p =>
           toPosixPath(pathLib.join(rootDir, p)),
         ),
@@ -130,7 +137,7 @@ describe('CLI helpers', () => {
 
     it('adds bower and node dependencies', async () => {
       const result = await appendProjectDependencyPaths(['/mocked/path/example-project']);
-      expect(result).to.eql([
+      expect(result).to.deep.equal([
         '/mocked/path/example-project/node_modules/dependency-a',
         '/mocked/path/example-project/node_modules/my-dependency',
         '/mocked/path/example-project/bower_components/dependency-b',
@@ -143,7 +150,7 @@ describe('CLI helpers', () => {
         ['/mocked/path/example-project'],
         '/^dependency-/',
       );
-      expect(result).to.eql([
+      expect(result).to.deep.equal([
         '/mocked/path/example-project/node_modules/dependency-a',
         // in windows, it should not add '/mocked/path/example-project/node_modules/my-dependency',
         '/mocked/path/example-project/bower_components/dependency-b',
@@ -151,7 +158,7 @@ describe('CLI helpers', () => {
       ]);
 
       const result2 = await appendProjectDependencyPaths(['/mocked/path/example-project'], '/b$/');
-      expect(result2).to.eql([
+      expect(result2).to.deep.equal([
         '/mocked/path/example-project/bower_components/dependency-b',
         '/mocked/path/example-project',
       ]);
@@ -163,7 +170,7 @@ describe('CLI helpers', () => {
         undefined,
         ['npm'],
       );
-      expect(result).to.eql([
+      expect(result).to.deep.equal([
         '/mocked/path/example-project/node_modules/dependency-a',
         '/mocked/path/example-project/node_modules/my-dependency',
         '/mocked/path/example-project',
@@ -174,7 +181,7 @@ describe('CLI helpers', () => {
         undefined,
         ['bower'],
       );
-      expect(result2).to.eql([
+      expect(result2).to.deep.equal([
         '/mocked/path/example-project/bower_components/dependency-b',
         '/mocked/path/example-project',
       ]);
@@ -189,7 +196,7 @@ describe('CLI helpers', () => {
     it('rewrites monorepo package paths when analysis is run from monorepo root', async () => {
       // This fails after InputDataService.addAstToProjectsData is memoized
       // (it does pass when run in isolation however, as a quick fix we disable memoization cache here...)
-      memoizeConfig.isCacheDisabled = true;
+      memoize.disableCaching();
       // Since we use the print method here, we need to force Babel, bc swc-to-babel output is not compatible
       // with @babel/generate
       const initialAstServiceFallbackToBabel = AstService.fallbackToBabel;
@@ -268,7 +275,7 @@ describe('CLI helpers', () => {
         cwd: '/my-components',
       });
 
-      expect(result).to.eql([
+      expect(result).to.deep.equal([
         {
           name: 'TheirButton',
           variable: {

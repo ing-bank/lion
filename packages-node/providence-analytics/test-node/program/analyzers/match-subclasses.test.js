@@ -332,14 +332,14 @@ describe('Analyzer "match-subclasses"', async () => {
         );
 
         const [name, filePath, project] = targetExportedId.split('::');
-        expect(matchedEntry.exportSpecifier).to.eql({
+        expect(matchedEntry.exportSpecifier).to.deep.equal({
           name,
           filePath,
           project,
           id: targetExportedId,
         });
         expect(matchedEntry.matchesPerProject[0].project).to.equal('importing-target-project');
-        expect(matchedEntry.matchesPerProject[0].files).to.eql(importedByFiles);
+        expect(matchedEntry.matchesPerProject[0].files).to.deep.equal(importedByFiles);
       }
 
       mockTargetAndReferenceProject(searchTargetProject, referenceProject);

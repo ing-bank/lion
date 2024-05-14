@@ -1,15 +1,16 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import fs from 'fs';
+import { fileURLToPath, pathToFileURL } from 'url';
 import pathLib from 'path';
 import sinon from 'sinon';
-import { fileURLToPath, pathToFileURL } from 'url';
+
+import { createTestServer } from '@web/dev-server-core/test-helpers';
 import { expect } from 'chai';
 import { it } from 'mocha';
-import fetch from 'node-fetch';
-import { createTestServer } from '@web/dev-server-core/test-helpers';
+
+import { providenceConfUtil } from '../../src/program/utils/providence-conf-util.js';
 import { createDashboardServerConfig } from '../../src/dashboard/server.js';
 import { ReportService } from '../../src/program/core/ReportService.js';
-import { providenceConfUtil } from '../../src/program/utils/providence-conf-util.js';
+import { fsAdapter } from '../../src/program/utils/fs-adapter.js';
 
 /**
  * @typedef {import('@web/dev-server-core').DevServer} DevServer
@@ -27,11 +28,18 @@ const mockedOutputPath = pathLib.join(__dirname, 'fixtures/providence-output');
 async function getConf(url) {
   const { href } = pathToFileURL(url);
   const { default: providenceConf } = await import(href);
-  const providenceConfRaw = fs.readFileSync(url, 'utf8');
+  const providenceConfRaw = fsAdapter.fs.readFileSync(url, 'utf8');
   return { providenceConf, providenceConfRaw };
 }
 
 describe('Dashboard Server', () => {
+  const [nodeMajor] = process.versions.node.split('.').map(Number);
+
+  if (nodeMajor < 18) {
+    // Skipping tests for now, since nopde < 18 will be phased out and we want to use native fetch...
+    return;
+  }
+
   /** @type {string} */
   let host;
   /** @type {DevServer} */
@@ -40,7 +48,7 @@ describe('Dashboard Server', () => {
   let providenceConfStub;
 
   before(() => {
-    // N.B. don't use mock-fs, since it doesn't correctly handle dynamic imports and fs.promises
+    // N.B. don't use mock-fs, since it doesn't correctly handle dynamic imports and fsAdapter.fs.promises
     ReportService.outputPath = mockedOutputPath;
   });
 
@@ -81,8 +89,11 @@ describe('Dashboard Server', () => {
         const response = await fetch(`${host}/menu-data.json`);
         expect(response.status).to.equal(200);
         const responseJSON = await response.json();
-        const expectedResult = fs.readFileSync(`${mockedResponsesPath}/menu-data.json`, 'utf8');
-        expect(responseJSON).to.eql(JSON.parse(expectedResult));
+        const expectedResult = fsAdapter.fs.readFileSync(
+          `${mockedResponsesPath}/menu-data.json`,
+          'utf8',
+        );
+        expect(responseJSON).to.deep.equal(JSON.parse(expectedResult));
       });
     });
 
@@ -91,8 +102,11 @@ describe('Dashboard Server', () => {
         const response = await fetch(`${host}/results.json`);
         expect(response.status).to.equal(200);
         const responseJson = await response.json();
-        const expectedResult = fs.readFileSync(`${mockedResponsesPath}/results.json`, 'utf8');
-        expect(responseJson).to.eql(JSON.parse(expectedResult));
+        const expectedResult = fsAdapter.fs.readFileSync(
+          `${mockedResponsesPath}/results.json`,
+          'utf8',
+        );
+        expect(responseJson).to.deep.equal(JSON.parse(expectedResult));
       });
     });
 

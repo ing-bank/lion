@@ -1,18 +1,19 @@
-import fs from 'fs';
 import path from 'path';
-import { swcTraverse } from '../../utils/swc-traverse.js';
-import { isRelativeSourcePath, toRelativeSourcePath } from '../../utils/relative-source-path.js';
-import { InputDataService } from '../../core/InputDataService.js';
-import { resolveImportPath } from '../../utils/resolve-import-path.js';
-import { AstService } from '../../core/AstService.js';
-import { memoize } from '../../utils/memoize.js';
+
+import { isRelativeSourcePath, toRelativeSourcePath } from './relative-source-path.js';
+import { InputDataService } from '../core/InputDataService.js';
+import { resolveImportPath } from './resolve-import-path.js';
+import { AstService } from '../core/AstService.js';
+import { swcTraverse } from './swc-traverse.js';
+import { fsAdapter } from './fs-adapter.js';
+import { memoize } from './memoize.js';
 
 /**
- * @typedef {import('../../../../types/index.js').RootFile} RootFile
- * @typedef {import('../../../../types/index.js').SpecifierSource} SpecifierSource
- * @typedef {import('../../../../types/index.js').IdentifierName} IdentifierName
- * @typedef {import('../../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../../../types/index.js').SwcPath} SwcPath
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').SpecifierSource} SpecifierSource
+ * @typedef {import('../../../types/index.js').IdentifierName} IdentifierName
+ * @typedef {import('../../../types/index.js').RootFile} RootFile
+ * @typedef {import('../../../types/index.js').SwcPath} SwcPath
  */
 
 /**
@@ -20,7 +21,7 @@ import { memoize } from '../../utils/memoize.js';
  * @param {string} projectName
  */
 function isSelfReferencingProject(source, projectName) {
-  return source.startsWith(`${projectName}`);
+  return source.split('/')[0] === projectName;
 }
 
 /**
@@ -193,7 +194,7 @@ async function trackDownIdentifierFn(
       specifier: '[default]',
     };
   }
-  const code = fs.readFileSync(/** @type {string} */ (resolvedSourcePath), 'utf8');
+  const code = fsAdapter.fs.readFileSync(/** @type {string} */ (resolvedSourcePath), 'utf8');
   const swcAst = AstService._getSwcAst(code);
 
   const shouldLookForDefaultExport = identifierName === '[default]';
