@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.16.1
+
+### Patch Changes
+
+- f9698e9: fix: expose inlined-swc-to-babel
+
 ## 0.16.0
 
 ### Minor Changes
