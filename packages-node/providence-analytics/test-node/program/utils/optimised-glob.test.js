@@ -13,7 +13,7 @@ const measurePerf = process.argv.includes('--measure-perf');
 /**
  * @param {*} patterns
  * @param {*} options
- * @returns {string[]}
+ * @returns {Promise<string[]>}
  */
 async function runOptimisedGlobAndCheckGlobbyParity(patterns, options) {
   performance.mark('start-optimisedGlob');

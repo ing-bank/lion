@@ -23,6 +23,7 @@
     "providence": "./src/cli/index.js"
   },
   "files": [
+    "inlined-swc-to-babel",
     "src"
   ],
   "scripts": {
