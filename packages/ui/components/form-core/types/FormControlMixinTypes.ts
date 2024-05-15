@@ -43,10 +43,6 @@ export declare interface HTMLElementWithValue extends HTMLElement {
 export declare class FormControlHost {
   static get styles(): CSSResultArray;
   static get properties(): {
-    name: {
-      type: StringConstructor;
-      reflect: boolean;
-    };
     readOnly: {
       type: BooleanConstructor;
       attribute: string;
@@ -87,14 +83,6 @@ export declare class FormControlHost {
    */
   get modelValue(): any | Unparseable;
   set modelValue(value: any | Unparseable);
-
-  /**
-   * The name the element will be registered with to the .formElements collection
-   * of the parent. Also, it serves as the key of key/value pairs in
-   *  modelValue/serializedValue objects
-   */
-  get name(): string;
-  set name(arg: any);
 
   /**
    * The label text for the input node.
@@ -237,7 +225,6 @@ export declare class FormControlHost {
   protected _onBeforeRepropagateChildrenValues(ev: CustomEvent): void;
   protected _repropagationCondition(target: FormControlHost): boolean;
 
-  private __name: string;
   private __helpText: string | undefined;
   private __label: string;
   private __fieldName: string | undefined;

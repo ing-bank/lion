@@ -34,7 +34,6 @@ const FormControlMixinImplementation = superclass =>
     /** @type {any} */
     static get properties() {
       return {
-        name: { type: String, reflect: true },
         readOnly: { type: Boolean, attribute: 'readonly', reflect: true },
         label: String, // FIXME: { attribute: false } breaks a bunch of tests, but shouldn't...
         labelSrOnly: { type: Boolean, attribute: 'label-sr-only', reflect: true },
@@ -45,25 +44,6 @@ const FormControlMixinImplementation = superclass =>
         _repropagationRole: { attribute: false },
         _isRepropagationEndpoint: { attribute: false },
       };
-    }
-
-    /**
-     * Name attribute for the control.
-     * @type {string}
-     */
-    get name() {
-      return this.__name || '';
-    }
-
-    /**
-     * Converts values provided for the `name` attribute to string type.
-     * Mimicks the native `input` behavior.
-     * @param {string} newName
-     */
-    set name(newName) {
-      const oldName = this.name;
-      this.__name = newName.toString();
-      this.requestUpdate('name', oldName);
     }
 
     /**
@@ -174,14 +154,6 @@ const FormControlMixinImplementation = superclass =>
 
     constructor() {
       super();
-
-      /**
-       * The name the element will be registered with to the .formElements collection
-       * of the parent. Also, it serves as the key of key/value pairs in
-       *  modelValue/serializedValue objects
-       * @type {string}
-       */
-      this.name = '';
 
       /**
        * A Boolean attribute which, if present, indicates that the user should not be able to edit
