@@ -43,6 +43,10 @@ export declare interface HTMLElementWithValue extends HTMLElement {
 export declare class FormControlHost {
   static get styles(): CSSResultArray;
   static get properties(): {
+    name: {
+      type: StringConstructor;
+      reflect: boolean;
+    };
     readOnly: {
       type: BooleanConstructor;
       attribute: string;
@@ -68,6 +72,13 @@ export declare class FormControlHost {
    * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly
    */
   readOnly: boolean;
+
+  /**
+   * The name the element will be registered with to the .formElements collection
+   * of the parent. Also, it serves as the key of key/value pairs in
+   *  modelValue/serializedValue objects
+   */
+  name: string;
 
   /**
    * The model value is the result of the parser function(when available).
