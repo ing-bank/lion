@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.16.3
+
+### Patch Changes
+
+- 9f8826a: resolve scoped packages outside node_modules
+
 ## 0.16.2
 
 ### Patch Changes
