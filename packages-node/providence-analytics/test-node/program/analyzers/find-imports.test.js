@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
+
 import { providence } from '../../../src/program/providence.js';
 import { QueryService } from '../../../src/program/core/QueryService.js';
 import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';

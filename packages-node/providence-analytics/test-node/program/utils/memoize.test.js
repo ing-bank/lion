@@ -119,6 +119,7 @@ describe('Memoize', () => {
       });
     });
   });
+
   describe('With non primitives', () => {
     describe('Arrays', () => {
       it(`returns cached result when called with same parameters`, async () => {
@@ -246,6 +247,7 @@ describe('Memoize', () => {
         expect(sumCalled).to.equal(1);
 
         // Outside world can edit returned reference
+        // @ts-expect-error
         resultCached.x = 3;
         // Return from cache
         const lastResult = sumMemoized({ x: 1 }, { y: 2 });

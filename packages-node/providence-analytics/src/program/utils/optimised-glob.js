@@ -141,7 +141,7 @@ async function getAllFilesFromStartPath(
     const direntsForLvl = await fs.promises.readdir(startPath, { withFileTypes: true });
     for (const dirent of direntsForLvl) {
       // @ts-expect-error
-      dirent.parentPath = startPath;
+      dirent.parentPath = dirent.path = startPath; // eslint-disable-line no-multi-assign
       dirents.push(dirent);
 
       if (dirent.isDirectory()) {
@@ -189,7 +189,7 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     options.onlyDirectories = true;
   }
 
-  const globs = Array.isArray(globOrGlobs) ? globOrGlobs : [globOrGlobs];
+  const globs = Array.isArray(globOrGlobs) ? Array.from(new Set(globOrGlobs)) : [globOrGlobs];
 
   /** @type {RegExp[]} */
   const matchRegexesNegative = [];
@@ -224,12 +224,10 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
       });
 
       const allDirEntsRelativeToCwd = allDirentsRelativeToStartPath.map(dirent => ({
-        // @ts-expect-error
-        relativeToCwdPath: toPosixPath(path.join(dirent.parentPath, dirent.name)).replace(
-          `${toPosixPath(options.cwd)}/`,
-          '',
-        ),
-
+        relativeToCwdPath: toPosixPath(
+          // @ts-expect-error
+          path.join(dirent.parentPath || dirent.path, dirent.name),
+        ).replace(`${toPosixPath(options.cwd)}/`, ''),
         dirent,
       }));
 
