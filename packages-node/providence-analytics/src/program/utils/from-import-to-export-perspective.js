@@ -38,7 +38,13 @@ export async function fromImportToExportPerspective({ importee, importer, import
   }
 
   const absolutePath = await resolveImportPath(importee, importer, {
-    modulePaths: [path.resolve(importeeProjectPath, '..')],
+    // Usually, we resolve from `{importer}/node_modules`.
+    // In some contexts, the package we are looking for is not in the importer's node_modules.
+    // In that case it is either 2 levels (in cases of a scoped package) up or 1 level up.
+    modulePaths: [
+      path.resolve(importeeProjectPath, '..'),
+      path.resolve(importeeProjectPath, '../..'),
+    ],
   });
 
   if (!absolutePath) {
