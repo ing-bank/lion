@@ -526,7 +526,7 @@ export class InputDataService {
       npmGlobs.push(...getNpmPackagePaths(startPath));
     }
 
-    const combinedGlobs = [...cfg.allowlist, ...npmGlobs, ...negativeGitGlobs];
+    const combinedGlobs = Array.from(new Set([...cfg.allowlist, ...npmGlobs, ...negativeGitGlobs]));
     const hasProvidedPositiveGlob = cfg.allowlist.some(glob => !glob.startsWith('!'));
 
     // We need to expand
@@ -538,6 +538,7 @@ export class InputDataService {
 
     const globbyCfg = {
       expandDirectories: false,
+      fs: fsAdapter.fs,
       onlyFiles: true,
       absolute: true,
       cwd: startPath,

@@ -2,9 +2,6 @@ import path from 'path';
 import { hash } from '../utils/hash.js';
 import { fsAdapter } from '../utils/fs-adapter.js';
 
-import { memoize } from '../utils/memoize.js';
-// const memoize = fn => fn;
-
 /**
  * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
@@ -132,5 +129,3 @@ export class ReportService {
     fsAdapter.fs.writeFileSync(filePath, JSON.stringify(file, null, 2), { flag: 'w' });
   }
 }
-ReportService.createIdentifier = memoize(ReportService.createIdentifier);
-ReportService.getCachedResult = memoize(ReportService.getCachedResult);
