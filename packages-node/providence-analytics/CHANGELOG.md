@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.16.2
+
+### Patch Changes
+
+- cbfbdb4: - feat: expose ReportService to allow config of outputPath
+  - fix: cache and performance improvements
+
 ## 0.16.1
 
 ### Patch Changes
