@@ -131,7 +131,11 @@ const SlotMixinImplementation = superclass =>
       if (isFirstRender) {
         // @ts-expect-error wait for browser support
         const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
-        const registryRoot = supportsScopedRegistry ? this.shadowRoot || document : document;
+        const hasShadowRoot = Boolean(this.shadowRoot);
+        if (!hasShadowRoot) {
+          throw new Error(`No shadowRoot was found`);
+        }
+        const registryRoot = supportsScopedRegistry ? this.shadowRoot : document;
 
         // @ts-expect-error wait for browser support
         const renderTargetThatRespectsShadowRootScoping = registryRoot.createElement('div');
