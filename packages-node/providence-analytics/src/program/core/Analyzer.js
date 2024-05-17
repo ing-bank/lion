@@ -1,26 +1,38 @@
 /* eslint-disable no-param-reassign */
-import semver from 'semver';
 import path from 'path';
-import { LogService } from './LogService.js';
-import { QueryService } from './QueryService.js';
-import { ReportService } from './ReportService.js';
+
+import semver from 'semver';
+
+import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
 import { InputDataService } from './InputDataService.js';
 import { toPosixPath } from '../utils/to-posix-path.js';
-import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
+import { ReportService } from './ReportService.js';
+import { QueryService } from './QueryService.js';
+import { LogService } from './LogService.js';
 
 /**
- * @typedef {import("@swc/core").Module} SwcAstModule
- * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
- * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
- * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
+ * @typedef {(ast: File, astContext: {code:string; relativePath:string; projectData: ProjectInputDataWithMeta}) => object} FileAstTraverseFn
  * @typedef {import('../../../types/index.js').ProjectInputDataWithMeta} ProjectInputDataWithMeta
  * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
  * @typedef {import('../../../types/index.js').MatchAnalyzerConfig} MatchAnalyzerConfig
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
+ * @typedef {import('../../../types/index.js').QueryOutput} QueryOutput
+ * @typedef {import("@swc/core").Module} SwcAstModule
  * @typedef {import('@babel/types').File} File
- * @typedef {(ast: File, astContext: {code:string; relativePath:string; projectData: ProjectInputDataWithMeta}) => object} FileAstTraverseFn
  */
+
+/**
+ * @param {string} identifier
+ */
+function displayProjectsInLog(identifier) {
+  const [target, targetV, , reference, referenceV] = identifier.split('_');
+  return decodeURIComponent(
+    `${target}@${targetV} ${reference ? `- ${reference}@${referenceV}` : ''}`,
+  );
+}
 
 /**
  * Analyzes one entry: the callback can traverse a given ast for each entry
@@ -247,12 +259,7 @@ export class Analyzer {
       if (!compatible) {
         if (!cfg.suppressNonCriticalLogs) {
           LogService.info(
-            `skipping ${LogService.pad(this.name, 16)} for ${
-              this.identifier
-            }: (${reason})\n${cfg.targetProjectPath.replace(
-              `${process.cwd()}/providence-input-data/search-targets/`,
-              '',
-            )}`,
+            `${LogService.pad(`skipping  ${this.name} (${reason})`)}${displayProjectsInLog(this.identifier)}`,
           );
         }
         return ensureAnalyzerResultFormat(`[${reason}]`, cfg, this);
@@ -273,24 +280,43 @@ export class Analyzer {
     }
 
     if (!cfg.suppressNonCriticalLogs) {
-      LogService.info(`starting ${LogService.pad(this.name, 16)} for ${this.identifier}`);
+      LogService.info(
+        `${LogService.pad(`starting ${this.name}`)}${displayProjectsInLog(this.identifier)}`,
+      );
     }
 
     /**
      * Get reference and search-target data
      */
     if (!cfg.targetProjectResult) {
+      performance.mark('analyzer--prepare--createDTarg-start');
       this.targetData = await InputDataService.createDataObject(
         [cfg.targetProjectPath],
         cfg.gatherFilesConfig,
       );
+      performance.mark('analyzer--prepare--createDTarg-end');
+      const m1 = performance.measure(
+        'analyzer--prepare--createDTarg',
+        'analyzer--prepare--createDTarg-start',
+        'analyzer--prepare--createDTarg-end',
+      );
+      LogService.perf(m1);
     }
 
     if (cfg.referenceProjectPath) {
+      performance.mark('analyzer--prepare--createDRef-start');
+
       this.referenceData = await InputDataService.createDataObject(
         [cfg.referenceProjectPath],
         cfg.gatherFilesConfigReference || cfg.gatherFilesConfig,
       );
+      performance.mark('analyzer--prepare--createDRef-end');
+      const m2 = performance.measure(
+        'analyzer--prepare--createDRef',
+        'analyzer--prepare--createDRef-start',
+        'analyzer--prepare--createDRef-end',
+      );
+      LogService.perf(m2);
     }
 
     return undefined;
@@ -304,10 +330,21 @@ export class Analyzer {
   _finalize(queryOutput, cfg) {
     LogService.debug(`Analyzer "${this.name}": started _finalize method`);
 
+    performance.mark('analyzer--finalize-start');
     const analyzerResult = ensureAnalyzerResultFormat(queryOutput, cfg, this);
     if (!cfg.suppressNonCriticalLogs) {
-      LogService.success(`finished ${LogService.pad(this.name, 16)} for ${this.identifier}`);
+      LogService.success(
+        `${LogService.pad(`finished ${this.name}`)}${displayProjectsInLog(this.identifier)}`,
+      );
     }
+    performance.mark('analyzer--finalize-end');
+    const measurementFinalize = performance.measure(
+      'analyzer--finalize',
+      'analyzer--finalize-start',
+      'analyzer--finalize-end',
+    );
+    LogService.perf(measurementFinalize);
+
     return analyzerResult;
   }
 

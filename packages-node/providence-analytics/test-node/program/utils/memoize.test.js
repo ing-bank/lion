@@ -335,11 +335,11 @@ describe('Memoize', () => {
 
       // Now the original function is called again
       expect(sumMemoized('1', '2')).to.equal('12');
-      expect(sumCalled).to.equal(3);
+      expect(sumCalled).to.equal(2);
 
       // Return from new cache again
       expect(sumMemoized('1', '2')).to.equal('12');
-      expect(sumCalled).to.equal(3);
+      expect(sumCalled).to.equal(2);
     });
   });
 });

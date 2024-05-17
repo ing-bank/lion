@@ -1,5 +1,5 @@
 /* eslint-disable no-continue */
-import pathLib from 'path';
+import path from 'path';
 /* eslint-disable no-shadow, no-param-reassign */
 import FindImportsAnalyzer from './find-imports.js';
 import FindExportsAnalyzer from './find-exports.js';
@@ -9,14 +9,15 @@ import { transformIntoIterableFindExportsOutput } from './helpers/transform-into
 import { transformIntoIterableFindImportsOutput } from './helpers/transform-into-iterable-find-imports-output.js';
 
 /**
- * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
- * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
  * @typedef {import('../../../types/index.js').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
- * @typedef {import('../../../types/index.js').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
- * @typedef {import('../../../types/index.js').MatchImportsConfig} MatchImportsConfig
- * @typedef {import('../../../types/index.js').MatchImportsAnalyzerResult} MatchImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
+ * @typedef {import('../../../types/index.js').MatchImportsAnalyzerResult} MatchImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').MatchImportsConfig} MatchImportsConfig
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
@@ -117,7 +118,7 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
       const fromImportToExport = await fromImportToExportPerspective({
         importee: importEntry.normalizedSource,
         importer: /** @type {PathFromSystemRoot} */ (
-          pathLib.resolve(importProjectPath, importEntry.file)
+          path.resolve(importProjectPath, importEntry.file)
         ),
         importeeProjectPath: cfg.referenceProjectPath,
       });
@@ -193,6 +194,7 @@ export default class MatchImportsAnalyzer extends Analyzer {
      * Prepare
      */
     const cachedAnalyzerResult = await this._prepare(cfg);
+
     if (cachedAnalyzerResult) {
       return cachedAnalyzerResult;
     }
@@ -205,6 +207,7 @@ export default class MatchImportsAnalyzer extends Analyzer {
         targetProjectPath: cfg.referenceProjectPath,
         skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
         suppressNonCriticalLogs: true,
+        gatherFilesConfig: cfg.gatherFilesConfigReference,
       });
     }
 
@@ -216,6 +219,7 @@ export default class MatchImportsAnalyzer extends Analyzer {
         targetProjectPath: cfg.targetProjectPath,
         skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
         suppressNonCriticalLogs: true,
+        gatherFilesConfig: cfg.gatherFilesConfig,
       });
     }
 

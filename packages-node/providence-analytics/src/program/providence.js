@@ -9,13 +9,13 @@ import { LogService } from './core/LogService.js';
 import { AstService } from './core/AstService.js';
 
 /**
- * @typedef {import('../../types/index.js').ProvidenceConfig} ProvidenceConfig
- * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../types/index.js').QueryResult} QueryResult
  * @typedef {import('../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
- * @typedef {import('../../types/index.js').QueryConfig} QueryConfig
  * @typedef {import('../../types/index.js').AnalyzerQueryConfig} AnalyzerQueryConfig
+ * @typedef {import('../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../types/index.js').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../../types/index.js').ProvidenceConfig} ProvidenceConfig
+ * @typedef {import('../../types/index.js').QueryResult} QueryResult
+ * @typedef {import('../../types/index.js').QueryConfig} QueryConfig
  */
 
 /**
@@ -81,6 +81,8 @@ function getSlicedQueryConfig(queryConfig, targetProjectPath, referenceProjectPa
  * @param {{ gatherFilesConfig:GatherFilesConfig, gatherFilesConfigReference:GatherFilesConfig, skipCheckMatchCompatibility:boolean }} cfg
  */
 async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
+  performance.mark(`${slicedQConfig.analyzerName}-start`);
+
   const queryResult = await QueryService.astSearch(slicedQConfig, {
     gatherFilesConfig: cfg.gatherFilesConfig,
     gatherFilesConfigReference: cfg.gatherFilesConfigReference,
@@ -88,6 +90,17 @@ async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
     addSystemPathsInResult: cfg.addSystemPathsInResult,
     ...slicedQConfig.analyzerConfig,
   });
+
+  performance.mark(`${slicedQConfig.analyzerName}-end`);
+  const measurement = /** @type {* & PerformanceMeasure} */ (
+    performance.measure(
+      slicedQConfig.analyzerName,
+      `${slicedQConfig.analyzerName}-start`,
+      `${slicedQConfig.analyzerName}-end`,
+    )
+  );
+  LogService.perf(measurement);
+
   if (queryResult) {
     report(queryResult, cfg);
   }
