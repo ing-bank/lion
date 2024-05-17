@@ -1,6 +1,6 @@
 {
   "name": "@lion/nodejs-helpers",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Node.js helpers that could be useful to extenders of lion",
   "license": "MIT",
   "author": "ing-bank",
