@@ -286,10 +286,10 @@ describe('<lion-input-datepicker>', () => {
 
       it('converts MinDate validator to "minDate" property', async () => {
         const myMinDate = new Date('2019/06/15');
-        const el = await fixture(html` <lion-input-datepicker
-          .validators="${[new MinDate(myMinDate)]}"
-        >
-        </lion-input-datepicker>`);
+        const el = await fixture(
+          html` <lion-input-datepicker .validators="${[new MinDate(myMinDate)]}">
+          </lion-input-datepicker>`,
+        );
         const elObj = new DatepickerInputObject(el);
         await elObj.openCalendar();
 

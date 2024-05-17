@@ -28,7 +28,9 @@ class WaOption extends LionOption {
         cursor: pointer;
         color: rgb(74, 74, 74);
         padding: 0;
-        transition: max-height 0.4s ease, opacity 0.3s ease;
+        transition:
+          max-height 0.4s ease,
+          opacity 0.3s ease;
         max-height: 500px;
       }
 
@@ -287,8 +289,18 @@ class WaCombobox extends LionCombobox {
     ...super.styles,
     css`
       :host {
-        font-family: SF Pro Text, SF Pro Icons, system, -apple-system, system-ui, BlinkMacSystemFont,
-          Helvetica Neue, Helvetica, Lucida Grande, Kohinoor Devanagari, sans-serif;
+        font-family:
+          SF Pro Text,
+          SF Pro Icons,
+          system,
+          -apple-system,
+          system-ui,
+          BlinkMacSystemFont,
+          Helvetica Neue,
+          Helvetica,
+          Lucida Grande,
+          Kohinoor Devanagari,
+          sans-serif;
       }
 
       .input-group__container {

@@ -35,7 +35,9 @@ export class GhButton extends LionButton {
         color: #24292e;
         background-color: #fafbfc;
         border-color: rgba(27, 31, 35, 0.15);
-        box-shadow: 0 1px 0 rgba(27, 31, 35, 0.04), inset 0 1px 0 hsla(0, 0%, 100%, 0.25);
+        box-shadow:
+          0 1px 0 rgba(27, 31, 35, 0.04),
+          inset 0 1px 0 hsla(0, 0%, 100%, 0.25);
         transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
       }
 

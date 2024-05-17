@@ -20,8 +20,9 @@ Can be provided via the `label-sr-only` boolean attribute.
 The label will be hidden, but still readable by screen readers.
 
 ```js preview-story
-export const labelSrOnly = () =>
-  html` <lion-input label-sr-only label="Input" name="input"></lion-input> `;
+export const labelSrOnly = () => html`
+  <lion-input label-sr-only label="Input" name="input"></lion-input>
+`;
 ```
 
 > Note: Once we support the ElementInternals API, the equivalent will be `<lion-input aria-label="Input" name="input"></lion-input>`

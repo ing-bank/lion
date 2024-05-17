@@ -95,8 +95,8 @@ const bypassImportMapForFile = async (filePath, packageDir, importMap) => {
   const initialCode = await readFile(filePath, 'utf-8');
   const adjustImportVisitor = getAdjustImportVisitor(filePath, packageDir, importMap);
   const updatedCode = transformCode(initialCode, adjustImportVisitor);
-  const prettyInitialCode = prettify(initialCode);
-  const prettyUpdatedCode = prettify(updatedCode);
+  const prettyInitialCode = await prettify(initialCode);
+  const prettyUpdatedCode = await prettify(updatedCode);
   if (prettyInitialCode === prettyUpdatedCode) {
     return Promise.resolve();
   }

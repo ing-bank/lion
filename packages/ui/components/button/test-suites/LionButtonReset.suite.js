@@ -164,15 +164,13 @@ export function LionButtonResetSuite({ klass = LionButtonReset } = {}) {
       const formSpyLater = /** @type {EventListener} */ (sinon.spy(e => e.preventDefault()));
 
       const form2El = /** @type {HTMLFormElement} */ (
-        await fixture(
-          html`
-            <div @click="${outsideSpy}">
-              <form @click="${formSpyEarly}">
-                <div @click="${insideSpy}">${lionButton}</div>
-              </form>
-            </div>
-          `,
-        )
+        await fixture(html`
+          <div @click="${outsideSpy}">
+            <form @click="${formSpyEarly}">
+              <div @click="${insideSpy}">${lionButton}</div>
+            </form>
+          </div>
+        `)
       );
       const form2Node = /** @type {HTMLFormElement} */ (form2El.querySelector('form'));
 

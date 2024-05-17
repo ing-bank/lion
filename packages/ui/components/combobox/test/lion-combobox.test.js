@@ -2300,17 +2300,17 @@ describe('lion-combobox', () => {
             await fixture(html`
             <${tag} name="foo" autocomplete="both" multiple-choice>
               <lion-option .label="${'Artichoke as label'}" .choiceValue="${{
-              value: 'Artichoke',
-            }}">Artichoke</lion-option>
+                value: 'Artichoke',
+              }}">Artichoke</lion-option>
               <lion-option .label="${'Chard as label'}" .choiceValue="${{
-              value: 'Chard',
-            }}">Chard</lion-option>
+                value: 'Chard',
+              }}">Chard</lion-option>
               <lion-option .label="${'Chicory as label'}" .choiceValue="${{
-              value: 'Chicory',
-            }}">Chicory</lion-option>
+                value: 'Chicory',
+              }}">Chicory</lion-option>
               <lion-option .label="${'Victoria Plum as label'}" .choiceValue="${{
-              value: 'Victoria Plum',
-            }}">Victoria Plum</lion-option>
+                value: 'Victoria Plum',
+              }}">Victoria Plum</lion-option>
             </${tag}>
           `)
           );
@@ -2353,17 +2353,17 @@ describe('lion-combobox', () => {
             await fixture(html`
             <${tag} name="foo">
               <lion-option .label="${'Artichoke as label'}" .choiceValue="${{
-              value: 'Artichoke',
-            }}">Artichoke</lion-option>
+                value: 'Artichoke',
+              }}">Artichoke</lion-option>
               <lion-option .label="${'Chard as label'}" .choiceValue="${{
-              value: 'Chard',
-            }}" checked>Chard</lion-option>
+                value: 'Chard',
+              }}" checked>Chard</lion-option>
               <lion-option .label="${'Chicory as label'}" .choiceValue="${{
-              value: 'Chicory',
-            }}">Chicory</lion-option>
+                value: 'Chicory',
+              }}">Chicory</lion-option>
               <lion-option .label="${'Victoria Plum as label'}" .choiceValue="${{
-              value: 'Victoria Plum',
-            }}">Victoria Plum</lion-option>
+                value: 'Victoria Plum',
+              }}">Victoria Plum</lion-option>
             </${tag}>
           `)
           );
@@ -2403,17 +2403,17 @@ describe('lion-combobox', () => {
             await fixture(html`
             <${tag} name="foo" .modelValue="${{ value: 'Artichoke' }}">
               <lion-option .label="${'Artichoke as label'}" .choiceValue="${{
-              value: 'Artichoke',
-            }}">Artichoke</lion-option>
+                value: 'Artichoke',
+              }}">Artichoke</lion-option>
               <lion-option .label="${'Chard as label'}" .choiceValue="${{
-              value: 'Chard',
-            }}">Chard</lion-option>
+                value: 'Chard',
+              }}">Chard</lion-option>
               <lion-option .label="${'Chicory as label'}" .choiceValue="${{
-              value: 'Chicory',
-            }}">Chicory</lion-option>
+                value: 'Chicory',
+              }}">Chicory</lion-option>
               <lion-option .label="${'Victoria Plum as label'}" .choiceValue="${{
-              value: 'Victoria Plum',
-            }}">Victoria Plum</lion-option>
+                value: 'Victoria Plum',
+              }}">Victoria Plum</lion-option>
             </${tag}>
           `)
           );
@@ -2450,17 +2450,17 @@ describe('lion-combobox', () => {
             await fixture(html`
             <${tag} name="foo">
               <lion-option .label="${'Artichoke as label'}" .choiceValue="${{
-              value: 'Artichoke',
-            }}">Artichoke</lion-option>
+                value: 'Artichoke',
+              }}">Artichoke</lion-option>
               <lion-option .label="${'Chard as label'}" .choiceValue="${{
-              value: 'Chard',
-            }}">Chard</lion-option>
+                value: 'Chard',
+              }}">Chard</lion-option>
               <lion-option .label="${'Chicory as label'}" .choiceValue="${{
-              value: 'Chicory',
-            }}">Chicory</lion-option>
+                value: 'Chicory',
+              }}">Chicory</lion-option>
               <lion-option .label="${'Victoria Plum as label'}" .choiceValue="${{
-              value: 'Victoria Plum',
-            }}">Victoria Plum</lion-option>
+                value: 'Victoria Plum',
+              }}">Victoria Plum</lion-option>
             </${tag}>
           `)
           );

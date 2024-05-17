@@ -35,7 +35,9 @@ class DemoApp extends LitElement {
         font-size: 1rem;
         cursor: pointer;
         text-align: center;
-        transition: background 250ms ease-in-out, transform 150ms ease;
+        transition:
+          background 250ms ease-in-out,
+          transform 150ms ease;
       }
 
       button:hover,

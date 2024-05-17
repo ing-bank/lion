@@ -36,24 +36,20 @@ describe('<lion-input-amount>', () => {
 
   it('formatAmount uses locale provided in formatOptions', async () => {
     let el = /** @type {LionInputAmount} */ (
-      await fixture(
-        html`
-          <lion-input-amount
-            .formatOptions="${{ locale: 'en-GB' }}"
-            .modelValue="${123}"
-          ></lion-input-amount>
-        `,
-      )
-    );
-    expect(el.formattedValue).to.equal('123.00');
-    el = await fixture(
-      html`
+      await fixture(html`
         <lion-input-amount
-          .formatOptions="${{ locale: 'nl-NL' }}"
+          .formatOptions="${{ locale: 'en-GB' }}"
           .modelValue="${123}"
         ></lion-input-amount>
-      `,
+      `)
     );
+    expect(el.formattedValue).to.equal('123.00');
+    el = await fixture(html`
+      <lion-input-amount
+        .formatOptions="${{ locale: 'nl-NL' }}"
+        .modelValue="${123}"
+      ></lion-input-amount>
+    `);
     expect(el.formattedValue).to.equal('123,00');
   });
 

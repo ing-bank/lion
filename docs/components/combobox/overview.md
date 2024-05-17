@@ -25,8 +25,9 @@ export const main = () => html`
   <lion-combobox name="combo" label="Default">
     ${lazyRender(
       listboxData.map(
-        (entry, i) =>
-          html` <lion-option .checked="${i === 0}" .choiceValue="${entry}">${entry}</lion-option> `,
+        (entry, i) => html`
+          <lion-option .checked="${i === 0}" .choiceValue="${entry}">${entry}</lion-option>
+        `,
       ),
     )}
   </lion-combobox>

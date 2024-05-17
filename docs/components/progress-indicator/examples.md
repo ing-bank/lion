@@ -51,15 +51,14 @@ By given the progress-indicator a value it becomes determinate.
 The min is automatically set to "0" and max to "100", but they can be set to your local needs.
 
 ```js preview-story
-export const progressBarDemo = () =>
-  html`
-    <my-determinate-progress-bar
-      aria-label="Interest rate"
-      name="my-bar"
-      value="50"
-    ></my-determinate-progress-bar>
-    <button @click="${changeProgress}">Randomize Value</button>
-  `;
+export const progressBarDemo = () => html`
+  <my-determinate-progress-bar
+    aria-label="Interest rate"
+    name="my-bar"
+    value="50"
+  ></my-determinate-progress-bar>
+  <button @click="${changeProgress}">Randomize Value</button>
+`;
 ```
 
 ## Styled progress spinner example
@@ -120,6 +119,7 @@ class MyIndeterminateProgressSpinner extends LionProgressIndicator {
 ```
 
 ```js preview-story
-export const main = () =>
-  html` <my-indeterminate-progress-spinner></my-indeterminate-progress-spinner> `;
+export const main = () => html`
+  <my-indeterminate-progress-spinner></my-indeterminate-progress-spinner>
+`;
 ```

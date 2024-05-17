@@ -84,9 +84,8 @@ describe('Analyzer "match-subclasses"', async () => {
     ],
   };
 
-  const matchSubclassesQueryConfig = await QueryService.getQueryConfigFromAnalyzer(
-    MatchSubclassesAnalyzer,
-  );
+  const matchSubclassesQueryConfig =
+    await QueryService.getQueryConfigFromAnalyzer(MatchSubclassesAnalyzer);
   /** @type {Partial<ProvidenceConfig>} */
   const _providenceCfg = {
     targetProjectPaths: [searchTargetProject.path],
