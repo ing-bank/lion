@@ -133,7 +133,8 @@ const SlotMixinImplementation = superclass =>
         const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
         const hasShadowRoot = Boolean(this.shadowRoot);
         if (!hasShadowRoot) {
-          throw new Error(`No shadowRoot was found`);
+          // TODO: throw an error in a breaking release
+          console.error(`[SlotMixin] No shadowRoot was found`);
         }
         const registryRoot = supportsScopedRegistry ? this.shadowRoot : document;
 
