@@ -55,7 +55,7 @@ const FormRegisteringMixinImplementation = superclass =>
 
     /**
      * Converts values provided for the `name` attribute to string type.
-     * Mimicks the native `input` behavior.
+     * Mimics the native `input` behavior.
      * @param {string} newName
      */
     set name(newName) {

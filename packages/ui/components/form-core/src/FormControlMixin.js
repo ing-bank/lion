@@ -34,7 +34,6 @@ const FormControlMixinImplementation = superclass =>
     /** @type {any} */
     static get properties() {
       return {
-        name: { type: String, reflect: true },
         readOnly: { type: Boolean, attribute: 'readonly', reflect: true },
         label: String, // FIXME: { attribute: false } breaks a bunch of tests, but shouldn't...
         labelSrOnly: { type: Boolean, attribute: 'label-sr-only', reflect: true },
