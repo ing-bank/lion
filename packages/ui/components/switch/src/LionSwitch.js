@@ -131,6 +131,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   }
 
   /**
+   * Override this function from ChoiceInputMixin.
    * @param {Event} ev
    * @protected
    */
