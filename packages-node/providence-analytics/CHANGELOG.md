@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.16.4
+
+### Patch Changes
+
+- bdebc8f: - expose types; improve logging and formatting
+  - apply memoisation in optimised-glob
+  - add perf logs to LogService
+  - allow to clear cache of memoized function
+
 ## 0.16.3
 
 ### Patch Changes
@@ -184,14 +193,14 @@
   This means tag names are no longer being rewritten with a hash.
 
   ```js
-  import { css, LitElement } from 'lit';
-  import { ScopedElementsMixin } from '@open-wc/scoped-elements';
-  import { MyButton } from './MyButton.js';
+  import { css, LitElement } from "lit";
+  import { ScopedElementsMixin } from "@open-wc/scoped-elements";
+  import { MyButton } from "./MyButton.js";
 
   export class MyElement extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
       return {
-        'my-button': MyButton,
+        "my-button": MyButton,
       };
     }
 
