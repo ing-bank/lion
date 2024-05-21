@@ -41,7 +41,7 @@
   ],
   "scripts": {
     "create-npm-publish-docs": "node ./scripts/create-docs-for-npm-publish.js",
-    "custom-elements-manifest": "custom-elements-manifest analyze --litelement --exclude \"docs/**/*\" \"test-helpers/**/*\"",
+    "custom-elements-manifest": "node ./scripts/cem.js",
     "debug": "cd ../../ && npm run debug",
     "debug:firefox": "cd ../../ && npm run debug:firefox",
     "debug:webkit": "cd ../../ && npm run debug:webkit",

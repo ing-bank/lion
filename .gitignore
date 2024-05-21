@@ -47,6 +47,7 @@ browserstack.err
 docs/_merged_data/
 docs/_merged_assets/
 docs/_merged_includes/
+docs/**/api-table.md
 
 debug.log
 
