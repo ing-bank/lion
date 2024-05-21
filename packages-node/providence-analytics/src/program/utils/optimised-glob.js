@@ -4,159 +4,189 @@ import nodeFs from 'fs';
 import path from 'path';
 
 import { toPosixPath } from './to-posix-path.js';
+import { memoize } from './memoize.js';
 
 /**
  * @typedef {nodeFs} FsLike
+ * @typedef {nodeFs.Dirent & {path:string;parentPath:string}} DirentWithPath
  * @typedef {{onlyDirectories:boolean;onlyFiles:boolean;deep:number;suppressErrors:boolean;fs: FsLike;cwd:string;absolute:boolean;extglob:boolean;}} FastGlobtions
  */
 
 const [nodeMajor] = process.versions.node.split('.').map(Number);
 
-/**
- * @param {string} glob
- * @param {object} [providedOpts]
- * @param {boolean} [providedOpts.globstar=true] if true, '/foo/*' => '^\/foo\/[^/]*$' (not allowing folders inside *), else '/foo/*' => '^\/foo\/.*$'
- * @param {boolean} [providedOpts.extglob=true] if true, supports so called "extended" globs (like bash) and single character matching, matching ranges of characters, group matching etc.
- * @returns {RegExp}
- */
-export function parseGlobToRegex(glob, providedOpts) {
-  if (typeof glob !== 'string') throw new TypeError('Expected a string');
+export const parseGlobToRegex = memoize(
+  /**
+   * @param {string} glob
+   * @param {object} [providedOpts]
+   * @param {boolean} [providedOpts.globstar=true] if true, '/foo/*' => '^\/foo\/[^/]*$' (not allowing folders inside *), else '/foo/*' => '^\/foo\/.*$'
+   * @param {boolean} [providedOpts.extglob=true] if true, supports so called "extended" globs (like bash) and single character matching, matching ranges of characters, group matching etc.
+   * @returns {RegExp}
+   */
+  (glob, providedOpts) => {
+    if (typeof glob !== 'string') throw new TypeError('Expected a string');
 
-  const options = {
-    globstar: true,
-    extglob: true,
-    ...providedOpts,
-  };
+    const options = {
+      globstar: true,
+      extglob: true,
+      ...providedOpts,
+    };
 
-  let regexResultStr = '';
-  let isInGroup = false;
-  let currentChar;
+    let regexResultStr = '';
+    let isInGroup = false;
+    let currentChar;
 
-  for (let i = 0; i < glob.length; i += 1) {
-    currentChar = glob[i];
+    for (let i = 0; i < glob.length; i += 1) {
+      currentChar = glob[i];
 
-    const charsToEscape = ['/', '$', '^', '+', '.', '(', ')', '=', '!', '|'];
-    if (charsToEscape.includes(currentChar)) {
-      regexResultStr += `\\${currentChar}`;
-      continue; // eslint-disable-line no-continue
-    }
-
-    if (options.extglob) {
-      if (currentChar === '?') {
-        regexResultStr += '.';
+      const charsToEscape = ['/', '$', '^', '+', '.', '(', ')', '=', '!', '|'];
+      if (charsToEscape.includes(currentChar)) {
+        regexResultStr += `\\${currentChar}`;
         continue; // eslint-disable-line no-continue
       }
-      if (['[', ']'].includes(currentChar)) {
-        regexResultStr += currentChar;
-        continue; // eslint-disable-line no-continue
-      }
-      if (currentChar === '{') {
-        isInGroup = true;
-        regexResultStr += '(';
-        continue; // eslint-disable-line no-continue
-      }
-      if (currentChar === '}') {
-        isInGroup = false;
-        regexResultStr += ')';
-        continue; // eslint-disable-line no-continue
-      }
-    }
 
-    if (currentChar === ',') {
-      if (isInGroup) {
-        regexResultStr += '|';
-        continue; // eslint-disable-line no-continue
-      }
-      regexResultStr += `\\${currentChar}`;
-      continue; // eslint-disable-line no-continue
-    }
-
-    if (currentChar === '*') {
-      const prevChar = glob[i - 1];
-      let isMultiStar = false;
-      while (glob[i + 1] === '*') {
-        isMultiStar = true;
-        i += 1;
-      }
-      const nextChar = glob[i + 1];
-      if (!options.globstar) {
-        // Treat any number of "*" as one
-        regexResultStr += '.*';
-      } else {
-        const isGlobstarSegment =
-          isMultiStar && ['/', undefined].includes(prevChar) && ['/', undefined].includes(nextChar);
-        if (isGlobstarSegment) {
-          // Match zero or more path segments
-          regexResultStr += '((?:[^/]*(?:/|$))*)';
-          // Move over the "/"
-          i += 1;
-        } else {
-          // Only match one path segment
-          regexResultStr += '([^/]*)';
+      if (options.extglob) {
+        if (currentChar === '?') {
+          regexResultStr += '.';
+          continue; // eslint-disable-line no-continue
+        }
+        if (['[', ']'].includes(currentChar)) {
+          regexResultStr += currentChar;
+          continue; // eslint-disable-line no-continue
+        }
+        if (currentChar === '{') {
+          isInGroup = true;
+          regexResultStr += '(';
+          continue; // eslint-disable-line no-continue
+        }
+        if (currentChar === '}') {
+          isInGroup = false;
+          regexResultStr += ')';
+          continue; // eslint-disable-line no-continue
         }
       }
-      continue; // eslint-disable-line no-continue
+
+      if (currentChar === ',') {
+        if (isInGroup) {
+          regexResultStr += '|';
+          continue; // eslint-disable-line no-continue
+        }
+        regexResultStr += `\\${currentChar}`;
+        continue; // eslint-disable-line no-continue
+      }
+
+      if (currentChar === '*') {
+        const prevChar = glob[i - 1];
+        let isMultiStar = false;
+        while (glob[i + 1] === '*') {
+          isMultiStar = true;
+          i += 1;
+        }
+        const nextChar = glob[i + 1];
+        if (!options.globstar) {
+          // Treat any number of "*" as one
+          regexResultStr += '.*';
+        } else {
+          const isGlobstarSegment =
+            isMultiStar &&
+            ['/', undefined].includes(prevChar) &&
+            ['/', undefined].includes(nextChar);
+          if (isGlobstarSegment) {
+            // Match zero or more path segments
+            regexResultStr += '((?:[^/]*(?:/|$))*)';
+            // Move over the "/"
+            i += 1;
+          } else {
+            // Only match one path segment
+            regexResultStr += '([^/]*)';
+          }
+        }
+        continue; // eslint-disable-line no-continue
+      }
+      regexResultStr += currentChar;
     }
-    regexResultStr += currentChar;
-  }
 
-  return new RegExp(`^${regexResultStr}$`);
-}
+    return new RegExp(`^${regexResultStr}$`);
+  },
+);
 
-/**
- * @param {string} glob
- */
-function getStartPath(glob) {
-  const reservedChars = ['?', '[', ']', '{', '}', ',', '.', '*'];
-  let hasFoundReservedChar = false;
-  return glob
-    .split('/')
-    .map(part => {
-      if (hasFoundReservedChar) return undefined;
-      hasFoundReservedChar = reservedChars.some(reservedChar => part.includes(reservedChar));
-      return hasFoundReservedChar ? undefined : part;
-    })
-    .filter(Boolean)
-    .join('/');
-}
+const getStartPath = memoize(
+  /**
+   * @param {string} glob
+   */
+  glob => {
+    const reservedChars = ['?', '[', ']', '{', '}', ',', '.', '*'];
+    let hasFoundReservedChar = false;
+    return glob
+      .split('/')
+      .map(part => {
+        if (hasFoundReservedChar) return undefined;
+        hasFoundReservedChar = reservedChars.some(reservedChar => part.includes(reservedChar));
+        return hasFoundReservedChar ? undefined : part;
+      })
+      .filter(Boolean)
+      .join('/');
+  },
+);
 
 let isCacheEnabled = false;
-/** @type {{[path:string]:nodeFs.Dirent[]}} */
+/** @type {{[path:string]:DirentWithPath[]}} */
 const cache = {};
 
-/**
- * @param {string} startPath
- * @param {{fs?:FsLike, dirents?:nodeFs.Dirent[]}} providedOptions
- * @returns {Promise<nodeFs.Dirent[]>}
- */
-async function getAllFilesFromStartPath(
-  startPath,
-  { fs = /** @type {* & FsLike} */ (nodeFs), dirents = [] } = {},
-) {
-  if (isCacheEnabled && cache[startPath]) return cache[startPath];
+const getAllDirentsFromStartPath = memoize(
+  /**
+   * @param {string} startPath
+   * @param {{fs?:FsLike, dirents?:DirentWithPath[]}} providedOptions
+   * @returns {Promise<DirentWithPath[]>}
+   */
+  async (startPath, { fs = /** @type {* & FsLike} */ (nodeFs), dirents = [] } = {}) => {
+    if (isCacheEnabled && cache[startPath]) return cache[startPath];
 
-  // Older node doesn't support recursive option
-  if (nodeMajor < 18) {
-    /** @type {nodeFs.Dirent[]} */
-    const direntsForLvl = await fs.promises.readdir(startPath, { withFileTypes: true });
-    for (const dirent of direntsForLvl) {
-      // @ts-expect-error
-      dirent.parentPath = dirent.path = startPath; // eslint-disable-line no-multi-assign
-      dirents.push(dirent);
+    // Older node doesn't support recursive option
+    if (nodeMajor < 18) {
+      /** @type {nodeFs.Dirent[]} */
+      const direntsForLvl = await fs.promises.readdir(startPath, { withFileTypes: true });
+      for (const _dirent of direntsForLvl) {
+        const dirent = /** @type {DirentWithPath} */ (_dirent);
+        dirent.parentPath = dirent.path = startPath; // eslint-disable-line no-multi-assign
+        dirents.push(/** @type {DirentWithPath} */ (dirent));
 
-      if (dirent.isDirectory()) {
-        const subDir = path.join(startPath, dirent.name);
-        await getAllFilesFromStartPath(subDir, { fs, dirents });
+        if (dirent.isDirectory()) {
+          const subDir = path.join(startPath, dirent.name);
+          await getAllDirentsFromStartPath(subDir, { fs, dirents });
+        }
       }
+      return dirents;
     }
-    return /** @type {nodeFs.Dirent[]} */ (dirents);
-  }
 
-  // @ts-expect-error
-  dirents.push(...(await fs.promises.readdir(startPath, { withFileTypes: true, recursive: true })));
-  cache[startPath] = dirents;
-  return dirents;
-}
+    dirents.push(
+      // @ts-expect-error
+      ...(await fs.promises.readdir(startPath, { withFileTypes: true, recursive: true })),
+    );
+    cache[startPath] = dirents;
+    return dirents;
+  },
+);
+
+const getAllDirentsRelativeToCwd = memoize(
+  /**
+   * @param {string} fullStartPath
+   * @param {{fs?:FsLike, cwd:string}} options
+   * @returns {Promise<{relativeToCwdPath:string;dirent:DirentWithPath}[]>}
+   */
+  async (fullStartPath, options) => {
+    const allDirentsRelativeToStartPath = await getAllDirentsFromStartPath(fullStartPath, {
+      fs: options.fs,
+    });
+
+    const allDirEntsRelativeToCwd = allDirentsRelativeToStartPath.map(dirent => ({
+      relativeToCwdPath: toPosixPath(
+        path.join(dirent.parentPath || dirent.path, dirent.name),
+      ).replace(`${toPosixPath(options.cwd)}/`, ''),
+      dirent,
+    }));
+    return allDirEntsRelativeToCwd;
+  },
+);
 
 /**
  * Lightweight glob implementation.
@@ -219,17 +249,10 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     const fullStartPath = path.join(options.cwd, startPath);
 
     try {
-      const allDirentsRelativeToStartPath = await getAllFilesFromStartPath(fullStartPath, {
+      const allDirEntsRelativeToCwd = await getAllDirentsRelativeToCwd(fullStartPath, {
+        cwd: options.cwd,
         fs: options.fs,
       });
-
-      const allDirEntsRelativeToCwd = allDirentsRelativeToStartPath.map(dirent => ({
-        relativeToCwdPath: toPosixPath(
-          // @ts-expect-error
-          path.join(dirent.parentPath || dirent.path, dirent.name),
-        ).replace(`${toPosixPath(options.cwd)}/`, ''),
-        dirent,
-      }));
 
       globEntries.push(...allDirEntsRelativeToCwd);
     } catch (e) {
@@ -262,8 +285,8 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     filteredPaths = filteredPaths.map(f => toPosixPath(path.join(options.cwd, f)));
 
     if (process.platform === 'win32') {
-      const driveLetter = path.win32.resolve(options.cwd).slice(0, 1).toUpperCase();
-      filteredPaths = filteredPaths.map(f => `${driveLetter}:${f}`);
+      const driveChar = path.win32.resolve(options.cwd).slice(0, 1).toUpperCase();
+      filteredPaths = filteredPaths.map(f => `${driveChar}:${f}`);
     }
   }
 
@@ -273,10 +296,16 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
 
   const result = options.unique ? Array.from(new Set(filteredPaths)) : filteredPaths;
 
-  return result.sort((a, b) => {
+  const res = result.sort((a, b) => {
     const pathDiff = a.split('/').length - b.split('/').length;
     return pathDiff !== 0 ? pathDiff : a.localeCompare(b);
   });
+
+  // It could happen the fs changes with the next call, so we clear the cache
+  getAllDirentsRelativeToCwd.clearCache();
+  getAllDirentsFromStartPath.clearCache();
+
+  return res;
 }
 
 optimisedGlob.disableCache = () => {

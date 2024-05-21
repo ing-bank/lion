@@ -24,7 +24,8 @@
   },
   "files": [
     "inlined-swc-to-babel",
-    "src"
+    "src",
+    "types"
   ],
   "scripts": {
     "dashboard": "node ./src/dashboard/server.js --run-server --serve-from-package-root",

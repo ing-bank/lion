@@ -201,13 +201,13 @@ describe('Memoize', () => {
           sumCalled += 1;
           return { ...a, ...b };
         }
-        const sumMemoized = memoize(sum, { serializeObjects: true });
+        const sumMemoized = memoize(sum);
         let sum2Called = 0;
         function sum2(/** @type {object} a */ a, /** @type {object} a */ b) {
           sum2Called += 1;
           return { ...a, ...b };
         }
-        const sum2Memoized = memoize(sum2, { serializeObjects: true });
+        const sum2Memoized = memoize(sum2);
 
         expect(sumMemoized({ x: 1 }, { y: 2 })).to.deep.equal({ x: 1, y: 2 });
         expect(sumCalled).to.equal(1);
@@ -233,7 +233,7 @@ describe('Memoize', () => {
           sumCalled += 1;
           return { ...a, ...b };
         }
-        const sumMemoized = memoize(sum, { serializeObjects: true });
+        const sumMemoized = memoize(sum);
 
         // Put in cache for args combination
         const result = sumMemoized({ x: 1 }, { y: 2 });
@@ -311,6 +311,35 @@ describe('Memoize', () => {
       expect(await sum2Memoized(1, 2)).to.equal(3);
       expect(sumCalled).to.equal(1);
       expect(sum2Called).to.equal(1);
+    });
+  });
+
+  describe('Cache', () => {
+    it(`"memoizedFn.clearCache()" clears the cache for a memoized fn"`, async () => {
+      let sumCalled = 0;
+      function sum(/** @type {string} a */ a, /** @type {string} a */ b) {
+        sumCalled += 1;
+        return a + b;
+      }
+      const sumMemoized = memoize(sum);
+
+      // Put in cache for args combination
+      expect(sumMemoized('1', '2')).to.equal('12');
+      expect(sumCalled).to.equal(1);
+
+      // Return from cache
+      expect(sumMemoized('1', '2')).to.equal('12');
+      expect(sumCalled).to.equal(1);
+
+      sumMemoized.clearCache();
+
+      // Now the original function is called again
+      expect(sumMemoized('1', '2')).to.equal('12');
+      expect(sumCalled).to.equal(2);
+
+      // Return from new cache again
+      expect(sumMemoized('1', '2')).to.equal('12');
+      expect(sumCalled).to.equal(2);
     });
   });
 });

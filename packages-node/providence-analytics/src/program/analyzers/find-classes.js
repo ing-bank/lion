@@ -1,10 +1,11 @@
 /* eslint-disable no-shadow, no-param-reassign */
 import path from 'path';
 
-import t from '@babel/types';
 import babelTraverse from '@babel/traverse';
-import { Analyzer } from '../core/Analyzer.js';
+import t from '@babel/types';
+
 import { trackDownIdentifierFromScope } from '../utils/track-down-identifier--legacy.js';
+import { Analyzer } from '../core/Analyzer.js';
 
 /**
  * @typedef {import('@babel/types').File} File

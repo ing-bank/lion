@@ -24,30 +24,33 @@ function createCachableArg(arg) {
 
 /**
  * @template T
- * @type {<T extends Function>(functionToMemoize:T, opts?:{ storage?:object; }) => T}
+ * @type {<T extends Function>(functionToMemoize:T, opts?:{ cacheStorage?:object; }) => T & {clearCache:() => void}}
  */
-export function memoize(functionToMemoize, { storage = {} } = {}) {
-  return /** @type {* & T} */ (
-    function memoizedFn() {
-      // eslint-disable-next-line prefer-rest-params
-      const args = [...arguments];
-      const shouldSerialize = args.some(isObject);
+export function memoize(functionToMemoize, { cacheStorage = {} } = {}) {
+  function memoizedFn() {
+    // eslint-disable-next-line prefer-rest-params
+    const args = [...arguments];
+    const shouldSerialize = args.some(isObject);
 
-      const cachableArgs = shouldSerialize ? args.map(createCachableArg) : args;
-      // Allow disabling of cache for testing purposes
+    const cachableArgs = shouldSerialize ? args.map(createCachableArg) : args;
+    // Allow disabling of cache for testing purposes
+    // @ts-expect-error
+    if (shouldCache && cachableArgs in cacheStorage) {
       // @ts-expect-error
-      if (shouldCache && cachableArgs in storage) {
-        // @ts-expect-error
-        return storage[cachableArgs];
-      }
-      // @ts-expect-error
-      const outcome = functionToMemoize.apply(this, args);
-      // @ts-expect-error
-      // eslint-disable-next-line no-param-reassign
-      storage[cachableArgs] = outcome;
-      return outcome;
+      return cacheStorage[cachableArgs];
     }
-  );
+    // @ts-expect-error
+    const outcome = functionToMemoize.apply(this, args);
+    // @ts-expect-error
+    // eslint-disable-next-line no-param-reassign
+    cacheStorage[cachableArgs] = outcome;
+    return outcome;
+  }
+  memoizedFn.clearCache = () => {
+    // eslint-disable-next-line no-param-reassign
+    cacheStorage = {};
+  };
+  return /** @type {* & T & {clearCache:() => void}} */ (memoizedFn);
 }
 
 /**

@@ -98,10 +98,24 @@ export class LogService {
   }
 
   /**
+   * @param {PerformanceMeasure} measurement
+   * @param {string} [title]
+   */
+  static perf(measurement, title) {
+    const text = `${this.pad(`[${measurement.name}]`)} ${measurement.duration}ms`;
+    // @ts-ignore
+    this._logHistory.push(`-    perf -${printTitle(title)} ${text}`);
+    if (this.allMuted || !this.perfEnabled) {
+      return;
+    }
+    log(colors.fgGray, `   perf${printTitle(title)}`, colors.reset, text);
+  }
+
+  /**
    * @param {string} text
    * @param {number} minChars
    */
-  static pad(text, minChars = 20) {
+  static pad(text, minChars = 40) {
     let result = text;
     const padding = minChars - text.length;
     if (padding > 0) {
@@ -127,6 +141,7 @@ export class LogService {
 LogService.debugEnabled = false;
 LogService.allMuted = false;
 LogService.throwsOnError = false;
+LogService.perfEnabled = false;
 
 /** @type {string[]} */
 LogService._logHistory = [];
