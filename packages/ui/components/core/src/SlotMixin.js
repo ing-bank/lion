@@ -134,6 +134,7 @@ const SlotMixinImplementation = superclass =>
         const hasShadowRoot = Boolean(this.shadowRoot);
         if (!hasShadowRoot) {
           // TODO: throw an error in a breaking release
+          // eslint-disable no-console
           console.error(`[SlotMixin] No shadowRoot was found`);
         }
         const registryRoot = supportsScopedRegistry ? this.shadowRoot : document;
