@@ -131,6 +131,15 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   }
 
   /**
+   * @param {Event} ev
+   * @protected
+   */
+  _toggleChecked(ev) {
+    ev.preventDefault();
+    super._toggleChecked(ev);
+  }
+
+  /**
    * @configure FormControlMixin
    * @protected
    */
