@@ -1,6 +1,6 @@
 {
   "name": "@lion/ui",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "A package of extendable web components",
   "license": "MIT",
   "author": "ing-bank",
@@ -46,8 +46,8 @@
     "debug:firefox": "cd ../../ && npm run debug:firefox",
     "debug:webkit": "cd ../../ && npm run debug:webkit",
     "generate-lion-exports": "node ./scripts/generate-lion-exports.js",
-    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-lion-exports",
+    "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "test": "cd ../../ && npm run test:browser",
     "types": "wireit",
     "types-check-only": "tsc --project tsconfig-check-only.json",
