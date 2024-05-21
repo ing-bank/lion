@@ -355,10 +355,12 @@ describe('<lion-calendar>', () => {
     it('has a initCentralDate() method for external contexts like datepickers', async () => {
       const initialCentralDate = new Date('2014/07/05');
       const initialSelectedDate = new Date('2014/07/07');
-      const el = await fixture(html`<lion-calendar
-        .centralDate="${initialCentralDate}"
-        .selectedDate="${initialSelectedDate}"
-      ></lion-calendar>`);
+      const el = await fixture(
+        html`<lion-calendar
+          .centralDate="${initialCentralDate}"
+          .selectedDate="${initialSelectedDate}"
+        ></lion-calendar>`,
+      );
 
       expect(el.selectedDate).to.equal(initialSelectedDate);
       expect(el.centralDate).to.equal(initialCentralDate);
@@ -408,14 +410,12 @@ describe('<lion-calendar>', () => {
       it('disables a date with disableDates function', async () => {
         /** @param {Date} d */
         const disable15th = d => d.getDate() === 15;
-        const el = await fixture(
-          html`
-            <lion-calendar
-              .selectedDate="${new Date('2000/12/01')}"
-              .disableDates=${disable15th}
-            ></lion-calendar>
-          `,
-        );
+        const el = await fixture(html`
+          <lion-calendar
+            .selectedDate="${new Date('2000/12/01')}"
+            .disableDates=${disable15th}
+          ></lion-calendar>
+        `);
         const elObj = new CalendarObject(el);
         elObj.dayEls.forEach((d, i) => {
           const shouldBeDisabled = i === 15 - 1;
@@ -490,15 +490,13 @@ describe('<lion-calendar>', () => {
           // without normalization, selectedDate < minDate would wrongfully be disabled
           const minDate = new Date('2000-11-02T04:00:00');
 
-          const el = await fixture(
-            html`
-              <lion-calendar
-                .selectedDate="${selectedDate}"
-                .minDate="${minDate}"
-                .maxDate="${maxDate}"
-              ></lion-calendar>
-            `,
-          );
+          const el = await fixture(html`
+            <lion-calendar
+              .selectedDate="${selectedDate}"
+              .minDate="${minDate}"
+              .maxDate="${maxDate}"
+            ></lion-calendar>
+          `);
           const elObj = new CalendarObject(el);
 
           expect(elObj.getDayObj(29).isDisabled).to.equal(false);
@@ -1531,15 +1529,13 @@ describe('<lion-calendar>', () => {
     });
 
     it('is accessible with disabled dates', async () => {
-      const el = await fixture(
-        html`
-          <lion-calendar
-            .disableDates=${
-              /** @param {Date} date */ date => date.getDay() === 6 || date.getDay() === 0
-            }
-          ></lion-calendar>
-        `,
-      );
+      const el = await fixture(html`
+        <lion-calendar
+          .disableDates=${
+            /** @param {Date} date */ date => date.getDay() === 6 || date.getDay() === 0
+          }
+        ></lion-calendar>
+      `);
       await expect(el).to.be.accessible();
     });
 

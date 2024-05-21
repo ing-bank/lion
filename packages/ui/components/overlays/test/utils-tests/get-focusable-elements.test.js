@@ -135,7 +135,7 @@ describe('getFocusableElements()', () => {
       class extends LitElement {
         render() {
           return html`
-            <button id="el-a-1"></button>
+            <button id="el-a-1">Button</button>
 
             <element-b marker="marker-1"></element-b>
 

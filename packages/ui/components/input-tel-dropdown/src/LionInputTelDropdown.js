@@ -100,6 +100,7 @@ export class LionInputTelDropdown extends LionInputTel {
             localizeManager.msg('lion-input-tel:suggestedCountries'),
         },
       },
+      input: this._inputNode,
     };
 
     return {
@@ -180,6 +181,7 @@ export class LionInputTelDropdown extends LionInputTel {
 
         return {
           template: templates.dropdown(this._templateDataDropdown),
+          renderAsDirectHostChild: Boolean,
         };
       },
     };
@@ -324,7 +326,10 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   _onDropdownValueChange(event) {
     const isInitializing = event.detail?.initialize || !this._phoneUtil;
-    const dropdownValue = /** @type {RegionCode} */ (event.target.modelValue || event.target.value);
+    const dropdownElement = event.target;
+    const dropdownValue = /** @type {RegionCode} */ (
+      dropdownElement.modelValue || dropdownElement.value
+    );
 
     if (isInitializing || this.activeRegion === dropdownValue) {
       return;
@@ -352,14 +357,6 @@ export class LionInputTelDropdown extends LionInputTel {
           this.modelValue = this._callParser(this.value.replace(valueObj[0], `+${countryCode}`));
         }
       }
-    }
-
-    // Put focus on text box
-    const overlayController = event.target._overlayCtrl;
-    if (overlayController?.isShown) {
-      setTimeout(() => {
-        this._inputNode.focus();
-      });
     }
   }
 

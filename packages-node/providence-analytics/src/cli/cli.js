@@ -1,27 +1,26 @@
-import child_process from 'child_process'; // eslint-disable-line camelcase
 import path from 'path';
-import fs from 'fs';
+
 import commander from 'commander';
-import { LogService } from '../program/core/LogService.js';
-import { QueryService } from '../program/core/QueryService.js';
+
 import { InputDataService } from '../program/core/InputDataService.js';
-import { toPosixPath } from '../program/utils/to-posix-path.js';
 import { getCurrentDir } from '../program/utils/get-current-dir.js';
-import { dashboardServer } from '../dashboard/server.js';
+import { QueryService } from '../program/core/QueryService.js';
 import { _providenceModule } from '../program/providence.js';
+import { fsAdapter } from '../program/utils/fs-adapter.js';
 import { _cliHelpersModule } from './cli-helpers.js';
-import { _extendDocsModule } from './launch-providence-with-extend-docs.js';
-import { _promptAnalyzerMenuModule } from './prompt-analyzer-menu.js';
 
 /**
- * @typedef {import('../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../types/index.js').ProvidenceCliConf} ProvidenceCliConf
+ * @typedef {import('../../types/index.js').AnalyzerName} AnalyzerName
  */
 
 const { version } = JSON.parse(
-  fs.readFileSync(path.resolve(getCurrentDir(import.meta.url), '../../package.json'), 'utf8'),
+  fsAdapter.fs.readFileSync(
+    path.resolve(getCurrentDir(import.meta.url), '../../package.json'),
+    'utf8',
+  ),
 );
-const { extensionsFromCs, setQueryMethod, targetDefault, installDeps } = _cliHelpersModule;
+const { extensionsFromCs, targetDefault } = _cliHelpersModule;
 
 /**
  * @param {{cwd?:string; argv?: string[]; providenceConf?: Partial<ProvidenceCliConf>}} cfg
@@ -37,77 +36,34 @@ export async function cli({ cwd = process.cwd(), providenceConf, argv = process.
     rejectCli = reject;
   });
 
-  /** @type {'analyzer'|'queryString'} */
-  let searchMode;
   /** @type {object} */
   let analyzerOptions;
-  /** @type {object} */
-  let featureOptions;
-  /** @type {object} */
-  let regexSearchOptions;
 
   // TODO: change back to "InputDataService.getExternalConfig();" once full package ESM
   const externalConfig = providenceConf;
 
   /**
-   * @param {'search-query'|'feature-query'|'analyzer-query'} searchMode
-   * @param {{regexString: string}} regexSearchOptions
-   * @param {{queryString: string}} featureOptions
-   * @param {{name:AnalyzerName; config:object;promptOptionalConfig:object}} analyzerOptions
-   * @returns
+   * @param {{analyzerOptions:{name:AnalyzerName; config:object;promptOptionalConfig:object}}} opts
    */
-  async function getQueryConfigAndMeta(
-    /* eslint-disable no-shadow */
-    searchMode,
-    regexSearchOptions,
-    featureOptions,
-    analyzerOptions,
-    /* eslint-enable no-shadow */
-  ) {
+  async function getQueryConfigAndMeta(opts) {
     let queryConfig = null;
     let queryMethod = null;
 
-    if (searchMode === 'search-query') {
-      queryConfig = QueryService.getQueryConfigFromRegexSearchString(
-        regexSearchOptions.regexString,
-      );
-      queryMethod = 'grep';
-    } else if (searchMode === 'feature-query') {
-      queryConfig = QueryService.getQueryConfigFromFeatureString(featureOptions.queryString);
-      queryMethod = 'grep';
-    } else if (searchMode === 'analyzer-query') {
-      let { name, config } = analyzerOptions;
-      if (!name) {
-        const answers = await _promptAnalyzerMenuModule.promptAnalyzerMenu();
-
-        name = answers.analyzerName;
-      }
-      if (!config) {
-        const answers = await _promptAnalyzerMenuModule.promptAnalyzerConfigMenu(
-          name,
-          analyzerOptions.promptOptionalConfig,
-        );
-        config = answers.analyzerConfig;
-      }
-      // Will get metaConfig from ./providence.conf.js
-      const metaConfig = externalConfig ? externalConfig.metaConfig : {};
-      config = { ...config, metaConfig };
-      queryConfig = await QueryService.getQueryConfigFromAnalyzer(name, config);
-      queryMethod = 'ast';
-    } else {
-      LogService.error('Please define a feature, analyzer or search');
-      process.exit(1);
+    // eslint-disable-next-line prefer-const
+    let { name, config } = opts.analyzerOptions;
+    if (!name) {
+      throw new Error('Please provide an analyzer name');
     }
+    // Will get metaConfig from ./providence.conf.js
+    const metaConfig = externalConfig ? externalConfig.metaConfig : {};
+    config = { ...config, metaConfig };
+    queryConfig = await QueryService.getQueryConfigFromAnalyzer(name, config);
+    queryMethod = 'ast';
     return { queryConfig, queryMethod };
   }
 
   async function launchProvidence() {
-    const { queryConfig, queryMethod } = await getQueryConfigAndMeta(
-      searchMode,
-      regexSearchOptions,
-      featureOptions,
-      analyzerOptions,
-    );
+    const { queryConfig, queryMethod } = await getQueryConfigAndMeta({ analyzerOptions });
 
     const searchTargetPaths = commander.searchTargetCollection || commander.searchTargetPaths;
     let referencePaths;
@@ -156,29 +112,6 @@ export async function cli({ cwd = process.cwd(), providenceConf, argv = process.
       addSystemPathsInResult: commander.addSystemPaths,
       fallbackToBabel: commander.fallbackToBabel,
     });
-  }
-
-  /**
-   * @param {{update:boolean; deps:boolean;createVersionHistory:boolean}} options
-   */
-  async function manageSearchTargets(options) {
-    const basePath = path.join(__dirname, '../..');
-    if (options.update) {
-      LogService.info('git submodule update --init --recursive');
-
-      // eslint-disable-next-line camelcase
-      const updateResult = child_process.execSync('git submodule update --init --recursive', {
-        cwd: basePath,
-      });
-
-      LogService.info(String(updateResult));
-    }
-    if (options.deps) {
-      await installDeps(commander.searchTargetPaths);
-    }
-    if (options.createVersionHistory) {
-      await installDeps(commander.searchTargetPaths);
-    }
   }
 
   commander
@@ -260,29 +193,6 @@ export async function cli({ cwd = process.cwd(), providenceConf, argv = process.
     );
 
   commander
-    .command('search <regex>')
-    .alias('s')
-    .description('perfoms regex search string like "my-.*-comp"')
-    .action((regexString, options) => {
-      searchMode = 'search-query';
-      regexSearchOptions = options;
-      regexSearchOptions.regexString = regexString;
-      launchProvidence().then(resolveCli).catch(rejectCli);
-    });
-
-  commander
-    .command('feature <query-string>')
-    .alias('f')
-    .description('query like "tg-icon[size=xs]"')
-    .option('-m, --method [method]', 'query method: "grep" or "ast"', setQueryMethod, 'grep')
-    .action((queryString, options) => {
-      searchMode = 'feature-query';
-      featureOptions = options;
-      featureOptions.queryString = queryString;
-      launchProvidence().then(resolveCli).catch(rejectCli);
-    });
-
-  commander
     .command('analyze [analyzer-name]')
     .alias('a')
     .description(
@@ -296,82 +206,9 @@ export async function cli({ cwd = process.cwd(), providenceConf, argv = process.
     )
     .option('-c, --config [config]', 'configuration object for analyzer', c => JSON.parse(c))
     .action((analyzerName, options) => {
-      searchMode = 'analyzer-query';
       analyzerOptions = options;
       analyzerOptions.name = analyzerName;
       launchProvidence().then(resolveCli).catch(rejectCli);
-    });
-
-  commander
-    .command('extend-docs')
-    .alias('e')
-    .description(
-      `Generates data for "babel-extend-docs" plugin. These data are generated by the "match-paths"
-    plugin, which automatically resolves import paths from reference projects
-    (say [@lion/input, @lion/textarea, ...etc]) to a target project (say "wolf-ui").`,
-    )
-    .option(
-      '--prefix-from [prefix-from]',
-      `Prefix for components of reference layer. By default "lion"`,
-      a => a,
-      'lion',
-    )
-    .option(
-      '--prefix-to [prefix-to]',
-      `Prefix for components of reference layer. For instance "wolf"`,
-    )
-    .option(
-      '--output-folder [output-folder]',
-      `This is the file path where the result file "providence-extend-docs-data.json" will be written to`,
-      p => toPosixPath(path.resolve(process.cwd(), p.trim())),
-      process.cwd(),
-    )
-    .action(options => {
-      if (!options.prefixTo) {
-        LogService.error(`Please provide a "prefix to" like '--prefix-to "myprefix"'`);
-        process.exit(1);
-      }
-      if (!commander.referencePaths) {
-        LogService.error(`Please provide referencePaths path like '-r "node_modules/@lion/*"'`);
-        process.exit(1);
-      }
-      const prefixCfg = { from: options.prefixFrom, to: options.prefixTo };
-      _extendDocsModule
-        .launchProvidenceWithExtendDocs({
-          referenceProjectPaths: commander.referencePaths,
-          prefixCfg,
-          outputFolder: options.outputFolder,
-          extensions: commander.extensions,
-          allowlist: commander.allowlist,
-          allowlistReference: commander.allowlistReference,
-          skipCheckMatchCompatibility: commander.skipCheckMatchCompatibility,
-          cwd,
-        })
-        .then(resolveCli)
-        .catch(rejectCli);
-    });
-
-  commander
-    .command('manage-projects')
-    .description(
-      `Before running a query, be sure to have search-targets up to date (think of
-    npm/bower dependencies, latest version etc.)`,
-    )
-    .option('-u, --update', 'gets latest of all search-targets and references')
-    .option('-d, --deps', 'installs npm/bower dependencies of search-targets')
-    .option('-h, --create-version-history', 'gets latest of all search-targets and references')
-    .action(options => {
-      manageSearchTargets(options);
-    });
-
-  commander
-    .command('dashboard')
-    .description(
-      `Runs an interactive dashboard that shows all aggregated data from proivdence-output, configured
-      via providence.conf`,
-    )
-    .action(() => {
-      dashboardServer.start();
     });
 
   commander.parse(argv);

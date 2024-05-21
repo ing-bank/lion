@@ -131,15 +131,12 @@ render() {
 
 or declaratively in your template with the `.config` property
 
-```html
-<demo-el-using-overlaymixin .config=${{ ...withModalDialogConfig() }}>
+```jsx
+<demo-el-using-overlaymixin .config="${{ ...withModalDialogConfig() }}">
   <button slot="invoker">Click me to open the overlay!</button>
   <div slot="content" class="demo-overlay">
     Hello! You can close this notification here:
-    <button
-      @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-    >
-      ⨯
+    <button @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}">
     </button>
   </div>
 </demo-el-using-overlaymixin>

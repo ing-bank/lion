@@ -55,6 +55,7 @@ export default class PendingRequestStore {
   }
 
   reset() {
+    this.resolveMatching(/.*/);
     this._pendingRequests = {};
   }
 }

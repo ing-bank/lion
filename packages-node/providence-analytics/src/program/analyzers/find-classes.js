@@ -1,10 +1,10 @@
 /* eslint-disable no-shadow, no-param-reassign */
 import path from 'path';
+
 import t from '@babel/types';
-// @ts-ignore
 import babelTraverse from '@babel/traverse';
 import { Analyzer } from '../core/Analyzer.js';
-import { trackDownIdentifierFromScope } from './helpers/track-down-identifier--legacy.js';
+import { trackDownIdentifierFromScope } from '../utils/track-down-identifier--legacy.js';
 
 /**
  * @typedef {import('@babel/types').File} File
@@ -241,7 +241,7 @@ export default class FindClassesAnalyzer extends Analyzer {
     /**
      * Prepare
      */
-    const analyzerResult = this._prepare(cfg);
+    const analyzerResult = await this._prepare(cfg);
     if (analyzerResult) {
       return analyzerResult;
     }

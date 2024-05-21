@@ -130,6 +130,7 @@ export class HelperOutput extends LitElement {
 
   constructor() {
     super();
+    // eslint-disable-next-line wc/no-constructor-attributes
     this.title = 'States';
   }
 

@@ -115,6 +115,8 @@ export declare class FormControlHost {
   set fieldName(arg: string);
   get fieldName(): string;
 
+  get operationMode(): string;
+
   /**
    * Allows to add extra element references to aria-labelledby attribute.
    */

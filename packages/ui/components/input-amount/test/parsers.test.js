@@ -1,11 +1,20 @@
 import { expect } from '@open-wc/testing';
-import { localize } from '@lion/ui/localize.js';
-
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { parseAmount } from '@lion/ui/input-amount.js';
 
 describe('parseAmount()', async () => {
+  const localizeManager = getLocalizeManager();
+
+  beforeEach(() => {
+    localizeManager.locale = 'en-GB';
+  });
+
+  afterEach(() => {
+    localizeTearDown();
+  });
+
   it('with currency set to correct amount of decimals', async () => {
-    localize.locale = 'en-GB';
     expect(
       parseAmount('1.015', {
         currency: 'EUR',
@@ -29,7 +38,26 @@ describe('parseAmount()', async () => {
   });
 
   it('with no currency keeps all decimals', async () => {
-    localize.locale = 'en-GB';
     expect(parseAmount('1.015')).to.equal(1.015);
+  });
+
+  // TODO: make it work with big numbers, e.g. make use of BigInt
+  it.skip('rounds up big numbers', async () => {
+    // eslint-disable-next-line no-loss-of-precision
+    expect(parseAmount('999999999999999999999,42')).to.equal(999999999999999999999.42);
+    // eslint-disable-next-line no-loss-of-precision
+    expect(parseAmount('12,345,678,987,654,321.42')).to.equal(12345678987654321.42);
+  });
+
+  it('returns undefined if an invalid value is entered', async () => {
+    expect(parseAmount('foo')).to.equal(undefined);
+    expect(parseAmount('foo1')).to.equal(undefined);
+    expect(parseAmount('EUR 1,50')).to.equal(undefined);
+    expect(parseAmount('--1')).to.equal(undefined);
+  });
+
+  it('ignores letters when "pasted" mode used', async () => {
+    expect(parseAmount('foo1', { mode: 'pasted' })).to.equal(1);
+    expect(parseAmount('EUR 1,50', { mode: 'pasted' })).to.equal(1.5);
   });
 });

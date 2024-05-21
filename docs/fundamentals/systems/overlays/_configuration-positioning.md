@@ -99,15 +99,6 @@ export const placementGlobal = () => {
 
 ## popperConfig
 
-/** Viewport configuration. Will be used when placementMode is 'global' \*/
-viewportConfig?: ViewportConfig;
-/** Hides other overlays when multiple are opened (currently exclusive to globalOverlayController) _/
-isBlocking?: boolean;
-/\*\* Will align contentNode with referenceNode (invokerNode by default) for local overlays. Usually needed for dropdowns. 'max' will prevent contentNode from exceeding width of referenceNode, 'min' guarantees that contentNode will be at least as wide as referenceNode. 'full' will make sure that the invoker width always is the same. _/
-inheritsReferenceWidth?: 'max' | 'full' | 'min' | 'none';
-/\*_ Change the default of 9999 _/
-zIndex?: number;
-
 | Prop                   | Description                                                                                                                                                                                                                                                                                                     | Type                               |     |     |     |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- | --- | --- | --- |
 | placementMode          | Determines the positioning anchor (viewport vs invokerNode/referenceNode)                                                                                                                                                                                                                                       | 'global'\|'local'                  |     |     |     |

@@ -1,5 +1,44 @@
 # Change Log
 
+## 0.16.3
+
+### Patch Changes
+
+- 9f8826a: resolve scoped packages outside node_modules
+
+## 0.16.2
+
+### Patch Changes
+
+- cbfbdb4: - feat: expose ReportService to allow config of outputPath
+  - fix: cache and performance improvements
+
+## 0.16.1
+
+### Patch Changes
+
+- f9698e9: fix: expose inlined-swc-to-babel
+
+## 0.16.0
+
+### Minor Changes
+
+- aea90ae: - Added `optimised-glob` util: a drop-in replacement for globby. It's faster, smaller and has zero dependencies
+  - Added `fs-adapter` util, allowing to provide a virtual fs instead of the default
+  - BREAKING: Cleanup of code and dependencies, removing deprecated cli commands
+
+## 0.15.3
+
+### Patch Changes
+
+- 3737c492: fix: allow compatibility with node 16
+
+## 0.15.2
+
+### Patch Changes
+
+- 5b64da8a: fix: update @web/dev-server version
+
 ## 0.15.1
 
 ### Patch Changes

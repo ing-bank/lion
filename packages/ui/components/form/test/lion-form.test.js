@@ -1,6 +1,6 @@
 import { LionFieldset } from '@lion/ui/fieldset.js';
 import '@lion/ui/define/lion-fieldset.js';
-import { LionField } from '@lion/ui/form-core.js';
+import { LionField, Required } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 
@@ -191,7 +191,7 @@ describe('<lion-form>', () => {
     const el = await fixture(html`
       <lion-form>
         <form>
-          <button type="reset">submit</button>
+          <button type="reset">reset</button>
         </form>
       </lion-form>
     `);
@@ -201,5 +201,69 @@ describe('<lion-form>', () => {
     button.click();
     expect(dispatchSpy.args[0][0].type).to.equal('reset');
     expect(internalHandlerSpy).to.be.calledBefore(dispatchSpy);
+  });
+
+  it('sets focus on submit to the first erroneous form element', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <${childTag} name="firstName" .modelValue=${'Foo'} .validators=${[
+            new Required(),
+          ]}></${childTag}>
+          <${childTag} name="lastName" .validators=${[new Required()]}></${childTag}>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    const dispatchSpy = spy(el, 'dispatchEvent');
+    button.click();
+    expect(dispatchSpy.args[0][0].type).to.equal('submit');
+    // @ts-ignore [allow-protected] in test
+    expect(document.activeElement).to.equal(el.formElements[1]._inputNode);
+  });
+
+  it('sets focus on submit to the first erroneous form element with a fieldset', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-fieldset name="name">
+            <${childTag} name="firstName" .modelValue=${'Foo'} .validators=${[
+              new Required(),
+            ]}></${childTag}>
+            <${childTag} name="lastName" .validators=${[new Required()]}></${childTag}>
+          </lion-fieldset>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    const dispatchSpy = spy(el, 'dispatchEvent');
+    button.click();
+    expect(dispatchSpy.args[0][0].type).to.equal('submit');
+    const fieldset = el.formElements[0];
+    // @ts-ignore [allow-protected] in test
+    expect(document.activeElement).to.equal(fieldset.formElements[1]._inputNode);
+  });
+
+  it('sets focus on submit to the first form element within a erroneous fieldset', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-fieldset name="name" .validators=${[new Required()]}>
+            <${childTag} name="firstName"></${childTag}>
+            <${childTag} name="lastName"></${childTag}>
+          </lion-fieldset>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    const dispatchSpy = spy(el, 'dispatchEvent');
+    button.click();
+    expect(dispatchSpy.args[0][0].type).to.equal('submit');
+    const fieldset = el.formElements[0];
+    // @ts-ignore [allow-protected] in test
+    expect(document.activeElement).to.equal(fieldset.formElements[0]._inputNode);
   });
 });

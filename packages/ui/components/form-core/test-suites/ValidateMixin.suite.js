@@ -788,6 +788,7 @@ export function runValidateMixinSuite(customConfig) {
           await fixture(html`
           <${tag}
             .validators="${[
+              // @ts-expect-error
               new EqualsLength(4, { getMessage: () => html`<div id="test123">test</div>` }),
             ]}" })]}"
             .modelValue="${'123'}"            

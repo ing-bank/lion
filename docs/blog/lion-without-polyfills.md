@@ -23,7 +23,7 @@ To clarify: within Lion class files we never import files that run `customElemen
 
 ```js
 import { LitElement, html } from 'lit';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { MyCardHeader } from './MyCardHeader.js';
 
 export class MyCard extends ScopedElementsMixin(LitElement) {
@@ -78,7 +78,7 @@ Be sure to always define **ALL** the sub elements you are using in your template
 
 ```js
 import { LitElement, html } from 'lit';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { MyCardHeader } from './MyCardHeader.js';
 
 export class MyCard extends ScopedElementsMixin(LitElement) {

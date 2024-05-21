@@ -74,4 +74,15 @@ describe('formatAmount()', () => {
     localizeManager.locale = 'nl-NL';
     expect(formatAmount(12345678)).to.equal('12.345.678,00');
   });
+
+  // TODO: make it work with big numbers, e.g. make use of BigInt
+  it.skip('rounds up big numbers', async () => {
+    expect(formatAmount(1e21, { locale: 'en-GB', currency: 'EUR' })).to.equal(
+      '1,000,000,000,000,000,000,000.00',
+    );
+    // eslint-disable-next-line no-loss-of-precision
+    expect(formatAmount(12345678987654321.42, { locale: 'en-GB', currency: 'EUR' })).to.equal(
+      '12,345,678,987,654,321.42',
+    );
+  });
 });

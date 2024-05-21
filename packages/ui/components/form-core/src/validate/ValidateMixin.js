@@ -1,9 +1,9 @@
 /* eslint-disable class-methods-use-this, camelcase, no-param-reassign, max-classes-per-file */
 import { SlotMixin, DisabledMixin } from '@lion/ui/core.js';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // TODO: make form-core independent from localize
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { ScopedElementsMixin } from '../../../core/src/ScopedElementsMixin.js';
 import { AsyncQueue } from '../utils/AsyncQueue.js';
 import { pascalCase } from '../utils/pascalCase.js';
 import { SyncUpdatableMixin } from '../utils/SyncUpdatableMixin.js';
@@ -20,6 +20,7 @@ import { FormControlMixin } from '../FormControlMixin.js';
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidateMixin} ValidateMixin
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidationType} ValidationType
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHost
+ * @typedef {import('../../types/validate/ValidateMixinTypes.js').OperationMode} OperationMode
  * @typedef {import('../../types/validate/index.js').ValidatorOutcome} ValidatorOutcome
  * @typedef {typeof import('../../types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHostConstructor
  * @typedef {{validator:Validator; outcome:boolean|string}} ValidationResultEntry
@@ -96,6 +97,15 @@ export const ValidateMixinImplementation = superclass =>
      */
     static get validationTypes() {
       return ['error'];
+    }
+
+    /**
+     * Types of input interaction of the FormControl (for instance 'enter'|'select'|'upload')
+     * @overridable
+     * @type {OperationMode}
+     */
+    get operationMode() {
+      return 'enter';
     }
 
     /**

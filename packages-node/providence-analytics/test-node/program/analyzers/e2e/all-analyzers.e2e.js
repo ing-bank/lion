@@ -1,13 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import pathLib, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
 import { expect } from 'chai';
 import { it } from 'mocha';
 import { providence } from '../../../../src/program/providence.js';
 import { QueryService } from '../../../../src/program/core/QueryService.js';
 import { ReportService } from '../../../../src/program/core/ReportService.js';
-import { memoizeConfig } from '../../../../src/program/utils/memoize.js';
+import { memoize } from '../../../../src/program/utils/memoize.js';
 import { setupAnalyzerTest } from '../../../../test-helpers/setup-analyzer-test.js';
 import {
   FindExportsAnalyzer,
@@ -18,6 +17,7 @@ import MatchSubclassesAnalyzer from '../../../../src/program/analyzers/match-sub
 import MatchPathsAnalyzer from '../../../../src/program/analyzers/match-paths.js';
 import FindCustomelementsAnalyzer from '../../../../src/program/analyzers/find-customelements.js';
 import FindClassesAnalyzer from '../../../../src/program/analyzers/find-classes.js';
+import { fsAdapter } from '../../../../src/program/utils/fs-adapter.js';
 
 /**
  * @typedef {import('../../../../types/index.js').ProvidenceConfig} ProvidenceConfig
@@ -48,13 +48,16 @@ describe('Analyzers file-system integration', () => {
   const originalGetResultFileNameAndPath = ReportService._getResultFileNameAndPath;
   const originalOutputPath = ReportService.outputPath;
 
-  const memoizeCacheDisabledInitial = memoizeConfig.isCacheDisabled;
-  memoizeConfig.isCacheDisabled = true;
+  const originalGetCachedResult = ReportService.getCachedResult;
+
+  const memoizeCacheEnabledInitial = memoize.isCacheEnabled;
+  memoize.disableCaching();
 
   after(() => {
     ReportService._getResultFileNameAndPath = originalGetResultFileNameAndPath;
+    ReportService.getCachedResult = originalGetCachedResult;
     ReportService.outputPath = originalOutputPath;
-    memoizeConfig.isCacheDisabled = memoizeCacheDisabledInitial;
+    memoize.restoreCaching(memoizeCacheEnabledInitial);
   });
 
   if (generateE2eMode) {
@@ -69,6 +72,8 @@ describe('Analyzers file-system integration', () => {
     };
   } else {
     ReportService.outputPath = __dirname; // prevents cache to fail the test
+    // @ts-ignore
+    ReportService.getCachedResult = () => undefined;
   }
   const analyzers = [
     {
@@ -120,9 +125,9 @@ describe('Analyzers file-system integration', () => {
 
   for (const { ctor, providenceConfig } of analyzers) {
     it(`"${ctor.analyzerName}" analyzer`, async () => {
-      const findExportsQueryConfig = await QueryService.getQueryConfigFromAnalyzer(ctor);
+      const currentQueryConfig = await QueryService.getQueryConfigFromAnalyzer(ctor);
       const queryResults = await providence(
-        findExportsQueryConfig,
+        currentQueryConfig,
         /** @type {ProvidenceConfig} */ (providenceConfig),
       );
       if (generateE2eMode) {
@@ -132,7 +137,7 @@ describe('Analyzers file-system integration', () => {
         return;
       }
       const expectedOutput = JSON.parse(
-        fs.readFileSync(
+        fsAdapter.fs.readFileSync(
           pathLib.resolve(
             __dirname,
             `../../../../test-helpers/project-mocks-analyzer-outputs/${ctor.analyzerName}.json`,
@@ -141,8 +146,8 @@ describe('Analyzers file-system integration', () => {
         ),
       );
       const { queryOutput } = JSON.parse(JSON.stringify(queryResults[0]));
-      expect(queryOutput).not.to.eql([]);
-      expect(queryOutput).to.eql(expectedOutput.queryOutput);
+      // expect(queryOutput).not.to.deep.equal([]);
+      expect(queryOutput).to.deep.equal(expectedOutput.queryOutput);
     });
   }
 });

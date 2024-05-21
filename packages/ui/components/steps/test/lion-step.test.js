@@ -50,13 +50,11 @@ describe('lion-step', () => {
   });
 
   it('is hidden when attribute hidden is true', async () => {
-    const el = await fixture(
-      html`
-        <fake-lion-steps>
-          <lion-step hidden>Step 1</lion-step>
-        </fake-lion-steps>
-      `,
-    );
+    const el = await fixture(html`
+      <fake-lion-steps>
+        <lion-step hidden>Step 1</lion-step>
+      </fake-lion-steps>
+    `);
     expect(el.children[0]).not.to.be.displayed;
   });
 

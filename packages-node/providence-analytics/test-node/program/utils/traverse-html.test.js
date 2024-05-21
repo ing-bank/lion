@@ -38,9 +38,9 @@ describe('traverseHtml', () => {
       },
     });
 
-    expect(foundDivs).to.eql(['a-lvl1', 'b']);
-    expect(foundSpans).to.eql(['a-lvl2']);
-    expect(foundMyTags).to.eql(['a-lvl3']);
+    expect(foundDivs).to.deep.equal(['a-lvl1', 'b']);
+    expect(foundSpans).to.deep.equal(['a-lvl2']);
+    expect(foundMyTags).to.deep.equal(['a-lvl3']);
   });
 
   it('traverses different levels in DOM order', async () => {
@@ -72,7 +72,7 @@ describe('traverseHtml', () => {
     traverseHtml(ast, processObj);
 
     // call order based on dom tree
-    expect(callOrder).to.eql(['div#a-lvl1', 'span#a-lvl2', 'my-tag#a-lvl3', 'div#b']);
+    expect(callOrder).to.deep.equal(['div#a-lvl1', 'span#a-lvl2', 'my-tag#a-lvl3', 'div#b']);
   });
 
   it('allows to stop traversal (for performance)', async () => {
@@ -104,7 +104,7 @@ describe('traverseHtml', () => {
     };
     traverseHtml(ast, processObj);
 
-    expect(callOrder).to.eql(['div#a-lvl1']);
+    expect(callOrder).to.deep.equal(['div#a-lvl1']);
   });
 
   it('allows to traverse within a path', async () => {
@@ -135,6 +135,6 @@ describe('traverseHtml', () => {
     };
     traverseHtml(ast, processObj);
 
-    expect(callOrder).to.eql(['my-tag#a-lvl3', 'not-found#a-lvl4']);
+    expect(callOrder).to.deep.equal(['my-tag#a-lvl3', 'not-found#a-lvl4']);
   });
 });

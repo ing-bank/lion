@@ -1,10 +1,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 module.exports = {
-  '*.js': ['eslint --fix', 'prettier --write', 'git add'],
+  '*.js': ['eslint --fix', 'prettier --write'],
   '*.md': [
     'prettier --write',
     "markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md}'",
-    'git add',
   ],
   'package-lock.json': ['node ./scripts/lock-scan.js'],
   '*package.json': absolutePaths => {

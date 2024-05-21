@@ -347,7 +347,7 @@ export class GoogleCombobox extends LionCombobox {
    */
   _overlayListboxTemplate() {
     return html`
-      <div id="overlay-content-node-wrapper" role="dialog">
+      <div id="overlay-content-node-wrapper" role="dialog" aria-label="search predictions">
         <slot name="listbox"></slot>
         ${this._googleSearchBtnsTemplate()}
         <div class="google-search-report"><a href="#">Report inappropriate predictions</a></div>
@@ -403,15 +403,13 @@ export class GoogleCombobox extends LionCombobox {
         ),
       prefix: () => renderLitAsNode(html` <span>${googleSearchIcon}</span> `),
       suffix: () =>
-        renderLitAsNode(
-          html` <button aria-label="Search by voice">${googleVoiceSearchIcon}</button> `,
-        ),
+        renderLitAsNode(html`
+          <button aria-label="Search by voice">${googleVoiceSearchIcon}</button>
+        `),
       'clear-btn': () =>
-        renderLitAsNode(
-          html`
-            <button @click="${this.__clearText}" aria-label="Clear text">${googleClearIcon}</button>
-          `,
-        ),
+        renderLitAsNode(html`
+          <button @click="${this.__clearText}" aria-label="Clear text">${googleClearIcon}</button>
+        `),
     };
   }
 

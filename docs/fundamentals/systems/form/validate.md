@@ -4,7 +4,7 @@
 import { html } from '@mdjs/mdjs-preview';
 import { LionInput } from '@lion/ui/input.js';
 import '@lion/ui/define/lion-checkbox-group.js';
-import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-form.js';
@@ -20,7 +20,6 @@ import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-options.js';
-import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio.js';
 import '@lion/ui/define/lion-select.js';
@@ -229,9 +228,13 @@ The required validator can be put onto every form field element and will make su
 
 ```js preview-story
 export const requiredValidator = () => html`
-  <lion-input .validators=${[new Required()]} label="Required"></lion-input>
+  <lion-input .validators=${[new Required()]} label="Required" .fieldName="value"></lion-input>
 `;
 ```
+
+The default `Required` validation message is "Please, enter a(n) {fieldName}". In which the "fieldName" can be provided separately via the `fieldName` attribute, with a fallback to the label. See [override fieldname](#override-fieldname) for more information.
+
+Specific required messages for a select and file-upload are created.
 
 ### String Validators
 
@@ -609,7 +612,7 @@ However, the validation system also supports three non blocking validation feedb
 - **error**: blocking the field from being submitted to the server. For example:
   "Please enter an amount higher than 1000,00 euro."
 - **warning**: something looks wrong, but it is not blocking. For example an optional email input:
-  "Please enter a valid e-mail address in the format "name@example.com"."
+  "Please enter a valid e-mail address in the format `name@example.com`."
 - **info**: shows extra information. For example a message of a scheduled payment planner:
   "Ends on 15/05/2020 after 5 payments."
 - **success**: will only be triggered if there was a Message from one of the above validation types and is now correct. For example: "Ok, correct."

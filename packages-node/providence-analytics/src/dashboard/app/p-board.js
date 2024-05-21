@@ -1,5 +1,7 @@
 /* eslint-disable lit-a11y/no-invalid-change-handler */
 /* eslint-disable max-classes-per-file */
+
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { LitElement, html, css } from 'lit-element';
 import { tooltip as tooltipStyles } from './styles/tooltip.css.js';
 import { global as globalStyles } from './styles/global.css.js';

@@ -1,6 +1,5 @@
 import { LitElement } from 'lit';
 import { LionOption } from '@lion/ui/listbox.js';
-import { getListboxMembers } from '@lion/ui/listbox-test-helpers.js';
 import { OverlayController } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { LionSelectInvoker, LionSelectRich } from '@lion/ui/select-rich.js';
@@ -17,25 +16,13 @@ import {
   nextFrame,
   unsafeStatic,
 } from '@open-wc/testing';
+import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
 
 /**
  * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
  * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
  * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
-
-/**
- * @param { LionSelectRich } el
- */
-function getSelectRichMembers(el) {
-  const obj = getListboxMembers(el);
-  // eslint-disable-next-line no-return-assign
-  return {
-    ...obj,
-    // @ts-ignore [allow-protected] in test
-    ...{ _invokerNode: el._invokerNode, _overlayCtrl: el._overlayCtrl },
-  };
-}
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -329,6 +316,21 @@ describe('lion-select-rich', () => {
       expect(elSingleoption.opened).to.be.false;
     });
 
+    it('stays closed with [ArrowUp] or [ArrowDown] key in readonly mode', async () => {
+      const elReadOnly = await fixture(html`
+        <lion-select-rich readonly>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20} checked>Item 2</lion-option>
+        </lion-select-rich>
+      `);
+
+      elReadOnly.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+      expect(elReadOnly.opened).to.be.false;
+
+      elReadOnly.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      expect(elReadOnly.opened).to.be.false;
+    });
+
     it('sets inheritsReferenceWidth to min by default', async () => {
       const el = await fixture(html`
         <lion-select-rich name="favoriteColor" label="Favorite color">
@@ -442,9 +444,9 @@ describe('lion-select-rich', () => {
     });
 
     it('adds focus to element with [role=listbox] when trapsKeyboardFocus is true', async () => {
-      const el = await fixture(
-        html` <lion-select-rich .config=${{ trapsKeyboardFocus: true }}></lion-select-rich> `,
-      );
+      const el = await fixture(html`
+        <lion-select-rich .config=${{ trapsKeyboardFocus: true }}></lion-select-rich>
+      `);
       const { _listboxNode } = getSelectRichMembers(el);
       expect(document.activeElement).to.not.equal(_listboxNode);
 
@@ -498,6 +500,16 @@ describe('lion-select-rich', () => {
       const { _listboxNode } = getSelectRichMembers(el);
       _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
       expect(el.opened).to.be.false;
+    });
+
+    it('does not close the listbox with [Tab] key once opened when trapsKeyboardFocus is true', async () => {
+      const el = await fixture(html`
+        <lion-select-rich opened .config=${{ trapsKeyboardFocus: true }}> </lion-select-rich>
+      `);
+      // tab can only be caught via keydown
+      const { _listboxNode } = getSelectRichMembers(el);
+      _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
+      expect(el.opened).to.be.true;
     });
   });
 

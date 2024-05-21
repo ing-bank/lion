@@ -118,20 +118,18 @@ describe('lion-icon', () => {
       window.addEventListener('importDone', resolve);
     });
 
-    const el = await fixture(
-      html`
-        <lion-icon
-          .svg=${until(
-            import('./heart.svg.js').then(e => {
-              dispatchEvent(new CustomEvent('importDone'));
-              return e.default;
-            }),
-            html``,
-          )}
-          aria-label="Love"
-        ></lion-icon>
-      `,
-    );
+    const el = await fixture(html`
+      <lion-icon
+        .svg=${until(
+          import('./heart.svg.js').then(e => {
+            dispatchEvent(new CustomEvent('importDone'));
+            return e.default;
+          }),
+          html``,
+        )}
+        aria-label="Love"
+      ></lion-icon>
+    `);
 
     await svgLoading;
     // We need to await the until directive is resolved and rendered to the dom

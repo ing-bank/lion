@@ -46,6 +46,7 @@ describe('Ajax', () => {
         addCaching: false,
         xsrfCookieName: 'XSRF-TOKEN',
         xsrfHeaderName: 'X-XSRF-TOKEN',
+        xsrfTrustedOrigins: [],
         jsonPrefix: ")]}',",
         cacheOptions: {
           useCache: true,
@@ -386,7 +387,7 @@ describe('Ajax', () => {
     });
 
     it('XSRF token header is set based on cookie', async () => {
-      await ajax.fetch('/foo');
+      await ajax.fetch('/foo', { method: 'POST' });
 
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.get('X-XSRF-TOKEN')).to.equal('1234');
@@ -394,7 +395,7 @@ describe('Ajax', () => {
 
     it('XSRF behavior can be disabled', async () => {
       const customAjax = new Ajax({ xsrfCookieName: null, xsrfHeaderName: null });
-      await customAjax.fetch('/foo');
+      await customAjax.fetch('/foo', { method: 'POST' });
       await ajax.fetch('/foo');
 
       const request = fetchStub.getCall(0).args[0];
@@ -406,10 +407,42 @@ describe('Ajax', () => {
         xsrfCookieName: 'CSRF-TOKEN',
         xsrfHeaderName: 'X-CSRF-TOKEN',
       });
-      await customAjax.fetch('/foo');
+      await customAjax.fetch('/foo', { method: 'POST' });
 
       const request = fetchStub.getCall(0).args[0];
       expect(request.headers.get('X-CSRF-TOKEN')).to.equal('5678');
+    });
+
+    it('should not set the XSRF header when a non updating method is used', async () => {
+      await ajax.fetch('/foo', { method: 'GET' });
+
+      const request = fetchStub.getCall(0).args[0];
+      expect(request.headers.get('X-XSRF-TOKEN')).to.be.null;
+    });
+
+    it('should not set the XSRF header if the url is from a different origin', async () => {
+      await ajax.fetch('https://api.localhost:8000/foo', { method: 'POST' });
+
+      const request = fetchStub.getCall(0).args[0];
+      expect(request.headers.get('X-XSRF-TOKEN')).to.be.null;
+    });
+
+    it('should set the XSRF header if origin is the same', async () => {
+      await ajax.fetch('/foo', { method: 'POST' });
+
+      const request = fetchStub.getCall(0).args[0];
+      expect(request.headers.get('X-XSRF-TOKEN')).to.equal('1234');
+    });
+
+    it('should set the XSRF header if origin is in the trusted origin list', async () => {
+      const customAjax = new Ajax({
+        xsrfTrustedOrigins: ['https://api.localhost'],
+      });
+
+      await customAjax.fetch('https://api.localhost/foo', { method: 'POST' });
+
+      const request = fetchStub.getCall(0).args[0];
+      expect(request.headers.get('X-XSRF-TOKEN')).to.equal('1234');
     });
   });
 
@@ -418,6 +451,8 @@ describe('Ajax', () => {
     let cacheId;
     /** @type {() => string} */
     let getCacheIdentifier;
+    /** @type {() => Promise<string>} */
+    let getCacheIdentifierAsync;
 
     const newCacheId = () => {
       if (!cacheId) {
@@ -430,6 +465,7 @@ describe('Ajax', () => {
 
     beforeEach(() => {
       getCacheIdentifier = () => String(cacheId);
+      getCacheIdentifierAsync = () => Promise.resolve(String(cacheId));
     });
 
     it('does not add cache interceptors when useCache is turned off', () => {
@@ -470,7 +506,97 @@ describe('Ajax', () => {
       expect(customAjax._responseInterceptors.length).to.equal(1);
     });
 
-    describe('caching interceptors', async () => {
+    const cachingTests = {};
+    cachingTests.works = async (/** @type {Ajax} */ customAjax) => {
+      await customAjax.fetch('/foo');
+
+      const secondResponse = await customAjax.fetch('/foo');
+      expect(fetchStub.callCount).to.equal(1);
+      expect(await secondResponse.text()).to.equal('mock response');
+      expect(secondResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+      expect(secondResponse.headers.get('Content-Type')).to.equal('application/json');
+    };
+
+    cachingTests.resetOnCacheIDChange = async (/** @type {Ajax} */ customAjax) => {
+      /* Three calls to the same endpoint should result in a 
+        single fetchStubCall due to caching */
+      await customAjax.fetch('/foo');
+      await customAjax.fetch('/foo');
+      await customAjax.fetch('/foo');
+      expect(fetchStub.callCount).to.equal(1);
+
+      newCacheId();
+      await customAjax.fetch('/foo');
+
+      /* The newCacheId call should reset the cache, thereby adding an
+      extra call to the fetchStub call count. */
+      expect(fetchStub.callCount).to.equal(2);
+    };
+
+    cachingTests.completePendingOnCacheIDChange = async (/** @type {Ajax} */ customAjax) => {
+      const requestOne = customAjax.fetch('/foo').then(() => 'completedRequestOne');
+      newCacheId();
+      const requestTwo = customAjax.fetch('/foo').then(() => 'completedRequestTwo');
+      expect(await requestOne).to.equal('completedRequestOne');
+      expect(await requestTwo).to.equal('completedRequestTwo');
+    };
+
+    cachingTests.worksWithFetchJson = async (/** @type {Ajax} */ customAjax) => {
+      fetchStub.returns(Promise.resolve(new Response('{"a":1,"b":2}', responseInit())));
+
+      const firstResponse = await customAjax.fetchJson('/foo');
+      expect(firstResponse.body).to.deep.equal({ a: 1, b: 2 });
+      expect(firstResponse.response.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+      expect(firstResponse.response.headers.get('Content-Type')).to.equal('application/json');
+
+      const secondResponse = await customAjax.fetchJson('/foo');
+      expect(fetchStub.callCount).to.equal(1);
+      expect(secondResponse.body).to.deep.equal({ a: 1, b: 2 });
+      expect(secondResponse.response.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+      expect(secondResponse.response.headers.get('Content-Type')).to.equal('application/json');
+    };
+
+    cachingTests.invalidatesOnNonGetMethod = async (/** @type {Ajax} */ customAjax) => {
+      await customAjax.fetch('/foo');
+
+      const secondResponse = await customAjax.fetch('/foo', { method: 'POST' });
+      expect(fetchStub.callCount).to.equal(2);
+      expect(await secondResponse.text()).to.equal('mock response');
+      expect(secondResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+      expect(secondResponse.headers.get('Content-Type')).to.equal('application/json');
+
+      const thirdResponse = await customAjax.fetch('/foo');
+      expect(fetchStub.callCount).to.equal(3);
+      expect(await thirdResponse.text()).to.equal('mock response');
+      expect(thirdResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+      expect(thirdResponse.headers.get('Content-Type')).to.equal('application/json');
+    };
+
+    cachingTests.invalidatesOnTTLPassed = async (/** @type {Ajax} */ customAjax) => {
+      const clock = useFakeTimers({
+        shouldAdvanceTime: true,
+      });
+
+      await customAjax.fetch('/foo');
+
+      const secondResponse = await customAjax.fetch('/foo');
+      expect(fetchStub.callCount).to.equal(1);
+      expect(await secondResponse.text()).to.equal('mock response');
+      expect(secondResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+      expect(secondResponse.headers.get('Content-Type')).to.equal('application/json');
+
+      clock.tick(101);
+
+      const thirdResponse = await customAjax.fetch('/foo');
+      expect(fetchStub.callCount).to.equal(2);
+      expect(await thirdResponse.text()).to.equal('mock response');
+      expect(thirdResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
+      expect(thirdResponse.headers.get('Content-Type')).to.equal('application/json');
+
+      clock.restore();
+    };
+
+    describe('Caching interceptors: cache tests with synchronous getCacheIdentifier', async () => {
       /**
        * @type {Ajax}
        */
@@ -488,68 +614,69 @@ describe('Ajax', () => {
       });
 
       it('works', async () => {
-        await customAjax.fetch('/foo');
+        await cachingTests.works(customAjax);
+      });
 
-        const secondResponse = await customAjax.fetch('/foo');
-        expect(fetchStub.callCount).to.equal(1);
-        expect(await secondResponse.text()).to.equal('mock response');
-        expect(secondResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
-        expect(secondResponse.headers.get('Content-Type')).to.equal('application/json');
+      it('resets the cache if the cache ID changes', async () => {
+        await cachingTests.resetOnCacheIDChange(customAjax);
+      });
+
+      it('Completes pending requests when the cache ID changes', async () => {
+        await cachingTests.completePendingOnCacheIDChange(customAjax);
       });
 
       it('works with fetchJson', async () => {
-        fetchStub.returns(Promise.resolve(new Response('{"a":1,"b":2}', responseInit())));
-
-        const firstResponse = await customAjax.fetchJson('/foo');
-        expect(firstResponse.body).to.deep.equal({ a: 1, b: 2 });
-        expect(firstResponse.response.headers.get('X-Custom-Header')).to.equal('y-custom-value');
-        expect(firstResponse.response.headers.get('Content-Type')).to.equal('application/json');
-
-        const secondResponse = await customAjax.fetchJson('/foo');
-        expect(fetchStub.callCount).to.equal(1);
-        expect(secondResponse.body).to.deep.equal({ a: 1, b: 2 });
-        expect(secondResponse.response.headers.get('X-Custom-Header')).to.equal('y-custom-value');
-        expect(secondResponse.response.headers.get('Content-Type')).to.equal('application/json');
+        await cachingTests.worksWithFetchJson(customAjax);
       });
 
       it('is invalidated on non-get method', async () => {
-        await customAjax.fetch('/foo');
-
-        const secondResponse = await customAjax.fetch('/foo', { method: 'POST' });
-        expect(fetchStub.callCount).to.equal(2);
-        expect(await secondResponse.text()).to.equal('mock response');
-        expect(secondResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
-        expect(secondResponse.headers.get('Content-Type')).to.equal('application/json');
-
-        const thirdResponse = await customAjax.fetch('/foo');
-        expect(fetchStub.callCount).to.equal(3);
-        expect(await thirdResponse.text()).to.equal('mock response');
-        expect(thirdResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
-        expect(thirdResponse.headers.get('Content-Type')).to.equal('application/json');
+        await cachingTests.invalidatesOnNonGetMethod(customAjax);
       });
 
       it('is invalidated after TTL has passed', async () => {
-        const clock = useFakeTimers({
-          shouldAdvanceTime: true,
+        await cachingTests.invalidatesOnTTLPassed(customAjax);
+      });
+    });
+
+    describe('Caching interceptors: cache tests with asynchronous getCacheIdentifier', async () => {
+      /**
+       * @type {Ajax}
+       */
+      let customAjax;
+
+      beforeEach(async () => {
+        newCacheId();
+        customAjax = new Ajax({
+          cacheOptions: {
+            useCache: true,
+            maxAge: 100,
+            getCacheIdentifier: getCacheIdentifierAsync,
+          },
         });
+      });
 
-        await customAjax.fetch('/foo');
+      it('works', async () => {
+        await cachingTests.works(customAjax);
+      });
 
-        const secondResponse = await customAjax.fetch('/foo');
-        expect(fetchStub.callCount).to.equal(1);
-        expect(await secondResponse.text()).to.equal('mock response');
-        expect(secondResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
-        expect(secondResponse.headers.get('Content-Type')).to.equal('application/json');
+      it('resets the cache if the cache ID changes', async () => {
+        await cachingTests.resetOnCacheIDChange(customAjax);
+      });
 
-        clock.tick(101);
+      it('Completes pending requests when the cache ID changes', async () => {
+        await cachingTests.completePendingOnCacheIDChange(customAjax);
+      });
 
-        const thirdResponse = await customAjax.fetch('/foo');
-        expect(fetchStub.callCount).to.equal(2);
-        expect(await thirdResponse.text()).to.equal('mock response');
-        expect(thirdResponse.headers.get('X-Custom-Header')).to.equal('y-custom-value');
-        expect(thirdResponse.headers.get('Content-Type')).to.equal('application/json');
+      it('works with fetchJson', async () => {
+        await cachingTests.worksWithFetchJson(customAjax);
+      });
 
-        clock.restore();
+      it('is invalidated on non-get method', async () => {
+        await cachingTests.invalidatesOnNonGetMethod(customAjax);
+      });
+
+      it('is invalidated after TTL has passed', async () => {
+        await cachingTests.invalidatesOnTTLPassed(customAjax);
       });
     });
   });
@@ -575,8 +702,10 @@ describe('Ajax', () => {
 
       const errors = [
         "Failed to execute 'fetch' on 'Window': The user aborted a request.", // chromium
+        'signal is aborted without reason', // newer chromium (?)
         'The operation was aborted. ', // firefox
         'Request signal is aborted', // webkit
+        'The operation was aborted.', // newer webkit
       ];
 
       expect(errors.includes(/** @type {Error} */ (err).message)).to.be.true;

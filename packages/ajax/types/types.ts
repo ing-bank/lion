@@ -16,6 +16,7 @@ export interface AjaxConfig {
   xsrfCookieName?: string | null;
   xsrfHeaderName?: string | null;
   cacheOptions?: CacheOptionsWithIdentifier;
+  xsrfTrustedOrigins?: string[] | null;
   jsonPrefix?: string;
 }
 
@@ -46,7 +47,7 @@ export interface CacheOptions {
 }
 
 export interface CacheOptionsWithIdentifier extends CacheOptions {
-  getCacheIdentifier?: () => string;
+  getCacheIdentifier?: () => string|Promise<string>;
 }
 
 export interface ValidatedCacheOptions extends CacheOptions {

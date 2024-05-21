@@ -1,14 +1,12 @@
-import { isBuiltin } from 'module';
+import { builtinModules } from 'module';
 import path from 'path';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import { LogService } from '../core/LogService.js';
-import { memoize } from './memoize.js';
-import { toPosixPath } from './to-posix-path.js';
 
-/**
- * Solution inspired by es-dev-server:
- * https://github.com/open-wc/open-wc/blob/master/packages/es-dev-server/src/utils/resolve-module-imports.js
- */
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+
+import { isRelativeSourcePath } from './relative-source-path.js';
+import { LogService } from '../core/LogService.js';
+import { toPosixPath } from './to-posix-path.js';
+import { memoize } from './memoize.js';
 
 /**
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
@@ -16,6 +14,20 @@ import { toPosixPath } from './to-posix-path.js';
  * @typedef {import('../../../types/index.js').SpecifierSource} SpecifierSource
  */
 
+/**
+ * @param {string} importee
+ */
+function isBuiltin(importee) {
+  return (
+    !isRelativeSourcePath(importee) &&
+    Boolean(builtinModules.find(m => importee.split('/')[0] === m))
+  );
+}
+
+/**
+ * Solution inspired by es-dev-server:
+ * https://github.com/open-wc/open-wc/blob/master/packages/es-dev-server/src/utils/resolve-module-imports.js
+ */
 const fakePluginContext = {
   meta: {
     // rollupVersion needed in plugin context => nodeResolvePackageJson.peerDependencies.rollup

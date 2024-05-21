@@ -1,4 +1,4 @@
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { html, css } from 'lit';
 import { ref } from 'lit/directives/ref.js';
 import { repeat } from 'lit/directives/repeat.js';
@@ -46,9 +46,15 @@ export class IntlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdo
         border-radius: 4px;
         -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
         box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%);
-        -webkit-transition: border-color ease-in-out 0.15s, -webkit-box-shadow ease-in-out 0.15s;
-        -o-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
-        transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+        -webkit-transition:
+          border-color ease-in-out 0.15s,
+          -webkit-box-shadow ease-in-out 0.15s;
+        -o-transition:
+          border-color ease-in-out 0.15s,
+          box-shadow ease-in-out 0.15s;
+        transition:
+          border-color ease-in-out 0.15s,
+          box-shadow ease-in-out 0.15s;
       }
 
       .input-group__input {
@@ -64,8 +70,12 @@ export class IntlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdo
       :host([focused]) .input-group__container {
         border-color: #66afe9;
         outline: 0;
-        -webkit-box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
-        box-shadow: inset 0 1px 1px rgb(0 0 0 / 8%), 0 0 8px rgb(102 175 233 / 60%);
+        -webkit-box-shadow:
+          inset 0 1px 1px rgb(0 0 0 / 8%),
+          0 0 8px rgb(102 175 233 / 60%);
+        box-shadow:
+          inset 0 1px 1px rgb(0 0 0 / 8%),
+          0 0 8px rgb(102 175 233 / 60%);
       }
     `,
   ];
@@ -83,6 +93,7 @@ export class IntlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdo
           ${ref(refs?.dropdown?.ref)}
           label="${refs?.dropdown?.labels?.country}"
           label-sr-only
+          .config="${{ elementToFocusAfterHide: refs?.input }}"
           @model-value-changed="${refs?.dropdown?.listeners['model-value-changed']}"
           style="${refs?.dropdown?.props?.style}"
         >

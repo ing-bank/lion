@@ -1,17 +1,27 @@
+import { isServer } from 'lit';
+
 /**
  * From https://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome
- * @param {string} [flavor]
+ * @param {string} [flavor='google-chrome']
  */
 function checkChrome(flavor = 'google-chrome') {
-  const isChromium = /** @type {window & { chrome?: boolean}} */ (window).chrome;
+  if (isServer) {
+    return flavor === 'google-chrome';
+  }
+
+  const isChromium = /** @type {window & { chrome?: boolean}} */ (globalThis).chrome;
+
   if (flavor === 'chromium') {
     return isChromium;
   }
-  const winNav = window.navigator;
-  const vendorName = winNav.vendor;
-  const isOpera = typeof (/** @type {window & { opr?: boolean}} */ (window).opr) !== 'undefined';
-  const isIEedge = winNav.userAgent.indexOf('Edge') > -1;
-  const isIOSChrome = winNav.userAgent.match('CriOS');
+  const winNav = globalThis.navigator;
+  const vendorName = winNav?.vendor;
+  const isOpera =
+    typeof (/** @type {window & { opr?: boolean}} */ (globalThis).opr) !== 'undefined';
+  // @ts-ignore
+  const isIEedge = globalThis.userAgent?.indexOf('Edge') > -1;
+  // @ts-ignore
+  const isIOSChrome = globalThis.userAgent?.match('CriOS');
 
   if (flavor === 'ios') {
     return isIOSChrome;
@@ -31,17 +41,18 @@ function checkChrome(flavor = 'google-chrome') {
 }
 
 export const browserDetection = {
-  isIE11: /Trident/.test(window.navigator.userAgent),
+  isIE11: /Trident/.test(globalThis.navigator?.userAgent),
   isChrome: checkChrome(),
   isIOSChrome: checkChrome('ios'),
   isChromium: checkChrome('chromium'),
-  isMac: navigator.appVersion.indexOf('Mac') !== -1,
-  isIOS: /iPhone|iPad|iPod/i.test(navigator.userAgent),
+  isFirefox: globalThis.navigator?.userAgent.toLowerCase().indexOf('firefox') > -1,
+  isMac: globalThis.navigator?.appVersion?.indexOf('Mac') !== -1,
+  isIOS: /iPhone|iPad|iPod/i.test(globalThis.navigator?.userAgent),
   isMacSafari:
-    navigator.vendor &&
-    navigator.vendor.indexOf('Apple') > -1 &&
-    navigator.userAgent &&
-    navigator.userAgent.indexOf('CriOS') === -1 &&
-    navigator.userAgent.indexOf('FxiOS') === -1 &&
-    navigator.appVersion.indexOf('Mac') !== -1,
+    globalThis.navigator?.vendor &&
+    globalThis.navigator?.vendor.indexOf('Apple') > -1 &&
+    globalThis.navigator?.userAgent &&
+    globalThis.navigator?.userAgent.indexOf('CriOS') === -1 &&
+    globalThis.navigator?.userAgent.indexOf('FxiOS') === -1 &&
+    globalThis.navigator?.appVersion.indexOf('Mac') !== -1,
 };

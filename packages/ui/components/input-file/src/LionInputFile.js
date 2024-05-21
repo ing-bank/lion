@@ -1,8 +1,8 @@
 import { LionField } from '@lion/ui/form-core.js';
 import { LocalizeMixin } from '@lion/ui/localize.js';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { FileHandle, MAX_FILE_SIZE } from './FileHandle.js';
 import { LionSelectedFileList } from './LionSelectedFileList.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
@@ -84,6 +84,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
             .multiple=${this.multiple}
           ></lion-selected-file-list>
         `,
+        renderAsDirectHostChild: true,
       }),
     };
   }
@@ -183,7 +184,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   get _fileListNode() {
     return /** @type {LionSelectedFileList} */ (
-      Array.from(this.children).find(child => child.slot === 'selected-file-list')?.children[0]
+      Array.from(this.children).find(child => child.slot === 'selected-file-list')
     );
   }
 
@@ -213,6 +214,11 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       // @ts-ignore
       this.buttonLabel = this.msgLit('lion-input-file:selectTextSingleFile');
     }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  get operationMode() {
+    return 'upload';
   }
 
   get _acceptCriteria() {
@@ -433,7 +439,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
               ];
             }
           });
-          // this._selectedFilesMetaData = [...this._selectedFilesMetaData];
+          // TODO: add a unit test for this
+          this._selectedFilesMetaData = [...this._selectedFilesMetaData];
         }
       });
     }

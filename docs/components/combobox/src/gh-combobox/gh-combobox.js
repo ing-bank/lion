@@ -123,8 +123,15 @@ export class GhCombobox extends LionCombobox {
         /** @configure LionCombobox */
 
         :host {
-          font-family: apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif,
-            Apple Color Emoji, Segoe UI Emoji;
+          font-family:
+            apple-system,
+            BlinkMacSystemFont,
+            Segoe UI,
+            Helvetica,
+            Arial,
+            sans-serif,
+            Apple Color Emoji,
+            Segoe UI Emoji;
           font-size: 14px;
         }
 
@@ -285,7 +292,7 @@ export class GhCombobox extends LionCombobox {
   render() {
     return html`
       <slot name="selection-display"></slot>
-      <div id="overlay-content-node-wrapper" role="dialog">
+      <div id="overlay-content-node-wrapper" role="dialog" aria-label="branches and tags">
         <div class="gh-combobox">
           <div class="form-field__group-one">
             <div class="gh-section-wrapper">${this._groupOneTemplate()}</div>

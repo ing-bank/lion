@@ -19,7 +19,10 @@ export const providenceFlowSvg = html` <svg
 >
   <style>
     #mermaid-1592918098747 .label {
-      font-family: trebuchet ms, verdana, arial;
+      font-family:
+        trebuchet ms,
+        verdana,
+        arial;
       color: #333;
     }
     #mermaid-1592918098747 .node circle,
@@ -57,7 +60,10 @@ export const providenceFlowSvg = html` <svg
       max-width: 200px;
       max-height: 400px;
       padding: 2px;
-      font-family: trebuchet ms, verdana, arial;
+      font-family:
+        trebuchet ms,
+        verdana,
+        arial;
       font-size: 12px;
       background: #ffffde;
       border: 1px solid #aa3;
@@ -118,7 +124,10 @@ export const providenceFlowSvg = html` <svg
     #mermaid-1592918098747 .noteText {
       fill: #000;
       stroke: none;
-      font-family: trebuchet ms, verdana, arial;
+      font-family:
+        trebuchet ms,
+        verdana,
+        arial;
       font-size: 14px;
     }
     #mermaid-1592918098747 .section {
@@ -267,7 +276,10 @@ export const providenceFlowSvg = html` <svg
     #mermaid-1592918098747 g.classGroup text {
       fill: #9370db;
       stroke: none;
-      font-family: trebuchet ms, verdana, arial;
+      font-family:
+        trebuchet ms,
+        verdana,
+        arial;
       font-size: 10px;
     }
     #mermaid-1592918098747 g.classGroup rect {
@@ -553,7 +565,10 @@ export const providenceInternalFlowSvg = html`
   >
     <style>
       #mermaid-1592918099462 .label {
-        font-family: trebuchet ms, verdana, arial;
+        font-family:
+          trebuchet ms,
+          verdana,
+          arial;
         color: #333;
       }
       #mermaid-1592918099462 .node circle,
@@ -591,7 +606,10 @@ export const providenceInternalFlowSvg = html`
         max-width: 200px;
         max-height: 400px;
         padding: 2px;
-        font-family: trebuchet ms, verdana, arial;
+        font-family:
+          trebuchet ms,
+          verdana,
+          arial;
         font-size: 12px;
         background: #ffffde;
         border: 1px solid #aa3;
@@ -652,7 +670,10 @@ export const providenceInternalFlowSvg = html`
       #mermaid-1592918099462 .noteText {
         fill: #000;
         stroke: none;
-        font-family: trebuchet ms, verdana, arial;
+        font-family:
+          trebuchet ms,
+          verdana,
+          arial;
         font-size: 14px;
       }
       #mermaid-1592918099462 .section {
@@ -801,7 +822,10 @@ export const providenceInternalFlowSvg = html`
       #mermaid-1592918099462 g.classGroup text {
         fill: #9370db;
         stroke: none;
-        font-family: trebuchet ms, verdana, arial;
+        font-family:
+          trebuchet ms,
+          verdana,
+          arial;
         font-size: 10px;
       }
       #mermaid-1592918099462 g.classGroup rect {

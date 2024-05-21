@@ -1,32 +1,33 @@
 /* eslint-disable no-shadow, no-param-reassign */
 import path from 'path';
-import { swcTraverse } from '../utils/swc-traverse.js';
-import { getAssertionType } from '../utils/get-assertion-type.js';
-import { Analyzer } from '../core/Analyzer.js';
-import { trackDownIdentifier } from './helpers/track-down-identifier.js';
-import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
+
 import { getReferencedDeclaration } from '../utils/get-source-code-fragment-of-declaration.js';
+import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
+import { trackDownIdentifier } from '../utils/track-down-identifier.js';
+import { getAssertionType } from '../utils/get-assertion-type.js';
+import { swcTraverse } from '../utils/swc-traverse.js';
 import { LogService } from '../core/LogService.js';
+import { Analyzer } from '../core/Analyzer.js';
 
 /**
- * @typedef {import("@swc/core").Module} SwcAstModule
- * @typedef {import("@swc/core").Node} SwcNode
- * @typedef {import("@swc/core").VariableDeclaration} SwcVariableDeclaration
- * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
- * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
+ * @typedef {{ exportSpecifiers:string[]; localMap: object; source:string, __tmp: { path:string } }} FindExportsSpecifierObj
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
  * @typedef {import('../../../types/index.js').FindExportsAnalyzerEntry} FindExportsAnalyzerEntry
- * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../../../types/index.js').SwcScope} SwcScope
+ * @typedef {import("@swc/core").VariableDeclaration} SwcVariableDeclaration
+ * @typedef {import('../utils/track-down-identifier.js').RootFile} RootFile
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
- * @typedef {import('../../../types/index.js').SwcPath} SwcPath
  * @typedef {import('../../../types/index.js').SwcVisitor} SwcVisitor
- * @typedef {import('./helpers/track-down-identifier.js').RootFile} RootFile
- * @typedef {object} RootFileMapEntry
- * @typedef {string} currentFileSpecifier this is the local name in the file we track from
- * @typedef {RootFile} rootFile contains file(filePath) and specifier
+ * @typedef {import('../../../types/index.js').SwcScope} SwcScope
+ * @typedef {import('../../../types/index.js').SwcPath} SwcPath
+ * @typedef {import("@swc/core").Module} SwcAstModule
+ * @typedef {import("@swc/core").Node} SwcNode
  * @typedef {RootFileMapEntry[]} RootFileMap
- * @typedef {{ exportSpecifiers:string[]; localMap: object; source:string, __tmp: { path:string } }} FindExportsSpecifierObj
+ * @typedef {string} currentFileSpecifier this is the local name in the file we track from
+ * @typedef {object} RootFileMapEntry
+ * @typedef {RootFile} rootFile contains file(filePath) and specifier
  */
 
 /**
@@ -108,13 +109,11 @@ function cleanup(transformedFile) {
  */
 function getExportSpecifiers(node) {
   // handles default [export const g = 4];
-  if (node.declaration) {
-    if (node.declaration.declarations) {
-      return [node.declaration.declarations[0].id.value];
-    }
-    if (node.declaration.identifier) {
-      return [node.declaration.identifier.value];
-    }
+  if (node.declaration?.declarations) {
+    return [node.declaration.declarations[0].id.value];
+  }
+  if (node.declaration?.identifier) {
+    return [node.declaration.identifier.value];
   }
 
   // handles (re)named specifiers [export { x (as y)} from 'y'];

@@ -5,7 +5,7 @@ import {
   suppressNonCriticalLogs,
   restoreSuppressNonCriticalLogs,
 } from './mock-log-service-helpers.js';
-import { memoizeConfig } from '../src/program/utils/memoize.js';
+import { memoize } from '../src/program/utils/memoize.js';
 
 /**
  * @typedef {import('../types/index.js').QueryResult} QueryResult
@@ -20,17 +20,17 @@ export function setupAnalyzerTest() {
 
   const originalReferenceProjectPaths = InputDataService.referenceProjectPaths;
   const cacheDisabledQInitialValue = QueryService.cacheDisabled;
-  const cacheDisabledIInitialValue = memoizeConfig.isCacheDisabled;
+  const cacheEnabledIInitialValue = memoize.isCacheEnabled;
 
   before(() => {
     QueryService.cacheDisabled = true;
-    memoizeConfig.isCacheDisabled = true;
+    memoize.disableCaching();
     suppressNonCriticalLogs();
   });
 
   after(() => {
     QueryService.cacheDisabled = cacheDisabledQInitialValue;
-    memoizeConfig.isCacheDisabled = cacheDisabledIInitialValue;
+    memoize.restoreCaching(cacheEnabledIInitialValue);
     restoreSuppressNonCriticalLogs();
   });
 

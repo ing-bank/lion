@@ -1,6 +1,6 @@
 {
   "name": "@lion/nodejs-helpers",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Node.js helpers that could be useful to extenders of lion",
   "license": "MIT",
   "author": "ing-bank",
@@ -29,13 +29,13 @@
     "types": "wireit"
   },
   "dependencies": {
-    "@babel/generator": "^7.22.5",
-    "@babel/parser": "^7.22.5",
-    "@babel/traverse": "^7.23.2",
-    "@babel/types": "^7.22.5",
-    "es-module-lexer": "^0.3.6",
-    "globby": "^13.2.0",
-    "prettier": "^2.8.8"
+    "@babel/generator": "^7.24.5",
+    "@babel/parser": "^7.24.5",
+    "@babel/traverse": "^7.24.5",
+    "@babel/types": "^7.24.5",
+    "es-module-lexer": "^0.3.26",
+    "globby": "^14.0.1",
+    "prettier": "^3.2.5"
   },
   "keywords": [
     "lion-tools",

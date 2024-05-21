@@ -10,8 +10,8 @@ import { formatDate } from '@lion/ui/localize.js';
 import '@lion/ui/define/lion-input-date.js';
 ```
 
-```js preview-story
-export const main = () => html` <lion-input-date label="Date"></lion-input-date> `;
+```html preview-story
+<lion-input-date label="Date" name="date"></lion-input-date>
 ```
 
 ## Features

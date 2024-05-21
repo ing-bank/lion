@@ -1,17 +1,11 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
-import { memoize, memoizeConfig } from '../../../src/program/utils/memoize.js';
-
-const cacheDisabledInitialValue = memoizeConfig.isCacheDisabled;
+import { memoize } from '../../../src/program/utils/memoize.js';
 
 describe('Memoize', () => {
-  beforeEach(() => {
-    // This is important, since memoization only works
-    memoizeConfig.isCacheDisabled = false;
-  });
-  afterEach(() => {
-    memoizeConfig.isCacheDisabled = cacheDisabledInitialValue;
-  });
+  // This is important, since memoization only works when cache is disabled.
+  // We want to prevent that another test unintentionally disabled caching.
+  memoize.restoreCaching();
 
   describe('With primitives', () => {
     describe('Numbers', () => {
@@ -125,6 +119,7 @@ describe('Memoize', () => {
       });
     });
   });
+
   describe('With non primitives', () => {
     describe('Arrays', () => {
       it(`returns cached result when called with same parameters`, async () => {
@@ -136,15 +131,15 @@ describe('Memoize', () => {
         const sumMemoized = memoize(sum);
 
         // Put in cache for args combination
-        expect(sumMemoized([1], [2])).to.eql([1, 2]);
+        expect(sumMemoized([1], [2])).to.deep.equal([1, 2]);
         expect(sumCalled).to.equal(1);
 
         // Return from cache
-        expect(sumMemoized([1], [2])).to.eql([1, 2]);
+        expect(sumMemoized([1], [2])).to.deep.equal([1, 2]);
         expect(sumCalled).to.equal(1);
 
         // Put in cache for args combination
-        expect(sumMemoized([1], [3])).to.eql([1, 3]);
+        expect(sumMemoized([1], [3])).to.deep.equal([1, 3]);
         expect(sumCalled).to.equal(2);
       });
 
@@ -162,17 +157,17 @@ describe('Memoize', () => {
         }
         const sum2Memoized = memoize(sum2);
 
-        expect(sumMemoized([1], [2])).to.eql([1, 2]);
+        expect(sumMemoized([1], [2])).to.deep.equal([1, 2]);
         expect(sumCalled).to.equal(1);
         expect(sum2Called).to.equal(0);
 
-        expect(sum2Memoized([1], [2])).to.eql([1, 2]);
+        expect(sum2Memoized([1], [2])).to.deep.equal([1, 2]);
         expect(sumCalled).to.equal(1);
         expect(sum2Called).to.equal(1);
 
         // Both cached
-        expect(sumMemoized([1], [2])).to.eql([1, 2]);
-        expect(sum2Memoized([1], [2])).to.eql([1, 2]);
+        expect(sumMemoized([1], [2])).to.deep.equal([1, 2]);
+        expect(sum2Memoized([1], [2])).to.deep.equal([1, 2]);
         expect(sumCalled).to.equal(1);
         expect(sum2Called).to.equal(1);
       });
@@ -188,15 +183,15 @@ describe('Memoize', () => {
         const sumMemoized = memoize(sum, { serializeObjects: true });
 
         // Put in cache for args combination
-        expect(sumMemoized({ x: 1 }, { y: 2 })).to.eql({ x: 1, y: 2 });
+        expect(sumMemoized({ x: 1 }, { y: 2 })).to.deep.equal({ x: 1, y: 2 });
         expect(sumCalled).to.equal(1);
 
         // Return from cache
-        expect(sumMemoized({ x: 1 }, { y: 2 })).to.eql({ x: 1, y: 2 });
+        expect(sumMemoized({ x: 1 }, { y: 2 })).to.deep.equal({ x: 1, y: 2 });
         expect(sumCalled).to.equal(1);
 
         // Put in cache for args combination
-        expect(sumMemoized({ x: 1 }, { y: 3 })).to.eql({ x: 1, y: 3 });
+        expect(sumMemoized({ x: 1 }, { y: 3 })).to.deep.equal({ x: 1, y: 3 });
         expect(sumCalled).to.equal(2);
       });
 
@@ -214,17 +209,17 @@ describe('Memoize', () => {
         }
         const sum2Memoized = memoize(sum2, { serializeObjects: true });
 
-        expect(sumMemoized({ x: 1 }, { y: 2 })).to.eql({ x: 1, y: 2 });
+        expect(sumMemoized({ x: 1 }, { y: 2 })).to.deep.equal({ x: 1, y: 2 });
         expect(sumCalled).to.equal(1);
         expect(sum2Called).to.equal(0);
 
-        expect(sum2Memoized({ x: 1 }, { y: 2 })).to.eql({ x: 1, y: 2 });
+        expect(sum2Memoized({ x: 1 }, { y: 2 })).to.deep.equal({ x: 1, y: 2 });
         expect(sumCalled).to.equal(1);
         expect(sum2Called).to.equal(1);
 
         // Both cached
-        expect(sumMemoized({ x: 1 }, { y: 2 })).to.eql({ x: 1, y: 2 });
-        expect(sum2Memoized({ x: 1 }, { y: 2 })).to.eql({ x: 1, y: 2 });
+        expect(sumMemoized({ x: 1 }, { y: 2 })).to.deep.equal({ x: 1, y: 2 });
+        expect(sum2Memoized({ x: 1 }, { y: 2 })).to.deep.equal({ x: 1, y: 2 });
         expect(sumCalled).to.equal(1);
         expect(sum2Called).to.equal(1);
       });
@@ -242,16 +237,17 @@ describe('Memoize', () => {
 
         // Put in cache for args combination
         const result = sumMemoized({ x: 1 }, { y: 2 });
-        expect(result).to.eql({ x: 1, y: 2 });
+        expect(result).to.deep.equal({ x: 1, y: 2 });
         expect(sumCalled).to.equal(1);
 
         // Return from cache
         const resultCached = sumMemoized({ x: 1 }, { y: 2 });
         expect(resultCached).to.equal(result);
-        expect(resultCached).to.eql({ x: 1, y: 2 });
+        expect(resultCached).to.deep.equal({ x: 1, y: 2 });
         expect(sumCalled).to.equal(1);
 
         // Outside world can edit returned reference
+        // @ts-expect-error
         resultCached.x = 3;
         // Return from cache
         const lastResult = sumMemoized({ x: 1 }, { y: 2 });

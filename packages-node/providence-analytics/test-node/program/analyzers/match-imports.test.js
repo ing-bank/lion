@@ -15,9 +15,8 @@ import MatchImportsAnalyzer from '../../../src/program/analyzers/match-imports.j
 setupAnalyzerTest();
 //
 describe('Analyzer "match-imports"', async () => {
-  const matchImportsQueryConfig = await QueryService.getQueryConfigFromAnalyzer(
-    MatchImportsAnalyzer,
-  );
+  const matchImportsQueryConfig =
+    await QueryService.getQueryConfigFromAnalyzer(MatchImportsAnalyzer);
   /** @type {Partial<ProvidenceConfig>} */
   const _providenceCfg = {
     targetProjectPaths: ['/importing/target/project'],
@@ -215,14 +214,14 @@ describe('Analyzer "match-imports"', async () => {
     );
 
     const [name, filePath, project] = targetExportedId.split('::');
-    expect(matchedEntry.exportSpecifier).to.eql({
+    expect(matchedEntry.exportSpecifier).to.deep.equal({
       name,
       filePath,
       project,
       id: targetExportedId,
     });
     expect(matchedEntry.matchesPerProject[0].project).to.equal('importing-target-project');
-    expect(matchedEntry.matchesPerProject[0].files).to.eql(importedByFiles);
+    expect(matchedEntry.matchesPerProject[0].files).to.deep.equal(importedByFiles);
   }
 
   describe('Extracting exports', () => {
@@ -435,7 +434,7 @@ describe('Analyzer "match-imports"', async () => {
       });
       const queryResult = queryResults[0];
       expect(queryResult.queryOutput[0].exportSpecifier.name).to.equal('[default]');
-      expect(queryResult.queryOutput[0].matchesPerProject).to.eql([
+      expect(queryResult.queryOutput[0].matchesPerProject).to.deep.equal([
         { files: ['./importDefault1.js', './importDefault2.js'], project: 'target' },
       ]);
     });
@@ -476,11 +475,11 @@ describe('Analyzer "match-imports"', async () => {
       });
       const queryResult = queryResults[0];
       expect(queryResult.queryOutput[0].exportSpecifier.name).to.equal('[default]');
-      expect(queryResult.queryOutput[0].matchesPerProject).to.eql([
+      expect(queryResult.queryOutput[0].matchesPerProject).to.deep.equal([
         { files: ['./deep-imports.js'], project: 'target' },
       ]);
       expect(queryResult.queryOutput[1].exportSpecifier.name).to.equal('RefClass');
-      expect(queryResult.queryOutput[1].matchesPerProject).to.eql([
+      expect(queryResult.queryOutput[1].matchesPerProject).to.deep.equal([
         { files: ['./deep-imports.js'], project: 'target' },
       ]);
     });

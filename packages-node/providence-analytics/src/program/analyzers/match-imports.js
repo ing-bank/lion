@@ -4,7 +4,7 @@ import pathLib from 'path';
 import FindImportsAnalyzer from './find-imports.js';
 import FindExportsAnalyzer from './find-exports.js';
 import { Analyzer } from '../core/Analyzer.js';
-import { fromImportToExportPerspective } from './helpers/from-import-to-export-perspective.js';
+import { fromImportToExportPerspective } from '../utils/from-import-to-export-perspective.js';
 import { transformIntoIterableFindExportsOutput } from './helpers/transform-into-iterable-find-exports-output.js';
 import { transformIntoIterableFindImportsOutput } from './helpers/transform-into-iterable-find-imports-output.js';
 
@@ -192,14 +192,11 @@ export default class MatchImportsAnalyzer extends Analyzer {
     /**
      * Prepare
      */
-    const cachedAnalyzerResult = this._prepare(cfg);
+    const cachedAnalyzerResult = await this._prepare(cfg);
     if (cachedAnalyzerResult) {
       return cachedAnalyzerResult;
     }
 
-    /**
-     * Traverse
-     */
     let { referenceProjectResult } = cfg;
     if (!referenceProjectResult) {
       const findExportsAnalyzer = new FindExportsAnalyzer();
@@ -222,6 +219,9 @@ export default class MatchImportsAnalyzer extends Analyzer {
       });
     }
 
+    /**
+     * Traverse
+     */
     const queryOutput = await matchImportsPostprocess(
       referenceProjectResult,
       targetProjectResult,

@@ -22,15 +22,14 @@
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
     "release": "changeset publish",
-    "rm-all-node_modules": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules",
-    "rocket:build": "rocket build",
-    "rocket:build:start": "web-dev-server --root-dir _site --open",
+    "repo:clean-slate": "git clean -dfX",
+    "repo:diff-package-lock": "npx diff-package-lock",
     "start": "rocket start",
     "test": "run-p test:browser test:node",
     "test:browser": "web-test-runner --coverage",
     "test:browserstack": "web-test-runner --config ./web-test-runner-browserstack.config.js",
     "test:node": "npm run test:node --workspaces --if-present",
-    "test:screenshots": "rimraf screenshots/.diff/ && rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
+    "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
     "types": "npm run types --workspaces --if-present",
     "types-check-only": "npm run types-check-only --workspaces --if-present"
@@ -39,73 +38,58 @@
     "packages/*",
     "packages-node/*"
   ],
-  "dependencies": {
-    "changeset": "^0.2.6"
-  },
   "devDependencies": {
-    "@babel/core": "^7.21.3",
+    "@babel/core": "^7.24.5",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
-    "@changesets/cli": "^2.26.1",
-    "@custom-elements-manifest/analyzer": "^0.8.0",
-    "@open-wc/building-rollup": "^1.10.0",
-    "@open-wc/eslint-config": "^10.0.0",
-    "@open-wc/testing": "^3.1.7",
-    "@open-wc/testing-helpers": "^2.2.0",
-    "@rocket/blog": "^0.4.0",
+    "@changesets/cli": "^2.27.1",
+    "@custom-elements-manifest/analyzer": "^0.10.2",
+    "@open-wc/building-rollup": "^2.2.3",
+    "@open-wc/eslint-config": "^12.0.3",
+    "@open-wc/scoped-elements": "^3.0.5",
+    "@open-wc/testing": "^4.0.0",
+    "@open-wc/testing-helpers": "^3.0.1",
+    "@rocket/blog": "0.4.0",
     "@rocket/cli": "^0.10.2",
     "@rocket/launch": "^0.6.0",
     "@rocket/search": "^0.5.1",
-    "@types/chai-as-promised": "^7.1.5",
-    "@types/chai-dom": "^0.0.8",
-    "@types/convert-source-map": "^1.5.2",
-    "@types/fs-extra": "^9.0.13",
-    "@types/glob": "^7.1.3",
-    "@types/istanbul-reports": "^3.0.1",
-    "@types/mocha": "^10.0.1",
-    "@types/prettier": "^2.7.2",
-    "@web/dev-server": "^0.1.37",
+    "@types/autosize": "^4.0.3",
+    "@types/chai-as-promised": "^7.1.8",
+    "@types/chai-dom": "^1.11.3",
+    "@types/fs-extra": "^11.0.4",
+    "@types/glob": "^8.1.0",
+    "@types/mocha": "^10.0.6",
+    "@types/prettier": "^3.0.0",
     "@web/dev-server-legacy": "^0.1.7",
-    "@web/test-runner": "^0.15.2",
-    "@web/test-runner-browserstack": "^0.5.1",
-    "@web/test-runner-commands": "^0.6.5",
-    "@web/test-runner-playwright": "^0.9.0",
-    "@webcomponents/scoped-custom-element-registry": "^0.0.8",
-    "@yarnpkg/lockfile": "^1.1.0",
-    "babel-polyfill": "^6.26.0",
+    "@web/test-runner": "^0.18.1",
+    "@web/test-runner-browserstack": "^0.7.1",
+    "@web/test-runner-commands": "^0.9.0",
+    "@web/test-runner-playwright": "^0.11.0",
+    "@webcomponents/scoped-custom-element-registry": "^0.0.9",
     "bundlesize": "^1.0.0-beta.2",
-    "cem-plugin-vs-code-custom-data-generator": "^1.4.1",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "cross-env": "^7.0.2",
-    "es6-promisify": "^6.1.1",
-    "eslint": "^8.37.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-lit": "^1.8.2",
-    "eslint-plugin-lit-a11y": "^2.4.0",
-    "eslint-plugin-wc": "^1.4.0",
-    "globby": "^13.1.3",
-    "husky": "^6.0.0",
-    "lint-staged": "^10.5.4",
+    "cem-plugin-vs-code-custom-data-generator": "^1.4.2",
+    "chai": "^4.4.1",
+    "chai-as-promised": "^7.1.2",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-wc": "^2.1.0",
+    "globby": "^14.0.1",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "looks-same": "^7.3.0",
-    "markdownlint-cli": "^0.17.0",
-    "minimist": "^1.2.6",
-    "mkdirp-promise": "^5.0.1",
-    "mocha": "^10.1.0",
+    "markdownlint-cli": "^0.40.0",
+    "mocha": "^10.4.0",
     "npm-run-all": "^4.1.5",
-    "playwright": "^1.32.1",
     "postinstall-postinstall": "^2.1.0",
-    "prettier": "^2.0.5",
-    "prettier-package-json": "^2.1.3",
-    "remark-html": "^13.0.1",
-    "rimraf": "^2.6.3",
+    "prettier": "^3.2.5",
+    "prettier-package-json": "^2.8.0",
+    "remark-html": "^13.0.2",
     "rollup": "^2.79.1",
-    "semver": "^7.5.2",
-    "sinon": "^7.5.0",
-    "ssl-root-cas": "^1.3.1",
-    "typescript": "~4.8.4",
-    "whatwg-fetch": "^3.0.0",
-    "wireit": "^0.7.2"
+    "semver": "^7.6.2",
+    "sinon": "^17.0.2",
+    "typescript": "^4.9.5",
+    "wireit": "^0.14.4"
   },
   "bundlesize": [
     {
@@ -115,10 +99,56 @@
   ],
   "comments": {
     "overrides": {
+      "//": [
+        "For best compatibility, we sometimes need to override a package version depended upon by multiple packages."
+      ],
       "sharp": [
         "Version of 'sharp' package we get via '@rocket/cli' is too old to be built on a Mac.",
         "But updating package '@rocket-cli' causes our portal to break. Reason unknown.",
         "So, we override the sharp version in here until '@rocket-cli' can be updated."
+      ]
+    },
+    "olderVersions": {
+      "//": [
+        "Our aim is to keep all depencies up-to-date(for maintainability, performance and security).",
+        "We use [npm-outdated](https://marketplace.visualstudio.com/items?itemName=mskelton.npm-outdated) as a helper for this.",
+        "Sometimes we can't bc/o incompatibility issues."
+      ],
+      "eslint": [
+        "Can't be updated yet to 9.x, because of eslint-plugin-import"
+      ],
+      "chai": [
+        "Can't be updated to 5.x, because of (unmaintained) chai-as-promised (TODO: phase out chai-as-promised)"
+      ],
+      "typescript": [
+        "Since changes in types can be reflected in the code, we want to keep this stable for a longer period of time.",
+        "As semver is not followed, we keep our major versions aligned with a minot of TS (hence '~' instead of '^' is used)"
+      ],
+      "remark-html": [
+        "Can't be updated to 14.x, because remark-html is still in commonjs."
+      ],
+      "@rocket/*": [
+        "Pinned, as newer versions require a complete overhaul of docs. Later we will move to astro."
+      ],
+      "looks-same": [
+        "Part of ./scripts/screenshots, which is not incorporated atm in automated test suite. TODO: re-evaluate solution and whether visual regression testing needs to be part of this repo"
+      ],
+      "@open-wc/building-rollup": [
+        "Can't be updated to 3.x, as v2 seems to be better compatible with rocket setup"
+      ]
+    },
+    "toBeRemoved": {
+      "//": [
+        "For maintainability, performance and security, we want to keep the number of dependencies as low as possible (in case functionality can be achieved via existing dependencies or platform functionality)."
+      ],
+      "@bundled-es-modules/fetch-mock": [
+        "Can be achieved via sinon as well"
+      ],
+      "publish-docs/fs-extra | @types/fs-extra": [
+        "Copy can be achieved via node's fs module"
+      ],
+      "@web/dev-server-legacy": [
+        "Only needed for browserstack config. Can be achieved via @web/dev-server"
       ]
     }
   },

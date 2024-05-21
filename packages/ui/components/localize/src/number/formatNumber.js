@@ -26,7 +26,7 @@ export function formatNumber(number, options = /** @type {FormatOptions} */ ({})
   }
   let printNumberOfParts = '';
   // update numberOfParts because there may be some parts added
-  const numberOfParts = formattedToParts && formattedToParts.length;
+  const numberOfParts = formattedToParts ? formattedToParts.length : 0;
   for (let i = 0; i < numberOfParts; i += 1) {
     const part = /** @type {FormatNumberPart} */ (formattedToParts[i]);
     printNumberOfParts += part.value;

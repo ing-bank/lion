@@ -4,7 +4,12 @@ import { Ajax, createCacheInterceptors } from '@lion/ajax';
 import { isResponseContentTypeSupported } from '../../src/interceptors/cacheInterceptors.js';
 
 // TODO: these are private API? should they be exposed? if not why do we test them?
-import { extendCacheOptions, resetCacheSession, ajaxCache } from '../../src/cacheManager.js';
+import {
+  extendCacheOptions,
+  resetCacheSession,
+  ajaxCache,
+  setCacheSessionId,
+} from '../../src/cacheManager.js';
 
 const MOCK_RESPONSE = 'mock response';
 
@@ -16,6 +21,8 @@ let ajax;
 /**
  * @typedef {import('../../types/types.js').CacheOptions} CacheOptions
  * @typedef {import('../../types/types.js').RequestIdFunction} RequestIdFunction
+ * @typedef {import('../../types/types.js').RequestInterceptor} RequestInterceptor
+ * @typedef {import('../../types/types.js').ResponseInterceptor} ResponseInterceptor
  */
 
 describe('cache interceptors', () => {
@@ -36,6 +43,8 @@ describe('cache interceptors', () => {
   /** @type {Response} */
   let mockResponse;
   const getCacheIdentifier = () => String(cacheId);
+  const getCacheIdentifierAsync = () => Promise.resolve(String(cacheId));
+
   /** @type {sinon.SinonSpy} */
   let ajaxRequestSpy;
 
@@ -50,6 +59,16 @@ describe('cache interceptors', () => {
 
   /**
    * @param {Ajax} ajaxInstance
+   * @param {RequestInterceptor} cacheRequestInterceptor
+   * @param {ResponseInterceptor} cacheResponseInterceptor
+   */
+  const assignInterceptors = (ajaxInstance, cacheRequestInterceptor, cacheResponseInterceptor) => {
+    ajaxInstance._requestInterceptors.push(cacheRequestInterceptor);
+    ajaxInstance._responseInterceptors.push(cacheResponseInterceptor);
+  };
+
+  /**
+   * @param {Ajax} ajaxInstance
    * @param {CacheOptions} options
    */
   const addCacheInterceptors = (ajaxInstance, options) => {
@@ -58,8 +77,25 @@ describe('cache interceptors', () => {
       options,
     );
 
-    ajaxInstance._requestInterceptors.push(cacheRequestInterceptor);
-    ajaxInstance._responseInterceptors.push(cacheResponseInterceptor);
+    assignInterceptors(ajaxInstance, cacheRequestInterceptor, cacheResponseInterceptor);
+  };
+
+  /**
+   * @param {Ajax} ajaxInstance
+   * @param {CacheOptions} options
+   * @param {() => string|Promise<string>} customGetCacheIdentifier
+   */
+  const addCacheInterceptorsWithCustomGetCacheIdentifier = (
+    ajaxInstance,
+    options,
+    customGetCacheIdentifier,
+  ) => {
+    const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
+      customGetCacheIdentifier,
+      options,
+    );
+
+    assignInterceptors(ajaxInstance, cacheRequestInterceptor, cacheResponseInterceptor);
   };
 
   beforeEach(() => {
@@ -142,6 +178,28 @@ describe('cache interceptors', () => {
       cacheId = '';
 
       addCacheInterceptors(ajax, { useCache: true });
+      await ajax
+        .fetch('/test')
+        .then(() => expect.fail('fetch should not resolve here'))
+        .catch(
+          /** @param {Error} err */ err => {
+            expect(err.message).to.equal('Invalid cache identifier');
+          },
+        )
+        .finally(() => {});
+      cacheId = cacheSessionId;
+    });
+
+    it('validates an async cache identifier function', async () => {
+      const cacheSessionId = cacheId;
+      // @ts-ignore needed for test
+      cacheId = '';
+
+      addCacheInterceptorsWithCustomGetCacheIdentifier(
+        ajax,
+        { useCache: true },
+        getCacheIdentifierAsync,
+      );
       await ajax
         .fetch('/test')
         .then(() => expect.fail('fetch should not resolve here'))
@@ -435,6 +493,37 @@ describe('cache interceptors', () => {
 
       // Then
       expect(fetchStub.callCount).to.equal(1);
+    });
+
+    it('Does not use cached request when session ID changes during processing a pending request', async () => {
+      addCacheInterceptors(ajax, {
+        useCache: true,
+        maxAge: 750,
+      });
+
+      // Reset cache
+      newCacheId();
+
+      /* Bump sessionID manually in an injected response interceptor.
+         This will simulate the cache session ID getting changed while
+         waiting for a pending request */
+
+      ajax._responseInterceptors.unshift(async (/** @type {Response} */ response) => {
+        newCacheId();
+        setCacheSessionId(getCacheIdentifier());
+        return response;
+      });
+
+      const requestOne = ajax.fetch('/foo').then(() => 'completedRequestOne');
+      const requestTwo = ajax.fetch('/foo').then(() => 'completedRequestTwo');
+      expect(await requestOne).to.equal('completedRequestOne');
+      // At this point the response interceptor of requestOne has called setCacheSessionId
+      expect(await requestTwo).to.equal('completedRequestTwo');
+
+      /* Neither call should use the cache. During the first call there is no cache entry for '/foo'.
+         During the second call there is, but since the first call's injected interceptor has bumped
+         the cache session ID, it shouldn't use the cached response. */
+      expect(fetchStub.callCount).to.equal(2);
     });
 
     it('does save to the cache when `maxResponseSize` is specified and the response size is within the threshold', async () => {

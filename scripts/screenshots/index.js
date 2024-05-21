@@ -3,10 +3,8 @@
 const { chromium } = require('playwright');
 const looksSame = require('looks-same');
 const { join } = require('path');
-const mkdirp = require('mkdirp-promise');
 const fs = require('fs');
-const { promisify } = require('es6-promisify');
-const minimist = require('minimist');
+const { promisify } = require('util');
 const { mdjsTransformer } = require('@mdjs/core');
 const { createConfig, startServer } = require('es-dev-server');
 const nodePath = require('path');
@@ -14,7 +12,6 @@ const nodePath = require('path');
 const access = promisify(fs.access);
 const compareScreenshots = promisify(looksSame);
 const createScreenshotsDiff = promisify(looksSame.createDiff);
-const args = minimist(process.argv);
 
 const DIFF_FOLDER_PREFIX = '.diff';
 const CURRENT_FOLDER_PREFIX = '.current';
@@ -157,7 +154,7 @@ async function getScreenshot({ root, id, selector, page, clip }) {
 
   const { path, folder } = await buildPath({ root, id, selector });
 
-  mkdirp(folder);
+  await fs.promises.mkdir(folder, { recursive: true });
 
   // Remove caret from screenshots to avoid caret diff
   await page.evaluate(() => {
@@ -201,7 +198,7 @@ const screenshotsCompareOptions = {
 async function invalidateScreenshots({ diffRoot: root, id, selector, reference, current }) {
   const { path, folder } = await buildPath({ root, id, selector });
 
-  mkdirp(folder);
+  await fs.promises.mkdir(folder, { recursive: true });
 
   await createScreenshotsDiff({
     ...screenshotsCompareOptions,
@@ -238,10 +235,11 @@ async function validateScreenshot(suite) {
   }
 }
 
-let updateScreenshots = args['update-screenshots'] || process.env.UPDATE_SCREENSHOTS;
+let updateScreenshots =
+  process.argv.includes('--update-screenshots') || process.env.UPDATE_SCREENSHOTS;
 
 try {
-  const avaConfig = JSON.parse(args._[2]);
+  const avaConfig = JSON.parse(process.argv[2]);
   updateScreenshots = avaConfig.updateScreenshots;
 } catch (e) {
   log('Could not parse config');

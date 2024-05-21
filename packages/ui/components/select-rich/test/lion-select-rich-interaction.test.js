@@ -7,6 +7,7 @@ import '@lion/ui/define/lion-option.js';
 
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
+import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
 
 /**
  * @typedef {import('../src/LionSelectRich.js').LionSelectRich} LionSelectRich
@@ -21,32 +22,6 @@ import '@lion/ui/define/lion-select-rich.js';
 function mimicKeyPress(el, key, code = '') {
   el.dispatchEvent(new KeyboardEvent('keydown', { key, code }));
   el.dispatchEvent(new KeyboardEvent('keyup', { key, code }));
-}
-
-/**
- * @param {LionSelectRich} lionSelectEl
- */
-function getNodes(lionSelectEl) {
-  const {
-    // @ts-ignore protected members allowed in test
-    _invokerNode: invoker,
-    // @ts-ignore protected members allowed in test
-    _feedbackNode: feedback,
-    // @ts-ignore protected members allowed in test
-    _labelNode: label,
-    // @ts-ignore protected members allowed in test
-    _helpTextNode: helpText,
-    // @ts-ignore protected members allowed in test
-    _listboxNode: listbox,
-    // @ts-ignore protected members allowed in test
-  } = lionSelectEl;
-  return {
-    invoker,
-    feedback,
-    label,
-    helpText,
-    listbox,
-  };
 }
 
 describe('lion-select-rich interactions', () => {
@@ -131,9 +106,15 @@ describe('lion-select-rich interactions', () => {
         });
       }
 
+      let isTriggeredByUser;
       const el = /** @type {LionSelectRich} */ (
         await fixture(html`
-          <lion-select-rich interaction-mode="windows/linux">
+          <lion-select-rich
+            interaction-mode="windows/linux"
+            @model-value-changed="${(/** @type {CustomEvent} */ event) => {
+              isTriggeredByUser = event.detail.isTriggeredByUser;
+            }}"
+          >
             <lion-options slot="input">
               <lion-option .choiceValue=${10}>Item 1</lion-option>
               <lion-option .choiceValue=${20}>Item 2</lion-option>
@@ -150,10 +131,14 @@ describe('lion-select-rich interactions', () => {
       el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
       expect(el.checkedIndex).to.equal(1);
       expectOnlyGivenOneOptionToBeChecked(options, 1);
+      expect(isTriggeredByUser).to.be.true;
+
+      isTriggeredByUser = false;
 
       el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
       expect(el.checkedIndex).to.equal(0);
       expectOnlyGivenOneOptionToBeChecked(options, 0);
+      expect(isTriggeredByUser).to.be.true;
     });
 
     it('checkes a value with [character] keys while listbox unopened', async () => {
@@ -187,8 +172,8 @@ describe('lion-select-rich interactions', () => {
           </lion-select-rich>
         `)
       );
-      const { invoker } = getNodes(el);
-      expect(invoker.tabIndex).to.equal(-1);
+      const { _invokerNode } = getSelectRichMembers(el);
+      expect(_invokerNode.tabIndex).to.equal(-1);
     });
 
     it('cannot be opened via click if disabled', async () => {
@@ -199,8 +184,9 @@ describe('lion-select-rich interactions', () => {
           </lion-select-rich>
         `)
       );
-      const { invoker } = getNodes(el);
-      invoker.click();
+      const { _invokerNode, _overlayCtrl } = getSelectRichMembers(el);
+      _invokerNode.click();
+      await _overlayCtrl._showComplete;
       expect(el.opened).to.be.false;
     });
 
@@ -212,11 +198,11 @@ describe('lion-select-rich interactions', () => {
           </lion-select-rich>
         `)
       );
-      const { invoker } = getNodes(el);
-      expect(invoker.hasAttribute('disabled')).to.be.true;
+      const { _invokerNode } = getSelectRichMembers(el);
+      expect(_invokerNode.hasAttribute('disabled')).to.be.true;
       el.removeAttribute('disabled');
       await el.updateComplete;
-      expect(invoker.hasAttribute('disabled')).to.be.false;
+      expect(_invokerNode.hasAttribute('disabled')).to.be.false;
     });
   });
 
@@ -232,10 +218,10 @@ describe('lion-select-rich interactions', () => {
           </lion-select-rich>
         `)
       );
-      const { invoker } = getNodes(el);
+      const { _invokerNode } = getSelectRichMembers(el);
       expect(el.touched).to.be.false;
-      await triggerFocusFor(invoker);
-      await triggerBlurFor(invoker);
+      await triggerFocusFor(_invokerNode);
+      await triggerBlurFor(_invokerNode);
       expect(el.touched).to.be.true;
     });
   });
@@ -252,21 +238,21 @@ describe('lion-select-rich interactions', () => {
           </lion-select-rich>
         `)
       );
-      const { invoker } = getNodes(el);
+      const { _invokerNode } = getSelectRichMembers(el);
       const options = el.formElements;
       await el.feedbackComplete;
       await el.updateComplete;
-      expect(invoker.getAttribute('aria-invalid')).to.equal('false');
+      expect(_invokerNode.getAttribute('aria-invalid')).to.equal('false');
 
       options[0].checked = true;
       await el.feedbackComplete;
       await el.updateComplete;
-      expect(invoker.getAttribute('aria-invalid')).to.equal('true');
+      expect(_invokerNode.getAttribute('aria-invalid')).to.equal('true');
 
       options[1].checked = true;
       await el.feedbackComplete;
       await el.updateComplete;
-      expect(invoker.getAttribute('aria-invalid')).to.equal('false');
+      expect(_invokerNode.getAttribute('aria-invalid')).to.equal('false');
     });
   });
 });

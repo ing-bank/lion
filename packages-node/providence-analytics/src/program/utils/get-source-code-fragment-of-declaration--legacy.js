@@ -1,15 +1,17 @@
-import fs from 'fs';
 import path from 'path';
+
 import babelTraversePkg from '@babel/traverse';
+
+import { trackDownIdentifier } from './track-down-identifier.js';
 import { AstService } from '../core/AstService.js';
-import { trackDownIdentifier } from '../analyzers/helpers/track-down-identifier.js';
 import { toPosixPath } from './to-posix-path.js';
+import { fsAdapter } from './fs-adapter.js';
 
 /**
- * @typedef {import('@babel/types').Node} Node
- * @typedef {import('@babel/traverse').NodePath} NodePath
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('@babel/traverse').NodePath} NodePath
+ * @typedef {import('@babel/types').Node} Node
  */
 
 /**
@@ -82,7 +84,7 @@ export async function getSourceCodeFragmentOfDeclaration({
   exportedIdentifier,
   projectRootPath,
 }) {
-  const code = fs.readFileSync(filePath, 'utf8');
+  const code = fsAdapter.fs.readFileSync(filePath, 'utf8');
   // TODO: fix swc-to-babel lib to make this compatible with 'swc-to-babel' mode of getAst
   const babelAst = AstService.getAst(code, 'babel', { filePath });
 

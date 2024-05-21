@@ -1,11 +1,12 @@
-import { LitElement } from 'lit';
 import { uuid } from '@lion/ui/core.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import {
   FormRegisteringMixin,
   FormRegistrarMixin,
   FormRegistrarPortalMixin,
 } from '@lion/ui/form-core.js';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { LitElement } from 'lit';
+import sinon from 'sinon';
 
 /**
  * @typedef {Object} customConfig
@@ -163,20 +164,20 @@ export const runRegistrationSuite = customConfig => {
     });
 
     it('works for components that have a delayed render', async () => {
-      class PerformUpdate extends FormRegistrarMixin(LitElement) {
-        async performUpdate() {
+      class ScheduleUpdate extends FormRegistrarMixin(LitElement) {
+        async scheduleUpdate() {
           // eslint-disable-next-line no-promise-executor-return
           await new Promise(resolve => setTimeout(() => resolve(undefined), 10));
-          await super.performUpdate();
+          await super.scheduleUpdate();
         }
 
         render() {
           return html`<slot></slot>`;
         }
       }
-      const tagWrapperString = defineCE(PerformUpdate);
+      const tagWrapperString = defineCE(ScheduleUpdate);
       const tagWrapper = unsafeStatic(tagWrapperString);
-      const el = /** @type {PerformUpdate} */ (
+      const el = /** @type {ScheduleUpdate} */ (
         await fixture(html`
         <${tagWrapper}>
           <${childTag}></${childTag}>
@@ -256,6 +257,60 @@ export const runRegistrationSuite = customConfig => {
       ]);
     });
 
+    describe('FormRegisteringMixin', () => {
+      it('propagates the form-element-register event through the shadowDom', async () => {
+        const eventSpy = sinon.spy();
+        const withShadowFormControlStr = defineCE(
+          class extends FormRegistrarMixin(LitElement) {
+            render() {
+              return html`
+              <${childTag}
+                id="child"
+                @form-element-register=${eventSpy}
+                allow-cross-root-registration
+              >
+              </${childTag}>`;
+            }
+          },
+        );
+        const withShadowFormControlTag = unsafeStatic(withShadowFormControlStr);
+
+        const el = /** @type {RegistrarClass} */ (
+          await fixture(html`
+            <${withShadowFormControlTag}>
+            </${withShadowFormControlTag}>
+          `)
+        );
+
+        expect(eventSpy).to.have.been.calledOnce;
+        expect(eventSpy.getCall(0).args[0].composed).to.equal(true);
+        expect(el.formElements).to.deep.equal([el.shadowRoot?.querySelector('#child')]);
+      });
+      it('dispatches the form-element-register event with compose true if allowCrossRootRegistration is set', async () => {
+        const eventSpy = sinon.spy();
+        /** @type {RegisteringClass} */ (
+          await fixture(html`
+            <${childTag}
+              @form-element-register=${eventSpy}
+              allow-cross-root-registration
+            >
+            </${childTag}>
+          `)
+        );
+        expect(eventSpy).to.have.been.calledOnce;
+        expect(eventSpy.getCall(0).args[0].composed).to.equal(true);
+      });
+      it('dispatches the form-element-register event with compose false if allowCrossRootRegistration is not set', async () => {
+        const eventSpy = sinon.spy();
+        /** @type {RegisteringClass} */ (
+          await fixture(html`
+            <${childTag} @form-element-register=${eventSpy}></${childTag}>
+          `)
+        );
+        expect(eventSpy).to.have.been.calledOnce;
+        expect(eventSpy.getCall(0).args[0].composed).to.equal(false);
+      });
+    });
     describe('FormRegistrarPortalMixin', () => {
       it('forwards registrations to the .registrationTarget', async () => {
         const el = /** @type {RegistrarClass} */ (
@@ -359,10 +414,10 @@ export const runRegistrationSuite = customConfig => {
       it('works for portals that have a delayed render', async () => {
         const delayedPortalString = defineCE(
           class extends FormRegistrarPortalMixin(LitElement) {
-            async performUpdate() {
+            async scheduleUpdate() {
               // eslint-disable-next-line no-promise-executor-return
               await new Promise(resolve => setTimeout(() => resolve(undefined), 10));
-              await super.performUpdate();
+              await super.scheduleUpdate();
             }
 
             render() {

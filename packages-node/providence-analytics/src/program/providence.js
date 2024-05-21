@@ -1,8 +1,11 @@
 import { performance } from 'perf_hooks';
-import { ReportService } from './core/ReportService.js';
+import nodeFs from 'fs';
+
 import { InputDataService } from './core/InputDataService.js';
-import { LogService } from './core/LogService.js';
+import { ReportService } from './core/ReportService.js';
 import { QueryService } from './core/QueryService.js';
+import { fsAdapter } from './utils/fs-adapter.js';
+import { LogService } from './core/LogService.js';
 import { AstService } from './core/AstService.js';
 
 /**
@@ -145,28 +148,6 @@ async function handleAnalyzer(queryConfig, cfg) {
   return queryResults;
 }
 
-async function handleFeature(queryConfig, cfg, inputData) {
-  if (cfg.queryMethod === 'grep') {
-    const queryResult = await QueryService.grepSearch(inputData, queryConfig, {
-      gatherFilesConfig: cfg.gatherFilesConfig,
-      gatherFilesConfigReference: cfg.gatherFilesConfigReference,
-    });
-    return queryResult;
-  }
-  return undefined;
-}
-
-async function handleRegexSearch(queryConfig, cfg, inputData) {
-  if (cfg.queryMethod === 'grep') {
-    const queryResult = await QueryService.grepSearch(inputData, queryConfig, {
-      gatherFilesConfig: cfg.gatherFilesConfig,
-      gatherFilesConfigReference: cfg.gatherFilesConfigReference,
-    });
-    return queryResult;
-  }
-  return undefined;
-}
-
 /**
  * Creates a report with usage metrics, based on a queryConfig.
  *
@@ -196,8 +177,14 @@ export async function providence(queryConfig, customConfig) {
     /** Allows to navigate to source file in code editor */
     addSystemPathsInResult: false,
     fallbackToBabel: false,
+    fs: nodeFs,
     ...customConfig,
   });
+
+  if (cfg.fs) {
+    // Allow to mock fs for testing
+    fsAdapter.setFs(cfg.fs);
+  }
 
   if (cfg.debugEnabled) {
     LogService.debugEnabled = true;
@@ -211,23 +198,7 @@ export async function providence(queryConfig, customConfig) {
     AstService.fallbackToBabel = true;
   }
 
-  let queryResults;
-  if (queryConfig.type === 'ast-analyzer') {
-    queryResults = await handleAnalyzer(queryConfig, cfg);
-  } else {
-    const inputData = InputDataService.createDataObject(
-      cfg.targetProjectPaths,
-      cfg.gatherFilesConfig,
-    );
-
-    if (queryConfig.type === 'feature') {
-      queryResults = await handleFeature(queryConfig, cfg, inputData);
-      report(queryResults, cfg);
-    } else if (queryConfig.type === 'search') {
-      queryResults = await handleRegexSearch(queryConfig, cfg, inputData);
-      report(queryResults, cfg);
-    }
-  }
+  const queryResults = await handleAnalyzer(queryConfig, cfg);
 
   if (cfg.writeLogFile) {
     LogService.writeLogFile();

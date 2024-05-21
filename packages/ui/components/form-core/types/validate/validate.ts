@@ -2,7 +2,7 @@ import { FormControlHost } from '../../src/FormControlMixin.js';
 import { ValidationType } from './ValidateMixinTypes.js';
 
 /**
- * The name under which validation results get registered. For convience and predictability, this
+ * The name under which validation results get registered. For convenience and predictability, this
  * should always be the same as the constructor name (since it will be obfuscated in js builds,
  * we need to provide it separately).
  * @example
@@ -34,7 +34,7 @@ export type ValidatorConfig = {
 };
 
 /**
- * Output of the `execute` function that returns a validity outcome. When we need to shpw feedback,
+ * Output of the `execute` function that returns a validity outcome. When we need to show feedback,
  * it should return true, otherwise false. So when an error\info|warning|success message
  * needs to be shown, return true.
  * It's also possible to return an enum. Let's say that a phone number can have multiple

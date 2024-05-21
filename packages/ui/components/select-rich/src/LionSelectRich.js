@@ -1,8 +1,8 @@
 import { LionListbox } from '@lion/ui/listbox.js';
 import { html } from 'lit';
 import { SlotMixin, browserDetection } from '@lion/ui/core.js';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
+import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { LionSelectInvoker } from './LionSelectInvoker.js';
 
 /**
@@ -477,13 +477,20 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   // TODO: rename to _onKeyUp in v1
   __onKeyUp(ev) {
-    if (this.disabled) {
+    if (this.disabled || this.readOnly) {
       return;
     }
 
     if (this.opened) {
       return;
     }
+
+    this._isHandlingUserInput = true;
+    setTimeout(() => {
+      // Since we can't control when subclasses are done handling keyboard input, we
+      // schedule a timeout to reset _isHandlingUserInput
+      this._isHandlingUserInput = false;
+    });
 
     const { key } = ev;
     switch (key) {
@@ -534,6 +541,9 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     switch (key) {
       case 'Tab':
         // Tab can only be caught in keydown
+        if (this._overlayCtrl.config.trapsKeyboardFocus === true) {
+          return;
+        }
         this.opened = false;
         break;
       case 'Escape':

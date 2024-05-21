@@ -188,7 +188,7 @@ describe('Analyzer "match-paths"', async () => {
       mockTargetAndReferenceProject(searchTargetProject, referenceProject);
       const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
-      expect(queryResult.queryOutput).to.eql(expectedMatches);
+      expect(queryResult.queryOutput).to.deep.equal(expectedMatches);
     });
 
     describe('Features', () => {
@@ -239,7 +239,7 @@ describe('Analyzer "match-paths"', async () => {
         mockTargetAndReferenceProject(targetProj, refProj);
         const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
-        expect(queryResult.queryOutput[0].variable.paths[0]).to.eql({
+        expect(queryResult.queryOutput[0].variable.paths[0]).to.deep.equal({
           from: './index.js',
           to: './target-src/TargetClass.js',
         });
@@ -263,7 +263,7 @@ describe('Analyzer "match-paths"', async () => {
           mockTargetAndReferenceProject(targetProjWithMultipleExports, refProj);
           const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
           const queryResult = queryResults[0];
-          expect(queryResult.queryOutput[0].variable.paths[0]).to.eql({
+          expect(queryResult.queryOutput[0].variable.paths[0]).to.deep.equal({
             from: './index.js',
             to: './reexportFromRoot.js',
           });
@@ -296,7 +296,7 @@ describe('Analyzer "match-paths"', async () => {
           mockTargetAndReferenceProject(targetProjWithMultipleExportsAndMainEntry, refProj);
           const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
           const queryResult = queryResults[0];
-          expect(queryResult.queryOutput[0].variable.paths[0]).to.eql({
+          expect(queryResult.queryOutput[0].variable.paths[0]).to.deep.equal({
             from: './index.js',
             to: './target-src/mainEntry.js',
           });
@@ -308,8 +308,11 @@ describe('Analyzer "match-paths"', async () => {
         const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
         const unprefixedPaths = queryResult.queryOutput[0].variable.paths[0];
-        expect(unprefixedPaths).to.eql({ from: './index.js', to: './target-src/TargetClass.js' });
-        expect(queryResult.queryOutput[0].variable.paths[1]).to.eql({
+        expect(unprefixedPaths).to.deep.equal({
+          from: './index.js',
+          to: './target-src/TargetClass.js',
+        });
+        expect(queryResult.queryOutput[0].variable.paths[1]).to.deep.equal({
           from: `${refProj.name}/${unprefixedPaths.from.slice(2)}`,
           to: unprefixedPaths.to,
         });
@@ -336,11 +339,11 @@ describe('Analyzer "match-paths"', async () => {
         mockTargetAndReferenceProject(targetProjMultipleTargetExtensions, refProj);
         const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
-        expect(queryResult.queryOutput[0].variable.paths[0]).to.eql({
+        expect(queryResult.queryOutput[0].variable.paths[0]).to.deep.equal({
           from: './index.js',
           to: './target-src/TargetClass.js',
         });
-        expect(queryResult.queryOutput[1].variable.paths[0]).to.eql({
+        expect(queryResult.queryOutput[1].variable.paths[0]).to.deep.equal({
           from: './index.js',
           to: './target-src/TargetSomething.js',
         });
@@ -410,7 +413,7 @@ describe('Analyzer "match-paths"', async () => {
         );
         const queryResults = await providence(matchPathsQueryConfigFilter, _providenceCfg);
         const queryResult = queryResults[0];
-        expect(queryResult.queryOutput[0].variable.paths[0]).to.eql({
+        expect(queryResult.queryOutput[0].variable.paths[0]).to.deep.equal({
           from: './index.js',
           to: './target-src/TargetClass.js',
         });
@@ -515,8 +518,8 @@ describe('Analyzer "match-paths"', async () => {
       mockTargetAndReferenceProject(searchTargetProject, referenceProject);
       const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
-      expect(queryResult.queryOutput[0].tag).to.eql(expectedMatches[0]);
-      expect(queryResult.queryOutput[1].tag).to.eql(expectedMatches[1]);
+      expect(queryResult.queryOutput[0].tag).to.deep.equal(expectedMatches[0]);
+      expect(queryResult.queryOutput[1].tag).to.deep.equal(expectedMatches[1]);
     });
 
     // TODO: test works in isolation, but some side effects occur when run in suite
@@ -578,7 +581,7 @@ describe('Analyzer "match-paths"', async () => {
         providenceCfg,
       );
       const queryResult = queryResults[0];
-      expect(queryResult.queryOutput[0].tag).to.eql({
+      expect(queryResult.queryOutput[0].tag).to.deep.equal({
         from: 'their-button',
         to: 'my-button',
         paths: [
@@ -607,7 +610,7 @@ describe('Analyzer "match-paths"', async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
         const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
-        expect(queryResult.queryOutput[0].tag.paths[0]).to.eql({
+        expect(queryResult.queryOutput[0].tag.paths[0]).to.deep.equal({
           from: './customelementDefinitions.js',
           to: './extendedCustomelementDefinitions.js',
         });
@@ -617,7 +620,7 @@ describe('Analyzer "match-paths"', async () => {
         mockTargetAndReferenceProject(searchTargetProject, referenceProject);
         const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
         const queryResult = queryResults[0];
-        expect(queryResult.queryOutput[0].tag.paths[1]).to.eql({
+        expect(queryResult.queryOutput[0].tag.paths[1]).to.deep.equal({
           from: 'reference-project/customelementDefinitions.js',
           to: './extendedCustomelementDefinitions.js',
         });
@@ -736,7 +739,7 @@ describe('Analyzer "match-paths"', async () => {
       mockTargetAndReferenceProject(searchTargetProjectFull, referenceProjectFull);
       const queryResults = await providence(matchPathsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
-      expect(queryResult.queryOutput).to.eql(expectedMatchesFull);
+      expect(queryResult.queryOutput).to.deep.equal(expectedMatchesFull);
     });
   });
 });

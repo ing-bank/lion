@@ -81,19 +81,19 @@ describe('Analyzer', async () => {
         const queryResult = queryResults[0];
         const { queryOutput, meta } = queryResult;
 
-        expect(queryOutput[0]).to.eql({
+        expect(queryOutput[0]).to.deep.equal({
           file: './test-file-0.js',
           meta: {},
           result: [{ matched: 'entry' }],
         });
-        expect(queryOutput[1]).to.eql({
+        expect(queryOutput[1]).to.deep.equal({
           file: './test-file2.js',
           meta: {},
           result: [{ matched: 'entry' }],
         });
         // Local machine info needs to be deleted, so that results are always 'machine agnostic'
         // (which is needed to share cached json results via git)
-        expect(meta).to.eql({
+        expect(meta).to.deep.equal({
           searchType: 'ast-analyzer',
           analyzerMeta: {
             name: 'my-analyzer',

@@ -11,6 +11,7 @@ import {
 } from '@open-wc/testing';
 import sinon from 'sinon';
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
+import { mimicUserChangingDropdown } from '@lion/ui/input-tel-dropdown-test-helpers.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -34,24 +35,6 @@ function getDropdownValue(dropdownEl) {
     return dropdownEl.modelValue;
   }
   return dropdownEl.value;
-}
-
-/**
- * @param {DropdownElement} dropdownEl
- * @param {string} value
- */
-function mimicUserChangingDropdown(dropdownEl, value) {
-  if ('modelValue' in dropdownEl) {
-    // eslint-disable-next-line no-param-reassign
-    dropdownEl.modelValue = value;
-    dropdownEl.dispatchEvent(
-      new CustomEvent('model-value-changed', { detail: { isTriggeredByUser: true } }),
-    );
-  } else {
-    // eslint-disable-next-line no-param-reassign
-    dropdownEl.value = value;
-    dropdownEl.dispatchEvent(new Event('change'));
-  }
 }
 
 /**
@@ -169,6 +152,8 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
                 props: { style: 'height: 100%;' },
                 ref: { value: dropdownNode },
               },
+              // @ts-expect-error [allow-protected]
+              input: el._inputNode,
             },
           }),
         );
@@ -232,7 +217,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
       it('renders to prefix slot in light dom', async () => {
         const el = await fixture(html` <${tag} .allowedRegions="${['DE']}"></${tag}> `);
         const prefixSlot = /** @type {HTMLElement} */ (
-          /** @type {HTMLElement} */ (el.refs.dropdown.value).parentElement
+          /** @type {HTMLElement} */ (el.refs.dropdown.value)
         );
         expect(prefixSlot.getAttribute('slot')).to.equal('prefix');
         expect(prefixSlot.slot).to.equal('prefix');
@@ -333,26 +318,6 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         await el.updateComplete;
         await el.updateComplete;
         expect(el.value).to.equal('+32');
-      });
-
-      it('focuses the textbox right after selection if selected via opened dropdown', async () => {
-        const el = await fixture(
-          html` <${tag} .allowedRegions="${[
-            'NL',
-            'BE',
-          ]}" .modelValue="${'+31612345678'}"></${tag}> `,
-        );
-        const dropdownElement = el.refs.dropdown.value;
-        // @ts-expect-error [allow-protected-in-tests]
-        if (dropdownElement?._overlayCtrl) {
-          // @ts-expect-error [allow-protected-in-tests]
-          dropdownElement._overlayCtrl.show();
-          mimicUserChangingDropdown(dropdownElement, 'BE');
-          await el.updateComplete;
-          await aTimeout(0);
-          // @ts-expect-error [allow-protected-in-tests]
-          expect(el._inputNode).to.equal(document.activeElement);
-        }
       });
 
       it('keeps focus on dropdownElement after selection if selected via unopened dropdown', async () => {

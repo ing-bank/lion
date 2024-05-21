@@ -7,7 +7,8 @@ apply ScopedElementsMixin to make sure it uses the right version of this interna
 
 ```js
 import { LitElement, html } from '@lion/ui/core.js';
-import { ScopedElementsMixin, LitElement, html } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+import { html, LitElement } from 'lit';
 
 import { LionInput } from '@lion/ui/input.js';
 import { LionButton } from '@lion/ui/button.js';
@@ -29,28 +30,31 @@ class MyElement extends ScopedElementsMixin(LitElement) {
 }
 ```
 
-## Query selectors
+## Polyfill
 
-Since Scoped Elements changes tagnames under the hood, a tagname querySelector should be written like this:
+This package requires use of the Scoped Custom Element Registry polyfill. Make sure to load it as the first thing in your application:
 
 ```js
-this.querySelector(
-  this.constructor.getScopedTagName('lion-input', this.constructor.scopedElements),
-);
+import '@webcomponents/scoped-custom-element-registry';
 ```
 
-## CSS selectors
+If you're using `@web/rollup-plugin-polyfills-loader`, you can use it in your rollup config like this:
 
-Avoid tagname css selectors.
-We already avoid query selectors internally in lion, but just be aware that a selector like
-
-```css
-lion-input {
-  padding: 20px;
-}
+```js
+polyfillsLoader({
+  polyfills: {
+    scopedCustomElementRegistry: true,
+  },
+});
 ```
 
-will stop working.
+If you're using `@web/dev-server` for local development, you can use the `@web/dev-server-polyfill` plugin:
+
+```js
+polyfill({
+  scopedCustomElementRegistry: true,
+});
+```
 
 ## Edge cases
 
@@ -91,12 +95,12 @@ In a less complex case, we might just want to add a child node to the dom.
 
 ```js
 import { LitElement  } from 'lit';
-import { ScopedElementsMixin, getScopedTagName } from '@open-wc/scoped-elements';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 
 ...
 
 __getLightDomNode() {
-  return document.createElement(getScopedTagName('lion-input', this.constructor.scopedElements));
+  return document.createElement('lion-input', this.constructor.scopedElements);
 }
 ```
 

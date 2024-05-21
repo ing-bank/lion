@@ -7,10 +7,8 @@ import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-input-range.js';
 ```
 
-```js preview-story
-export const main = () => html`
-  <lion-input-range min="200" max="500" .modelValue="${300}" label="Input range"></lion-input-range>
-`;
+```html preview-story
+<lion-input-range min="200" max="500" .modelValue="${300}" label="Input range"></lion-input-range>
 ```
 
 ## Features

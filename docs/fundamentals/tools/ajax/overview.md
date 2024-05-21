@@ -7,7 +7,7 @@
 - Supports caching, so a request can be prevented from reaching to network, by returning the cached response.
 - Supports JSON with `ajax.fetchJSON` by automatically serializing request body and deserializing response payload as JSON, and adding the correct Content-Type and Accept headers.
 - Adds accept-language header to requests based on application language
-- Adds XSRF header to request if the cookie is present
+- Adds XSRF header to request if the cookie is present and the request is for a mutable action (POST/PUT/PATCH/DELETE) and if the origin is the same as current origin or the request origin is in the xsrfTrustedOrigins list.
 
 ## Installation
 
@@ -126,29 +126,31 @@ Response interceptors can be async and will be awaited.
 
 ## Ajax class options
 
-| Property                         | Type     | Default Value                                                      | Description                                                                                                                                     |
-| -------------------------------- | -------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| addAcceptLanguage                | boolean  | `true`                                                             | Whether to add the Accept-Language header from the `data-localize-lang` document property                                                       |
-| addCaching                       | boolean  | `false`                                                            | Whether to add the cache interceptor and start storing responses in the cache, even if `cacheOptions.useCache` is `false`                       |
-| xsrfCookieName                   | string   | `"XSRF-TOKEN"`                                                     | The name for the Cross Site Request Forgery cookie                                                                                              |
-| xsrfHeaderName                   | string   | `"X-XSRF-TOKEN"`                                                   | The name for the Cross Site Request Forgery header                                                                                              |
-| jsonPrefix                       | string   | `""`                                                               | The prefix to add to add to responses for the `.fetchJson` functions                                                                            |
-| cacheOptions.useCache            | boolean  | `false`                                                            | Whether to use the default cache interceptors to cache requests                                                                                 |
-| cacheOptions.getCacheIdentifier  | function | a function returning the string `_default`                         | A function to determine the cache that should be used for each request; used to make sure responses for one session are not used in the next    |
-| cacheOptions.methods             | string[] | `["get"]`                                                          | The HTTP methods to cache reponses for. Any other method will invalidate the cache for this request, see "Invalidating cache", below            |
-| cacheOptions.maxAge              | number   | `360000`                                                           | The time to keep a response in the cache before invalidating it automatically                                                                   |
-| cacheOptions.invalidateUrls      | string[] | `undefined`                                                        | Urls to invalidate each time a method not in `cacheOptions.methods` is encountered, see "Invalidating cache", below                             |
-| cacheOptions.invalidateUrlsRegex | regex    | `undefined`                                                        | Regular expression matching urls to invalidate each time a method not in `cacheOptions.methods` is encountered, see "Invalidating cache", below |
-| cacheOptions.requestIdFunction   | function | a function returning the base url and serialized search parameters | Function to determine what defines a unique URL                                                                                                 |
-| cacheOptions.contentTypes        | string[] | `undefined`                                                        | Whitelist of content types that will be stored to or retrieved from the cache                                                                   |
-| cacheOptions.maxResponseSize     | number   | `undefined`                                                        | The maximum response size in bytes that will be stored to or retrieved from the cache                                                           |
-| cacheOptions.maxCacheSize        | number   | `undefined`                                                        | The maxiumum total size in bytes of the cache; when the cache gets larger it is truncated                                                       |
+| Property                         | Type     | Default Value                                                      | Description                                                                                                                                                 |
+| -------------------------------- | -------- | ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| addAcceptLanguage                | boolean  | `true`                                                             | Whether to add the Accept-Language header from the `data-localize-lang` document property                                                                   |
+| addCaching                       | boolean  | `false`                                                            | Whether to add the cache interceptor and start storing responses in the cache, even if `cacheOptions.useCache` is `false`                                   |
+| xsrfCookieName                   | string   | `"XSRF-TOKEN"`                                                     | The name for the Cross Site Request Forgery cookie                                                                                                          |
+| xsrfHeaderName                   | string   | `"X-XSRF-TOKEN"`                                                   | The name for the Cross Site Request Forgery header                                                                                                          |
+| xsrfTrustedOrigins               | string[] | []                                                                 | List of trusted origins, the XSRF header will also be added if the origin is in this list.                                                                  |
+| jsonPrefix                       | string   | `""`                                                               | The prefix to add to add to responses for the `.fetchJson` functions                                                                                        |
+| cacheOptions.useCache            | boolean  | `false`                                                            | Whether to use the default cache interceptors to cache requests                                                                                             |
+| cacheOptions.getCacheIdentifier  | function | a function returning the string `_default`.                        | A function to determine the cache that should be used for each request; used to make sure responses for one session are not used in the next. Can be async. |
+| cacheOptions.methods             | string[] | `["get"]`                                                          | The HTTP methods to cache reponses for. Any other method will invalidate the cache for this request, see "Invalidating cache", below                        |
+| cacheOptions.maxAge              | number   | `360000`                                                           | The time to keep a response in the cache before invalidating it automatically                                                                               |
+| cacheOptions.invalidateUrls      | string[] | `undefined`                                                        | Urls to invalidate each time a method not in `cacheOptions.methods` is encountered, see "Invalidating cache", below                                         |
+| cacheOptions.invalidateUrlsRegex | regex    | `undefined`                                                        | Regular expression matching urls to invalidate each time a method not in `cacheOptions.methods` is encountered, see "Invalidating cache", below             |
+| cacheOptions.requestIdFunction   | function | a function returning the base url and serialized search parameters | Function to determine what defines a unique URL                                                                                                             |
+| cacheOptions.contentTypes        | string[] | `undefined`                                                        | Whitelist of content types that will be stored to or retrieved from the cache                                                                               |
+| cacheOptions.maxResponseSize     | number   | `undefined`                                                        | The maximum response size in bytes that will be stored to or retrieved from the cache                                                                       |
+| cacheOptions.maxCacheSize        | number   | `undefined`                                                        | The maxiumum total size in bytes of the cache; when the cache gets larger it is truncated                                                                   |
 
 ## Caching
 
 ```js
 import { ajax, createCacheInterceptors } from '@lion/ajax';
 
+// Note: getCacheIdentifier can be async
 const getCacheIdentifier = () => {
   let userId = localStorage.getItem('lion-ajax-cache-demo-user-id');
   if (!userId) {

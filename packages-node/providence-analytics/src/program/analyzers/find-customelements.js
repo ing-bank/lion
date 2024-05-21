@@ -1,13 +1,15 @@
 import path from 'path';
-import t from '@babel/types';
+
 import babelTraverse from '@babel/traverse';
+import t from '@babel/types';
+
+import { trackDownIdentifierFromScope } from '../utils/track-down-identifier--legacy.js';
 import { Analyzer } from '../core/Analyzer.js';
-import { trackDownIdentifierFromScope } from './helpers/track-down-identifier--legacy.js';
 
 /**
- * @typedef {import('@babel/types').File} File
- * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').FindCustomelementsConfig} FindCustomelementsConfig
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('@babel/types').File} File
  */
 
 function cleanup(transformedEntry) {
@@ -109,7 +111,7 @@ export default class FindCustomelementsAnalyzer extends Analyzer {
     /**
      * Prepare
      */
-    const cachedAnalyzerResult = this._prepare(cfg);
+    const cachedAnalyzerResult = await this._prepare(cfg);
     if (cachedAnalyzerResult) {
       return cachedAnalyzerResult;
     }

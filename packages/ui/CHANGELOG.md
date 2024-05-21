@@ -1,5 +1,117 @@
 # @lion/ui
 
+## 0.7.2
+
+### Patch Changes
+
+- 36f0bbce: [select-rich] only close the overlay on tab when trapsKeyboardFocus is false
+
+## 0.7.1
+
+### Patch Changes
+
+- 3a1482f7: Fix [ArrowUp]/[ArrowDown] not registering as user interaction when done directly on the select-rich component
+- a53ded7e: [localize] make use of formatDate locale option to parse the date correctly, which prevents day and month jumping in the input-amount when e.g. en-GB is used on the html tag and en-US is used to format the date.
+
+## 0.7.0
+
+### Minor Changes
+
+- 3cef9164: [select-rich] fix readonly keyboard interaction
+- 3cef9164: [select-rich] export getSelectRichMembers test helper
+
+### Patch Changes
+
+- 3cef9164: [input-amount] returns Unparseable as a modelValue if a wrong value has been entered
+- 3cef9164: [core] allow browserDetection to be run in ssr context
+- 3cef9164: [lion-input-tel-dropdown] Focus input fieled after dropdown menu is closed
+
+## 0.6.1
+
+### Patch Changes
+
+- 37deecd2: Added support for cross-root registration by adding a flag to composed property of form-element-register event.
+- f0333bbc: [core/SlotMixin] allow to (re)render scoped elements as direct light dom child
+
+## 0.6.0
+
+BREAKING:
+
+- [form] set focus to the first erroneous form element on submit (mildly breaking, since it could conflict with custom focus management)
+- Update to lit version 3
+- Moved to scoped-elements v3
+
+### Patch Changes
+
+- [input-tel-dropdown] use ScopedElementsMixin in to run test-suite with select-rich
+- [core] add Firefox to browserDetection
+- [textarea] set box-sizing in tests to make it work cross browser
+- [input-stepper] fix the toggling of the disabled state for the buttons
+- [core] update types for ScopedElementsMixin
+- [form-core] order aria-labelledby and aria-describedby based on slot order instead of dom order
+- [input-range] add screen-reader labels for minimum and maximum value
+- [form-core] remove fieldset label/helpt-text from input-field aria-labelledby/aria-describedby. See https://github.com/ing-bank/lion/issues/1576
+- [validation-messages] get correct validation min and max dates in French
+- [form-core]: set aria-disabled next to the disabled attribute for NVDA screen reader
+- [input-stepper] a11y enhancement & added translations
+- [checkbox-group] add role="list" and role="listitem" to checkbox-indeterminate and its children
+
+## 0.5.6
+
+### Patch Changes
+
+- e6b8dd14: [@lion/ui]: Fix "Multiple versions of Lit loaded." by pinning `@open-wc/scoped-elements` version.
+- 8b7cc43f: feat: allow SlotRerenderObject to first render on connectedCallback via `firstRenderOnConnected`
+
+## 0.5.5
+
+### Patch Changes
+
+- e72fd6d6: [form-core] add operationMode to ValidateMixin, to create specific select and upload required messages
+- 36bf8c6f: Uncommented a previously commented line since this is probably a mistake and breaks functionality
+- 91fad701: fix: only use elementToFocusAfterHide when provided as HTMLElement
+- cf616e1e: [input-tel-dropdown] prevent jumping to input field on each arrow key in windows/linux
+
+## 0.5.4
+
+### Minor Changes
+
+- aeab467c: [input-stepper] a11y enhancement & added translations
+
+### Patch Changes
+
+- aeab467c: [checkbox-group] add role="list" and role="listitem" to checkbox-indeterminate and its children
+- aeab467c: migrate deprecated `performUpdate` api to `scheduleUpdate`
+- aeab467c: [form-core]: set aria-disabled next to the disabled attribute for NVDA screen reader
+- aeab467c: [form-core] remove fieldset label/helpt-text from input-field aria-labelledby/aria-describedby. See https://github.com/ing-bank/lion/issues/1576
+- aeab467c: [input-range] add screen-reader labels for minimum and maximum value
+- aeab467c: feat: split validate-messages-no-side-effects methods, so they can be bundled along with entrypoints.
+
+  For optimized bundling, it's reccommended to load feedback messages per entrypoint. For instance, when you only use form-core in your app:
+
+  ```js
+  import { LionInputTel } from '@lion/ui/input-tel.js';
+  import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+  import { loadInputTelMessagesNoSideEffects } from '@lion/ui/validate-messages-no-side-effects.js';
+
+  export class MyInputTel extends LionInputTel {
+    constructor() {
+      super();
+      loadInputTelMessagesNoSideEffects({ localize: getLocalizeManager() });
+    }
+  }
+  ```
+
+  This prevents you from loading unused entrypoints like input-tel (which loads a full phone validation library) etc.
+
+- aeab467c: [form-core] order aria-labelledby and aria-describedby based on slot order instead of dom order
+
+## 0.5.3
+
+### Patch Changes
+
+- 69c9da8f: [validation-messages] get correct validation min and max dates in French
+
 ## 0.5.2
 
 ### Patch Changes
