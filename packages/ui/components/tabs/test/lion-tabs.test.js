@@ -452,45 +452,26 @@ describe('<lion-tabs>', () => {
   });
 
   describe('Accessibility', () => {
-    it('does not make panels focusable', async () => {
-      const el = /** @type {LionTabs} */ (
-        await fixture(html`
-          <lion-tabs>
-            <button slot="tab">tab 1</button>
-            <div slot="panel">panel 1</div>
-            <button slot="tab">tab 2</button>
-            <div slot="panel">panel 2</div>
-          </lion-tabs>
-        `)
-      );
-      expect(Array.from(el.children).find(child => child.slot === 'panel')).to.not.have.attribute(
-        'tabindex',
-      );
-      expect(Array.from(el.children).find(child => child.slot === 'panel')).to.not.have.attribute(
-        'tabindex',
-      );
-    });
-
-    it('makes selected tab focusable (other tabs are unfocusable)', async () => {
-      const el = /** @type {LionTabs} */ (
-        await fixture(html`
-          <lion-tabs>
-            <button slot="tab">tab 1</button>
-            <div slot="panel">panel 1</div>
-            <button slot="tab">tab 2</button>
-            <div slot="panel">panel 2</div>
-            <button slot="tab">tab 3</button>
-            <div slot="panel">panel 3</div>
-          </lion-tabs>
-        `)
-      );
-      const tabs = el.querySelectorAll('[slot=tab]');
-      expect(tabs[0]).to.have.attribute('tabindex', '0');
-      expect(tabs[1]).to.have.attribute('tabindex', '-1');
-      expect(tabs[2]).to.have.attribute('tabindex', '-1');
-    });
-
     describe('Tabs', () => {
+      it('makes selected tab focusable (other tabs are unfocusable)', async () => {
+        const el = /** @type {LionTabs} */ (
+          await fixture(html`
+            <lion-tabs>
+              <button slot="tab">tab 1</button>
+              <div slot="panel">panel 1</div>
+              <button slot="tab">tab 2</button>
+              <div slot="panel">panel 2</div>
+              <button slot="tab">tab 3</button>
+              <div slot="panel">panel 3</div>
+            </lion-tabs>
+          `)
+        );
+        const tabs = el.querySelectorAll('[slot=tab]');
+        expect(tabs[0]).to.have.attribute('tabindex', '0');
+        expect(tabs[1]).to.have.attribute('tabindex', '-1');
+        expect(tabs[2]).to.have.attribute('tabindex', '-1');
+      });
+
       it('links ids of content items to tab via [aria-controls]', async () => {
         const el = /** @type {LionTabs} */ (
           await fixture(html`
@@ -561,6 +542,36 @@ describe('<lion-tabs>', () => {
         const tabs = el.querySelectorAll('[slot=tab]');
         expect(panels[0]).to.have.attribute('aria-labelledby', tabs[0].id);
         expect(panels[1]).to.have.attribute('aria-labelledby', tabs[1].id);
+      });
+
+      it('makes panel focusable', async () => {
+        const el = /** @type {LionTabs} */ (
+          await fixture(html`
+            <lion-tabs>
+              <button slot="tab">tab 1</button>
+              <div slot="panel">panel 1</div>
+              <button slot="tab">tab 2</button>
+              <div slot="panel">panel 2</div>
+            </lion-tabs>
+          `)
+        );
+        const panels = el.querySelectorAll('[slot=panel]');
+        expect(panels[0]).to.have.attribute('tabindex', '0');
+      });
+
+      it('does not override the tabindex already set on the panel', async () => {
+        const el = /** @type {LionTabs} */ (
+          await fixture(html`
+            <lion-tabs>
+              <button slot="tab">tab 1</button>
+              <div slot="panel" tabindex="-1">panel 1</div>
+              <button slot="tab">tab 2</button>
+              <div slot="panel">panel 2</div>
+            </lion-tabs>
+          `)
+        );
+        const panels = el.querySelectorAll('[slot=panel]');
+        expect(panels[0]).to.have.attribute('tabindex', '-1');
       });
     });
   });
