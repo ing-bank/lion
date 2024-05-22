@@ -59,7 +59,7 @@ export async function getExtendDocsResults({
   );
 
   const queryOutputs = flatten(
-    results.map(result => result.queryOutput).filter(o => typeof o !== 'string'), // filter out '[no-dependency]' etc.
+    results.map(result => result.queryOutput).filter(o => typeof o !== 'string'), // filter out '[no-dep]' etc.
   );
 
   /**

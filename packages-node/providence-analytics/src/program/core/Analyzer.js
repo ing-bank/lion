@@ -166,10 +166,10 @@ const checkForMatchCompatibility = (
 
   const importEntry = allTargetDeps.find(([name]) => referencePkg?.name === name);
   if (!importEntry) {
-    return { compatible: false, reason: 'no-dependency' };
+    return { compatible: false, reason: 'no-dep' };
   }
   if (referencePkg?.version && !semver.satisfies(referencePkg.version, importEntry[1])) {
-    return { compatible: false, reason: 'no-matched-version' };
+    return { compatible: false, reason: 'no-match' };
   }
   return { compatible: true };
 };
@@ -259,7 +259,7 @@ export class Analyzer {
       if (!compatible) {
         if (!cfg.suppressNonCriticalLogs) {
           LogService.info(
-            `${LogService.pad(`skipping  ${this.name} (${reason})`)}${displayProjectsInLog(this.identifier)}`,
+            `${LogService.pad(`skipping ${this.name} (${reason})`)}${displayProjectsInLog(this.identifier)}`,
           );
         }
         return ensureAnalyzerResultFormat(`[${reason}]`, cfg, this);

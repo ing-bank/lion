@@ -210,9 +210,9 @@ describe('Analyzer', async () => {
   //   describe('Prepare phase', () => {
   //     it('halts non-compatible reference + target combinations', async () => {
   //       mockTargetAndReferenceProject(referenceProject, nonMatchingVersionTargetProject);
-  //       // Check stubbed LogService.info with reason 'no-matched-version'
+  //       // Check stubbed LogService.info with reason 'no-match'
   //       mockTargetAndReferenceProject(referenceProject, nonMatchingDepTargetProject);
-  //       // Check stubbed LogService.info with reason 'no-dependency'
+  //       // Check stubbed LogService.info with reason 'no-dep'
   //     });
 
   //     it('starts analysis for compatible reference + target combinations', async () => {

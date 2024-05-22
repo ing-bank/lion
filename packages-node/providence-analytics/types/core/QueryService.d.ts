@@ -38,7 +38,7 @@ export interface QueryOutputEntry {
   file: PathRelativeFromProjectRoot;
 }
 
-export type QueryOutput = QueryOutputEntry[] | '[no-dependency]' | '[no-matched-version]';
+export type QueryOutput = QueryOutputEntry[] | '[no-dep]' | '[no-match]';
 
 export interface QueryResult {
   queryOutput: QueryOutput;
