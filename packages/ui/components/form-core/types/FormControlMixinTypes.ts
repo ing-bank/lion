@@ -71,7 +71,7 @@ export declare class FormControlHost {
 
   /**
    * The name the element will be registered with to the .formElements collection
-   * of the parent. Also, it serves as the keny of key/value pairs in
+   * of the parent. Also, it serves as the key of key/value pairs in
    *  modelValue/serializedValue objects
    */
   name: string;
