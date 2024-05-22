@@ -23,6 +23,14 @@ const FormRegisteringMixinImplementation = superclass =>
     constructor() {
       super();
       /**
+       * The name the element will be registered with to the .formElements collection
+       * of the parent. Also, it serves as the key of key/value pairs in
+       *  modelValue/serializedValue objects
+       * @type {string}
+       */
+      this.name = '';
+
+      /**
        * The registrar this FormControl registers to, Usually a descendant of FormGroup or
        * ChoiceGroup
        * @type {FormRegistrarHost | undefined}
@@ -37,8 +45,28 @@ const FormRegisteringMixinImplementation = superclass =>
       this.allowCrossRootRegistration = false;
     }
 
+    /**
+     * Name attribute for the control.
+     * @type {string}
+     */
+    get name() {
+      return this.__name || '';
+    }
+
+    /**
+     * Converts values provided for the `name` attribute to string type.
+     * Mimics the native `input` behavior.
+     * @param {string} newName
+     */
+    set name(newName) {
+      const oldName = this.name;
+      this.__name = newName.toString();
+      this.requestUpdate('name', oldName);
+    }
+
     static get properties() {
       return {
+        name: { type: String, reflect: true },
         allowCrossRootRegistration: { type: Boolean, attribute: 'allow-cross-root-registration' },
       };
     }

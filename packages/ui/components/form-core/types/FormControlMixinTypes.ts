@@ -43,10 +43,6 @@ export declare interface HTMLElementWithValue extends HTMLElement {
 export declare class FormControlHost {
   static get styles(): CSSResultArray;
   static get properties(): {
-    name: {
-      type: StringConstructor;
-      reflect: boolean;
-    };
     readOnly: {
       type: BooleanConstructor;
       attribute: string;

@@ -310,6 +310,23 @@ export const runRegistrationSuite = customConfig => {
         expect(eventSpy).to.have.been.calledOnce;
         expect(eventSpy.getCall(0).args[0].composed).to.equal(false);
       });
+      it('accepts a name attribute and converts the values provided to a string', async () => {
+        const elAttr = /** @type {RegisteringClass} */ (
+          await fixture(html`<${childTag} name=${5}></${childTag}>`)
+        );
+
+        expect(elAttr.hasAttribute('name')).to.be.true;
+        expect(elAttr.name).to.be.a('string');
+        expect(elAttr.name).to.equal('5', 'as an attribute');
+
+        const elProp = /** @type {RegisteringClass} */ (
+          await fixture(html`<${childTag} .name=${5}></${childTag}>`)
+        );
+
+        expect(elProp.hasAttribute('name')).to.be.true;
+        expect(elProp.name).to.be.a('string');
+        expect(elProp.name).to.equal('5', 'as a property');
+      });
     });
     describe('FormRegistrarPortalMixin', () => {
       it('forwards registrations to the .registrationTarget', async () => {

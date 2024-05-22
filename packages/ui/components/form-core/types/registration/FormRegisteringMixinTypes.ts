@@ -4,10 +4,13 @@ import { LitElement } from 'lit';
 import { FormRegistrarHost } from './FormRegistrarMixinTypes.js';
 
 export declare class FormRegisteringHost {
-  /**
-   * The name the host is registered with to a parent
-   */
-  name: string;
+  static get properties(): {
+    name: {
+      type: StringConstructor;
+      reflect: boolean;
+    };
+  }
+  
   /**
    * To encourage accessibility best practices, `form-element-register` events
    * do not pierce through shadow roots. This forces the developer to create form groups and fieldsets that
@@ -18,10 +21,20 @@ export declare class FormRegisteringHost {
   allowCrossRootRegistration: boolean;
 
   /**
+   * The name the element will be registered with to the .formElements collection
+   * of the parent. Also, it serves as the key of key/value pairs in
+   *  modelValue/serializedValue objects
+   */
+  get name(): string;
+  set name(arg: any);
+
+  /**
    * The registrar this FormControl registers to, Usually a descendant of FormGroup or
    * ChoiceGroup
    */
   protected _parentFormGroup: FormRegistrarHost | undefined;
+
+  private __name: string;
 
   private __unregisterFormElement: void;
 }
