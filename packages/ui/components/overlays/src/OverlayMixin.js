@@ -240,7 +240,7 @@ export const OverlayMixinImplementation = superclass =>
     }
 
     /**
-     * When the opened state is changed by an Application Developer,cthe OverlayController is
+     * When the opened state is changed by an Application Developer, the OverlayController is
      * requested to show/hide. It might happen that this request is not honoured
      * (intercepted in before-hide for instance), so that we need to sync the controller state
      * to this webcomponent again, preventing eternal loops.

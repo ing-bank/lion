@@ -95,7 +95,8 @@ export class OverlaysManager {
     if (this.shownList.length >= 2) {
       this.shownList.forEach((ctrl, index) => {
         if (index > 0) {
-          this.__shownList[index]._blocksEscKeyHandler = true;
+          // @ts-ignore allow-private
+          this.__shownList[index]._hasOpenChildOverlay = true;
         }
       });
     }
@@ -117,11 +118,13 @@ export class OverlaysManager {
       throw new Error('could not find controller to hide');
     }
     // eslint-disable-next-line no-param-reassign
-    ctrlToHide._blocksEscKeyHandler = false;
+    ctrlToHide._hasOpenChildOverlay = false;
     this.__shownList = this.shownList.filter(ctrl => ctrl !== ctrlToHide);
+    /** Remove the _hasOpenChildOverlay from the parent overlay, once the child is closed. */
     setTimeout(() => {
       if (this.__shownList.length > 0) {
-        this.__shownList[0]._blocksEscKeyHandler = false;
+        // @ts-ignore allow-private
+        this.__shownList[0]._hasOpenChildOverlay = false;
       }
     });
   }

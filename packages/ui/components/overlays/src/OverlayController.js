@@ -121,7 +121,8 @@ export class OverlayController extends EventTarget {
     /** @private */
     this.__sharedConfig = config;
 
-    this._blocksEscKeyHandler = false;
+    /** @protected */
+    this._hasOpenChildOverlay = false;
 
     /** @private */
     this.__activeElementRightBeforeHide = null;
@@ -203,6 +204,8 @@ export class OverlayController extends EventTarget {
     this.__hasActiveBackdrop = true;
     /** @private */
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
+    /** @private */
+    this.__outsideEscKeyHandler = this.__outsideEscKeyHandler.bind(this);
   }
 
   /**
@@ -1133,7 +1136,17 @@ export class OverlayController extends EventTarget {
    * @private
    */
   __escKeyHandler(ev) {
-    if (ev.key === 'Escape' && !this._blocksEscKeyHandler) {
+    if (ev.key === 'Escape' && !this._hasOpenChildOverlay) {
+      this.hide();
+    }
+  }
+
+  /**
+   * @param {KeyboardEvent} ev
+   * @private
+   */
+  __outsideEscKeyHandler(ev) {
+    if (ev.key === 'Escape') {
       this.hide();
     }
   }
@@ -1162,11 +1175,9 @@ export class OverlayController extends EventTarget {
    */
   _handleHidesOnOutsideEsc({ phase }) {
     if (phase === 'show') {
-      this.__escKeyHandler = (/** @type {KeyboardEvent} */ ev) =>
-        ev.key === 'Escape' && this.hide();
-      document.addEventListener('keyup', this.__escKeyHandler);
+      document.addEventListener('keyup', this.__outsideEscKeyHandler);
     } else if (phase === 'hide') {
-      document.removeEventListener('keyup', this.__escKeyHandler);
+      document.removeEventListener('keyup', this.__outsideEscKeyHandler);
     }
   }
 

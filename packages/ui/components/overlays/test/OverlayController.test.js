@@ -9,7 +9,8 @@ import {
   fixtureSync,
 } from '@open-wc/testing';
 import sinon from 'sinon';
-import { OverlayController, overlays } from '@lion/ui/overlays.js';
+import { LitElement } from 'lit';
+import { OverlayController, overlays, OverlayMixin } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { keyCodes } from '../src/utils/key-codes.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
@@ -19,6 +20,8 @@ import { createShadowHost } from '../test-helpers/createShadowHost.js';
 /**
  * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
+ * @typedef {import('../types/OverlayMixinTypes.js').OverlayHost} OverlayHost
+ * @typedef {LitElement & OverlayHost & {_overlayCtrl:OverlayController}} OverlayEl
  */
 
 const wrappingDialogNodeStyle = 'display: none; z-index: 9999; padding: 0px;';
@@ -73,6 +76,30 @@ const withLocalTestConfig = () =>
       fixtureSync(html` <div role="button" style="width: 100px; height: 20px;">Invoker</div> `)
     ),
   });
+
+class OverlayTest extends OverlayMixin(LitElement) {
+  /**
+   * @overridable method `_defineOverlay`
+   * @desc Overrides arrow and keepTogether modifier to be enabled,
+   * and adds onCreate and onUpdate hooks to sync from popper state
+   * @returns {import('../types/OverlayConfig.js').OverlayConfig}
+   */
+  _defineOverlayConfig() {
+    return {
+      ...super._defineOverlayConfig(),
+    };
+  }
+
+  render() {
+    return html`
+      <button slot="invoker">invoker button</button>
+      <div id="overlay-content-node-wrapper">
+        <div slot="content">content of the overlay</div>
+      </div>
+    `;
+  }
+}
+customElements.define('overlay-test', OverlayTest);
 
 afterEach(() => {
   overlays.teardown();
@@ -148,20 +175,20 @@ describe('OverlayController', () => {
           contentNode: await createZNode('auto', { mode: 'global' }),
         });
         await ctrl.show();
-        // @ts-expect-error find out why config would/could be undfined
+        // @ts-expect-error find out why config would/could be undefined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
         ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
         await ctrl.show();
-        // @ts-expect-error find out why config would/could be undfined
+        // @ts-expect-error find out why config would/could be undefined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
 
         ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'global' }) });
         await ctrl.show();
-        // @ts-expect-error find out why config would/could be undfined
+        // @ts-expect-error find out why config would/could be undefined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
         ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'inline' }) });
         await ctrl.show();
-        // @ts-expect-error find out why config would/could be undfined
+        // @ts-expect-error find out why config would/could be undefined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
       });
 
@@ -607,30 +634,56 @@ describe('OverlayController', () => {
         expect(ctrl.isShown).to.be.true;
       });
 
-      it('hides only one overlay when [escape] is pressed', async () => {
+      it('does not hide when [escape] while the overlay has a child open', async () => {
         const ctrl1 = new OverlayController({
           ...withGlobalTestConfig(),
           hidesOnEsc: true,
         });
-        const ctrl2 = new OverlayController({
-          ...withGlobalTestConfig(),
-          hidesOnEsc: true,
-        });
-
         await ctrl1.show();
-        await ctrl2.show();
-        expect(ctrl1.manager.shownList.length).to.equal(2);
-        expect(ctrl1._blocksEscKeyHandler).to.be.true;
-        expect(ctrl2._blocksEscKeyHandler).to.be.false;
-
-        ctrl2.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        // @ts-ignore [allow-protected] in test
+        ctrl1._hasOpenChildOverlay = true;
+        ctrl1.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
         await aTimeout(0);
-        expect(ctrl2.isShown).to.be.false;
         expect(ctrl1.isShown).to.be.true;
-        expect(ctrl1.manager.shownList.length).to.equal(1);
-        await aTimeout(0);
-        expect(ctrl1._blocksEscKeyHandler).to.be.false;
       });
+    });
+
+    it('hides only one overlay when [escape] is pressed', async () => {
+      const config = /** @type {OverlayConfig} */ ({ placementMode: 'global', hidesOnEsc: true });
+      const el = /** @type {OverlayTest} */ (
+        await fixture(html`
+          <overlay-test .config=${config}>
+            <div slot="content">
+              <div>This is the content</div>
+              <overlay-test .config=${config}>
+                <div slot="content">This is child content</div>
+                <button slot="invoker">Open child overlay</button>
+              </overlay-test>
+            </div>
+            <button slot="invoker">Open overlay</button>
+          </overlay-test>
+        `)
+      );
+
+      // @ts-ignore [allow-private-in-test]
+      const ctrl1 = /** @type {OverlayController} */ (el._overlayCtrl);
+      const nestedOverlay = /** @type {OverlayTest} */ (
+        ctrl1.contentNode.querySelector('overlay-test')
+      );
+      // @ts-ignore [allow-private-in-test]
+      const ctrl2 = /** @type {OverlayController} */ (nestedOverlay._overlayCtrl);
+      await ctrl1.show();
+      await ctrl2.show();
+      expect(ctrl1.manager.shownList.length).to.equal(2);
+
+      ctrl2.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+      await aTimeout(0);
+      await el.updateComplete;
+      await nestedOverlay.updateComplete;
+
+      expect(ctrl2.isShown).to.be.false;
+      expect(ctrl1.isShown).to.be.true;
+      expect(ctrl1.manager.shownList.length).to.equal(1);
     });
 
     describe('hidesOnOutsideEsc', () => {
@@ -656,27 +709,42 @@ describe('OverlayController', () => {
       });
 
       it('hides all overlays when [escape] is pressed on outside element', async () => {
-        const ctrl1 = new OverlayController({
-          ...withGlobalTestConfig(),
+        const config = /** @type {OverlayConfig} */ ({
+          placementMode: 'global',
           hidesOnOutsideEsc: true,
         });
-        const ctrl2 = new OverlayController({
-          ...withGlobalTestConfig(),
-          hidesOnOutsideEsc: true,
-        });
+        const el = /** @type {OverlayTest} */ (
+          await fixture(html`
+            <overlay-test .config=${config}>
+              <div slot="content">
+                <div>This is the content</div>
+                <overlay-test .config=${config}>
+                  <div slot="content">This is child content</div>
+                  <button slot="invoker">Open child overlay</button>
+                </overlay-test>
+              </div>
+              <button slot="invoker">Open overlay</button>
+            </overlay-test>
+          `)
+        );
+
+        // @ts-ignore [allow-private-in-test]
+        const ctrl1 = /** @type {OverlayController} */ (el._overlayCtrl);
+        const overlay2 = /** @type {OverlayTest} */ (
+          ctrl1.contentNode.querySelector('overlay-test')
+        );
+        // @ts-ignore [allow-private-in-test]
+        const ctrl2 = /** @type {OverlayController} */ (overlay2._overlayCtrl);
 
         await ctrl1.show();
         await ctrl2.show();
         expect(ctrl1.manager.shownList.length).to.equal(2);
-        expect(ctrl1._blocksEscKeyHandler).to.be.true;
-        expect(ctrl2._blocksEscKeyHandler).to.be.false;
 
         document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
         await aTimeout(0);
         expect(ctrl2.isShown).to.be.false;
         expect(ctrl1.isShown).to.be.false;
         expect(ctrl1.manager.shownList.length).to.equal(0);
-        expect(ctrl1._blocksEscKeyHandler).to.be.false;
       });
     });
 
