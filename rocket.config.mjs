@@ -8,6 +8,9 @@ import { copy } from '@web/rollup-plugin-copy';
 
 export default {
   presets: [rocketLaunch(), rocketSearch(), rocketBlog()],
+  eleventy(eleventyConfig) {
+    eleventyConfig.setUseGitIgnore(false);
+  },
   absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
   setupUnifiedPlugins: [
     adjustPluginOptions(mdjsSetupCode, {
