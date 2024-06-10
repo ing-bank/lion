@@ -93,11 +93,9 @@ describe('lion-combobox', () => {
         `)
       );
 
-      const { _comboboxNode, _listboxNode } = getComboboxMembers(el);
+      const { _listboxNode } = getComboboxMembers(el);
 
       async function open() {
-        // activate opened listbox
-        _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
         mimicUserTyping(el, 'ch');
         return el.updateComplete;
       }
@@ -150,7 +148,7 @@ describe('lion-combobox', () => {
         await performChecks();
       });
 
-      it('shows overlay on focusin', async () => {
+      it('shows overlay on click', async () => {
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <lion-combobox name="foo" .showAllOnEmpty="${true}">
@@ -161,15 +159,15 @@ describe('lion-combobox', () => {
             </lion-combobox>
           `)
         );
-        const { _comboboxNode } = getComboboxMembers(el);
+        const { _inputNode } = getComboboxMembers(el);
 
         expect(el.opened).to.be.false;
-        _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+        _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.be.true;
       });
 
-      it('hides overlay on focusin after [Escape]', async () => {
+      it('hides overlay on [Escape] after being opened', async () => {
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
             <lion-combobox name="foo" .showAllOnEmpty="${true}">
@@ -183,7 +181,7 @@ describe('lion-combobox', () => {
         const { _comboboxNode, _inputNode } = getComboboxMembers(el);
 
         expect(el.opened).to.be.false;
-        _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+        _comboboxNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.be.true;
         _inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
@@ -203,11 +201,9 @@ describe('lion-combobox', () => {
           `)
         );
 
-        const { _comboboxNode, _listboxNode, _inputNode } = getComboboxMembers(el);
+        const { _listboxNode, _inputNode } = getComboboxMembers(el);
 
         async function open() {
-          // activate opened listbox
-          _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
           mimicUserTyping(el, 'ch');
           return el.updateComplete;
         }
@@ -870,10 +866,10 @@ describe('lion-combobox', () => {
   });
 
   describe('Overlay visibility', () => {
-    it('does not show overlay on focusin', async () => {
+    it('does not show overlay on click', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
-          <lion-combobox name="foo" multiple-choice>
+          <lion-combobox name="foo">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -884,7 +880,26 @@ describe('lion-combobox', () => {
       const { _comboboxNode } = getComboboxMembers(el);
 
       expect(el.opened).to.equal(false);
-      _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      _comboboxNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
+      await el.updateComplete;
+      expect(el.opened).to.equal(false);
+    });
+
+    it('shows overlay on click when filled', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      const { _comboboxNode } = getComboboxMembers(el);
+      el.modelValue = 'Art';
+      expect(el.opened).to.equal(false);
+      _comboboxNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
       await el.updateComplete;
       expect(el.opened).to.equal(false);
     });
@@ -914,7 +929,7 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(false);
 
       // step [1]
-      _inputNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
       await el.updateComplete;
       expect(el.opened).to.equal(false);
 
@@ -948,10 +963,7 @@ describe('lion-combobox', () => {
         `)
       );
 
-      const { _comboboxNode, _inputNode } = getComboboxMembers(el);
-
-      // open
-      _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      const { _inputNode } = getComboboxMembers(el);
 
       mimicUserTyping(el, 'art');
       await el.updateComplete;
@@ -961,6 +973,32 @@ describe('lion-combobox', () => {
       _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
       expect(el.opened).to.equal(false);
       expect(_inputNode.value).to.equal('');
+    });
+
+    it('hides overlay on [Enter]', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      const { _inputNode } = getComboboxMembers(el);
+
+      mimicUserTyping(el, 'art');
+      await el.updateComplete;
+      expect(el.opened).to.equal(true);
+      expect(_inputNode.value).to.equal('Artichoke');
+
+      // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
+      // because this closely mimics what happens in the browser
+      _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      expect(el.opened).to.equal(false);
+      expect(_inputNode.value).to.equal('Artichoke');
     });
 
     it('hides overlay on [Tab]', async () => {
@@ -975,10 +1013,7 @@ describe('lion-combobox', () => {
         `)
       );
 
-      const { _comboboxNode, _inputNode } = getComboboxMembers(el);
-
-      // open
-      _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      const { _inputNode } = getComboboxMembers(el);
 
       mimicUserTyping(el, 'art');
       await el.updateComplete;
@@ -989,6 +1024,32 @@ describe('lion-combobox', () => {
       // because this closely mimics what happens in the browser
       _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }));
       expect(el.opened).to.equal(false);
+      expect(_inputNode.value).to.equal('Artichoke');
+    });
+
+    it('keeps overlay open on [Shift]', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      const { _inputNode } = getComboboxMembers(el);
+
+      mimicUserTyping(el, 'art');
+      await el.updateComplete;
+      expect(el.opened).to.equal(true);
+      expect(_inputNode.value).to.equal('Artichoke');
+
+      // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
+      // because this closely mimics what happens in the browser
+      _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Shift' }));
+      expect(el.opened).to.equal(true);
       expect(_inputNode.value).to.equal('Artichoke');
     });
 
@@ -1004,10 +1065,7 @@ describe('lion-combobox', () => {
         `)
       );
 
-      const { _comboboxNode, _inputNode } = getComboboxMembers(el);
-
-      // open
-      _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
+      const { _inputNode } = getComboboxMembers(el);
 
       mimicUserTyping(el, 'art');
       await el.updateComplete;
@@ -1043,34 +1101,6 @@ describe('lion-combobox', () => {
 
     // NB: If this becomes a suite, move to separate file
     describe('Subclassers', () => {
-      it('allows to control overlay visibility via "_showOverlayCondition"', async () => {
-        class ShowOverlayConditionCombobox extends LionCombobox {
-          /** @param {{ currentValue: string, lastKey:string }} options */
-          _showOverlayCondition(options) {
-            return this.focused || super._showOverlayCondition(options);
-          }
-        }
-        const tagName = defineCE(ShowOverlayConditionCombobox);
-        const tag = unsafeStatic(tagName);
-
-        const el = /** @type {LionCombobox} */ (
-          await fixture(html`
-          <${tag} name="foo" multiple-choice>
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </${tag}>
-        `)
-        );
-        const { _comboboxNode } = getComboboxMembers(el);
-
-        expect(el.opened).to.equal(false);
-        _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
-        await el.updateComplete;
-        expect(el.opened).to.equal(true);
-      });
-
       it('allows to control overlay visibility via "_showOverlayCondition": should not display overlay if currentValue length condition is not fulfilled', async () => {
         class ShowOverlayConditionCombobox extends LionCombobox {
           /** @param {{ currentValue: string, lastKey:string }} options */
@@ -1164,10 +1194,7 @@ describe('lion-combobox', () => {
           `)
         );
         const options = el.formElements;
-        const { _comboboxNode } = getComboboxMembers(el);
         expect(el.opened).to.equal(false);
-
-        _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
 
         mimicUserTyping(el, 'art');
         await el.updateComplete;
@@ -1208,10 +1235,7 @@ describe('lion-combobox', () => {
           `)
         );
         const options = el.formElements;
-        const { _comboboxNode } = getComboboxMembers(el);
         expect(el.opened).to.equal(false);
-
-        _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
 
         mimicUserTyping(el, 'art');
         expect(el.opened).to.equal(true);
@@ -2948,7 +2972,7 @@ describe('lion-combobox', () => {
 
   describe('Multiple Choice', () => {
     // TODO: possibly later share test with select-rich if it officially supports multipleChoice
-    it('does not close listbox on click/enter', async () => {
+    it('does not close listbox on click', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" multiple-choice>
@@ -2960,10 +2984,7 @@ describe('lion-combobox', () => {
         `)
       );
 
-      const { _comboboxNode } = getComboboxMembers(el);
-
       // activate opened listbox
-      _comboboxNode.dispatchEvent(new Event('focusin', { bubbles: true, composed: true }));
       mimicUserTyping(el, 'ch');
       await el.updateComplete;
 
@@ -2971,7 +2992,29 @@ describe('lion-combobox', () => {
       const visibleOptions = el.formElements.filter(o => o.style.display !== 'none');
       visibleOptions[0].click();
       expect(el.opened).to.equal(true);
-      mimicKeyPress(visibleOptions[1], 'Enter');
+    });
+
+    it('does not close listbox on [Enter]', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      const { _inputNode } = getComboboxMembers(el);
+
+      mimicUserTyping(el, 'art');
+      await el.updateComplete;
+      expect(el.opened).to.equal(true);
+
+      // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
+      // because this closely mimics what happens in the browser
+      _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       expect(el.opened).to.equal(true);
     });
 
