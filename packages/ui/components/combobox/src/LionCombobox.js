@@ -457,9 +457,13 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     this.__listboxContentChanged = false;
 
     /** @type {EventListener}
+     * @protected
+     */
+    this._onKeyUp = this._onKeyUp.bind(this);
+    /** @type {EventListener}
      * @private
      */
-    this.__requestShowOverlay = this.__requestShowOverlay.bind(this);
+    this._textboxOnClick = this._textboxOnClick.bind(this);
     /** @type {EventListener}
      * @protected
      */
@@ -499,9 +503,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
           this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
         }
       }
-    }
-    if (name === 'focused' && this.focused) {
-      this.__requestShowOverlay();
     }
   }
 
@@ -614,11 +615,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    * that wraps the listbox with options
    *
    * @example
-   * _showOverlayCondition(options) {
-   *   return this.focused || super._showOverlayCondition(options);
-   * }
-   *
-   * @example
    * _showOverlayCondition({ lastKey }) {
    *   return lastKey === 'ArrowDown';
    * }
@@ -635,19 +631,20 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   // TODO: batch all pending condition triggers in __pendingShowTriggers, reducing race conditions
   // eslint-disable-next-line class-methods-use-this
   _showOverlayCondition({ lastKey }) {
-    const hideOn = ['Tab', 'Escape', 'Enter'];
-    if (lastKey && hideOn.includes(lastKey)) {
+    const alwaysHideOn = ['Tab', 'Escape'];
+    const notMultipleChoiceHideOn = ['Enter'];
+    if (
+      lastKey &&
+      (alwaysHideOn.includes(lastKey) ||
+        (!this.multipleChoice && notMultipleChoiceHideOn.includes(lastKey)))
+    ) {
       return false;
     }
-
-    if (this.showAllOnEmpty && this.focused) {
+    if (this.filled || this.showAllOnEmpty) {
       return true;
     }
     // when no keyboard action involved (on focused change), return current opened state
-    if (!lastKey) {
-      return /** @type {boolean} */ (this.opened);
-    }
-    return true;
+    return /** @type {boolean} */ (this.opened);
   }
 
   /**
@@ -678,9 +675,14 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     this.__listboxContentChanged = true;
   }
 
+  /**
+   * @param {Event} ev
+   * @protected
+   */
   // eslint-disable-next-line no-unused-vars
-  _textboxOnInput() {
+  _textboxOnInput(ev) {
     this.__shouldAutocompleteNextUpdate = true;
+    this.opened = true;
   }
 
   /**
@@ -1068,7 +1070,8 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   _setupOpenCloseListeners() {
     super._setupOpenCloseListeners();
-    this._inputNode.addEventListener('keyup', this.__requestShowOverlay);
+    this._inputNode.addEventListener('keyup', this._onKeyUp);
+    this._inputNode.addEventListener('click', this._textboxOnClick);
   }
 
   /**
@@ -1077,7 +1080,8 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   _teardownOpenCloseListeners() {
     super._teardownOpenCloseListeners();
-    this._inputNode.removeEventListener('keyup', this.__requestShowOverlay);
+    this._inputNode.removeEventListener('keyup', this._onKeyUp);
+    this._inputNode.removeEventListener('click', this._textboxOnClick);
   }
 
   /**
@@ -1225,14 +1229,23 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
 
   /**
    * @param {KeyboardEvent} [ev]
-   * @private
+   * @protected
    */
-  __requestShowOverlay(ev) {
+  _onKeyUp(ev) {
     const lastKey = ev && ev.key;
     this.opened = this._showOverlayCondition({
       lastKey,
       currentValue: this._inputNode.value,
     });
+  }
+
+  /**
+   * @param {FocusEvent} [ev]
+   * @protected
+   */
+  // eslint-disable-next-line no-unused-vars
+  _textboxOnClick(ev) {
+    this.opened = this._showOverlayCondition({});
   }
 
   clear() {
