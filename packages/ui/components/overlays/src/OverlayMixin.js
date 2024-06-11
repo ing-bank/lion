@@ -255,6 +255,8 @@ export const OverlayMixinImplementation = superclass =>
       this.__teardownSyncFromOverlayController();
       /** @type {OverlayController} */
       (this._overlayCtrl).teardown();
+      /** @type {OverlayController} */
+      (this._overlayCtrl).manager.remove(/** @type {OverlayController} */ (this._overlayCtrl));
     }
 
     /**

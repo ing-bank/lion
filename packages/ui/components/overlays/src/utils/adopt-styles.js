@@ -25,7 +25,7 @@ export const _adoptStyleUtils = {
   adoptStyles: undefined,
 };
 
-const styleCache = new Map();
+const styleCache = new WeakMap();
 
 /**
  * @param {CSSStyleSheet} cssStyleSheet
@@ -81,10 +81,10 @@ function adoptStyleWhenAdoptedStylesheetsNotSupported(
  */
 function handleCache(renderRoot, style, { teardown = false } = {}) {
   let haltFurtherExecution = false;
-  if (!styleCache.has(renderRoot)) {
+  if (renderRoot && !styleCache.has(renderRoot)) {
     styleCache.set(renderRoot, []);
   }
-  const addedStylesForRoot = styleCache.get(renderRoot);
+  const addedStylesForRoot = styleCache.get(renderRoot) ?? [];
   const foundStyle = addedStylesForRoot.find(
     (/** @type {import("lit").CSSResultOrNative} */ addedStyle) => style === addedStyle,
   );
