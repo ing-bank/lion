@@ -182,6 +182,13 @@ export const OverlayMixinImplementation = superclass =>
       this._setupOverlayCtrl();
     }
 
+    connectedCallback() {
+      super.connectedCallback();
+      if (this._overlayCtrl) {
+        this.__connectOverlayCtrl();
+      }
+    }
+
     disconnectedCallback() {
       super.disconnectedCallback();
       if (this._overlayCtrl) {
@@ -247,16 +254,35 @@ export const OverlayMixinImplementation = superclass =>
       this.__syncToOverlayController();
       this.__setupSyncFromOverlayController();
       this._setupOpenCloseListeners();
+      this.__connectOverlayCtrl();
+    }
+
+    /** @private */
+    __connectOverlayCtrl() {
+      const ctrlToConnect = /** @type {OverlayController} */ (this._overlayCtrl);
+      if (!ctrlToConnect.manager.list.find(ctrl => ctrl === ctrlToConnect)) {
+        ctrlToConnect.manager.add(ctrlToConnect);
+      }
+    }
+
+    /**
+     * Necessary to prevent a memory leak caused by the manager never letting the controller go.
+     * @private
+     */
+    __unregisterOverlayCtrl() {
+      const ctrlToDisconnect = /** @type {OverlayController} */ (this._overlayCtrl);
+      if (ctrlToDisconnect.manager.list.find(ctrl => ctrl === ctrlToDisconnect)) {
+        ctrlToDisconnect.manager.remove(ctrlToDisconnect);
+      }
     }
 
     /** @protected */
     _teardownOverlayCtrl() {
       this._teardownOpenCloseListeners();
       this.__teardownSyncFromOverlayController();
-      /** @type {OverlayController} */
-      (this._overlayCtrl).teardown();
-      /** @type {OverlayController} */
-      (this._overlayCtrl).manager.remove(/** @type {OverlayController} */ (this._overlayCtrl));
+      const ctrlToTeardown = /** @type {OverlayController} */ (this._overlayCtrl);
+      ctrlToTeardown.teardown();
+      this.__unregisterOverlayCtrl();
     }
 
     /**
