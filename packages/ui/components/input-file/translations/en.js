@@ -5,11 +5,11 @@ export default {
     'Please select a {allowedTypesArray} or {allowedTypesLastItem} file with max {maxSize}.',
   dragAndDropText: 'Drag & Drop your files here or', // TODO: or what? Why is Drag & Drop capitalized?
   fileNameDescriptionLabel: 'File name: {fileName}',
+  generalValidatorMessage: '"{validatorMessage}", for {listOfErroneousFiles}.',
+  noFilesSelected: 'No files selected.',
+  numberOfFiles: '{numberOfFiles} files.',
   removeButtonLabel: 'Remove {fileName} file',
   selectTextDuplicateFileName: 'A file with same filename was already present.',
   selectTextMultipleFile: 'Select files',
   selectTextSingleFile: 'Select file',
-  noFilesSelected: 'No files selected.',
-  numberOfFiles: '{numberOfFiles} files.',
-  generalValidatorMessage: '"{validatorMessage}", for {listOfErroneousFiles}.',
 };
