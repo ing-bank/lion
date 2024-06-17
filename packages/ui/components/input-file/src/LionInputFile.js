@@ -77,6 +77,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         >
           ${this.buttonLabel}
         </button>`,
+      after: () => html`<div data-description></div>`,
       'selected-file-list': () => ({
         template: html`
           <lion-selected-file-list
@@ -105,8 +106,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   }
 
   /**
-   * The helpt text for the input node.
-   * When no light dom defined via [slot=help-text], this value will be used
+   * The label of the button
    * @type {string}
    */
   get buttonLabel() {
@@ -332,8 +332,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     super.firstUpdated(changedProperties);
 
     this.__setupFileValidators();
-    // We need to update our light dom
-    this._enhanceSelectedList();
 
     // TODO: if there's no inputNode by now, we should either throw an error or add a slot change listener
     if (this._inputNode) {
@@ -443,6 +441,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
           this._selectedFilesMetaData = [...this._selectedFilesMetaData];
         }
       });
+      this._updateUploadButtonDescription();
     }
   }
 
@@ -519,20 +518,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   _onClick(ev) {
     // @ts-ignore
     ev.target.value = ''; // eslint-disable-line no-param-reassign
-  }
-
-  /**
-   * @protected
-   */
-  _enhanceSelectedList() {
-    /**
-     * @type {LionSelectedFileList | null}
-     */
-    const selectedFileList = this.querySelector('[slot="selected-file-list"]');
-    if (selectedFileList) {
-      selectedFileList.setAttribute('id', `selected-file-list-${this._inputId}`);
-      this.addToAriaDescribedBy(selectedFileList, { idPrefix: 'selected-file-list' });
-    }
   }
 
   /**
@@ -740,6 +725,46 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   }
 
   /**
+   * Description for screen readers connected to the button about how many files have been updated
+   * @protected
+   */
+  _updateUploadButtonDescription() {
+    const erroneousFilesNames = /** @type {string[]} */ ([]);
+    let errorMessage;
+
+    this._selectedFilesMetaData.forEach(file => {
+      if (file.status === 'FAIL') {
+        errorMessage = file.validationFeedback ? file.validationFeedback[0].message.toString() : '';
+        erroneousFilesNames.push(/** @type {string} */ (file.systemFile.name));
+      }
+    });
+
+    const selectedFiles = this.querySelector('[slot="after"]');
+    if (selectedFiles) {
+      if (!this._selectedFilesMetaData || this._selectedFilesMetaData.length === 0) {
+        selectedFiles.textContent = /** @type {string} */ (
+          this.msgLit('lion-input-file:noFilesSelected')
+        );
+      } else if (this._selectedFilesMetaData.length === 1) {
+        selectedFiles.textContent = /** @type {string} */ (
+          errorMessage || this._selectedFilesMetaData[0].systemFile.name
+        );
+      } else {
+        selectedFiles.textContent = `${this.msgLit('lion-input-file:numberOfFiles', {
+          numberOfFiles: this._selectedFilesMetaData.length,
+        })} ${
+          errorMessage
+            ? this.msgLit('lion-input-file:generalValidatorMessage', {
+                validatorMessage: errorMessage,
+                listOfErroneousFiles: erroneousFilesNames.join(', '),
+              })
+            : ''
+        }`;
+      }
+    }
+  }
+
+  /**
    * @private
    * @param {InputFile} removedFile
    */
@@ -755,6 +780,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
     this._inputNode.value = '';
     this._handleErrors();
+    this._updateUploadButtonDescription();
   }
 
   /**
@@ -847,6 +873,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   _inputGroupInputTemplate() {
     return html`
       <slot name="input"> </slot>
+      <slot name="after"> </slot>
       ${this.enableDropZone && this._isDragAndDropSupported
         ? this._dropZoneTemplate()
         : html`
@@ -890,6 +917,19 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
           align-items: center;
           border: dashed 2px black;
           padding: 24px 0;
+        }
+
+        .input-group__container ::slotted([slot='after']) {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip-path: inset(100%);
+          clip: rect(1px, 1px, 1px, 1px);
+          white-space: nowrap;
+          border: 0;
+          margin: 0;
+          padding: 0;
         }
       `,
     ];
