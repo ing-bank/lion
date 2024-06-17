@@ -729,22 +729,26 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @protected
    */
   _updateUploadButtonDescription() {
-    const erroneousFilesNames = [];
+    const erroneousFilesNames = /** @type {string[]} */ ([]);
     let errorMessage;
 
     this._selectedFilesMetaData.forEach(file => {
       if (file.status === 'FAIL') {
         errorMessage = file.validationFeedback ? file.validationFeedback[0].message.toString() : '';
-        erroneousFilesNames.push(file.systemFile.name);
+        erroneousFilesNames.push(/** @type {string} */ (file.systemFile.name));
       }
     });
 
     const selectedFiles = this.querySelector('[slot="after"]');
     if (selectedFiles) {
       if (!this._selectedFilesMetaData || this._selectedFilesMetaData.length === 0) {
-        selectedFiles.textContent = this.msgLit('lion-input-file:noFilesSelected');
+        selectedFiles.textContent = /** @type {string} */ (
+          this.msgLit('lion-input-file:noFilesSelected')
+        );
       } else if (this._selectedFilesMetaData.length === 1) {
-        selectedFiles.textContent = errorMessage || this._selectedFilesMetaData[0].systemFile.name;
+        selectedFiles.textContent = /** @type {string} */ (
+          errorMessage || this._selectedFilesMetaData[0].systemFile.name
+        );
       } else {
         selectedFiles.textContent = `${this.msgLit('lion-input-file:numberOfFiles', {
           numberOfFiles: this._selectedFilesMetaData.length,
@@ -913,6 +917,19 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
           align-items: center;
           border: dashed 2px black;
           padding: 24px 0;
+        }
+
+        .input-group__container ::slotted([slot='after']) {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip-path: inset(100%);
+          clip: rect(1px, 1px, 1px, 1px);
+          white-space: nowrap;
+          border: 0;
+          margin: 0;
+          padding: 0;
         }
       `,
     ];

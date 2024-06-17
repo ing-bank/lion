@@ -1159,6 +1159,7 @@ describe('lion-input-file', () => {
           // @ts-expect-error [allow-protected-in-test]
           `feedback-${el._inputId}`,
         );
+        // @ts-expect-error [allow-protected-in-test]
         expect(el._buttonNode?.getAttribute('aria-describedby')).to.contain(
           // @ts-expect-error [allow-protected-in-test]
           `after-${el._inputId}`,
@@ -1176,11 +1177,11 @@ describe('lion-input-file', () => {
         ];
         const el = await fixture(html` <lion-input-file label="Select"></lion-input-file> `);
 
-        expect(el.querySelector('[slot="after"]').textContent).to.equal('No files selected.');
-
+        expect(el.querySelector('[slot="after"]')?.textContent).to.equal('No files selected.');
+        // @ts-expect-error
         el.uploadResponse = uploadResponse;
         await el.updateComplete;
-        expect(el.querySelector('[slot="after"]').textContent).to.equal('file1.txt');
+        expect(el.querySelector('[slot="after"]')?.textContent).to.equal('file1.txt');
       });
 
       it('after contains upload validator message of file when FAIL', async () => {
@@ -1194,11 +1195,11 @@ describe('lion-input-file', () => {
         ];
         const el = await fixture(html` <lion-input-file label="Select"></lion-input-file> `);
 
-        expect(el.querySelector('[slot="after"]').textContent).to.equal('No files selected.');
-
+        expect(el.querySelector('[slot="after"]')?.textContent).to.equal('No files selected.');
+        // @ts-expect-error
         el.uploadResponse = uploadResponse;
         await el.updateComplete;
-        expect(el.querySelector('[slot="after"]').textContent).to.equal('something went wrong');
+        expect(el.querySelector('[slot="after"]')?.textContent).to.equal('something went wrong');
       });
 
       it('after contains upload status of files when multiple files have been uploaded', async () => {
@@ -1219,11 +1220,11 @@ describe('lion-input-file', () => {
         const el = await fixture(html`
           <lion-input-file label="Select" multiple></lion-input-file>
         `);
-
+        // @ts-expect-error
         el.uploadResponse = uploadResponse;
 
         await el.updateComplete;
-        expect(el.querySelector('[slot="after"]').textContent.trim()).to.equal(
+        expect(el.querySelector('[slot="after"]')?.textContent?.trim()).to.equal(
           '2 files. "something went wrong", for file2.txt.',
         );
       });
