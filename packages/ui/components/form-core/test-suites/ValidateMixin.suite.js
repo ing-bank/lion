@@ -800,7 +800,7 @@ export function runValidateMixinSuite(customConfig) {
         expect(el.hasFeedbackFor).to.deep.equal(['error']);
         const { _feedbackNode } = getFormControlMembers(el);
         await el.updateComplete;
-        await el.updateComplete;
+        await _feedbackNode.updateComplete;
         const messageHtmlNode = _feedbackNode.shadowRoot?.querySelector(`#${messageHtmlId}`);
         expect(messageHtmlNode?.outerHTML).to.equal(messageHtml);
         expect(messageHtmlNode?.tagName).to.equal('DIV');

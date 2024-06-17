@@ -14,10 +14,10 @@ describe('lion-validation-feedback', () => {
     const el = /** @type {LionValidationFeedback} */ (
       await fixture(html`<lion-validation-feedback></lion-validation-feedback>`)
     );
-    expect(el).shadowDom.to.equal('');
+    expect(el.shadowRoot?.textContent).to.not.include('hello');
     el.feedbackData = [{ message: 'hello', type: 'error', validator: new AlwaysInvalid() }];
     await el.updateComplete;
-    expect(el).shadowDom.to.equal('hello');
+    expect(el.shadowRoot?.textContent).to.include('hello');
   });
 
   it('renders the validation type attribute', async () => {
@@ -72,5 +72,33 @@ describe('lion-validation-feedback', () => {
     expect(el.getAttribute('type')).to.equal('error');
 
     clock.restore();
+  });
+
+  it('shares to the user the type of validation feedback', async () => {
+    const el = /** @type {LionValidationFeedback} */ (
+      await fixture(html`<lion-validation-feedback></lion-validation-feedback>`)
+    );
+
+    el.feedbackData = [{ message: 'hello', type: 'error', validator: new AlwaysInvalid() }];
+    await el.updateComplete;
+
+    const validationFeedbackType = el.shadowRoot?.querySelector('.validation-feedback__type');
+    expect(validationFeedbackType?.textContent?.trim()).to.equal('Error');
+
+    el.feedbackData = [{ message: 'hello', type: 'info', validator: new AlwaysInvalid() }];
+    await el.updateComplete;
+
+    expect(validationFeedbackType?.textContent?.trim()).to.equal('Info');
+  });
+
+  describe('accessibility', () => {
+    it('passes a11y audit when with a message', async () => {
+      const el = /** @type {LionValidationFeedback} */ (
+        await fixture(html`<lion-validation-feedback></lion-validation-feedback>`)
+      );
+      el.feedbackData = [{ message: 'hello', type: 'error', validator: new AlwaysInvalid() }];
+      await el.updateComplete;
+      await expect(el).to.be.accessible();
+    });
   });
 });
