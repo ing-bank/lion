@@ -26,9 +26,16 @@ export const OverlayMixinImplementation = superclass =>
 
     constructor() {
       super();
+      /**
+       * If you add the opened attribute a dialog will be opened on page load. The invoker can be left out
+       * in case the user does not need to be able to reopen the dialog.
+       */
       this.opened = false;
 
-      /** @type {Partial<OverlayConfig>} */
+      /**
+       * Configure the many options of the `OverlayController`
+       * @type {Partial<OverlayConfig>}
+       */
       this.config = {};
 
       /** @type {EventListener} */
