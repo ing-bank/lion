@@ -115,7 +115,7 @@ export const getLocalizedMessage = async ({ data, localize }) => {
         ? capitalize(data.formControl?.operationMode)
         : undefined;
     const validatorName = operationMode ? `_${data.name}${operationMode}` : data.name;
-
+    console.log('getLocalizedMessage', validatorName, localize);
     return localize.msg(`lion-validate:${data.type}.${validatorName}`, data);
   }
   return '';

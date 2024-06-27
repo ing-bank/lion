@@ -1,0 +1,25 @@
+diff --git a/packages/ui/components/validate-messages/src/getLocalizedMessage.js b/packages/ui/components/validate-messages/src/getLocalizedMessage.js
+index 52d829bf..45859e01 100644
+--- a/packages/ui/components/validate-messages/src/getLocalizedMessage.js
++++ b/packages/ui/components/validate-messages/src/getLocalizedMessage.js
+@@ -115,7 +115,7 @@ export const getLocalizedMessage = async ({ data, localize }) => {
+         ? capitalize(data.formControl?.operationMode)
+         : undefined;
+     const validatorName = operationMode ? `_${data.name}${operationMode}` : data.name;
+-
++    console.log('getLocalizedMessage', validatorName, localize);
+     return localize.msg(`lion-validate:${data.type}.${validatorName}`, data);
+   }
+   return '';
+diff --git a/packages/ui/components/validate-messages/src/per-entrypoint/loadFormCoreMessagesNoSideEffects.js b/packages/ui/components/validate-messages/src/per-entrypoint/loadFormCoreMessagesNoSideEffects.js
+index 0936eeea..e0ef3cb5 100644
+--- a/packages/ui/components/validate-messages/src/per-entrypoint/loadFormCoreMessagesNoSideEffects.js
++++ b/packages/ui/components/validate-messages/src/per-entrypoint/loadFormCoreMessagesNoSideEffects.js
+@@ -31,6 +31,7 @@ let isLoaded = false;
+  * @param {{localize: LocalizeManager}} opts allow multiple lion/extension lib versions to provide their deduped instance of LocalizeManager
+  */
+ export function loadFormCoreMessagesNoSideEffects({ localize }) {
++  console.log('loadFormCoreMessagesNoSideEffects', isLoaded);
+   if (isLoaded === true) return;
+ 
+   /** @param {FeedbackMessageData} data */

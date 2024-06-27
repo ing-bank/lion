@@ -31,6 +31,7 @@ let isLoaded = false;
  * @param {{localize: LocalizeManager}} opts allow multiple lion/extension lib versions to provide their deduped instance of LocalizeManager
  */
 export function loadFormCoreMessagesNoSideEffects({ localize }) {
+  console.log('loadFormCoreMessagesNoSideEffects', isLoaded);
   if (isLoaded === true) return;
 
   /** @param {FeedbackMessageData} data */

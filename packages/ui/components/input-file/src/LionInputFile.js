@@ -499,13 +499,13 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
     this._inputNode.files = ev.dataTransfer.files;
 
-    const computedFiles = this.__computeNewAddedFiles(
-      /** @type {InputFile[]} */ (Array.from(ev.dataTransfer.files)),
-    );
     if (this.multiple) {
+      const computedFiles = this.__computeNewAddedFiles(
+        /** @type {InputFile[]} */ (Array.from(ev.dataTransfer.files)),
+      );
       this.modelValue = [...(this.modelValue ?? []), ...computedFiles];
     } else {
-      this.modelValue = computedFiles;
+      this.modelValue = Array.from(ev.dataTransfer.files);
     }
 
     // @ts-ignore
