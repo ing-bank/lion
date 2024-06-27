@@ -1,5 +1,16 @@
 # @lion/ui
 
+## 0.7.4
+
+### Patch Changes
+
+- 3dbee0c: [FeedbackValidation] add a translation of the validation feedback type to the beginning of the validation message
+- 08a1cb1: [tabs] make tab panels focusable
+- 57597bb: [form-core] Updated behavior of name attribute in FormRegisteringMixin to convert values to string type
+- 58d56b2: [input-file] add files more than once doesn't overwrite model value anymore
+- b2d7d9b: [input-file] improve a11y labels
+- b50b960: [combobox] update the code to when show and hide the overlay, to be more robust
+
 ## 0.7.3
 
 ### Patch Changes
