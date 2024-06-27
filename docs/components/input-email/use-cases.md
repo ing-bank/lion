@@ -2,6 +2,7 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
+import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import { Validator } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-input-email.js';
 ```
@@ -13,9 +14,11 @@ When prefilling with a faulty input, an error feedback message will show.
 Use `loadDefaultFeedbackMessages` to get our default feedback messages displayed on it.
 
 ```js preview-story
-export const faultyPrefilled = () => html`
-  <lion-input-email .modelValue=${'foo'} label="Email"></lion-input-email>
-`;
+export const faultyPrefilled = () => {
+  loadDefaultFeedbackMessages();
+
+  return html` <lion-input-email .modelValue=${'foo'} label="Email"></lion-input-email> `;
+};
 ```
 
 ## Custom Validator
