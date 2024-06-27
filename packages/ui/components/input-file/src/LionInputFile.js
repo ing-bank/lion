@@ -505,11 +505,10 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       );
       this.modelValue = [...(this.modelValue ?? []), ...computedFiles];
     } else {
-      this.modelValue = Array.from(ev.dataTransfer.files);
+      this.modelValue = /** @type {InputFile[]} */ (Array.from(ev.dataTransfer.files));
     }
 
-    // @ts-ignore
-    this._processFiles(Array.from(ev.dataTransfer.files));
+    this._processFiles(/** @type {InputFile[]} */ (Array.from(ev.dataTransfer.files)));
   }
 
   /**
@@ -628,7 +627,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
       .map(({ systemFile }) => /** @type {InputFile} */ (systemFile));
 
     if (_successFiles.length > 0) {
-      // this.modelValue = [...this.modelValue, _successFiles];
       this._dispatchFileListChangeEvent(_successFiles);
     }
   }
