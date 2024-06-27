@@ -1,7 +1,7 @@
 import '@lion/ui/define/lion-input-file.js';
 import { Required } from '@lion/ui/form-core.js';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
-import { expect, fixture as _fixture, html, oneEvent } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, oneEvent, elementUpdated } from '@open-wc/testing';
 import sinon from 'sinon';
 
 /**
@@ -556,19 +556,22 @@ describe('lion-input-file', () => {
       });
       const fileListChangedEvent = await oneEvent(el, 'file-list-changed');
       filesListChanged(el, fileListChangedEvent);
-      await el.updateComplete;
+      await elementUpdated(el);
 
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData.length).to.equal(2);
+      expect(el.modelValue.length).to.equal(2);
 
       setTimeout(() => {
         mimicSelectFile(el, [file3, file4]);
       });
       const fileListChangedEvent1 = await oneEvent(el, 'file-list-changed');
       filesListChanged(el, fileListChangedEvent1);
-      await el.updateComplete;
+      await elementUpdated(el);
+
       // @ts-expect-error [allow-protected-in-test]
       expect(el._selectedFilesMetaData.length).to.equal(4);
+      expect(el.modelValue.length).to.equal(4);
     });
 
     it('should add multiple files and dispatch file-list-changed event ONLY with newly added file', async () => {
@@ -956,6 +959,37 @@ describe('lion-input-file', () => {
       window.dispatchEvent(new Event('drop', { bubbles: true }));
       await el.updateComplete;
       expect(el.hasAttribute('is-dragging')).to.equal(false);
+    });
+
+    it('should update modelValue on drop', async () => {
+      const list = new DataTransfer();
+      // @ts-ignore
+      list.items.add(file);
+      const droppedFiles = list.files;
+
+      // @ts-expect-error [allow-protected-in-test]
+      await el._processDroppedFiles({
+        // @ts-ignore
+        dataTransfer: { files: droppedFiles, items: [{ name: 'test.txt' }] },
+        preventDefault: () => {},
+      });
+      await el.updateComplete;
+
+      expect(el.modelValue.length).to.equal(1);
+
+      const list2 = new DataTransfer();
+      // @ts-ignore
+      list2.items.add(file2);
+
+      // @ts-expect-error [allow-protected-in-test]
+      await el._processDroppedFiles({
+        // @ts-ignore
+        dataTransfer: { files: list2.files, items: [{ name: 'test2.txt' }] },
+        preventDefault: () => {},
+      });
+      await el.updateComplete;
+
+      expect(el.modelValue.length).to.equal(2);
     });
 
     it('should call _processFiles method', async () => {
