@@ -585,6 +585,17 @@ describe('OverlayController', () => {
         expect(ctrl.isShown).to.be.false;
       });
 
+      it("doesn't hide when [escape] is pressed and hidesOnEsc is set to false", async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnEsc: false,
+        });
+        await ctrl.show();
+        ctrl.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        await aTimeout(0);
+        expect(ctrl.isShown).to.be.true;
+      });
+
       it('stays shown when [escape] is pressed on outside element', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),

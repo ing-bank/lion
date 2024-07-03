@@ -201,6 +201,8 @@ export class OverlayController extends EventTarget {
     this.__hasActiveBackdrop = true;
     /** @private */
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
+    /** @private */
+    this.__cancelHandler = this.__cancelHandler.bind(this);
   }
 
   /**
@@ -509,6 +511,8 @@ export class OverlayController extends EventTarget {
       this.__initContentDomStructure();
       this.__contentHasBeenInitialized = true;
     }
+
+    this.__wrappingDialogNode?.addEventListener('cancel', this.__cancelHandler);
 
     // Reset all positioning styles (local, c.q. Popper) and classes (global)
     this.contentWrapperNode.removeAttribute('style');
@@ -1126,6 +1130,17 @@ export class OverlayController extends EventTarget {
     }
   }
 
+  /**
+   * When the overlay is a modal dialog hidesOnEsc works out of the box, so we prevent that.
+   *
+   * There is currently a bug in chrome that makes the dialog close when pressing Esc the second time
+   * @private
+   */
+  // eslint-disable-next-line class-methods-use-this
+  __cancelHandler(/** @type {Event} */ ev) {
+    ev.preventDefault();
+  }
+
   /** @private */
   __escKeyHandler(/** @type {KeyboardEvent} */ ev) {
     return ev.key === 'Escape' && this.hide();
@@ -1292,6 +1307,7 @@ export class OverlayController extends EventTarget {
   teardown() {
     this.__handleOverlayStyles({ phase: 'teardown' });
     this._handleFeatures({ phase: 'teardown' });
+    this.__wrappingDialogNode?.removeEventListener('cancel', this.__cancelHandler);
   }
 
   /** @private */
