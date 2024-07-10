@@ -84,6 +84,7 @@ describe('Form inside dialog Integrations', () => {
         </div>
       </lion-dialog>
     `);
+    // @ts-expect-error
     /** @type {HTMLButtonElement} */ (el.shadowRoot.querySelector('button')).click();
     const lionInput = el.querySelector('[name="input"]');
     // @ts-expect-error [allow-protected-in-tests]
