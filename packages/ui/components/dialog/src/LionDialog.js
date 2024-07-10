@@ -43,7 +43,7 @@ export class LionDialog extends LitElement {
       <button part="invoker" @click=${this.#open}>
         <slot name="invoker"></slot>
       </button>
-      <dialog id="overlay-content-node-wrapper">
+      <dialog>
         <slot name="content"></slot>
       </dialog>
     `;
