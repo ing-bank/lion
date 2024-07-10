@@ -48,3 +48,24 @@ Use `min` and `max` attribute to specify a range.
   value="200"
 ></lion-input-stepper>
 ```
+
+### Formatting
+
+Just like with the `input-amount` you can add the `formatOptions` to format the numbers to your preferences, to a different locale or adjust the amount of fractions.
+
+```js preview-story
+export const formatting = () => {
+  const format = { locale: 'nl-NL' };
+  return html`
+    <lion-input-stepper
+      label="Amount of oranges"
+      min="0"
+      max="5000"
+      step="100"
+      name="value"
+      .formatOptions="${format}"
+      .modelValue="${1200}"
+    ></lion-input-stepper>
+  `;
+};
+```
