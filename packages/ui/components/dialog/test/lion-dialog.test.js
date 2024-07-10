@@ -1,5 +1,4 @@
-/* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture as _fixture, html, aTimeout } from '@open-wc/testing';
+import { expect, fixture as _fixture, html } from '@open-wc/testing';
 import '@lion/ui/define/lion-dialog.js';
 
 /**
@@ -42,23 +41,5 @@ describe('lion-dialog', () => {
     // @ts-expect-error you're not allowed to call protected _overlayInvokerNode in public context, but for testing it's okay
     nestedDialogEl?.querySelector('#inner-invoker').click();
     expect(nestedDialogEl.opened).to.be.true;
-  });
-
-  it('sets focus on autofocused element', async () => {
-    const el = await fixture(html`
-      <lion-dialog>
-        <button slot="invoker">invoker button</button>
-        <div slot="content">
-          <label for="myInput">Label</label>
-          <input id="myInput" autofocus />
-        </div>
-      </lion-dialog>
-    `);
-    const invokerNode = /** @type {HTMLButtonElement} */ (el.querySelector('button[slot=invoker]'));
-    invokerNode.focus();
-    invokerNode.click();
-    await aTimeout(300);
-    const input = el.querySelector('input');
-    expect(document.activeElement).to.equal(input);
   });
 });

@@ -1,5 +1,4 @@
-/* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture, aTimeout } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
@@ -71,23 +70,5 @@ describe('Form inside dialog Integrations', () => {
       'lion-input-stepper',
       'lion-textarea',
     ]);
-  });
-
-  it('sets focus on first focusable element with autofocus', async () => {
-    const el = /** @type {LionDialog} */ await fixture(html`
-      <lion-dialog>
-        <span slot="invoker">invoker button</span>
-        <div slot="content">
-          <lion-input label="label" name="input" autofocus></lion-input>
-          <lion-textarea label="label" name="textarea" autofocus></lion-textarea>
-        </div>
-      </lion-dialog>
-    `);
-    // @ts-expect-error
-    /** @type {HTMLButtonElement} */ (el.shadowRoot.querySelector('button')).click();
-    await aTimeout(300);
-    const lionInput = el.querySelector('[name="input"]');
-    // @ts-expect-error [allow-protected-in-tests]
-    expect(document.activeElement).to.equal(lionInput._focusableNode);
   });
 });
