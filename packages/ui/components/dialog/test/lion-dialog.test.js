@@ -1,5 +1,5 @@
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture as _fixture, html } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, aTimeout } from '@open-wc/testing';
 import '@lion/ui/define/lion-dialog.js';
 
 /**
@@ -57,6 +57,7 @@ describe('lion-dialog', () => {
     const invokerNode = /** @type {HTMLButtonElement} */ (el.querySelector('button[slot=invoker]'));
     invokerNode.focus();
     invokerNode.click();
+    await aTimeout(300);
     const input = el.querySelector('input');
     expect(document.activeElement).to.equal(input);
   });
