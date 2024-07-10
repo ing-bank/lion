@@ -24,8 +24,7 @@ describe('Form inside dialog Integrations', () => {
       </lion-dialog>`,
     );
 
-    const formEl = /** @type {LionForm} */ (el.querySelector('umbrella-form'));
-    await formEl.registrationComplete;
+    const formEl = /** @type {UmbrellaForm} */ (el.querySelector('umbrella-form'));
     const registeredEls = getAllTagNames(formEl._lionFormNode);
 
     expect(registeredEls).to.eql([
