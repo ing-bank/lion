@@ -5,6 +5,7 @@ export { Analyzer } from '../core/Analyzer.js';
 export { default as FindExportsAnalyzer } from './find-exports.js';
 export { default as FindImportsAnalyzer } from './find-imports.js';
 export { default as MatchImportsAnalyzer } from './match-imports.js';
+export { default as MatchSubclassesAnalyzer } from './match-subclasses.js';
 
 export { transformIntoIterableFindImportsOutput } from './helpers/transform-into-iterable-find-imports-output.js';
 export { transformIntoIterableFindExportsOutput } from './helpers/transform-into-iterable-find-exports-output.js';

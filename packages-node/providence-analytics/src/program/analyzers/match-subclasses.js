@@ -7,15 +7,17 @@ import { Analyzer } from '../core/Analyzer.js';
 import { fromImportToExportPerspective } from '../utils/from-import-to-export-perspective.js';
 
 /**
+ * @typedef {import('../../../types/index.js').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
+ * @typedef {import('../../../types/index.js').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
+ * @typedef {import('../../../types/index.js').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').FindClassesAnalyzerResult} FindClassesAnalyzerResult
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').FindExportsAnalyzerResult} FindExportsAnalyzerResult
- * @typedef {import('../../../types/index.js').IterableFindExportsAnalyzerEntry} IterableFindExportsAnalyzerEntry
- * @typedef {import('../../../types/index.js').IterableFindImportsAnalyzerEntry} IterableFindImportsAnalyzerEntry
- * @typedef {import('../../../types/index.js').ConciseMatchImportsAnalyzerResult} ConciseMatchImportsAnalyzerResult
- * @typedef {import('../../../types/index.js').MatchImportsConfig} MatchImportsConfig
- * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').MatchImportsConfig} MatchImportsConfig
+ * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  */
 
 function getMemberOverrides(
@@ -276,13 +278,12 @@ async function matchSubclassesPostprocess(
 // }
 
 export default class MatchSubclassesAnalyzer extends Analyzer {
-  static get analyzerName() {
-    return 'match-subclasses';
-  }
+  /** @type {AnalyzerName} */
+  static analyzerName = 'match-subclasses';
 
-  static get requiresReference() {
-    return true;
-  }
+  static requiredAst = /** @type {AnalyzerAst} */ ('babel');
+
+  static requiresReference = true;
 
   /**
    * Based on ExportsAnalyzerResult of reference project(s) (for instance lion-based-ui)
