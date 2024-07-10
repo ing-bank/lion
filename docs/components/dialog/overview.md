@@ -16,13 +16,10 @@ export const main = () => html`
     ${demoStyle}
   </style>
   <lion-dialog>
-    <button slot="invoker">Click me to open dialog</button>
-    <div slot="content" class="demo-dialog-content">
+    <span slot="invoker">Click me to open dialog</span>
+    <div slot="content">
       Hello! You can close this dialog here:
-      <button
-        class="demo-dialog-content__close-button"
-        @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
-      >
+      <button @click=${e => e.target.dispatchEvent(new Event('close', { bubbles: true }))}>
         ⨯
       </button>
     </div>
