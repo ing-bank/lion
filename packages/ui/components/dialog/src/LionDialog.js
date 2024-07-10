@@ -15,8 +15,11 @@ export class LionDialog extends LitElement {
     this.removeEventListener('close', this.#close);
   }
 
+  /**
+   * @returns {HTMLDialogElement}
+   */
   get #dialog() {
-    return this.shadowRoot.querySelector('dialog');
+    return /** @type {HTMLDialogElement} */ (this.renderRoot.querySelector('dialog'));
   }
 
   #open() {

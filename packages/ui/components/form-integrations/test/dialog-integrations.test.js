@@ -19,13 +19,12 @@ describe('Form inside dialog Integrations', () => {
   it('Successfully registers all form components inside a dialog', async () => {
     const el = /** @type {LionDialog} */ await fixture(
       html` <lion-dialog>
-        <button slot="invoker">Open Dialog</button>
+        <span slot="invoker">Open Dialog</span>
         <umbrella-form slot="content"></umbrella-form>
       </lion-dialog>`,
     );
 
-    // @ts-ignore
-    const formEl = /** @type {LionForm} */ (el._overlayCtrl.contentNode._lionFormNode);
+    const formEl = /** @type {LionForm} */ (el.querySelector('umbrella-form'));
     await formEl.registrationComplete;
     const registeredEls = getAllTagNames(formEl);
 
@@ -78,15 +77,14 @@ describe('Form inside dialog Integrations', () => {
   it('sets focus on first focusable element with autofocus', async () => {
     const el = /** @type {LionDialog} */ await fixture(html`
       <lion-dialog>
-        <button slot="invoker">invoker button</button>
+        <span slot="invoker">invoker button</span>
         <div slot="content">
           <lion-input label="label" name="input" autofocus></lion-input>
           <lion-textarea label="label" name="textarea" autofocus></lion-textarea>
         </div>
       </lion-dialog>
     `);
-    // @ts-expect-error [allow-protected-in-tests]
-    el._overlayInvokerNode.click();
+    /** @type {HTMLButtonElement} */ (el.shadowRoot.querySelector('button')).click();
     const lionInput = el.querySelector('[name="input"]');
     // @ts-expect-error [allow-protected-in-tests]
     expect(document.activeElement).to.equal(lionInput._focusableNode);

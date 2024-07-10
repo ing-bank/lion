@@ -35,7 +35,7 @@ describe('lion-dialog', () => {
       </lion-dialog>
     `);
 
-    el.querySelector('#outer-invoker')?.click();
+    /** @type {HTMLButtonElement} */ (el.querySelector('#outer-invoker')).click();
     expect(el.opened).to.be.true;
 
     const nestedDialogEl = /** @type {LionDialog} */ (el.querySelector('lion-dialog'));
@@ -54,7 +54,7 @@ describe('lion-dialog', () => {
         </div>
       </lion-dialog>
     `);
-    const invokerNode = el.querySelector('button[slot=invoker]');
+    const invokerNode = /** @type {HTMLButtonElement} */ (el.querySelector('button[slot=invoker]'));
     invokerNode.focus();
     invokerNode.click();
     const input = el.querySelector('input');
