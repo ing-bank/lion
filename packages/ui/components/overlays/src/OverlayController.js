@@ -1238,6 +1238,12 @@ export class OverlayController extends EventTarget {
           wasMouseUpInside = false;
         });
       };
+
+      /** @type {EventListenerOrEventListenerObject} */
+      this.__onWindowBlur = () => {
+        // When the current window loses the focus (clicking outside iframe) the overlay gets hidden
+        this.hide();
+      };
     }
 
     this.contentWrapperNode[addOrRemoveListener](
@@ -1272,6 +1278,12 @@ export class OverlayController extends EventTarget {
       'mouseup',
       /** @type {EventListenerOrEventListenerObject} */
       (this.__onDocumentMouseUp),
+      true,
+    );
+    window[addOrRemoveListener](
+      'blur',
+      /** @type {EventListenerOrEventListenerObject} */
+      (this.__onWindowBlur),
       true,
     );
   }
