@@ -320,12 +320,12 @@ export class UIBaseElement extends LitElement {
     }
 
     return {
-      stylesFromProvider,
+      templateContextProcessor,
       lightStylesFromProvider,
-      templates,
+      stylesFromProvider,
       scopedElements,
       dynamicLayouts,
-      templateContextProcessor,
+      templates,
     };
   }
 
@@ -347,16 +347,23 @@ export class UIBaseElement extends LitElement {
   static provideDesign(provider) {
     const ctor = this;
     const {
-      stylesFromProvider,
-      lightStylesFromProvider,
-      templates,
-      scopedElements,
       templateContextProcessor,
+      lightStylesFromProvider,
+      stylesFromProvider,
+      scopedElements,
       dynamicLayouts,
+      templates,
     } = ctor._extractDataFromProvider(provider);
 
     ctor.templates = templates || ctor.templates;
-    ctor.scopedElements = scopedElements || ctor.scopedElements;
+    // ctor.scopedElements = scopedElements || ctor.scopedElements;
+    Object.defineProperty(ctor, 'scopedElements', {
+      // enumerable: false,
+      // configurable: false,
+      // writable: false,
+      value: scopedElements || ctor.scopedElements,
+    });
+
     ctor.templateContextProcessor = templateContextProcessor;
     ctor.dynamicLayouts = dynamicLayouts;
 
@@ -368,8 +375,11 @@ export class UIBaseElement extends LitElement {
     // if (isServer) {
     //   ctor.styles = ctor.elementStyles;
     // }
-    ctor.styles = ctor.elementStyles = ctor.finalizeStyles([...stylesFromProvider]);
 
+    // ctor.styles = ctor.elementStyles = ctor.finalizeStyles([...stylesFromProvider]);
+
+    ctor.elementStyles = ctor.finalizeStyles([...stylesFromProvider]);
+    Object.defineProperty(ctor, 'styles', { value: ctor.elementStyles });
     // If we call this method after instances have been created, we need to force a rerender for those instances
     for (const instance of Array.from(ctor._instances)) {
       ctor._initInstanceDesign(instance, ctor.elementStyles, lightStylesFromProvider);

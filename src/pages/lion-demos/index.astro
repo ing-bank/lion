@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+import { UIField} from '@lion-demos-provide-design/provide-designs-and-export-components--side-effectful.js';
+---
+
+<MainLayout>
+
+  <UIField name="hallo">
+    <label slot="label">Name</label>
+    <input slot="input"/>
+  </UIField>
+
+
+  <!-- <div class="ui-portal-collection">
+    {
+      blogs.map((blog) => (
+        <article class="ui-portal-card">
+          <h2>{blog.data.title}</h2>
+          <p>{blog.data.description}</p>
+          <a href={"blog/" + blog.slug}>View blog</a>
+        </article>
+      ))
+    }
+  </div> -->
+</MainLayout>

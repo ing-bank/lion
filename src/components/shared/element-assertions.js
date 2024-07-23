@@ -1,5 +1,11 @@
 import { isServer } from 'lit';
 
+/**
+ * Element assertions assure the right semantics are applied to the right element.
+ * These assertions can be used in UIPartDirectives, making sure that custom templates provide the
+ * semantics that are expected.
+ */
+
 function isChildOf(ctorName, el) {
   let current = el;
   while (current) {

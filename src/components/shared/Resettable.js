@@ -4,9 +4,9 @@
  * Helper class for elements that temporarily fulfill a certain role, when placed in a context.
  * A concrete example: when a main navigation is used on desktop, it is a horizontal bar with menu items.
  * On mobile, it is a vertical bar with menu items, inside a popover.
- * Thus, on switch of layout, the main navigation temporarily fulfills the role of a popover.
+ * Thus, on switch of layout, the main navigation (or a level thereof) temporarily fulfills the role of a popover.
  *
- * Resettable allows you to use a subset of the native Element api (setAttribute, removeAttribute, addEventListener, toggleAttribute)
+ * `Resettable` allows you to use a subset of the native Element api (setAttribute, removeAttribute, addEventListener, toggleAttribute)
  * that can automatically be cleaned up when the role is no longer needed.
  *
  * @example

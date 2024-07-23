@@ -1,22 +1,21 @@
 import { AsyncDirective } from 'lit/async-directive.js';
-import { UIBaseElement } from './UIBaseElement.js';
 
 export class UIPartDirective extends AsyncDirective {
   host;
 
   constructor() {
     super();
-    this._hasFirstUpdated = false;
+    this._hasAlreadySetup = false;
   }
 
   setup() {}
 
   update(...args) {
     this.host = args[0].options.host;
-    if (!this._hasFirstUpdated) {
+    if (!this._hasAlreadySetup) {
       this.setup(...args);
     }
-    this._hasFirstUpdated = true;
+    this._hasAlreadySetup = true;
   }
 }
 

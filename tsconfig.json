@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@portal-provide-design/*": ["./src/design-providers/ingportal/*"]
+      "@portal-provide-design/*": ["./src/design-providers/ingportal/*"],
+      "@lion-demos-provide-design/*": ["./src-lion-demos/design-providers/macos/*"]
     }
   }
 }
