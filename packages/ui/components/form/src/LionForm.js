@@ -11,6 +11,15 @@ const throwFormNodeError = () => {
 };
 
 /**
+ * @param {FormRegistrarHost} formEl
+ * @returns {boolean}
+ */
+function hasFocusableChildren(formEl) {
+  // this implies all children have the same type (either all of them are focusable or none of them are)
+  return formEl.formElements?.some(child => child._focusableNode);
+}
+
+/**
  * LionForm: form wrapper providing extra features and integration with lion-field elements.
  *
  * @customElement lion-form
@@ -63,7 +72,7 @@ export class LionForm extends LionFieldset {
     this.dispatchEvent(new Event('submit', { bubbles: true }));
 
     if (this.hasFeedbackFor?.includes('error')) {
-      this._setFocusOnFirstErroneousFormElement(this);
+      this._setFocusOnFirstErroneousFormElement(/** @type { * & FormRegistrarHost } */ (this));
     }
   }
 
@@ -95,7 +104,7 @@ export class LionForm extends LionFieldset {
       element.formElements.find(child => child.hasFeedbackFor.includes('error')) ||
       element.formElements[0];
 
-    if (firstFormElWithError.formElements?.length > 0) {
+    if (hasFocusableChildren(firstFormElWithError)) {
       this._setFocusOnFirstErroneousFormElement(firstFormElWithError);
     } else {
       firstFormElWithError._focusableNode.focus();

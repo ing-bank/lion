@@ -3,7 +3,8 @@ import '@lion/ui/define/lion-fieldset.js';
 import { LionField, Required } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
-
+import '@lion/ui/define/lion-listbox.js';
+import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-form.js';
 import {
   aTimeout,
@@ -223,7 +224,7 @@ describe('<lion-form>', () => {
     expect(document.activeElement).to.equal(el.formElements[1]._inputNode);
   });
 
-  it('sets focus on submit to the first erroneous form element with a fieldset', async () => {
+  it('sets focus on submit to the first erroneous form element within a fieldset', async () => {
     const el = await fixture(html`
       <lion-form>
         <form>
@@ -265,5 +266,23 @@ describe('<lion-form>', () => {
     const fieldset = el.formElements[0];
     // @ts-ignore [allow-protected] in test
     expect(document.activeElement).to.equal(fieldset.formElements[0]._inputNode);
+  });
+
+  it('sets focus on submit to the first form element within a erroneous listbox', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-listbox name="name" .validators="${[new Required()]}">
+            <lion-option value="a">a</lion-option>
+            <lion-option value="b">b</lion-option>
+          </lion-listbox>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    button.click();
+    const listboxEl = el.formElements[0];
+    expect(document.activeElement).to.equal(listboxEl._inputNode);
   });
 });
