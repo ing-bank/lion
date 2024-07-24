@@ -1243,10 +1243,7 @@ export class OverlayController extends EventTarget {
       this.__onWindowBlur = () => {
         // When the current window loses the focus (clicking outside iframe) the overlay gets hidden
         setTimeout(() => {
-          const ctrlManaged = this.manager.list.includes(this);
-          if (ctrlManaged) {
-            this.hide();
-          }
+          this.hide();
         });
       };
     }
@@ -1289,7 +1286,6 @@ export class OverlayController extends EventTarget {
       'blur',
       /** @type {EventListenerOrEventListenerObject} */
       (this.__onWindowBlur),
-      true,
     );
   }
 
