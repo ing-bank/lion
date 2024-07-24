@@ -4,7 +4,7 @@
 import { html } from '@mdjs/mdjs-preview';
 import './assets/demo-el-using-overlaymixin.mjs';
 import './assets/applyDemoOverlayStyles.mjs';
-import { withDropdownConfig, withTooltipConfig } from '@lion/ui/overlays.js';
+import { withDropdownConfig, withModalDialogConfig, withTooltipConfig } from '@lion/ui/overlays.js';
 ```
 
 The `OverlayController` has many configuration options.
@@ -128,6 +128,32 @@ Boolean property. Will allow closing the overlay on ESC key when enabled.
 ```js preview-story
 export const hidesOnEsc = () => {
   const hidesOnEscConfig = { ...withDropdownConfig(), hidesOnEsc: true };
+  return html`
+    <demo-el-using-overlaymixin .config=${hidesOnEscConfig}>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <div slot="content" class="demo-overlay">
+        Hello! You can close this notification here:
+        <button
+          class="close-button"
+          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        >
+          ⨯
+        </button>
+      </div>
+    </demo-el-using-overlaymixin>
+  `;
+};
+```
+
+And how it works if `hidesOnEsc` is disabled. In most cases `hidesOnOutsideEsc` needs also to be set to `false`.
+
+```js preview-story
+export const hidesOnEscFalse = () => {
+  const hidesOnEscConfig = {
+    ...withModalDialogConfig(),
+    hidesOnEsc: false,
+    hidesOnOutsideEsc: false,
+  };
   return html`
     <demo-el-using-overlaymixin .config=${hidesOnEscConfig}>
       <button slot="invoker">Click me to open the overlay!</button>
