@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.7.5
+
+### Patch Changes
+
+- 1dce98d: fix focus first erroneous for listbox
+
 ## 0.7.4
 
 ### Patch Changes
