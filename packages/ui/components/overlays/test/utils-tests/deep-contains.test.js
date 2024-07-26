@@ -124,4 +124,31 @@ describe('deepContains()', () => {
     expect(deepContains(element, elementFirstChildShadowChildShadow)).to.be.true;
     expect(deepContains(element, elementFirstChildShadowChildShadowLastChild)).to.be.true;
   });
+
+  it('returns true if the element, which is located in ShadowsRoot, contains a target element, located in the LightDom', async () => {
+    const mainElement = /** @type {HTMLElement} */ (await fixture('<div id="main"></div>'));
+    mainElement.innerHTML = `      
+      <div slot="content" id="light-el-content">Content</div>
+    `;
+    const shadowRoot = mainElement.attachShadow({ mode: 'open' });
+    shadowRoot.innerHTML = `
+      <div id="dialog-wrapper">
+        <div id="dialog-header">
+          Header          
+        </div>  
+        <div id="dialog-content">
+          <slot name="content" id="shadow-el-content"></slot>
+        </div>  
+      </div>      
+    `;
+    const contentElement = /** @type {HTMLElement} */ (
+      mainElement.querySelector('#light-el-content')
+    );
+    const dialogWrapperElement = /** @type {HTMLElement} */ (
+      shadowRoot.querySelector('#dialog-wrapper')
+    );
+    await fixture(html`${mainElement}`);
+
+    expect(deepContains(dialogWrapperElement, contentElement)).to.be.true;
+  });
 });
