@@ -29,14 +29,14 @@ export function deepContains(el, targetEl) {
    *     <div id="dialog-wrapper">
    *       <div id="dialog-header">Header</div>
    *       <div id="dialog-content">
-   *         <slot name="content"></slot>
+   *         <slot id="dialog-content-slot" name="content"></slot>
    *       </div>
    *     </div>
    *   <!-- Light DOM -->
    *   <div id="my-slot-content" slot="content">my content</div>
    * </custom-element>
    * ```
-   * Then for `div#dialog-wrapper` which is defined in the ShadowDom the function returns `div#my-slot-content` which is defined in the LightDom
+   * Then for `slot#dialog-content-slot` which is defined in the ShadowDom the function returns `div#my-slot-content` which is defined in the LightDom
    * @param {HTMLElement | HTMLSlotElement} htmlElement
    * @returns {HTMLElement | null}
    * */
@@ -51,10 +51,8 @@ export function deepContains(el, targetEl) {
     for (let i = 0; i < elem.children.length; i += 1) {
       const child = /** @type {HTMLElement}  */ (elem.children[i]);
       const slotProjectionElement = getSlotProjection(child);
-      if (
-        (child.shadowRoot && deepContains(child.shadowRoot, targetEl)) ||
-        (slotProjectionElement && deepContains(slotProjectionElement, targetEl))
-      ) {
+      const childSubElement = child.shadowRoot || slotProjectionElement;
+      if (childSubElement && deepContains(childSubElement, targetEl)) {
         containsTarget = true;
         break;
       }
