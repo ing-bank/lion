@@ -11,7 +11,7 @@ export function deepContains(el, targetEl) {
   }
 
   /**
-   * @description A `type guard` to resolve TS compiler errors
+   * @description A `Typescript` `type guard` for `HTMLSlotElement`
    * @param {HTMLElement | HTMLSlotElement} htmlElement
    * @returns {htmlElement is HTMLSlotElement}
    */
@@ -20,7 +20,17 @@ export function deepContains(el, targetEl) {
   }
 
   /**
-   * @description Returns
+   * @description Returns a slot projection or it returns `null` if `htmlElement` is not an `HTMLSlotElement`
+   * @example
+   * Let's say this is a custom element declared as follows:
+   * ```
+   * <custom-element>
+   *  shadowRoot
+   *    <slot id="mySlot" name="content"></slot>
+   *  <div id="mySlotSontent" slot="content">my content</div>
+   * </custom-element>
+   * ```
+   * Then for `slot#mySlot` the function returns `div#mySlotSontent`
    * @param {HTMLElement | HTMLSlotElement} htmlElement
    * @returns {HTMLElement | null}
    * */
