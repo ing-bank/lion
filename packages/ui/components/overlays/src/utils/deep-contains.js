@@ -27,10 +27,10 @@ export function deepContains(el, targetEl) {
    * <custom-element>
    *  shadowRoot
    *    <slot id="mySlot" name="content"></slot>
-   *  <div id="mySlotSontent" slot="content">my content</div>
+   *  <div id="mySlotContent" slot="content">my content</div>
    * </custom-element>
    * ```
-   * Then for `slot#mySlot` the function returns `div#mySlotSontent`
+   * Then for `slot#mySlot` the function returns `div#mySlotContent`
    * @param {HTMLElement | HTMLSlotElement} htmlElement
    * @returns {HTMLElement | null}
    * */
