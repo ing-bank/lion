@@ -10,11 +10,35 @@ export function deepContains(el, targetEl) {
     return true;
   }
 
+  /**
+   * @description A `type guard` to resolve TS compiler errors
+   * @param {HTMLElement | HTMLSlotElement} htmlElement
+   * @returns {htmlElement is HTMLSlotElement}
+   */
+  function isSlot(htmlElement) {
+    return htmlElement.tagName === 'SLOT';
+  }
+
+  /**
+   * @description Returns
+   * @param {HTMLElement | HTMLSlotElement} htmlElement
+   * @returns {HTMLElement | null}
+   * */
+  function getSlotProjection(htmlElement) {
+    return isSlot(htmlElement)
+      ? /** @type {HTMLElement}  */ (htmlElement.assignedElements()[0])
+      : null;
+  }
+
   /** @param {HTMLElement|ShadowRoot} elem */
   function checkChildren(elem) {
     for (let i = 0; i < elem.children.length; i += 1) {
       const child = /** @type {HTMLElement}  */ (elem.children[i]);
-      if (child.shadowRoot && deepContains(child.shadowRoot, targetEl)) {
+      const slotProjectionElement = getSlotProjection(child);
+      if (
+        (child.shadowRoot && deepContains(child.shadowRoot, targetEl)) ||
+        (slotProjectionElement && deepContains(slotProjectionElement, targetEl))
+      ) {
         containsTarget = true;
         break;
       }
