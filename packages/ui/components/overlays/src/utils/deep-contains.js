@@ -25,12 +25,18 @@ export function deepContains(el, targetEl) {
    * Let's say this is a custom element declared as follows:
    * ```
    * <custom-element>
-   *  shadowRoot
-   *    <slot id="mySlot" name="content"></slot>
-   *  <div id="mySlotContent" slot="content">my content</div>
+   *   shadowRoot
+   *     <div id="dialog-wrapper">
+   *       <div id="dialog-header">Header</div>
+   *       <div id="dialog-content">
+   *         <slot name="content"></slot>
+   *       </div>
+   *     </div>
+   *   <!-- Light DOM -->
+   *   <div id="my-slot-content" slot="content">my content</div>
    * </custom-element>
    * ```
-   * Then for `slot#mySlot` the function returns `div#mySlotContent`
+   * Then for `div#dialog-wrapper` which is defined in the ShadowDom the function returns `div#my-slot-content` which is defined in the LightDom
    * @param {HTMLElement | HTMLSlotElement} htmlElement
    * @returns {HTMLElement | null}
    * */
