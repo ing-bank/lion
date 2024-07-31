@@ -13,30 +13,37 @@
 export function deepContains(el, targetEl, cache = {}) {
   /**
    * @description A `Typescript` `type guard` for `HTMLElement`
-   * @param {HTMLElement|ShadowRoot} htmlElement
+   * @param {Element|ShadowRoot} htmlElement
    * @returns {htmlElement is HTMLElement}
    */
   function isHTMLElement(htmlElement) {
     return 'getAttribute' in htmlElement;
   }
 
-  /** @type {CacheItem} */
-  let itemToCache = null;
-  if (isHTMLElement(el)) {
-    const slotName = el.getAttribute('slot');
-    if (slotName) {
-      // eslint-disable-next-line no-param-reassign
-      cache[slotName] = cache[slotName] || [];
-      const cachedItemsWithSameName = cache[slotName];
-      for (let i = 0; i < cachedItemsWithSameName.length; i += 1) {
-        const cachedItem = cachedItemsWithSameName[i];
-        if (cachedItem?.element === el) {
-          return cachedItem.deepContains;
-        }
-      }
-      itemToCache = { element: el, deepContains: false };
-      cachedItemsWithSameName.push(itemToCache);
+  /**
+   * @description Returns a cached item for the given element or null otherwise
+   * @param {HTMLElement|ShadowRoot} element
+   * @returns {CacheItem|null}
+   */
+  function getCachedItem(element) {
+    if (!isHTMLElement(element)) {
+      return null;
     }
+    const slotName = element.getAttribute('slot');
+    /** @type {CacheItem|null} */
+    let result = null;
+    if (slotName) {
+      const cachedItemsWithSameName = cache[slotName];
+      if (cachedItemsWithSameName) {
+        result = cachedItemsWithSameName.filter(item => item?.element === element)[0] || null;
+      }
+    }
+    return result;
+  }
+
+  const cachedItem = getCachedItem(el);
+  if (cachedItem) {
+    return cachedItem.deepContains;
   }
 
   /**
@@ -45,8 +52,14 @@ export function deepContains(el, targetEl, cache = {}) {
    * @returns {void}
    */
   function cacheItem(contains) {
-    if (itemToCache) {
-      itemToCache.deepContains = contains;
+    if (!isHTMLElement(el)) {
+      return;
+    }
+    const slotName = el.getAttribute('slot');
+    if (slotName) {
+      // eslint-disable-next-line no-param-reassign
+      cache[slotName] = cache[slotName] || [];
+      cache[slotName].push({ element: el, deepContains: contains });
     }
   }
 
@@ -84,33 +97,39 @@ export function deepContains(el, targetEl, cache = {}) {
    * ```
    * Then for `slot#dialog-content-slot` which is defined in the ShadowDom the function returns `div#my-slot-content` which is defined in the LightDom
    * @param {HTMLElement|HTMLSlotElement} htmlElement
-   * @returns {HTMLElement|null}
+   * @returns {Element[]}
    * */
-  function getSlotProjection(htmlElement) {
-    return isSlot(htmlElement)
-      ? /** @type {HTMLElement}  */ (htmlElement.assignedElements()[0])
-      : null;
+  function getSlotProjections(htmlElement) {
+    return isSlot(htmlElement) ? /** @type {Element[]}  */ (htmlElement.assignedElements()) : [];
   }
 
   /**
-   * @description Returns a cached item for the given element or null otherwise
-   * @param {HTMLElement|HTMLSlotElement} element
-   * @returns {CacheItem|null}
+   * @description A `Typescript` `type guard` for `ShadowRoot`
+   * @param {Element|ShadowRoot} htmlElement
+   * @returns {htmlElement is ShadowRoot}
    */
-  function getCachedItem(element) {
-    if (!isHTMLElement(element)) {
-      return null;
-    }
-    const slotName = element.getAttribute('slot');
-    /** @type {CacheItem|null} */
-    let result = null;
-    if (slotName) {
-      const cachedItemsWithSameName = cache[slotName];
-      if (cachedItemsWithSameName) {
-        result = cachedItemsWithSameName.filter(item => item?.element === element)[0] || null;
+  function isShadowRoot(htmlElement) {
+    return htmlElement.nodeType === Node.DOCUMENT_FRAGMENT_NODE;
+  }
+
+  /**
+   * Check whether any element contains target
+   * @param {(Element|ShadowRoot|null)[]} elements
+   * */
+  function checkElements(elements) {
+    let contains = false;
+    for (let i = 0; i < elements.length; i += 1) {
+      const element = elements[i];
+      if (
+        element &&
+        (isHTMLElement(element) || isShadowRoot(element)) &&
+        deepContains(element, targetEl, cache)
+      ) {
+        contains = true;
+        break;
       }
     }
-    return result;
+    return contains;
   }
 
   /** @param {HTMLElement|ShadowRoot} elem */
@@ -119,12 +138,12 @@ export function deepContains(el, targetEl, cache = {}) {
       const child = /** @type {HTMLElement}  */ (elem.children[i]);
       const cachedChild = getCachedItem(child);
       if (cachedChild) {
-        containsTarget = cachedChild.deepContains;
+        containsTarget = cachedChild.deepContains || containsTarget;
         break;
       }
-      const slotProjectionElement = getSlotProjection(child);
-      const childSubElement = child.shadowRoot || slotProjectionElement;
-      if (childSubElement && deepContains(childSubElement, targetEl, cache)) {
+      const slotProjections = getSlotProjections(child);
+      const childSubElements = [child.shadowRoot, ...slotProjections];
+      if (checkElements(childSubElements)) {
         containsTarget = true;
         break;
       }
