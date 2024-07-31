@@ -129,7 +129,10 @@ describe('deepContains()', () => {
     const mainElement = /** @type {HTMLElement} */ (await fixture('<div id="main"></div>'));
     mainElement.innerHTML = `      
       <div slot="content" id="light-el-content">
-        <input type="text" id="light-el-input"></input>
+        <input type="text" id="light-el-input-1"></input>
+      </div>
+      <div slot="content" id="light-el-content">
+        <input type="text" id="light-el-input-2"></input>
       </div>
     `;
     const shadowRoot = mainElement.attachShadow({ mode: 'open' });
@@ -143,14 +146,16 @@ describe('deepContains()', () => {
         </div>  
       </div>      
     `;
-    const inputElement = /** @type {HTMLElement} */ (mainElement.querySelector('#light-el-input'));
+    const inputElement = /** @type {HTMLElement} */ (
+      mainElement.querySelector('#light-el-input-2')
+    );
     const dialogWrapperElement = /** @type {HTMLElement} */ (
       shadowRoot.querySelector('#dialog-wrapper')
     );
     expect(deepContains(dialogWrapperElement, inputElement)).to.be.true;
   });
 
-  it(`returns true if the element, which is located in ShadowsRoot, contains a target element, located in the ShadowRoot element of the LightDom element  `, async () => {
+  it(`returns true if the element, which is located in ShadowRoot, contains a target element, located in the ShadowRoot element of the LightDom element  `, async () => {
     /**
      * The DOM for the `main` element looks as follows:
      *
@@ -177,6 +182,9 @@ describe('deepContains()', () => {
      */
     const mainElement = /** @type {HTMLElement} */ (await fixture('<div id="main"></div>'));
     mainElement.innerHTML = `      
+      <div slot="content" id="light-el-content">
+        <div id="content-wrapper"></div>
+      </div>
       <div slot="content" id="light-el-content">
         <div id="content-wrapper"></div>
       </div>

@@ -57,7 +57,7 @@ export function deepContains(el, targetEl, cache = {}) {
   }
 
   /**
-   * @description A `Typescript` `type guard` for `HTMLSlotElement`
+   * A `Typescript` `type guard` for `HTMLSlotElement`
    * @param {HTMLElement|HTMLSlotElement} htmlElement
    * @returns {htmlElement is HTMLSlotElement}
    */
@@ -66,7 +66,7 @@ export function deepContains(el, targetEl, cache = {}) {
   }
 
   /**
-   * @description Returns a slot projection or it returns `null` if `htmlElement` is not an `HTMLSlotElement`
+   * Returns a slot projection or it returns `null` if `htmlElement` is not an `HTMLSlotElement`
    * @example
    * Let's say this is a custom element declared as follows:
    * ```
