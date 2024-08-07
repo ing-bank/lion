@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { loadComboboxMessagesNoSideEffects } from './per-entrypoint/loadComboboxMessagesNoSideEffects.js';
 import { loadFormCoreMessagesNoSideEffects } from './per-entrypoint/loadFormCoreMessagesNoSideEffects.js';
+import { loadInputIBANMessagesNoSideEffects } from './per-entrypoint/loadInputIBANMessagesNoSideEffects.js';
 import { loadInputTelMessagesNoSideEffects } from './per-entrypoint/loadInputTelMessagesNoSideEffects.js';
 
 /**
@@ -22,6 +23,7 @@ export function loadDefaultFeedbackMessagesNoSideEffects({ localize }) {
   loadComboboxMessagesNoSideEffects({ localize });
   loadFormCoreMessagesNoSideEffects({ localize });
   loadInputTelMessagesNoSideEffects({ localize });
+  loadInputIBANMessagesNoSideEffects({ localize });
 
   isLoaded = true;
 }
