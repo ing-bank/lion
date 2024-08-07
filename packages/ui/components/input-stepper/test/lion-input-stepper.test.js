@@ -1,6 +1,7 @@
 import { expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
+import { formatNumber } from '@lion/ui/localize-no-side-effects.js';
 import '@lion/ui/define/lion-input-stepper.js';
 
 /**
@@ -49,6 +50,50 @@ describe('<lion-input-stepper>', () => {
     });
   });
 
+  describe('Formatter', () => {
+    it('uses formatNumber for formatting', async () => {
+      const el = await fixture(defaultInputStepper);
+      expect(el.formatter).to.equal(formatNumber);
+    });
+
+    it('formatNumber uses locale provided in formatOptions', async () => {
+      let el = await fixture(html`
+        <lion-input-stepper
+          .formatOptions="${{ locale: 'en-GB' }}"
+          .modelValue="${1234.56}"
+        ></lion-input-stepper>
+      `);
+      expect(el.formattedValue).to.equal('1,234.56');
+      el = await fixture(html`
+        <lion-input-stepper
+          .formatOptions="${{ locale: 'nl-NL' }}"
+          .modelValue="${1234.56}"
+        ></lion-input-stepper>
+      `);
+      expect(el.formattedValue).to.equal('1.234,56');
+    });
+
+    it('supports overriding decimalSeparator in formatOptions', async () => {
+      const el = await fixture(
+        html`<lion-input-stepper
+          .formatOptions="${{ locale: 'nl-NL', decimalSeparator: '.' }}"
+          .modelValue="${12.34}"
+        ></lion-input-stepper>`,
+      );
+      expect(el.formattedValue).to.equal('12.34');
+    });
+
+    it('supports overriding groupSeparator in formatOptions', async () => {
+      const el = await fixture(
+        html`<lion-input-stepper
+          .formatOptions="${{ locale: 'nl-NL', groupSeparator: ',', decimalSeparator: '.' }}"
+          .modelValue="${1234.56}"
+        ></lion-input-stepper>`,
+      );
+      expect(el.formattedValue).to.equal('1,234.56');
+    });
+  });
+
   describe('User interaction', () => {
     it('should increment the value to 1 on [ArrowUp]', async () => {
       const el = await fixture(defaultInputStepper);
@@ -71,7 +116,7 @@ describe('<lion-input-stepper>', () => {
       expect(el.value).to.equal('');
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       await el.updateComplete;
-      expect(el.value).to.equal('-1');
+      expect(el.value).to.equal('−1');
     });
 
     it('should increment the value to minValue on [ArrowDown] if value is below min', async () => {
@@ -95,7 +140,7 @@ describe('<lion-input-stepper>', () => {
       expect(el.value).to.equal('');
       const decrementButton = el.querySelector('[slot=prefix]');
       decrementButton?.dispatchEvent(new Event('click'));
-      expect(el.value).to.equal('-1');
+      expect(el.value).to.equal('−1');
     });
 
     it('fires one "user-input-changed" event on + button click', async () => {
@@ -143,7 +188,7 @@ describe('<lion-input-stepper>', () => {
       decrementButton?.dispatchEvent(new Event('focus'));
       decrementButton?.dispatchEvent(new Event('click'));
       decrementButton?.dispatchEvent(new Event('blur'));
-      expect(el.value).to.equal('-1');
+      expect(el.value).to.equal('−1');
       expect(blurSpy.calledOnce).to.be.true;
       expect(el.touched).to.be.true;
 

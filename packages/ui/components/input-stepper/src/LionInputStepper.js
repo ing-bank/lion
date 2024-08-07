@@ -1,5 +1,5 @@
 import { html, css, render } from 'lit';
-import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
+import { formatNumber, LocalizeMixin, parseNumber } from '@lion/ui/localize-no-side-effects.js';
 import { LionInput } from '@lion/ui/input.js';
 import { IsNumber, MinNumber, MaxNumber } from '@lion/ui/form-core.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
@@ -52,7 +52,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    * @returns {number}
    */
   get currentValue() {
-    return parseFloat(this.value) || 0;
+    return this.modelValue || 0;
   }
 
   get _inputNode() {
@@ -62,7 +62,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
   constructor() {
     super();
     /** @param {string} modelValue */
-    this.parser = modelValue => parseFloat(modelValue);
+    this.parser = parseNumber;
+    this.formatter = formatNumber;
     this.min = Infinity;
     this.max = Infinity;
     this.step = 1;
@@ -229,7 +230,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     const { step, min, max } = this.values;
     const newValue = this.currentValue + step;
     if (newValue <= max || max === Infinity) {
-      this.value = newValue < min && min !== Infinity ? `${min}` : `${newValue}`;
+      this.modelValue = newValue < min && min !== Infinity ? `${min}` : `${newValue}`;
       this.__toggleSpinnerButtonsState();
       this._proxyInputEvent();
     }
@@ -243,7 +244,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     const { step, min, max } = this.values;
     const newValue = this.currentValue - step;
     if (newValue >= min || min === Infinity) {
-      this.value = newValue > max && max !== Infinity ? `${max}` : `${newValue}`;
+      this.modelValue = newValue > max && max !== Infinity ? `${max}` : `${newValue}`;
       this.__toggleSpinnerButtonsState();
       this._proxyInputEvent();
     }
