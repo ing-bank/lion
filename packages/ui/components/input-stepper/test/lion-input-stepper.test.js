@@ -56,7 +56,7 @@ describe('<lion-input-stepper>', () => {
       expect(el.formatter).to.equal(formatNumber);
     });
 
-    it('formatAmount uses locale provided in formatOptions', async () => {
+    it('formatNumber uses locale provided in formatOptions', async () => {
       let el = await fixture(html`
         <lion-input-stepper
           .formatOptions="${{ locale: 'en-GB' }}"
