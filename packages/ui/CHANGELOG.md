@@ -1,5 +1,13 @@
 # @lion/ui
 
+## 0.7.6
+
+### Patch Changes
+
+- 58796de: improve deep-contains function so it works correctly with slots
+- f9ba215: [overlays] prevent closing of a modal dialog on pressing Esc and hidesOnEsc is set to false
+- cdf0a9e: [input-stepper] add parseNumber and formatNumber to format the value based on locale
+
 ## 0.7.5
 
 ### Patch Changes
