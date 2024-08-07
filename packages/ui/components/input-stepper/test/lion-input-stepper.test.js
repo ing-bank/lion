@@ -51,7 +51,7 @@ describe('<lion-input-stepper>', () => {
   });
 
   describe('Formatter', () => {
-    it('uses formatAmount for formatting', async () => {
+    it('uses formatNumber for formatting', async () => {
       const el = await fixture(defaultInputStepper);
       expect(el.formatter).to.equal(formatNumber);
     });
