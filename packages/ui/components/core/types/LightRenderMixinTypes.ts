@@ -1,7 +1,7 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { TemplateResult, LitElement } from 'lit';
 
-export type SlotItem = { name: string; templateFn: () => TemplateResult };
+export type SlotItem = { name: string; template: () => TemplateResult; host?: HTMLElement };
 
 export declare class LightRenderHost {
   /**
@@ -120,9 +120,7 @@ export declare class LightRenderHost {
  * ```js
  * class MyInput extends LightDomRenderMixin(LitElement) {
  *
- *   slots = {
- *    input: this.renderInput,
- *   }
+ *   slots = [{ name: 'input', template: this.renderInput }];
  *
  *   render() {
  *     return html`

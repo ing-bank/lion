@@ -22,7 +22,7 @@ function extractPrivateSlots({ slots, slotsProvidedByUser }) {
       continue; // eslint-disable-line no-continue
     }
     // Allow to conditionally return a slot
-    const slotFunctionResult = slots.find(s => s.name === slotName)?.templateFn();
+    const slotFunctionResult = slots.find(s => s.name === slotName)?.template();
     if (slotFunctionResult === undefined) {
       continue; // eslint-disable-line no-continue
     }
@@ -52,6 +52,7 @@ function renderLightDomInScopedContext({
   slotName,
 }) {
   const isFirstRender = !renderMetaPerSlot.has(slotName);
+  
   if (isFirstRender) {
     // @ts-expect-error wait for browser support
     const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
@@ -94,7 +95,13 @@ function renderLightDomInScopedContext({
  */
 function patchRenderFns({ isInLightDom, slots, defaultHost }) {
   const slotTemplateFns = [];
-  for (const { name: slotName, templateFn, host } of slots) {
+  console.debug({slots});
+
+
+  for (const { name: slotName, template: templateFn, host } of slots) {
+
+    console.debug({slotName, templateFn, host});
+
     const hostObj = host || defaultHost;
     // eslint-disable-next-line no-restricted-syntax, guard-for-in
     for (const potentialFnName in hostObj) {
@@ -282,9 +289,16 @@ const LightRenderMixinImplementation = superclass =>
        */
       slots = [];
 
-      constructor() {
-        super();
 
+      /**
+       * Private state
+       */
+      #lightRenderState = {
+        /**
+         * @type {'shadow-dom'|'light-dom'}
+         */
+        slotRenderPhase: 'shadow-dom',
+        isInitialized: false,
         /**
          * The roots that are used to do a rerender in.
          * In case of a SlotRerenderObject, this will create a render wrapper in the scoped context (shadow root)
@@ -292,9 +306,9 @@ const LightRenderMixinImplementation = superclass =>
          * so that all interactions work as intended and no focus issues can arise (which would be the case
          * when (cloned) nodes of a render outcome would be moved around)
          * @private
-         * @type { Map<string, RenderMetaObj> } */
-        this.__renderMetaPerSlot = new Map();
-
+         * @type { Map<string, RenderMetaObj> } 
+         */
+        renderMetaPerSlot: new Map(),
         /**
          * Those are slots that should be touched by SlotMixin
          * The opposite of __slotsProvidedByUserOnFirstConnected,
@@ -302,18 +316,12 @@ const LightRenderMixinImplementation = superclass =>
          * @private
          * @type {Set<string>}
          */
-        this.__privateSlots = new Set();
-
-        /**
-         * @private
-         * @type {'shadow-dom'|'light-dom'}
-         */
-        this.__slotRenderPhase = 'shadow-dom';
-      }
+         privateSlots: new Set(),
+      };
 
       connectedCallback() {
         super.connectedCallback();
-        this.__initLightRenderMixin();
+        this.#initLightRenderMixin();
       }
 
       /**
@@ -323,23 +331,23 @@ const LightRenderMixinImplementation = superclass =>
       update(changedProperties) {
         // Here we just render the shadow dom
         // For this, we tell our patched function to render the slot outlet
-        this.__slotRenderPhase = 'shadow-dom';
+        this.#lightRenderState.slotRenderPhase = 'shadow-dom';
         super.update(changedProperties);
 
         // Now, we update/render the light dom
         // For this, we tell our patched function to render the original function (to light dom)
-        this.__slotRenderPhase = 'light-dom';
+        this.#lightRenderState.slotRenderPhase = 'light-dom';
 
         // Now we render the light dom in one go...
-        for (const slotName of this.__privateSlots) {
-          const slotFunctionResult = this.slots.find(s => s.name === slotName)?.templateFn();
+        for (const slotName of this.#lightRenderState.privateSlots) {
+          const slotFunctionResult = this.slots.find(s => s.name === slotName)?.template();
           if (slotFunctionResult === undefined) {
             continue; // eslint-disable-line no-continue
           }
           // Providing all options breaks Safari; keep host and creationScope
           const { creationScope, host } = this.renderOptions;
           renderLightDomInScopedContext({
-            renderMetaPerSlot: this.__renderMetaPerSlot,
+            renderMetaPerSlot: this.#lightRenderState.renderMetaPerSlot,
             renderOptions: { creationScope, host },
             template: slotFunctionResult,
             shadowHost: this,
@@ -355,24 +363,24 @@ const LightRenderMixinImplementation = superclass =>
        * @returns {boolean} true if given slot name been created by SlotMixin
        */
       _isPrivateSlot(slotName) {
-        return this.__privateSlots.has(slotName);
+        return this.#lightRenderState.privateSlots.has(slotName);
       }
 
       /**
-       * @private
        * @returns {void}
        */
-      __initLightRenderMixin() {
-        if (this.__isLightRenderMixinInitialized) return;
+      #initLightRenderMixin() {
+        // This is called on connected, so avoid that it is called twice when the host element is moved...
+        if (this.#lightRenderState.isInitialized) return;
 
         patchRenderFns({
-          isInLightDom: () => this.__slotRenderPhase === 'light-dom',
+          isInLightDom: () => this.#lightRenderState.slotRenderPhase === 'light-dom',
           slots: this.slots,
           defaultHost: this,
         });
         const slotsProvidedByUser = new Set(Array.from(this.children).map(c => c.slot || ''));
-        this.__privateSlots = extractPrivateSlots({ slotsProvidedByUser, slots: this.slots });
-        this.__isLightRenderMixinInitialized = true;
+        this.#lightRenderState.privateSlots = extractPrivateSlots({ slotsProvidedByUser, slots: this.slots });
+        this.#lightRenderState.isInitialized = true;
       }
     }
   );
