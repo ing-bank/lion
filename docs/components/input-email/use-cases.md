@@ -14,7 +14,7 @@ Use `loadDefaultFeedbackMessages` to get our default feedback messages displayed
 
 ```js preview-story
 export const faultyPrefilled = () => html`
-  <lion-input-email .modelValue=${'foo'} label="Email"></lion-input-email>
+  <lion-input-email .modelValue="${'foo'}" label="Email"></lion-input-email>
 `;
 ```
 
@@ -39,8 +39,8 @@ export const customValidator = () => {
   }
   return html`
     <lion-input-email
-      .modelValue=${'foo@bar.com'}
-      .validators=${[new GmailOnly()]}
+      .modelValue="${'foo@bar.com'}"
+      .validators="${[new GmailOnly()]}"
       label="Email"
     ></lion-input-email>
   `;

@@ -59,13 +59,13 @@ The `placementMode` property determines the positioning of the `contentNode`:
 export const placementLocal = () => {
   const placementModeLocalConfig = { placementMode: 'local' };
   return html`
-    <demo-el-using-overlaymixin .config=${placementModeLocalConfig}>
+    <demo-el-using-overlaymixin .config="${placementModeLocalConfig}">
       <button slot="invoker">Click me to open the local overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
           class="close-button"
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
@@ -81,13 +81,13 @@ export const placementLocal = () => {
 export const placementGlobal = () => {
   const placementModeGlobalConfig = { placementMode: 'global' };
   return html`
-    <demo-el-using-overlaymixin .config=${placementModeGlobalConfig}>
+    <demo-el-using-overlaymixin .config="${placementModeGlobalConfig}">
       <button slot="invoker">Click me to open the global overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
           class="close-button"
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>

@@ -34,7 +34,7 @@ When `requireOptionMatch` is set to false the textbox is leading, with the listb
 
 ```js preview-story
 export const optionMatch = () => html`
-  <lion-combobox name="search" label="Search" .requireOptionMatch=${false}>
+  <lion-combobox name="search" label="Search" .requireOptionMatch="${false}">
     ${lazyRender(
       listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
     )}
@@ -243,7 +243,7 @@ export const multipleChoice = () => html`
     ${lazyRender(
       listboxData.map(
         (entry, i) => html`
-          <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option>
+          <lion-option .choiceValue="${entry}" ?checked="${i === 0}>${entry}"</lion-option>
         `,
       ),
     )}
@@ -258,7 +258,7 @@ Alternatively, the multi-choice flag can be combined with .requireMultipleMatch=
 
 ```js preview-story
 export const multipleCustomizableChoice = () => html`
-  <lion-combobox name="combo" label="Multiple" .requireOptionMatch=${false} multiple-choice>
+  <lion-combobox name="combo" label="Multiple" .requireOptionMatch="${false}" multiple-choice>
     <demo-selection-display
       slot="selection-display"
       style="display: contents;"
@@ -266,7 +266,7 @@ export const multipleCustomizableChoice = () => html`
     ${lazyRender(
       listboxData.map(
         (entry, i) => html`
-          <lion-option .choiceValue="${entry}" ?checked=${i === 0}>${entry}</lion-option>
+          <lion-option .choiceValue="${entry}" ?checked="${i === 0}>${entry}"</lion-option>
         `,
       ),
     )}
@@ -282,7 +282,7 @@ By default the a check is made which makes sure the value matches an option. Thi
 
 ```js preview-story
 export const validation = () => html`
-  <lion-combobox name="combo" label="Validation" .validators=${[new Required()]}>
+  <lion-combobox name="combo" label="Validation" .validators="${[new Required()]}">
     ${lazyRender(
       listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
     )}

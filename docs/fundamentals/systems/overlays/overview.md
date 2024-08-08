@@ -43,7 +43,7 @@ html`
     <div slot="content">
       This is an overlay
       <button
-        @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
       >x</button>
     <div>
     <button slot="invoker">

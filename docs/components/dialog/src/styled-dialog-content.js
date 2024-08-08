@@ -30,7 +30,7 @@ class StyledDialogContent extends LitElement {
       <div>
         <p>Look how nice this <span class="nice">dialog</span> looks!</p>
       </div>
-      <button class="close-button" @click=${this._closeOverlay}>⨯</button>
+      <button class="close-button" @click="${this._closeOverlay}">⨯</button>
     `;
   }
 }

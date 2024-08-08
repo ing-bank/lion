@@ -11,7 +11,7 @@ import '@lion/ui/define/lion-input-iban.js';
 
 ```js preview-story
 export const prefilled = () => html`
-  <lion-input-iban .modelValue=${'NL20INGB0001234567'} name="iban" label="IBAN"></lion-input-iban>
+  <lion-input-iban .modelValue="${'NL20INGB0001234567'}" name="iban" label="IBAN"></lion-input-iban>
 `;
 ```
 
@@ -20,7 +20,7 @@ export const prefilled = () => html`
 ```js preview-story
 export const faultyPrefilled = () => html`
   <lion-input-iban
-    .modelValue=${'NL20INGB0001234567XXXX'}
+    .modelValue="${'NL20INGB0001234567XXXX'}"
     name="iban"
     label="IBAN"
   ></lion-input-iban>
@@ -39,8 +39,8 @@ export const countryRestrictions = () => {
   loadDefaultFeedbackMessages();
   return html`
     <lion-input-iban
-      .modelValue=${'DE89370400440532013000'}
-      .validators=${[new IsCountryIBAN('NL')]}
+      .modelValue="${'DE89370400440532013000'}"
+      .validators="${[new IsCountryIBAN('NL')]}"
       name="iban"
       label="IBAN"
     ></lion-input-iban>
@@ -58,8 +58,8 @@ export const countryRestrictionsMultiple = () => {
   loadDefaultFeedbackMessages();
   return html`
     <lion-input-iban
-      .modelValue=${'DE89370400440532013000'}
-      .validators=${[new IsCountryIBAN(['BE', 'NL', 'LU'])]}
+      .modelValue="${'DE89370400440532013000'}"
+      .validators="${[new IsCountryIBAN(['BE', 'NL', 'LU'])]}"
       name="iban"
       label="IBAN"
     ></lion-input-iban>
@@ -88,8 +88,8 @@ export const blacklistedCountry = () => {
   loadDefaultFeedbackMessages();
   return html`
     <lion-input-iban
-      .modelValue=${'DE89370400440532013000'}
-      .validators=${[new IsNotCountryIBAN(['RO', 'NL'])]}
+      .modelValue="${'DE89370400440532013000'}"
+      .validators="${[new IsNotCountryIBAN(['RO', 'NL'])]}"
       name="iban"
       label="IBAN"
     ></lion-input-iban>

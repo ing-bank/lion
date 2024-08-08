@@ -52,17 +52,17 @@ export const methods = ({ shadowRoot }) => {
       }}
     ></lion-pagination>
     <section style="margin-top:16px">
-      <button @click=${() => shadowRoot.getElementById('pagination-method').previous()}>
+      <button @click="${() => shadowRoot.getElementById('pagination-method').previous()}">
         Previous
       </button>
-      <button @click=${() => shadowRoot.getElementById('pagination-method').next()}>Next</button>
+      <button @click="${() => shadowRoot.getElementById('pagination-method').next()}">Next</button>
       <br />
       <br />
-      <button @click=${() => shadowRoot.getElementById('pagination-method').first()}>First</button>
-      <button @click=${() => shadowRoot.getElementById('pagination-method').last()}>Last</button>
+      <button @click="${() => shadowRoot.getElementById('pagination-method').first()}">First</button>
+      <button @click="${() => shadowRoot.getElementById('pagination-method').last()}">Last</button>
       <br />
       <br />
-      <button @click=${() => shadowRoot.getElementById('pagination-method').goto(55)}>
+      <button @click="${() => shadowRoot.getElementById('pagination-method').goto(55)}">
         Go to 55
       </button>
     </section>

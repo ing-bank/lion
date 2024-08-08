@@ -12,8 +12,8 @@ A web component that can be used to group multiple input fields or other fieldse
 ```js preview-story
 export const main = () => html`
   <lion-fieldset name="nameGroup" label="Name">
-    <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-    <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+    <lion-input name="firstName" label="First Name" .modelValue="${'Foo'}"></lion-input>
+    <lion-input name="lastName" label="Last Name" .modelValue="${'Bar'}"></lion-input>
   </lion-fieldset>
 `;
 ```

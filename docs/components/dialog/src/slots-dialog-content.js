@@ -24,7 +24,7 @@ class SlotsDialogContent extends LitElement {
       <div class="actions">
         <slot name="actions"></slot>
       </div>
-      <button class="close-button" @click=${this._closeOverlay}>⨯</button>
+      <button class="close-button" @click="${this._closeOverlay}">⨯</button>
     `;
   }
 }

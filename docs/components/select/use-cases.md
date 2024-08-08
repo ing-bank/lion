@@ -13,7 +13,7 @@ loadDefaultFeedbackMessages();
 You can preselect an option by setting the property modelValue.
 
 ```html preview-story
-<lion-select name="favoriteColor" label="Favorite color" .modelValue=${'hotpink'}>
+<lion-select name="favoriteColor" label="Favorite color" .modelValue="${'hotpink'}">
   <select slot="input">
     <option selected hidden value>Please select</option>
     <option value="red">Red</option>

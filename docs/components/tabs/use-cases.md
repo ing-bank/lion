@@ -12,7 +12,7 @@ You can set the `selectedIndex` to select a certain tab.
 
 ```js preview-story
 export const selectedIndex = () => html`
-  <lion-tabs .selectedIndex=${1}>
+  <lion-tabs .selectedIndex="${1}">
     <button slot="tab">Info</button>
     <p slot="panel">Info page with lots of information about us.</p>
     <button slot="tab">Work</button>

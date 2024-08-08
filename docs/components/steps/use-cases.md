@@ -12,7 +12,7 @@ export const main = () => html`
     <lion-step initial-step>
       <p>Welcome</p>
       <button disabled>previous</button> &nbsp;
-      <button type="button" @click=${ev => ev.target.parentElement.controller.next()}>Next</button>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">Next</button>
     </lion-step>
     <lion-step>
       <p>Are you single?</p>
@@ -36,29 +36,29 @@ export const main = () => html`
         No
       </button>
       <br /><br />
-      <button type="button" @click=${ev => ev.target.parentElement.controller.previous()}>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.previous()}">
         Previous
       </button>
     </lion-step>
     <lion-step id="is-single" .condition="${data => data.isSingle}">
       <p>You are single</p>
-      <button type="button" @click=${ev => ev.target.parentElement.controller.previous()}>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.previous()}">
         Previous
       </button>
       &nbsp;
-      <button type="button" @click=${ev => ev.target.parentElement.controller.next()}>Next</button>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">Next</button>
     </lion-step>
     <lion-step id="is-not-single" .condition="${data => data.isSingle}" invert-condition>
       <p>You are NOT single.</p>
-      <button type="button" @click=${ev => ev.target.parentElement.controller.previous()}>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.previous()}">
         Previous
       </button>
       &nbsp;
-      <button type="button" @click=${ev => ev.target.parentElement.controller.next()}>Next</button>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">Next</button>
     </lion-step>
     <lion-step>
       <p>Finish</p>
-      <button type="button" @click=${ev => ev.target.parentElement.controller.previous()}>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.previous()}">
         Previous
       </button>
     </lion-step>

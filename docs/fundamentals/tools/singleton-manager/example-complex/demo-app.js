@@ -71,7 +71,7 @@ class DemoApp extends LitElement {
       <h1>Demo App</h1>
       <nav>
         <button
-          class=${this.page === 'A' ? 'active' : ''}
+          class="${this.page === 'A' ? 'active' : ''}"
           @click=${() => {
             this.page = 'A';
           }}
@@ -79,7 +79,7 @@ class DemoApp extends LitElement {
           Page A
         </button>
         <button
-          class=${this.page === 'B' ? 'active' : ''}
+          class="${this.page === 'B' ? 'active' : ''}"
           @click=${() => {
             this.page = 'B';
           }}

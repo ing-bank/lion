@@ -49,7 +49,7 @@ export const helpText = () => html`
 
 ```js preview-story
 export const prefilled = () => html`
-  <lion-input .modelValue=${'Prefilled value'} label="Prefilled"></lion-input>
+  <lion-input .modelValue="${'Prefilled value'}" label="Prefilled"></lion-input>
 `;
 ```
 
@@ -61,7 +61,7 @@ This field **will still be included** in the parent fieldset or form's `serializ
 
 ```js preview-story
 export const readOnly = () => html`
-  <lion-input readonly .modelValue=${'This is read only'} label="Read only"></lion-input>
+  <lion-input readonly .modelValue="${'This is read only'}" label="Read only"></lion-input>
 `;
 ```
 
@@ -73,6 +73,6 @@ This field **will not be included** in the parent fieldset or form's `serialized
 
 ```js preview-story
 export const disabled = () => html`
-  <lion-input disabled .modelValue=${'This is disabled'} label="Disabled"></lion-input>
+  <lion-input disabled .modelValue="${'This is disabled'}" label="Disabled"></lion-input>
 `;
 ```

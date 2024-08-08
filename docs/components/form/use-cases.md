@@ -39,8 +39,8 @@ export const formSubmit = () => {
     ev.target.previousElementSibling.submit();
   };
   return html`
-    <lion-form @submit=${submitHandler}>
-      <form @submit=${ev => ev.preventDefault()}>
+    <lion-form @submit="${submitHandler}">
+      <form @submit="${ev => ev.preventDefault()}">
         <lion-input
           name="firstName"
           label="First Name"
@@ -55,14 +55,14 @@ export const formSubmit = () => {
           <button>Submit</button>
           <button
             type="button"
-            @click=${ev => ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}
+            @click="${ev => ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}"
           >
             Reset
           </button>
         </div>
       </form>
     </lion-form>
-    <button @click=${submitViaJS}>Explicit submit via JavaScript</button>
+    <button @click="${submitViaJS}">Explicit submit via JavaScript</button>
   `;
 };
 ```

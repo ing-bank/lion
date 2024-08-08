@@ -21,7 +21,7 @@ export const invokerRelation = () => {
         margin: 50px;
       }
     </style>
-    <lion-tooltip .config=${invokerRelationConfig}>
+    <lion-tooltip .config="${invokerRelationConfig}">
       <button slot="invoker" class="demo-tooltip-invoker">📅</button>
       <div slot="content">Agenda<div>
     </lion-tooltip>
@@ -50,19 +50,19 @@ export const placements = () => {
       }
     </style>
     <div class="demo-box-placements">
-      <lion-tooltip has-arrow .config=${placementTopConfig}>
+      <lion-tooltip has-arrow .config="${placementTopConfig}">
         <button slot="invoker">Top</button>
         <div slot="content">Top placement</div>
       </lion-tooltip>
-      <lion-tooltip has-arrow .config=${placementRightConfig}>
+      <lion-tooltip has-arrow .config="${placementRightConfig}">
         <button slot="invoker">Right</button>
         <div slot="content">Right placement</div>
       </lion-tooltip>
-      <lion-tooltip has-arrow .config=${placementBottomConfig}>
+      <lion-tooltip has-arrow .config="${placementBottomConfig}">
         <button slot="invoker">Bottom</button>
         <div slot="content">Bottom placement</div>
       </lion-tooltip>
-      <lion-tooltip has-arrow .config=${placementLeftConfig}>
+      <lion-tooltip has-arrow .config="${placementLeftConfig}">
         <button slot="invoker">Left</button>
         <div slot="content">Left placement</div>
       </lion-tooltip>
@@ -120,7 +120,7 @@ export const overridePopperConfig = () => {
         margin: 50px;
       }
     </style>
-    <lion-tooltip .config=${overridePopperConfig}>
+    <lion-tooltip .config="${overridePopperConfig}">
       <button slot="invoker" class="demo-tooltip-invoker">Hover me</button>
       <div slot="content">This is a tooltip<div>
     </lion-tooltip>

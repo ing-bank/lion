@@ -13,17 +13,17 @@ export const main = () => html`
   <lion-steps>
     <lion-step initial-step>
       Step 1
-      <button type="button" @click=${ev => ev.target.parentElement.controller.next()}>Next</button>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">Next</button>
     </lion-step>
     <lion-step>
-      <button type="button" @click=${ev => ev.target.parentElement.controller.previous()}>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.previous()}">
         Previous
       </button>
       Step 2
-      <button type="button" @click=${ev => ev.target.parentElement.controller.next()}>Next</button>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">Next</button>
     </lion-step>
     <lion-step>
-      <button type="button" @click=${ev => ev.target.parentElement.controller.previous()}>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.previous()}">
         Previous
       </button>
       Step 3
