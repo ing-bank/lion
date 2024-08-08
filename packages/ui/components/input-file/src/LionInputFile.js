@@ -175,6 +175,11 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
     /** @private */
     this.__duplicateFileNamesValidator = new DuplicateFileNames({ show: false });
+    /**
+     * @private
+     * @type {FileList | null}
+     */
+    this.__previouslyParsedFiles = null;
   }
 
   /**
@@ -282,8 +287,20 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @returns {InputFile[]} parsedValue
    */
   parser() {
-    // @ts-ignore
-    return this._inputNode.files ? Array.from(this._inputNode.files) : [];
+    // parser is called twice for one user event; one for 'user-input-change', another for 'change'
+    if (this.__previouslyParsedFiles === this._inputNode.files) {
+      return this.modelValue;
+    }
+    this.__previouslyParsedFiles = this._inputNode.files;
+
+    const files = this._inputNode.files
+      ? /** @type {InputFile[]} */ (Array.from(this._inputNode.files))
+      : [];
+    if (this.multiple) {
+      return [...(this.modelValue ?? []), ...files];
+    }
+
+    return files;
   }
 
   /**
@@ -481,16 +498,17 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     }
 
     this._inputNode.files = ev.dataTransfer.files;
-    // @ts-ignore
-    this.modelValue = Array.from(ev.dataTransfer.files);
-    // if same file is selected again, e.dataTransfer.files lists that file.
-    // So filter if the file already exists
-    // @ts-ignore
-    // const newFiles = this.__computeNewAddedFiles(Array.from(ev.dataTransfer.files));
-    // if (newFiles.length > 0) {
-    //   this._processFiles(newFiles);
-    // }
-    this._processFiles(Array.from(ev.dataTransfer.files));
+
+    if (this.multiple) {
+      const computedFiles = this.__computeNewAddedFiles(
+        /** @type {InputFile[]} */ (Array.from(ev.dataTransfer.files)),
+      );
+      this.modelValue = [...(this.modelValue ?? []), ...computedFiles];
+    } else {
+      this.modelValue = /** @type {InputFile[]} */ (Array.from(ev.dataTransfer.files));
+    }
+
+    this._processFiles(/** @type {InputFile[]} */ (Array.from(ev.dataTransfer.files)));
   }
 
   /**
