@@ -16,7 +16,7 @@ import './src/slots-dialog-content.js';
 <lion-dialog>
   <div slot="content">
     This is a dialog
-    <button @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}>x</button>
+    <button @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}">x</button>
   <div>
   <button slot="invoker">Click me</button>
 </lion-dialog>
@@ -35,7 +35,7 @@ export const placementOverrides = () => {
           Hello! You can close this notification here:
           <button
             class="close-button"
-            @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+            @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
           >
             ⨯
           </button>
@@ -88,7 +88,7 @@ export const otherOverrides = () => {
         Hello! You can close this dialog here:
         <button
           class="demo-dialog-content__close-button"
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>

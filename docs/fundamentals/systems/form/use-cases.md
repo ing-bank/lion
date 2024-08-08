@@ -88,9 +88,9 @@ export const main = () => {
           .validators="${[new Required()]}"
           .fieldName="${'value'}"
         >
-          <lion-checkbox .choiceValue=${'foo'} label="I like foo"></lion-checkbox>
-          <lion-checkbox .choiceValue=${'bar'} label="I like bar"></lion-checkbox>
-          <lion-checkbox .choiceValue=${'baz'} label="I like baz"></lion-checkbox>
+          <lion-checkbox .choiceValue="${'foo'}" label="I like foo"></lion-checkbox>
+          <lion-checkbox .choiceValue="${'bar'}" label="I like bar"></lion-checkbox>
+          <lion-checkbox .choiceValue="${'baz'}" label="I like baz"></lion-checkbox>
         </lion-checkbox-group>
         <lion-radio-group
           name="dinosaurs"
@@ -98,14 +98,14 @@ export const main = () => {
           .fieldName="${'dinosaur'}"
           .validators="${[new Required()]}"
         >
-          <lion-radio .choiceValue=${'allosaurus'} label="allosaurus"></lion-radio>
-          <lion-radio .choiceValue=${'brontosaurus'} label="brontosaurus"></lion-radio>
-          <lion-radio .choiceValue=${'diplodocus'} label="diplodocus"></lion-radio>
+          <lion-radio .choiceValue="${'allosaurus'}" label="allosaurus"></lion-radio>
+          <lion-radio .choiceValue="${'brontosaurus'}" label="brontosaurus"></lion-radio>
+          <lion-radio .choiceValue="${'diplodocus'}" label="diplodocus"></lion-radio>
         </lion-radio-group>
         <lion-listbox name="favoriteFruit" label="Favorite fruit">
-          <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
-          <lion-option checked .choiceValue=${'Banana'}>Banana</lion-option>
-          <lion-option .choiceValue=${'Mango'}>Mango</lion-option>
+          <lion-option .choiceValue="${'Apple'}">Apple</lion-option>
+          <lion-option checked .choiceValue="${'Banana'}">Banana</lion-option>
+          <lion-option .choiceValue="${'Mango'}">Mango</lion-option>
         </lion-listbox>
         <lion-combobox
           .validators="${[new Required()]}"
@@ -113,17 +113,17 @@ export const main = () => {
           label="Favorite movie"
           autocomplete="both"
         >
-          <lion-option checked .choiceValue=${'Rocky'}>Rocky</lion-option>
-          <lion-option .choiceValue=${'Rocky II'}>Rocky II</lion-option>
-          <lion-option .choiceValue=${'Rocky III'}>Rocky III</lion-option>
-          <lion-option .choiceValue=${'Rocky IV'}>Rocky IV</lion-option>
-          <lion-option .choiceValue=${'Rocky V'}>Rocky V</lion-option>
-          <lion-option .choiceValue=${'Rocky Balboa'}>Rocky Balboa</lion-option>
+          <lion-option checked .choiceValue="${'Rocky'}">Rocky</lion-option>
+          <lion-option .choiceValue="${'Rocky II'}">Rocky II</lion-option>
+          <lion-option .choiceValue="${'Rocky III'}">Rocky III</lion-option>
+          <lion-option .choiceValue="${'Rocky IV'}">Rocky IV</lion-option>
+          <lion-option .choiceValue="${'Rocky V'}">Rocky V</lion-option>
+          <lion-option .choiceValue="${'Rocky Balboa'}">Rocky Balboa</lion-option>
         </lion-combobox>
         <lion-select-rich name="favoriteColor" label="Favorite color">
-          <lion-option .choiceValue=${'red'}>Red</lion-option>
-          <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-          <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+          <lion-option .choiceValue="${'red'}">Red</lion-option>
+          <lion-option .choiceValue="${'hotpink'}" checked>Hotpink</lion-option>
+          <lion-option .choiceValue="${'teal'}">Teal</lion-option>
         </lion-select-rich>
         <lion-select label="Lyrics" name="lyrics" .validators="${[new Required()]}">
           <select slot="input">
@@ -162,7 +162,7 @@ export const main = () => {
         <div class="buttons">
           <lion-button-submit>Submit</lion-button-submit>
           <lion-button-reset
-            @click=${ev => ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}
+            @click="${ev => ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}"
             >Reset</lion-button-reset
           >
         </div>

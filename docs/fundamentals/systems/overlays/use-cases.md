@@ -29,7 +29,7 @@ export const main = () => html`
     <button slot="invoker">Click me to open the overlay!</button>
     <div slot="content" class="demo-overlay">
       Hello! You can close this notification here:
-      <button @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}>
+      <button @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}">
         ⨯
       </button>
     </div>
@@ -152,13 +152,13 @@ The easiest way is declarative. This can be achieved by adding a `<slot name="ba
 export const backdrop = () => {
   const responsiveModalDialogConfig = { ...withModalDialogConfig() };
   return html`
-    <demo-el-using-overlaymixin .config=${responsiveModalDialogConfig}>
+    <demo-el-using-overlaymixin .config="${responsiveModalDialogConfig}">
       <demo-overlay-backdrop slot="backdrop"></demo-overlay-backdrop>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
@@ -176,12 +176,12 @@ export const backdropImperative = () => {
   const backdropNode = document.createElement('demo-overlay-backdrop');
   const responsiveModalDialogConfig = { ...withModalDialogConfig(), backdropNode };
   return html`
-    <demo-el-using-overlaymixin .config=${responsiveModalDialogConfig}>
+    <demo-el-using-overlaymixin .config="${responsiveModalDialogConfig}">
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
@@ -231,13 +231,13 @@ Under the hood, the OverlayController listens to `animationend` event, only then
 export const backdropAnimation = () => {
   const responsiveModalDialogConfig = { ...withModalDialogConfig() };
   return html`
-    <demo-el-using-overlaymixin .config=${responsiveModalDialogConfig}>
+    <demo-el-using-overlaymixin .config="${responsiveModalDialogConfig}">
       <button slot="invoker">Click me to open the overlay!</button>
       <demo-overlay-backdrop slot="backdrop"></demo-overlay-backdrop>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
@@ -262,7 +262,7 @@ export const responsiveSwitching = () => {
   const responsiveBottomSheetConfig = { ...withBottomSheetConfig() };
   return html`
     <demo-el-using-overlaymixin
-      .config=${responsiveBottomSheetConfig}
+      .config="${responsiveBottomSheetConfig}"
       @before-opened=${e => {
         if (window.innerWidth >= 600) {
           e.target.config = { ...withModalDialogConfig() };
@@ -275,7 +275,7 @@ export const responsiveSwitching = () => {
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
@@ -362,12 +362,12 @@ export const responsiveSwitching2 = () => {
     </select>
 
     <br />
-    <demo-el-using-overlaymixin ${ref(overlayRef)} .config=${getConfig(selectRef.value?.value)}>
+    <demo-el-using-overlaymixin ${ref(overlayRef)} .config="${getConfig(selectRef.value?.value)}">
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
@@ -401,13 +401,13 @@ export const openedState = () => {
     <demo-el-using-overlaymixin
       ${ref(myRefs.overlay)}
       .opened="${appState.opened}"
-      @opened-changed=${onOpenClosed}
+      @opened-changed="${onOpenClosed}"
     >
       <button slot="invoker">Overlay</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
@@ -448,8 +448,8 @@ export const interceptingOpenClose = () => {
     </button>
     <demo-el-using-overlaymixin
       ${ref(myRefs.overlay)}
-      @before-closed=${intercept}
-      @before-opened=${intercept}
+      @before-closed="${intercept}"
+      @before-opened="${intercept}"
     >
       <button
         slot="invoker"
@@ -460,7 +460,7 @@ export const interceptingOpenClose = () => {
       </button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
-        <button @click=${() => (myRefs.overlay.value.opened = false)}>⨯</button>
+        <button @click="${() => (myRefs.overlay.value.opened = false)}">⨯</button>
       </div>
     </demo-el-using-overlaymixin>
   `;
@@ -538,29 +538,29 @@ Below an example is shown with the `isBlocking` option, which makes use of the O
 export const overlayManager = () => {
   const hasBackdropConfig = { ...withModalDialogConfig(), hasBackdrop: true };
   return html`
-    <demo-el-using-overlaymixin .config=${hasBackdropConfig}>
+    <demo-el-using-overlaymixin .config="${hasBackdropConfig}">
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
         <br />
-        <button @click=${e => (document.querySelector('#secondOverlay').opened = true)}>
+        <button @click="${e => (document.querySelector('#secondOverlay').opened = true)}">
           Click me to open another overlay which is blocking
         </button>
       </div>
     </demo-el-using-overlaymixin>
     <demo-el-using-overlaymixin
       id="secondOverlay"
-      .config=${{ ...withModalDialogConfig(), hasBackdrop: true, isBlocking: true }}
+      .config="${{ ...withModalDialogConfig(), hasBackdrop: true, isBlocking: true }}"
     >
       <div slot="content" class="demo-overlay demo-overlay--second">
         Hello! You can close this notification here:
         <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
@@ -580,13 +580,13 @@ Here is the example below
 export const localBackdrop = () => {
   const localBackdropConfig = { ...withDropdownConfig() };
   return html`
-    <demo-el-using-overlaymixin .config=${localBackdropConfig}>
+    <demo-el-using-overlaymixin .config="${localBackdropConfig}">
       <demo-overlay-backdrop slot="backdrop"></demo-overlay-backdrop>
       <button slot="invoker">Click me to open the overlay!</button>
       <div slot="content" class="demo-overlay">
         Hello! You can close this notification here:
         <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
@@ -611,7 +611,7 @@ export const nestedOverlays = () => {
           <div slot="content" id="nestedContent" class="demo-overlay">
             Nested content
             <button
-              @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+              @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
             >
               ⨯
             </button>
@@ -619,7 +619,7 @@ export const nestedOverlays = () => {
           <button slot="invoker" id="nestedInvoker">nested invoker button</button>
         </demo-el-using-overlaymixin>
         <button
-          @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+          @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
         >
           ⨯
         </button>
@@ -684,15 +684,15 @@ export const LocalWithArrow = () => {
         <button slot="invoker">Top</button>
         <div slot="content">This is a tooltip with an arrow</div>
       </arrow-example>
-      <arrow-example .config=${placementRightConfig}>
+      <arrow-example .config="${placementRightConfig}">
         <button slot="invoker">Right</button>
         <div slot="content">This is a tooltip with an arrow</div>
       </arrow-example>
-      <arrow-example .config=${placementBottomConfig}>
+      <arrow-example .config="${placementBottomConfig}">
         <button slot="invoker">Bottom</button>
         <div slot="content">This is a tooltip with an arrow</div>
       </arrow-example>
-      <arrow-example .config=${placementLeftConfig}>
+      <arrow-example .config="${placementLeftConfig}">
         <button slot="invoker">Left</button>
         <div slot="content">This is a tooltip with an arrow</div>
       </arrow-example>

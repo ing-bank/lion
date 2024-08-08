@@ -211,11 +211,11 @@ export const defaultValidationMessages = () => {
       .validators="${[new Required(), new MinLength(4)]}"
       .modelValue="${'foo'}"
     ></lion-input>
-    <button @click=${() => (localize.locale = 'de-DE')}>DE</button>
-    <button @click=${() => (localize.locale = 'en-GB')}>EN</button>
-    <button @click=${() => (localize.locale = 'fr-FR')}>FR</button>
-    <button @click=${() => (localize.locale = 'nl-NL')}>NL</button>
-    <button @click=${() => (localize.locale = 'zh-CN')}>CN</button>
+    <button @click="${() => (localize.locale = 'de-DE')}">DE</button>
+    <button @click="${() => (localize.locale = 'en-GB')}">EN</button>
+    <button @click="${() => (localize.locale = 'fr-FR')}">FR</button>
+    <button @click="${() => (localize.locale = 'nl-NL')}">NL</button>
+    <button @click="${() => (localize.locale = 'zh-CN')}">CN</button>
   `;
 };
 ```
@@ -228,7 +228,7 @@ The required validator can be put onto every form field element and will make su
 
 ```js preview-story
 export const requiredValidator = () => html`
-  <lion-input .validators=${[new Required()]} label="Required" .fieldName="value"></lion-input>
+  <lion-input .validators="${[new Required()]}" label="Required" .fieldName="value"></lion-input>
 `;
 ```
 
@@ -243,28 +243,28 @@ Useful on input elements it allows to define how many characters can be entered.
 ```js preview-story
 export const stringValidators = () => html`
   <lion-input
-    .validators=${[new EqualsLength(7)]}
-    .modelValue=${'not exactly'}
+    .validators="${[new EqualsLength(7)]}"
+    .modelValue="${'not exactly'}"
     label="EqualsLength"
   ></lion-input>
   <lion-input
-    .validators=${[new MinLength(10)]}
-    .modelValue=${'too short'}
+    .validators="${[new MinLength(10)]}"
+    .modelValue="${'too short'}"
     label="MinLength"
   ></lion-input>
   <lion-input
-    .validators=${[new MaxLength(7)]}
-    .modelValue=${'too long'}
+    .validators="${[new MaxLength(7)]}"
+    .modelValue="${'too long'}"
     label="MaxLength"
   ></lion-input>
   <lion-input
-    .validators=${[new MinMaxLength({ min: 10, max: 20 })]}
-    .modelValue=${'that should be enough'}
+    .validators="${[new MinMaxLength({ min: 10, max: 20 })]}"
+    .modelValue="${'that should be enough'}"
     label="MinMaxLength"
   ></lion-input>
   <lion-input
-    .validators=${[new Pattern(/#LionRocks/)]}
-    .modelValue=${'regex checks if "#Lion<NO SPACE>Rocks" is in this input #LionRocks'}
+    .validators="${[new Pattern(/#LionRocks/)]}"
+    .modelValue="${'regex checks if "#Lion<NO SPACE>Rocks" is in this input #LionRocks'}"
     label="Pattern"
   ></lion-input>
 `;
@@ -314,23 +314,23 @@ export const dateValidators = () => {
   const tomorrow = new Date(year, month, day + 1);
   return html`
     <lion-input-date
-      .validators=${[new IsDate()]}
-      .modelValue=${'foo'}
+      .validators="${[new IsDate()]}"
+      .modelValue="${'foo'}"
       label="IsDate"
     ></lion-input-date>
     <lion-input-date
-      .validators=${[new MinDate(today)]}
-      .modelValue=${new Date(yesterday)}
+      .validators="${[new MinDate(today)]}"
+      .modelValue="${new Date(yesterday)}"
       label="MinDate"
     ></lion-input-date>
     <lion-input-date
-      .validators=${[new MaxDate(today)]}
-      .modelValue=${new Date(tomorrow)}
+      .validators="${[new MaxDate(today)]}"
+      .modelValue="${new Date(tomorrow)}"
       label="MaxDate"
     ></lion-input-date>
     <lion-input-date
-      .validators=${[new MinMaxDate({ min: new Date(yesterday), max: new Date(tomorrow) })]}
-      .modelValue=${new Date(today)}
+      .validators="${[new MinMaxDate({ min: new Date(yesterday), max: new Date(tomorrow) })]}"
+      .modelValue="${new Date(today)}"
       label="MinMaxDate"
     ></lion-input-date>
   `;
@@ -476,11 +476,11 @@ export const checkboxValidation = () => {
       id="scientists"
       name="scientists[]"
       label="Favorite scientists"
-      .validators=${[new Required()]}
+      .validators="${[new Required()]}"
     >
-      <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-      <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-      <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+      <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
+      <lion-checkbox label="Francis Bacon" .choiceValue="${'Francis Bacon'}"></lion-checkbox>
+      <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
     </lion-checkbox-group>
     <button @click="${e => validate(e)}">Validate</button>
   `;
@@ -512,11 +512,11 @@ export const checkboxValidationAdvanced = () => {
       name="scientists2[]"
       label="Favorite scientists"
       help-text="You should have at least 2 of those"
-      .validators=${[new Required(), new HasMinTwoChecked()]}
+      .validators="${[new Required(), new HasMinTwoChecked()]}"
     >
-      <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-      <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-      <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+      <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
+      <lion-checkbox label="Francis Bacon" .choiceValue="${'Francis Bacon'}"></lion-checkbox>
+      <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
     </lion-checkbox-group>
     <button @click="${e => validate(e)}">Validate</button>
   `;
@@ -536,10 +536,10 @@ export const radioValidation = () => {
       id="dinos1"
       name="dinos1"
       label="Favourite dinosaur"
-      .validators=${[new Required()]}
+      .validators="${[new Required()]}"
     >
-      <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
-      <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
+      <lion-radio label="allosaurus" .choiceValue="${'allosaurus'}"></lion-radio>
+      <lion-radio label="brontosaurus" .choiceValue="${'brontosaurus'}"></lion-radio>
       <lion-radio label="diplodocus" .choiceValue="${'diplodocus'}"></lion-radio>
     </lion-radio-group>
     <button @click="${e => validate(e)}">Validate</button>
@@ -575,11 +575,11 @@ export const radioValidationAdvanced = () => {
       id="dinos2"
       name="dinos2"
       label="Favourite dinosaur"
-      .validators=${[new Required(), new IsBrontosaurus()]}
+      .validators="${[new Required(), new IsBrontosaurus()]}"
     >
-      <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
-      <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
-      <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+      <lion-radio label="allosaurus" .choiceValue="${'allosaurus'}"></lion-radio>
+      <lion-radio label="brontosaurus" .choiceValue="${'brontosaurus'}"></lion-radio>
+      <lion-radio label="diplodocus" .choiceValue="${'diplodocus'}"></lion-radio>
     </lion-radio-group>
     <button @click="${e => validate(e)}">Validate</button>
   `;
@@ -593,12 +593,12 @@ Validation can be used as normal, below is an example of a combobox with a `Requ
 ```js preview-story
 export const validationCombobox = () => html`
   <lion-combobox .validators="${[new Required()]}" name="favoriteMovie" label="Favorite movie">
-    <lion-option checked .choiceValue=${'Rocky'}>Rocky</lion-option>
-    <lion-option .choiceValue=${'Rocky II'}>Rocky II</lion-option>
-    <lion-option .choiceValue=${'Rocky III'}>Rocky III</lion-option>
-    <lion-option .choiceValue=${'Rocky IV'}>Rocky IV</lion-option>
-    <lion-option .choiceValue=${'Rocky V'}>Rocky V</lion-option>
-    <lion-option .choiceValue=${'Rocky Balboa'}>Rocky Balboa</lion-option>
+    <lion-option checked .choiceValue="${'Rocky'}">Rocky</lion-option>
+    <lion-option .choiceValue="${'Rocky II'}">Rocky II</lion-option>
+    <lion-option .choiceValue="${'Rocky III'}">Rocky III</lion-option>
+    <lion-option .choiceValue="${'Rocky IV'}">Rocky IV</lion-option>
+    <lion-option .choiceValue="${'Rocky V'}">Rocky V</lion-option>
+    <lion-option .choiceValue="${'Rocky Balboa'}">Rocky Balboa</lion-option>
   </lion-combobox>
 `;
 ```
@@ -762,8 +762,8 @@ According to the W3C specs, Disabled fields should not be validated. Therefore i
 export const disabledInputsValidation = () => html`
   <lion-input
     disabled
-    .validators=${[new EqualsLength(7)]}
-    .modelValue=${'not exactly'}
+    .validators="${[new EqualsLength(7)]}"
+    .modelValue="${'not exactly'}"
     label="EqualsLength"
   ></lion-input>
 `;
@@ -840,7 +840,7 @@ export const backendValidation = () => {
         opacity: 0.5;
       }
     </style>
-    <lion-form @submit=${submitHandler}>
+    <lion-form @submit="${submitHandler}">
       <form>
         <lion-input
           label="username"

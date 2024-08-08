@@ -21,10 +21,10 @@ export const main = () => {
     });
   };
   return html`
-    <lion-form @submit=${submitHandler}>
-      <form @submit=${ev => ev.preventDefault()}>
-        <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-        <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+    <lion-form @submit="${submitHandler}">
+      <form @submit="${ev => ev.preventDefault()}">
+        <lion-input name="firstName" label="First Name" .modelValue="${'Foo'}"></lion-input>
+        <lion-input name="lastName" label="Last Name" .modelValue="${'Bar'}"></lion-input>
         <button>Submit</button>
       </form>
     </lion-form>

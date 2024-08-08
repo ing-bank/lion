@@ -46,9 +46,9 @@ export const allowedRegions = () => {
     <lion-input-tel-dropdown
       label="Select region via dropdown"
       help-text="With region code 'NL'"
-      .modelValue=${'+31612345678'}
+      .modelValue="${'+31612345678'}"
       name="phoneNumber"
-      .allowedRegions=${['NL', 'DE', 'GB']}
+      .allowedRegions="${['NL', 'DE', 'GB']}"
     ></lion-input-tel-dropdown>
     <h-output
       .show="${['modelValue', 'activeRegion']}"
@@ -69,10 +69,10 @@ export const preferredRegionCodes = () => {
     <lion-input-tel-dropdown
       label="Select region via dropdown"
       help-text="Preferred regions show on top"
-      .modelValue=${'+31612345678'}
+      .modelValue="${'+31612345678'}"
       name="phoneNumber"
-      .allowedRegions=${['BE', 'CA', 'DE', 'GB', 'NL', 'US']}
-      .preferredRegions=${['DE', 'NL']}
+      .allowedRegions="${['BE', 'CA', 'DE', 'GB', 'NL', 'US']}"
+      .preferredRegions="${['DE', 'NL']}"
     ></lion-input-tel-dropdown>
     <h-output
       .show="${['modelValue', 'activeRegion']}"

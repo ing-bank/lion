@@ -16,7 +16,7 @@ It will accept negative numbers with a minus symbol.
 
 ```js preview-story
 export const negativeNumber = () => html`
-  <lion-input-amount label="Amount" .modelValue=${-123456.78}></lion-input-amount>
+  <lion-input-amount label="Amount" .modelValue="${-123456.78}"></lion-input-amount>
 `;
 ```
 
@@ -26,7 +26,7 @@ You can optionally set a currency label with the `currency` attribute, which is 
 
 ```js preview-story
 export const currencySuffix = () => html`
-  <lion-input-amount label="Price" currency="USD" .modelValue=${123456.78}></lion-input-amount>
+  <lion-input-amount label="Price" currency="USD" .modelValue="${123456.78}"></lion-input-amount>
 `;
 ```
 
@@ -43,7 +43,7 @@ export const forceLocale = () => {
       label="Price"
       currency="JOD"
       .locale="nl-NL"
-      .modelValue=${123456.78}
+      .modelValue="${123456.78}"
     ></lion-input-amount>
   `;
 };
@@ -66,7 +66,7 @@ Separator characters include:
 import { preprocessAmount } from '@lion/ui/input-amount.js';
 
 export const forceDigits = () => html`
-  <lion-input-amount label="Amount" .preprocessor=${preprocessAmount}></lion-input-amount>
+  <lion-input-amount label="Amount" .preprocessor="${preprocessAmount}"></lion-input-amount>
 `;
 ```
 
@@ -81,7 +81,7 @@ export const faultyPrefilled = () => html`
   <lion-input-amount
     label="Amount"
     help-text="Faulty prefilled input will cause error feedback"
-    .modelValue=${'foo'}
+    .modelValue="${'foo'}"
   ></lion-input-amount>
 `;
 ```
@@ -96,11 +96,11 @@ export const noDecimals = () => html`
   <lion-input-amount
     label="Amount"
     help-text="Prefilled and formatted"
-    .formatOptions=${{
+    .formatOptions="${({
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    }}
-    .modelValue=${20}
+    })}"
+    .modelValue="${20}"
   >
   </lion-input-amount>
 `;

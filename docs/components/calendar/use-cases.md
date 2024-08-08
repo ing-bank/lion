@@ -21,7 +21,7 @@ export const selectedDate = () => html`
       max-width: 500px;
     }
   </style>
-  <lion-calendar class="demo-calendar" .selectedDate=${new Date(1988, 2, 5)}></lion-calendar>
+  <lion-calendar class="demo-calendar" .selectedDate="${new Date(1988, 2, 5)}"></lion-calendar>
 `;
 ```
 
@@ -160,7 +160,7 @@ export const disabledDates = () => html`
   </style>
   <lion-calendar
     class="demo-calendar"
-    .disableDates=${day => day.getDay() === 6 || day.getDay() === 0}
+    .disableDates="${day => day.getDay() === 6 || day.getDay() === 0}"
   ></lion-calendar>
 `;
 ```
@@ -183,7 +183,7 @@ export const combinedDisabledDates = () => {
     </style>
     <lion-calendar
       class="demo-calendar"
-      .disableDates=${day => day.getDay() === 6 || day.getDay() === 0}
+      .disableDates="${day => day.getDay() === 6 || day.getDay() === 0}"
       .minDate="${new Date()}"
       .maxDate="${maxDate}"
     ></lion-calendar>
@@ -215,7 +215,7 @@ export const findingEnabledDates = () => {
     </style>
     <lion-calendar
       class="demo-calendar js-calendar"
-      .disableDates=${day => day.getDay() === 6 || day.getDay() === 0}
+      .disableDates="${day => day.getDay() === 6 || day.getDay() === 0}"
     ></lion-calendar>
     <button @click="${ev => getCalendar(ev).focusDate(getCalendar(ev).findNextEnabledDate())}">
       focus findNextEnabledDate

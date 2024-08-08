@@ -79,24 +79,24 @@ export class UmbrellaForm extends LitElement {
             name="checkers"
             .validators="${[new Required()]}"
           >
-            <lion-checkbox .choiceValue=${'foo'} checked label="I like foo"></lion-checkbox>
-            <lion-checkbox .choiceValue=${'bar'} checked label="I like bar"></lion-checkbox>
-            <lion-checkbox .choiceValue=${'baz'} label="I like baz"></lion-checkbox>
+            <lion-checkbox .choiceValue="${'foo'}" checked label="I like foo"></lion-checkbox>
+            <lion-checkbox .choiceValue="${'bar'}" checked label="I like bar"></lion-checkbox>
+            <lion-checkbox .choiceValue="${'baz'}" label="I like baz"></lion-checkbox>
           </lion-checkbox-group>
           <lion-radio-group
             name="dinosaurs"
             label="Favorite dinosaur"
             .validators="${[new Required()]}"
           >
-            <lion-radio .choiceValue=${'allosaurus'} label="allosaurus"></lion-radio>
-            <lion-radio .choiceValue=${'brontosaurus'} checked label="brontosaurus"></lion-radio>
-            <lion-radio .choiceValue=${'diplodocus'} label="diplodocus"></lion-radio>
+            <lion-radio .choiceValue="${'allosaurus'}" label="allosaurus"></lion-radio>
+            <lion-radio .choiceValue="${'brontosaurus'}" checked label="brontosaurus"></lion-radio>
+            <lion-radio .choiceValue="${'diplodocus'}" label="diplodocus"></lion-radio>
           </lion-radio-group>
           <lion-select-rich name="favoriteColor" label="Favorite color">
             <lion-options slot="input">
-              <lion-option .choiceValue=${'red'}>Red</lion-option>
-              <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-              <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+              <lion-option .choiceValue="${'red'}">Red</lion-option>
+              <lion-option .choiceValue="${'hotpink'}" checked>Hotpink</lion-option>
+              <lion-option .choiceValue="${'teal'}">Teal</lion-option>
             </lion-options>
           </lion-select-rich>
           <lion-select label="Lyrics" name="lyrics" .validators="${[new Required()]}">

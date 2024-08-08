@@ -62,10 +62,10 @@ export const withinForm = () => html`
     <input id="firstNameId" name="firstName" />
     <label for="lastNameId">Last name</label>
     <input id="lastNameId" name="lastName" />
-    <lion-button-submit @click=${ev => console.log('click submit handler', ev.target)}
+    <lion-button-submit @click="${ev => console.log('click submit handler', ev.target)}"
       >Submit</lion-button-submit
     >
-    <lion-button-reset @click=${ev => console.log('click reset handler', ev.target)}
+    <lion-button-reset @click="${ev => console.log('click reset handler', ev.target)}"
       >Reset</lion-button-reset
     >
   </form>

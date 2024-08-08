@@ -118,7 +118,7 @@ If you want to fetch it from some API this is also possible.
 localize.loadNamespace({
   'my-hello-component': async locale => {
     const response = await fetch(
-      `https://api.example.com/?namespace=my-hello-component&locale=${locale}`,
+      `https://api.example.com/?namespace=my-hello-component&locale="${locale}"`,
     );
     return response.json(); // resolves to the JSON object `{ greeting: 'Hallo {name}!' }`
   },
@@ -133,7 +133,7 @@ And this is there the second option comes in handy.
 ```js
 // using the regexp to match all component names staring with 'my-'
 localize.setupNamespaceLoader(/my-.+/, async (locale, namespace) => {
-  const response = await fetch(`https://api.example.com/?namespace=${namespace}&locale=${locale}`);
+  const response = await fetch(`https://api.example.com/?namespace="${namespace}&locale=${locale}"`);
   return response.json();
 });
 
@@ -302,14 +302,14 @@ This is sort of a router for the data and is typically needed to fetch it from a
 // for one specific component
 localize.setupNamespaceLoader('my-hello-component', async locale => {
   const response = await fetch(
-    `https://api.example.com/?namespace=my-hello-component&locale=${locale}`,
+    `https://api.example.com/?namespace=my-hello-component&locale="${locale}"`,
   );
   return response.json();
 });
 
 // for all components which have a prefix in their names
 localize.setupNamespaceLoader(/my-.+/, async (locale, namespace) => {
-  const response = await fetch(`https://api.example.com/?namespace=${namespace}&locale=${locale}`);
+  const response = await fetch(`https://api.example.com/?namespace="${namespace}&locale=${locale}"`);
   return response.json();
 });
 ```

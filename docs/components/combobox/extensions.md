@@ -20,11 +20,11 @@ easily from an extended Lion component, just by:
 ```js preview-story
 export const MaterialDesign = () => html`
   <md-combobox name="combo" label="Default">
-    <md-option .choiceValue=${'Apple'}>Apple</md-option>
-    <md-option .choiceValue=${'Artichoke'}>Artichoke</md-option>
-    <md-option .choiceValue=${'Asparagus'}>Asparagus</md-option>
-    <md-option .choiceValue=${'Banana'}>Banana</md-option>
-    <md-option .choiceValue=${'Beets'}>Beets</md-option>
+    <md-option .choiceValue="${'Apple'}">Apple</md-option>
+    <md-option .choiceValue="${'Artichoke'}">Artichoke</md-option>
+    <md-option .choiceValue="${'Asparagus'}">Asparagus</md-option>
+    <md-option .choiceValue="${'Banana'}">Banana</md-option>
+    <md-option .choiceValue="${'Beets'}">Beets</md-option>
   </md-combobox>
 `;
 ```
@@ -34,11 +34,11 @@ export const MaterialDesign = () => html`
 ```js preview-story
 export const Github = () => html`
   <gh-combobox name="combo" label="Switch branches/tags">
-    <gh-option href="https://www.github.com" .choiceValue=${'master'} default>master</gh-option>
-    <gh-option .choiceValue=${'develop'}>develop</gh-option>
-    <gh-option .choiceValue=${'release'}>release</gh-option>
-    <gh-option .choiceValue=${'feat/abc'}>feat/abc</gh-option>
-    <gh-option .choiceValue=${'feat/xyz123'}>feat/xyz123</gh-option>
+    <gh-option href="https://www.github.com" .choiceValue="${'master'}" default>master</gh-option>
+    <gh-option .choiceValue="${'develop'}">develop</gh-option>
+    <gh-option .choiceValue="${'release'}">release</gh-option>
+    <gh-option .choiceValue="${'feat/abc'}">feat/abc</gh-option>
+    <gh-option .choiceValue="${'feat/xyz123'}">feat/xyz123</gh-option>
   </gh-combobox>
 `;
 ```
@@ -62,7 +62,7 @@ export const Whatsapp = () => {
         is-user-text
         is-user-text-read
         image="${obamaImgUrl}"
-        .choiceValue=${'Barack Obama'}
+        .choiceValue="${'Barack Obama'}"
       ></wa-option>
       <wa-option
         title="Donald Trump"
@@ -70,28 +70,28 @@ export const Whatsapp = () => {
         time="14:59"
         is-user-text
         image="${trumpImgUrl}"
-        .choiceValue=${'Donald Trump'}
+        .choiceValue="${'Donald Trump'}"
       ></wa-option>
       <wa-option
         title="Joe Biden"
         text="Hehe😅. You too, man, you too..."
         time="yesterday"
         image="${bidenImgUrl}"
-        .choiceValue=${'Joe Biden'}
+        .choiceValue="${'Joe Biden'}"
       ></wa-option>
       <wa-option
         title="George W. Bush"
         time="friday"
         text="You bet I will. Let's catch up soon!"
         image="${bushImgUrl}"
-        .choiceValue=${'George W. Bush'}
+        .choiceValue="${'George W. Bush'}"
       ></wa-option>
       <wa-option
         title="Bill Clinton"
         time="thursday"
         text="Dude...😂 😂 😂"
         image="${clintonImgUrl}"
-        .choiceValue=${'Bill Clinton'}
+        .choiceValue="${'Bill Clinton'}"
       ></wa-option>
     </wa-combobox>
   `;
@@ -114,35 +114,35 @@ export const GoogleSearch = () => {
         href="https://www.google.com/search?query=apple"
         target="_blank"
         rel="noopener noreferrer"
-        .choiceValue=${'Apple'}
+        .choiceValue="${'Apple'}"
         >Apple</google-option
       >
       <google-option
         href="https://www.google.com/search?query=Artichoke"
         target="_blank"
         rel="noopener noreferrer"
-        .choiceValue=${'Artichoke'}
+        .choiceValue="${'Artichoke'}"
         >Artichoke</google-option
       >
       <google-option
         href="https://www.google.com/search?query=Asparagus"
         target="_blank"
         rel="noopener noreferrer"
-        .choiceValue=${'Asparagus'}
+        .choiceValue="${'Asparagus'}"
         >Asparagus</google-option
       >
       <google-option
         href="https://www.google.com/search?query=Banana"
         target="_blank"
         rel="noopener noreferrer"
-        .choiceValue=${'Banana'}
+        .choiceValue="${'Banana'}"
         >Banana</google-option
       >
       <google-option
         href="https://www.google.com/search?query=Beets"
         target="_blank"
         rel="noopener noreferrer"
-        .choiceValue=${'Beets'}
+        .choiceValue="${'Beets'}"
         >Beets</google-option
       >
     </google-combobox>

@@ -56,7 +56,7 @@ export const parser = () => html`
     help-text="Uses .parser to create model values from view values"
     .parser="${viewValue => Number(viewValue)}"
     .modelValue="${1234567890}"
-    @model-value-changed=${({ target }) => console.log(target)}
+    @model-value-changed="${({ target }) => console.log(target)}"
   ></lion-input>
   <h-output .show="${['modelValue']}"></h-output>
 `;
@@ -165,7 +165,7 @@ export const preprocessors = () => {
     <lion-input
       label="Date Example"
       help-text="Uses .preprocessor to prevent digits"
-      .preprocessor=${preprocess}
+      .preprocessor="${preprocess}"
     ></lion-input>
     <h-output .show="${['modelValue']}"></h-output>
   `;
@@ -190,14 +190,14 @@ export const liveFormatters = () => {
       label="Live Format"
       .modelValue="${new Unparseable('+31')}"
       help-text="Uses .preprocessor to format during typing"
-      .preprocessor=${(viewValue, { currentCaretIndex, prevViewValue }) => {
+      .preprocessor="${(viewValue, { currentCaretIndex, prevViewValue }) => {
         return liveFormatPhoneNumber(viewValue, {
           regionCode: 'NL',
           formatStrategy: 'international',
           currentCaretIndex,
           prevViewValue,
         });
-      }}
+      }}"
     ></lion-input>
     <h-output .show="${['modelValue']}"></h-output>
   `;

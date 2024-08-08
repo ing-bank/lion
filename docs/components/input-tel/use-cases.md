@@ -213,7 +213,7 @@ export const formatStrategy = () => {
       ${ref(inputTel)}
       label="Format strategy"
       help-text="Choose a strategy above"
-      .modelValue=${'+46707123456'}
+      .modelValue="${'+46707123456'}"
       format-strategy="national"
       name="phoneNumber"
     ></lion-input-tel>
@@ -243,7 +243,7 @@ export const formatCountryCodeStyle = () => {
       ${ref(inputTel)}
       label="Format strategy"
       help-text="Choose a strategy above"
-      .modelValue=${'+46707123456'}
+      .modelValue="${'+46707123456'}"
       format-country-code-style="parentheses"
       name="phoneNumber"
     ></lion-input-tel>
@@ -268,7 +268,7 @@ export const liveFormat = () => {
     <lion-input-tel
       label="Realtime format on user input"
       help-text="Partial numbers are also formatted"
-      .modelValue=${new Unparseable('+31')}
+      .modelValue="${new Unparseable('+31')}"
       format-strategy="international"
       live-format
       name="phoneNumber"

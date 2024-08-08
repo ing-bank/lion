@@ -21,16 +21,16 @@ This will:
 
 ```html preview-story
 <lion-listbox name="combo" label="Multiple" multiple-choice>
-  <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
-  <lion-option .choiceValue=${'Artichoke'}>Artichoke</lion-option>
-  <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
-  <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
-  <lion-option .choiceValue=${'Beets'}>Beets</lion-option>
-  <lion-option .choiceValue=${'Bell pepper'}>Bell pepper</lion-option>
-  <lion-option .choiceValue=${'Broccoli'}>Broccoli</lion-option>
-  <lion-option .choiceValue=${'Brussels sprout'}>Brussels sprout</lion-option>
-  <lion-option .choiceValue=${'Cabbage'}>Cabbage</lion-option>
-  <lion-option .choiceValue=${'Carrot'}>Carrot</lion-option>
+  <lion-option .choiceValue="${'Apple'}">Apple</lion-option>
+  <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+  <lion-option .choiceValue="${'Asparagus'}">Asparagus</lion-option>
+  <lion-option .choiceValue="${'Banana'}">Banana</lion-option>
+  <lion-option .choiceValue="${'Beets'}">Beets</lion-option>
+  <lion-option .choiceValue="${'Bell pepper'}">Bell pepper</lion-option>
+  <lion-option .choiceValue="${'Broccoli'}">Broccoli</lion-option>
+  <lion-option .choiceValue="${'Brussels sprout'}">Brussels sprout</lion-option>
+  <lion-option .choiceValue="${'Cabbage'}">Cabbage</lion-option>
+  <lion-option .choiceValue="${'Carrot'}">Carrot</lion-option>
 </lion-listbox>
 ```
 
@@ -42,16 +42,16 @@ By default, `orientation="vertical"` is set, which enables up and down arrow key
 
 ```html preview-story
 <lion-listbox name="combo" label="Orientation horizontal" orientation="horizontal">
-  <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
-  <lion-option .choiceValue=${'Artichoke'}>Artichoke</lion-option>
-  <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
-  <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
-  <lion-option .choiceValue=${'Beets'}>Beets</lion-option>
-  <lion-option .choiceValue=${'Bell pepper'}>Bell pepper</lion-option>
-  <lion-option .choiceValue=${'Broccoli'}>Broccoli</lion-option>
-  <lion-option .choiceValue=${'Brussels sprout'}>Brussels sprout</lion-option>
-  <lion-option .choiceValue=${'Cabbage'}>Cabbage</lion-option>
-  <lion-option .choiceValue=${'Carrot'}>Carrot</lion-option>
+  <lion-option .choiceValue="${'Apple'}">Apple</lion-option>
+  <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+  <lion-option .choiceValue="${'Asparagus'}">Asparagus</lion-option>
+  <lion-option .choiceValue="${'Banana'}">Banana</lion-option>
+  <lion-option .choiceValue="${'Beets'}">Beets</lion-option>
+  <lion-option .choiceValue="${'Bell pepper'}">Bell pepper</lion-option>
+  <lion-option .choiceValue="${'Broccoli'}">Broccoli</lion-option>
+  <lion-option .choiceValue="${'Brussels sprout'}">Brussels sprout</lion-option>
+  <lion-option .choiceValue="${'Cabbage'}">Cabbage</lion-option>
+  <lion-option .choiceValue="${'Carrot'}">Carrot</lion-option>
 </lion-listbox>
 ```
 
@@ -64,16 +64,16 @@ With `multiple-choice` flag configured, multiple options can be checked.
   orientation="horizontal"
   multiple-choice
 >
-  <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
-  <lion-option .choiceValue=${'Artichoke'}>Artichoke</lion-option>
-  <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
-  <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
-  <lion-option .choiceValue=${'Beets'}>Beets</lion-option>
-  <lion-option .choiceValue=${'Bell pepper'}>Bell pepper</lion-option>
-  <lion-option .choiceValue=${'Broccoli'}>Broccoli</lion-option>
-  <lion-option .choiceValue=${'Brussels sprout'}>Brussels sprout</lion-option>
-  <lion-option .choiceValue=${'Cabbage'}>Cabbage</lion-option>
-  <lion-option .choiceValue=${'Carrot'}>Carrot</lion-option>
+  <lion-option .choiceValue="${'Apple'}">Apple</lion-option>
+  <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+  <lion-option .choiceValue="${'Asparagus'}">Asparagus</lion-option>
+  <lion-option .choiceValue="${'Banana'}">Banana</lion-option>
+  <lion-option .choiceValue="${'Beets'}">Beets</lion-option>
+  <lion-option .choiceValue="${'Bell pepper'}">Bell pepper</lion-option>
+  <lion-option .choiceValue="${'Broccoli'}">Broccoli</lion-option>
+  <lion-option .choiceValue="${'Brussels sprout'}">Brussels sprout</lion-option>
+  <lion-option .choiceValue="${'Cabbage'}">Cabbage</lion-option>
+  <lion-option .choiceValue="${'Carrot'}">Carrot</lion-option>
 </lion-listbox>
 ```
 
@@ -86,16 +86,16 @@ See [wai aria spec](https://www.w3.org/TR/wai-aria-practices/#kbd_selection_foll
 
 ```html preview-story
 <lion-listbox name="combo" label="Selection follows focus" selection-follows-focus>
-  <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
-  <lion-option .choiceValue=${'Artichoke'} disabled>Artichoke</lion-option>
-  <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
-  <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
-  <lion-option .choiceValue=${'Beets'}>Beets</lion-option>
-  <lion-option .choiceValue=${'Bell pepper'}>Bell pepper</lion-option>
-  <lion-option .choiceValue=${'Broccoli'}>Broccoli</lion-option>
-  <lion-option .choiceValue=${'Brussels sprout'}>Brussels sprout</lion-option>
-  <lion-option .choiceValue=${'Cabbage'}>Cabbage</lion-option>
-  <lion-option .choiceValue=${'Carrot'}>Carrot</lion-option>
+  <lion-option .choiceValue="${'Apple'}">Apple</lion-option>
+  <lion-option .choiceValue="${'Artichoke'}" disabled>Artichoke</lion-option>
+  <lion-option .choiceValue="${'Asparagus'}">Asparagus</lion-option>
+  <lion-option .choiceValue="${'Banana'}">Banana</lion-option>
+  <lion-option .choiceValue="${'Beets'}">Beets</lion-option>
+  <lion-option .choiceValue="${'Bell pepper'}">Bell pepper</lion-option>
+  <lion-option .choiceValue="${'Broccoli'}">Broccoli</lion-option>
+  <lion-option .choiceValue="${'Brussels sprout'}">Brussels sprout</lion-option>
+  <lion-option .choiceValue="${'Cabbage'}">Cabbage</lion-option>
+  <lion-option .choiceValue="${'Carrot'}">Carrot</lion-option>
 </lion-listbox>
 ```
 
@@ -105,16 +105,16 @@ See [wai aria spec](https://www.w3.org/TR/wai-aria-practices/#kbd_selection_foll
 
 ```html preview-story
 <lion-listbox name="combo" label="Rotate keyboard navigation" rotate-keyboard-navigation>
-  <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
-  <lion-option .choiceValue=${'Artichoke'}>Artichoke</lion-option>
-  <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
-  <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
-  <lion-option .choiceValue=${'Beets'}>Beets</lion-option>
-  <lion-option .choiceValue=${'Bell pepper'}>Bell pepper</lion-option>
-  <lion-option .choiceValue=${'Broccoli'}>Broccoli</lion-option>
-  <lion-option .choiceValue=${'Brussels sprout'}>Brussels sprout</lion-option>
-  <lion-option .choiceValue=${'Cabbage'}>Cabbage</lion-option>
-  <lion-option .choiceValue=${'Carrot'}>Carrot</lion-option>
+  <lion-option .choiceValue="${'Apple'}">Apple</lion-option>
+  <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+  <lion-option .choiceValue="${'Asparagus'}">Asparagus</lion-option>
+  <lion-option .choiceValue="${'Banana'}">Banana</lion-option>
+  <lion-option .choiceValue="${'Beets'}">Beets</lion-option>
+  <lion-option .choiceValue="${'Bell pepper'}">Bell pepper</lion-option>
+  <lion-option .choiceValue="${'Broccoli'}">Broccoli</lion-option>
+  <lion-option .choiceValue="${'Brussels sprout'}">Brussels sprout</lion-option>
+  <lion-option .choiceValue="${'Cabbage'}">Cabbage</lion-option>
+  <lion-option .choiceValue="${'Carrot'}">Carrot</lion-option>
 </lion-listbox>
 ```
 
@@ -124,16 +124,16 @@ Navigation will skip over disabled options. Let's disable Artichoke and Brussel 
 
 ```html preview-story
 <lion-listbox name="combo" label="Rotate with disabled options" rotate-keyboard-navigation>
-  <lion-option .choiceValue=${'Apple'}>Apple</lion-option>
-  <lion-option .choiceValue=${'Artichoke'} disabled>Artichoke</lion-option>
-  <lion-option .choiceValue=${'Asparagus'}>Asparagus</lion-option>
-  <lion-option .choiceValue=${'Banana'}>Banana</lion-option>
-  <lion-option .choiceValue=${'Beets'}>Beets</lion-option>
-  <lion-option .choiceValue=${'Bell pepper'}>Bell pepper</lion-option>
-  <lion-option .choiceValue=${'Broccoli'}>Broccoli</lion-option>
-  <lion-option .choiceValue=${'Brussels sprout'} disabled>Brussels sprout</lion-option>
-  <lion-option .choiceValue=${'Cabbage'}>Cabbage</lion-option>
-  <lion-option .choiceValue=${'Carrot'}>Carrot</lion-option>
+  <lion-option .choiceValue="${'Apple'}">Apple</lion-option>
+  <lion-option .choiceValue="${'Artichoke'}" disabled>Artichoke</lion-option>
+  <lion-option .choiceValue="${'Asparagus'}">Asparagus</lion-option>
+  <lion-option .choiceValue="${'Banana'}">Banana</lion-option>
+  <lion-option .choiceValue="${'Beets'}">Beets</lion-option>
+  <lion-option .choiceValue="${'Bell pepper'}">Bell pepper</lion-option>
+  <lion-option .choiceValue="${'Broccoli'}">Broccoli</lion-option>
+  <lion-option .choiceValue="${'Brussels sprout'}" disabled>Brussels sprout</lion-option>
+  <lion-option .choiceValue="${'Cabbage'}">Cabbage</lion-option>
+  <lion-option .choiceValue="${'Carrot'}">Carrot</lion-option>
 </lion-listbox>
 ```
 

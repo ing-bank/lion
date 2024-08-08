@@ -67,7 +67,7 @@ export const manyOptionsWithScrolling = () => {
     <lion-option .modelValue="${modelValues[3]}">
       <p style="color: green;">I am green</p>
     </lion-option>
-    <lion-option .modelValue"=${modelValues[4]}">
+    <lion-option .modelValue"="${modelValues[4]}"">
       <p style="color: blue;">I am blue</p>
     </lion-option>
   </lion-select-rich>
@@ -84,9 +84,9 @@ The readonly attribute is delegated to the invoker for disabling opening the ove
 
 ```html preview-story
 <lion-select-rich label="Read-only select" readonly name="color">
-  <lion-option .choiceValue=${'red'}>Red</lion-option>
-  <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-  <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+  <lion-option .choiceValue="${'red'}">Red</lion-option>
+  <lion-option .choiceValue="${'hotpink'}" checked>Hotpink</lion-option>
+  <lion-option .choiceValue="${'teal'}">Teal</lion-option>
 </lion-select-rich>
 ```
 
@@ -98,19 +98,19 @@ If you disable the entire select, the disabled attribute is also delegated to th
 
 ```html preview-story
 <lion-select-rich label="Disabled select" disabled name="color">
-  <lion-option .choiceValue=${'red'}>Red</lion-option>
-  <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-  <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+  <lion-option .choiceValue="${'red'}">Red</lion-option>
+  <lion-option .choiceValue="${'hotpink'}" checked>Hotpink</lion-option>
+  <lion-option .choiceValue="${'teal'}">Teal</lion-option>
 </lion-select-rich>
 ```
 
 ```html preview-story
 <lion-select-rich label="Disabled options" name="color">
-  <lion-option .choiceValue=${'red'} disabled>Red</lion-option>
-  <lion-option .choiceValue=${'blue'}>Blue</lion-option>
-  <lion-option .choiceValue=${'hotpink'} disabled>Hotpink</lion-option>
-  <lion-option .choiceValue=${'green'}>Green</lion-option>
-  <lion-option .choiceValue=${'teal'} disabled>Teal</lion-option>
+  <lion-option .choiceValue="${'red'}" disabled>Red</lion-option>
+  <lion-option .choiceValue="${'blue'}">Blue</lion-option>
+  <lion-option .choiceValue="${'hotpink'}" disabled>Hotpink</lion-option>
+  <lion-option .choiceValue="${'green'}">Green</lion-option>
+  <lion-option .choiceValue="${'teal'}" disabled>Teal</lion-option>
 </lion-select-rich>
 ```
 
@@ -134,8 +134,8 @@ export const renderOptions = ({ shadowRoot }) => {
     );
   }
   return html`
-    <lion-select-rich label="Credit Card" name="color" @model-value-changed=${showOutput}>
-      ${objs.map(obj => html` <lion-option .choiceValue=${obj}>${obj.label}</lion-option> `)}
+    <lion-select-rich label="Credit Card" name="color" @model-value-changed="${showOutput}">
+      ${objs.map(obj => html` <lion-option .choiceValue="${obj}>${obj.label}</lion-option> `)}"
     </lion-select-rich>
     <p>Full value:</p>
     <pre id="demoRenderOutput"></pre>
@@ -152,14 +152,14 @@ This changes the keyboard interaction.
 
 ```html preview-story
 <lion-select-rich label="Mac mode" name="color" interaction-mode="mac">
-  <lion-option .choiceValue=${'red'}>Red</lion-option>
-  <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-  <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+  <lion-option .choiceValue="${'red'}">Red</lion-option>
+  <lion-option .choiceValue="${'hotpink'}" checked>Hotpink</lion-option>
+  <lion-option .choiceValue="${'teal'}">Teal</lion-option>
 </lion-select-rich>
 <lion-select-rich label="Windows/Linux mode" name="color" interaction-mode="windows/linux">
-  <lion-option .choiceValue=${'red'}>Red</lion-option>
-  <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-  <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+  <lion-option .choiceValue="${'red'}">Red</lion-option>
+  <lion-option .choiceValue="${'hotpink'}" checked>Hotpink</lion-option>
+  <lion-option .choiceValue="${'teal'}">Teal</lion-option>
 </lion-select-rich>
 ```
 
@@ -199,9 +199,9 @@ export const checkedIndexAndValue = ({ shadowRoot }) => html`
     Console log checked index and value
   </button>
   <lion-select-rich id="checkedRichSelect" name="favoriteColor" label="Favorite color">
-    <lion-option .choiceValue=${'red'}>Red</lion-option>
-    <lion-option .choiceValue=${'hotpink'} checked>Hotpink</lion-option>
-    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+    <lion-option .choiceValue="${'red'}">Red</lion-option>
+    <lion-option .choiceValue="${'hotpink'}" checked>Hotpink</lion-option>
+    <lion-option .choiceValue="${'teal'}">Teal</lion-option>
   </lion-select-rich>
 `;
 ```
@@ -223,9 +223,9 @@ For this you can use `has-no-default-selected` attribute.
 
 ```html preview-story
   <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
-    <lion-option .choiceValue=${'red'}>Red</lion-option>
-    <lion-option .choiceValue=${'hotpink'}>Hotpink</lion-option>
-    <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+    <lion-option .choiceValue="${'red'}">Red</lion-option>
+    <lion-option .choiceValue="${'hotpink'}">Hotpink</lion-option>
+    <lion-option .choiceValue="${'teal'}">Teal</lion-option>
   </lion-select-rich>
 ```
 
@@ -238,7 +238,7 @@ If there is a single option rendered, then `singleOption` property is set to `tr
 
 ```html preview-story
 <lion-select-rich label="Single Option" name="color">
-  <lion-option .choiceValue=${'red'}>Red</lion-option>
+  <lion-option .choiceValue="${'red'}">Red</lion-option>
 </lion-select-rich>
 ```
 
@@ -259,12 +259,12 @@ class SingleOptionRemoveAdd extends LitElement {
 
   render() {
     return html`
-      <button @click=${this.addOption}>Add an option</button>
-      <button @click=${this.removeOption}>Remove last option</button>
+      <button @click="${this.addOption}">Add an option</button>
+      <button @click="${this.removeOption}">Remove last option</button>
       <lion-select-rich name="favoriteColor" label="Favorite color">
         <lion-options slot="input">
           ${this.options.map(
-            option => html` <lion-option .choiceValue=${option}>${option}</lion-option> `,
+            option => html` <lion-option .choiceValue="${option}>${option}"</lion-option> `,
           )}
         </lion-options>
       </lion-select-rich>

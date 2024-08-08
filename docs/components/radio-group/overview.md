@@ -13,9 +13,9 @@ import '@lion/ui/define/lion-radio.js';
 ```js preview-story
 export const main = () => html`
   <lion-radio-group name="dinos" label="What are your favourite dinosaurs?">
-    <lion-radio label="allosaurus" .choiceValue=${'allosaurus'}></lion-radio>
-    <lion-radio label="brontosaurus" .choiceValue=${'brontosaurus'}></lion-radio>
-    <lion-radio label="diplodocus" .choiceValue=${'diplodocus'}></lion-radio>
+    <lion-radio label="allosaurus" .choiceValue="${'allosaurus'}"></lion-radio>
+    <lion-radio label="brontosaurus" .choiceValue="${'brontosaurus'}"></lion-radio>
+    <lion-radio label="diplodocus" .choiceValue="${'diplodocus'}"></lion-radio>
   </lion-radio-group>
 `;
 ```

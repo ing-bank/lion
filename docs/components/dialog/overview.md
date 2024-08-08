@@ -21,7 +21,7 @@ export const main = () => html`
       Hello! You can close this dialog here:
       <button
         class="demo-dialog-content__close-button"
-        @click=${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}
+        @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
       >
         ⨯
       </button>

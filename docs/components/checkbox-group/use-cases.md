@@ -35,9 +35,9 @@ Our recommendation would be to set the `name` attribute only on the `lion-checkb
   name="scientists[]"
   label="Favorite scientists"
 >
-  <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-  <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-  <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+  <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
+  <lion-checkbox label="Francis Bacon" .choiceValue="${'Francis Bacon'}"></lion-checkbox>
+  <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
 </lion-checkbox-group>
 ```
 
@@ -47,9 +47,9 @@ You can pre-select options by targeting the `modelValue` object of the option an
 
 ```html preview-story
 <lion-checkbox-group name="scientists" label="Favorite scientists">
-  <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-  <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'} checked></lion-checkbox>
-    <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+  <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
+  <lion-checkbox label="Francis Bacon" .choiceValue="${'Francis Bacon'}" checked></lion-checkbox>
+    <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
 </lion-checkbox-group>
 ```
 
@@ -59,9 +59,9 @@ You can disable the entire group by setting the `disabled` attribute on the `<li
 
 ```html preview-story
 <lion-checkbox-group name="scientists[]" label="Favorite scientists" disabled>
-  <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-  <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-    <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+  <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
+  <lion-checkbox label="Francis Bacon" .choiceValue="${'Francis Bacon'}"></lion-checkbox>
+    <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
 </lion-checkbox-group>
 ```
 
@@ -71,17 +71,17 @@ You can use `slot="label"` instead of the `label` attribute for defining more co
 
 ```html preview-story
 <lion-checkbox-group name="scientists[]" label="Favorite scientists">
-  <lion-checkbox .choiceValue=${'Archimedes'}>
+  <lion-checkbox .choiceValue="${'Archimedes'}">
     <label slot="label"
       ><a href="https://wikipedia.org/wiki/Archimedes" target="_blank">Archimedes</a></label
     >
   </lion-checkbox>
-  <lion-checkbox .choiceValue=${'Francis Bacon'}>
+  <lion-checkbox .choiceValue="${'Francis Bacon'}">
     <label slot="label"
       ><a href="https://wikipedia.org/wiki/Francis_Bacon" target="_blank">Francis Bacon</a></label
     >
   </lion-checkbox>
-  <lion-checkbox .choiceValue=${'Marie Curie'}>
+  <lion-checkbox .choiceValue="${'Marie Curie'}">
     <label slot="label"
       ><a href="https://wikipedia.org/wiki/Marie_Curie" target="_blank">Marie Curie</a></label
     >
@@ -97,17 +97,17 @@ You can add help text on each checkbox with `help-text` attribute on the `<lion-
 <lion-checkbox-group name="scientists[]" label="Favorite scientists">
   <lion-checkbox
     label="Archimedes"
-    .choiceValue=${'Archimedes'}
+    .choiceValue="${'Archimedes'}"
     help-text="Archimedes of Syracuse was a Greek mathematician, physicist, engineer, inventor, and astronomer"
   ></lion-checkbox>
   <lion-checkbox
     label="Francis Bacon"
-    .choiceValue=${'Francis Bacon'}
+    .choiceValue="${'Francis Bacon'}"
     help-text="Francis Bacon, 1st Viscount St Alban also known as Lord Verulam, was an English philosopher and statesman who served as Attorney General and as Lord Chancellor of England"
   ></lion-checkbox>
   <lion-checkbox
     label="Marie Curie"
-    .choiceValue=${'Marie Curie'}
+    .choiceValue="${'Marie Curie'}"
     help-text="Marie Skłodowska Curie born Maria Salomea Skłodowska, was a Polish and naturalized-French physicist and chemist who conducted pioneering research on radioactivity"
   ></lion-checkbox>
 </lion-checkbox-group>
@@ -129,9 +129,9 @@ export const event = ({ shadowRoot }) => html`
         4,
       ))}
   >
-    <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-    <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-    <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+    <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
+    <lion-checkbox label="Francis Bacon" .choiceValue="${'Francis Bacon'}"></lion-checkbox>
+    <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
   </lion-checkbox-group>
   <br />
   <span>Selected scientists: <strong id="selectedDinosaur">N/A</strong></span>
@@ -147,22 +147,22 @@ A `checkbox-indeterminate`'s value is neither true nor false, but is instead ind
   <lion-checkbox-indeterminate label="Old Greek scientists">
     <lion-checkbox
       label="Archimedes"
-      .choiceValue=${'Archimedes'}
+      .choiceValue="${'Archimedes'}"
     ></lion-checkbox>
-    <lion-checkbox  label="Plato" .choiceValue=${'Plato'}></lion-checkbox>
+    <lion-checkbox  label="Plato" .choiceValue="${'Plato'}"></lion-checkbox>
     <lion-checkbox
       label="Pythagoras"
-      .choiceValue=${'Pythagoras'}
+      .choiceValue="${'Pythagoras'}"
     ></lion-checkbox>
   </lion-checkbox-indeterminate>
   <lion-checkbox-indeterminate label="17th Century scientists">
     <lion-checkbox
       label="Isaac Newton"
-      .choiceValue=${'Isaac Newton'}
+      .choiceValue="${'Isaac Newton'}"
     ></lion-checkbox>
     <lion-checkbox
       label="Galileo Galilei"
-      .choiceValue=${'Galileo Galilei'}
+      .choiceValue="${'Galileo Galilei'}"
     ></lion-checkbox>
   </lion-checkbox-indeterminate>
 </lion-checkbox-group>
@@ -175,21 +175,21 @@ The `checkbox-indeterminate` can have another `checkbox-indeterminate` as a chil
   <lion-checkbox-indeterminate label="Scientists">
     <lion-checkbox
       label="Isaac Newton"
-      .choiceValue=${'Isaac Newton'}
+      .choiceValue="${'Isaac Newton'}"
     ></lion-checkbox>
     <lion-checkbox
       label="Galileo Galilei"
-      .choiceValue=${'Galileo Galilei'}
+      .choiceValue="${'Galileo Galilei'}"
     ></lion-checkbox>
     <lion-checkbox-indeterminate  label="Old Greek scientists">
       <lion-checkbox
         label="Archimedes"
-        .choiceValue=${'Archimedes'}
+        .choiceValue="${'Archimedes'}"
       ></lion-checkbox>
-      <lion-checkbox  label="Plato" .choiceValue=${'Plato'}></lion-checkbox>
+      <lion-checkbox  label="Plato" .choiceValue="${'Plato'}"></lion-checkbox>
       <lion-checkbox
         label="Pythagoras"
-        .choiceValue=${'Pythagoras'}
+        .choiceValue="${'Pythagoras'}"
       ></lion-checkbox>
     </lion-checkbox-indeterminate>
   </lion-checkbox-indeterminate>
@@ -203,21 +203,21 @@ You can also use `mixed-state` attribute so your indeterminate checkbox toggles 
   <lion-checkbox-indeterminate mixed-state label="Scientists">
     <lion-checkbox
       label="Isaac Newton"
-      .choiceValue=${'Isaac Newton'}
+      .choiceValue="${'Isaac Newton'}"
     ></lion-checkbox>
     <lion-checkbox
       label="Galileo Galilei"
-      .choiceValue=${'Galileo Galilei'}
+      .choiceValue="${'Galileo Galilei'}"
     ></lion-checkbox>
     <lion-checkbox-indeterminate mixed-state  label="Old Greek scientists">
       <lion-checkbox
         label="Archimedes"
-        .choiceValue=${'Archimedes'}
+        .choiceValue="${'Archimedes'}"
       ></lion-checkbox>
-      <lion-checkbox  label="Plato" .choiceValue=${'Plato'}></lion-checkbox>
+      <lion-checkbox  label="Plato" .choiceValue="${'Plato'}"></lion-checkbox>
       <lion-checkbox
         label="Pythagoras"
-        .choiceValue=${'Pythagoras'}
+        .choiceValue="${'Pythagoras'}"
       ></lion-checkbox>
     </lion-checkbox-indeterminate>
   </lion-checkbox-indeterminate>

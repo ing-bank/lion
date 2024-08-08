@@ -16,9 +16,9 @@ The fieldset's modelValue is an `Object` containing properties where the key is 
 ```js preview-story
 export const data = () => html`
   <lion-fieldset name="nameGroup" label="Name">
-    <lion-input name="firstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-    <lion-input name="lastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
-    <button @click=${ev => console.log(ev.target.parentElement.modelValue)}>
+    <lion-input name="firstName" label="First Name" .modelValue="${'Foo'}"></lion-input>
+    <lion-input name="lastName" label="Last Name" .modelValue="${'Bar'}"></lion-input>
+    <button @click="${ev => console.log(ev.target.parentElement.modelValue)}">
       Log to Action Logger
     </button>
   </lion-fieldset>
@@ -38,14 +38,14 @@ export const disabled = () => {
   }
   return html`
     <lion-fieldset name="nameGroup" label="Name" id="fieldset" disabled>
-      <lion-input name="FirstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-      <lion-input name="LastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+      <lion-input name="FirstName" label="First Name" .modelValue="${'Foo'}"></lion-input>
+      <lion-input name="LastName" label="Last Name" .modelValue="${'Bar'}"></lion-input>
       <lion-fieldset name="nameGroup2" label="Name">
-        <lion-input name="FirstName2" label="First Name" .modelValue=${'Foo'} disabled></lion-input>
-        <lion-input name="LastName2" label="Last Name" .modelValue=${'Bar'}></lion-input>
+        <lion-input name="FirstName2" label="First Name" .modelValue="${'Foo'}" disabled></lion-input>
+        <lion-input name="LastName2" label="Last Name" .modelValue="${'Bar'}"></lion-input>
       </lion-fieldset>
     </lion-fieldset>
-    <button @click=${toggleDisabled}>Toggle disabled</button>
+    <button @click="${toggleDisabled}">Toggle disabled</button>
   `;
 };
 ```
@@ -59,18 +59,18 @@ export const nestingFieldsets = () => html`
   <lion-fieldset>
     <div slot="label">Personal data</div>
     <lion-fieldset name="nameGroup" label="Name">
-      <lion-input name="FirstName" label="First Name" .modelValue=${'Foo'}></lion-input>
-      <lion-input name="LastName" label="Last Name" .modelValue=${'Bar'}></lion-input>
+      <lion-input name="FirstName" label="First Name" .modelValue="${'Foo'}"></lion-input>
+      <lion-input name="LastName" label="Last Name" .modelValue="${'Bar'}"></lion-input>
     </lion-fieldset>
     <lion-fieldset name="location" label="Location">
-      <lion-input name="country" label="Country" .modelValue=${'Netherlands'}></lion-input>
+      <lion-input name="country" label="Country" .modelValue="${'Netherlands'}"></lion-input>
     </lion-fieldset>
-    <lion-input name="age" label="Age" .modelValue=${21}></lion-input>
-    <button @click=${ev => console.log(ev.target.parentElement.modelValue)}>
+    <lion-input name="age" label="Age" .modelValue="${21}"></lion-input>
+    <button @click="${ev => console.log(ev.target.parentElement.modelValue)}">
       Log everything to Action Logger
     </button>
     <br />
-    <button @click=${ev => console.log(ev.target.parentElement.formElements.nameGroup.modelValue)}>
+    <button @click="${ev => console.log(ev.target.parentElement.formElements.nameGroup.modelValue)}">
       Log only Name fieldset to Action Logger
     </button>
   </lion-fieldset>
@@ -168,7 +168,7 @@ export const validatingMultipleFieldsets = () => {
     }
   };
   return html`
-    <lion-fieldset name="outer" .validators=${[new IsCatsDogs()]}>
+    <lion-fieldset name="outer" .validators="${[new IsCatsDogs()]}">
       <lion-fieldset name="inner1">
         <label slot="label">Fieldset no. 1</label>
         <lion-input label="Write 'cats' here" name="input1"> </lion-input>

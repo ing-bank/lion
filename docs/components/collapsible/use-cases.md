@@ -39,13 +39,13 @@ export const methods = ({ shadowRoot }) => html`
     </div>
   </lion-collapsible>
   <section style="margin-top:16px">
-    <button @click=${() => shadowRoot.querySelector('#car-collapsible').toggle()}>
+    <button @click="${() => shadowRoot.querySelector('#car-collapsible').toggle()}">
       Toggle content
     </button>
-    <button @click=${() => shadowRoot.querySelector('#car-collapsible').show()}>
+    <button @click="${() => shadowRoot.querySelector('#car-collapsible').show()}">
       Show content
     </button>
-    <button @click=${() => shadowRoot.querySelector('#car-collapsible').hide()}>
+    <button @click="${() => shadowRoot.querySelector('#car-collapsible').hide()}">
       Hide content
     </button>
   </section>

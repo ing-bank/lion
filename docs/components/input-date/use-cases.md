@@ -12,7 +12,7 @@ import '@lion/ui/define/lion-input-date.js';
 
 ```js preview-story
 export const isADate = () => html`
-  <lion-input-date label="IsDate" .modelValue=${new Date('foo')}> </lion-input-date>
+  <lion-input-date label="IsDate" .modelValue="${new Date('foo')}"> </lion-input-date>
 `;
 ```
 
@@ -25,8 +25,8 @@ export const withMinimumDate = () => {
     <lion-input-date
       label="MinDate"
       help-text="Enter a date greater than or equal to today."
-      .modelValue=${new Date('2018/05/30')}
-      .validators=${[new MinDate(new Date())]}
+      .modelValue="${new Date('2018/05/30')}"
+      .validators="${[new MinDate(new Date())]}"
     >
     </lion-input-date>
   `;
@@ -42,8 +42,8 @@ export const withMaximumDate = () => {
     <lion-input-date
       label="MaxDate"
       help-text="Enter a date smaller than or equal to today."
-      .modelValue=${new Date('2100/05/30')}
-      .validators=${[new MaxDate(new Date())]}
+      .modelValue="${new Date('2100/05/30')}"
+      .validators="${[new MaxDate(new Date())]}"
     ></lion-input-date>
   `;
 };
@@ -57,8 +57,8 @@ export const withMinimumAndMaximumDate = () => {
   return html`
     <lion-input-date
       label="MinMaxDate"
-      .modelValue=${new Date('2018/05/30')}
-      .validators=${[new MinMaxDate({ min: new Date('2018/05/24'), max: new Date('2018/06/24') })]}
+      .modelValue="${new Date('2018/05/30')}"
+      .validators="${[new MinMaxDate({ min: new Date('2018/05/24'), max: new Date('2018/06/24') })]}"
     >
       <div slot="help-text">
         Enter a date between ${formatDate(new Date('2018/05/24'))} and ${formatDate(
@@ -77,7 +77,7 @@ export const faultyPrefilled = () => html`
   <lion-input-date
     label="Date"
     help-text="Faulty prefilled input will be cleared"
-    .modelValue=${'foo'}
+    .modelValue="${'foo'}"
   ></lion-input-date>
 `;
 ```

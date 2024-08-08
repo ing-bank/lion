@@ -13,7 +13,7 @@ You can prefill the textarea. If you want to prefill on multiline, you will have
 export const prefilled = () => html`
   <lion-textarea
     label="Prefilled"
-    .modelValue=${['batman', 'and', 'robin'].join('\n')}
+    .modelValue="${['batman', 'and', 'robin'].join('\n')}"
   ></lion-textarea>
 `;
 ```
@@ -35,7 +35,7 @@ export const readonly = () => html`
   <lion-textarea
     label="Readonly"
     readonly
-    .modelValue=${['batman', 'and', 'robin'].join('\n')}
+    .modelValue="${['batman', 'and', 'robin'].join('\n')}"
   ></lion-textarea>
 `;
 ```
@@ -49,7 +49,7 @@ export const stopGrowing = () => html`
   <lion-textarea
     label="Stop growing"
     max-rows="4"
-    .modelValue=${['batman', 'and', 'robin'].join('\n')}
+    .modelValue="${['batman', 'and', 'robin'].join('\n')}"
   ></lion-textarea>
 `;
 ```

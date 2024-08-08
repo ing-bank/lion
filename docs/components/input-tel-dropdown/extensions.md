@@ -22,7 +22,7 @@ export const IntlInputTelDropdown = () => {
   return html`
     <intl-input-tel-dropdown
       .preferredRegions="${['NL', 'PH']}"
-      .modelValue=${'+639608920056'}
+      .modelValue="${'+639608920056'}"
       label="Telephone number"
       help-text="Advanced dropdown and styling"
       name="phoneNumber"

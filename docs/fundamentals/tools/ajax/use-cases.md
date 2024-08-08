@@ -52,8 +52,8 @@ export const getRequest = () => {
         --sb-action-logger-max-height: 300px;
       }
     </style>
-    <button @click=${() => fetchHandler('pabu')}>Fetch Pabu</button>
-    <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
+    <button @click="${() => fetchHandler('pabu')}">Fetch Pabu</button>
+    <button @click="${() => fetchHandler('naga')}">Fetch Naga</button>
     ${actionLogger}
   `;
 };
@@ -101,8 +101,8 @@ export const getJsonRequest = () => {
         --sb-action-logger-max-height: 300px;
       }
     </style>
-    <button @click=${() => fetchHandler('pabu')}>Fetch Pabu</button>
-    <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
+    <button @click="${() => fetchHandler('pabu')}">Fetch Pabu</button>
+    <button @click="${() => fetchHandler('naga')}">Fetch Naga</button>
     ${actionLogger}
   `;
 };
@@ -151,7 +151,7 @@ export const errorHandling = () => {
         --sb-action-logger-max-height: 300px;
       }
     </style>
-    <button @click=${fetchHandler}>Fetch</button>
+    <button @click="${fetchHandler}">Fetch</button>
     ${actionLogger}
   `;
 };
@@ -239,8 +239,8 @@ export const cache = () => {
         --sb-action-logger-max-height: 300px;
       }
     </style>
-    <button @click=${() => fetchHandler('pabu')}>Fetch Pabu</button>
-    <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
+    <button @click="${() => fetchHandler('pabu')}">Fetch Pabu</button>
+    <button @click="${() => fetchHandler('naga')}">Fetch Naga</button>
     ${actionLogger}
   `;
 };
@@ -274,8 +274,8 @@ export const cacheActionOptions = () => {
         --sb-action-logger-max-height: 300px;
       }
     </style>
-    <button @click=${() => fetchHandler('pabu')}>Fetch Pabu</button>
-    <button @click=${() => fetchHandler('naga')}>Fetch Naga</button>
+    <button @click="${() => fetchHandler('pabu')}">Fetch Pabu</button>
+    <button @click="${() => fetchHandler('naga')}">Fetch Naga</button>
     ${actionLogger}
   `;
 };
@@ -321,7 +321,7 @@ export const cacheMaxAge = () => {
         --sb-action-logger-max-height: 300px;
       }
     </style>
-    <button @click=${fetchHandler}>Fetch Pabu</button>
+    <button @click="${fetchHandler}">Fetch Pabu</button>
     ${actionLogger}
   `;
 };
@@ -355,8 +355,8 @@ export const changeCacheIdentifier = () => {
         --sb-action-logger-max-height: 300px;
       }
     </style>
-    <button @click=${fetchHandler}>Fetch Pabu</button>
-    <button @click=${changeUserHandler}>Change user</button>
+    <button @click="${fetchHandler}">Fetch Pabu</button>
+    <button @click="${changeUserHandler}">Change user</button>
     ${actionLogger}
   `;
 };
@@ -392,10 +392,10 @@ export const nonGETRequest = () => {
         --sb-action-logger-max-height: 300px;
       }
     </style>
-    <button @click=${() => fetchHandler('pabu', 'GET')}>GET Pabu</button>
-    <button @click=${() => fetchHandler('pabu', 'PATCH')}>PATCH Pabu</button>
-    <button @click=${() => fetchHandler('naga', 'GET')}>GET Naga</button>
-    <button @click=${() => fetchHandler('naga', 'PATCH')}>PATCH Naga</button>
+    <button @click="${() => fetchHandler('pabu', 'GET')}">GET Pabu</button>
+    <button @click="${() => fetchHandler('pabu', 'PATCH')}">PATCH Pabu</button>
+    <button @click="${() => fetchHandler('naga', 'GET')}">GET Naga</button>
+    <button @click="${() => fetchHandler('naga', 'PATCH')}">PATCH Naga</button>
     ${actionLogger}
   `;
 };
@@ -446,10 +446,10 @@ export const invalidateRules = () => {
         --sb-action-logger-max-height: 300px;
       }
     </style>
-    <button @click=${() => fetchHandler('pabu', 'GET')}>GET Pabu</button>
-    <button @click=${() => fetchHandler('pabu', 'PATCH')}>PATCH Pabu</button>
-    <button @click=${() => fetchHandler('naga', 'GET')}>GET Naga</button>
-    <button @click=${() => fetchHandler('naga', 'PATCH')}>PATCH Naga</button>
+    <button @click="${() => fetchHandler('pabu', 'GET')}">GET Pabu</button>
+    <button @click="${() => fetchHandler('pabu', 'PATCH')}">PATCH Pabu</button>
+    <button @click="${() => fetchHandler('naga', 'GET')}">GET Naga</button>
+    <button @click="${() => fetchHandler('naga', 'PATCH')}">PATCH Naga</button>
     ${actionLogger}
   `;
 };

@@ -13,9 +13,9 @@ import '@lion/ui/define/lion-checkbox.js';
 
 ```html preview-story
 <lion-checkbox-group name="scientists[]" label="Favorite scientists">
-  <lion-checkbox label="Archimedes" .choiceValue=${'Archimedes'}></lion-checkbox>
-  <lion-checkbox label="Francis Bacon" .choiceValue=${'Francis Bacon'}></lion-checkbox>
-  <lion-checkbox label="Marie Curie" .choiceValue=${'Marie Curie'}></lion-checkbox>
+  <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
+  <lion-checkbox label="Francis Bacon" .choiceValue="${'Francis Bacon'}"></lion-checkbox>
+  <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
 </lion-checkbox-group>
 ```
 

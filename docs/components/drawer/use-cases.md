@@ -125,9 +125,9 @@ export const methods = ({ shadowRoot }) => html`
     ${demoStyle}
   </style>
   <section style="margin-top:16px">
-    <button @click=${() => shadowRoot.querySelector('#drawer').toggle()}>Toggle content</button>
-    <button @click=${() => shadowRoot.querySelector('#drawer').show()}>Show content</button>
-    <button @click=${() => shadowRoot.querySelector('#drawer').hide()}>Hide content</button>
+    <button @click="${() => shadowRoot.querySelector('#drawer').toggle()}">Toggle content</button>
+    <button @click="${() => shadowRoot.querySelector('#drawer').show()}">Show content</button>
+    <button @click="${() => shadowRoot.querySelector('#drawer').hide()}">Hide content</button>
   </section>
 
   <div class="demo-container">

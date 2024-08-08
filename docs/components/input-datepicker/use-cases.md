@@ -17,8 +17,8 @@ Below are examples of different validators for dates.
 export const minimumAndMaximumDate = () => html`
   <lion-input-datepicker
     label="MinMaxDate"
-    .modelValue=${new Date('2018/05/30')}
-    .validators=${[new MinMaxDate({ min: new Date('2018/05/24'), max: new Date('2018/06/24') })]}
+    .modelValue="${new Date('2018/05/30')}"
+    .validators="${[new MinMaxDate({ min: new Date('2018/05/24'), max: new Date('2018/06/24') })]}"
   >
     <div slot="help-text">
       Enter a date between ${formatDate(new Date('2018/05/24'))} and ${formatDate(
@@ -36,8 +36,8 @@ export const disableSpecificDates = () => html`
   <lion-input-datepicker
     label="IsDateDisabled"
     help-text="You're not allowed to choose any 15th."
-    .modelValue=${new Date('2023/06/15')}
-    .validators=${[new IsDateDisabled(d => d.getDate() === 15)]}
+    .modelValue="${new Date('2023/06/15')}"
+    .validators="${[new IsDateDisabled(d => d.getDate() === 15)]}"
   ></lion-input-datepicker>
 `;
 ```
@@ -53,7 +53,7 @@ export const calendarHeading = () => html`
   <lion-input-datepicker
     label="Date"
     .calendarHeading="${'Custom heading'}"
-    .modelValue=${new Date()}
+    .modelValue="${new Date()}"
   ></lion-input-datepicker>
 `;
 ```

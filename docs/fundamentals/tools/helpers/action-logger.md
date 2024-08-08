@@ -112,17 +112,17 @@ export const customTitle = () => {
   const uid = Math.random().toString(36).substr(2, 10);
   return html`
     <button
-      @click=${e => e.target.parentElement.querySelector(`#logger-${uid}`).log('Hello, World!')}
+      @click="${e => e.target.parentElement.querySelector(`#logger-${uid}`).log('Hello, World!')}"
     >
       Log
     </button>
-    <sb-action-logger id="logger-${uid}" .title=${'Hello World'}></sb-action-logger>
+    <sb-action-logger id="logger-${uid}" .title="${'Hello World'}"></sb-action-logger>
   `;
 };
 ```
 
 ```html
-<sb-action-logger .title=${'Hello World'}></sb-action-logger>
+<sb-action-logger .title="${'Hello World'}"></sb-action-logger>
 ```
 
 ## Rationale
