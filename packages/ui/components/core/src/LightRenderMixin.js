@@ -31,6 +31,23 @@ function extractPrivateSlots({ slots, slotsProvidedByUser }) {
   return privateSlots;
 }
 
+
+/**
+ * @param {object} options
+ * @param {Node[]} options.nodes
+ * @param {Element} options.renderParent It's recommended to create a render target in light dom (like <div slot=myslot>),
+ * which can be used as a render target for most
+ * @param {string} options.slotName For the first render, it's best to use slotName
+ */
+function appendNodes({ nodes, renderParent, slotName }) {
+  for (const node of nodes) {
+    if (node instanceof Element && slotName && slotName !== '') {
+      node.setAttribute('slot', slotName);
+    }
+    renderParent.appendChild(node);
+  }
+}
+
 /**
  * Renders to light dom while respecting shadow dom scoping.
  * Suitable for rerendering as well.
@@ -71,8 +88,10 @@ function renderLightDomInScopedContext({
       renderBefore: endComment,
     });
 
-    renderTargetThatRespectsShadowRootScoping.slot = slotName;
-    shadowHost.appendChild(renderTargetThatRespectsShadowRootScoping);
+    // renderTargetThatRespectsShadowRootScoping.slot = slotName;
+    // shadowHost.appendChild(renderTargetThatRespectsShadowRootScoping);
+    const nodes = Array.from(renderTargetThatRespectsShadowRootScoping.childNodes);
+    appendNodes({ nodes, renderParent: shadowHost, slotName });
 
     renderMetaPerSlot.set(slotName, {
       renderTargetThatRespectsShadowRootScoping,
