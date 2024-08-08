@@ -114,13 +114,8 @@ function renderLightDomInScopedContext({
  */
 function patchRenderFns({ isInLightDom, slots, defaultHost }) {
   const slotTemplateFns = [];
-  console.debug({slots});
-
 
   for (const { name: slotName, template: templateFn, host } of slots) {
-
-    console.debug({slotName, templateFn, host});
-
     const hostObj = host || defaultHost;
     // eslint-disable-next-line no-restricted-syntax, guard-for-in
     for (const potentialFnName in hostObj) {
