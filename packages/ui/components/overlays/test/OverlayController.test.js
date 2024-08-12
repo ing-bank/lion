@@ -1764,4 +1764,20 @@ describe('OverlayController', () => {
       );
     });
   });
+
+  describe('run _keepBodySize only with global placement', () => {
+    /**
+     * @type {OverlayController}
+     */
+    const overlayControllerLocal = new OverlayController({
+      ...withLocalTestConfig(),
+    });
+
+    it('should not run with local placement', async () => {
+      await overlayControllerLocal.show();
+
+      expect(overlayControllerLocal.__bodyMarginRightInline).to.equal(undefined);
+      expect(overlayControllerLocal.__bodyMarginRight).to.equal(undefined);
+    });
+  });
 });
