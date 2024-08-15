@@ -81,6 +81,29 @@ describe('lion-combobox', () => {
       await performChecks();
     });
 
+    it('shows all options on reset()', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      const options = el.formElements;
+      const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
+
+      mimicUserTyping(el, 'cha');
+      await el.updateComplete;
+      expect(visibleOptions().length).to.equal(1);
+      el.reset();
+      await el.updateComplete;
+      expect(visibleOptions().length).to.equal(4);
+    });
+
     it('hides listbox on click/enter (when multiple-choice is false)', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
@@ -508,7 +531,7 @@ describe('lion-combobox', () => {
       el2.reset();
       expect(el2.modelValue).to.deep.equal(['Artichoke']);
       // @ts-ignore [allow-protected] in test
-      expect(el2._inputNode.value).to.equal('Artichoke');
+      expect(el2._inputNode.value).to.equal('');
     });
 
     it('syncs textbox to modelValue', async () => {
@@ -735,7 +758,7 @@ describe('lion-combobox', () => {
       await el.updateComplete;
     });
 
-    it('allows manyu custom selections when multi-choice when requireOptionMatch is false', async () => {
+    it('allows many custom selections when multi-choice when requireOptionMatch is false', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox
@@ -2088,7 +2111,7 @@ describe('lion-combobox', () => {
       });
     });
 
-    it('highlights first occcurence of matching option', async () => {
+    it('highlights first occurrence of matching option', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" match-mode="all">
@@ -2168,6 +2191,28 @@ describe('lion-combobox', () => {
       expect(options[3]).lightDom.to.equal(
         `<div>Victoria Plum</div><small>Prunus domestica</small>`,
       );
+    });
+
+    it('resets removes highlights on reset()', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" match-mode="all">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      const options = el.formElements;
+
+      mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
+
+      await el.updateComplete;
+      expect(options[0]).lightDom.to.equal(`<span aria-label="Artichoke">Arti<b>c</b>hoke</span>`);
+      el.reset();
+      await el.updateComplete;
+      expect(options[0]).lightDom.to.equal(`Artichoke`);
     });
 
     it('synchronizes textbox when autocomplete is "inline" or "both"', async () => {
@@ -3016,6 +3061,37 @@ describe('lion-combobox', () => {
       // because this closely mimics what happens in the browser
       _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       expect(el.opened).to.equal(true);
+    });
+
+    it('resets the inputNode.value and listbox options on [Enter]', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      const { _inputNode } = getComboboxMembers(el);
+      const options = el.formElements;
+
+      mimicUserTyping(el, 'art');
+      await el.updateComplete;
+
+      expect(el.opened).to.equal(true);
+      const visibleOptions = options.filter(o => o.style.display !== 'none');
+      expect(visibleOptions.length).to.equal(1);
+
+      // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
+      // because this closely mimics what happens in the browser
+      _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      expect(el.opened).to.equal(true);
+      const visibleOptions2 = options.filter(o => o.style.display !== 'none');
+      expect(visibleOptions2.length).to.equal(4);
+      expect(_inputNode.value).to.equal('');
     });
 
     it('submits form on [Enter] when listbox is closed', async () => {
