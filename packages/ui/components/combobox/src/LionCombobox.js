@@ -22,7 +22,7 @@ const matchA11ySpanReverseFns = new WeakMap();
  * @typedef {import('@lion/ui/types/form-core.js').ChoiceInputHost} ChoiceInputHost
  * @typedef {import('@lion/ui/types/form-core.js').FormControlHost} FormControlHost
  * @typedef {import('../types/SelectionDisplay.js').SelectionDisplay} SelectionDisplay
- * @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn
+ * @typedef {LionOption & { onFilterUnmatch?:function; onFilterMatch?:function }} OptionWithFilterFn
  */
 
 /**

@@ -3063,7 +3063,7 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(true);
     });
 
-    it('resets the inputNode.value and listbox options on [Enter]', async () => {
+    it('clears texbox after selection of a new item', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" multiple-choice>
