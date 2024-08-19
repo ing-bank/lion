@@ -3063,7 +3063,7 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(true);
     });
 
-    it('clears texbox after selection of a new item', async () => {
+    it('clears textbox after selection of a new item on [enter]', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" multiple-choice>
@@ -3088,6 +3088,35 @@ describe('lion-combobox', () => {
       // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
       // because this closely mimics what happens in the browser
       _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      expect(el.opened).to.equal(true);
+      const visibleOptions2 = options.filter(o => o.style.display !== 'none');
+      expect(visibleOptions2.length).to.equal(4);
+      expect(_inputNode.value).to.equal('');
+    });
+
+    it('clears textbox after selection of a new item on click', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" multiple-choice>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      const { _inputNode } = getComboboxMembers(el);
+      const options = el.formElements;
+
+      mimicUserTyping(el, 'art');
+      await el.updateComplete;
+
+      expect(el.opened).to.equal(true);
+      const visibleOptions = options.filter(o => o.style.display !== 'none');
+      expect(visibleOptions.length).to.equal(1);
+
+      visibleOptions[0].click();
       expect(el.opened).to.equal(true);
       const visibleOptions2 = options.filter(o => o.style.display !== 'none');
       expect(visibleOptions2.length).to.equal(4);

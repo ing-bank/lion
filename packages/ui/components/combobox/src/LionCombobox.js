@@ -206,10 +206,13 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       // @ts-ignore _initialModelValue comes from ListboxMixin
       this.value = this._initialModelValue;
     }
-    this.resetListboxOptions();
+    this._resetListboxOptions();
   }
 
-  resetListboxOptions() {
+  /**
+   * @protected
+   */
+  _resetListboxOptions() {
     this.formElements.forEach((/** @type {OptionWithFilterFn} */ option, idx) => {
       this._unhighlightMatchedOption(option);
       if (this.opened) {
@@ -721,11 +724,13 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   _listboxOnClick(ev) {
     super._listboxOnClick(ev);
-
     this._inputNode.focus();
     if (!this.multipleChoice) {
       this.activeIndex = -1;
       this.opened = false;
+    } else {
+      this._inputNode.value = '';
+      this._resetListboxOptions();
     }
   }
 
@@ -1140,7 +1145,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
           this.opened = false;
         } else {
           super._listboxOnKeyDown(ev);
-          this.resetListboxOptions();
+          this._resetListboxOptions();
         }
         if (!this.multipleChoice) {
           this.opened = false;
