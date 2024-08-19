@@ -4,6 +4,7 @@ import { render } from 'lit';
 
 /**
  * @typedef {{renderBefore:Comment; renderTargetThatRespectsShadowRootScoping: HTMLDivElement}} RenderMetaObj
+ * @typedef {import('../types/LightRenderMixinTypes.js').LightRenderMixin} LightRenderMixin
  * @typedef {import('../types/LightRenderMixinTypes.js').LightRenderHost} LightRenderHost
  * @typedef {import('../types/LightRenderMixinTypes.js').SlotItem} SlotItem
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -251,9 +252,7 @@ function patchRenderFns({ isInLightDom, slots, defaultHost }) {
  * ```js
  * class MyInput extends LightDomRenderMixin(LitElement) {
  *
- *   slots = {
- *    input: this.renderInput,
- *   }
+ *   slots = [{ name:'input', template: this.renderInput }];
  *
  *   render() {
  *     return html`

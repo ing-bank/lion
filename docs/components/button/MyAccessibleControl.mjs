@@ -16,8 +16,8 @@ export class MyAccessibleControl extends LightRenderMixin(LitElement) {
     };
 
     slots = [
-      { name: 'label', template: this.renderLabel },
       { name: 'input', template: templates.renderInput, host: templates },
+      { name: 'label', template: this.renderLabel },
     ];
 
     constructor() {
