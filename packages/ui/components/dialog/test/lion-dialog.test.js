@@ -143,6 +143,7 @@ describe('lion-dialog', () => {
       expect(el.opened).to.be.true;
 
       el.addEventListener('opened-changed', e => {
+        // @ts-expect-error [allow-detail-since-custom-event]
         expect(e.detail.opened).to.be.false;
       });
       el.removeAttribute('opened');
