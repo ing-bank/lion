@@ -5,7 +5,7 @@
 - Allows globally registering request and response interceptors
 - Throws on 4xx and 5xx status codes
 - Supports caching, so a request can be prevented from reaching to network, by returning the cached response.
-- Supports JSON with `ajax.fetchJSON` by automatically serializing request body and deserializing response payload as JSON, and adding the correct Content-Type and Accept headers.
+- Supports JSON with `ajax.fetchJson` by automatically serializing request body and deserializing response payload as JSON, and adding the correct Content-Type and Accept headers.
 - Adds accept-language header to requests based on application language
 - Adds XSRF header to request if the cookie is present and the request is for a mutable action (POST/PUT/PATCH/DELETE) and if the origin is the same as current origin or the request origin is in the xsrfTrustedOrigins list.
 
@@ -123,6 +123,27 @@ ajax.addResponseInterceptor(rewriteFoo);
 ```
 
 Response interceptors can be async and will be awaited.
+
+### Response JSON object interceptors
+
+A response JSON object interceptor is a function that takes a successfully parsed response JSON object and `response` object and returns a new response JSON object.
+It's used only when the request is made with the `fetchJson` method, providing a convenience API to directly modify or inspect the parsed JSON without the need to parse it and handle errors manually.
+
+```js
+async function interceptJson(jsonObject, response) {
+  if (response.url === '/my-api') {
+    return {
+      ...jsonObject,
+      changed: true,
+    };
+  }
+  return jsonObject;
+}
+
+ajax.addResponseJsonInterceptor(interceptJson);
+```
+
+Response JSON object interceptors can be async and will be awaited.
 
 ## Ajax class options
 
