@@ -127,5 +127,43 @@ describe('lion-dialog', () => {
       invokerNode.click();
       expect(document.activeElement).to.equal(invokerNode);
     });
+
+    it('opened-changed event should send detail object with opened state', async () => {
+      const el = /** @type {LionDialog} */ await fixture(html`
+        <lion-dialog .config=${{ trapsKeyboardFocus: false }}>
+          <button slot="invoker">invoker button</button>
+          <div slot="content">
+            <label for="myInput">Label</label>
+            <input id="myInput" autofocus />
+          </div>
+        </lion-dialog>
+      `);
+
+      el.setAttribute('opened', '');
+      expect(el.opened).to.be.true;
+
+      el.addEventListener('opened-changed', e => {
+        // @ts-expect-error [allow-detail-since-custom-event]
+        expect(e.detail.opened).to.be.false;
+      });
+      el.removeAttribute('opened');
+    });
+
+    it("opened-changed event's target should point to lion-dialog", async () => {
+      const el = /** @type {LionDialog} */ await fixture(html`
+        <lion-dialog .config=${{ trapsKeyboardFocus: false }}>
+          <button slot="invoker">invoker button</button>
+          <div slot="content">
+            <label for="myInput">Label</label>
+            <input id="myInput" autofocus />
+          </div>
+        </lion-dialog>
+      `);
+
+      el.addEventListener('opened-changed', e => {
+        expect(e.target).to.equal(el);
+      });
+      el.setAttribute('opened', '');
+    });
   });
 });

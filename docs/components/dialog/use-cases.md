@@ -10,6 +10,7 @@ import '@lion/ui/define/lion-dialog.js';
 import { demoStyle } from './src/demoStyle.js';
 import './src/styled-dialog-content.js';
 import './src/slots-dialog-content.js';
+import './src/external-dialog.js';
 ```
 
 ```html
@@ -20,6 +21,51 @@ import './src/slots-dialog-content.js';
   <div>
   <button slot="invoker">Click me</button>
 </lion-dialog>
+```
+
+## External trigger
+
+```js preview-story
+export const externalTrigger = () => {
+  const externalTriggerDialog = () => {
+    class DialogTriggerDemo extends LitElement {
+      static get properties() {
+        return {
+          _isOpen: { state: true },
+        };
+      }
+
+      toggleDialog(open) {
+        return () => (this._isOpen = open);
+      }
+
+      handleDialog(e) {
+        this._isOpen = e.detail.opened;
+      }
+
+      render() {
+        return html`
+          <button @click=${this.toggleDialog(true)}>Open dialog</button>
+          <lion-dialog ?opened=${this._isOpen} @opened-changed=${this.handleDialog}>
+            <div slot="content" class="dialog demo-box">
+              Hello! You can close this notification here:
+              <button class="close-button" @click=${this.toggleDialog(false)}>⨯</button>
+            </div>
+          </lion-dialog>
+        `;
+      }
+    }
+  };
+
+  return html`
+    <style>
+      ${demoStyle}
+    </style>
+    <div class="demo-box_placements">
+      <dialog-trigger-demo></dialog-trigger-demo>
+    </div>
+  `;
+};
 ```
 
 ## Placement overrides
