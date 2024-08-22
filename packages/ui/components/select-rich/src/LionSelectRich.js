@@ -196,6 +196,18 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
       }
     }
 
+    if (changedProperties.has('singleOption')) {
+      if (this.singleOption) {
+        this._invokerNode.removeAttribute('role');
+        this._invokerNode.removeAttribute('aria-haspopup');
+        this._invokerNode.removeAttribute('aria-expanded');
+      } else {
+        this._invokerNode.setAttribute('role', 'button');
+        this._invokerNode.setAttribute('aria-haspopup', 'listbox');
+        this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
+      }
+    }
+
     if (this._inputNode && this._invokerNode) {
       if (changedProperties.has('_ariaLabelledNodes')) {
         this._invokerNode.setAttribute(

@@ -148,6 +148,32 @@ describe('lion-select-rich', () => {
       expect(_invokerNode.hasAttribute('single-option')).to.be.true;
     });
 
+    it('sets and removes the button role and aria attributes on change of singleOption', async () => {
+      const el = await fixture(html`
+        <lion-select-rich>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2</lion-option>
+        </lion-select-rich>
+      `);
+      const { _invokerNode } = getSelectRichMembers(el);
+
+      expect(_invokerNode.hasAttribute('role')).to.be.true;
+      expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.true;
+      expect(_invokerNode.hasAttribute('aria-expanded')).to.be.true;
+
+      el.singleOption = true;
+      await el.updateComplete;
+      expect(_invokerNode.hasAttribute('role')).to.be.false;
+      expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.false;
+      expect(_invokerNode.hasAttribute('aria-expanded')).to.be.false;
+
+      el.singleOption = false;
+      await el.updateComplete;
+      expect(_invokerNode.hasAttribute('role')).to.be.true;
+      expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.true;
+      expect(_invokerNode.hasAttribute('aria-expanded')).to.be.true;
+    });
+
     it('updates the invoker when the selected element is the same but the modelValue was updated asynchronously', async () => {
       const tagString = defineCE(
         class LionCustomOption extends LionOption {
