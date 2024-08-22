@@ -15,6 +15,31 @@ function clearAndUpper(text) {
   return text.replace(/-/, ' ').toUpperCase();
 }
 
+/**
+ * Function to convert code into HTML markup
+ * @param {string} code 
+ */
+function codeToHtml(code) {
+  return code
+      // Escape HTML characters
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;')
+      // Preserve line breaks and spaces (for indentation)
+      .replace(/\n/g, '<br>')
+      .replace(/ {2}/g, '&nbsp;');
+}
+
+/**
+ * @param {string} input 
+ */
+function stripBackticks(input) {
+  // This regex matches a backtick followed by <pre> or </pre> followed by a backtick
+  return input.replace(/(`<pre>|<\/pre>`)/gm, (_, t) => t.replace(/`/, ''));
+}
+
 const systemsTable = ['core', 'form-core', 'localize', 'overlays'];
 const mappingTable = [{ componentDir: 'validate-messages', portalDir: 'form' }];
 
@@ -54,6 +79,14 @@ for (let dir of componentDirs) {
     for (const mod of customElementsJson.modules) {
       for (const declaration of mod.declarations) {
         if (declaration.name === c && declaration.kind === 'class') {
+
+          declaration.members = declaration.members.map(member => {
+            if (typeof member.default === 'string' && /\r?\n/.test(member.default)) {
+              member.default = `<pre><code>${codeToHtml(member.default)}</code></pre>`;
+            }
+            return member;
+          })
+
           const md = customElementsManifestToMarkdown(
             {
               modules: [
@@ -74,7 +107,7 @@ for (let dir of componentDirs) {
               ],
             },
           );
-          dirApiTableMd = `${dirApiTableMd} \n\n${md}`;
+          dirApiTableMd = `${dirApiTableMd} \n\n${stripBackticks(md)}`;
         }
       }
     }
