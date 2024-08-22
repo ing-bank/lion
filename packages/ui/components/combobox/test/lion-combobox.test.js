@@ -81,10 +81,33 @@ describe('lion-combobox', () => {
       await performChecks();
     });
 
-    it('shows all options on reset()', async () => {
+    it('hides all options on reset()', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      const options = el.formElements;
+      const visibleOptions = () => options.filter(o => o.style.display !== 'none');
+
+      mimicUserTyping(el, 'cha');
+      await el.updateComplete;
+      expect(visibleOptions().length).to.equal(1);
+      el.reset();
+      await el.updateComplete;
+      expect(visibleOptions().length).to.equal(0);
+    });
+
+    it('shows all options on reset() when showAllOnEmpty is set to true and overlay was open', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo" show-all-on-empty>
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
             <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -99,6 +122,8 @@ describe('lion-combobox', () => {
       mimicUserTyping(el, 'cha');
       await el.updateComplete;
       expect(visibleOptions().length).to.equal(1);
+      expect(el.opened).to.be.true;
+
       el.reset();
       await el.updateComplete;
       expect(visibleOptions().length).to.equal(4);
@@ -490,13 +515,12 @@ describe('lion-combobox', () => {
       mimicUserTyping(el, 'a');
       await el.updateComplete;
 
-      const visibleOptions = options.filter(o => o.style.display !== 'none');
-      expect(visibleOptions.length).to.equal(3, 'after input');
+      const visibleOptions = () => options.filter(o => o.style.display !== 'none');
+      expect(visibleOptions().length).to.equal(3, 'after input');
 
       el.clear();
       await el.updateComplete;
-      const visibleOptions2 = options.filter(o => o.style.display !== 'none');
-      expect(visibleOptions2.length).to.equal(0, 'after clear');
+      expect(visibleOptions().length).to.equal(0, 'after clear');
     });
 
     it('resets modelValue and textbox value on reset()', async () => {
@@ -3082,15 +3106,14 @@ describe('lion-combobox', () => {
       await el.updateComplete;
 
       expect(el.opened).to.equal(true);
-      const visibleOptions = options.filter(o => o.style.display !== 'none');
-      expect(visibleOptions.length).to.equal(1);
+      const visibleOptions = () => options.filter(o => o.style.display !== 'none');
+      expect(visibleOptions().length).to.equal(1);
 
       // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
       // because this closely mimics what happens in the browser
       _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       expect(el.opened).to.equal(true);
-      const visibleOptions2 = options.filter(o => o.style.display !== 'none');
-      expect(visibleOptions2.length).to.equal(4);
+      expect(visibleOptions().length).to.equal(0);
       expect(_inputNode.value).to.equal('');
     });
 
@@ -3113,13 +3136,12 @@ describe('lion-combobox', () => {
       await el.updateComplete;
 
       expect(el.opened).to.equal(true);
-      const visibleOptions = options.filter(o => o.style.display !== 'none');
-      expect(visibleOptions.length).to.equal(1);
+      const visibleOptions = () => options.filter(o => o.style.display !== 'none');
+      expect(visibleOptions().length).to.equal(1);
 
-      visibleOptions[0].click();
+      visibleOptions()[0].click();
       expect(el.opened).to.equal(true);
-      const visibleOptions2 = options.filter(o => o.style.display !== 'none');
-      expect(visibleOptions2.length).to.equal(4);
+      expect(visibleOptions().length).to.equal(0);
       expect(_inputNode.value).to.equal('');
     });
 

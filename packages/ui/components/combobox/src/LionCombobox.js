@@ -215,7 +215,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   _resetListboxOptions() {
     this.formElements.forEach((/** @type {OptionWithFilterFn} */ option, idx) => {
       this._unhighlightMatchedOption(option);
-      if (this.opened) {
+      if (!this.showAllOnEmpty || !this.opened) {
+        // eslint-disable-next-line no-param-reassign
+        option.style.display = 'none';
+      } else {
         // eslint-disable-next-line no-param-reassign
         option.style.display = '';
         option.setAttribute('aria-posinset', `${idx + 1}`);
