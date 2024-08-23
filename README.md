@@ -1,7 +1,7 @@
 <p align="center">
   <img
     width="20%"
-    src="https://raw.githubusercontent.com/ing-bank/lion/master/docs/_assets/logo.svg"
+    src="./master/docs/_assets/logo.svg"
     alt="Lion"
   />
   <h1 style="text-align: center;">Lion</h1>
