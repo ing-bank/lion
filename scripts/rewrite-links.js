@@ -88,14 +88,15 @@ function rewriteLinksInMdContent(mdContent, filePath, cfg = rewriteLinksConfig) 
 
   // /^!?\[(label)\]\(href(?:\s+(title))?\s*\)/
   const linkPattern = '!?\\[(.*)\\]\\(([^|\\s]*)( +(.*))?\\s*\\)'; // eslint-disable-line
-  const linkReplaced = mdContent.replace(new RegExp(linkPattern, 'g'), (_, p1, p2, p3) => {
-    return mdLink(p2, p3, p1);
-  });
+  const linkReplaced = mdContent.replace(new RegExp(linkPattern, 'g'), (_, p1, p2, p3) =>
+    mdLink(p2, p3, p1),
+  );
 
   const imgSrcPattern = `src *= *['"](.*)['"]`;
-  const imageReplaced = linkReplaced.replace(new RegExp(imgSrcPattern, 'g'), (_, p1) => {
-    return `src="${rewrite(cfg.assetBasePath, cfg.monorepoRootPath)(p1)}`;
-  });
+  const imageReplaced = linkReplaced.replace(
+    new RegExp(imgSrcPattern, 'g'),
+    (_, p1) => `src="${rewrite(cfg.assetBasePath, cfg.monorepoRootPath)(p1)}`,
+  );
 
   return imageReplaced;
 }
