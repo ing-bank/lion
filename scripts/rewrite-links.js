@@ -61,27 +61,30 @@ function gatherFilesFromDir(startPath, cfg = gatherFilesConfig, result = []) {
  * @returns {string} adjusted contents of input md file (mdContent)
  */
 function rewriteLinksInMdContent(mdContent, filePath, cfg = rewriteLinksConfig) {
-  const rewrite = (/** @type {string} */ repoBasePath, /** @type {string} */ repoRootPath) => (/** @type {string} */ href) => {
-    const isRelativeUrlPattern = /^(\.\/|\.\.\/)/; // starts with './' or '../'
-    if (!href.match(isRelativeUrlPattern)) {
-      return href;
-    }
+  const rewrite =
+    (/** @type {string} */ repoBasePath, /** @type {string} */ repoRootPath) =>
+    (/** @type {string} */ href) => {
+      const isRelativeUrlPattern = /^(\.\/|\.\.\/)/; // starts with './' or '../'
+      if (!href.match(isRelativeUrlPattern)) {
+        return href;
+      }
 
-    const fileFolder = filePath.replace(/(.*\/).*/g, '$1');
-    const absoluteLocalPath = path.resolve(fileFolder, href);
-    // relativeFromRootPath: for instance 'packages/my-component/docs/' when
-    // filePath is 'path/to/repo/packages/my-component/docs/myDoc.md'
-    const relativeFromRootPath = absoluteLocalPath.replace(repoRootPath, '').slice(1);
-    // newRoot: https://github.com/ing-bank/lion/blob/master/packages/my-component/docs/
+      const fileFolder = filePath.replace(/(.*\/).*/g, '$1');
+      const absoluteLocalPath = path.resolve(fileFolder, href);
+      // relativeFromRootPath: for instance 'packages/my-component/docs/' when
+      // filePath is 'path/to/repo/packages/my-component/docs/myDoc.md'
+      const relativeFromRootPath = absoluteLocalPath.replace(repoRootPath, '').slice(1);
+      // newRoot: https://github.com/ing-bank/lion/blob/master/packages/my-component/docs/
 
-    return repoBasePath + relativeFromRootPath;
-  };
+      return repoBasePath + relativeFromRootPath;
+    };
 
   const mdLink = (
     /** @type {string} */ href,
     /** @type {string} */ title,
     /** @type {string} */ text,
-  ) => `[${text}](${rewrite(cfg.repoBasePath, cfg.monorepoRootPath)(href)}${title ? ` ${title}` : ''})`;
+  ) =>
+    `[${text}](${rewrite(cfg.repoBasePath, cfg.monorepoRootPath)(href)}${title ? ` ${title}` : ''})`;
 
   // /^!?\[(label)\]\(href(?:\s+(title))?\s*\)/
   const linkPattern = '!?\\[(.*)\\]\\(([^|\\s]*)( +(.*))?\\s*\\)'; // eslint-disable-line
