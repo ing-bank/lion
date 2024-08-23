@@ -7,7 +7,8 @@ const fs = require('fs');
 const path = require('path');
 
 const rewriteLinksConfig = {
-  githubPath: 'https://github.com/ing-bank/lion/blob/master/',
+  repoBasePath: 'https://github.com/ing-bank/lion/blob/master/',
+  assetBasePath: 'https://raw.githubusercontent.com/ing-bank/lion/master/',
   monorepoRootPath: path.resolve(__dirname, '../'),
 };
 
@@ -54,57 +55,46 @@ function gatherFilesFromDir(startPath, cfg = gatherFilesConfig, result = []) {
  * @param {string} filePath - local filesystem path of md file,
  * like '/path/to/lion/packages/my-component/docs/myClass.md'
  * @param {object} cfg - configurantion object
- * @param {string} cfg.githubPath - root github url for the absolute result links
+ * @param {string} cfg.repoBasePath - root repository url for the absolute result links
+ * @param {string} cfg.assetBasePath - root asset url for the absolute result image url
  * @param {string} cfg.monorepoRootPath - local filesystem root path of the monorepo
  * @returns {string} adjusted contents of input md file (mdContent)
  */
 function rewriteLinksInMdContent(mdContent, filePath, cfg = rewriteLinksConfig) {
-  const rewrite = (/** @type {string} */ href) => {
-    let newHref = href;
+  const rewrite = (/** @type {string} */ repoBasePath, /** @type {string} */ repoRootPath) => (/** @type {string} */ href) => {
     const isRelativeUrlPattern = /^(\.\/|\.\.\/)/; // starts with './' or '../'
-    if (href.match(isRelativeUrlPattern)) {
-      const fileFolder = filePath.replace(/(.*\/).*/g, '$1');
-      const absoluteLocalPath = path.resolve(fileFolder, href);
-      // relativeFromRootPath: for instance 'packages/my-component/docs/' when
-      // filePath is 'path/to/repo/packages/my-component/docs/myDoc.md'
-      const relativeFromRootPath = absoluteLocalPath.replace(cfg.monorepoRootPath, '').slice(1);
-      // newRoot: https://github.com/ing-bank/lion/blob/master/packages/my-component/docs/
-      newHref = cfg.githubPath + relativeFromRootPath;
+    if (!href.match(isRelativeUrlPattern)) {
+      return href;
     }
-    return newHref;
+
+    const fileFolder = filePath.replace(/(.*\/).*/g, '$1');
+    const absoluteLocalPath = path.resolve(fileFolder, href);
+    // relativeFromRootPath: for instance 'packages/my-component/docs/' when
+    // filePath is 'path/to/repo/packages/my-component/docs/myDoc.md'
+    const relativeFromRootPath = absoluteLocalPath.replace(repoRootPath, '').slice(1);
+    // newRoot: https://github.com/ing-bank/lion/blob/master/packages/my-component/docs/
+
+    return repoBasePath + relativeFromRootPath;
   };
 
   const mdLink = (
     /** @type {string} */ href,
     /** @type {string} */ title,
     /** @type {string} */ text,
-  ) => `[${text}](${rewrite(href)}${title ? ` ${title}` : ''})`;
+  ) => `[${text}](${rewrite(cfg.repoBasePath, cfg.monorepoRootPath)(href)}${title ? ` ${title}` : ''})`;
 
-  /** @type {string[]} */
-  const resultLinks = [];
   // /^!?\[(label)\]\(href(?:\s+(title))?\s*\)/
   const linkPattern = '!?\\[(.*)\\]\\(([^|\\s]*)( +(.*))?\\s*\\)'; // eslint-disable-line
-  const matches = mdContent.match(new RegExp(linkPattern, 'g')) || [];
-
-  matches.forEach(link => {
-    let newLink = '';
-    const parts = link.match(new RegExp(linkPattern));
-    if (parts) {
-      newLink = mdLink(parts[2], parts[3], parts[1]);
-    }
-    resultLinks.push(newLink);
+  const linkReplaced = mdContent.replace(new RegExp(linkPattern, 'g'), (_, p1, p2, p3) => {
+    return mdLink(p2, p3, p1);
   });
 
-  // Now that we have our rewritten links, stitch back together the desired result
-  const tokenPattern = /!?\[.*\]\([^|\s]*(?: +.*)?\s*\)/;
-  const tokens = mdContent.split(new RegExp(tokenPattern, 'g'));
-  /** @type {string[]} */
-  const resultTokens = [];
-  tokens.forEach((token, i) => {
-    resultTokens.push(token + (resultLinks[i] || ''));
+  const imgSrcPattern = `src *= *['"](.*)['"]`;
+  const imageReplaced = linkReplaced.replace(new RegExp(imgSrcPattern, 'g'), (_, p1) => {
+    return `src="${rewrite(cfg.assetBasePath, cfg.monorepoRootPath)(p1)}`;
   });
-  const resultContent = resultTokens.join('');
-  return resultContent;
+
+  return imageReplaced;
 }
 
 /**
