@@ -42,7 +42,7 @@
     "@babel/core": "^7.24.5",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
     "@changesets/cli": "^2.27.1",
-    "@custom-elements-manifest/analyzer": "^0.9.4",
+    "@custom-elements-manifest/analyzer": "^0.10.3",
     "@custom-elements-manifest/to-markdown": "^0.1.0",
     "@open-wc/building-rollup": "^2.2.3",
     "@open-wc/eslint-config": "^12.0.3",
