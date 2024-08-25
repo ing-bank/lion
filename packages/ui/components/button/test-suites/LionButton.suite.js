@@ -52,7 +52,9 @@ export function LionButtonSuite({ klass = LionButton } = {}) {
 
     describe('Active', () => {
       it('updates "active" attribute on host when mousedown/mouseup on button', async () => {
-        const el = /** @type {LionButton} */ (await fixture(html`<${tagButton}>foo</${tagButton}`));
+        const el = /** @type {LionButton} */ (
+          await fixture(html`<${tagButton}>foo</${tagButton}>`)
+        );
         el.dispatchEvent(new Event('mousedown'));
 
         expect(el.active).to.be.true;
