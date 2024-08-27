@@ -23,7 +23,7 @@ export function LionButtonSuite({ klass = LionButton } = {}) {
   it('Clicking on disabled button', () => {
     customElements.define('lion-button', LionButton);
 
-    ['lion-button', 'button'].forEach(async tagName => {
+    ['lion-button', 'button'].forEach(tagName => {
       let counter = 1;
 
       const theButton = document.createElement(tagName);
