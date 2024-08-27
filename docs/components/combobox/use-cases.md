@@ -243,7 +243,7 @@ export const multipleChoice = () => html`
     ${lazyRender(
       listboxData.map(
         (entry, i) => html`
-          <lion-option .choiceValue="${entry}" ?checked="${i === 0}>${entry}"</lion-option>
+          <lion-option .choiceValue="${entry}" ?checked="${i === 0}">${entry}</lion-option>
         `,
       ),
     )}
@@ -266,7 +266,7 @@ export const multipleCustomizableChoice = () => html`
     ${lazyRender(
       listboxData.map(
         (entry, i) => html`
-          <lion-option .choiceValue="${entry}" ?checked="${i === 0}>${entry}"</lion-option>
+          <lion-option .choiceValue="${entry}" ?checked="${i === 0}">${entry}</lion-option>
         `,
       ),
     )}
