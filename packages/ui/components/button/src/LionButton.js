@@ -27,6 +27,8 @@ const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === 
  * - When implicit form submission should be supported on top, use LionButtonSubmit.
  */
 export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
+  static formAssociated = true;
+
   static get properties() {
     return {
       active: { type: Boolean, reflect: true },

@@ -171,6 +171,15 @@ export function LionButtonSuite({ klass = LionButton } = {}) {
         expect(el.getAttribute('tabindex')).to.equal('0');
       });
 
+      it('does not react to clicks when disabled (issue-2330)', async () => {
+        const clickSpy = sinon.spy();
+        const el = /** @type {LionButton} */ (
+          await fixture(html`<${tagButton} disabled @click=${clickSpy}></${tagButton}>`)
+        );
+        el.click();
+        expect(clickSpy).to.not.have.been.called;
+      });
+
       it('has a tabindex="-1" when disabled', async () => {
         const el = /** @type {LionButton} */ (
           await fixture(html`<${tagButton} disabled>foo</${tagButton}>`)
