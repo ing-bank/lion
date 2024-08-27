@@ -3,7 +3,7 @@ import { playwrightLauncher } from '@web/test-runner-playwright';
 
 const devMode = process.argv.includes('--dev-mode');
 
-const packages = fs
+const testGroups = fs
   .readdirSync('packages')
   .filter(
     dir => fs.statSync(`packages/${dir}`).isDirectory() && fs.existsSync(`packages/${dir}/test`),
@@ -18,21 +18,54 @@ const packages = fs
           fs.existsSync(`packages/ui/components/${dir}/test`),
       )
       .map(dir => ({ name: dir, path: `packages/ui/components/${dir}/test` })),
-  );
+  )
+  .map(pkg => ({
+    name: pkg.name,
+    files: `${pkg.path}/**/*.test.js`,
+  }));
 
-/**
- * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}
- *
- */
-const testRunnerHtml = testRunnerImport =>
-  `
+const testsThatShouldRunWithScopedCustomElementRegistryPolyfill = testGroups.map(testGroup => {
+  const files = [
+    testGroup.files,
+    `!${testGroup.files.replace('*.test.js', '*.no-polyfill.test.js')}`,
+  ];
+  return {
+    name: testGroup.name,
+    files,
+    /**
+     * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}
+     *
+     */
+    testRunnerHtml: testRunnerImport => `
 <html>
   <head>
     <script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
     <script type="module" src="${testRunnerImport}"></script>
   </head>
 </html>
-`;
+`,
+  };
+});
+
+const testsThatShouldNotRunWithPolyfill = testGroups.map(testGroup => {
+  const files = [testGroup.files, `!${testGroup.files.replace('*.test.js', '*.polyfill.test.js')}`];
+
+  return {
+    name: testGroup.name,
+    files,
+    /**
+     * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}
+     *
+     */
+    testRunnerHtml: testRunnerImport => `
+<html>
+  <head>
+    <script type="module" src="${testRunnerImport}"></script>
+  </head>
+</html>
+`,
+  };
+});
 
 export default {
   nodeResolve: { exportConditions: [devMode && 'development'] },
@@ -51,14 +84,13 @@ export default {
       timeout: '5000',
     },
   },
-  testRunnerHtml,
   browsers: [
     playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),
     playwrightLauncher({ product: 'webkit' }),
   ],
-  groups: packages.map(pkg => ({
-    name: pkg.name,
-    files: `${pkg.path}/**/*.test.js`,
-  })),
+  groups: [].concat([
+    ...testsThatShouldRunWithScopedCustomElementRegistryPolyfill,
+    ...testsThatShouldNotRunWithPolyfill,
+  ]),
 };
