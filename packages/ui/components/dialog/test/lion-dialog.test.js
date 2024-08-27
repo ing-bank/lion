@@ -1,5 +1,5 @@
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture as _fixture, html, unsafeStatic, aTimeout } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
 import '@lion/ui/define/lion-dialog.js';
 
@@ -164,26 +164,6 @@ describe('lion-dialog', () => {
         expect(e.target).to.equal(el);
       });
       el.setAttribute('opened', '');
-    });
-  });
-
-  describe('Accessibility', () => {
-    it('adds [aria-expanded] to invoker button', async () => {
-      const el = await fixture(
-        html` <lion-dialog>
-          <div slot="content" class="dialog">Hey there</div>
-          <button slot="invoker">Popup button</button>
-        </lion-dialog>`,
-      );
-      const invokerButton = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
-
-      expect(invokerButton.getAttribute('aria-expanded')).to.equal(null);
-      await invokerButton.click();
-      await aTimeout(0);
-      expect(invokerButton.getAttribute('aria-expanded')).to.equal(null);
-      await invokerButton.click();
-      await aTimeout(0);
-      expect(invokerButton.getAttribute('aria-expanded')).to.equal(null);
     });
   });
 });

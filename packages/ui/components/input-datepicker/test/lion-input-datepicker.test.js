@@ -495,11 +495,11 @@ describe('<lion-input-datepicker>', () => {
       const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
       const elObj = new DatepickerInputObject(el);
 
-      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
+      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal('false');
       await elObj.openCalendar();
-      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
+      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal('true');
       await elObj.closeCalendar();
-      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
+      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal('false');
     });
 
     it('is accessible when closed', async () => {

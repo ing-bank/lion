@@ -640,14 +640,13 @@ export class OverlayController extends EventTarget {
   __setupTeardownAccessibility({ phase }) {
     if (phase === 'init') {
       this.__storeOriginalAttrs(this.contentNode, ['role', 'id']);
-      const isModal = this.hasBackdrop;
 
       if (this.invokerNode) {
-        const attributesToStore = ['aria-labelledby', 'aria-describedby'];
-        if (!isModal) {
-          attributesToStore.push('aria-expanded');
-        }
-        this.__storeOriginalAttrs(this.invokerNode, attributesToStore);
+        this.__storeOriginalAttrs(this.invokerNode, [
+          'aria-expanded',
+          'aria-labelledby',
+          'aria-describedby',
+        ]);
       }
 
       if (!this.contentNode.id) {
@@ -662,7 +661,7 @@ export class OverlayController extends EventTarget {
         }
         this.contentNode.setAttribute('role', 'tooltip');
       } else {
-        if (this.invokerNode && !isModal) {
+        if (this.invokerNode) {
           this.invokerNode.setAttribute('aria-expanded', `${this.isShown}`);
         }
         if (!this.contentNode.getAttribute('role')) {
@@ -1093,7 +1092,7 @@ export class OverlayController extends EventTarget {
         // @ts-ignore
         this.__wrappingDialogNode.close();
         // @ts-ignore
-        this.__wrappingDialogNode.show();
+        this.__wrappingDialogNode.showModal();
       }
       // else {
       this.enableTrapsKeyboardFocus();
@@ -1300,8 +1299,7 @@ export class OverlayController extends EventTarget {
     if (phase === 'init' || phase === 'teardown') {
       this.__setupTeardownAccessibility({ phase });
     }
-    const isModal = this.hasBackdrop;
-    if (this.invokerNode && !this.isTooltip && !isModal) {
+    if (this.invokerNode && !this.isTooltip) {
       this.invokerNode.setAttribute('aria-expanded', `${phase === 'show'}`);
     }
   }
