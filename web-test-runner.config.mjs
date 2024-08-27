@@ -28,7 +28,6 @@ const testRunnerHtml = testRunnerImport =>
   `
 <html>
   <head>
-    <script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
     <script type="module" src="${testRunnerImport}"></script>
   </head>
 </html>
