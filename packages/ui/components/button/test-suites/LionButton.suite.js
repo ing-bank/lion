@@ -16,6 +16,39 @@ export function LionButtonSuite({ klass = LionButton } = {}) {
   const tagStringButton = defineCE(class extends klass {});
   const tagButton = unsafeStatic(tagStringButton);
 
+  // This test below is exactly the same code that we see in this reproductino link:
+  // https://studio.webcomponents.dev/edit/CdTHK8iuVNqVSuive1NH/src/index.js?p=README.md
+  // and in this branch, the output of the code in the console is identical to the
+  // output of the code in the reproduction link.
+  it('Clicking on disabled button', () => {
+    customElements.define('lion-button', LionButton);
+
+    ['lion-button', 'button'].forEach(async tagName => {
+      let counter = 1;
+
+      const theButton = document.createElement(tagName);
+      theButton.textContent = `This is ${tagName}`;
+      document.body.appendChild(theButton);
+
+      theButton.addEventListener('click', () => {
+        console.log(`Hello from ${tagName} - ${counter}`);
+      });
+
+      theButton.click();
+      counter += 1;
+
+      theButton.setAttribute('disabled', 'true');
+
+      theButton.click();
+      counter += 1;
+
+      theButton.removeAttribute('disabled');
+
+      theButton.click();
+      counter += 1;
+    });
+  });
+
   describe('LionButton', () => {
     it('has .type="button" and type="button" by default', async () => {
       const el = /** @type {LionButton} */ (await fixture(html`<${tagButton}>foo</${tagButton}>`));
