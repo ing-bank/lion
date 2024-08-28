@@ -788,6 +788,10 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _keepBodySize({ phase }) {
+    if (!this.preventsScroll) {
+      return;
+    }
+
     switch (phase) {
       case 'before-show':
         this.__bodyClientWidth = document.body.clientWidth;

@@ -1781,4 +1781,33 @@ describe('OverlayController', () => {
       );
     });
   });
+
+  describe('run _keepBodySize only with scroll prevention', () => {
+    /**
+     * @type {OverlayController}
+     */
+    const overlayControllerNoPrevent = new OverlayController({
+      ...withLocalTestConfig(),
+      preventsScroll: false,
+    });
+
+    const overlayControllerPreventsScroll = new OverlayController({
+      ...withLocalTestConfig(),
+      preventsScroll: true,
+    });
+
+    it('should not run with scroll prevention', async () => {
+      await overlayControllerNoPrevent.show();
+
+      expect(overlayControllerNoPrevent.__bodyMarginRightInline).to.equal(undefined);
+      expect(overlayControllerNoPrevent.__bodyMarginRight).to.equal(undefined);
+    });
+
+    it('should run with scroll prevention', async () => {
+      await overlayControllerPreventsScroll.show();
+
+      expect(overlayControllerPreventsScroll.__bodyMarginRightInline).to.not.equal(undefined);
+      expect(overlayControllerPreventsScroll.__bodyMarginRight).to.not.equal(undefined);
+    });
+  });
 });
