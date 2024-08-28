@@ -1765,24 +1765,32 @@ describe('OverlayController', () => {
     });
   });
 
-  describe('run _keepBodySize only with global placement', () => {
+  describe('run _keepBodySize only with scroll prevention', () => {
     /**
      * @type {OverlayController}
      */
-    const overlayControllerLocal = new OverlayController({
+    const overlayControllerNoPrevent = new OverlayController({
       ...withLocalTestConfig(),
       preventsScroll: false,
     });
 
-    it('should not run with local placement', async () => {
-      await overlayControllerLocal.show();
+    const overlayControllerPreventsScroll = new OverlayController({
+      ...withLocalTestConfig(),
+      preventsScroll: true,
+    });
 
-      expect(overlayControllerLocal.__bodyMarginRightInline).to.equal(undefined);
-      expect(overlayControllerLocal.__bodyMarginRight).to.equal(undefined);
-      
-      overlayControllerLocal.updateConfig({ preventsScroll: true }); 
-      expect(overlayControllerLocal.__bodyMarginRightInline).to.not.equal(undefined);
-      expect(overlayControllerLocal.__bodyMarginRight).to.not.equal(undefined);
+    it('should not run with scroll prevention', async () => {
+      await overlayControllerNoPrevent.show();
+
+      expect(overlayControllerNoPrevent.__bodyMarginRightInline).to.equal(undefined);
+      expect(overlayControllerNoPrevent.__bodyMarginRight).to.equal(undefined);
+    });
+
+    it('should run with scroll prevention', async () => {
+      await overlayControllerPreventsScroll.show();
+
+      expect(overlayControllerPreventsScroll.__bodyMarginRightInline).to.not.equal(undefined);
+      expect(overlayControllerPreventsScroll.__bodyMarginRight).to.not.equal(undefined);
     });
   });
 });
