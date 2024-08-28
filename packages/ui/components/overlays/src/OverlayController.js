@@ -1093,7 +1093,7 @@ export class OverlayController extends EventTarget {
         // @ts-ignore
         this.__wrappingDialogNode.close();
         // @ts-ignore
-        this.__wrappingDialogNode.show();
+        this.__wrappingDialogNode.showModal();
       }
       // else {
       this.enableTrapsKeyboardFocus();
