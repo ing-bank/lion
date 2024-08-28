@@ -640,7 +640,7 @@ export class OverlayController extends EventTarget {
   __setupTeardownAccessibility({ phase }) {
     if (phase === 'init') {
       this.__storeOriginalAttrs(this.contentNode, ['role', 'id']);
-      const isModal = this.hasBackdrop;
+      const isModal = this.trapsKeyboardFocus;
 
       if (this.invokerNode) {
         const attributesToStore = ['aria-labelledby', 'aria-describedby'];
@@ -1300,7 +1300,7 @@ export class OverlayController extends EventTarget {
     if (phase === 'init' || phase === 'teardown') {
       this.__setupTeardownAccessibility({ phase });
     }
-    const isModal = this.hasBackdrop;
+    const isModal = this.trapsKeyboardFocus;
     if (this.invokerNode && !this.isTooltip && !isModal) {
       this.invokerNode.setAttribute('aria-expanded', `${phase === 'show'}`);
     }

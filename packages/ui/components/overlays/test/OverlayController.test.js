@@ -1534,7 +1534,7 @@ describe('OverlayController', () => {
       );
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
-        hasBackdrop: true,
+        trapsKeyboardFocus: true,
         handlesAccessibility: true,
         invokerNode,
       });
