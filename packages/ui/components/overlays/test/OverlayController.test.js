@@ -1771,6 +1771,7 @@ describe('OverlayController', () => {
      */
     const overlayControllerLocal = new OverlayController({
       ...withLocalTestConfig(),
+      preventsScroll: false,
     });
 
     it('should not run with local placement', async () => {
@@ -1778,6 +1779,10 @@ describe('OverlayController', () => {
 
       expect(overlayControllerLocal.__bodyMarginRightInline).to.equal(undefined);
       expect(overlayControllerLocal.__bodyMarginRight).to.equal(undefined);
+      
+      overlayControllerLocal.updateConfig({ preventsScroll: true }); 
+      expect(overlayControllerLocal.__bodyMarginRightInline).to.not.equal(undefined);
+      expect(overlayControllerLocal.__bodyMarginRight).to.not.equal(undefined);
     });
   });
 });

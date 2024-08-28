@@ -787,7 +787,7 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _keepBodySize({ phase }) {
-    if (this.placementMode !== 'global') {
+    if (!this.preventsScroll) {
       return;
     }
 
