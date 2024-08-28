@@ -168,7 +168,7 @@ describe('lion-dialog', () => {
   });
 
   describe('Accessibility', () => {
-    it('adds [aria-expanded] to invoker button', async () => {
+    it('does not add [aria-expanded] to invoker button', async () => {
       const el = await fixture(
         html` <lion-dialog>
           <div slot="content" class="dialog">Hey there</div>
