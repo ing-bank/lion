@@ -1528,7 +1528,7 @@ describe('OverlayController', () => {
       expect(ctrl.invokerNode?.getAttribute('aria-expanded')).to.equal('false');
     });
 
-    it('synchronizes [aria-expanded] on invoker when the overlay is modal', async () => {
+    it('does not synchronize [aria-expanded] on invoker when the overlay is modal', async () => {
       const invokerNode = /** @type {HTMLElement} */ (
         await fixture('<div role="button">invoker</div>')
       );
