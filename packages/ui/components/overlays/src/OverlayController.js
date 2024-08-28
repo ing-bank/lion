@@ -640,13 +640,14 @@ export class OverlayController extends EventTarget {
   __setupTeardownAccessibility({ phase }) {
     if (phase === 'init') {
       this.__storeOriginalAttrs(this.contentNode, ['role', 'id']);
+      const isModal = this.hasBackdrop;
 
       if (this.invokerNode) {
-        this.__storeOriginalAttrs(this.invokerNode, [
-          'aria-expanded',
-          'aria-labelledby',
-          'aria-describedby',
-        ]);
+        const attributesToStore = ['aria-labelledby', 'aria-describedby'];
+        if (!isModal) {
+          attributesToStore.push('aria-expanded');
+        }
+        this.__storeOriginalAttrs(this.invokerNode, attributesToStore);
       }
 
       if (!this.contentNode.id) {
@@ -661,7 +662,7 @@ export class OverlayController extends EventTarget {
         }
         this.contentNode.setAttribute('role', 'tooltip');
       } else {
-        if (this.invokerNode) {
+        if (this.invokerNode && !isModal) {
           this.invokerNode.setAttribute('aria-expanded', `${this.isShown}`);
         }
         if (!this.contentNode.getAttribute('role')) {
@@ -1299,7 +1300,8 @@ export class OverlayController extends EventTarget {
     if (phase === 'init' || phase === 'teardown') {
       this.__setupTeardownAccessibility({ phase });
     }
-    if (this.invokerNode && !this.isTooltip) {
+    const isModal = this.hasBackdrop;
+    if (this.invokerNode && !this.isTooltip && !isModal) {
       this.invokerNode.setAttribute('aria-expanded', `${phase === 'show'}`);
     }
   }

@@ -1528,6 +1528,23 @@ describe('OverlayController', () => {
       expect(ctrl.invokerNode?.getAttribute('aria-expanded')).to.equal('false');
     });
 
+    it('does not synchronize [aria-expanded] on invoker when the overlay is modal', async () => {
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture('<div role="button">invoker</div>')
+      );
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        hasBackdrop: true,
+        handlesAccessibility: true,
+        invokerNode,
+      });
+      expect(ctrl.invokerNode?.getAttribute('aria-expanded')).to.equal(null);
+      await ctrl.show();
+      expect(ctrl.invokerNode?.getAttribute('aria-expanded')).to.equal(null);
+      await ctrl.hide();
+      expect(ctrl.invokerNode?.getAttribute('aria-expanded')).to.equal(null);
+    });
+
     it('creates unique id for content', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
