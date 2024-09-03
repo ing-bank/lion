@@ -232,7 +232,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     /** @type {string[]} */
     let allowedFileExtensions = [];
     if (this.accept) {
-      const acceptedFiles = this.accept.replace(/\s+/g, '').replace(/\.+/g, '').split(',');
+      const acceptedFiles = this.accept.replace(/\s+/g, '').split(',');
       allowedFileTypes = acceptedFiles.filter(acceptedFile => acceptedFile.includes('/'));
       allowedFileExtensions = acceptedFiles.filter(acceptedFile => !acceptedFile.includes('/'));
     }
@@ -692,8 +692,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
 
     if (allowedFileExtensions.length) {
       array = allowedFileExtensions;
-      // eslint-disable-next-line no-return-assign
-      array = array.map(item => (item = `.${item}`));
       lastItem = array.pop();
       arrayLength = array.length;
     } else if (allowedFileTypes.length) {

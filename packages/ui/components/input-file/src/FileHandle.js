@@ -53,7 +53,7 @@ export class FileHandle {
    */
   // eslint-disable-next-line class-methods-use-this
   _getFileNameExtension(fileName) {
-    return fileName.slice(fileName.lastIndexOf('.') + 1);
+    return fileName.slice(fileName.lastIndexOf('.'));
   }
 
   // TODO: seems to suggest upload is going on...
