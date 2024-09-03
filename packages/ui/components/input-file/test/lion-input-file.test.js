@@ -158,6 +158,17 @@ describe('lion-input-file', () => {
       })
     );
 
+    it('error should not be there when the file extensions are accepted', async () => {
+      const el = await fixture(html`
+        <lion-input-file label="Select" accept=".txt"></lion-input-file>
+      `);
+
+      mimicSelectFile(el, [fileWrongType]);
+      await el.updateComplete;
+
+      expect(el.hasFeedbackFor.length).to.equal(0);
+    });
+
     it('should not be added to the selected list', async () => {
       const el = await fixture(html`
         <lion-input-file label="Select" accept="text/plain"></lion-input-file>
