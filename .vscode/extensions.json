@@ -4,5 +4,6 @@
       "esbenp.prettier-vscode",
       "mskelton.npm-outdated",
       "runem.lit-plugin",
+      "astro-build.astro-vscode"
     ]
   }
