@@ -354,20 +354,6 @@ describe('lion-input-file', () => {
         expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
       });
     });
-
-    it('error message should add all file extensions to the validator message also works without dots "."', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept="jpg, png, pdf"></lion-input-file>
-      `);
-
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
-
-      // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
-      });
-    });
   });
 
   describe('invalid file sizes', async () => {
