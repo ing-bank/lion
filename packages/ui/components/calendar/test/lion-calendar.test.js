@@ -1262,6 +1262,30 @@ describe('<lion-calendar>', () => {
 
           clock.restore();
         });
+
+        it('is nearest to today if no selected date is available and today is disabled', async () => {
+          const clock = sinon.useFakeTimers({ now: new Date('2000/12/15').getTime() });
+
+          const calWithMin = await fixture(
+            html`<lion-calendar .minDate=${new Date('2000/12/25')}></lion-calendar>`,
+          );
+          const calObjWithMin = new CalendarObject(calWithMin);
+          expect(calObjWithMin.centralDayObj?.monthday).to.equal(25);
+
+          const calWithMax = await fixture(
+            html`<lion-calendar .maxDate=${new Date('2000/12/05')}></lion-calendar>`,
+          );
+          const calObjWithMax = new CalendarObject(calWithMax);
+          expect(calObjWithMax.centralDayObj?.monthday).to.equal(5);
+
+          const calWithDisabled = await fixture(
+            html`<lion-calendar .disableDates=${[new Date('2000/12/15')]}></lion-calendar>`,
+          );
+          const calObjWithDisabled = new CalendarObject(calWithDisabled);
+          expect(calObjWithDisabled.centralDayObj?.monthday).to.equal(16);
+
+          clock.restore();
+        });
       });
 
       /**
