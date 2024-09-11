@@ -47,8 +47,7 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 - **Modern Code:** Lion is distributes as pure es modules.
 - **Exposes functions/classes and Web Components:** Ships a functionality in it's most appropriate form.
 
-> Note: Our demos may look a little bland but that is on purpose. They only come with functional stylings.
-> This makes sense as the main use case is to extend those components and if you do you do not want to override existing stylings.
+> Note: Our demo examples might look simple and not very stylish. This is on purpose. They are designed to be basic so you can easily add your own styles to them to match your intended design, without dealing with styles that are already there.
 
 <p align="center">
   <a href="https://lion-web.netlify.app/guides/"><strong>Explore the Lion Guides&nbsp;&nbsp;▶</strong></a>
