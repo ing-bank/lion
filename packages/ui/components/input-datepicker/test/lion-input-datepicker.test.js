@@ -263,6 +263,33 @@ describe('<lion-input-datepicker>', () => {
       expect(el.value).to.equal('18/12/2019');
     });
 
+    describe('localization', () => {
+      /** @type {import('@lion/ui/localize.js').LocalizeManager} */ let localizeManager;
+
+      before(async () => {
+        const { getLocalizeManager } = await import('@lion/ui/localize-no-side-effects.js');
+        localizeManager = getLocalizeManager();
+      });
+
+      it('should update formatted value and value in accordance of localization upon model value update', async () => {
+        localizeManager.locale = 'nl-NL';
+
+        const el = await fixture(html`
+          <lion-input-datepicker .modelValue="${new Date('2022/12/30')}"></lion-input-datepicker>
+        `);
+
+        await el.updateComplete;
+
+        expect(el.formattedValue).to.equal('30-12-2022');
+        expect(el.value).to.equal('30-12-2022');
+      });
+
+      after(() => {
+        // @ts-ignore - using protected method to undo setting explict locale
+        localizeManager.locale = localizeManager._fallbackLocale;
+      });
+    });
+
     describe('Validators', () => {
       /**
        * Validators are the Application Developer facing API in <lion-input-datepicker>:
