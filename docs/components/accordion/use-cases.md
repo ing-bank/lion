@@ -160,6 +160,50 @@ A header can be multiline.
 </lion-accordion>
 ```
 
+## Exclusive
+Sometimes, it might be required to show only one expaned slot of the accordion at a time. For such instances, we have a feature called 'exclusive'. This allows the accordion to open only one and a time and closes the open slot when a new slot is clicked upon.
+
+This field takes in a Boolean value, which by default is false.
+
+```html preview-story
+<lion-accordion exclusive=true>
+  <h3 slot="invoker">
+    <button>
+      Sensory Factors <br />
+      <small>or the experience of taste</small>
+    </button>
+  </h3>
+  <div slot="content" class="lion-paragraph-container">
+    <p>
+      The taste of oranges is determined mainly by the relative ratios of sugars and acids, whereas
+      orange aroma derives from volatile organic compounds, including alcohols, aldehydes, ketones,
+      terpenes, and esters. Bitter limonoid compounds, such as limonin, decrease gradually during
+      development, whereas volatile aroma compounds tend to peak in mid– to late–season development.
+      Taste quality tends to improve later in harvests when there is a higher sugar/acid ratio with
+      less bitterness. As a citrus fruit, the orange is acidic, with pH levels ranging from 2.9 to
+      4.0.
+    </p>
+
+    <p>
+      Sensory qualities vary according to genetic background, environmental conditions during
+      development, ripeness at harvest, postharvest conditions, and storage duration.
+    </p>
+  </div>
+  <h3 slot="invoker">
+    <button>
+      Nutritional value
+      <small>or the raw data</small>
+    </button>
+  </h3>
+  <div slot="content">
+    Orange flesh is 87% water, 12% carbohydrates, 1% protein, and contains negligible fat (table).
+    In a 100 gram reference amount, orange flesh provides 47 calories, and is a rich source of
+    vitamin C, providing 64% of the Daily Value. No other micronutrients are present in significant
+    amounts (table).
+  </div>
+</lion-accordion>
+```
+
 ## Distribute New Elements
 
 Below, we demonstrate how you could dynamically add a new invoker + content.
@@ -249,48 +293,4 @@ export const distributeNewElement = () => {
 
   return previewHtml`<demo-distribute></demo-distribute>`;
 };
-```
-
-## Exclusive
-Sometimes, it might be required to show only one expaned slot of the accordion at a time. For such instances, we have a feature called 'exclusive'. This allows the accordion to open only one and a time and closes the open slot when a new slot is clicked upon.
-
-This field takes in a Boolean value, which by default is false.
-
-```html preview-story
-<lion-accordion exclusive=true>
-  <h3 slot="invoker">
-    <button>
-      Sensory Factors <br />
-      <small>or the experience of taste</small>
-    </button>
-  </h3>
-  <div slot="content" class="lion-paragraph-container">
-    <p>
-      The taste of oranges is determined mainly by the relative ratios of sugars and acids, whereas
-      orange aroma derives from volatile organic compounds, including alcohols, aldehydes, ketones,
-      terpenes, and esters. Bitter limonoid compounds, such as limonin, decrease gradually during
-      development, whereas volatile aroma compounds tend to peak in mid– to late–season development.
-      Taste quality tends to improve later in harvests when there is a higher sugar/acid ratio with
-      less bitterness. As a citrus fruit, the orange is acidic, with pH levels ranging from 2.9 to
-      4.0.
-    </p>
-
-    <p>
-      Sensory qualities vary according to genetic background, environmental conditions during
-      development, ripeness at harvest, postharvest conditions, and storage duration.
-    </p>
-  </div>
-  <h3 slot="invoker">
-    <button>
-      Nutritional value
-      <small>or the raw data</small>
-    </button>
-  </h3>
-  <div slot="content">
-    Orange flesh is 87% water, 12% carbohydrates, 1% protein, and contains negligible fat (table).
-    In a 100 gram reference amount, orange flesh provides 47 calories, and is a rich source of
-    vitamin C, providing 64% of the Daily Value. No other micronutrients are present in significant
-    amounts (table).
-  </div>
-</lion-accordion>
 ```
