@@ -1278,7 +1278,9 @@ describe('<lion-calendar>', () => {
           expect(calObjWithMax.centralDayObj?.monthday).to.equal(5);
 
           const calWithDisabled = await fixture(
-            html`<lion-calendar .disableDates=${d => d.getDate() === 15}></lion-calendar>`,
+            html`<lion-calendar
+              .disableDates=${/** @param {Date} date */ date => date.getDay() === 15}
+            ></lion-calendar>`,
           );
           await calWithDisabled.updateComplete;
 
