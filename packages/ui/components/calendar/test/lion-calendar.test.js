@@ -1279,7 +1279,7 @@ describe('<lion-calendar>', () => {
 
           const calWithDisabled = await fixture(
             html`<lion-calendar
-              .disableDates=${/** @param {Date} date */ date => date.getDay() === 15}
+              .disableDates=${/** @param {Date} date */ date => date.getDate() === 15}
             ></lion-calendar>`,
           );
           await calWithDisabled.updateComplete;
