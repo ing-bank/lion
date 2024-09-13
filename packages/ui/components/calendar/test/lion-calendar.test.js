@@ -465,9 +465,8 @@ describe('<lion-calendar>', () => {
         `);
 
         clock.restore();
-        expect(isSameDate(el.centralDate, new Date('2019/06/03')), 'central date').to.be.true;
-        expect(isSameDate(elSetting.centralDate, new Date('2019/07/03')), 'central date').to.be
-          .true;
+        expect(isSameDate(el.centralDate, new Date('2019/07/03'))).to.be.true;
+        expect(isSameDate(elSetting.centralDate, new Date('2019/07/03'))).to.be.true;
       });
 
       describe('Normalization', () => {
@@ -573,7 +572,7 @@ describe('<lion-calendar>', () => {
               .disableDates="${/** @param {Date} d */ d => d.getDate() === 15}"
             ></lion-calendar>
           `);
-          el.focusDate(el.findNearestEnabledDate());
+          el.focusDate(el.findNearestEnabledDate(new Date()));
           await el.updateComplete;
 
           const elObj = new CalendarObject(el);
@@ -590,7 +589,7 @@ describe('<lion-calendar>', () => {
               .disableDates="${/** @param {Date} d */ d => d.getFullYear() > 1998}"
             ></lion-calendar>
           `);
-          el.focusDate(el.findNearestEnabledDate());
+          el.focusDate(el.findNearestEnabledDate(new Date()));
           await el.updateComplete;
 
           expect(el.centralDate.getFullYear()).to.equal(1998);
@@ -609,7 +608,7 @@ describe('<lion-calendar>', () => {
             ></lion-calendar>
           `);
 
-          el.focusDate(el.findNearestEnabledDate());
+          el.focusDate(el.findNearestEnabledDate(new Date()));
           await el.updateComplete;
 
           expect(el.centralDate.getFullYear()).to.equal(2002);
@@ -1279,8 +1278,10 @@ describe('<lion-calendar>', () => {
           expect(calObjWithMax.centralDayObj?.monthday).to.equal(5);
 
           const calWithDisabled = await fixture(
-            html`<lion-calendar .disableDates=${[new Date('2000/12/15')]}></lion-calendar>`,
+            html`<lion-calendar .disableDates=${d => d.getDate() === 15}></lion-calendar>`,
           );
+          await calWithDisabled.updateComplete;
+
           const calObjWithDisabled = new CalendarObject(calWithDisabled);
           expect(calObjWithDisabled.centralDayObj?.monthday).to.equal(16);
 
