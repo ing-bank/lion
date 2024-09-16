@@ -270,11 +270,6 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
     this.__connectedCallbackDone = true;
 
-    this.__calculateInitialCentralDate();
-
-    // setup data for initial render
-    this.__data = this.__createData();
-
     /**
      * This logic needs to happen on firstUpdated, but every time the DOM node is moved as well
      * since firstUpdated only runs once, this logic is moved here, but after updateComplete
@@ -303,6 +298,13 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       this.__contentWrapperElement.addEventListener('keydown', this.__boundKeyboardNavigationEvent);
       this.__eventsAdded = true;
     }
+  }
+
+  firstUpdated() {
+    this.__calculateInitialCentralDate();
+
+    // setup data for initial render
+    this.__data = this.__createData();
   }
 
   disconnectedCallback() {
@@ -372,6 +374,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     if (this.centralDate === this.__today && this.selectedDate) {
       // initialized with selectedDate only if user didn't provide another one
       this.centralDate = this.selectedDate;
+    } else if (!this.__isEnabledDate(this.centralDate)) {
+      this.centralDate = this.findNearestEnabledDate(this.centralDate);
     }
     /** @type {Date} */
     this.__initialCentralDate = this.centralDate;

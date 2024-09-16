@@ -465,9 +465,8 @@ describe('<lion-calendar>', () => {
         `);
 
         clock.restore();
-        expect(isSameDate(el.centralDate, new Date('2019/06/03')), 'central date').to.be.true;
-        expect(isSameDate(elSetting.centralDate, new Date('2019/07/03')), 'central date').to.be
-          .true;
+        expect(isSameDate(el.centralDate, new Date('2019/07/03'))).to.be.true;
+        expect(isSameDate(elSetting.centralDate, new Date('2019/07/03'))).to.be.true;
       });
 
       describe('Normalization', () => {
@@ -573,7 +572,7 @@ describe('<lion-calendar>', () => {
               .disableDates="${/** @param {Date} d */ d => d.getDate() === 15}"
             ></lion-calendar>
           `);
-          el.focusDate(el.findNearestEnabledDate());
+          el.focusDate(el.findNearestEnabledDate(new Date()));
           await el.updateComplete;
 
           const elObj = new CalendarObject(el);
@@ -590,7 +589,7 @@ describe('<lion-calendar>', () => {
               .disableDates="${/** @param {Date} d */ d => d.getFullYear() > 1998}"
             ></lion-calendar>
           `);
-          el.focusDate(el.findNearestEnabledDate());
+          el.focusDate(el.findNearestEnabledDate(new Date()));
           await el.updateComplete;
 
           expect(el.centralDate.getFullYear()).to.equal(1998);
@@ -609,7 +608,7 @@ describe('<lion-calendar>', () => {
             ></lion-calendar>
           `);
 
-          el.focusDate(el.findNearestEnabledDate());
+          el.focusDate(el.findNearestEnabledDate(new Date()));
           await el.updateComplete;
 
           expect(el.centralDate.getFullYear()).to.equal(2002);
@@ -1259,6 +1258,34 @@ describe('<lion-calendar>', () => {
           const el = await fixture(html`<lion-calendar></lion-calendar>`);
           const elObj = new CalendarObject(el);
           expect(elObj.centralDayObj?.monthday).to.equal(15);
+
+          clock.restore();
+        });
+
+        it('is nearest to today if no selected date is available and today is disabled', async () => {
+          const clock = sinon.useFakeTimers({ now: new Date('2000/12/15').getTime() });
+
+          const calWithMin = await fixture(
+            html`<lion-calendar .minDate=${new Date('2000/12/25')}></lion-calendar>`,
+          );
+          const calObjWithMin = new CalendarObject(calWithMin);
+          expect(calObjWithMin.centralDayObj?.monthday).to.equal(25);
+
+          const calWithMax = await fixture(
+            html`<lion-calendar .maxDate=${new Date('2000/12/05')}></lion-calendar>`,
+          );
+          const calObjWithMax = new CalendarObject(calWithMax);
+          expect(calObjWithMax.centralDayObj?.monthday).to.equal(5);
+
+          const calWithDisabled = await fixture(
+            html`<lion-calendar
+              .disableDates=${/** @param {Date} date */ date => date.getDate() === 15}
+            ></lion-calendar>`,
+          );
+          await calWithDisabled.updateComplete;
+
+          const calObjWithDisabled = new CalendarObject(calWithDisabled);
+          expect(calObjWithDisabled.centralDayObj?.monthday).to.equal(16);
 
           clock.restore();
         });
