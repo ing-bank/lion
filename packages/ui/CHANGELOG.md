@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.7.8
+
+### Patch Changes
+
+- 9f7935c: [input-datepicker] Fix a locale bug
+- bb1f347: [calendar] Now central date would be nearest enabled date if today is disabled
+
 ## 0.7.7
 
 ### Patch Changes
