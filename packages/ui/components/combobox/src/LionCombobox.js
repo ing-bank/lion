@@ -4,9 +4,9 @@ import { LionListbox } from '@lion/ui/listbox.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { css, html } from 'lit';
+import { CustomChoiceGroupMixin } from '../../form-core/src/choice-group/CustomChoiceGroupMixin.js';
 import { makeMatchingTextBold, unmakeMatchingTextBold } from './utils/makeMatchingTextBold.js';
 import { MatchesOption } from './validators.js';
-import { CustomChoiceGroupMixin } from '../../form-core/src/choice-group/CustomChoiceGroupMixin.js';
 
 const matchA11ySpanReverseFns = new WeakMap();
 
@@ -705,7 +705,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   // eslint-disable-next-line no-unused-vars
   _textboxOnInput(ev) {
     this.__shouldAutocompleteNextUpdate = true;
-    this.opened = true;
+    this.opened = this._showOverlayCondition({});
   }
 
   /**
