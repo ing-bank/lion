@@ -44,7 +44,7 @@ test.describe('lion-combobox', () => {
   });
 
   test("doesn't select any similar options after using delete when requireOptionMatch is false", async ({ page }) => {
-    await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/simple-combobox.js`);
+    await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/combobox-e2e-test-2.js`);
     await page.evaluate(() => {
       const comboboxEl = document.querySelector('lion-combobox');
       comboboxEl.requireOptionMatch = false;  
@@ -64,7 +64,7 @@ test.describe('lion-combobox', () => {
     expect(await combobox.evaluate((el) => el.value)).toEqual('Art');
   });
 
-  test.only('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async ({ page }) => {
+  test('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async ({ page }) => {
     await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/combobox-e2e-test1.js`);
     const combobox = await page.locator('lion-combobox');
     const input = await page.locator('css=input');  
@@ -74,9 +74,33 @@ test.describe('lion-combobox', () => {
     await page.keyboard.type('t');  
     await page.keyboard.press('Backspace');
     await page.keyboard.press('Enter');
-    await page.waitForTimeout(1000);
-
+    
     expect(await combobox.evaluate((el) => el.modelValue)).toEqual(['Art']);
   });
+
+  test.only('hides listbox on click/enter (when multiple-choice is false)', async ({ page }) => {
+    await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/combobox-e2e-test-3.js`);
+    const combobox = await page.locator('lion-combobox');
+    const lionOptions = await page.locator('lion-options');
+    const input = await page.locator('css=input');  
+    await input.focus();
+
+    async function open() {
+      await input.fill('ch');
+    }
+
+    await open();
+    expect(await combobox.evaluate((el) => el.opened)).toEqual(true);
+    const firstVisibleOption = await page.$("lion-option >> visible=true");
+    await firstVisibleOption?.click();
+    expect(await combobox.evaluate((el) => el.opened)).toEqual(false);    
+    await open();
+    expect(await combobox.evaluate((el) => el.opened)).toEqual(true);    
+    const allOptions = await page.locator("lion-option").all();
+    const index = allOptions.indexOf(await page.locator("lion-option >> visible=true"));
+    await combobox.evaluate((el, index) => el.activeIndex = index, index);
+    await page.keyboard.press('Enter');
+    expect(await combobox.evaluate((el) => el.opened)).toEqual(false);    
+   });
 });
 
