@@ -163,5 +163,8 @@
     "singleQuote": true,
     "arrowParens": "avoid",
     "trailingComma": "all"
+  },
+  "dependencies": {
+    "@rollup/plugin-node-resolve": "^15.3.0"
   }
 }

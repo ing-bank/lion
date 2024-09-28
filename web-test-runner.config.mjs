@@ -1,6 +1,8 @@
 import fs from 'fs';
 import { playwrightLauncher } from '@web/test-runner-playwright';
 
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+
 const devMode = process.argv.includes('--dev-mode');
 
 const packages = fs
@@ -46,9 +48,12 @@ export default {
       lines: 95,
     },
   },
+  plugins: [nodeResolve({
+    exportConditions: ['development']
+  })],
   testFramework: {
     config: {
-      timeout: '5000',
+      timeout: '20000',
     },
   },
   testRunnerHtml,

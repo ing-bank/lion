@@ -396,37 +396,9 @@ To highlight the correct elements of the option, each element should be tagged w
 
 ```js preview-story
 class ComplexObjectCombobox extends LionCombobox {
-  /**
-   * @overridable
-   * @param {LionOption & {__originalInnerHTML?:string}} option
-   * @param {string} matchingString
-   * @protected
-   */
-  _onFilterMatch(option, matchingString) {
-    Array.from(option.children).forEach(child => {
-      if (child.hasAttribute('data-key')) {
-        this._highlightMatchedOption(child, matchingString);
-      }
-    });
-    // Alternatively, an extension can add an animation here
-    option.style.display = '';
-  }
-
-  /**
-   * @overridable
-   * @param {LionOption & {__originalInnerHTML?:string}} option
-   * @param {string} [curValue]
-   * @param {string} [prevValue]
-   * @protected
-   */
-  _onFilterUnmatch(option, curValue, prevValue) {
-    Array.from(option.children).forEach(child => {
-      if (child.hasAttribute('data-key')) {
-        this._unhighlightMatchedOption(child);
-      }
-    });
-    // Alternatively, an extension can add an animation here
-    option.style.display = 'none';
+  _showOverlayCondition(options) {
+    console.log('options.currentValue: ', options.currentValue);
+    return false;
   }
 }
 
@@ -436,7 +408,7 @@ const onModelValueChanged = event => {
   console.log(`event.target.modelValue: ${JSON.stringify(event.target.modelValue)}`);
 };
 
-export const complexObjectChoiceValue = () =>
+export const complexObjectChoiceValue = () => 
   html` <complex-object-combobox
     name="combo"
     label="Display only the label once selected"

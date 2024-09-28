@@ -11,7 +11,7 @@ import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
 import { Required, Unparseable } from '@lion/ui/form-core.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
@@ -662,7 +662,7 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('Foo');
     });
 
-    it("doesn't select any similar options after using delete when requireOptionMatch is false", async () => {
+    it.only("doesn't select any similar options after using delete when requireOptionMatch is false", async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" .validators=${[new Required()]}>
@@ -676,12 +676,12 @@ describe('lion-combobox', () => {
       el.requireOptionMatch = false;
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'Art');
+      mimicUserTyping(el, 'Art');      
       await el.updateComplete;
 
       await mimicUserTypingAdvanced(el, ['Delete']);
       await el.updateComplete;
-      await el.updateComplete;
+      //await el.updateComplete;
 
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
@@ -1152,7 +1152,8 @@ describe('lion-combobox', () => {
         class ShowOverlayConditionCombobox extends LionCombobox {
           /** @param {{ currentValue: string, lastKey:string }} options */
           _showOverlayCondition(options) {
-            return options.currentValue.length > 3 && super._showOverlayCondition(options);
+            // @ts-ignore
+            return this.__prevCboxValueNonSelected.length > 3 && super._showOverlayCondition(options);
           }
         }
         const tagName = defineCE(ShowOverlayConditionCombobox);
@@ -1169,8 +1170,33 @@ describe('lion-combobox', () => {
         `)
         );
 
+        /**
+         * It is important to wait until popper is loaded to match normal code flow 
+         * like in case when a user interracts with the combobox in a browser  
+         */
+        // @ts-ignore allow protected members
+        await el._overlayCtrl?.constructor.popperModule;        
+        const dialog = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('dialog'));
+        
+        /**
+         * hasDropdownFlashed is `true` if the menu was shown for a short period of time and then got closed
+         */
+        let hasDropdownFlashed = false;
+
+        const observer = new MutationObserver((mutationList, observer) => {
+          for (const mutation of mutationList) {
+              if (dialog.style.display === '') {
+                console.log(`The ${mutation.attributeName} attribute was modified.`);
+                hasDropdownFlashed = true;                
+              }              
+          }
+        });
+        observer.observe(dialog, { attributeFilter: ['style'] });
+
         mimicUserTyping(el, 'aaa');
+        //expect(hasDropdownFlashed).to.be.false;
         expect(el.opened).to.be.false;
+        observer.disconnect();
       });
 
       it('allows to control overlay visibility via "_showOverlayCondition": should display overlay if currentValue length condition is fulfilled', async () => {

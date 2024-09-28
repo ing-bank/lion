@@ -48,6 +48,22 @@ export function mimicUserTyping(el, value) {
 }
 
 /**
+ * @param {LionCombobox} el
+ */
+async function waitForHideAndShowCompletion(el) {
+  // @ts-ignore
+  if (el._overlayCtrl._showComplete) {
+    // @ts-ignore
+    await el._overlayCtrl._showComplete;
+  }
+  // @ts-ignore    
+  if (el._overlayCtrl._hideComplete) {
+    // @ts-ignore    
+    await el._overlayCtrl._hideComplete;
+  }  
+}
+
+/**
  * @param {HTMLElement} el
  * @param {string} key
  */
@@ -66,43 +82,39 @@ export async function mimicUserTypingAdvanced(el, values) {
   let cursorPosition = _inputNode.selectionStart || 0;
 
   for (const key of values) {
-    // eslint-disable-next-line no-await-in-loop, no-loop-func
-    await new Promise(resolve => {
-      const selectionStart = _inputNode.selectionStart || 0;
-      const selectionEnd = _inputNode.selectionEnd || 0;
-      const hasSelection = selectionStart !== selectionEnd;
+    const selectionStart = _inputNode.selectionStart || 0;
+    const selectionEnd = _inputNode.selectionEnd || 0;
+    const hasSelection = selectionStart !== selectionEnd;
 
-      if (key === 'Backspace' || key === 'Delete') {
-        if (hasSelection) {
-          _inputNode.value =
-            _inputNode.value.slice(0, selectionStart) + _inputNode.value.slice(selectionEnd);
-          cursorPosition = selectionStart;
-        } else if (cursorPosition > 0 && key === 'Backspace') {
-          _inputNode.value =
-            _inputNode.value.slice(0, cursorPosition - 1) + _inputNode.value.slice(cursorPosition);
-          cursorPosition -= 1;
-        } else if (cursorPosition < _inputNode.value.length && key === 'Delete') {
-          _inputNode.value =
-            _inputNode.value.slice(0, cursorPosition) + _inputNode.value.slice(cursorPosition + 1);
-        }
-      } else if (hasSelection) {
+    if (key === 'Backspace' || key === 'Delete') {
+      if (hasSelection) {
         _inputNode.value =
-          _inputNode.value.slice(0, selectionStart) + key + _inputNode.value.slice(selectionEnd);
-        cursorPosition = selectionStart + key.length;
-      } else {
+          _inputNode.value.slice(0, selectionStart) + _inputNode.value.slice(selectionEnd);
+        cursorPosition = selectionStart;
+      } else if (cursorPosition > 0 && key === 'Backspace') {
         _inputNode.value =
-          _inputNode.value.slice(0, cursorPosition) + key + _inputNode.value.slice(cursorPosition);
-        cursorPosition += 1;
+          _inputNode.value.slice(0, cursorPosition - 1) + _inputNode.value.slice(cursorPosition);
+        cursorPosition -= 1;
+      } else if (cursorPosition < _inputNode.value.length && key === 'Delete') {
+        _inputNode.value =
+          _inputNode.value.slice(0, cursorPosition) + _inputNode.value.slice(cursorPosition + 1);
       }
+    } else if (hasSelection) {
+      _inputNode.value =
+        _inputNode.value.slice(0, selectionStart) + key + _inputNode.value.slice(selectionEnd);
+      cursorPosition = selectionStart + key.length;
+    } else {
+      _inputNode.value =
+        _inputNode.value.slice(0, cursorPosition) + key + _inputNode.value.slice(cursorPosition);
+      cursorPosition += 1;
+    }
 
-      mimicKeyPress(_inputNode, key);
-      _inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-
-      el.updateComplete.then(() => {
-        // @ts-ignore
-        resolve();
-      });
-    });
+    _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key }));
+    await waitForHideAndShowCompletion(el);
+    _inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    await waitForHideAndShowCompletion(el);
+    _inputNode.dispatchEvent(new KeyboardEvent('keyup', { key }));
+    await waitForHideAndShowCompletion(el);
   }
 }
 
