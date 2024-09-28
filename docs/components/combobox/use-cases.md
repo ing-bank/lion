@@ -388,6 +388,40 @@ customElements.define('demo-server-side', DemoServerSide);
 export const serverSideCompletion = () => html`<demo-server-side></demo-server-side>`;
 ```
 
+## _showOverlayCondition test
+
+```js preview-story
+class ComplexCombobox extends LionCombobox {
+  _showOverlayCondition(options) {
+    /**
+     * Do now show dropdown until 3 symbols are typed
+     * @override
+     * @ts-ignore
+     */ 
+    return this.__prevCboxValueNonSelected.length > 3 && super._showOverlayCondition(options);
+  }
+}
+
+customElements.define('complex-combobox', ComplexCombobox);
+
+export const complexChoiceValue = () =>
+  html` <complex-combobox
+    name="combo"
+    label="Display only the label once selected"
+  >
+    ${lazyRender(
+      listboxComplexData.map(
+        entry => html`
+          <lion-option .choiceValue="${entry.label}">
+            <div data-key>${entry.label}</div>
+            <small>${entry.description}</small>
+          </lion-option>
+        `,
+      ),
+    )}
+  </complex-combobox>`;
+```
+
 ## Complex options
 
 For performance reasons a complex object in the choiceValue property is unwanted. But it is possible to create more complex options.
@@ -396,37 +430,8 @@ To highlight the correct elements of the option, each element should be tagged w
 
 ```js preview-story
 class ComplexObjectCombobox extends LionCombobox {
-  /**
-   * @overridable
-   * @param {LionOption & {__originalInnerHTML?:string}} option
-   * @param {string} matchingString
-   * @protected
-   */
-  _onFilterMatch(option, matchingString) {
-    Array.from(option.children).forEach(child => {
-      if (child.hasAttribute('data-key')) {
-        this._highlightMatchedOption(child, matchingString);
-      }
-    });
-    // Alternatively, an extension can add an animation here
-    option.style.display = '';
-  }
-
-  /**
-   * @overridable
-   * @param {LionOption & {__originalInnerHTML?:string}} option
-   * @param {string} [curValue]
-   * @param {string} [prevValue]
-   * @protected
-   */
-  _onFilterUnmatch(option, curValue, prevValue) {
-    Array.from(option.children).forEach(child => {
-      if (child.hasAttribute('data-key')) {
-        this._unhighlightMatchedOption(child);
-      }
-    });
-    // Alternatively, an extension can add an animation here
-    option.style.display = 'none';
+  _showOverlayCondition(options) {  
+    return false;
   }
 }
 

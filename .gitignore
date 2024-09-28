@@ -62,5 +62,7 @@ __output
 ## generate-package-exports tests
 packages/ui/new-exports/
 packages/ui/test-exports/
-
-
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
