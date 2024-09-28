@@ -43,7 +43,7 @@ test.describe('lion-combobox', () => {
     expect(hasDropdownFlashed).toBeFalsy();
   });
 
-  test.only("doesn't select any similar options after using delete when requireOptionMatch is false", async ({ page }) => {
+  test("doesn't select any similar options after using delete when requireOptionMatch is false", async ({ page }) => {
     await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/simple-combobox.js`);
     await page.evaluate(() => {
       const comboboxEl = document.querySelector('lion-combobox');
@@ -62,6 +62,21 @@ test.describe('lion-combobox', () => {
     expect(await combobox.evaluate((el) => el.checkedIndex)).toEqual(-1);
     expect(await combobox.evaluate((el) => el.modelValue)).toEqual('Art');
     expect(await combobox.evaluate((el) => el.value)).toEqual('Art');
+  });
+
+  test.only('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async ({ page }) => {
+    await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/combobox-e2e-test1.js`);
+    const combobox = await page.locator('lion-combobox');
+    const input = await page.locator('css=input');  
+    await input.focus();
+    await page.keyboard.type('a');  
+    await page.keyboard.type('r');  
+    await page.keyboard.type('t');  
+    await page.keyboard.press('Backspace');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(1000);
+
+    expect(await combobox.evaluate((el) => el.modelValue)).toEqual(['Art']);
   });
 });
 
