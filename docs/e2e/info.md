@@ -46,3 +46,8 @@ Creation the use case file is covered in the section down below. Here is an exam
     await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/index-e2e.js`);
     ```
     Note, check `packages/ui/components/combobox/test/lion-combobox.e2e.test.js` as a reference implementation.
+
+## Run e2e tests
+
+- `npm run test:e2e` - run the e2e tests in the hearless mode
+- `npm run test:e2e:debug` - run the e2e tests in the debug mode
