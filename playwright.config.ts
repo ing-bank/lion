@@ -12,7 +12,8 @@ import { defineConfig, devices } from '@playwright/test';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: './tests',
+  testDir: './packages/ui/components',
+  testMatch: '*.e2e.test.js',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -71,8 +72,8 @@ export default defineConfig({
     // },
   ],
   webServer: {
-    command: 'npm run start',
-    url: 'http://localhost:8000',
+    command: 'npm run e2e-app:start',
+    url: 'http://localhost:8005',
     reuseExistingServer: true,
     stdout: 'pipe',
     stderr: 'pipe',

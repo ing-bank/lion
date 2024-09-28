@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <body>    
+    <script>
+        const url="http://localhost:8005";
+        debugger;
+        //const path = new URLSearchParams(document.location.search).get('js');
+        const path = '/packages/ui/components/combobox/test/index-e2e-1.js';
+        const script = document.createElement("script");
+        script.src = url + path;
+        script.type = 'module';
+        if (path) {
+          document.body.appendChild(script);
+        }        
+      </script>
+    <e2e-root></e2e-root>
+  </body>
+</html>
