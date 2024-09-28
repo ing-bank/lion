@@ -1,7 +1,10 @@
 import { test, expect } from '@playwright/test';
+import * as path from 'path';
 
 test('Combobox does not flash the menu when _showOverlayCondition returns "false"', async ({ page }) => {
-  await page.goto('http://localhost:8005/tests?js=/packages/ui/components/combobox/test/index-e2e.js');
+  const currentFileRelativePath = import.meta.url.split(process.env.PWD)[1];
+  const currentDirRelativePath = path.dirname(currentFileRelativePath);
+  await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/index-e2e.js`);
 
   const input = await page.locator('css=input');  
   await input.focus();
