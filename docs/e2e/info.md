@@ -25,10 +25,10 @@ Creation the use case file is covered in the section down below. Here is an exam
 
 ### Create a component use case
 
-- In the component directory create a file with the name `index-e2e.js`, f.e. `packages/ui/components/combobox/test/index-e2e.js`
+- In the component directory create a `*.js` file for the use case, f.e. `packages/ui/components/combobox/test/e2e-use-cases/no-dropdown-flash.js`
 - In that file create a use case for the component. The code is going to be run in the browser at runtime. The use case is the same as
-`js preview-story` in `md` files.
-- You could run or debug example in the browser by running `npm run e2e-app:start` and then navigating to `http://localhost:8005/?js=${index-e2e.js-path}` where `${index-e2e.js-path}` is the path to the `index-e2e.js` file, f.e.: `http://localhost:8005/?js=/packages/ui/components/combobox/test/index-e2e.js`
+`js-preview-story` in `md` files.
+- You could run or debug example in the browser by running `npm run e2e-app:start` and then navigating to `http://localhost:8005/?js=${use-case.js-path}` where `${use-case.js-path}` is the path to the use case `*.js` file, f.e.: `http://localhost:8005/?js=/packages/ui/components/combobox/test/e2e-use-cases/no-dropdown-flash.js`
 - The final thing of writing a use case code is to injecting it to the page as follows:
     ```
     render(template(), document.querySelector('e2e-root'));
@@ -43,7 +43,7 @@ Creation the use case file is covered in the section down below. Here is an exam
     ```
     const currentFileRelativePath = import.meta.url.split(process.env.PWD)[1];
     const currentDirRelativePath = path.dirname(currentFileRelativePath);
-    await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/index-e2e.js`);
+    await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/no-dropdown-flash.js`);
     ```
     Note, check `packages/ui/components/combobox/test/lion-combobox.e2e.test.js` as a reference implementation.
 

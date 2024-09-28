@@ -1,10 +1,9 @@
 import { html, render } from 'lit';
 import { LionCombobox } from '@lion/ui/combobox.js';
-//import { listboxComplexData } from '../../../../../docs/components/listbox/src/listboxData.';
-import { listboxComplexData } from '../../../../../docs/components/listbox/src/listboxData.js';
+import { listboxComplexData } from '../../../../../../docs/components/listbox/src/listboxData.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
-import { lazyRender } from '../../../../../docs/components/combobox/src/lazyRender.js';
+import { lazyRender } from '../../../../../../docs/components/combobox/src/lazyRender.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 
 loadDefaultFeedbackMessages();
