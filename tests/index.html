@@ -4,8 +4,7 @@
     <script>
         const url="http://localhost:8005";
         debugger;
-        //const path = new URLSearchParams(document.location.search).get('js');
-        const path = '/packages/ui/components/combobox/test/index-e2e-1.js';
+        const path = new URLSearchParams(document.location.search).get('js');
         const script = document.createElement("script");
         script.src = url + path;
         script.type = 'module';
