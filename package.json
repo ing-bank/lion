@@ -26,7 +26,7 @@
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
     "start": "rocket start",
-    "test": "run-p test:browser test:node",
+    "test": "run-p test:browser test:node test:e2e",
     "test:browser": "web-test-runner --coverage",
     "test:browserstack": "web-test-runner --config ./web-test-runner-browserstack.config.js",
     "test:e2e": "npx playwright test",
