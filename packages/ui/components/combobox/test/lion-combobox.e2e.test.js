@@ -77,7 +77,7 @@ test.describe('lion-combobox', () => {
           )}
         </complex-combobox>`;
 
-      render(template(), document.querySelector('e2e-root'));
+      render(template(), document.body);
 
     });
 
@@ -137,7 +137,7 @@ test.describe('lion-combobox', () => {
           </lion-combobox>
         `;
 
-      render(template(), document.querySelector('e2e-root'));
+      render(template(), document.body);
     });
 
     await page.evaluate(() => {
@@ -179,7 +179,7 @@ test.describe('lion-combobox', () => {
           </lion-combobox>
         `;
 
-      render(template(), document.querySelector('e2e-root'));
+      render(template(), document.body);
     });
     
     await page.evaluate(() => {
@@ -225,7 +225,7 @@ test.describe('lion-combobox', () => {
           </lion-combobox>
         `;
       
-      render(template(), document.querySelector('e2e-root'));
+      render(template(), document.body);
       
     });
 
@@ -261,7 +261,7 @@ test.describe('lion-combobox', () => {
           </lion-combobox>
         `;
       
-      render(template(), document.querySelector('e2e-root'));            
+      render(template(), document.body);            
     });
 
     const combobox = await page.locator('lion-combobox');
