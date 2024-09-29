@@ -8,6 +8,7 @@ _site-dev
 _site
 docs/_merged_*
 patches/
+playwright-report
 
 /docs/_assets/scoped-custom-element-registry.min.js
 /docs/_assets/scoped-custom-element-registry.min.js.map

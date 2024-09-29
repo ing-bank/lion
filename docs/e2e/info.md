@@ -38,12 +38,12 @@ Evevery Playwrigth test should start with calling `goToPage` function. That func
 
 ## How to write an e2e test for a component
 
-- In the component directory create a file with the extension that matches `*.e2e.spec.js`. Note if using `*.e2e.test.js` instead of `*.e2e.spec.js` pattern, then `prettier` replaces the relative paths in dynamic imports with `@lion/root` and `import.meta.resolve` cannot resolve it. 
+- In the component directory create a file with the extension that matches `*.e2e.spec.js`. Note if using `*.e2e.test.js` instead of `*.e2e.spec.js` pattern, then `prettier` replaces the relative paths in dynamic imports with `@lion/root` and `import.meta.resolve` cannot resolve it.
 - Use this boilerplate code for an e2e test file:
 
   ```javascript
   import { test, expect } from '@playwright/test';
-  import { goToPage } from '../../../../../e2e/helper.mjs';  
+  import { goToPage } from '../../../../../e2e/helper.mjs';
 
   test.describe('lion-combobox', () => {
     test('Combobox renders', async ({ page }, testInfo) => {

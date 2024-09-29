@@ -42,6 +42,12 @@ module.exports = {
         'import/no-extraneous-dependencies': 'off',
       },
     },
+    {
+      files: ['*e2e.spec.js'],
+      rules: {
+        'import/no-relative-packages': 'off',
+      },
+    },
   ],
   settings: {
     'import/resolver': {

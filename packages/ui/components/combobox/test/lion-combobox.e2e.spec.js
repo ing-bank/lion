@@ -5,7 +5,7 @@ test.describe('lion-combobox', () => {
   // TODO Fix the lion source code
   test.skip('Combobox does not flash the menu when _showOverlayCondition returns "false"', async ({
     page,
-  }, testInfo) => {
+  }) => {
     await goToPage(page, import.meta);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
@@ -27,7 +27,7 @@ test.describe('lion-combobox', () => {
            * Do now show dropdown until 3 symbols are typed
            * @override
            */
-          //@ts-ignore
+          // @ts-ignore
           return this.__prevCboxValueNonSelected.length > 3 && super._showOverlayCondition(options);
         }
       }
@@ -64,6 +64,7 @@ test.describe('lion-combobox', () => {
       };
       const dialog = document.querySelector('complex-combobox').shadowRoot.querySelector('dialog');
       config.observer = new MutationObserver(mutationList => {
+        // eslint-disable-next-line no-unused-vars
         for (const mutation of mutationList) {
           if (dialog.style.display === '') {
             config.hasDropdownFlashed = true;
@@ -132,7 +133,7 @@ test.describe('lion-combobox', () => {
 
   test('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async ({
     page,
-  }, testInfo) => {
+  }) => {
     await goToPage(page, import.meta);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
@@ -165,9 +166,7 @@ test.describe('lion-combobox', () => {
     expect(await combobox.evaluate(el => el.modelValue)).toEqual(['Art']);
   });
 
-  test('hides listbox on click/enter (when multiple-choice is false)', async ({
-    page,
-  }, testInfo) => {
+  test('hides listbox on click/enter (when multiple-choice is false)', async ({ page }) => {
     await goToPage(page, import.meta);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
@@ -190,7 +189,6 @@ test.describe('lion-combobox', () => {
     });
 
     const combobox = await page.locator('lion-combobox');
-    const lionOptions = await page.locator('lion-options');
     const input = await page.locator('css=input');
     await input.focus();
 
@@ -207,7 +205,8 @@ test.describe('lion-combobox', () => {
     expect(await combobox.evaluate(el => el.opened)).toEqual(true);
     const allOptions = await page.locator('lion-option').all();
     const index = allOptions.indexOf(await page.locator('lion-option >> visible=true'));
-    await combobox.evaluate((el, index) => (el.activeIndex = index), index);
+    // eslint-disable-next-line
+    await combobox.evaluate((el, indexValue) => (el.activeIndex = indexValue), index);
     await page.keyboard.press('Enter');
     expect(await combobox.evaluate(el => el.opened)).toEqual(false);
   });
