@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import * as path from 'path';
 import * as fs from 'fs';
 import { fileURLToPath } from 'url';
 const __dirname = fileURLToPath(import.meta.url);
