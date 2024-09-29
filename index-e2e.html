@@ -7,17 +7,8 @@
         const importmap = document.createElement("script");
         importmap.type = "importmap";
         importmap.textContent = importMapParam;
-        document.currentScript.after(importmap);
+        document.head.appendChild(importmap);
       }      
-
-      const url="http://localhost:8005";
-      const path = new URLSearchParams(document.location.search).get('js');      
-      const script = document.createElement("script");
-      script.src = url + path;
-      script.type = 'module';
-      if (path) {
-        document.body.appendChild(script);
-      }        
     </script>
     <e2e-root></e2e-root>
   </body>

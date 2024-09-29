@@ -38,7 +38,8 @@ const goToPage = async (page) => {
 } 
 
 test.describe('lion-combobox', () => {
-  test.only('Combobox does not flash the menu when _showOverlayCondition returns "false"', async ({ page }, testInfo) => {      
+  // TODO Fix the lion source code
+  test.skip('Combobox does not flash the menu when _showOverlayCondition returns "false"', async ({ page }, testInfo) => {      
     await goToPage(page);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');      
@@ -114,11 +115,10 @@ test.describe('lion-combobox', () => {
       return document.config.hasDropdownFlashed;
     });
 
-    //expect(hasDropdownFlashed).toBeFalsy();
-    expect(true).toEqual(true);
+    expect(hasDropdownFlashed).toBeFalsy();
   });
 
-  test.only("doesn't select any similar options after using delete when requireOptionMatch is false", async ({ page }, testInfo) => {
+  test("doesn't select any similar options after using delete when requireOptionMatch is false", async ({ page }, testInfo) => {
     await goToPage(page);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
@@ -160,7 +160,7 @@ test.describe('lion-combobox', () => {
     expect(await combobox.evaluate((el) => el.value)).toEqual('Art');
   });
 
-  test.only("Test inline script execution", async ({ page }, testInfo) => {    
+  test("Test inline script execution", async ({ page }, testInfo) => {    
     await goToPage(page);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
@@ -202,7 +202,7 @@ test.describe('lion-combobox', () => {
     expect(await combobox.evaluate((el) => el.value)).toEqual('Art');
   });
 
-  test.only('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async ({ page }, testInfo) => {
+  test('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async ({ page }, testInfo) => {
     await goToPage(page);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
@@ -242,7 +242,7 @@ test.describe('lion-combobox', () => {
     expect(await combobox.evaluate((el) => el.modelValue)).toEqual(['Art']);
   });
 
-  test.only('hides listbox on click/enter (when multiple-choice is false)', async ({ page }, testInfo) => {
+  test('hides listbox on click/enter (when multiple-choice is false)', async ({ page }, testInfo) => {
     await goToPage(page);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
