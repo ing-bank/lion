@@ -1,6 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { fileURLToPath } from 'url';
-const __dirname = fileURLToPath(import.meta.url);
 import { goToPage } from '../../../../../e2e/helper.mjs';
 
 test.describe('lion-combobox', () => {
@@ -8,8 +6,7 @@ test.describe('lion-combobox', () => {
   test.skip('Combobox does not flash the menu when _showOverlayCondition returns "false"', async ({
     page,
   }, testInfo) => {
-    await goToPage(page, import.meta.resolve, __dirname);
-    //await goToPage(page);
+    await goToPage(page, import.meta);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
       await import('@lion/ui/define/lion-combobox.js');
@@ -93,8 +90,7 @@ test.describe('lion-combobox', () => {
   test("doesn't select any similar options after using delete when requireOptionMatch is false", async ({
     page,
   }) => {
-    //await goToPage(page);
-    await goToPage(page, import.meta.resolve, __dirname);
+    await goToPage(page, import.meta);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
       const { Required } = await import('@lion/ui/form-core.js');
@@ -137,8 +133,7 @@ test.describe('lion-combobox', () => {
   test('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async ({
     page,
   }, testInfo) => {
-    await goToPage(page, import.meta.resolve, __dirname);
-    //await goToPage(page);
+    await goToPage(page, import.meta);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
       await import('@lion/ui/define/lion-combobox.js');
@@ -173,8 +168,7 @@ test.describe('lion-combobox', () => {
   test('hides listbox on click/enter (when multiple-choice is false)', async ({
     page,
   }, testInfo) => {
-    await goToPage(page, import.meta.resolve, __dirname);
-    //await goToPage(page);
+    await goToPage(page, import.meta);
     await page.evaluate(async () => {
       const { html, render } = await import('lit');
       await import('@lion/ui/define/lion-combobox.js');

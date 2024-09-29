@@ -43,48 +43,11 @@ Evevery Playwrigth test should start with calling `goToPage` function. That func
 
   ```javascript
   import { test, expect } from '@playwright/test';
-  import * as fs from 'fs';
-  import { fileURLToPath } from 'url';
-  const __dirname = fileURLToPath(import.meta.url);
-
-  /**
-   * Read the current file and fetch all dynamic import dependencies using regex.
-   * TODO use AST instead of regex
-   */
-  const fetchAllTestsDependencies = async () => {
-    const currentFile = (await fs.promises.readFile(__dirname)).toString();
-    const importRegexp = /import\((.+)\)/gm;
-    const matches = [...currentFile.matchAll(importRegexp)];
-    const dependencies = matches.map(arrayItem => {
-      const dependency = arrayItem[1];
-      return dependency.replace(/['"]+/g, '');
-    });
-    return dependencies;
-  };
-
-  /**
-   * Generates importMap with all the dependencies in the tests in this file and returns importMap as a string
-   */
-  const getImportMap = async () => {
-    const dependencies = await fetchAllTestsDependencies();
-    const importMapObject = {
-      imports: {},
-    };
-    dependencies.forEach(dependency => {
-      importMapObject.imports[dependency] = import.meta
-        .resolve(dependency)
-        .split(process.env.PWD)[1];
-    });
-    return JSON.stringify(importMapObject);
-  };
-
-  const goToPage = async page => {
-    await page.goto(`http://localhost:8005/?importMap=${await getImportMap()}`);
-  };
+  import { goToPage } from '../../../../../e2e/helper.mjs';  
 
   test.describe('lion-combobox', () => {
     test('Combobox renders', async ({ page }, testInfo) => {
-      await goToPage(page);
+      await goToPage(page, import.meta);
       // Use case
       await page.evaluate(async () => {
         // use case code here
@@ -95,7 +58,7 @@ Evevery Playwrigth test should start with calling `goToPage` function. That func
   });
   ```
 
-- The first step for any test is to navigate to the server default URL. It should be done by calling `await goToPage(page);`
+- The first step for any test is to navigate to the server default URL. It should be done by calling `await goToPage(page, import.meta);`
 - Provide a use case code in a `await page.evaluate` wrapper. Note, static imports cannot be used an dynamic imports are only allowed.
 - Use Playwright API for writing the actual e2e test
 
