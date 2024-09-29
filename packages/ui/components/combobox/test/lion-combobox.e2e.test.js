@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import * as path from 'path';
 import * as fs from 'fs';
+import { fileURLToPath } from 'url';
+const __dirname = fileURLToPath(import.meta.url);
 
 const currentFileRelativePath = import.meta.url.split(process.env.PWD)[1];
 const currentDirRelativePath = path.dirname(currentFileRelativePath);
@@ -12,8 +14,36 @@ const getImportMapString = (dependencies) => {
   dependencies.forEach(dependency => {
     importMap.imports[dependency] = import.meta.resolve(dependency).split(process.env.PWD)[1];
   });
+  console.log('importMap 11: ', importMap);
   return JSON.stringify(importMap);
 };
+
+const goToPageWithImportMap = (page, dependencies) => {
+  //await page.goto(`http://localhost:8005/?importMap=${importMapString}`);
+}
+
+console.log('import.meta.url: ', import.meta.url)
+console.log('__dirname: ', __dirname)
+
+/**
+ * Read the current file and fetch all dynamic import dependencies using regex.
+ * TODO use AST instead of regex
+ */
+const fetchAllTestsDependencies = async () => {
+  const currentFile = (await fs.promises.readFile(__dirname)).toString();  
+  const importRegexp = /import\((.+)\)/gm;
+  const matches = [...currentFile.matchAll(importRegexp)];
+  const dependencies = matches.map(arrayItem => {
+    const dependency = arrayItem[1];
+    return dependency.replace(/['"]+/g, '');
+  });
+  return dependencies;
+}
+const importMapString = Promise.resolve(getImportMapString(await fetchAllTestsDependencies()));
+
+const goToPage = async (page) => {
+  await page.goto(`http://localhost:8005/?importMap=${await importMapString}`);
+}
 
 /**
  * Converts a test name into a kebab string which is going to be used for the use case file name
@@ -25,17 +55,17 @@ const convertName = (name) => name.replace(/([^a-z0-9]+)/gi, '-');
  * Converts the test name into kebab string and use it as a file name for the use case to navigate to.
  * Note, make sure the file with such a name is created manually and contains the use case.
  */
-const goToPage = async (page, testInfo) => {
-  const descriptionAndTestNames = testInfo.titlePath.slice(1).join('-');
-  const useCaseFileName = convertName(descriptionAndTestNames);
-  const useCaseFileRelativePath = `./e2e-use-cases/${useCaseFileName}.js`;
-  await fs.promises.readFile(path.resolve(path.dirname(import.meta.url.split('file://')[1]), useCaseFileRelativePath))
-    .catch((er) => {
-      console.log('er: ', er);
-      throw Error(`The file name for the use case that matches the test name does not exit. Create it manually by the path: ${useCaseFileRelativePath}`);
-    });
-  await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/${useCaseFileName}.js`);
-};
+// const goToPage = async (page, testInfo) => {
+//   const descriptionAndTestNames = testInfo.titlePath.slice(1).join('-');
+//   const useCaseFileName = convertName(descriptionAndTestNames);
+//   const useCaseFileRelativePath = `./e2e-use-cases/${useCaseFileName}.js`;
+//   await fs.promises.readFile(path.resolve(path.dirname(import.meta.url.split('file://')[1]), useCaseFileRelativePath))
+//     .catch((er) => {
+//       console.log('er: ', er);
+//       throw Error(`The file name for the use case that matches the test name does not exit. Create it manually by the path: ${useCaseFileRelativePath}`);
+//     });
+//   await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/${useCaseFileName}.js`);
+// };
   
 
 test.describe('lion-combobox', () => {
@@ -109,16 +139,17 @@ test.describe('lion-combobox', () => {
     // };
     // const importMapString = JSON.stringify(importMap);
 
-    const importMapString = getImportMapString([
-      'lit', 
-      '@lion/ui/form-core.js', 
-      '@lion/ui/define/lion-combobox.js', 
-      '@lion/ui/define/lion-option.js', 
-      '@lion/ui/validate-messages.js'
-    ]);
+    // const importMapString = getImportMapString([
+    //   'lit', 
+    //   '@lion/ui/form-core.js', 
+    //   '@lion/ui/define/lion-combobox.js', 
+    //   '@lion/ui/define/lion-option.js', 
+    //   '@lion/ui/validate-messages.js'
+    // ]);
 
-    await page.goto(`http://localhost:8005/?importMap=${importMapString}`);
+    //await page.goto(`http://localhost:8005/?importMap=${importMapString}`);
     //await page.goto(`http://localhost:8005`);
+    await goToPage(page);
 
     await page.evaluate(async () => {
       // const importMap = {
@@ -138,7 +169,7 @@ test.describe('lion-combobox', () => {
       const { html, render } = await import('lit');
       const { Required } = await import('@lion/ui/form-core.js');      
       await import('@lion/ui/define/lion-combobox.js');
-      await import ('@lion/ui/define/lion-option.js');      
+      await import('@lion/ui/define/lion-option.js');      
       const { loadDefaultFeedbackMessages } = await import('@lion/ui/validate-messages.js');
 
       // const { html, render } = await import('./../../../node_modules/lit/index.js');
