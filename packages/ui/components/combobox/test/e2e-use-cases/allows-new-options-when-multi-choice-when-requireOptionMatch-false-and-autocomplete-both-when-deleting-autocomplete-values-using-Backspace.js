@@ -1,13 +1,18 @@
 import { html, render } from 'lit';
-import { Required } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
+
 loadDefaultFeedbackMessages();
 
 const template = () =>
-  html` 
-    <lion-combobox name="foo" .validators=${[new Required()]}>
+  html`
+    <lion-combobox
+      name="foo"
+      multiple-choice
+      .requireOptionMatch=${false}
+      autocomplete="both"
+    >
       <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
       <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
       <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>

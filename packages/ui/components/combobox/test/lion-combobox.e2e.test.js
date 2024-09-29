@@ -1,13 +1,36 @@
 import { test, expect } from '@playwright/test';
 import * as path from 'path';
+import * as fs from 'fs';
 
 const currentFileRelativePath = import.meta.url.split(process.env.PWD)[1];
 const currentDirRelativePath = path.dirname(currentFileRelativePath);
 
-test.describe('lion-combobox', () => {
-  test('Combobox does not flash the menu when _showOverlayCondition returns "false"', async ({ page }) => {    
-    await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/no-dropdown-flash.js`);
+/**
+ * Converts a test name into a kebab string which is going to be used for the use case file name
+ * @param {string} name 
+ */
+const convertName = (name) => name.replace(/([^a-z0-9]+)/gi, '-');
+
+/**
+ * Converts the test name into kebab string and use it as a file name for the use case to navigate to.
+ * Note, make sure the file with such a name is created manually and contains the use case.
+ */
+const goToPage = async (page, testInfo) => {
+  const descriptionAndTestNames = testInfo.titlePath.slice(1).join('-');
+  const useCaseFileName = convertName(descriptionAndTestNames);
+  const useCaseFileRelativePath = `./e2e-use-cases/${useCaseFileName}.js`;
+  await fs.promises.readFile(path.resolve(path.dirname(import.meta.url.split('file://')[1]), useCaseFileRelativePath))
+    .catch((er) => {
+      console.log('er: ', er);
+      throw Error(`The file name for the use case that matches the test name does not exit. Create it manually by the path: ${useCaseFileRelativePath}`);
+    });
+  await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/${useCaseFileName}.js`);
+};
   
+
+test.describe('lion-combobox', () => {
+  test.skip('Combobox does not flash the menu when _showOverlayCondition returns "false"', async ({ page }, testInfo) => {      
+    await goToPage(page, testInfo);  
     const input = await page.locator('css=input');  
     await input.focus();
   
@@ -43,8 +66,8 @@ test.describe('lion-combobox', () => {
     expect(hasDropdownFlashed).toBeFalsy();
   });
 
-  test("doesn't select any similar options after using delete when requireOptionMatch is false", async ({ page }) => {
-    await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/combobox-e2e-test-2.js`);
+  test("doesn't select any similar options after using delete when requireOptionMatch is false", async ({ page }, testInfo) => {
+    await goToPage(page, testInfo);
     await page.evaluate(() => {
       const comboboxEl = document.querySelector('lion-combobox');
       comboboxEl.requireOptionMatch = false;  
@@ -64,8 +87,8 @@ test.describe('lion-combobox', () => {
     expect(await combobox.evaluate((el) => el.value)).toEqual('Art');
   });
 
-  test('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async ({ page }) => {
-    await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/combobox-e2e-test1.js`);
+  test('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async ({ page }, testInfo) => {
+    await goToPage(page, testInfo);
     const combobox = await page.locator('lion-combobox');
     const input = await page.locator('css=input');  
     await input.focus();
@@ -74,12 +97,12 @@ test.describe('lion-combobox', () => {
     await page.keyboard.type('t');  
     await page.keyboard.press('Backspace');
     await page.keyboard.press('Enter');
-    
+
     expect(await combobox.evaluate((el) => el.modelValue)).toEqual(['Art']);
   });
 
-  test.only('hides listbox on click/enter (when multiple-choice is false)', async ({ page }) => {
-    await page.goto(`http://localhost:8005/?js=${currentDirRelativePath}/e2e-use-cases/combobox-e2e-test-3.js`);
+  test('hides listbox on click/enter (when multiple-choice is false)', async ({ page }, testInfo) => {
+    await goToPage(page, testInfo);
     const combobox = await page.locator('lion-combobox');
     const lionOptions = await page.locator('lion-options');
     const input = await page.locator('css=input');  

@@ -2,6 +2,7 @@ import { html, render } from 'lit';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
+
 loadDefaultFeedbackMessages();
 
 const template = () =>
