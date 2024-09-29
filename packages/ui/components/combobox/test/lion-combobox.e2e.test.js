@@ -5,11 +5,15 @@ import * as fs from 'fs';
 const currentFileRelativePath = import.meta.url.split(process.env.PWD)[1];
 const currentDirRelativePath = path.dirname(currentFileRelativePath);
 
-console.log('import.meta.resolve() 1: ', import.meta.resolve('lit'));
-console.log('import.meta.resolve() 2: ', import.meta.resolve('@lion/ui/form-core.js'));
-console.log('import.meta.resolve() 3: ', import.meta.resolve('@lion/ui/define/lion-combobox.js'));
-console.log('import.meta.resolve() 4: ', import.meta.resolve('@lion/ui/define/lion-option.js'));
-console.log('import.meta.resolve() 5: ', import.meta.resolve('@lion/ui/validate-messages.js'));
+const getImportMapString = (dependencies) => {
+  const importMap = {
+    imports: {}
+  };
+  dependencies.forEach(dependency => {
+    importMap.imports[dependency] = import.meta.resolve(dependency).split(process.env.PWD)[1];
+  });
+  return JSON.stringify(importMap);
+};
 
 /**
  * Converts a test name into a kebab string which is going to be used for the use case file name
@@ -94,18 +98,27 @@ test.describe('lion-combobox', () => {
   });
 
   test.only("Test inline script execution", async ({ page }, testInfo) => {
-    const importMap = {
-      imports: {
-        'lit': './../../../../node_modules/lit/index.js',
-        '@lion/ui/form-core.js': './../../../../exports/form-core.js',
-        '@lion/ui/define/lion-combobox.js': './../../../../exports/define/lion-combobox.js',
-        '@lion/ui/define/lion-option.js': './../../../../exports/define/lion-option.js',
-        '@lion/ui/validate-messages.js': './../../../../exports/validate-messages.js'
-      }
-    };
-    const importMapString = JSON.stringify(importMap);
-    //await page.goto(`http://localhost:8005/?importMap=${importMapString}`);
-    await page.goto(`http://localhost:8005`);
+    // const importMap = {
+    //   imports: {
+    //     'lit': import.meta.resolve('lit'),
+    //     '@lion/ui/form-core.js': import.meta.resolve('@lion/ui/form-core.js'),
+    //     '@lion/ui/define/lion-combobox.js': import.meta.resolve('@lion/ui/define/lion-combobox.js'),
+    //     '@lion/ui/define/lion-option.js': import.meta.resolve('@lion/ui/define/lion-option.js'),
+    //     '@lion/ui/validate-messages.js': import.meta.resolve('@lion/ui/validate-messages.js')
+    //   }
+    // };
+    // const importMapString = JSON.stringify(importMap);
+
+    const importMapString = getImportMapString([
+      'lit', 
+      '@lion/ui/form-core.js', 
+      '@lion/ui/define/lion-combobox.js', 
+      '@lion/ui/define/lion-option.js', 
+      '@lion/ui/validate-messages.js'
+    ]);
+
+    await page.goto(`http://localhost:8005/?importMap=${importMapString}`);
+    //await page.goto(`http://localhost:8005`);
 
     await page.evaluate(async () => {
       // const importMap = {
@@ -122,11 +135,11 @@ test.describe('lion-combobox', () => {
       // importmap.textContent = JSON.stringify(importMap);      
       //document.currentScript.after(importmap);
 
-      // const { html, render } = await import('lit');
-      // const { Required } = await import('@lion/ui/form-core.js');      
-      // await import('@lion/ui/define/lion-combobox.js');
-      // await import ('@lion/ui/define/lion-option.js');      
-      // const { loadDefaultFeedbackMessages } = await import('@lion/ui/validate-messages.js');
+      const { html, render } = await import('lit');
+      const { Required } = await import('@lion/ui/form-core.js');      
+      await import('@lion/ui/define/lion-combobox.js');
+      await import ('@lion/ui/define/lion-option.js');      
+      const { loadDefaultFeedbackMessages } = await import('@lion/ui/validate-messages.js');
 
       // const { html, render } = await import('./../../../node_modules/lit/index.js');
       // const { Required } = await import('./../../../exports/form-core.js');
@@ -134,11 +147,11 @@ test.describe('lion-combobox', () => {
       // await import('./../../../exports/define/lion-option.js');
       // const { loadDefaultFeedbackMessages } = await import('./../../../exports/validate-messages.js');
 
-      const { html, render } = await import('/packages/ui/node_modules/lit/index.js');
-      const { Required } = await import('/packages/ui/exports/form-core.js');
-      await import('/packages/ui/exports/define/lion-combobox.js');
-      await import('/packages/ui/exports/define/lion-option.js');
-      const { loadDefaultFeedbackMessages } = await import('/packages/ui/exports/validate-messages.js');
+      // const { html, render } = await import('/packages/ui/node_modules/lit/index.js');
+      // const { Required } = await import('/packages/ui/exports/form-core.js');
+      // await import('/packages/ui/exports/define/lion-combobox.js');
+      // await import('/packages/ui/exports/define/lion-option.js');
+      // const { loadDefaultFeedbackMessages } = await import('/packages/ui/exports/validate-messages.js');
 
       // import { html, render } from './../../../../node_modules/lit/index.js';
       // import { Required } from './../../../../exports/form-core.js';
