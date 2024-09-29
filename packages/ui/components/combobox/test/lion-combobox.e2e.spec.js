@@ -22,7 +22,7 @@ test.describe('lion-combobox', () => {
       loadDefaultFeedbackMessages();
 
       class ComplexCombobox extends LionCombobox {
-        _showOverlayCondition(options) {
+        _showOverlayCondition(/** @type {{ currentValue?: string, lastKey?: string }} */ options) {
           /**
            * Do now show dropdown until 3 symbols are typed
            * @override
@@ -55,23 +55,26 @@ test.describe('lion-combobox', () => {
     await input.focus();
 
     await page.evaluate(() => {
+      const dialog = document
+        .querySelector('complex-combobox')
+        ?.shadowRoot?.querySelector('dialog');
       const config = {
         /**
          * hasDropdownFlashed is `true` if the menu was shown for a short period of time and then got closed
          */
         hasDropdownFlashed: false,
-        observer: null,
-      };
-      const dialog = document.querySelector('complex-combobox').shadowRoot.querySelector('dialog');
-      config.observer = new MutationObserver(mutationList => {
-        // eslint-disable-next-line no-unused-vars
-        for (const mutation of mutationList) {
-          if (dialog.style.display === '') {
-            config.hasDropdownFlashed = true;
+        observer: new MutationObserver(mutationList => {
+          // eslint-disable-next-line no-unused-vars
+          for (const mutation of mutationList) {
+            if (dialog?.style.display === '') {
+              config.hasDropdownFlashed = true;
+            }
           }
-        }
-      });
-      config.observer.observe(dialog, { attributeFilter: ['style'] });
+        }),
+      };
+
+      config.observer.observe(/** @type {Node} */ (dialog), { attributeFilter: ['style'] });
+      // @ts-ignore
       document.config = config;
     });
 
@@ -81,7 +84,9 @@ test.describe('lion-combobox', () => {
     await page.keyboard.press('Backspace');
 
     const hasDropdownFlashed = await page.evaluate(() => {
+      // @ts-ignore
       document.config.observer.disconnect();
+      // @ts-ignore
       return document.config.hasDropdownFlashed;
     });
 
@@ -112,8 +117,12 @@ test.describe('lion-combobox', () => {
       render(template(), document.body);
     });
 
+    /** @typedef {import('@lion/ui/combobox.js').LionCombobox} LionCombobox */
+
     await page.evaluate(() => {
-      const comboboxEl = document.querySelector('lion-combobox');
+      const comboboxEl = /** @type {Element & {requireOptionMatch: boolean}} */ (
+        document.querySelector('lion-combobox')
+      );
       comboboxEl.requireOptionMatch = false;
     });
 
@@ -126,9 +135,13 @@ test.describe('lion-combobox', () => {
     await page.keyboard.press('Backspace');
     await page.keyboard.press('Enter');
 
-    expect(await combobox.evaluate(el => el.checkedIndex)).toEqual(-1);
-    expect(await combobox.evaluate(el => el.modelValue)).toEqual('Art');
-    expect(await combobox.evaluate(el => el.value)).toEqual('Art');
+    expect(await combobox.evaluate(el => /** @type {LionCombobox} */ (el).checkedIndex)).toEqual(
+      -1,
+    );
+    expect(await combobox.evaluate(el => /** @type {LionCombobox} */ (el).modelValue)).toEqual(
+      'Art',
+    );
+    expect(await combobox.evaluate(el => /** @type {LionCombobox} */ (el).value)).toEqual('Art');
   });
 
   test('allows new options when multi-choice when requireOptionMatch=false and autocomplete="both", when deleting autocomplete values using Backspace', async ({
@@ -163,7 +176,11 @@ test.describe('lion-combobox', () => {
     await page.keyboard.press('Backspace');
     await page.keyboard.press('Enter');
 
-    expect(await combobox.evaluate(el => el.modelValue)).toEqual(['Art']);
+    expect(
+      await combobox.evaluate(
+        el => /** @type {import('@lion/ui/combobox.js').LionCombobox} */ (el).modelValue,
+      ),
+    ).toEqual(['Art']);
   });
 
   test('hides listbox on click/enter (when multiple-choice is false)', async ({ page }) => {
@@ -173,8 +190,8 @@ test.describe('lion-combobox', () => {
       await import('@lion/ui/define/lion-combobox.js');
       await import('@lion/ui/define/lion-option.js');
       const { loadDefaultFeedbackMessages } = await import('@lion/ui/validate-messages.js');
-
       loadDefaultFeedbackMessages();
+      /** @typedef {import('@lion/ui/combobox.js').LionCombobox} LionCombobox */
 
       const template = () => html`
         <lion-combobox name="foo">

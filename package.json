@@ -19,7 +19,7 @@
     "lint:eslint": "eslint --ext .js,.html .",
     "lint:markdownlint": "git ls-files '*.md' | xargs markdownlint --ignore '{.github/**/*.md,.changeset/*.md,**/CHANGELOG.md,packages/ui/_legacy-changelogs/*.md}'",
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
-    "lint:types": "echo 'test'",
+    "lint:types": "echo 'fix types'",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
     "release": "changeset publish",
