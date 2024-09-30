@@ -33,14 +33,14 @@ function getAccordionChildren(el) {
 }
 
 /**
- * @param {Element} el
+ * @param {LionAccordion} el
  */
 function getInvokers(el) {
   return getAccordionChildren(el).filter(child => child.classList.contains('invoker'));
 }
 
 /**
- * @param {Element} el
+ * @param {LionAccordion} el
  */
 function getContents(el) {
   return getAccordionChildren(el).filter(child => child.classList.contains('content'));
@@ -512,14 +512,14 @@ describe('<lion-accordion>', () => {
 
     describe('Invokers', () => {
       it('links ids of content items to invoker first child via [aria-controls]', async () => {
-        const el = await fixture(html`
+        const el = /** @type {LionAccordion} */ (await fixture(html`
           <lion-accordion>
             <h2 id="h1" slot="invoker"><button>invoker 1</button></h2>
             <div id="p1" slot="content">content 1</div>
             <h2 id="h2" slot="invoker"><button>invoker 2</button></h2>
             <div id="p2" slot="content">content 2</div>
           </lion-accordion>
-        `);
+        `));
         const invokers = getInvokers(el);
         const contents = getContents(el);
         expect(invokers[0].firstElementChild?.getAttribute('aria-controls')).to.equal(
@@ -531,12 +531,12 @@ describe('<lion-accordion>', () => {
       });
 
       it('adds aria-expanded="false" to invoker when its content is not expanded', async () => {
-        const el = await fixture(html`
+        const el = /** @type {LionAccordion} */ (await fixture(html`
           <lion-accordion>
             <h2 slot="invoker"><button>invoker</button></h2>
             <div slot="content">content</div>
           </lion-accordion>
-        `);
+        `));
         expect(Array.from(getInvokers(el))[0]?.firstElementChild).to.have.attribute(
           'aria-expanded',
           'false',
@@ -562,14 +562,14 @@ describe('<lion-accordion>', () => {
 
     describe('Contents', () => {
       it('adds aria-labelledby referring to invoker ids', async () => {
-        const el = await fixture(html`
+        const el = /** @type {LionAccordion} */ (await fixture(html`
           <lion-accordion>
             <h2 slot="invoker"><button>invoker 1</button></h2>
             <div slot="content">content 1</div>
             <h2 slot="invoker"><button>invoker 2</button></h2>
             <div slot="content">content 2</div>
           </lion-accordion>
-        `);
+        `));
         const contents = getContents(el);
         const invokers = getInvokers(el);
         expect(contents[0]).to.have.attribute('aria-labelledby', invokers[0].firstElementChild?.id);
