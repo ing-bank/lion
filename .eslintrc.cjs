@@ -17,6 +17,7 @@ module.exports = {
     },
     {
       files: [
+        '**/test-helpers/**/*.js',
         '**/test-suites/**/*.js',
         '**/test/**/*.js',
         '**/test-node/**/*.{j,mj}s',
