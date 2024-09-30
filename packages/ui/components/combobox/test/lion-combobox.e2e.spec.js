@@ -47,11 +47,11 @@ test.describe('lion-combobox', () => {
     const input = await page.locator('css=input');
     await input.focus();
 
-    await page.evaluate(() => {
+    const config = await page.evaluateHandle(() => {
       const dialog = document
         .querySelector('complex-combobox')
         ?.shadowRoot?.querySelector('dialog');
-      const config = {
+      const configInternal = {
         /**
          * hasDropdownFlashed is `true` if the menu was shown for a short period of time and then got closed
          */
@@ -60,15 +60,14 @@ test.describe('lion-combobox', () => {
           // eslint-disable-next-line no-unused-vars
           for (const mutation of mutationList) {
             if (dialog?.style.display === '') {
-              config.hasDropdownFlashed = true;
+              configInternal.hasDropdownFlashed = true;
             }
           }
         }),
       };
 
-      config.observer.observe(/** @type {Node} */ (dialog), { attributeFilter: ['style'] });
-      // @ts-ignore
-      document.config = config;
+      configInternal.observer.observe(/** @type {Node} */ (dialog), { attributeFilter: ['style'] });
+      return configInternal;
     });
 
     await page.keyboard.type('a');
@@ -76,12 +75,13 @@ test.describe('lion-combobox', () => {
     await page.keyboard.type('t');
     await page.keyboard.press('Backspace');
 
-    const hasDropdownFlashed = await page.evaluate(() => {
-      // @ts-ignore
-      document.config.observer.disconnect();
-      // @ts-ignore
-      return document.config.hasDropdownFlashed;
-    });
+    const hasDropdownFlashed = await page.evaluate(
+      (/** @type {{hasDropdownFlashed: boolean, observer: MutationObserver}} */ configObj) => {
+        configObj.observer.disconnect();
+        return configObj.hasDropdownFlashed;
+      },
+      config,
+    );
 
     expect(hasDropdownFlashed).toBeFalsy();
   });
