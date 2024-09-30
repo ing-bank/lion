@@ -1,5 +1,10 @@
 import { test, expect } from '@playwright/test';
+// @ts-ignore
 import { goToPage } from '../../../../../e2e/helper.mjs';
+
+/**
+ * @typedef {import('@lion/ui/combobox.js').LionCombobox} LionCombobox
+ */
 
 test.describe('lion-combobox', () => {
   // TODO Fix the lion source code
@@ -12,12 +17,6 @@ test.describe('lion-combobox', () => {
       await import('@lion/ui/define/lion-combobox.js');
       await import('@lion/ui/define/lion-option.js');
       const { LionCombobox } = await import('@lion/ui/combobox.js');
-      const { listboxComplexData } = await import(
-        '../../../../../docs/components/listbox/src/listboxData.js'
-      );
-      const { lazyRender } = await import(
-        '../../../../../docs/components/combobox/src/lazyRender.js'
-      );
       const { loadDefaultFeedbackMessages } = await import('@lion/ui/validate-messages.js');
       loadDefaultFeedbackMessages();
 
@@ -36,16 +35,10 @@ test.describe('lion-combobox', () => {
 
       const template = () =>
         html` <complex-combobox name="combo" label="Display only the label once selected">
-          ${lazyRender(
-            listboxComplexData.map(
-              entry => html`
-                <lion-option .choiceValue="${entry.label}">
-                  <div data-key>${entry.label}</div>
-                  <small>${entry.description}</small>
-                </lion-option>
-              `,
-            ),
-          )}
+          <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+          <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+          <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+          <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
         </complex-combobox>`;
 
       render(template(), document.body);
@@ -117,8 +110,6 @@ test.describe('lion-combobox', () => {
       render(template(), document.body);
     });
 
-    /** @typedef {import('@lion/ui/combobox.js').LionCombobox} LionCombobox */
-
     await page.evaluate(() => {
       const comboboxEl = /** @type {Element & {requireOptionMatch: boolean}} */ (
         document.querySelector('lion-combobox')
@@ -176,11 +167,9 @@ test.describe('lion-combobox', () => {
     await page.keyboard.press('Backspace');
     await page.keyboard.press('Enter');
 
-    expect(
-      await combobox.evaluate(
-        el => /** @type {import('@lion/ui/combobox.js').LionCombobox} */ (el).modelValue,
-      ),
-    ).toEqual(['Art']);
+    expect(await combobox.evaluate(el => /** @type {LionCombobox} */ (el).modelValue)).toEqual([
+      'Art',
+    ]);
   });
 
   test('hides listbox on click/enter (when multiple-choice is false)', async ({ page }) => {
@@ -191,7 +180,6 @@ test.describe('lion-combobox', () => {
       await import('@lion/ui/define/lion-option.js');
       const { loadDefaultFeedbackMessages } = await import('@lion/ui/validate-messages.js');
       loadDefaultFeedbackMessages();
-      /** @typedef {import('@lion/ui/combobox.js').LionCombobox} LionCombobox */
 
       const template = () => html`
         <lion-combobox name="foo">
@@ -214,17 +202,19 @@ test.describe('lion-combobox', () => {
     }
 
     await open();
-    expect(await combobox.evaluate(el => el.opened)).toEqual(true);
+    expect(await combobox.evaluate(el => /** @type {LionCombobox} */ (el).opened)).toEqual(true);
     const firstVisibleOption = await page.$('lion-option >> visible=true');
     await firstVisibleOption?.click();
-    expect(await combobox.evaluate(el => el.opened)).toEqual(false);
+    expect(await combobox.evaluate(el => /** @type {LionCombobox} */ (el).opened)).toEqual(false);
     await open();
-    expect(await combobox.evaluate(el => el.opened)).toEqual(true);
+    expect(await combobox.evaluate(el => /** @type {LionCombobox} */ (el).opened)).toEqual(true);
     const allOptions = await page.locator('lion-option').all();
     const index = allOptions.indexOf(await page.locator('lion-option >> visible=true'));
-    // eslint-disable-next-line
-    await combobox.evaluate((el, indexValue) => (el.activeIndex = indexValue), index);
+    await combobox.evaluate((el, indexValue) => {
+      // eslint-disable-next-line
+      /** @type {LionCombobox} */ (el).activeIndex = indexValue;
+    }, index);
     await page.keyboard.press('Enter');
-    expect(await combobox.evaluate(el => el.opened)).toEqual(false);
+    expect(await combobox.evaluate(el => /** @type {LionCombobox} */ (el).opened)).toEqual(false);
   });
 });
