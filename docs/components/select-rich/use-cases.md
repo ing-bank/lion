@@ -222,11 +222,11 @@ Often, you may want a placeholder that appears initially, but cannot be selected
 For this you can use `has-no-default-selected` attribute.
 
 ```html preview-story
-  <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
-    <lion-option .choiceValue="${'red'}">Red</lion-option>
-    <lion-option .choiceValue="${'hotpink'}">Hotpink</lion-option>
-    <lion-option .choiceValue="${'teal'}">Teal</lion-option>
-  </lion-select-rich>
+<lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
+  <lion-option .choiceValue="${'red'}">Red</lion-option>
+  <lion-option .choiceValue="${'hotpink'}">Hotpink</lion-option>
+  <lion-option .choiceValue="${'teal'}">Teal</lion-option>
+</lion-select-rich>
 ```
 
 > By default, the placeholder is completely empty in the `LionSelectInvoker`,

@@ -25,21 +25,15 @@ export class LionAccordion extends LitElement {
       /**
        * index number of the focused accordion
        */
-      focusedIndex: {
-        type: Number,
-      },
+      focusedIndex: { type: Number },
       /**
        * array of indices of the expanded accordions
        */
-      expanded: {
-        type: Array,
-      },
+      expanded: { type: Array },
       /**
        * exclusive property allows only one accordion slot to be open at a time
        */
-      exclusive: { 
-        type: Boolean,
-      }
+      exclusive: { type: Boolean },
     };
   }
 
@@ -108,6 +102,11 @@ export class LionAccordion extends LitElement {
     this.styles = {};
 
     /**
+     * @type {boolean}
+     */
+    this.exclusive = false;
+
+    /**
      * @type {StoreEntry[]}
      * @private
      */
@@ -124,13 +123,6 @@ export class LionAccordion extends LitElement {
      * @private
      */
     this.__expanded = [];
-
-    /**
-     * @type {Boolean}
-     * @private
-     */
-    this.exclusive = false
-    ;
   }
 
   /** @param {import('lit').PropertyValues } changedProperties */
@@ -457,9 +449,9 @@ export class LionAccordion extends LitElement {
     const indexFound = this.expanded.indexOf(indexClicked);
     const expandedNewValues = this.exclusive ? [] : [...this.expanded];
 
-    if(indexFound === -1){
+    if (indexFound === -1) {
       expandedNewValues.push(indexClicked);
-    } else if(expandedNewValues.includes(indexFound)){
+    } else if (expandedNewValues.includes(indexFound)) {
       expandedNewValues.splice(indexFound, 1);
     }
 

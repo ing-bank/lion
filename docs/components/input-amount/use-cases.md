@@ -96,10 +96,10 @@ export const noDecimals = () => html`
   <lion-input-amount
     label="Amount"
     help-text="Prefilled and formatted"
-    .formatOptions="${({
+    .formatOptions="${{
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
-    })}"
+    }}"
     .modelValue="${20}"
   >
   </lion-input-amount>

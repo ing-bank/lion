@@ -112,6 +112,51 @@ describe('<lion-accordion>', () => {
       expect(invokers[1].firstElementChild).to.have.attribute('expanded');
     });
 
+    it('supports [exclusive] attribute, allowing one collapsible to be open at a time', async () => {
+      const el = /** @type {LionAccordion} */ (
+        await fixture(html`
+          <lion-accordion exclusive>
+            <h2 slot="invoker"><button>invoker 1</button></h2>
+            <div slot="content">content 1</div>
+            <h2 slot="invoker"><button>invoker 2</button></h2>
+            <div slot="content">content 2</div>
+            <h2 slot="invoker"><button>invoker 3</button></h2>
+            <div slot="content">content 3</div>
+          </lion-accordion>
+        `)
+      );
+
+      const invokerButtons = Array.from(getInvokers(el)).map(
+        invokerHeadingEl => /** @type {HTMLButtonElement} */ (invokerHeadingEl.firstElementChild),
+      );
+
+      // We open the first... (nothing different from not [exclusive] so far)
+      invokerButtons[0].click();
+      expect(invokerButtons[0]).to.have.attribute('expanded');
+      expect(invokerButtons[1]).to.not.have.attribute('expanded');
+      expect(invokerButtons[2]).to.not.have.attribute('expanded');
+
+      // We click the second...
+      invokerButtons[1].click();
+      expect(invokerButtons[0]).to.not.have.attribute('expanded');
+      expect(invokerButtons[1]).to.have.attribute('expanded');
+      expect(invokerButtons[2]).to.not.have.attribute('expanded');
+
+      // We click the third...
+      invokerButtons[2].click();
+      expect(invokerButtons[0]).to.not.have.attribute('expanded');
+      expect(invokerButtons[1]).to.not.have.attribute('expanded');
+      expect(invokerButtons[2]).to.have.attribute('expanded');
+
+      el.exclusive = false;
+
+      // We open the first... (behaving as default (not [exclusive]) again)
+      invokerButtons[0].click();
+      expect(invokerButtons[0]).to.have.attribute('expanded');
+      expect(invokerButtons[1]).to.not.have.attribute('expanded');
+      expect(invokerButtons[2]).to.have.attribute('expanded');
+    });
+
     it('sends event "expanded-changed" for every expanded state change', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const spy = sinon.spy();

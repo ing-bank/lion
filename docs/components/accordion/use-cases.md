@@ -161,12 +161,13 @@ A header can be multiline.
 ```
 
 ## Exclusive
+
 Sometimes, it might be required to show only one expaned slot of the accordion at a time. For such instances, we have a feature called 'exclusive'. This allows the accordion to open only one and a time and closes the open slot when a new slot is clicked upon.
 
 This field takes in a Boolean value, which by default is false.
 
 ```html preview-story
-<lion-accordion exclusive=true>
+<lion-accordion exclusive="true">
   <h3 slot="invoker">
     <button>
       Sensory Factors <br />
