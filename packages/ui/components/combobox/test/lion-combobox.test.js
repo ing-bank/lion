@@ -1275,8 +1275,8 @@ describe('lion-combobox', () => {
         class ShowOverlayConditionCombobox extends LionCombobox {
           /** @param {{ currentValue: string, lastKey:string }} options */
           _showOverlayCondition(options) {
-            // @ts-ignore
             return (
+              // @ts-ignore
               this.__prevCboxValueNonSelected.length > 3 && super._showOverlayCondition(options)
             );
           }
