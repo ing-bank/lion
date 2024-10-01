@@ -15,7 +15,7 @@ All accordion panels are collapsed by default.
   <h3 slot="invoker">
     <button>Sensory Factors</button>
   </h3>
-  <div slot="content" class="lion-paragraph-container">
+  <div slot="content">
     <p>
       The taste of oranges is determined mainly by the relative ratios of sugars and acids, whereas
       orange aroma derives from volatile organic compounds, including alcohols, aldehydes, ketones,
@@ -52,7 +52,7 @@ Multiple accordion panels can be expanded at the same time. When content drops o
   <h3 slot="invoker">
     <button>Sensory Factors</button>
   </h3>
-  <div slot="content" class="lion-paragraph-container">
+  <div slot="content">
     <p>
       The taste of oranges is determined mainly by the relative ratios of sugars and acids, whereas
       orange aroma derives from volatile organic compounds, including alcohols, aldehydes, ketones,
@@ -92,7 +92,7 @@ The invoker and content slots are ordered by DOM order. This means you can put a
   <h3 slot="invoker">
     <button>Nutritional value</button>
   </h3>
-  <div slot="content" class="lion-paragraph-container">
+  <div slot="content">
     <p>
       The taste of oranges is determined mainly by the relative ratios of sugars and acids, whereas
       orange aroma derives from volatile organic compounds, including alcohols, aldehydes, ketones,
@@ -129,7 +129,7 @@ A header can be multiline.
       <small>or the experience of taste</small>
     </button>
   </h3>
-  <div slot="content" class="lion-paragraph-container">
+  <div slot="content">
     <p>
       The taste of oranges is determined mainly by the relative ratios of sugars and acids, whereas
       orange aroma derives from volatile organic compounds, including alcohols, aldehydes, ketones,
@@ -162,19 +162,16 @@ A header can be multiline.
 
 ## Exclusive
 
-Sometimes, it might be required to show only one expaned slot of the accordion at a time. For such instances, we have a feature called 'exclusive'. This allows the accordion to open only one and a time and closes the open slot when a new slot is clicked upon.
+Sometimes, it might be required to show only one expanded slot of the accordion at a time. For such instances, we have a feature called 'exclusive'. This allows the accordion to open only one and a time and closes the open slot when a new slot is clicked upon.
 
 This field takes in a Boolean value, which by default is false.
 
 ```html preview-story
-<lion-accordion exclusive="true">
+<lion-accordion exclusive>
   <h3 slot="invoker">
-    <button>
-      Sensory Factors <br />
-      <small>or the experience of taste</small>
-    </button>
+    <button>This collapsible closes all other ones</button>
   </h3>
-  <div slot="content" class="lion-paragraph-container">
+  <div slot="content">
     <p>
       The taste of oranges is determined mainly by the relative ratios of sugars and acids, whereas
       orange aroma derives from volatile organic compounds, including alcohols, aldehydes, ketones,
@@ -191,10 +188,7 @@ This field takes in a Boolean value, which by default is false.
     </p>
   </div>
   <h3 slot="invoker">
-    <button>
-      Nutritional value
-      <small>or the raw data</small>
-    </button>
+    <button>Same for this collapsible</button>
   </h3>
   <div slot="content">
     Orange flesh is 87% water, 12% carbohydrates, 1% protein, and contains negligible fat (table).
@@ -282,7 +276,7 @@ export const distributeNewElement = () => {
       const accordionElement = this.shadowRoot.querySelector('#pushTabs');
       const i = Math.floor(accordionElement.children.length / 2) + 1;
       this.__collection = [
-        ...this. ,
+        ...this.__collection,
         {
           invoker: `header ${i}`,
           content: `content ${i}`,
