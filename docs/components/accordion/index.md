@@ -1,3 +1,3 @@
-# Accordion ||10
+# Accordion
 
 -> go to Overview
