@@ -12,7 +12,9 @@ export const main = () => html`
     <lion-step initial-step>
       <p>Welcome</p>
       <button disabled>previous</button> &nbsp;
-      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">Next</button>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">
+        Next
+      </button>
     </lion-step>
     <lion-step>
       <p>Are you single?</p>
@@ -46,7 +48,9 @@ export const main = () => html`
         Previous
       </button>
       &nbsp;
-      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">Next</button>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">
+        Next
+      </button>
     </lion-step>
     <lion-step id="is-not-single" .condition="${data => data.isSingle}" invert-condition>
       <p>You are NOT single.</p>
@@ -54,7 +58,9 @@ export const main = () => html`
         Previous
       </button>
       &nbsp;
-      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">Next</button>
+      <button type="button" @click="${ev => ev.target.parentElement.controller.next()}">
+        Next
+      </button>
     </lion-step>
     <lion-step>
       <p>Finish</p>

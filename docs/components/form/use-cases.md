@@ -55,7 +55,8 @@ export const formSubmit = () => {
           <button>Submit</button>
           <button
             type="button"
-            @click="${ev => ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}"
+            @click="${ev =>
+              ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}"
           >
             Reset
           </button>

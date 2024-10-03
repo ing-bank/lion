@@ -309,7 +309,9 @@ localize.setupNamespaceLoader('my-hello-component', async locale => {
 
 // for all components which have a prefix in their names
 localize.setupNamespaceLoader(/my-.+/, async (locale, namespace) => {
-  const response = await fetch(`https://api.example.com/?namespace="${namespace}&locale=${locale}"`);
+  const response = await fetch(
+    `https://api.example.com/?namespace="${namespace}&locale=${locale}"`,
+  );
   return response.json();
 });
 ```

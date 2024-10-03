@@ -58,7 +58,9 @@ export const methods = ({ shadowRoot }) => {
       <button @click="${() => shadowRoot.getElementById('pagination-method').next()}">Next</button>
       <br />
       <br />
-      <button @click="${() => shadowRoot.getElementById('pagination-method').first()}">First</button>
+      <button @click="${() => shadowRoot.getElementById('pagination-method').first()}">
+        First
+      </button>
       <button @click="${() => shadowRoot.getElementById('pagination-method').last()}">Last</button>
       <br />
       <br />

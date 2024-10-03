@@ -31,10 +31,7 @@ Our recommendation would be to set the `name` attribute only on the `lion-checkb
 ## Example
 
 ```html
-<lion-checkbox-group
-  name="scientists[]"
-  label="Favorite scientists"
->
+<lion-checkbox-group name="scientists[]" label="Favorite scientists">
   <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
   <lion-checkbox label="Francis Bacon" .choiceValue="${'Francis Bacon'}"></lion-checkbox>
   <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
@@ -49,7 +46,7 @@ You can pre-select options by targeting the `modelValue` object of the option an
 <lion-checkbox-group name="scientists" label="Favorite scientists">
   <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
   <lion-checkbox label="Francis Bacon" .choiceValue="${'Francis Bacon'}" checked></lion-checkbox>
-    <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
+  <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
 </lion-checkbox-group>
 ```
 
@@ -61,7 +58,7 @@ You can disable the entire group by setting the `disabled` attribute on the `<li
 <lion-checkbox-group name="scientists[]" label="Favorite scientists" disabled>
   <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
   <lion-checkbox label="Francis Bacon" .choiceValue="${'Francis Bacon'}"></lion-checkbox>
-    <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
+  <lion-checkbox label="Marie Curie" .choiceValue="${'Marie Curie'}"></lion-checkbox>
 </lion-checkbox-group>
 ```
 
@@ -145,25 +142,13 @@ A `checkbox-indeterminate`'s value is neither true nor false, but is instead ind
 ```html preview-story
 <lion-checkbox-group name="scientists[]" label="Favorite scientists">
   <lion-checkbox-indeterminate label="Old Greek scientists">
-    <lion-checkbox
-      label="Archimedes"
-      .choiceValue="${'Archimedes'}"
-    ></lion-checkbox>
-    <lion-checkbox  label="Plato" .choiceValue="${'Plato'}"></lion-checkbox>
-    <lion-checkbox
-      label="Pythagoras"
-      .choiceValue="${'Pythagoras'}"
-    ></lion-checkbox>
+    <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
+    <lion-checkbox label="Plato" .choiceValue="${'Plato'}"></lion-checkbox>
+    <lion-checkbox label="Pythagoras" .choiceValue="${'Pythagoras'}"></lion-checkbox>
   </lion-checkbox-indeterminate>
   <lion-checkbox-indeterminate label="17th Century scientists">
-    <lion-checkbox
-      label="Isaac Newton"
-      .choiceValue="${'Isaac Newton'}"
-    ></lion-checkbox>
-    <lion-checkbox
-      label="Galileo Galilei"
-      .choiceValue="${'Galileo Galilei'}"
-    ></lion-checkbox>
+    <lion-checkbox label="Isaac Newton" .choiceValue="${'Isaac Newton'}"></lion-checkbox>
+    <lion-checkbox label="Galileo Galilei" .choiceValue="${'Galileo Galilei'}"></lion-checkbox>
   </lion-checkbox-indeterminate>
 </lion-checkbox-group>
 ```
@@ -173,24 +158,12 @@ The `checkbox-indeterminate` can have another `checkbox-indeterminate` as a chil
 ```html preview-story
 <lion-checkbox-group name="scientists[]" label="Favorite scientists">
   <lion-checkbox-indeterminate label="Scientists">
-    <lion-checkbox
-      label="Isaac Newton"
-      .choiceValue="${'Isaac Newton'}"
-    ></lion-checkbox>
-    <lion-checkbox
-      label="Galileo Galilei"
-      .choiceValue="${'Galileo Galilei'}"
-    ></lion-checkbox>
-    <lion-checkbox-indeterminate  label="Old Greek scientists">
-      <lion-checkbox
-        label="Archimedes"
-        .choiceValue="${'Archimedes'}"
-      ></lion-checkbox>
-      <lion-checkbox  label="Plato" .choiceValue="${'Plato'}"></lion-checkbox>
-      <lion-checkbox
-        label="Pythagoras"
-        .choiceValue="${'Pythagoras'}"
-      ></lion-checkbox>
+    <lion-checkbox label="Isaac Newton" .choiceValue="${'Isaac Newton'}"></lion-checkbox>
+    <lion-checkbox label="Galileo Galilei" .choiceValue="${'Galileo Galilei'}"></lion-checkbox>
+    <lion-checkbox-indeterminate label="Old Greek scientists">
+      <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
+      <lion-checkbox label="Plato" .choiceValue="${'Plato'}"></lion-checkbox>
+      <lion-checkbox label="Pythagoras" .choiceValue="${'Pythagoras'}"></lion-checkbox>
     </lion-checkbox-indeterminate>
   </lion-checkbox-indeterminate>
 </lion-checkbox-group>
@@ -201,24 +174,12 @@ You can also use `mixed-state` attribute so your indeterminate checkbox toggles 
 ```html preview-story
 <lion-checkbox-group name="scientists[]" label="Favorite scientists">
   <lion-checkbox-indeterminate mixed-state label="Scientists">
-    <lion-checkbox
-      label="Isaac Newton"
-      .choiceValue="${'Isaac Newton'}"
-    ></lion-checkbox>
-    <lion-checkbox
-      label="Galileo Galilei"
-      .choiceValue="${'Galileo Galilei'}"
-    ></lion-checkbox>
-    <lion-checkbox-indeterminate mixed-state  label="Old Greek scientists">
-      <lion-checkbox
-        label="Archimedes"
-        .choiceValue="${'Archimedes'}"
-      ></lion-checkbox>
-      <lion-checkbox  label="Plato" .choiceValue="${'Plato'}"></lion-checkbox>
-      <lion-checkbox
-        label="Pythagoras"
-        .choiceValue="${'Pythagoras'}"
-      ></lion-checkbox>
+    <lion-checkbox label="Isaac Newton" .choiceValue="${'Isaac Newton'}"></lion-checkbox>
+    <lion-checkbox label="Galileo Galilei" .choiceValue="${'Galileo Galilei'}"></lion-checkbox>
+    <lion-checkbox-indeterminate mixed-state label="Old Greek scientists">
+      <lion-checkbox label="Archimedes" .choiceValue="${'Archimedes'}"></lion-checkbox>
+      <lion-checkbox label="Plato" .choiceValue="${'Plato'}"></lion-checkbox>
+      <lion-checkbox label="Pythagoras" .choiceValue="${'Pythagoras'}"></lion-checkbox>
     </lion-checkbox-indeterminate>
   </lion-checkbox-indeterminate>
 </lion-checkbox-group>
