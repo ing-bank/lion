@@ -2,7 +2,7 @@ export default {
   error: {
     Required: 'Vul een {fieldName} in.',
     _RequiredUpload: 'Upload een {fieldName}.',
-    _RequiredSelect: 'Selecteer een {fieldname}.',
+    _RequiredSelect: 'Selecteer een {fieldName}.',
     EqualsLength: 'Vul een {fieldName} in gelijk aan {params} karakters.',
     MinLength: 'Vul een {fieldName} in van minimaal {params} karakters.',
     MaxLength: 'Vul een {fieldName} in van maximaal {params} karakters.',
@@ -25,7 +25,7 @@ export default {
   warning: {
     Required: 'Vul een {fieldName} in.',
     _RequiredUpload: 'Upload een {fieldName}.',
-    _RequiredSelect: 'Selecteer een {fieldname}.',
+    _RequiredSelect: 'Selecteer een {fieldName}.',
     EqualsLength: 'Vul een {fieldName} in gelijk aan {params} karakters.',
     MinLength: 'Vul een {fieldName} in van minimaal {params} karakters.',
     MaxLength: 'Vul een {fieldName} in van maximaal {params} karakters.',

@@ -2,7 +2,7 @@ export default {
   error: {
     Required: 'Уведіть також значення {fieldName}.',
     _RequiredUpload: 'Завантажте {fieldName}.',
-    _RequiredSelect: 'Виберіть також {fieldname}.',
+    _RequiredSelect: 'Виберіть також {fieldName}.',
     EqualsLength:
       'Введіть правильне значення {fieldName}, кількість символів має бути точно {params}.',
     MinLength: 'Уведіть правильне значення {fieldName} (щонайменше {params}).',
@@ -27,7 +27,7 @@ export default {
   warning: {
     Required: 'Уведіть також значення {fieldName}.',
     _RequiredUpload: 'Завантажте {fieldName}.',
-    _RequiredSelect: 'Виберіть також {fieldname}.',
+    _RequiredSelect: 'Виберіть також {fieldName}.',
     EqualsLength:
       'Введіть правильне значення {fieldName}, кількість символів має бути точно {params}.',
     MinLength: 'Уведіть правильне значення {fieldName} (щонайменше {params}).',

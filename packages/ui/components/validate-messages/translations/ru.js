@@ -2,7 +2,7 @@ export default {
   error: {
     Required: 'Введите значение поля {fieldName}.',
     _RequiredUpload: 'Загрузите {fieldName}.',
-    _RequiredSelect: 'Также выберите значение поля {fieldname}.',
+    _RequiredSelect: 'Также выберите значение поля {fieldName}.',
     EqualsLength: 'Введите корректное значение поля {fieldName} — ровно {params} симв.',
     MinLength: 'Введите корректное значение поля {fieldName} (не менее {params}).',
     MaxLength: 'Введите корректное значение поля {fieldName} (до {params} симв.).',
@@ -26,7 +26,7 @@ export default {
   warning: {
     Required: 'Введите значение поля {fieldName}.',
     _RequiredUpload: 'Загрузите {fieldName}.',
-    _RequiredSelect: 'Также выберите значение поля {fieldname}.',
+    _RequiredSelect: 'Также выберите значение поля {fieldName}.',
     EqualsLength: 'Введите корректное значение поля {fieldName} — ровно {paramsn} симв.',
     MinLength: 'Введите корректное значение поля {fieldName} (не менее {params}).',
     MaxLength: 'Введите корректное значение поля {fieldName} (до {params} симв.).',
