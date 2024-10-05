@@ -55,9 +55,9 @@ export default {
   testRunnerHtml,
   browserLogs: true,
   browsers: [
-    // playwrightLauncher({ product: 'firefox', concurrency: 1 }),
+    playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),
-    // playwrightLauncher({ product: 'webkit' }),
+    playwrightLauncher({ product: 'webkit' }),
   ],
   groups: packages.map(pkg => ({
     name: pkg.name,
