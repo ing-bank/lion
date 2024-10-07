@@ -11,6 +11,7 @@ import { AjaxFetchError } from './AjaxFetchError.js';
  * @typedef {import('../types/types.js').CachedRequestInterceptor} CachedRequestInterceptor
  * @typedef {import('../types/types.js').ResponseInterceptor} ResponseInterceptor
  * @typedef {import('../types/types.js').CachedResponseInterceptor} CachedResponseInterceptor
+ * @typedef {import('../types/types.js').ResponseJsonInterceptor} ResponseJsonInterceptor
  * @typedef {import('../types/types.js').AjaxConfig} AjaxConfig
  * @typedef {import('../types/types.js').CacheRequest} CacheRequest
  * @typedef {import('../types/types.js').CacheResponse} CacheResponse
@@ -31,7 +32,7 @@ function isFailedResponse(response) {
 - Allows globally registering request and response interceptors
 - Throws on 4xx and 5xx status codes
 - Supports caching, so a request can be prevented from reaching to network, by returning the cached response.
-- Supports JSON with `ajax.fetchJSON` by automatically serializing request body and
+- Supports JSON with `ajax.fetchJson` by automatically serializing request body and
   deserializing response payload as JSON, and adding the correct Content-Type and Accept headers.
 - Adds accept-language header to requests based on application language
 - Adds XSRF header to request if the cookie is present
@@ -63,6 +64,8 @@ export class Ajax {
     this._requestInterceptors = [];
     /** @type {Array.<ResponseInterceptor|CachedResponseInterceptor>} */
     this._responseInterceptors = [];
+    /** @type {Array.<ResponseJsonInterceptor>} */
+    this._responseJsonInterceptors = [];
 
     if (this.__config.addAcceptLanguage) {
       this.addRequestInterceptor(acceptLanguageRequestInterceptor);
@@ -125,6 +128,11 @@ export class Ajax {
     this._responseInterceptors = this._responseInterceptors.filter(
       interceptor => interceptor !== responseInterceptor,
     );
+  }
+
+  /** @param {ResponseJsonInterceptor} responseJsonInterceptor */
+  addResponseJsonInterceptor(responseJsonInterceptor) {
+    this._responseJsonInterceptors.push(responseJsonInterceptor);
   }
 
   /**
@@ -202,7 +210,10 @@ export class Ajax {
     const jsonInit = /** @type {RequestInit} */ (lionInit);
     const response = await this.fetch(info, jsonInit, true);
 
-    const body = await this.__parseBody(response);
+    let body = await this.__parseBody(response);
+    if (typeof body === 'object') {
+      body = await this.__interceptResponseJson(body, response);
+    }
 
     return { response, body };
   }
@@ -286,5 +297,19 @@ export class Ajax {
       interceptedResponse = await intercept(/** @type {CacheResponse} */ (interceptedResponse));
     }
     return interceptedResponse;
+  }
+
+  /**
+   * @param {object} jsonObject
+   * @param {Response} response
+   * @returns {Promise<object>}
+   */
+  async __interceptResponseJson(jsonObject, response) {
+    let interceptedJsonObject = jsonObject;
+    for (const intercept of this._responseJsonInterceptors) {
+      // eslint-disable-next-line no-await-in-loop
+      interceptedJsonObject = await intercept(interceptedJsonObject, response);
+    }
+    return interceptedJsonObject;
   }
 }
