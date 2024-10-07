@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.7.9
+
+### Patch Changes
+
+- 4696ad7: [accordion] new "exclusive" feature, allowing one opened collapsible at a time
+- 5ce7fee: [validate-messages] set correct fieldName to required select validation message.
+
 ## 0.7.8
 
 ### Patch Changes
