@@ -446,17 +446,33 @@ export class LionAccordion extends LitElement {
    * @private
    */
   __toggleExpanded(indexClicked) {
-    const indexFound = this.expanded.indexOf(indexClicked);
-    const expandedNewValues = this.exclusive ? [] : [...this.expanded];
-
-    if (indexFound === -1) {
-      expandedNewValues.push(indexClicked);
-    } else if (expandedNewValues.includes(indexFound)) {
-      expandedNewValues.splice(indexFound, 1);
+    if (this.exclusive) {
+      this.expanded = [indexClicked];
+      return;
     }
 
-    // trigger a render
+    const expandedNewValues = [...this.expanded];
+    const clickedPositionInExpandedArr = this.expanded.indexOf(indexClicked);
+    const isClickedExpanded = clickedPositionInExpandedArr !== -1;
+    if (!isClickedExpanded) {
+      // Open
+      expandedNewValues.push(indexClicked);
+    } else {
+      // Close
+      expandedNewValues.splice(clickedPositionInExpandedArr, 1);
+    }
     this.expanded = expandedNewValues;
+
+    // const indexFound = this.expanded.indexOf(indexClicked);
+    // const expandedNewValues = this.exclusive ? [] : [...this.expanded];
+
+    // if (!isClickedExpanded) {
+    //   expandedNewValues.push(indexClicked);
+    // } else if (expandedNewValues.includes(indexFound)) {
+    //   expandedNewValues.splice(indexFound, 1);
+    // }
+
+    // trigger a render
   }
 
   /**
