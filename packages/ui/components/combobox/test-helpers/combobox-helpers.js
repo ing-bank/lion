@@ -42,7 +42,7 @@ export async function mimicUserTyping(el, keys) {
   _inputNode.value = '';
   _inputNode.focus();
   await sendKeys({
-    type: keys
+    type: keys,
   });
 }
 

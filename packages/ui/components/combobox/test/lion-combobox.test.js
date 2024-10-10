@@ -1122,7 +1122,7 @@ describe('lion-combobox', () => {
       expect(el.checkedIndex).to.equal(0);
 
       // await mimicUserTyping(el, '');
-      await sendKeys({ press: 'Backspace'});
+      await sendKeys({ press: 'Backspace' });
       await el.updateComplete;
       el.opened = false;
       await el.updateComplete;
@@ -2571,12 +2571,12 @@ describe('lion-combobox', () => {
             // expect(_inputNode.value).to.equal('Aha', autocompleteMode);
             expect(el.checkedIndex).to.equal(0, autocompleteMode);
 
-            await mimicUserTypingAdvanced(el, ['A','r','t','i']);
+            await mimicUserTypingAdvanced(el, ['A', 'r', 't', 'i']);
             await el.updateComplete;
             expect(_inputNode.value).to.equal('Arti', `autocompleteMode is ${autocompleteMode}`);
 
             await el.updateComplete;
-            expect(el.checkedIndex).to.equal(-1,  `autocompleteMode is ${autocompleteMode}`);
+            expect(el.checkedIndex).to.equal(-1, `autocompleteMode is ${autocompleteMode}`);
             _inputNode.value = '';
           }
 
