@@ -1,4 +1,5 @@
 import { getListboxMembers } from '@lion/ui/listbox-test-helpers.js';
+import { sendKeys } from '@web/test-runner-commands';
 
 /**
  * @typedef {import('@lion/ui/combobox.js').LionCombobox} LionCombobox
@@ -34,17 +35,15 @@ export function getComboboxMembers(el) {
 
 /**
  * @param {LionCombobox} el
- * @param {string} value
+ * @param {string} keys
  */
-// TODO: add keys that actually make sense...
-export function mimicUserTyping(el, value) {
+export async function mimicUserTyping(el, keys) {
   const { _inputNode } = getComboboxMembers(el);
-  _inputNode.dispatchEvent(new Event('focusin', { bubbles: true }));
-  // eslint-disable-next-line no-param-reassign
-  _inputNode.value = value;
-  _inputNode.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
-  _inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: value }));
-  _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: value }));
+  _inputNode.value = '';
+  _inputNode.focus();
+  await sendKeys({
+    type: keys,
+  });
 }
 
 /**

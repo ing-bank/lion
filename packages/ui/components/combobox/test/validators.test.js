@@ -3,6 +3,7 @@ import { MatchesOption } from '@lion/ui/combobox.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
 import { expect, fixture, html } from '@open-wc/testing';
+import { sendKeys } from '@web/test-runner-commands';
 
 /**
  * @typedef {import('@lion/ui/combobox.js').LionCombobox} LionCombobox
@@ -29,9 +30,11 @@ describe('MatchesOption validation', () => {
     await el.updateComplete;
 
     isEnabled = validator.execute('Artichoke', undefined, config);
+    await sendKeys({ press: 'Enter' });
     expect(isEnabled).to.be.false;
 
     mimicUserTyping(el, 'Foo');
+    await sendKeys({ press: 'Enter' });
     await el.updateComplete;
 
     isEnabled = validator.execute('Foo', undefined, config);
