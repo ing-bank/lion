@@ -8,18 +8,22 @@ import { LitElement } from 'lit';
  * @typedef {import('../types/SlotMixinTypes.js').SlotHost} SlotHost
  */
 
-/**
- * loads a script into DOM and awaits loading it
- * @param {string} src
- */
-async function loadScript(src) {
-  const script = document.createElement('script');
-  script.src = src;
-  document.head.appendChild(script);
+// @ts-ignore
+const createElementNative = ShadowRoot.prototype.createElement;
+function mockScopedRegistry() {
+  const outputObj = { createElementCallCount: 0 };
+  // @ts-expect-error wait for browser support
+  ShadowRoot.prototype.createElement = (tagName, options) => {
+    outputObj.createElementCallCount += 1;
+    // Return an element that lit can use as render target
+    return createElementNative(tagName, options);
+  };
+  return outputObj;
+}
 
-  await new Promise(resolve => {
-    script.onload = resolve;
-  });
+function unMockScopedRegistry() {
+  // @ts-expect-error wait for browser support
+  ShadowRoot.prototype.createElement = createElementNative;
 }
 
 describe('SlotMixin', () => {
@@ -565,16 +569,12 @@ describe('SlotMixin', () => {
 
   describe('Scoped Registries', () => {
     it('supports scoped elements when polyfill loaded', async () => {
-      const polyfill =
-        '/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js';
-      await loadScript(polyfill);
-
-      // @ts-ignore the polyfill loaded above, makes sure `ShadowRoot.prototype.createElement` is defined
-      const spy = sinon.spy(ShadowRoot.prototype, 'createElement');
+      const outputObj = mockScopedRegistry();
 
       class ScopedEl extends LitElement {}
 
       const tagName = defineCE(
+        // @ts-ignore
         class extends ScopedElementsMixin(SlotMixin(LitElement)) {
           static get scopedElements() {
             return {
@@ -600,7 +600,9 @@ describe('SlotMixin', () => {
       const tag = unsafeStatic(tagName);
       await fixture(html`<${tag}></${tag}>`);
 
-      expect(spy.getCalls()).to.have.length(1);
+      expect(outputObj.createElementCallCount).to.equal(1);
+
+      unMockScopedRegistry();
     });
 
     it('does not scope elements when polyfill not loaded', async () => {
@@ -643,6 +645,7 @@ describe('SlotMixin', () => {
 
       document.body.removeChild(renderTarget);
       docSpy.restore();
+      unMockScopedRegistry();
     });
   });
 });
