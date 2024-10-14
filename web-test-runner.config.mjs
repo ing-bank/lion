@@ -31,10 +31,9 @@ const testRunnerHtml = testRunnerImport =>
   `
 <html>
   <head>
-    <!-- This line below is where the problem is coming from. This alters behavior -->
-    <!-- And I believe its dangerous, because it gives us false positives. -->
-    <!-- Not everybody is importing this module in their app -->
-    <!-- Only tests that need it, should import it individually -->
+    <!-- This line below is where the problem is coming from. This alters behavior in tests vs browser -->
+    <!-- Running all tests with this polyfill gives us false positives. -->
+    <!-- Not everybody is importing this polyfill in their app -->
     <!-- <script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script> -->
 
     <script type="module" src="${testRunnerImport}"></script>
