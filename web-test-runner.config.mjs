@@ -24,7 +24,7 @@ const testGroups = fs
     files: `${pkg.path}/**/*.test.js`,
   }));
 
-const testsThatShouldRunWithScopedCustomElementRegistryPolyfill = testGroups.map(testGroup => {
+const testsThatMustRunWithScopedCustomElementRegistryPolyfill = testGroups.map(testGroup => {
   const files = [
     testGroup.files,
     `!${testGroup.files.replace('*.test.js', '*.no-polyfill.test.js')}`,
@@ -47,7 +47,7 @@ const testsThatShouldRunWithScopedCustomElementRegistryPolyfill = testGroups.map
   };
 });
 
-const testsThatShouldNotRunWithPolyfill = testGroups.map(testGroup => {
+const testsThatMustRunWithoutPolyfill = testGroups.map(testGroup => {
   const files = [testGroup.files, `!${testGroup.files.replace('*.test.js', '*.polyfill.test.js')}`];
 
   return {
@@ -90,7 +90,7 @@ export default {
     playwrightLauncher({ product: 'webkit' }),
   ],
   groups: [].concat([
-    ...testsThatShouldRunWithScopedCustomElementRegistryPolyfill,
-    ...testsThatShouldNotRunWithPolyfill,
+    ...testsThatMustRunWithScopedCustomElementRegistryPolyfill,
+    ...testsThatMustRunWithoutPolyfill,
   ]),
 };
