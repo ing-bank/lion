@@ -63,12 +63,13 @@ describe('lion-combobox', () => {
       const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
 
       async function performChecks() {
-        mimicUserTyping(el, 'c');
+        await mimicUserTyping(el, 'c');
         await el.updateComplete;
-        expect(visibleOptions().length).to.equal(4);
-        mimicUserTyping(el, '');
+        expect(visibleOptions().length).to.equal(4, `autocompleteMode is ${el.autocomplete}`);
+        // Remove [hard], [c]
+        await mimicUserTypingAdvanced(el, ['Backspace', 'Backspace']);
         await el.updateComplete;
-        expect(visibleOptions().length).to.equal(0);
+        expect(visibleOptions().length).to.equal(0, `autocompleteMode is ${el.autocomplete}`);
       }
 
       el.autocomplete = 'none';
@@ -96,7 +97,7 @@ describe('lion-combobox', () => {
       const options = el.formElements;
       const visibleOptions = () => options.filter(o => o.style.display !== 'none');
 
-      mimicUserTyping(el, 'cha');
+      await mimicUserTyping(el, 'cha');
       await el.updateComplete;
       expect(visibleOptions().length).to.equal(1);
       el.reset();
@@ -119,7 +120,7 @@ describe('lion-combobox', () => {
       const options = el.formElements;
       const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
 
-      mimicUserTyping(el, 'cha');
+      await mimicUserTyping(el, 'cha');
       await el.updateComplete;
       expect(visibleOptions().length).to.equal(1);
       expect(el.opened).to.be.true;
@@ -144,7 +145,7 @@ describe('lion-combobox', () => {
       const { _listboxNode } = getComboboxMembers(el);
 
       async function open() {
-        mimicUserTyping(el, 'ch');
+        await mimicUserTyping(el, 'ch');
         return el.updateComplete;
       }
 
@@ -178,10 +179,10 @@ describe('lion-combobox', () => {
         const visibleOptions = () => options.filter(o => o.getAttribute('aria-hidden') !== 'true');
 
         async function performChecks() {
-          mimicUserTyping(el, 'c');
+          await mimicUserTyping(el, 'c');
           await el.updateComplete;
           expect(visibleOptions().length).to.equal(4);
-          mimicUserTyping(el, '');
+          await mimicUserTyping(el, '');
           await el.updateComplete;
           expect(visibleOptions().length).to.equal(options.length);
         }
@@ -252,7 +253,7 @@ describe('lion-combobox', () => {
         const { _listboxNode, _inputNode } = getComboboxMembers(el);
 
         async function open() {
-          mimicUserTyping(el, 'ch');
+          await mimicUserTyping(el, 'ch');
           return el.updateComplete;
         }
 
@@ -326,7 +327,7 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
-      mimicUserTyping(el, '30');
+      await mimicUserTyping(el, '30');
       await el.updateComplete;
       expect(el.hasFeedbackFor).to.include('error');
       expect(el.validationStates).to.have.property('error');
@@ -512,7 +513,7 @@ describe('lion-combobox', () => {
         `)
       );
       const options = el.formElements;
-      mimicUserTyping(el, 'a');
+      await mimicUserTyping(el, 'a');
       await el.updateComplete;
 
       const visibleOptions = () => options.filter(o => o.style.display !== 'none');
@@ -575,15 +576,15 @@ describe('lion-combobox', () => {
         await el.updateComplete;
 
         // FIXME: fix properly for Webkit
-        // expect(_inputNode.value).to.equal('Aha', `autocomplete mode ${autocompleteMode}`);
-        expect(el.checkedIndex).to.equal(0, `autocomplete mode ${autocompleteMode}`);
+        // expect(_inputNode.value).to.equal('Aha', `autocompleteMode is ${autocompleteMode}`);
+        expect(el.checkedIndex).to.equal(0, `autocompleteMode is ${autocompleteMode}`);
 
-        mimicUserTyping(el, 'Ah');
+        await mimicUserTyping(el, 'Ah');
         await el.updateComplete;
-        expect(_inputNode.value).to.equal('Ah', `autocomplete mode ${autocompleteMode}`);
+        expect(_inputNode.value).to.equal('Ah', `autocompleteMode is ${autocompleteMode}`);
 
         await el.updateComplete;
-        expect(el.checkedIndex).to.equal(-1, `autocomplete mode ${autocompleteMode}`);
+        expect(el.checkedIndex).to.equal(-1, `autocompleteMode is ${autocompleteMode}`);
       }
 
       el.autocomplete = 'none';
@@ -631,7 +632,7 @@ describe('lion-combobox', () => {
       await el.updateComplete;
       expect(el.modelValue).to.eql([]);
 
-      mimicUserTyping(el, ' ');
+      await mimicUserTyping(el, ' ');
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
@@ -653,7 +654,7 @@ describe('lion-combobox', () => {
       const { _inputNode } = getComboboxMembers(el);
       expect(el.checkedIndex).to.equal(0);
 
-      mimicUserTyping(el, 'Foo');
+      await mimicUserTyping(el, 'Foo');
       _inputNode.dispatchEvent(new Event('input'));
       await el.updateComplete;
 
@@ -676,7 +677,7 @@ describe('lion-combobox', () => {
       el.requireOptionMatch = false;
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'Art');
+      await mimicUserTyping(el, 'Art');
       await el.updateComplete;
 
       await mimicUserTypingAdvanced(el, ['Delete']);
@@ -768,7 +769,7 @@ describe('lion-combobox', () => {
       expect(el.modelValue).to.eql(['Chard']);
       expect(el.checkedIndex).to.eql([1]);
 
-      mimicUserTyping(el, 'Foo');
+      await mimicUserTyping(el, 'Foo');
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
@@ -776,7 +777,7 @@ describe('lion-combobox', () => {
       expect(el.modelValue).to.eql(['Chard', 'Foo']);
       expect(el.checkedIndex).to.eql([1]);
 
-      mimicUserTyping(el, 'Bar');
+      await mimicUserTyping(el, 'Bar');
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
@@ -804,7 +805,7 @@ describe('lion-combobox', () => {
 
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'Foo');
+      await mimicUserTyping(el, 'Foo');
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
@@ -812,7 +813,7 @@ describe('lion-combobox', () => {
       expect(el.modelValue).to.eql(['Foo']);
       expect(el.checkedIndex).to.eql([]);
 
-      mimicUserTyping(el, 'Bar');
+      await mimicUserTyping(el, 'Bar');
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
@@ -842,7 +843,7 @@ describe('lion-combobox', () => {
 
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'Artist');
+      await mimicUserTyping(el, 'Artist');
       await el.updateComplete;
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
@@ -870,7 +871,7 @@ describe('lion-combobox', () => {
       await el.updateComplete;
 
       const { _inputNode } = getComboboxMembers(el);
-      mimicUserTyping(el, 'Art');
+      await mimicUserTyping(el, 'Art');
       await el.updateComplete;
       await mimicUserTypingAdvanced(el, ['Backspace']);
       await el.updateComplete;
@@ -902,7 +903,7 @@ describe('lion-combobox', () => {
       const { _inputNode } = getComboboxMembers(el);
       el.modelValue = [];
 
-      mimicUserTyping(el, 'Art');
+      await mimicUserTyping(el, 'Art');
       await el.updateComplete;
       await mimicUserTypingAdvanced(el, ['Delete']);
       await el.updateComplete;
@@ -981,7 +982,7 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(false);
 
       // step [2]
-      mimicUserTyping(el, 'c');
+      await mimicUserTyping(el, 'c');
       await el.updateComplete;
       expect(el.opened).to.equal(true);
 
@@ -993,7 +994,7 @@ describe('lion-combobox', () => {
 
       // step [4]
       await el.updateComplete;
-      mimicUserTyping(el, 'c');
+      await mimicUserTyping(el, 'c');
       await el.updateComplete;
       expect(el.opened).to.equal(true);
     });
@@ -1012,7 +1013,7 @@ describe('lion-combobox', () => {
 
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'art');
+      await mimicUserTyping(el, 'art');
       await el.updateComplete;
       expect(el.opened).to.equal(true);
       expect(_inputNode.value).to.equal('Artichoke');
@@ -1036,7 +1037,7 @@ describe('lion-combobox', () => {
 
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'art');
+      await mimicUserTyping(el, 'art');
       await el.updateComplete;
       expect(el.opened).to.equal(true);
       expect(_inputNode.value).to.equal('Artichoke');
@@ -1062,7 +1063,7 @@ describe('lion-combobox', () => {
 
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'art');
+      await mimicUserTyping(el, 'art');
       await el.updateComplete;
       expect(el.opened).to.equal(true);
       expect(_inputNode.value).to.equal('Artichoke');
@@ -1088,7 +1089,7 @@ describe('lion-combobox', () => {
 
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'art');
+      await mimicUserTyping(el, 'art');
       await el.updateComplete;
       expect(el.opened).to.equal(true);
       expect(_inputNode.value).to.equal('Artichoke');
@@ -1114,13 +1115,14 @@ describe('lion-combobox', () => {
 
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'art');
+      await mimicUserTyping(el, 'art');
       await el.updateComplete;
       expect(el.opened).to.equal(true);
       expect(_inputNode.value).to.equal('Artichoke');
       expect(el.checkedIndex).to.equal(0);
 
-      mimicUserTyping(el, '');
+      // await mimicUserTyping(el, '');
+      await sendKeys({ press: 'Backspace' });
       await el.updateComplete;
       el.opened = false;
       await el.updateComplete;
@@ -1169,7 +1171,7 @@ describe('lion-combobox', () => {
         `)
         );
 
-        mimicUserTyping(el, 'aaa');
+        await mimicUserTyping(el, 'aaa');
         expect(el.opened).to.be.false;
       });
 
@@ -1194,7 +1196,7 @@ describe('lion-combobox', () => {
         `)
         );
 
-        mimicUserTyping(el, 'aaaa');
+        await mimicUserTyping(el, 'aaaa');
         expect(el.opened).to.be.true;
       });
 
@@ -1219,10 +1221,10 @@ describe('lion-combobox', () => {
         `)
         );
 
-        mimicUserTyping(el, 'aaaa');
+        await mimicUserTyping(el, 'aaaa');
         expect(el.opened).to.be.true;
 
-        mimicUserTyping(el, 'aaa');
+        await mimicUserTyping(el, 'aaa');
         await el.updateComplete;
         expect(el.opened).to.be.false;
       });
@@ -1243,7 +1245,7 @@ describe('lion-combobox', () => {
         const options = el.formElements;
         expect(el.opened).to.equal(false);
 
-        mimicUserTyping(el, 'art');
+        await mimicUserTyping(el, 'art');
         await el.updateComplete;
         expect(el.opened).to.equal(true);
 
@@ -1284,7 +1286,7 @@ describe('lion-combobox', () => {
         const options = el.formElements;
         expect(el.opened).to.equal(false);
 
-        mimicUserTyping(el, 'art');
+        await mimicUserTyping(el, 'art');
         expect(el.opened).to.equal(true);
         await el.updateComplete;
 
@@ -1531,7 +1533,7 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql(['Artichoke', 'Chard', 'Chicory']);
     });
@@ -1547,7 +1549,7 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
       const { _inputNode } = getComboboxMembers(el);
 
@@ -1556,7 +1558,7 @@ describe('lion-combobox', () => {
       expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
 
       // We don't autocomplete when characters are removed
-      mimicUserTyping(el, 'c'); // The user pressed backspace (number of chars decreased)
+      await mimicUserTyping(el, 'c'); // The user pressed backspace (number of chars decreased)
       expect(_inputNode.value).to.equal('c');
       expect(_inputNode.selectionStart).to.equal(_inputNode.value.length);
     });
@@ -1574,7 +1576,7 @@ describe('lion-combobox', () => {
       );
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql(['Artichoke', 'Chard', 'Chicory']);
       expect(_inputNode.value).to.equal('ch');
@@ -1591,7 +1593,7 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql([
         'Artichoke',
@@ -1653,7 +1655,7 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql([
         'Artichoke',
@@ -1675,11 +1677,11 @@ describe('lion-combobox', () => {
         `)
       );
 
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(el.checkedIndex).to.equal(1);
 
-      mimicUserTyping(el, 'cho');
+      await mimicUserTyping(el, 'cho');
       await el.updateComplete;
       expect(el.checkedIndex).to.equal(-1);
 
@@ -1695,12 +1697,12 @@ describe('lion-combobox', () => {
         `)
       );
 
-      mimicUserTyping(el2, 'ch');
+      await mimicUserTyping(el2, 'ch');
       await el2.updateComplete;
       expect(el2.checkedIndex).to.equal(1);
 
       // Also works when 'diminishing amount of chars'
-      mimicUserTyping(el2, 'x');
+      await mimicUserTyping(el2, 'x');
       await el2.updateComplete;
       expect(el2.checkedIndex).to.equal(-1);
     });
@@ -1718,11 +1720,11 @@ describe('lion-combobox', () => {
       );
 
       /** Goes from 2nd option Chard to 3rd option Chicory */
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(el.checkedIndex).to.equal(1);
 
-      mimicUserTyping(el, 'chi');
+      await mimicUserTyping(el, 'chi');
       await el.updateComplete;
       expect(el.checkedIndex).to.equal(2);
 
@@ -1737,14 +1739,14 @@ describe('lion-combobox', () => {
         `)
       );
 
-      mimicUserTyping(el2, 'ch');
+      await mimicUserTyping(el2, 'ch');
       await el2.updateComplete;
       expect(el2.checkedIndex).to.equal(1);
 
       // match-mode all ensures the user sees Artichoke option, but it's not
       // auto-completed or auto-selected, because it doesn't start with "cho"
       // See next test for more clarification
-      mimicUserTyping(el2, 'cho');
+      await mimicUserTyping(el2, 'cho');
       await el2.updateComplete;
       expect(el2.checkedIndex).to.equal(-1);
       expect(getFilteredOptionValues(el2)).to.eql(['Artichoke']);
@@ -1763,7 +1765,7 @@ describe('lion-combobox', () => {
       );
 
       // first match is Char'd', but better match is 'D'aikon
-      mimicUserTyping(el, 'd');
+      await mimicUserTyping(el, 'd');
       await el.updateComplete;
       expect(el.checkedIndex).to.equal(3);
       expect(getFilteredOptionValues(el)).to.eql(['Chard', 'Daikon']);
@@ -1782,7 +1784,7 @@ describe('lion-combobox', () => {
       );
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(_inputNode.value).to.equal('Chard');
       expect(_inputNode.selectionStart).to.equal('ch'.length);
@@ -1794,10 +1796,10 @@ describe('lion-combobox', () => {
       expect(_inputNode.selectionStart).to.equal('chic'.length);
       expect(_inputNode.selectionEnd).to.equal('Chicory'.length);
 
-      // Diminishing chars, but autocompleting
-      mimicUserTyping(el, 'ch');
+      // Diminishing chars, but autocompletion
+      await mimicUserTypingAdvanced(el, ['Backspace', 'Backspace', 'Backspace']); // Ch
       await el.updateComplete;
-      expect(_inputNode.value).to.equal('ch');
+      expect(_inputNode.value).to.equal('Ch');
       expect(_inputNode.selectionStart).to.equal('ch'.length);
       expect(_inputNode.selectionEnd).to.equal('ch'.length);
     });
@@ -1903,7 +1905,7 @@ describe('lion-combobox', () => {
         `)
       );
 
-      mimicUserTyping(el, 'ch'); // ch
+      await mimicUserTyping(el, 'ch'); // ch
       await el.updateComplete; // Ch[ard]
       expect(el.activeIndex).to.equal(1);
       expect(el.checkedIndex).to.equal(1);
@@ -1931,7 +1933,7 @@ describe('lion-combobox', () => {
         `)
       );
 
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(el.activeIndex).to.equal(1);
       expect(el.checkedIndex).to.equal(1);
@@ -1941,8 +1943,8 @@ describe('lion-combobox', () => {
       expect(el.activeIndex).to.equal(2);
       expect(el.checkedIndex).to.equal(2);
 
-      // Diminishing chars, but autocompleting
-      mimicUserTyping(el, 'a');
+      // Diminishing chars, but autocompletion
+      await mimicUserTypingAdvanced(el, ['Backspace', 'Backspace', 'Backspace', 'Backspace', 'a']); // a
       await el.updateComplete;
       expect(el.activeIndex).to.equal(0);
       expect(el.checkedIndex).to.equal(0);
@@ -1962,7 +1964,7 @@ describe('lion-combobox', () => {
 
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'char');
+      await mimicUserTyping(el, 'char');
       expect(_inputNode.value).to.equal('char');
       await el.updateComplete; // Char
 
@@ -1989,7 +1991,7 @@ describe('lion-combobox', () => {
       );
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
       expect(_inputNode.value).to.equal('Chard');
       expect(_inputNode.selectionStart).to.equal('Ch'.length);
@@ -2066,9 +2068,10 @@ describe('lion-combobox', () => {
         // Arrange
         const el = /** @type {MyEl} */ (await fixture(html`<${wrappingTag}></${wrappingTag}>`));
         await el.combobox.registrationComplete;
+        const { _inputNode } = getComboboxMembers(el.combobox);
 
         // Act (start typing)
-        mimicUserTyping(el.combobox, 'l');
+        await mimicUserTypingAdvanced(el.combobox, ['l']);
         // simulate fetching data from server
         el.clearOptions();
         await el.updateComplete;
@@ -2078,14 +2081,13 @@ describe('lion-combobox', () => {
         await el.updateComplete;
 
         // Assert
-        const { _inputNode } = getComboboxMembers(el.combobox);
         expect(_inputNode.value).to.equal('lorem');
         expect(_inputNode.selectionStart).to.equal(1);
         expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
         expect(getFilteredOptionValues(el.combobox)).to.eql(['lorem', 'dolor']);
 
         // Act (continue typing)
-        mimicUserTyping(el.combobox, 'lo');
+        await mimicUserTypingAdvanced(el.combobox, ['o']);
         // simulate fetching data from server
         el.clearOptions();
         await el.updateComplete;
@@ -2101,7 +2103,7 @@ describe('lion-combobox', () => {
         expect(getFilteredOptionValues(el.combobox)).to.eql(['lorem', 'dolor']);
 
         // We don't autocomplete when characters are removed
-        mimicUserTyping(el.combobox, 'l'); // The user pressed backspace (number of chars decreased)
+        await mimicUserTypingAdvanced(el.combobox, ['Backspace', 'Backspace']);
         expect(_inputNode.value).to.equal('l');
         expect(_inputNode.selectionStart).to.equal(_inputNode.value.length);
       });
@@ -2148,7 +2150,7 @@ describe('lion-combobox', () => {
       );
       const options = el.formElements;
 
-      mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
+      await mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
 
       await el.updateComplete;
       expect(options[0]).lightDom.to.equal(`<span aria-label="Artichoke">Arti<b>c</b>hoke</span>`);
@@ -2158,7 +2160,7 @@ describe('lion-combobox', () => {
         `<span aria-label="Victoria Plum">Vi<b>c</b>toria Plum</span>`,
       );
 
-      mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+      await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
 
       await el.updateComplete;
       expect(options[0]).lightDom.to.equal(`<span aria-label="Artichoke">Arti<b>ch</b>oke</span>`);
@@ -2166,7 +2168,7 @@ describe('lion-combobox', () => {
       expect(options[2]).lightDom.to.equal(`<span aria-label="Chicory"><b>Ch</b>icory</span>`);
       expect(options[3]).lightDom.to.equal(`Victoria Plum`);
 
-      mimicUserTyping(/** @type {LionCombobox} */ (el), 'D');
+      await mimicUserTyping(/** @type {LionCombobox} */ (el), 'D');
 
       await el.updateComplete;
       expect(options[0]).lightDom.to.equal(`Artichoke`);
@@ -2200,7 +2202,7 @@ describe('lion-combobox', () => {
       );
       const options = el.formElements;
 
-      mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+      await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
 
       await el.updateComplete;
       expect(options[0]).lightDom.to.equal(
@@ -2230,7 +2232,7 @@ describe('lion-combobox', () => {
       );
       const options = el.formElements;
 
-      mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
+      await mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
 
       await el.updateComplete;
       expect(options[0]).lightDom.to.equal(`<span aria-label="Artichoke">Arti<b>c</b>hoke</span>`);
@@ -2569,12 +2571,13 @@ describe('lion-combobox', () => {
             // expect(_inputNode.value).to.equal('Aha', autocompleteMode);
             expect(el.checkedIndex).to.equal(0, autocompleteMode);
 
-            mimicUserTyping(el, 'Arti');
+            await mimicUserTypingAdvanced(el, ['A', 'r', 't', 'i']);
             await el.updateComplete;
-            expect(_inputNode.value).to.equal('Arti', autocompleteMode);
+            expect(_inputNode.value).to.equal('Arti', `autocompleteMode is ${autocompleteMode}`);
 
             await el.updateComplete;
-            expect(el.checkedIndex).to.equal(-1, autocompleteMode);
+            expect(el.checkedIndex).to.equal(-1, `autocompleteMode is ${autocompleteMode}`);
+            _inputNode.value = '';
           }
 
           el.autocomplete = 'none';
@@ -2648,7 +2651,7 @@ describe('lion-combobox', () => {
         );
         const options = el.formElements;
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
 
         await el.updateComplete;
         expect(options[0]).lightDom.to.equal(
@@ -2664,7 +2667,7 @@ describe('lion-combobox', () => {
           `<div data-key>Victoria Plum</div><small>Prunus domestica</small>`,
         );
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'D');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'D');
 
         await el.updateComplete;
         expect(options[0]).lightDom.to.equal(`<div data-key>Artichoke</div><small>Cardoon</small>`);
@@ -2690,7 +2693,7 @@ describe('lion-combobox', () => {
             </lion-combobox>
           `)
         );
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
         expect(el.activeIndex).to.equal(1);
       });
@@ -2735,7 +2738,7 @@ describe('lion-combobox', () => {
         // does not set active at all until user selects
         await setup(el, 'none');
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
         expect(el.activeIndex).to.equal(-1);
         expect(el.opened).to.be.true;
@@ -2749,7 +2752,7 @@ describe('lion-combobox', () => {
         // does not set active at all until user selects
         await setup(el, 'list');
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
         expect(el.opened).to.be.true;
         expect(el.activeIndex).to.equal(-1);
@@ -2762,9 +2765,9 @@ describe('lion-combobox', () => {
         // Example 3. List with Inline Autocomplete (mostly, but with aria-autocomplete="inline")
         await setup(el, 'inline');
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el), '');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), '');
         await el.updateComplete;
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
         await el.updateComplete;
         expect(el.opened).to.be.true;
@@ -2781,9 +2784,9 @@ describe('lion-combobox', () => {
         // https://www.w3.org/TR/wai-aria-practices/examples/combobox/aria1.1pattern/listbox-combo.html
         // Example 3. List with Inline Autocomplete
         await setup(el, 'both');
-        mimicUserTyping(/** @type {LionCombobox} */ (el), '');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), '');
         await el.updateComplete;
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
         mimicKeyPress(_inputNode, 'Enter');
         expect(el.activeIndex).to.equal(1);
@@ -2803,27 +2806,27 @@ describe('lion-combobox', () => {
         );
         const { _inputNode } = getComboboxMembers(el);
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
         expect(el.activeIndex).to.equal(1);
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'chi');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'chi');
         // Chard no longer matches, so should switch active to Chicory
         await el.updateComplete;
 
         expect(el.activeIndex).to.equal(2);
 
         // select artichoke
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'artichoke');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'artichoke');
         await el.updateComplete;
         mimicKeyPress(_inputNode, 'Enter');
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el), '');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), '');
         await el.updateComplete;
         // change selection, active index should update to closest match
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'vic');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'vic');
         await el.updateComplete;
         expect(el.activeIndex).to.equal(3);
       });
@@ -2842,7 +2845,7 @@ describe('lion-combobox', () => {
         const { _inputNode } = getComboboxMembers(el);
 
         // Select something
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'cha');
         await el.updateComplete;
         mimicKeyPress(_inputNode, 'Enter');
         expect(el.activeIndex).to.equal(1);
@@ -2854,7 +2857,7 @@ describe('lion-combobox', () => {
         el.formElements.forEach(option => expect(option.active).to.be.false);
 
         // change selection, active index should update to closest match
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'vic');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'vic');
         await el.updateComplete;
         expect(el.activeIndex).to.equal(3);
       });
@@ -2906,7 +2909,7 @@ describe('lion-combobox', () => {
         );
         expect(el.formElements[1].active).to.equal(false);
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el.updateComplete;
         expect(elProts._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
           null,
@@ -2931,7 +2934,7 @@ describe('lion-combobox', () => {
 
         const el2Prots = getComboboxMembers(el2);
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el2), 'ch');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el2), 'ch');
         await el2.updateComplete;
         expect(el2Prots._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
           el2.formElements[1].id,
@@ -2939,7 +2942,7 @@ describe('lion-combobox', () => {
         expect(el2.formElements[1].active).to.equal(true);
 
         el2.autocomplete = 'list';
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
         await el2.updateComplete;
         expect(el2Prots._activeDescendantOwnerNode.getAttribute('aria-activedescendant')).to.equal(
           el2.formElements[1].id,
@@ -2949,7 +2952,7 @@ describe('lion-combobox', () => {
 
       it('adds aria-label to highlighted options', async () => {
         const [el, options] = await fruitFixture({ autocomplete: 'both', matchMode: 'all' });
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
         await el.updateComplete;
         const labelledElement = options[0].querySelector('span[aria-label="Artichoke"]');
         expect(labelledElement).to.not.be.null;
@@ -2969,7 +2972,7 @@ describe('lion-combobox', () => {
         );
         const options = el.formElements;
 
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
         await el.updateComplete;
         const labelledElement = options[0].querySelector('span[aria-label=" Artichoke Cardoon "]');
         expect(labelledElement).to.not.be.null;
@@ -3054,7 +3057,7 @@ describe('lion-combobox', () => {
       );
 
       // activate opened listbox
-      mimicUserTyping(el, 'ch');
+      await mimicUserTyping(el, 'ch');
       await el.updateComplete;
 
       expect(el.opened).to.equal(true);
@@ -3077,7 +3080,7 @@ describe('lion-combobox', () => {
 
       const { _inputNode } = getComboboxMembers(el);
 
-      mimicUserTyping(el, 'art');
+      await mimicUserTyping(el, 'art');
       await el.updateComplete;
       expect(el.opened).to.equal(true);
 
@@ -3102,7 +3105,7 @@ describe('lion-combobox', () => {
       const { _inputNode } = getComboboxMembers(el);
       const options = el.formElements;
 
-      mimicUserTyping(el, 'art');
+      await mimicUserTyping(el, 'art');
       await el.updateComplete;
 
       expect(el.opened).to.equal(true);
@@ -3132,7 +3135,7 @@ describe('lion-combobox', () => {
       const { _inputNode } = getComboboxMembers(el);
       const options = el.formElements;
 
-      mimicUserTyping(el, 'art');
+      await mimicUserTyping(el, 'art');
       await el.updateComplete;
 
       expect(el.opened).to.equal(true);
@@ -3205,7 +3208,7 @@ describe('lion-combobox', () => {
 
     it('will suggest partial matches (in the middle of the word) when set to "all"', async () => {
       const [el] = await fruitFixture();
-      mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
+      await mimicUserTyping(/** @type {LionCombobox} */ (el), 'c');
       await el.updateComplete;
       expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([
         'Artichoke',
@@ -3217,7 +3220,7 @@ describe('lion-combobox', () => {
 
     it('will only suggest beginning matches when set to "begin"', async () => {
       const [el] = await fruitFixture({ matchMode: 'begin' });
-      mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+      await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
       await el.updateComplete;
       expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([
         'Chard',
@@ -3236,10 +3239,10 @@ describe('lion-combobox', () => {
           return option.value === curValue;
         }
         el.matchCondition = onlyExactMatches;
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'Chicory');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'Chicory');
         await el.updateComplete;
         expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql(['Chicory']);
-        mimicUserTyping(/** @type {LionCombobox} */ (el), 'Chicor');
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'Chicor');
         await el.updateComplete;
         expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([]);
       });

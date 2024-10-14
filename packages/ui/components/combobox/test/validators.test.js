@@ -25,13 +25,13 @@ describe('MatchesOption validation', () => {
     config.node = el;
     const validator = new MatchesOption();
 
-    mimicUserTyping(el, 'Artichoke');
+    await mimicUserTyping(el, 'Artichoke');
     await el.updateComplete;
 
     isEnabled = validator.execute('Artichoke', undefined, config);
     expect(isEnabled).to.be.false;
 
-    mimicUserTyping(el, 'Foo');
+    await mimicUserTyping(el, 'Foo');
     await el.updateComplete;
 
     isEnabled = validator.execute('Foo', undefined, config);
