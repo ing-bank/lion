@@ -300,7 +300,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     }
   }
 
-  firstUpdated() {
+  /** @param {import('lit').PropertyValues } changedProperties */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
     this.__calculateInitialCentralDate();
 
     // setup data for initial render
