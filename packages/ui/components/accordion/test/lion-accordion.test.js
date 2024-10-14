@@ -1,5 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
+import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
 
 import '@lion/ui/define/lion-accordion.js';
@@ -309,11 +310,14 @@ describe('<lion-accordion>', () => {
    * > content content to be preloaded.
    */
   describe('User interaction', () => {
-    it('opens a invoker on click', async () => {
+    it('opens/close an invoker on click', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = getInvokers(el);
       invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
       expect(el.expanded).to.deep.equal([1]);
+
+      invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
+      expect(el.expanded).to.deep.equal([]);
     });
 
     it('selects a invoker on click', async () => {
@@ -323,12 +327,13 @@ describe('<lion-accordion>', () => {
       expect(el.focusedIndex).to.equal(1);
     });
 
-    it.skip('opens/close invoker on [enter] and [space]', async () => {
+    it('opens/close invoker on [enter] and [space]', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = getInvokers(el);
-      invokers[0].firstElementChild?.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+      invokers[0].getElementsByTagName('button')[0].focus();
+      await sendKeys({ press: 'Enter' });
       expect(el.expanded).to.deep.equal([0]);
-      invokers[0].firstElementChild?.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+      await sendKeys({ press: 'Space' });
       expect(el.expanded).to.deep.equal([]);
     });
 

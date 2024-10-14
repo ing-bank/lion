@@ -451,7 +451,7 @@ export class LionAccordion extends LitElement {
 
     if (indexFound === -1) {
       expandedNewValues.push(indexClicked);
-    } else if (expandedNewValues.includes(indexFound)) {
+    } else {
       expandedNewValues.splice(indexFound, 1);
     }
 
