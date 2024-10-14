@@ -89,8 +89,7 @@ export default {
     playwrightLauncher({ product: 'chromium' }),
     playwrightLauncher({ product: 'webkit' }),
   ],
-  groups: [].concat([
+  groups: testsThatMustRunWithoutPolyfill.concat([
     ...testsThatMustRunWithScopedCustomElementRegistryPolyfill,
-    ...testsThatMustRunWithoutPolyfill,
   ]),
 };
