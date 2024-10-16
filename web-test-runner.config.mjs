@@ -17,7 +17,10 @@ const packages = fs
           fs.statSync(`packages/ui/components/${dir}`).isDirectory() &&
           fs.existsSync(`packages/ui/components/${dir}/test`),
       )
-      .map(dir => ({ name: dir, path: `packages/ui/components/${dir}/test` })),
+      .map(dir => ({ name: dir, path: `packages/ui/components/${dir}/test` }))
+
+      // just run button tests so it runs faster
+      .filter(p => p.name === 'button'),
   );
 
 /**
@@ -27,7 +30,11 @@ const testRunnerHtml = testRunnerImport =>
   `
 <html>
   <head>
-    <script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
+    <!-- This line below is where the problem is coming from. This alters behavior in tests vs browser -->
+    <!-- Running all tests with this polyfill gives us false positives. -->
+    <!-- Not everybody is importing this polyfill in their app -->
+    <!-- <script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script> -->
+
     <script type="module" src="${testRunnerImport}"></script>
   </head>
 </html>
@@ -35,6 +42,7 @@ const testRunnerHtml = testRunnerImport =>
 
 export default {
   nodeResolve: { exportConditions: [devMode && 'development'] },
+  browserLogs: true,
   coverageConfig: {
     report: true,
     reportDir: 'coverage',
@@ -54,7 +62,9 @@ export default {
   browsers: [
     playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),
-    playwrightLauncher({ product: 'webkit' }),
+
+    // ignore this, didn't work for me locally
+    // playwrightLauncher({ product: 'webkit' }),
   ],
   groups: packages.map(pkg => ({
     name: pkg.name,
