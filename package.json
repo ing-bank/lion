@@ -39,9 +39,9 @@
     "packages-node/*"
   ],
   "devDependencies": {
-    "@babel/core": "^7.24.5",
+    "@babel/core": "^7.25.8",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
-    "@changesets/cli": "^2.27.1",
+    "@changesets/cli": "^2.27.9",
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@custom-elements-manifest/to-markdown": "^0.1.0",
     "@open-wc/building-rollup": "^2.2.3",
@@ -53,46 +53,44 @@
     "@rocket/cli": "^0.10.2",
     "@rocket/launch": "^0.6.0",
     "@rocket/search": "^0.5.1",
-    "@thepassle/module-graph": "^0.10.1",
+    "@thepassle/module-graph": "^0.11.0",
     "@types/autosize": "^4.0.3",
-    "@types/chai-as-promised": "^7.1.8",
+    "@types/chai-as-promised": "^8.0.1",
     "@types/chai-dom": "^1.11.3",
     "@types/fs-extra": "^11.0.4",
     "@types/glob": "^8.1.0",
-    "@types/mocha": "^10.0.6",
-    "@types/prettier": "^3.0.0",
-    "@web/dev-server-legacy": "^0.1.7",
-    "@web/test-runner": "^0.18.1",
-    "@web/test-runner-browserstack": "^0.7.1",
+    "@types/mocha": "^10.0.9",
+    "@web/dev-server-legacy": "^2.1.1",
+    "@web/test-runner": "^0.19.0",
+    "@web/test-runner-browserstack": "^0.7.2",
     "@web/test-runner-commands": "^0.9.0",
     "@web/test-runner-playwright": "^0.11.0",
     "@webcomponents/scoped-custom-element-registry": "^0.0.9",
     "bundlesize": "^1.0.0-beta.2",
     "cem-plugin-vs-code-custom-data-generator": "^1.4.2",
-    "chai": "^4.4.1",
-    "chai-as-promised": "^7.1.2",
+    "chai": "^4.5.0",
+    "chai-as-promised": "^8.0.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.57.0",
+    "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-wc": "^2.1.0",
-    "globby": "^14.0.1",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
-    "looks-same": "^7.3.0",
-    "markdownlint-cli": "^0.40.0",
-    "mocha": "^10.4.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-wc": "^2.2.0",
+    "globby": "^14.0.2",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
+    "looks-same": "^9.0.1",
+    "markdownlint-cli": "^0.42.0",
+    "mocha": "^10.7.3",
     "npm-run-all": "^4.1.5",
-    "patch-package": "^6.4.7",
+    "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.3",
     "prettier-package-json": "^2.8.0",
     "remark-html": "^13.0.2",
-    "rollup": "^2.79.1",
-    "semver": "^7.6.2",
-    "sinon": "^17.0.2",
+    "semver": "^7.6.3",
+    "sinon": "^19.0.2",
     "typescript": "^4.9.5",
-    "wireit": "^0.14.4"
+    "wireit": "^0.14.9"
   },
   "bundlesize": [
     {
@@ -120,9 +118,6 @@
       "eslint": [
         "Can't be updated yet to 9.x, because of eslint-plugin-import"
       ],
-      "chai": [
-        "Can't be updated to 5.x, because of (unmaintained) chai-as-promised (TODO: phase out chai-as-promised)"
-      ],
       "typescript": [
         "Since changes in types can be reflected in the code, we want to keep this stable for a longer period of time.",
         "As semver is not followed, we keep our major versions aligned with a minot of TS (hence '~' instead of '^' is used)"
@@ -138,6 +133,9 @@
       ],
       "@open-wc/building-rollup": [
         "Can't be updated to 3.x, as v2 seems to be better compatible with rocket setup"
+      ],
+      "chai": [
+        "Can't be updated to 5.x, because @web/dev-server-core test-helpers (having implicit dep on chai) is not compatible with chai >= 5.x"
       ]
     },
     "toBeRemoved": {

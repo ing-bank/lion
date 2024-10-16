@@ -1,14 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import path from 'path';
 import { fileURLToPath } from 'url';
-import chai from 'chai';
+import { expect } from 'chai';
 import { mdjsProcess } from '@mdjs/core';
 import { addPlugin } from 'plugins-manager';
 import markdownPkg from 'remark-parse';
 
 import { remarkExtendLionDocsTransformJs } from '../src/remarkExtendLionDocsTransformJs.js';
 
-const { expect } = chai;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**

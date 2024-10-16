@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import chai from 'chai';
+import { expect } from 'chai';
 import path from 'path';
 import mdStringify from 'remark-html';
 import markdown from 'remark-parse';
@@ -7,7 +7,6 @@ import unified from 'unified';
 import { fileURLToPath } from 'url';
 import { remarkUrlToLocal } from '../src/remarkUrlToLocal.js';
 
-const { expect } = chai;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**

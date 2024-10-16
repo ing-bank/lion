@@ -1,11 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import path from 'path';
 import { fileURLToPath } from 'url';
-import chai from 'chai';
+import { expect } from 'chai';
 
 import { generateExtendDocsConfig } from '../src/generateExtendDocsConfig.js';
 
-const { expect } = chai;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /**

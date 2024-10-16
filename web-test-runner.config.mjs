@@ -22,7 +22,6 @@ const packages = fs
 
 /**
  * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}
- *
  */
 const testRunnerHtml = testRunnerImport =>
   `

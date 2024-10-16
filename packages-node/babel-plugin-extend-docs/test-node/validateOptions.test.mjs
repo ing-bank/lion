@@ -1,7 +1,10 @@
-const { expect } = require('chai');
-const path = require('path');
-const { executeBabel } = require('./helpers.js');
+import { expect } from 'chai';
+import path from 'path';
+import { executeBabel } from './helpers.mjs';
 
+/**
+ * @param {object|undefined} json
+ */
 function formatJsonErrorMessage(json) {
   if (!json) {
     return '';
@@ -36,6 +39,9 @@ describe('babel-plugin-extend-docs: validateOptions', () => {
 
   it('throws if tag change does not have a valid to, from, and paths property', () => {
     const defaultMsg = ['babel-plugin-extend-docs: The provided tag change is not valid.'];
+    /**
+     * @param {object | undefined} tag
+     */
     function tagThrowsErrorFor(tag, msg = defaultMsg) {
       expect(() => {
         executeBabel('', {
@@ -90,6 +96,9 @@ describe('babel-plugin-extend-docs: validateOptions', () => {
 
   it('throws if variable change does not have a valid to, from, and paths property', () => {
     const defaultMsg = ['babel-plugin-extend-docs: The provided variable change is not valid.'];
+    /**
+     * @param {object | undefined} variable
+     */
     function variableThrowsErrorFor(variable, msg = defaultMsg) {
       expect(() => {
         executeBabel('', {

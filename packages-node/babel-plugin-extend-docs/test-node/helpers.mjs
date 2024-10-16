@@ -1,15 +1,19 @@
 // eslint-disable-next-line import/no-unresolved
-const babel = require('@babel/core');
-const babelPluginExtendDocs = require('../src/babelPluginExtendDocs.js');
+import * as babel from '@babel/core';
+import babelPluginExtendDocs from '../src/babelPluginExtendDocs.js';
 
-function executeBabel(input, options) {
+/**
+ * @param {string} input
+ * @param {object} options
+ */
+export function executeBabel(input, options) {
   const result = babel.transform(input, {
     plugins: [[babelPluginExtendDocs, options], '@babel/plugin-syntax-import-assertions'],
   });
-  return result.code;
+  return result?.code;
 }
 
-const baseConfig = {
+export const baseConfig = {
   changes: [
     {
       description: 'LionInput',
@@ -94,9 +98,4 @@ const baseConfig = {
       },
     },
   ],
-};
-
-module.exports = {
-  executeBabel,
-  baseConfig,
 };

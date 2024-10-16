@@ -1,10 +1,13 @@
-const { expect } = require('chai');
+import path from 'path';
+import url from 'url';
+import { expect } from 'chai';
+import unified from 'unified';
+import markdown from 'remark-parse';
+import mdStringify from 'remark-html';
 
-const unified = require('unified');
-const markdown = require('remark-parse');
-const mdStringify = require('remark-html');
+import { remarkExtend } from '../src/remarkExtend.js';
 
-const { remarkExtend } = require('../src/remarkExtend.js');
+const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 /**
  * @param {function} method

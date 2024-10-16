@@ -21,9 +21,8 @@ export const minimumAndMaximumDate = () => html`
     .validators="${[new MinMaxDate({ min: new Date('2018/05/24'), max: new Date('2018/06/24') })]}"
   >
     <div slot="help-text">
-      Enter a date between ${formatDate(new Date('2018/05/24'))} and ${formatDate(
-        new Date('2018/06/24'),
-      )}.
+      Enter a date between ${formatDate(new Date('2018/05/24'))} and
+      ${formatDate(new Date('2018/06/24'))}.
     </div>
   </lion-input-datepicker>
 `;
