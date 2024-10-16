@@ -29,7 +29,6 @@
   ],
   "scripts": {
     "dashboard": "node ./src/dashboard/server.js --run-server --serve-from-package-root",
-    "postinstall": "npx patch-package",
     "match-lion-imports": "npm run providence -- analyze match-imports --search-target-collection @lion-targets --reference-collection @lion-references --measure-perf --skip-check-match-compatibility",
     "providence": "node --max-old-space-size=8192 ./src/cli/index.js",
     "prepublishOnly": "npm run publish-docs",
@@ -39,27 +38,25 @@
     "test:node:unit": "mocha './{test-node,src}/**/*.test.js'"
   },
   "dependencies": {
-    "@babel/parser": "^7.24.5",
-    "@babel/plugin-syntax-import-assertions": "^7.24.1",
-    "@babel/traverse": "^7.24.5",
-    "@babel/types": "^7.24.5",
-    "@putout/babel": "^2.4.0",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@swc/core": "^1.5.6",
+    "@babel/parser": "^7.25.8",
+    "@babel/plugin-syntax-import-assertions": "^7.25.7",
+    "@babel/traverse": "^7.25.7",
+    "@babel/types": "^7.25.8",
+    "@putout/babel": "^2.8.0",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@swc/core": "^1.7.36",
     "commander": "^2.20.3",
-    "parse5": "^7.1.2",
-    "semver": "^7.6.2"
+    "parse5": "^7.2.0",
+    "semver": "^7.6.3"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.16",
     "@types/inquirer": "^9.0.7",
-    "@types/mocha": "^10.0.6",
-    "@web/dev-server": "^0.4.5",
-    "@web/dev-server-core": "^0.7.2",
-    "globby": "^14.0.1",
-    "lit-element": "^4.0.5",
-    "mock-fs": "^5.2.0",
-    "mock-require": "^3.0.3"
+    "@types/mocha": "^10.0.9",
+    "@web/dev-server": "^0.4.6",
+    "@web/dev-server-core": "^0.7.3",
+    "globby": "^14.0.2",
+    "lit-element": "^4.1.1",
+    "mock-fs": "^5.4.0"
   },
   "keywords": [
     "analysis",

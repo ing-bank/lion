@@ -1,8 +1,8 @@
 import path from 'path';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { mockFsAndRequire } from './mock-fs-and-require.js';
+import mockFs from 'mock-fs';
 
-export const mock = mockFsAndRequire;
+export const mock = mockFs;
 
 /**
  * Makes sure that, whenever the main program (providence) calls
@@ -72,12 +72,12 @@ function getMockObjectForProject(files, cfg = {}, existingMock = {}) {
  */
 export function mockProject(files, cfg = {}, existingMock = {}) {
   const obj = getMockObjectForProject(files, cfg, existingMock);
-  mockFsAndRequire(obj);
+  mockFs(obj);
   return obj;
 }
 
 export function restoreMockedProjects() {
-  mockFsAndRequire.restore();
+  mockFs.restore();
 }
 
 export function getEntry(queryResult, index = 0) {
