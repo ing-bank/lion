@@ -1,5 +1,5 @@
-const { expect } = require('chai');
-const { executeBabel } = require('./helpers.js');
+import { expect } from 'chai';
+import { executeBabel } from './helpers.mjs';
 
 const extendDocsConfig = {
   changes: [

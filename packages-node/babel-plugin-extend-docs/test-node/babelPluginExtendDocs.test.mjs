@@ -1,6 +1,7 @@
+import { expect } from 'chai';
+import { executeBabel, baseConfig } from './helpers.mjs';
+
 /* eslint-disable no-template-curly-in-string */
-const { expect } = require('chai');
-const { executeBabel, baseConfig } = require('./helpers.js');
 
 const testConfig = {
   ...baseConfig,

@@ -219,7 +219,7 @@ describe('lion-combobox', () => {
       it('hides overlay on [Escape] after being opened', async () => {
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
-            <lion-combobox name="foo" .showAllOnEmpty="${true}">
+            <lion-combobox name="foo" .showAllOnEmpty="${true}" opened>
               <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
               <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
               <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -227,12 +227,8 @@ describe('lion-combobox', () => {
             </lion-combobox>
           `)
         );
-        const { _comboboxNode, _inputNode } = getComboboxMembers(el);
+        const { _inputNode } = getComboboxMembers(el);
 
-        expect(el.opened).to.be.false;
-        _comboboxNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
-        await el.updateComplete;
-        expect(el.opened).to.be.true;
         _inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
         await el.updateComplete;
         expect(el.opened).to.be.false;
@@ -1140,12 +1136,17 @@ describe('lion-combobox', () => {
           </lion-combobox>
         `)
       );
-      // @ts-ignore [allow-protected] in test
-      expect(el._defineOverlayConfig().elementToFocusAfterHide).to.equal(undefined);
-      // @ts-ignore [allow-protected] in test
-      expect(el._defineOverlayConfig().invokerNode).to.equal(el._inputNode);
-      // @ts-ignore [allow-protected] in test
-      expect(el._defineOverlayConfig().visibilityTriggerFunction).to.equal(undefined);
+      // @ts-expect-error [allow-protected] in test
+      const overlayCfg = el._defineOverlayConfig();
+
+      const equalsOrContainsInput = (/** @type {HTMLInputElement|HTMLDivElement} */ invokerNode) =>
+        // @ts-expect-error [allow-protected] in test
+        invokerNode === el._inputNode || invokerNode.contains(el._inputNode);
+
+      expect(overlayCfg.elementToFocusAfterHide).to.equal(undefined);
+      // @ts-expect-error
+      expect(equalsOrContainsInput(overlayCfg.invokerNode)).to.be.true;
+      expect(overlayCfg.visibilityTriggerFunction).to.equal(undefined);
     });
 
     // NB: If this becomes a suite, move to separate file

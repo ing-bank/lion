@@ -9,11 +9,19 @@ function checkChrome(flavor = 'google-chrome') {
     return flavor === 'google-chrome';
   }
 
-  const isChromium = /** @type {window & { chrome?: boolean}} */ (globalThis).chrome;
+  // eslint-disable-next-line prefer-destructuring
+  const navigator = /** @type {Navigator & {userAgentData: {brands:{brand:string}[]}}} */ (
+    globalThis.navigator
+  );
+
+  const isChromium =
+    !!navigator.userAgentData &&
+    navigator.userAgentData.brands.some(data => data.brand === 'Chromium');
 
   if (flavor === 'chromium') {
     return isChromium;
   }
+
   const winNav = globalThis.navigator;
   const vendorName = winNav?.vendor;
   const isOpera =

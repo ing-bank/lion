@@ -310,7 +310,7 @@ describe('<lion-accordion>', () => {
    * > content content to be preloaded.
    */
   describe('User interaction', () => {
-    it('opens/close an invoker on click', async () => {
+    it('opens/closes an invoker on click', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = getInvokers(el);
       invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
@@ -327,7 +327,7 @@ describe('<lion-accordion>', () => {
       expect(el.focusedIndex).to.equal(1);
     });
 
-    it('opens/close invoker on [enter] and [space]', async () => {
+    it('opens/closes invoker on [enter] and [space]', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = getInvokers(el);
       invokers[0].getElementsByTagName('button')[0].focus();

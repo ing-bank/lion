@@ -1,8 +1,6 @@
-import chai from 'chai';
+import { expect } from 'chai';
 import { EOL } from 'os';
 import { execute } from './test-helpers.js';
-
-const { expect } = chai;
 
 describe('PublishDocs', () => {
   it('reads all md files and replaces their content if reference is found', async () => {

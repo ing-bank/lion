@@ -63,9 +63,8 @@ export const withMinimumAndMaximumDate = () => {
       ]}"
     >
       <div slot="help-text">
-        Enter a date between ${formatDate(new Date('2018/05/24'))} and ${formatDate(
-          new Date('2018/06/24'),
-        )}.
+        Enter a date between ${formatDate(new Date('2018/05/24'))} and
+        ${formatDate(new Date('2018/06/24'))}.
       </div>
     </lion-input-date>
   `;
