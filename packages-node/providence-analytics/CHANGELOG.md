@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.16.6
+
+### Patch Changes
+
+- a30dbf3: update dependencies
+
 ## 0.16.5
 
 ### Patch Changes
@@ -199,14 +205,14 @@
   This means tag names are no longer being rewritten with a hash.
 
   ```js
-  import { css, LitElement } from "lit";
-  import { ScopedElementsMixin } from "@open-wc/scoped-elements";
-  import { MyButton } from "./MyButton.js";
+  import { css, LitElement } from 'lit';
+  import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+  import { MyButton } from './MyButton.js';
 
   export class MyElement extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
       return {
-        "my-button": MyButton,
+        'my-button': MyButton,
       };
     }
 
