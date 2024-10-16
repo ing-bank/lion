@@ -1,5 +1,17 @@
 # @lion/ui
 
+## 0.8.0
+
+### Minor Changes
+
+- 27af6be: [combobox] change mimicUserTyping test helper function async and use sendKeys() internally
+
+### Patch Changes
+
+- 5530eef: fix(ui/calendar): use correct firstUpdated type signature
+- dbb9640: [core] fix chromium detection
+- 96b09e5: [accordion] make accordion closeable again
+
 ## 0.7.9
 
 ### Patch Changes
@@ -146,9 +158,9 @@ BREAKING:
   For optimized bundling, it's reccommended to load feedback messages per entrypoint. For instance, when you only use form-core in your app:
 
   ```js
-  import { LionInputTel } from "@lion/ui/input-tel.js";
-  import { getLocalizeManager } from "@lion/ui/localize-no-side-effects.js";
-  import { loadInputTelMessagesNoSideEffects } from "@lion/ui/validate-messages-no-side-effects.js";
+  import { LionInputTel } from '@lion/ui/input-tel.js';
+  import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+  import { loadInputTelMessagesNoSideEffects } from '@lion/ui/validate-messages-no-side-effects.js';
 
   export class MyInputTel extends LionInputTel {
     constructor() {
@@ -516,12 +528,12 @@ BREAKING:
   Recommended approach is to do below at the top of your app (before lion code runs):
 
   ```js
-  import { singletonManager } from "singleton-manager";
-  import { LocalizeManager } from "@lion/ui/localize-no-side-effects.js";
+  import { singletonManager } from 'singleton-manager';
+  import { LocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 
   class MyLocalizeManager extends LocalizeManager {}
 
-  singletonManager.set("@lion/ui::localize::0.x", new MyLocalizeManager());
+  singletonManager.set('@lion/ui::localize::0.x', new MyLocalizeManager());
   ```
 
 - de51dae2: Use the correct names for singleton registrations
