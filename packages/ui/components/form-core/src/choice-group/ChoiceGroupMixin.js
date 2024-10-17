@@ -127,6 +127,13 @@ const ChoiceGroupMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * @configure FocusMixin
+     */
+    get _focusableNode() {
+      return this.formElements[0]._focusableNode;
+    }
+
     get operationMode() {
       // @ts-ignore
       return this._repropagationRole === 'choice-group' ? 'select' : 'enter';
