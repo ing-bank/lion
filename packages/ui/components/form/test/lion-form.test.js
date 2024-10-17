@@ -5,6 +5,10 @@ import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
+import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox.js';
+import '@lion/ui/define/lion-radio-group.js';
+import '@lion/ui/define/lion-radio.js';
 import '@lion/ui/define/lion-form.js';
 import {
   aTimeout,
@@ -284,5 +288,62 @@ describe('<lion-form>', () => {
     button.click();
     const listboxEl = el.formElements[0];
     expect(document.activeElement).to.equal(listboxEl._inputNode);
+  });
+
+  it('sets focus on submit to the first form element within a erroneous listbox within a fieldset', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-fieldset name="fieldset">
+            <lion-listbox name="name" .validators="${[new Required()]}">
+              <lion-option value="a">a</lion-option>
+              <lion-option value="b">b</lion-option>
+            </lion-listbox>
+          </lion-fieldset>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    button.click();
+    const fieldsetEl = el.formElements[0];
+    const listboxEl = fieldsetEl.formElements[0];
+    expect(document.activeElement).to.equal(listboxEl._inputNode);
+  });
+
+  it('sets focus on submit to the first form element within a erroneous checkbox-group', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-checkbox-group name="name" .validators="${[new Required()]}">
+            <lion-checkbox .choiceValue=${'a'} label="a"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'b'} label="b"></lion-checkbox>
+          </lion-checkbox-group>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    button.click();
+    const radioGroupEl = el.formElements[0];
+    expect(document.activeElement).to.equal(radioGroupEl._focusableNode);
+  });
+
+  it('sets focus on submit to the first form element within a erroneous radio-group', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-radio-group name="name" .validators="${[new Required()]}">
+            <lion-radio .choiceValue=${'a'} label="a"></lion-radio>
+            <lion-radio .choiceValue=${'b'} label="b"></lion-radio>
+          </lion-radio-group>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    button.click();
+    const radioGroupEl = el.formElements[0];
+    expect(document.activeElement).to.equal(radioGroupEl._focusableNode);
   });
 });
