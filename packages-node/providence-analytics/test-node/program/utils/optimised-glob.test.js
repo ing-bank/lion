@@ -266,6 +266,20 @@ describe('optimisedGlob', () => {
       expect(files).to.deep.equal(['my/.hiddenFile.js']);
     });
 
+    it('"ignore" filters out files" ', async () => {
+      const files = await runOptimisedGlobAndCheckGlobbyParity('**', {
+        ...testCfg,
+        ignore: ['**/lvl1/**'],
+      });
+
+      expect(files).to.deep.equal([
+        'my/folder/some/anotherFile.d.ts',
+        'my/folder/some/anotherFile.js',
+        'my/folder/some/file.d.ts',
+        'my/folder/some/file.js',
+      ]);
+    });
+
     it.skip('"suppressErrors" throws errors when paths do not exist', async () => {
       expect(async () =>
         optimisedGlob('my/folder/**/some/file.js', {

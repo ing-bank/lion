@@ -109,6 +109,24 @@ export const parseGlobToRegex = memoize(
   },
 );
 
+/**
+ * @template T
+ * @param {T|T[]} value
+ * @returns {T[]}
+ */
+function ensureArray(value) {
+  return Array.isArray(value) ? value : [value];
+}
+
+/**
+ * @template T
+ * @param {T[]} arr
+ * @returns {T[]}
+ */
+function toUniqueArray(arr) {
+  return Array.from(new Set(arr));
+}
+
 const getStartPath = memoize(
   /**
    * @param {string} glob
@@ -209,6 +227,7 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     unique: true,
     sync: false,
     dot: false,
+    ignore: [],
     // TODO: ignore, throwErrorOnBrokenSymbolicLink, markDirectories, objectMode, onlyDirectories, onlyFiles, stats
     // https://github.com/mrmlnc/fast-glob?tab=readme-ov-file
     ...providedOptions,
@@ -219,7 +238,12 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     options.onlyDirectories = true;
   }
 
-  const globs = Array.isArray(globOrGlobs) ? Array.from(new Set(globOrGlobs)) : [globOrGlobs];
+  const regularGlobs = Array.isArray(globOrGlobs) ? toUniqueArray(globOrGlobs) : [globOrGlobs];
+  const ignoreGlobs = options.ignore.map((/** @type {string} */ g) =>
+    g.startsWith('!') ? g : `!${g}`,
+  );
+
+  const globs = toUniqueArray([...regularGlobs, ...ignoreGlobs]);
 
   /** @type {RegExp[]} */
   const matchRegexesNegative = [];
