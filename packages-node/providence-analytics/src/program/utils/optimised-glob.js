@@ -7,9 +7,21 @@ import { toPosixPath } from './to-posix-path.js';
 import { memoize } from './memoize.js';
 
 /**
+ * @typedef {nodeFs.Dirent & { path:string; parentPath:string }} DirentWithPath
  * @typedef {nodeFs} FsLike
- * @typedef {nodeFs.Dirent & {path:string;parentPath:string}} DirentWithPath
- * @typedef {{onlyDirectories:boolean;onlyFiles:boolean;deep:number;suppressErrors:boolean;fs: FsLike;cwd:string;absolute:boolean;extglob:boolean;}} FastGlobtions
+ * @typedef {{
+ *   onlyDirectories: boolean;
+ *   suppressErrors: boolean;
+ *   onlyFiles: boolean;
+ *   absolute: boolean;
+ *   extglob: boolean;
+ *   ignore: string[];
+ *   unique: boolean;
+ *   deep: number;
+ *   dot: boolean;
+ *   cwd: string;
+ *   fs: FsLike;
+ * }} FastGlobtions
  */
 
 const [nodeMajor] = process.versions.node.split('.').map(Number);
@@ -109,6 +121,65 @@ export const parseGlobToRegex = memoize(
   },
 );
 
+/**
+ * @template T
+ * @param {T[]} arr
+ * @returns {T[]}
+ */
+function toUniqueArray(arr) {
+  return Array.from(new Set(arr));
+}
+
+/**
+ * @param {DirentWithPath} dirent
+ * @param {{cwd:string}} cfg
+ * @returns {string}
+ */
+function direntToLocalPath(dirent, { cwd }) {
+  const folder = (dirent.parentPath || dirent.path).replace(/(^.*)\/(.*\..*$)/, '$1');
+  return toPosixPath(path.join(folder, dirent.name)).replace(
+    new RegExp(`^${toPosixPath(cwd)}/`),
+    '',
+  );
+}
+
+/**
+ * @param {{dirent:nodeFs.Dirent;relativeToCwdPath:string}[]} matchedEntries
+ * @param {FastGlobtions} options
+ * @returns {string[]}
+ */
+function postprocessOptions(matchedEntries, options) {
+  const allFileOrDirectoryEntries = matchedEntries.filter(({ dirent }) =>
+    options.onlyDirectories ? dirent.isDirectory() : dirent.isFile(),
+  );
+
+  let filteredPaths = allFileOrDirectoryEntries.map(({ relativeToCwdPath }) => relativeToCwdPath);
+
+  if (!options.dot) {
+    filteredPaths = filteredPaths.filter(
+      f => !f.split('/').some(folderOrFile => folderOrFile.startsWith('.')),
+    );
+  }
+
+  if (options.absolute) {
+    filteredPaths = filteredPaths.map(f => toPosixPath(path.join(options.cwd, f)));
+    if (process.platform === 'win32') {
+      const driveChar = path.win32.resolve(options.cwd).slice(0, 1).toUpperCase();
+      filteredPaths = filteredPaths.map(f => `${driveChar}:${f}`);
+    }
+  }
+
+  if (options.deep !== Infinity) {
+    filteredPaths = filteredPaths.filter(f => f.split('/').length <= options.deep + 2);
+  }
+
+  const result = options.unique ? toUniqueArray(filteredPaths) : filteredPaths;
+  return result.sort((a, b) => {
+    const pathDiff = a.split('/').length - b.split('/').length;
+    return pathDiff !== 0 ? pathDiff : a.localeCompare(b);
+  });
+}
+
 const getStartPath = memoize(
   /**
    * @param {string} glob
@@ -129,6 +200,7 @@ const getStartPath = memoize(
 );
 
 let isCacheEnabled = false;
+let isExperimentalFsGlobEnabled = false;
 /** @type {{[path:string]:DirentWithPath[]}} */
 const cache = {};
 
@@ -179,14 +251,33 @@ const getAllDirentsRelativeToCwd = memoize(
     });
 
     const allDirEntsRelativeToCwd = allDirentsRelativeToStartPath.map(dirent => ({
-      relativeToCwdPath: toPosixPath(
-        path.join(dirent.parentPath || dirent.path, dirent.name),
-      ).replace(`${toPosixPath(options.cwd)}/`, ''),
+      relativeToCwdPath: direntToLocalPath(dirent, { cwd: options.cwd }),
       dirent,
     }));
+
     return allDirEntsRelativeToCwd;
   },
 );
+
+/**
+ * @param {string|string[]} globOrGlobs
+ * @param {{ fs: FsLike; cwd: string; exclude?: Function; stats?: boolean }} cfg
+ * @returns {Promise<string[]|DirentWithPath[]>}
+ */
+async function nativeGlob(globOrGlobs, { fs, cwd, exclude, stats }) {
+  // @ts-expect-error
+  const asyncGenResult = await fs.promises.glob(globOrGlobs, {
+    withFileTypes: true,
+    cwd,
+    ...(exclude ? { exclude } : {}),
+  });
+  const results = [];
+  for await (const dirent of asyncGenResult) {
+    if (dirent.name === '.' || dirent.isDirectory()) continue; // eslint-disable-line no-continue
+    results.push(stats ? dirent : direntToLocalPath(dirent, { cwd }));
+  }
+  return results;
+}
 
 /**
  * Lightweight glob implementation.
@@ -209,7 +300,8 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     unique: true,
     sync: false,
     dot: false,
-    // TODO: ignore, throwErrorOnBrokenSymbolicLink, markDirectories, objectMode, onlyDirectories, onlyFiles, stats
+    ignore: [],
+    // Add if needed: throwErrorOnBrokenSymbolicLink, markDirectories, objectMode, stats
     // https://github.com/mrmlnc/fast-glob?tab=readme-ov-file
     ...providedOptions,
   };
@@ -219,7 +311,46 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     options.onlyDirectories = true;
   }
 
-  const globs = Array.isArray(globOrGlobs) ? Array.from(new Set(globOrGlobs)) : [globOrGlobs];
+  const regularGlobs = Array.isArray(globOrGlobs) ? globOrGlobs : [globOrGlobs];
+  const ignoreGlobs = options.ignore.map((/** @type {string} */ g) =>
+    g.startsWith('!') ? g : `!${g}`,
+  );
+
+  const optionsNotSupportedByNativeGlob = ['onlyDirectories', 'dot'];
+  const doesConfigAllowNative = !optionsNotSupportedByNativeGlob.some(opt => options[opt]);
+  if (isExperimentalFsGlobEnabled && options.fs.promises.glob && doesConfigAllowNative) {
+    const negativeGlobs = [...ignoreGlobs, ...regularGlobs.filter(r => r.startsWith('!'))].map(r =>
+      r.slice(1),
+    );
+
+    const negativeResults = negativeGlobs.length
+      ? /** @type {string[]} */ (await nativeGlob(negativeGlobs, options))
+      : [];
+    const positiveGlobs = regularGlobs.filter(r => !r.startsWith('!'));
+
+    const result = /** @type {DirentWithPath[]} */ (
+      await nativeGlob(positiveGlobs, {
+        cwd: options.cwd,
+        fs: options.fs,
+        stats: true,
+        // we cannot use the exclude option here, because it's not working correctly
+      })
+    );
+
+    const direntsFiltered = result.filter(
+      dirent => !negativeResults.includes(direntToLocalPath(dirent, { cwd: options.cwd })),
+    );
+
+    return postprocessOptions(
+      direntsFiltered.map(dirent => ({
+        dirent,
+        relativeToCwdPath: direntToLocalPath(dirent, { cwd: options.cwd }),
+      })),
+      options,
+    );
+  }
+
+  const globs = toUniqueArray([...regularGlobs, ...ignoreGlobs]);
 
   /** @type {RegExp[]} */
   const matchRegexesNegative = [];
@@ -269,37 +400,7 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
       !matchRegexesNegative.some(globReNeg => globReNeg.test(globEntry.relativeToCwdPath)),
   );
 
-  const allFileOrDirectoryEntries = matchedEntries.filter(({ dirent }) =>
-    options.onlyDirectories ? dirent.isDirectory() : dirent.isFile(),
-  );
-
-  let filteredPaths = allFileOrDirectoryEntries.map(({ relativeToCwdPath }) => relativeToCwdPath);
-
-  if (!options.dot) {
-    filteredPaths = filteredPaths.filter(
-      f => !f.split('/').some(folderOrFile => folderOrFile.startsWith('.')),
-    );
-  }
-
-  if (options.absolute) {
-    filteredPaths = filteredPaths.map(f => toPosixPath(path.join(options.cwd, f)));
-
-    if (process.platform === 'win32') {
-      const driveChar = path.win32.resolve(options.cwd).slice(0, 1).toUpperCase();
-      filteredPaths = filteredPaths.map(f => `${driveChar}:${f}`);
-    }
-  }
-
-  if (options.deep !== Infinity) {
-    filteredPaths = filteredPaths.filter(f => f.split('/').length <= options.deep + 2);
-  }
-
-  const result = options.unique ? Array.from(new Set(filteredPaths)) : filteredPaths;
-
-  const res = result.sort((a, b) => {
-    const pathDiff = a.split('/').length - b.split('/').length;
-    return pathDiff !== 0 ? pathDiff : a.localeCompare(b);
-  });
+  const res = postprocessOptions(matchedEntries, options);
 
   // It could happen the fs changes with the next call, so we clear the cache
   getAllDirentsRelativeToCwd.clearCache();
@@ -310,4 +411,12 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
 
 optimisedGlob.disableCache = () => {
   isCacheEnabled = false;
+};
+
+optimisedGlob.enableExperimentalFsGlob = () => {
+  isExperimentalFsGlobEnabled = true;
+};
+
+optimisedGlob.disableExperimentalFsGlob = () => {
+  isExperimentalFsGlobEnabled = false;
 };
