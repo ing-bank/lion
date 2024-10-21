@@ -162,7 +162,10 @@ function postprocessOptions(matchedEntries, options) {
   }
 
   if (options.absolute) {
-    filteredPaths = filteredPaths.map(f => toPosixPath(path.join(options.cwd, f)));
+    filteredPaths = filteredPaths.map(f => {
+      const isRootPath = f.startsWith('/');
+      return isRootPath ? toPosixPath(f) : toPosixPath(path.join(options.cwd, f));
+    });
     if (process.platform === 'win32') {
       const driveChar = path.win32.resolve(options.cwd).slice(0, 1).toUpperCase();
       filteredPaths = filteredPaths.map(f => `${driveChar}:${f}`);
@@ -183,19 +186,17 @@ function postprocessOptions(matchedEntries, options) {
 const getStartPath = memoize(
   /**
    * @param {string} glob
+   * @returns {string}
    */
   glob => {
     const reservedChars = ['?', '[', ']', '{', '}', ',', '.', '*'];
-    let hasFoundReservedChar = false;
-    return glob
-      .split('/')
-      .map(part => {
-        if (hasFoundReservedChar) return undefined;
-        hasFoundReservedChar = reservedChars.some(reservedChar => part.includes(reservedChar));
-        return hasFoundReservedChar ? undefined : part;
-      })
-      .filter(Boolean)
-      .join('/');
+    const startPathParts = [];
+    for (const part of glob.split('/')) {
+      const hasReservedChar = reservedChars.some(reservedChar => part.includes(reservedChar));
+      if (hasReservedChar) break;
+      startPathParts.push(part);
+    }
+    return startPathParts.join('/');
   },
 );
 
@@ -250,8 +251,9 @@ const getAllDirentsRelativeToCwd = memoize(
       fs: options.fs,
     });
 
+    const isRootPath = fullStartPath.startsWith('/');
     const allDirEntsRelativeToCwd = allDirentsRelativeToStartPath.map(dirent => ({
-      relativeToCwdPath: direntToLocalPath(dirent, { cwd: options.cwd }),
+      relativeToCwdPath: direntToLocalPath(dirent, { cwd: isRootPath ? options.cwd : '' }),
       dirent,
     }));
 
@@ -315,9 +317,12 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
   const ignoreGlobs = options.ignore.map((/** @type {string} */ g) =>
     g.startsWith('!') ? g : `!${g}`,
   );
+  const globs = toUniqueArray([...regularGlobs, ...ignoreGlobs]);
 
   const optionsNotSupportedByNativeGlob = ['onlyDirectories', 'dot'];
-  const doesConfigAllowNative = !optionsNotSupportedByNativeGlob.some(opt => options[opt]);
+  const hasGlobWithFullPath = globs.some(g => g.startsWith('/'));
+  const doesConfigAllowNative =
+    !optionsNotSupportedByNativeGlob.some(opt => options[opt]) && !hasGlobWithFullPath;
   if (isExperimentalFsGlobEnabled && options.fs.promises.glob && doesConfigAllowNative) {
     const negativeGlobs = [...ignoreGlobs, ...regularGlobs.filter(r => r.startsWith('!'))].map(r =>
       r.slice(1),
@@ -350,8 +355,6 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     );
   }
 
-  const globs = toUniqueArray([...regularGlobs, ...ignoreGlobs]);
-
   /** @type {RegExp[]} */
   const matchRegexesNegative = [];
   /** @type {RegExp[]} */
@@ -377,11 +380,13 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
 
     // Search for the "deepest" starting point in the filesystem that we can use to search the fs
     const startPath = getStartPath(globNormalized);
-    const fullStartPath = path.join(options.cwd, startPath);
+    const isRootPath = startPath.startsWith('/');
+    const cwd = isRootPath ? '/' : options.cwd;
+    const fullStartPath = path.join(cwd, startPath);
 
     try {
       const allDirEntsRelativeToCwd = await getAllDirentsRelativeToCwd(fullStartPath, {
-        cwd: options.cwd,
+        cwd,
         fs: options.fs,
       });
 
