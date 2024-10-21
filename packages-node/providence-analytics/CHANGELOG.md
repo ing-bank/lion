@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.16.7
+
+### Patch Changes
+
+- 2dbb1ca: - support `ignore: string[]` globs in optimisedGlob
+  - experimental `fs.glob` support under the hood in optimisedGlob
+
 ## 0.16.6
 
 ### Patch Changes
