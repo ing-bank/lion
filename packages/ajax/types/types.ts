@@ -22,6 +22,7 @@ export interface AjaxConfig {
 
 export type RequestInterceptor = (request: Request) => Promise<Request | Response>;
 export type ResponseInterceptor = (response: Response) => Promise<Response>;
+export type ResponseJsonInterceptor = (jsonObject: object, response: Response) => Promise<object>;
 
 export interface CacheConfig {
   expires: string;
