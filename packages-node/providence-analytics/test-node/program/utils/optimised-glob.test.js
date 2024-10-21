@@ -40,6 +40,8 @@ async function runOptimisedGlobAndCheckGlobbyParity(patterns, options) {
     );
   }
 
+  console.debug({ optimisedGlobResult, globbyResult });
+
   expect(optimisedGlobResult).to.deep.equal(globbyResult);
 
   return optimisedGlobResult;
@@ -300,6 +302,38 @@ function runSuiteForOptimisedGlob() {
             suppressErrors: false,
           }),
         ).to.throw();
+      });
+    });
+
+    describe('Edge cases', () => {
+      it('allows prefixing a system path (regardless of cwd)', async () => {
+        const files = await runOptimisedGlobAndCheckGlobbyParity(
+          '/fakeFs/my/folder/*/some/file.{js,d.ts}',
+          testCfg,
+        );
+        expect(files).to.deep.equal([
+          '/fakeFs/my/folder/lvl1/some/file.d.ts',
+          '/fakeFs/my/folder/lvl1/some/file.js',
+        ]);
+        // With non-existing cwd
+        const files2 = await runOptimisedGlobAndCheckGlobbyParity(
+          '/fakeFs/my/folder/*/some/file.{js,d.ts}',
+          {
+            ...testCfg,
+            cwd: '/nonExisting/path', // this will not exist
+          },
+        );
+        expect(files2).to.deep.equal([
+          '/fakeFs/my/folder/lvl1/some/file.d.ts',
+          '/fakeFs/my/folder/lvl1/some/file.js',
+        ]);
+
+        // // With negative globs: this is not supported by globby
+        // const files3 = await runOptimisedGlobAndCheckGlobbyParity(
+        //   ['!/fakeFs/my/**/*.d.ts', '/fakeFs/my/folder/*/some/file.{js,d.ts}'],
+        //   testCfg,
+        // );
+        // expect(files3).to.deep.equal(['/fakeFs/my/folder/lvl1/some/file.js']);
       });
     });
   });
