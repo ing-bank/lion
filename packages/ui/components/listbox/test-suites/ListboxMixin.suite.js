@@ -400,7 +400,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         `);
         await el.updateComplete;
         await el.updateComplete; // need 2 awaits as overlay.show is an async function
-        // for more info about why we need the ignoreRules, see: https://lion-web.netlify.app/fundamentals/systems/overlays/rationale/#considerations
+        // for more info about why we need the ignoreRules, see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
         await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
       });
 
@@ -412,7 +412,7 @@ export function runListboxMixinSuite(customConfig = {}) {
             <${optionTag} .choiceValue=${20}>Item 2</${optionTag}>
           </${tag}>
         `);
-        // for more info about why we need the ignoreRules, see: https://lion-web.netlify.app/fundamentals/systems/overlays/rationale/#considerations
+        // for more info about why we need the ignoreRules, see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
         await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
       });
 
