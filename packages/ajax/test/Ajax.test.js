@@ -271,6 +271,49 @@ describe('Ajax', () => {
       const { response } = await ajax.fetchJson('/foo');
       expect(response.ok);
     });
+
+    describe('addResponseJsonInterceptor', () => {
+      it('adds a function which intercepts the parsed response body JSON object', async () => {
+        ajax.addResponseJsonInterceptor(async jsonObject => ({
+          ...jsonObject,
+          intercepted: true,
+        }));
+        fetchStub.returns(Promise.resolve(new Response('{"a":1,"b":2}', responseInit())));
+
+        const response = await ajax.fetchJson('/foo');
+
+        expect(response.body).to.eql({ a: 1, b: 2, intercepted: true });
+      });
+
+      it('does not serialize/deserialize the JSON object after intercepting', async () => {
+        let interceptorJsonObject;
+        ajax.addResponseJsonInterceptor(async jsonObject => {
+          interceptorJsonObject = {
+            ...jsonObject,
+          };
+          return interceptorJsonObject;
+        });
+        fetchStub.returns(Promise.resolve(new Response('{"a":1,"b":2}', responseInit())));
+
+        const response = await ajax.fetchJson('/foo');
+
+        expect(response.body).to.equal(interceptorJsonObject);
+      });
+
+      it('provides response object to the interceptor', async () => {
+        let interceptorResponse;
+        ajax.addResponseJsonInterceptor(async (jsonObject, response) => {
+          interceptorResponse = response;
+          return jsonObject;
+        });
+        const mockedResponse = new Response('{"a":1,"b":2}', responseInit());
+        fetchStub.returns(Promise.resolve(mockedResponse));
+
+        await ajax.fetchJson('/foo');
+
+        expect(interceptorResponse).to.equal(mockedResponse);
+      });
+    });
   });
 
   describe('request and response interceptors', () => {
