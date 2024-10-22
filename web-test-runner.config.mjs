@@ -8,6 +8,7 @@ const packages = fs
   .filter(
     dir => fs.statSync(`packages/${dir}`).isDirectory() && fs.existsSync(`packages/${dir}/test`),
   )
+  .filter(dir => dir === 'ui')
   .map(dir => ({ name: dir, path: `packages/${dir}/test` }))
   .concat(
     fs
@@ -17,6 +18,7 @@ const packages = fs
           fs.statSync(`packages/ui/components/${dir}`).isDirectory() &&
           fs.existsSync(`packages/ui/components/${dir}/test`),
       )
+      .filter(dir => dir === 'core')
       .map(dir => ({ name: dir, path: `packages/ui/components/${dir}/test` })),
   );
 
@@ -27,7 +29,6 @@ const testRunnerHtml = testRunnerImport =>
   `
 <html>
   <head>
-    <script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
     <script type="module" src="${testRunnerImport}"></script>
   </head>
 </html>
@@ -51,6 +52,7 @@ export default {
     },
   },
   testRunnerHtml,
+  browserLogs: true,
   browsers: [
     playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),

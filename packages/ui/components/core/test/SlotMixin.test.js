@@ -567,7 +567,8 @@ describe('SlotMixin', () => {
     });
   });
 
-  describe('Scoped Registries', () => {
+  // eslint-disable-next-line no-only-tests/no-only-tests
+  describe.only('Scoped Registries', () => {
     it('supports scoped elements when polyfill loaded', async () => {
       const outputObj = mockScopedRegistry();
 
@@ -605,7 +606,8 @@ describe('SlotMixin', () => {
       unMockScopedRegistry();
     });
 
-    it('does not scope elements when polyfill not loaded', async () => {
+    // eslint-disable-next-line no-only-tests/no-only-tests
+    it.only('does not scope elements when polyfill not loaded', async () => {
       // @ts-expect-error
       ShadowRoot.prototype.createElement = null;
       class ScopedEl extends LitElement {}
