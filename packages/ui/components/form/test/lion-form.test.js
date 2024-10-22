@@ -5,6 +5,10 @@ import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
+import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-checkbox.js';
+import '@lion/ui/define/lion-radio-group.js';
+import '@lion/ui/define/lion-radio.js';
 import '@lion/ui/define/lion-form.js';
 import {
   aTimeout,
@@ -264,8 +268,29 @@ describe('<lion-form>', () => {
     button.click();
     expect(dispatchSpy.args[0][0].type).to.equal('submit');
     const fieldset = el.formElements[0];
-    // @ts-ignore [allow-protected] in test
     expect(document.activeElement).to.equal(fieldset.formElements[0]._inputNode);
+  });
+
+  it('sets focus on submit to the first form element within a erroneous fieldset within another fieldset', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-fieldset name="parentFieldset">
+            <lion-fieldset name="childFieldset" .validators="${[new Required()]}">
+              <${childTag} name="firstName"></${childTag}>
+            </lion-fieldset>
+          </lion-fieldset>
+
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    const parentFieldSetEl = el.formElements[0];
+    const childFieldsetEl = parentFieldSetEl.formElements[0];
+    const inputEl = childFieldsetEl.formElements[0];
+    button.click();
+    expect(document.activeElement).to.equal(inputEl._focusableNode);
   });
 
   it('sets focus on submit to the first form element within a erroneous listbox', async () => {
@@ -284,5 +309,67 @@ describe('<lion-form>', () => {
     button.click();
     const listboxEl = el.formElements[0];
     expect(document.activeElement).to.equal(listboxEl._inputNode);
+  });
+
+  it('sets focus on submit to the first form element within a erroneous listbox within a fieldset', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-fieldset name="fieldset">
+            <lion-listbox name="name" .validators="${[new Required()]}">
+              <lion-option value="a">a</lion-option>
+              <lion-option value="b">b</lion-option>
+            </lion-listbox>
+          </lion-fieldset>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    button.click();
+    const fieldsetEl = el.formElements[0];
+    const listboxEl = fieldsetEl.formElements[0];
+    expect(document.activeElement).to.equal(listboxEl._inputNode);
+  });
+
+  it('sets focus on submit to the first form element within a erroneous checkbox-group', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-checkbox-group name="name" .validators="${[new Required()]}">
+            <lion-checkbox .choiceValue=${'a'} label="a"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'b'} label="b"></lion-checkbox>
+          </lion-checkbox-group>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    const checkboxGroupEl = el.formElements[0];
+    const checkboxEl = checkboxGroupEl.formElements[0];
+    button.click();
+    expect(document.activeElement).to.equal(checkboxEl._focusableNode);
+  });
+
+  it('sets focus on submit to the first form element within a erroneous radio-group', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+            <lion-radio-group name="name" .validators="${[new Required()]}">
+              <lion-radio .choiceValue=${'a'} label="a"></lion-radio>
+              <lion-radio .choiceValue=${'b'} label="b"></lion-radio>
+            </lion-radio-group>
+          </lion-fieldset>
+
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+
+    const radioGroupEl = el.formElements[0];
+    const radioEl = radioGroupEl.formElements[0];
+    button.click();
+    expect(document.activeElement).to.equal(radioEl._focusableNode);
   });
 });
