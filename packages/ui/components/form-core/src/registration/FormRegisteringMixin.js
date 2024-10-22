@@ -40,7 +40,7 @@ const FormRegisteringMixinImplementation = superclass =>
        * To encourage accessibility best practices, `form-element-register` events
        * do not pierce through shadow roots. This forces the developer to create form groups and fieldsets that automatically allow the creation of accessible relationships in the same dom tree.
       Use this option if you know what you're doing. It will then be possible to nest FormControls
-      inside shadow dom. See https://lion-web.netlify.app/fundamentals/rationales/accessibility/#shadow-roots-and-accessibility
+      inside shadow dom. See https://lion.js.org/fundamentals/rationales/accessibility/#shadow-roots-and-accessibility
       */
       this.allowCrossRootRegistration = false;
     }
