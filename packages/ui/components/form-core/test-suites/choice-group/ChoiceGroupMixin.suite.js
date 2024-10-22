@@ -81,21 +81,6 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
       });
     }
 
-    it("has the focusableNode set to the first child's focusableNode", async () => {
-      const el = /** @type {ChoiceInputGroup} */ (
-        await fixture(html`
-        <${parentTag} name="gender[]">
-          <${childTag} .choiceValue=${'male'}></${childTag}>
-          <${childTag} .choiceValue=${'female'} checked></${childTag}>
-          <${childTag} .choiceValue=${'other'}></${childTag}>
-        </${parentTag}>
-      `)
-      );
-
-      // @ts-ignore [allow-protected] in test
-      expect(el._focusableNode).to.equal(el.formElements[0]._focusableNode);
-    });
-
     it('throws if a child element without a modelValue like { value: "foo", checked: false } tries to register', async () => {
       const el = /** @type {ChoiceInputGroup} */ (
         await fixture(html`

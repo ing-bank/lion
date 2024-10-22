@@ -2,4 +2,4 @@
 '@lion/ui': patch
 ---
 
-[form-core] add focusableNode to choiceGroupMixin to make \_setFocusOnFirstErroneousFormElement function work for checkbox-group and radio-group
+[form-core] make \_setFocusOnFirstErroneousFormElement work for checkbox-group, radio-group and nested fieldsets
