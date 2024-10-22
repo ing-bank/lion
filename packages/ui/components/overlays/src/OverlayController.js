@@ -578,7 +578,7 @@ export class OverlayController extends EventTarget {
     // The role="dialog" is set on the contentNode (or another role), so role="none"
     // is valid here, although AXE complains about this setup.
     // For now we need to add `ignoredRules: ['aria-allowed-role']` in your AXE tests.
-    // see: https://lion-web.netlify.app/fundamentals/systems/overlays/rationale/#considerations
+    // see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
     wrappingDialogElement.setAttribute('role', 'none');
     wrappingDialogElement.setAttribute('data-overlay-outer-wrapper', '');
     // N.B. position: fixed is needed to escape out of 'overflow: hidden'
