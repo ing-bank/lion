@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.16.8
+
+### Patch Changes
+
+- 6ec74dc: support fullPath notation in optimisedGlob
+
 ## 0.16.7
 
 ### Patch Changes
