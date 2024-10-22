@@ -1,5 +1,6 @@
 export { ChoiceGroupHost } from '../../components/form-core/types/choice-group/ChoiceGroupMixinTypes.js';
 export { ChoiceInputHost } from '../../components/form-core/types/choice-group/ChoiceInputMixinTypes.js';
+export { FocusHost } from '../../components/form-core/types/FocusMixinTypes.js';
 export { FormControlHost } from '../../components/form-core/types/FormControlMixinTypes.js';
 export { HTMLElementWithValue } from '../../components/form-core/types/FormControlMixinTypes.js';
 export { FormGroupHost } from '../../components/form-core/types/form-group/FormGroupMixinTypes.js';
