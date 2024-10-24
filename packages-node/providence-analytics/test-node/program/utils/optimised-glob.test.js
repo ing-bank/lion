@@ -40,8 +40,6 @@ async function runOptimisedGlobAndCheckGlobbyParity(patterns, options) {
     );
   }
 
-  console.debug({ optimisedGlobResult, globbyResult });
-
   expect(optimisedGlobResult).to.deep.equal(globbyResult);
 
   return optimisedGlobResult;
@@ -74,6 +72,7 @@ function runSuiteForOptimisedGlob() {
         '/fakeFs/my/folder/lvl1/lvl2/lvl3/some/anotherFile.d.ts': 'content',
 
         '/fakeFs/my/.hiddenFile.js': 'content',
+        '/fakeFs/my/.hiddenFolder/file.js': 'content',
       };
       mockFs(fakeFs);
     });
@@ -275,9 +274,17 @@ function runSuiteForOptimisedGlob() {
       });
 
       it('"dot" allows hidden files" ', async () => {
-        const files = await runOptimisedGlobAndCheckGlobbyParity('*/*', { ...testCfg, dot: true });
-
+        const files = await runOptimisedGlobAndCheckGlobbyParity('*/*', {
+          ...testCfg,
+          dot: true,
+        });
         expect(files).to.deep.equal(['my/.hiddenFile.js']);
+
+        const files2 = await runOptimisedGlobAndCheckGlobbyParity('*/*/*', {
+          ...testCfg,
+          dot: true,
+        });
+        expect(files2).to.deep.equal(['my/.hiddenFolder/file.js']);
       });
 
       it('"ignore" filters out files" ', async () => {
@@ -334,6 +341,15 @@ function runSuiteForOptimisedGlob() {
         //   testCfg,
         // );
         // expect(files3).to.deep.equal(['/fakeFs/my/folder/lvl1/some/file.js']);
+      });
+
+      it('starts from hidden folders', async () => {
+        const files = await runOptimisedGlobAndCheckGlobbyParity('**/*', {
+          ...testCfg,
+          cwd: '/fakeFs/my/.hiddenFolder',
+          dot: true,
+        });
+        expect(files).to.deep.equal(['file.js']);
       });
     });
   });
