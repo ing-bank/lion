@@ -144,7 +144,13 @@ function isRootGlob(glob) {
  * @returns {string}
  */
 function direntToLocalPath(dirent, { cwd }) {
-  const folder = (dirent.parentPath || dirent.path).replace(/(^.*)\/(.*\..*$)/, '$1');
+  const parentPath = toPosixPath(dirent.parentPath || dirent.path);
+  // Since `fs.glob` can return parent paths with files included, we need to strip the file part
+  const parts = parentPath.split('/');
+  const lastPart = parts[parts.length - 1];
+  const isLastPartFile = !lastPart.startsWith('.') && lastPart.split('.').length > 1;
+  const folder = isLastPartFile ? parts.slice(0, parts.length - 1).join('/') : parentPath;
+
   return toPosixPath(path.join(folder, dirent.name)).replace(
     new RegExp(`^${toPosixPath(cwd)}/`),
     '',
@@ -270,7 +276,7 @@ const getAllDirentsRelativeToCwd = memoize(
 
 /**
  * @param {string|string[]} globOrGlobs
- * @param {{ fs: FsLike; cwd: string; exclude?: Function; stats?: boolean }} cfg
+ * @param {Partial<FastGlobtions> & {exclude?:Function; stats: boolean; cwd:string}} cfg
  * @returns {Promise<string[]|DirentWithPath[]>}
  */
 async function nativeGlob(globOrGlobs, { fs, cwd, exclude, stats }) {
@@ -286,6 +292,54 @@ async function nativeGlob(globOrGlobs, { fs, cwd, exclude, stats }) {
     results.push(stats ? dirent : direntToLocalPath(dirent, { cwd }));
   }
   return results;
+}
+
+/**
+ *
+ * @param {{globs: string[]; ignoreGlobs: string[]; options: FastGlobtions; regularGlobs:string[]}} config
+ * @returns {Promise<string[]|void>}
+ */
+async function getNativeGlobResults({ globs, options, ignoreGlobs, regularGlobs }) {
+  const optionsNotSupportedByNativeGlob = ['onlyDirectories', 'dot'];
+  const hasGlobWithFullPath = globs.some(isRootGlob);
+  const doesConfigAllowNative =
+    !optionsNotSupportedByNativeGlob.some(opt => options[opt]) && !hasGlobWithFullPath;
+
+  if (!doesConfigAllowNative) return undefined;
+
+  const negativeGlobs = [...ignoreGlobs, ...regularGlobs.filter(r => r.startsWith('!'))].map(r =>
+    r.slice(1),
+  );
+
+  const negativeResults = negativeGlobs.length
+    ? // @ts-ignore
+      /** @type {string[]} */ (await nativeGlob(negativeGlobs, options))
+    : [];
+  const positiveGlobs = regularGlobs.filter(r => !r.startsWith('!'));
+
+  const result = /** @type {DirentWithPath[]} */ (
+    await nativeGlob(positiveGlobs, {
+      cwd: /** @type {string} */ (options.cwd),
+      fs: options.fs,
+      stats: true,
+      // we cannot use the exclude option here, because it's not working correctly
+    })
+  );
+
+  const direntsFiltered = result.filter(
+    dirent =>
+      !negativeResults.includes(
+        direntToLocalPath(dirent, { cwd: /** @type {string} */ (options.cwd) }),
+      ),
+  );
+
+  return postprocessOptions(
+    direntsFiltered.map(dirent => ({
+      dirent,
+      relativeToCwdPath: direntToLocalPath(dirent, { cwd: /** @type {string} */ (options.cwd) }),
+    })),
+    options,
+  );
 }
 
 /**
@@ -326,40 +380,10 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
   );
   const globs = toUniqueArray([...regularGlobs, ...ignoreGlobs]);
 
-  const optionsNotSupportedByNativeGlob = ['onlyDirectories', 'dot'];
-  const hasGlobWithFullPath = globs.some(isRootGlob);
-  const doesConfigAllowNative =
-    !optionsNotSupportedByNativeGlob.some(opt => options[opt]) && !hasGlobWithFullPath;
-  if (isExperimentalFsGlobEnabled && options.fs.promises.glob && doesConfigAllowNative) {
-    const negativeGlobs = [...ignoreGlobs, ...regularGlobs.filter(r => r.startsWith('!'))].map(r =>
-      r.slice(1),
-    );
-
-    const negativeResults = negativeGlobs.length
-      ? /** @type {string[]} */ (await nativeGlob(negativeGlobs, options))
-      : [];
-    const positiveGlobs = regularGlobs.filter(r => !r.startsWith('!'));
-
-    const result = /** @type {DirentWithPath[]} */ (
-      await nativeGlob(positiveGlobs, {
-        cwd: options.cwd,
-        fs: options.fs,
-        stats: true,
-        // we cannot use the exclude option here, because it's not working correctly
-      })
-    );
-
-    const direntsFiltered = result.filter(
-      dirent => !negativeResults.includes(direntToLocalPath(dirent, { cwd: options.cwd })),
-    );
-
-    return postprocessOptions(
-      direntsFiltered.map(dirent => ({
-        dirent,
-        relativeToCwdPath: direntToLocalPath(dirent, { cwd: options.cwd }),
-      })),
-      options,
-    );
+  if (isExperimentalFsGlobEnabled && options.fs?.promises.glob) {
+    const params = { regularGlobs, ignoreGlobs, options, globs };
+    const nativeGlobResults = await getNativeGlobResults(params);
+    if (nativeGlobResults) return nativeGlobResults;
   }
 
   /** @type {RegExp[]} */
@@ -390,7 +414,6 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     const isRootPath = isRootGlob(startPath);
     const cwd = isRootPath ? '/' : options.cwd;
     const fullStartPath = path.join(cwd, startPath);
-
     try {
       const allDirEntsRelativeToCwd = await getAllDirentsRelativeToCwd(fullStartPath, {
         cwd,
