@@ -1,3 +1,4 @@
+import module from 'module';
 import path from 'path';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import mockFs from 'mock-fs';
@@ -60,6 +61,46 @@ function getMockObjectForProject(files, cfg = {}, existingMock = {}) {
 }
 
 /**
+ * @param {string} resolvedPath
+ * @param {string} dynamicImport
+ * @returns {string}
+ */
+function getPackageRootFromNodeModulesPath(resolvedPath, dynamicImport) {
+  const scope = dynamicImport.startsWith('@') ? dynamicImport.split('/')[0] : dynamicImport;
+  const tailOfRootPath = `${path.sep}node_modules${path.sep}${scope}`;
+  const lio = resolvedPath.lastIndexOf(tailOfRootPath);
+  return resolvedPath.slice(0, lio + tailOfRootPath.length);
+}
+
+function incorporateDynamicImports(
+  dynamicImports = [
+    {
+      name: 'oxc-parser',
+      siblings: [
+        '@oxc-parser',
+        // '@oxc-resolver'
+      ],
+    },
+    { name: '@babel/parser' },
+    { name: '@swc/core' },
+  ],
+) {
+  const require = module.createRequire(import.meta.url);
+  const importablePaths = [];
+  for (const dynamicImport of dynamicImports) {
+    const resolvedPath = require.resolve(dynamicImport.name);
+    const rootPath = getPackageRootFromNodeModulesPath(resolvedPath, dynamicImport.name);
+    importablePaths.push(rootPath);
+    for (const sibling of dynamicImport.siblings || []) {
+      const siblingPath = `${rootPath.split(path.sep).slice(0, -1).join(path.sep)}${path.sep}${sibling}`;
+      importablePaths.push(siblingPath);
+    }
+  }
+  return importablePaths;
+}
+const importablePaths = incorporateDynamicImports();
+
+/**
  * Makes sure that, whenever the main program (providence) calls
  * "InputDataService.createDataObject", it gives back a mocked response.
  * @param {string[]|object} files all the code that will be run trhough AST
@@ -72,7 +113,7 @@ function getMockObjectForProject(files, cfg = {}, existingMock = {}) {
  */
 export function mockProject(files, cfg = {}, existingMock = {}) {
   const obj = getMockObjectForProject(files, cfg, existingMock);
-  mockFs(obj);
+  mockFs({ ...obj, ...Object.fromEntries(importablePaths.map(p => [p, mockFs.load(p)])) });
   return obj;
 }
 

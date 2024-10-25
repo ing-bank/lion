@@ -159,7 +159,8 @@ async function matchImportsPostprocess(exportsAnalyzerResult, importsAnalyzerRes
 export default class MatchImportsAnalyzer extends Analyzer {
   static analyzerName = /** @type {AnalyzerName} */ ('match-imports');
 
-  static requiredAst = /** @type {AnalyzerAst} */ ('swc');
+  // N.B. implicit
+  static requiredAst = /** @type {AnalyzerAst} */ ('oxc');
 
   static requiresReference = true;
 

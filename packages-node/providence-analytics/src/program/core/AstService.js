@@ -1,15 +1,21 @@
-import babelParser from '@babel/parser';
 import * as parse5 from 'parse5';
-import swc from '@swc/core';
 import { traverseHtml } from '../utils/traverse-html.js';
 import { LogService } from './LogService.js';
-import { guardedSwcToBabel } from '../utils/guarded-swc-to-babel.js';
+
+/** @type {import('@babel/parser')} */
+let babelParser;
+/** @type {import('@swc/core')} */
+let swcParser;
+/** @type {import('oxc-parser')} */
+let oxcParser;
 
 /**
- * @typedef {import("@babel/types").File} File
- * @typedef {import("@swc/core").Module} SwcAstModule
- * @typedef {import("@babel/parser").ParserOptions} ParserOptions
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
+ * @typedef {import("oxc-parser").ParseResult} OxcParseResult
+ * @typedef {import("@babel/parser").ParserOptions} ParserOptions
+ * @typedef {import("@swc/core").Module} SwcAstModule
+ * @typedef {import("@babel/types").File} File
  */
 
 export class AstService {
@@ -17,9 +23,13 @@ export class AstService {
    * Compiles an array of file paths using Babel.
    * @param {string} code
    * @param {ParserOptions} parserOptions
-   * @returns {File}
+   * @returns {Promise<File>}
    */
-  static _getBabelAst(code, parserOptions = {}) {
+  static async _getBabelAst(code, parserOptions = {}) {
+    if (!babelParser) {
+      babelParser = (await import('@babel/parser')).default;
+    }
+
     const ast = babelParser.parse(code, {
       sourceType: 'module',
       plugins: [
@@ -35,31 +45,17 @@ export class AstService {
   }
 
   /**
-   * Compiles an array of file paths using Babel.
-   * @param {string} code
-   * @param {ParserOptions} parserOptions
-   * @returns {File}
-   */
-  static _getSwcToBabelAst(code, parserOptions = {}) {
-    if (this.fallbackToBabel) {
-      return this._getBabelAst(code, parserOptions);
-    }
-    const ast = swc.parseSync(code, {
-      syntax: 'typescript',
-      // importAssertions: true,
-      ...parserOptions,
-    });
-    return guardedSwcToBabel(ast, code);
-  }
-
-  /**
    * Compiles an array of file paths using swc.
    * @param {string} code
    * @param {ParserOptions} parserOptions
-   * @returns {SwcAstModule}
+   * @returns {Promise<SwcAstModule>}
    */
-  static _getSwcAst(code, parserOptions = {}) {
-    const ast = swc.parseSync(code, {
+  static async _getSwcAst(code, parserOptions = {}) {
+    if (!swcParser) {
+      swcParser = (await import('@swc/core')).default;
+    }
+
+    const ast = swcParser.parseSync(code, {
       syntax: 'typescript',
       target: 'es2022',
       ...parserOptions,
@@ -72,7 +68,22 @@ export class AstService {
    * @returns {number}
    */
   static _getSwcOffset() {
-    return swc.parseSync('').span.end;
+    return swcParser.parseSync('').span.end;
+  }
+
+  /**
+   * Compiles an array of file paths using swc.
+   * @param {string} code
+   * @param {ParserOptions} parserOptions
+   * @returns {Promise<OxcParseResult>}
+   */
+  static async _getOxcAst(code, parserOptions = {}) {
+    if (!oxcParser) {
+      // eslint-disable-next-line import/no-extraneous-dependencies
+      oxcParser = (await import('oxc-parser')).default;
+    }
+
+    return oxcParser.parseSync(code, parserOptions).program;
   }
 
   /**
@@ -100,22 +111,22 @@ export class AstService {
   /**
    * Returns the Babel AST
    * @param { string } code
-   * @param { 'babel'|'swc-to-babel'|'swc'} astType
+   * @param {AnalyzerAst} astType
    * @param { {filePath?: PathFromSystemRoot} } options
-   * @returns {File|undefined|SwcAstModule}
+   * @returns {Promise<File|undefined|SwcAstModule|OxcParseResult>}
    */
   // eslint-disable-next-line consistent-return
-  static getAst(code, astType, { filePath } = {}) {
+  static async getAst(code, astType, { filePath } = {}) {
     // eslint-disable-next-line default-case
     try {
       if (astType === 'babel') {
-        return this._getBabelAst(code);
-      }
-      if (astType === 'swc-to-babel') {
-        return this._getSwcToBabelAst(code);
+        return await this._getBabelAst(code);
       }
       if (astType === 'swc') {
-        return this._getSwcAst(code);
+        return await this._getSwcAst(code);
+      }
+      if (astType === 'oxc') {
+        return await this._getOxcAst(code);
       }
       throw new Error(`astType "${astType}" not supported.`);
     } catch (e) {

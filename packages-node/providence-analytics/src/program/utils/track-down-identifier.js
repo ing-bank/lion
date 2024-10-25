@@ -4,7 +4,7 @@ import { isRelativeSourcePath, toRelativeSourcePath } from './relative-source-pa
 import { InputDataService } from '../core/InputDataService.js';
 import { resolveImportPath } from './resolve-import-path.js';
 import { AstService } from '../core/AstService.js';
-import { swcTraverse } from './swc-traverse.js';
+import { oxcTraverse, nameOf, importedOf } from './oxc-traverse.js';
 import { fsAdapter } from './fs-adapter.js';
 import { memoize } from './memoize.js';
 
@@ -55,18 +55,19 @@ function getBindingAndSourceReexports(swcPath, identifierName) {
   }
   const rootPath = curPath;
 
-  swcTraverse(rootPath.node, {
+  oxcTraverse(rootPath.node, {
     ExportSpecifier(astPath) {
+      const { node } = astPath;
       // eslint-disable-next-line arrow-body-style
       const found =
-        astPath.node.orig?.value === identifierName ||
-        astPath.node.exported?.value === identifierName ||
-        astPath.node.local?.value === identifierName;
+        nameOf(importedOf(node)) === identifierName ||
+        nameOf(node.exported) === identifierName ||
+        nameOf(node.local) === identifierName;
       if (found) {
         bindingPath = astPath;
         bindingType = 'ExportSpecifier';
         source = astPath.parentPath.node.source
-          ? astPath.parentPath.node.source.value
+          ? nameOf(astPath.parentPath.node.source)
           : '[current]';
         astPath.stop();
       }
@@ -89,13 +90,15 @@ export function getImportSourceFromAst(astPath, identifierName) {
   let source;
   let importedIdentifierName;
 
-  const binding = astPath.scope.bindings[identifierName];
+  // TODO: use (smth like) getReferencedDeclaration if we want to catch renamed variables
+  const binding = astPath.scope.getBinding(identifierName);
+
   let bindingType = binding?.path.type;
   let bindingPath = binding?.path;
   const matchingTypes = ['ImportSpecifier', 'ImportDefaultSpecifier', 'ExportSpecifier'];
 
   if (bindingType && matchingTypes.includes(bindingType)) {
-    source = binding?.path?.parentPath?.node?.source?.value;
+    source = nameOf(binding?.path?.parentPath?.node?.source);
   } else {
     // no binding
     [source, bindingType, bindingPath] = getBindingAndSourceReexports(astPath, identifierName);
@@ -106,7 +109,7 @@ export function getImportSourceFromAst(astPath, identifierName) {
     importedIdentifierName = '[default]';
   } else if (source) {
     const { node } = bindingPath;
-    importedIdentifierName = node.orig?.value || node.imported?.value || node.local?.value;
+    importedIdentifierName = nameOf(importedOf(node)) || nameOf(node.local);
   }
 
   return { source, importedIdentifierName };
@@ -194,8 +197,11 @@ async function trackDownIdentifierFn(
       specifier: '[default]',
     };
   }
-  const code = fsAdapter.fs.readFileSync(/** @type {string} */ (resolvedSourcePath), 'utf8');
-  const swcAst = AstService._getSwcAst(code);
+  const code = await fsAdapter.fs.promises.readFile(
+    /** @type {string} */ (resolvedSourcePath),
+    'utf8',
+  );
+  const oxcAst = await AstService._getOxcAst(code);
 
   const shouldLookForDefaultExport = identifierName === '[default]';
 
@@ -204,16 +210,16 @@ async function trackDownIdentifierFn(
   let pendingTrackDownPromise;
 
   const handleExportDefaultDeclOrExpr = astPath => {
-    if (!shouldLookForDefaultExport) {
-      return;
-    }
+    if (!shouldLookForDefaultExport) return;
+
+    const { node } = astPath;
 
     let newSource;
-    if (
-      astPath.node.expression?.type === 'Identifier' ||
-      astPath.node.declaration?.type === 'Identifier'
-    ) {
-      newSource = getImportSourceFromAst(astPath, astPath.node.expression.value).source;
+    if (node.expression?.type === 'Identifier' || node.declaration?.type === 'Identifier') {
+      newSource = getImportSourceFromAst(
+        astPath,
+        nameOf(node.expression || node.declaration),
+      ).source;
     }
 
     if (newSource) {
@@ -237,54 +243,54 @@ async function trackDownIdentifierFn(
   };
   const handleExportDeclOrNamedDecl = {
     enter(astPath) {
-      if (reexportMatch || shouldLookForDefaultExport) {
-        return;
-      }
+      if (reexportMatch || shouldLookForDefaultExport) return;
+
+      const { node } = astPath;
 
       // Are we dealing with a re-export ?
-      if (astPath.node.specifiers?.length) {
-        exportMatch = astPath.node.specifiers.find(
-          s => s.orig?.value === identifierName || s.exported?.value === identifierName,
-        );
+      if (!node.specifiers?.length) return;
 
-        if (exportMatch) {
-          const localName = exportMatch.orig.value;
-          let newSource;
-          if (astPath.node.source) {
-            /**
-             * @example
-             * export { x } from 'y'
-             */
-            newSource = astPath.node.source.value;
-          } else {
-            /**
-             * @example
-             * import { x } from 'y'
-             * export { x }
-             */
-            newSource = getImportSourceFromAst(astPath, identifierName).source;
+      exportMatch = node.specifiers.find(
+        s => nameOf(importedOf(s)) === identifierName || nameOf(s.exported) === identifierName,
+      );
 
-            if (!newSource || newSource === '[current]') {
-              /**
-               * @example
-               * const x = 12;
-               * export { x }
-               */
-              return;
-            }
-          }
-          reexportMatch = true;
-          pendingTrackDownPromise = trackDownIdentifier(
-            newSource,
-            localName,
-            resolvedSourcePath,
-            rootPath,
-            projectName,
-            depth + 1,
-          );
-          astPath.stop();
+      if (!exportMatch) return;
+
+      const localName = nameOf(importedOf(exportMatch));
+      let newSource;
+      if (node.source) {
+        /**
+         * @example
+         * export { x } from 'y'
+         */
+        newSource = nameOf(node.source);
+      } else {
+        /**
+         * @example
+         * import { x } from 'y'
+         * export { x }
+         */
+        newSource = getImportSourceFromAst(astPath, identifierName).source;
+
+        if (!newSource || newSource === '[current]') {
+          /**
+           * @example
+           * const x = 12;
+           * export { x }
+           */
+          return;
         }
       }
+      reexportMatch = true;
+      pendingTrackDownPromise = trackDownIdentifier(
+        newSource,
+        localName,
+        resolvedSourcePath,
+        rootPath,
+        projectName,
+        depth + 1,
+      );
+      astPath.stop();
     },
     exit(astPath) {
       if (!reexportMatch) {
@@ -307,7 +313,7 @@ async function trackDownIdentifierFn(
     ExportDeclaration: handleExportDeclOrNamedDecl,
   };
 
-  swcTraverse(swcAst, visitor, { needsAdvancedPaths: true });
+  oxcTraverse(oxcAst, visitor, { needsAdvancedPaths: true });
 
   if (pendingTrackDownPromise) {
     // We can't handle promises inside Babel traverse, so we do it here...
@@ -351,6 +357,7 @@ async function trackDownIdentifierFromScopeFn(
     const specifier = sourceObj.importedIdentifierName || identifierNameInScope;
     rootFile = { file: '[current]', specifier };
   }
+
   return rootFile;
 }
 
