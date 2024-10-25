@@ -2,8 +2,12 @@ import { expect } from 'chai';
 import { it } from 'mocha';
 
 import { getSourceCodeFragmentOfDeclaration } from '../../../src/program/utils/index.js';
-import { mock } from '../../../test-helpers/mock-project-helpers.js';
+import { mockProject } from '../../../test-helpers/mock-project-helpers.js';
 import { memoize } from '../../../src/program/utils/memoize.js';
+
+/**
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ */
 
 describe('getSourceCodeFragmentOfDeclaration', () => {
   const initialMemoizeCacheEnabled = memoize.isCacheEnabled;
@@ -19,10 +23,10 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
       const fakeFs = {
         '/my/proj/exports/file.js': 'export const x = 0;',
       };
-      mock(fakeFs);
+      mockProject(fakeFs);
 
       const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
-        filePath: '/my/proj/exports/file.js',
+        filePath: /** @type {PathFromSystemRoot} */ ('/my/proj/exports/file.js'),
         exportedIdentifier: 'x',
       });
 
@@ -36,7 +40,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
             export const x = y;
           `,
       };
-      mock(fakeFs);
+      mockProject(fakeFs);
 
       const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
         filePath: '/my/proj/exports/file.js',
@@ -54,7 +58,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
             export const myIdentifier = y;
           `,
       };
-      mock(fakeFs);
+      mockProject(fakeFs);
 
       const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
         filePath: '/my/proj/exports/file.js',
@@ -74,7 +78,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
         export const black67 = black59;
         `,
       };
-      mock(fakeFs);
+      mockProject(fakeFs);
 
       const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
         filePath: '/my/proj/exports/file-2.js',
@@ -93,7 +97,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
         export class AjaxClass extends LionAjaxClass {}
         `,
         };
-        mock(fakeFs);
+        mockProject(fakeFs);
 
         const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
           filePath: '/my/proj/exports/ajax.js',
@@ -109,7 +113,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
         export function myFn() {}
         `,
         };
-        mock(fakeFs);
+        mockProject(fakeFs);
 
         const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
           filePath: '/my/proj/exports/myFn.js',
@@ -126,7 +130,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
       const fakeFs = {
         '/my/proj/exports/file.js': 'export default class {};',
       };
-      mock(fakeFs);
+      mockProject(fakeFs);
 
       const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
         filePath: '/my/proj/exports/file.js',
@@ -143,7 +147,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
               export default myIdentifier;
             `,
       };
-      mock(fakeFs);
+      mockProject(fakeFs);
 
       const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
         filePath: '/my/proj/exports/file.js',
@@ -161,7 +165,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
               export default myIdentifier;
             `,
       };
-      mock(fakeFs);
+      mockProject(fakeFs);
 
       const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
         filePath: '/my/proj/exports/file.js',
@@ -180,7 +184,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
         export default class AjaxClass extends LionAjaxClass {}
         `,
         };
-        mock(fakeFs);
+        mockProject(fakeFs);
 
         const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
           filePath: '/my/proj/exports/ajax.js',
@@ -196,7 +200,7 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
         export default function myFn() {}
         `,
         };
-        mock(fakeFs);
+        mockProject(fakeFs);
 
         const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
           filePath: '/my/proj/exports/myFn.js',

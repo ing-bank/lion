@@ -89,7 +89,7 @@
 - bdb038e1: Many improvements:
 
   - rewritten from babel to swc
-  - swcTraverse tool, compatible with babel traverse api
+  - oxcTraverse tool, compatible with babel traverse api
   - increased performance
   - better windows compatibility
 

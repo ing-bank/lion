@@ -3,7 +3,7 @@
     "searchType": "ast-analyzer",
     "analyzerMeta": {
       "name": "match-imports",
-      "requiredAst": "swc",
+      "requiredAst": "oxc",
       "identifier": "importing-target-project_0.0.2-target-mock_+_exporting-ref-project_1.0.0__1789378150",
       "targetProject": {
         "mainEntry": "./target-src/match-imports/root-level-imports.js",

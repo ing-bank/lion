@@ -10,5 +10,9 @@ export function getAssertionType(node) {
   if (node.assertions) {
     return node.assertions.properties[0].value?.value;
   }
+  // oxc
+  if (node.withClause) {
+    return node.withClause.withEntries[0].value?.name;
+  }
   return undefined;
 }

@@ -1,14 +1,14 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
 
-import { setupAnalyzerTest } from '../../../../test-helpers/setup-analyzer-test.js';
-import { mockProject } from '../../../../test-helpers/mock-project-helpers.js';
-import { swcTraverse } from '../../../../src/program/utils/swc-traverse.js';
-import { AstService } from '../../../../src/program/core/AstService.js';
+import { setupAnalyzerTest } from '../../../test-helpers/setup-analyzer-test.js';
+import { mockProject } from '../../../test-helpers/mock-project-helpers.js';
+import { oxcTraverse } from '../../../src/program/utils/oxc-traverse.js';
+import { AstService } from '../../../src/program/core/AstService.js';
 import {
   trackDownIdentifier,
   trackDownIdentifierFromScope,
-} from '../../../../src/program/utils/track-down-identifier.js';
+} from '../../../src/program/utils/track-down-identifier.js';
 
 /**
  * @typedef {import('@babel/traverse').NodePath} NodePath
@@ -295,7 +295,7 @@ describe('trackDownIdentifierFromScope', () => {
 
     mockProject(projectFiles, { projectName: 'my-project', projectPath: '/my/project' });
     // const ast = AstService._getBabelAst(projectFiles['./src/declarationOfMyClass.js']);
-    const ast = AstService._getSwcAst(projectFiles['./src/declarationOfMyClass.js']);
+    const ast = await AstService._getOxcAst(projectFiles['./src/declarationOfMyClass.js']);
 
     // Let's say we want to track down 'MyClass' in the code above
     const identifierNameInScope = 'MyClass';
@@ -309,7 +309,7 @@ describe('trackDownIdentifierFromScope', () => {
     //     astPath = path;
     //   },
     // });
-    swcTraverse(ast, {
+    oxcTraverse(ast, {
       ClassDeclaration(path) {
         astPath = path;
       },
@@ -346,7 +346,7 @@ describe('trackDownIdentifierFromScope', () => {
 
     mockProject(projectFiles, { projectName: 'my-project', projectPath: '/my/project' });
     // const ast = AstService._getBabelAst(projectFiles['./imported.js']);
-    const ast = AstService._getSwcAst(projectFiles['./imported.js']);
+    const ast = await AstService._getOxcAst(projectFiles['./imported.js']);
 
     // Let's say we want to track down 'MyClass' in the code above
     const identifierNameInScope = 'MyClass';
@@ -360,7 +360,7 @@ describe('trackDownIdentifierFromScope', () => {
     //     astPath = path;
     //   },
     // });
-    swcTraverse(ast, {
+    oxcTraverse(ast, {
       ImportDeclaration(path) {
         astPath = path;
       },
@@ -394,7 +394,7 @@ describe('trackDownIdentifierFromScope', () => {
 
     mockProject(projectFiles, { projectName: 'my-project', projectPath: '/my/project' });
     // const ast = AstService._getBabelAst(projectFiles['./imported.js']);
-    const ast = AstService._getSwcAst(projectFiles['./imported.js']);
+    const ast = await AstService._getOxcAst(projectFiles['./imported.js']);
 
     // Let's say we want to track down 'MyClass' in the code above
     const identifierNameInScope = 'El1';
@@ -408,7 +408,7 @@ describe('trackDownIdentifierFromScope', () => {
     //     astPath = path;
     //   },
     // });
-    swcTraverse(ast, {
+    oxcTraverse(ast, {
       ClassDeclaration(path) {
         astPath = path;
       },
@@ -425,5 +425,55 @@ describe('trackDownIdentifierFromScope', () => {
       file: './src/classes.js',
       specifier: 'El1',
     });
+  });
+
+  it(`handles edge cases`, async () => {
+    const projectName = 'my-project';
+    const projectPath = '/my/project';
+
+    const targetProject = {
+      path: projectPath,
+      name: projectName,
+      files: [
+        {
+          file: './WolfComp.js',
+          code: `
+    import { LionComp } from 'ref/LionComp.js';
+
+    export class WolfComp extends LionComp {}
+    `,
+        },
+        {
+          file: './node_modules/ref/LionComp.js',
+          code: `export class LionComp extends HTMLElement {};`,
+        },
+      ],
+    };
+
+    mockProject(targetProject, { projectName, projectPath });
+    const ast = await AstService._getOxcAst(targetProject.files[0].code);
+
+    // Let's say we want to track down 'LionComp' in the code above
+    const identifierNameInScope = 'LionComp';
+    const fullCurrentFilePath = '/my/project/WolfComp.js';
+
+    /** @type {NodePath} */
+    let astPath;
+
+    oxcTraverse(ast, {
+      ClassDeclaration(path) {
+        astPath = path;
+      },
+    });
+
+    const rootFile = await trackDownIdentifierFromScope(
+      // @ts-ignore
+      astPath,
+      identifierNameInScope,
+      fullCurrentFilePath,
+      projectPath,
+    );
+
+    expect(rootFile).to.deep.equal({ file: 'ref/LionComp.js', specifier: 'LionComp' });
   });
 });

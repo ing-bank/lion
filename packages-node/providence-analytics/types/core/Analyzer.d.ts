@@ -16,7 +16,7 @@ import {
  */
 export type AnalyzerName = `${'find' | 'match'}-${string}` | '';
 
-export type AnalyzerAst = 'babel' | 'swc-to-babel' | 'swc';
+export type AnalyzerAst = 'babel' | 'swc' | 'oxc';
 
 // TODO: make sure that data structures of JSON output (generated in ReportService)
 // and data structure generated in Analyzer.prototype._finalize match exactly (move logic from ReportSerivce to _finalize)
