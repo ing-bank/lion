@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Command } from 'commander';
 
 export class MockCommand {

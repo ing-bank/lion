@@ -1,9 +1,6 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import sinon from 'sinon';
-import fs from 'fs';
 import { MigrateCli } from '../src/MigrateCli.js';
-import { UpgradeCommandBase } from '../src/commands/UpgradeCommandBase.js';
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

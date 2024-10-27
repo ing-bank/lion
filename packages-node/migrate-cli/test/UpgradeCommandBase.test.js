@@ -1,11 +1,11 @@
 import * as chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import { Command } from 'commander';
 import path from 'path';
 import sinon from 'sinon';
 import fs from 'fs';
 import { _mockable, UpgradeCommandBase } from '../src/commands/UpgradeCommandBase.js';
 import { MigrateCli } from '../src/MigrateCli.js';
-import { Command } from 'commander';
 
 chai.use(chaiAsPromised);
 const { expect } = chai;
@@ -23,10 +23,10 @@ describe('UpgradeCommandBase works as base command', () => {
       let commandAdded = false;
       const program = new Command();
       // @ts-ignore
-      (program.addCommand = () => {
+      program.addCommand = () => {
         commandAdded = true;
-      }),
-        await upgradeCommandBase.setupCommand(program, {});
+      };
+      await upgradeCommandBase.setupCommand(program, {});
       expect(addHelpTextSpy.callCount).to.equal(1);
       expect(setCommandOptionsSpy.callCount).to.equal(1);
       expect(commandAdded).to.be.true;
