@@ -159,6 +159,14 @@ export class UpgradeCommandBase {
     const command = new Command('upgrade');
     this.setCommandOptions(command);
     command.action(async options => {
+      // if config file is provided, first apply this before applying other options
+      if (options.configFile) {
+        if (fs.existsSync(options.configFile)) {
+          cli.options.configFile = options.configFile;
+          await cli.applyConfigFile();
+        }
+        delete options.config;
+      }
       cli.setOptions(options);
       // eslint-disable-next-line no-param-reassign
       cli.activePlugin = this;
@@ -190,6 +198,7 @@ export class UpgradeCommandBase {
         'skips package.json checks and updates. Can be handy for mono repos including docs folders etc.',
       ),
     );
+    command.addOption(new Option('-c, --config-file <config-file>', 'path of a config file'));
   }
 
   addHelpText() {
@@ -254,9 +263,9 @@ export class UpgradeCommandBase {
       return;
     }
 
-    const { task } = this.cli.options;
+    const { task, upgradeTaskUrl } = this.cli.options;
 
-    if (!task) {
+    if (!task && !upgradeTaskUrl) {
       throw new Error(`Please provide a task via -t`);
     }
     await this.setTransformOptions();
