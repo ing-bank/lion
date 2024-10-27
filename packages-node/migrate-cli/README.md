@@ -77,13 +77,20 @@ When this is run, the following things will happen:
 
 #### Configuration
 
-By default, the CLI will look for a `migrate-cli.config.(m)js` in the folder where it is run.
+By default, the CLI will look for a `migrate-cli.config.(m)js` in the folder where it is run. You can also provide a config file using the `-c` option of the `upgrade` command.
 
-| Property | Description |
-| -------- | ----------- |
-| January  | $250        |
-| February | $80         |
-| March    | $420        |
+The most common configurable properties are listed below:
+
+| Property             | Description                                                                      |
+| -------------------- | -------------------------------------------------------------------------------- |
+| `inputDir`           | Root directory of the project to be migrated                                     |
+| `task`               | Upgrade task that should be performed                                            |
+| `jscsOpts`           | Options object passed to `index.js` of the upgrade                               |
+| `upgradesDir`        | URL or string providing the directory where one or more upgrades can be found    |
+| `upgradesConfigHref` | Upgrade specific configuration (defaults to `${upgradesDir}/upgrades.config.js`) |
+| `upgradeTaskUrl`     | Location of a specific upgrade task                                              |
+
+The upgrade command always needs to resolve to a specific task. Therefore, it will always need either a `task` and an `upgradesDir`, or an `upgradesTaskUrl`.
 
 ### Advanced usage
 
