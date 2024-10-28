@@ -90,8 +90,34 @@ The most common configurable properties are listed below:
 | `upgradesConfigHref` | Upgrade specific configuration (defaults to `${upgradesDir}/upgrades.config.js`) |
 | `upgradeTaskUrl`     | Location of a specific upgrade task                                              |
 
-The upgrade command always needs to resolve to a specific task. Therefore, it will always need either a `task` and an `upgradesDir`, or an `upgradesTaskUrl`.
+The upgrade command always needs to resolve to a specific task. Therefore, it will always require either a `task` and an `upgradesDir`, or an `upgradesTaskUrl`.
 
 ### Advanced usage
 
-###
+A user can also implement the CLI in their own project, allowing for more advanced functionality. A user can enhance the CLI in the following ways:
+
+1. By initializing the `MigrateCli` passing an `initOptions` object (allowing for additional commands, changing name and introduction text, etc.);
+2. By extending the `UpgradeCommandBase` class to suit their specific needs.
+
+#### Example of initializing with initial options
+
+An example implementation of (1):
+
+```javascript
+import { MigrateCli } from './MigrateCli.js';
+import path from 'path';
+
+const initOptions = {
+  cliOptions: {
+    upgradesUrl: new URL('./upgrades', import.meta.url), // will look for potential upgrades in this directory
+  },
+  commandsUrls: [new URL('./commands', import.meta.url)], // allows for more (or more specific) commands to be loaded from this directory
+  includeBaseCommands: false, // if true, UpgradeBaseCommand will be included as well as user specified commands
+  cliIntroductionText: `Welcome to lib-foo-migrate CLI 👋\n`,
+  pathToPkgJson: path.resolve(dirname(fileURLToPath(import.meta.url)), '../package.json'), // specify so version can be retrieved
+};
+
+const cli = new MigrateCli(initOptions);
+
+cli.start();
+```
