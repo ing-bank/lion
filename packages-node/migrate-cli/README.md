@@ -39,12 +39,12 @@ The CLI expects migration tasks to be in the following structure:
 Here `index.js` is the entry point to the migration task, and it must have a function with the following signature:
 
 ```javascript
-export async function upgrade(options, workspaceMeta) {
+export async function upgrade(jscsOpts, workspaceMeta) {
   ...
 }
 ```
 
-`options` by default contains minimal information required for running the CLI. More options can be added by enriching the `jscsOpts` object in the CLI configuration.
+`jscsOpts` by default contains minimal information required for running the CLI. More options can be added by enriching the `jscsOpts` object in the CLI configuration.
 
 `workspaceMeta` contains information that is relevant when running the CLI in a monorepo.
 
@@ -60,7 +60,7 @@ export async function executeJsCodeShiftTransforms(
 )
 ```
 
-This function can be called from `index.js` to perform the transformations in `transformsFolder` (`jscodeshift` in the example above) against a codebase found in `inputDir`.
+This function can be called from `index.js` to perform the transformations in `transformsFolder` (`jscodeshift` in the example above) against a codebase found in `inputDir`. By default, this function will also be passed in the `jscsOpts` as `transformFunction`, so that it does not need to be imported.
 
 ### Basic usage
 

@@ -1,7 +1,7 @@
 /* eslint-disable new-cap, no-await-in-loop */
-import { Option, Command } from 'commander';
+import { Command } from 'commander';
 import path, { dirname } from 'path';
-import fs, { existsSync } from 'fs';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 import { mergeDeep } from './cli-helpers/mergeDeep.js';
@@ -112,9 +112,13 @@ export class MigrateCli {
     }
   }
 
-  async applyConfigFile() {
-    if (this.options.configFile) {
-      const configFilePath = path.resolve(this.options.configFile);
+  /**
+   * @param {string?} configFile
+   */
+  async applyConfigFile(configFile) {
+    const _configFile = configFile || this.options.configFile;
+    if (_configFile) {
+      const configFilePath = path.resolve(_configFile);
       const fileOptions = (await import(configFilePath)).default;
       this.setOptions(fileOptions);
     } else {

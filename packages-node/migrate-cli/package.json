@@ -2,27 +2,27 @@
   "name": "migrate-cli",
   "version": "0.1.0",
   "description": "CLI to execute migration with custom transforms",
-  "type": "module",
+  "author": "ing-bank",
   "repository": {
     "type": "git",
     "url": "https://github.com/ing-bank/lion.git",
     "directory": "packages-node/migrate-cli"
   },
-  "bin": {
-    "migrate-cli": "src/cli.js"
-  },
+  "type": "module",
   "exports": {
     ".": "./index.js"
   },
-  "scripts": {
-    "test": "mocha ./**/*.test.js --timeout 8000",
-    "lint": "eslint . && prettier \"**/*.js\" --check --ignore-path .lintignore"
+  "bin": {
+    "migrate-cli": "src/cli.js"
   },
-  "author": "ing-bank",
+  "scripts": {
+    "lint": "eslint . && prettier \"**/*.js\" --check --ignore-path .lintignore",
+    "test": "mocha ./**/*.test.js --timeout 8000"
+  },
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
-    "globby": "^13.2.2",
+    "globby": "^14.0.2",
     "jscodeshift": "^0.13.1",
     "prompts": "^2.4.2"
   },
@@ -32,8 +32,8 @@
   },
   "keywords": [
     "cli",
-    "jscodeshift",
     "codemod",
+    "jscodeshift",
     "migrate"
   ]
 }
