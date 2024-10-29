@@ -12,7 +12,7 @@ import isLocalizeESModule from './isLocalizeESModule.js';
 /**
  * `LocalizeManager` manages your translations (includes loading)
  */
-export class LocalizeManager {
+export class LocalizeManager extends EventTarget {
   // eslint-disable-line no-unused-vars
   constructor({
     autoLoadOnLocaleChange = false,
@@ -20,8 +20,8 @@ export class LocalizeManager {
     showKeyAsFallback = false,
     allowOverridesForExistingNamespaces = false,
   } = {}) {
-    /** @private */
-    this.__delegationTarget = document.createDocumentFragment();
+    super();
+
     /** @protected */
     this._autoLoadOnLocaleChange = !!autoLoadOnLocaleChange;
     /** @protected */
@@ -478,31 +478,6 @@ export class LocalizeManager {
   // eslint-disable-next-line class-methods-use-this
   _getLangFromLocale(locale) {
     return locale.substring(0, 2);
-  }
-
-  /**
-   * @param {string} type
-   * @param {EventListener} listener
-   * @param {...Object} options
-   */
-  addEventListener(type, listener, ...options) {
-    this.__delegationTarget.addEventListener(type, listener, ...options);
-  }
-
-  /**
-   * @param {string} type
-   * @param {EventListener} listener
-   * @param {...Object} options
-   */
-  removeEventListener(type, listener, ...options) {
-    this.__delegationTarget.removeEventListener(type, listener, ...options);
-  }
-
-  /**
-   *  @param {CustomEvent} event
-   */
-  dispatchEvent(event) {
-    this.__delegationTarget.dispatchEvent(event);
   }
 
   /**
