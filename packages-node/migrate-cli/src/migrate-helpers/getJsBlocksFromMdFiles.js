@@ -73,7 +73,7 @@ async function updateJsBlocksMdFiles(blockResultsAllMdFiles, tmpDir) {
     }
   }
   // clean up temp folder
-  await fs.promises.rm(tmpDir, { recursive: true, force: true });
+  await fs.promises.rmdir(tmpDir, { recursive: true });
 }
 
 /**

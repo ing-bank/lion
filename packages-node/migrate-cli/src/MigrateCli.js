@@ -107,7 +107,7 @@ export class MigrateCli {
   }
 
   /**
-   * @param {string?} configFile
+   * @param {string} [configFile]
    */
   async applyConfigFile(configFile) {
     const _configFile = configFile || this.options.configFile;
@@ -165,8 +165,8 @@ export class MigrateCli {
       await this.program.parseAsync(this.config.argv);
     } catch (error) {
       // @ts-ignore
-      console.error(`ERROR: ${error}`);
       if (error.action) {
+        // @ts-ignore
         await error.action();
       }
       throw error;

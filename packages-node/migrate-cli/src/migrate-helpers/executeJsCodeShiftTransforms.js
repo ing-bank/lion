@@ -2,7 +2,7 @@
 import { run as jscodeshift } from 'jscodeshift/src/Runner.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { readdir } from 'fs/promises';
+import fs from 'fs';
 import { globby } from 'globby';
 import { getJsBlocksFromMdFiles } from './getJsBlocksFromMdFiles.js';
 
@@ -160,7 +160,7 @@ export async function executeJsCodeShiftTransforms(
     ok: 0,
   };
 
-  const _transformFiles = await readdir(transformsPath);
+  const _transformFiles = await fs.promises.readdir(transformsPath);
   const transformFiles = jscsOptions.filterTransformFiles
     ? _transformFiles.filter(jscsOptions.filterTransformFiles)
     : _transformFiles;
