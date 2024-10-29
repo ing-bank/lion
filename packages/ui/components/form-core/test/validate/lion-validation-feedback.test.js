@@ -100,7 +100,6 @@ describe('lion-validation-feedback', () => {
     await el.updateComplete;
 
     const validationFeedbackType = el.shadowRoot?.querySelector('.validation-feedback__type');
-    console.log('validationFeedbackType', validationFeedbackType);
     expect(validationFeedbackType?.textContent?.trim()).to.not.equal('Error');
   });
 
