@@ -70,12 +70,6 @@ export class MigrateCli {
       this.setOptions(initOptions.options);
     }
 
-    // const indexOfConfig = this.config.argv.findIndex(opt => opt === '-c' || opt === '--config') + 1;
-    // const configFilePath = indexOfConfig > 0 ? this.config.argv[indexOfConfig] : '';
-    // if (existsSync(configFilePath)) {
-    //   console.log(configFilePath);
-    //   this.options.configFile = configFilePath;
-    // }
     const { name, version } = this.getNameAndVersion();
     this.program.version(initOptions.cliVersion || version, '-v, --version');
     this.program.name = () => name;
