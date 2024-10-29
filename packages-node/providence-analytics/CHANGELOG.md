@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.17.0
+
+### Minor Changes
+
+- 615472c: - use oxc for all analyzers (oxc is way smaller and more performant than swc, let alone babel)
+
+  - make swcTraverse compatible with oxc
+  - expand scope functionality of swcTraverse
+
+  BREAKING:
+
+  - make parsers peerDependencies (babel or swc should be loaded by external analyzers)
+  - rename `swcTraverse` to `oxcTraverse`
+
+### Patch Changes
+
+- 6f3137c: fix normalization of native glob dirent.parentPath for optimisedGlob
+
 ## 0.16.8
 
 ### Patch Changes
