@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.8.1
+
+### Patch Changes
+
+- 2d4fb0e: [form-core] make \_setFocusOnFirstErroneousFormElement work for checkbox-group, radio-group and nested fieldsets
+- 7baecb5: [localize] make LocalizeManager ssr-compatible
+
 ## 0.8.0
 
 ### Minor Changes
