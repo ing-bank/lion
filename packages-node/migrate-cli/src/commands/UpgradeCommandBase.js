@@ -215,10 +215,6 @@ export class UpgradeCommandBase {
     );
   }
 
-  /**
-   * @returns
-   */
-  // eslint-disable-next-line no-unused-vars
   async setTransformOptions() {
     const { upgradeTaskUrl, upgradesDir } = /** @type {import('../MigrateCli.js').MigrateCli} */ (
       this.cli
