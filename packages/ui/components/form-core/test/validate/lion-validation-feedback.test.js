@@ -91,6 +91,19 @@ describe('lion-validation-feedback', () => {
     expect(validationFeedbackType?.textContent?.trim()).to.equal('Info');
   });
 
+  it('it does not share the type if there is no message', async () => {
+    const el = /** @type {LionValidationFeedback} */ (
+      await fixture(html`<lion-validation-feedback></lion-validation-feedback>`)
+    );
+
+    el.feedbackData = [{ message: '', type: 'error', validator: new AlwaysInvalid() }];
+    await el.updateComplete;
+
+    const validationFeedbackType = el.shadowRoot?.querySelector('.validation-feedback__type');
+    console.log('validationFeedbackType', validationFeedbackType);
+    expect(validationFeedbackType?.textContent?.trim()).to.not.equal('Error');
+  });
+
   describe('accessibility', () => {
     it('passes a11y audit when with a message', async () => {
       const el = /** @type {LionValidationFeedback} */ (
