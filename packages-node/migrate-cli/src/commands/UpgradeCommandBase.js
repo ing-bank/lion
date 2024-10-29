@@ -266,6 +266,7 @@ export class UpgradeCommandBase {
     if (!task && !upgradeTaskUrl) {
       throw new Error(`Please provide a task via -t`);
     }
+    const taskString = /** @type {string} */ (task);
     await this.setTransformOptions();
     const { upgradesDir } = this.cli.options;
     const upgradesDirUrl = _mockable.getUpgradesDirUrl(upgradesDir);
@@ -274,16 +275,16 @@ export class UpgradeCommandBase {
 
     await this.setUpgradesConfig();
 
-    await this.getTaskDetails(task);
+    await this.getTaskDetails(taskString);
 
     if (fs.existsSync(this.cli.options.upgradeTaskUrl)) {
       await _mockable.runUpgradeTask({
         upgradeTaskUrl: this.cli.options.upgradeTaskUrl,
         options: this.cli.options,
-        task,
+        task: taskString,
       });
-    } else if (this.cli.options.allowedCompositeTasks?.get(task) && upgradesDirUrl) {
-      const upgradeTasks = this.cli.options.allowedCompositeTasks.get(task) || [];
+    } else if (this.cli.options.allowedCompositeTasks?.get(taskString) && upgradesDirUrl) {
+      const upgradeTasks = this.cli.options.allowedCompositeTasks.get(taskString) || [];
       const availableTasks = fs.readdirSync(new URL(upgradesDirUrl));
       let continueCombined = true;
       upgradeTasks.forEach(partialTask => {

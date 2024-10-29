@@ -17,7 +17,8 @@
   },
   "scripts": {
     "lint": "eslint . && prettier \"**/*.js\" --check --ignore-path .lintignore",
-    "test": "mocha ./**/*.test.js --timeout 8000"
+    "test": "mocha ./**/*.test.js --timeout 8000",
+    "types": "wireit"
   },
   "dependencies": {
     "chalk": "^5.3.0",
@@ -35,5 +36,19 @@
     "codemod",
     "jscodeshift",
     "migrate"
-  ]
+  ],
+  "wireit": {
+    "types": {
+      "command": "tsc --build --pretty",
+      "files": [
+        "src",
+        "test-node",
+        "types",
+        "tsconfig.json"
+      ],
+      "output": [
+        "dist-types/**"
+      ]
+    }
+  }
 }
