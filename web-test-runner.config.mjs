@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { playwrightLauncher } from '@web/test-runner-playwright';
+import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 
 const devMode = process.argv.includes('--dev-mode');
 
@@ -60,4 +61,5 @@ export default {
     name: pkg.name,
     files: `${pkg.path}/**/*.test.js`,
   })),
+  plugins: [litSsrPlugin()],
 };

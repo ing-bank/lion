@@ -13,7 +13,7 @@ import isLocalizeESModule from './isLocalizeESModule.js';
 /**
  * We can't access `window.document.documentElement` on the server,
  * so we write to and read from this object on the server.
- * N.B.: for now, the goal is to make LocalizeManager not crash on the server, and localizaion happens on the client.
+ * N.B.: for now, the goal is to make LocalizeManager not crash on the server, and let localization happen on the client.
  * In the future, we might want to look into more advanced SSR of localized messages
  */
 const documentElement = isServer
