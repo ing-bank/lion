@@ -57,6 +57,13 @@ const SyncUpdatableMixinImplementation = superclass =>
     }
 
     /**
+     * // TODO: check if this is a false positive or if we can improve
+     * @configure ReactiveElement
+     */
+    // @ts-expect-error
+    static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
+
+    /**
      * Makes the propertyAccessor.`hasChanged` compatible in synchronous updates
      * @param {string} name
      * @param {*} newValue

@@ -94,6 +94,12 @@ export class LionProgressIndicator extends LocalizeMixin(LitElement) {
   }
 
   /**
+   * // TODO: check if this is a false positive or if we can improve
+   * @configure ReactiveElement
+   */
+  static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
+
+  /**
    * In case of a determinate progress-indicator it returns the progress percentage
    * based on value, min & max.
    * Could be used for styling inside the _graphicTemplate

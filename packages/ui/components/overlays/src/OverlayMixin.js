@@ -189,6 +189,13 @@ export const OverlayMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * // TODO: check if this is a false positive or if we can improve
+     * @configure ReactiveElement
+     */
+    // @ts-expect-error
+    static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
+
     get _overlayInvokerNode() {
       return /** @type {HTMLElement | undefined} */ (
         Array.from(this.children).find(child => child.slot === 'invoker')

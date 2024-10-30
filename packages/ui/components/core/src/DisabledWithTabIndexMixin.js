@@ -50,6 +50,13 @@ const DisabledWithTabIndexMixinImplementation = superclass =>
     }
 
     /**
+     * // TODO: check if this is a false positive or if we can improve
+     * @configure ReactiveElement
+     */
+    // @ts-expect-error
+    static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
+
+    /**
      * @param {number} value
      * @private
      */
