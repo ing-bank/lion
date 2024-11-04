@@ -10,13 +10,13 @@ import { SyncUpdatableMixin } from '../utils/SyncUpdatableMixin.js';
 import { LionValidationFeedback } from './LionValidationFeedback.js';
 import { ResultValidator as MetaValidator } from './ResultValidator.js';
 import { Unparseable } from './Unparseable.js';
-import { Validator } from './Validator.js';
 import { Required } from './validators/Required.js';
 import { FormControlMixin } from '../FormControlMixin.js';
 
 // TODO: [v1] make all @readOnly => @readonly and actually make sure those values cannot be set
 
 /**
+ * @typedef {import('./Validator.js').Validator} Validator
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidateMixin} ValidateMixin
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidationType} ValidationType
  * @typedef {import('../../types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHost
@@ -460,7 +460,9 @@ export const ValidateMixinImplementation = superclass =>
 
       if (isEmpty) {
         const hasSingleValue = !(/** @type {*  & ValidateHost} */ (this)._isFormOrFieldset);
-        const requiredValidator = this._allValidators.find(v => v instanceof Required);
+        const requiredValidator = this._allValidators.find(
+          v => /** @type {typeof Validator} */ (v.constructor)?.validatorName === 'Required',
+        );
         if (requiredValidator) {
           this.__syncValidationResult = [{ validator: requiredValidator, outcome: true }];
         }
@@ -685,7 +687,7 @@ export const ValidateMixinImplementation = superclass =>
       }
 
       for (const validatorToSetup of this._allValidators) {
-        if (!(validatorToSetup instanceof Validator)) {
+        if (validatorToSetup.type === undefined) {
           // throws in constructor are not visible to end user so we do both
           const errorType = Array.isArray(validatorToSetup) ? 'array' : typeof validatorToSetup;
           const errorMessage = `Validators array only accepts class instances of Validator. Type "${errorType}" found. This may be caused by having multiple installations of "@lion/ui/form-core.js".`;
