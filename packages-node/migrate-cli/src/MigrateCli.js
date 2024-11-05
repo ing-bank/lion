@@ -1,4 +1,4 @@
-/* eslint-disable new-cap, no-await-in-loop */
+/* eslint-disable new-cap, no-await-in-loop, no-console */
 import { Command } from 'commander';
 import path, { dirname } from 'path';
 import fs from 'fs';
