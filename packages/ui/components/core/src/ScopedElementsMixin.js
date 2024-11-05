@@ -1,6 +1,31 @@
-/*
+import { dedupeMixin } from '@open-wc/dedupe-mixin';
+import { adoptStyles, isServer } from 'lit';
+import { ScopedElementsMixin as OpenWcLitScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+
+/**
+ * @typedef {import('../../form-core/types/validate/ValidateMixinTypes.js').ScopedElementsMap} ScopedElementsMap
+ * @typedef {import('@open-wc/dedupe-mixin').Constructor<ScopedElementsHost>} ScopedElementsHostConstructor
+ * @typedef {import('@open-wc/scoped-elements/lit-element.js').ScopedElementsHost} ScopedElementsHost
+ * @typedef {import('./types.js').ScopedElementsHostV2Constructor} ScopedElementsHostV2Constructor
+ * @typedef {import('@open-wc/dedupe-mixin').Constructor<LitElement>} LitElementConstructor
+ * @typedef {import('lit').CSSResultOrNative} CSSResultOrNative
+ * @typedef {typeof import('lit').LitElement} TypeofLitElement
+ * @typedef {import('lit').LitElement} LitElement
+ */
+
+export function supportsScopedRegistry() {
+  return Boolean(
+    // @ts-expect-error
+    globalThis.ShadowRoot?.prototype.createElement && globalThis.ShadowRoot?.prototype.importNode,
+  );
+}
+
+/**
  * This file is combination of '@open-wc/scoped-elements@v3/lit-element.js' and '@open-wc/scoped-elements@v3/html-element.js'.
  * Then on top of those, some code from '@open-wc/scoped-elements@v2' is brought to to make polyfill not mandatory.
+ * This can be a great help for ssr scenarios, allowing elements to be consumed without needing knowledge about internall
+ * consumption.
+ * (N.B. at this point in time, this is limited to the scenario where there's one version of lion on the page).
  *
  * ## Considerations
  * In its current state, the [scoped-custom-element-registry](https://github.com/webcomponents/polyfills/tree/master/packages/scoped-custom-element-registry) draft spec has uncertainties:
@@ -21,29 +46,7 @@
  * This can be beneficial for performance, bundle size, ease of use and SSR capabilities.
  *
  * We will keep a close eye on developments in spec and polyfill, and will re-evaluate the scoped-elements approach when the time is right.
- */
-
-import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { adoptStyles } from 'lit';
-import { ScopedElementsMixin as OpenWcLitScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
-
-/**
- * @typedef {import('@open-wc/scoped-elements/lit-element.js').ScopedElementsHost} ScopedElementsHost
- * @typedef {import('../../form-core/types/validate/ValidateMixinTypes.js').ScopedElementsMap} ScopedElementsMap
- * @typedef {import('lit').CSSResultOrNative} CSSResultOrNative
- * @typedef {import('lit').LitElement} LitElement
- * @typedef {typeof import('lit').LitElement} TypeofLitElement
- * @typedef {import('@open-wc/dedupe-mixin').Constructor<LitElement>} LitElementConstructor
- * @typedef {import('@open-wc/dedupe-mixin').Constructor<ScopedElementsHost>} ScopedElementsHostConstructor
- * @typedef {import('./types.js').ScopedElementsHostV2Constructor} ScopedElementsHostV2Constructor
- */
-
-const supportsScopedRegistry = Boolean(
-  // @ts-expect-error
-  ShadowRoot.prototype.createElement && ShadowRoot.prototype.importNode,
-);
-
-/**
+ *
  * @template {LitElementConstructor} T
  * @param {T} superclass
  * @return {T & ScopedElementsHostConstructor & ScopedElementsHostV2Constructor}
@@ -51,8 +54,29 @@ const supportsScopedRegistry = Boolean(
 const ScopedElementsMixinImplementation = superclass =>
   /** @type {ScopedElementsHost} */
   class ScopedElementsHost extends OpenWcLitScopedElementsMixin(superclass) {
+    constructor() {
+      super();
+
+      if (isServer) {
+        // We are on the server: this means we can't support scoped registries...
+        // So we must treat it like the "no-polyfill scenario", that registers scoped
+        // elements used for internal composition on the global registry.
+        // On the client that would happen in connectedCallback, so we do it here...
+        // N.B. keep in mind that this does not work when we have multiple element (versions)
+        // with the same name. (like multiple versions of lion extension layers).
+        // If we want to support this, we must re-introduce the shim-behavior of ScopedElementsMixin v1
+        // to make this work with ssr as well.
+        // @ts-expect-error
+        this.registry = customElements;
+        // @ts-expect-error
+        for (const [name, klass] of Object.entries(this.constructor.scopedElements || {})) {
+          this.defineScopedElement(name, klass);
+        }
+      }
+    }
+
     createScopedElement(/** @type {string} */ tagName) {
-      const root = supportsScopedRegistry ? this.shadowRoot : document;
+      const root = supportsScopedRegistry() ? this.shadowRoot : document;
       // @ts-expect-error polyfill to support createElement on shadowRoot is loaded
       return root.createElement(tagName);
     }
@@ -61,12 +85,12 @@ const ScopedElementsMixinImplementation = superclass =>
      * Defines a scoped element.
      *
      * @param {string} tagName
-     * @param {typeof HTMLElement} klass
+     * @param {typeof HTMLElement} classToBeRegistered
      */
-    defineScopedElement(tagName, klass) {
-      // @ts-ignore
+    defineScopedElement(tagName, classToBeRegistered) {
       const registeredClass = this.registry.get(tagName);
-      if (registeredClass && supportsScopedRegistry === false && registeredClass !== klass) {
+      const isAlreadyRegistered = registeredClass && registeredClass === classToBeRegistered;
+      if (isAlreadyRegistered && !supportsScopedRegistry()) {
         // eslint-disable-next-line no-console
         console.error(
           [
@@ -80,10 +104,8 @@ const ScopedElementsMixinImplementation = superclass =>
         );
       }
       if (!registeredClass) {
-        // @ts-ignore
-        return this.registry.define(tagName, klass);
+        return this.registry.define(tagName, classToBeRegistered);
       }
-      // @ts-ignore
       return this.registry.get(tagName);
     }
 
@@ -92,12 +114,12 @@ const ScopedElementsMixinImplementation = superclass =>
      * @returns {ShadowRoot}
      */
     attachShadow(options) {
-      // @ts-ignore
+      // @ts-expect-error
       const { scopedElements } = /** @type {typeof ScopedElementsHost} */ (this.constructor);
 
       const shouldCreateRegistry =
         !this.registry ||
-        // @ts-ignore
+        // @ts-expect-error
         (this.registry === this.constructor.__registry &&
           !Object.prototype.hasOwnProperty.call(this.constructor, '__registry'));
 
@@ -108,8 +130,7 @@ const ScopedElementsMixinImplementation = superclass =>
        * This is important specifically for superclasses/inheritance
        */
       if (shouldCreateRegistry) {
-        // @ts-ignore
-        this.registry = supportsScopedRegistry ? new CustomElementRegistry() : customElements;
+        this.registry = supportsScopedRegistry() ? new CustomElementRegistry() : customElements;
         for (const [tagName, klass] of Object.entries(scopedElements ?? {})) {
           this.defineScopedElement(tagName, klass);
         }
@@ -131,7 +152,7 @@ const ScopedElementsMixinImplementation = superclass =>
       );
 
       const createdRoot = this.attachShadow(shadowRootOptions);
-      if (supportsScopedRegistry) {
+      if (supportsScopedRegistry()) {
         // @ts-expect-error
         this.renderOptions.creationScope = createdRoot;
       }

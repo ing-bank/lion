@@ -3,7 +3,7 @@
     "searchType": "ast-analyzer",
     "analyzerMeta": {
       "name": "find-classes",
-      "requiredAst": "babel",
+      "requiredAst": "oxc",
       "identifier": "importing-target-project_0.0.2-target-mock__-1503180842",
       "targetProject": {
         "mainEntry": "./target-src/match-imports/root-level-imports.js",

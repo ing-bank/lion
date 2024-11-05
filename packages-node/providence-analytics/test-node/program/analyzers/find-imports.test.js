@@ -87,7 +87,7 @@ describe('Analyzer "find-imports"', async () => {
       expect(firstEntry.result[0].importSpecifiers[0]).to.equal('[*]');
     });
 
-    describe('Reexports', () => {
+    describe('Re-exports', () => {
       it(`supports [export { x } from 'imported/source'] (re-exported named specifiers)`, async () => {
         mockProject([`export { x } from 'imported/source'`]);
         const queryResults = await providence(findImportsQueryConfig, _providenceCfg);

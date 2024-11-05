@@ -7,7 +7,7 @@ tags: javascript, documentation, demos
 cover_image: https://miro.medium.com/max/2000/1*NZ6tdtJHHJjxtPmIFxWpGw.jpeg
 ---
 
-If you extend [Lion](https://lion-web.netlify.app/) components, you don't only want to reuse the components, but you probably want to reuse the documentation (Storybook demos) as well. Wouldn't it be nice to just take it all from lion, but replace it with your own design system extension, so you don't have the extra maintenance of essentially copying the docs from `Lion` for your own design system implementation?
+If you extend [Lion](https://lion.js.org/) components, you don't only want to reuse the components, but you probably want to reuse the documentation (Storybook demos) as well. Wouldn't it be nice to just take it all from lion, but replace it with your own design system extension, so you don't have the extra maintenance of essentially copying the docs from `Lion` for your own design system implementation?
 
 In this blog we will explain how `Lion` supports this use case, and allows you to extend not just the components, but also the documentation.
 
@@ -67,7 +67,7 @@ This step alone should already give you the `LionTabs` docs inside your own Stor
 
 Potentially the hardest part is to analyse your extension `LeaTabs`, and to figure out how we should transform the import paths for `LionTabs` to new paths to your `LeaTabs`.
 
-To do this we make use of [Providence](https://lion-web.netlify.app/?path=/docs/tools-providence-main--run-providence). This tool has a command that creates a full map of all the import paths of a reference project (`Lion`) and can replace them with the correct paths of a target project (`Lea`).
+To do this we make use of [Providence](https://lion.js.org/?path=/docs/tools-providence-main--run-providence). This tool has a command that creates a full map of all the import paths of a reference project (`Lion`) and can replace them with the correct paths of a target project (`Lea`).
 
 So lets install it:
 
@@ -87,7 +87,7 @@ The `--prefix-from` and `--prefix-to` are the prefixes of the project you extend
 
 If you know you only use a single component from lion, you can reduce the time the tool needs for analysis, by specifying this package `-r 'node_modules/@lion/tabs'`.
 
-Running the script will create a `providence-extend-docs-data.json` file, with all from/to information. You can change the name / location of the output file, refer to [Providence Documentation](https://lion-web.netlify.app/?path=/docs/tools-providence-main--run-providence) for this.
+Running the script will create a `providence-extend-docs-data.json` file, with all from/to information. You can change the name / location of the output file, refer to [Providence Documentation](https://lion.js.org/?path=/docs/tools-providence-main--run-providence) for this.
 
 #### Running it automatically when upgrading lion dependency
 
@@ -104,7 +104,7 @@ Inside ING, our design system also makes use of this providence tool to create t
 
 Now that we have a JSON file with all the information we need to know about to replace import paths and tagnames inside templates, we can start transforming the `LionTabs` documentation to `LeaTabs` documentation.
 
-For this, we created a `babel-plugin` called [babel-plugin-extend-docs](https://lion-web.netlify.app/?path=/docs/tools-babelpluginextenddocs--page).
+For this, we created a `babel-plugin` called [babel-plugin-extend-docs](https://lion.js.org/?path=/docs/tools-babelpluginextenddocs--page).
 
 This will analyse the JavaScript script and story content inside the markdown files, which uses [MDJS](https://open-wc.org/mdjs/) syntax, and transform it on the fly in `es-dev-server`, as well as on rollup build for production.
 
@@ -165,7 +165,7 @@ In some cases you don't want to show all examples of how to use a component. Som
 
 In our example, we will show you have to remove the `Rationale` section that you would normally inherit from the `Lion` documentation.
 
-For this step we make use of a remark plugin for the MD content, similar to how you would use a babel plugin for JS content. It is called [Remark extend](https://lion-web.netlify.app/?path=/docs/tools-remark-extend--page).
+For this step we make use of a remark plugin for the MD content, similar to how you would use a babel plugin for JS content. It is called [Remark extend](https://lion.js.org/?path=/docs/tools-remark-extend--page).
 It will let you add, remove or replace sections or specific words.
 
 First of all we need to add the plugin to the `.storybook/main.js`:
@@ -257,7 +257,7 @@ Or you can add an extra paragraph below the content. Create a fenced codeblock:
 ::removeMdAfter(':scope:last-child')
 ```
 
-> See [Remark extend](https://lion-web.netlify.app/?path=/docs/tools-remark-extend--page) for more information
+> See [Remark extend](https://lion.js.org/?path=/docs/tools-remark-extend--page) for more information
 
 ### Lea Tabs Special Feature
 

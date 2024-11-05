@@ -1,9 +1,9 @@
 import path from 'path';
 
-import babelTraverse from '@babel/traverse';
-import t from '@babel/types';
+// import babelTraverse from '@babel/traverse';
+import { oxcTraverse } from '../utils/oxc-traverse.js';
 
-import { trackDownIdentifierFromScope } from '../utils/track-down-identifier--legacy.js';
+import { trackDownIdentifierFromScope } from '../utils/track-down-identifier.js';
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
@@ -40,27 +40,29 @@ async function trackdownRoot(transformedEntry, relativePath, projectPath) {
 
 /**
  * Finds import specifiers and sources
- * @param {File} babelAst
+ * @param {File} oxcAst
  */
-function findCustomElementsPerAstFile(babelAst) {
+function findCustomElementsPerAstFile(oxcAst) {
   const definitions = [];
-  babelTraverse.default(babelAst, {
+  oxcTraverse(oxcAst, {
     CallExpression(astPath) {
       let found = false;
       // Doing it like this we detect 'customElements.define()',
       // but also 'window.customElements.define()'
       astPath.traverse({
-        MemberExpression(memberPath) {
-          if (memberPath.parentPath !== astPath) {
+        // MemberExpression in babel
+        StaticMemberExpression(memberPath) {
+          if (memberPath.node !== astPath.node.callee) {
             return;
           }
+
           const { node } = memberPath;
+
           if (node.object.name === 'customElements' && node.property.name === 'define') {
             found = true;
           }
           if (
-            node.object.object &&
-            node.object.object.name === 'window' &&
+            node.object.object?.name === 'window' &&
             node.object.property.name === 'customElements' &&
             node.property.name === 'define'
           ) {
@@ -72,7 +74,7 @@ function findCustomElementsPerAstFile(babelAst) {
         let tagName;
         let constructorIdentifier;
 
-        if (t.isLiteral(astPath.node.arguments[0])) {
+        if (astPath.node.arguments[0].type === 'StringLiteral') {
           tagName = astPath.node.arguments[0].value;
         } else {
           // No Literal found. For now, we only mark them as '[variable]'
@@ -95,8 +97,8 @@ export default class FindCustomelementsAnalyzer extends Analyzer {
   /** @type {AnalyzerName} */
   static analyzerName = 'find-customelements';
 
-  /** @type {'babel'|'swc-to-babel'} */
-  static requiredAst = 'swc-to-babel';
+  /** @type {AnalyzerAst} */
+  static requiredAst = 'oxc';
 
   /**
    * Finds export specifiers and sources

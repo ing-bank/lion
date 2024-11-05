@@ -1,13 +1,14 @@
 /**
- * @typedef {import('@swc/core').Module} SwcAstModule
- * @typedef {import('@swc/core').Node} SwcNode
+ * @typedef {import('../../../types/index.js').SwcTraversalContext} SwcTraversalContext
  * @typedef {import('@swc/core').VariableDeclarator} SwcVariableDeclarator
  * @typedef {import('@swc/core').Identifier} SwcIdentifierNode
+ * @typedef {import('@swc/core').Module} SwcAstModule
+ * @typedef {import('@swc/core').Node} SwcNode
  * @typedef {import('../../../types/index.js').SwcPath} SwcPath
  * @typedef {import('../../../types/index.js').SwcScope} SwcScope
  * @typedef {import('../../../types/index.js').SwcVisitor} SwcVisitor
  * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
- * @typedef {import('../../../types/index.js').SwcTraversalContext} SwcTraversalContext
+ * @typedef {import('oxc-parser').ParseResult} OxcNode
  */
 
 /**
@@ -25,6 +26,42 @@ const fnTypes = [
 ];
 
 const nonBlockParentTypes = [...fnTypes, 'SwitchStatement', 'ClassDeclaration'];
+
+/**
+ * @param {SwcNode|OxcNode} node
+ */
+export function nameOf(node) {
+  // @ts-expect-error
+  return node.value || node.name;
+}
+
+/**
+ * @param {SwcNode|OxcNode} node
+ */
+export function importedOf(node) {
+  // @ts-expect-error
+  // babel/oxc vs swc
+  return node?.imported || node?.orig || node?.local;
+}
+
+/**
+ * @param {SwcNode|OxcNode} node
+ */
+export function isProperty(node) {
+  if (!node) return false;
+
+  switch (node.type) {
+    case 'ObjectProperty':
+    case 'ClassProperty':
+    case 'ClassAccessorProperty':
+    case 'ClassPrivateProperty':
+      break;
+    default:
+      return false;
+  }
+
+  return false;
+}
 
 /**
  * @param {SwcPath} swcPath
@@ -48,6 +85,15 @@ function getNewScope(swcPath, currentScope, traversalContext) {
       parentScope: currentScope,
       path: swcPath,
       bindings: {},
+      getBinding(identifierName) {
+        let parentScope = currentScope;
+        let foundBinding;
+        while (!foundBinding && parentScope) {
+          foundBinding = parentScope.bindings[identifierName];
+          parentScope = parentScope.parentScope;
+        }
+        return foundBinding;
+      },
       _pendingRefsWithoutBinding: [],
       _isIsolatedBlockStatement: isIsolatedBlockStatement,
     };
@@ -83,7 +129,7 @@ function createSwcPath(node, parent, stop, scope) {
       const swcPathForNode = getPathFromNode(node[id]);
       if (node[id] && !swcPathForNode) {
         // throw new Error(
-        //   `[swcTraverse]: Use {needsAdvancedPaths: true} to find path for node: ${node[name]}`,
+        //   `[oxcTraverse]: Use {needsAdvancedPaths: true} to find path for node: ${node[name]}`,
         // );
         // TODO: "pre-traverse" the missing path parts instead
       }
@@ -91,6 +137,10 @@ function createSwcPath(node, parent, stop, scope) {
     },
     get type() {
       return node.type;
+    },
+    traverse(visitor) {
+      // eslint-disable-next-line no-use-before-define
+      return oxcTraverse(node, visitor);
     },
   };
   swcPathCache.set(node, swcPath);
@@ -103,19 +153,18 @@ function createSwcPath(node, parent, stop, scope) {
  * - an import specifier (like "import { a } from 'b'")?
  * Handy to know if the parents of Identifiers mark a binding
  * @param {SwcNode} parent
- * @param {string} identifierValue
+ * @param {string} identifierName
  */
-function isBindingNode(parent, identifierValue) {
-  if (parent.type === 'VariableDeclarator') {
+function isBindingNode(parent, identifierName) {
+  if (['VariableDeclarator', 'ClassDeclaration'].includes(parent.type)) {
     // @ts-expect-error
-    return parent.id.value === identifierValue;
+    return nameOf(parent.id) === identifierName;
   }
   return [
-    'ClassDeclaration',
-    'FunctionDeclaration',
     'ArrowFunctionExpression',
-    'ImportSpecifier',
     'ImportDefaultSpecifier',
+    'FunctionDeclaration',
+    'ImportSpecifier',
   ].includes(parent.type);
 }
 
@@ -141,15 +190,13 @@ function isBindingRefNode(parent) {
 function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
   const { node, parent, scope, parentPath } = swcPathForIdentifier;
 
-  if (node.type !== 'Identifier') {
-    return;
-  }
+  if (node.type !== 'Identifier') return;
 
   // const parentPath = getPathFromNode(parent);
-  if (isBindingNode(parent, node.value)) {
+  if (isBindingNode(parent, nameOf(node))) {
     /** @type {SwcBinding} */
     const binding = {
-      identifier: parent,
+      identifier: parent?.id || parent?.identifier,
       // kind: 'var',
       refs: [],
       path: swcPathForIdentifier.parentPath,
@@ -170,19 +217,20 @@ function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
         1,
       );
     }
-    const idName = node.value || node.local?.value || node.orig?.value;
+    const idName = nameOf(node) || nameOf(node.local) || nameOf(node.orig || node.imported);
+
     // eslint-disable-next-line no-param-reassign
     scopeBindingBelongsTo.bindings[idName] = binding;
 
     // Align with Babel... => in example `class Q {}`, Q has binding to root scope and ClassDeclaration scope
-    if (parent.type === 'ClassDeclaration') {
+    if (parent.type === 'ClassDeclaration' && (parent.id || parent.identifier) === node) {
       scope.bindings[idName] = binding;
     }
   }
   // In other cases, we are dealing with a reference that must be bound to a binding
   else if (isBindingRefNode(parent)) {
     // eslint-disable-next-line no-prototype-builtins
-    const binding = scope.bindings.hasOwnProperty(node.value) && scope.bindings[node.value];
+    const binding = scope.bindings.hasOwnProperty(nameOf(node)) && scope.bindings[nameOf(node)];
     if (binding) {
       binding.refs.push(parentPath);
     } else {
@@ -200,7 +248,7 @@ function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
  * @returns {boolean}
  */
 function isRootNode(node) {
-  return node.type === 'Module' || node.type === 'Script';
+  return node.type === 'Program' || node.type === 'Module' || node.type === 'Script';
 }
 
 /**
@@ -260,12 +308,12 @@ function visit(swcPath, visitor, traversalContext) {
 
 /**
  * Simple traversal for swc ast.
- * @param {SwcAstModule} swcAst
+ * @param {SwcAstModule|SwcNode} oxcAst
  * @param {SwcVisitor} visitor
  * @param {object} config
  * @param {boolean} [config.needsAdvancedPaths] needs a full traversal before starting the visitor, which is less performant. Only enable when path.get() is used
  */
-export function swcTraverse(swcAst, visitor, { needsAdvancedPaths = false } = {}) {
+export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}) {
   /**
    * For performance, the author of a visitor can call this to stop further traversal
    */
@@ -344,15 +392,18 @@ export function swcTraverse(swcAst, visitor, { needsAdvancedPaths = false } = {}
     id: traversalContext.scopeId,
     bindings: {},
     path: null,
+    getBinding(/** @type {string} */ identifierName) {
+      return initialScope.bindings[identifierName];
+    },
     _pendingRefsWithoutBinding: [],
     _isIsolatedBlockStatement: false,
   };
   if (needsAdvancedPaths) {
     // Do one full traversal to prepare advanced path functionality like path.get() and path.scope.bindings
     // TODO: improve with on the fly, partial tree traversal for best performance
-    prepareTree(swcAst, null, initialScope, traversalContext);
+    prepareTree(oxcAst, null, initialScope, traversalContext);
   }
-  visitTree(swcAst, null, initialScope, { hasPreparedTree: needsAdvancedPaths }, traversalContext);
+  visitTree(oxcAst, null, initialScope, { hasPreparedTree: needsAdvancedPaths }, traversalContext);
   // @ts-expect-error
   traversalContext.visitOnExitFns.reverse().forEach(fn => fn());
 }

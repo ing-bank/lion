@@ -370,6 +370,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   /**
+   * // TODO: check if this is a false positive or if we can improve
+   * @configure ReactiveElement
+   */
+  static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
+
+  /**
    * @private
    */
   __calculateInitialCentralDate() {

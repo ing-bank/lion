@@ -1,10 +1,9 @@
 /* eslint-disable no-shadow, no-param-reassign */
 import path from 'path';
 
-import babelTraverse from '@babel/traverse';
-import t from '@babel/types';
+import { oxcTraverse, isProperty } from '../utils/oxc-traverse.js';
 
-import { trackDownIdentifierFromScope } from '../utils/track-down-identifier--legacy.js';
+import { trackDownIdentifierFromScope } from '../utils/track-down-identifier.js';
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
@@ -16,6 +15,7 @@ import { Analyzer } from '../core/Analyzer.js';
  * @typedef {import('../../../types/index.js').FindClassesAnalyzerOutputFile} FindClassesAnalyzerOutputFile
  * @typedef {import('../../../types/index.js').FindClassesAnalyzerEntry} FindClassesAnalyzerEntry
  * @typedef {import('../../../types/index.js').FindClassesConfig} FindClassesConfig
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  */
 
 /**
@@ -132,55 +132,58 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
       methods: [],
     };
 
-    astPath.traverse({
-      ClassMethod(astPath) {
-        // if (isBlacklisted(astPath)) {
-        //   return;
-        // }
-        if (isStaticProperties(astPath)) {
-          let hasFoundTopLvlObjExpr = false;
-          astPath.traverse({
-            ObjectExpression(astPath) {
-              if (hasFoundTopLvlObjExpr) return;
-              hasFoundTopLvlObjExpr = true;
-              astPath.node.properties.forEach(objectProperty => {
-                if (!t.isProperty(objectProperty)) {
-                  // we can also have a SpreadElement
-                  return;
-                }
-                const propRes = {};
-                const { name } = objectProperty.key;
-                propRes.name = name;
-                propRes.accessType = computeAccessType(name);
-                propRes.kind = [...(propRes.kind || []), objectProperty.kind];
-                classRes.members.props.push(propRes);
-              });
-            },
-          });
-          return;
+    const handleMethodDefinitionOrClassMethod = astPath => {
+      // if (isBlacklisted(astPath)) {
+      //   return;
+      // }
+      if (isStaticProperties(astPath)) {
+        let hasFoundTopLvlObjExpr = false;
+        astPath.traverse({
+          ObjectExpression(astPath) {
+            if (hasFoundTopLvlObjExpr) return;
+            hasFoundTopLvlObjExpr = true;
+            astPath.node.properties.forEach(objectProperty => {
+              if (!isProperty(objectProperty)) {
+                // we can also have a SpreadElement
+                return;
+              }
+              const propRes = {};
+              const { name } = objectProperty.key;
+              propRes.name = name;
+              propRes.accessType = computeAccessType(name);
+              propRes.kind = [...(propRes.kind || []), objectProperty.kind];
+              classRes.members.props.push(propRes);
+            });
+          },
+        });
+        return;
+      }
+
+      const methodRes = {};
+      const { name } = astPath.node.key;
+      methodRes.name = name;
+      methodRes.accessType = computeAccessType(name);
+
+      if (astPath.node.kind === 'set' || astPath.node.kind === 'get') {
+        if (astPath.node.static) {
+          methodRes.static = true;
         }
-
-        const methodRes = {};
-        const { name } = astPath.node.key;
-        methodRes.name = name;
-        methodRes.accessType = computeAccessType(name);
-
-        if (astPath.node.kind === 'set' || astPath.node.kind === 'get') {
-          if (astPath.node.static) {
-            methodRes.static = true;
-          }
-          methodRes.kind = [...(methodRes.kind || []), astPath.node.kind];
-          // Merge getter/setters into one
-          const found = classRes.members.props.find(p => p.name === name);
-          if (found) {
-            found.kind = [...(found.kind || []), astPath.node.kind];
-          } else {
-            classRes.members.props.push(methodRes);
-          }
+        methodRes.kind = [...(methodRes.kind || []), astPath.node.kind];
+        // Merge getter/setters into one
+        const found = classRes.members.props.find(p => p.name === name);
+        if (found) {
+          found.kind = [...(found.kind || []), astPath.node.kind];
         } else {
-          classRes.members.methods.push(methodRes);
+          classRes.members.props.push(methodRes);
         }
-      },
+      } else {
+        classRes.members.methods.push(methodRes);
+      }
+    };
+
+    astPath.traverse({
+      ClassMethod: handleMethodDefinitionOrClassMethod,
+      MethodDefinition: handleMethodDefinitionOrClassMethod,
     });
 
     classesFound.push(classRes);
@@ -188,7 +191,7 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
 
   const classesToTraverse = [];
 
-  babelTraverse.default(babelAst, {
+  oxcTraverse(babelAst, {
     ClassDeclaration(astPath) {
       classesToTraverse.push({ astPath, isMixin: false });
     },
@@ -228,8 +231,8 @@ export default class FindClassesAnalyzer extends Analyzer {
   /** @type {AnalyzerName} */
   static analyzerName = 'find-classes';
 
-  /** @type {'babel'|'swc-to-babel'} */
-  static requiredAst = 'babel';
+  /** @type {AnalyzerAst} */
+  static requiredAst = 'oxc';
 
   /**
    * Will find all public members (properties (incl. getter/setters)/functions) of a class and

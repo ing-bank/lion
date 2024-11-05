@@ -1,5 +1,21 @@
 # @lion/ui
 
+## 0.8.2
+
+### Patch Changes
+
+- 2c38a91: [core] make scoped-elements ssr-compatible
+- da5ae67: [localize] make sure LocalizeManager does not crash with lit-ssr
+- 1626dbd: improve test experience in dev-mode by limiting verbose warnings
+- 7c2b469: [validation-feedback] do not display type of the validation feedback message, if there is no message
+
+## 0.8.1
+
+### Patch Changes
+
+- 2d4fb0e: [form-core] make \_setFocusOnFirstErroneousFormElement work for checkbox-group, radio-group and nested fieldsets
+- 7baecb5: [localize] make LocalizeManager ssr-compatible
+
 ## 0.8.0
 
 ### Minor Changes
