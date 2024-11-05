@@ -21,9 +21,9 @@ export function supportsScopedRegistry() {
 }
 
 /**
- * This file is combination of '@open-wc/scoped-elements@v3/lit-element.js' and '@open-wc/scoped-elements@v3/html-element.js'.
- * Then on top of those, some code from '@open-wc/scoped-elements@v2' is brought to to make polyfill not mandatory.
- * This can be a great help for ssr scenarios, allowing elements to be consumed without needing knowledge about internall
+ * This file is a combination of '@open-wc/scoped-elements@v3/lit-element.js' and '@open-wc/scoped-elements@v3/html-element.js'.
+ * To make the polyfill an opt-in, some code from '@open-wc/scoped-elements@v2' is added as well.
+ * This can be a great help for ssr scenarios, allowing elements to be consumed without needing knowledge about internal
  * consumption.
  * (N.B. at this point in time, this is limited to the scenario where there's one version of lion on the page).
  *
