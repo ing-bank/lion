@@ -1,4 +1,5 @@
 // @ts-ignore
+/* eslint-disable new-cap, no-await-in-loop, no-console */
 import { run as jscodeshift } from 'jscodeshift/src/Runner.js';
 import path from 'path';
 import { fileURLToPath } from 'url';

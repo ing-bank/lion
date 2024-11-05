@@ -1,4 +1,4 @@
-/* eslint-disable no-empty, class-methods-use-this, no-use-before-define, no-await-in-loop */
+/* eslint-disable no-empty, class-methods-use-this, no-use-before-define, no-await-in-loop, no-console */
 import fs from 'fs';
 import path, { isAbsolute } from 'path';
 import { globby } from 'globby';
