@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.8.4
+
+### Patch Changes
+
+- 0582868: expand script that corrects types after build
+- a4f654a: fix(ui/types): export FocusHost type from types/form-core.js
+
 ## 0.8.3
 
 ### Patch Changes
