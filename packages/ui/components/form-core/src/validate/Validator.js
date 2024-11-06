@@ -32,6 +32,7 @@ export class Validator extends EventTarget {
      * @type {ValidationType}
      */
     this.type = config?.type || 'error';
+    this._$isValidator$ = true;
   }
 
   /**
