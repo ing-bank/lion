@@ -32,7 +32,11 @@ export class Validator extends EventTarget {
      * @type {ValidationType}
      */
     this.type = config?.type || 'error';
-    this._$isValidator$ = true;
+    /**
+     * Disable dot notation to avoid the renaming for the prop during build/minification
+     */
+    // eslint-disable-next-line dot-notation
+    this['_$isValidator$'] = true;
   }
 
   /**
