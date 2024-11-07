@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.0
+
+### Minor Changes
+
+- 8d178a5: add interceptors for parsed response JSON objects
+
 ## 2.0.2
 
 ### Patch Changes

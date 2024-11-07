@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.17.1
+
+### Patch Changes
+
+- cc2a646: optimisedGlob: allow providing cwd with trailing slash
+
 ## 0.17.0
 
 ### Minor Changes

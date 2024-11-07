@@ -1,16 +1,17 @@
 import { overlays } from './singleton.js';
 import { containFocus } from './utils/contain-focus.js';
+import { deepContains } from './utils/deep-contains.js';
 import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
 import { _adoptStyleUtils } from './utils/adopt-styles.js';
 
 /**
- * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
+ * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
  * @typedef {import('@lion/ui/types/overlays.js').ViewportConfig} ViewportConfig
- * @typedef {import('@popperjs/core').createPopper} Popper
+ * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
+ * @typedef {import('@popperjs/core').createPopper} Popper
  * @typedef {{ createPopper: Popper }} PopperModule
- * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
  */
 
 /**
@@ -102,6 +103,8 @@ async function preloadPopper() {
   // @ts-ignore [external]: import complains about untyped module, but we typecast it ourselves
   return /** @type {* & Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
 }
+
+const childDialogsClosedInEventLoopWeakmap = new WeakMap();
 
 /**
  * OverlayController is the fundament for every single type of overlay. With the right
@@ -498,9 +501,6 @@ export class OverlayController extends EventTarget {
         '[OverlayController] .isTooltip only takes effect when .handlesAccessibility is enabled',
       );
     }
-    // if (newConfig.popperConfig.modifiers.arrow && !newConfig.contentWrapperNode) {
-    //   throw new Error('You need to provide a .contentWrapperNode when Popper arrow is enabled');
-    // }
   }
 
   /**
@@ -1146,10 +1146,39 @@ export class OverlayController extends EventTarget {
     ev.preventDefault();
   }
 
-  /** @private */
-  __escKeyHandler(/** @type {KeyboardEvent} */ ev) {
-    return ev.key === 'Escape' && this.hide();
+  /**
+   * @param {KeyboardEvent} event
+   * @returns {void}
+   */
+  __escKeyHandler(event) {
+    if (event.key !== 'Escape' || childDialogsClosedInEventLoopWeakmap.has(event)) return;
+
+    const hasPressedInside =
+      event.composedPath().includes(this.contentNode) ||
+      deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
+    if (hasPressedInside) {
+      this.hide();
+      // We could do event.stopPropagation() here, but we don't want to hide info for
+      // the outside world about user interactions. Instead, we store the event in a WeakMap
+      // that will be garbage collected after the event loop.
+      childDialogsClosedInEventLoopWeakmap.set(event, this);
+    }
   }
+
+  /**
+   * @param {KeyboardEvent} event
+   * @returns {void}
+   */
+  #outsideEscKeyHandler = event => {
+    if (event.key !== 'Escape') return;
+
+    const hasPressedInside =
+      event.composedPath().includes(this.contentNode) ||
+      deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
+    if (!hasPressedInside) {
+      this.hide();
+    }
+  };
 
   /**
    * @param {{ phase: OverlayPhase }} config
@@ -1175,11 +1204,9 @@ export class OverlayController extends EventTarget {
    */
   _handleHidesOnOutsideEsc({ phase }) {
     if (phase === 'show') {
-      this.__escKeyHandler = (/** @type {KeyboardEvent} */ ev) =>
-        ev.key === 'Escape' && this.hide();
-      document.addEventListener('keyup', this.__escKeyHandler);
+      document.addEventListener('keyup', this.#outsideEscKeyHandler);
     } else if (phase === 'hide') {
-      document.removeEventListener('keyup', this.__escKeyHandler);
+      document.removeEventListener('keyup', this.#outsideEscKeyHandler);
     }
   }
 
