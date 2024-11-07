@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import { LitElement } from 'lit';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
@@ -190,6 +191,8 @@ describe('Validator', () => {
   describe('Types', () => {
     it('has type "error" by default', async () => {
       expect(new Validator().type).to.equal('error');
+      expect(new Validator()['_$isValidator$']).to.be.exist;
+      expect(new Validator()['_$isValidator$']).to.equal(true);
     });
 
     it('supports customized types', async () => {
@@ -204,6 +207,8 @@ describe('Validator', () => {
         }
       }
       expect(new MyValidator().type).to.equal('my-type');
+      expect(new Validator()['_$isValidator$']).to.be.exist;
+      expect(new Validator()['_$isValidator$']).to.equal(true);
     });
   });
 });
