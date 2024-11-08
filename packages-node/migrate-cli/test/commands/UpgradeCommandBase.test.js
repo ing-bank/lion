@@ -4,8 +4,8 @@ import { Command } from 'commander';
 import path from 'path';
 import sinon from 'sinon';
 import fs from 'fs';
-import { _mockable, UpgradeCommandBase } from '../src/commands/UpgradeCommandBase.js';
-import { MigrateCli } from '../src/MigrateCli.js';
+import { _mockable, UpgradeCommandBase } from '../../src/commands/UpgradeCommandBase.js';
+import { MigrateCli } from '../../src/MigrateCli.js';
 
 chai.use(chaiAsPromised);
 const { expect } = chai;

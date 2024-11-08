@@ -1,9 +1,8 @@
 // @ts-ignore
-/* eslint-disable new-cap, no-await-in-loop, no-console */
 import { run as jscodeshift } from 'jscodeshift/src/Runner.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
+import { readdir } from 'fs/promises';
 import { globby } from 'globby';
 import { getJsBlocksFromMdFiles } from './getJsBlocksFromMdFiles.js';
 
@@ -49,7 +48,6 @@ function captureLogs({
   if (shouldCaptureStdout) {
     // https://github.com/facebook/jscodeshift/blob/51da1a5c4ba3707adb84416663634d4fc3141cbb/src/Runner.js#L42
     // @ts-ignore
-
     process.stdout.write = (...args) => {
       // @ts-ignore
       capturedLogs.push([args[0].toString()]);
@@ -85,13 +83,13 @@ function hasReservedMdName(sourceFile) {
 /**
  * @param {string | URL} inputDir
  * @param {string | URL} transformsFolder
- * @param {*} [jscsOptions]
+ * @param {*} [jscOptions]
  * @param {{customPaths?:string[]; shouldDebug?: boolean; workspaceMeta?:WorkspaceMeta}} extraOpts
  */
 export async function executeJsCodeShiftTransforms(
   inputDir,
   transformsFolder,
-  jscsOptions = {},
+  jscOptions = {},
   { customPaths, shouldDebug = false, workspaceMeta } = {},
 ) {
   const excludePaths =
@@ -102,15 +100,15 @@ export async function executeJsCodeShiftTransforms(
   const transformsPath =
     transformsFolder instanceof URL ? fileURLToPath(transformsFolder) : transformsFolder;
   const inputDirPath = inputDir instanceof URL ? fileURLToPath(inputDir) : inputDir;
-  const ignore = jscsOptions.ignore || ['**/node_modules/**', '**/bower_components/**'];
-
+  const transformFiles = await readdir(transformsPath);
   /** @type {string[]} */
   let sourceFiles;
+  const supportedFileTypes = ['mjs', 'js', 'cjs', 'md', 'mdx', 'ts'];
   if (!Array.isArray(customPaths)) {
     sourceFiles = (
-      await globby([`**/*.{mjs,js,cjs,md,ts}`], {
+      await globby([`**/*.{${supportedFileTypes.join(',')}}`], {
         cwd: inputDirPath,
-        ignore,
+        ignore: ['**/node_modules/**', '**/bower_components/**'],
       })
     ).map(file => path.join(inputDirPath, file));
   } else {
@@ -120,7 +118,7 @@ export async function executeJsCodeShiftTransforms(
   const hiddenStorybookPath = `${inputDirPath}/.storybook`;
   // We skip hidden folders, except for storybook folder
   const hiddenStorybookConfigFiles = (
-    await globby([`**/*.{mjs,js,cjs,md,ts}`], {
+    await globby([`**/*.{${supportedFileTypes.join(',')}}`], {
       cwd: hiddenStorybookPath,
     })
   ).map(file => path.join(hiddenStorybookPath, file));
@@ -128,14 +126,14 @@ export async function executeJsCodeShiftTransforms(
   const jsSourceFiles = [];
   const mdSourceFiles = [];
   for (const sourceFile of [...sourceFiles, ...hiddenStorybookConfigFiles]) {
-    if (sourceFile.endsWith('.md')) {
+    if (sourceFile.endsWith('.md') || sourceFile.endsWith('.mdx')) {
       if (hasReservedMdName(sourceFile)) {
         // eslint-disable-next-line no-continue
         continue;
       }
       mdSourceFiles.push(sourceFile);
     } else {
-      if (sourceFile.endsWith('.ts') && !jscsOptions.includeTs) {
+      if (sourceFile.endsWith('.ts') && !jscOptions.includeTs) {
         // eslint-disable-next-line no-continue
         continue;
       }
@@ -161,19 +159,14 @@ export async function executeJsCodeShiftTransforms(
     ok: 0,
   };
 
-  const _transformFiles = await fs.promises.readdir(transformsPath);
-  const transformFiles = jscsOptions.filterTransformFiles
-    ? _transformFiles.filter(jscsOptions.filterTransformFiles)
-    : _transformFiles;
-
-  for (const transformFile of transformFiles) {
+  const cjsTransformFiles = transformFiles.filter(t => t.endsWith('_-_cjs-export.cjs'));
+  for (const transformFile of cjsTransformFiles) {
     const fullTransformFile = path.join(transformsPath, transformFile);
 
     // eslint-disable-next-line no-unused-vars
-
-    const { restore } = captureLogs({
+    const { capturedLogs, restore } = captureLogs({
       shouldCaptureConsole: false,
-      shouldCaptureStdout: false,
+      shouldCaptureStdout: true,
       shouldDebug,
     });
 
@@ -181,16 +174,14 @@ export async function executeJsCodeShiftTransforms(
       // dry: true,
       silent: false,
       verbose: 2,
-      ...jscsOptions,
+      ...jscOptions,
+      ...(jscOptions?.includeTs ? { parser: 'ts' } : {}),
       ...(shouldDebug ? { runInBand: false } : {}),
     };
 
-    const niceName = jscsOptions.niceTransformName
-      ? jscsOptions.niceTransformName(transformFile)
-      : transformFile;
+    const niceName = path.basename(transformFile).replace('_-_cjs-export.cjs', '');
     console.log(`🚀 Running jscodeshift mod "${niceName}"`);
 
-    // eslint-disable-next-line no-await-in-loop
     const res = await jscodeshift(fullTransformFile, jsCodeShiftPaths, mergedOptions);
 
     restore();

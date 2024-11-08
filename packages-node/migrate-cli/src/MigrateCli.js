@@ -8,15 +8,9 @@ import { mergeDeep } from './cli-helpers/mergeDeep.js';
 import { AsyncEventEmitter } from './cli-helpers/AsyncEventEmitter.js';
 
 /**
- * @typedef {{ configFile?:string;inputDir:string; cwd:string; setupCliPlugins?: function; task?:string; jscsOpts?:object; _upgradeTaskHref?:string; upgradesConfigHref?:string; upgradesDir: URL|string; _upgradesDirUrl?: URL; upgradeTaskNames: string[]; upgradeTaskUrl: string|URL; allowedCompositeTasks?: Map<string, string[]>}} Options
- */
-
-/**
  * @typedef {{ plugins: {setupCommand:function;stop:function}[]; argv:string[];commandsUrls:URL[]}} Config
- */
-
-/**
- * @typedef {{ plugins?: {setupCommand:function;stop:function}[]; argv?:string[];commandsUrls?:URL[]; cliName?:string; cliIntroductionText?:string; includeBaseCommands?:boolean; cwd?:string; pathToPkgJson?:string; cliVersion?:string; options?: Partial<Options>}} InitOptions
+ * @typedef {import('../types/index.js').Options}Options
+ * @typedef {import('../types/index.js').InitOptions}InitOptions
  */
 
 export class MigrateCli {
@@ -29,8 +23,8 @@ export class MigrateCli {
     jscsOpts: {},
     upgradeTaskUrl: '',
     upgradesDir: '',
+    _upgradesDirUrl: undefined,
     upgradeTaskNames: [],
-    _upgradeTaskHref: '',
   };
 
   events = new AsyncEventEmitter();
