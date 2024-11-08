@@ -1,32 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import mockFs from 'mock-fs';
-import mockRequire from 'mock-require';
-
-/**
- * @typedef {import('./types.js').MockBridgeOpts} MockBridgeOpts
- */
-
-/**
- * @param {object} obj
- */
-export function mock(obj) {
-  mockFs(obj);
-
-  Object.entries(obj).forEach(([key, value]) => {
-    if (key.endsWith('.json')) {
-      mockRequire(key, JSON.parse(value));
-    } else {
-      mockRequire(key, value);
-    }
-  });
-}
-
-mock.restore = () => {
-  mockFs.restore();
-  mockRequire.stopAll();
-};
 
 /**
  * TODO: remove this method if mock-fs works as expected

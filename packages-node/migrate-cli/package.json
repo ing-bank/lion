@@ -17,8 +17,7 @@
   },
   "scripts": {
     "lint": "eslint . && prettier \"**/*.js\" --check --ignore-path .lintignore",
-    "test": "mocha ./test/CLI/cli.test.js --timeout 8000",
-    "test-2": "mocha test/**/*.test.js --timeout 8000",
+    "test": "mocha test/**/*.test.js --timeout 8000",
     "types": "wireit"
   },
   "dependencies": {
@@ -32,6 +31,7 @@
   },
   "devDependencies": {
     "@types/jscodeshift": "^0.11.11",
+    "@types/semver": "^7.5.8",
     "chai-as-promised": "^8.0.0",
     "mock-require": "^3.0.3"
   },
