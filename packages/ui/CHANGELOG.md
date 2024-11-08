@@ -1,5 +1,19 @@
 # @lion/ui
 
+## 0.8.4
+
+### Patch Changes
+
+- 0582868: expand script that corrects types after build
+- a4f654a: fix(ui/types): export FocusHost type from types/form-core.js
+
+## 0.8.3
+
+### Patch Changes
+
+- 360641c: [overlays] no hiding of nested overlays having `hideOnEsc` configured
+- 03a9b33: revert es version in tsconfig (as it was breaking types)
+
 ## 0.8.2
 
 ### Patch Changes

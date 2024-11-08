@@ -157,6 +157,37 @@ function runSuiteForOptimisedGlob() {
           'my/folder/some/file.js',
         ]);
       });
+
+      it('supports patterns like "my", "my/**" and "my/**/*" ', async () => {
+        const files = await runOptimisedGlobAndCheckGlobbyParity('my/**', testCfg);
+
+        const allMy = [
+          'my/folder/some/anotherFile.d.ts',
+          'my/folder/some/anotherFile.js',
+          'my/folder/some/file.d.ts',
+          'my/folder/some/file.js',
+          'my/folder/lvl1/some/anotherFile.d.ts',
+          'my/folder/lvl1/some/anotherFile.js',
+          'my/folder/lvl1/some/file.d.ts',
+          'my/folder/lvl1/some/file.js',
+          'my/folder/lvl1/lvl2/some/anotherFile.d.ts',
+          'my/folder/lvl1/lvl2/some/anotherFile.js',
+          'my/folder/lvl1/lvl2/some/file.d.ts',
+          'my/folder/lvl1/lvl2/some/file.js',
+          'my/folder/lvl1/lvl2/lvl3/some/anotherFile.d.ts',
+          'my/folder/lvl1/lvl2/lvl3/some/anotherFile.js',
+          'my/folder/lvl1/lvl2/lvl3/some/file.d.ts',
+          'my/folder/lvl1/lvl2/lvl3/some/file.js',
+        ];
+
+        expect(files).to.deep.equal(allMy);
+
+        const files2 = await runOptimisedGlobAndCheckGlobbyParity('my/**/*', testCfg);
+
+        expect(files2).to.deep.equal(allMy);
+
+        // TODO: "my" (this will need a code change: preprocess 'my' to 'my/**')
+      });
     });
 
     describe('Accolade patterns', () => {
@@ -350,6 +381,15 @@ function runSuiteForOptimisedGlob() {
           dot: true,
         });
         expect(files).to.deep.equal(['file.js']);
+      });
+
+      it('supports cwd ending with "/"', async () => {
+        const files = await runOptimisedGlobAndCheckGlobbyParity('my/folder/*/some/file.js', {
+          ...testCfg,
+          cwd: '/fakeFs/',
+        });
+
+        expect(files).to.deep.equal(['my/folder/lvl1/some/file.js']);
       });
     });
   });

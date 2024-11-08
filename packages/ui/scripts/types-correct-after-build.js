@@ -11,23 +11,36 @@
  */
 
 import fs from 'fs';
+// @ts-expect-error
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { globby } from 'globby';
+import { optimisedGlob as globby } from 'providence-analytics/utils.js';
 import { fileURLToPath } from 'url';
 
 const packageRoot = fileURLToPath(new URL('../', import.meta.url));
 
-async function alignLitImports() {
-  const fileNames = await globby([`${packageRoot}/dist-types`]);
+async function alignLitImportsAndFixLocalPaths() {
+  const fileNames = await globby('dist-types/**', { cwd: packageRoot });
+
   for (const fileName of fileNames) {
     // eslint-disable-next-line no-await-in-loop
     const contents = await fs.promises.readFile(fileName, 'utf-8');
-    const replaced = contents.replace(
+    const replaced1 = contents.replace(
       /(LitElement.*\}) from "lit-element\/lit-element\.js/g,
       '$1 from "lit',
     );
-    fs.promises.writeFile(fileName, replaced);
+
+    // Now "unresolve" all paths that reference '../**/node_modules/**'
+    // These are outside of the bundled repo and therefore break in consuming context
+    // Also, they are resolved to their local context via the export map, this should be 'unwinded'
+
+    const re = /"(..\/)*?node_modules\/@open-wc\/scoped-elements\/types\.js"/g;
+    const replaced2 = replaced1.replace(re, '"@open-wc/scoped-elements/lit-element.js"');
+
+    // For now, we did a quick and dirty fix with specific knowledge of this repo,
+    // because we expect https://github.com/microsoft/TypeScript/issues/51622 to be solved in the future.
+
+    fs.promises.writeFile(fileName, replaced2);
   }
 }
 
-alignLitImports();
+alignLitImportsAndFixLocalPaths();

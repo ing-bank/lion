@@ -116,7 +116,6 @@ export const parseGlobToRegex = memoize(
       }
       regexResultStr += currentChar;
     }
-
     return new RegExp(`^${regexResultStr}$`);
   },
 );
@@ -136,6 +135,15 @@ function toUniqueArray(arr) {
  */
 function isRootGlob(glob) {
   return glob.startsWith('/') || glob.startsWith('!/') || Boolean(glob.match(/^([A-Z]:\\|\\\\)/));
+}
+
+/**
+ * Makes sure cwd does not end with a slash
+ * @param {string} str
+ * @returns {string}
+ */
+function normalizeCwd(str) {
+  return str.endsWith('/') ? str.slice(0, -1) : str;
 }
 
 /**
@@ -369,6 +377,8 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     ...providedOptions,
   };
 
+  options.cwd = normalizeCwd(options.cwd);
+
   if (!options.onlyFiles) {
     // This makes behavior aligned with globby
     options.onlyDirectories = true;
@@ -403,6 +413,7 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
       globstar: options.globstar,
       extglob: options.extglob,
     });
+
     if (isNegative) {
       matchRegexesNegative.push(regexForGlob);
     } else {
@@ -416,8 +427,8 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     const fullStartPath = path.join(cwd, startPath);
     try {
       const allDirEntsRelativeToCwd = await getAllDirentsRelativeToCwd(fullStartPath, {
-        cwd,
         fs: options.fs,
+        cwd,
       });
 
       globEntries.push(...allDirEntsRelativeToCwd);

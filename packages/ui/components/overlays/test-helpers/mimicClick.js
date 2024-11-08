@@ -8,9 +8,9 @@ async function sleep(t = 0) {
 
 /**
  * @param {HTMLElement} el
- * @param {{isAsync?:boolean, releaseElement?: HTMLElement}} config
+ * @param {{isAsync?:boolean, releaseElement?: HTMLElement}} config releaseElement can be different when the mouse is dragged before release
  */
-export async function mimicClick(el, { isAsync, releaseElement } = { isAsync: false }) {
+export async function mimicClick(el, { isAsync = false, releaseElement } = {}) {
   const releaseEl = releaseElement || el;
   el.dispatchEvent(new MouseEvent('mousedown'));
   if (isAsync) {
