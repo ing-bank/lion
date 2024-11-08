@@ -129,7 +129,6 @@ async function runUpgradeTask({ upgradeTaskUrl, options, task, isRunningMultiple
       type: workspacePackage.type,
       workspacePackages,
     };
-
     try {
       await script._mockable.upgrade(
         {
@@ -194,6 +193,7 @@ export class UpgradeCommandBase {
     command.addOption(
       new Option('-u, --upgrades-dir <upgrades-dir>', 'directory for upgrades tasks'),
     );
+    command.addOption(new Option('--include-ts', 'to apply the "upgrade" to ts files'));
     command.addOption(
       new Option(
         '--skip-package-json',
@@ -250,8 +250,8 @@ export class UpgradeCommandBase {
   async getTaskDetails(task) {
     const { _upgradesDirUrl } = /** @type {import('../MigrateCli.js').MigrateCli} */ (this.cli)
       .options;
-    if (_upgradesDirUrl) {
-      /** @type {import('../MigrateCli.js').MigrateCli} */ (this.cli).options.upgradeTaskUrl =
+    if (_upgradesDirUrl && this.cli) {
+      /** @type {import('../MigrateCli.js').MigrateCli} */ this.cli.options.upgradeTaskUrl =
         getUpgradeTaskUrl(task, _upgradesDirUrl);
     }
   }
@@ -269,7 +269,7 @@ export class UpgradeCommandBase {
     const taskString = /** @type {string} */ (task);
     await this.setTransformOptions();
     const { upgradesDir } = this.cli.options;
-    const upgradesDirUrl = _mockable.getUpgradesDirUrl(upgradesDir);
+    const upgradesDirUrl = upgradesDir ? _mockable.getUpgradesDirUrl(upgradesDir) : undefined;
     /** @type {import('../MigrateCli.js').MigrateCli} */ (this.cli).options._upgradesDirUrl =
       upgradesDirUrl;
 
