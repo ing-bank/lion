@@ -188,11 +188,16 @@ describe('Validator', () => {
     expect(disconnectSpy.calledWith(el)).to.equal(true);
   });
 
+  it('adds static ["_$isValidator$"] property as a marker to identify the Validator class across different lion versions (as instanceof cannot be used)', async () => {
+    const myValidator = new Validator();
+
+    expect(myValidator.constructor['_$isValidator$']).to.exist;
+    expect(myValidator.constructor['_$isValidator$']).to.be.true;
+  });
+
   describe('Types', () => {
     it('has type "error" by default', async () => {
       expect(new Validator().type).to.equal('error');
-      expect(new Validator()['_$isValidator$']).to.be.exist;
-      expect(new Validator()['_$isValidator$']).to.equal(true);
     });
 
     it('supports customized types', async () => {
@@ -207,8 +212,6 @@ describe('Validator', () => {
         }
       }
       expect(new MyValidator().type).to.equal('my-type');
-      expect(new Validator()['_$isValidator$']).to.be.exist;
-      expect(new Validator()['_$isValidator$']).to.equal(true);
     });
   });
 });

@@ -688,8 +688,9 @@ export const ValidateMixinImplementation = superclass =>
 
       for (const validatorToSetup of this._allValidators) {
         // disable dot notation to avoid the renaming for the prop during build/minification
+        const validatorCtor = /** @type {typeof Validator}  */ (validatorToSetup.constructor);
         // eslint-disable-next-line dot-notation
-        if (/** @type {typeof Validator}  */ validatorToSetup['_$isValidator$'] === undefined) {
+        if (validatorCtor['_$isValidator$'] === undefined) {
           // throws in constructor are not visible to end user so we do both
           const errorType = Array.isArray(validatorToSetup) ? 'array' : typeof validatorToSetup;
           const errorMessage = `Validators array only accepts class instances of Validator. Type "${errorType}" found. This may be caused by having multiple installations of "@lion/ui/form-core.js".`;
