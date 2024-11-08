@@ -2,7 +2,7 @@
 import { run as jscodeshift } from 'jscodeshift/src/Runner.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { readdir } from 'fs/promises';
+import fs from 'fs';
 import { globby } from 'globby';
 import { getJsBlocksFromMdFiles } from './getJsBlocksFromMdFiles.js';
 
@@ -100,7 +100,7 @@ export async function executeJsCodeShiftTransforms(
   const transformsPath =
     transformsFolder instanceof URL ? fileURLToPath(transformsFolder) : transformsFolder;
   const inputDirPath = inputDir instanceof URL ? fileURLToPath(inputDir) : inputDir;
-  const transformFiles = await readdir(transformsPath);
+  const transformFiles = await fs.promises.readdir(transformsPath);
   /** @type {string[]} */
   let sourceFiles;
   const supportedFileTypes = ['mjs', 'js', 'cjs', 'md', 'mdx', 'ts'];
@@ -159,7 +159,9 @@ export async function executeJsCodeShiftTransforms(
     ok: 0,
   };
 
-  const cjsTransformFiles = transformFiles.filter(t => t.endsWith('_-_cjs-export.cjs'));
+  const cjsTransformFiles = transformFiles.filter((/** @type string */ t) =>
+    t.endsWith('_-_cjs-export.cjs'),
+  );
   for (const transformFile of cjsTransformFiles) {
     const fullTransformFile = path.join(transformsPath, transformFile);
 
