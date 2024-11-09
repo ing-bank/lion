@@ -192,7 +192,6 @@ export class OverlayController extends EventTarget {
       zIndex: 9999,
     };
 
-    this.manager.add(this);
     /** @protected */
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
     /** @private */
@@ -475,6 +474,14 @@ export class OverlayController extends EventTarget {
     this._init();
     /** @private */
     this.__elementToFocusAfterHide = undefined;
+
+    if (!this.#isRegisteredOnManager()) {
+      this.manager.add(this);
+    }
+  }
+
+  #isRegisteredOnManager() {
+    return Boolean(this.manager.list.find(ctrl => this === ctrl));
   }
 
   /**
@@ -1341,6 +1348,10 @@ export class OverlayController extends EventTarget {
     this.__handleOverlayStyles({ phase: 'teardown' });
     this._handleFeatures({ phase: 'teardown' });
     this.__wrappingDialogNode?.removeEventListener('cancel', this.__cancelHandler);
+
+    if (this.#isRegisteredOnManager()) {
+      this.manager.remove(this);
+    }
   }
 
   /** @private */
