@@ -89,8 +89,8 @@ const ScopedElementsMixinImplementation = superclass =>
      */
     defineScopedElement(tagName, classToBeRegistered) {
       const registeredClass = this.registry.get(tagName);
-      const isAlreadyRegistered = registeredClass && registeredClass === classToBeRegistered;
-      if (isAlreadyRegistered && !supportsScopedRegistry()) {
+      const isNewClassWithSameName = registeredClass && registeredClass !== classToBeRegistered;
+      if (!supportsScopedRegistry() && isNewClassWithSameName) {
         // eslint-disable-next-line no-console
         console.error(
           [
