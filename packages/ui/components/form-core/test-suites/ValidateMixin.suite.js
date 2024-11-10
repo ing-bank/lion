@@ -2,25 +2,25 @@ import { LitElement } from 'lit';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import {
   getFormControlMembers,
-  AlwaysInvalid,
-  AlwaysValid,
   AsyncAlwaysInvalid,
   AsyncAlwaysValid,
+  AlwaysInvalid,
+  AlwaysValid,
 } from '@lion/ui/form-core-test-helpers.js';
 import sinon from 'sinon';
 import {
+  ResultValidator,
+  ValidateMixin,
   EqualsLength,
+  Unparseable,
   MaxLength,
   MinLength,
-  Required,
-  ResultValidator,
-  Unparseable,
-  ValidateMixin,
   Validator,
+  Required,
 } from '@lion/ui/form-core.js';
 
-import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
+import '@lion/ui/define/lion-field.js';
 
 /**
  * @typedef {import('@lion/ui/form-core.js').LionField} LionField
