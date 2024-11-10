@@ -6,9 +6,9 @@ import {
 } from '@lit-labs/testing/fixtures.js';
 import { LitElement, html } from 'lit';
 import sinon from 'sinon';
-import { browserDetection } from '../src/browserDetection.js';
 
 import { ScopedElementsMixin, supportsScopedRegistry } from '../src/ScopedElementsMixin.js';
+import { browserDetection } from '../src/browserDetection.js';
 
 const hasRealScopedRegistrySupport = supportsScopedRegistry();
 const originalShadowRootProps = {
@@ -78,6 +78,8 @@ describe('ScopedElementsMixin', () => {
 
   describe('When scoped registries are supported', () => {
     it('registers elements on local registry', async () => {
+      if (!hasRealScopedRegistrySupport) return;
+
       const ceDefineSpy = sinon.spy(customElements, 'define');
 
       const el = /** @type {ScopedElementsHost} */ (
@@ -126,6 +128,37 @@ describe('ScopedElementsMixin', () => {
       expect(el.registry).to.equal(customElements);
       expect(ceDefineSpy.calledWith('scoped-elements-child-no-reg')).to.be.true;
       ceDefineSpy.restore();
+    });
+
+    it('fails when different classes are registered under different name', async () => {
+      class ScopedElementsHostNoReg2 extends ScopedElementsMixin(LitElement) {
+        static scopedElements = { 'scoped-elements-child-no-reg': class extends HTMLElement {} };
+
+        render() {
+          return html`<scoped-elements-child-no-reg></scoped-elements-child-no-reg>`;
+        }
+      }
+      customElements.define('scoped-elements-host-no-reg-2', ScopedElementsHostNoReg2);
+
+      const errorSpy = sinon.spy(console, 'error');
+      /** @type {ScopedElementsHostNoReg2} */ (
+        await fixture(html`<scoped-elements-host-no-reg></scoped-elements-host-no-reg>`)
+      );
+      /** @type {ScopedElementsHostNoReg2} */ (
+        await fixture(html`<scoped-elements-host-no-reg-2></scoped-elements-host-no-reg-2>`)
+      );
+
+      expect(errorSpy.args[0][0]).to.equal(
+        [
+          'You are trying to re-register the "scoped-elements-child-no-reg" custom element with a different class via ScopedElementsMixin.',
+          'This is only possible with a CustomElementRegistry.',
+          'Your browser does not support this feature so you will need to load a polyfill for it.',
+          'Load "@webcomponents/scoped-custom-element-registry" before you register ANY web component to the global customElements registry.',
+          'e.g. add "<script src="/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>" as your first script tag.',
+          'For more details you can visit https://open-wc.org/docs/development/scoped-elements/',
+        ].join('\n'),
+      );
+      errorSpy.restore();
     });
   });
 });
