@@ -1,30 +1,22 @@
-import fs from 'fs';
-import { playwrightLauncher } from '@web/test-runner-playwright';
 import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
+import { playwrightLauncher } from '@web/test-runner-playwright';
+import { optimisedGlob } from 'providence-analytics/utils.js';
 
-const devMode = process.argv.includes('--dev-mode');
+const config = {
+  shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),
+  shouldRunDevMode: process.argv.includes('--dev-mode'),
+};
 
-const packages = fs
-  .readdirSync('packages')
-  .filter(
-    dir => fs.statSync(`packages/${dir}`).isDirectory() && fs.existsSync(`packages/${dir}/test`),
-  )
-  .map(dir => ({ name: dir, path: `packages/${dir}/test` }))
-  .concat(
-    fs
-      .readdirSync('packages/ui/components')
-      .filter(
-        dir =>
-          fs.statSync(`packages/ui/components/${dir}`).isDirectory() &&
-          fs.existsSync(`packages/ui/components/${dir}/test`),
-      )
-      .map(dir => ({ name: dir, path: `packages/ui/components/${dir}/test` })),
-  );
+const groups = (
+  await optimisedGlob(['packages/*/test', 'packages/ui/components/**/test'], {
+    onlyDirectories: true,
+  })
+).map(dir => ({ name: dir.split('/').at(-2), files: `${dir}/**/*.test.js` }));
 
 /**
  * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}
  */
-const testRunnerHtml = testRunnerImport =>
+const testRunnerHtmlWithPolyfill = testRunnerImport =>
   `
 <html>
   <head>
@@ -35,31 +27,21 @@ const testRunnerHtml = testRunnerImport =>
 `;
 
 export default {
-  nodeResolve: { exportConditions: [devMode && 'development'] },
+  nodeResolve: config.shouldRunDevMode ? { exportConditions: ['development'] } : true,
   coverageConfig: {
     report: true,
     reportDir: 'coverage',
-    threshold: {
-      statements: 95,
-      functions: 95,
-      branches: 95,
-      lines: 95,
-    },
+    threshold: { statements: 95, functions: 95, branches: 95, lines: 95 },
   },
   testFramework: {
-    config: {
-      timeout: '5000',
-    },
+    config: { timeout: '5000' },
   },
-  testRunnerHtml,
+  testRunnerHtml: config.shouldLoadPolyfill ? testRunnerHtmlWithPolyfill : undefined,
   browsers: [
     playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),
     playwrightLauncher({ product: 'webkit' }),
   ],
-  groups: packages.map(pkg => ({
-    name: pkg.name,
-    files: `${pkg.path}/**/*.test.js`,
-  })),
+  groups,
   plugins: [litSsrPlugin()],
 };

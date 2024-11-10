@@ -9,6 +9,7 @@
     "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present && node ./scripts/create-api-tables.mjs",
     "debug": "web-test-runner --watch --config web-test-runner-chrome.config.mjs",
     "debug:firefox": "web-test-runner --watch --config web-test-runner-firefox.config.mjs",
+    "debug:no-scoped-registries-polyfill": "npm run debug -- --no-scoped-registries-polyfill",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
