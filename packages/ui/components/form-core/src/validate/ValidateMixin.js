@@ -461,7 +461,9 @@ export const ValidateMixinImplementation = superclass =>
 
       if (isEmpty) {
         const hasSingleValue = !(/** @type {*  & ValidateHost} */ (this)._isFormOrFieldset);
-        const requiredValidator = this._allValidators.find(v => v instanceof Required);
+        const requiredValidator = this._allValidators.find(
+          v => /** @type {typeof Validator} */ (v.constructor)?.validatorName === 'Required',
+        );
         if (requiredValidator) {
           this.__syncValidationResult = [{ validator: requiredValidator, outcome: true }];
         }
