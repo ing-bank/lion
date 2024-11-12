@@ -2,7 +2,6 @@
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import { providenceFlowSvg, providenceInternalFlowSvg } from './assets/_mermaid.svg.js';
 ```
 
 Providence is the 'All Seeing Eye' that generates usage statistics by analyzing code.
@@ -10,8 +9,6 @@ It measures the effectivity and popularity of your software.
 With just a few commands you can measure the impact for (breaking) changes, making
 your release process more stable and predictable.
 
-Providence can be used as a dev dependency in a project for which metrics
-can be generated via analyzers (see below).
 For instance for a repo "lion-based-ui" that extends @lion/\* we can answer questions like:
 
 - **Which subsets of my product are popular?**
@@ -23,170 +20,76 @@ For instance for a repo "lion-based-ui" that extends @lion/\* we can answer ques
 
 - etc...
 
-All the above results can be shown in a dashboard (see below), which allows to sort exports from reference project (@lion) based on popularity, category, consumer etc.
-The dashboard allows to aggregate data from many target projects as well and will show you on a detailed (file) level how those components are being consumed by which projects.
+Providence uses abstract syntax trees (ASTs) to have the most advanced analysis possible.
+It does this via the [oxc parser](https://oxc.rs/docs/guide/usage/parser.html), the quickest parser available today!
 
-## Setup
+## Run
 
-### Install providence
-
-```bash
-npm i --save-dev providence-analytics
-```
-
-### Add a providence script to package.json
-
-```json
-"scripts": {
-  "providence:match-imports": "providence analyze match-imports -r 'node_modules/@lion/ui/*.js'",
-}
-```
-
-> The example above illustrates how to run the "match-imports" analyzer for reference project 'lion-based-ui'. Note that it is possible to run other analyzers and configurations supported by providence as well. For a full overview of cli options, run `npx providence --help`. All supported analyzers will be viewed when running `npx providence analyze`
-
-You are now ready to use providence in your project. All
-data will be stored in json files in the folder `./providence-output`
-
-![CLI](./assets/provicli.gif 'CLI')
-
-## Setup: Dashboard
-
-### Add "providence:dashboard" script to package.json
-
-```js
-...
-"scripts": {
-    ...
-    "providence:dashboard": "providence dashboard"
-}
-```
-
-### Add providence.conf.js
-
-```js
-export default {
-  referenceCollections: {
-    'lion-based-ui-collection': [
-      './node_modules/lion-based-ui/packages/x',
-      './node_modules/lion-based-ui/packages/y',
-    ],
-  },
-};
-```
-
-Run `npm run providence:dashboard`
-
-![dashboard](./assets/providash.gif 'dashboard')
-
-## Setup: about result output
-
-All output files will be stored in `./providence-output`.
-This means they will be committed to git, so your colleagues don't have to
-rerun the analysis (for large projects with many dependencies this can be time consuming)
-and can directly start the dashboard usage metrics.
-Also, note that the files serve as cache (they are stored with hashes based on project version and analyzer configuration). This means that an interrupted analysis can be
-resumed later on.
-
-## Conceptual overview
-
-Providence performs queries on one or more search targets.
-These search targets consist of one or more software projects (javascript/html repositories)
-
-The diagram below shows how `providenceMain` function can be used from an external context.
-
-```js story
-export const providenceFlow = () => providenceFlowSvg;
-```
-
-## Flow inside providence
-
-The diagram below depicts the flow inside the `providenceMain` function.
-It uses:
-
-- InputDataService
-  Used to create a data structure based on a folder (for instance the search target or
-  the references root). The structure creates entries for every file, which get enriched with code,
-  ast results, query results etc. Returns `InputData` object.
-- QueryService
-  Requires a `queryConfig` and `InputData` object. It will perform a query (grep search or ast analysis)
-  and returns a `QueryResult`.
-  It also contains helpers for the creation of a `queryConfig`
-- ReportService
-  The result gets outputted to the user. Currently, a log to the console and/or a dump to a json file
-  are available as output formats.
-
-```js story
-export const providenceInternalFlow = () => providenceInternalFlowSvg;
-```
-
-## Queries
-
-Providence requires a queries as input.
-Queries are defined as objects and can be of two types:
-
-- feature-query
-- ast-analyzer
-
-A `QueryConfig` is required as input to run the `providenceMain` function.
-This object specifies the type of query and contains the relevant meta
-information that will later be outputted in the `QueryResult` (the JSON object that
-the `providenceMain` function returns.)
-
-## Analyzer Query
-
-Analyzer queries are also created via `QueryConfig`s.
-
-Analyzers can be described as predefined queries that use AST traversal.
-
-Run:
+Providence expects an analyzer name that tells it what type of analysis to run:
 
 ```bash
-providence analyze
+npx providence analyze <analyzer-name>
 ```
 
-Now you will get a list of all predefined analyzers:
+By default Providence ships these analyzers:
 
 - find-imports
 - find-exports
 - find-classes
 - match-imports
 - match-subclasses
-- etc...
 
-![Analyzer query](./assets/analyzer-query.gif 'Analyzer query')
-
-<!--
-## Running providence from its own repo
-
-### How to add a new search target project
+Let's say we run `find-imports`:
 
 ```bash
-git submodule add <git-url> ./providence-input-data/search-targets/<project-name>
+npx providence analyze find-imports
 ```
 
-### How to add a reference project
+Now it retrieves all relevant data about es module imports.
+There are plenty of edge cases that it needs to take into account here;
+you can have a look at the tests to get an idea about all different cases Providence handles for you.
 
-By adding a reference project, you can automatically see how code in your reference project is
-used across the search target projects.
-Under the hood, this automatically creates a set of queries for you.
+## Projects
+
+Providence uses the concept of projects. A project is a piece of software to analyze:
+usually an npm artifact or a git (mono-)repository. What all projects have in common,
+is a package.json. From it, the following project data is derived:
+
+- the name
+- the version
+- the files it uses for scanning. One of the following strategies is usually followed:
+  - exportmap entrypoints (by 'expanding' package.json "exports" on file system)
+  - npm files (it reads package.json "files" | .npmignore)
+  - the git files (it reads .gitignore)
+  - a custom defined list
+
+For a "find" analyzer, there is one project involved (the target project).
+
+We can specify it like this (we override the default current working directory):
 
 ```bash
-git submodule add <git-url> ./providence-input-data/references/<project-name>
+npx providence analyze find-imports -t /importing/project
 ```
 
-### Updating submodules
-
-Please run:
+For a "match" analyzer, there is also a reference project.
+Here we match the exports of the reference project (-r) against the imports of the target project (-t).
 
 ```bash
-git submodule update --init --recursive
+npx providence analyze match-imports -t /importing/project -r /exporting/project
 ```
 
-### Removing submodules
+## Utils
 
-Please run:
+Providence comes with many tools for deep traversal of identifiers,
+the (babel like) traversal of ast trees in oxc and swc and more.
+Also more generic utils for caching and performant globbing come delivered with Providence.
+
+For a better understanding, check out the utils folders (tests and code).
+
+## More
+
+For more options, see:
 
 ```bash
-sh ./rm-submodule.sh <path/to/submodule>
+npx providence --help
 ```
--->
