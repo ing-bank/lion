@@ -20,7 +20,7 @@ For instance for a repo "lion-based-ui" that extends @lion/\* we can answer ques
 
 - etc...
 
-Providence uses AST analysis for getting the most advanced analysis possible.
+Providence uses abstract syntax trees (ASTs) to have the most advanced analysis possible.
 It does this via the [oxc parser](https://oxc.rs/docs/guide/usage/parser.html), the quickest parser available today!
 
 ## Run
@@ -39,13 +39,13 @@ By default Providence ships these analyzers:
 - match-imports
 - match-subclasses
 
-Let's say we run `find-exports`:
+Let's say we run `find-imports`:
 
 ```bash
 npx providence analyze find-imports
 ```
 
-Now it retrieves all relevant data about es module exports.
+Now it retrieves all relevant data about es module imports.
 There are plenty of edge cases that it needs to take into account here;
 you can have a look at the tests to get an idea about all different cases Providence handles for you.
 
@@ -82,7 +82,7 @@ npx providence analyze match-imports -t /importing/project -r /exporting/project
 
 Providence comes with many tools for deep traversal of identifiers,
 the (babel like) traversal of ast trees in oxc and swc and more.
-Also more generic utils for caching and performant globing come delivered with Providence.
+Also more generic utils for caching and performant globbing come delivered with Providence.
 
 For a better understanding, check out the utils folders (tests and code).
 
