@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- 9b92fa2: Add unique ['\_$isValidator
+- 9b92fa2: Add unique ['_$isValidator$']
 
 ## 0.8.4
 
