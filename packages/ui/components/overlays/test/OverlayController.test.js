@@ -37,6 +37,14 @@ async function mimicEscapePress(element) {
 }
 
 /**
+ * @param {OverlayController} ctrlToFind
+ * @returns {boolean}
+ */
+function isRegisteredOnManager(ctrlToFind) {
+  return Boolean(ctrlToFind.manager?.list?.find(ctrl => ctrlToFind === ctrl));
+}
+
+/**
  * Make sure that all browsers serialize html in a similar way
  * (Firefox tends to output empty style attrs)
  * @param {HTMLElement} node
@@ -275,8 +283,18 @@ describe('OverlayController', () => {
     });
   });
 
-  // TODO: Add teardown feature tests
-  describe('Teardown', () => {});
+  // TODO: Add more teardown feature tests
+  describe('Teardown', () => {
+    it('unregisters itself from overlayManager', async () => {
+      const ctrl = new OverlayController(withGlobalTestConfig());
+
+      expect(isRegisteredOnManager(ctrl)).to.be.true;
+
+      ctrl.teardown();
+
+      expect(isRegisteredOnManager(ctrl)).to.be.false;
+    });
+  });
 
   describe('Node Configuration', () => {
     describe('Content', async () => {
