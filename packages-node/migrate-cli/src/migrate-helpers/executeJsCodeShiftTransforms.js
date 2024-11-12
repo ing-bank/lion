@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // @ts-ignore
 import { run as jscodeshift } from 'jscodeshift/src/Runner.js';
 import path from 'path';
