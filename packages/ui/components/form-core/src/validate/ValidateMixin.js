@@ -10,6 +10,7 @@ import { SyncUpdatableMixin } from '../utils/SyncUpdatableMixin.js';
 import { LionValidationFeedback } from './LionValidationFeedback.js';
 import { ResultValidator as MetaValidator } from './ResultValidator.js';
 import { Unparseable } from './Unparseable.js';
+// eslint-disable-next-line no-unused-vars
 import { Validator } from './Validator.js';
 import { Required } from './validators/Required.js';
 import { FormControlMixin } from '../FormControlMixin.js';
@@ -460,7 +461,9 @@ export const ValidateMixinImplementation = superclass =>
 
       if (isEmpty) {
         const hasSingleValue = !(/** @type {*  & ValidateHost} */ (this)._isFormOrFieldset);
-        const requiredValidator = this._allValidators.find(v => v instanceof Required);
+        const requiredValidator = this._allValidators.find(
+          v => /** @type {typeof Validator} */ (v.constructor)?.validatorName === 'Required',
+        );
         if (requiredValidator) {
           this.__syncValidationResult = [{ validator: requiredValidator, outcome: true }];
         }
@@ -685,7 +688,10 @@ export const ValidateMixinImplementation = superclass =>
       }
 
       for (const validatorToSetup of this._allValidators) {
-        if (!(validatorToSetup instanceof Validator)) {
+        // disable dot notation to avoid the renaming for the prop during build/minification
+        const validatorCtor = /** @type {typeof Validator}  */ (validatorToSetup.constructor);
+        // eslint-disable-next-line dot-notation
+        if (validatorCtor['_$isValidator$'] === undefined) {
           // throws in constructor are not visible to end user so we do both
           const errorType = Array.isArray(validatorToSetup) ? 'array' : typeof validatorToSetup;
           const errorMessage = `Validators array only accepts class instances of Validator. Type "${errorType}" found. This may be caused by having multiple installations of "@lion/ui/form-core.js".`;
