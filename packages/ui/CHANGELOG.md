@@ -1,5 +1,13 @@
 # @lion/ui
 
+## 0.8.6
+
+### Patch Changes
+
+- faca191: no registration of same class twice w/o scoped-registries polyfill
+- 86ca2e0: [overlays] Fixed memory leak caused adopted style cache and the `OverlayMixin` not releasing the `OverlayController` on teardown
+- 2a989f4: [overlays] now closes when iframe loses focus
+
 ## 0.8.5
 
 ### Patch Changes
