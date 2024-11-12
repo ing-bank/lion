@@ -24,7 +24,7 @@
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
     "globby": "^14.0.2",
-    "jscodeshift": "^0.13.1",
+    "jscodeshift": "^17.1.1",
     "prompts": "^2.4.2",
     "providence-analytics": "^0.17.0",
     "semver": "^7.6.3"
