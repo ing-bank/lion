@@ -1092,6 +1092,19 @@ describe('OverlayController', () => {
 
         expect(ctrl.isShown).to.be.true;
       });
+
+      it('hides when window is blurred (useful for iframes)', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideClick: true,
+        });
+        await ctrl.show();
+
+        window.dispatchEvent(new Event('blur'));
+        await aTimeout(0);
+
+        expect(ctrl.isShown).to.be.false;
+      });
     });
 
     describe('elementToFocusAfterHide', () => {
