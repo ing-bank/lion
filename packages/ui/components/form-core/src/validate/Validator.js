@@ -1,10 +1,10 @@
 /**
  * @typedef {import('../../types/validate/index.js').FeedbackMessageData} FeedbackMessageData
- * @typedef {import('../../types/validate/index.js').ValidatorParam} ValidatorParam
- * @typedef {import('../../types/validate/index.js').ValidatorConfig} ValidatorConfig
  * @typedef {import('../../types/validate/index.js').ValidatorOutcome} ValidatorOutcome
- * @typedef {import('../../types/validate/index.js').ValidatorName} ValidatorName
+ * @typedef {import('../../types/validate/index.js').ValidatorConfig} ValidatorConfig
+ * @typedef {import('../../types/validate/index.js').ValidatorParam} ValidatorParam
  * @typedef {import('../../types/validate/index.js').ValidationType} ValidationType
+ * @typedef {import('../../types/validate/index.js').ValidatorName} ValidatorName
  * @typedef {import('../FormControlMixin.js').FormControlHost} FormControlHost
  */
 
@@ -32,7 +32,21 @@ export class Validator extends EventTarget {
      * @type {ValidationType}
      */
     this.type = config?.type || 'error';
+    /**
+     * Disable dot notation to avoid the renaming for the prop during build/minification
+     */
   }
+
+  /**
+   * This unique marker allows us to identify Validator instances across different lion versions.
+   * It's meant to be used as a replacement for an instanceof check.
+   *
+   * N.B. it's important to keep the bracket notation, as `static _$isValidator$ = true;` will
+   * be renamed during minification and that leads to different names across different
+   * lion versions.
+   * @type {boolean}
+   */
+  static ['_$isValidator$'] = true;
 
   /**
    * The name under which validation results get registered. For convenience and predictability, this

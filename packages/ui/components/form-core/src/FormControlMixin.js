@@ -274,7 +274,7 @@ const FormControlMixinImplementation = superclass =>
       super.updated(changedProperties);
 
       if (changedProperties.has('disabled')) {
-        this._inputNode?.setAttribute('aria-disabled', this.disabled.toString());
+        this._inputNode?.setAttribute('aria-disabled', `${Boolean(this.disabled)}`);
       }
 
       if (changedProperties.has('_ariaLabelledNodes')) {

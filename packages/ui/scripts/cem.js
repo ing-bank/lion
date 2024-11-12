@@ -39,10 +39,10 @@ for (const [, module] of moduleGraph.modules) {
 
 /** Exclude information inherited from these mixins, they're generally not useful for public api */
 const inheritanceDenyList = [
-  'LocalizeMixin',
   'ScopedElementsMixin',
-  'SlotMixin',
   'SyncUpdatableMixin',
+  'LocalizeMixin',
+  'SlotMixin',
 ];
 
 const cem = create({
@@ -66,11 +66,11 @@ const cem = create({
                * Set privacy for members based on naming conventions
                */
               for (const m of declaration.members) {
-                if (!m.privacy && !m.name.startsWith('_') && !m.name.startsWith('#')) {
+                if (!m.privacy && !m.name?.startsWith('_') && !m.name?.startsWith('#')) {
                   m.privacy = 'public';
-                } else if (!m.privacy && m.name.startsWith('_')) {
+                } else if (!m.privacy && m.name?.startsWith('_')) {
                   m.privacy = 'protected';
-                } else if (m.name.startsWith('#') || m.name.startsWith('__')) {
+                } else if (m.name?.startsWith('#') || m.name?.startsWith('__')) {
                   m.privacy = 'private';
                 }
               }
