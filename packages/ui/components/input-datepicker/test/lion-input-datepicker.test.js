@@ -391,6 +391,12 @@ describe('<lion-input-datepicker>', () => {
         myMaxDateValidator.param = new Date('2020/03/03');
 
         expect(el.__calendarMaxDate.toString()).to.equal(new Date('2020/03/03').toString());
+
+        el._overlayInvokerNode.click();
+        await new Promise(res => {
+          setTimeout(res, 10);
+        });
+        expect(el._calendarNode.centralDate.toString()).to.equal(new Date('2020/03/03').toString());
       });
 
       it('should sync MinMaxDate validator param with Calendar Min And Max Date', async () => {
@@ -408,6 +414,27 @@ describe('<lion-input-datepicker>', () => {
 
         expect(el.__calendarMinDate.toString()).to.equal(new Date('2019/05/15').toString());
         expect(el.__calendarMaxDate.toString()).to.equal(new Date('2019/07/15').toString());
+      });
+
+      it('should update the central date of Calendar if updated validator made the current central date disabled', async () => {
+        const initialValidators = [new MaxDate(new Date('2000/01/01'))];
+        const updatedValidators = [new MaxDate(new Date('2020/01/01'))];
+
+        const el = await fixture(html`
+          <lion-input-datepicker .validators="${initialValidators}"></lion-input-datepicker>
+        `);
+        el._overlayInvokerNode.click();
+        await new Promise(res => {
+          setTimeout(res, 10);
+        });
+        expect(el._calendarNode.centralDate.toString()).to.equal(new Date('2000/01/01').toString());
+
+        el.validators = updatedValidators;
+        el._overlayInvokerNode.click();
+        await new Promise(res => {
+          setTimeout(res, 10);
+        });
+        expect(el._calendarNode.centralDate.toString()).to.equal(new Date('2020/01/01').toString());
       });
 
       it('should show error on invalid date passed to modelValue', async () => {
