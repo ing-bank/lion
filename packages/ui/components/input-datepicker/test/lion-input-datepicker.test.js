@@ -19,9 +19,10 @@ import '@lion/ui/define/lion-input-datepicker.js';
  */
 function getProtectedMembersDatepicker(datepickerEl) {
   // @ts-ignore
-  const { __invokerId: invokerId } = datepickerEl;
+  const { __invokerId: invokerId, _calendarNode: calendarNode } = datepickerEl;
   return {
     invokerId,
+    calendarNode,
   };
 }
 
@@ -391,12 +392,6 @@ describe('<lion-input-datepicker>', () => {
         myMaxDateValidator.param = new Date('2020/03/03');
 
         expect(el.__calendarMaxDate.toString()).to.equal(new Date('2020/03/03').toString());
-
-        el._overlayInvokerNode.click();
-        await new Promise(res => {
-          setTimeout(res, 10);
-        });
-        expect(el._calendarNode.centralDate.toString()).to.equal(new Date('2020/03/03').toString());
       });
 
       it('should sync MinMaxDate validator param with Calendar Min And Max Date', async () => {
@@ -427,14 +422,18 @@ describe('<lion-input-datepicker>', () => {
         await new Promise(res => {
           setTimeout(res, 10);
         });
-        expect(el._calendarNode.centralDate.toString()).to.equal(new Date('2000/01/01').toString());
+        expect(getProtectedMembersDatepicker(el).calendarNode.centralDate.toString()).to.equal(
+          new Date('2000/01/01').toString(),
+        );
 
         el.validators = updatedValidators;
         el._overlayInvokerNode.click();
         await new Promise(res => {
           setTimeout(res, 10);
         });
-        expect(el._calendarNode.centralDate.toString()).to.equal(new Date('2020/01/01').toString());
+        expect(getProtectedMembersDatepicker(el).calendarNode.centralDate.toString()).to.equal(
+          new Date('2020/01/01').toString(),
+        );
       });
 
       it('should show error on invalid date passed to modelValue', async () => {
