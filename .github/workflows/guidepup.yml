@@ -1,0 +1,17 @@
+name: SR automation
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+jobs:
+  voiceover:
+    name: SR auto
+    runs-on: macos-latest
+    steps:
+      - name: Setup Environment
+        uses: guidepup/setup-action
+
+      - name: Run test
+        run: node guidepup.test.cjs
