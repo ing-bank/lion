@@ -190,6 +190,7 @@ export class OverlayController extends EventTarget {
         placement: 'center',
       },
       zIndex: 9999,
+      // _noDialogEl: true,
     };
 
     /** @protected */
