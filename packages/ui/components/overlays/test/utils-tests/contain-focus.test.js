@@ -24,7 +24,7 @@ function simulateTabInWindow(elToRecieveFocus) {
 }
 
 const interactionElementsNode = renderLitAsNode(html`
-  <div>
+  <div id="contentEl">
     <button id="el1">Button</button>
     <a id="el2" href="#">foo</a>
     <div id="el3" tabindex="0"></div>
@@ -91,6 +91,17 @@ describe('containFocus()', () => {
     expect(root.getAttribute('tabindex')).to.equal('-1');
     expect(root.style.getPropertyValue('outline-style')).to.equal('none');
 
+    disconnect();
+  });
+
+  it('starts focus at the specified content element when contentElementToFocus is given and there is no element with [autofocus]', async () => {
+    await fixture(lightDomTemplate);
+    const root = /** @type {HTMLElement} */ (document.getElementById('rootElement'));
+    const contentEl = /** @type {HTMLElement} */ (document.getElementById('contentEl'));
+    const { disconnect } = containFocus(root, contentEl);
+
+    expect(getDeepActiveElement()).to.equal(contentEl);
+    expect(contentEl.getAttribute('tabindex')).to.equal('0');
     disconnect();
   });
 

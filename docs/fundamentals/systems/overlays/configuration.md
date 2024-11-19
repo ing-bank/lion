@@ -1,7 +1,7 @@
 # Systems >> Overlays >> Configuration ||40
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html as previewHtml } from '@mdjs/mdjs-preview';
 import './assets/demo-el-using-overlaymixin.mjs';
 import './assets/applyDemoOverlayStyles.mjs';
 import { withDropdownConfig, withModalDialogConfig, withTooltipConfig } from '@lion/ui/overlays.js';
@@ -216,6 +216,153 @@ export const hidesOnOutsideClick = () => {
         </button>
       </div>
     </demo-el-using-overlaymixin>
+  `;
+};
+```
+
+## contentElementToFocus
+
+In case of an sticky element inside an overlay with a lot of content you can set `contentElementToFocus` to make sure the scrollable element gets focused.
+
+```js preview-story
+import { css, html, LitElement } from 'lit';
+import { uuid } from '@lion/ui/core.js';
+import { OverlayMixin } from '@lion/ui/overlays.js';
+
+class MyOverlayFrame extends LitElement {
+  static get styles() {
+    return css`
+      :host {
+        display: flex;
+        flex-direction: column;
+        max-width: 600px;
+        max-height: 600px;
+        overflow: hidden;
+        background-color: white;
+        border: 1px solid black;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+      }
+      :host ::slotted([slot='frame-content']) {
+        overflow-y: auto;
+        padding: 10px;
+      }
+    `;
+  }
+
+  get headerNode() {
+    return this.querySelector('[slot="frame-header"]');
+  }
+
+  get bodyNode() {
+    return this.querySelector('[slot="frame-content"]');
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    const frameId = uuid();
+    this.headerNode.setAttribute('id', `frame-header-${frameId}`);
+    this.bodyNode.setAttribute('id', `frame-body-${frameId}`);
+    this.bodyNode.setAttribute('aria-labelledby', `frame-header-${frameId}`);
+    this.bodyNode.setAttribute('aria-describedby', `frame-body-${frameId}`);
+  }
+
+  render() {
+    return html`
+      <h1 class="header">
+        <slot name="frame-header"></slot>
+        <button type="button" @click="${() => this.dispatchEvent(new Event('close-overlay'))}">
+          ⨯
+        </button>
+      </h1>
+      <slot name="frame-content"></slot>
+    `;
+  }
+}
+
+class MyOverlay extends OverlayMixin(LitElement) {
+  _defineOverlayConfig() {
+    return {
+      ...withModalDialogConfig(),
+      contentElementToFocus: this._overlayContentNode?.bodyNode,
+    };
+  }
+
+  render() {
+    return html`
+      <slot name="invoker"></slot>
+      <div id="overlay-content-node-wrapper">
+        <slot name="content"></slot>
+      </div>
+    `;
+  }
+}
+customElements.define('my-overlay-frame', MyOverlayFrame);
+customElements.define('my-overlay', MyOverlay);
+
+export const contentElementToFocus = () => {
+  return previewHtml`
+    <my-overlay>
+      <button slot="invoker">Click me to open the overlay!</button>
+      <my-overlay-frame slot="content">
+        <span slot="frame-header">Heading</span>
+        <div slot="frame-content">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Pulvinar mattis nunc sed blandit. Tellus
+            elementum sagittis vitae et. Orci sagittis eu volutpat odio facilisis mauris sit amet
+            massa. Scelerisque in dictum non consectetur a erat. In mollis nunc sed id semper risus
+            in. Ac ut consequat semper viverra. Dignissim cras tincidunt lobortis feugiat vivamus at
+            augue eget. Ultrices neque ornare aenean euismod elementum nisi. Lorem sed risus
+            ultricies tristique nulla aliquet enim tortor at. Rhoncus est pellentesque elit
+            ullamcorper dignissim cras tincidunt lobortis feugiat.
+          </p>
+          <p>
+            Sagittis id consectetur purus ut faucibus pulvinar elementum integer. Ante in nibh
+            mauris cursus. Et netus et malesuada fames ac turpis. Id eu nisl nunc mi ipsum. Sagittis
+            orci a scelerisque purus. Placerat vestibulum lectus mauris ultrices eros in. In est
+            ante in nibh mauris cursus mattis. Sem viverra aliquet eget sit. Vulputate ut pharetra
+            sit amet aliquam id. Eu facilisis sed odio morbi quis commodo.
+          </p>
+          <p>
+            Semper eget duis at tellus at urna. Diam quis enim lobortis scelerisque fermentum dui
+            faucibus in. Risus in hendrerit gravida rutrum quisque non tellus orci. Est ante in nibh
+            mauris cursus mattis molestie a iaculis. Semper quis lectus nulla at volutpat diam ut.
+            At auctor urna nunc id cursus metus aliquam eleifend. Dui faucibus in ornare quam
+            viverra. Netus et malesuada fames ac turpis egestas. Placerat in egestas erat imperdiet
+            sed euismod nisi porta. Volutpat lacus laoreet non curabitur gravida arcu ac tortor.
+            Donec et odio pellentesque diam volutpat commodo. In tellus integer feugiat scelerisque
+            varius morbi enim. Rhoncus mattis rhoncus urna neque viverra justo nec ultrices dui. A
+            cras semper auctor neque vitae tempus quam. Ipsum a arcu cursus vitae congue mauris.
+            Commodo ullamcorper a lacus vestibulum.
+          </p>
+          <p>
+            Vulputate ut pharetra sit amet aliquam. Neque laoreet suspendisse interdum consectetur
+            libero id. Amet commodo nulla facilisi nullam vehicula ipsum a arcu. Risus viverra
+            adipiscing at in tellus. Cum sociis natoque penatibus et. Morbi tempus iaculis urna id
+            volutpat lacus. Integer enim neque volutpat ac tincidunt vitae semper quis. Elementum
+            sagittis vitae et leo duis ut diam quam nulla. Magna sit amet purus gravida quis blandit
+            turpis cursus. Maecenas pharetra convallis posuere morbi leo urna. Quis imperdiet massa
+            tincidunt nunc pulvinar sapien et ligula ullamcorper. Ullamcorper a lacus vestibulum sed
+            arcu non.
+          </p>
+          <p>
+            Donec massa sapien faucibus et. Sed pulvinar proin gravida hendrerit lectus. Odio
+            facilisis mauris sit amet massa vitae tortor. Pharetra convallis posuere morbi leo urna
+            molestie at. Volutpat odio facilisis mauris sit amet massa vitae tortor condimentum.
+            Lobortis feugiat vivamus at augue eget arcu dictum. Morbi enim nunc faucibus a
+            pellentesque sit amet porttitor. Duis convallis convallis tellus id interdum velit
+            laoreet id donec. Montes nascetur ridiculus mus mauris. Et netus et malesuada fames ac
+            turpis egestas. Lacus sed turpis tincidunt id aliquet risus feugiat in. Sem integer
+            vitae justo eget magna fermentum. Purus in massa tempor nec. Elementum curabitur vitae
+            nunc sed velit dignissim. Felis imperdiet proin fermentum leo vel orci porta non.
+          </p>
+        </div>
+      </my-overlay-frame>
+    </my-overlay>
   `;
 };
 ```

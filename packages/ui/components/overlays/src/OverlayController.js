@@ -141,6 +141,7 @@ export class OverlayController extends EventTarget {
       invokerNode: config.invokerNode,
       backdropNode: config.backdropNode,
       referenceNode: undefined,
+      contentElementToFocus: config.contentNode,
       elementToFocusAfterHide: config.invokerNode,
       inheritsReferenceWidth: 'none',
       hasBackdrop: false,
@@ -281,6 +282,14 @@ export class OverlayController extends EventTarget {
   }
 
   /**
+   * The element that should be called `.focus()` on show if no autofocus is set
+   * @type {HTMLElement}
+   */
+  get contentElementToFocus() {
+    return /** @type {HTMLElement} */ (this.config?.contentElementToFocus || this.contentNode);
+  }
+
+  /**
    * The element that should be called `.focus()` on after dialog closes
    * @type {HTMLElement}
    */
@@ -299,7 +308,7 @@ export class OverlayController extends EventTarget {
   }
 
   /**
-   * Hides other overlays when mutiple are opened (currently exclusive to globalOverlayController)
+   * Hides other overlays when multiple are opened (currently exclusive to globalOverlayController)
    * @type {boolean}
    */
   get isBlocking() {
@@ -307,7 +316,7 @@ export class OverlayController extends EventTarget {
   }
 
   /**
-   * Hides other overlays when mutiple are opened (currently exclusive to globalOverlayController)
+   * Hides other overlays when multiple are opened (currently exclusive to globalOverlayController)
    * @type {boolean}
    */
   get preventsScroll() {
@@ -331,7 +340,7 @@ export class OverlayController extends EventTarget {
   }
 
   /**
-   * Hides the overlay when clicking next to it, exluding invoker
+   * Hides the overlay when clicking next to it, excluding invoker
    * @type {boolean}
    */
   get hidesOnOutsideClick() {
@@ -424,7 +433,7 @@ export class OverlayController extends EventTarget {
    * @param {number} value
    */
   set elevation(value) {
-    // @ts-expect-error find out why config would/could be undfined
+    // @ts-expect-error find out why config would/could be undefined
     this.__wrappingDialogNode.style.zIndex = `${this.config.zIndex + value}`;
   }
 
@@ -1114,7 +1123,7 @@ export class OverlayController extends EventTarget {
     if (this.manager) {
       this.manager.disableTrapsKeyboardFocusForAll();
     }
-    this._containFocusHandler = containFocus(this.contentNode);
+    this._containFocusHandler = containFocus(this.contentNode, this.contentElementToFocus);
     this.__hasActiveTrapsKeyboardFocus = true;
     if (this.manager) {
       this.manager.informTrapsKeyboardFocusGotEnabled(this.placementMode);

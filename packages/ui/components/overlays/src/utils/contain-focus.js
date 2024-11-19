@@ -69,12 +69,18 @@ export function rotateFocus(rootElement, e) {
  * focusable element.
  *
  * @param {HTMLElement} rootElement The element to contain focus within
+ * @param {HTMLElement} [contentElementToFocus] The element to set focus on
  * @returns {{ disconnect: () => void }} handler with a disconnect callback
  */
-export function containFocus(rootElement) {
+export function containFocus(rootElement, contentElementToFocus) {
+  if (!contentElementToFocus) {
+    contentElementToFocus = rootElement;
+  }
+
   const focusableElements = getFocusableElements(rootElement);
   // Initial focus goes to first element with autofocus, or the root element
-  const initialFocus = focusableElements.find(e => e.hasAttribute('autofocus')) || rootElement;
+  const initialFocus =
+    focusableElements.find(e => e.hasAttribute('autofocus')) || contentElementToFocus;
   /** @type {HTMLElement} */
   let tabDetectionElement;
   /** @type {MutationObserver} */
@@ -82,13 +88,12 @@ export function containFocus(rootElement) {
 
   // If root element will receive focus, it should have a tabindex of -1.
   // This makes it focusable through js, but it won't appear in the tab order
-  if (initialFocus === rootElement) {
-    rootElement.tabIndex = -1;
-    rootElement.style.setProperty('outline', 'none');
-  }
+  contentElementToFocus.tabIndex = rootElement === contentElementToFocus ? -1 : 0;
+  rootElement.style.setProperty('outline', 'none');
 
   // Focus first focusable element
   initialFocus.focus();
+  initialFocus.scrollTo(0, 0);
 
   /**
    * Ensures focus stays inside root element on tab

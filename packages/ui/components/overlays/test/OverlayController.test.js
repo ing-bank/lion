@@ -1094,6 +1094,59 @@ describe('OverlayController', () => {
       });
     });
 
+    describe('contentElementToFocus', () => {
+      it('focuses root of the content by default', async () => {
+        const contentNode = /** @type {HTMLElement} */ (await fixture('<div><input /></div>'));
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          viewportConfig: {
+            placement: 'top-left',
+          },
+          contentNode,
+        });
+
+        await ctrl.show();
+        expect(document.activeElement).to.equal(contentNode);
+      });
+
+      it('focuses element defined by contentElementToFocus by if provided', async () => {
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture('<div><div id="content"><input /><div></div>')
+        );
+        const contentElementToFocus = /** @type {HTMLElement} */ (
+          contentNode.querySelector('#content')
+        );
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          viewportConfig: {
+            placement: 'top-left',
+          },
+          contentNode,
+          contentElementToFocus,
+        });
+
+        await ctrl.show();
+        expect(document.activeElement).to.equal(contentElementToFocus);
+      });
+
+      it('focuses on element with autofocus when available', async () => {
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture('<div><input autofocus /></div>')
+        );
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          viewportConfig: {
+            placement: 'top-left',
+          },
+          contentNode,
+        });
+
+        await ctrl.show();
+        const input = /** @type {HTMLInputElement} */ (contentNode.querySelector('input'));
+        expect(document.activeElement).to.equal(input);
+      });
+    });
+
     describe('elementToFocusAfterHide', () => {
       it('focuses body when hiding by default', async () => {
         const contentNode = /** @type {HTMLElement} */ (await fixture('<div><input /></div>'));
