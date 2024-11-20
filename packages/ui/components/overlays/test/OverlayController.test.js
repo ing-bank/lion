@@ -603,8 +603,8 @@ describe('OverlayController', () => {
         event.keyCode = keyCodes.tab;
         window.dispatchEvent(event);
 
-        expect(elOutside).to.not.equal(document.activeElement);
-        expect(input1).to.equal(document.activeElement);
+        expect(isActiveElement(elOutside)).to.be.false;
+        expect(isActiveElement(input1)).to.be.true;
       });
 
       it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
@@ -625,7 +625,7 @@ describe('OverlayController', () => {
         input.focus();
         simulateTab();
 
-        expect(elOutside).to.equal(document.activeElement);
+        expect(isActiveElement(elOutside)).to.be.true;
       });
 
       it('keeps focus within overlay with multiple overlays with all traps on true', async () => {
@@ -647,6 +647,30 @@ describe('OverlayController', () => {
         await ctrl1.hide();
         expect(ctrl0.hasActiveTrapsKeyboardFocus).to.be.true;
         expect(ctrl1.hasActiveTrapsKeyboardFocus).to.be.false;
+      });
+
+      it('warns when contentNode is a host for a shadowRoot', async () => {
+        const warnSpy = sinon.spy(console, 'warn');
+
+        const contentNode = /** @type {HTMLDivElement} */ (await fixture(html` <div></div> `));
+        contentNode.attachShadow({ mode: 'open' });
+        const shadowRootContentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div><input id="input1" /><input id="input2" /></div> `)
+        );
+        contentNode.shadowRoot?.appendChild(shadowRootContentNode);
+
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+          contentNode,
+        });
+        await ctrl.show();
+
+        // @ts-expect-error
+        expect(console.warn.args[0][0]).to.equal(
+          '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
+        );
+        warnSpy.restore();
       });
     });
 
