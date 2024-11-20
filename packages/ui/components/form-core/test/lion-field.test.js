@@ -1,26 +1,27 @@
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
-import { Required, Validator } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-field.js';
 import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
-import {
-  expect,
-  fixture,
-  html,
-  triggerBlurFor,
-  triggerFocusFor,
-  unsafeStatic,
-} from '@open-wc/testing';
+import { Required, Validator } from '@lion/ui/form-core.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import '@lion/ui/define/lion-field.js';
 import sinon from 'sinon';
+import {
+  triggerFocusFor,
+  triggerBlurFor,
+  unsafeStatic,
+  fixture,
+  expect,
+  html,
+} from '@open-wc/testing';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
- * @typedef {import('../src/LionField.js').LionField} LionField
- * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {FormControlHost & HTMLElement & {_parentFormGroup?:HTMLElement, checked?:boolean}} FormControl
+ * @typedef {HTMLElement & {shadowRoot: HTMLElement, assignedNodes: Function}} ShadowHTMLElement
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../src/LionField.js').LionField} LionField
  */
-
-/** @typedef {HTMLElement & {shadowRoot: HTMLElement, assignedNodes: Function}} ShadowHTMLElement */
 
 const tagString = 'lion-field';
 const tag = unsafeStatic(tagString);
@@ -106,7 +107,7 @@ describe('<lion-field>', () => {
 
     await triggerFocusFor(el);
 
-    expect(document.activeElement).to.equal(_inputNode);
+    expect(isActiveElement(_inputNode)).to.be.true;
     expect(cbFocusHost.callCount).to.equal(1);
     expect(cbFocusNativeInput.callCount).to.equal(1);
     expect(cbBlurHost.callCount).to.equal(0);
@@ -117,7 +118,7 @@ describe('<lion-field>', () => {
     expect(cbBlurNativeInput.callCount).to.equal(1);
 
     await triggerFocusFor(el);
-    expect(document.activeElement).to.equal(_inputNode);
+    expect(isActiveElement(_inputNode)).to.be.true;
     expect(cbFocusHost.callCount).to.equal(2);
     expect(cbFocusNativeInput.callCount).to.equal(2);
 

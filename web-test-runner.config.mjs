@@ -11,7 +11,8 @@ const groups = (
   await optimisedGlob(['packages/*/test', 'packages/ui/components/**/test'], {
     onlyDirectories: true,
   })
-).map(dir => ({ name: dir.split('/').at(-2), files: `${dir}/**/*.test.js` }));
+) // @ts-expect-error [update-es-version-later]
+  .map(dir => ({ name: dir.split('/').at(-2), files: `${dir}/**/*.test.js` })); // .filter(({name}) => name === 'overlays');
 
 /**
  * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}

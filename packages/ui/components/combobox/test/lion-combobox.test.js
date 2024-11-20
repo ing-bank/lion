@@ -1,20 +1,22 @@
-import {
-  getComboboxMembers,
-  getFilteredOptionValues,
-  mimicKeyPress,
-  mimicUserTyping,
-  mimicUserTypingAdvanced,
-} from '@lion/ui/combobox-test-helpers.js';
+import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { Required, Unparseable } from '@lion/ui/form-core.js';
+import { sendKeys } from '@web/test-runner-commands';
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { browserDetection } from '@lion/ui/core.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
-import { Required, Unparseable } from '@lion/ui/form-core.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
-import { sendKeys } from '@web/test-runner-commands';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import {
+  getFilteredOptionValues,
+  mimicUserTypingAdvanced,
+  getComboboxMembers,
+  mimicUserTyping,
+  mimicKeyPress,
+} from '@lion/ui/combobox-test-helpers.js';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
  * @typedef {import('../types/SelectionDisplay.js').SelectionDisplay} SelectionDisplay
@@ -986,7 +988,7 @@ describe('lion-combobox', () => {
       options[0].click();
       await el.updateComplete;
       expect(el.opened).to.equal(false);
-      expect(document.activeElement).to.equal(_inputNode);
+      expect(isActiveElement(_inputNode)).to.be.true;
 
       // step [4]
       await el.updateComplete;
