@@ -1121,6 +1121,15 @@ export class OverlayController extends EventTarget {
     if (this.manager) {
       this.manager.disableTrapsKeyboardFocusForAll();
     }
+
+    const isContentShadowHost = Boolean(this.contentNode.shadowRoot);
+    if (isContentShadowHost) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
+      );
+    }
+
     this._containFocusHandler = containFocus(this.contentNode);
     this.__hasActiveTrapsKeyboardFocus = true;
     if (this.manager) {
