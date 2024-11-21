@@ -19,9 +19,10 @@ import '@lion/ui/define/lion-input-datepicker.js';
  */
 function getProtectedMembersDatepicker(datepickerEl) {
   // @ts-ignore
-  const { __invokerId: invokerId } = datepickerEl;
+  const { __invokerId: invokerId, _calendarNode: calendarNode } = datepickerEl;
   return {
     invokerId,
+    calendarNode,
   };
 }
 
@@ -408,6 +409,29 @@ describe('<lion-input-datepicker>', () => {
 
         expect(el.__calendarMinDate.toString()).to.equal(new Date('2019/05/15').toString());
         expect(el.__calendarMaxDate.toString()).to.equal(new Date('2019/07/15').toString());
+      });
+
+      it('should update the central date of Calendar if updated validator made the current central date disabled', async () => {
+        const initialValidators = [new MaxDate(new Date('2000/01/01'))];
+        const updatedValidators = [new MaxDate(new Date('2020/01/01'))];
+
+        const el = await fixture(html`
+          <lion-input-datepicker .validators="${initialValidators}"></lion-input-datepicker>
+        `);
+        const obj = new DatepickerInputObject(el);
+        await obj.openCalendar();
+
+        expect(getProtectedMembersDatepicker(el).calendarNode.centralDate.toString()).to.equal(
+          new Date('2000/01/01').toString(),
+        );
+
+        await obj.closeCalendar();
+        el.validators = updatedValidators;
+        await obj.openCalendar();
+
+        expect(getProtectedMembersDatepicker(el).calendarNode.centralDate.toString()).to.equal(
+          new Date('2020/01/01').toString(),
+        );
       });
 
       it('should show error on invalid date passed to modelValue', async () => {

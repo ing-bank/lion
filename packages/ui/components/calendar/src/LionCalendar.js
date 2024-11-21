@@ -364,7 +364,11 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     if (this.selectedDate) {
       this.focusSelectedDate();
     } else {
-      this.centralDate = /** @type {Date} */ (this.__initialCentralDate);
+      if (!this.__isEnabledDate(/** @type {Date} */ (this.__initialCentralDate))) {
+        this.centralDate = this.findNearestEnabledDate(this.__initialCentralDate);
+      } else {
+        this.centralDate = /** @type {Date} */ (this.__initialCentralDate);
+      }
       this.focusCentralDate();
     }
   }
