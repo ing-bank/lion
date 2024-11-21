@@ -5,6 +5,7 @@ import { globby } from 'globby';
 import * as readline from 'readline';
 
 import { Option, Command } from 'commander';
+import { executeJsCodeShiftTransforms } from '../migrate-helpers/executeJsCodeShiftTransforms.js';
 
 export const consoleColorHelpers = {
   reset: '\x1b[0m',
@@ -13,7 +14,6 @@ export const consoleColorHelpers = {
 
 /**
  * @param {URL|string} upgradesDir
- * @param {string} cwd
  * @returns {URL}
  */
 function getUpgradesDirUrl(upgradesDir) {
@@ -132,7 +132,12 @@ async function runUpgradeTask({ upgradeTaskUrl, options, task, isRunningMultiple
 
     try {
       await script._mockable.upgrade(
-        { skipPackageJson: false, ...options, inputDir: workspacePackage.dir },
+        {
+          skipPackageJson: false,
+          transformFunction: executeJsCodeShiftTransforms,
+          ...options,
+          inputDir: workspacePackage.dir,
+        },
         workspaceMeta,
       );
     } catch (e) {
@@ -160,14 +165,11 @@ export class UpgradeCommandBase {
     this.setCommandOptions(command);
     command.action(async options => {
       // if config file is provided, first apply this before applying other options
-      if (options.configFile) {
-        if (fs.existsSync(options.configFile)) {
-          cli.options.configFile = options.configFile;
-          await cli.applyConfigFile();
-        }
-        delete options.config;
+      const { configFile, ..._options } = options;
+      if (configFile) {
+        cli.applyConfigFile(configFile);
       }
-      cli.setOptions(options);
+      cli.setOptions(_options);
       // eslint-disable-next-line no-param-reassign
       cli.activePlugin = this;
       await this.upgrade();
