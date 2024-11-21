@@ -6,7 +6,7 @@
  * and contains several bugs on IE11.
  */
 
-import { getDeepActiveElement } from './get-deep-active-element.js';
+import { getDeepActiveElement } from '../../../core/src/getDeepActiveElement.js';
 import { getFocusableElements } from './get-focusable-elements.js';
 import { deepContains } from './deep-contains.js';
 import { keyCodes } from './key-codes.js';

@@ -4,6 +4,7 @@ import { LitElement } from 'lit';
 import sinon from 'sinon';
 
 import { ScopedElementsMixin, supportsScopedRegistry } from '../src/ScopedElementsMixin.js';
+import { isActiveElement } from '../test-helpers/isActiveElement.js';
 
 /**
  * @typedef {import('../types/SlotMixinTypes.js').SlotHost} SlotHost
@@ -210,12 +211,12 @@ describe('SlotMixin', () => {
       );
       const el = /** @type {* & SlotHost} */ (await fixture(`<${tag}></${tag}>`));
       el._focusableNode.focus();
-      expect(document.activeElement).to.equal(el._focusableNode);
+      expect(isActiveElement(el._focusableNode)).to.be.true;
 
       el.currentValue = 1;
       await el.updateComplete;
 
-      expect(document.activeElement).to.equal(el._focusableNode);
+      expect(isActiveElement(el._focusableNode)).to.be.true;
     });
 
     it('keeps focus after rerendering complex shadow root into slot', async () => {
@@ -277,7 +278,7 @@ describe('SlotMixin', () => {
       el.currentValue = 1;
       await el.updateComplete;
 
-      expect(document.activeElement).to.equal(el._focusableNode);
+      expect(isActiveElement(el._focusableNode)).to.be.true;
       expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
     });
 
@@ -335,12 +336,12 @@ describe('SlotMixin', () => {
 
       el._focusableNode._buttonNode.focus();
 
-      expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
 
       el.currentValue = 1;
       await el.updateComplete;
 
-      expect(document.activeElement).to.equal(el._focusableNode);
+      expect(isActiveElement(el._focusableNode)).to.be.true;
       expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
     });
 

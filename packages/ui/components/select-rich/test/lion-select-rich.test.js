@@ -1,30 +1,28 @@
-import { LitElement } from 'lit';
-import { LionOption } from '@lion/ui/listbox.js';
-import { OverlayController } from '@lion/ui/overlays.js';
-import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { LionSelectInvoker, LionSelectRich } from '@lion/ui/select-rich.js';
-
-import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-listbox.js';
+import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
+import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
+import { OverlayController } from '@lion/ui/overlays.js';
+import { LionOption } from '@lion/ui/listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
+import '@lion/ui/define/lion-listbox.js';
+import '@lion/ui/define/lion-option.js';
+import { LitElement } from 'lit';
 import {
+  fixture as _fixture,
+  unsafeStatic,
+  nextFrame,
   aTimeout,
   defineCE,
   expect,
-  fixture as _fixture,
   html,
-  nextFrame,
-  unsafeStatic,
 } from '@open-wc/testing';
-import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
- * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
- * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
  * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
- */
-
-/**
+ * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
+ * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
@@ -478,7 +476,7 @@ describe('lion-select-rich', () => {
 
       el.opened = true;
       await el.updateComplete;
-      expect(document.activeElement).to.equal(_listboxNode);
+      expect(isActiveElement(_listboxNode)).to.be.true;
 
       el.opened = false;
       await el.updateComplete;

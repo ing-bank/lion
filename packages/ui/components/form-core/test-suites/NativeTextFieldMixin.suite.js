@@ -1,14 +1,16 @@
-import { LitElement } from 'lit';
-import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { defineCE, expect, fixture, html, triggerFocusFor, unsafeStatic } from '@open-wc/testing';
-import { sendKeys } from '@web/test-runner-commands';
-import { spy } from 'sinon';
+import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { NativeTextFieldMixin } from '@lion/ui/form-core.js';
+import { sendKeys } from '@web/test-runner-commands';
 import { browserDetection } from '@lion/ui/core.js';
+import { LitElement } from 'lit';
+import { spy } from 'sinon';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
- * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
+ * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  */
 
 /**
@@ -56,7 +58,7 @@ export function runNativeTextFieldMixinSuite(customConfig) {
       const { _inputNode } = getFormControlMembers(el);
       await triggerFocusFor(el);
       await el.updateComplete;
-      expect(document.activeElement).to.equal(_inputNode);
+      expect(isActiveElement(_inputNode)).to.be.true;
       await sendKeys({
         press: 'h',
       });

@@ -1,6 +1,7 @@
 /* eslint-disable lit-a11y/no-autofocus */
 import { expect, fixture as _fixture, html, unsafeStatic, aTimeout } from '@open-wc/testing';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import '@lion/ui/define/lion-dialog.js';
 
 /**
@@ -89,8 +90,8 @@ describe('lion-dialog', () => {
       const invokerNode = el._overlayInvokerNode;
       invokerNode.focus();
       invokerNode.click();
-      const contentNode = el.querySelector('[slot="content"]');
-      expect(document.activeElement).to.equal(contentNode);
+      const contentNode = /** @type {Element} */ (el.querySelector('[slot="content"]'));
+      expect(isActiveElement(contentNode)).to.be.true;
     });
 
     it('sets focus on autofocused element', async () => {
@@ -107,8 +108,8 @@ describe('lion-dialog', () => {
       const invokerNode = el._overlayInvokerNode;
       invokerNode.focus();
       invokerNode.click();
-      const input = el.querySelector('input');
-      expect(document.activeElement).to.equal(input);
+      const input = /** @type {Element} */ (el.querySelector('input'));
+      expect(isActiveElement(input)).to.be.true;
     });
 
     it('with trapsKeyboardFocus set to false the focus stays on the invoker', async () => {
@@ -125,7 +126,7 @@ describe('lion-dialog', () => {
       const invokerNode = el._overlayInvokerNode;
       invokerNode.focus();
       invokerNode.click();
-      expect(document.activeElement).to.equal(invokerNode);
+      expect(isActiveElement(invokerNode)).to.be.true;
     });
 
     it('opened-changed event should send detail object with opened state', async () => {

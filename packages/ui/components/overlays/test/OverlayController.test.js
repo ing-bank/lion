@@ -12,6 +12,7 @@ import {
   html,
 } from '@open-wc/testing';
 
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { createShadowHost } from '../test-helpers/createShadowHost.js';
 import { _adoptStyleUtils } from '../src/utils/adopt-styles.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
@@ -574,7 +575,8 @@ describe('OverlayController', () => {
           trapsKeyboardFocus: true,
         });
         await ctrl.show();
-        expect(ctrl.contentNode).to.equal(document.activeElement);
+
+        expect(isActiveElement(ctrl.contentNode)).to.be.true;
       });
 
       it('keeps focus within the overlay e.g. you can not tab out by accident', async () => {
@@ -1139,10 +1141,10 @@ describe('OverlayController', () => {
         await ctrl.show();
         const input = /** @type {HTMLInputElement} */ (contentNode.querySelector('input'));
         input.focus();
-        expect(document.activeElement).to.equal(input);
+        expect(isActiveElement(input)).to.be.true;
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(document.body);
+        expect(isActiveElement(document.body)).to.be.true;
       });
 
       it('supports elementToFocusAfterHide option to focus it when hiding', async () => {
@@ -1159,10 +1161,10 @@ describe('OverlayController', () => {
         await ctrl.show();
         const textarea = /** @type {HTMLTextAreaElement} */ (contentNode.querySelector('textarea'));
         textarea.focus();
-        expect(document.activeElement).to.equal(textarea);
+        expect(isActiveElement(textarea)).to.be.true;
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(input);
+        expect(isActiveElement(input)).to.be.true;
         expect(isInViewport(input)).to.be.true;
       });
 
@@ -1187,10 +1189,10 @@ describe('OverlayController', () => {
         await ctrl.show();
         const textarea = /** @type {HTMLTextAreaElement} */ (contentNode.querySelector('textarea'));
         textarea.focus();
-        expect(document.activeElement).to.equal(textarea);
+        expect(isActiveElement(textarea)).to.be.true;
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(input);
+        expect(isActiveElement(input)).to.be.true;
 
         document.body.removeChild(shadowHost);
       });
@@ -1208,10 +1210,10 @@ describe('OverlayController', () => {
         await ctrl.show();
         // an outside element has taken over focus
         outsideButton.focus();
-        expect(document.activeElement).to.equal(outsideButton);
+        expect(isActiveElement(outsideButton)).to.be.true;
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(outsideButton);
+        expect(isActiveElement(outsideButton)).to.be.true;
       });
 
       it('allows to set elementToFocusAfterHide on show', async () => {
@@ -1230,10 +1232,10 @@ describe('OverlayController', () => {
         await ctrl.show(input);
         const textarea = /** @type {HTMLTextAreaElement} */ (contentNode.querySelector('textarea'));
         textarea.focus();
-        expect(document.activeElement).to.equal(textarea);
+        expect(isActiveElement(textarea)).to.be.true;
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(input);
+        expect(isActiveElement(input)).to.be.true;
       });
     });
 
