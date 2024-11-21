@@ -418,19 +418,17 @@ describe('<lion-input-datepicker>', () => {
         const el = await fixture(html`
           <lion-input-datepicker .validators="${initialValidators}"></lion-input-datepicker>
         `);
-        el._overlayInvokerNode.click();
-        await new Promise(res => {
-          setTimeout(res, 10);
-        });
+        const obj = new DatepickerInputObject(el);
+        await obj.openCalendar();
+
         expect(getProtectedMembersDatepicker(el).calendarNode.centralDate.toString()).to.equal(
           new Date('2000/01/01').toString(),
         );
 
+        await obj.closeCalendar();
         el.validators = updatedValidators;
-        el._overlayInvokerNode.click();
-        await new Promise(res => {
-          setTimeout(res, 10);
-        });
+        await obj.openCalendar();
+
         expect(getProtectedMembersDatepicker(el).calendarNode.centralDate.toString()).to.equal(
           new Date('2020/01/01').toString(),
         );
