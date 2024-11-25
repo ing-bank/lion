@@ -1,5 +1,13 @@
 # @lion/ui
 
+## 0.8.7
+
+### Patch Changes
+
+- a51e28d: fix(calendar): align central date with dynamic disabled dates
+- 3e13ade: make web-test-runner statements checking `documentOrShadowRoot.activeElement` debuggable by exposing
+  a test-helper method `isActiveElement`.
+
 ## 0.8.6
 
 ### Patch Changes
