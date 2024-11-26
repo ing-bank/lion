@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 
 /**
@@ -287,6 +287,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
               <button
                 aria-label="${this.msgLit('lion-pagination:page', { page })}"
                 aria-current=${page === this.current}
+                aria-live="${page === this.current ? 'polite' : nothing}"
                 @click=${() => this.__fire(page)}
               >
                 ${page}

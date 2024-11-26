@@ -105,7 +105,23 @@ describe('Pagination', () => {
       expect(el.current).to.equal(2);
     });
 
-    it('should goto next and previous page using `next()` and `previous()`', async () => {
+    it('should announce next and previous page using `next()` and `previous()`', async () => {
+      const el = await fixture(html` <lion-pagination count="6" current="2"></lion-pagination> `);
+      const buttons = Array.from(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('button'),
+      );
+      expect(buttons[2].getAttribute('aria-live')).to.equal('polite');
+      el.next();
+      await el.updateComplete;
+      expect(buttons[3].getAttribute('aria-live')).to.equal('polite');
+      expect(buttons[2].getAttribute('aria-live')).to.equal(null);
+      el.previous();
+      await el.updateComplete;
+      expect(buttons[3].getAttribute('aria-live')).to.equal(null);
+      expect(buttons[2].getAttribute('aria-live')).to.equal('polite');
+    });
+
+    it('should set `aria-live` for the current page using `next()`', async () => {
       const el = await fixture(html` <lion-pagination count="6" current="2"></lion-pagination> `);
       el.next();
       expect(el.current).to.equal(3);
