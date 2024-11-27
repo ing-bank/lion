@@ -69,7 +69,7 @@ describe('lion-switch', () => {
     const { _inputNode, _labelNode } = getSwitchMembers(el);
 
     _labelNode.click();
-    expect(document.activeElement).to.not.equal(_inputNode);
+    expect(isActiveElement(_inputNode)).to.be.false;
   });
 
   it('should sync its "disabled" state to child button', async () => {

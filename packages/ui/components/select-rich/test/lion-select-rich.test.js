@@ -31,10 +31,11 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionSelectRich>} */ 
 describe('lion-select-rich', () => {
   it('clicking the label should focus the invoker', async () => {
     const el = await fixture(html` <lion-select-rich label="foo"> </lion-select-rich> `);
-    expect(document.activeElement === document.body).to.be.true;
+    expect(isActiveElement(document.body)).to.be.true;
+
     const { _labelNode, _invokerNode } = getSelectRichMembers(el);
     _labelNode.click();
-    expect(document.activeElement === _invokerNode).to.be.true;
+    expect(isActiveElement(_invokerNode)).to.be.true;
   });
 
   it('has an attribute focused when focused', async () => {
@@ -276,14 +277,14 @@ describe('lion-select-rich', () => {
 
       await _overlayCtrl.show();
       await el.updateComplete;
-      expect(document.activeElement === _listboxNode).to.be.true;
-      expect(document.activeElement === _invokerNode).to.be.false;
+      expect(isActiveElement(_listboxNode)).to.be.true;
+      expect(isActiveElement(_invokerNode)).to.be.false;
 
       el.opened = false;
       await el.updateComplete;
       await el.updateComplete; // safari takes a little longer
-      expect(document.activeElement === _listboxNode).to.be.false;
-      expect(document.activeElement === _invokerNode).to.be.true;
+      expect(isActiveElement(_listboxNode)).to.be.false;
+      expect(isActiveElement(_invokerNode)).to.be.true;
     });
 
     it('opens the listbox with checked option as active', async () => {
@@ -472,7 +473,7 @@ describe('lion-select-rich', () => {
         <lion-select-rich .config=${{ trapsKeyboardFocus: true }}></lion-select-rich>
       `);
       const { _listboxNode } = getSelectRichMembers(el);
-      expect(document.activeElement).to.not.equal(_listboxNode);
+      expect(isActiveElement(_listboxNode)).to.be.false;
 
       el.opened = true;
       await el.updateComplete;
@@ -481,7 +482,7 @@ describe('lion-select-rich', () => {
       el.opened = false;
       await el.updateComplete;
       await el.updateComplete; // safari takes a little longer
-      expect(document.activeElement).to.not.equal(_listboxNode);
+      expect(isActiveElement(_listboxNode)).to.be.false;
     });
   });
 

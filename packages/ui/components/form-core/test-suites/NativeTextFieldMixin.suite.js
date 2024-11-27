@@ -51,7 +51,7 @@ export function runNativeTextFieldMixinSuite(customConfig) {
       expect(_inputNode.selectionEnd).to.equal(2);
     });
 
-    it('move focus to a next focusable element after writing some text', async () => {
+    it('moves focus to a next focusable element after writing some text', async () => {
       const el = /** @type {NativeTextFieldClass} */ (await fixture(html`<${tag}></${tag}>`));
       // @ts-ignore [allow-protected] in test
       const setValueAndPreserveCaretSpy = spy(el, '_setValueAndPreserveCaret');
@@ -59,12 +59,8 @@ export function runNativeTextFieldMixinSuite(customConfig) {
       await triggerFocusFor(el);
       await el.updateComplete;
       expect(isActiveElement(_inputNode)).to.be.true;
-      await sendKeys({
-        press: 'h',
-      });
-      await sendKeys({
-        press: 'Tab',
-      });
+      await sendKeys({ press: 'h' });
+      await sendKeys({ press: 'Tab' });
 
       expect(setValueAndPreserveCaretSpy.calledOnce).to.be.false;
 
@@ -73,7 +69,7 @@ export function runNativeTextFieldMixinSuite(customConfig) {
         return;
       }
 
-      expect(document.activeElement).to.not.equal(_inputNode);
+      expect(isActiveElement(_inputNode)).to.be.false;
     });
   });
 }

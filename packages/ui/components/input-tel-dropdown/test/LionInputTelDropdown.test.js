@@ -1,20 +1,22 @@
+import { mimicUserChangingDropdown } from '@lion/ui/input-tel-dropdown-test-helpers.js';
+import { runInputTelDropdownSuite } from '@lion/ui/input-tel-dropdown-test-suites.js';
+import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 import { runInputTelSuite } from '@lion/ui/input-tel-test-suites.js';
+import { aTimeout, expect, fixture } from '@open-wc/testing';
+import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { repeat } from 'lit/directives/repeat.js';
+import { LionOption } from '@lion/ui/listbox.js';
 import { ref } from 'lit/directives/ref.js';
 import { html } from 'lit';
-import { aTimeout, expect, fixture } from '@open-wc/testing';
-import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
-import { LionOption } from '@lion/ui/listbox.js';
-import { LionSelectRich } from '@lion/ui/select-rich.js';
-import { runInputTelDropdownSuite } from '@lion/ui/input-tel-dropdown-test-suites.js';
-import { mimicUserChangingDropdown } from '@lion/ui/input-tel-dropdown-test-helpers.js';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 
 /**
- * @typedef {import('lit').TemplateResult} TemplateResult
- * @typedef {HTMLSelectElement|HTMLElement & {modelValue:string}} DropdownElement
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
+ * @typedef {HTMLSelectElement|HTMLElement & {modelValue:string}} DropdownElement
  * @typedef {import('../types/index.js').RegionMeta} RegionMeta
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 class WithFormControlInputTelDropdown extends ScopedElementsMixin(LionInputTelDropdown) {
@@ -114,7 +116,7 @@ describe('WithFormControlInputTelDropdown', () => {
       await el.updateComplete;
       await aTimeout(0);
       // @ts-expect-error [allow-protected-in-tests]
-      expect(el._inputNode).to.equal(document.activeElement);
+      expect(isActiveElement(el._inputNode)).to.be.true;
     }
   });
 
@@ -167,7 +169,7 @@ describe('WithFormControlInputTelDropdown', () => {
       await el.updateComplete;
       await aTimeout(0);
       // @ts-expect-error [allow-protected-in-tests]
-      expect(el._inputNode).to.not.equal(document.activeElement);
+      expect(isActiveElement(el._inputNode)).to.be.false;
     }
   });
 });
