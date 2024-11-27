@@ -2,6 +2,8 @@ import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
+
 /**
  * @typedef {import('../src/LionTabs.js').LionTabs} LionTabs
  */
@@ -397,9 +399,11 @@ describe('<lion-tabs>', () => {
         `)
       );
 
+      const secondTab = /** @type {HTMLElement} */ (
+        el.querySelector('[slot="tab"]:nth-of-type(2)')
+      );
       el.selectedIndex = 1;
-      expect(el.querySelector('[slot="tab"]:nth-of-type(2)') === document.activeElement).to.be
-        .false;
+      expect(isActiveElement(secondTab)).to.be.false;
     });
 
     it('does not focus a tab on firstUpdate', async () => {
@@ -414,7 +418,7 @@ describe('<lion-tabs>', () => {
         `)
       );
       const tabs = Array.from(el.children).filter(child => child.slot === 'tab');
-      expect(tabs.some(tab => tab === document.activeElement)).to.be.false;
+      expect(tabs.some(tab => isActiveElement(tab))).to.be.false;
     });
 
     it('focuses on a tab when setting with _setSelectedIndexWithFocus method', async () => {
@@ -429,9 +433,12 @@ describe('<lion-tabs>', () => {
         `)
       );
 
+      const secondTab = /** @type {HTMLElement} */ (
+        el.querySelector('[slot="tab"]:nth-of-type(2)')
+      );
       // @ts-ignore : this el is LionTabs
       el._setSelectedIndexWithFocus(1);
-      expect(el.querySelector('[slot="tab"]:nth-of-type(2)') === document.activeElement).to.be.true;
+      expect(isActiveElement(secondTab)).to.be.true;
     });
   });
 
@@ -448,7 +455,7 @@ describe('<lion-tabs>', () => {
     );
     const secondTab = /** @type {Element} */ (el.querySelector('[slot="tab"]:nth-of-type(2)'));
     secondTab.dispatchEvent(new MouseEvent('click'));
-    expect(secondTab === document.activeElement).to.be.true;
+    expect(isActiveElement(secondTab)).to.be.true;
   });
 
   describe('Accessibility', () => {

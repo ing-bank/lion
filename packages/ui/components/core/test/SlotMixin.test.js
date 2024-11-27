@@ -273,13 +273,13 @@ describe('SlotMixin', () => {
 
       el._focusableNode._buttonNode.focus();
 
-      expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
 
       el.currentValue = 1;
       await el.updateComplete;
 
       expect(isActiveElement(el._focusableNode)).to.be.true;
-      expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
     });
 
     it('allows for rerendering complex shadow root into slot as a direct child', async () => {
@@ -342,7 +342,7 @@ describe('SlotMixin', () => {
       await el.updateComplete;
 
       expect(isActiveElement(el._focusableNode)).to.be.true;
-      expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
     });
 
     describe('firstRenderOnConnected (for backwards compatibility)', () => {
