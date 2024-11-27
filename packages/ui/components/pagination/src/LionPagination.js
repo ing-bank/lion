@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { LitElement, html, css, nothing } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 
 /**
