@@ -287,6 +287,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
               <button
                 aria-label="${this.msgLit('lion-pagination:page', { page })}"
                 aria-current=${page === this.current}
+                aria-live="${page === this.current ? 'polite' : 'off'}"
                 @click=${() => this.__fire(page)}
               >
                 ${page}
