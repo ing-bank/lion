@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.8.8
+
+### Patch Changes
+
+- eac4312: [lion-pagination] announce current page
+
 ## 0.8.7
 
 ### Patch Changes
