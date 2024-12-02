@@ -49,6 +49,41 @@ Use `min` and `max` attribute to specify a range.
 ></lion-input-stepper>
 ```
 
+### Value text
+
+Use the `.valueText` property to override the value with a text.
+
+```js preview-story
+export const valueText = () => {
+  const values = [
+    'first',
+    'second',
+    'third',
+    'fourth',
+    'fifth',
+    'sixth',
+    'seventh',
+    'eighth',
+    'ninth',
+    'tenth',
+  ];
+  function onModelValueChanged(ev) {
+    const inputStepper = ev.target;
+    inputStepper.valueText = values[inputStepper.modelValue - 1];
+  }
+  const format = { locale: 'nl-NL' };
+  return html`
+    <lion-input-stepper
+      label="Quality of oranges"
+      min="1"
+      max="10"
+      name="value"
+      @model-value-changed="${ev => onModelValueChanged(ev)}"
+    ></lion-input-stepper>
+  `;
+};
+```
+
 ### Formatting
 
 Just like with the `input-amount` you can add the `formatOptions` to format the numbers to your preferences, to a different locale or adjust the amount of fractions.

@@ -283,6 +283,43 @@ describe('<lion-input-stepper>', () => {
       const incrementButton = el.querySelector('[slot=suffix]');
       incrementButton?.dispatchEvent(new Event('click'));
       expect(el).to.have.attribute('aria-valuenow', '1');
+
+      el._inputNode.value = '';
+      await el.updateComplete;
+      expect(el).to.not.have.attribute('aria-valuenow');
+    });
+
+    it('updates aria-valuetext when stepper is changed', async () => {
+      const el = await fixture(defaultInputStepper);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      incrementButton?.dispatchEvent(new Event('click'));
+      expect(el).to.have.attribute('aria-valuetext', '1');
+
+      el._inputNode.value = '';
+      await el.updateComplete;
+      expect(el).to.not.have.attribute('aria-valuetext');
+    });
+
+    it('updates aria-valuemin when stepper is changed', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      incrementButton?.dispatchEvent(new Event('click'));
+      expect(el).to.have.attribute('aria-valuemin', '100');
+
+      el.min = 0;
+      await el.updateComplete;
+      expect(el).to.have.attribute('aria-valuemin', '0');
+    });
+
+    it('updates aria-valuemax when stepper is changed', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      incrementButton?.dispatchEvent(new Event('click'));
+      expect(el).to.have.attribute('aria-valuemax', '200');
+
+      el.max = 1000;
+      await el.updateComplete;
+      expect(el).to.have.attribute('aria-valuemax', '1000');
     });
   });
 });
