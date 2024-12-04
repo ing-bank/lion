@@ -38,7 +38,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       },
       valueText: {
         type: Object,
-        reflect: true,
         attribute: 'value-text',
       },
       step: {
