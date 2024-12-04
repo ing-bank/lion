@@ -1,5 +1,16 @@
 # @lion/ui
 
+## 0.9.0
+
+### Minor Changes
+
+- 5dc2205: [input-stepper] add aria-valuemin, aria-valuemax and an option to set aria-valuetext
+
+### Patch Changes
+
+- 3d49a41: prevent click on disabled elements
+- 382a9aa: make sure that voiceover + safari modals are accessible
+
 ## 0.8.8
 
 ### Patch Changes
