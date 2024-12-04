@@ -55,30 +55,25 @@ Use the `.valueText` property to override the value with a text.
 
 ```js preview-story
 export const valueText = () => {
-  const values = [
-    'first',
-    'second',
-    'third',
-    'fourth',
-    'fifth',
-    'sixth',
-    'seventh',
-    'eighth',
-    'ninth',
-    'tenth',
-  ];
-  function onModelValueChanged(ev) {
-    const inputStepper = ev.target;
-    inputStepper.valueText = values[inputStepper.modelValue - 1];
-  }
-  const format = { locale: 'nl-NL' };
+  const values = {
+    1: 'first',
+    2: 'second',
+    3: 'third',
+    4: 'fourth',
+    5: 'fifth',
+    6: 'sixth',
+    7: 'seventh',
+    8: 'eighth',
+    9: 'ninth',
+    10: 'tenth',
+  };
   return html`
     <lion-input-stepper
-      label="Quality of oranges"
+      label="Order"
       min="1"
       max="10"
       name="value"
-      @model-value-changed="${ev => onModelValueChanged(ev)}"
+      .valueText="${values}"
     ></lion-input-stepper>
   `;
 };

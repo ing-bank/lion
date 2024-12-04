@@ -280,24 +280,43 @@ describe('<lion-input-stepper>', () => {
 
     it('updates aria-valuenow when stepper is changed', async () => {
       const el = await fixture(defaultInputStepper);
-      const incrementButton = el.querySelector('[slot=suffix]');
-      incrementButton?.dispatchEvent(new Event('click'));
-      expect(el).to.have.attribute('aria-valuenow', '1');
+      el.modelValue = 1;
 
-      el._inputNode.value = '';
       await el.updateComplete;
-      expect(el).to.not.have.attribute('aria-valuenow');
+      expect(el.hasAttribute('aria-valuenow')).to.be.true;
+      expect(el.getAttribute('aria-valuenow')).to.equal('1');
+
+      el.modelValue = '';
+      await el.updateComplete;
+      expect(el.hasAttribute('aria-valuenow')).to.be.false;
     });
 
     it('updates aria-valuetext when stepper is changed', async () => {
       const el = await fixture(defaultInputStepper);
-      const incrementButton = el.querySelector('[slot=suffix]');
-      incrementButton?.dispatchEvent(new Event('click'));
-      expect(el).to.have.attribute('aria-valuetext', '1');
-
-      el._inputNode.value = '';
+      el.modelValue = 1;
       await el.updateComplete;
-      expect(el).to.not.have.attribute('aria-valuetext');
+
+      expect(el.hasAttribute('aria-valuetext')).to.be.true;
+      expect(el.getAttribute('aria-valuetext')).to.equal('1');
+
+      el.modelValue = '';
+      await el.updateComplete;
+      expect(el.hasAttribute('aria-valuetext')).to.be.false;
+    });
+
+    it('can give aria-valuetext to override default value as a human-readable text alternative', async () => {
+      const values = {
+        1: 'first',
+        2: 'second',
+        3: 'third',
+      };
+      const el = await fixture(html`
+        <lion-input-stepper min="1" max="3" .valueText="${values}"></lion-input-stepper>
+      `);
+      el.modelValue = 1;
+      await el.updateComplete;
+      expect(el.hasAttribute('aria-valuetext')).to.be.true;
+      expect(el.getAttribute('aria-valuetext')).to.equal('first');
     });
 
     it('updates aria-valuemin when stepper is changed', async () => {

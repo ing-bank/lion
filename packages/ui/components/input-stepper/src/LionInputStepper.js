@@ -37,7 +37,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
         reflect: true,
       },
       valueText: {
-        type: Number,
+        type: Object,
         reflect: true,
         attribute: 'value-text',
       },
@@ -71,8 +71,11 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     this.formatter = formatNumber;
     this.min = Infinity;
     this.max = Infinity;
-    /** @type {string | undefined} */
-    this.valueText = undefined;
+    /**
+     * The aria-valuetext attribute defines the human-readable text alternative of aria-valuenow.
+     * @type {[ Number: String] | []}
+     */
+    this.valueText = [];
     this.step = 1;
     this.values = {
       max: this.max,
@@ -137,14 +140,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     }
 
     if (changedProperties.has('valueText')) {
-      const displayValue = this._inputNode.value;
-      if (this.valueText) {
-        this.setAttribute('aria-valuetext', `${this.valueText}`);
-      } else if (displayValue) {
-        this.setAttribute('aria-valuetext', `${displayValue}`);
-      } else {
-        this.removeAttribute('aria-valuetext');
-      }
+      this._updateAriaAttributes();
     }
 
     if (changedProperties.has('step')) {
@@ -234,10 +230,22 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     decrementButton[disableDecrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
     incrementButton[disableIncrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
 
+    this._updateAriaAttributes();
+  }
+
+  /**
+   * @protected
+   */
+  _updateAriaAttributes() {
     const displayValue = this._inputNode.value;
     if (displayValue) {
       this.setAttribute('aria-valuenow', `${displayValue}`);
-      if (!this.valueText) {
+      if (
+        Object.keys(this.valueText).length !== 0 &&
+        Object.keys(this.valueText).find(key => Number(key) === this.currentValue)
+      ) {
+        this.setAttribute('aria-valuetext', `${this.valueText[this.currentValue]}`);
+      } else {
         // VoiceOver announces percentages once the valuemin or valuemax are used.
         // This can be fixed by setting valuetext to the same value as valuenow
         this.setAttribute('aria-valuetext', `${displayValue}`);
