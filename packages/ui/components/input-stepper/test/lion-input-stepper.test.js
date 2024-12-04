@@ -292,6 +292,9 @@ describe('<lion-input-stepper>', () => {
     });
 
     it('updates aria-valuetext when stepper is changed', async () => {
+      // VoiceOver announces percentages once the valuemin or valuemax are used.
+      // This can be fixed by setting valuetext to the same value as valuenow
+      // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-valuenow
       const el = await fixture(defaultInputStepper);
       el.modelValue = 1;
       await el.updateComplete;
@@ -311,7 +314,7 @@ describe('<lion-input-stepper>', () => {
         3: 'third',
       };
       const el = await fixture(html`
-        <lion-input-stepper min="1" max="3" .valueText="${values}"></lion-input-stepper>
+        <lion-input-stepper min="1" max="3" .valueTextMapping="${values}"></lion-input-stepper>
       `);
       el.modelValue = 1;
       await el.updateComplete;

@@ -51,10 +51,10 @@ Use `min` and `max` attribute to specify a range.
 
 ### Value text
 
-Use the `.valueText` property to override the value with a text.
+Use the `.valueTextMapping` property to override the value with a text.
 
 ```js preview-story
-export const valueText = () => {
+export const valueTextMapping = () => {
   const values = {
     1: 'first',
     2: 'second',
@@ -73,7 +73,7 @@ export const valueText = () => {
       min="1"
       max="10"
       name="value"
-      .valueText="${values}"
+      .valueTextMapping="${values}"
     ></lion-input-stepper>
   `;
 };

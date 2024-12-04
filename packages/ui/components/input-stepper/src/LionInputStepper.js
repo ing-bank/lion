@@ -36,7 +36,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
         type: Number,
         reflect: true,
       },
-      valueText: {
+      valueTextMapping: {
         type: Object,
         attribute: 'value-text',
       },
@@ -74,7 +74,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
      * The aria-valuetext attribute defines the human-readable text alternative of aria-valuenow.
      * @type {{[key: number]: string}}
      */
-    this.valueText = {};
+    this.valueTextMapping = {};
     this.step = 1;
     this.values = {
       max: this.max,
@@ -138,7 +138,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       this.__toggleSpinnerButtonsState();
     }
 
-    if (changedProperties.has('valueText')) {
+    if (changedProperties.has('valueTextMapping')) {
       this._updateAriaAttributes();
     }
 
@@ -240,13 +240,14 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     if (displayValue) {
       this.setAttribute('aria-valuenow', `${displayValue}`);
       if (
-        Object.keys(this.valueText).length !== 0 &&
-        Object.keys(this.valueText).find(key => Number(key) === this.currentValue)
+        Object.keys(this.valueTextMapping).length !== 0 &&
+        Object.keys(this.valueTextMapping).find(key => Number(key) === this.currentValue)
       ) {
-        this.setAttribute('aria-valuetext', `${this.valueText[this.currentValue]}`);
+        this.setAttribute('aria-valuetext', `${this.valueTextMapping[this.currentValue]}`);
       } else {
         // VoiceOver announces percentages once the valuemin or valuemax are used.
         // This can be fixed by setting valuetext to the same value as valuenow
+        // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-valuenow
         this.setAttribute('aria-valuetext', `${displayValue}`);
       }
     } else {
