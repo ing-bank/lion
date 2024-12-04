@@ -72,7 +72,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     this.max = Infinity;
     /**
      * The aria-valuetext attribute defines the human-readable text alternative of aria-valuenow.
-     * @type {[ Number: String] | []}
+     * @type {{[key: number]: string}}
      */
     this.valueText = [];
     this.step = 1;
