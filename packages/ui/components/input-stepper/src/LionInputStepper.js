@@ -36,6 +36,10 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
         type: Number,
         reflect: true,
       },
+      valueTextMapping: {
+        type: Object,
+        attribute: 'value-text',
+      },
       step: {
         type: Number,
         reflect: true,
@@ -66,6 +70,11 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     this.formatter = formatNumber;
     this.min = Infinity;
     this.max = Infinity;
+    /**
+     * The aria-valuetext attribute defines the human-readable text alternative of aria-valuenow.
+     * @type {{[key: number]: string}}
+     */
+    this.valueTextMapping = {};
     this.step = 1;
     this.values = {
       max: this.max,
@@ -110,13 +119,27 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     if (changedProperties.has('min')) {
       this._inputNode.min = `${this.min}`;
       this.values.min = this.min;
+      if (this.min !== Infinity) {
+        this.setAttribute('aria-valuemin', `${this.min}`);
+      } else {
+        this.removeAttribute('aria-valuemin');
+      }
       this.__toggleSpinnerButtonsState();
     }
 
     if (changedProperties.has('max')) {
       this._inputNode.max = `${this.max}`;
       this.values.max = this.max;
+      if (this.max !== Infinity) {
+        this.setAttribute('aria-valuemax', `${this.max}`);
+      } else {
+        this.removeAttribute('aria-valuemax');
+      }
       this.__toggleSpinnerButtonsState();
+    }
+
+    if (changedProperties.has('valueTextMapping')) {
+      this._updateAriaAttributes();
     }
 
     if (changedProperties.has('step')) {
@@ -193,8 +216,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    */
   __toggleSpinnerButtonsState() {
     const { min, max } = this.values;
-    const decrementButton = this.__getSlot('prefix');
-    const incrementButton = this.__getSlot('suffix');
+    const decrementButton = /** @type {HTMLButtonElement} */ (this.__getSlot('prefix'));
+    const incrementButton = /** @type {HTMLButtonElement} */ (this.__getSlot('suffix'));
     const disableIncrementor = this.currentValue >= max && max !== Infinity;
     const disableDecrementor = this.currentValue <= min && min !== Infinity;
     if (
@@ -205,7 +228,32 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     }
     decrementButton[disableDecrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
     incrementButton[disableIncrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
-    this.setAttribute('aria-valuenow', `${this.currentValue}`);
+
+    this._updateAriaAttributes();
+  }
+
+  /**
+   * @protected
+   */
+  _updateAriaAttributes() {
+    const displayValue = this._inputNode.value;
+    if (displayValue) {
+      this.setAttribute('aria-valuenow', `${displayValue}`);
+      if (
+        Object.keys(this.valueTextMapping).length !== 0 &&
+        Object.keys(this.valueTextMapping).find(key => Number(key) === this.currentValue)
+      ) {
+        this.setAttribute('aria-valuetext', `${this.valueTextMapping[this.currentValue]}`);
+      } else {
+        // VoiceOver announces percentages once the valuemin or valuemax are used.
+        // This can be fixed by setting valuetext to the same value as valuenow
+        // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-valuenow
+        this.setAttribute('aria-valuetext', `${displayValue}`);
+      }
+    } else {
+      this.removeAttribute('aria-valuenow');
+      this.removeAttribute('aria-valuetext');
+    }
   }
 
   /**

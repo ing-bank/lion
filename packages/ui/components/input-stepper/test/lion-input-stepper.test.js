@@ -280,9 +280,68 @@ describe('<lion-input-stepper>', () => {
 
     it('updates aria-valuenow when stepper is changed', async () => {
       const el = await fixture(defaultInputStepper);
+      el.modelValue = 1;
+
+      await el.updateComplete;
+      expect(el.hasAttribute('aria-valuenow')).to.be.true;
+      expect(el.getAttribute('aria-valuenow')).to.equal('1');
+
+      el.modelValue = '';
+      await el.updateComplete;
+      expect(el.hasAttribute('aria-valuenow')).to.be.false;
+    });
+
+    it('updates aria-valuetext when stepper is changed', async () => {
+      // VoiceOver announces percentages once the valuemin or valuemax are used.
+      // This can be fixed by setting valuetext to the same value as valuenow
+      // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-valuenow
+      const el = await fixture(defaultInputStepper);
+      el.modelValue = 1;
+      await el.updateComplete;
+
+      expect(el.hasAttribute('aria-valuetext')).to.be.true;
+      expect(el.getAttribute('aria-valuetext')).to.equal('1');
+
+      el.modelValue = '';
+      await el.updateComplete;
+      expect(el.hasAttribute('aria-valuetext')).to.be.false;
+    });
+
+    it('can give aria-valuetext to override default value as a human-readable text alternative', async () => {
+      const values = {
+        1: 'first',
+        2: 'second',
+        3: 'third',
+      };
+      const el = await fixture(html`
+        <lion-input-stepper min="1" max="3" .valueTextMapping="${values}"></lion-input-stepper>
+      `);
+      el.modelValue = 1;
+      await el.updateComplete;
+      expect(el.hasAttribute('aria-valuetext')).to.be.true;
+      expect(el.getAttribute('aria-valuetext')).to.equal('first');
+    });
+
+    it('updates aria-valuemin when stepper is changed', async () => {
+      const el = await fixture(inputStepperWithAttrs);
       const incrementButton = el.querySelector('[slot=suffix]');
       incrementButton?.dispatchEvent(new Event('click'));
-      expect(el).to.have.attribute('aria-valuenow', '1');
+      expect(el).to.have.attribute('aria-valuemin', '100');
+
+      el.min = 0;
+      await el.updateComplete;
+      expect(el).to.have.attribute('aria-valuemin', '0');
+    });
+
+    it('updates aria-valuemax when stepper is changed', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const incrementButton = el.querySelector('[slot=suffix]');
+      incrementButton?.dispatchEvent(new Event('click'));
+      expect(el).to.have.attribute('aria-valuemax', '200');
+
+      el.max = 1000;
+      await el.updateComplete;
+      expect(el).to.have.attribute('aria-valuemax', '1000');
     });
   });
 });
