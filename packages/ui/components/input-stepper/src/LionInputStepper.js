@@ -21,6 +21,19 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
         .input-group__container > .input-group__input ::slotted(.form-control) {
           text-align: center;
         }
+
+        .input-stepper__value {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip-path: inset(100%);
+          clip: rect(1px, 1px, 1px, 1px);
+          white-space: nowrap;
+          border: 0;
+          margin: 0;
+          padding: 0;
+        }
       `,
     ];
   }
@@ -84,6 +97,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
     this.__increment = this.__increment.bind(this);
     this.__decrement = this.__decrement.bind(this);
+    this.__boundOnEnterButton = this._onEnterButton.bind(this);
     this.__boundOnLeaveButton = this._onLeaveButton.bind(this);
   }
 
@@ -94,11 +108,12 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       min: this.min,
       step: this.step,
     };
-
-    this.role = 'spinbutton';
+    if (this._inputNode) {
+      this._inputNode.role = 'spinbutton';
+      this._inputNode.setAttribute('inputmode', 'decimal');
+      this._inputNode.setAttribute('autocomplete', 'off');
+    }
     this.addEventListener('keydown', this.__keyDownHandler);
-    this._inputNode.setAttribute('inputmode', 'decimal');
-    this._inputNode.setAttribute('autocomplete', 'off');
     this.__setDefaultValidators();
     this.__toggleSpinnerButtonsState();
   }
@@ -120,9 +135,9 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       this._inputNode.min = `${this.min}`;
       this.values.min = this.min;
       if (this.min !== Infinity) {
-        this.setAttribute('aria-valuemin', `${this.min}`);
+        this._inputNode.setAttribute('aria-valuemin', `${this.min}`);
       } else {
-        this.removeAttribute('aria-valuemin');
+        this._inputNode.removeAttribute('aria-valuemin');
       }
       this.__toggleSpinnerButtonsState();
     }
@@ -131,9 +146,9 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       this._inputNode.max = `${this.max}`;
       this.values.max = this.max;
       if (this.max !== Infinity) {
-        this.setAttribute('aria-valuemax', `${this.max}`);
+        this._inputNode.setAttribute('aria-valuemax', `${this.max}`);
       } else {
-        this.removeAttribute('aria-valuemax');
+        this._inputNode.removeAttribute('aria-valuemax');
       }
       this.__toggleSpinnerButtonsState();
     }
@@ -146,14 +161,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       this._inputNode.step = `${this.step}`;
       this.values.step = this.step;
     }
-
-    if (changedProperties.has('_ariaLabelledNodes')) {
-      this.__reflectAriaAttrToSpinButton('aria-labelledby', this._ariaLabelledNodes);
-    }
-
-    if (changedProperties.has('_ariaDescribedNodes')) {
-      this.__reflectAriaAttrToSpinButton('aria-describedby', this._ariaDescribedNodes);
-    }
   }
 
   get slots() {
@@ -162,22 +169,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       prefix: () => this.__getDecrementButtonNode(),
       suffix: () => this.__getIncrementButtonNode(),
     };
-  }
-
-  /**
-   * Based on FormControlMixin __reflectAriaAttr()
-   *
-   * Will handle help text, validation feedback and character counter,
-   * prefix/suffix/before/after (if they contain data-description flag attr).
-   * Also, contents of id references that will be put in the <lion-field>._ariaDescribedby property
-   * from an external context, will be read by a screen reader.
-   * @param {string} attrName
-   * @param {Element[]} nodes
-   * @private
-   */
-  __reflectAriaAttrToSpinButton(attrName, nodes) {
-    const string = nodes.map(n => n.id).join(' ');
-    this.setAttribute(attrName, string);
   }
 
   /**
@@ -228,7 +219,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     }
     decrementButton[disableDecrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
     incrementButton[disableIncrementor ? 'setAttribute' : 'removeAttribute']('disabled', 'true');
-
     this._updateAriaAttributes();
   }
 
@@ -238,21 +228,22 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
   _updateAriaAttributes() {
     const displayValue = this._inputNode.value;
     if (displayValue) {
-      this.setAttribute('aria-valuenow', `${displayValue}`);
+      this._inputNode.setAttribute('aria-valuenow', `${displayValue}`);
       if (
         Object.keys(this.valueTextMapping).length !== 0 &&
         Object.keys(this.valueTextMapping).find(key => Number(key) === this.currentValue)
       ) {
-        this.setAttribute('aria-valuetext', `${this.valueTextMapping[this.currentValue]}`);
+        this.__valueText = this.valueTextMapping[this.currentValue];
       } else {
         // VoiceOver announces percentages once the valuemin or valuemax are used.
         // This can be fixed by setting valuetext to the same value as valuenow
         // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-valuenow
-        this.setAttribute('aria-valuetext', `${displayValue}`);
+        this.__valueText = displayValue;
       }
+      this._inputNode.setAttribute('aria-valuetext', `${this.__valueText}`);
     } else {
-      this.removeAttribute('aria-valuenow');
-      this.removeAttribute('aria-valuetext');
+      this._inputNode.removeAttribute('aria-valuenow');
+      this._inputNode.removeAttribute('aria-valuetext');
     }
   }
 
@@ -374,6 +365,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       <button
         ?disabled=${this.disabled || this.readOnly}
         @click=${this.__decrement}
+        @focus=${this.__boundOnEnterButton}
         @blur=${this.__boundOnLeaveButton}
         type="button"
         aria-label="${this.msgLit('lion-input-stepper:decrease')}"
@@ -393,6 +385,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       <button
         ?disabled=${this.disabled || this.readOnly}
         @click=${this.__increment}
+        @focus=${this.__boundOnEnterButton}
         @blur=${this.__boundOnLeaveButton}
         type="button"
         aria-label="${this.msgLit('lion-input-stepper:increase')}"
@@ -400,6 +393,33 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
         ${this._incrementorSignTemplate()}
       </button>
     `;
+  }
+
+  /** @protected */
+  _inputGroupTemplate() {
+    return html`
+      <div class="input-stepper__value">${this.__valueText}</div>
+      <div class="input-group">
+        ${this._inputGroupBeforeTemplate()}
+        <div class="input-group__container">
+          ${this._inputGroupPrefixTemplate()} ${this._inputGroupInputTemplate()}
+          ${this._inputGroupSuffixTemplate()}
+        </div>
+        ${this._inputGroupAfterTemplate()}
+      </div>
+    `;
+  }
+
+  /**
+   * @protected
+   * @param {Event} ev
+   */
+  // eslint-disable-next-line no-unused-vars
+  _onEnterButton(ev) {
+    const valueNode = /** @type {HTMLElement} */ (
+      this.shadowRoot?.querySelector('.input-stepper__value')
+    );
+    valueNode.setAttribute('aria-live', 'assertive');
   }
 
   /**
@@ -411,8 +431,16 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    *
    * Interacting with the buttons is "user interactions"
    * the same way as focusing + blurring the field (native input)
+   *
+   * @protected
+   * @param {Event} ev
    */
-  _onLeaveButton() {
+  // eslint-disable-next-line no-unused-vars
+  _onLeaveButton(ev) {
+    const valueNode = /** @type {HTMLElement} */ (
+      this.shadowRoot?.querySelector('.input-stepper__value')
+    );
+    valueNode.removeAttribute('aria-live');
     this.dispatchEvent(new Event(this._leaveEvent));
   }
 }

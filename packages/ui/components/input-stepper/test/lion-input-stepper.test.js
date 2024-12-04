@@ -278,17 +278,23 @@ describe('<lion-input-stepper>', () => {
       await expect(el).to.be.accessible();
     });
 
+    it('has role="spinbutton"', async () => {
+      const el = await fixture(defaultInputStepper);
+      expect(el._inputNode.hasAttribute('role')).to.be.true;
+      expect(el._inputNode.getAttribute('role')).to.equal('spinbutton');
+    });
+
     it('updates aria-valuenow when stepper is changed', async () => {
       const el = await fixture(defaultInputStepper);
       el.modelValue = 1;
 
       await el.updateComplete;
-      expect(el.hasAttribute('aria-valuenow')).to.be.true;
-      expect(el.getAttribute('aria-valuenow')).to.equal('1');
+      expect(el._inputNode.hasAttribute('aria-valuenow')).to.be.true;
+      expect(el._inputNode.getAttribute('aria-valuenow')).to.equal('1');
 
       el.modelValue = '';
       await el.updateComplete;
-      expect(el.hasAttribute('aria-valuenow')).to.be.false;
+      expect(el._inputNode.hasAttribute('aria-valuenow')).to.be.false;
     });
 
     it('updates aria-valuetext when stepper is changed', async () => {
@@ -299,12 +305,12 @@ describe('<lion-input-stepper>', () => {
       el.modelValue = 1;
       await el.updateComplete;
 
-      expect(el.hasAttribute('aria-valuetext')).to.be.true;
-      expect(el.getAttribute('aria-valuetext')).to.equal('1');
+      expect(el._inputNode.hasAttribute('aria-valuetext')).to.be.true;
+      expect(el._inputNode.getAttribute('aria-valuetext')).to.equal('1');
 
       el.modelValue = '';
       await el.updateComplete;
-      expect(el.hasAttribute('aria-valuetext')).to.be.false;
+      expect(el._inputNode.hasAttribute('aria-valuetext')).to.be.false;
     });
 
     it('can give aria-valuetext to override default value as a human-readable text alternative', async () => {
@@ -318,30 +324,60 @@ describe('<lion-input-stepper>', () => {
       `);
       el.modelValue = 1;
       await el.updateComplete;
-      expect(el.hasAttribute('aria-valuetext')).to.be.true;
-      expect(el.getAttribute('aria-valuetext')).to.equal('first');
+      expect(el._inputNode.hasAttribute('aria-valuetext')).to.be.true;
+      expect(el._inputNode.getAttribute('aria-valuetext')).to.equal('first');
     });
 
     it('updates aria-valuemin when stepper is changed', async () => {
       const el = await fixture(inputStepperWithAttrs);
       const incrementButton = el.querySelector('[slot=suffix]');
       incrementButton?.dispatchEvent(new Event('click'));
-      expect(el).to.have.attribute('aria-valuemin', '100');
+      expect(el._inputNode.hasAttribute('aria-valuemin')).to.be.true;
+      expect(el._inputNode.getAttribute('aria-valuemin')).to.equal('100');
 
       el.min = 0;
       await el.updateComplete;
-      expect(el).to.have.attribute('aria-valuemin', '0');
+      expect(el._inputNode.hasAttribute('aria-valuemin')).to.be.true;
+      expect(el._inputNode.getAttribute('aria-valuemin')).to.equal('0');
     });
 
     it('updates aria-valuemax when stepper is changed', async () => {
       const el = await fixture(inputStepperWithAttrs);
       const incrementButton = el.querySelector('[slot=suffix]');
       incrementButton?.dispatchEvent(new Event('click'));
-      expect(el).to.have.attribute('aria-valuemax', '200');
+      expect(el._inputNode.hasAttribute('aria-valuemax')).to.be.true;
+      expect(el._inputNode.getAttribute('aria-valuemax')).to.equal('200');
 
       el.max = 1000;
       await el.updateComplete;
-      expect(el).to.have.attribute('aria-valuemax', '1000');
+      expect(el._inputNode.hasAttribute('aria-valuemax')).to.be.true;
+      expect(el._inputNode.getAttribute('aria-valuemax')).to.equal('1000');
+    });
+
+    it('when decrease button gets focus, it sets aria-live to input-stepper__value', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const stepperValue = el.shadowRoot?.querySelector('.input-stepper__value');
+      const decrementButton = el.querySelector('[slot=prefix]');
+
+      decrementButton?.dispatchEvent(new Event('focus'));
+      expect(stepperValue?.hasAttribute('aria-live')).to.be.true;
+      expect(stepperValue?.getAttribute('aria-live')).to.equal('assertive');
+
+      decrementButton?.dispatchEvent(new Event('blur'));
+      expect(stepperValue?.hasAttribute('aria-live')).to.be.false;
+    });
+
+    it('when increase button gets focus, it sets aria-live to input-stepper__value', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const stepperValue = el.shadowRoot?.querySelector('.input-stepper__value');
+      const incrementButton = el.querySelector('[slot=suffix]');
+
+      incrementButton?.dispatchEvent(new Event('focus'));
+      expect(stepperValue?.hasAttribute('aria-live')).to.be.true;
+      expect(stepperValue?.getAttribute('aria-live')).to.equal('assertive');
+
+      incrementButton?.dispatchEvent(new Event('blur'));
+      expect(stepperValue?.hasAttribute('aria-live')).to.be.false;
     });
   });
 });
