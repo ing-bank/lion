@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign */
-import path from 'path';
-
 import semver from 'semver';
+import path from 'path';
 
 import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
 import { InputDataService } from './InputDataService.js';
