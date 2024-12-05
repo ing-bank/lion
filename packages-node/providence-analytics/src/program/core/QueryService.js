@@ -1,30 +1,30 @@
 import path from 'path';
 
+import { getCurrentDir } from '../utils/get-current-dir.js';
 import { AstService } from './AstService.js';
 import { LogService } from './LogService.js';
-import { getCurrentDir } from '../utils/get-current-dir.js';
 // import { memoize } from '../utils/memoize.js';
 
 const memoize = fn => fn;
 
 /**
- * @typedef {import('./Analyzer.js').Analyzer} Analyzer
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
- * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../../../types/index.js').QueryConfig} QueryConfig
- * @typedef {import('../../../types/index.js').QueryResult} QueryResult
- * @typedef {import('../../../types/index.js').FeatureQueryConfig} FeatureQueryConfig
- * @typedef {import('../../../types/index.js').SearchQueryConfig} SearchQueryConfig
  * @typedef {import('../../../types/index.js').AnalyzerQueryConfig} AnalyzerQueryConfig
- * @typedef {import('../../../types/index.js').Feature} Feature
+ * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').FeatureQueryConfig} FeatureQueryConfig
+ * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../../../types/index.js').SearchQueryConfig} SearchQueryConfig
  * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
  * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
- * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').QueryConfig} QueryConfig
+ * @typedef {import('../../../types/index.js').QueryResult} QueryResult
+ * @typedef {import('../../../types/index.js').Feature} Feature
+ * @typedef {import('./Analyzer.js').Analyzer} Analyzer
  */
 
 const astProjectsDataCache = new Map();
@@ -32,7 +32,7 @@ const astProjectsDataCache = new Map();
 export class QueryService {
   /**
    * Retrieves the default export found in ./program/analyzers/find-import.js
-   * @param {typeof Analyzer} analyzerCtor
+   * @param {typeof Analyzer} analyzerObjectOrString
    * @param {AnalyzerConfig} [analyzerConfig]
    * @returns {Promise<AnalyzerQueryConfig>}
    */
@@ -112,7 +112,8 @@ export class QueryService {
     for (const projectData of projectsData) {
       const cachedData = astProjectsDataCache.get(projectData.project.path);
       if (cachedData) {
-        return cachedData;
+        resultWithAsts.push(cachedData);
+        continue; // eslint-disable-line no-continue
       }
 
       const resultEntries = [];
