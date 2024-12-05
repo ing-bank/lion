@@ -54,6 +54,10 @@ function compareVersions(versionsA, versionsB) {
     if (dep === 'glob') {
       return;
     }
+    // commander will be removed from providence-analytics, resolving this conflict
+    if (dep === 'commander') {
+      return;
+    }
     if (versionsA[dep] && versionsB[dep] && versionsA[dep] !== versionsB[dep]) {
       if (!semver.satisfies(versionsA[dep], versionsB[dep])) {
         // if version doesn't satisfy range, check if they are both ranges,
