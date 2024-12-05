@@ -72,7 +72,17 @@ function getPackageRootFromNodeModulesPath(resolvedPath, dynamicImport) {
   return resolvedPath.slice(0, lio + tailOfRootPath.length);
 }
 
-function incorporateDynamicImports(
+/**
+ * @example
+ * ```js
+ * const importablePaths = resolveDynamicImportsForMockFs();
+ * mockFs({...Object.fromEntries(importablePaths.map(p => [p, mockFs.load(p)])), ...rest });
+ * ```
+ *
+ * @param {{name:string;siblings?:string[]}[]} dynamicImports
+ * @returns {string[]}
+ */
+export function resolveDynamicImportsForMockFs(
   dynamicImports = [
     {
       name: 'oxc-parser',
@@ -88,7 +98,14 @@ function incorporateDynamicImports(
   const require = module.createRequire(import.meta.url);
   const importablePaths = [];
   for (const dynamicImport of dynamicImports) {
-    const resolvedPath = require.resolve(dynamicImport.name);
+    /** @type {string} */
+    let resolvedPath;
+    try {
+      resolvedPath = require.resolve(dynamicImport.name);
+    } catch {
+      console.warn(`[resolveDynamicImportsForMockFs] Did not find ${dynamicImport.name}`);
+      continue; // eslint-disable-line no-continue
+    }
     const rootPath = getPackageRootFromNodeModulesPath(resolvedPath, dynamicImport.name);
     importablePaths.push(rootPath);
     for (const sibling of dynamicImport.siblings || []) {
@@ -98,7 +115,7 @@ function incorporateDynamicImports(
   }
   return importablePaths;
 }
-const importablePaths = incorporateDynamicImports();
+const importablePaths = resolveDynamicImportsForMockFs();
 
 /**
  * Makes sure that, whenever the main program (providence) calls

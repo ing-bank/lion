@@ -37,11 +37,10 @@
     "test:node:unit": "mocha './{test-node,src}/**/*.test.js'"
   },
   "dependencies": {
-    "@babel/traverse": "^7.25.7",
     "@rollup/plugin-node-resolve": "^15.3.0",
     "commander": "^2.20.3",
-    "oxc-parser": "^0.34.0",
-    "parse5": "^7.2.0",
+    "oxc-parser": "^0.39.0",
+    "parse5": "^7.2.1",
     "semver": "^7.6.3"
   },
   "peerDependencies": {
@@ -50,16 +49,17 @@
     "@swc/core": "^1.7.36"
   },
   "devDependencies": {
-    "@babel/parser": "^7.25.8",
-    "@babel/plugin-syntax-import-assertions": "^7.25.7",
+    "@babel/parser": "^7.26.3",
+    "@babel/plugin-syntax-import-assertions": "^7.26.0",
+    "@babel/traverse": "^7.26.3",
     "@swc/core": "^1.7.36",
     "@types/inquirer": "^9.0.7",
-    "@types/mocha": "^10.0.9",
+    "@types/mocha": "^10.0.10",
     "@web/dev-server": "^0.4.6",
-    "@web/dev-server-core": "^0.7.3",
+    "@web/dev-server-core": "^0.7.4",
     "globby": "^14.0.2",
     "lit-element": "^4.1.1",
-    "mock-fs": "^5.4.0"
+    "mock-fs": "^5.4.1"
   },
   "keywords": [
     "analysis",
