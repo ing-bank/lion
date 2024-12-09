@@ -705,7 +705,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   // eslint-disable-next-line no-unused-vars
   _textboxOnInput(ev) {
     this.__shouldAutocompleteNextUpdate = true;
-    this.opened = true;
+    this.opened = this._showOverlayCondition({});
   }
 
   /**
