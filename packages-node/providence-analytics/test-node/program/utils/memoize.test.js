@@ -1,5 +1,7 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
+import sinon from 'sinon';
+
 import { memoize } from '../../../src/program/utils/memoize.js';
 
 describe('Memoize', () => {
@@ -340,6 +342,157 @@ describe('Memoize', () => {
       // Return from new cache again
       expect(sumMemoized('1', '2')).to.equal('12');
       expect(sumCalled).to.equal(2);
+    });
+
+    describe('Strategies', () => {
+      beforeEach(() => {
+        memoize.restoreCaching();
+      });
+
+      describe('lfu (least frequently used) strategy', () => {
+        it('has lfu strategy by default', async () => {
+          expect(memoize.cacheStrategy).to.equal('lfu');
+        });
+
+        it('removes least used from cache', async () => {
+          memoize.limitForCacheStrategy = 2;
+
+          const spy1 = sinon.spy(() => {});
+          const spy2 = sinon.spy(() => {});
+          const spy3 = sinon.spy(() => {});
+
+          const spy1Memoized = memoize(spy1);
+          const spy2Memoized = memoize(spy2);
+          const spy3Memoized = memoize(spy3);
+
+          // Call spy1 3 times
+          spy1Memoized();
+          expect(spy1.callCount).to.equal(1);
+          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 1 }]);
+
+          spy1Memoized();
+          expect(spy1.callCount).to.equal(1);
+          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 2 }]);
+
+          spy1Memoized();
+          expect(spy1.callCount).to.equal(1);
+          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 3 }]);
+
+          // Call spy2 2 times (so it's the least frequently used)
+          spy2Memoized();
+          expect(spy2.callCount).to.equal(1);
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy1Memoized, count: 3 },
+            { fn: spy2Memoized, count: 1 },
+          ]);
+
+          spy2Memoized();
+          expect(spy2.callCount).to.equal(1);
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy1Memoized, count: 3 },
+            { fn: spy2Memoized, count: 2 },
+          ]);
+
+          // When we add number 3, we exceed limitForCacheStrategy
+          // This means that we 'free' the least frequently used (spy2)
+          spy3Memoized();
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy1Memoized, count: 3 },
+            { fn: spy3Memoized, count: 1 },
+          ]);
+
+          spy2Memoized();
+          expect(spy2.callCount).to.equal(2);
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy1Memoized, count: 3 },
+            { fn: spy2Memoized, count: 1 }, // we start over
+          ]);
+
+          spy2Memoized(); // 2
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy1Memoized, count: 3 }, // we start over
+            { fn: spy2Memoized, count: 2 },
+          ]);
+          spy2Memoized(); // 3
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy1Memoized, count: 3 }, // we start over
+            { fn: spy2Memoized, count: 3 },
+          ]);
+          spy2Memoized(); // 4
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy1Memoized, count: 3 }, // we start over
+            { fn: spy2Memoized, count: 4 },
+          ]);
+
+          console.debug('spy3Memoized');
+          spy3Memoized();
+          console.debug(memoize.cacheStrategyItems);
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy2Memoized, count: 4 },
+            { fn: spy3Memoized, count: 1 }, // we start over
+          ]);
+        });
+      });
+
+      describe('lru (least recently used) strategy', () => {
+        it(`can set lru strategy"`, async () => {
+          memoize.cacheStrategy = 'lru';
+          expect(memoize.cacheStrategy).to.equal('lru');
+        });
+
+        it('removes least recently used from cache', async () => {
+          memoize.limitForCacheStrategy = 2;
+          memoize.cacheStrategy = 'lru';
+
+          const spy1 = sinon.spy(() => {});
+          const spy2 = sinon.spy(() => {});
+          const spy3 = sinon.spy(() => {});
+
+          const spy1Memoized = memoize(spy1);
+          const spy2Memoized = memoize(spy2);
+          const spy3Memoized = memoize(spy3);
+
+          // Call spy1 3 times
+          spy1Memoized();
+          expect(spy1.callCount).to.equal(1);
+          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 1 }]);
+
+          spy1Memoized();
+          expect(spy1.callCount).to.equal(1);
+          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 2 }]);
+
+          spy1Memoized();
+          expect(spy1.callCount).to.equal(1);
+          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 3 }]);
+
+          spy2Memoized();
+          expect(spy2.callCount).to.equal(1);
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy2Memoized, count: 1 },
+            { fn: spy1Memoized, count: 3 },
+          ]);
+
+          spy2Memoized();
+          expect(spy2.callCount).to.equal(1);
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy2Memoized, count: 2 },
+            { fn: spy1Memoized, count: 3 },
+          ]);
+
+          spy3Memoized();
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy3Memoized, count: 1 },
+            { fn: spy2Memoized, count: 2 },
+          ]);
+
+          spy1Memoized();
+          expect(spy1.callCount).to.equal(2);
+          expect(memoize.cacheStrategyItems).to.deep.equal([
+            { fn: spy1Memoized, count: 1 }, // we start over
+            { fn: spy3Memoized, count: 1 },
+          ]);
+        });
+      });
     });
   });
 });
