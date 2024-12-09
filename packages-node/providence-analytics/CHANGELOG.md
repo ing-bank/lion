@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.17.3
+
+### Patch Changes
+
+- 7e25f3e: lfu and lru cache strategies for memoize
+- 344ffa9: make sure all cached asts are retrieved
+
 ## 0.17.2
 
 ### Patch Changes
