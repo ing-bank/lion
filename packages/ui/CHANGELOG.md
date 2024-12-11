@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.9.1
+
+### Patch Changes
+
+- 67f5735: [input-stepper] move role="spinbutton" and relevant aria attributes to the inputNode
+
 ## 0.9.0
 
 ### Minor Changes
