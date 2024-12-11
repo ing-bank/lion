@@ -97,8 +97,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
     this.__increment = this.__increment.bind(this);
     this.__decrement = this.__decrement.bind(this);
-    this.__boundOnEnterButton = this._onEnterButton.bind(this);
-    this.__boundOnLeaveButton = this._onLeaveButton.bind(this);
+    this._onEnterButton = this._onEnterButton.bind(this);
+    this._onLeaveButton = this._onLeaveButton.bind(this);
   }
 
   connectedCallback() {
@@ -365,8 +365,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       <button
         ?disabled=${this.disabled || this.readOnly}
         @click=${this.__decrement}
-        @focus=${this.__boundOnEnterButton}
-        @blur=${this.__boundOnLeaveButton}
+        @focus=${this._onEnterButton}
+        @blur=${this._onLeaveButton}
         type="button"
         aria-label="${this.msgLit('lion-input-stepper:decrease')}"
       >
@@ -385,8 +385,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       <button
         ?disabled=${this.disabled || this.readOnly}
         @click=${this.__increment}
-        @focus=${this.__boundOnEnterButton}
-        @blur=${this.__boundOnLeaveButton}
+        @focus=${this._onEnterButton}
+        @blur=${this._onLeaveButton}
         type="button"
         aria-label="${this.msgLit('lion-input-stepper:increase')}"
       >
