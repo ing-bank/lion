@@ -663,7 +663,11 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     ) {
       return false;
     }
-    if (this.filled || this.showAllOnEmpty) {
+    if (
+      this.filled ||
+      this.showAllOnEmpty ||
+      (!this.filled && this.multipleChoice && this.__prevCboxValueNonSelected)
+    ) {
       return true;
     }
     // when no keyboard action involved (on focused change), return current opened state

@@ -1303,7 +1303,7 @@ describe('lion-combobox', () => {
 
         await mimicUserTyping(el, 'art');
         await el.updateComplete;
-        expect(el.opened).to.equal(true); // valid
+        expect(el.opened).to.equal(true);
 
         const visibleOptions = options.filter(o => o.style.display !== 'none');
         expect(visibleOptions.length).to.not.equal(0);
@@ -3116,7 +3116,7 @@ describe('lion-combobox', () => {
       await mimicUserTyping(el, 'ch');
       await el.updateComplete;
 
-      expect(el.opened).to.equal(true); // valid
+      expect(el.opened).to.equal(true);
       const visibleOptions = el.formElements.filter(o => o.style.display !== 'none');
       visibleOptions[0].click();
       expect(el.opened).to.equal(true);
@@ -3138,7 +3138,7 @@ describe('lion-combobox', () => {
 
       await mimicUserTyping(el, 'art');
       await el.updateComplete;
-      expect(el.opened).to.equal(true); // valid
+      expect(el.opened).to.equal(true);
 
       // N.B. we do only trigger keydown here (and not mimicKeypress (both keyup and down)),
       // because this closely mimics what happens in the browser
@@ -3164,7 +3164,7 @@ describe('lion-combobox', () => {
       await mimicUserTyping(el, 'art');
       await el.updateComplete;
 
-      expect(el.opened).to.equal(true); // valid
+      expect(el.opened).to.equal(true);
       const visibleOptions = () => options.filter(o => o.style.display !== 'none');
       expect(visibleOptions().length).to.equal(1);
 
@@ -3194,7 +3194,7 @@ describe('lion-combobox', () => {
       await mimicUserTyping(el, 'art');
       await el.updateComplete;
 
-      expect(el.opened).to.equal(true); // valid
+      expect(el.opened).to.equal(true);
       const visibleOptions = () => options.filter(o => o.style.display !== 'none');
       expect(visibleOptions().length).to.equal(1);
 
