@@ -663,7 +663,11 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     ) {
       return false;
     }
-    if (this.filled || this.showAllOnEmpty) {
+    if (
+      this.filled ||
+      this.showAllOnEmpty ||
+      (!this.filled && this.multipleChoice && this.__prevCboxValueNonSelected)
+    ) {
       return true;
     }
     // when no keyboard action involved (on focused change), return current opened state
@@ -705,7 +709,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   // eslint-disable-next-line no-unused-vars
   _textboxOnInput(ev) {
     this.__shouldAutocompleteNextUpdate = true;
-    this.opened = true;
+    this.opened = this._showOverlayCondition({});
   }
 
   /**

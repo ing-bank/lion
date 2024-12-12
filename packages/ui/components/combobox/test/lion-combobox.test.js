@@ -931,6 +931,50 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(false);
     });
 
+    it('does not flash the menu when _showOverlayCondition returns "false"', async () => {
+      class ComplexCombobox extends LionCombobox {
+        _showOverlayCondition() {
+          return false;
+        }
+      }
+
+      const tagName = defineCE(ComplexCombobox);
+      const tag = unsafeStatic(tagName);
+
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html` 
+          <${tag} name="combo" label="Display only the label once selected">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `)
+      );
+
+      const dialog = el.shadowRoot?.querySelector('dialog');
+      /**
+       * hasDropdownFlashed is `true` if the menu was shown for a short period of time and then got closed
+       */
+      let hasDropdownFlashed = false;
+      const observer = new MutationObserver(mutationList => {
+        // eslint-disable-next-line no-unused-vars
+        for (const mutation of mutationList) {
+          if (dialog?.style.display === '') {
+            hasDropdownFlashed = true;
+          }
+        }
+      });
+      observer.observe(/** @type {Node} */ (dialog), { attributeFilter: ['style'] });
+
+      const { _inputNode } = getComboboxMembers(el);
+      _inputNode.focus();
+      await sendKeys({
+        type: 'art',
+      });
+      expect(hasDropdownFlashed).to.be.false;
+    });
+
     it('shows overlay on click when filled', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
@@ -1157,7 +1201,10 @@ describe('lion-combobox', () => {
         class ShowOverlayConditionCombobox extends LionCombobox {
           /** @param {{ currentValue: string, lastKey:string }} options */
           _showOverlayCondition(options) {
-            return options.currentValue.length > 3 && super._showOverlayCondition(options);
+            return (
+              // @ts-ignore
+              this.__prevCboxValueNonSelected.length > 3 && super._showOverlayCondition(options)
+            );
           }
         }
         const tagName = defineCE(ShowOverlayConditionCombobox);
@@ -1182,7 +1229,10 @@ describe('lion-combobox', () => {
         class ShowOverlayConditionCombobox extends LionCombobox {
           /** @param {{ currentValue: string, lastKey:string }} options */
           _showOverlayCondition(options) {
-            return options.currentValue.length > 3 && super._showOverlayCondition(options);
+            return (
+              // @ts-ignore
+              this.__prevCboxValueNonSelected.length > 3 && super._showOverlayCondition(options)
+            );
           }
         }
         const tagName = defineCE(ShowOverlayConditionCombobox);
@@ -1207,7 +1257,10 @@ describe('lion-combobox', () => {
         class ShowOverlayConditionCombobox extends LionCombobox {
           /** @param {{ currentValue: string, lastKey:string }} options */
           _showOverlayCondition(options) {
-            return options.currentValue.length > 3 && super._showOverlayCondition(options);
+            return (
+              // @ts-ignore
+              this.__prevCboxValueNonSelected.length > 3 && super._showOverlayCondition(options)
+            );
           }
         }
         const tagName = defineCE(ShowOverlayConditionCombobox);
