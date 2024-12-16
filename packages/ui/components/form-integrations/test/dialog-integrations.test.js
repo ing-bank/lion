@@ -1,13 +1,14 @@
 /* eslint-disable lit-a11y/no-autofocus */
 import { expect, fixture } from '@open-wc/testing';
-import { html } from 'lit';
-import { getAllTagNames } from './helpers/helpers.js';
-import './helpers/umbrella-form.js';
-import '@lion/ui/define/lion-dialog.js';
 import '@lion/ui/define/lion-checkbox.js';
+import '@lion/ui/define/lion-dialog.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-radio.js';
+import { html } from 'lit';
 
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
+import { getAllTagNames } from './helpers/helpers.js';
+import './helpers/umbrella-form.js';
 /**
  * @typedef {import('./helpers/umbrella-form.js').UmbrellaForm} UmbrellaForm
  * @typedef {import('../../dialog/src/LionDialog.js').LionDialog} LionDialog
@@ -89,6 +90,6 @@ describe('Form inside dialog Integrations', () => {
     el._overlayInvokerNode.click();
     const lionInput = el.querySelector('[name="input"]');
     // @ts-expect-error [allow-protected-in-tests]
-    expect(document.activeElement).to.equal(lionInput._focusableNode);
+    expect(isActiveElement(lionInput._focusableNode)).to.be.true;
   });
 });

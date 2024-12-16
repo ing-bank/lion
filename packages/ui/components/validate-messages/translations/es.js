@@ -2,7 +2,7 @@ export default {
   error: {
     Required: 'Introduzca también un/a {fieldName}.',
     _RequiredUpload: 'Cargue un {fieldName}.',
-    _RequiredSelect: 'Seleccione también un/a {fieldname}.',
+    _RequiredSelect: 'Seleccione también un/a {fieldName}.',
     EqualsLength: 'Introduzca un/a {fieldName} correcto/a de exactamente {params} caracteres.',
     MinLength: 'Introduzca un/a {fieldName} correcto/a (de al menos {params} caracteres).',
     MaxLength: 'Introduzca un/a {fieldName} correcto/a (hasta {params} caracteres).',
@@ -26,7 +26,7 @@ export default {
   warning: {
     Required: 'Introduzca también un/a {fieldName}.',
     _RequiredUpload: 'Cargue un {fieldName}.',
-    _RequiredSelect: 'Seleccione también un/a {fieldname}.',
+    _RequiredSelect: 'Seleccione también un/a {fieldName}.',
     EqualsLength: 'Introduzca un/a {fieldName} correcto/a de exactamente {params} caracteres.',
     MinLength: 'Introduzca un/a {fieldName} correcto/a (de al menos {params} caracteres).',
     MaxLength: 'Introduzca un/a {fieldName} correcto/a (hasta {params} caracteres).',

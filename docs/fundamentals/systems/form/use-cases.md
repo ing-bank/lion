@@ -162,7 +162,8 @@ export const main = () => {
         <div class="buttons">
           <lion-button-submit>Submit</lion-button-submit>
           <lion-button-reset
-            @click="${ev => ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}"
+            @click="${ev =>
+              ev.currentTarget.parentElement.parentElement.parentElement.resetGroup()}"
             >Reset</lion-button-reset
           >
         </div>

@@ -1,27 +1,49 @@
 /* eslint-disable no-new */
-import {
-  aTimeout,
-  defineCE,
-  expect,
-  fixture,
-  html,
-  unsafeStatic,
-  fixtureSync,
-} from '@open-wc/testing';
-import sinon from 'sinon';
 import { OverlayController, overlays } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
-import { keyCodes } from '../src/utils/key-codes.js';
-import { simulateTab } from '../src/utils/simulate-tab.js';
-import { _adoptStyleUtils } from '../src/utils/adopt-styles.js';
+import sinon from 'sinon';
+import {
+  unsafeStatic,
+  fixtureSync,
+  defineCE,
+  aTimeout,
+  fixture,
+  expect,
+  html,
+} from '@open-wc/testing';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { createShadowHost } from '../test-helpers/createShadowHost.js';
+import { _adoptStyleUtils } from '../src/utils/adopt-styles.js';
+import { simulateTab } from '../src/utils/simulate-tab.js';
+import { keyCodes } from '../src/utils/key-codes.js';
 
 /**
- * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  */
 
 const wrappingDialogNodeStyle = 'display: none; z-index: 9999; padding: 0px;';
+
+/**
+ * A small wrapper function that closely mimics an escape press from a user
+ * (prevents common mistakes like no bubbling or keydown)
+ * @param {Element|Document} element
+ */
+async function mimicEscapePress(element) {
+  element.dispatchEvent(
+    new KeyboardEvent('keyup', { key: 'Escape', bubbles: true, composed: true }),
+  );
+  await aTimeout(0);
+}
+
+/**
+ * @param {OverlayController} ctrlToFind
+ * @returns {boolean}
+ */
+function isRegisteredOnManager(ctrlToFind) {
+  return Boolean(ctrlToFind.manager?.list?.find(ctrl => ctrlToFind === ctrl));
+}
 
 /**
  * Make sure that all browsers serialize html in a similar way
@@ -73,6 +95,50 @@ const withLocalTestConfig = () =>
       fixtureSync(html` <div role="button" style="width: 100px; height: 20px;">Invoker</div> `)
     ),
   });
+
+/**
+ * @param {HTMLDivElement} parentContent
+ * @returns {Promise<{parentOverlay: OverlayController; childOverlay: OverlayController}>}
+ */
+async function createNestedEscControllers(parentContent) {
+  const childContent = /** @type {HTMLDivElement} */ (parentContent.querySelector('div[id]'));
+  // Assert valid fixure
+  const isValid =
+    (parentContent.id === 'parent-overlay--hidesOnEsc' ||
+      parentContent.id === 'parent-overlay--hidesOnOutsideEsc') &&
+    (childContent.id === 'child-overlay--hidesOnEsc' ||
+      childContent.id === 'child-overlay--hidesOnOutsideEsc');
+  if (!isValid) {
+    throw new Error('Provide a valid fixture');
+  }
+
+  if (parentContent.hasAttribute('data-convert-to-shadow-root')) {
+    const shadowRootParent = parentContent.attachShadow({ mode: 'open' });
+    shadowRootParent.appendChild(childContent);
+  }
+
+  const parentHasOutsideOnEsc = parentContent.id === 'parent-overlay--hidesOnOutsideEsc';
+  const childHasOutsideOnEsc = childContent.id === 'child-overlay--hidesOnOutsideEsc';
+
+  const parentConfig = parentHasOutsideOnEsc ? { hidesOnOutsideEsc: true } : { hidesOnEsc: true };
+  const childConfig = childHasOutsideOnEsc ? { hidesOnOutsideEsc: true } : { hidesOnEsc: true };
+
+  const parentOverlay = new OverlayController({
+    ...withGlobalTestConfig(),
+    contentNode: parentContent,
+    ...parentConfig,
+  });
+  const childOverlay = new OverlayController({
+    ...withGlobalTestConfig(),
+    contentNode: childContent,
+    ...childConfig,
+  });
+
+  await parentOverlay.show();
+  await childOverlay.show();
+
+  return { parentOverlay, childOverlay };
+}
 
 afterEach(() => {
   overlays.teardown();
@@ -218,8 +284,18 @@ describe('OverlayController', () => {
     });
   });
 
-  // TODO: Add teardown feature tests
-  describe('Teardown', () => {});
+  // TODO: Add more teardown feature tests
+  describe('Teardown', () => {
+    it('unregisters itself from overlayManager', async () => {
+      const ctrl = new OverlayController(withGlobalTestConfig());
+
+      expect(isRegisteredOnManager(ctrl)).to.be.true;
+
+      ctrl.teardown();
+
+      expect(isRegisteredOnManager(ctrl)).to.be.false;
+    });
+  });
 
   describe('Node Configuration', () => {
     describe('Content', async () => {
@@ -499,7 +575,8 @@ describe('OverlayController', () => {
           trapsKeyboardFocus: true,
         });
         await ctrl.show();
-        expect(ctrl.contentNode).to.equal(document.activeElement);
+
+        expect(isActiveElement(ctrl.contentNode)).to.be.true;
       });
 
       it('keeps focus within the overlay e.g. you can not tab out by accident', async () => {
@@ -526,8 +603,8 @@ describe('OverlayController', () => {
         event.keyCode = keyCodes.tab;
         window.dispatchEvent(event);
 
-        expect(elOutside).to.not.equal(document.activeElement);
-        expect(input1).to.equal(document.activeElement);
+        expect(isActiveElement(elOutside)).to.be.false;
+        expect(isActiveElement(input1)).to.be.true;
       });
 
       it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
@@ -548,7 +625,7 @@ describe('OverlayController', () => {
         input.focus();
         simulateTab();
 
-        expect(elOutside).to.equal(document.activeElement);
+        expect(isActiveElement(elOutside)).to.be.true;
       });
 
       it('keeps focus within overlay with multiple overlays with all traps on true', async () => {
@@ -571,77 +648,248 @@ describe('OverlayController', () => {
         expect(ctrl0.hasActiveTrapsKeyboardFocus).to.be.true;
         expect(ctrl1.hasActiveTrapsKeyboardFocus).to.be.false;
       });
+
+      it('warns when contentNode is a host for a shadowRoot', async () => {
+        const warnSpy = sinon.spy(console, 'warn');
+
+        const contentNode = /** @type {HTMLDivElement} */ (await fixture(html` <div></div> `));
+        contentNode.attachShadow({ mode: 'open' });
+        const shadowRootContentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div><input id="input1" /><input id="input2" /></div> `)
+        );
+        contentNode.shadowRoot?.appendChild(shadowRootContentNode);
+
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+          contentNode,
+        });
+        await ctrl.show();
+
+        // @ts-expect-error
+        expect(console.warn.args[0][0]).to.equal(
+          '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
+        );
+        warnSpy.restore();
+      });
     });
 
     describe('hidesOnEsc', () => {
-      it('hides when [escape] is pressed', async () => {
+      it('hides on [Escape] press', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           hidesOnEsc: true,
         });
         await ctrl.show();
-        ctrl.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
-        await aTimeout(0);
+        await mimicEscapePress(ctrl.contentNode);
         expect(ctrl.isShown).to.be.false;
       });
 
-      it("doesn't hide when [escape] is pressed and hidesOnEsc is set to false", async () => {
+      it('stays shown on [Escape] press with `.hidesOnEsc` set to false', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           hidesOnEsc: false,
         });
         await ctrl.show();
-        ctrl.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
-        await aTimeout(0);
+        await mimicEscapePress(ctrl.contentNode);
         expect(ctrl.isShown).to.be.true;
       });
 
-      it('stays shown when [escape] is pressed on outside element', async () => {
+      it('stays shown on [Escape] press on outside element', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           hidesOnEsc: true,
         });
         await ctrl.show();
-        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        await mimicEscapePress(document);
         expect(ctrl.isShown).to.be.true;
       });
 
-      it('does not hide when [escape] is pressed with modal <dialog> and "hidesOnEsc" is false', async () => {
+      it('stays shown on [Escape] press with modal <dialog> and `.hidesOnEsc` is false', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           trapsKeyboardFocus: true,
           hidesOnEsc: false,
         });
         await ctrl.show();
-        ctrl.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
-        await aTimeout(0);
+        await mimicEscapePress(ctrl.contentNode);
         expect(ctrl.isShown).to.be.true;
+      });
+
+      it('parent stays shown on [Escape] press in a nested overlay', async () => {
+        const parentContent = /** @type {HTMLDivElement} */ (
+          await fixture(
+            html` <!-- -->
+              <div id="parent-overlay--hidesOnEsc">
+                <div id="child-overlay--hidesOnEsc">we press [Escape] here</div>
+              </div>`,
+          )
+        );
+        const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+        await mimicEscapePress(childOverlay.contentNode);
+
+        expect(parentOverlay.isShown).to.be.true;
+        expect(childOverlay.isShown).to.be.false;
       });
     });
 
     describe('hidesOnOutsideEsc', () => {
-      it('hides when [escape] is pressed on outside element', async () => {
+      it('hides on [Escape] press on outside element', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           hidesOnOutsideEsc: true,
         });
         await ctrl.show();
-        document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
-        await aTimeout(0);
+        await mimicEscapePress(document);
         expect(ctrl.isShown).to.be.false;
       });
 
-      it('stays shown when [escape] is pressed on inside element', async () => {
+      it('stays shown on [Escape] press on inside element', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           hidesOnOutsideEsc: true,
         });
         await ctrl.show();
-        ctrl.contentNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
+        await mimicEscapePress(ctrl.contentNode);
         expect(ctrl.isShown).to.be.true;
+      });
+
+      it('stays shown on [Escape] press in a nested overlay', async () => {
+        const parentContent = /** @type {HTMLDivElement} */ (
+          await fixture(
+            html` <!-- -->
+              <div id="parent-overlay--hidesOnOutsideEsc">
+                <div id="child-overlay--hidesOnOutsideEsc">we press [Escape] here</div>
+              </div>`,
+          )
+        );
+        const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+        mimicEscapePress(childOverlay.contentNode);
+
+        expect(parentOverlay.isShown).to.be.true;
+        expect(childOverlay.isShown).to.be.true;
       });
     });
 
+    describe('Nested hidesOnEsc / hidesOnOutsideEsc', () => {
+      describe('Parent has hidesOnEsc and child has hidesOnOutsideEsc', () => {
+        it('on [Escape] press in child overlay: parent hides, child stays shown', async () => {
+          const parentContent = /** @type {HTMLDivElement} */ (
+            await fixture(
+              html` <!-- -->
+                <div id="parent-overlay--hidesOnEsc">
+                  <div id="child-overlay--hidesOnOutsideEsc">we press [Escape] here</div>
+                </div>`,
+            )
+          );
+          const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+          await mimicEscapePress(childOverlay.contentNode);
+
+          expect(parentOverlay.isShown).to.be.false;
+          expect(childOverlay.isShown).to.be.true;
+        });
+
+        it('on [Escape] press outside overlays: parent stays shown, child hides', async () => {
+          const parentContent = /** @type {HTMLDivElement} */ (
+            await fixture(
+              html` <!-- we press [Escape] here -->
+                <div id="parent-overlay--hidesOnEsc">
+                  <div id="child-overlay--hidesOnOutsideEsc"></div>
+                </div>`,
+            )
+          );
+          const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+          await mimicEscapePress(document);
+
+          expect(parentOverlay.isShown).to.be.true;
+          expect(childOverlay.isShown).to.be.false;
+        });
+
+        it('on [Escape] press in parent overlay: parent is hidden, child is hidden', async () => {
+          const parentContent = /** @type {HTMLDivElement} */ (
+            await fixture(
+              html` <!-- -->
+                <div id="parent-overlay--hidesOnEsc">
+                  we press [Escape] here
+                  <div id="child-overlay--hidesOnOutsideEsc"></div>
+                </div>`,
+            )
+          );
+          const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+          await mimicEscapePress(parentContent);
+
+          expect(parentOverlay.isShown).to.be.false;
+          expect(childOverlay.isShown).to.be.false;
+        });
+      });
+      describe('Parent has hidesOnOutsideEsc and child has hidesOnEsc', () => {
+        it('on [Escape] press in child overlay: parent stays shown, child hides', async () => {
+          const parentContent = /** @type {HTMLDivElement} */ (
+            await fixture(
+              html` <!-- -->
+                <div id="parent-overlay--hidesOnOutsideEsc">
+                  <div id="child-overlay--hidesOnEsc">we press [Escape] here</div>
+                </div>`,
+            )
+          );
+          const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+          await mimicEscapePress(childOverlay.contentNode);
+
+          expect(parentOverlay.isShown).to.be.true;
+          expect(childOverlay.isShown).to.be.false;
+        });
+
+        it('on [Escape] press outside overlays: parent hides, child stays shown', async () => {
+          const parentContent = /** @type {HTMLDivElement} */ (
+            await fixture(
+              html` <!-- we press [Escape] here -->
+                <div id="parent-overlay--hidesOnOutsideEsc">
+                  <div id="child-overlay--hidesOnEsc"></div>
+                </div>`,
+            )
+          );
+          const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+          await mimicEscapePress(document);
+
+          expect(parentOverlay.isShown).to.be.false;
+          expect(childOverlay.isShown).to.be.true;
+        });
+
+        it('on [Escape] press in parent overlay: parent hides, child stays shown', async () => {
+          const parentContent = /** @type {HTMLDivElement} */ (
+            await fixture(
+              html` <!-- we press [Escape] here -->
+                <div id="parent-overlay--hidesOnOutsideEsc">
+                  <div id="child-overlay--hidesOnEsc"></div>
+                </div>`,
+            )
+          );
+          const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+          await mimicEscapePress(document);
+
+          expect(parentOverlay.isShown).to.be.false;
+          expect(childOverlay.isShown).to.be.true;
+        });
+      });
+
+      describe('With shadow dom', () => {
+        it('on [Escape] press in child overlay in shadow root: parent hides, child stays shown', async () => {
+          const parentContent = /** @type {HTMLDivElement} */ (
+            await fixture(
+              html` <!-- -->
+                <div id="parent-overlay--hidesOnEsc" data-convert-to-shadow-root>
+                  <div id="child-overlay--hidesOnOutsideEsc">we press [Escape] here</div>
+                </div>`,
+            )
+          );
+          const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+          await mimicEscapePress(childOverlay.contentNode);
+
+          expect(parentOverlay.isShown).to.be.false;
+          expect(childOverlay.isShown).to.be.true;
+        });
+      });
+    });
     describe('hidesOnOutsideClick', () => {
       it('hides on outside click', async () => {
         const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
@@ -684,9 +932,8 @@ describe('OverlayController', () => {
         expect(ctrl.isShown).to.be.true;
 
         // Don't hide on inside mousedown & outside mouseup
-        ctrl.contentNode.dispatchEvent(new MouseEvent('mousedown'));
-        await aTimeout(0);
-        document.body.dispatchEvent(new MouseEvent('mouseup'));
+        await mimicClick(ctrl.contentNode, { releaseElement: document.body, isAsync: true });
+
         await aTimeout(0);
         expect(ctrl.isShown).to.be.true;
 
@@ -889,6 +1136,19 @@ describe('OverlayController', () => {
 
         expect(ctrl.isShown).to.be.true;
       });
+
+      it('hides when window is blurred (useful for iframes)', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideClick: true,
+        });
+        await ctrl.show();
+
+        window.dispatchEvent(new Event('blur'));
+        await aTimeout(0);
+
+        expect(ctrl.isShown).to.be.false;
+      });
     });
 
     describe('elementToFocusAfterHide', () => {
@@ -905,10 +1165,10 @@ describe('OverlayController', () => {
         await ctrl.show();
         const input = /** @type {HTMLInputElement} */ (contentNode.querySelector('input'));
         input.focus();
-        expect(document.activeElement).to.equal(input);
+        expect(isActiveElement(input)).to.be.true;
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(document.body);
+        expect(isActiveElement(document.body)).to.be.true;
       });
 
       it('supports elementToFocusAfterHide option to focus it when hiding', async () => {
@@ -925,10 +1185,10 @@ describe('OverlayController', () => {
         await ctrl.show();
         const textarea = /** @type {HTMLTextAreaElement} */ (contentNode.querySelector('textarea'));
         textarea.focus();
-        expect(document.activeElement).to.equal(textarea);
+        expect(isActiveElement(textarea)).to.be.true;
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(input);
+        expect(isActiveElement(input)).to.be.true;
         expect(isInViewport(input)).to.be.true;
       });
 
@@ -953,10 +1213,10 @@ describe('OverlayController', () => {
         await ctrl.show();
         const textarea = /** @type {HTMLTextAreaElement} */ (contentNode.querySelector('textarea'));
         textarea.focus();
-        expect(document.activeElement).to.equal(textarea);
+        expect(isActiveElement(textarea)).to.be.true;
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(input);
+        expect(isActiveElement(input)).to.be.true;
 
         document.body.removeChild(shadowHost);
       });
@@ -974,10 +1234,10 @@ describe('OverlayController', () => {
         await ctrl.show();
         // an outside element has taken over focus
         outsideButton.focus();
-        expect(document.activeElement).to.equal(outsideButton);
+        expect(isActiveElement(outsideButton)).to.be.true;
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(outsideButton);
+        expect(isActiveElement(outsideButton)).to.be.true;
       });
 
       it('allows to set elementToFocusAfterHide on show', async () => {
@@ -996,10 +1256,10 @@ describe('OverlayController', () => {
         await ctrl.show(input);
         const textarea = /** @type {HTMLTextAreaElement} */ (contentNode.querySelector('textarea'));
         textarea.focus();
-        expect(document.activeElement).to.equal(textarea);
+        expect(isActiveElement(textarea)).to.be.true;
 
         await ctrl.hide();
-        expect(document.activeElement).to.equal(input);
+        expect(isActiveElement(input)).to.be.true;
       });
     });
 
@@ -1528,6 +1788,23 @@ describe('OverlayController', () => {
       expect(ctrl.invokerNode?.getAttribute('aria-expanded')).to.equal('false');
     });
 
+    it('does not synchronize [aria-expanded] on invoker when the overlay is modal', async () => {
+      const invokerNode = /** @type {HTMLElement} */ (
+        await fixture('<div role="button">invoker</div>')
+      );
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        trapsKeyboardFocus: true,
+        handlesAccessibility: true,
+        invokerNode,
+      });
+      expect(ctrl.invokerNode?.getAttribute('aria-expanded')).to.equal(null);
+      await ctrl.show();
+      expect(ctrl.invokerNode?.getAttribute('aria-expanded')).to.equal(null);
+      await ctrl.hide();
+      expect(ctrl.invokerNode?.getAttribute('aria-expanded')).to.equal(null);
+    });
+
     it('creates unique id for content', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
@@ -1762,6 +2039,35 @@ describe('OverlayController', () => {
       }).to.throw(
         '[OverlayController] .isTooltip only takes effect when .handlesAccessibility is enabled',
       );
+    });
+  });
+
+  describe('run _keepBodySize only with scroll prevention', () => {
+    /**
+     * @type {OverlayController}
+     */
+    const overlayControllerNoPrevent = new OverlayController({
+      ...withLocalTestConfig(),
+      preventsScroll: false,
+    });
+
+    const overlayControllerPreventsScroll = new OverlayController({
+      ...withLocalTestConfig(),
+      preventsScroll: true,
+    });
+
+    it('should not run with scroll prevention', async () => {
+      await overlayControllerNoPrevent.show();
+
+      expect(overlayControllerNoPrevent.__bodyMarginRightInline).to.equal(undefined);
+      expect(overlayControllerNoPrevent.__bodyMarginRight).to.equal(undefined);
+    });
+
+    it('should run with scroll prevention', async () => {
+      await overlayControllerPreventsScroll.show();
+
+      expect(overlayControllerPreventsScroll.__bodyMarginRightInline).to.not.equal(undefined);
+      expect(overlayControllerPreventsScroll.__bodyMarginRight).to.not.equal(undefined);
     });
   });
 });

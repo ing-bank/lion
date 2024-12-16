@@ -5,7 +5,7 @@ import { getReferencedDeclaration } from '../utils/get-source-code-fragment-of-d
 import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
 import { trackDownIdentifier } from '../utils/track-down-identifier.js';
 import { getAssertionType } from '../utils/get-assertion-type.js';
-import { swcTraverse } from '../utils/swc-traverse.js';
+import { oxcTraverse } from '../utils/oxc-traverse.js';
 import { LogService } from '../core/LogService.js';
 import { Analyzer } from '../core/Analyzer.js';
 
@@ -110,20 +110,25 @@ function cleanup(transformedFile) {
 function getExportSpecifiers(node) {
   // handles default [export const g = 4];
   if (node.declaration?.declarations) {
-    return [node.declaration.declarations[0].id.value];
+    return [node.declaration.declarations[0].id.value || node.declaration.declarations[0].id.name];
   }
   if (node.declaration?.identifier) {
-    return [node.declaration.identifier.value];
+    return [node.declaration.identifier.value || node.declaration.identifier.name];
+  }
+  if (node.declaration?.id) {
+    return [node.declaration.id.value || node.declaration.id.name];
   }
 
   // handles (re)named specifiers [export { x (as y)} from 'y'];
   return (node.specifiers || []).map(s => {
     if (s.exported) {
       // { x as y }
-      return s.exported.value === 'default' ? '[default]' : s.exported.value;
+      return (s.exported.value || s.exported.name) === 'default'
+        ? '[default]'
+        : s.exported.value || s.exported.name;
     }
     // { x }
-    return s.orig.value;
+    return s.orig.value || s.local.name;
   });
 }
 
@@ -133,11 +138,18 @@ function getExportSpecifiers(node) {
 function getLocalNameSpecifiers(node) {
   return (node.declaration?.declarations || node.specifiers || [])
     .map(s => {
-      if (s.exported && s.orig && s.exported.value !== s.orig.value) {
+      if (
+        s.exported &&
+        (s.orig || s.local) &&
+        (s.exported.value || s.exported.name) !== (s.orig?.value || s.local?.name)
+      ) {
         return {
           // if reserved keyword 'default' is used, translate it into 'providence keyword'
-          local: s.orig.value === 'default' ? '[default]' : s.orig.value,
-          exported: s.exported.value,
+          local:
+            (s.orig?.value || s.local?.name) === 'default'
+              ? '[default]'
+              : s.orig?.value || s.local?.name,
+          exported: s.exported.value || s.exported.name,
         };
       }
       return undefined;
@@ -150,10 +162,10 @@ const isImportingSpecifier = pathOrNode =>
 
 /**
  * Finds import specifiers and sources for a given ast result
- * @param {SwcAstModule} swcAst
+ * @param {SwcAstModule} oxcAst
  * @param {FindExportsConfig} config
  */
-function findExportsPerAstFile(swcAst, { skipFileImports }) {
+function findExportsPerAstFile(oxcAst, { skipFileImports }) {
   LogService.debug(`Analyzer "find-exports": started findExportsPerAstFile method`);
 
   // Visit AST...
@@ -169,7 +181,7 @@ function findExportsPerAstFile(swcAst, { skipFileImports }) {
   const exportHandler = (/** @type {SwcPath} */ astPath) => {
     const exportSpecifiers = getExportSpecifiers(astPath.node);
     const localMap = getLocalNameSpecifiers(astPath.node);
-    const source = astPath.node.source?.value;
+    const source = astPath.node.source?.value || astPath.node.source?.name;
     const entry = { exportSpecifiers, localMap, source, __tmp: { astPath } };
     const assertionType = getAssertionType(astPath.node);
     if (assertionType) {
@@ -180,15 +192,18 @@ function findExportsPerAstFile(swcAst, { skipFileImports }) {
 
   const exportDefaultHandler = (/** @type {SwcPath} */ astPath) => {
     const exportSpecifiers = ['[default]'];
+    const { node } = astPath;
     let source;
     // Is it an inline declaration like "export default class X {};" ?
     if (
-      astPath.node.decl?.type === 'Identifier' ||
-      astPath.node.expression?.type === 'Identifier'
+      node.decl?.type === 'Identifier' ||
+      node.expression?.type === 'Identifier' ||
+      node.declaration?.type === 'Identifier'
     ) {
       // It is a reference to an identifier like "export { x } from 'y';"
       const importOrDeclPath = getReferencedDeclaration({
-        referencedIdentifierName: astPath.node.decl?.value || astPath.node.expression.value,
+        referencedIdentifierName:
+          node.decl?.value || node.expression?.value || node.declaration?.name,
         globalScopeBindings,
       });
       if (isImportingSpecifier(importOrDeclPath)) {
@@ -198,18 +213,23 @@ function findExportsPerAstFile(swcAst, { skipFileImports }) {
     transformedFile.push({ exportSpecifiers, source, __tmp: { astPath } });
   };
 
+  const globalScopeHandler = ({ scope }) => {
+    globalScopeBindings = scope.bindings;
+  };
+
   /** @type {SwcVisitor} */
   const visitor = {
-    Module({ scope }) {
-      globalScopeBindings = scope.bindings;
-    },
+    // for swc
+    Module: globalScopeHandler,
+    // for oxc and babel
+    Program: globalScopeHandler,
     ExportDeclaration: exportHandler,
     ExportNamedDeclaration: exportHandler,
     ExportDefaultDeclaration: exportDefaultHandler,
     ExportDefaultExpression: exportDefaultHandler,
   };
 
-  swcTraverse(swcAst, visitor, { needsAdvancedPaths: true });
+  oxcTraverse(oxcAst, visitor, { needsAdvancedPaths: true });
 
   if (!skipFileImports) {
     // Always add an entry for just the file 'relativePath'
@@ -226,7 +246,7 @@ function findExportsPerAstFile(swcAst, { skipFileImports }) {
 export default class FindExportsAnalyzer extends Analyzer {
   static analyzerName = /** @type {AnalyzerName} */ ('find-exports');
 
-  static requiredAst = /** @type {AnalyzerAst} */ ('swc');
+  static requiredAst = /** @type {AnalyzerAst} */ ('oxc');
 
   /**
    * @typedef FindExportsConfig

@@ -1,6 +1,7 @@
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture as _fixture, html, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, unsafeStatic, aTimeout } from '@open-wc/testing';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import '@lion/ui/define/lion-dialog.js';
 
 /**
@@ -89,8 +90,8 @@ describe('lion-dialog', () => {
       const invokerNode = el._overlayInvokerNode;
       invokerNode.focus();
       invokerNode.click();
-      const contentNode = el.querySelector('[slot="content"]');
-      expect(document.activeElement).to.equal(contentNode);
+      const contentNode = /** @type {Element} */ (el.querySelector('[slot="content"]'));
+      expect(isActiveElement(contentNode)).to.be.true;
     });
 
     it('sets focus on autofocused element', async () => {
@@ -107,8 +108,8 @@ describe('lion-dialog', () => {
       const invokerNode = el._overlayInvokerNode;
       invokerNode.focus();
       invokerNode.click();
-      const input = el.querySelector('input');
-      expect(document.activeElement).to.equal(input);
+      const input = /** @type {Element} */ (el.querySelector('input'));
+      expect(isActiveElement(input)).to.be.true;
     });
 
     it('with trapsKeyboardFocus set to false the focus stays on the invoker', async () => {
@@ -125,7 +126,65 @@ describe('lion-dialog', () => {
       const invokerNode = el._overlayInvokerNode;
       invokerNode.focus();
       invokerNode.click();
-      expect(document.activeElement).to.equal(invokerNode);
+      expect(isActiveElement(invokerNode)).to.be.true;
+    });
+
+    it('opened-changed event should send detail object with opened state', async () => {
+      const el = /** @type {LionDialog} */ await fixture(html`
+        <lion-dialog .config=${{ trapsKeyboardFocus: false }}>
+          <button slot="invoker">invoker button</button>
+          <div slot="content">
+            <label for="myInput">Label</label>
+            <input id="myInput" autofocus />
+          </div>
+        </lion-dialog>
+      `);
+
+      el.setAttribute('opened', '');
+      expect(el.opened).to.be.true;
+
+      el.addEventListener('opened-changed', e => {
+        // @ts-expect-error [allow-detail-since-custom-event]
+        expect(e.detail.opened).to.be.false;
+      });
+      el.removeAttribute('opened');
+    });
+
+    it("opened-changed event's target should point to lion-dialog", async () => {
+      const el = /** @type {LionDialog} */ await fixture(html`
+        <lion-dialog .config=${{ trapsKeyboardFocus: false }}>
+          <button slot="invoker">invoker button</button>
+          <div slot="content">
+            <label for="myInput">Label</label>
+            <input id="myInput" autofocus />
+          </div>
+        </lion-dialog>
+      `);
+
+      el.addEventListener('opened-changed', e => {
+        expect(e.target).to.equal(el);
+      });
+      el.setAttribute('opened', '');
+    });
+  });
+
+  describe('Accessibility', () => {
+    it('does not add [aria-expanded] to invoker button', async () => {
+      const el = await fixture(
+        html` <lion-dialog>
+          <div slot="content" class="dialog">Hey there</div>
+          <button slot="invoker">Popup button</button>
+        </lion-dialog>`,
+      );
+      const invokerButton = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
+
+      expect(invokerButton.getAttribute('aria-expanded')).to.equal(null);
+      await invokerButton.click();
+      await aTimeout(0);
+      expect(invokerButton.getAttribute('aria-expanded')).to.equal(null);
+      await invokerButton.click();
+      await aTimeout(0);
+      expect(invokerButton.getAttribute('aria-expanded')).to.equal(null);
     });
   });
 });

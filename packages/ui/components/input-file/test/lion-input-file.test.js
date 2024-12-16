@@ -158,6 +158,17 @@ describe('lion-input-file', () => {
       })
     );
 
+    it('error should not be there when the file extensions are accepted', async () => {
+      const el = await fixture(html`
+        <lion-input-file label="Select" accept=".txt"></lion-input-file>
+      `);
+
+      mimicSelectFile(el, [fileWrongType]);
+      await el.updateComplete;
+
+      expect(el.hasFeedbackFor.length).to.equal(0);
+    });
+
     it('should not be added to the selected list', async () => {
       const el = await fixture(html`
         <lion-input-file label="Select" accept="text/plain"></lion-input-file>
@@ -333,20 +344,6 @@ describe('lion-input-file', () => {
     it('error message should add all file extensions to the validator message also works without spaces " "', async () => {
       const el = await fixture(html`
         <lion-input-file label="Select" accept=".jpg,.png,.pdf"></lion-input-file>
-      `);
-
-      mimicSelectFile(el, [fileWrongType]);
-      await el.updateComplete;
-
-      // @ts-expect-error [allow-protected-in-test]
-      el._selectedFilesMetaData[0].validationFeedback?.forEach(error => {
-        expect(error.message).to.equal('Please select a .jpg, .png or .pdf file with max 500MB.');
-      });
-    });
-
-    it('error message should add all file extensions to the validator message also works without dots "."', async () => {
-      const el = await fixture(html`
-        <lion-input-file label="Select" accept="jpg, png, pdf"></lion-input-file>
       `);
 
       mimicSelectFile(el, [fileWrongType]);

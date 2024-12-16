@@ -1,202 +1,182 @@
-// @ts-ignore
+// @ts-expect-error
 import MessageFormat from '@bundled-es-modules/message-format/MessageFormat.js';
+import { isServer } from 'lit';
+
 import isLocalizeESModule from './isLocalizeESModule.js';
 
 /**
+ * @typedef {import('../types/LocalizeMixinTypes.js').NumberPostProcessor} NumberPostProcessor
+ * @typedef {import('../types/LocalizeMixinTypes.js').DatePostProcessor} DatePostProcessor
  * @typedef {import('../types/LocalizeMixinTypes.js').NamespaceObject} NamespaceObject
  */
 
-/** @typedef {import('../types/LocalizeMixinTypes.js').DatePostProcessor} DatePostProcessor */
-/** @typedef {import('../types/LocalizeMixinTypes.js').NumberPostProcessor} NumberPostProcessor */
+/**
+ * We can't access `window.document.documentElement` on the server,
+ * so we write to and read from this object on the server.
+ * N.B.: for now, the goal is to make LocalizeManager not crash on the server, and let localization happen on the client.
+ * In the future, we might want to look into more advanced SSR of localized messages
+ */
+const documentElement = isServer
+  ? { getAttribute: () => null, lang: '' }
+  : globalThis.document?.documentElement;
 
 /**
  * `LocalizeManager` manages your translations (includes loading)
  */
-export class LocalizeManager {
-  // eslint-disable-line no-unused-vars
-  constructor({
-    autoLoadOnLocaleChange = false,
-    fallbackLocale = '',
-    showKeyAsFallback = false,
-    allowOverridesForExistingNamespaces = false,
-  } = {}) {
-    /** @private */
-    this.__delegationTarget = document.createDocumentFragment();
-    /** @protected */
-    this._autoLoadOnLocaleChange = !!autoLoadOnLocaleChange;
-    /** @protected */
-    this._fallbackLocale = fallbackLocale;
-    /** @protected */
-    this._showKeyAsFallback = showKeyAsFallback;
+export class LocalizeManager extends EventTarget {
+  /**
+   * The localize system uses (normalized) Intl for formatting numbers.
+   * It's possible to customize this output per locale
+   */
+  formatNumberOptions = {
+    returnIfNaN: '',
+    /** @type {Map<string, NumberPostProcessor>} */
+    postProcessors: new Map(),
+  };
 
-    /** @private */
-    this.__allowOverridesForExistingNamespaces = allowOverridesForExistingNamespaces;
+  /**
+   * The localize system uses (normalized) Intl for formatting dates.
+   * It's possible to customize this output per locale
+   */
+  formatDateOptions = {
+    /** @type {Map<string, DatePostProcessor>} */
+    postProcessors: new Map(),
+  };
 
-    /**
-     * @type {Object.<string, Object.<string, Object>>}
-     * @private
-     */
-    this.__storage = {};
+  /**
+   * Although it's common to configure the language via the html[lang] attribute,
+   * the lang attribute can be changed by 3rd party translation tools like Google Translate.
+   *
+   * ## Why is this a potential problem?
+   * The localize system reads from html[lang] for its original configuration. Let's say it's
+   * configured as "en-US" by the developer. This means all translation data are fetched for locale "en-US".
+   *
+   * Now the Google Translate plugin kicks in. It will automatically translate all English texts found into
+   * Chinese texts. Everything looks fine... But Google Translate also sets html[lang] to "zh-CN":
+   * our localize system responds by trying to fetch Chinese translation data.
+   * Two problems can occur here:
+   * - the Chinese translations don't exist
+   * - Google Translate expects to translate from English to Chinese... and now we suddenly serve Chinese text
+   * ourselves... not what we intended.
+   *
+   * ## How can we solve this?
+   * Via `html[data-localize-lang]`, developers are allowed to set the initial locale, without
+   * having to worry about whether locale is initialized before 3rd parties like Google Translate.
+   * When this value differs from html[lang], we assume the 3rd party took
+   * control over the page language and we set this.#localeSetByTranslationTool to html[lang]
+   */
+  #shouldHandleTranslationTools = false;
 
-    /**
-     * @type {Map.<RegExp|string, function>}
-     * @private
-     */
-    this.__namespacePatternsMap = new Map();
+  /**
+   * The locale that is configured on html[data-localize-lang]
+   */
+  #localeProvidedViaDataLangAttr = '';
 
-    /**
-     * @type {Object.<string, function|null>}
-     * @private
-     */
-    this.__namespaceLoadersCache = {};
+  /**
+   * The locale that is set on html[lang] by a 3rd party translation tool like Googl Translate
+   * @type {string|null}
+   */
+  #localeSetByTranslationTool = null;
 
-    /**
-     * @type {Object.<string, Object.<string, Promise.<Object|void>>>}
-     * @private
-     */
-    this.__namespaceLoaderPromisesCache = {};
+  /**
+   * @type {Object<string, Object<string, Object>>}
+   * @private
+   */
+  __storage = {};
 
-    this.formatNumberOptions = {
-      returnIfNaN: '',
-      /** @type {Map<string,DatePostProcessor>} */
-      postProcessors: new Map(),
-    };
+  /**
+   * @type {Map<RegExp|string, function>}
+   * @private
+   */
+  __namespacePatternsMap = new Map();
 
-    this.formatDateOptions = {
-      /** @type {Map<string,DatePostProcessor>} */
-      postProcessors: new Map(),
-    };
+  /**
+   * @type {Object<string, function|null>}
+   * @private
+   */
+  __namespaceLoadersCache = {};
 
-    /**
-     * Via html[data-localize-lang], developers are allowed to set the initial locale, without
-     * having to worry about whether locale is initialized before 3rd parties like Google Translate.
-     * When this value differs from html[lang], we assume the 3rd party took
-     * control over the page language and we set this._langAttrSetByTranslationTool to html[lang]
-     */
-    const initialLocale = document.documentElement.getAttribute('data-localize-lang');
-
-    /** @protected */
-    this._supportExternalTranslationTools = Boolean(initialLocale);
-
-    if (this._supportExternalTranslationTools) {
-      this.locale = initialLocale || 'en-GB';
-      this._setupTranslationToolSupport();
-    }
-
-    if (!document.documentElement.lang) {
-      document.documentElement.lang = this.locale || 'en-GB';
-    }
-
-    /** @protected */
-    this._setupHtmlLangAttributeObserver();
-  }
-
-  /** @protected */
-  _setupTranslationToolSupport() {
-    /**
-     * This value allows for support for Google Translate (or other 3rd parties taking control
-     * of the html[lang] attribute).
-     *
-     * Have the following scenario in mind:
-     * 1. locale is initialized by developer via html[data-localize-lang="en-US"] and
-     * html[lang="en-US"]. When localize is loaded (note that this also can be after step 2 below),
-     * it will sync its initial state from html[data-localize-lang]
-     * 2. Google Translate kicks in for the French language. It will set html[lang="fr"].
-     * This new language is not one known by us, so we most likely don't have translations for
-     * this file. Therefore, we do NOT sync this value to LocalizeManager. The manager should
-     * still ask for known resources (in this case for locale 'en-US')
-     * 3. locale is changed (think of a language dropdown)
-     * It's a bit of a weird case, because we would not expect an end user to do this. If he/she
-     * does, make sure that we do not go against Google Translate, so we maintain accessibility
-     * (by not altering html[lang]). We detect this by reading _langAttrSetByTranslationTool:
-     * when its value is null, we consider Google translate 'not active'.
-     *
-     * When Google Translate is turned off by the user (html[lang=auto]),
-     * `localize.locale` will be synced to html[lang] again
-     *
-     * Keep in mind that all of the above also works with other tools than Google Translate,
-     * but this is the most widely used tool and therefore used as an example.
-     */
-    this._langAttrSetByTranslationTool = document.documentElement.lang || null;
-  }
-
-  teardown() {
-    this._teardownHtmlLangAttributeObserver();
-  }
+  /**
+   * @type {Object<string, Object<string, Promise<Object|void>>>}
+   * @private
+   */
+  __namespaceLoaderPromisesCache = {};
 
   /**
    * @returns {string}
    */
   get locale() {
-    if (this._supportExternalTranslationTools) {
-      return this.__locale || '';
+    if (!this.#shouldHandleTranslationTools) {
+      return documentElement.lang || '';
     }
-    return document.documentElement.lang;
+    return this.#localeProvidedViaDataLangAttr || '';
   }
 
   /**
-   * @param {string} value
+   * @param {string} newLocale
    */
-  set locale(value) {
-    /** @type {string} */
-    let oldLocale;
-    if (this._supportExternalTranslationTools) {
-      oldLocale = /** @type {string} */ (this.__locale);
-      this.__locale = value;
-      if (this._langAttrSetByTranslationTool === null) {
-        this._setHtmlLangAttribute(value);
-      }
-    } else {
-      oldLocale = document.documentElement.lang;
-      this._setHtmlLangAttribute(value);
+  set locale(newLocale) {
+    this.#assertCorrectLocale(newLocale);
+
+    if (!this.#shouldHandleTranslationTools) {
+      const oldLocale = documentElement.lang;
+      this._setHtmlLangAttribute(newLocale);
+      this._onLocaleChanged(newLocale, oldLocale);
+      return;
     }
 
-    if (!value.includes('-')) {
-      this.__handleLanguageOnly(value);
+    const oldLocale = /** @type {string} */ (this.#localeProvidedViaDataLangAttr);
+    this.#localeProvidedViaDataLangAttr = newLocale;
+    const isLangAutoOrTranslationToolNotProcessed = this.#localeSetByTranslationTool === null;
+    if (isLangAutoOrTranslationToolNotProcessed) {
+      this._setHtmlLangAttribute(newLocale);
     }
-
-    this._onLocaleChanged(value, oldLocale);
+    this._onLocaleChanged(newLocale, oldLocale);
   }
 
   /**
-   * @param {string} locale
-   * @protected
-   */
-  _setHtmlLangAttribute(locale) {
-    this._teardownHtmlLangAttributeObserver();
-    document.documentElement.lang = locale;
-    this._setupHtmlLangAttributeObserver();
-  }
-
-  /**
-   * @param {string} value
-   * @throws {Error} Language only locales are not allowed(Use 'en-GB' instead of 'en')
-   * @private
-   */
-  // eslint-disable-next-line class-methods-use-this
-  __handleLanguageOnly(value) {
-    throw new Error(`
-      Locale was set to ${value}.
-      Language only locales are not allowed, please use the full language locale e.g. 'en-GB' instead of 'en'.
-      See https://github.com/ing-bank/lion/issues/187 for more information.
-    `);
-  }
-
-  /**
-   * @returns {Promise.<Object|void>}
+   * @readonly
+   * @returns {Promise<Object|void>}
    */
   get loadingComplete() {
-    if (typeof this.__namespaceLoaderPromisesCache[this.locale] === 'object') {
-      return Promise.all(Object.values(this.__namespaceLoaderPromisesCache[this.locale]));
-    }
-    return Promise.resolve();
+    const hasPendingCacheForLocale =
+      typeof this.__namespaceLoaderPromisesCache[this.locale] === 'object';
+
+    return !hasPendingCacheForLocale
+      ? Promise.resolve()
+      : Promise.all(Object.values(this.__namespaceLoaderPromisesCache[this.locale]));
   }
 
-  reset() {
-    this.__storage = {};
-    this.__namespacePatternsMap = new Map();
-    this.__namespaceLoadersCache = {};
-    this.__namespaceLoaderPromisesCache = {};
+  constructor({
+    allowOverridesForExistingNamespaces = false,
+    autoLoadOnLocaleChange = false,
+    showKeyAsFallback = false,
+    fallbackLocale = '',
+  } = {}) {
+    super();
+
+    /** @private */
+    this.__allowOverridesForExistingNamespaces = allowOverridesForExistingNamespaces;
+    /** @protected */
+    this._autoLoadOnLocaleChange = !!autoLoadOnLocaleChange;
+    /** @protected */
+    this._showKeyAsFallback = showKeyAsFallback;
+    /** @protected */
+    this._fallbackLocale = fallbackLocale;
+
+    const localeProvidedViaDataLangAttr = documentElement.getAttribute('data-localize-lang');
+    this.#shouldHandleTranslationTools = Boolean(localeProvidedViaDataLangAttr);
+
+    if (this.#shouldHandleTranslationTools) {
+      this.locale = /** @type {string} */ (localeProvidedViaDataLangAttr);
+      this._setupTranslationToolSupport();
+    }
+
+    if (!documentElement.lang) {
+      documentElement.lang = this.locale || 'en-GB';
+    }
+
+    this._setupHtmlLangAttributeObserver();
   }
 
   /**
@@ -240,7 +220,7 @@ export class LocalizeManager {
    * @param {NamespaceObject[]} namespaces
    * @param {Object} options
    * @param {string} [options.locale]
-   * @returns {Promise.<Object>}
+   * @returns {Promise<Object>}
    */
   loadNamespaces(namespaces, { locale } = {}) {
     return Promise.all(
@@ -255,7 +235,7 @@ export class LocalizeManager {
    * @param {NamespaceObject} namespaceObj
    * @param {Object} options
    * @param {string} [options.locale]
-   * @returns {Promise.<Object|void>}
+   * @returns {Promise<Object|void>}
    */
   loadNamespace(namespaceObj, { locale = this.locale } = { locale: this.locale }) {
     const isDynamicImport = typeof namespaceObj === 'object';
@@ -278,7 +258,7 @@ export class LocalizeManager {
 
   /**
    * @param {string | string[]} keys
-   * @param {Object.<string,?>} [vars]
+   * @param {Object<string,?>} [vars]
    * @param {Object} [opts]
    * @param {string} [opts.locale]
    * @returns {string}
@@ -293,18 +273,84 @@ export class LocalizeManager {
     return formatter.format(vars);
   }
 
+  teardown() {
+    this._teardownHtmlLangAttributeObserver();
+  }
+
+  reset() {
+    this.__storage = {};
+    this.__namespacePatternsMap = new Map();
+    this.__namespaceLoadersCache = {};
+    this.__namespaceLoaderPromisesCache = {};
+  }
+
+  /**
+   * @param {{locale:string, postProcessor:DatePostProcessor}} options
+   */
+  setDatePostProcessorForLocale({ locale, postProcessor }) {
+    this.formatDateOptions?.postProcessors.set(locale, postProcessor);
+  }
+
+  /**
+   * @param {{locale:string, postProcessor:NumberPostProcessor}} options
+   */
+  setNumberPostProcessorForLocale({ locale, postProcessor }) {
+    this.formatNumberOptions?.postProcessors.set(locale, postProcessor);
+  }
+
+  /**
+   * This value allows for support for Google Translate (or other 3rd parties taking control
+   * of the html[lang] attribute).
+   *
+   * Have the following scenario in mind:
+   * 1. locale is initialized by developer via html[data-localize-lang="en-US"] and
+   * html[lang="en-US"]. When localize is loaded (note that this also can be after step 2 below),
+   * it will sync its initial state from html[data-localize-lang]
+   * 2. Google Translate kicks in for the French language. It will set html[lang="fr"].
+   * This new language is not one known by us, so we most likely don't have translations for
+   * this file. Therefore, we do NOT sync this value to LocalizeManager. The manager should
+   * still ask for known resources (in this case for locale 'en-US')
+   * 3. locale is changed (think of a language dropdown)
+   * It's a bit of a weird case, because we would not expect an end user to do this. If he/she
+   * does, make sure that we do not go against Google Translate, so we maintain accessibility
+   * (by not altering html[lang]). We detect this by reading #localeSetByTranslationTool:
+   * when its value is null, we consider Google translate 'not active'.
+   *
+   * When Google Translate is turned off by the user (html[lang=auto]),
+   * `localize.locale` will be synced to html[lang] again
+   *
+   * Keep in mind that all of the above also works with other tools than Google Translate,
+   * but this is the most widely used tool and therefore used as an example.
+   * @protected
+   */
+  _setupTranslationToolSupport() {
+    this.#localeSetByTranslationTool = documentElement.lang || null;
+  }
+
+  /**
+   * @param {string} locale
+   * @protected
+   */
+  _setHtmlLangAttribute(locale) {
+    this._teardownHtmlLangAttributeObserver();
+    documentElement.lang = locale;
+    this._setupHtmlLangAttributeObserver();
+  }
+
   /** @protected */
   _setupHtmlLangAttributeObserver() {
+    if (isServer) return;
+
     if (!this._htmlLangAttributeObserver) {
       this._htmlLangAttributeObserver = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
-          if (this._supportExternalTranslationTools) {
-            if (document.documentElement.lang === 'auto') {
+          if (this.#shouldHandleTranslationTools) {
+            if (documentElement.lang === 'auto') {
               // Google Translate is switched off
-              this._langAttrSetByTranslationTool = null;
+              this.#localeSetByTranslationTool = null;
               this._setHtmlLangAttribute(this.locale);
             } else {
-              this._langAttrSetByTranslationTool = document.documentElement.lang;
+              this.#localeSetByTranslationTool = document.documentElement.lang;
             }
           } else {
             this._onLocaleChanged(document.documentElement.lang, mutation.oldValue || '');
@@ -352,7 +398,7 @@ export class LocalizeManager {
    * @param {NamespaceObject} namespaceObj
    * @param {boolean} isDynamicImport
    * @param {string} namespace
-   * @returns {Promise.<Object|void>}
+   * @returns {Promise<Object|void>}
    * @protected
    */
   _loadNamespaceData(locale, namespaceObj, isDynamicImport, namespace) {
@@ -388,7 +434,7 @@ export class LocalizeManager {
     let loader = this.__namespaceLoadersCache[namespace];
     if (!loader) {
       if (isDynamicImport) {
-        const _namespaceObj = /** @type {Object.<string,function>} */ (namespaceObj);
+        const _namespaceObj = /** @type {Object<string,function>} */ (namespaceObj);
         loader = _namespaceObj[namespace];
         this.__namespaceLoadersCache[namespace] = loader;
       } else {
@@ -411,7 +457,7 @@ export class LocalizeManager {
    * @param {string} locale
    * @param {string} namespace
    * @param {string} [fallbackLocale]
-   * @returns {Promise.<any>}
+   * @returns {Promise<any>}
    * @throws {Error} Data for namespace and (locale or fallback locale) could not be loaded.
    * @protected
    */
@@ -441,7 +487,7 @@ export class LocalizeManager {
   /**
    * @param {string} locale
    * @param {string} namespace
-   * @param {Promise.<Object|void>} promise
+   * @param {Promise<Object|void>} promise
    * @protected
    */
   _cacheNamespaceLoaderPromise(locale, namespace, promise) {
@@ -481,31 +527,6 @@ export class LocalizeManager {
   }
 
   /**
-   * @param {string} type
-   * @param {EventListener} listener
-   * @param {...Object} options
-   */
-  addEventListener(type, listener, ...options) {
-    this.__delegationTarget.addEventListener(type, listener, ...options);
-  }
-
-  /**
-   * @param {string} type
-   * @param {EventListener} listener
-   * @param {...Object} options
-   */
-  removeEventListener(type, listener, ...options) {
-    this.__delegationTarget.removeEventListener(type, listener, ...options);
-  }
-
-  /**
-   *  @param {CustomEvent} event
-   */
-  dispatchEvent(event) {
-    this.__delegationTarget.dispatchEvent(event);
-  }
-
-  /**
    * @param {string} newLocale
    * @param {string} oldLocale
    * @returns {undefined}
@@ -514,9 +535,8 @@ export class LocalizeManager {
   _onLocaleChanged(newLocale, oldLocale) {
     // Event firing immediately, does not wait for loading the translations
     this.dispatchEvent(new CustomEvent('__localeChanging'));
-    if (newLocale === oldLocale) {
-      return;
-    }
+    if (newLocale === oldLocale) return;
+
     if (this._autoLoadOnLocaleChange) {
       this._loadAllMissing(newLocale, oldLocale);
       this.loadingComplete.then(() => {
@@ -588,7 +608,7 @@ export class LocalizeManager {
     const names = namesString.split('.');
     const result = names.reduce(
       /**
-       * @param {Object.<string, any> | string} message
+       * @param {Object<string, any> | string} message
        * @param {string} name
        * @returns {string}
        */
@@ -600,16 +620,51 @@ export class LocalizeManager {
   }
 
   /**
-   * @param {{locale:string, postProcessor:DatePostProcessor}} options
+   * @param {string} value
+   * @throws {Error} Language only locales are not allowed(Use 'en-GB' instead of 'en')
    */
-  setDatePostProcessorForLocale({ locale, postProcessor }) {
-    this.formatDateOptions.postProcessors.set(locale, postProcessor);
+  // eslint-disable-next-line class-methods-use-this
+  #assertCorrectLocale(value) {
+    if (value.includes('-')) return;
+
+    throw new Error(`
+      Locale was set to ${value}.
+      Language only locales are not allowed, please use the full language locale e.g. 'en-GB' instead of 'en'.
+      See https://github.com/ing-bank/lion/issues/187 for more information.
+    `);
+  }
+
+  // === TODO: delete below in a next breaking release ---
+
+  /**
+   * @deprecated
+   * @protected
+   */
+  get _supportExternalTranslationTools() {
+    return this.#shouldHandleTranslationTools;
   }
 
   /**
-   * @param {{locale:string, postProcessor:NumberPostProcessor}} options
+   * @deprecated
+   * @protected
    */
-  setNumberPostProcessorForLocale({ locale, postProcessor }) {
-    this.formatNumberOptions.postProcessors.set(locale, postProcessor);
+  set _supportExternalTranslationTools(supportsThem) {
+    this.#shouldHandleTranslationTools = supportsThem;
+  }
+
+  /**
+   * @deprecated
+   * @protected
+   */
+  get _langAttrSetByTranslationTool() {
+    return this.#localeProvidedViaDataLangAttr;
+  }
+
+  /**
+   * @deprecated
+   * @protected
+   */
+  set _langAttrSetByTranslationTool(newValue) {
+    this.#localeProvidedViaDataLangAttr = newValue;
   }
 }

@@ -1,7 +1,8 @@
 import { expect, fixture } from '@open-wc/testing';
+import { DisabledMixin } from '@lion/ui/core.js';
 import { html } from 'lit/static-html.js';
 import { LitElement } from 'lit';
-import { DisabledMixin } from '@lion/ui/core.js';
+import sinon from 'sinon';
 
 describe('DisabledMixin', () => {
   class CanBeDisabled extends DisabledMixin(LitElement) {}
@@ -83,5 +84,25 @@ describe('DisabledMixin', () => {
     el.disabled = false;
     el.retractRequestToBeDisabled();
     expect(el.disabled).to.be.false;
+  });
+
+  it('will not perform click when disabled', async () => {
+    const el = /** @type {CanBeDisabled} */ (
+      await fixture(html`<can-be-disabled></can-be-disabled>`)
+    );
+    const spy = sinon.spy();
+    el.addEventListener('click', spy);
+
+    el.click();
+
+    expect(spy.callCount).to.equal(1);
+
+    el.disabled = true;
+    el.click();
+    expect(spy.callCount).to.equal(1);
+
+    el.disabled = false;
+    el.click();
+    expect(spy.callCount).to.equal(2);
   });
 });

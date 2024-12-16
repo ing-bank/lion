@@ -7,9 +7,21 @@ import { toPosixPath } from './to-posix-path.js';
 import { memoize } from './memoize.js';
 
 /**
+ * @typedef {nodeFs.Dirent & { path:string; parentPath:string }} DirentWithPath
  * @typedef {nodeFs} FsLike
- * @typedef {nodeFs.Dirent & {path:string;parentPath:string}} DirentWithPath
- * @typedef {{onlyDirectories:boolean;onlyFiles:boolean;deep:number;suppressErrors:boolean;fs: FsLike;cwd:string;absolute:boolean;extglob:boolean;}} FastGlobtions
+ * @typedef {{
+ *   onlyDirectories: boolean;
+ *   suppressErrors: boolean;
+ *   onlyFiles: boolean;
+ *   absolute: boolean;
+ *   extglob: boolean;
+ *   ignore: string[];
+ *   unique: boolean;
+ *   deep: number;
+ *   dot: boolean;
+ *   cwd: string;
+ *   fs: FsLike;
+ * }} FastGlobtions
  */
 
 const [nodeMajor] = process.versions.node.split('.').map(Number);
@@ -104,31 +116,114 @@ export const parseGlobToRegex = memoize(
       }
       regexResultStr += currentChar;
     }
-
     return new RegExp(`^${regexResultStr}$`);
   },
 );
 
+/**
+ * @template T
+ * @param {T[]} arr
+ * @returns {T[]}
+ */
+function toUniqueArray(arr) {
+  return Array.from(new Set(arr));
+}
+
+/**
+ * @param {string} glob
+ * @returns {boolean}
+ */
+function isRootGlob(glob) {
+  return glob.startsWith('/') || glob.startsWith('!/') || Boolean(glob.match(/^([A-Z]:\\|\\\\)/));
+}
+
+/**
+ * Makes sure cwd does not end with a slash
+ * @param {string} str
+ * @returns {string}
+ */
+function normalizeCwd(str) {
+  return str.endsWith('/') ? str.slice(0, -1) : str;
+}
+
+/**
+ * @param {DirentWithPath} dirent
+ * @param {{cwd:string}} cfg
+ * @returns {string}
+ */
+function direntToLocalPath(dirent, { cwd }) {
+  const parentPath = toPosixPath(dirent.parentPath || dirent.path);
+  // Since `fs.glob` can return parent paths with files included, we need to strip the file part
+  const parts = parentPath.split('/');
+  const lastPart = parts[parts.length - 1];
+  const isLastPartFile = !lastPart.startsWith('.') && lastPart.split('.').length > 1;
+  const folder = isLastPartFile ? parts.slice(0, parts.length - 1).join('/') : parentPath;
+
+  return toPosixPath(path.join(folder, dirent.name)).replace(
+    new RegExp(`^${toPosixPath(cwd)}/`),
+    '',
+  );
+}
+
+/**
+ * @param {{dirent:nodeFs.Dirent;relativeToCwdPath:string}[]} matchedEntries
+ * @param {FastGlobtions} options
+ * @returns {string[]}
+ */
+function postprocessOptions(matchedEntries, options) {
+  const allFileOrDirectoryEntries = matchedEntries.filter(({ dirent }) =>
+    options.onlyDirectories ? dirent.isDirectory() : dirent.isFile(),
+  );
+
+  let filteredPaths = allFileOrDirectoryEntries.map(({ relativeToCwdPath }) => relativeToCwdPath);
+
+  if (!options.dot) {
+    filteredPaths = filteredPaths.filter(
+      f => !f.split('/').some(folderOrFile => folderOrFile.startsWith('.')),
+    );
+  }
+
+  if (options.absolute) {
+    filteredPaths = filteredPaths.map(f => {
+      const isRootPath = isRootGlob(f);
+      return isRootPath ? toPosixPath(f) : toPosixPath(path.join(options.cwd, f));
+    });
+    if (process.platform === 'win32') {
+      const driveChar = path.win32.resolve(options.cwd).slice(0, 1).toUpperCase();
+      filteredPaths = filteredPaths.map(f => `${driveChar}:${f}`);
+    }
+  }
+
+  if (options.deep !== Infinity) {
+    filteredPaths = filteredPaths.filter(f => f.split('/').length <= options.deep + 2);
+  }
+
+  const result = options.unique ? toUniqueArray(filteredPaths) : filteredPaths;
+  return result.sort((a, b) => {
+    const pathDiff = a.split('/').length - b.split('/').length;
+    return pathDiff !== 0 ? pathDiff : a.localeCompare(b);
+  });
+}
+
 const getStartPath = memoize(
   /**
    * @param {string} glob
+   * @returns {string}
    */
   glob => {
     const reservedChars = ['?', '[', ']', '{', '}', ',', '.', '*'];
-    let hasFoundReservedChar = false;
-    return glob
-      .split('/')
-      .map(part => {
-        if (hasFoundReservedChar) return undefined;
-        hasFoundReservedChar = reservedChars.some(reservedChar => part.includes(reservedChar));
-        return hasFoundReservedChar ? undefined : part;
-      })
-      .filter(Boolean)
-      .join('/');
+    const startPathParts = [];
+    for (const part of glob.split('/')) {
+      const hasReservedChar = reservedChars.some(reservedChar => part.includes(reservedChar));
+      if (hasReservedChar) break;
+      startPathParts.push(part);
+    }
+    return startPathParts.join('/');
   },
 );
 
 let isCacheEnabled = false;
+let isExperimentalFsGlobEnabled = false;
 /** @type {{[path:string]:DirentWithPath[]}} */
 const cache = {};
 
@@ -179,14 +274,81 @@ const getAllDirentsRelativeToCwd = memoize(
     });
 
     const allDirEntsRelativeToCwd = allDirentsRelativeToStartPath.map(dirent => ({
-      relativeToCwdPath: toPosixPath(
-        path.join(dirent.parentPath || dirent.path, dirent.name),
-      ).replace(`${toPosixPath(options.cwd)}/`, ''),
+      relativeToCwdPath: direntToLocalPath(dirent, { cwd: options.cwd }),
       dirent,
     }));
+
     return allDirEntsRelativeToCwd;
   },
 );
+
+/**
+ * @param {string|string[]} globOrGlobs
+ * @param {Partial<FastGlobtions> & {exclude?:Function; stats: boolean; cwd:string}} cfg
+ * @returns {Promise<string[]|DirentWithPath[]>}
+ */
+async function nativeGlob(globOrGlobs, { fs, cwd, exclude, stats }) {
+  // @ts-expect-error
+  const asyncGenResult = await fs.promises.glob(globOrGlobs, {
+    withFileTypes: true,
+    cwd,
+    ...(exclude ? { exclude } : {}),
+  });
+  const results = [];
+  for await (const dirent of asyncGenResult) {
+    if (dirent.name === '.' || dirent.isDirectory()) continue; // eslint-disable-line no-continue
+    results.push(stats ? dirent : direntToLocalPath(dirent, { cwd }));
+  }
+  return results;
+}
+
+/**
+ *
+ * @param {{globs: string[]; ignoreGlobs: string[]; options: FastGlobtions; regularGlobs:string[]}} config
+ * @returns {Promise<string[]|void>}
+ */
+async function getNativeGlobResults({ globs, options, ignoreGlobs, regularGlobs }) {
+  const optionsNotSupportedByNativeGlob = ['onlyDirectories', 'dot'];
+  const hasGlobWithFullPath = globs.some(isRootGlob);
+  const doesConfigAllowNative =
+    !optionsNotSupportedByNativeGlob.some(opt => options[opt]) && !hasGlobWithFullPath;
+
+  if (!doesConfigAllowNative) return undefined;
+
+  const negativeGlobs = [...ignoreGlobs, ...regularGlobs.filter(r => r.startsWith('!'))].map(r =>
+    r.slice(1),
+  );
+
+  const negativeResults = negativeGlobs.length
+    ? // @ts-ignore
+      /** @type {string[]} */ (await nativeGlob(negativeGlobs, options))
+    : [];
+  const positiveGlobs = regularGlobs.filter(r => !r.startsWith('!'));
+
+  const result = /** @type {DirentWithPath[]} */ (
+    await nativeGlob(positiveGlobs, {
+      cwd: /** @type {string} */ (options.cwd),
+      fs: options.fs,
+      stats: true,
+      // we cannot use the exclude option here, because it's not working correctly
+    })
+  );
+
+  const direntsFiltered = result.filter(
+    dirent =>
+      !negativeResults.includes(
+        direntToLocalPath(dirent, { cwd: /** @type {string} */ (options.cwd) }),
+      ),
+  );
+
+  return postprocessOptions(
+    direntsFiltered.map(dirent => ({
+      dirent,
+      relativeToCwdPath: direntToLocalPath(dirent, { cwd: /** @type {string} */ (options.cwd) }),
+    })),
+    options,
+  );
+}
 
 /**
  * Lightweight glob implementation.
@@ -209,17 +371,30 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
     unique: true,
     sync: false,
     dot: false,
-    // TODO: ignore, throwErrorOnBrokenSymbolicLink, markDirectories, objectMode, onlyDirectories, onlyFiles, stats
+    ignore: [],
+    // Add if needed: throwErrorOnBrokenSymbolicLink, markDirectories, objectMode, stats
     // https://github.com/mrmlnc/fast-glob?tab=readme-ov-file
     ...providedOptions,
   };
+
+  options.cwd = normalizeCwd(options.cwd);
 
   if (!options.onlyFiles) {
     // This makes behavior aligned with globby
     options.onlyDirectories = true;
   }
 
-  const globs = Array.isArray(globOrGlobs) ? Array.from(new Set(globOrGlobs)) : [globOrGlobs];
+  const regularGlobs = Array.isArray(globOrGlobs) ? globOrGlobs : [globOrGlobs];
+  const ignoreGlobs = options.ignore.map((/** @type {string} */ g) =>
+    g.startsWith('!') ? g : `!${g}`,
+  );
+  const globs = toUniqueArray([...regularGlobs, ...ignoreGlobs]);
+
+  if (isExperimentalFsGlobEnabled && options.fs?.promises.glob) {
+    const params = { regularGlobs, ignoreGlobs, options, globs };
+    const nativeGlobResults = await getNativeGlobResults(params);
+    if (nativeGlobResults) return nativeGlobResults;
+  }
 
   /** @type {RegExp[]} */
   const matchRegexesNegative = [];
@@ -238,6 +413,7 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
       globstar: options.globstar,
       extglob: options.extglob,
     });
+
     if (isNegative) {
       matchRegexesNegative.push(regexForGlob);
     } else {
@@ -246,12 +422,13 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
 
     // Search for the "deepest" starting point in the filesystem that we can use to search the fs
     const startPath = getStartPath(globNormalized);
-    const fullStartPath = path.join(options.cwd, startPath);
-
+    const isRootPath = isRootGlob(startPath);
+    const cwd = isRootPath ? '/' : options.cwd;
+    const fullStartPath = path.join(cwd, startPath);
     try {
       const allDirEntsRelativeToCwd = await getAllDirentsRelativeToCwd(fullStartPath, {
-        cwd: options.cwd,
         fs: options.fs,
+        cwd,
       });
 
       globEntries.push(...allDirEntsRelativeToCwd);
@@ -269,37 +446,7 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
       !matchRegexesNegative.some(globReNeg => globReNeg.test(globEntry.relativeToCwdPath)),
   );
 
-  const allFileOrDirectoryEntries = matchedEntries.filter(({ dirent }) =>
-    options.onlyDirectories ? dirent.isDirectory() : dirent.isFile(),
-  );
-
-  let filteredPaths = allFileOrDirectoryEntries.map(({ relativeToCwdPath }) => relativeToCwdPath);
-
-  if (!options.dot) {
-    filteredPaths = filteredPaths.filter(
-      f => !f.split('/').some(folderOrFile => folderOrFile.startsWith('.')),
-    );
-  }
-
-  if (options.absolute) {
-    filteredPaths = filteredPaths.map(f => toPosixPath(path.join(options.cwd, f)));
-
-    if (process.platform === 'win32') {
-      const driveChar = path.win32.resolve(options.cwd).slice(0, 1).toUpperCase();
-      filteredPaths = filteredPaths.map(f => `${driveChar}:${f}`);
-    }
-  }
-
-  if (options.deep !== Infinity) {
-    filteredPaths = filteredPaths.filter(f => f.split('/').length <= options.deep + 2);
-  }
-
-  const result = options.unique ? Array.from(new Set(filteredPaths)) : filteredPaths;
-
-  const res = result.sort((a, b) => {
-    const pathDiff = a.split('/').length - b.split('/').length;
-    return pathDiff !== 0 ? pathDiff : a.localeCompare(b);
-  });
+  const res = postprocessOptions(matchedEntries, options);
 
   // It could happen the fs changes with the next call, so we clear the cache
   getAllDirentsRelativeToCwd.clearCache();
@@ -310,4 +457,12 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
 
 optimisedGlob.disableCache = () => {
   isCacheEnabled = false;
+};
+
+optimisedGlob.enableExperimentalFsGlob = () => {
+  isExperimentalFsGlobEnabled = true;
+};
+
+optimisedGlob.disableExperimentalFsGlob = () => {
+  isExperimentalFsGlobEnabled = false;
 };

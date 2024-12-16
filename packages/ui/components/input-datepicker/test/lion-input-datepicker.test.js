@@ -19,9 +19,10 @@ import '@lion/ui/define/lion-input-datepicker.js';
  */
 function getProtectedMembersDatepicker(datepickerEl) {
   // @ts-ignore
-  const { __invokerId: invokerId } = datepickerEl;
+  const { __invokerId: invokerId, _calendarNode: calendarNode } = datepickerEl;
   return {
     invokerId,
+    calendarNode,
   };
 }
 
@@ -263,6 +264,33 @@ describe('<lion-input-datepicker>', () => {
       expect(el.value).to.equal('18/12/2019');
     });
 
+    describe('localization', () => {
+      /** @type {import('@lion/ui/localize.js').LocalizeManager} */ let localizeManager;
+
+      before(async () => {
+        const { getLocalizeManager } = await import('@lion/ui/localize-no-side-effects.js');
+        localizeManager = getLocalizeManager();
+      });
+
+      it('should update formatted value and value in accordance of localization upon model value update', async () => {
+        localizeManager.locale = 'nl-NL';
+
+        const el = await fixture(html`
+          <lion-input-datepicker .modelValue="${new Date('2022/12/30')}"></lion-input-datepicker>
+        `);
+
+        await el.updateComplete;
+
+        expect(el.formattedValue).to.equal('30-12-2022');
+        expect(el.value).to.equal('30-12-2022');
+      });
+
+      after(() => {
+        // @ts-ignore - using protected method to undo setting explict locale
+        localizeManager.locale = localizeManager._fallbackLocale;
+      });
+    });
+
     describe('Validators', () => {
       /**
        * Validators are the Application Developer facing API in <lion-input-datepicker>:
@@ -383,6 +411,29 @@ describe('<lion-input-datepicker>', () => {
         expect(el.__calendarMaxDate.toString()).to.equal(new Date('2019/07/15').toString());
       });
 
+      it('should update the central date of Calendar if updated validator made the current central date disabled', async () => {
+        const initialValidators = [new MaxDate(new Date('2000/01/01'))];
+        const updatedValidators = [new MaxDate(new Date('2020/01/01'))];
+
+        const el = await fixture(html`
+          <lion-input-datepicker .validators="${initialValidators}"></lion-input-datepicker>
+        `);
+        const obj = new DatepickerInputObject(el);
+        await obj.openCalendar();
+
+        expect(getProtectedMembersDatepicker(el).calendarNode.centralDate.toString()).to.equal(
+          new Date('2000/01/01').toString(),
+        );
+
+        await obj.closeCalendar();
+        el.validators = updatedValidators;
+        await obj.openCalendar();
+
+        expect(getProtectedMembersDatepicker(el).calendarNode.centralDate.toString()).to.equal(
+          new Date('2020/01/01').toString(),
+        );
+      });
+
       it('should show error on invalid date passed to modelValue', async () => {
         const myDate = new Date('foo');
         const el = await fixture(html`
@@ -495,11 +546,11 @@ describe('<lion-input-datepicker>', () => {
       const el = await fixture(html`<lion-input-datepicker></lion-input-datepicker>`);
       const elObj = new DatepickerInputObject(el);
 
-      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal('false');
+      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
       await elObj.openCalendar();
-      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal('true');
+      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
       await elObj.closeCalendar();
-      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal('false');
+      expect(elObj.invokerEl.getAttribute('aria-expanded')).to.equal(null);
     });
 
     it('is accessible when closed', async () => {

@@ -74,6 +74,12 @@ const DisabledMixinImplementation = superclass =>
         }
       }
     }
+
+    click() {
+      if (this.disabled) return;
+
+      super.click();
+    }
   };
 
 export const DisabledMixin = dedupeMixin(DisabledMixinImplementation);

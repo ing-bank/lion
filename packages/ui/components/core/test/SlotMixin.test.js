@@ -1,30 +1,14 @@
-import sinon from 'sinon';
 import { defineCE, expect, fixture, fixtureSync, unsafeStatic, html } from '@open-wc/testing';
-import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { SlotMixin } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
+import sinon from 'sinon';
+
+import { ScopedElementsMixin, supportsScopedRegistry } from '../src/ScopedElementsMixin.js';
+import { isActiveElement } from '../test-helpers/isActiveElement.js';
 
 /**
  * @typedef {import('../types/SlotMixinTypes.js').SlotHost} SlotHost
  */
-
-// @ts-ignore
-const createElementNative = ShadowRoot.prototype.createElement;
-function mockScopedRegistry() {
-  const outputObj = { createElementCallCount: 0 };
-  // @ts-expect-error wait for browser support
-  ShadowRoot.prototype.createElement = (tagName, options) => {
-    outputObj.createElementCallCount += 1;
-    // Return an element that lit can use as render target
-    return createElementNative(tagName, options);
-  };
-  return outputObj;
-}
-
-function unMockScopedRegistry() {
-  // @ts-expect-error wait for browser support
-  ShadowRoot.prototype.createElement = createElementNative;
-}
 
 describe('SlotMixin', () => {
   it('inserts provided element into light dom and sets slot', async () => {
@@ -227,12 +211,12 @@ describe('SlotMixin', () => {
       );
       const el = /** @type {* & SlotHost} */ (await fixture(`<${tag}></${tag}>`));
       el._focusableNode.focus();
-      expect(document.activeElement).to.equal(el._focusableNode);
+      expect(isActiveElement(el._focusableNode)).to.be.true;
 
       el.currentValue = 1;
       await el.updateComplete;
 
-      expect(document.activeElement).to.equal(el._focusableNode);
+      expect(isActiveElement(el._focusableNode)).to.be.true;
     });
 
     it('keeps focus after rerendering complex shadow root into slot', async () => {
@@ -289,13 +273,13 @@ describe('SlotMixin', () => {
 
       el._focusableNode._buttonNode.focus();
 
-      expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
 
       el.currentValue = 1;
       await el.updateComplete;
 
-      expect(document.activeElement).to.equal(el._focusableNode);
-      expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+      expect(isActiveElement(el._focusableNode)).to.be.true;
+      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
     });
 
     it('allows for rerendering complex shadow root into slot as a direct child', async () => {
@@ -352,13 +336,13 @@ describe('SlotMixin', () => {
 
       el._focusableNode._buttonNode.focus();
 
-      expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
 
       el.currentValue = 1;
       await el.updateComplete;
 
-      expect(document.activeElement).to.equal(el._focusableNode);
-      expect(el._focusableNode.shadowRoot.activeElement).to.equal(el._focusableNode._buttonNode);
+      expect(isActiveElement(el._focusableNode)).to.be.true;
+      expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
     });
 
     describe('firstRenderOnConnected (for backwards compatibility)', () => {
@@ -568,8 +552,11 @@ describe('SlotMixin', () => {
   });
 
   describe('Scoped Registries', () => {
-    it('supports scoped elements when polyfill loaded', async () => {
-      const outputObj = mockScopedRegistry();
+    it('supports scoped elements when scoped registries supported (or polyfill loaded)', async () => {
+      if (!supportsScopedRegistry()) return;
+
+      // @ts-expect-error
+      const createElSpy = sinon.spy(ShadowRoot.prototype, 'createElement');
 
       class ScopedEl extends LitElement {}
 
@@ -600,14 +587,14 @@ describe('SlotMixin', () => {
       const tag = unsafeStatic(tagName);
       await fixture(html`<${tag}></${tag}>`);
 
-      expect(outputObj.createElementCallCount).to.equal(1);
+      expect(createElSpy.callCount).to.equal(1);
 
-      unMockScopedRegistry();
+      createElSpy.restore();
     });
 
-    it('does not scope elements when polyfill not loaded', async () => {
-      // @ts-expect-error
-      ShadowRoot.prototype.createElement = null;
+    it('does not scope elements when scoped registries not supported (or polyfill not loaded)', async () => {
+      if (supportsScopedRegistry()) return;
+
       class ScopedEl extends LitElement {}
 
       const tagName = defineCE(
@@ -645,7 +632,6 @@ describe('SlotMixin', () => {
 
       document.body.removeChild(renderTarget);
       docSpy.restore();
-      unMockScopedRegistry();
     });
   });
 });

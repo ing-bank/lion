@@ -2,7 +2,7 @@ export default {
   error: {
     Required: 'Proszę również podać wartość {fieldName}.',
     _RequiredUpload: 'Prześlij plik {fieldName}.',
-    _RequiredSelect: 'Wprowadź prawidłową wartość w polu {fieldname}.',
+    _RequiredSelect: 'Wprowadź prawidłową wartość w polu {fieldName}.',
     EqualsLength: 'Wprowadź prawidłową wartość w polu {fieldName} (maks. liczba znaków: {params}).',
     MinLength: 'Proszę podać prawidłową wartość {fieldName} (co najmniej {params} znaków).',
     MaxLength: 'Proszę podać prawidłową wartość {fieldName} (maks. {params} znaków).',
@@ -25,7 +25,7 @@ export default {
   warning: {
     Required: 'Proszę również podać wartość {fieldName}.',
     _RequiredUpload: 'Prześlij plik {fieldName}.',
-    _RequiredSelect: 'Wprowadź prawidłową wartość w polu {fieldname}.',
+    _RequiredSelect: 'Wprowadź prawidłową wartość w polu {fieldName}.',
     EqualsLength: 'Wprowadź prawidłową wartość w polu {fieldName} (maks. liczba znaków: {params}).',
     MinLength: 'Proszę podać prawidłową wartość {fieldName} (co najmniej {params} znaków).',
     MaxLength: 'Proszę podać prawidłową wartość {fieldName} (maks. {params} znaków).',

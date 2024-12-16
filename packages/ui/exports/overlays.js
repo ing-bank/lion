@@ -11,11 +11,12 @@ export { withTooltipConfig } from '../components/overlays/src/configurations/wit
 
 export { containFocus, rotateFocus } from '../components/overlays/src/utils/contain-focus.js';
 export { deepContains } from '../components/overlays/src/utils/deep-contains.js';
-export { getDeepActiveElement } from '../components/overlays/src/utils/get-deep-active-element.js';
+// re-export via this entrypoint for backwards compatibility
+export { getDeepActiveElement } from '../components/core/src/getDeepActiveElement.js';
 export { getFocusableElements } from '../components/overlays/src/utils/get-focusable-elements.js';
 export {
-  setSiblingsInert,
   unsetSiblingsInert,
+  setSiblingsInert,
 } from '../components/overlays/src/utils/inert-siblings.js';
 
 export { overlays } from '../components/overlays/src/singleton.js';

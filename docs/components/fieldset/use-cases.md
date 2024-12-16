@@ -41,7 +41,12 @@ export const disabled = () => {
       <lion-input name="FirstName" label="First Name" .modelValue="${'Foo'}"></lion-input>
       <lion-input name="LastName" label="Last Name" .modelValue="${'Bar'}"></lion-input>
       <lion-fieldset name="nameGroup2" label="Name">
-        <lion-input name="FirstName2" label="First Name" .modelValue="${'Foo'}" disabled></lion-input>
+        <lion-input
+          name="FirstName2"
+          label="First Name"
+          .modelValue="${'Foo'}"
+          disabled
+        ></lion-input>
         <lion-input name="LastName2" label="Last Name" .modelValue="${'Bar'}"></lion-input>
       </lion-fieldset>
     </lion-fieldset>
@@ -70,7 +75,9 @@ export const nestingFieldsets = () => html`
       Log everything to Action Logger
     </button>
     <br />
-    <button @click="${ev => console.log(ev.target.parentElement.formElements.nameGroup.modelValue)}">
+    <button
+      @click="${ev => console.log(ev.target.parentElement.formElements.nameGroup.modelValue)}"
+    >
       Log only Name fieldset to Action Logger
     </button>
   </lion-fieldset>

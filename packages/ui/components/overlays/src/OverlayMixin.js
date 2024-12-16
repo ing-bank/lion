@@ -72,7 +72,11 @@ export const OverlayMixinImplementation = superclass =>
     requestUpdate(name, oldValue, options) {
       super.requestUpdate(name, oldValue, options);
       if (name === 'opened' && this.opened !== oldValue) {
-        this.dispatchEvent(new Event('opened-changed'));
+        this.dispatchEvent(
+          new CustomEvent('opened-changed', {
+            detail: { opened: this.opened },
+          }),
+        );
       }
     }
 
@@ -178,12 +182,21 @@ export const OverlayMixinImplementation = superclass =>
       this._setupOverlayCtrl();
     }
 
-    disconnectedCallback() {
+    async disconnectedCallback() {
       super.disconnectedCallback();
-      if (this._overlayCtrl) {
-        this._teardownOverlayCtrl();
-      }
+
+      if (!this._overlayCtrl) return;
+      if (await this.#isMovingInDom()) return;
+
+      this._teardownOverlayCtrl();
     }
+
+    /**
+     * // TODO: check if this is a false positive or if we can improve
+     * @configure ReactiveElement
+     */
+    // @ts-expect-error
+    static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
     get _overlayInvokerNode() {
       return /** @type {HTMLElement | undefined} */ (
@@ -242,6 +255,7 @@ export const OverlayMixinImplementation = superclass =>
     _teardownOverlayCtrl() {
       this._teardownOpenCloseListeners();
       this.__teardownSyncFromOverlayController();
+
       /** @type {OverlayController} */
       (this._overlayCtrl).teardown();
     }
@@ -375,6 +389,16 @@ export const OverlayMixinImplementation = superclass =>
       if (ctrl.placementMode === 'local' && ctrl._popper) {
         ctrl._popper.update();
       }
+    }
+
+    /**
+     * When we're moving around in dom, disconnectedCallback gets called.
+     * Before we decide to teardown, let's wait to see if we were not just moving nodes around.
+     * @return {Promise<boolean>}
+     */
+    async #isMovingInDom() {
+      await this.updateComplete;
+      return this.isConnected;
     }
   };
 export const OverlayMixin = dedupeMixin(OverlayMixinImplementation);

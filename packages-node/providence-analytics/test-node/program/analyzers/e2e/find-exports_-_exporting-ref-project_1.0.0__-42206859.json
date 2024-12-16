@@ -3,7 +3,7 @@
     "searchType": "ast-analyzer",
     "analyzerMeta": {
       "name": "find-exports",
-      "requiredAst": "swc",
+      "requiredAst": "oxc",
       "identifier": "exporting-ref-project_1.0.0__-42206859",
       "targetProject": {
         "mainEntry": "./index.js",

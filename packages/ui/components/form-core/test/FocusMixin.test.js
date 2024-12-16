@@ -1,7 +1,9 @@
-import { LitElement } from 'lit';
 import { defineCE, expect, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing';
-import sinon from 'sinon';
 import { FocusMixin } from '@lion/ui/form-core.js';
+import { LitElement } from 'lit';
+import sinon from 'sinon';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 const windowWithOptionalPolyfill =
   /** @type {Window & typeof globalThis & {applyFocusVisiblePolyfill?: function}} */ (window);
@@ -84,9 +86,9 @@ describe('FocusMixin', () => {
     const { _focusableNode } = el;
 
     el.focus();
-    expect(document.activeElement === _focusableNode).to.be.true;
+    expect(isActiveElement(_focusableNode)).to.be.true;
     el.blur();
-    expect(document.activeElement === _focusableNode).to.be.false;
+    expect(isActiveElement(_focusableNode)).to.be.false;
   });
 
   it('has an attribute focused when focused', async () => {

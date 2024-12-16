@@ -1,11 +1,12 @@
 /* eslint-disable lit-a11y/no-autofocus */
 import { expect, fixture, nextFrame } from '@open-wc/testing';
-import { html } from 'lit/static-html.js';
+import { getFocusableElements } from '@lion/ui/overlays.js';
 import { renderLitAsNode } from '@lion/ui/helpers.js';
-import { getDeepActiveElement, getFocusableElements } from '@lion/ui/overlays.js';
+import { html } from 'lit/static-html.js';
 
-import { keyCodes } from '../../src/utils/key-codes.js';
+import { isActiveElement } from '../../../core/test-helpers/isActiveElement.js';
 import { containFocus } from '../../src/utils/contain-focus.js';
+import { keyCodes } from '../../src/utils/key-codes.js';
 
 function simulateTabWithinContainFocus() {
   const event = new CustomEvent('keydown', { detail: 0, bubbles: true });
@@ -87,7 +88,7 @@ describe('containFocus()', () => {
     const root = /** @type {HTMLElement} */ (document.getElementById('rootElement'));
     const { disconnect } = containFocus(root);
 
-    expect(getDeepActiveElement()).to.equal(root);
+    expect(isActiveElement(root, { deep: true })).to.be.true;
     expect(root.getAttribute('tabindex')).to.equal('-1');
     expect(root.style.getPropertyValue('outline-style')).to.equal('none');
 
@@ -99,7 +100,7 @@ describe('containFocus()', () => {
     const el = /** @type {HTMLElement} */ (document.querySelector('input[autofocus]'));
     const { disconnect } = containFocus(el);
 
-    expect(getDeepActiveElement()).to.equal(el);
+    expect(isActiveElement(el, { deep: true })).to.be.true;
 
     disconnect();
   });
@@ -113,7 +114,7 @@ describe('containFocus()', () => {
     /** @type {HTMLElement} */ (document.getElementById('outside-1')).focus();
 
     simulateTabWithinContainFocus();
-    expect(getDeepActiveElement()).to.equal(focusableElements[0]);
+    expect(isActiveElement(focusableElements[0], { deep: true })).to.be.true;
 
     disconnect();
   });
@@ -127,7 +128,7 @@ describe('containFocus()', () => {
     focusableElements[focusableElements.length - 1].focus();
 
     simulateTabWithinContainFocus();
-    expect(getDeepActiveElement()).to.equal(focusableElements[0]);
+    expect(isActiveElement(focusableElements[0], { deep: true })).to.be.true;
 
     disconnect();
   });
@@ -146,7 +147,7 @@ describe('containFocus()', () => {
      * actual tab key press. So the best we can do is if we didn't redirect focus
      * to the first element.
      */
-    expect(getDeepActiveElement()).to.equal(focusableElements[2]);
+    expect(isActiveElement(focusableElements[2], { deep: true })).to.be.true;
 
     disconnect();
   });
@@ -158,9 +159,10 @@ describe('containFocus()', () => {
     const { disconnect } = containFocus(root);
 
     focusableElements[2].focus();
-    expect(getDeepActiveElement()).to.equal(focusableElements[2]);
+    expect(isActiveElement(focusableElements[2], { deep: true })).to.be.true;
+
     document.body.click(); // this does not cause focusout event :( doesn't seem possible to mock
-    expect(getDeepActiveElement()).to.equal(root);
+    expect(isActiveElement(root, { deep: true })).to.be.true;
 
     disconnect();
   });
@@ -185,11 +187,12 @@ describe('containFocus()', () => {
 
       // Simulate tab in window
       simulateTabInWindow(/** @type {HTMLElement} */ (document.getElementById('outside-1')));
-      expect(getDeepActiveElement()).to.equal(focusableElements[0]);
+      expect(isActiveElement(focusableElements[0], { deep: true })).to.be.true;
 
       // Simulate shift+tab in window
       simulateTabInWindow(/** @type {HTMLElement} */ (document.getElementById('outside-2')));
-      expect(getDeepActiveElement()).to.equal(focusableElements[focusableElements.length - 1]);
+      expect(isActiveElement(focusableElements[focusableElements.length - 1], { deep: true })).to.be
+        .true;
 
       disconnect();
     });
@@ -202,11 +205,12 @@ describe('containFocus()', () => {
 
       // Simulate tab in window
       simulateTabInWindow(/** @type {HTMLElement} */ (document.getElementById('outside-1')));
-      expect(getDeepActiveElement()).to.equal(focusableElements[0]);
+      expect(isActiveElement(focusableElements[0], { deep: true })).to.be.true;
 
       // Simulate shift+tab in window
       simulateTabInWindow(/** @type {HTMLElement} */ (document.getElementById('outside-2')));
-      expect(getDeepActiveElement()).to.equal(focusableElements[focusableElements.length - 1]);
+      expect(isActiveElement(focusableElements[focusableElements.length - 1], { deep: true })).to.be
+        .true;
 
       disconnect();
     });
@@ -219,11 +223,12 @@ describe('containFocus()', () => {
 
       // Simulate tab in window
       simulateTabInWindow(focusableElements[0]);
-      expect(getDeepActiveElement()).to.equal(focusableElements[0]);
+      expect(isActiveElement(focusableElements[0], { deep: true })).to.be.true;
 
       // Simulate shift+tab in window
       simulateTabInWindow(focusableElements[focusableElements.length - 1]);
-      expect(getDeepActiveElement()).to.equal(focusableElements[focusableElements.length - 1]);
+      expect(isActiveElement(focusableElements[focusableElements.length - 1], { deep: true })).to.be
+        .true;
 
       disconnect();
     });

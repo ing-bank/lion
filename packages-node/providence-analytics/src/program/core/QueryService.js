@@ -1,30 +1,30 @@
 import path from 'path';
 
+import { getCurrentDir } from '../utils/get-current-dir.js';
 import { AstService } from './AstService.js';
 import { LogService } from './LogService.js';
-import { getCurrentDir } from '../utils/get-current-dir.js';
 // import { memoize } from '../utils/memoize.js';
 
 const memoize = fn => fn;
 
 /**
- * @typedef {import('./Analyzer.js').Analyzer} Analyzer
+ * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerEntry} FindImportsAnalyzerEntry
- * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
- * @typedef {import('../../../types/index.js').QueryConfig} QueryConfig
- * @typedef {import('../../../types/index.js').QueryResult} QueryResult
- * @typedef {import('../../../types/index.js').FeatureQueryConfig} FeatureQueryConfig
- * @typedef {import('../../../types/index.js').SearchQueryConfig} SearchQueryConfig
  * @typedef {import('../../../types/index.js').AnalyzerQueryConfig} AnalyzerQueryConfig
- * @typedef {import('../../../types/index.js').Feature} Feature
+ * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
+ * @typedef {import('../../../types/index.js').FeatureQueryConfig} FeatureQueryConfig
+ * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
+ * @typedef {import('../../../types/index.js').SearchQueryConfig} SearchQueryConfig
  * @typedef {import('../../../types/index.js').ProjectInputData} ProjectInputData
  * @typedef {import('../../../types/index.js').AnalyzerConfig} AnalyzerConfig
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
- * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
- * @typedef {import('../../../types/index.js').GatherFilesConfig} GatherFilesConfig
- * @typedef {import('../../../types/index.js').AnalyzerQueryResult} AnalyzerQueryResult
+ * @typedef {import('../../../types/index.js').QueryConfig} QueryConfig
+ * @typedef {import('../../../types/index.js').QueryResult} QueryResult
+ * @typedef {import('../../../types/index.js').Feature} Feature
+ * @typedef {import('./Analyzer.js').Analyzer} Analyzer
  */
 
 const astProjectsDataCache = new Map();
@@ -32,7 +32,7 @@ const astProjectsDataCache = new Map();
 export class QueryService {
   /**
    * Retrieves the default export found in ./program/analyzers/find-import.js
-   * @param {typeof Analyzer} analyzerCtor
+   * @param {typeof Analyzer} analyzerObjectOrString
    * @param {AnalyzerConfig} [analyzerConfig]
    * @returns {Promise<AnalyzerQueryConfig>}
    */
@@ -107,20 +107,28 @@ export class QueryService {
    * @param {AnalyzerAst} requiredAst
    */
   static async addAstToProjectsData(projectsData, requiredAst) {
-    return projectsData.map(projectData => {
+    const resultWithAsts = [];
+
+    for (const projectData of projectsData) {
       const cachedData = astProjectsDataCache.get(projectData.project.path);
       if (cachedData) {
-        return cachedData;
+        resultWithAsts.push(cachedData);
+        continue; // eslint-disable-line no-continue
       }
 
-      const resultEntries = projectData.entries.map(entry => {
-        const ast = AstService.getAst(entry.context.code, requiredAst, { filePath: entry.file });
-        return { ...entry, ast };
-      });
+      const resultEntries = [];
+      for (const entry of projectData.entries) {
+        const ast = await AstService.getAst(entry.context.code, requiredAst, {
+          filePath: entry.file,
+        });
+        resultEntries.push({ ...entry, ast });
+      }
       const astData = { ...projectData, entries: resultEntries };
       this._addToProjectsDataCache(`${projectData.project.path}#${requiredAst}`, astData);
-      return astData;
-    });
+      resultWithAsts.push(astData);
+    }
+
+    return resultWithAsts;
   }
 
   /**

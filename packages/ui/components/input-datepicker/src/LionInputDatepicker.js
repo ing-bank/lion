@@ -101,23 +101,6 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     };
   }
 
-  _inputFormatter = new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts;
-
-  /**
-   * @param {Date} date
-   */
-  // eslint-disable-next-line class-methods-use-this
-  _formatDate(date) {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = String(date.getFullYear());
-    return `${day}/${month}/${year}`;
-  }
-
   get slots() {
     return {
       ...super.slots,
@@ -375,18 +358,15 @@ export class LionInputDatepicker extends ScopedElementsMixin(
     if (this._syncOnUserSelect) {
       // Synchronize new selectedDate value to input
       this._isHandlingUserInput = true;
+      this._isHandlingCalendarUserInput = true;
 
       if (
         Array.isArray(this.__calendarDisableDates) &&
         this.__calendarDisableDates.includes(selectedDate)
       ) {
         // If the selected date is disabled, reset the values
-        this.value = '';
-        this.formattedValue = '';
         this.modelValue = undefined;
       } else {
-        this.formattedValue = this._formatDate(selectedDate);
-        this.value = this.formattedValue;
         this.modelValue = selectedDate;
       }
 

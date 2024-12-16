@@ -22,6 +22,7 @@ const matchA11ySpanReverseFns = new WeakMap();
  * @typedef {import('@lion/ui/types/form-core.js').ChoiceInputHost} ChoiceInputHost
  * @typedef {import('@lion/ui/types/form-core.js').FormControlHost} FormControlHost
  * @typedef {import('../types/SelectionDisplay.js').SelectionDisplay} SelectionDisplay
+ * @typedef {LionOption & { onFilterUnmatch?:function; onFilterMatch?:function }} OptionWithFilterFn
  */
 
 /**
@@ -141,8 +142,30 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
 
   reset() {
     super.reset();
-    // @ts-ignore _initialModelValue comes from ListboxMixin
-    this.value = this._initialModelValue;
+    if (!this.multipleChoice) {
+      // @ts-ignore _initialModelValue comes from ListboxMixin
+      this.value = this._initialModelValue;
+    }
+    this._resetListboxOptions();
+  }
+
+  /**
+   * @protected
+   */
+  _resetListboxOptions() {
+    this.formElements.forEach((/** @type {OptionWithFilterFn} */ option, idx) => {
+      this._unhighlightMatchedOption(option);
+      if (!this.showAllOnEmpty || !this.opened) {
+        // eslint-disable-next-line no-param-reassign
+        option.style.display = 'none';
+      } else {
+        // eslint-disable-next-line no-param-reassign
+        option.style.display = '';
+        option.setAttribute('aria-posinset', `${idx + 1}`);
+        option.setAttribute('aria-setsize', `${this.formElements.length}`);
+        option.removeAttribute('aria-hidden');
+      }
+    });
   }
 
   /**
@@ -580,7 +603,11 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     ) {
       return false;
     }
-    if (this.filled || this.showAllOnEmpty) {
+    if (
+      this.filled ||
+      this.showAllOnEmpty ||
+      (!this.filled && this.multipleChoice && this.__prevCboxValueNonSelected)
+    ) {
       return true;
     }
     // when no keyboard action involved (on focused change), return current opened state
@@ -622,7 +649,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   // eslint-disable-next-line no-unused-vars
   _textboxOnInput(ev) {
     this.__shouldAutocompleteNextUpdate = true;
-    this.opened = true;
+    this.opened = this._showOverlayCondition({});
   }
 
   /**
@@ -644,11 +671,13 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   _listboxOnClick(ev) {
     super._listboxOnClick(ev);
-
     this._inputNode.focus();
     if (!this.multipleChoice) {
       this.activeIndex = -1;
       this.opened = false;
+    } else {
+      this._inputNode.value = '';
+      this._resetListboxOptions();
     }
   }
 
@@ -837,7 +866,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     const autoselect = this._autoSelectCondition();
     const noFilter = this.autocomplete === 'inline' || this.autocomplete === 'none';
 
-    /** @typedef {LionOption & { onFilterUnmatch?:function, onFilterMatch?:function }} OptionWithFilterFn */
     this.formElements.forEach((/** @type {OptionWithFilterFn} */ option, i) => {
       // [1]. Decide whether option should be shown
       const matches = this.matchCondition(option, curValue);
@@ -923,7 +951,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
 
     // [8]. These values will help computing autofill intentions next autocomplete cycle
     this.__prevCboxValueNonSelected = curValue;
-    // See test 'computation of "user intends autofill" works correctly afer autofill'
+    // See test 'computation of "user intends autofill" works correctly after autofill'
     this.__prevCboxValue = this._inputNode.value;
     this.__hadSelectionLastAutofill =
       this._inputNode.value.length !== this._inputNode.selectionStart;
@@ -1060,16 +1088,16 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
           ev.preventDefault();
 
           this.modelValue = this.parser([...this.modelValue, this._inputNode.value]);
-
           this._inputNode.value = '';
           this.opened = false;
         } else {
           super._listboxOnKeyDown(ev);
-          // TODO: should we clear the input value here when allowCustomChoice is false?
-          // For now, we don't...
+          this._resetListboxOptions();
         }
         if (!this.multipleChoice) {
           this.opened = false;
+        } else {
+          this._inputNode.value = '';
         }
         break;
       default: {
@@ -1108,7 +1136,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
         .filter(option => diff.includes(option.choiceValue))
         .map(option => this._getTextboxValueFromOption(option))
         .join(' ');
-      this._setTextboxValue(newValue); // or last selected value?
+      this._setTextboxValue(newValue);
     }
   }
 

@@ -1,16 +1,17 @@
 import { overlays } from './singleton.js';
 import { containFocus } from './utils/contain-focus.js';
+import { deepContains } from './utils/deep-contains.js';
 import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
 import { _adoptStyleUtils } from './utils/adopt-styles.js';
 
 /**
- * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
+ * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
  * @typedef {import('@lion/ui/types/overlays.js').ViewportConfig} ViewportConfig
- * @typedef {import('@popperjs/core').createPopper} Popper
+ * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
+ * @typedef {import('@popperjs/core').createPopper} Popper
  * @typedef {{ createPopper: Popper }} PopperModule
- * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
  */
 
 /**
@@ -103,6 +104,8 @@ async function preloadPopper() {
   return /** @type {* & Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
 }
 
+const childDialogsClosedInEventLoopWeakmap = new WeakMap();
+
 /**
  * OverlayController is the fundament for every single type of overlay. With the right
  * configuration, it can be used to build (modal) dialogs, tooltips, dropdowns, popovers,
@@ -189,7 +192,6 @@ export class OverlayController extends EventTarget {
       zIndex: 9999,
     };
 
-    this.manager.add(this);
     /** @protected */
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
     /** @private */
@@ -472,6 +474,14 @@ export class OverlayController extends EventTarget {
     this._init();
     /** @private */
     this.__elementToFocusAfterHide = undefined;
+
+    if (!this.#isRegisteredOnManager()) {
+      this.manager.add(this);
+    }
+  }
+
+  #isRegisteredOnManager() {
+    return Boolean(this.manager.list.find(ctrl => this === ctrl));
   }
 
   /**
@@ -498,9 +508,6 @@ export class OverlayController extends EventTarget {
         '[OverlayController] .isTooltip only takes effect when .handlesAccessibility is enabled',
       );
     }
-    // if (newConfig.popperConfig.modifiers.arrow && !newConfig.contentWrapperNode) {
-    //   throw new Error('You need to provide a .contentWrapperNode when Popper arrow is enabled');
-    // }
   }
 
   /**
@@ -578,7 +585,7 @@ export class OverlayController extends EventTarget {
     // The role="dialog" is set on the contentNode (or another role), so role="none"
     // is valid here, although AXE complains about this setup.
     // For now we need to add `ignoredRules: ['aria-allowed-role']` in your AXE tests.
-    // see: https://lion-web.netlify.app/fundamentals/systems/overlays/rationale/#considerations
+    // see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
     wrappingDialogElement.setAttribute('role', 'none');
     wrappingDialogElement.setAttribute('data-overlay-outer-wrapper', '');
     // N.B. position: fixed is needed to escape out of 'overflow: hidden'
@@ -640,13 +647,14 @@ export class OverlayController extends EventTarget {
   __setupTeardownAccessibility({ phase }) {
     if (phase === 'init') {
       this.__storeOriginalAttrs(this.contentNode, ['role', 'id']);
+      const isModal = this.trapsKeyboardFocus;
 
       if (this.invokerNode) {
-        this.__storeOriginalAttrs(this.invokerNode, [
-          'aria-expanded',
-          'aria-labelledby',
-          'aria-describedby',
-        ]);
+        const attributesToStore = ['aria-labelledby', 'aria-describedby'];
+        if (!isModal) {
+          attributesToStore.push('aria-expanded');
+        }
+        this.__storeOriginalAttrs(this.invokerNode, attributesToStore);
       }
 
       if (!this.contentNode.id) {
@@ -661,7 +669,7 @@ export class OverlayController extends EventTarget {
         }
         this.contentNode.setAttribute('role', 'tooltip');
       } else {
-        if (this.invokerNode) {
+        if (this.invokerNode && !isModal) {
           this.invokerNode.setAttribute('aria-expanded', `${this.isShown}`);
         }
         if (!this.contentNode.getAttribute('role')) {
@@ -787,6 +795,10 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _keepBodySize({ phase }) {
+    if (!this.preventsScroll) {
+      return;
+    }
+
     switch (phase) {
       case 'before-show':
         this.__bodyClientWidth = document.body.clientWidth;
@@ -1109,6 +1121,15 @@ export class OverlayController extends EventTarget {
     if (this.manager) {
       this.manager.disableTrapsKeyboardFocusForAll();
     }
+
+    const isContentShadowHost = Boolean(this.contentNode.shadowRoot);
+    if (isContentShadowHost) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
+      );
+    }
+
     this._containFocusHandler = containFocus(this.contentNode);
     this.__hasActiveTrapsKeyboardFocus = true;
     if (this.manager) {
@@ -1141,10 +1162,39 @@ export class OverlayController extends EventTarget {
     ev.preventDefault();
   }
 
-  /** @private */
-  __escKeyHandler(/** @type {KeyboardEvent} */ ev) {
-    return ev.key === 'Escape' && this.hide();
+  /**
+   * @param {KeyboardEvent} event
+   * @returns {void}
+   */
+  __escKeyHandler(event) {
+    if (event.key !== 'Escape' || childDialogsClosedInEventLoopWeakmap.has(event)) return;
+
+    const hasPressedInside =
+      event.composedPath().includes(this.contentNode) ||
+      deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
+    if (hasPressedInside) {
+      this.hide();
+      // We could do event.stopPropagation() here, but we don't want to hide info for
+      // the outside world about user interactions. Instead, we store the event in a WeakMap
+      // that will be garbage collected after the event loop.
+      childDialogsClosedInEventLoopWeakmap.set(event, this);
+    }
   }
+
+  /**
+   * @param {KeyboardEvent} event
+   * @returns {void}
+   */
+  #outsideEscKeyHandler = event => {
+    if (event.key !== 'Escape') return;
+
+    const hasPressedInside =
+      event.composedPath().includes(this.contentNode) ||
+      deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
+    if (!hasPressedInside) {
+      this.hide();
+    }
+  };
 
   /**
    * @param {{ phase: OverlayPhase }} config
@@ -1170,11 +1220,9 @@ export class OverlayController extends EventTarget {
    */
   _handleHidesOnOutsideEsc({ phase }) {
     if (phase === 'show') {
-      this.__escKeyHandler = (/** @type {KeyboardEvent} */ ev) =>
-        ev.key === 'Escape' && this.hide();
-      document.addEventListener('keyup', this.__escKeyHandler);
+      document.addEventListener('keyup', this.#outsideEscKeyHandler);
     } else if (phase === 'hide') {
-      document.removeEventListener('keyup', this.__escKeyHandler);
+      document.removeEventListener('keyup', this.#outsideEscKeyHandler);
     }
   }
 
@@ -1253,6 +1301,14 @@ export class OverlayController extends EventTarget {
           wasMouseUpInside = false;
         });
       };
+
+      /** @type {EventListenerOrEventListenerObject} */
+      this.__onWindowBlur = () => {
+        // When the current window loses the focus (clicking outside iframe) the overlay gets hidden
+        setTimeout(() => {
+          this.hide();
+        });
+      };
     }
 
     this.contentWrapperNode[addOrRemoveListener](
@@ -1289,6 +1345,11 @@ export class OverlayController extends EventTarget {
       (this.__onDocumentMouseUp),
       true,
     );
+    window[addOrRemoveListener](
+      'blur',
+      /** @type {EventListenerOrEventListenerObject} */
+      (this.__onWindowBlur),
+    );
   }
 
   /**
@@ -1299,7 +1360,8 @@ export class OverlayController extends EventTarget {
     if (phase === 'init' || phase === 'teardown') {
       this.__setupTeardownAccessibility({ phase });
     }
-    if (this.invokerNode && !this.isTooltip) {
+    const isModal = this.trapsKeyboardFocus;
+    if (this.invokerNode && !this.isTooltip && !isModal) {
       this.invokerNode.setAttribute('aria-expanded', `${phase === 'show'}`);
     }
   }
@@ -1308,6 +1370,10 @@ export class OverlayController extends EventTarget {
     this.__handleOverlayStyles({ phase: 'teardown' });
     this._handleFeatures({ phase: 'teardown' });
     this.__wrappingDialogNode?.removeEventListener('cancel', this.__cancelHandler);
+
+    if (this.#isRegisteredOnManager()) {
+      this.manager.remove(this);
+    }
   }
 
   /** @private */

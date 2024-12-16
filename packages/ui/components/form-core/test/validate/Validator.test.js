@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import { LitElement } from 'lit';
 import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
@@ -185,6 +186,13 @@ describe('Validator', () => {
     expect(connectSpy.callCount).to.equal(1);
     expect(disconnectSpy.callCount).to.equal(1);
     expect(disconnectSpy.calledWith(el)).to.equal(true);
+  });
+
+  it('adds static ["_$isValidator$"] property as a marker to identify the Validator class across different lion versions (as instanceof cannot be used)', async () => {
+    const myValidator = new Validator();
+
+    expect(myValidator.constructor['_$isValidator$']).to.exist;
+    expect(myValidator.constructor['_$isValidator$']).to.be.true;
   });
 
   describe('Types', () => {

@@ -1,21 +1,27 @@
-import { LionFieldset } from '@lion/ui/fieldset.js';
-import '@lion/ui/define/lion-fieldset.js';
 import { LionField, Required } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
+import { LionFieldset } from '@lion/ui/fieldset.js';
+import '@lion/ui/define/lion-checkbox-group.js';
+import '@lion/ui/define/lion-radio-group.js';
+import '@lion/ui/define/lion-fieldset.js';
+import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
+import '@lion/ui/define/lion-field.js';
+import '@lion/ui/define/lion-radio.js';
 import '@lion/ui/define/lion-form.js';
+import { spy } from 'sinon';
 import {
+  fixture as _fixture,
+  unsafeStatic,
   aTimeout,
   defineCE,
-  expect,
-  fixture as _fixture,
-  html,
   oneEvent,
-  unsafeStatic,
+  expect,
+  html,
 } from '@open-wc/testing';
-import { spy } from 'sinon';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
  * @typedef {import('../src/LionForm.js').LionForm} LionForm
@@ -221,7 +227,7 @@ describe('<lion-form>', () => {
     button.click();
     expect(dispatchSpy.args[0][0].type).to.equal('submit');
     // @ts-ignore [allow-protected] in test
-    expect(document.activeElement).to.equal(el.formElements[1]._inputNode);
+    expect(isActiveElement(el.formElements[1]._inputNode)).to.be.true;
   });
 
   it('sets focus on submit to the first erroneous form element within a fieldset', async () => {
@@ -244,7 +250,7 @@ describe('<lion-form>', () => {
     expect(dispatchSpy.args[0][0].type).to.equal('submit');
     const fieldset = el.formElements[0];
     // @ts-ignore [allow-protected] in test
-    expect(document.activeElement).to.equal(fieldset.formElements[1]._inputNode);
+    expect(isActiveElement(fieldset.formElements[1]._inputNode)).to.be.true;
   });
 
   it('sets focus on submit to the first form element within a erroneous fieldset', async () => {
@@ -264,8 +270,29 @@ describe('<lion-form>', () => {
     button.click();
     expect(dispatchSpy.args[0][0].type).to.equal('submit');
     const fieldset = el.formElements[0];
-    // @ts-ignore [allow-protected] in test
-    expect(document.activeElement).to.equal(fieldset.formElements[0]._inputNode);
+    expect(isActiveElement(fieldset.formElements[0]._inputNode)).to.be.true;
+  });
+
+  it('sets focus on submit to the first form element within a erroneous fieldset within another fieldset', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-fieldset name="parentFieldset">
+            <lion-fieldset name="childFieldset" .validators="${[new Required()]}">
+              <${childTag} name="firstName"></${childTag}>
+            </lion-fieldset>
+          </lion-fieldset>
+
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    const parentFieldSetEl = el.formElements[0];
+    const childFieldsetEl = parentFieldSetEl.formElements[0];
+    const inputEl = childFieldsetEl.formElements[0];
+    button.click();
+    expect(isActiveElement(inputEl._focusableNode)).to.be.true;
   });
 
   it('sets focus on submit to the first form element within a erroneous listbox', async () => {
@@ -283,6 +310,68 @@ describe('<lion-form>', () => {
     const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
     button.click();
     const listboxEl = el.formElements[0];
-    expect(document.activeElement).to.equal(listboxEl._inputNode);
+    expect(isActiveElement(listboxEl._inputNode)).to.be.true;
+  });
+
+  it('sets focus on submit to the first form element within a erroneous listbox within a fieldset', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-fieldset name="fieldset">
+            <lion-listbox name="name" .validators="${[new Required()]}">
+              <lion-option value="a">a</lion-option>
+              <lion-option value="b">b</lion-option>
+            </lion-listbox>
+          </lion-fieldset>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    button.click();
+    const fieldsetEl = el.formElements[0];
+    const listboxEl = fieldsetEl.formElements[0];
+    expect(isActiveElement(listboxEl._inputNode)).to.be.true;
+  });
+
+  it('sets focus on submit to the first form element within a erroneous checkbox-group', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+          <lion-checkbox-group name="name" .validators="${[new Required()]}">
+            <lion-checkbox .choiceValue=${'a'} label="a"></lion-checkbox>
+            <lion-checkbox .choiceValue=${'b'} label="b"></lion-checkbox>
+          </lion-checkbox-group>
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+    const checkboxGroupEl = el.formElements[0];
+    const checkboxEl = checkboxGroupEl.formElements[0];
+    button.click();
+    expect(isActiveElement(checkboxEl._focusableNode)).to.be.true;
+  });
+
+  it('sets focus on submit to the first form element within a erroneous radio-group', async () => {
+    const el = await fixture(html`
+      <lion-form>
+        <form>
+            <lion-radio-group name="name" .validators="${[new Required()]}">
+              <lion-radio .choiceValue=${'a'} label="a"></lion-radio>
+              <lion-radio .choiceValue=${'b'} label="b"></lion-radio>
+            </lion-radio-group>
+          </lion-fieldset>
+
+          <button type="submit">submit</button>
+        </form>
+      </lion-form>
+    `);
+    const button = /** @type {HTMLButtonElement} */ (el.querySelector('button'));
+
+    const radioGroupEl = el.formElements[0];
+    const radioEl = radioGroupEl.formElements[0];
+    button.click();
+    expect(isActiveElement(radioEl._focusableNode)).to.be.true;
   });
 });

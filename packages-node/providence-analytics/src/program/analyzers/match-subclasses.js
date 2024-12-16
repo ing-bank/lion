@@ -74,7 +74,7 @@ function storeResult(resultsObj, exportId, filteredList, meta) {
  * @param {FindClassesAnalyzerResult} targetClassesAnalyzerResult
  * @param {FindClassesAnalyzerResult} refClassesAResult
  * @param {MatchSubclassesConfig} customConfig
- * @returns {AnalyzerQueryResult}
+ * @returns {Promise<AnalyzerQueryResult>}
  */
 async function matchSubclassesPostprocess(
   refExportsAnalyzerResult,
@@ -281,7 +281,7 @@ export default class MatchSubclassesAnalyzer extends Analyzer {
   /** @type {AnalyzerName} */
   static analyzerName = 'match-subclasses';
 
-  static requiredAst = /** @type {AnalyzerAst} */ ('babel');
+  static requiredAst = /** @type {AnalyzerAst} */ ('oxc');
 
   static requiresReference = true;
 

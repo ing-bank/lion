@@ -1,16 +1,17 @@
+import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
 import { expect, fixture as _fixture } from '@open-wc/testing';
-import { html } from 'lit/static-html.js';
-import sinon from 'sinon';
 import { Validator } from '@lion/ui/form-core.js';
 import { LionSwitch } from '@lion/ui/switch.js';
-import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
-
+import { html } from 'lit/static-html.js';
 import '@lion/ui/define/lion-switch.js';
+import sinon from 'sinon';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
  * @typedef {import('../src/LionSwitchButton.js').LionSwitchButton} LionSwitchButton
- * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {import('@lion/ui/types/form-core.js').FormControlHost} FormControlHost
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const IsTrue = class extends Validator {
@@ -60,7 +61,7 @@ describe('lion-switch', () => {
     const { _inputNode, _labelNode } = getSwitchMembers(el);
 
     _labelNode.click();
-    expect(document.activeElement).to.equal(_inputNode);
+    expect(isActiveElement(_inputNode)).to.be.true;
   });
 
   it('clicking the label should not focus the toggle button when disabled', async () => {
@@ -68,7 +69,7 @@ describe('lion-switch', () => {
     const { _inputNode, _labelNode } = getSwitchMembers(el);
 
     _labelNode.click();
-    expect(document.activeElement).to.not.equal(_inputNode);
+    expect(isActiveElement(_inputNode)).to.be.false;
   });
 
   it('should sync its "disabled" state to child button', async () => {

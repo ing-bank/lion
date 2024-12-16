@@ -1,30 +1,28 @@
-import { LitElement } from 'lit';
-import { LionOption } from '@lion/ui/listbox.js';
-import { OverlayController } from '@lion/ui/overlays.js';
-import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { LionSelectInvoker, LionSelectRich } from '@lion/ui/select-rich.js';
-
-import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-listbox.js';
+import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
+import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
+import { OverlayController } from '@lion/ui/overlays.js';
+import { LionOption } from '@lion/ui/listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
+import '@lion/ui/define/lion-listbox.js';
+import '@lion/ui/define/lion-option.js';
+import { LitElement } from 'lit';
 import {
+  fixture as _fixture,
+  unsafeStatic,
+  nextFrame,
   aTimeout,
   defineCE,
   expect,
-  fixture as _fixture,
   html,
-  nextFrame,
-  unsafeStatic,
 } from '@open-wc/testing';
-import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
- * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
- * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
  * @typedef {import('../../form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
- */
-
-/**
+ * @typedef {import('../../listbox/types/ListboxMixinTypes.js').ListboxHost} ListboxHost
+ * @typedef {import('../../listbox/src/LionOptions.js').LionOptions} LionOptions
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
@@ -33,10 +31,11 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionSelectRich>} */ 
 describe('lion-select-rich', () => {
   it('clicking the label should focus the invoker', async () => {
     const el = await fixture(html` <lion-select-rich label="foo"> </lion-select-rich> `);
-    expect(document.activeElement === document.body).to.be.true;
+    expect(isActiveElement(document.body)).to.be.true;
+
     const { _labelNode, _invokerNode } = getSelectRichMembers(el);
     _labelNode.click();
-    expect(document.activeElement === _invokerNode).to.be.true;
+    expect(isActiveElement(_invokerNode)).to.be.true;
   });
 
   it('has an attribute focused when focused', async () => {
@@ -148,6 +147,32 @@ describe('lion-select-rich', () => {
       expect(_invokerNode.hasAttribute('single-option')).to.be.true;
     });
 
+    it('sets and removes the button role and aria attributes on change of singleOption', async () => {
+      const el = await fixture(html`
+        <lion-select-rich>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2</lion-option>
+        </lion-select-rich>
+      `);
+      const { _invokerNode } = getSelectRichMembers(el);
+
+      expect(_invokerNode.hasAttribute('role')).to.be.true;
+      expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.true;
+      expect(_invokerNode.hasAttribute('aria-expanded')).to.be.true;
+
+      el.singleOption = true;
+      await el.updateComplete;
+      expect(_invokerNode.hasAttribute('role')).to.be.false;
+      expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.false;
+      expect(_invokerNode.hasAttribute('aria-expanded')).to.be.false;
+
+      el.singleOption = false;
+      await el.updateComplete;
+      expect(_invokerNode.hasAttribute('role')).to.be.true;
+      expect(_invokerNode.hasAttribute('aria-haspopup')).to.be.true;
+      expect(_invokerNode.hasAttribute('aria-expanded')).to.be.true;
+    });
+
     it('updates the invoker when the selected element is the same but the modelValue was updated asynchronously', async () => {
       const tagString = defineCE(
         class LionCustomOption extends LionOption {
@@ -252,14 +277,14 @@ describe('lion-select-rich', () => {
 
       await _overlayCtrl.show();
       await el.updateComplete;
-      expect(document.activeElement === _listboxNode).to.be.true;
-      expect(document.activeElement === _invokerNode).to.be.false;
+      expect(isActiveElement(_listboxNode)).to.be.true;
+      expect(isActiveElement(_invokerNode)).to.be.false;
 
       el.opened = false;
       await el.updateComplete;
       await el.updateComplete; // safari takes a little longer
-      expect(document.activeElement === _listboxNode).to.be.false;
-      expect(document.activeElement === _invokerNode).to.be.true;
+      expect(isActiveElement(_listboxNode)).to.be.false;
+      expect(isActiveElement(_invokerNode)).to.be.true;
     });
 
     it('opens the listbox with checked option as active', async () => {
@@ -448,16 +473,16 @@ describe('lion-select-rich', () => {
         <lion-select-rich .config=${{ trapsKeyboardFocus: true }}></lion-select-rich>
       `);
       const { _listboxNode } = getSelectRichMembers(el);
-      expect(document.activeElement).to.not.equal(_listboxNode);
+      expect(isActiveElement(_listboxNode)).to.be.false;
 
       el.opened = true;
       await el.updateComplete;
-      expect(document.activeElement).to.equal(_listboxNode);
+      expect(isActiveElement(_listboxNode)).to.be.true;
 
       el.opened = false;
       await el.updateComplete;
       await el.updateComplete; // safari takes a little longer
-      expect(document.activeElement).to.not.equal(_listboxNode);
+      expect(isActiveElement(_listboxNode)).to.be.false;
     });
   });
 

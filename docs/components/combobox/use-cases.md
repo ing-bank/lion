@@ -243,7 +243,7 @@ export const multipleChoice = () => html`
     ${lazyRender(
       listboxData.map(
         (entry, i) => html`
-          <lion-option .choiceValue="${entry}" ?checked="${i === 0}>${entry}"</lion-option>
+          <lion-option .choiceValue="${entry}" ?checked="${i === 0}">${entry}</lion-option>
         `,
       ),
     )}
@@ -266,7 +266,7 @@ export const multipleCustomizableChoice = () => html`
     ${lazyRender(
       listboxData.map(
         (entry, i) => html`
-          <lion-option .choiceValue="${entry}" ?checked="${i === 0}>${entry}"</lion-option>
+          <lion-option .choiceValue="${entry}" ?checked="${i === 0}">${entry}</lion-option>
         `,
       ),
     )}
@@ -371,9 +371,8 @@ class DemoServerSide extends LitElement {
         .helpText="Returned from server: [${this.options.join(', ')}]"
       >
         <label slot="label" aria-live="polite"
-          >Server side completion ${this.loading
-            ? html`<span style="font-style: italic;">(loading...)</span>`
-            : ''}</label
+          >Server side completion
+          ${this.loading ? html`<span style="font-style: italic;">(loading...)</span>` : ''}</label
         >
         ${repeat(
           this.options,

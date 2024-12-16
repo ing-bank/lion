@@ -1,5 +1,61 @@
 # Change Log
 
+## 0.17.3
+
+### Patch Changes
+
+- 7e25f3e: lfu and lru cache strategies for memoize
+- 344ffa9: make sure all cached asts are retrieved
+
+## 0.17.2
+
+### Patch Changes
+
+- a19096e: improve docs
+
+## 0.17.1
+
+### Patch Changes
+
+- cc2a646: optimisedGlob: allow providing cwd with trailing slash
+
+## 0.17.0
+
+### Minor Changes
+
+- 615472c: - use oxc for all analyzers (oxc is way smaller and more performant than swc, let alone babel)
+
+  - make swcTraverse compatible with oxc
+  - expand scope functionality of swcTraverse
+
+  BREAKING:
+
+  - make parsers peerDependencies (babel or swc should be loaded by external analyzers)
+  - rename `swcTraverse` to `oxcTraverse`
+
+### Patch Changes
+
+- 6f3137c: fix normalization of native glob dirent.parentPath for optimisedGlob
+
+## 0.16.8
+
+### Patch Changes
+
+- 6ec74dc: support fullPath notation in optimisedGlob
+
+## 0.16.7
+
+### Patch Changes
+
+- 2dbb1ca: - support `ignore: string[]` globs in optimisedGlob
+  - experimental `fs.glob` support under the hood in optimisedGlob
+
+## 0.16.6
+
+### Patch Changes
+
+- a30dbf3: update dependencies
+
 ## 0.16.5
 
 ### Patch Changes
@@ -70,7 +126,7 @@
 - bdb038e1: Many improvements:
 
   - rewritten from babel to swc
-  - swcTraverse tool, compatible with babel traverse api
+  - oxcTraverse tool, compatible with babel traverse api
   - increased performance
   - better windows compatibility
 
@@ -199,14 +255,14 @@
   This means tag names are no longer being rewritten with a hash.
 
   ```js
-  import { css, LitElement } from "lit";
-  import { ScopedElementsMixin } from "@open-wc/scoped-elements";
-  import { MyButton } from "./MyButton.js";
+  import { css, LitElement } from 'lit';
+  import { ScopedElementsMixin } from '@open-wc/scoped-elements';
+  import { MyButton } from './MyButton.js';
 
   export class MyElement extends ScopedElementsMixin(LitElement) {
     static get scopedElements() {
       return {
-        "my-button": MyButton,
+        'my-button': MyButton,
       };
     }
 

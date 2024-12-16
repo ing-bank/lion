@@ -1,22 +1,24 @@
-import { PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
+import { mimicUserChangingDropdown } from '@lion/ui/input-tel-dropdown-test-helpers.js';
+import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
+import { PhoneUtilManager } from '@lion/ui/input-tel.js';
+import sinon from 'sinon';
 import {
+  fixtureSync as _fixtureSync,
+  fixture as _fixture,
+  unsafeStatic,
   aTimeout,
   defineCE,
   expect,
-  fixture as _fixture,
-  fixtureSync as _fixtureSync,
   html,
-  unsafeStatic,
 } from '@open-wc/testing';
-import sinon from 'sinon';
-import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
-import { mimicUserChangingDropdown } from '@lion/ui/input-tel-dropdown-test-helpers.js';
+
+import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
 /**
- * @typedef {import('lit').TemplateResult} TemplateResult
- * @typedef {HTMLSelectElement|HTMLElement & {modelValue:string}} DropdownElement
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
+ * @typedef {HTMLSelectElement|HTMLElement & {modelValue:string}} DropdownElement
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: string | TemplateResult) => Promise<LionInputTelDropdown>} */ (
@@ -206,12 +208,14 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
 
       it('syncs disabled attribute to dropdown', async () => {
         const el = await fixture(html` <${tag} disabled></${tag}> `);
-        expect(el.refs.dropdown.value?.hasAttribute('disabled')).to.be.true;
+        expect(/** @type {HTMLElement} */ (el.refs.dropdown.value)?.hasAttribute('disabled')).to.be
+          .true;
       });
 
       it('disables dropdown on readonly', async () => {
         const el = await fixture(html` <${tag} readonly></${tag}> `);
-        expect(el.refs.dropdown.value?.hasAttribute('disabled')).to.be.true;
+        expect(/** @type {HTMLElement} */ (el.refs.dropdown.value)?.hasAttribute('disabled')).to.be
+          .true;
       });
 
       it('renders to prefix slot in light dom', async () => {
@@ -332,7 +336,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         mimicUserChangingDropdown(dropdownElement, 'BE');
         await el.updateComplete;
         // @ts-expect-error [allow-protected-in-tests]
-        expect(el._inputNode).to.not.equal(document.activeElement);
+        expect(isActiveElement(el._inputNode)).to.be.false;
       });
     });
 

@@ -26,15 +26,15 @@
 </p>
 
 <p align="center">
-  <a href="https://lion-web.netlify.app">Website</a>
+  <a href="https://lion.js.org">Website</a>
   ·
-  <a href="https://lion-web.netlify.app/fundamentals/">Fundamentals</a>
+  <a href="https://lion.js.org/fundamentals/">Fundamentals</a>
   ·
-  <a href="https://lion-web.netlify.app/guides/">Guides</a>
+  <a href="https://lion.js.org/guides/">Guides</a>
   ·
-  <a href="https://lion-web.netlify.app/components/">Components</a>
+  <a href="https://lion.js.org/components/">Components</a>
   ·
-  <a href="https://lion-web.netlify.app/blog/">Blog</a>
+  <a href="https://lion.js.org/blog/">Blog</a>
 </p>
 
 **Lion is a set of highly performant, accessible and flexible Web Components.!**
@@ -47,11 +47,10 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 - **Modern Code:** Lion is distributes as pure es modules.
 - **Exposes functions/classes and Web Components:** Ships a functionality in it's most appropriate form.
 
-> Note: Our demos may look a little bland but that is on purpose. They only come with functional stylings.
-> This makes sense as the main use case is to extend those components and if you do you do not want to override existing stylings.
+> Note: Our demo examples might look simple and not very stylish. This is on purpose. They are designed to be basic so you can easily add your own styles to them to match your intended design, without dealing with styles that are already there.
 
 <p align="center">
-  <a href="https://lion-web.netlify.app/guides/"><strong>Explore the Lion Guides&nbsp;&nbsp;▶</strong></a>
+  <a href="https://lion.js.org/guides/"><strong>Explore the Lion Guides&nbsp;&nbsp;▶</strong></a>
 </p>
 
 ## How to install
@@ -159,7 +158,7 @@ This means you only have to apply your own Design System: by delivering styles, 
 
 ## Coding guidelines
 
-Check out our [coding guidelines](https://lion-web.netlify.app/guides/principles/definitions-and-terms/) for more detailed information.
+Check out our [coding guidelines](https://lion.js.org/guides/principles/definitions-and-terms/) for more detailed information.
 
 ## How to contribute
 

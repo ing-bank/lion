@@ -58,12 +58,13 @@ export const withMinimumAndMaximumDate = () => {
     <lion-input-date
       label="MinMaxDate"
       .modelValue="${new Date('2018/05/30')}"
-      .validators="${[new MinMaxDate({ min: new Date('2018/05/24'), max: new Date('2018/06/24') })]}"
+      .validators="${[
+        new MinMaxDate({ min: new Date('2018/05/24'), max: new Date('2018/06/24') }),
+      ]}"
     >
       <div slot="help-text">
-        Enter a date between ${formatDate(new Date('2018/05/24'))} and ${formatDate(
-          new Date('2018/06/24'),
-        )}.
+        Enter a date between ${formatDate(new Date('2018/05/24'))} and
+        ${formatDate(new Date('2018/06/24'))}.
       </div>
     </lion-input-date>
   `;

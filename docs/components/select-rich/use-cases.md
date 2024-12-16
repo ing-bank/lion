@@ -135,7 +135,7 @@ export const renderOptions = ({ shadowRoot }) => {
   }
   return html`
     <lion-select-rich label="Credit Card" name="color" @model-value-changed="${showOutput}">
-      ${objs.map(obj => html` <lion-option .choiceValue="${obj}>${obj.label}</lion-option> `)}"
+      ${objs.map(obj => html` <lion-option .choiceValue="${obj}">${obj.label}</lion-option> `)}
     </lion-select-rich>
     <p>Full value:</p>
     <pre id="demoRenderOutput"></pre>
@@ -222,11 +222,11 @@ Often, you may want a placeholder that appears initially, but cannot be selected
 For this you can use `has-no-default-selected` attribute.
 
 ```html preview-story
-  <lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
-    <lion-option .choiceValue="${'red'}">Red</lion-option>
-    <lion-option .choiceValue="${'hotpink'}">Hotpink</lion-option>
-    <lion-option .choiceValue="${'teal'}">Teal</lion-option>
-  </lion-select-rich>
+<lion-select-rich name="favoriteColor" label="Favorite color" has-no-default-selected>
+  <lion-option .choiceValue="${'red'}">Red</lion-option>
+  <lion-option .choiceValue="${'hotpink'}">Hotpink</lion-option>
+  <lion-option .choiceValue="${'teal'}">Teal</lion-option>
+</lion-select-rich>
 ```
 
 > By default, the placeholder is completely empty in the `LionSelectInvoker`,
@@ -264,7 +264,7 @@ class SingleOptionRemoveAdd extends LitElement {
       <lion-select-rich name="favoriteColor" label="Favorite color">
         <lion-options slot="input">
           ${this.options.map(
-            option => html` <lion-option .choiceValue="${option}>${option}"</lion-option> `,
+            option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
           )}
         </lion-options>
       </lion-select-rich>

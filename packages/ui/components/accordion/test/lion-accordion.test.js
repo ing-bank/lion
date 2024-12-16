@@ -1,5 +1,6 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
+import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
 
 import '@lion/ui/define/lion-accordion.js';
@@ -33,14 +34,14 @@ function getAccordionChildren(el) {
 }
 
 /**
- * @param {Element} el
+ * @param {LionAccordion} el
  */
 function getInvokers(el) {
   return getAccordionChildren(el).filter(child => child.classList.contains('invoker'));
 }
 
 /**
- * @param {Element} el
+ * @param {LionAccordion} el
  */
 function getContents(el) {
   return getAccordionChildren(el).filter(child => child.classList.contains('content'));
@@ -110,6 +111,51 @@ describe('<lion-accordion>', () => {
       el.expanded = [1];
       expect(invokers[0].firstElementChild).to.not.have.attribute('expanded');
       expect(invokers[1].firstElementChild).to.have.attribute('expanded');
+    });
+
+    it('supports [exclusive] attribute, allowing one collapsible to be open at a time', async () => {
+      const el = /** @type {LionAccordion} */ (
+        await fixture(html`
+          <lion-accordion exclusive>
+            <h2 slot="invoker"><button>invoker 1</button></h2>
+            <div slot="content">content 1</div>
+            <h2 slot="invoker"><button>invoker 2</button></h2>
+            <div slot="content">content 2</div>
+            <h2 slot="invoker"><button>invoker 3</button></h2>
+            <div slot="content">content 3</div>
+          </lion-accordion>
+        `)
+      );
+
+      const invokerButtons = Array.from(getInvokers(el)).map(
+        invokerHeadingEl => /** @type {HTMLButtonElement} */ (invokerHeadingEl.firstElementChild),
+      );
+
+      // We open the first... (nothing different from not [exclusive] so far)
+      invokerButtons[0].click();
+      expect(invokerButtons[0]).to.have.attribute('expanded');
+      expect(invokerButtons[1]).to.not.have.attribute('expanded');
+      expect(invokerButtons[2]).to.not.have.attribute('expanded');
+
+      // We click the second...
+      invokerButtons[1].click();
+      expect(invokerButtons[0]).to.not.have.attribute('expanded');
+      expect(invokerButtons[1]).to.have.attribute('expanded');
+      expect(invokerButtons[2]).to.not.have.attribute('expanded');
+
+      // We click the third...
+      invokerButtons[2].click();
+      expect(invokerButtons[0]).to.not.have.attribute('expanded');
+      expect(invokerButtons[1]).to.not.have.attribute('expanded');
+      expect(invokerButtons[2]).to.have.attribute('expanded');
+
+      el.exclusive = false;
+
+      // We open the first... (behaving as default (not [exclusive]) again)
+      invokerButtons[0].click();
+      expect(invokerButtons[0]).to.have.attribute('expanded');
+      expect(invokerButtons[1]).to.not.have.attribute('expanded');
+      expect(invokerButtons[2]).to.have.attribute('expanded');
     });
 
     it('sends event "expanded-changed" for every expanded state change', async () => {
@@ -264,11 +310,14 @@ describe('<lion-accordion>', () => {
    * > content content to be preloaded.
    */
   describe('User interaction', () => {
-    it('opens a invoker on click', async () => {
+    it('opens/closes an invoker on click', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = getInvokers(el);
       invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
       expect(el.expanded).to.deep.equal([1]);
+
+      invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
+      expect(el.expanded).to.deep.equal([]);
     });
 
     it('selects a invoker on click', async () => {
@@ -278,12 +327,13 @@ describe('<lion-accordion>', () => {
       expect(el.focusedIndex).to.equal(1);
     });
 
-    it.skip('opens/close invoker on [enter] and [space]', async () => {
+    it('opens/closes invoker on [enter] and [space]', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       const invokers = getInvokers(el);
-      invokers[0].firstElementChild?.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
+      invokers[0].getElementsByTagName('button')[0].focus();
+      await sendKeys({ press: 'Enter' });
       expect(el.expanded).to.deep.equal([0]);
-      invokers[0].firstElementChild?.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+      await sendKeys({ press: 'Space' });
       expect(el.expanded).to.deep.equal([]);
     });
 
@@ -467,14 +517,16 @@ describe('<lion-accordion>', () => {
 
     describe('Invokers', () => {
       it('links ids of content items to invoker first child via [aria-controls]', async () => {
-        const el = await fixture(html`
-          <lion-accordion>
-            <h2 id="h1" slot="invoker"><button>invoker 1</button></h2>
-            <div id="p1" slot="content">content 1</div>
-            <h2 id="h2" slot="invoker"><button>invoker 2</button></h2>
-            <div id="p2" slot="content">content 2</div>
-          </lion-accordion>
-        `);
+        const el = /** @type {LionAccordion} */ (
+          await fixture(html`
+            <lion-accordion>
+              <h2 id="h1" slot="invoker"><button>invoker 1</button></h2>
+              <div id="p1" slot="content">content 1</div>
+              <h2 id="h2" slot="invoker"><button>invoker 2</button></h2>
+              <div id="p2" slot="content">content 2</div>
+            </lion-accordion>
+          `)
+        );
         const invokers = getInvokers(el);
         const contents = getContents(el);
         expect(invokers[0].firstElementChild?.getAttribute('aria-controls')).to.equal(
@@ -486,12 +538,14 @@ describe('<lion-accordion>', () => {
       });
 
       it('adds aria-expanded="false" to invoker when its content is not expanded', async () => {
-        const el = await fixture(html`
-          <lion-accordion>
-            <h2 slot="invoker"><button>invoker</button></h2>
-            <div slot="content">content</div>
-          </lion-accordion>
-        `);
+        const el = /** @type {LionAccordion} */ (
+          await fixture(html`
+            <lion-accordion>
+              <h2 slot="invoker"><button>invoker</button></h2>
+              <div slot="content">content</div>
+            </lion-accordion>
+          `)
+        );
         expect(Array.from(getInvokers(el))[0]?.firstElementChild).to.have.attribute(
           'aria-expanded',
           'false',
@@ -517,14 +571,16 @@ describe('<lion-accordion>', () => {
 
     describe('Contents', () => {
       it('adds aria-labelledby referring to invoker ids', async () => {
-        const el = await fixture(html`
-          <lion-accordion>
-            <h2 slot="invoker"><button>invoker 1</button></h2>
-            <div slot="content">content 1</div>
-            <h2 slot="invoker"><button>invoker 2</button></h2>
-            <div slot="content">content 2</div>
-          </lion-accordion>
-        `);
+        const el = /** @type {LionAccordion} */ (
+          await fixture(html`
+            <lion-accordion>
+              <h2 slot="invoker"><button>invoker 1</button></h2>
+              <div slot="content">content 1</div>
+              <h2 slot="invoker"><button>invoker 2</button></h2>
+              <div slot="content">content 2</div>
+            </lion-accordion>
+          `)
+        );
         const contents = getContents(el);
         const invokers = getInvokers(el);
         expect(contents[0]).to.have.attribute('aria-labelledby', invokers[0].firstElementChild?.id);
