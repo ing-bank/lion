@@ -2,10 +2,10 @@ import { LionField } from '@lion/ui/form-core.js';
 import { LocalizeMixin } from '@lion/ui/localize.js';
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { resolveLocaleConfig } from '@lion/ui/localize-no-side-effects.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { FileHandle, MAX_FILE_SIZE } from './FileHandle.js';
 import { LionSelectedFileList } from './LionSelectedFileList.js';
-import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 import { DuplicateFileNames, IsAcceptedFile } from './validators.js';
 
 /**
@@ -53,10 +53,10 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     };
   }
 
-  static localizeNamespaces = [
-    { 'lion-input-file': localizeNamespaceLoader },
-    ...super.localizeNamespaces,
-  ];
+  static get localizeNamespaces() {
+    const localePath = new URL('../translations', import.meta.url);
+    return [resolveLocaleConfig('lion-input-file', localePath), ...super.localizeNamespaces];
+  }
 
   static get validationTypes() {
     return ['error', 'info'];

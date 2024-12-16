@@ -11,9 +11,8 @@ import {
   withModalDialogConfig,
   ArrowMixin,
 } from '@lion/ui/overlays.js';
-import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
+import { LocalizeMixin, resolveLocaleConfig } from '@lion/ui/localize-no-side-effects.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
-import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
@@ -127,7 +126,13 @@ export class LionInputDatepicker extends ScopedElementsMixin(
   }
 
   static get localizeNamespaces() {
-    return [{ 'lion-input-datepicker': localizeNamespaceLoader }, ...super.localizeNamespaces];
+    const datepickerLocalePath = new URL('../translations', import.meta.url);
+    const overlayLocalePath = new URL('../../overlays/translations', import.meta.url);
+
+    return [
+      resolveLocaleConfig('lion-input-datepicker', [overlayLocalePath, datepickerLocalePath]),
+      ...super.localizeNamespaces,
+    ];
   }
 
   /**
