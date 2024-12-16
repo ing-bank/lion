@@ -43,7 +43,6 @@ export const resolveLocaleConfig = (namespace, localeDir) => ({
       ? mergeMultipleConfigs(localeDir)
       : loadLocaleConfig(localeDir);
 
-    console.log({ localeConfig: await localeConfig });
     return localeConfig;
   },
 });
