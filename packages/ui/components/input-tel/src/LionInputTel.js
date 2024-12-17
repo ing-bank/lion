@@ -158,8 +158,6 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
 
     /** @private */
     this.__isPhoneNumberValidatorInstance = new PhoneNumber();
-    /**  @configures ValidateMixin */
-    this.defaultValidators.push(this.__isPhoneNumberValidatorInstance);
 
     // Expose awesome-phonenumber lib for Subclassers
     /**
@@ -218,6 +216,14 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
 
     if (changedProperties.has('modelValue') || changedProperties.has('allowedRegions')) {
       this.__calculateActiveRegion();
+    }
+
+    if (
+      (changedProperties.has('dirty') && this.dirty) ||
+      (changedProperties.has('prefilled') && this.prefilled)
+    ) {
+      /** @configures ValidateMixin */
+      this.defaultValidators.push(this.__isPhoneNumberValidatorInstance);
     }
   }
 

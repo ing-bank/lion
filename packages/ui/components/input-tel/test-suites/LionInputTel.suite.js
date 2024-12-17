@@ -316,8 +316,17 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
     });
 
     describe('Validation', () => {
-      it('applies PhoneNumber as default validator', async () => {
+      it('applies PhoneNumber as default validator if prefilled', async () => {
+        const el = await fixture(html` <${tag} .modelValue="${'612345678'}"></${tag}> `);
+        await el.updateComplete;
+        expect(el.defaultValidators.find(v => v instanceof PhoneNumber)).to.be.not.undefined;
+      });
+
+      it('applies PhoneNumber as default validator once dirty', async () => {
         const el = await fixture(html` <${tag}></${tag}> `);
+        expect(el.defaultValidators.find(v => v instanceof PhoneNumber)).to.be.undefined;
+        el.dirty = true;
+        await el.updateComplete;
         expect(el.defaultValidators.find(v => v instanceof PhoneNumber)).to.be.not.undefined;
       });
 
@@ -326,10 +335,11 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
           html` <${tag} .allowedRegions="${['NL']}" .modelValue="${'612345678'}"></${tag}> `,
         );
         const spy = sinon.spy(el, 'validate');
+        el.dirty = true;
+        await el.updateComplete;
         const validatorInstance = /** @type {PhoneNumber} */ (
           el.defaultValidators.find(v => v instanceof PhoneNumber)
         );
-        await el.updateComplete;
         expect(validatorInstance.param).to.equal('NL');
         expect(spy).to.have.been.called;
         spy.restore();
@@ -339,12 +349,13 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
         const el = await fixture(
           html` <${tag} .allowedRegions="${['NL']}" .modelValue="${'612345678'}"></${tag}> `,
         );
+        // @ts-expect-error allow protected in tests
+        el._setActiveRegion('DE');
+        el.dirty = true;
+        await el.updateComplete;
         const validatorInstance = /** @type {PhoneNumber} */ (
           el.defaultValidators.find(v => v instanceof PhoneNumber)
         );
-        // @ts-expect-error allow protected in tests
-        el._setActiveRegion('DE');
-        await el.updateComplete;
         expect(validatorInstance.param).to.equal('DE');
       });
     });
@@ -418,14 +429,14 @@ export function runInputTelSuite({ klass = LionInputTel } = {}) {
         expect(el.formattedValue).to.equal('+31 6 12345678');
       });
 
-      it('validates once lib has been loaded', async () => {
+      it('does not validate once lib has been loaded', async () => {
         const el = await fixture(
           html` <${tag} .modelValue="${'+31612345678'}" .allowedRegions="${['DE']}"></${tag}> `,
         );
         expect(el.hasFeedbackFor).to.eql([]);
         resolveLoaded(undefined);
         await aTimeout(0);
-        expect(el.hasFeedbackFor).to.eql(['error']);
+        expect(el.hasFeedbackFor).to.eql([]);
       });
     });
 
