@@ -48,7 +48,7 @@ describe('Form Integrations', () => {
       notifications: { value: '', checked: false },
       rsvp: '',
       tel: '',
-      'tel-dropdown': '+44',
+      'tel-dropdown': '',
       comments: '',
     });
   });
@@ -82,7 +82,7 @@ describe('Form Integrations', () => {
       notifications: '',
       rsvp: '',
       tel: '',
-      'tel-dropdown': '+44',
+      'tel-dropdown': '',
       comments: '',
     });
   });

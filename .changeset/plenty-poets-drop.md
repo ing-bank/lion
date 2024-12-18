@@ -2,4 +2,4 @@
 '@lion/ui': patch
 ---
 
-[input-tel] only add defaultValidators on prefilled or dirty, so the initial countrycode does not count as an interaction
+[input-tel-dropdown] remove the country telephone code from the modelValue on init, only have it as viewValue

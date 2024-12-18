@@ -11,6 +11,7 @@ import { html } from 'lit';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import '@lion/ui/define/lion-input-tel-dropdown.js';
 
 /**
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
@@ -66,6 +67,18 @@ describe('WithFormControlInputTelDropdown', () => {
   // @ts-expect-error
   // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
   runInputTelDropdownSuite({ klass: WithFormControlInputTelDropdown });
+
+  it("it doesn't set the country as modelValue, only as viewValue", async () => {
+    const el = /** @type {LionInputTelDropdown} */ (
+      await fixture(html`
+        <lion-input-tel-dropdown .allowedRegions="${['NL']}"></lion-input-tel-dropdown>
+      `)
+    );
+
+    // @ts-expect-error [allow-protected-in-tests]
+    expect(el._inputNode.value).to.equal('+31');
+    expect(el.modelValue).to.equal('');
+  });
 
   it('focuses the textbox right after selection if selected via opened dropdown if interaction-mode is mac', async () => {
     class InputTelDropdownMac extends LionInputTelDropdown {
