@@ -103,12 +103,12 @@ const withLocalTestConfig = () =>
 async function createNestedEscControllers(parentContent) {
   const childContent = /** @type {HTMLDivElement} */ (parentContent.querySelector('div[id]'));
   // Assert valid fixure
-  const isValid =
-    (parentContent.id === 'parent-overlay--hidesOnEsc' ||
-      parentContent.id === 'parent-overlay--hidesOnOutsideEsc') &&
-    (childContent.id === 'child-overlay--hidesOnEsc' ||
-      childContent.id === 'child-overlay--hidesOnOutsideEsc');
-  if (!isValid) {
+  const isValidFixture =
+    (parentContent.id.startsWith('parent-overlay--hidesOnEsc') ||
+      parentContent.id.startsWith('parent-overlay--hidesOnOutsideEsc')) &&
+    (childContent.id.startsWith('child-overlay--hidesOnEsc') ||
+      childContent.id.startsWith('child-overlay--hidesOnOutsideEsc'));
+  if (!isValidFixture) {
     throw new Error('Provide a valid fixture');
   }
 
@@ -117,8 +117,8 @@ async function createNestedEscControllers(parentContent) {
     shadowRootParent.appendChild(childContent);
   }
 
-  const parentHasOutsideOnEsc = parentContent.id === 'parent-overlay--hidesOnOutsideEsc';
-  const childHasOutsideOnEsc = childContent.id === 'child-overlay--hidesOnOutsideEsc';
+  const parentHasOutsideOnEsc = parentContent.id.startsWith('parent-overlay--hidesOnOutsideEsc');
+  const childHasOutsideOnEsc = childContent.id.startsWith('child-overlay--hidesOnOutsideEsc');
 
   const parentConfig = parentHasOutsideOnEsc ? { hidesOnOutsideEsc: true } : { hidesOnEsc: true };
   const childConfig = childHasOutsideOnEsc ? { hidesOnOutsideEsc: true } : { hidesOnEsc: true };
@@ -787,6 +787,9 @@ describe('OverlayController', () => {
 
           expect(parentOverlay.isShown).to.be.false;
           expect(childOverlay.isShown).to.be.true;
+
+          await childOverlay.teardown();
+          await parentOverlay.teardown();
         });
 
         it('on [Escape] press outside overlays: parent stays shown, child hides', async () => {

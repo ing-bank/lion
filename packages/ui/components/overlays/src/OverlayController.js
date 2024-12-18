@@ -1003,16 +1003,16 @@ export class OverlayController extends EventTarget {
    * @param {{ phase: OverlayPhase }} config
    */
   _handleVisibilityTriggers({ phase }) {
-    if (typeof this.visibilityTriggerFunction === 'function') {
-      if (phase === 'init') {
-        this.__visibilityTriggerHandler = this.visibilityTriggerFunction({
-          phase,
-          controller: this,
-        });
-      }
-      if (this.__visibilityTriggerHandler[phase]) {
-        this.__visibilityTriggerHandler[phase]();
-      }
+    if (typeof this.visibilityTriggerFunction !== 'function') return;
+
+    if (phase === 'init') {
+      this.__visibilityTriggerHandler = this.visibilityTriggerFunction({
+        phase,
+        controller: this,
+      });
+    }
+    if (this.__visibilityTriggerHandler[phase]) {
+      this.__visibilityTriggerHandler[phase]();
     }
   }
 
@@ -1191,9 +1191,9 @@ export class OverlayController extends EventTarget {
     const hasPressedInside =
       event.composedPath().includes(this.contentNode) ||
       deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
-    if (!hasPressedInside) {
-      this.hide();
-    }
+    if (hasPressedInside) return;
+
+    this.hide();
   };
 
   /**
@@ -1206,7 +1206,7 @@ export class OverlayController extends EventTarget {
       if (this.invokerNode) {
         this.invokerNode.addEventListener('keyup', this.__escKeyHandler);
       }
-    } else if (phase === 'hide') {
+    } else if (phase === 'hide' || phase === 'teardown') {
       this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
       if (this.invokerNode) {
         this.invokerNode.removeEventListener('keyup', this.__escKeyHandler);
@@ -1221,7 +1221,7 @@ export class OverlayController extends EventTarget {
   _handleHidesOnOutsideEsc({ phase }) {
     if (phase === 'show') {
       document.addEventListener('keyup', this.#outsideEscKeyHandler);
-    } else if (phase === 'hide') {
+    } else if (phase === 'hide' || phase === 'teardown') {
       document.removeEventListener('keyup', this.#outsideEscKeyHandler);
     }
   }

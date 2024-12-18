@@ -1,5 +1,20 @@
 import { Options } from '@popperjs/core';
 
+export type ViewportPlacement =
+  | 'center'
+  | 'top-left'
+  | 'top'
+  | 'top-right'
+  | 'right'
+  | 'bottom-right'
+  | 'bottom'
+  | 'bottom-left'
+  | 'left';
+
+
+export interface ViewportConfig {
+  placement: ViewportPlacement;
+}
 export interface OverlayConfig {
   // Positioning
 
@@ -80,17 +95,4 @@ export interface OverlayConfig {
   visibilityTriggerFunction?: Function;
 }
 
-export type ViewportPlacement =
-  | 'center'
-  | 'top-left'
-  | 'top'
-  | 'top-right'
-  | 'right'
-  | 'bottom-right'
-  | 'bottom'
-  | 'bottom-left'
-  | 'left';
 
-export interface ViewportConfig {
-  placement: ViewportPlacement;
-}
