@@ -44,5 +44,8 @@ export default {
     playwrightLauncher({ product: 'webkit' }),
   ],
   groups,
+  filterBrowserLogs(/** @type {{ type: 'error'|'warn'|'debug'; args: string[] }} */ log) {
+    return log.type === 'error' || log.type === 'debug';
+  },
   plugins: [litSsrPlugin()],
 };

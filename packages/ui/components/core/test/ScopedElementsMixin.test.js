@@ -140,7 +140,7 @@ describe('ScopedElementsMixin', () => {
       }
       customElements.define('scoped-elements-host-no-reg-2', ScopedElementsHostNoReg2);
 
-      const errorSpy = sinon.spy(console, 'error');
+      const errorStub = sinon.stub(console, 'error');
       /** @type {ScopedElementsHostNoReg2} */ (
         await fixture(html`<scoped-elements-host-no-reg></scoped-elements-host-no-reg>`)
       );
@@ -148,7 +148,7 @@ describe('ScopedElementsMixin', () => {
         await fixture(html`<scoped-elements-host-no-reg-2></scoped-elements-host-no-reg-2>`)
       );
 
-      expect(errorSpy.args[0][0]).to.equal(
+      expect(errorStub.args[0][0]).to.equal(
         [
           'You are trying to re-register the "scoped-elements-child-no-reg" custom element with a different class via ScopedElementsMixin.',
           'This is only possible with a CustomElementRegistry.',
@@ -158,7 +158,7 @@ describe('ScopedElementsMixin', () => {
           'For more details you can visit https://open-wc.org/docs/development/scoped-elements/',
         ].join('\n'),
       );
-      errorSpy.restore();
+      errorStub.restore();
     });
   });
 });
