@@ -9,6 +9,7 @@ import { html } from 'lit';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
+
 /**
  * @typedef {import('./helpers/umbrella-form.js').UmbrellaForm} UmbrellaForm
  * @typedef {import('../../dialog/src/LionDialog.js').LionDialog} LionDialog
@@ -25,10 +26,12 @@ describe('Form inside dialog Integrations', () => {
       </lion-dialog>`,
     );
 
-    // @ts-ignore
-    const formEl = /** @type {LionForm} */ (el._overlayCtrl.contentNode._lionFormNode);
+    // @ts-expect-error [allow-protected-in-tests]
+    const umbrellaEl = el._overlayCtrl.contentNode;
+    const formEl = /** @type {LionForm} */ (umbrellaEl._lionFormNode);
     await formEl.registrationComplete;
     const registeredEls = getAllTagNames(formEl);
+    await umbrellaEl.waitForAllChildrenUpdates();
 
     expect(registeredEls).to.eql([
       'lion-fieldset',
@@ -86,6 +89,7 @@ describe('Form inside dialog Integrations', () => {
         </div>
       </lion-dialog>
     `);
+
     // @ts-expect-error [allow-protected-in-tests]
     el._overlayInvokerNode.click();
     const lionInput = el.querySelector('[name="input"]');

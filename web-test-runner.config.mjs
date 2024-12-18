@@ -1,6 +1,7 @@
 import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 import { playwrightLauncher } from '@web/test-runner-playwright';
 import { optimisedGlob } from 'providence-analytics/utils.js';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { esbuildPlugin } from '@web/dev-server-esbuild';
 import { fileURLToPath } from 'url';
 
@@ -46,13 +47,16 @@ export default {
     playwrightLauncher({ product: 'webkit' }),
   ],
   groups,
+  filterBrowserLogs(/** @type {{ type: 'error'|'warn'|'debug'; args: string[] }} */ log) {
+    console.debug(log);
+    return log.type === 'error' || log.type === 'debug';
+  },
   plugins: [
     litSsrPlugin(),
     esbuildPlugin({
       ts: true,
       js: true,
       target: 'auto',
-      forceTsLoader: true,
       tsconfig: fileURLToPath(new URL('./tsconfig.json', import.meta.url)),
     }),
   ],
