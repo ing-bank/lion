@@ -59,10 +59,9 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     };
   }
 
-  static localizeNamespaces = [
-    { 'lion-input-stepper': localizeNamespaceLoader },
-    ...super.localizeNamespaces,
-  ];
+  static get localizeNamespaces() {
+    return [{ 'lion-input-stepper': localizeNamespaceLoader }, ...super.localizeNamespaces];
+  }
 
   /**
    * @returns {number}

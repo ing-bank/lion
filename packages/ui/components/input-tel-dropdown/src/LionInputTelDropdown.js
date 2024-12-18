@@ -1,4 +1,5 @@
 import { html, css } from 'lit';
+import { property } from 'lit/decorators.js';
 import { ref, createRef } from 'lit/directives/ref.js';
 
 import { LionInputTel } from '@lion/ui/input-tel.js';
@@ -41,13 +42,9 @@ import { getFlagSymbol } from './getFlagSymbol.js';
  * `e164` format that contains all info (both region code and national phone number).
  */
 export class LionInputTelDropdown extends LionInputTel {
-  /**
-   * @configure LitElement
-   * @type {any}
-   */
-  static properties = {
-    preferredRegions: { type: Array },
-  };
+  /** @type {RegionCode[]} */
+  @property({ type: Array })
+  preferredRegions = [];
 
   refs = {
     /** @type {DropdownRef} */
@@ -154,20 +151,22 @@ export class LionInputTelDropdown extends LionInputTel {
    * @configure LitElement
    * @enhance LionInputTel
    */
-  static styles = [
-    super.styles,
-    css`
-      /**
+  static get styles() {
+    return [
+      super.styles,
+      css`
+        /**
            * We need to align the height of the dropdown with the height of the text field.
            * We target the HTMLDivElement (render wrapper from SlotMixin) here. Its child,
            * [data-ref=dropdown], recieves a 100% height as well via inline styles (since we
            * can't target from shadow styles).
            */
-      ::slotted([slot='prefix']) {
-        height: 100%;
-      }
-    `,
-  ];
+        ::slotted([slot='prefix']) {
+          height: 100%;
+        }
+      `,
+    ];
+  }
 
   /**
    * @configure SlotMixin
@@ -326,37 +325,42 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   _onDropdownValueChange(event) {
     const isInitializing = event.detail?.initialize || !this._phoneUtil;
+    if (isInitializing) return;
+
     const dropdownElement = event.target;
     const dropdownValue = /** @type {RegionCode} */ (
       dropdownElement.modelValue || dropdownElement.value
     );
 
-    if (isInitializing || this.activeRegion === dropdownValue) {
-      return;
-    }
+    const isAlreadySelected = this.activeRegion === dropdownValue;
+    if (isAlreadySelected) return;
 
     const prevActiveRegion = this.activeRegion;
     this._setActiveRegion(dropdownValue);
 
+    const isSameAsPrevRegion = prevActiveRegion === this.activeRegion;
+    // We should not format during typing
+    const isTextboxFocused = this.focused;
+    if (isSameAsPrevRegion || isTextboxFocused) return;
+
     // Change region code in text box
     // From: https://bl00mber.github.io/react-phone-input-2.html
-    if (prevActiveRegion !== this.activeRegion && !this.focused && this._phoneUtil) {
-      const prevCountryCode = this._phoneUtil.getCountryCodeForRegionCode(prevActiveRegion);
-      const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
+    const prevCountryCode = this._phoneUtil.getCountryCodeForRegionCode(prevActiveRegion);
+    const countryCode = this._phoneUtil.getCountryCodeForRegionCode(this.activeRegion);
 
-      if (this.value.includes(`+${prevCountryCode}`)) {
-        this.modelValue = this._callParser(
-          this.value.replace(`+${prevCountryCode}`, `+${countryCode}`),
-        );
-      } else {
-        // In case of dropdown has +31, and input has only +3
-        const valueObj = this.value.split(' ');
-        if (this.formatCountryCodeStyle === 'parentheses' && !this.value.includes('(')) {
-          this.modelValue = this._callParser(this.value.replace(valueObj[0], `(+${countryCode})`));
-        } else {
-          this.modelValue = this._callParser(this.value.replace(valueObj[0], `+${countryCode}`));
-        }
-      }
+    if (this.value.includes(`+${prevCountryCode}`)) {
+      this.modelValue = this._callParser(
+        this.value.replace(`+${prevCountryCode}`, `+${countryCode}`),
+      );
+      return;
+    }
+
+    // In case of dropdown has +31, and input has only +3
+    const valueObj = this.value.split(' ');
+    if (this.formatCountryCodeStyle === 'parentheses' && !this.value.includes('(')) {
+      this.modelValue = this._callParser(this.value.replace(valueObj[0], `(+${countryCode})`));
+    } else {
+      this.modelValue = this._callParser(this.value.replace(valueObj[0], `+${countryCode}`));
     }
   }
 
@@ -365,9 +369,8 @@ export class LionInputTelDropdown extends LionInputTel {
    */
   __syncRegionWithDropdown(regionCode = this.activeRegion) {
     const dropdownElement = this.refs.dropdown?.value;
-    if (!dropdownElement || !regionCode) {
-      return;
-    }
+    if (!dropdownElement || !regionCode) return;
+
     const inputCountryCode = this._phoneUtil?.getCountryCodeForRegionCode(regionCode);
 
     if ('modelValue' in dropdownElement) {

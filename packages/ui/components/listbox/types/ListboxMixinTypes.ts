@@ -9,7 +9,7 @@ import { LionOptions } from '../src/LionOptions.js';
 import { LionOption } from '../src/LionOption.js';
 
 export declare class ListboxHost {
-  static get styles(): CSSResultArray;
+  static styles: CSSResultArray;
   /**
    * When true, will synchronize active descendant and selected element on
    * arrow key navigation.

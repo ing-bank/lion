@@ -61,9 +61,9 @@ export interface msgOptions {
 }
 
 export declare class LocalizeMixinHost {
-  static get localizeNamespaces(): NamespaceObject[];
+  static localizeNamespaces: NamespaceObject[];
 
-  static get waitForLocalizeNamespaces(): boolean;
+  static waitForLocalizeNamespaces: boolean;
 
   public localizeNamespacesLoaded: Promise<Object> | undefined;
 

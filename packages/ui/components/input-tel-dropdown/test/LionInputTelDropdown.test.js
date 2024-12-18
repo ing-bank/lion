@@ -1,5 +1,6 @@
 import { mimicUserChangingDropdown } from '@lion/ui/input-tel-dropdown-test-helpers.js';
 import { runInputTelDropdownSuite } from '@lion/ui/input-tel-dropdown-test-suites.js';
+// eslint-disable-next-line import/named
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 import { runInputTelSuite } from '@lion/ui/input-tel-test-suites.js';
 import { aTimeout, expect, fixture } from '@open-wc/testing';
@@ -23,11 +24,13 @@ class WithFormControlInputTelDropdown extends ScopedElementsMixin(LionInputTelDr
   /**
    * @configure ScopedElementsMixin
    */
-  static scopedElements = {
-    ...super.scopedElements,
-    'lion-select-rich': LionSelectRich,
-    'lion-option': LionOption,
-  };
+  static get scopedElements() {
+    return {
+      ...super.scopedElements,
+      'lion-select-rich': LionSelectRich,
+      'lion-option': LionOption,
+    };
+  }
 
   static templates = {
     ...(super.templates || {}),

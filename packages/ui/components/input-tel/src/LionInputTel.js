@@ -22,18 +22,19 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
   /**
    * @configure LitElement
    */
-  static properties = {
-    allowedRegions: { type: Array },
-    formatStrategy: { type: String, attribute: 'format-strategy' },
-    formatCountryCodeStyle: { type: String, attribute: 'format-country-code-style' },
-    activeRegion: { type: String },
-    _phoneUtil: { type: Object, state: true },
-  };
+  static get properties() {
+    return {
+      allowedRegions: { type: Array },
+      formatStrategy: { type: String, attribute: 'format-strategy' },
+      formatCountryCodeStyle: { type: String, attribute: 'format-country-code-style' },
+      activeRegion: { type: String },
+      _phoneUtil: { type: Object, state: true },
+    };
+  }
 
-  static localizeNamespaces = [
-    { 'lion-input-tel': localizeNamespaceLoader },
-    ...super.localizeNamespaces,
-  ];
+  static get localizeNamespaces() {
+    return [{ 'lion-input-tel': localizeNamespaceLoader }, ...super.localizeNamespaces];
+  }
 
   /**
    * Currently active region based on:

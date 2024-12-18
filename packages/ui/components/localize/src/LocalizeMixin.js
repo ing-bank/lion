@@ -18,18 +18,14 @@ const LocalizeMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class LocalizeMixin extends superclass {
     /**
-     * @returns {NamespaceObject[]}
+     * @type {NamespaceObject[]}
      */
-    static get localizeNamespaces() {
-      return [];
-    }
+    static localizeNamespaces = [];
 
     /**
-     * @returns {boolean}
+     * @type {boolean}
      */
-    static get waitForLocalizeNamespaces() {
-      return true;
-    }
+    static waitForLocalizeNamespaces = true;
 
     constructor() {
       super();

@@ -25,8 +25,11 @@ export declare class ChoiceInputHost {
    */
   get choiceValue(): any;
   set choiceValue(value: any);
-  static get styles(): CSSResultArray;
+
+  static styles: CSSResultArray;
+  
   parser(): any;
+  
   formatter(modelValue: ChoiceInputModelValue): string;
 
   protected _isHandlingUserInput: boolean;

@@ -24,10 +24,9 @@ export class LionValidationFeedback extends LocalizeMixin(LitElement) {
     };
   }
 
-  static localizeNamespaces = [
-    { 'lion-form-core': localizeNamespaceLoader },
-    ...super.localizeNamespaces,
-  ];
+  static get localizeNamespaces() {
+    return [{ 'lion-form-core': localizeNamespaceLoader }, ...super.localizeNamespaces];
+  }
 
   static get styles() {
     return [

@@ -4,7 +4,7 @@ import { LitElement } from 'lit';
 import { FormRegistrarHost } from './FormRegistrarMixinTypes.js';
 
 export declare class FormRegisteringHost {
-  static get properties(): {
+  static properties: {
     name: {
       type: StringConstructor;
       reflect: boolean;

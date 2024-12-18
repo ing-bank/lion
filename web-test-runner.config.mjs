@@ -1,6 +1,8 @@
 import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 import { playwrightLauncher } from '@web/test-runner-playwright';
 import { optimisedGlob } from 'providence-analytics/utils.js';
+import { esbuildPlugin } from '@web/dev-server-esbuild';
+import { fileURLToPath } from 'url';
 
 const config = {
   shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),
@@ -44,5 +46,14 @@ export default {
     playwrightLauncher({ product: 'webkit' }),
   ],
   groups,
-  plugins: [litSsrPlugin()],
+  plugins: [
+    litSsrPlugin(),
+    esbuildPlugin({
+      ts: true,
+      js: true,
+      target: 'auto',
+      forceTsLoader: true,
+      tsconfig: fileURLToPath(new URL('./tsconfig.json', import.meta.url)),
+    }),
+  ],
 };
