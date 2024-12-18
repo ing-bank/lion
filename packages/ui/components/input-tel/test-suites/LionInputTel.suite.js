@@ -1,22 +1,23 @@
-import {
-  expect,
-  fixture as _fixture,
-  fixtureSync as _fixtureSync,
-  html,
-  defineCE,
-  unsafeStatic,
-  aTimeout,
-} from '@open-wc/testing';
-import sinon from 'sinon';
-import { mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
-import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { Unparseable } from '@lion/ui/form-core.js';
-import { LionInputTel, PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.js';
 import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
+import { LionInputTel, PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
+import { Unparseable } from '@lion/ui/form-core.js';
+import sinon from 'sinon';
+
+import {
+  fixtureSync as _fixtureSync,
+  fixture as _fixture,
+  unsafeStatic,
+  defineCE,
+  aTimeout,
+  expect,
+  html,
+} from '@open-wc/testing';
 
 /**
- * @typedef {import('lit').TemplateResult} TemplateResult
  * @typedef {import('../types/index.js').RegionCode} RegionCode
+ * @typedef {import('lit').TemplateResult} TemplateResult
  */
 
 const fixture = /** @type {(arg: string | TemplateResult) => Promise<LionInputTel>} */ (_fixture);

@@ -1,7 +1,15 @@
 const path = require('path');
 
 module.exports = {
-  extends: ['@open-wc/eslint-config', 'eslint-config-prettier'].map(require.resolve),
+  extends: [
+    '@open-wc/eslint-config',
+    'eslint-config-prettier',
+    // 'eslint:recommended',
+    // '@typescript-eslint/recommended',
+  ].map(require.resolve),
+  parser: '@typescript-eslint/parser',
+  parserOptions: { project: ['./tsconfig.json'] },
+  plugins: ['@typescript-eslint', 'use-decorator'],
   overrides: [
     {
       files: ['**/*.js', '**/*.mjs'],

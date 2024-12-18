@@ -1,0 +1,28 @@
+diff --git a/node_modules/@web/dev-server-esbuild/dist/EsbuildPlugin.js b/node_modules/@web/dev-server-esbuild/dist/EsbuildPlugin.js
+index af498e5..35095c0 100644
+--- a/node_modules/@web/dev-server-esbuild/dist/EsbuildPlugin.js
++++ b/node_modules/@web/dev-server-esbuild/dist/EsbuildPlugin.js
+@@ -82,10 +82,10 @@ class EsbuildPlugin {
+             return;
+         }
+         const target = (0, getEsbuildTarget_js_1.getEsbuildTarget)(this.esbuildConfig.target, context.headers['user-agent']);
+-        if (target === 'esnext' && loader === 'js') {
+-            // no need run esbuild, this happens when compile target is set to auto and the user is on a modern browser
+-            return;
+-        }
++        // if (target === 'esnext' && loader === 'js') {
++        //     // no need run esbuild, this happens when compile target is set to auto and the user is on a modern browser
++        //     return;
++        // }
+         const filePath = (0, dev_server_core_1.getRequestFilePath)(context.url, this.config.rootDir);
+         if (context.response.is('html')) {
+             this.transformedHtmlFiles.push(context.path);
+@@ -111,7 +111,7 @@ class EsbuildPlugin {
+             const transformOptions = {
+                 sourcefile: filePath,
+                 sourcemap: 'inline',
+-                loader,
++                loader: loader === 'js' ? 'ts' : loader,
+                 target,
+                 // don't set any format for JS-like formats, otherwise esbuild reformats the code unnecessarily
+                 format: ['js', 'jsx', 'ts', 'tsx'].includes(loader) ? undefined : 'esm',

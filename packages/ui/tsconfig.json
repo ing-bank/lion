@@ -1,8 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "experimentalDecorators": true,
     "outDir": "./dist-types",
-    "rootDir": "."
+    "rootDir": ".",
+    
   },
   "include": ["exports", "components"],
   "exclude": ["dist-types"]

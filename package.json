@@ -45,6 +45,7 @@
     "@changesets/cli": "^2.27.9",
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@custom-elements-manifest/to-markdown": "^0.1.0",
+    "@eslint/js": "^9.17.0",
     "@lit-labs/testing": "^0.2.5",
     "@open-wc/building-rollup": "^2.2.3",
     "@open-wc/eslint-config": "^12.0.3",
@@ -62,6 +63,7 @@
     "@types/fs-extra": "^11.0.4",
     "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.9",
+    "@web/dev-server-esbuild": "^1.0.3",
     "@web/dev-server-legacy": "^2.1.1",
     "@web/test-runner": "^0.19.0",
     "@web/test-runner-browserstack": "^0.7.2",
@@ -76,6 +78,7 @@
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-use-decorator": "^0.2.0",
     "eslint-plugin-wc": "^2.2.0",
     "globby": "^14.0.2",
     "husky": "^9.1.6",
@@ -92,6 +95,7 @@
     "semver": "^7.6.3",
     "sinon": "^19.0.2",
     "typescript": "^4.9.5",
+    "typescript-eslint": "^8.18.1",
     "wireit": "^0.14.9"
   },
   "bundlesize": [

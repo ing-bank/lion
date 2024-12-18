@@ -5,6 +5,8 @@ import { absoluteBaseUrlNetlify } from '@rocket/core/helpers';
 import { adjustPluginOptions } from 'plugins-manager';
 import { mdjsSetupCode } from '@mdjs/core';
 import { copy } from '@web/rollup-plugin-copy';
+import { esbuildPlugin } from '@web/dev-server-esbuild';
+import { fileURLToPath } from 'url';
 
 export default {
   presets: [rocketLaunch(), rocketSearch(), rocketBlog()],
@@ -32,4 +34,15 @@ export default {
       return config;
     }),
   ],
+  devServer: {
+    plugins: [
+      esbuildPlugin({
+        ts: true,
+        js: true,
+        target: 'auto',
+        forceTsLoader: true,
+        tsconfig: fileURLToPath(new URL('./tsconfig.json', import.meta.url)),
+      }),
+    ],
+  },
 };
