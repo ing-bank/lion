@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: 'Selector de fecha abierta',
+  openDatepickerLabel: 'Abrir selector de fecha',
 };
