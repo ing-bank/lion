@@ -9,8 +9,10 @@ import { LionOption } from '@lion/ui/listbox.js';
 import { ref } from 'lit/directives/ref.js';
 import { html } from 'lit';
 
+import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import '@lion/ui/define/lion-input-tel-dropdown.js';
 
 /**
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputTel} TemplateDataForDropdownInputTel
@@ -66,6 +68,18 @@ describe('WithFormControlInputTelDropdown', () => {
   // @ts-expect-error
   // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
   runInputTelDropdownSuite({ klass: WithFormControlInputTelDropdown });
+
+  it("it doesn't set the country as modelValue, only as viewValue", async () => {
+    const el = /** @type {LionInputTelDropdown} */ (
+      await fixture(html`
+        <lion-input-tel-dropdown .allowedRegions="${['NL']}"></lion-input-tel-dropdown>
+      `)
+    );
+
+    // @ts-expect-error [allow-protected-in-tests]
+    expect(el._inputNode.value).to.equal('+31');
+    expect(el.modelValue).to.equal('');
+  });
 
   it('focuses the textbox right after selection if selected via opened dropdown if interaction-mode is mac', async () => {
     class InputTelDropdownMac extends LionInputTelDropdown {
@@ -171,5 +185,41 @@ describe('WithFormControlInputTelDropdown', () => {
       // @ts-expect-error [allow-protected-in-tests]
       expect(isActiveElement(el._inputNode)).to.be.false;
     }
+  });
+
+  describe('defaultValidators', () => {
+    /** @type {(value:any) => void} */
+    let resolveLoaded;
+    beforeEach(() => {
+      ({ resolveLoaded } = mockPhoneUtilManager());
+    });
+
+    afterEach(() => {
+      restorePhoneUtilManager();
+    });
+
+    it('without interaction are not called', async () => {
+      const el = /** @type {LionInputTelDropdown} */ (
+        await fixture(html`
+          <lion-input-tel-dropdown .allowedRegions="${['NL']}"></lion-input-tel-dropdown>
+        `)
+      );
+      resolveLoaded(undefined);
+      await aTimeout(0);
+      expect(el.hasFeedbackFor).to.deep.equal([]);
+    });
+
+    it('with interaction are called', async () => {
+      const el = /** @type {LionInputTelDropdown} */ (
+        await fixture(html`
+          <lion-input-tel-dropdown .allowedRegions="${['NL']}"></lion-input-tel-dropdown>
+        `)
+      );
+      el.modelValue = '+31 6';
+
+      resolveLoaded(undefined);
+      await aTimeout(0);
+      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+    });
   });
 });

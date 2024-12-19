@@ -158,11 +158,11 @@ export class LionInputTelDropdown extends LionInputTel {
     super.styles,
     css`
       /**
-           * We need to align the height of the dropdown with the height of the text field.
-           * We target the HTMLDivElement (render wrapper from SlotMixin) here. Its child,
-           * [data-ref=dropdown], recieves a 100% height as well via inline styles (since we
-           * can't target from shadow styles).
-           */
+       * We need to align the height of the dropdown with the height of the text field.
+       * We target the HTMLDivElement (render wrapper from SlotMixin) here. Its child,
+       * [data-ref=dropdown], receives a 100% height as well via inline styles (since we
+       * can't target from shadow styles).
+       */
       ::slotted([slot='prefix']) {
         height: 100%;
       }
@@ -301,7 +301,8 @@ export class LionInputTelDropdown extends LionInputTel {
       } else {
         this.__initializedRegionCode = `+${countryCode}`;
       }
-      this.modelValue = this.__initializedRegionCode;
+      // on init we set the value to the _inputNode and not the modelValue to prevent validation
+      this._inputNode.value = this.__initializedRegionCode;
       this._initialModelValue = this.__initializedRegionCode;
       this.initInteractionState();
     }
