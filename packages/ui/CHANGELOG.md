@@ -1,5 +1,14 @@
 # @lion/ui
 
+## 0.9.1
+
+### Patch Changes
+
+- 67f5735: [input-stepper] move role="spinbutton" and relevant aria attributes to the inputNode
+- 0652492: [input-datepicker] replace spanish literal for openDatepickerLabel
+- a256f73: [input-tel-dropdown] remove the country telephone code from the modelValue on init, only have it as viewValue
+- e117884: show overlay based on overridden "\_showOverlayCondition"
+
 ## 0.9.0
 
 ### Minor Changes
