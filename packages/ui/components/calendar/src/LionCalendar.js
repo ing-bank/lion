@@ -1,26 +1,27 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { property, state } from 'lit/decorators.js';
 import { html, LitElement } from 'lit';
 import {
-  getMonthNames,
-  getWeekdayNames,
-  LocalizeMixin,
   normalizeDateTime,
+  getWeekdayNames,
+  getMonthNames,
+  LocalizeMixin,
 } from '@lion/ui/localize-no-side-effects.js';
 
-import { calendarStyle } from './calendarStyle.js';
-import { createDay } from './utils/createDay.js';
+import { getLastDayPreviousMonth } from './utils/getLastDayPreviousMonth.js';
+import { getFirstDayNextMonth } from './utils/getFirstDayNextMonth.js';
 import { createMultipleMonth } from './utils/createMultipleMonth.js';
+import { getDayMonthYear } from './utils/getDayMonthYear.js';
 import { dataTemplate } from './utils/dataTemplate.js';
 import { dayTemplate } from './utils/dayTemplate.js';
-import { getFirstDayNextMonth } from './utils/getFirstDayNextMonth.js';
-import { getLastDayPreviousMonth } from './utils/getLastDayPreviousMonth.js';
+import { calendarStyle } from './calendarStyle.js';
 import { isSameDate } from './utils/isSameDate.js';
-import { getDayMonthYear } from './utils/getDayMonthYear.js';
+import { createDay } from './utils/createDay.js';
 
 /**
- * @typedef {import('../types/day.js').Day} Day
- * @typedef {import('../types/day.js').Week} Week
  * @typedef {import('../types/day.js').Month} Month
+ * @typedef {import('../types/day.js').Week} Week
+ * @typedef {import('../types/day.js').Day} Day
  */
 
 const isDayButton = /** @param {HTMLElement} el */ el =>
@@ -38,6 +39,83 @@ function isDisabledDayButton(el) {
  * @customElement lion-calendar
  */
 export class LionCalendar extends LocalizeMixin(LitElement) {
+  /**
+   * Minimum date. All dates before will be disabled
+   */
+  @property({ attribute: false })
+  minDate = new Date(0);
+
+  /**
+   * Maximum date. All dates after will be disabled
+   */
+  @property({ attribute: false })
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+  maxDate = new Date(8640000000000000);
+
+  /**
+   * Disable certain dates
+   */
+  @property({ attribute: false })
+  disableDates;
+
+  /**
+   * The selected date, usually synchronized with datepicker-input
+   * Not to be confused with the focused date (therefore not necessarily in active month view)
+   * @type {Date}
+   */
+  @property({ attribute: false })
+  selectedDate;
+
+  /**
+   * The date that
+   * 1. determines the currently visible month
+   * 2. will be focused when the month grid gets focused by the keyboard
+   */
+  @property({ attribute: false })
+  centralDate;
+
+  /**
+   * Weekday that will be displayed in first column of month grid.
+   * 0: sunday, 1: monday, 2: tuesday, 3: wednesday , 4: thursday, 5: friday, 6: saturday
+   * Default is 0
+   * @type {0|1|2|3|4|5|6}
+   */
+  @property({ attribute: false })
+  firstDayOfWeek = 0;
+
+  /**
+   * Weekday header notation, based on Intl DatetimeFormat:
+   * - 'long' (e.g., Thursday)
+   * - 'short' (e.g., Thu)
+   * - 'narrow' (e.g., T).
+   * Default is 'short'
+   * @type {'long'|'short'|'narrow'}
+   */
+  @property({ attribute: false })
+  weekdayHeaderNotation = 'short';
+
+  /**
+   * Different locale for this component scope
+   */
+  @property({ attribute: false })
+  locale;
+
+  /**
+   * The currently focused date (if any)
+   * @type {Date}
+   */
+  @state()
+  __focusedDate;
+
+  /**
+   * Data to render current month grid
+   * @type {{months: Month[]}}
+   */
+  @state()
+  __data = { months: [] };
+
+  __today = normalizeDateTime(new Date());
+
   static get localizeNamespaces() {
     return [
       {
@@ -103,78 +181,11 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     ];
   }
 
-  static get properties() {
-    return {
-      /**
-       * Minimum date. All dates before will be disabled
-       */
-      minDate: { attribute: false },
-
-      /**
-       * Maximum date. All dates after will be disabled
-       */
-      maxDate: { attribute: false },
-
-      /**
-       * Disable certain dates
-       */
-      disableDates: { attribute: false },
-
-      /**
-       * The selected date, usually synchronized with datepicker-input
-       * Not to be confused with the focused date (therefore not necessarily in active month view)
-       */
-      selectedDate: { attribute: false },
-
-      /**
-       * The date that
-       * 1. determines the currently visible month
-       * 2. will be focused when the month grid gets focused by the keyboard
-       */
-      centralDate: { attribute: false },
-
-      /**
-       * Weekday that will be displayed in first column of month grid.
-       * 0: sunday, 1: monday, 2: tuesday, 3: wednesday , 4: thursday, 5: friday, 6: saturday
-       * Default is 0
-       */
-      firstDayOfWeek: { attribute: false },
-
-      /**
-       * Weekday header notation, based on Intl DatetimeFormat:
-       * - 'long' (e.g., Thursday)
-       * - 'short' (e.g., Thu)
-       * - 'narrow' (e.g., T).
-       * Default is 'short'
-       */
-      weekdayHeaderNotation: { attribute: false },
-
-      /**
-       * Different locale for this component scope
-       */
-      locale: { attribute: false },
-
-      /**
-       * The currently focused date (if any)
-       */
-      __focusedDate: { attribute: false },
-
-      /**
-       * Data to render current month grid
-       */
-      __data: { attribute: false },
-    };
-  }
-
   constructor() {
     super();
-    /** @type {{months: Month[]}}
-     * @private
-     */
-    this.__data = { months: [] };
-    this.minDate = new Date(0);
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
-    this.maxDate = new Date(8640000000000000);
+
+    console.debug('con struc tor');
+
     /** @param {Day} day */
     this.dayPreprocessor = day => day;
 
@@ -182,17 +193,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     // eslint-disable-next-line no-unused-vars
     this.disableDates = day => false;
 
-    this.firstDayOfWeek = 0;
-    this.weekdayHeaderNotation = 'short';
-    /** @private */
-    this.__today = normalizeDateTime(new Date());
     /** @type {Date} */
     this.centralDate = this.__today;
-    /**
-     * @type {Date | null}
-     * @private
-     */
-    this.__focusedDate = null;
     /** @private */
     this.__connectedCallbackDone = false;
     /** @private */
@@ -303,10 +305,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   /** @param {import('lit').PropertyValues } changedProperties */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
-    this.__calculateInitialCentralDate();
+    this.#calculateInitialCentralDate();
 
     // setup data for initial render
-    this.__data = this.__createData();
+    this.__data = this.#createData();
   }
 
   disconnectedCallback() {
@@ -352,7 +354,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const updateDataOn = ['centralDate', 'minDate', 'maxDate', 'selectedDate', 'disableDates'];
 
     if (updateDataOn.includes(name) && this.__connectedCallbackDone) {
-      this.__data = this.__createData();
+      this.__data = this.#createData();
     }
   }
 
@@ -379,10 +381,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    */
   static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
-  /**
-   * @private
-   */
-  __calculateInitialCentralDate() {
+  #calculateInitialCentralDate() {
+    console.debug('#calculateInitialCentralDate');
+
     if (this.centralDate === this.__today && this.selectedDate) {
       // initialized with selectedDate only if user didn't provide another one
       this.centralDate = this.selectedDate;
@@ -442,6 +443,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   __renderNavigation() {
     const month = getMonthNames({ locale: this.__getLocale() })[this.centralDate.getMonth()];
     const year = this.centralDate.getFullYear();
+
     return html`
       <div class="calendar__navigation">
         ${this.__renderYearNavigation(month, year)} ${this.__renderMonthNavigation(month, year)}
@@ -684,9 +686,10 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
   /**
    * @param {Day} [options]
-   * @private
    */
-  __createData(options) {
+  #createData(options) {
+    console.debug('createData', this.centralDate);
+
     const data = createMultipleMonth(this.centralDate, {
       firstDayOfWeek: this.firstDayOfWeek,
       ...options,

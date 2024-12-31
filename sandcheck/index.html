@@ -3,22 +3,22 @@
   <head>
     <meta charset="UTF-8" />
  
-    <script type="importmap">
-      {
-        "imports": {
-          "react": "https://esm.sh/react@18.2.0",
-          "react-dom": "https://esm.sh/react-dom@18.2.0",
-          "react-dom/": "https://esm.sh/react-dom@18.2.0/",
-          "@codesandbox/sandpack-react": "https://esm.sh/@codesandbox/sandpack-react@2.8.0"
-        }
-      }
-    </script>
- 
     <script type="module">
       import React from "react";
       import { createRoot } from "react-dom/client";
       import { Sandpack } from "@codesandbox/sandpack-react";
  
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').then((reg) => {
+          if (reg.active) {
+            console.log('serviceworker installed');
+          }
+        })
+        .catch((err) => {
+          console.log('registration failed: ' + err);
+        });
+      }
+
       const root = createRoot(document.getElementById("root"));
       const sandpackComponent = React.createElement(
         Sandpack,

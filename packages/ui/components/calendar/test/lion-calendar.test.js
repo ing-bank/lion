@@ -311,7 +311,7 @@ describe('<lion-calendar>', () => {
         <lion-calendar .centralDate="${new Date('2019/06/01')}"></lion-calendar>
       `);
       const elObj = new CalendarObject(el);
-      expect(el.focusedDate).to.be.null;
+      expect(el.focusedDate).to.be.undefined;
       elObj.getDayEl(15).click();
       expect(isSameDate(/** @type {Date} */ (el.focusedDate), new Date('2019/06/15'))).to.equal(
         true,
