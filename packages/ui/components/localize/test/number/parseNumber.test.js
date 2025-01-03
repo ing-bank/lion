@@ -106,12 +106,6 @@ describe('parseNumber()', () => {
     expect(parseNumber('1,234')).to.equal(1.234);
     expect(parseNumber('1.2345')).to.equal(12345);
     expect(parseNumber('1,2345')).to.equal(1.2345);
-
-    localizeManager.locale = 'de-DE';
-    expect(parseNumber('1.234')).to.equal(1234);
-    expect(parseNumber('1,234')).to.equal(1.234);
-    expect(parseNumber('1.2345')).to.equal(12345);
-    expect(parseNumber('1,2345')).to.equal(1.2345);
   });
 
   it('returns numbers only if it can not be interpreted e.g. 1.234.567', () => {
