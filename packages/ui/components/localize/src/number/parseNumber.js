@@ -16,17 +16,19 @@ import { getDecimalSeparator } from './getDecimalSeparator.js';
  * parseNumber('1,234.56'); // method: heuristic => 1234.56
  *
  * @param {string} value Clean number (only [0-9 ,.]) to be parsed
- * @param {object} options
- * @param {string?} [options.mode] auto|pasted
+ * @param {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} [options] Locale Options
  * @return {string} unparseable|withLocale|heuristic
  */
-function getParseMode(value, { mode = 'auto' } = {}) {
+function getParseMode(value, options = { mode: 'auto' }) {
   const separators = value.match(/[., ]/g);
 
   if (!separators) {
     return 'withLocale';
   }
-  if (mode === 'auto' && separators.length === 1) {
+  if (options.locale) {
+    return 'withLocale';
+  }
+  if (options.mode === 'auto' && separators.length === 1) {
     const decimalLength = value.split(`${separators}`)[1].length;
     if (decimalLength >= 3) {
       return 'withLocale';
