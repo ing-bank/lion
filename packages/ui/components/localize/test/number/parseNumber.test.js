@@ -94,14 +94,24 @@ describe('parseNumber()', () => {
     expect(parseNumber('12,34')).to.equal(12.34);
   });
 
-  it('uses locale to parse amount if there is only one separator e.g. 1.234 and amount of decimals is bigger then 2', () => {
+  it('uses english locale to parse amount if there is only one separator e.g. 1.234 and amount of decimals is bigger then 2', () => {
     localizeManager.locale = 'en-GB';
     expect(parseNumber('1.234')).to.equal(1.234);
     expect(parseNumber('1,234')).to.equal(1234);
     expect(parseNumber('1.2345')).to.equal(1.2345);
     expect(parseNumber('1,2345')).to.equal(12345);
+  });
 
+  it('uses dutch locale to parse amount if there is only one separator e.g. 1.234 and amount of decimals is bigger then 2', () => {
     localizeManager.locale = 'nl-NL';
+    expect(parseNumber('1.234')).to.equal(1234);
+    expect(parseNumber('1,234')).to.equal(1.234);
+    expect(parseNumber('1.2345')).to.equal(12345);
+    expect(parseNumber('1,2345')).to.equal(1.2345);
+  });
+
+  it('uses german locale to parse amount if there is only one separator e.g. 1.234 and amount of decimals is bigger then 2', () => {
+    localizeManager.locale = 'de-DE';
     expect(parseNumber('1.234')).to.equal(1234);
     expect(parseNumber('1,234')).to.equal(1.234);
     expect(parseNumber('1.2345')).to.equal(12345);
@@ -182,5 +192,74 @@ describe('parseNumber()', () => {
         locale: 'es-ES',
       }),
     ).to.equal(6000);
+  });
+
+  it('with english locale and english number format', () => {
+    expect(
+      parseNumber('1,00', {
+        locale: 'en-GB',
+      }),
+    ).to.equal(100);
+    expect(
+      parseNumber('55,55', {
+        locale: 'en-GB',
+      }),
+    ).to.equal(5555);
+    expect(
+      parseNumber('1.00', {
+        locale: 'en-GB',
+      }),
+    ).to.equal(1.0);
+    expect(
+      parseNumber('55.55', {
+        locale: 'en-GB',
+      }),
+    ).to.equal(55.55);
+  });
+
+  it('with dutch locale and dutch number format', () => {
+    expect(
+      parseNumber('1,00', {
+        locale: 'nl-NL',
+      }),
+    ).to.equal(1);
+    expect(
+      parseNumber('55,55', {
+        locale: 'nl-NL',
+      }),
+    ).to.equal(55.55);
+    expect(
+      parseNumber('1.00', {
+        locale: 'nl-NL',
+      }),
+    ).to.equal(100);
+    expect(
+      parseNumber('55.55', {
+        locale: 'nl-NL',
+      }),
+    ).to.equal(5555);
+  });
+
+  it('with german locale and german number format', () => {
+    expect(
+      parseNumber('1,00', {
+        locale: 'de-DE',
+      }),
+    ).to.equal(1);
+    expect(
+      parseNumber('55,55', {
+        locale: 'de-DE',
+      }),
+    ).to.equal(55.55);
+    expect(
+      parseNumber('1.00', {
+        locale: 'de-DE',
+      }),
+    ).to.equal(100);
+    expect(
+      parseNumber('55.55', {
+        locale: 'de-DE',
+      }),
+    ).to.equal(5555);
   });
 });
