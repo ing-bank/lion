@@ -24,6 +24,8 @@ export const OverlayMixinImplementation = superclass =>
       };
     }
 
+    #hasSetup = false;
+
     constructor() {
       super();
       /**
@@ -173,22 +175,23 @@ export const OverlayMixinImplementation = superclass =>
       }
     }
 
-    /**
-     * @param {import('lit-element').PropertyValues } changedProperties
-     */
-    firstUpdated(changedProperties) {
-      super.firstUpdated(changedProperties);
+    connectedCallback() {
+      super.connectedCallback();
 
-      this._setupOverlayCtrl();
+      this.updateComplete.then(() => {
+        if (this.#hasSetup) return;
+        this._setupOverlayCtrl();
+        this.#hasSetup = true;
+      });
     }
 
     async disconnectedCallback() {
       super.disconnectedCallback();
 
-      if (!this._overlayCtrl) return;
-      if (await this.#isMovingInDom()) return;
-
-      this._teardownOverlayCtrl();
+      if (await this._isPermanentlyDisconnected()) {
+        this._teardownOverlayCtrl();
+        this.#hasSetup = false;
+      }
     }
 
     /**
@@ -238,6 +241,8 @@ export const OverlayMixinImplementation = superclass =>
 
     /** @protected */
     _setupOverlayCtrl() {
+      if (this._overlayCtrl) return;
+
       /** @type {OverlayController} */
       this._overlayCtrl = this._defineOverlay({
         contentNode: this._overlayContentNode,
@@ -253,11 +258,12 @@ export const OverlayMixinImplementation = superclass =>
 
     /** @protected */
     _teardownOverlayCtrl() {
+      if (!this._overlayCtrl) return;
+
       this._teardownOpenCloseListeners();
       this.__teardownSyncFromOverlayController();
 
-      /** @type {OverlayController} */
-      (this._overlayCtrl).teardown();
+      /** @type {OverlayController} */ (this._overlayCtrl).teardown();
     }
 
     /**
@@ -396,9 +402,9 @@ export const OverlayMixinImplementation = superclass =>
      * Before we decide to teardown, let's wait to see if we were not just moving nodes around.
      * @return {Promise<boolean>}
      */
-    async #isMovingInDom() {
+    async _isPermanentlyDisconnected() {
       await this.updateComplete;
-      return this.isConnected;
+      return !this.isConnected;
     }
   };
 export const OverlayMixin = dedupeMixin(OverlayMixinImplementation);

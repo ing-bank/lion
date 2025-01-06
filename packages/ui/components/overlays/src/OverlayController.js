@@ -1003,16 +1003,16 @@ export class OverlayController extends EventTarget {
    * @param {{ phase: OverlayPhase }} config
    */
   _handleVisibilityTriggers({ phase }) {
-    if (typeof this.visibilityTriggerFunction !== 'function') return;
-
-    if (phase === 'init') {
-      this.__visibilityTriggerHandler = this.visibilityTriggerFunction({
-        phase,
-        controller: this,
-      });
-    }
-    if (this.__visibilityTriggerHandler[phase]) {
-      this.__visibilityTriggerHandler[phase]();
+    if (typeof this.visibilityTriggerFunction === 'function') {
+      if (phase === 'init') {
+        this.__visibilityTriggerHandler = this.visibilityTriggerFunction({
+          phase,
+          controller: this,
+        });
+      }
+      if (this.__visibilityTriggerHandler[phase]) {
+        this.__visibilityTriggerHandler[phase]();
+      }
     }
   }
 
@@ -1192,7 +1192,6 @@ export class OverlayController extends EventTarget {
       event.composedPath().includes(this.contentNode) ||
       deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
     if (hasPressedInside) return;
-
     this.hide();
   };
 

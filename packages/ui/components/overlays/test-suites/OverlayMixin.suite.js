@@ -1,18 +1,25 @@
-import { expect, fixture, html, nextFrame, aTimeout } from '@open-wc/testing';
-
-import sinon from 'sinon';
+import {
+  unsafeStatic,
+  nextFrame,
+  aTimeout,
+  defineCE,
+  fixture,
+  expect,
+  html,
+} from '@open-wc/testing';
 import { overlays as overlaysManager, OverlayController } from '@lion/ui/overlays.js';
-
-import '@lion/ui/define/lion-dialog.js';
 import { browserDetection } from '@lion/ui/core.js';
+import { cache } from 'lit/directives/cache.js';
+import '@lion/ui/define/lion-dialog.js';
+import { LitElement } from 'lit';
+import sinon from 'sinon';
 
 /**
- * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  * @typedef {import('../types/OverlayMixinTypes.js').DefineOverlayConfig} DefineOverlayConfig
- * @typedef {import('../types/OverlayMixinTypes.js').OverlayHost} OverlayHost
- * @typedef {import('../types/OverlayMixinTypes.js').OverlayMixin} OverlayMixin
- * @typedef {import('lit').LitElement} LitElement
  * @typedef {LitElement & OverlayHost & {_overlayCtrl:OverlayController}} OverlayEl
+ * @typedef {import('../types/OverlayMixinTypes.js').OverlayMixin} OverlayMixin
+ * @typedef {import('../types/OverlayMixinTypes.js').OverlayHost} OverlayHost
+ * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  */
 
 function getGlobalOverlayCtrls() {
@@ -331,6 +338,173 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       }).to.not.throw;
       stub.restore();
     });
+
+    describe('Teardown', () => {
+      it('does not teardown when moving dom nodes', async () => {
+        const el = /** @type {OverlayEl} */ (
+          await fixture(html`
+        <${tag}>
+          <div slot="content">content</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `)
+        );
+        // @ts-expect-error [allow-protected] in tests
+        const teardownSpy = sinon.spy(el, '_teardownOverlayCtrl');
+        // @ts-expect-error [allow-protected] in tests
+        const spyDisconnected = sinon.spy(el, '_isPermanentlyDisconnected');
+
+        // move around in dom
+        const newParent = document.createElement('div');
+        document.body.appendChild(newParent);
+        newParent.appendChild(el);
+        expect(spyDisconnected.callCount).to.equal(1);
+
+        const otherParent = document.createElement('div');
+        document.body.appendChild(otherParent);
+        otherParent.appendChild(el);
+        await aTimeout(0);
+
+        expect(spyDisconnected.callCount).to.equal(2);
+        expect(teardownSpy.callCount).to.equal(0);
+
+        // simulate a permanent disconnect
+        otherParent.removeChild(el);
+        await aTimeout(0);
+
+        expect(teardownSpy.callCount).to.equal(1);
+      });
+
+      it('allows to disconnect and reconnect later', async () => {
+        const el = /** @type {OverlayEl} */ (
+          await fixture(html`
+        <${tag}>
+          <div slot="content">content</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `)
+        );
+        // @ts-expect-error [allow-protected] in tests
+        const teardownSpy = sinon.spy(el, '_teardownOverlayCtrl');
+        // @ts-expect-error [allow-protected] in tests
+        const spyDisconnected = sinon.spy(el, '_isPermanentlyDisconnected');
+        // @ts-expect-error [allow-protected] in tests
+        const setupSpy = sinon.spy(el, '_setupOverlayCtrl');
+
+        // 'permanently' disconnect (although we will reconnect later)
+        const offlineParent = document.createElement('div');
+        offlineParent.appendChild(el);
+        await aTimeout(0);
+
+        expect(spyDisconnected.callCount).to.equal(1);
+        expect(teardownSpy.callCount).to.equal(1);
+
+        // reconnect
+        document.body.appendChild(offlineParent);
+        await aTimeout(0);
+
+        expect(setupSpy.callCount).to.equal(1);
+      });
+
+      it('works with cache directive when reconnected', async () => {
+        class CachingContext extends LitElement {
+          static properties = {
+            switched: { type: Boolean },
+          };
+
+          constructor() {
+            super();
+
+            this.switched = false;
+          }
+
+          get overlayEl() {
+            return this.shadowRoot?.querySelector('#myOverlay');
+          }
+
+          render() {
+            return html`${cache(
+              this.switched
+                ? html`something else`
+                : html`<${tag} id="myOverlay">
+              <div slot="content">content b</div>
+              <button slot="invoker">invoker button b</button>
+            </${tag}>`,
+            )}`;
+          }
+        }
+
+        const cachingTagName = defineCE(CachingContext);
+        const cachingTag = unsafeStatic(cachingTagName);
+
+        const el = /** @type {CachingContext} */ (
+          await fixture(html`
+        <${cachingTag}></${cachingTag}>
+      `)
+        );
+
+        // @ts-expect-error [allow-protected] in tests
+        const teardownSpy = sinon.spy(el.overlayEl, '_teardownOverlayCtrl');
+        // @ts-expect-error [allow-protected] in tests
+        const spyDisconnected = sinon.spy(el.overlayEl, '_isPermanentlyDisconnected');
+        // @ts-expect-error [allow-protected] in tests
+        const setupSpy = sinon.spy(el.overlayEl, '_setupOverlayCtrl');
+
+        el.switched = true;
+        // render the new content
+        await el.updateComplete;
+        // wait for the teardown to complete
+        await el.updateComplete;
+
+        expect(spyDisconnected.callCount).to.equal(1);
+        expect(teardownSpy.callCount).to.equal(1);
+        expect(setupSpy.callCount).to.equal(0);
+
+        el.switched = false;
+        await el.updateComplete;
+
+        expect(setupSpy.callCount).to.equal(1);
+      });
+
+      it('correctly removes event listeners when disconnected from dom', async () => {
+        const el = /** @type {OverlayEl} */ (
+          await fixture(html`
+          <${tag}>
+            <div slot="content">content</div>
+            <button slot="invoker">invoker button</button>
+          </${tag}>
+        `)
+        );
+
+        const eventRemoveSpy = sinon.spy(el._overlayCtrl, 'removeEventListener');
+        el.parentNode?.removeChild(el);
+        await el.updateComplete;
+
+        expect(eventRemoveSpy.callCount).to.equal(0);
+
+        await el.updateComplete;
+        const hasOneInstanceFor = (
+          /** @type {string} */ eventName,
+          /** @type {any[][]} */ eventsToSearch,
+          /** @type {string} */ methodToRemove,
+        ) =>
+          Boolean(
+            eventsToSearch.filter(
+              ([eventToSearch, methodToSearch]) =>
+                eventToSearch === eventName && methodToSearch === methodToRemove,
+            ).length,
+          );
+
+        // @ts-expect-error [allow-private] in tests
+        expect(hasOneInstanceFor('show', eventRemoveSpy.args, el.__onOverlayCtrlShow)).to.be.true;
+        // @ts-expect-error [allow-private] in tests
+        expect(hasOneInstanceFor('hide', eventRemoveSpy.args, el.__onOverlayCtrlHide)).to.be.true;
+        // @ts-expect-error [allow-private] in tests
+        expect(hasOneInstanceFor('before-show', eventRemoveSpy.args, el.__onBeforeShow)).to.be.true;
+        // @ts-expect-error [allow-private] in tests
+        expect(hasOneInstanceFor('before-hide', eventRemoveSpy.args, el.__onBeforeHide)).to.be.true;
+      });
+    });
   });
 
   describe(`OverlayMixin${suffix} nested`, () => {
@@ -388,6 +562,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         const moveTarget = /** @type {OverlayEl} */ (await fixture('<div id="target"></div>'));
         moveTarget.appendChild(el);
         await el.updateComplete;
+
         expect(getGlobalOverlayCtrls().length).to.equal(1);
       }
     });
