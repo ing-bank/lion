@@ -7,6 +7,7 @@ import '@lion/ui/define/lion-select-rich.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
 import { LitElement } from 'lit';
+import sinon from 'sinon';
 import {
   fixture as _fixture,
   unsafeStatic,
@@ -708,6 +709,49 @@ describe('lion-select-rich', () => {
       expect(selectRich.checkedIndex).to.equal(2);
       expect(selectRich.modelValue).to.equal('hotpink');
       expect(/** @type {LionOption} */ (_invokerNode.selectedElement).value).to.equal('hotpink');
+    });
+  });
+
+  describe('Teardown', () => {
+    it('correctly removes event listeners when disconnected from dom', async () => {
+      const el = await fixture(html`
+        <lion-select-rich label="age">
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
+          <lion-option .choiceValue=${20}>Item 2</lion-option>
+        </lion-select-rich>
+      `);
+
+      const { _overlayCtrl } = getSelectRichMembers(el);
+      const eventRemoveSpy = sinon.spy(_overlayCtrl, 'removeEventListener');
+
+      el.parentNode?.removeChild(el);
+
+      expect(eventRemoveSpy.callCount).to.equal(0);
+
+      await el.updateComplete;
+      expect(eventRemoveSpy.callCount).to.equal(0);
+
+      await el.updateComplete;
+
+      const hasOneInstanceFor = (
+        /** @type {string} */ eventName,
+        /** @type {any[][]} */ eventsToSearch,
+        /** @type {string} */ methodToRemove,
+      ) =>
+        Boolean(
+          eventsToSearch.filter(
+            ([eventToSearch, methodToSearch]) =>
+              eventToSearch === eventName && methodToSearch === methodToRemove,
+          ).length,
+        );
+
+      // @ts-expect-error [allow-private] in tests
+      expect(hasOneInstanceFor('show', eventRemoveSpy.args, el.__overlayOnShow)).to.be.true;
+      // @ts-expect-error [allow-private] in tests
+      expect(hasOneInstanceFor('before-show', eventRemoveSpy.args, el.__overlayBeforeShow)).to.be
+        .true;
+      // @ts-expect-error [allow-private] in tests
+      expect(hasOneInstanceFor('hide', eventRemoveSpy.args, el.__overlayOnHide)).to.be.true;
     });
   });
 

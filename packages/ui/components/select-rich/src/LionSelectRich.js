@@ -423,6 +423,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    */
   _teardownOverlayCtrl() {
     super._teardownOverlayCtrl();
+
     this._overlayCtrl.removeEventListener('show', this.__overlayOnShow);
     this._overlayCtrl.removeEventListener('before-show', this.__overlayBeforeShow);
     this._overlayCtrl.removeEventListener('hide', this.__overlayOnHide);
@@ -434,11 +435,12 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @protected
    */
   async _alignInvokerWidth() {
+    await this.updateComplete;
+
     if (!this._overlayCtrl?.content) {
       return;
     }
 
-    await this.updateComplete;
     const initContentDisplay = this._overlayCtrl.content.style.display;
     const initContentMinWidth = this._overlayCtrl.contentWrapperNode.style.minWidth;
     const initContentWidth = this._overlayCtrl.contentWrapperNode.style.width;

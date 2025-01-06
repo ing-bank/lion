@@ -2,6 +2,7 @@
 import { expect, fixture as _fixture, html, unsafeStatic, aTimeout } from '@open-wc/testing';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
+import '../test-helpers/test-router.js';
 import '@lion/ui/define/lion-dialog.js';
 
 /**
@@ -185,6 +186,59 @@ describe('lion-dialog', () => {
       await invokerButton.click();
       await aTimeout(0);
       expect(invokerButton.getAttribute('aria-expanded')).to.equal(null);
+    });
+  });
+
+  describe('Edge cases', () => {
+    it('does not lose click event handler when was detached and reattached', async () => {
+      const el = await fixture(html`
+        <test-router
+          .routingMap="${{
+            a: html`
+              <lion-dialog>
+                <div slot="content" class="dialog">Hey there</div>
+                <button slot="invoker">Popup button</button>
+              </lion-dialog>
+            `,
+            b: html` <div>B</div> `,
+          }}"
+          path="a"
+        ></test-router>
+      `);
+
+      const getDialog = () =>
+        /** @type {LionDialog} */ (el.shadowRoot?.querySelector('lion-dialog'));
+      const getInvoker = () =>
+        /** @type {HTMLElement} */ (getDialog().querySelector('[slot="invoker"]'));
+
+      getInvoker().click();
+      const dialog = getDialog();
+      // @ts-expect-error [allow-protected-in-tests]
+      await dialog._overlayCtrl._showComplete;
+      expect(dialog.opened).to.be.true;
+
+      dialog.close();
+      // @ts-expect-error [allow-protected-in-tests]
+      await dialog._overlayCtrl._hideComplete;
+      expect(dialog.opened).to.be.false;
+
+      const buttonA = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('#path-a'));
+      const buttonB = /** @type {HTMLElement} */ (el.shadowRoot?.querySelector('#path-b'));
+
+      buttonB.click();
+      await el.updateComplete;
+      buttonA.click();
+      await el.updateComplete;
+      await el.updateComplete;
+
+      getInvoker().click();
+
+      const dialogAfterRouteChange = getDialog();
+      // @ts-expect-error [allow-protected-in-tests]
+      expect(dialogAfterRouteChange._overlayCtrl).not.to.be.undefined;
+      // @ts-expect-error [allow-protected-in-tests]
+      await dialogAfterRouteChange._overlayCtrl._showComplete;
+      expect(dialogAfterRouteChange.opened).to.be.true;
     });
   });
 });

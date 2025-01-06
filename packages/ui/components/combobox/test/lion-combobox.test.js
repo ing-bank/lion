@@ -229,6 +229,8 @@ describe('lion-combobox', () => {
             </lion-combobox>
           `)
         );
+        await el.updateComplete;
+
         const { _inputNode } = getComboboxMembers(el);
 
         _inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
