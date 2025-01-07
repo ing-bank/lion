@@ -106,6 +106,14 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
       }
       this.__reformat();
     }
+
+    if (changedProperties.has('formattedValue')) {
+      if (this.filled) {
+        this.formatOptions.mode = 'preformatted';
+      } else {
+        this.formatOptions.mode = 'auto';
+      }
+    }
   }
 
   /**

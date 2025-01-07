@@ -41,7 +41,7 @@ export declare interface FormatNumberOptions extends Intl.NumberFormatOptions {
   // https://en.wikipedia.org/wiki/Decimal_separator#Digit_grouping
   // note the half space in there as well
   groupSeparator?: ',' | '.' | ' ' | '_' | ' ' | "'";
-  mode?: 'pasted' | 'auto';
+  mode?: 'pasted' | 'auto' | 'preformatted';
 
   postProcessors?: Map<string, NumberPostProcessor>;
 }
