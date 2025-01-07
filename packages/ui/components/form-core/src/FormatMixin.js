@@ -546,6 +546,7 @@ const FormatMixinImplementation = superclass =>
       this.formatOptions.mode = 'pasted';
       setTimeout(() => {
         this._isPasting = false;
+        this.formatOptions.mode = 'auto';
       });
     }
 

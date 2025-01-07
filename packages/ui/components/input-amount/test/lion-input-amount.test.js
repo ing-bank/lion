@@ -128,6 +128,21 @@ describe('<lion-input-amount>', () => {
     expect(_inputNode.value).to.equal('100.12');
   });
 
+  it('parses an updated value based on locale', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(
+        html`<lion-input-amount .modelValue=${123456.78} currency="EUR"></lion-input-amount>`,
+      )
+    );
+    const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
+    expect(_inputNode.value).to.equal('123,456.78');
+    _inputNode.value = '123,45';
+    _inputNode.dispatchEvent(new Event('input'));
+    await el.updateComplete;
+    expect(el.modelValue).to.equal(12345);
+    expect(el.formatOptions).to.eql({ mode: 'preformatted', currency: 'EUR' });
+  });
+
   it('sets inputmode attribute to decimal', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(`<lion-input-amount></lion-input-amount>`)

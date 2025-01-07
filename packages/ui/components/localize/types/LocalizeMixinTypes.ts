@@ -21,7 +21,7 @@ export declare interface FormatDateOptions extends Intl.DateTimeFormatOptions {
 
   roundMode?: string;
   returnIfNaN?: string;
-  mode?: 'pasted' | 'auto';
+  mode?: 'pasted' | 'auto' | 'preformatted';
 
   postProcessors?: Map<string, DatePostProcessor>;
 }
