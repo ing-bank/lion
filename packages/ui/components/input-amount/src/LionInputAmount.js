@@ -109,6 +109,8 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
     if (changedProperties.has('formattedValue')) {
       if (this.filled) {
+        // By letting the parser know that the value has been formatted before,
+        // the parser will parse the value based on locale.
         this.formatOptions.mode = 'preformatted';
       } else {
         this.formatOptions.mode = 'auto';
