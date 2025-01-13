@@ -480,7 +480,7 @@ export function runFormatMixinSuite(customConfig) {
           /**
            * @param {FormatClass} el
            */
-          function paste(el, val = 'lorem') {
+          function mimicPaste(el, val = 'lorem') {
             const { _inputNode } = getFormControlMembers(el);
             _inputNode.value = val;
             _inputNode.dispatchEvent(new ClipboardEvent('paste', { bubbles: true }));
@@ -494,7 +494,7 @@ export function runFormatMixinSuite(customConfig) {
           `)
             );
             const formatterSpy = sinon.spy(el, 'formatter');
-            paste(el);
+            mimicPaste(el);
             expect(formatterSpy).to.be.called;
             expect(/** @type {{mode: string}} */ (formatterSpy.args[0][1]).mode).to.equal('pasted');
             await aTimeout(0);
@@ -509,7 +509,7 @@ export function runFormatMixinSuite(customConfig) {
           `)
             );
             const formatterSpy = sinon.spy(el, 'formatter');
-            paste(el);
+            mimicPaste(el);
             expect(formatterSpy).to.have.been.called;
             // @ts-ignore [allow-protected] in test
             expect(el._isPasting).to.be.true;
@@ -526,7 +526,7 @@ export function runFormatMixinSuite(customConfig) {
             );
             // @ts-ignore [allow-protected] in test
             const reflectBackSpy = sinon.spy(el, '_reflectBackOn');
-            paste(el);
+            mimicPaste(el);
             expect(reflectBackSpy).to.have.been.called;
           });
 
@@ -538,8 +538,37 @@ export function runFormatMixinSuite(customConfig) {
             );
             // @ts-ignore [allow-protected] in test
             const reflectBackSpy = sinon.spy(el, '_reflectBackOn');
-            paste(el);
+            mimicPaste(el);
             expect(reflectBackSpy).to.have.been.called;
+          });
+        });
+
+        describe('On user input', () => {
+          it.only('adjusts formatOptions.mode to "user-edit" for parser when user changes value', async () => {
+            const el = /** @type {FormatClass} */ (
+              await fixture(
+                html`<${tag} 
+                  .parser=${sinon.spy(v => v)}
+                ><input slot="input"></${tag}>`,
+              )
+            );
+
+            // We start with auto mode
+            expect(el.formatOptions.mode).to.equal('auto');
+
+            mimicUserInput(el, 'some val');
+            expect(el.formatOptions.mode).to.equal('auto');
+            await el.updateComplete;
+
+            mimicUserInput(el, 'some other val');
+            expect(el.formatOptions.mode).to.equal('user-edit');
+            await el.updateComplete;
+
+            // Formatting should only affect values that should be formatted / parsed as a consequence of user input.
+            // When a user finished editing, the default should be restored.
+            // (think of a progrmatically set modelValue, that should behave idempotent, regardless of when it is set)
+            await aTimeout(0);
+            expect(el.formatOptions.mode).to.equal('auto');
           });
         });
       });

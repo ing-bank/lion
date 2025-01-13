@@ -241,6 +241,8 @@ const FormatMixinImplementation = superclass =>
         return undefined;
       }
 
+      this.#setFormatOptionsForParseOrFormat('user-edit');
+
       // B) parse the view value
 
       // - if result:
@@ -284,6 +286,8 @@ const FormatMixinImplementation = superclass =>
         // In flow [1] (we restore a previously stored modelValue) we should sync down, however.
         return this.modelValue.viewValue;
       }
+
+      this.#setFormatOptionsForParseOrFormat('user-edit');
 
       return this.formatter(this.modelValue, this.formatOptions);
     }
@@ -459,7 +463,7 @@ const FormatMixinImplementation = superclass =>
       /**
        * Configuration object that will be available inside the formatter function
        */
-      this.formatOptions = /** @type {FormatOptions} */ ({});
+      this.formatOptions = /** @type {FormatOptions} */ ({ mode: 'auto' });
 
       /**
        * The view value is the result of the formatter function (when available).
@@ -543,10 +547,8 @@ const FormatMixinImplementation = superclass =>
      */
     __onPaste() {
       this._isPasting = true;
-      this.formatOptions.mode = 'pasted';
-      setTimeout(() => {
+      this.#setFormatOptionsForParseOrFormat('pasted', () => {
         this._isPasting = false;
-        this.formatOptions.mode = 'auto';
       });
     }
 
@@ -587,6 +589,25 @@ const FormatMixinImplementation = superclass =>
         this._inputNode.removeEventListener('compositionstart', this.__onCompositionEvent);
         this._inputNode.removeEventListener('compositionend', this.__onCompositionEvent);
       }
+    }
+
+    /**
+     * @param {'user-edit'|'pasted'} newMode
+     * @param {() => void} [callbackFn]
+     * @returns {void}
+     */
+    #setFormatOptionsForParseOrFormat(newMode, callbackFn) {
+      const isUserEditingOrPasting = Boolean(
+        (this._isHandlingUserInput || this._isPasting) && this.__prevViewValue,
+      );
+      if (!isUserEditingOrPasting) return;
+      if (this.formatOptions.mode !== 'pasted') {
+        this.formatOptions.mode = newMode;
+      }
+      queueMicrotask(() => {
+        this.formatOptions.mode = 'auto';
+        callbackFn?.();
+      });
     }
   };
 

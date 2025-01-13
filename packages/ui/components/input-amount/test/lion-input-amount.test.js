@@ -1,10 +1,11 @@
 import { aTimeout, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit';
-import { localize } from '@lion/ui/localize.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import { LionInputAmount, formatAmount, parseAmount } from '@lion/ui/input-amount.js';
-
+import { mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
+import sinon from 'sinon';
 import '@lion/ui/define/lion-input-amount.js';
 
 /**
@@ -12,6 +13,8 @@ import '@lion/ui/define/lion-input-amount.js';
  */
 
 describe('<lion-input-amount>', () => {
+  const localize = getLocalizeManager();
+
   beforeEach(() => {
     localizeTearDown();
   });
@@ -128,19 +131,30 @@ describe('<lion-input-amount>', () => {
     expect(_inputNode.value).to.equal('100.12');
   });
 
-  it('parses an updated value based on locale', async () => {
+  it('adjusts formatOptions.mode to "user-edit" for parser/formatter when user changes value', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(
         html`<lion-input-amount .modelValue=${123456.78} currency="EUR"></lion-input-amount>`,
       )
     );
-    const { _inputNode } = getInputMembers(/** @type {* & LionInput} */ (el));
-    expect(_inputNode.value).to.equal('123,456.78');
-    _inputNode.value = '123,45';
-    _inputNode.dispatchEvent(new Event('input'));
+    const parserSpy = sinon.spy(el, 'parser');
+    // We start with auto mode
+    expect(el.formatOptions.mode).to.equal('auto');
+    // @ts-expect-error [allow-protected] in test
+    expect(el._inputNode.value).to.equal('123,456.78');
+    // When editing an already existing value, we interpet the separators as they are
+    mimicUserInput(el, '123,45');
     await el.updateComplete;
+
+    expect(parserSpy.args[0]).to.deep.equal(['123,45', { mode: 'user-edit', currency: 'EUR' }]);
     expect(el.modelValue).to.equal(12345);
-    expect(el.formatOptions).to.eql({ mode: 'preformatted', currency: 'EUR' });
+    expect(el.formatOptions.mode).to.equal('user-edit');
+
+    // Formatting should only affect values that should be formatted / parsed as a consequence of user input.
+    // When a user finished editing, the default should be restored.
+    // (think of a programmatically set modelValue, that should behave idempotent, regardless of when it is set)
+    await aTimeout(0);
+    expect(el.formatOptions.mode).to.equal('auto');
   });
 
   it('sets inputmode attribute to decimal', async () => {

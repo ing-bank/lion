@@ -12,5 +12,6 @@ export function mimicUserInput(formControl, newViewValue, { caretIndex } = {}) {
     // eslint-disable-next-line no-param-reassign
     formControl._inputNode.selectionEnd = caretIndex;
   }
+  console.debug(formControl._inputNode);
   formControl._inputNode.dispatchEvent(new Event('input', { bubbles: true }));
 }

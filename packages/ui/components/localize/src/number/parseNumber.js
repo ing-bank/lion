@@ -17,13 +17,15 @@ import { getDecimalSeparator } from './getDecimalSeparator.js';
  *
  * @param {string} value Clean number (only [0-9 ,.]) to be parsed
  * @param {object} options
- * @param {string?} [options.mode] auto|pasted|preformatted
+ * @param {string?} [options.mode] auto|pasted|user-edit
  * @return {string} unparseable|withLocale|heuristic
  */
 function getParseMode(value, { mode = 'auto' } = {}) {
   const separators = value.match(/[., ]/g);
 
-  if (!separators || mode === 'preformatted') {
+  // When a user edits an existin value, we already formatted it with a certain locale.
+  // For best UX, we stick with this locale
+  if (!separators || mode === 'user-edit') {
     return 'withLocale';
   }
   if (mode === 'auto' && separators.length === 1) {
