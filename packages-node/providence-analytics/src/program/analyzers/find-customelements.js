@@ -7,7 +7,7 @@ import { trackDownIdentifierFromScope } from '../utils/track-down-identifier.js'
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
- * @typedef {import('../../../types/index.js').FindCustomelementsConfig} FindCustomelementsConfig
+ * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('@babel/types').File} File
  */
@@ -100,38 +100,21 @@ export default class FindCustomelementsAnalyzer extends Analyzer {
   /** @type {AnalyzerAst} */
   static requiredAst = 'oxc';
 
-  /**
-   * Finds export specifiers and sources
-   * @param {FindCustomelementsConfig} customConfig
-   */
-  async execute(customConfig = {}) {
-    const cfg = {
+  get config() {
+    return {
       targetProjectPath: null,
-      ...customConfig,
+      ...this._customConfig,
     };
+  }
 
-    /**
-     * Prepare
-     */
-    const cachedAnalyzerResult = await this._prepare(cfg);
-    if (cachedAnalyzerResult) {
-      return cachedAnalyzerResult;
-    }
-
-    /**
-     * Traverse
-     */
-    const projectPath = cfg.targetProjectPath;
-    const queryOutput = await this._traverse(async (ast, context) => {
-      let transformedEntry = findCustomElementsPerAstFile(ast);
-      transformedEntry = await trackdownRoot(transformedEntry, context.relativePath, projectPath);
-      transformedEntry = cleanup(transformedEntry);
-      return { result: transformedEntry };
-    });
-
-    /**
-     * Finalize
-     */
-    return this._finalize(queryOutput, cfg);
+  static async analyzeFile(oxcAst, context) {
+    let transformedEntry = findCustomElementsPerAstFile(oxcAst);
+    transformedEntry = await trackdownRoot(
+      transformedEntry,
+      context.relativePath,
+      context.projectData.project.path,
+    );
+    transformedEntry = cleanup(transformedEntry);
+    return { result: transformedEntry };
   }
 }

@@ -348,36 +348,28 @@ export class Analyzer {
   }
 
   /**
-   * @param {FileAstTraverseFn|{traverseEntryFn: FileAstTraverseFn; filePaths:string[]; projectPath: string}} traverseEntryOrConfig
+   * @param {FileAstTraverseFn|{traverseEntryFn: FileAstTraverseFn; filePaths:string[]; projectPath: string; targetData: ProjectInputDataWithMeta}} analyzeFileCfg
    */
-  async _traverse(traverseEntryOrConfig) {
+  static async analyzeProject(analyzeFileCfg) {
     LogService.debug(`Analyzer "${this.name}": started _traverse method`);
 
-    let traverseEntryFn;
     let finalTargetData;
-
-    if (typeof traverseEntryOrConfig === 'function') {
-      traverseEntryFn = traverseEntryOrConfig;
-      finalTargetData = this.targetData;
+    if (!analyzeFileCfg.filePaths) {
+      finalTargetData = analyzeFileCfg.targetData;
     } else {
-      traverseEntryFn = traverseEntryOrConfig.traverseEntryFn;
-      if (!traverseEntryOrConfig.filePaths) {
-        finalTargetData = this.targetData;
-      } else {
-        const { projectPath, projectName } = traverseEntryOrConfig;
-        if (!projectPath) {
-          LogService.error(`[Analyzer._traverse]: you must provide a projectPath`);
-        }
-        finalTargetData = await InputDataService.createDataObject([
-          {
-            project: {
-              name: projectName || '[n/a]',
-              path: projectPath,
-            },
-            entries: traverseEntryOrConfig.filePaths,
-          },
-        ]);
+      const { projectPath, projectName } = analyzeFileCfg;
+      if (!projectPath) {
+        LogService.error(`[Analyzer._traverse]: you must provide a projectPath`);
       }
+      finalTargetData = await InputDataService.createDataObject([
+        {
+          project: {
+            name: projectName || '[n/a]',
+            path: projectPath,
+          },
+          entries: analyzeFileCfg.filePaths,
+        },
+      ]);
     }
 
     /**
@@ -385,9 +377,13 @@ export class Analyzer {
      */
     const astDataProjects = await QueryService.addAstToProjectsData(
       finalTargetData,
-      this.constructor.requiredAst,
+      this.requiredAst,
     );
-    return analyzePerAstFile(astDataProjects[0], traverseEntryFn, this.config);
+    return analyzePerAstFile(
+      astDataProjects[0],
+      analyzeFileCfg.traverseEntryFn,
+      analyzeFileCfg.config,
+    );
   }
 
   /**
@@ -409,11 +405,13 @@ export class Analyzer {
     /**
      * Traverse
      */
-    const queryOutput = await this._traverse({
+    const queryOutput = await /** @type {typeof Analyzer} */ (this.constructor).analyzeProject({
       // @ts-ignore
       traverseEntryFn: this.constructor.analyzeFile,
-      filePaths: cfg.targetFilePaths,
       projectPath: cfg.targetProjectPath,
+      filePaths: cfg.targetFilePaths,
+      targetData: this.targetData,
+      config: this.config,
     });
 
     /**

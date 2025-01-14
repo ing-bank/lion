@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow, no-param-reassign */
 import path from 'path';
 
+// import { transformIntoIterableFindExportsOutput } from './helpers/transform-into-iterable-find-exports-output.js';
 import { getReferencedDeclaration } from '../utils/get-source-code-fragment-of-declaration.js';
 import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
 import { trackDownIdentifier } from '../utils/track-down-identifier.js';
@@ -273,5 +274,11 @@ export default class FindExportsAnalyzer extends Analyzer {
     transformedFile = cleanup(transformedFile);
 
     return { result: transformedFile };
+  }
+
+  static async analyzeProject(...args) {
+    const totalResult = await super.analyzeProject(...args);
+    // return transformIntoIterableFindExportsOutput({ queryOutput: totalResult });
+    return totalResult;
   }
 }
