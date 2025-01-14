@@ -241,8 +241,6 @@ const FormatMixinImplementation = superclass =>
         return undefined;
       }
 
-      this.#setFormatModeForParseOrFormat('user-edit');
-
       // B) parse the view value
 
       // - if result:
@@ -251,7 +249,7 @@ const FormatMixinImplementation = superclass =>
       // Apparently, the parser was not able to produce a satisfactory output for the desired
       // modelValue type, based on the current viewValue. Unparseable allows to restore all
       // states (for instance from a lost user session), since it saves the current viewValue.
-      const result = this.parser(value, this.formatOptions);
+      const result = this.parser(value, { ...this.formatOptions, mode: this.#getFormatMode() });
       return result !== undefined ? result : new Unparseable(value);
     }
 
@@ -272,7 +270,7 @@ const FormatMixinImplementation = superclass =>
       // input into `._inputNode` with modelValue as input)
 
       if (this._isHandlingUserInput && this.hasFeedbackFor?.includes('error') && this._inputNode) {
-        return this._inputNode ? this.value : undefined;
+        return this.value;
       }
 
       if (this.modelValue instanceof Unparseable) {
@@ -282,9 +280,10 @@ const FormatMixinImplementation = superclass =>
         return this.modelValue.viewValue;
       }
 
-      this.#setFormatModeForParseOrFormat('user-edit');
-
-      return this.formatter(this.modelValue, this.formatOptions);
+      return this.formatter(this.modelValue, {
+        ...this.formatOptions,
+        mode: this.#getFormatMode(),
+      });
     }
 
     /**
@@ -540,7 +539,7 @@ const FormatMixinImplementation = superclass =>
      */
     __onPaste() {
       this._isPasting = true;
-      this.#setFormatModeForParseOrFormat('pasted', () => {
+      queueMicrotask(() => {
         this._isPasting = false;
       });
     }
@@ -584,25 +583,15 @@ const FormatMixinImplementation = superclass =>
       }
     }
 
-    /**
-     * @param {'user-edit'|'pasted'} newMode
-     * @param {() => void} [callbackFn]
-     * @returns {void}
-     */
-    #setFormatModeForParseOrFormat(newMode, callbackFn) {
-      const isUserEditingOrPasting = Boolean(
-        this._isPasting || (this._isHandlingUserInput && this.__prevViewValue),
-      );
-      if (!isUserEditingOrPasting) return;
-      // an in-progress mode of 'pasted' takes precedence over 'user-edit'
-      if (this.formatOptions.mode === 'pasted') return;
-
-      this.formatOptions.mode = newMode;
-      //
-      queueMicrotask(() => {
-        this.formatOptions.mode = 'auto';
-        callbackFn?.();
-      });
+    #getFormatMode() {
+      if (this._isPasting) {
+        return 'pasted';
+      }
+      const isUserEditing = this._isHandlingUserInput && this.__prevViewValue;
+      if (isUserEditing) {
+        return 'user-edit';
+      }
+      return 'auto';
     }
   };
 

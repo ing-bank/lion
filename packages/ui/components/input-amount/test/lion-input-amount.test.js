@@ -142,23 +142,24 @@ describe('<lion-input-amount>', () => {
       )
     );
     const parserSpy = sinon.spy(el, 'parser');
+    const formatterSpy = sinon.spy(el, 'formatter');
+
     // @ts-expect-error [allow-protected] in test
     expect(el._inputNode.value).to.equal('123.456,78');
 
     // When editing an already existing value, we interpet the separators as they are
     mimicUserInput(el, '123.456');
-    expect(parserSpy.args[0][1]?.mode).to.equal('user-edit');
-    expect(el.formatOptions.mode).to.equal('user-edit');
+    expect(parserSpy.lastCall.args[1]?.mode).to.equal('user-edit');
+    expect(formatterSpy.lastCall.args[1]?.mode).to.equal('user-edit');
     expect(el.modelValue).to.equal(123456);
     expect(el.formattedValue).to.equal('123.456,00');
 
     // Formatting should only affect values that should be formatted / parsed as a consequence of user input.
     // When a user finished editing, the default should be restored.
     // (think of a programmatically set modelValue, that should behave idempotent, regardless of when it is set)
-    await aTimeout(0);
-    expect(el.modelValue).to.equal(123456);
-    expect(el.formattedValue).to.equal('123.456,00');
-    expect(el.formatOptions.mode).to.equal('auto');
+    el.modelValue = 1234;
+    expect(el.formattedValue).to.equal('1.234,00');
+    expect(formatterSpy.lastCall.args[1]?.mode).to.equal('auto');
   });
 
   it('sets inputmode attribute to decimal', async () => {

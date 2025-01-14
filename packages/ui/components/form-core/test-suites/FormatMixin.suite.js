@@ -498,9 +498,15 @@ export function runFormatMixinSuite(customConfig) {
             const formatterSpy = sinon.spy(el, 'formatter');
             mimicPaste(el);
             expect(formatterSpy).to.be.called;
-            expect(/** @type {{mode: string}} */ (formatterSpy.args[0][1]).mode).to.equal('pasted');
+            expect(/** @type {{mode: string}} */ (formatterSpy.lastCall.args[1]).mode).to.equal(
+              'pasted',
+            );
+            // give microtask of _isPasting chance to reset
             await aTimeout(0);
-            expect(/** @type {{mode: string}} */ (formatterSpy.args[0][1]).mode).to.equal('auto');
+            el.modelValue = 'foo';
+            expect(/** @type {{mode: string}} */ (formatterSpy.lastCall.args[1]).mode).to.equal(
+              'auto',
+            );
           });
 
           it('sets protected value "_isPasting" for Subclassers', async () => {
@@ -547,29 +553,23 @@ export function runFormatMixinSuite(customConfig) {
         describe('On user input', () => {
           it('adjusts formatOptions.mode to "user-edit" for parser when user changes value', async () => {
             const el = /** @type {FormatClass} */ (
-              await fixture(
-                html`<${tag} 
-                  .parser=${sinon.spy(v => v)}
-                ><input slot="input"></${tag}>`,
-              )
+              await fixture(html`<${tag}><input slot="input"></${tag}>`)
             );
 
-            // We start with auto mode
-            expect(el.formatOptions.mode).to.equal('auto');
+            const parserSpy = sinon.spy(el, 'parser');
 
+            // Here we get auto as we start from '' (so there was no value to edit)
             mimicUserInput(el, 'some val');
-            expect(el.formatOptions.mode).to.equal('auto');
+            expect(/** @type {{mode: string}} */ (parserSpy.lastCall.args[1]).mode).to.equal(
+              'auto',
+            );
             await el.updateComplete;
 
             mimicUserInput(el, 'some other val');
-            expect(el.formatOptions.mode).to.equal('user-edit');
+            expect(/** @type {{mode: string}} */ (parserSpy.lastCall.args[1]).mode).to.equal(
+              'user-edit',
+            );
             await el.updateComplete;
-
-            // Formatting should only affect values that should be formatted / parsed as a consequence of user input.
-            // When a user finished editing, the default should be restored.
-            // (think of a progrmatically set modelValue, that should behave idempotent, regardless of when it is set)
-            await aTimeout(0);
-            expect(el.formatOptions.mode).to.equal('auto');
           });
         });
       });
