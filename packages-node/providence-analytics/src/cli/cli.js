@@ -1,6 +1,5 @@
-import path from 'path';
-
 import commander from 'commander';
+import path from 'path';
 
 import { InputDataService } from '../program/core/InputDataService.js';
 import { getCurrentDir } from '../program/utils/get-current-dir.js';

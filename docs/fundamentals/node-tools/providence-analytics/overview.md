@@ -28,7 +28,7 @@ It does this via the [oxc parser](https://oxc.rs/docs/guide/usage/parser.html), 
 Providence expects an analyzer name that tells it what type of analysis to run:
 
 ```bash
-npx providence analyze <analyzer-name>
+npx providence-analytics analyze <analyzer-name>
 ```
 
 By default Providence ships these analyzers:
@@ -42,7 +42,7 @@ By default Providence ships these analyzers:
 Let's say we run `find-imports`:
 
 ```bash
-npx providence analyze find-imports
+npx providence-analytics analyze find-imports
 ```
 
 Now it retrieves all relevant data about es module imports.
@@ -68,14 +68,14 @@ For a "find" analyzer, there is one project involved (the target project).
 We can specify it like this (we override the default current working directory):
 
 ```bash
-npx providence analyze find-imports -t /importing/project
+npx providence-analytics analyze find-imports -t /importing/project
 ```
 
 For a "match" analyzer, there is also a reference project.
 Here we match the exports of the reference project (-r) against the imports of the target project (-t).
 
 ```bash
-npx providence analyze match-imports -t /importing/project -r /exporting/project
+npx providence-analytics analyze match-imports -t /importing/project -r /exporting/project
 ```
 
 ## Utils
@@ -91,5 +91,5 @@ For a better understanding, check out the utils folders (tests and code).
 For more options, see:
 
 ```bash
-npx providence --help
+npx providence-analytics --help
 ```

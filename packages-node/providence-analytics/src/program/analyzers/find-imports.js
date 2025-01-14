@@ -23,16 +23,9 @@ import { Analyzer } from '../core/Analyzer.js';
 
 /**
  * Intends to work for oxc, swc, and babel asts
+ * @param {SwcNode} s
  */
 function getSpecifierValue(s) {
-  // for (const exportedorImportedName of [...exportedNames, ...importedNames]) {
-  //   for (const valueName of valueNames) {
-  //     const result = s[exportedorImportedName][valueName];
-  //     if (result) return result;
-  //   }
-  // }
-  // return undefined;
-
   return (
     // These are regular import values and must be checked first
     s.imported?.value ||
@@ -164,57 +157,35 @@ export default class FindImportsSwcAnalyzer extends Analyzer {
   static requiredAst = /** @type {AnalyzerAst} */ ('oxc');
 
   /**
-   * Finds import specifiers and sources
-   * @param {FindImportsConfig} customConfig
+   * @typedef FindImportsConfig
+   * @property {boolean} [keepInternalSources=false] by default, relative paths like '../x.js' are
+   * filtered out. This option keeps them.
+   * means that 'external-dep/file' will be resolved to 'external-dep/file.js' will both be stored
+   * as the latter
    */
-  async execute(customConfig = {}) {
-    /**
-     * @typedef FindImportsConfig
-     * @property {boolean} [keepInternalSources=false] by default, relative paths like '../x.js' are
-     * filtered out. This option keeps them.
-     * means that 'external-dep/file' will be resolved to 'external-dep/file.js' will both be stored
-     * as the latter
-     */
-    const cfg = {
+  get config() {
+    return {
       targetProjectPath: null,
       // post process file
       keepInternalSources: false,
-      ...customConfig,
+      ...this._customConfig,
     };
+  }
 
-    /**
-     * Prepare
-     */
-    const cachedAnalyzerResult = await this._prepare(cfg);
-    if (cachedAnalyzerResult) {
-      return cachedAnalyzerResult;
+  static async analyzeFile(oxcAst, context) {
+    let transformedFile = findImportsPerAstFile(oxcAst);
+    // Post processing based on configuration...
+    transformedFile = await normalizeSourcePaths(
+      transformedFile,
+      context.relativePath,
+      context.analyzerCfg.targetProjectPath,
+    );
+
+    if (!context.analyzerCfg.keepInternalSources) {
+      // @ts-expect-error
+      transformedFile = transformedFile.filter(entry => !isRelativeSourcePath(entry.source));
     }
 
-    /**
-     * Traverse
-     */
-    const queryOutput = await this._traverse(async (oxcAst, context) => {
-      // @ts-expect-error
-      let transformedFile = findImportsPerAstFile(oxcAst);
-      // Post processing based on configuration...
-      transformedFile = await normalizeSourcePaths(
-        transformedFile,
-        context.relativePath,
-        // @ts-expect-error
-        cfg.targetProjectPath,
-      );
-
-      if (!cfg.keepInternalSources) {
-        // @ts-expect-error
-        transformedFile = transformedFile.filter(entry => !isRelativeSourcePath(entry.source));
-      }
-
-      return { result: transformedFile };
-    });
-
-    /**
-     * Finalize
-     */
-    return this._finalize(queryOutput, cfg);
+    return { result: transformedFile };
   }
 }

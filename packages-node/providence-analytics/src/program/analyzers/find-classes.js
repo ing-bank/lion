@@ -234,37 +234,10 @@ export default class FindClassesAnalyzer extends Analyzer {
   /** @type {AnalyzerAst} */
   static requiredAst = 'oxc';
 
-  /**
-   * Will find all public members (properties (incl. getter/setters)/functions) of a class and
-   * will make a distinction between private, public and protected methods
-   * @param {Partial<FindClassesConfig>} customConfig
-   */
-  async execute(customConfig) {
-    const cfg = customConfig;
-
-    /**
-     * Prepare
-     */
-    const analyzerResult = await this._prepare(cfg);
-    if (analyzerResult) {
-      return analyzerResult;
-    }
-
-    /**
-     * Traverse
-     */
-    /** @type {FindClassesAnalyzerOutput} */
-    const queryOutput = await this._traverse(async (ast, { relativePath }) => {
-      const projectPath = cfg.targetProjectPath;
-      const fullPath = path.resolve(projectPath, relativePath);
-      const transformedEntry = await findMembersPerAstEntry(ast, fullPath, projectPath);
-      return { result: transformedEntry };
-    });
-    // _flattenedFormsPostProcessor();
-
-    /**
-     * Finalize
-     */
-    return this._finalize(queryOutput, cfg);
+  static async analyzeFile(oxcAst, context) {
+    const projectPath = context.analyzerCfg.targetProjectPath;
+    const fullPath = path.resolve(projectPath, context.relativePath);
+    const transformedEntry = await findMembersPerAstEntry(oxcAst, fullPath, projectPath);
+    return { result: transformedEntry };
   }
 }

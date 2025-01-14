@@ -34,6 +34,9 @@ import { AstService } from './AstService.js';
  * @typedef {import('../../../types/index.js').Feature} Feature
  */
 
+/** @type {`.${string}`[]} */
+const defaultExtensions = ['.js', '.ts', '.jsx', '.tsx', '.mjs'];
+
 /**
  * @typedef {(rootPath:PathFromSystemRoot) => PackageJson|undefined} GetPackageJsonFn
  * @type {GetPackageJsonFn}
@@ -179,8 +182,9 @@ const getNpmPackagePaths = memoize((/** @type {PathFromSystemRoot} */ rootPath) 
 });
 
 /**
- * @param {any|any[]} v
- * @returns {any[]}
+ * @template T
+ * @param {T|T[]} v
+ * @returns {T[]}
  */
 function ensureArray(v) {
   return Array.isArray(v) ? v : [v];
@@ -429,7 +433,7 @@ export class InputDataService {
   static get defaultGatherFilesConfig() {
     return {
       allowlist: ['!node_modules/**', '!bower_components/**', '!**/*.conf.js', '!**/*.config.js'],
-      extensions: ['.js'],
+      extensions: defaultExtensions,
       depth: Infinity,
     };
   }
@@ -440,7 +444,7 @@ export class InputDataService {
    * @param {string[]} extensions
    * @returns {string}
    */
-  static _getDefaultGlobDepthPattern(depth = Infinity, extensions = ['.js']) {
+  static _getDefaultGlobDepthPattern(depth = Infinity, extensions = defaultExtensions) {
     // `.{${cfg.extensions.map(e => e.slice(1)).join(',')},}`;
     const extensionsGlobPart = `.{${extensions.map(extension => extension.slice(1)).join(',')},}`;
     if (depth === Infinity) {
@@ -472,6 +476,15 @@ export class InputDataService {
    * @returns {Promise<PathFromSystemRoot[]>} result list of file paths
    */
   static async gatherFilesFromDir(startPath, customConfig = {}) {
+    const allowlistModes = ['npm', 'git', 'all', 'export-map'];
+    if (customConfig.allowlistMode && !allowlistModes.includes(customConfig.allowlistMode)) {
+      throw new Error(
+        `[gatherFilesConfig] Please provide a valid allowListMode like "${allowlistModes.join(
+          '|',
+        )}". Found: "${customConfig.allowlistMode}"`,
+      );
+    }
+
     const cfg = {
       ...this.defaultGatherFilesConfig,
       ...customConfig,
@@ -481,15 +494,6 @@ export class InputDataService {
         ...this.defaultGatherFilesConfig.allowlist,
         ...(customConfig.allowlist || []),
       ];
-    }
-
-    const allowlistModes = ['npm', 'git', 'all', 'export-map'];
-    if (customConfig.allowlistMode && !allowlistModes.includes(customConfig.allowlistMode)) {
-      throw new Error(
-        `[gatherFilesConfig] Please provide a valid allowListMode like "${allowlistModes.join(
-          '|',
-        )}". Found: "${customConfig.allowlistMode}"`,
-      );
     }
 
     if (cfg.allowlistMode === 'export-map') {

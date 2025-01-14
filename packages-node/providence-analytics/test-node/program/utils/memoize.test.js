@@ -424,9 +424,7 @@ describe('Memoize', () => {
             { fn: spy2Memoized, count: 4 },
           ]);
 
-          console.debug('spy3Memoized');
           spy3Memoized();
-          console.debug(memoize.cacheStrategyItems);
           expect(memoize.cacheStrategyItems).to.deep.equal([
             { fn: spy2Memoized, count: 4 },
             { fn: spy3Memoized, count: 1 }, // we start over
