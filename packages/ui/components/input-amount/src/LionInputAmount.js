@@ -106,6 +106,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this._inputNode.setAttribute('inputmode', 'decimal');
 
     this._viewInputNode.addEventListener('focus', this.#swapInputsOnFocus);
+    this._viewInputNode?.setAttribute('aria-hidden', 'true');
     this._inputNode.addEventListener('blur', this.#showViewInput);
     this.#showViewInput();
     this._viewInputNode?.classList.add('form-control');
@@ -120,6 +121,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     }
   }
 
+  // TODO: just swap input type and value of _inputNode with 1 input
   #swapInputsOnFocus = ev => {
     ev.preventDefault();
     ev.stopPropagation();
@@ -130,6 +132,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
 
   #showViewInput = () => {
     this._viewInputNode.style.display = '';
+    // todo: sr only for a11y
     this._inputNode.style.display = 'none';
   };
 
