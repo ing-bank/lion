@@ -8,7 +8,7 @@ import { getLocale } from '../utils/getLocale.js';
  * @returns {string} The separator
  */
 export function getDecimalSeparator(locale, options) {
-  if (options && options.decimalSeparator) {
+  if (options?.decimalSeparator) {
     return options.decimalSeparator;
   }
   const computedLocale = getLocale(locale);

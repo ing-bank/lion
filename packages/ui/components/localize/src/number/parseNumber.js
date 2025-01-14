@@ -54,8 +54,7 @@ function getParseMode(value, { mode = 'auto' } = {}) {
  * @param {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} options Locale Options
  */
 function parseWithLocale(value, options) {
-  const locale = options && options.locale ? options.locale : undefined;
-  const separator = getDecimalSeparator(locale, options);
+  const separator = getDecimalSeparator(options?.locale, options);
   const regexNumberAndLocaleSeparator = new RegExp(`[0-9${separator}-]`, 'g');
   let numberAndLocaleSeparator = value.match(regexNumberAndLocaleSeparator)?.join('');
   if (separator === ',') {

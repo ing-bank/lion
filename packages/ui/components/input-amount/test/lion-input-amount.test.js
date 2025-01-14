@@ -131,29 +131,33 @@ describe('<lion-input-amount>', () => {
     expect(_inputNode.value).to.equal('100.12');
   });
 
-  it('adjusts formatOptions.mode to "user-edit" for parser/formatter when user changes value', async () => {
+  it('adjusts formats with locale when formatOptions.mode is "user-edit"', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(
-        html`<lion-input-amount .modelValue=${123456.78} currency="EUR"></lion-input-amount>`,
+        html`<lion-input-amount
+          .modelValue=${123456.78}
+          currency="EUR"
+          .formatOptions="${{ locale: 'nl-NL' }}"
+        ></lion-input-amount>`,
       )
     );
     const parserSpy = sinon.spy(el, 'parser');
-    // We start with auto mode
-    expect(el.formatOptions.mode).to.equal('auto');
     // @ts-expect-error [allow-protected] in test
-    expect(el._inputNode.value).to.equal('123,456.78');
-    // When editing an already existing value, we interpet the separators as they are
-    mimicUserInput(el, '123,45');
-    await el.updateComplete;
+    expect(el._inputNode.value).to.equal('123.456,78');
 
-    expect(parserSpy.args[0]).to.deep.equal(['123,45', { mode: 'user-edit', currency: 'EUR' }]);
-    expect(el.modelValue).to.equal(12345);
+    // When editing an already existing value, we interpet the separators as they are
+    mimicUserInput(el, '123.456');
+    expect(parserSpy.args[0][1]?.mode).to.equal('user-edit');
     expect(el.formatOptions.mode).to.equal('user-edit');
+    expect(el.modelValue).to.equal(123456);
+    expect(el.formattedValue).to.equal('123.456,00');
 
     // Formatting should only affect values that should be formatted / parsed as a consequence of user input.
     // When a user finished editing, the default should be restored.
     // (think of a programmatically set modelValue, that should behave idempotent, regardless of when it is set)
     await aTimeout(0);
+    expect(el.modelValue).to.equal(123456);
+    expect(el.formattedValue).to.equal('123.456,00');
     expect(el.formatOptions.mode).to.equal('auto');
   });
 

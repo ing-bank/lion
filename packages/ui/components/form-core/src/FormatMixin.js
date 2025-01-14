@@ -241,7 +241,7 @@ const FormatMixinImplementation = superclass =>
         return undefined;
       }
 
-      this.#setFormatOptionsForParseOrFormat('user-edit');
+      this.#setFormatModeForParseOrFormat('user-edit');
 
       // B) parse the view value
 
@@ -271,12 +271,7 @@ const FormatMixinImplementation = superclass =>
       // imperatively, we DO want to format a value (it is the only way to get meaningful
       // input into `._inputNode` with modelValue as input)
 
-      if (
-        this._isHandlingUserInput &&
-        this.hasFeedbackFor?.length &&
-        this.hasFeedbackFor.includes('error') &&
-        this._inputNode
-      ) {
+      if (this._isHandlingUserInput && this.hasFeedbackFor?.includes('error') && this._inputNode) {
         return this._inputNode ? this.value : undefined;
       }
 
@@ -287,7 +282,7 @@ const FormatMixinImplementation = superclass =>
         return this.modelValue.viewValue;
       }
 
-      this.#setFormatOptionsForParseOrFormat('user-edit');
+      this.#setFormatModeForParseOrFormat('user-edit');
 
       return this.formatter(this.modelValue, this.formatOptions);
     }
@@ -352,7 +347,6 @@ const FormatMixinImplementation = superclass =>
      * @private
      */
     __handlePreprocessor() {
-      const unprocessedValue = this.value;
       let currentCaretIndex = this.value.length;
       // Be gentle with Safari
       if (
@@ -368,7 +362,6 @@ const FormatMixinImplementation = superclass =>
         prevViewValue: this.__prevViewValue,
       });
 
-      this.__prevViewValue = unprocessedValue;
       if (preprocessedValue === undefined) {
         // Make sure we do no set back original value, so we preserve
         // caret index (== selectionStart/selectionEnd)
@@ -547,7 +540,7 @@ const FormatMixinImplementation = superclass =>
      */
     __onPaste() {
       this._isPasting = true;
-      this.#setFormatOptionsForParseOrFormat('pasted', () => {
+      this.#setFormatModeForParseOrFormat('pasted', () => {
         this._isPasting = false;
       });
     }
@@ -596,14 +589,16 @@ const FormatMixinImplementation = superclass =>
      * @param {() => void} [callbackFn]
      * @returns {void}
      */
-    #setFormatOptionsForParseOrFormat(newMode, callbackFn) {
+    #setFormatModeForParseOrFormat(newMode, callbackFn) {
       const isUserEditingOrPasting = Boolean(
-        (this._isHandlingUserInput || this._isPasting) && this.__prevViewValue,
+        this._isPasting || (this._isHandlingUserInput && this.__prevViewValue),
       );
       if (!isUserEditingOrPasting) return;
-      if (this.formatOptions.mode !== 'pasted') {
-        this.formatOptions.mode = newMode;
-      }
+      // an in-progress mode of 'pasted' takes precedence over 'user-edit'
+      if (this.formatOptions.mode === 'pasted') return;
+
+      this.formatOptions.mode = newMode;
+      //
       queueMicrotask(() => {
         this.formatOptions.mode = 'auto';
         callbackFn?.();
