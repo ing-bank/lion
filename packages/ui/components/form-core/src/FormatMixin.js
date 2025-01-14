@@ -101,6 +101,7 @@ const FormatMixinImplementation = superclass =>
       // if not yet connected to dom can't change the value
       if (this._inputNode) {
         this._inputNode.value = value;
+        this._viewInputNode.value = value;
         /** @type {string | undefined} */
         this.__value = undefined;
       } else {

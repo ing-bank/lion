@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import { css, html } from 'lit';
 import { LionInput } from '@lion/ui/input.js';
 import { getCurrencyName, LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { IsNumber } from '@lion/ui/form-core.js';
@@ -51,6 +51,7 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
         el.textContent = this.__currencyLabel;
         return el;
       },
+      'view-input': () => html`<input />`,
     };
   }
 
@@ -79,14 +80,76 @@ export class LionInputAmount extends LocalizeMixin(LionInput) {
     this._currencyDisplayNodeSlot = 'after';
   }
 
+  get _viewInputNode() {
+    return Array.from(this.children).find(child => child.slot === 'view-input');
+  }
+
+  /**
+   * @enhance FormControlMixin
+   * @return {import('lit').TemplateResult}
+   * @protected
+   */
+  // eslint-disable-next-line class-methods-use-this
+  _inputGroupInputTemplate() {
+    return html`
+      <div class="input-group__input">
+        <slot name="input"></slot>
+        <slot name="view-input"></slot>
+      </div>
+    `;
+  }
+
   connectedCallback() {
     // eslint-disable-next-line wc/guard-super-call
     super.connectedCallback();
     this.type = 'text';
     this._inputNode.setAttribute('inputmode', 'decimal');
 
+    this._viewInputNode.addEventListener('focus', this.#swapInputsOnFocus);
+    this._inputNode.addEventListener('blur', this.#showViewInput);
+    this.#showViewInput();
+    this._viewInputNode?.classList.add('form-control');
+
+    this.updateComplete.then(() => {
+      this._inputNode.type = 'number';
+      this._inputNode.step = 0.01;
+    });
+
     if (this.currency) {
       this.__setCurrencyDisplayLabel();
+    }
+  }
+
+  #swapInputsOnFocus = ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this._viewInputNode.style.display = 'none';
+    this._inputNode.style.display = '';
+    this._inputNode.focus();
+  };
+
+  #showViewInput = () => {
+    this._viewInputNode.style.display = '';
+    this._inputNode.style.display = 'none';
+  };
+
+  /**
+   * The view value. Will be delegated to `._inputNode.value`
+   */
+  get value() {
+    return (this._inputNode && this._inputNode.value) || this.__value || '';
+  }
+
+  /** @param {string} value */
+  set value(value) {
+    // if not yet connected to dom can't change the value
+    if (this._inputNode) {
+      this._inputNode.value = parseAmount(value, this.formatOptions) || '';
+      this._viewInputNode.value = value;
+      /** @type {string | undefined} */
+      this.__value = undefined;
+    } else {
+      this.__value = value;
     }
   }
 
