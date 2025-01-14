@@ -60,4 +60,11 @@ describe('parseAmount()', async () => {
     expect(parseAmount('foo1', { mode: 'pasted' })).to.equal(1);
     expect(parseAmount('EUR 1,50', { mode: 'pasted' })).to.equal(1.5);
   });
+
+  it('parses based on locale when "user-edit" mode used', async () => {
+    expect(parseAmount('123,456.78', { mode: 'auto' })).to.equal(123456.78);
+    expect(parseAmount('123,456.78', { mode: 'user-edit' })).to.equal(123456.78);
+    expect(parseAmount('123.456,78', { mode: 'auto' })).to.equal(123456.78);
+    expect(parseAmount('123.456,78', { mode: 'user-edit' })).to.equal(123.45678);
+  });
 });

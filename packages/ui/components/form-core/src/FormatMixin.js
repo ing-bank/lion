@@ -101,6 +101,7 @@ const FormatMixinImplementation = superclass =>
       // if not yet connected to dom can't change the value
       if (this._inputNode) {
         this._inputNode.value = value;
+        this._viewInputNode.value = value;
         /** @type {string | undefined} */
         this.__value = undefined;
       } else {
@@ -249,7 +250,7 @@ const FormatMixinImplementation = superclass =>
       // Apparently, the parser was not able to produce a satisfactory output for the desired
       // modelValue type, based on the current viewValue. Unparseable allows to restore all
       // states (for instance from a lost user session), since it saves the current viewValue.
-      const result = this.parser(value, this.formatOptions);
+      const result = this.parser(value, { ...this.formatOptions, mode: this.#getFormatMode() });
       return result !== undefined ? result : new Unparseable(value);
     }
 
@@ -269,13 +270,8 @@ const FormatMixinImplementation = superclass =>
       // imperatively, we DO want to format a value (it is the only way to get meaningful
       // input into `._inputNode` with modelValue as input)
 
-      if (
-        this._isHandlingUserInput &&
-        this.hasFeedbackFor?.length &&
-        this.hasFeedbackFor.includes('error') &&
-        this._inputNode
-      ) {
-        return this._inputNode ? this.value : undefined;
+      if (this._isHandlingUserInput && this.hasFeedbackFor?.includes('error') && this._inputNode) {
+        return this.value;
       }
 
       if (this.modelValue instanceof Unparseable) {
@@ -285,7 +281,10 @@ const FormatMixinImplementation = superclass =>
         return this.modelValue.viewValue;
       }
 
-      return this.formatter(this.modelValue, this.formatOptions);
+      return this.formatter(this.modelValue, {
+        ...this.formatOptions,
+        mode: this.#getFormatMode(),
+      });
     }
 
     /**
@@ -348,7 +347,6 @@ const FormatMixinImplementation = superclass =>
      * @private
      */
     __handlePreprocessor() {
-      const unprocessedValue = this.value;
       let currentCaretIndex = this.value.length;
       // Be gentle with Safari
       if (
@@ -364,7 +362,6 @@ const FormatMixinImplementation = superclass =>
         prevViewValue: this.__prevViewValue,
       });
 
-      this.__prevViewValue = unprocessedValue;
       if (preprocessedValue === undefined) {
         // Make sure we do no set back original value, so we preserve
         // caret index (== selectionStart/selectionEnd)
@@ -459,7 +456,7 @@ const FormatMixinImplementation = superclass =>
       /**
        * Configuration object that will be available inside the formatter function
        */
-      this.formatOptions = /** @type {FormatOptions} */ ({});
+      this.formatOptions = /** @type {FormatOptions} */ ({ mode: 'auto' });
 
       /**
        * The view value is the result of the formatter function (when available).
@@ -543,10 +540,8 @@ const FormatMixinImplementation = superclass =>
      */
     __onPaste() {
       this._isPasting = true;
-      this.formatOptions.mode = 'pasted';
-      setTimeout(() => {
+      queueMicrotask(() => {
         this._isPasting = false;
-        this.formatOptions.mode = 'auto';
       });
     }
 
@@ -587,6 +582,17 @@ const FormatMixinImplementation = superclass =>
         this._inputNode.removeEventListener('compositionstart', this.__onCompositionEvent);
         this._inputNode.removeEventListener('compositionend', this.__onCompositionEvent);
       }
+    }
+
+    #getFormatMode() {
+      if (this._isPasting) {
+        return 'pasted';
+      }
+      const isUserEditing = this._isHandlingUserInput && this.__prevViewValue;
+      if (isUserEditing) {
+        return 'user-edit';
+      }
+      return 'auto';
     }
   };
 

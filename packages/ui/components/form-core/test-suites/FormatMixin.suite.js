@@ -5,6 +5,8 @@ import sinon from 'sinon';
 import { Unparseable, Validator, FormatMixin } from '@lion/ui/form-core.js';
 import { getFormControlMembers, mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
 
+const isLionInputStepper = (/** @type {FormatClass} */ el) => 'valueTextMapping' in el;
+
 /**
  * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost
  * @typedef {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType
@@ -480,7 +482,7 @@ export function runFormatMixinSuite(customConfig) {
           /**
            * @param {FormatClass} el
            */
-          function paste(el, val = 'lorem') {
+          function mimicPaste(el, val = 'lorem') {
             const { _inputNode } = getFormControlMembers(el);
             _inputNode.value = val;
             _inputNode.dispatchEvent(new ClipboardEvent('paste', { bubbles: true }));
@@ -494,12 +496,17 @@ export function runFormatMixinSuite(customConfig) {
           `)
             );
             const formatterSpy = sinon.spy(el, 'formatter');
-            paste(el);
+            mimicPaste(el);
             expect(formatterSpy).to.be.called;
-            expect(/** @type {{mode: string}} */ (formatterSpy.args[0][1]).mode).to.equal('pasted');
+            expect(/** @type {{mode: string}} */ (formatterSpy.lastCall.args[1]).mode).to.equal(
+              'pasted',
+            );
+            // give microtask of _isPasting chance to reset
             await aTimeout(0);
-            mimicUserInput(el, '');
-            expect(/** @type {{mode: string}} */ (formatterSpy.args[0][1]).mode).to.equal('auto');
+            el.modelValue = 'foo';
+            expect(/** @type {{mode: string}} */ (formatterSpy.lastCall.args[1]).mode).to.equal(
+              'auto',
+            );
           });
 
           it('sets protected value "_isPasting" for Subclassers', async () => {
@@ -509,7 +516,7 @@ export function runFormatMixinSuite(customConfig) {
           `)
             );
             const formatterSpy = sinon.spy(el, 'formatter');
-            paste(el);
+            mimicPaste(el);
             expect(formatterSpy).to.have.been.called;
             // @ts-ignore [allow-protected] in test
             expect(el._isPasting).to.be.true;
@@ -526,7 +533,7 @@ export function runFormatMixinSuite(customConfig) {
             );
             // @ts-ignore [allow-protected] in test
             const reflectBackSpy = sinon.spy(el, '_reflectBackOn');
-            paste(el);
+            mimicPaste(el);
             expect(reflectBackSpy).to.have.been.called;
           });
 
@@ -538,8 +545,31 @@ export function runFormatMixinSuite(customConfig) {
             );
             // @ts-ignore [allow-protected] in test
             const reflectBackSpy = sinon.spy(el, '_reflectBackOn');
-            paste(el);
+            mimicPaste(el);
             expect(reflectBackSpy).to.have.been.called;
+          });
+        });
+
+        describe('On user input', () => {
+          it('adjusts formatOptions.mode to "user-edit" for parser when user changes value', async () => {
+            const el = /** @type {FormatClass} */ (
+              await fixture(html`<${tag}><input slot="input"></${tag}>`)
+            );
+
+            const parserSpy = sinon.spy(el, 'parser');
+
+            // Here we get auto as we start from '' (so there was no value to edit)
+            mimicUserInput(el, 'some val');
+            expect(/** @type {{mode: string}} */ (parserSpy.lastCall.args[1]).mode).to.equal(
+              'auto',
+            );
+            await el.updateComplete;
+
+            mimicUserInput(el, 'some other val');
+            expect(/** @type {{mode: string}} */ (parserSpy.lastCall.args[1]).mode).to.equal(
+              'user-edit',
+            );
+            await el.updateComplete;
           });
         });
       });
@@ -595,6 +625,43 @@ export function runFormatMixinSuite(customConfig) {
           expect(preprocessorSpy.callCount).to.equal(2);
           expect(parserSpy.lastCall.args[0]).to.equal(val);
           expect(_inputNode.value).to.equal(val);
+        });
+
+        it('does only calculate derived values as consequence of user input when preprocessed value is different from previous view value', async () => {
+          const val = generateValueBasedOnType({ viewValue: true }) || 'init-value';
+          if (typeof val !== 'string') return;
+
+          const preprocessorSpy = sinon.spy(v => v.replace(/\$$/g, ''));
+          const el = /** @type {FormatClass} */ (
+            await fixture(html`
+          <${tag} .preprocessor=${preprocessorSpy}>
+            <input slot="input" .value="${val}">
+          </${tag}>
+        `)
+          );
+
+          // TODO: find out why we need to skip this for lion-input-stepper
+          if (isLionInputStepper(el)) return;
+
+          /**
+           * The _calculateValues method is called inside _onUserInputChanged w/o providing args
+           * @param {sinon.SinonSpyCall} call
+           * @returns {boolean}
+           */
+          const isCalculateCallAfterUserInput = call => call.args[0]?.length === 0;
+
+          const didRecalculateAfterUserInput = (/** @type {sinon.SinonSpy<any[], any>} */ spy) =>
+            spy.callCount > 1 && !spy.getCalls().find(isCalculateCallAfterUserInput);
+
+          // @ts-expect-error [allow-protected] in test
+          const calcValuesSpy = sinon.spy(el, '_calculateValues');
+          // this value gets preprocessed to 'val'
+          mimicUserInput(el, `${val}$`);
+          expect(didRecalculateAfterUserInput(calcValuesSpy)).to.be.false;
+
+          // this value gets preprocessed to 'value' (and thus differs from previous)
+          mimicUserInput(el, `${val}ue$`);
+          expect(didRecalculateAfterUserInput(calcValuesSpy)).to.be.true;
         });
 
         it('does not preprocess during composition', async () => {

@@ -1,7 +1,7 @@
 import { parseNumber, getFractionDigits } from '@lion/ui/localize-no-side-effects.js';
 
 /**
- * @typedef {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} FormatOptions
+ * @typedef {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} FormatNumberOptions
  */
 
 /**
@@ -28,7 +28,7 @@ function round(value, decimals) {
  * parseAmount('1,234.56', {currency: 'JOD'}); => 1234.560
  *
  * @param {string} value Number to be parsed
- * @param {FormatOptions} [givenOptions] Locale Options
+ * @param {FormatNumberOptions} [givenOptions] Locale Options
  */
 export function parseAmount(value, givenOptions) {
   const unmatchedInput = value.match(/[^0-9,.\- ]/g);
@@ -44,7 +44,7 @@ export function parseAmount(value, givenOptions) {
     return undefined;
   }
 
-  /** @type {FormatOptions} */
+  /** @type {FormatNumberOptions} */
   const options = {
     ...givenOptions,
   };

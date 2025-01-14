@@ -17,13 +17,15 @@ import { getDecimalSeparator } from './getDecimalSeparator.js';
  *
  * @param {string} value Clean number (only [0-9 ,.]) to be parsed
  * @param {object} options
- * @param {string?} [options.mode] auto|pasted
+ * @param {string?} [options.mode] auto|pasted|user-edit
  * @return {string} unparseable|withLocale|heuristic
  */
 function getParseMode(value, { mode = 'auto' } = {}) {
   const separators = value.match(/[., ]/g);
 
-  if (!separators) {
+  // When a user edits an existin value, we already formatted it with a certain locale.
+  // For best UX, we stick with this locale
+  if (!separators || mode === 'user-edit') {
     return 'withLocale';
   }
   if (mode === 'auto' && separators.length === 1) {
@@ -52,8 +54,7 @@ function getParseMode(value, { mode = 'auto' } = {}) {
  * @param {import('../../types/LocalizeMixinTypes.js').FormatNumberOptions} options Locale Options
  */
 function parseWithLocale(value, options) {
-  const locale = options && options.locale ? options.locale : undefined;
-  const separator = getDecimalSeparator(locale, options);
+  const separator = getDecimalSeparator(options?.locale, options);
   const regexNumberAndLocaleSeparator = new RegExp(`[0-9${separator}-]`, 'g');
   let numberAndLocaleSeparator = value.match(regexNumberAndLocaleSeparator)?.join('');
   if (separator === ',') {
