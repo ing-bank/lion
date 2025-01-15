@@ -131,7 +131,7 @@ describe('<lion-input-amount>', () => {
     expect(_inputNode.value).to.equal('100.12');
   });
 
-  it('adjusts formats with locale when formatOptions.mode is "user-edit"', async () => {
+  it('adjusts formats with locale when formatOptions.mode is "user-edited"', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(
         html`<lion-input-amount
@@ -149,8 +149,8 @@ describe('<lion-input-amount>', () => {
 
     // When editing an already existing value, we interpet the separators as they are
     mimicUserInput(el, '123.456');
-    expect(parserSpy.lastCall.args[1]?.mode).to.equal('user-edit');
-    expect(formatterSpy.lastCall.args[1]?.mode).to.equal('user-edit');
+    expect(parserSpy.lastCall.args[1]?.mode).to.equal('user-edited');
+    expect(formatterSpy.lastCall.args[1]?.mode).to.equal('user-edited');
     expect(el.modelValue).to.equal(123456);
     expect(el.formattedValue).to.equal('123.456,00');
 

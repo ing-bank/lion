@@ -551,7 +551,7 @@ export function runFormatMixinSuite(customConfig) {
         });
 
         describe('On user input', () => {
-          it('adjusts formatOptions.mode to "user-edit" for parser when user changes value', async () => {
+          it('adjusts formatOptions.mode to "user-edited" for parser when user changes value', async () => {
             const el = /** @type {FormatClass} */ (
               await fixture(html`<${tag}><input slot="input"></${tag}>`)
             );
@@ -567,9 +567,41 @@ export function runFormatMixinSuite(customConfig) {
 
             mimicUserInput(el, 'some other val');
             expect(/** @type {{mode: string}} */ (parserSpy.lastCall.args[1]).mode).to.equal(
-              'user-edit',
+              'user-edited',
             );
+          });
+
+          it('adjusts formatOptions.viewValueStates when user already formatted value', async () => {
+            const el = /** @type {FormatClass} */ (
+              await fixture(html`<${tag}><input slot="input"></${tag}>`)
+            );
+
+            // Neutralize config, so that we know for sure that the user has formatted the value
+            // when this suite is run on extended classes
+
+            // always reflect back formattedVlaue to view (instead of on blur or else)
+            // @ts-expect-error [allow-protected] in test
+            el._reflectBackOn = () => true;
+            // avoid non-formatted values due to validators in extended classes
+            el.defaultValidators = [];
+            // avoid Unparseable due to parsers in extended classes
+            el.parser = v => v;
+            // @ts-expect-error
+            el.formatter = v => v;
+
+            const parserSpy = sinon.spy(el, 'parser');
+            const formatterSpy = sinon.spy(el, 'formatter');
+
+            mimicUserInput(el, 'some val');
+            expect(parserSpy.lastCall.args[1].viewValueStates).to.not.include('formatted');
+            // @ts-expect-error
+            expect(formatterSpy.lastCall.args[1].viewValueStates).to.not.include('formatted');
             await el.updateComplete;
+
+            mimicUserInput(el, 'some other val');
+            expect(parserSpy.lastCall.args[1].viewValueStates).to.include('formatted');
+            // @ts-expect-error
+            expect(formatterSpy.lastCall.args[1].viewValueStates).to.include('formatted');
           });
         });
       });
