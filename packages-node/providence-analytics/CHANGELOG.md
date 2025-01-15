@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.18.0
+
+### Minor Changes
+
+- 71992cc: update version of oxc; cleanup; include .ts(x) and jsx by default
+
 ## 0.17.3
 
 ### Patch Changes
