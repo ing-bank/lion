@@ -16,16 +16,18 @@ import { getDecimalSeparator } from './getDecimalSeparator.js';
  * parseNumber('1,234.56'); // method: heuristic => 1234.56
  *
  * @param {string} value Clean number (only [0-9 ,.]) to be parsed
- * @param {object} options
- * @param {string?} [options.mode] auto|pasted|user-edit
+ * @param {{mode?:'auto'|'pasted'|'user-edited'; viewValueStates?:string[]}} options
  * @return {string} unparseable|withLocale|heuristic
  */
-function getParseMode(value, { mode = 'auto' } = {}) {
+function getParseMode(value, { mode = 'auto', viewValueStates } = {}) {
   const separators = value.match(/[., ]/g);
 
-  // When a user edits an existin value, we already formatted it with a certain locale.
+  // When a user edits an existing value, we already formatted it with a certain locale.
   // For best UX, we stick with this locale
-  if (!separators || mode === 'user-edit') {
+  const shouldAlignWithExistingSeparators =
+    viewValueStates?.includes('formatted') && mode === 'user-edited';
+
+  if (!separators || shouldAlignWithExistingSeparators) {
     return 'withLocale';
   }
   if (mode === 'auto' && separators.length === 1) {

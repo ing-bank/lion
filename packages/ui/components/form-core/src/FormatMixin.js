@@ -1,14 +1,15 @@
 /* eslint-disable class-methods-use-this */
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
+
+import { ValidateMixin } from './validate/ValidateMixin.js';
 import { FormControlMixin } from './FormControlMixin.js';
 import { Unparseable } from './validate/Unparseable.js';
-import { ValidateMixin } from './validate/ValidateMixin.js';
 
 /**
- * @typedef {import('../types/FormatMixinTypes.js').FormatMixin} FormatMixin
- * @typedef {import('../types/FormatMixinTypes.js').FormatOptions} FormatOptions
  * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
+ * @typedef {import('../types/FormatMixinTypes.js').FormatOptions} FormatOptions
+ * @typedef {import('../types/FormatMixinTypes.js').FormatMixin} FormatMixin
  */
 
 // For a future breaking release:
@@ -70,6 +71,16 @@ const FormatMixinImplementation = superclass =>
     }
 
     /**
+     * During format/parse, we sometimes need to know how the current viewValue the user
+     * interacts with "came to be". Was it already formatted before for instance?
+     * If so, in case of an amount input, we might want to stick to the curent interpretation of separators.
+     */
+    #viewValueState = {
+      didFormatterOutputSyncToView: false,
+      didFormatterRun: false,
+    };
+
+    /**
      * @param {string} [name]
      * @param {unknown} [oldValue]
      * @param {import('lit').PropertyDeclaration} [options]
@@ -93,7 +104,7 @@ const FormatMixinImplementation = superclass =>
      * The view value. Will be delegated to `._inputNode.value`
      */
     get value() {
-      return (this._inputNode && this._inputNode.value) || this.__value || '';
+      return this._inputNode?.value || this.__value || '';
     }
 
     /** @param {string} value */
@@ -249,7 +260,11 @@ const FormatMixinImplementation = superclass =>
       // Apparently, the parser was not able to produce a satisfactory output for the desired
       // modelValue type, based on the current viewValue. Unparseable allows to restore all
       // states (for instance from a lost user session), since it saves the current viewValue.
-      const result = this.parser(value, { ...this.formatOptions, mode: this.#getFormatMode() });
+      const result = this.parser(value, {
+        ...this.formatOptions,
+        mode: this.#getFormatOptionsMode(),
+        viewValueStates: this.#getFormatOptionsViewValueStates(),
+      });
       return result !== undefined ? result : new Unparseable(value);
     }
 
@@ -258,6 +273,8 @@ const FormatMixinImplementation = superclass =>
      * @private
      */
     _callFormatter() {
+      this.#viewValueState.didFormatterRun = false;
+
       // - Why check for this.hasError?
       // We only want to format values that are considered valid. For best UX,
       // we only 'reward' valid inputs.
@@ -280,9 +297,12 @@ const FormatMixinImplementation = superclass =>
         return this.modelValue.viewValue;
       }
 
+      this.#viewValueState.didFormatterRun = true;
+
       return this.formatter(this.modelValue, {
         ...this.formatOptions,
-        mode: this.#getFormatMode(),
+        mode: this.#getFormatOptionsMode(),
+        viewValueStates: this.#getFormatOptionsViewValueStates(),
       });
     }
 
@@ -389,6 +409,8 @@ const FormatMixinImplementation = superclass =>
       if (this._reflectBackOn()) {
         // Text 'undefined' should not end up in <input>
         this.value = typeof this.formattedValue !== 'undefined' ? this.formattedValue : '';
+        this.#viewValueState.didFormatterOutputSyncToView =
+          Boolean(this.formattedValue) && this.#viewValueState.didFormatterRun;
       }
     }
 
@@ -583,15 +605,36 @@ const FormatMixinImplementation = superclass =>
       }
     }
 
-    #getFormatMode() {
+    /**
+     * This method will be called right before a parser or formatter gets called and computes
+     * the formatOptions.mode. In short, it gives meta info about how the user interacted with
+     * the form control, as these user interactions can infleunce the formatting/parsing behavior.
+     *
+     * It's important that the behavior of these can be different during a paste or user edit,
+     * but not during programmatic setting of values (like setting modelValue).
+     * @returns {'auto'|'pasted'|'user-edited'}
+     */
+    #getFormatOptionsMode() {
       if (this._isPasting) {
         return 'pasted';
       }
       const isUserEditing = this._isHandlingUserInput && this.__prevViewValue;
       if (isUserEditing) {
-        return 'user-edit';
+        return 'user-edited';
       }
       return 'auto';
+    }
+
+    /**
+     * @returns {FormatOptions['viewValueStates']}
+     */
+    #getFormatOptionsViewValueStates() {
+      /** @type {FormatOptions['viewValueStates']}} */
+      const states = [];
+      if (this.#viewValueState.didFormatterOutputSyncToView) {
+        states.push('formatted');
+      }
+      return states;
     }
   };
 

@@ -3,7 +3,10 @@ import { LitElement } from 'lit';
 import { ValidateHost } from './validate/ValidateMixinTypes.js';
 import { FormControlHost } from './FormControlMixinTypes.js';
 
-export type FormatOptions = { mode: 'pasted' | 'auto' | 'user-edit'} & object;
+export type FormatOptions = {
+  mode: 'pasted' | 'auto' | 'user-edited';
+  viewValueStates?: 'formatted'[];
+};
 export declare class FormatHost {
   /**
    * Converts viewValue to modelValue
