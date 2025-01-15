@@ -561,7 +561,7 @@ const FormatMixinImplementation = superclass =>
      */
     __onPaste() {
       this._isPasting = true;
-      queueMicrotask(() => {
+      setTimeout(() => {
         this._isPasting = false;
       });
     }
@@ -608,7 +608,7 @@ const FormatMixinImplementation = superclass =>
     /**
      * This method will be called right before a parser or formatter gets called and computes
      * the formatOptions.mode. In short, it gives meta info about how the user interacted with
-     * the form control, as these user interactions can infleunce the formatting/parsing behavior.
+     * the form control, as these user interactions can influence the formatting/parsing behavior.
      *
      * It's important that the behavior of these can be different during a paste or user edit,
      * but not during programmatic setting of values (like setting modelValue).
