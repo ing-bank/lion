@@ -1,5 +1,19 @@
 # @lion/ui
 
+## 0.10.0
+
+### Minor Changes
+
+- 35e6605: [form-core] add "user-edited" mode to formatOptions while editing existing value of a form control
+- 8377e8d: [overlays]: rework setup and teardown logic of OverlayMixin (allow to reconnect offline dom nodes; allow moving dom nodes in performant way)
+
+### Patch Changes
+
+- 45f0666: [input-amount]: when an existing value is edited (preformatted), stick with the same heuristic for interpreting separators (commas, dots, spaces), namely: `withLocale`
+- e5ff2b0: [overlays]: overlayController teardown cleanup (removes logs in test files)
+- 8377e8d: [overlays]: allow Subclassers to teardown at the right moment
+- d5258d5: [form-core] enhance formatter and parser meta with viewValueStates
+
 ## 0.9.1
 
 ### Patch Changes
