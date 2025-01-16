@@ -345,6 +345,56 @@ describe('SlotMixin', () => {
       expect(isActiveElement(el._focusableNode._buttonNode, { deep: true })).to.be.true;
     });
 
+    it('allows for switching template root in slot as a direct child', async () => {
+      const tagName = defineCE(
+        // @ts-expect-error
+        class extends SlotMixin(LitElement) {
+          static properties = { isSwitched: Boolean };
+
+          constructor() {
+            super();
+            this.isSwitched = false;
+          }
+
+          get slots() {
+            return {
+              ...super.slots,
+              'my-root-switcher-node': () => ({
+                template: this.isSwitched
+                  ? html`<div id="is-switched"></div>`
+                  : html`<span id="is-not-switched"> </span> `,
+                renderAsDirectHostChild: true,
+              }),
+            };
+          }
+
+          render() {
+            return html`<slot name="my-root-switcher-node"></slot>`;
+          }
+
+          get _myRootSwitcherNode() {
+            return /** @type HTMLSpanElement */ (
+              Array.from(this.children).find(elm => elm.slot === 'my-root-switcher-node')
+            );
+          }
+        },
+      );
+      const el = /** @type {* & SlotHost} */ (await fixture(`<${tagName}></${tagName}>`));
+
+      expect(el._myRootSwitcherNode.id).to.equal('is-not-switched');
+      expect(el.innerHTML).to.equal(
+        `<!--_start_slot_my-root-switcher-node_--><!----><span id="is-not-switched" slot="my-root-switcher-node"> </span> <!--_end_slot_my-root-switcher-node_-->`,
+      );
+
+      el.isSwitched = true;
+      await el.updateComplete;
+
+      expect(el._myRootSwitcherNode.id).to.equal('is-switched');
+      expect(el.innerHTML).to.equal(
+        `<!--_start_slot_my-root-switcher-node_--><!----><div id="is-switched" slot="my-root-switcher-node"></div><!--_end_slot_my-root-switcher-node_-->`,
+      );
+    });
+
     describe('firstRenderOnConnected (for backwards compatibility)', () => {
       it('does render on connected when firstRenderOnConnected:true', async () => {
         // Start with elem that does not render on connectedCallback
