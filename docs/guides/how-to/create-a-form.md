@@ -25,8 +25,13 @@ Large or complex forms might need to be split up into multiple files. This compo
 - shared templates
 - (web) components
 
-In the latter case: make sure that your components don't have a shadow root.
-This can be achieved in LitElement by providing the host as render root:
+In the latter case: make sure that your components don't have a shadow root. This can be achieved by rendering into Light DOM. The form registration mechanism relies on light dom by design: as soon as you do start to use shadow roots, you will notice that your form components won't register themselves anymore to their parents.
+
+> Today, rendering to light dom is the only way to [stay accessible](../../fundamentals/rationales/accessibility.md#shadow-roots-and-accessibility).
+
+### Example of a component that renders into Light DOM
+
+Rendering into Light DOM can be achieved in LitElement by providing the host as render root:
 
 ```js
 class MySubForm extends LitElement {
@@ -62,10 +67,6 @@ class MyForm extends LitElement {
   }
 }
 ```
-
-> Today, rendering to light dom is the only way to [stay accessible](../../fundamentals/rationales/accessibility.md#shadow-roots-and-accessibility).
-
-The registration mechanism relies on light dom by design: as soon as you do start to use shadow roots, you will notice that your form components won't register themselves anymore to their parents.
 
 ## Extending form components
 
