@@ -67,6 +67,36 @@ export const placementGlobal = () => {
 };
 ```
 
+## isAlertDialog
+
+In some cases the dialog should act like an [alertdialog](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/examples/alertdialog/), which is a combination of an alert and dialog. If that is the case, you can add `is-alert-dialog` attribute, which sets the correct role on the dialog.
+
+```js preview-story
+export const alertDialog = () => {
+  const placementModeGlobalConfig = { ...withModalDialogConfig(), isAlertDialog: true };
+  return html`
+    <demo-el-using-overlaymixin .config="${placementModeGlobalConfig}">
+      <button slot="invoker">Click me to open the alert dialog!</button>
+      <div slot="content" class="demo-overlay">
+        Are you sure you want to perform this action?
+        <button
+          type="button"
+          @click="${ev => ev.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+        >
+          Yes
+        </button>
+        <button
+          type="button"
+          @click="${ev => ev.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+        >
+          No
+        </button>
+      </div>
+    </demo-el-using-overlaymixin>
+  `;
+};
+```
+
 ## isTooltip (placementMode: 'local')
 
 As specified in the [overlay rationale](./rationale.md) there are only two official types of overlays: dialogs and tooltips. And their main differences are:

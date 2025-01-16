@@ -1876,6 +1876,22 @@ describe('OverlayController', () => {
     it.skip('adds attributes inert and aria-hidden="true" on all siblings of rootNode if an overlay is shown', async () => {});
     it.skip('disables pointer events and selection on inert elements', async () => {});
 
+    describe('Alert dialog', () => {
+      it('sets role="alertdialog" when isAlertDialog is set', async () => {
+        const invokerNode = /** @type {HTMLElement} */ (
+          await fixture('<div role="button">invoker</div>')
+        );
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          handlesAccessibility: true,
+          isAlertDialog: true,
+          invokerNode,
+        });
+
+        expect(ctrl.contentNode?.getAttribute('role')).to.equal('alertdialog');
+      });
+    });
+
     describe('Tooltip', () => {
       it('adds [aria-describedby] on invoker', async () => {
         const invokerNode = /** @type {HTMLElement} */ (

@@ -6,7 +6,8 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-dialog.js';
-
+import '@lion/ui/define/lion-form.js';
+import '@lion/ui/define/lion-input.js';
 import { demoStyle } from './src/demoStyle.js';
 import './src/styled-dialog-content.js';
 import './src/slots-dialog-content.js';
@@ -21,6 +22,71 @@ import './src/external-dialog.js';
   <div>
   <button slot="invoker">Click me</button>
 </lion-dialog>
+```
+
+## Alert dialog
+
+In some cases the dialog should act like an [alertdialog](https://www.w3.org/WAI/ARIA/apg/patterns/alertdialog/examples/alertdialog/), which is a combination of an alert and dialog. If that is the case, you can add `is-alert-dialog` attribute, which sets the correct role on the dialog.
+
+```js preview-story
+export const alertDialog = () => {
+  const submitHandler = ev => {
+    const formData = ev.target.serializedValue;
+    console.log('formData', formData);
+    if (!ev.target.hasFeedbackFor?.includes('error')) {
+      fetch('/api/foo/', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+      });
+    }
+  };
+  const resetHandler = ev => {
+    ev.target.dispatchEvent(new Event('close-overlay', { bubbles: true }));
+    ev.target.dispatchEvent(new Event('form-reset', { bubbles: true }));
+  };
+  const formResetHandler = ev => {
+    ev.currentTarget.resetGroup();
+  };
+  return html`
+    <style>
+      ${demoStyle} .button__group {
+        display: flex;
+        align-items: center;
+      }
+      .button-submit {
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
+      .dialog {
+        margin-bottom: 4px;
+      }
+    </style>
+    <lion-form @submit="${submitHandler}" @form-reset="${formResetHandler}">
+      <form>
+        <lion-input name="firstName" label="First Name"></lion-input>
+        <lion-input name="lastName" label="Last Name"></lion-input>
+        <div class="button__group">
+          <button class="button-submit">Submit</button>
+          <lion-dialog is-alert-dialog class="dialog">
+            <button type="button" slot="invoker">Reset</button>
+            <div slot="content" class="demo-box">
+              Are you sure you want to clear the input field?
+              <button orange type="button" @click="${resetHandler}">Yes</button>
+              <button
+                grey
+                type="button"
+                @click="${ev =>
+                  ev.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+              >
+                No
+              </button>
+            </div>
+          </lion-dialog>
+        </div>
+      </form>
+    </lion-form>
+  `;
+};
 ```
 
 ## External trigger

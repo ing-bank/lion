@@ -2,6 +2,18 @@ import { html, LitElement } from 'lit';
 import { OverlayMixin, withModalDialogConfig } from '@lion/ui/overlays.js';
 
 export class LionDialog extends OverlayMixin(LitElement) {
+  /** @type {any} */
+  static get properties() {
+    return {
+      isAlertDialog: { type: Boolean, attribute: 'is-alert-dialog' },
+    };
+  }
+
+  constructor() {
+    super();
+    this.isAlertDialog = false;
+  }
+
   /**
    * @protected
    */
@@ -9,6 +21,7 @@ export class LionDialog extends OverlayMixin(LitElement) {
   _defineOverlayConfig() {
     return {
       ...withModalDialogConfig(),
+      isAlertDialog: this.isAlertDialog,
     };
   }
 
