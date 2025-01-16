@@ -182,6 +182,21 @@ const SlotMixinImplementation = superclass =>
       // Providing all options breaks Safari: we keep host and creationScope
       const { creationScope, host } = this.renderOptions;
       render(template, rerenderTarget, { creationScope, host, renderBefore });
+
+      // Assume we had this config:
+      // `'my-slot': () => ({ template: myBool ? html`<div id=a></div>` : html`<span id=b></span>`, renderAsDirectHostChild: true })`
+      // If myBool started as true, <div id=a></div> would be rendered in first render above, a slot would be applied,
+      // resulting in <div id=a slot=my-slot></div>
+      // However, when myBool changes to false, the <span id=b></span> would be rendered as root instead...
+      // We need to make sure that this "replaced root" gets the slot applied as well => <span id=b slot=my-slot></span>
+      const isRerenderingRootOfTemplate =
+        renderAsDirectHostChild &&
+        renderBefore.previousElementSibling &&
+        !renderBefore.previousElementSibling.slot;
+
+      if (isRerenderingRootOfTemplate) {
+        renderBefore.previousElementSibling.slot = slotName;
+      }
     }
 
     /**
