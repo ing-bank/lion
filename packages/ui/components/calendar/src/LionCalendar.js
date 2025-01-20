@@ -658,25 +658,16 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     day.ariaCurrent = day.today ? 'date' : undefined;
     day.disabledInfo = '';
 
+    if (day.disabled) {
+      day.disabledInfo = `${this.msgLit(`lion-calendar:defaultDisabledDate`)}`;
+    }
     if (this.minDate && normalizeDateTime(day.date) < normalizeDateTime(this.minDate)) {
       day.disabled = true;
-      // TODO: turn this into a translated string
-      day.disabledInfo = `This date is unavailable. Earliest date to select is ${
-        this.__getSelectableDateRange().earliestSelectableDate
-      }. Please select another date.`;
+      day.disabledInfo = `${this.msgLit(`lion-calendar:beforeDisabledDate`, { params: this.__getSelectableDateRange().earliestSelectableDate })}`;
     }
-
     if (this.maxDate && normalizeDateTime(day.date) > normalizeDateTime(this.maxDate)) {
       day.disabled = true;
-      // TODO: turn this into a translated string
-      day.disabledInfo = `This date is unavailable. Latest date to select is ${
-        this.__getSelectableDateRange().latestSelectableDate
-      }. Please select another date.`;
-    }
-
-    if (day.disabled) {
-      // TODO: turn this into a translated string
-      day.disabledInfo = `This date is unavailable. Please select another date`;
+      day.disabledInfo = `${this.msgLit(`lion-calendar:afterDisabledDate`, { params: this.__getSelectableDateRange().latestSelectableDate })}`;
     }
 
     return this.dayPreprocessor(day);
