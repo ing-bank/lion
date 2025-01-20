@@ -171,7 +171,9 @@ const ChoiceInputMixinImplementation = superclass =>
     render() {
       return html`
         <slot name="input"></slot>
-        <div class="choice-field__graphic-container">${this._choiceGraphicTemplate()}</div>
+        <div class="choice-field__graphic-container" aria-hidden="true">
+          ${this._choiceGraphicTemplate()}
+        </div>
         <div class="choice-field__label">
           <slot name="label"></slot>
         </div>
