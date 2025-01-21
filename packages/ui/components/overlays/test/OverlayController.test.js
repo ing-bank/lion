@@ -1938,6 +1938,19 @@ describe('OverlayController', () => {
         expect(ctrl.contentNode.getAttribute('role')).to.equal('tooltip');
       });
 
+      it('adds tabindex="-1" to the wrappingDialog element', async () => {
+        const invokerNode = /** @type {HTMLElement} */ (
+          await fixture('<div role="button">invoker</div>')
+        );
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          handlesAccessibility: true,
+          isTooltip: true,
+          invokerNode,
+        });
+        expect(ctrl.__wrappingDialogNode?.getAttribute('tabindex')).to.equal('-1');
+      });
+
       describe('Teardown', () => {
         it('restores [role] on dialog content', async () => {
           const invokerNode = /** @type {HTMLElement} */ (
