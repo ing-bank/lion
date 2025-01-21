@@ -170,6 +170,27 @@ describe('lion-dialog', () => {
   });
 
   describe('Accessibility', () => {
+    it('passes a11y audit', async () => {
+      const el = await fixture(html`
+        <lion-dialog>
+          <button slot="invoker">Invoker</button>
+          <div slot="content" class="dialog" aria-label="Dialog">Hey there</div>
+        </lion-dialog>
+      `);
+      await expect(el).to.be.accessible();
+    });
+
+    it('passes a11y audit when opened', async () => {
+      const el = await fixture(html`
+        <lion-dialog opened>
+          <button slot="invoker">Invoker</button>
+          <div slot="content" class="dialog" aria-label="Dialog">Hey there</div>
+        </lion-dialog>
+      `);
+      // error expected since we put role="none" on the dialog itself, which is valid but not recognized by Axe
+      await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
+    });
+
     it('does not add [aria-expanded] to invoker button', async () => {
       const el = await fixture(
         html` <lion-dialog>
@@ -186,6 +207,41 @@ describe('lion-dialog', () => {
       await invokerButton.click();
       await aTimeout(0);
       expect(invokerButton.getAttribute('aria-expanded')).to.equal(null);
+    });
+
+    it('has role="dialog" by default', async () => {
+      const el = await fixture(
+        html` <lion-dialog>
+          <div slot="content" class="dialog">Hey there</div>
+          <button slot="invoker">Popup button</button>
+        </lion-dialog>`,
+      );
+      const contentNode = /** @type {HTMLElement} */ (el.querySelector('[slot="content"]'));
+
+      expect(contentNode.getAttribute('role')).to.equal('dialog');
+    });
+
+    it('has role="alertdialog" by when "is-alert-dialog" is set', async () => {
+      const el = await fixture(
+        html` <lion-dialog is-alert-dialog>
+          <div slot="content" class="dialog">Hey there</div>
+          <button slot="invoker">Popup button</button>
+        </lion-dialog>`,
+      );
+      const contentNode = /** @type {HTMLElement} */ (el.querySelector('[slot="content"]'));
+
+      expect(contentNode.getAttribute('role')).to.equal('alertdialog');
+    });
+
+    it('passes a11y audit when opened and role="alertdialog"', async () => {
+      const el = await fixture(html`
+        <lion-dialog opened is-alert-dialog>
+          <button slot="invoker">Invoker</button>
+          <div slot="content" class="dialog" aria-label="Dialog">Hey there</div>
+        </lion-dialog>
+      `);
+      // error expected since we put role="none" on the dialog itself, which is valid but not recognized by Axe
+      await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
     });
   });
 

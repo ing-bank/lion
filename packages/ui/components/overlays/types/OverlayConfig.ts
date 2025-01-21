@@ -41,7 +41,7 @@ export interface OverlayConfig {
   contentNode?: HTMLElement;
   /** The wrapper element of contentNode, used to supply inline positioning styles. When a Popper arrow is needed, it acts as parent of the arrow node. Will be automatically created for global and non projected contentNodes. Required when used in shadow dom mode or when Popper arrow is supplied. Essential for allowing webcomponents to style their projected contentNodes */
   contentWrapperNode?: HTMLElement;
-  /** The element that is placed behin the contentNode. When not provided and `hasBackdrop` is true, a backdropNode will be automatically created */
+  /** The element that is placed behind the contentNode. When not provided and `hasBackdrop` is true, a backdropNode will be automatically created */
   backdropNode?: HTMLElement;
   /** The element that should be called `.focus()` on after dialog closes */
   elementToFocusAfterHide?: HTMLElement;
@@ -59,7 +59,7 @@ export interface OverlayConfig {
   trapsKeyboardFocus?: boolean;
   /** Hides the overlay when pressing [ esc ] */
   hidesOnEsc?: boolean;
-  /** Hides the overlay when clicking next to it, exluding invoker */
+  /** Hides the overlay when clicking next to it, excluding invoker */
   hidesOnOutsideClick?: boolean;
   /** Hides the overlay when pressing esc, even when contentNode has no focus */
   hidesOnOutsideEsc?: boolean;
@@ -82,6 +82,8 @@ export interface OverlayConfig {
 
   /** Has a totally different interaction- and accessibility pattern from all other overlays. Will behave as role="tooltip" element instead of a role="dialog" element */
   isTooltip?: boolean;
+  /** The alertdialog role is to be used on modal alert dialogs that interrupt a user's workflow to communicate an important message and require a response. */
+  isAlertDialog?: boolean;
   /** By default, the tooltip content is a 'description' for the invoker (uses aria-describedby) Setting this property to 'label' makes the content function as a label (via aria-labelledby) */
   invokerRelation?: 'label' | 'description';
 

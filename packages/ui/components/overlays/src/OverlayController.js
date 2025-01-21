@@ -151,6 +151,7 @@ export class OverlayController extends EventTarget {
       hidesOnOutsideEsc: false,
       hidesOnOutsideClick: false,
       isTooltip: false,
+      isAlertDialog: false,
       invokerRelation: 'description',
       visibilityTriggerFunction: undefined,
       handlesAccessibility: false,
@@ -379,6 +380,14 @@ export class OverlayController extends EventTarget {
    */
   get isTooltip() {
     return /** @type {boolean} */ (this.config?.isTooltip);
+  }
+
+  /**
+   * The alertdialog role is to be used on modal alert dialogs that interrupt a user's workflow
+   * to communicate an important message and require a response.
+   */
+  get isAlertDialog() {
+    return /** @type {boolean} */ (this.config?.isAlertDialog);
   }
 
   /**
@@ -672,7 +681,10 @@ export class OverlayController extends EventTarget {
         if (this.invokerNode && !isModal) {
           this.invokerNode.setAttribute('aria-expanded', `${this.isShown}`);
         }
-        if (!this.contentNode.getAttribute('role')) {
+        if (this.isAlertDialog) {
+          this.contentNode.setAttribute('role', 'alertdialog');
+        } else if (!this.contentNode.getAttribute('role')) {
+          // N.B. if we did not explicitly set `isTooltip` or `isAlertDialog`, a role potentially already provided by a user (like 'listbox') takes precedence
           this.contentNode.setAttribute('role', 'dialog');
         }
       }
