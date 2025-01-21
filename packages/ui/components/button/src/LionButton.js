@@ -147,6 +147,7 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
    */
   updated(changedProperties) {
     super.updated(changedProperties);
+
     if (changedProperties.has('disabled')) {
       if (this.disabled) {
         this.setAttribute('aria-disabled', 'true');
