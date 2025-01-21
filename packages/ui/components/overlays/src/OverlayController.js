@@ -620,6 +620,10 @@ export class OverlayController extends EventTarget {
     });
     // @ts-ignore
     wrappingDialogElement.open = true;
+    if (this.isTooltip) {
+      // needed to prevent tooltip getting focus in Safari and Firefox
+      wrappingDialogElement.setAttribute('tabindex', '-1');
+    }
 
     this.__wrappingDialogNode.style.display = 'none';
     this.contentWrapperNode.style.zIndex = '1';
