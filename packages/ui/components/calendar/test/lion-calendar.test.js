@@ -896,6 +896,94 @@ describe('<lion-calendar>', () => {
             'Next year, December 2001',
           );
         });
+
+        it('disables a date with disableDates function provide a correct message', async () => {
+          /** @param {Date} d */
+          const disable15th = d => d.getDate() === 15;
+          const el = await fixture(html`
+            <lion-calendar
+              .selectedDate="${new Date('2000/12/01')}"
+              .disableDates=${disable15th}
+            ></lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+          expect(elObj.getDayObj(15).isDisabled).to.equal(true);
+          expect(elObj.getDayObj(15).el).dom.to.equal(`
+            <div
+              class="calendar__day-button"
+              aria-disabled="true"
+              role="button"
+              tabindex="-1"
+              aria-pressed="false"
+              past=""
+              current-month="">
+              <span class="calendar__day-button__text">
+                15
+              </span>
+              <span class="u-sr-only">
+                December 2000 Friday This date is unavailable. Please choose another date.
+              </span>
+            </div>
+          `);
+        });
+
+        it('disables days before "minDate" property provide a correct message', async () => {
+          const el = await fixture(html`
+            <lion-calendar
+              .selectedDate="${new Date('2000/12/31')}"
+              .minDate="${new Date('2000/12/09')}"
+            >
+            </lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+          expect(elObj.getDayObj(1).isDisabled).to.equal(true);
+          expect(elObj.getDayObj(1).el).dom.to.equal(`
+            <div
+              class="calendar__day-button"
+              aria-disabled="true"
+              role="button"
+              tabindex="-1"
+              aria-pressed="false"
+              past=""
+              current-month="">
+              <span class="calendar__day-button__text">
+                1
+              </span>
+              <span class="u-sr-only">
+                December 2000 Friday This date is unavailable. Earliest available date is 9 December 2000. Please choose another date.
+              </span>
+            </div>
+          `);
+        });
+
+        it('disables days after "maxDate" property provide a correct message', async () => {
+          const el = await fixture(html`
+            <lion-calendar
+              .selectedDate="${new Date('2000/12/31')}"
+              .maxDate="${new Date('2000/12/09')}"
+            >
+            </lion-calendar>
+          `);
+          const elObj = new CalendarObject(el);
+          expect(elObj.getDayObj(30).isDisabled).to.equal(true);
+          expect(elObj.getDayObj(30).el).dom.to.equal(`
+            <div
+              class="calendar__day-button"
+              aria-disabled="true"
+              role="button"
+              tabindex="-1"
+              aria-pressed="false"
+              past=""
+              current-month="">
+              <span class="calendar__day-button__text">
+                30
+              </span>
+              <span class="u-sr-only">
+                December 2000 Saturday This date is unavailable. Latest available date is 9 December 2000. Please choose another date.
+              </span>
+            </div>
+          `);
+        });
       });
     });
   });
