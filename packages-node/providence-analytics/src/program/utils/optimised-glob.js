@@ -253,12 +253,16 @@ const getAllDirentsFromStartPath = memoize(
       return dirents;
     }
 
-    dirents.push(
-      // @ts-expect-error
-      ...(await fs.promises.readdir(startPath, { withFileTypes: true, recursive: true })),
+    const direntResult = /** @type {* & DirentWithPath[]} */ (
+      await fs.promises.readdir(startPath, {
+        withFileTypes: true,
+        // @ts-expect-error
+        recursive: true,
+      })
     );
-    cache[startPath] = dirents;
-    return dirents;
+
+    cache[startPath] = direntResult;
+    return direntResult;
   },
 );
 
@@ -401,7 +405,7 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
   /** @type {RegExp[]} */
   const matchRegexes = [];
   /** @type {{dirent:nodeFs.Dirent;relativeToCwdPath:string}[]} */
-  const globEntries = [];
+  let globEntries = [];
 
   for (const glob of globs) {
     const isNegative = glob.startsWith('!');
@@ -431,7 +435,8 @@ export async function optimisedGlob(globOrGlobs, providedOptions = {}) {
         cwd,
       });
 
-      globEntries.push(...allDirEntsRelativeToCwd);
+      // N.B. `globEntries.push(...allDirEntsRelativeToCwd);` can give memory issues for large file trees
+      globEntries = globEntries.concat(allDirEntsRelativeToCwd);
     } catch (e) {
       if (!options.suppressErrors) {
         throw e;
