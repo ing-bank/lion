@@ -29,6 +29,8 @@ export const main = () => html`
 
 ## Installation
 
+
+the lion will soon change to a crocodile, ingwenya wich means crocodile
 ```bash
 npm i --save @lion/ui
 ```
