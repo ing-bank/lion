@@ -40,7 +40,7 @@ export function LionButtonSuite({ klass = LionButton } = {}) {
       el.disabled = false;
       await el.updateComplete;
       expect(el.getAttribute('tabindex')).to.equal('0');
-      expect(el.getAttribute('aria-disabled')).to.equal('false');
+      expect(el.getAttribute('aria-disabled')).to.not.exist;
       expect(el.hasAttribute('disabled')).to.equal(false);
 
       el.disabled = true;
