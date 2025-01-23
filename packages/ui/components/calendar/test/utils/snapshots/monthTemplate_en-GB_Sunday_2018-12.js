@@ -4,19 +4,48 @@ export default html`
   <div id="js-content-wrapper">
     <table aria-readonly="true" class="calendar__grid" data-wrap-cols="" role="grid">
       <thead>
-        <tr>
-          <th class="calendar__weekday-header" aria-label="Sunday" scope="col">Sun</th>
-          <th class="calendar__weekday-header" aria-label="Monday" scope="col">Mon</th>
-          <th class="calendar__weekday-header" aria-label="Tuesday" scope="col">Tue</th>
-          <th class="calendar__weekday-header" aria-label="Wednesday" scope="col">Wed</th>
-          <th class="calendar__weekday-header" aria-label="Thursday" scope="col">Thu</th>
-          <th class="calendar__weekday-header" aria-label="Friday" scope="col">Fri</th>
-          <th class="calendar__weekday-header" aria-label="Saturday" scope="col">Sat</th>
+        <tr role="row">
+          <th class="calendar__weekday-header" aria-label="Sunday" scope="col" role="columnheader">
+            Sun
+          </th>
+          <th class="calendar__weekday-header" aria-label="Monday" scope="col" role="columnheader">
+            Mon
+          </th>
+          <th class="calendar__weekday-header" aria-label="Tuesday" scope="col" role="columnheader">
+            Tue
+          </th>
+          <th
+            class="calendar__weekday-header"
+            aria-label="Wednesday"
+            scope="col"
+            role="columnheader"
+          >
+            Wed
+          </th>
+          <th
+            class="calendar__weekday-header"
+            aria-label="Thursday"
+            scope="col"
+            role="columnheader"
+          >
+            Thu
+          </th>
+          <th class="calendar__weekday-header" aria-label="Friday" scope="col" role="columnheader">
+            Fri
+          </th>
+          <th
+            class="calendar__weekday-header"
+            aria-label="Saturday"
+            scope="col"
+            role="columnheader"
+          >
+            Sat
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="calendar__day-cell" start-of-last-week>
+        <tr role="row">
+          <td class="calendar__day-cell" role="gridcell" start-of-last-week>
             <div
               role="button"
               aria-disabled="false"
@@ -28,7 +57,7 @@ export default html`
               <span class="u-sr-only"> November 2018.</span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -40,7 +69,7 @@ export default html`
               <span class="u-sr-only"> November 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -52,7 +81,7 @@ export default html`
               <span class="u-sr-only"> November 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -64,7 +93,7 @@ export default html`
               <span class="u-sr-only"> November 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -76,7 +105,7 @@ export default html`
               <span class="u-sr-only"> November 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell" last-day>
+          <td class="calendar__day-cell" role="gridcell" last-day>
             <div
               role="button"
               aria-disabled="false"
@@ -88,7 +117,7 @@ export default html`
               <span class="u-sr-only"> November 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell" end-of-first-week first-day>
+          <td class="calendar__day-cell" role="gridcell" end-of-first-week first-day>
             <div
               role="button"
               aria-disabled="false"
@@ -101,8 +130,8 @@ export default html`
             </div>
           </td>
         </tr>
-        <tr>
-          <td class="calendar__day-cell" start-of-first-full-week>
+        <tr role="row">
+          <td class="calendar__day-cell" role="gridcell" start-of-first-full-week>
             <div
               role="button"
               aria-disabled="false"
@@ -114,7 +143,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -126,7 +155,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -138,7 +167,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -150,7 +179,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -162,7 +191,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -174,7 +203,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -187,8 +216,8 @@ export default html`
             </div>
           </td>
         </tr>
-        <tr>
-          <td class="calendar__day-cell">
+        <tr role="row">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -200,7 +229,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -212,7 +241,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -224,7 +253,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -236,7 +265,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -248,7 +277,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -260,7 +289,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -273,8 +302,8 @@ export default html`
             </div>
           </td>
         </tr>
-        <tr>
-          <td class="calendar__day-cell">
+        <tr role="row">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -286,7 +315,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -298,7 +327,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -310,7 +339,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -322,7 +351,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -334,7 +363,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -346,7 +375,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -359,8 +388,8 @@ export default html`
             </div>
           </td>
         </tr>
-        <tr>
-          <td class="calendar__day-cell">
+        <tr role="row">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -372,7 +401,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -384,7 +413,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -396,7 +425,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -408,7 +437,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -420,7 +449,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -432,7 +461,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell" end-of-last-full-week>
+          <td class="calendar__day-cell" role="gridcell" end-of-last-full-week>
             <div
               role="button"
               aria-disabled="false"
@@ -445,8 +474,8 @@ export default html`
             </div>
           </td>
         </tr>
-        <tr>
-          <td class="calendar__day-cell" start-of-last-week>
+        <tr role="row">
+          <td class="calendar__day-cell" role="gridcell" start-of-last-week>
             <div
               role="button"
               aria-disabled="false"
@@ -458,7 +487,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell" last-day>
+          <td class="calendar__day-cell" role="gridcell" last-day>
             <div
               role="button"
               aria-disabled="false"
@@ -470,7 +499,7 @@ export default html`
               <span class="u-sr-only"> December 2018. </span>
             </div>
           </td>
-          <td class="calendar__day-cell" first-day>
+          <td class="calendar__day-cell" role="gridcell" first-day>
             <div
               role="button"
               aria-disabled="false"
@@ -482,7 +511,7 @@ export default html`
               <span class="u-sr-only"> January 2019. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -494,7 +523,7 @@ export default html`
               <span class="u-sr-only"> January 2019. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -506,7 +535,7 @@ export default html`
               <span class="u-sr-only"> January 2019. </span>
             </div>
           </td>
-          <td class="calendar__day-cell">
+          <td class="calendar__day-cell" role="gridcell">
             <div
               role="button"
               aria-disabled="false"
@@ -518,7 +547,7 @@ export default html`
               <span class="u-sr-only"> January 2019. </span>
             </div>
           </td>
-          <td class="calendar__day-cell" end-of-first-week>
+          <td class="calendar__day-cell" role="gridcell" end-of-first-week>
             <div
               role="button"
               aria-disabled="false"

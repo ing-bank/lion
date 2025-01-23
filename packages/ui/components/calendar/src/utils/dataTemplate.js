@@ -15,10 +15,15 @@ export function dataTemplate(
         month => html`
           <table role="grid" data-wrap-cols aria-readonly="true" class="calendar__grid">
             <thead>
-              <tr>
+              <tr role="row">
                 ${weekdaysShort.map(
                   (header, i) => html`
-                    <th class="calendar__weekday-header" scope="col" aria-label="${weekdays[i]}">
+                    <th
+                      role="columnheader"
+                      class="calendar__weekday-header"
+                      scope="col"
+                      aria-label="${weekdays[i]}"
+                    >
                       ${header}
                     </th>
                   `,
@@ -28,7 +33,7 @@ export function dataTemplate(
             <tbody>
               ${month.weeks.map(
                 week => html`
-                  <tr>
+                  <tr role="row">
                     ${week.days.map(day =>
                       dayTemplate(day, { weekdaysShort, weekdays, monthsLabels }),
                     )}
