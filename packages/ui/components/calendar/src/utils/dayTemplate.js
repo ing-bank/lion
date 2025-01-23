@@ -11,10 +11,10 @@ const lastDaysOfYear = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
  * @param {{ weekdays: string[], monthsLabels?: string[] }} opts
  */
 export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }) {
-  const { dayNumber, monthName, year, weekdayName } = getDayMonthYear(day, weekdays, monthsLabels);
+  const { dayNumber, monthName, year } = getDayMonthYear(day, weekdays, monthsLabels);
 
   function __getFullDate() {
-    return `${monthName} ${year} ${weekdayName}`;
+    return `${monthName} ${year}.`;
   }
 
   function __getAccessibleMessage() {
@@ -39,7 +39,6 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
 
   return html`
     <td
-      role="gridcell"
       class="calendar__day-cell"
       ?current-month=${day.currentMonth}
       ?first-day=${firstDay}
