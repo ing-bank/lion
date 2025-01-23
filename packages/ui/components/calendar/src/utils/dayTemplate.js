@@ -13,12 +13,12 @@ const lastDaysOfYear = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }) {
   const { dayNumber, monthName, year } = getDayMonthYear(day, weekdays, monthsLabels);
 
-  function __getFullDate() {
+  function __getMonthAndYear() {
     return `${monthName} ${year}.`;
   }
 
   function __getAccessibleMessage() {
-    return `${day.disabledInfo}`;
+    return ` ${day.disabledInfo}`;
   }
 
   const firstDay = dayNumber === 1;
@@ -39,6 +39,7 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
 
   return html`
     <td
+      role="gridcell"
       class="calendar__day-cell"
       ?current-month=${day.currentMonth}
       ?first-day=${firstDay}
@@ -65,7 +66,7 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
         ?next-month=${day.nextMonth}
       >
         <span class="calendar__day-button__text">${dayNumber}</span>
-        <span class="u-sr-only">${__getFullDate()} ${__getAccessibleMessage()}</span>
+        <span class="u-sr-only">${__getMonthAndYear()}${__getAccessibleMessage()}</span>
       </div>
     </td>
   `;
