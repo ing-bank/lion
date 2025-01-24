@@ -225,7 +225,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
   }
 
   /**
-   * @param {CustomEvent} ev
+   * @param {Event} ev
    * @protected
    */
   _onRequestToAddFormElement(ev) {
@@ -236,7 +236,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     // hence its formElements doesn't include the element that was just registered.
     // We save the element in a temporary variable to help _subCheckboxes to include the element
     // and _setOwnCheckedState works as expected.
-    this.__temporaryRegisteredElement = ev.detail.element;
+    this.__temporaryRegisteredElement = /** @type {CustomEvent} */ (ev).detail.element;
     this._setOwnCheckedState();
   }
 
