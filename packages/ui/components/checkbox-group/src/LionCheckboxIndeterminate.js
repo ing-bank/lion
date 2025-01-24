@@ -61,8 +61,15 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
       checkboxes = this._checkboxGroupNode.formElements.filter(
         checkbox => checkbox !== this && this.contains(checkbox),
       );
+      if (this._checkboxGroupNode.formElements.includes(this.__temporaryRegisteredElement)) {
+        this.__temporaryRegisteredElement = undefined;
+      }
     }
-    return /** @type LionCheckbox[] */ (checkboxes);
+    return /** @type LionCheckbox[] */ (
+      this.__temporaryRegisteredElement === undefined
+        ? checkboxes
+        : [...checkboxes, this.__temporaryRegisteredElement]
+    );
   }
 
   _storeIndeterminateState() {
@@ -78,10 +85,10 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
   }
 
   /**
-   * @param {LionCheckbox[]} subCheckboxes
    * @protected
    */
-  _setOwnCheckedState(subCheckboxes) {
+  _setOwnCheckedState() {
+    const subCheckboxes = this._subCheckboxes;
     if (!subCheckboxes.length) {
       return;
     }
@@ -192,7 +199,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         this.__settingOwnSubs = false;
       });
     } else {
-      this._setOwnCheckedState(this._subCheckboxes);
+      this._setOwnCheckedState();
       this.updateComplete.then(() => {
         if (!this.__settingOwnSubs && !this.__settingOwnChecked && this.mixedState) {
           this._storeIndeterminateState();
@@ -218,16 +225,19 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
   }
 
   /**
-   * @param {Event} ev
+   * @param {CustomEvent} ev
    * @protected
    */
   _onRequestToAddFormElement(ev) {
     if (!(/** @type {HTMLElement} */ (ev.target).hasAttribute('role'))) {
       /** @type {HTMLElement} */ (ev.target)?.setAttribute('role', 'listitem');
     }
-    // At this moment, this._subCheckboxes doesn't have ev.target in it as this._subCheckboxes checks this._checkboxGroupNode.formElements
-    // and ev.target is added to the formElement when this event is bubbled up to the checkboxGroupNode
-    this._setOwnCheckedState([...this._subCheckboxes, /** @type {LionCheckbox} */ (ev.target)]);
+    // At this moment, the form-element-register event hasn't reached the parent form group
+    // hence its formElements doesn't include the element that was just registered.
+    // We save the element in a temporary variable to help _subCheckboxes to include the element
+    // and _setOwnCheckedState works as expected.
+    this.__temporaryRegisteredElement = ev.detail.element;
+    this._setOwnCheckedState();
   }
 
   /**
@@ -247,6 +257,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     this.forceSyncIndeterminate = 0;
     this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
     this.__onModelValueChanged = this.__onModelValueChanged.bind(this);
+    this.__temporaryRegisteredElement = undefined;
     /** @type {boolean[]} */
     this._indeterminateSubStates = [];
     this.mixedState = false;
