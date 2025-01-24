@@ -96,8 +96,6 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     this.__settingOwnChecked = true;
     const checkedElements = subCheckboxes.filter(checkbox => checkbox.checked);
 
-    const disabledElements = subCheckboxes.filter(checkbox => checkbox.disabled);
-
     switch (subCheckboxes.length - checkedElements.length) {
       // all checked
       case 0:
@@ -109,7 +107,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         this.indeterminate = false;
         this.checked = false;
         break;
-      default:
+      default: {
         this.indeterminate = true;
 
         // When 1. sub checkboxes have disabled elements and 2. one or more elements are checked
@@ -119,8 +117,11 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         // when updated callback is called because it hasn't updated (true -> true).
         // Hence we have to force syncing the indeterminate state between the properties and the DOM's attribute.
         this.forceSyncIndeterminate += 1;
+
+        const disabledElements = subCheckboxes.filter(checkbox => checkbox.disabled);
         this.checked =
           subCheckboxes.length - checkedElements.length - disabledElements.length === 0;
+      }
     }
     this.updateComplete.then(() => {
       this.__settingOwnChecked = false;
@@ -176,7 +177,6 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         subCheckboxes.length > 0 && subCheckboxes.length === checkedElements.length;
       const allDisabled =
         subCheckboxes.length > 0 && subCheckboxes.length === disabledElements.length;
-      // const hasDisabledElements = disabledElements.length > 0;
 
       if (allDisabled) {
         this.checked = allChecked;
