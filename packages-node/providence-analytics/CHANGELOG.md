@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.18.1
+
+### Patch Changes
+
+- 0f0991c: [optimised-glob] use Array.concat for memory efficiency
+
 ## 0.18.0
 
 ### Minor Changes
