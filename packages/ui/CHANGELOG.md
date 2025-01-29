@@ -1,5 +1,16 @@
 # @lion/ui
 
+## 0.10.1
+
+### Patch Changes
+
+- dd59812: [dialog] add an option to set role="alertdialog" instead of the default role="dialog"
+- 5344fde: [core] rerender direct host child with right slot attr when root is switched
+- a1d6dd9: [button] set the 'aria-disabled' attribute to 'true' when disabled and remove it when not disabled
+- 81e2a1d: [calendar] add translations for an information message for screen reader users when a date is disabled
+- 795237d: [form-core] add aria-hidden=true to the graphic element of the choiceInput
+- 2155e45: [overlays] add tabindex="-1" to prevent tooltips get focus in Safari and Firefox
+
 ## 0.10.0
 
 ### Minor Changes
