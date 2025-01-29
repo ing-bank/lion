@@ -224,7 +224,7 @@ describe('lion-select-rich interactions', () => {
       expect(isTriggeredByUser).to.be.true;
     });
 
-    it('navigates through list with [ArrowLeft] [ArrowRight] keys checks the option while listbox unopened', async () => {
+    it('navigation through list with [ArrowLeft] [ArrowRight] keys checks the option while listbox unopened', async () => {
       let isTriggeredByUser;
       const el = /** @type {LionSelectRich} */ (
         await fixture(html`
