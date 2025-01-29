@@ -24,6 +24,24 @@ function mimicKeyPress(el, key, code = '') {
   el.dispatchEvent(new KeyboardEvent('keyup', { key, code }));
 }
 
+/**
+ * @param {LionOption[]} options
+ * @param {number} selectedIndex
+ */
+function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
+  /**
+   * @param {{ checked: any; }} option
+   * @param {any} i
+   */
+  options.forEach((option, i) => {
+    if (i === selectedIndex) {
+      expect(option.checked).to.be.true;
+    } else {
+      expect(option.checked).to.be.false;
+    }
+  });
+}
+
 describe('lion-select-rich interactions', () => {
   describe('Interaction mode', () => {
     it('autodetects interactionMode if not defined', async () => {
@@ -86,26 +104,91 @@ describe('lion-select-rich interactions', () => {
     });
   });
 
-  describe('Invoker Keyboard navigation Windows', () => {
-    it('navigates through list with [ArrowDown] [ArrowUp] keys checks the option while listbox unopened', async () => {
-      /**
-       * @param {LionOption[]} options
-       * @param {number} selectedIndex
-       */
-      function expectOnlyGivenOneOptionToBeChecked(options, selectedIndex) {
-        /**
-         * @param {{ checked: any; }} option
-         * @param {any} i
-         */
-        options.forEach((option, i) => {
-          if (i === selectedIndex) {
-            expect(option.checked).to.be.true;
-          } else {
-            expect(option.checked).to.be.false;
-          }
-        });
-      }
+  describe('Invoker Keyboard navigation Mac', () => {
+    it('opens dropdown with [ArrowDown] [ArrowUp] keys or navigates through the listbox options', async () => {
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="mac">
+            <lion-options slot="input">
+              <lion-option .choiceValue=${10}>Item 1</lion-option>
+              <lion-option .choiceValue=${20}>Item 2</lion-option>
+              <lion-option .choiceValue=${30}>Item 3</lion-option>
+            </lion-options>
+          </lion-select-rich>
+        `)
+      );
 
+      const options = el.formElements;
+      expect(el.checkedIndex).to.equal(0);
+      expectOnlyGivenOneOptionToBeChecked(options, 0);
+
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+
+      expect(el.opened).to.be.true;
+      expect(el.checkedIndex).to.equal(0);
+      expectOnlyGivenOneOptionToBeChecked(options, 0);
+
+      el.opened = false;
+
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      expect(el.opened).to.be.true;
+      expect(el.checkedIndex).to.equal(0);
+      expectOnlyGivenOneOptionToBeChecked(options, 0);
+    });
+
+    it('does not open dropdown with [ArrowLeft] [ArrowRight] keys or navigates through the listbox options', async () => {
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="mac">
+            <lion-options slot="input">
+              <lion-option .choiceValue=${10}>Item 1</lion-option>
+              <lion-option .choiceValue=${20}>Item 2</lion-option>
+              <lion-option .choiceValue=${30}>Item 3</lion-option>
+            </lion-options>
+          </lion-select-rich>
+        `)
+      );
+
+      const options = el.formElements;
+      expect(el.checkedIndex).to.equal(0);
+      expectOnlyGivenOneOptionToBeChecked(options, 0);
+
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+
+      expect(el.opened).to.be.false;
+      expect(el.checkedIndex).to.equal(0);
+      expectOnlyGivenOneOptionToBeChecked(options, 0);
+
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      expect(el.opened).to.be.false;
+      expect(el.checkedIndex).to.equal(0);
+      expectOnlyGivenOneOptionToBeChecked(options, 0);
+    });
+
+    it('checks a value with [character] keys while listbox unopened', async () => {
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich interaction-mode="mac">
+            <lion-options slot="input">
+              <lion-option .choiceValue=${'red'}>Red</lion-option>
+              <lion-option .choiceValue=${'teal'}>Teal</lion-option>
+              <lion-option .choiceValue=${'turquoise'}>Turquoise</lion-option>
+            </lion-options>
+          </lion-select-rich>
+        `)
+      );
+
+      // @ts-ignore [allow-private] in test
+      mimicKeyPress(el, 't', 'KeyT');
+      expect(el.checkedIndex).to.equal(1);
+
+      mimicKeyPress(el, 'u', 'KeyU');
+      expect(el.checkedIndex).to.equal(2);
+    });
+  });
+
+  describe('Invoker Keyboard navigation Windows/Linux', () => {
+    it('navigates through list with [ArrowDown] [ArrowUp] keys checks the option while listbox unopened', async () => {
       let isTriggeredByUser;
       const el = /** @type {LionSelectRich} */ (
         await fixture(html`
@@ -141,7 +224,43 @@ describe('lion-select-rich interactions', () => {
       expect(isTriggeredByUser).to.be.true;
     });
 
-    it('checkes a value with [character] keys while listbox unopened', async () => {
+    it('navigates through list with [ArrowLeft] [ArrowRight] keys checks the option while listbox unopened', async () => {
+      let isTriggeredByUser;
+      const el = /** @type {LionSelectRich} */ (
+        await fixture(html`
+          <lion-select-rich
+            interaction-mode="windows/linux"
+            @model-value-changed="${(/** @type {CustomEvent} */ event) => {
+              isTriggeredByUser = event.detail.isTriggeredByUser;
+            }}"
+          >
+            <lion-options slot="input">
+              <lion-option .choiceValue=${10}>Item 1</lion-option>
+              <lion-option .choiceValue=${20}>Item 2</lion-option>
+              <lion-option .choiceValue=${30}>Item 3</lion-option>
+            </lion-options>
+          </lion-select-rich>
+        `)
+      );
+
+      const options = el.formElements;
+      expect(el.checkedIndex).to.equal(0);
+      expectOnlyGivenOneOptionToBeChecked(options, 0);
+
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowRight' }));
+      expect(el.checkedIndex).to.equal(1);
+      expectOnlyGivenOneOptionToBeChecked(options, 1);
+      expect(isTriggeredByUser).to.be.true;
+
+      isTriggeredByUser = false;
+
+      el.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowLeft' }));
+      expect(el.checkedIndex).to.equal(0);
+      expectOnlyGivenOneOptionToBeChecked(options, 0);
+      expect(isTriggeredByUser).to.be.true;
+    });
+
+    it('checks a value with [character] keys while listbox unopened', async () => {
       const el = /** @type {LionSelectRich} */ (
         await fixture(html`
           <lion-select-rich interaction-mode="windows/linux">

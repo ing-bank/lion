@@ -489,7 +489,7 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
    * @param {KeyboardEvent} ev
    * @protected
    */
-  // TODO: rename to _onKeyUp in v1
+  // TODO: rename to #invokerOnKeyUp() (and move event listener to the invoker) in v1
   __onKeyUp(ev) {
     if (this.disabled || this.readOnly) {
       return;
@@ -527,6 +527,22 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
           );
         } else {
           this.opened = true;
+        }
+        break;
+      case 'ArrowLeft':
+        ev.preventDefault();
+        if (this.navigateWithinInvoker) {
+          this.setCheckedIndex(
+            this._getPreviousEnabledOption(/**  @type {number} */ (this.checkedIndex)),
+          );
+        }
+        break;
+      case 'ArrowRight':
+        ev.preventDefault();
+        if (this.navigateWithinInvoker) {
+          this.setCheckedIndex(
+            this._getNextEnabledOption(/**  @type {number} */ (this.checkedIndex)),
+          );
         }
         break;
       default:
