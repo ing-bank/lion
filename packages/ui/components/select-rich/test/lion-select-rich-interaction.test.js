@@ -188,7 +188,7 @@ describe('lion-select-rich interactions', () => {
   });
 
   describe('Invoker Keyboard navigation Windows/Linux', () => {
-    it('navigates through list with [ArrowDown] [ArrowUp] keys checks the option while listbox unopened', async () => {
+    it('navigation through list with [ArrowDown] [ArrowUp] keys checks the option while listbox unopened', async () => {
       let isTriggeredByUser;
       const el = /** @type {LionSelectRich} */ (
         await fixture(html`
