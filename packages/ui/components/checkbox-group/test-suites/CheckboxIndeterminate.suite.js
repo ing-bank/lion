@@ -246,6 +246,25 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       expect(elIndeterminate?.hasAttribute('checked')).to.be.true;
     });
 
+    it('should be unchecked when it has an disabled checked child and an unchecked child', async () => {
+      // Arrange
+      const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
+      <${groupTag} name="scientists[]">
+        <${tag} label="Favorite scientists">
+          <${childTag} disabled checked label="Archimedes"></${childTag}>
+          <${childTag} label="Francis Bacon"></${childTag}>
+        </${tag}>
+      </${groupTag}>
+    `);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${cfg.tagString}`)
+      );
+
+      // Assert
+      expect(elIndeterminate?.hasAttribute('checked')).to.be.false;
+    });
+
     it('should be indeterminated when some of the children are prechecked', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ await fixture(html`

@@ -89,9 +89,11 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         break;
       default: {
         this.indeterminate = true;
-        const disabledElements = subCheckboxes.filter(checkbox => checkbox.disabled);
+        const disabledUncheckedElements = subCheckboxes.filter(
+          checkbox => checkbox.disabled && checkbox.checked === false,
+        );
         this.checked =
-          subCheckboxes.length - checkedElements.length - disabledElements.length === 0;
+          subCheckboxes.length - checkedElements.length - disabledUncheckedElements.length === 0;
       }
     }
     this.updateComplete.then(() => {
