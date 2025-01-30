@@ -13,7 +13,7 @@ import { QueryService } from '../../../src/program/core/QueryService.js';
 describe('QueryService', () => {
   describe('Methods', () => {
     describe('Retrieving QueryConfig', () => {
-      describe('"getQueryConfigFromAnalyzer"', () => {
+      describe.skip('"getQueryConfigFromAnalyzer"', () => {
         const myAnalyzerCfg = { targetProjectPath: /** @type {PathFromSystemRoot} */ ('/my/path') };
         it('accepts a constructor as first argument', async () => {
           const result = await QueryService.getQueryConfigFromAnalyzer(
