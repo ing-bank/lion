@@ -69,6 +69,6 @@ describe('parseAmount()', async () => {
     expect(parseAmount('123.456,78', { mode: 'auto' })).to.equal(123456.78);
     expect(
       parseAmount('123.456,78', { mode: 'user-edited', viewValueStates: ['formatted'] }),
-    ).to.equal(123.45678);
+    ).to.equal(123456.78);
   });
 });

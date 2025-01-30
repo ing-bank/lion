@@ -131,7 +131,7 @@ describe('<lion-input-amount>', () => {
     expect(_inputNode.value).to.equal('100.12');
   });
 
-  it('adjusts formats with locale when formatOptions.mode is "user-edited"', async () => {
+  it('formats with locale when formatOptions.mode is "user-edited" and value has three decimal places', async () => {
     const el = /** @type {LionInputAmount} */ (
       await fixture(
         html`<lion-input-amount
@@ -154,11 +154,58 @@ describe('<lion-input-amount>', () => {
     expect(el.modelValue).to.equal(123456);
     expect(el.formattedValue).to.equal('123.456,00');
 
+    // When editing an already existing value, we interpet the separators as they are.
+    // However, only when the decimal places are 3 or more.
+    mimicUserInput(el, '123.456.00');
+    expect(parserSpy.lastCall.args[1]?.mode).to.equal('user-edited');
+    expect(formatterSpy.lastCall.args[1]?.mode).to.equal('user-edited');
+    expect(el.modelValue).to.equal(123456);
+    expect(el.formattedValue).to.equal('123.456,00');
+
     // Formatting should only affect values that should be formatted / parsed as a consequence of user input.
     // When a user finished editing, the default should be restored.
     // (think of a programmatically set modelValue, that should behave idempotent, regardless of when it is set)
     el.modelValue = 1234;
     expect(el.formattedValue).to.equal('1.234,00');
+    expect(formatterSpy.lastCall.args[1]?.mode).to.equal('auto');
+  });
+
+  it('formats with heuristic when formatOptions.mode is "user-edited" and value has two decimal places', async () => {
+    const el = /** @type {LionInputAmount} */ (
+      await fixture(
+        html`<lion-input-amount
+          .modelValue=${64}
+          currency="EUR"
+          .formatOptions="${{ locale: 'en-GB' }}"
+        ></lion-input-amount>`,
+      )
+    );
+    const parserSpy = sinon.spy(el, 'parser');
+    const formatterSpy = sinon.spy(el, 'formatter');
+
+    expect(el.formattedValue).to.equal('64.00');
+    // @ts-expect-error [allow-protected] in test
+    expect(el._inputNode.value).to.equal('64.00');
+
+    // When editing an already existing value, we interpret the separators based on decimal places when there's 1 or
+    // less separator in total (otherwise we would accidentally multiply or divide by 1000)
+    mimicUserInput(el, '64,00');
+    expect(parserSpy.lastCall.args[1]?.mode).to.equal('user-edited');
+    expect(formatterSpy.lastCall.args[1]?.mode).to.equal('user-edited');
+    expect(el.modelValue).to.equal(64);
+    expect(el.formattedValue).to.equal('64.00');
+
+    mimicUserInput(el, '64,0');
+    expect(parserSpy.lastCall.args[1]?.mode).to.equal('user-edited');
+    expect(formatterSpy.lastCall.args[1]?.mode).to.equal('user-edited');
+    expect(el.modelValue).to.equal(64);
+    expect(el.formattedValue).to.equal('64.00');
+
+    // Formatting should only affect values that should be formatted / parsed as a consequence of user input.
+    // When a user finished editing, the default should be restored.
+    // (think of a programmatically set modelValue, that should behave idempotent, regardless of when it is set)
+    el.modelValue = 1234;
+    expect(el.formattedValue).to.equal('1,234.00');
     expect(formatterSpy.lastCall.args[1]?.mode).to.equal('auto');
   });
 
