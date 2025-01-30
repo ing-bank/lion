@@ -1,5 +1,16 @@
 # @lion/ui
 
+## 0.11.0
+
+### Minor Changes
+
+- 29b729e: [input-amount] make sure that previous locale is not used for parsing on user-edit with <= 2 decimals
+
+### Patch Changes
+
+- b983379: [validate-messages] updated translation of the MinNumber and MaxNumber validation error messages, so that endpoint is included.
+- 41fecd3: [select-rich] allow arrowLeft and arrowRight to change the value when navigateWithinInvoker is true and dropdown is closed
+
 ## 0.10.1
 
 ### Patch Changes
