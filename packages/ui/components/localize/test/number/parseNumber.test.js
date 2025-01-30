@@ -82,7 +82,7 @@ describe('parseNumber()', () => {
     expect(parseNumber('123.456,78', { mode: 'auto' })).to.equal(123456.78);
     expect(
       parseNumber('123.456,78', { mode: 'user-edited', viewValueStates: ['formatted'] }),
-    ).to.equal(123.45678);
+    ).to.equal(123456.78);
   });
 
   it('detects separators unparseable when there are 2 same ones e.g. 1.234.56', () => {

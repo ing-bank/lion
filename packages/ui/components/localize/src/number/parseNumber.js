@@ -20,25 +20,34 @@ import { getDecimalSeparator } from './getDecimalSeparator.js';
  * @return {string} unparseable|withLocale|heuristic
  */
 function getParseMode(value, { mode = 'auto', viewValueStates } = {}) {
-  const separators = value.match(/[., ]/g);
-
-  // When a user edits an existing value, we already formatted it with a certain locale.
-  // For best UX, we stick with this locale
-  const shouldAlignWithExistingSeparators =
+  const separatorsRe = /[., ]/g;
+  const separators = value.match(separatorsRe) || [];
+  // @ts-expect-error [wait-for-platform-types]
+  const decimalPlaces = (value.split(separatorsRe) || []).at(-1).length;
+  const isCurViewFormattedAndUserIsEditing =
     viewValueStates?.includes('formatted') && mode === 'user-edited';
 
-  if (!separators || shouldAlignWithExistingSeparators) {
+  // When a user edits an existing value, we already formatted it with a certain locale.
+  // For best UX, we stick with this locale. However, we only do this when the user has
+  // entered at least 3 decimal places.
+  const shouldUseCurLocale = isCurViewFormattedAndUserIsEditing && decimalPlaces > 2;
+
+  const shouldUseLocale =
+    shouldUseCurLocale ||
+    !separators.length ||
+    (mode === 'auto' && separators.length === 1 && decimalPlaces >= 3);
+  if (shouldUseLocale) {
     return 'withLocale';
   }
-  if (mode === 'auto' && separators.length === 1) {
-    const decimalLength = value.split(`${separators}`)[1].length;
-    if (decimalLength >= 3) {
-      return 'withLocale';
-    }
-  }
-  if (separators.length === 1 || separators[0] !== separators[separators.length - 1]) {
+
+  const shouldUseHeuristic =
+    (isCurViewFormattedAndUserIsEditing && decimalPlaces <= 2) ||
+    separators.length === 1 ||
+    separators[0] !== separators[separators.length - 1];
+  if (shouldUseHeuristic) {
     return 'heuristic';
   }
+
   return 'unparseable';
 }
 
