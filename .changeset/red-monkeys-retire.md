@@ -1,5 +1,5 @@
 ---
-'@lion/ui': minor
+'@lion/ui': patch
 ---
 
-Updated translation of the MinNumber and MaxNumber validation error messages, so that endpoint is included.
+[validate-messages] updated translation of the MinNumber and MaxNumber validation error messages, so that endpoint is included.
