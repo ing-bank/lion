@@ -39,9 +39,9 @@
   "dependencies": {
     "@rollup/plugin-node-resolve": "^16.0.0",
     "commander": "^2.20.3",
-    "oxc-parser": "^0.46.0",
+    "oxc-parser": "^0.48.1",
     "parse5": "^7.2.1",
-    "semver": "^7.6.3"
+    "semver": "^7.7.0"
   },
   "peerDependencies": {
     "@babel/parser": "^7.25.8",
