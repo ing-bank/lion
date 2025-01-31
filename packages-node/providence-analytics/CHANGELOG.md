@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.18.2
+
+### Patch Changes
+
+- 0d3b2fd: update oxc-parser
+
 ## 0.18.1
 
 ### Patch Changes
