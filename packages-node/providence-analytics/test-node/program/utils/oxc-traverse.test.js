@@ -73,7 +73,7 @@ describe('oxcTraverse', () => {
         'ImportDeclaration',
         'ImportDefaultSpecifier',
         'Identifier',
-        'StringLiteral',
+        'Literal',
       ]);
     });
 

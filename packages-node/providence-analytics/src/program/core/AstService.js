@@ -74,16 +74,19 @@ export class AstService {
   /**
    * Compiles an array of file paths using swc.
    * @param {string} code
-   * @param {ParserOptions} parserOptions
+   * @param {object} opts
+   * @param {string} [opts.filePath]
+   * @param {ParserOptions} [opts.parserOptions]
    * @returns {Promise<OxcParseResult>}
    */
-  static async _getOxcAst(code, parserOptions = {}) {
+  static async _getOxcAst(code, { filePath = '', parserOptions = {} } = {}) {
     if (!oxcParser) {
       // eslint-disable-next-line import/no-extraneous-dependencies
       oxcParser = (await import('oxc-parser')).default;
     }
 
-    return oxcParser.parseSync(code, parserOptions).program;
+    // we can only send stringified data with napi
+    return oxcParser.parseSync(filePath, code, parserOptions);
   }
 
   /**
@@ -126,7 +129,7 @@ export class AstService {
         return await this._getSwcAst(code);
       }
       if (astType === 'oxc') {
-        return await this._getOxcAst(code);
+        return await this._getOxcAst(code, { filePath });
       }
       throw new Error(`astType "${astType}" not supported.`);
     } catch (e) {

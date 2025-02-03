@@ -17,9 +17,13 @@ import { Analyzer } from '../core/Analyzer.js';
  * @typedef {import("@swc/core").Node} SwcNode
  */
 
-// const exportedNames = ['exported'];
-// const importedNames = ['orig', 'imported', 'local'];
-// const valueNames = ['name', 'value'];
+/**
+ * @param {SwcNode|undefined} node
+ * @returns {boolean}
+ */
+function isLiteral(node) {
+  return node?.type === 'Literal' || node?.type === 'StringLiteral';
+}
 
 /**
  * Intends to work for oxc, swc, and babel asts
@@ -68,6 +72,8 @@ function getImportOrReexportsSpecifiers(node) {
  */
 function findImportsPerAstFile(oxcAst) {
   LogService.debug(`Analyzer "find-imports": started findImportsPerAstFile method`);
+
+  // TODO: possibly make traversal quicker by using import/export data from oxcAst.module
 
   // https://github.com/babel/babel/blob/672a58660f0b15691c44582f1f3fdcdac0fa0d2f/packages/babel-core/src/transformation/index.ts#L110
   // Visit AST...
@@ -125,10 +131,9 @@ function findImportsPerAstFile(oxcAst) {
       // TODO: also check for ['file']
       const importSpecifiers = ['[default]'];
       const dynamicImportExpression = node.arguments[0].expression;
-      const source =
-        dynamicImportExpression.type === 'StringLiteral'
-          ? dynamicImportExpression.value
-          : '[variable]';
+      const source = isLiteral(dynamicImportExpression)
+        ? dynamicImportExpression.value
+        : '[variable]';
       transformedFile.push({ importSpecifiers, source });
     },
     // Dynamic imports for oxc
@@ -140,10 +145,9 @@ function findImportsPerAstFile(oxcAst) {
       // TODO: also check for ['file']
       const importSpecifiers = ['[default]'];
       const dynamicImportExpression = node.expression;
-      const source =
-        dynamicImportExpression.source?.type === 'StringLiteral'
-          ? dynamicImportExpression.source.value
-          : '[variable]';
+      const source = isLiteral(dynamicImportExpression.source)
+        ? dynamicImportExpression.source.value
+        : '[variable]';
       transformedFile.push({ importSpecifiers, source });
     },
   });

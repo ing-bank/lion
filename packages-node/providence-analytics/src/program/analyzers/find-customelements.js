@@ -74,7 +74,10 @@ function findCustomElementsPerAstFile(oxcAst) {
         let tagName;
         let constructorIdentifier;
 
-        if (astPath.node.arguments[0].type === 'StringLiteral') {
+        if (
+          astPath.node.arguments[0].type === 'StringLiteral' ||
+          astPath.node.arguments[0].type === 'Literal'
+        ) {
           tagName = astPath.node.arguments[0].value;
         } else {
           // No Literal found. For now, we only mark them as '[variable]'

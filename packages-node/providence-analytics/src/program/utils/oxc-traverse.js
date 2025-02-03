@@ -1,14 +1,15 @@
 /**
  * @typedef {import('../../../types/index.js').SwcTraversalContext} SwcTraversalContext
  * @typedef {import('@swc/core').VariableDeclarator} SwcVariableDeclarator
- * @typedef {import('@swc/core').Identifier} SwcIdentifierNode
- * @typedef {import('@swc/core').Module} SwcAstModule
- * @typedef {import('@swc/core').Node} SwcNode
- * @typedef {import('../../../types/index.js').SwcPath} SwcPath
- * @typedef {import('../../../types/index.js').SwcScope} SwcScope
  * @typedef {import('../../../types/index.js').SwcVisitor} SwcVisitor
  * @typedef {import('../../../types/index.js').SwcBinding} SwcBinding
+ * @typedef {import('../../../types/index.js').SwcScope} SwcScope
+ * @typedef {import('../../../types/index.js').SwcPath} SwcPath
+ * @typedef {import("oxc-parser").ParseResult} OxcParseResult
+ * @typedef {import('@swc/core').Identifier} SwcIdentifierNode
  * @typedef {import('oxc-parser').ParseResult} OxcNode
+ * @typedef {import('@swc/core').Module} SwcAstModule
+ * @typedef {import('@swc/core').Node} SwcNode
  */
 
 /**
@@ -308,12 +309,15 @@ function visit(swcPath, visitor, traversalContext) {
 
 /**
  * Simple traversal for swc ast.
- * @param {SwcAstModule|SwcNode} oxcAst
+ * @param {OxcParseResult|SwcAstModule|SwcNode} oxcAst
  * @param {SwcVisitor} visitor
  * @param {object} config
  * @param {boolean} [config.needsAdvancedPaths] needs a full traversal before starting the visitor, which is less performant. Only enable when path.get() is used
  */
 export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}) {
+  // @ts-expect-error
+  // Before traversing, normalize so that we're still compatible with both oxc and swc
+  const ast = oxcAst.program || oxcAst;
   /**
    * For performance, the author of a visitor can call this to stop further traversal
    */
@@ -401,9 +405,9 @@ export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}
   if (needsAdvancedPaths) {
     // Do one full traversal to prepare advanced path functionality like path.get() and path.scope.bindings
     // TODO: improve with on the fly, partial tree traversal for best performance
-    prepareTree(oxcAst, null, initialScope, traversalContext);
+    prepareTree(ast, null, initialScope, traversalContext);
   }
-  visitTree(oxcAst, null, initialScope, { hasPreparedTree: needsAdvancedPaths }, traversalContext);
+  visitTree(ast, null, initialScope, { hasPreparedTree: needsAdvancedPaths }, traversalContext);
   // @ts-expect-error
   traversalContext.visitOnExitFns.reverse().forEach(fn => fn());
 }

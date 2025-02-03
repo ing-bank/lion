@@ -195,6 +195,7 @@ function findExportsPerAstFile(oxcAst, { skipFileImports }) {
     const exportSpecifiers = ['[default]'];
     const { node } = astPath;
     let source;
+
     // Is it an inline declaration like "export default class X {};" ?
     if (
       node.decl?.type === 'Identifier' ||
