@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.18.4
+
+### Patch Changes
+
+- 87ba78e: fix: provide right ast to oxcTraverse
+
 ## 0.18.3
 
 ### Patch Changes
