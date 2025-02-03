@@ -313,7 +313,7 @@ async function trackDownIdentifierFn(
     ExportDeclaration: handleExportDeclOrNamedDecl,
   };
 
-  oxcTraverse(oxcAst.program, visitor, { needsAdvancedPaths: true });
+  oxcTraverse(oxcAst, visitor, { needsAdvancedPaths: true });
 
   if (pendingTrackDownPromise) {
     // We can't handle promises inside Babel traverse, so we do it here...
