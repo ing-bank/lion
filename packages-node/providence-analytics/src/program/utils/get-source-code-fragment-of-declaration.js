@@ -31,6 +31,16 @@ export function getFilePathOrExternalSource({ rootPath, localPath }) {
 }
 
 /**
+ * Checks whether we are a Declaration (like class X {}) or Declarator (like const x = 88)
+ * @param {SwcNode} node
+ * @returns {boolean}
+ */
+function containsIdentifier(node) {
+  // @ts-expect-error
+  return node.id || node.identifier;
+}
+
+/**
  *  Assume we had:
  *  ```js
  *  const x = 88;
@@ -47,25 +57,33 @@ export function getFilePathOrExternalSource({ rootPath, localPath }) {
  */
 export function getReferencedDeclaration({ referencedIdentifierName, globalScopeBindings }) {
   // We go from referencedIdentifierName 'y' to binding (VariableDeclarator path) 'y';
-  const refDeclaratorBinding = globalScopeBindings[referencedIdentifierName];
+  const identifierBinding = /** @type {SwcBinding} */ (
+    globalScopeBindings[referencedIdentifierName]
+  );
 
   // We provided a referencedIdentifierName that is not in the globalScopeBindings
-  if (!refDeclaratorBinding) {
-    return null;
+  if (!identifierBinding) return null;
+
+  const { type } = identifierBinding.path.node;
+  const isNonRefDeclaration = type.endsWith('Declaration');
+  if (isNonRefDeclaration && !containsIdentifier(identifierBinding.path.node)) {
+    throw new Error('Make sure entries added to globalScopeBindings contains an identifier');
   }
 
-  if (['ImportSpecifier', 'ImportDefaultSpecifier'].includes(refDeclaratorBinding.path.node.type)) {
-    return refDeclaratorBinding.path;
+  const isImportingSpecifier = ['ImportSpecifier', 'ImportDefaultSpecifier'].includes(type);
+  if (isImportingSpecifier || isNonRefDeclaration) {
+    return identifierBinding.path;
   }
 
-  if (refDeclaratorBinding.path.node.init.type === 'Identifier') {
+  const isRefDeclarator = identifierBinding.path.node.init.type === 'Identifier';
+  if (isRefDeclarator) {
     return getReferencedDeclaration({
-      referencedIdentifierName: nameOf(refDeclaratorBinding.path.node.init),
+      referencedIdentifierName: nameOf(identifierBinding.path.node.init),
       globalScopeBindings,
     });
   }
 
-  return refDeclaratorBinding.path.get('init');
+  return /** @type {SwcPath} */ (identifierBinding.path.get('init'));
 }
 
 /**

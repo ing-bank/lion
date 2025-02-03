@@ -1,11 +1,11 @@
-import { IdentifierName } from "../index.js";
+import { IdentifierName } from '../index.js';
 
 export type SwcScope = {
   id: number;
   parentScope?: Scope;
   bindings: { [key: string]: SwcBinding };
   path: SwcPath | null;
-  getBinding: (IdentifierName:string) => SwcBinding;
+  getBinding: (IdentifierName: string) => SwcBinding;
   _pendingRefsWithoutBinding: SwcNode[];
   _isIsolatedBlockStatement: boolean;
 };
@@ -15,7 +15,7 @@ export type SwcBinding = {
   identifier: SwcNode;
   // kind: string;
   refs: SwcNode[];
-  path: SwcPath | null | undefined;
+  path: SwcPath;
 };
 
 export type SwcPath = {

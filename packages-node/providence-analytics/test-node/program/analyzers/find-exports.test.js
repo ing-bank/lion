@@ -100,6 +100,33 @@ describe('Analyzer "find-exports"', async () => {
       expect(firstEntry.result[0].source).to.equal('y');
     });
 
+    it(`supports "const x = 0; export default x;" (default, referenced export)`, async () => {
+      mockProject([`const x = 0; export default x;`]);
+      const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
+      const firstEntry = getEntry(queryResults[0]);
+      expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
+      expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('[default]');
+      expect(firstEntry.result[0].source).to.equal(undefined);
+    });
+
+    it(`supports "class X {}; export default X;" (default, referenced ClassDeclaration export)`, async () => {
+      mockProject([`class X {}; export default X;`]);
+      const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
+      const firstEntry = getEntry(queryResults[0]);
+      expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
+      expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('[default]');
+      expect(firstEntry.result[0].source).to.equal(undefined);
+    });
+
+    it(`supports "function x() {}; export default x;" (default, referenced FunctionDeclaration export)`, async () => {
+      mockProject([`function x() {}; export default x;`]);
+      const queryResults = await providence(findExportsQueryConfig, _providenceCfg);
+      const firstEntry = getEntry(queryResults[0]);
+      expect(firstEntry.result[0].exportSpecifiers.length).to.equal(1);
+      expect(firstEntry.result[0].exportSpecifiers[0]).to.equal('[default]');
+      expect(firstEntry.result[0].source).to.equal(undefined);
+    });
+
     it(`supports "export { x } from 'my/source'" (re-export named specifier)`, async () => {
       mockProject([`export { x } from 'my/source'`]);
       const queryResults = await providence(findExportsQueryConfig, _providenceCfg);

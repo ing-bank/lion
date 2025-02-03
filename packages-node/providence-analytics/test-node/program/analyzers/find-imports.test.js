@@ -23,6 +23,7 @@ describe('Analyzer "find-imports"', async () => {
   describe('Import notations', () => {
     it(`supports [import 'imported/source'] (no specifiers)`, async () => {
       mockProject([`import 'imported/source'`]);
+
       const queryResults = await providence(findImportsQueryConfig, _providenceCfg);
       const queryResult = queryResults[0];
       const firstEntry = getEntry(queryResult);
