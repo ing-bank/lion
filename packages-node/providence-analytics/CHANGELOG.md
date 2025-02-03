@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.18.3
+
+### Patch Changes
+
+- 103df25: - pin oxc-parser for stability/predictability
+  - fix export default edge cases in `find-exports`
+
 ## 0.18.2
 
 ### Patch Changes
