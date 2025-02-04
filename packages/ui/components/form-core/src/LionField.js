@@ -44,7 +44,7 @@ export class LionField extends FormControlMixin(
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this._inputNode.removeEventListener('change', this._onChange);
+    this._inputNode?.removeEventListener('change', this._onChange);
   }
 
   resetInteractionState() {

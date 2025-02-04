@@ -49,17 +49,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
    * @protected
    */
   get _subCheckboxes() {
-    let checkboxes = [];
-    if (
-      this._checkboxGroupNode &&
-      this._checkboxGroupNode.formElements &&
-      this._checkboxGroupNode.formElements.length > 0
-    ) {
-      checkboxes = this._checkboxGroupNode.formElements.filter(
-        checkbox => checkbox !== this && this.contains(checkbox),
-      );
-    }
-    return /** @type LionCheckbox[] */ (checkboxes);
+    return /** @type LionCheckbox[] */ (this.__subCheckboxes);
   }
 
   _storeIndeterminateState() {
@@ -97,9 +87,14 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         this.indeterminate = false;
         this.checked = false;
         break;
-      default:
+      default: {
         this.indeterminate = true;
-        this.checked = false;
+        const disabledUncheckedElements = subCheckboxes.filter(
+          checkbox => checkbox.disabled && checkbox.checked === false,
+        );
+        this.checked =
+          subCheckboxes.length - checkedElements.length - disabledUncheckedElements.length === 0;
+      }
     }
     this.updateComplete.then(() => {
       this.__settingOwnChecked = false;
@@ -155,13 +150,12 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
         subCheckboxes.length > 0 && subCheckboxes.length === checkedElements.length;
       const allDisabled =
         subCheckboxes.length > 0 && subCheckboxes.length === disabledElements.length;
-      const hasDisabledElements = disabledElements.length > 0;
 
       if (allDisabled) {
         this.checked = allChecked;
       }
 
-      if (this.indeterminate && (this.mixedState || hasDisabledElements)) {
+      if (this.indeterminate && this.mixedState) {
         this._subCheckboxes.forEach((checkbox, i) => {
           // eslint-disable-next-line no-param-reassign
           checkbox.checked = this._indeterminateSubStates[i];
@@ -211,6 +205,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     if (!(/** @type {HTMLElement} */ (ev.target).hasAttribute('role'))) {
       /** @type {HTMLElement} */ (ev.target)?.setAttribute('role', 'listitem');
     }
+    this.__addToSubCheckboxes(/** @type {CustomEvent} */ (ev).detail.element);
     this._setOwnCheckedState();
   }
 
@@ -223,6 +218,26 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     if (/** @type {HTMLElement} */ (ev.target).getAttribute('role') === 'listitem') {
       /** @type {HTMLElement} */ (ev.target)?.removeAttribute('role');
     }
+    this.__removeFromSubCheckboxes(/** @type {CustomEvent} */ (ev).detail.element);
+  }
+
+  /**
+   * @param {HTMLElement} element
+   */
+  __addToSubCheckboxes(element) {
+    if (element !== this && this.contains(element)) {
+      this.__subCheckboxes.push(element);
+    }
+  }
+
+  /**
+   * @param {HTMLElement} element
+   */
+  __removeFromSubCheckboxes(element) {
+    const index = this.__subCheckboxes.indexOf(element);
+    if (index !== -1) {
+      this.__subCheckboxes.splice(index, 1);
+    }
   }
 
   constructor() {
@@ -230,6 +245,8 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     this.indeterminate = false;
     this._onRequestToAddFormElement = this._onRequestToAddFormElement.bind(this);
     this.__onModelValueChanged = this.__onModelValueChanged.bind(this);
+    /** @type {HTMLElement[]} */
+    this.__subCheckboxes = [];
     /** @type {boolean[]} */
     this._indeterminateSubStates = [];
     this.mixedState = false;
@@ -259,7 +276,13 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
   /** @param {import('lit-element').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
-    if (changedProperties.has('indeterminate')) {
+
+    // When 1. sub checkboxes have disabled elements and 2. some elements are checked while the others are unchecked
+    // both this._inputNode.indeterminate and this.indeterminate are already true.
+    // If user clicks the input node, this._inputNode.indeterminate is turned to false by the browser
+    // while this.indeterminate is still true and the 'indeterminate' is not in the changedProperties
+    // because it hasn't been updated (true -> true) but checked would have been updated (false -> true).
+    if (changedProperties.has('indeterminate') || changedProperties.has('checked')) {
       this._inputNode.indeterminate = this.indeterminate;
     }
   }

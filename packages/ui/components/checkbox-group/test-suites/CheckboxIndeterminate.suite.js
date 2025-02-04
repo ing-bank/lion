@@ -205,7 +205,84 @@ export function runCheckboxIndeterminateSuite(customConfig) {
 
       // Assert
       expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.true;
-      expect(elIndeterminate?.checked).to.be.false;
+      expect(elIndeterminate?.checked).to.be.true;
+    });
+
+    it('should be checked when all children are prechecked', async () => {
+      // Arrange
+      const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
+      <${groupTag} name="scientists[]">
+        <${tag} label="Favorite scientists">
+          <${childTag} checked label="Archimedes"></${childTag}>
+          <${childTag} checked label="Francis Bacon"></${childTag}>
+          <${childTag} checked label="Marie Curie"></${childTag}>
+        </${tag}>
+      </${groupTag}>
+    `);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${cfg.tagString}`)
+      );
+
+      // Assert
+      expect(elIndeterminate?.hasAttribute('checked')).to.be.true;
+    });
+
+    it('should be checked when it has one prechecked child', async () => {
+      // Arrange
+      const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
+      <${groupTag} name="scientists[]">
+        <${tag} label="Favorite scientists">
+          <${childTag} checked label="Archimedes"></${childTag}>
+        </${tag}>
+      </${groupTag}>
+    `);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${cfg.tagString}`)
+      );
+
+      // Assert
+      expect(elIndeterminate?.hasAttribute('checked')).to.be.true;
+    });
+
+    it('should be unchecked when it has an disabled checked child and an unchecked child', async () => {
+      // Arrange
+      const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
+      <${groupTag} name="scientists[]">
+        <${tag} label="Favorite scientists">
+          <${childTag} disabled checked label="Archimedes"></${childTag}>
+          <${childTag} label="Francis Bacon"></${childTag}>
+        </${tag}>
+      </${groupTag}>
+    `);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${cfg.tagString}`)
+      );
+
+      // Assert
+      expect(elIndeterminate?.hasAttribute('checked')).to.be.false;
+    });
+
+    it('should be indeterminated when some of the children are prechecked', async () => {
+      // Arrange
+      const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
+      <${groupTag} name="scientists[]">
+        <${tag} label="Favorite scientists">
+          <${childTag} checked label="Archimedes"></${childTag}>
+          <${childTag} checked label="Francis Bacon"></${childTag}>
+          <${childTag} label="Marie Curie"></${childTag}>
+        </${tag}>
+      </${groupTag}>
+    `);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${cfg.tagString}`)
+      );
+
+      // Assert
+      expect(elIndeterminate.hasAttribute('indeterminate')).to.be.true;
     });
 
     it('should sync all children when parent is checked (from indeterminate to checked)', async () => {
@@ -384,6 +461,65 @@ export function runCheckboxIndeterminateSuite(customConfig) {
       expect(_subCheckboxes[2].hasAttribute('checked')).to.be.false;
     });
 
+    it('should sync all prechecked children when parent is indeterminate and some of the children are disabled (from checked to unchecked)', async () => {
+      // Arrange
+      const el = /**  @type {LionCheckboxGroup} */ (
+        await fixture(html`
+        <${groupTag} name="scientists[]">
+          <${tag} label="Favorite scientists">
+            <${childTag} checked label="Archimedes"></${childTag}>
+            <${childTag} disabled label="Francis Bacon"></${childTag}>
+            <${childTag} checked label="Marie Curie"></${childTag}>
+          </${tag}>
+        </${groupTag}>
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${cfg.tagString}`)
+      );
+      const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
+
+      // Act
+      _inputNode.click();
+      await elIndeterminate.updateComplete;
+
+      // Assert
+      expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.false;
+      expect(_inputNode?.hasAttribute('indeterminate')).to.be.false;
+      expect(_subCheckboxes[0].hasAttribute('checked')).to.be.false;
+      expect(_subCheckboxes[1].hasAttribute('checked')).to.be.false;
+      expect(_subCheckboxes[2].hasAttribute('checked')).to.be.false;
+    });
+
+    it('should stay as indeterminated after it is clicked, when it is interminated already and some children are disabled', async () => {
+      // Arrange
+      const el = /**  @type {LionCheckboxGroup} */ (
+        await fixture(html`
+        <${groupTag} name="scientists[]">
+          <${tag} label="Favorite scientists">
+            <${childTag} checked label="Archimedes"></${childTag}>
+            <${childTag} disabled label="Francis Bacon"></${childTag}>
+            <${childTag} label="Marie Curie"></${childTag}>
+          </${tag}>
+        </${groupTag}>
+      `)
+      );
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${cfg.tagString}`)
+      );
+      const { _subCheckboxes, _inputNode } = getCheckboxIndeterminateMembers(elIndeterminate);
+
+      // Act
+      _inputNode.click();
+      await elIndeterminate.updateComplete;
+
+      // Assert
+      expect(elIndeterminate.hasAttribute('indeterminate')).to.be.true;
+      expect(_inputNode.indeterminate).to.be.true;
+      expect(_subCheckboxes[0].hasAttribute('checked')).to.be.true;
+      expect(_subCheckboxes[2].hasAttribute('checked')).to.be.true;
+    });
+
     it('should work as expected with siblings checkbox-indeterminate', async () => {
       // Arrange
       const el = /**  @type {LionCheckboxGroup} */ (
@@ -448,6 +584,58 @@ export function runCheckboxIndeterminateSuite(customConfig) {
 
       expect(elSecondSubCheckboxes._subCheckboxes[0].hasAttribute('checked')).to.be.false;
       expect(elSecondSubCheckboxes._subCheckboxes[1].hasAttribute('checked')).to.be.false;
+    });
+
+    it('should work as expected when new checkbox was added', async () => {
+      // Arrange
+      const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
+      <${groupTag} name="scientists[]">
+        <${tag} label="Favorite scientists">
+          <${childTag} checked label="Archimedes"></${childTag}>
+          <${childTag} checked label="Francis Bacon" checked></${childTag}>
+          <${childTag} checked label="Marie Curie"></${childTag}>
+        </${tag}>
+      </${groupTag}>
+    `);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${cfg.tagString}`)
+      );
+      expect(elIndeterminate.hasAttribute('indeterminate')).to.be.false;
+
+      // Act
+      const newChild = document.createElement(/** @type {string} */ (cfg.childTagString));
+      elIndeterminate.appendChild(newChild);
+      await elIndeterminate.updateComplete;
+
+      // Assert
+      expect(elIndeterminate.hasAttribute('indeterminate')).to.be.true;
+    });
+
+    it('should work as expected when an existing checkbox was removed', async () => {
+      // Arrange
+      const el = /**  @type {LionCheckboxGroup} */ await fixture(html`
+      <${groupTag} name="scientists[]">
+        <${tag} label="Favorite scientists">
+          <${childTag} checked label="Archimedes"></${childTag}>
+          <${childTag} checked label="Francis Bacon" checked></${childTag}>
+          <${childTag} label="Marie Curie"></${childTag}>
+        </${tag}>
+      </${groupTag}>
+    `);
+
+      const elIndeterminate = /**  @type {LionCheckboxIndeterminate} */ (
+        el.querySelector(`${cfg.tagString}`)
+      );
+      expect(elIndeterminate.hasAttribute('indeterminate')).to.be.true;
+      expect(elIndeterminate.checked).to.be.false;
+
+      // Act
+      elIndeterminate.removeChild(/** @type {ChildNode} */ (elIndeterminate.lastChild));
+      await elIndeterminate.updateComplete;
+
+      // Assert
+      expect(elIndeterminate?.hasAttribute('indeterminate')).to.be.true;
     });
 
     it('should work as expected with nested indeterminate checkboxes', async () => {
