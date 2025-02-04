@@ -198,19 +198,19 @@ const FocusMixinImplementation = superclass =>
      * @private
      */
     __teardownEventsForFocusMixin() {
-      this._focusableNode.removeEventListener(
+      this._focusableNode?.removeEventListener(
         'focus',
         /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchFocus),
       );
-      this._focusableNode.removeEventListener(
+      this._focusableNode?.removeEventListener(
         'blur',
         /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchBlur),
       );
-      this._focusableNode.removeEventListener(
+      this._focusableNode?.removeEventListener(
         'focusin',
         /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchFocusin),
       );
-      this._focusableNode.removeEventListener(
+      this._focusableNode?.removeEventListener(
         'focusout',
         /** @type {EventListenerOrEventListenerObject} */ (this.__redispatchFocusout),
       );
