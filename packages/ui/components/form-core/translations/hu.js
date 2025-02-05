@@ -1,6 +1,6 @@
 export default {
-  validationError: 'Hiba',
-  validationWarning: 'Figyelmeztetés',
-  validationSuccess: 'Sikeres',
-  validationInfo: 'Információ',
+  validationError: 'Hiba,',
+  validationWarning: 'Figyelmeztetés,',
+  validationSuccess: 'Sikeres,',
+  validationInfo: 'Információ,',
 };

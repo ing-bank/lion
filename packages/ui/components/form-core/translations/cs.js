@@ -1,6 +1,6 @@
 export default {
-  validationError: 'Chyba',
-  validationWarning: 'Varování',
-  validationSuccess: 'Úspěch',
-  validationInfo: 'Informace',
+  validationError: 'Chyba,',
+  validationWarning: 'Varování,',
+  validationSuccess: 'Úspěch,',
+  validationInfo: 'Informace,',
 };

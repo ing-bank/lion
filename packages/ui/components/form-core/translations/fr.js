@@ -1,6 +1,6 @@
 export default {
-  validationError: 'Erreur',
-  validationWarning: 'Avertissement',
-  validationSuccess: 'Succès',
-  validationInfo: 'Info',
+  validationError: 'Erreur,',
+  validationWarning: 'Avertissement,',
+  validationSuccess: 'Succès,',
+  validationInfo: 'Info,',
 };
