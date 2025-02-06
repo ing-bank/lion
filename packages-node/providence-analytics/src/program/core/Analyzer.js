@@ -258,7 +258,7 @@ export class Analyzer {
       if (!compatible) {
         if (!cfg.suppressNonCriticalLogs) {
           LogService.info(
-            `${LogService.pad(`skipping  ${this.name} (${reason})`)}${displayProjectsInLog(this.identifier)}`,
+            `${LogService.pad(`skipping ${this.name} (${reason})`)}${displayProjectsInLog(this.identifier)}`,
           );
         }
         return ensureAnalyzerResultFormat(`[${reason}]`, cfg, this);
