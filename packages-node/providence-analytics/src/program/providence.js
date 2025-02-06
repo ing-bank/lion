@@ -88,6 +88,7 @@ async function handleAnalyzerForProjectCombo(slicedQConfig, cfg) {
     gatherFilesConfigReference: cfg.gatherFilesConfigReference,
     skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
     addSystemPathsInResult: cfg.addSystemPathsInResult,
+    parser: cfg.parser,
     ...slicedQConfig.analyzerConfig,
   });
 

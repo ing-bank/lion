@@ -1,9 +1,10 @@
 import path from 'path';
 
-import { oxcTraverse, getPathFromNode, nameOf } from './oxc-traverse.js';
+import { oxcTraverse, getPathFromNode } from './oxc-traverse.js';
 import { trackDownIdentifier } from './track-down-identifier.js';
 import { AstService } from '../core/AstService.js';
 import { toPosixPath } from './to-posix-path.js';
+import { nameOf } from './ast-normalizations.js';
 import { fsAdapter } from './fs-adapter.js';
 
 /**

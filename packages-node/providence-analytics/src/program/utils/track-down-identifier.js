@@ -3,8 +3,9 @@ import path from 'path';
 import { isRelativeSourcePath, toRelativeSourcePath } from './relative-source-path.js';
 import { InputDataService } from '../core/InputDataService.js';
 import { resolveImportPath } from './resolve-import-path.js';
+import { nameOf, importedOf } from './ast-normalizations.js';
 import { AstService } from '../core/AstService.js';
-import { oxcTraverse, nameOf, importedOf } from './oxc-traverse.js';
+import { oxcTraverse } from './oxc-traverse.js';
 import { fsAdapter } from './fs-adapter.js';
 import { memoize } from './memoize.js';
 

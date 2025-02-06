@@ -2,10 +2,10 @@
 import { normalizeSourcePaths } from './helpers/normalize-source-paths.js';
 import { isRelativeSourcePath } from '../utils/relative-source-path.js';
 import { getAssertionType } from '../utils/get-assertion-type.js';
+import { isLiteral } from '../utils/ast-normalizations.js';
 import { oxcTraverse } from '../utils/oxc-traverse.js';
 import { LogService } from '../core/LogService.js';
 import { Analyzer } from '../core/Analyzer.js';
-
 /**
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
  * @typedef {import('../../../types/index.js').FindImportsAnalyzerResult} FindImportsAnalyzerResult
@@ -16,14 +16,6 @@ import { Analyzer } from '../core/Analyzer.js';
  * @typedef {import("@swc/core").Module} oxcAstModule
  * @typedef {import("@swc/core").Node} SwcNode
  */
-
-/**
- * @param {SwcNode|undefined} node
- * @returns {boolean}
- */
-function isLiteral(node) {
-  return node?.type === 'Literal' || node?.type === 'StringLiteral';
-}
 
 /**
  * Intends to work for oxc, swc, and babel asts
