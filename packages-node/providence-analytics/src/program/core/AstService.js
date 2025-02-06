@@ -63,12 +63,11 @@ export class AstService {
       }
     }
 
-    const ast = swcParser.parseSync(code, {
+    return swcParser.parse(code, {
       syntax: 'typescript',
       target: 'es2022',
       ...parserOptions,
     });
-    return ast;
   }
 
   /**
@@ -94,7 +93,7 @@ export class AstService {
     }
 
     // we can only send stringified data with napi
-    return oxcParser.parseSync(filePath, code, parserOptions);
+    return oxcParser.parseAsync(filePath, code, parserOptions);
   }
 
   /**
