@@ -45,7 +45,7 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 - **Accessibility:** Aimed at compliance with the WCAG 2.2 AA standard to create components that are accessible for everybody.
 - **Flexibility:** Provides solutions through Web Components and JavaScript classes which can be used, adopted and extended to fit all needs.
 - **Modern Code:** Lion is distributes as pure es modules.
-- **Exposes functions/classes and Web Components:** Ships a functionality in it's most appropriate form.
+- **Exposes functions/classes and Web Components:** Ships a functionality in its most appropriate form.
 
 > Note: Our demo examples might look simple and not very stylish. This is on purpose. They are designed to be basic so you can easily add your own styles to them to match your intended design, without dealing with styles that are already there.
 
@@ -113,7 +113,7 @@ You can also use the lion elements directly, although this is likely not a commo
 
 ## Issues
 
-If you encounter an issue with any of the packages we are offering please open a [new bug issue](https://github.com/ing-bank/lion/issues/new?assignees=&labels=&template=bug_report.md&title=). Be sure to include a description of the expected and the current behavior - additional adding a [reproduction](https://webcomponents.dev/edit/kpZmz1CJN580OaXsk56f?pm=1) always helps.
+If you encounter an issue with any of the packages we are offering please open a [new bug issue](https://github.com/ing-bank/lion/issues/new?assignees=&labels=&template=bug_report.md&title=). Be sure to include a description of the expected and the current behavior - additionally adding a [reproduction](https://webcomponents.dev/edit/kpZmz1CJN580OaXsk56f?pm=1) always helps.
 
 ## Feature requests
 
