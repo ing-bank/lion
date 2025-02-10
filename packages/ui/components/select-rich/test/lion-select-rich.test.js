@@ -342,11 +342,17 @@ describe('lion-select-rich', () => {
       expect(elSingleoption.opened).to.be.false;
     });
 
-    it('stays closed with [ArrowUp] or [ArrowDown] key in readonly mode', async () => {
+    it('stays closed with [ArrowUp] or [ArrowDown] key in readonly mode or has a single option', async () => {
       const elReadOnly = await fixture(html`
         <lion-select-rich readonly>
           <lion-option .choiceValue=${10}>Item 1</lion-option>
           <lion-option .choiceValue=${20} checked>Item 2</lion-option>
+        </lion-select-rich>
+      `);
+
+      const elSingleOption = await fixture(html`
+        <lion-select-rich>
+          <lion-option .choiceValue=${10}>Item 1</lion-option>
         </lion-select-rich>
       `);
 
@@ -355,6 +361,12 @@ describe('lion-select-rich', () => {
 
       elReadOnly.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
       expect(elReadOnly.opened).to.be.false;
+
+      elSingleOption.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowDown' }));
+      expect(elSingleOption.opened).to.be.false;
+
+      elSingleOption.dispatchEvent(new KeyboardEvent('keyup', { key: 'ArrowUp' }));
+      expect(elSingleOption.opened).to.be.false;
     });
 
     it('sets inheritsReferenceWidth to min by default', async () => {
