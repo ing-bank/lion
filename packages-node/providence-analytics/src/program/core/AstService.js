@@ -27,7 +27,11 @@ export class AstService {
    */
   static async _getBabelAst(code, parserOptions = {}) {
     if (!babelParser) {
-      babelParser = (await import('@babel/parser')).default;
+      try {
+        babelParser = (await import('@babel/parser')).default;
+      } catch {
+        throw new Error('No valid parser found for "babel". Run `npm i @babel/parser`');
+      }
     }
 
     const ast = babelParser.parse(code, {
@@ -52,15 +56,18 @@ export class AstService {
    */
   static async _getSwcAst(code, parserOptions = {}) {
     if (!swcParser) {
-      swcParser = (await import('@swc/core')).default;
+      try {
+        swcParser = (await import('@swc/core')).default;
+      } catch {
+        throw new Error('No valid parser found for "swc". Run `npm i @swc/core`');
+      }
     }
 
-    const ast = swcParser.parseSync(code, {
+    return swcParser.parse(code, {
       syntax: 'typescript',
       target: 'es2022',
       ...parserOptions,
     });
-    return ast;
   }
 
   /**
@@ -86,7 +93,7 @@ export class AstService {
     }
 
     // we can only send stringified data with napi
-    return oxcParser.parseSync(filePath, code, parserOptions);
+    return oxcParser.parseAsync(filePath, code, parserOptions);
   }
 
   /**

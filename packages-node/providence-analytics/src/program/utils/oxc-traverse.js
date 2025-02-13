@@ -12,11 +12,13 @@
  * @typedef {import('@swc/core').Node} SwcNode
  */
 
+import { nameOf } from './ast-normalizations.js';
+
 /**
  * Contains all node info, to create paths from
  * @type {WeakMap<SwcNode,SwcPath>}
  */
-const swcPathCache = new WeakMap();
+const oxcPathCache = new WeakMap();
 
 const fnTypes = [
   'FunctionDeclaration',
@@ -27,42 +29,6 @@ const fnTypes = [
 ];
 
 const nonBlockParentTypes = [...fnTypes, 'SwitchStatement', 'ClassDeclaration'];
-
-/**
- * @param {SwcNode|OxcNode} node
- */
-export function nameOf(node) {
-  // @ts-expect-error
-  return node.value || node.name;
-}
-
-/**
- * @param {SwcNode|OxcNode} node
- */
-export function importedOf(node) {
-  // @ts-expect-error
-  // babel/oxc vs swc
-  return node?.imported || node?.orig || node?.local;
-}
-
-/**
- * @param {SwcNode|OxcNode} node
- */
-export function isProperty(node) {
-  if (!node) return false;
-
-  switch (node.type) {
-    case 'ObjectProperty':
-    case 'ClassProperty':
-    case 'ClassAccessorProperty':
-    case 'ClassPrivateProperty':
-      break;
-    default:
-      return false;
-  }
-
-  return false;
-}
 
 /**
  * @param {SwcPath} swcPath
@@ -107,7 +73,7 @@ function getNewScope(swcPath, currentScope, traversalContext) {
  * @param {SwcNode} node
  */
 export function getPathFromNode(node) {
-  return swcPathCache.get(node);
+  return oxcPathCache.get(node);
 }
 
 /**
@@ -144,7 +110,7 @@ function createSwcPath(node, parent, stop, scope) {
       return oxcTraverse(node, visitor);
     },
   };
-  swcPathCache.set(node, swcPath);
+  oxcPathCache.set(node, swcPath);
   return swcPath;
 }
 
@@ -159,7 +125,7 @@ function createSwcPath(node, parent, stop, scope) {
 function isBindingNode(parent, identifierName) {
   if (['VariableDeclarator', 'ClassDeclaration'].includes(parent.type)) {
     // @ts-expect-error
-    return nameOf(parent.id) === identifierName;
+    return nameOf(parent.id || parent.identifier) === identifierName;
   }
   return [
     'ArrowFunctionExpression',
@@ -253,6 +219,18 @@ function isRootNode(node) {
 }
 
 /**
+ * Swc wraps arguments in expressions, whereas oxc doesn't..
+ * @param {SwcNode} potentialSwcArg
+ * @returns {SwcNode}
+ */
+function normalizePotentialSwcArgument(potentialSwcArg) {
+  // @ts-expect-error
+  const isSwcArgument = 'spread' in potentialSwcArg && potentialSwcArg.expression;
+  // @ts-expect-error
+  return isSwcArgument ? potentialSwcArg.expression : potentialSwcArg;
+}
+
+/**
  * @param {{node: SwcNode; }} node
  * @param {(data:{child:SwcNode}) => void} callback
  */
@@ -265,7 +243,7 @@ const loopChildren = ({ node }, callback) => {
 
     if (Array.isArray(childVal)) {
       for (const childValElem of childVal) {
-        callback({ child: childValElem });
+        callback({ child: normalizePotentialSwcArgument(childValElem) });
       }
     } else if (typeof childVal === 'object') {
       callback({ child: childVal });
@@ -335,7 +313,7 @@ export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}
    */
   const handlePathAndScope = (node, parent, scope, hasPreparedTree, traversalContext) => {
     if (hasPreparedTree) {
-      const swcPath = /** @type {SwcPath} */ (swcPathCache.get(node));
+      const swcPath = /** @type {SwcPath} */ (oxcPathCache.get(node));
       return {
         swcPath,
         newOrCurScope: getNewScope(swcPath, scope, traversalContext) || scope,

@@ -173,6 +173,7 @@ export type ProvidenceConfig = {
   skipCheckMatchCompatibility: boolean;
   fallbackToBabel: boolean;
   fs: FsAdapter;
+  parser: 'swc' | 'oxc';
 };
 
 /**
