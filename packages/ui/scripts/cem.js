@@ -29,6 +29,25 @@ const moduleGraph = await createModuleGraph(globs, {
 });
 
 /**
+ * @param {{name: string}} a
+ * @param {{name: string}} b
+ * @returns
+ */
+function sortName(a, b) {
+  const nameA = a.name?.toUpperCase(); // ignore upper and lowercase
+  const nameB = b.name?.toUpperCase(); // ignore upper and lowercase
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+
+  // names must be equal
+  return 0;
+}
+
+/**
  * Create ts.sourceFiles from the modules in the module graph
  * to pass to the CEM analyzer
  */
@@ -58,20 +77,22 @@ const cem = create({
               /**
                * Filter out unwanted information from the docs
                */
-              declaration.members = declaration.members.filter(
-                member => !inheritanceDenyList.includes(member.inheritedFrom?.name),
-              );
-
+              declaration.members = declaration.members
+                .filter(
+                  /** @param {{inheritedFrom: {name: string}}} member */ member =>
+                    !inheritanceDenyList.includes(member.inheritedFrom?.name),
+                )
+                .sort(sortName);
               /**
                * Set privacy for members based on naming conventions
                */
               for (const m of declaration.members) {
                 if (!m.privacy && !m.name?.startsWith('_') && !m.name?.startsWith('#')) {
                   m.privacy = 'public';
-                } else if (!m.privacy && m.name?.startsWith('_')) {
-                  m.privacy = 'protected';
                 } else if (m.name?.startsWith('#') || m.name?.startsWith('__')) {
                   m.privacy = 'private';
+                } else if (!m.privacy && m.name?.startsWith('_')) {
+                  m.privacy = 'protected';
                 }
               }
             }
