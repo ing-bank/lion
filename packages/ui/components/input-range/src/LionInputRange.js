@@ -1,9 +1,12 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { css, html } from 'lit';
-import { LocalizeMixin, formatNumber } from '@lion/ui/localize-no-side-effects.js';
+import {
+  LocalizeMixin,
+  formatNumber,
+  resolveLocaleConfig,
+} from '@lion/ui/localize-no-side-effects.js';
 import { ScopedStylesController } from '@lion/ui/core.js';
 import { LionInput } from '@lion/ui/input.js';
-import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('lit').CSSResult} CSSResult
@@ -41,10 +44,10 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
     };
   }
 
-  static localizeNamespaces = [
-    { 'lion-input-range': localizeNamespaceLoader },
-    ...super.localizeNamespaces,
-  ];
+  static get localizeNamespaces() {
+    const localePath = new URL('../translations', import.meta.url);
+    return [resolveLocaleConfig('lion-input-range', localePath), ...super.localizeNamespaces];
+  }
 
   /**
    * @param {CSSResult} scope
