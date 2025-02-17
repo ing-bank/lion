@@ -12,13 +12,4 @@ export const overlayDocumentStyle = css`
   body.overlays-scroll-lock {
     overflow: hidden;
   }
-
-  body.overlays-scroll-lock-ios-fix {
-    position: fixed;
-    width: 100%;
-  }
-
-  html.overlays-scroll-lock-ios-fix {
-    height: 100vh;
-  }
 `;
