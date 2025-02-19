@@ -67,11 +67,6 @@ export declare class LocalizeMixinHost {
 
   public localizeNamespacesLoaded: Promise<Object> | undefined;
 
-  /**
-   * Hook into LitElement to only render once all translations are loaded
-   */
-  public performUpdate(): Promise<void>;
-
   public onLocaleReady(): void;
   public onLocaleChanged(newLocale: string, oldLocale: string): void;
   public onLocaleUpdated(): void;
