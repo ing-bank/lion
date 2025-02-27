@@ -67,7 +67,7 @@
     "@web/test-runner-browserstack": "^0.7.2",
     "@web/test-runner-commands": "^0.9.0",
     "@web/test-runner-playwright": "^0.11.0",
-    "@webcomponents/scoped-custom-element-registry": "^0.0.9",
+    "@webcomponents/scoped-custom-element-registry": "^0.0.10",
     "bundlesize": "^1.0.0-beta.2",
     "cem-plugin-vs-code-custom-data-generator": "^1.4.2",
     "chai": "^4.5.0",
