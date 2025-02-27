@@ -37,14 +37,14 @@
   <a href="https://lion.js.org/blog/">Blog</a>
 </p>
 
-**Lion is a set of highly performant, accessible and flexible Web Components.!**
+**Lion is a set of highly performant, accessible, and flexible Web Components.**
 
 They provide an unopinionated, white-label layer that can be extended to your own layer of components.
 
 - **High Performance:** Focused on great performance in all relevant browsers with a minimal number of dependencies.
 - **Accessibility:** Aimed at compliance with the WCAG 2.2 AA standard to create components that are accessible for everybody.
 - **Flexibility:** Provides solutions through Web Components and JavaScript classes which can be used, adopted and extended to fit all needs.
-- **Modern Code:** Lion is distributes as pure es modules.
+- **Modern Code:** Lion is distributed as pure es modules.
 - **Exposes functions/classes and Web Components:** Ships a functionality in its most appropriate form.
 
 > Note: Our demo examples might look simple and not very stylish. This is on purpose. They are designed to be basic so you can easily add your own styles to them to match your intended design, without dealing with styles that are already there.
