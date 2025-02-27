@@ -1,5 +1,5 @@
 import { Unparseable } from '@lion/ui/form-core.js';
-import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
+import { LocalizeMixin, resolveLocaleConfig } from '@lion/ui/localize-no-side-effects.js';
 import { LionInput } from '@lion/ui/input.js';
 
 import { PhoneUtilManager } from './PhoneUtilManager.js';
@@ -7,7 +7,6 @@ import { liveFormatPhoneNumber } from './preprocessors.js';
 import { formatPhoneNumber } from './formatters.js';
 import { parsePhoneNumber } from './parsers.js';
 import { PhoneNumber } from './validators.js';
-import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('../types/index.js').RegionCode} RegionCode
@@ -30,10 +29,10 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     _phoneUtil: { type: Object, state: true },
   };
 
-  static localizeNamespaces = [
-    { 'lion-input-tel': localizeNamespaceLoader },
-    ...super.localizeNamespaces,
-  ];
+  static get localizeNamespaces() {
+    const localePath = new URL('../translations', import.meta.url);
+    return [resolveLocaleConfig('lion-input-tel', localePath), ...super.localizeNamespaces];
+  }
 
   /**
    * Currently active region based on:
