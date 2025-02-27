@@ -1,9 +1,11 @@
 import { expect } from 'chai';
 import { it } from 'mocha';
-// @ts-ignore
+
 import babelTraversePkg from '@babel/traverse';
+import { nameOf } from '../../../src/program/utils/ast-normalizations.js';
 import { oxcTraverse } from '../../../src/program/utils/oxc-traverse.js';
 import { AstService } from '../../../src/program/core/AstService.js';
+// @ts-ignore
 
 /**
  * @typedef {import('@swc/core').Module} SwcAstModule
@@ -27,16 +29,9 @@ function gatherAllScopes(oxcAst) {
   return swcScopes;
 }
 
-/**
- * @param {*} node
- */
-function nameOf(node) {
-  return node.value || node.name;
-}
-
 describe('oxcTraverse', () => {
   describe('Visitor', () => {
-    it('traverses an swc AST based on <Node.type> visitor', async () => {
+    it('traverses an oxc AST based on <Node.type> visitor', async () => {
       const code = `import x from 'y';`;
       const oxcAst = await AstService._getOxcAst(code);
 

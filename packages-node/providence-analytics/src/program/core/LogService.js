@@ -115,7 +115,7 @@ export class LogService {
    * @param {string} text
    * @param {number} minChars
    */
-  static pad(text, minChars = 40) {
+  static pad(text, minChars = 45) {
     let result = text;
     const padding = minChars - text.length;
     if (padding > 0) {

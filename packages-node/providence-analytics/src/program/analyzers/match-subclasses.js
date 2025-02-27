@@ -328,6 +328,7 @@ export default class MatchSubclassesAnalyzer extends Analyzer {
       gatherFilesConfig: cfg.gatherFilesConfigReference,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
       suppressNonCriticalLogs: true,
+      parser: cfg.parser,
     });
     const findClassesAnalyzer = new FindClassesAnalyzer();
     /** @type {FindClassesAnalyzerResult} */
@@ -335,6 +336,7 @@ export default class MatchSubclassesAnalyzer extends Analyzer {
       targetProjectPath: cfg.targetProjectPath,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
       suppressNonCriticalLogs: true,
+      parser: cfg.parser,
     });
     const findRefClassesAnalyzer = new FindClassesAnalyzer();
     /** @type {FindClassesAnalyzerResult} */
@@ -343,6 +345,7 @@ export default class MatchSubclassesAnalyzer extends Analyzer {
       gatherFilesConfig: cfg.gatherFilesConfigReference,
       skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
       suppressNonCriticalLogs: true,
+      parser: cfg.parser,
     });
 
     const queryOutput = await matchSubclassesPostprocess(

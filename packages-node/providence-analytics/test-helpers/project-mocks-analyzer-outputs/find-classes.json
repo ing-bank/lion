@@ -44,15 +44,12 @@
           "isMixin": false,
           "superClasses": [
             {
-              "isMixin": true,
-              "rootFile": {
-                "file": "[current]"
-              }
-            },
-            {
+              "name": null,
+              "customElementsGetRef": "on-the-fly",
               "isMixin": false,
               "rootFile": {
-                "file": "[current]"
+                "file": "[current]",
+                "specifier": null
               }
             }
           ],
@@ -151,14 +148,17 @@
                 "accessType": "private"
               },
               {
+                "isPartOfPlatformLifeCycle": true,
                 "name": "constructor",
-                "accessType": "public"
+                "accessType": "[n/a]"
               },
               {
+                "isPartOfPlatformLifeCycle": true,
                 "name": "connectedCallback",
                 "accessType": "public"
               },
               {
+                "isPartOfPlatformLifeCycle": true,
                 "name": "disconnectedCallback",
                 "accessType": "public"
               },
