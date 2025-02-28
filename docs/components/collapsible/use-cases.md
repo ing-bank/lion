@@ -1,4 +1,15 @@
-# Collapsible >> Use Cases ||20
+---
+parts:
+  - Collapsible
+  - Use Cases
+title: 'Collapsible: Use Cases'
+eleventyNavigation:
+  key: 'Collapsible: Use Cases'
+  order: 20
+  parent: Collapsible
+  title: Use Cases
+---
+# Collapsible: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

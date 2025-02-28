@@ -1,4 +1,15 @@
-# Button >> Extensions ||90
+---
+parts:
+  - Button
+  - Extensions
+title: 'Button: Extensions'
+eleventyNavigation:
+  key: 'Button: Extensions'
+  order: 90
+  parent: Button
+  title: Extensions
+---
+# Button: Extensions
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

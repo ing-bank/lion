@@ -1,4 +1,15 @@
-# Select Rich >> Examples ||30
+---
+parts:
+  - Select Rich
+  - Examples
+title: 'Select Rich: Examples'
+eleventyNavigation:
+  key: 'Select Rich: Examples'
+  order: 30
+  parent: Select Rich
+  title: Examples
+---
+# Select Rich: Examples
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

@@ -1,4 +1,15 @@
-# Select Rich >> Overview ||10
+---
+parts:
+  - Select Rich
+  - Overview
+title: 'Select Rich: Overview'
+eleventyNavigation:
+  key: 'Select Rich: Overview'
+  order: 10
+  parent: Select Rich
+  title: Overview
+---
+# Select Rich: Overview
 
 This web component is a 'rich' version of the native `<select>` element.
 It allows providing fully customized options and a fully customized invoker button and is meant to be used whenever the native `<select>` doesn't provide enough styling, theming or user interaction opportunities.

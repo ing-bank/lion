@@ -1,4 +1,15 @@
-# Tabs >> Examples ||30
+---
+parts:
+  - Tabs
+  - Examples
+title: 'Tabs: Examples'
+eleventyNavigation:
+  key: 'Tabs: Examples'
+  order: 30
+  parent: Tabs
+  title: Examples
+---
+# Tabs: Examples
 
 ```js script
 import { LitElement, html } from '@mdjs/mdjs-preview';

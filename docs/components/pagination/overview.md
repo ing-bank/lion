@@ -1,4 +1,15 @@
-# Pagination >> Overview ||10
+---
+parts:
+  - Pagination
+  - Overview
+title: 'Pagination: Overview'
+eleventyNavigation:
+  key: 'Pagination: Overview'
+  order: 10
+  parent: Pagination
+  title: Overview
+---
+# Pagination: Overview
 
 A web component that handles pagination.
 

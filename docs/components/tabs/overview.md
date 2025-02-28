@@ -1,4 +1,15 @@
-# Tabs >> Overview ||10
+---
+parts:
+  - Tabs
+  - Overview
+title: 'Tabs: Overview'
+eleventyNavigation:
+  key: 'Tabs: Overview'
+  order: 10
+  parent: Tabs
+  title: Overview
+---
+# Tabs: Overview
 
 A web component that allows users to quickly move between a small number of equally important views.
 

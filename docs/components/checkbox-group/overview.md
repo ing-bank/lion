@@ -1,4 +1,15 @@
-# Checkbox Group >> Overview ||10
+---
+parts:
+  - Checkbox Group
+  - Overview
+title: 'Checkbox Group: Overview'
+eleventyNavigation:
+  key: 'Checkbox Group: Overview'
+  order: 10
+  parent: Checkbox Group
+  title: Overview
+---
+# Checkbox Group: Overview
 
 A checkbox group enhances the functionality of the native `<input type="checkbox">` element.
 Its purpose is to provide a way for users to check **multiple** options amongst a set of choices, or to function as a single toggle.

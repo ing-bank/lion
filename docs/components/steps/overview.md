@@ -1,4 +1,15 @@
-# Steps >> Overview ||10
+---
+parts:
+  - Steps
+  - Overview
+title: 'Steps: Overview'
+eleventyNavigation:
+  key: 'Steps: Overview'
+  order: 10
+  parent: Steps
+  title: Overview
+---
+# Steps: Overview
 
 A web component that can be used to break a single goal down into dependable sub-tasks.
 
