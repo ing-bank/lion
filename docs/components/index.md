@@ -1,4 +1,13 @@
-# Components ||40
+---
+parts:
+  - Components
+title: Components
+eleventyNavigation:
+  key: Components
+  order: 40
+  title: Components
+---
+# Components
 
 Components are one of the key building blocks of the design system. Their systematic reuse helps to create visual and functional consistency across products.
 

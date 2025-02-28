@@ -1,4 +1,15 @@
-# Tooltip >> Examples ||30
+---
+parts:
+  - Tooltip
+  - Examples
+title: 'Tooltip: Examples'
+eleventyNavigation:
+  key: 'Tooltip: Examples'
+  order: 30
+  parent: Tooltip
+  title: Examples
+---
+# Tooltip: Examples
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

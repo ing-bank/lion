@@ -1,4 +1,15 @@
-# Input Amount >> Use Cases ||20
+---
+parts:
+  - Input Amount
+  - Use Cases
+title: 'Input Amount: Use Cases'
+eleventyNavigation:
+  key: 'Input Amount: Use Cases'
+  order: 20
+  parent: Input Amount
+  title: Use Cases
+---
+# Input Amount: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

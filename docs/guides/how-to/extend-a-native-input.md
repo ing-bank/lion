@@ -1,4 +1,15 @@
-# How To >> Extend a native input ||20
+---
+parts:
+  - How To
+  - Extend a native input
+title: 'How To: Extend a native input'
+eleventyNavigation:
+  key: 'How To: Extend a native input'
+  order: 20
+  parent: How To
+  title: Extend a native input
+---
+# How To: Extend a native input
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

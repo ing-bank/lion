@@ -1,4 +1,15 @@
-# Input Iban >> Overview ||10
+---
+parts:
+  - Input Iban
+  - Overview
+title: 'Input Iban: Overview'
+eleventyNavigation:
+  key: 'Input Iban: Overview'
+  order: 10
+  parent: Input Iban
+  title: Overview
+---
+# Input Iban: Overview
 
 A web component based on the generic text input field.
 Its purpose is to provide a way for users to fill in an IBAN (International Bank Account Number).

@@ -1,4 +1,15 @@
-# Combobox >> Use Cases ||20
+---
+parts:
+  - Combobox
+  - Use Cases
+title: 'Combobox: Use Cases'
+eleventyNavigation:
+  key: 'Combobox: Use Cases'
+  order: 20
+  parent: Combobox
+  title: Use Cases
+---
+# Combobox: Use Cases
 
 A combobox is a widget made up of the combination of two distinct elements:
 

@@ -1,4 +1,15 @@
-# Switch >> Reference ||30
+---
+parts:
+  - Switch
+  - Reference
+title: 'Switch: Reference'
+eleventyNavigation:
+  key: 'Switch: Reference'
+  order: 30
+  parent: Switch
+  title: Reference
+---
+# Switch: Reference
 
 <p class="lion-paragraph--emphasis">Everything you need to re-use the switch.</p>
 

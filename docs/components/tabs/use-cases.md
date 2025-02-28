@@ -1,4 +1,15 @@
-# Tabs >> Use Cases ||20
+---
+parts:
+  - Tabs
+  - Use Cases
+title: 'Tabs: Use Cases'
+eleventyNavigation:
+  key: 'Tabs: Use Cases'
+  order: 20
+  parent: Tabs
+  title: Use Cases
+---
+# Tabs: Use Cases
 
 ```js script
 import { LitElement, html } from '@mdjs/mdjs-preview';
