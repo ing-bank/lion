@@ -64,6 +64,12 @@ export function parseDate(dateString, options) {
 
   const [year, month, day] = parsedString.split('/').map(Number);
   let correctedYear = year;
+
+  // Invalidate 3-digit years
+  if (year < 1000) {
+    return undefined;
+  }
+
   if (year < 50) {
     correctedYear = 2000 + year;
   }
