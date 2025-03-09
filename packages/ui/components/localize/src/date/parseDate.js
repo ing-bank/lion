@@ -1,6 +1,7 @@
 import { getDateFormatBasedOnLocale } from './getDateFormatBasedOnLocale.js';
 import { getLocalizeManager } from '../getLocalizeManager.js';
 import { addLeadingZero } from './utils/addLeadingZero.js';
+import { isCorrectYearFormat } from './utils/checkYearFormat.js';
 
 /**
  * @typedef {import('../../types/LocalizeMixinTypes.js').FormatDateOptions} FormatDateOptions
@@ -63,12 +64,16 @@ export function parseDate(dateString, options) {
   }
 
   const [year, month, day] = parsedString.split('/').map(Number);
+  const parsedYear = parsedString.split('/')[0];
+  if (!isCorrectYearFormat(String(parsedYear))) {
+    return undefined;
+  }
   let correctedYear = year;
   if (year < 50) {
     correctedYear = 2000 + year;
   }
 
-  const parsedDate = new Date(new Date(correctedYear, month - 1, day));
+  const parsedDate = new Date(correctedYear, month - 1, day);
   // Check if parsedDate is not `Invalid Date` or that the date has changed (e.g. the not existing 31.02.2020)
   if (
     year > 0 &&
