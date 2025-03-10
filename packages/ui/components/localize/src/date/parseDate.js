@@ -64,8 +64,8 @@ export function parseDate(dateString, options) {
   }
 
   const [year, month, day] = parsedString.split('/').map(Number);
-  const parsedYear = parsedString.split('/')[0];
-  if (!isCorrectYearFormat(String(parsedYear))) {
+  const [yearString] = parsedString.split('/');
+  if (!isCorrectYearFormat(yearString)) {
     return undefined;
   }
   let correctedYear = year;

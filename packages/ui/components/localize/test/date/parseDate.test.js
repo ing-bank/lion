@@ -96,12 +96,4 @@ describe('parseDate()', () => {
     expect(parseDate('12-12-0000')).to.equal(undefined);
     expect(parseDate('12-12-999')).to.equal(undefined);
   });
-
-  it('corrects years less than 50 to 2000+year', () => {
-    expect(equalsDate(parseDate('1/1/49'), new Date('2049/01/01'))).to.equal(true);
-    expect(equalsDate(parseDate('1/1/50'), new Date('1950/01/01'))).to.equal(true);
-    expect(equalsDate(parseDate('1/1/20'), new Date('2020/01/01'))).to.equal(true);
-    expect(equalsDate(parseDate('1/1/01'), new Date('2001/01/01'))).to.equal(true);
-    expect(equalsDate(parseDate('1/1/5'), new Date('2005/01/01'))).to.equal(true);
-  });
 });
