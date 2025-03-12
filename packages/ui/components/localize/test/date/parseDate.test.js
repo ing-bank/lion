@@ -93,6 +93,7 @@ describe('parseDate()', () => {
   });
 
   it('returns undefined for incorrect year format', () => {
+    // TODO: we need a `> 0` check for day and month, but maybe consider `>= 0` for year?
     expect(parseDate('12-12-0000')).to.equal(undefined);
     expect(parseDate('12-12-999')).to.equal(undefined);
   });
