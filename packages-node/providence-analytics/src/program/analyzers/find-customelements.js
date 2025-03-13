@@ -1,16 +1,56 @@
 import path from 'path';
 
 // import babelTraverse from '@babel/traverse';
-import { oxcTraverse } from '../utils/oxc-traverse.js';
-
+import { isLiteral, nameOf, expressionOf } from '../utils/ast-normalizations.js';
 import { trackDownIdentifierFromScope } from '../utils/track-down-identifier.js';
+import { oxcTraverse } from '../utils/oxc-traverse.js';
 import { Analyzer } from '../core/Analyzer.js';
 
 /**
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import('../../../types/index.js').AnalyzerName} AnalyzerName
  * @typedef {import('@babel/types').File} File
+ * @typedef {import("@swc/core").Node} SwcNode
  */
+
+/**
+ * @param {SwcNode} node
+ * @returns {boolean}
+ */
+export function isCustomElementsObj(node) {
+  if (!node) return false;
+
+  return (
+    // @ts-expect-error
+    nameOf(node.object) === 'customElements' ||
+    // @ts-expect-error
+    (nameOf(node.object?.object) === 'window' &&
+      // @ts-expect-error
+      nameOf(node.object?.property) === 'customElements')
+  );
+}
+
+/**
+ * @param {SwcNode} node
+ * @returns {boolean}
+ */
+export function isCustomElementsGet(node) {
+  if (!node) return false;
+
+  // @ts-expect-error
+  return isCustomElementsObj(node) && nameOf(node.property) === 'get';
+}
+
+/**
+ * @param {SwcNode} node
+ * @returns {boolean}
+ */
+export function isCustomElementsDefine(node) {
+  if (!node) return false;
+
+  // @ts-expect-error
+  return isCustomElementsObj(node) && nameOf(node.property) === 'define';
+}
 
 function cleanup(transformedEntry) {
   transformedEntry.forEach(definitionObj => {
@@ -44,47 +84,39 @@ async function trackdownRoot(transformedEntry, relativePath, projectPath) {
  */
 function findCustomElementsPerAstFile(oxcAst) {
   const definitions = [];
+
   oxcTraverse(oxcAst, {
     CallExpression(astPath) {
-      let found = false;
+      let didFindCeDefine = false;
+      const onMemberExpr = memberPath => {
+        if (memberPath.node !== astPath.node.callee) return;
+
+        if (isCustomElementsDefine(memberPath.node)) {
+          didFindCeDefine = true;
+        }
+      };
       // Doing it like this we detect 'customElements.define()',
       // but also 'window.customElements.define()'
       astPath.traverse({
-        // MemberExpression in babel
-        StaticMemberExpression(memberPath) {
-          if (memberPath.node !== astPath.node.callee) {
-            return;
-          }
-
-          const { node } = memberPath;
-
-          if (node.object.name === 'customElements' && node.property.name === 'define') {
-            found = true;
-          }
-          if (
-            node.object.object?.name === 'window' &&
-            node.object.property.name === 'customElements' &&
-            node.property.name === 'define'
-          ) {
-            found = true;
-          }
-        },
+        StaticMemberExpression: onMemberExpr,
+        // MemberExpression in babel and swc
+        MemberExpression: onMemberExpr,
       });
-      if (found) {
+      if (didFindCeDefine) {
         let tagName;
         let constructorIdentifier;
 
-        if (
-          astPath.node.arguments[0].type === 'StringLiteral' ||
-          astPath.node.arguments[0].type === 'Literal'
-        ) {
-          tagName = astPath.node.arguments[0].value;
+        const firstArg = astPath.node.arguments[0];
+        if (isLiteral(expressionOf(firstArg))) {
+          tagName = nameOf(expressionOf(firstArg));
         } else {
           // No Literal found. For now, we only mark them as '[variable]'
           tagName = '[variable]';
         }
-        if (astPath.node.arguments[1].type === 'Identifier') {
-          constructorIdentifier = astPath.node.arguments[1].name;
+
+        const secondArg = expressionOf(astPath.node.arguments[1]);
+        if (secondArg.type === 'Identifier') {
+          constructorIdentifier = nameOf(secondArg);
         } else {
           // We assume customElements.define('my-el', class extends HTMLElement {...})
           constructorIdentifier = '[inline]';
