@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.11.2
+
+### Patch Changes
+
+- a181a03: [localize] Fix bug that accepted 3 digit year
+
 ## 0.11.1
 
 ### Patch Changes
