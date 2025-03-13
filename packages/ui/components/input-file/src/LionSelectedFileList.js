@@ -4,8 +4,8 @@ import { LocalizeMixin } from '@lion/ui/localize.js';
 import { css, html, LitElement, nothing } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { repeat } from 'lit/directives/repeat.js';
+import { resolveLocaleConfig } from '@lion/ui/localize-no-side-effects.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
-import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -29,10 +29,10 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
     };
   }
 
-  static localizeNamespaces = [
-    { 'lion-input-file': localizeNamespaceLoader },
-    ...super.localizeNamespaces,
-  ];
+  static get localizeNamespaces() {
+    const localePath = new URL('../translations', import.meta.url);
+    return [resolveLocaleConfig('lion-input-file', localePath), ...super.localizeNamespaces];
+  }
 
   constructor() {
     super();
