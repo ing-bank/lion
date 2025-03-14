@@ -1,4 +1,4 @@
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { sendKeys } from '@web/test-runner-commands';
 import { LionCombobox } from '@lion/ui/combobox.js';
@@ -48,6 +48,84 @@ async function fruitFixture({ autocomplete, matchMode } = {}) {
 }
 
 describe('lion-combobox', () => {
+  describe('Rendering on API change', () => {
+    it('renders when options changed', async () => {
+      const entries = [
+        {
+          id: '1',
+          label: 'Apple',
+          description: 'Rosaceae',
+          iconId: 'ing:products:basketFilled',
+        },
+        {
+          id: '2',
+          label: 'Artichoke',
+          description: 'Cardoon',
+          iconId: 'ing:products:basketFilled',
+        },
+        {
+          id: '3',
+          label: 'Asparagus',
+        },
+        {
+          id: '4',
+          label: 'Banana',
+          description: 'Bananas',
+          iconId: 'ing:products:basketFilled',
+        },
+        {
+          id: '5',
+          label: 'Pineapple',
+          description: 'Pineapples',
+          iconId: 'ing:products:basketFilled',
+        },
+      ];
+
+      class Wrapper extends LitElement {
+        static properties = {
+          ...super.properties,
+          entries: { type: Array },
+        };
+
+        constructor() {
+          super();
+          this.entries = entries;
+        }
+
+        render() {
+          return html`<lion-combobox name="foo">
+            ${this.entries.map(
+              entry => html`<lion-option .choiceValue="${entry.id}">${entry.label}</lion-option>`,
+            )}
+          </lion-combobox>`;
+        }
+      }
+
+      const tagString = defineCE(Wrapper);
+      const tag = unsafeStatic(tagString);
+      const wrapperElement = /** @type {Wrapper} */ (await fixture(html`<${tag}></${tag}>`));
+      await aTimeout(100);
+
+      wrapperElement.entries = [
+        {
+          id: '4',
+          label: 'Banana',
+          description: 'Bananas',
+          iconId: 'ing:products:basketFilled',
+        },
+      ];
+
+      await aTimeout(100);
+      await wrapperElement.updateComplete;
+
+      const optionElements = wrapperElement.shadowRoot?.querySelectorAll('lion-option');
+      expect(optionElements?.length).to.equal(1);
+      const optionElement = optionElements?.item(0);
+
+      expect(optionElement?.textContent).to.equal('Banana');
+    });
+  });
+
   describe('Options visibility', () => {
     it('hides options when text in input node is cleared after typing something by default', async () => {
       const el = /** @type {LionCombobox} */ (
