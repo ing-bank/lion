@@ -54,14 +54,10 @@ describe('lion-combobox', () => {
         {
           id: '1',
           label: 'Apple',
-          description: 'Rosaceae',
-          iconId: 'ing:products:basketFilled',
         },
         {
           id: '2',
           label: 'Artichoke',
-          description: 'Cardoon',
-          iconId: 'ing:products:basketFilled',
         },
         {
           id: '3',
@@ -70,14 +66,10 @@ describe('lion-combobox', () => {
         {
           id: '4',
           label: 'Banana',
-          description: 'Bananas',
-          iconId: 'ing:products:basketFilled',
         },
         {
           id: '5',
           label: 'Pineapple',
-          description: 'Pineapples',
-          iconId: 'ing:products:basketFilled',
         },
       ];
 
@@ -114,8 +106,6 @@ describe('lion-combobox', () => {
         {
           id: '4',
           label: 'Banana',
-          description: 'Bananas',
-          iconId: 'ing:products:basketFilled',
         },
       ];
 
