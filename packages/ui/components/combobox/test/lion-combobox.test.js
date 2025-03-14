@@ -116,7 +116,7 @@ describe('lion-combobox', () => {
       );
 
       const optionElements = wrapperElement.shadowRoot?.querySelectorAll('lion-option');
-      expect(optionElements?.length).to.equal(1);
+      expect(optionElements?.length).to.equal(wrapperElement.entries.length);
       const optionElement = optionElements?.item(0);
       expect(optionElement?.textContent).to.equal('Banana');
     });
