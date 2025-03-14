@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Principles
   title: Definitions and Terms
 ---
+
 # Principles: Definitions and Terms
 
 Below you will find a list of definitions and terms that will be used throughout our code

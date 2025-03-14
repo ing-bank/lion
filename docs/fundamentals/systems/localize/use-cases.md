@@ -1,3 +1,16 @@
+---
+parts:
+  - Use Cases
+  - Localize
+  - Systems
+title: 'Localize: Use Cases'
+eleventyNavigation:
+  key: Systems >> Localize >> Use Cases
+  title: Use Cases
+  order: 50
+  parent: Systems >> Localize
+---
+
 # Systems >> Localize >> Use Cases ||50
 
 The localization system helps to manage localization data split into locales and automate its loading.

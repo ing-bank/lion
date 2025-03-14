@@ -7,6 +7,7 @@ eleventyNavigation:
   order: 40
   title: Select Rich
 ---
+
 # Select Rich
 
 -> go to Overview

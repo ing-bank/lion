@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Pagination
   title: Overview
 ---
+
 # Pagination: Overview
 
 A web component that handles pagination.

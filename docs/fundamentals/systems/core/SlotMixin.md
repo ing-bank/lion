@@ -1,3 +1,16 @@
+---
+parts:
+  - SlotMixin
+  - Core
+  - Systems
+title: 'Core: SlotMixin'
+eleventyNavigation:
+  key: Systems >> Core >> SlotMixin
+  title: SlotMixin
+  order: 20
+  parent: Systems >> Core
+---
+
 # Systems >> Core >> SlotMixin ||20
 
 The SlotMixin is made for solving accessibility challenges that inherently come with the usage of shadow dom.

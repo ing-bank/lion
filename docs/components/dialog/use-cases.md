@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Dialog
   title: Use Cases
 ---
+
 # Dialog: Use Cases
 
 `lion-dialog` is a component wrapping a modal dialog controller.

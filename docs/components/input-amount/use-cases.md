@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Input Amount
   title: Use Cases
 ---
+
 # Input Amount: Use Cases
 
 ```js script

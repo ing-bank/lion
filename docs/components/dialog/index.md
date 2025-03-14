@@ -7,6 +7,7 @@ eleventyNavigation:
   order: 20
   title: Dialog
 ---
+
 # Dialog
 
 -> go to Overview

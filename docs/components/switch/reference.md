@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Switch
   title: Reference
 ---
+
 # Switch: Reference
 
 <p class="lion-paragraph--emphasis">Everything you need to re-use the switch.</p>

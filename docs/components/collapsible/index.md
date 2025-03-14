@@ -7,6 +7,7 @@ eleventyNavigation:
   order: 10
   title: Collapsible
 ---
+
 # Collapsible
 
 -> go to Overview

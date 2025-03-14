@@ -1,3 +1,16 @@
+---
+parts:
+  - Formatting and Parsing
+  - Form
+  - Systems
+title: 'Form: Formatting and Parsing'
+eleventyNavigation:
+  key: Systems >> Form >> Formatting and Parsing
+  title: Formatting and Parsing
+  order: 21
+  parent: Systems >> Form
+---
+
 # Systems >> Form >> Formatting and Parsing ||21
 
 ```js script

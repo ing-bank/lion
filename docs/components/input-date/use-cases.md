@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Input Date
   title: Use Cases
 ---
+
 # Input Date: Use Cases
 
 ```js script

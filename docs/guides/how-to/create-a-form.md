@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: How To
   title: Create a form
 ---
+
 # How To: Create a form
 
 Creating your own forms as an Application Developer is really simple. Only two rules need to be followed.

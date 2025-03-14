@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Switch
   title: Use Cases
 ---
+
 # Switch: Use Cases
 
 ```js script

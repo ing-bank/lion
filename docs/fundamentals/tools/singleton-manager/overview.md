@@ -1,3 +1,16 @@
+---
+parts:
+  - Overview
+  - Singleton Manager
+  - Tools
+title: 'Singleton Manager: Overview'
+eleventyNavigation:
+  key: Tools >> Singleton Manager >> Overview
+  title: Overview
+  order: 10
+  parent: Tools >> Singleton Manager
+---
+
 # Tools >> Singleton Manager >> Overview ||10
 
 A singleton manager provides a way to make sure a singleton instance loaded from multiple file locations stays a singleton.

@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Icon
   title: Overview
 ---
+
 # Icon: Overview
 
 A web component for displaying icons.

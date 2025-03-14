@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Checkbox Group
   title: Overview
 ---
+
 # Checkbox Group: Overview
 
 A checkbox group enhances the functionality of the native `<input type="checkbox">` element.

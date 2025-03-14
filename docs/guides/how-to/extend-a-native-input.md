@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: How To
   title: Extend a native input
 ---
+
 # How To: Extend a native input
 
 ```js script

@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Progress Indicator
   title: Overview
 ---
+
 # Progress Indicator: Overview
 
 A web component that implements accessibility requirements for progress indicators.

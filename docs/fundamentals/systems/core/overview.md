@@ -1,3 +1,16 @@
+---
+parts:
+  - Overview
+  - Core
+  - Systems
+title: 'Core: Overview'
+eleventyNavigation:
+  key: Systems >> Core >> Overview
+  title: Overview
+  order: 10
+  parent: Systems >> Core
+---
+
 # Systems >> Core >> Overview ||10
 
 The core package is mostly for in-depth usage.

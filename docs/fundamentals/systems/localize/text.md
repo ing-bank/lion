@@ -1,3 +1,16 @@
+---
+parts:
+  - Translate Text
+  - Localize
+  - Systems
+title: 'Localize: Translate Text'
+eleventyNavigation:
+  key: Systems >> Localize >> Translate Text
+  title: Translate Text
+  order: 20
+  parent: Systems >> Localize
+---
+
 # Systems >> Localize >> Translate Text ||20
 
 ## As a function

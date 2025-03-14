@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Calendar
   title: Overview
 ---
+
 # Calendar: Overview
 
 A reusable and accessible calendar view web component.

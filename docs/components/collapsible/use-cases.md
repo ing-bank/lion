@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Collapsible
   title: Use Cases
 ---
+
 # Collapsible: Use Cases
 
 ```js script

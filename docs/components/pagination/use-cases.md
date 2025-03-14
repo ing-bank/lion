@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Pagination
   title: Use Cases
 ---
+
 # Pagination: Use Cases
 
 ```js script

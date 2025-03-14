@@ -7,6 +7,7 @@ eleventyNavigation:
   order: 20
   title: Input Date
 ---
+
 # Input Date
 
 -> go to Overview

@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Accordion
   title: Reference
 ---
+
 # Accordion: Reference
 
 <p class="lion-paragraph--emphasis">Everything you need to re-use the accordion.</p>

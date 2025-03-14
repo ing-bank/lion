@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Input Stepper
   title: Overview
 ---
+
 # Input Stepper: Overview
 
 A web component that enables the user to increase and decrease a numeric value by predefined range. It is a combination of two buttons and a number input field with an optional slot `after` to suffix the extra information.

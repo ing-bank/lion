@@ -9,6 +9,7 @@ eleventyNavigation:
   parent: Input Email
   title: Use Cases
 ---
+
 # Input Email: Use Cases
 
 ```js script
