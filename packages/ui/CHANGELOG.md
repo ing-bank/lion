@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.11.1
+
+### Patch Changes
+
+- 22b8f24: [lion-checkbox-indeterminate] Fix bugs regarding disabled and pre-checked children
+- d86c1f7: [select-rich] block arrow key interaction when singleOption is set
+
 ## 0.11.0
 
 ### Minor Changes
