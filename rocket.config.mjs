@@ -33,5 +33,5 @@ export default {
       return config;
     }),
   ],
-  setupEleventyComputedConfig: [removePlugin(TitleMetaPlugin)]
+  // setupEleventyComputedConfig: [removePlugin(TitleMetaPlugin)]
 };

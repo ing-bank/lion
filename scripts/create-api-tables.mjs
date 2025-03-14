@@ -47,6 +47,22 @@ for (let dir of componentDirs) {
     dir = 'form';
   }
 
+//   const frontmatter = `
+//     ---
+// parts:
+//   - Configuration
+//   - Overlays
+//   - Systems
+// title: API Table
+// eleventyNavigation:
+//   key: Systems >> Overlays >> API Table
+//   title: API Table
+//   order: 40
+//   parent: Systems >> Overlays
+// ---
+// # Overlays: API Table
+//   `;
+
   const folderHeading = isSystem ? 'Systems >> ' : '';
   let dirApiTableMd = `# ${folderHeading}${toSplitAndUpperCase(dir)} >> API Table ||90`;
 
