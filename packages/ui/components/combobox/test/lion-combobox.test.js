@@ -125,12 +125,9 @@ describe('lion-combobox', () => {
             .length === wrapperElement.entries.length,
       );
 
-      await wrapperElement.updateComplete;
-
       const optionElements = wrapperElement.shadowRoot?.querySelectorAll('lion-option');
       expect(optionElements?.length).to.equal(1);
       const optionElement = optionElements?.item(0);
-
       expect(optionElement?.textContent).to.equal('Banana');
     });
   });
