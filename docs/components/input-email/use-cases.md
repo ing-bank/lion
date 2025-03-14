@@ -1,4 +1,16 @@
-# Input Email >> Use Cases ||20
+---
+parts:
+  - Input Email
+  - Use Cases
+title: 'Input Email: Use Cases'
+eleventyNavigation:
+  key: 'Input Email: Use Cases'
+  order: 20
+  parent: Input Email
+  title: Use Cases
+---
+
+# Input Email: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

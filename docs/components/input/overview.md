@@ -1,4 +1,16 @@
-# Input >> Overview ||10
+---
+parts:
+  - Input
+  - Overview
+title: 'Input: Overview'
+eleventyNavigation:
+  key: 'Input: Overview'
+  order: 10
+  parent: Input
+  title: Overview
+---
+
+# Input: Overview
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

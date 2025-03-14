@@ -1,4 +1,16 @@
-# Button >> Examples ||30
+---
+parts:
+  - Button
+  - Examples
+title: 'Button: Examples'
+eleventyNavigation:
+  key: 'Button: Examples'
+  order: 30
+  parent: Button
+  title: Examples
+---
+
+# Button: Examples
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

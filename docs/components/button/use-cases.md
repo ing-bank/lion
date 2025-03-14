@@ -1,4 +1,16 @@
-# Button >> Use Cases ||20
+---
+parts:
+  - Button
+  - Use Cases
+title: 'Button: Use Cases'
+eleventyNavigation:
+  key: 'Button: Use Cases'
+  order: 20
+  parent: Button
+  title: Use Cases
+---
+
+# Button: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

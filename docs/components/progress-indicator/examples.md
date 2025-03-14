@@ -1,4 +1,16 @@
-# Progress Indicator >> Examples ||30
+---
+parts:
+  - Progress Indicator
+  - Examples
+title: 'Progress Indicator: Examples'
+eleventyNavigation:
+  key: 'Progress Indicator: Examples'
+  order: 30
+  parent: Progress Indicator
+  title: Examples
+---
+
+# Progress Indicator: Examples
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

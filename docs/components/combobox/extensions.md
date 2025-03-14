@@ -1,4 +1,16 @@
-# Combobox >> Extensions ||30
+---
+parts:
+  - Combobox
+  - Extensions
+title: 'Combobox: Extensions'
+eleventyNavigation:
+  key: 'Combobox: Extensions'
+  order: 30
+  parent: Combobox
+  title: Extensions
+---
+
+# Combobox: Extensions
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

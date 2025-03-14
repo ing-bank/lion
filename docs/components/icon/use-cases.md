@@ -1,4 +1,16 @@
-# Icon >> Use Cases ||20
+---
+parts:
+  - Icon
+  - Use Cases
+title: 'Icon: Use Cases'
+eleventyNavigation:
+  key: 'Icon: Use Cases'
+  order: 20
+  parent: Icon
+  title: Use Cases
+---
+
+# Icon: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

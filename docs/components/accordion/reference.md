@@ -1,4 +1,16 @@
-# Accordion >> Reference ||30
+---
+parts:
+  - Accordion
+  - Reference
+title: 'Accordion: Reference'
+eleventyNavigation:
+  key: 'Accordion: Reference'
+  order: 30
+  parent: Accordion
+  title: Reference
+---
+
+# Accordion: Reference
 
 <p class="lion-paragraph--emphasis">Everything you need to re-use the accordion.</p>
 

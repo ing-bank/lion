@@ -1,3 +1,16 @@
+---
+parts:
+  - ModelValue
+  - Form
+  - Systems
+title: 'Form: ModelValue'
+eleventyNavigation:
+  key: Systems >> Form >> ModelValue
+  title: ModelValue
+  order: 20
+  parent: Systems >> Form
+---
+
 # Systems >> Form >> ModelValue ||20
 
 The modelValue or model can be considered as the ‘aorta’ of our form system.

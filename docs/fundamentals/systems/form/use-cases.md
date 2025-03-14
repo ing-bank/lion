@@ -1,3 +1,16 @@
+---
+parts:
+  - Use Cases
+  - Form
+  - Systems
+title: 'Form: Use Cases'
+eleventyNavigation:
+  key: Systems >> Form >> Use Cases
+  title: Use Cases
+  order: 50
+  parent: Systems >> Form
+---
+
 # Systems >> Form >> Use Cases ||50
 
 This is a meta package to show interaction between various form elements.

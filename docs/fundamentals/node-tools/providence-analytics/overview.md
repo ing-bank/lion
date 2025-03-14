@@ -1,3 +1,16 @@
+---
+parts:
+  - Overview
+  - Providence Analytics
+  - Node Tools
+title: 'Providence Analytics: Overview'
+eleventyNavigation:
+  key: Node Tools >> Providence Analytics >> Overview
+  title: Overview
+  order: 10
+  parent: Node Tools >> Providence Analytics
+---
+
 # Node Tools >> Providence Analytics >> Overview ||10
 
 ```js script

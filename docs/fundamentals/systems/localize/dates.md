@@ -1,3 +1,16 @@
+---
+parts:
+  - Format Dates
+  - Localize
+  - Systems
+title: 'Localize: Format Dates'
+eleventyNavigation:
+  key: Systems >> Localize >> Format Dates
+  title: Format Dates
+  order: 40
+  parent: Systems >> Localize
+---
+
 # Systems >> Localize >> Format Dates ||40
 
 ## Features

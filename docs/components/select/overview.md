@@ -1,4 +1,16 @@
-# Select >> Overview ||10
+---
+parts:
+  - Select
+  - Overview
+title: 'Select: Overview'
+eleventyNavigation:
+  key: 'Select: Overview'
+  order: 10
+  parent: Select
+  title: Overview
+---
+
+# Select: Overview
 
 A web component that works as a wrapper around the native `select`.
 

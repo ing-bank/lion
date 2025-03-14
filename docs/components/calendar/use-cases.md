@@ -1,4 +1,16 @@
-# Calendar >> Use Cases ||20
+---
+parts:
+  - Calendar
+  - Use Cases
+title: 'Calendar: Use Cases'
+eleventyNavigation:
+  key: 'Calendar: Use Cases'
+  order: 20
+  parent: Calendar
+  title: Use Cases
+---
+
+# Calendar: Use Cases
 
 ```js script
 import { html, css } from '@mdjs/mdjs-preview';

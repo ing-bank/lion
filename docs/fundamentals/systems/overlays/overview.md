@@ -1,3 +1,16 @@
+---
+parts:
+  - Overview
+  - Overlays
+  - Systems
+title: 'Overlays: Overview'
+eleventyNavigation:
+  key: Systems >> Overlays >> Overview
+  title: Overview
+  order: 10
+  parent: Systems >> Overlays
+---
+
 # Systems >> Overlays >> Overview ||10
 
 Supports different types of overlays like dialogs, toasts, tooltips, dropdown, etc.

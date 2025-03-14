@@ -1,4 +1,16 @@
-# Drawer >> Use Cases ||20
+---
+parts:
+  - Drawer
+  - Use Cases
+title: 'Drawer: Use Cases'
+eleventyNavigation:
+  key: 'Drawer: Use Cases'
+  order: 20
+  parent: Drawer
+  title: Use Cases
+---
+
+# Drawer: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

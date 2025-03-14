@@ -1,4 +1,16 @@
-# Principles >> Subclasser apis ||50
+---
+parts:
+  - Principles
+  - Subclasser apis
+title: 'Principles: Subclasser apis'
+eleventyNavigation:
+  key: 'Principles: Subclasser apis'
+  order: 50
+  parent: Principles
+  title: Subclasser apis
+---
+
+# Principles: Subclasser apis
 
 In order to make it easy for Subclassers to extend our components, we follow a certain set
 of best practices naming conventions to make our code predictable.

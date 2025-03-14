@@ -1,3 +1,16 @@
+---
+parts:
+  - Overview
+  - Localize
+  - Systems
+title: 'Localize: Overview'
+eleventyNavigation:
+  key: Systems >> Localize >> Overview
+  title: Overview
+  order: 10
+  parent: Systems >> Localize
+---
+
 # Systems >> Localize >> Overview ||10
 
 Is meant to translate text into multiple languages.

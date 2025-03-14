@@ -1,4 +1,16 @@
-# Input File >> Use Cases ||20
+---
+parts:
+  - Input File
+  - Use Cases
+title: 'Input File: Use Cases'
+eleventyNavigation:
+  key: 'Input File: Use Cases'
+  order: 20
+  parent: Input File
+  title: Use Cases
+---
+
+# Input File: Use Cases
 
 ```js script
 import { Required, Validator } from '@lion/ui/form-core.js';

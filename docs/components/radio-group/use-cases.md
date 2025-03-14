@@ -1,4 +1,16 @@
-# Radio Group >> Use Cases ||20
+---
+parts:
+  - Radio Group
+  - Use Cases
+title: 'Radio Group: Use Cases'
+eleventyNavigation:
+  key: 'Radio Group: Use Cases'
+  order: 20
+  parent: Radio Group
+  title: Use Cases
+---
+
+# Radio Group: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
