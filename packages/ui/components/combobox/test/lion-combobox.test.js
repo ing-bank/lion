@@ -1,4 +1,4 @@
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { defineCE, expect, fixture, html, unsafeStatic, waitUntil } from '@open-wc/testing';
 import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { sendKeys } from '@web/test-runner-commands';
 import { LionCombobox } from '@lion/ui/combobox.js';
@@ -104,7 +104,11 @@ describe('lion-combobox', () => {
       const tagString = defineCE(Wrapper);
       const tag = unsafeStatic(tagString);
       const wrapperElement = /** @type {Wrapper} */ (await fixture(html`<${tag}></${tag}>`));
-      await aTimeout(100);
+      await waitUntil(
+        () =>
+          wrapperElement?.shadowRoot?.querySelector('lion-options')?.querySelectorAll('lion-option')
+            .length === entries.length,
+      );
 
       wrapperElement.entries = [
         {
@@ -115,7 +119,12 @@ describe('lion-combobox', () => {
         },
       ];
 
-      await aTimeout(100);
+      await waitUntil(
+        () =>
+          wrapperElement?.shadowRoot?.querySelector('lion-options')?.querySelectorAll('lion-option')
+            .length === wrapperElement.entries.length,
+      );
+
       await wrapperElement.updateComplete;
 
       const optionElements = wrapperElement.shadowRoot?.querySelectorAll('lion-option');
