@@ -209,6 +209,7 @@ export default class MatchImportsAnalyzer extends Analyzer {
         skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
         suppressNonCriticalLogs: true,
         gatherFilesConfig: cfg.gatherFilesConfigReference,
+        parser: cfg.parser,
       });
     }
 
@@ -221,6 +222,7 @@ export default class MatchImportsAnalyzer extends Analyzer {
         skipCheckMatchCompatibility: cfg.skipCheckMatchCompatibility,
         suppressNonCriticalLogs: true,
         gatherFilesConfig: cfg.gatherFilesConfig,
+        parser: cfg.parser,
       });
     }
 

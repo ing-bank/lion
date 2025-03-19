@@ -52,8 +52,8 @@ async function analyzePerAstFile(projectData, astAnalysis, analyzerCfg) {
     try {
       const { result, meta } = await astAnalysis(ast, context);
       entries.push({ file: relativePath, meta, result });
-    } catch (e) {
-      LogService.error(`[analyzePerAstFile]: ${fullPath} throws: ${e}`);
+    } catch (/** @type {* & Error} */ e) {
+      LogService.error(`[analyzePerAstFile]: ${fullPath} throws: ${e.message}. Cause: ${e.cause}`);
     }
   }
   const filteredEntries = entries.filter(({ result }) => Boolean(result.length));
@@ -258,7 +258,7 @@ export class Analyzer {
       if (!compatible) {
         if (!cfg.suppressNonCriticalLogs) {
           LogService.info(
-            `${LogService.pad(`skipping  ${this.name} (${reason})`)}${displayProjectsInLog(this.identifier)}`,
+            `${LogService.pad(`skipping ${this.name} (${reason})`)}${displayProjectsInLog(this.identifier)}`,
           );
         }
         return ensureAnalyzerResultFormat(`[${reason}]`, cfg, this);
@@ -377,7 +377,7 @@ export class Analyzer {
      */
     const astDataProjects = await QueryService.addAstToProjectsData(
       finalTargetData,
-      this.requiredAst,
+      analyzeFileCfg.config.parser || this.requiredAst,
     );
     return analyzePerAstFile(
       astDataProjects[0],
@@ -411,7 +411,7 @@ export class Analyzer {
       projectPath: cfg.targetProjectPath,
       filePaths: cfg.targetFilePaths,
       targetData: this.targetData,
-      config: this.config,
+      config: cfg,
     });
 
     /**

@@ -1,10 +1,20 @@
 /* eslint-disable no-shadow, no-param-reassign */
 import path from 'path';
 
-import { oxcTraverse, isProperty } from '../utils/oxc-traverse.js';
-
 import { trackDownIdentifierFromScope } from '../utils/track-down-identifier.js';
+import {
+  expressionOf,
+  isProperty,
+  isSetter,
+  isGetter,
+  isStatic,
+  nameOf,
+  idOf,
+} from '../utils/ast-normalizations.js';
+import { oxcTraverse } from '../utils/oxc-traverse.js';
 import { Analyzer } from '../core/Analyzer.js';
+
+import { isCustomElementsGet } from './find-customelements.js';
 
 /**
  * @typedef {import('@babel/types').File} File
@@ -16,22 +26,27 @@ import { Analyzer } from '../core/Analyzer.js';
  * @typedef {import('../../../types/index.js').FindClassesAnalyzerEntry} FindClassesAnalyzerEntry
  * @typedef {import('../../../types/index.js').FindClassesConfig} FindClassesConfig
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
+ * @typedef {import("@swc/core").Node} SwcNode
  */
 
 /**
  * Finds import specifiers and sources
- * @param {File} babelAst
+ * @param {File} oxcAst
  * @param {string} fullCurrentFilePath the file being currently processed
  */
-async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath) {
+async function findMembersPerAstEntry(oxcAst, fullCurrentFilePath, projectPath) {
   // The transformed entry
   const classesFound = [];
   /**
    * Detects private/publicness based on underscores. Checks '$' as well
    * @param {string} name
-   * @returns {'public'|'protected'|'private'}
+   * @returns {'public'|'protected'|'private'|'[n/a]'}
    */
   function computeAccessType(name) {
+    if (name === 'constructor') {
+      return '[n/a]';
+    }
+
     if (name.startsWith('_') || name.startsWith('$')) {
       // (at least) 2 prefixes
       if (name.startsWith('__') || name.startsWith('$$')) {
@@ -47,7 +62,7 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
    * @returns
    */
   function isStaticProperties({ node }) {
-    return node.static && node.kind === 'get' && node.key.name === 'properties';
+    return isStatic(node) && isGetter(node) && nameOf(node.key) === 'properties';
   }
 
   // function isBlacklisted({ node }) {
@@ -86,26 +101,47 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
   // }
 
   /**
-   *
+   * @param {SwcNode|OxcNode} node
+   */
+  function isSuperClassAMixin(superClassNode) {
+    if (!superClassNode) return false;
+
+    const isCallExpression = superClassNode?.type === 'CallExpression';
+    if (!isCallExpression) return false;
+    return !isCustomElementsGet(superClassNode.callee);
+  }
+
+  /**
    * @param {NodePath} astPath
    * @param {{isMixin?:boolean}} opts
    */
   async function traverseClass(astPath, { isMixin = false } = {}) {
     const classRes = {};
-    classRes.name = astPath.node.id && astPath.node.id.name;
+    classRes.name = (idOf(astPath.node) && nameOf(idOf(astPath.node))) || null;
     classRes.isMixin = Boolean(isMixin);
+
     if (astPath.node.superClass) {
       const superClasses = [];
 
       // Add all Identifier names
       let parent = astPath.node.superClass;
-      while (parent.type === 'CallExpression') {
-        superClasses.push({ name: parent.callee.name, isMixin: true });
+      while (isSuperClassAMixin(parent)) {
+        superClasses.push({ name: nameOf(parent.callee), isMixin: true });
         // As long as we are a CallExpression, we will have a parent
-        [parent] = parent.arguments;
+        [parent] = parent.arguments.map(expressionOf);
       }
-      // At the end of the chain, we find type === Identifier
-      superClasses.push({ name: parent.name, isMixin: false });
+
+      // At the end of the chain, we find type === Identifier or customElements.get directly.
+      if (isCustomElementsGet(parent.callee)) {
+        superClasses.push({
+          name: null,
+          customElementsGetRef: nameOf(parent.arguments?.map(expressionOf)[0]),
+          isMixin: false,
+        });
+      } else {
+        // an identifier like 'MyClass'
+        superClasses.push({ name: nameOf(expressionOf(parent)), isMixin: false });
+      }
 
       // For all found superclasses, track down their root location.
       // This will either result in a local, relative astPath in the project,
@@ -160,19 +196,27 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
       }
 
       const methodRes = {};
-      const { name } = astPath.node.key;
+      const name = nameOf(astPath.node.key);
       methodRes.name = name;
       methodRes.accessType = computeAccessType(name);
+      if (
+        ['constructor', 'connectedCallback', 'disconnectedCallback', 'adoptedCallback'].includes(
+          name,
+        )
+      ) {
+        methodRes.isPartOfPlatformLifeCycle = true;
+      }
 
-      if (astPath.node.kind === 'set' || astPath.node.kind === 'get') {
-        if (astPath.node.static) {
+      if (isSetter(astPath.node) || isGetter(astPath.node)) {
+        const setOrGet = isSetter(astPath.node) ? 'set' : 'get';
+        if (isStatic(astPath.node)) {
           methodRes.static = true;
         }
-        methodRes.kind = [...(methodRes.kind || []), astPath.node.kind];
+        methodRes.kind = [...(methodRes.kind || []), setOrGet];
         // Merge getter/setters into one
-        const found = classRes.members.props.find(p => p.name === name);
+        const found = classRes.members.props.find(p => nameOf(p) === name);
         if (found) {
-          found.kind = [...(found.kind || []), astPath.node.kind];
+          found.kind = [...(found.kind || []), setOrGet];
         } else {
           classRes.members.props.push(methodRes);
         }
@@ -184,6 +228,8 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
     astPath.traverse({
       ClassMethod: handleMethodDefinitionOrClassMethod,
       MethodDefinition: handleMethodDefinitionOrClassMethod,
+      // for swc
+      Constructor: handleMethodDefinitionOrClassMethod,
     });
 
     classesFound.push(classRes);
@@ -191,7 +237,7 @@ async function findMembersPerAstEntry(babelAst, fullCurrentFilePath, projectPath
 
   const classesToTraverse = [];
 
-  oxcTraverse(babelAst, {
+  oxcTraverse(oxcAst, {
     ClassDeclaration(astPath) {
       classesToTraverse.push({ astPath, isMixin: false });
     },
