@@ -228,18 +228,18 @@ describe('Analyzer "find-exports"', async () => {
       ]);
       expect(secondEntry.result[0].rootFileMap).to.deep.equal([
         {
-          currentFileSpecifier: 'InBetweenComp',
+          currentFileSpecifier: 'OriginalComp',
           rootFile: {
-            file: './src/OriginalComp.js',
+            file: '[current]',
             specifier: 'OriginalComp',
           },
         },
       ]);
       expect(thirdEntry.result[0].rootFileMap).to.deep.equal([
         {
-          currentFileSpecifier: 'OriginalComp',
+          currentFileSpecifier: 'InBetweenComp',
           rootFile: {
-            file: '[current]',
+            file: './src/OriginalComp.js',
             specifier: 'OriginalComp',
           },
         },

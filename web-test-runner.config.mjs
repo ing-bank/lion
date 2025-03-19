@@ -1,6 +1,6 @@
 import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 import { playwrightLauncher } from '@web/test-runner-playwright';
-import { optimisedGlob } from 'providence-analytics/utils.js';
+import { globby } from 'globby';
 
 const config = {
   shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),
@@ -8,7 +8,7 @@ const config = {
 };
 
 const groups = (
-  await optimisedGlob(['packages/*/test', 'packages/ui/components/**/test'], {
+  await globby(['packages/*/test', 'packages/ui/components/**/test'], {
     onlyDirectories: true,
   })
 ) // @ts-expect-error [update-es-version-later]
