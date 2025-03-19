@@ -1,4 +1,16 @@
-# Input Tel Dropdown >> Use Cases ||20
+---
+parts:
+  - Input Tel Dropdown
+  - Use Cases
+title: 'Input Tel Dropdown: Use Cases'
+eleventyNavigation:
+  key: 'Input Tel Dropdown: Use Cases'
+  order: 20
+  parent: Input Tel Dropdown
+  title: Use Cases
+---
+
+# Input Tel Dropdown: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

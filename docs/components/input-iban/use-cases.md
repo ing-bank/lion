@@ -1,4 +1,16 @@
-# Input Iban >> Use Cases ||20
+---
+parts:
+  - Input Iban
+  - Use Cases
+title: 'Input Iban: Use Cases'
+eleventyNavigation:
+  key: 'Input Iban: Use Cases'
+  order: 20
+  parent: Input Iban
+  title: Use Cases
+---
+
+# Input Iban: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

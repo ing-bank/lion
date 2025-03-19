@@ -1,4 +1,16 @@
-# Tooltip >> Use Cases ||20
+---
+parts:
+  - Tooltip
+  - Use Cases
+title: 'Tooltip: Use Cases'
+eleventyNavigation:
+  key: 'Tooltip: Use Cases'
+  order: 20
+  parent: Tooltip
+  title: Use Cases
+---
+
+# Tooltip: Use Cases
 
 ```js script
 import { css, html } from '@mdjs/mdjs-preview';

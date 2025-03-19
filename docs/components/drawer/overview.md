@@ -1,4 +1,16 @@
-# Drawer >> Overview ||10
+---
+parts:
+  - Drawer
+  - Overview
+title: 'Drawer: Overview'
+eleventyNavigation:
+  key: 'Drawer: Overview'
+  order: 10
+  parent: Drawer
+  title: Overview
+---
+
+# Drawer: Overview
 
 A combination of a button (the invoker) and a chunk of 'extra content'. This web component can be extended with an
 animation to disclose the extra content.

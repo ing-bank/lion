@@ -1,4 +1,16 @@
-# Input File >> Overview ||10
+---
+parts:
+  - Input File
+  - Overview
+title: 'Input File: Overview'
+eleventyNavigation:
+  key: 'Input File: Overview'
+  order: 10
+  parent: Input File
+  title: Overview
+---
+
+# Input File: Overview
 
 A web component based on the file input field.
 

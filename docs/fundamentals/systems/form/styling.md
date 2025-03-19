@@ -1,3 +1,16 @@
+---
+parts:
+  - Styling
+  - Form
+  - Systems
+title: 'Form: Styling'
+eleventyNavigation:
+  key: Systems >> Form >> Styling
+  title: Styling
+  order: 40
+  parent: Systems >> Form
+---
+
 # Systems >> Form >> Styling ||40
 
 ```js script

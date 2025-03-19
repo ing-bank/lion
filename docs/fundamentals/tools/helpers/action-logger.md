@@ -1,3 +1,16 @@
+---
+parts:
+  - Action Logger
+  - Helpers
+  - Tools
+title: 'Helpers: Action Logger'
+eleventyNavigation:
+  key: Tools >> Helpers >> Action Logger
+  title: Action Logger
+  order: 20
+  parent: Tools >> Helpers
+---
+
 # Tools >> Helpers >> Action Logger ||20
 
 A visual element to show action logs in demos `sb-action-logger`

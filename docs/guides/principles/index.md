@@ -1,4 +1,14 @@
-# Principles ||10
+---
+parts:
+  - Principles
+title: Principles
+eleventyNavigation:
+  key: Principles
+  order: 10
+  title: Principles
+---
+
+# Principles
 
 Lion is a set of white label Web Components that can be extended to your own styled layer of components.
 

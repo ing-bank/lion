@@ -1,3 +1,16 @@
+---
+parts:
+  - Overview
+  - Extend Docs
+  - Node Tools
+title: 'Extend Docs: Overview'
+eleventyNavigation:
+  key: Node Tools >> Extend Docs >> Overview
+  title: Overview
+  order: 10
+  parent: Node Tools >> Extend Docs
+---
+
 # Node Tools >> Extend Docs >> Overview ||10
 
 When maintaining your own extension layer of lion you most likely want to maintain a similar documentation.

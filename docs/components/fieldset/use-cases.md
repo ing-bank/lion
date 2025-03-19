@@ -1,4 +1,16 @@
-# Fieldset >> Use Cases ||20
+---
+parts:
+  - Fieldset
+  - Use Cases
+title: 'Fieldset: Use Cases'
+eleventyNavigation:
+  key: 'Fieldset: Use Cases'
+  order: 20
+  parent: Fieldset
+  title: Use Cases
+---
+
+# Fieldset: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

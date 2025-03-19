@@ -1,4 +1,16 @@
-# Input Stepper >> Use Cases ||20
+---
+parts:
+  - Input Stepper
+  - Use Cases
+title: 'Input Stepper: Use Cases'
+eleventyNavigation:
+  key: 'Input Stepper: Use Cases'
+  order: 20
+  parent: Input Stepper
+  title: Use Cases
+---
+
+# Input Stepper: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

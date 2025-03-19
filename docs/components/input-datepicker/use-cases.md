@@ -1,4 +1,16 @@
-# Input Datepicker >> Use Cases ||20
+---
+parts:
+  - Input Datepicker
+  - Use Cases
+title: 'Input Datepicker: Use Cases'
+eleventyNavigation:
+  key: 'Input Datepicker: Use Cases'
+  order: 20
+  parent: Input Datepicker
+  title: Use Cases
+---
+
+# Input Datepicker: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

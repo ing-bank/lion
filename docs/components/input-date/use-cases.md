@@ -1,4 +1,16 @@
-# Input Date >> Use Cases ||20
+---
+parts:
+  - Input Date
+  - Use Cases
+title: 'Input Date: Use Cases'
+eleventyNavigation:
+  key: 'Input Date: Use Cases'
+  order: 20
+  parent: Input Date
+  title: Use Cases
+---
+
+# Input Date: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

@@ -1,4 +1,16 @@
-# Tooltip >> Overview ||10
+---
+parts:
+  - Tooltip
+  - Overview
+title: 'Tooltip: Overview'
+eleventyNavigation:
+  key: 'Tooltip: Overview'
+  order: 10
+  parent: Tooltip
+  title: Overview
+---
+
+# Tooltip: Overview
 
 A web component used for basic popups on hover.
 Its purpose is to show content appearing when the user hovers over an invoker element with the cursor or with the keyboard, or if the invoker element is focused.
