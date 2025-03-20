@@ -2,4 +2,5 @@
 'providence-analytics': minor
 ---
 
-use globby again
+- use globby again
+- fix ast cache (prevent from endless expanding); expose amountOfCachedProjects

@@ -146,12 +146,12 @@ export class QueryService {
     }
     // In order to prevent running out of memory, there is a limit to the number of
     // project ASTs in cache. For a session running multiple analyzers for reference
-    // and target projects, we need this number to be at least 2.
-    if (astProjectsDataCache.size >= 2) {
-      astProjectsDataCache.delete(astProjectsDataCache.keys()[0]);
+    if (astProjectsDataCache.size >= this.amountOfCachedProjects) {
+      astProjectsDataCache.delete(astProjectsDataCache.keys().next().value);
     }
     astProjectsDataCache.set(pathAndRequiredAst, astData);
   }
 }
 QueryService.cacheDisabled = false;
+QueryService.amountOfCachedProjects = 2;
 QueryService.addAstToProjectsData = memoize(QueryService.addAstToProjectsData);
