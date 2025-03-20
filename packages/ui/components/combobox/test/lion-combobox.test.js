@@ -354,7 +354,7 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('20');
     });
 
-    it('sets modelValue to Unparseable if no option is selected', async () => {
+    it.only('sets modelValue to Unparseable if no option is selected', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" .modelValue="${'Artichoke'}">
@@ -944,7 +944,7 @@ describe('lion-combobox', () => {
       const tag = unsafeStatic(tagName);
 
       const el = /** @type {LionCombobox} */ (
-        await fixture(html` 
+        await fixture(html`
           <${tag} name="combo" label="Display only the label once selected">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>

@@ -124,6 +124,24 @@ const CustomChoiceGroupMixinImplementation = superclass =>
       this._customChoices = new Set();
     }
 
+    update (changedProperties) {
+      super.update(changedProperties);
+      console.log('update customChoice', changedProperties)
+      this.modelValue = this._initialModelValue
+    }
+
+    firstUpdated(changedProperties) {
+      super.firstUpdated(changedProperties);
+      console.log('customChoice', changedProperties)
+      super.registrationComplete?.then(() => {
+        debugger
+      })
+      this.registrationComplete.then(() => {
+        /** @type {any[]} */
+        this._initialModelValue = this.modelValue;
+      });
+    }
+
     /**
      * @private
      */

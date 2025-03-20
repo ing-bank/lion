@@ -129,6 +129,11 @@ const FormRegistrarMixinImplementation = superclass =>
       }
     }
 
+    firstUpdated (changedProperties) {
+      super.firstUpdated(changedProperties);
+      console.log('firstUpdated from choice formRegistrarMixin',changedProperties)
+    }
+
     /**
      *
      * @param {ElementWithParentFormGroup} el

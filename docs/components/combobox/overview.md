@@ -22,11 +22,11 @@ import { lazyRender } from './src/lazyRender.js';
 
 ```js preview-story
 export const main = () => html`
-  <lion-combobox name="combo" label="Default">
+  <lion-combobox autocomplete="none" name="combo" label="Default" .modelValue=${'Mango'}>
     ${lazyRender(
       listboxData.map(
         (entry, i) => html`
-          <lion-option .checked="${i === 0}" .choiceValue="${entry}">${entry}</lion-option>
+          <lion-option .choiceValue="${entry}">${entry}</lion-option>
         `,
       ),
     )}
