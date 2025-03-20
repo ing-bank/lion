@@ -161,6 +161,9 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     if (choiceGroupModelValue !== '') {
       return choiceGroupModelValue;
     }
+    // if (choiceGroupModelValue === '' && !this.allowCustomChoice) {
+    //   return this._initialModelValue || '';
+    // }
     // Since the FormatMixin can't be applied to a [FormGroup](https://github.com/ing-bank/lion/blob/master/packages/ui/components/form-core/src/form-group/FormGroupMixin.js)
     // atm, we treat it in a way analogue to InteractionStateMixin (basically same apis, w/o Mixin applied).
     // Hence, modelValue has no reactivity by default and we need to call parser manually here...
@@ -171,9 +174,16 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   // If you override one, gotta override the other, they go in pairs.
   /**
    * @override ChoiceGroupMixin
+   * @param {string | string[]} value
    */
   set modelValue(value) {
-    super.modelValue = value;
+    if (this.__isInitialModelValue) {
+      this._initialModelValue = value;
+      this.requestUpdate('modelValue', this._oldModelValue);
+      this.__isInitialModelValue = false;
+    } else {
+      super.modelValue = value;
+    }
   }
 
   /**
@@ -495,6 +505,19 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
      * @protected
      */
     this._textboxOnKeydown = this._textboxOnKeydown.bind(this);
+    /**
+     * Flag that will be set when user interaction takes place (for instance after an 'input'
+     * event). Will be added as meta info to the `model-value-changed` event. Depending on
+     * whether a user is interacting, formatting logic will be handled differently.
+     * @protected
+     * @type {boolean}
+     */
+    this._isHandlingUserInput = false;
+    /** @private */
+    this.__isInitialModelValue = true;
+    /** @protected
+     * @type {string[] | string} */
+    this._initialModelValue = '';
   }
 
   connectedCallback() {
@@ -516,15 +539,13 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       this.__setComboboxDisabledAndReadOnly();
     }
     if (name === 'modelValue' && this.modelValue && this.modelValue !== oldValue) {
-      if (this._syncToTextboxCondition(this.modelValue, this._oldModelValue)) {
-        if (!this.multipleChoice) {
-          const textboxValue = this._getTextboxValueFromOption(
-            this.formElements[/** @type {number} */ (this.checkedIndex)],
-          );
-          this._setTextboxValue(textboxValue);
-        } else {
-          this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
-        }
+      if (!this.multipleChoice) {
+        const textboxValue = this._getTextboxValueFromOption(
+          this.formElements[/** @type {number} */ (this.checkedIndex)],
+        );
+        this._setTextboxValue(textboxValue);
+      } else if (Array.isArray(this.modelValue)) {
+        this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
       }
     }
   }
@@ -605,6 +626,20 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     if (typeof this._selectionDisplayNode?.onComboboxElementUpdated === 'function') {
       this._selectionDisplayNode.onComboboxElementUpdated(changedProperties);
     }
+  }
+
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+    console.log('firstUpdated from combobox',changedProperties)
+    super.registrationComplete?.then(() => {
+      debugger
+    })
+    console.log(this.modelValue)
+    this.registrationComplete.then(() => {
+      /** @type {any[]} */
+      this._initialModelValue = this.modelValue;
+    });
+    console.log(this.modelValue)
   }
 
   /**
@@ -709,7 +744,9 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   // eslint-disable-next-line no-unused-vars
   _textboxOnInput(ev) {
     this.__shouldAutocompleteNextUpdate = true;
+    this._isHandlingUserInput = true;
     this.opened = this._showOverlayCondition({});
+    this._isHandlingUserInput = false;
   }
 
   /**
@@ -759,15 +796,13 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     if (!this.multipleChoice) {
       if (
         this.checkedIndex !== -1 &&
-        this._syncToTextboxCondition(this.modelValue, this._oldModelValue, {
-          phase: 'overlay-close',
-        })
+        this._syncToTextboxCondition({ phase: 'overlay-close' })
       ) {
         this._inputNode.value = this._getTextboxValueFromOption(
           this.formElements[/** @type {number} */ (this.checkedIndex)],
         );
       }
-    } else {
+    } else if (Array.isArray(this.modelValue)){
       this._syncToTextboxMultiple(this.modelValue, this._oldModelValue);
     }
   }
@@ -920,7 +955,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     const visibleOptions = [];
     /** Whether autofill (activeIndex/checkedIndex and ) has taken place in this 'cycle' */
     let hasAutoFilled = false;
-    const userIntendsInlineAutoFill = this.__computeUserIntendsAutoFill({ prevValue, curValue });
+    const userIntendsInlineAutoFill = this.__computeUserIntendsAutoFill({
+      prevValue,
+      curValue,
+    });
     const isInlineAutoFillCandidate =
       this.autocomplete === 'both' || this.autocomplete === 'inline';
     const autoselect = this._autoSelectCondition();
@@ -1006,6 +1044,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       if (prevValue !== curValue) {
         this.activeIndex = -1;
       }
+      this.modelValue = this.parser(inputValue);
+    }
+
+    if (!this._autoSelectCondition()) {
       this.modelValue = this.parser(inputValue);
     }
 
@@ -1169,13 +1211,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
 
   /**
    * @overridable
-   * @param {string|string[]} modelValue
-   * @param {string|string[]} oldModelValue
    * @param {{phase?:string}} config
    * @protected
    */
-  // eslint-disable-next-line no-unused-vars
-  _syncToTextboxCondition(modelValue, oldModelValue, { phase } = {}) {
+  _syncToTextboxCondition({ phase } = {}) {
     return (
       this.autocomplete === 'inline' || this.autocomplete === 'both' || phase === 'overlay-close'
     );

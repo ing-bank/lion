@@ -187,6 +187,19 @@ const ChoiceGroupMixinImplementation = superclass =>
       }
     }
 
+    firstUpdated(changedProperties) {
+      super.firstUpdated(changedProperties);
+      console.log('firstUpdated from choice groupe',changedProperties)
+      super.registrationComplete?.then(() => {
+        debugger
+      })
+      this.registrationComplete.then(() => {
+        console.log(changedProperties)
+        /** @type {any[]} */
+        this._initialModelValue = this.modelValue;
+      });
+    }
+
     /**
      * @enhance FormRegistrarMixin
      * @param {FormControl} child
