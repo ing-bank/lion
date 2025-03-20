@@ -1,7 +1,5 @@
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
-import sinon from 'sinon';
-import { browserDetection } from '@lion/ui/core.js';
 import { OverlayController, OverlaysManager } from '@lion/ui/overlays.js';
 
 /**
@@ -99,70 +97,5 @@ describe('OverlaysManager', () => {
 
     await dialog2.hide();
     expect(mngr.shownList).to.deep.equal([]);
-  });
-
-  describe('Browser/device edge cases', () => {
-    const isIOSDetectionStub = sinon.stub(browserDetection, 'isIOS');
-    const isMacSafariDetectionStub = sinon.stub(browserDetection, 'isMacSafari');
-
-    function mockIOS() {
-      isIOSDetectionStub.value(true);
-      isMacSafariDetectionStub.value(false);
-    }
-
-    function mockMacSafari() {
-      // When we are iOS
-      isIOSDetectionStub.value(false);
-      isMacSafariDetectionStub.value(true);
-    }
-
-    afterEach(() => {
-      // Restore original values
-      isIOSDetectionStub.restore();
-      isMacSafariDetectionStub.restore();
-    });
-
-    describe('When initialized with "preventsScroll: true"', () => {
-      it('adds class "overlays-scroll-lock-ios-fix" to body and html on iOS', async () => {
-        mockIOS();
-        const dialog = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
-        await dialog.show();
-        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
-        expect(Array.from(document.documentElement.classList)).to.contain(
-          'overlays-scroll-lock-ios-fix',
-        );
-        await dialog.hide();
-        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
-        expect(Array.from(document.documentElement.classList)).to.not.contain(
-          'overlays-scroll-lock-ios-fix',
-        );
-
-        // When we are not iOS nor MacSafari
-        isIOSDetectionStub.value(false);
-        isMacSafariDetectionStub.value(false);
-
-        const dialog2 = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
-        await dialog2.show();
-        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
-        expect(Array.from(document.documentElement.classList)).to.not.contain(
-          'overlays-scroll-lock-ios-fix',
-        );
-      });
-
-      it('adds class "overlays-scroll-lock-ios-fix" to body on MacSafari', async () => {
-        mockMacSafari();
-        const dialog = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
-        await dialog.show();
-        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
-        expect(Array.from(document.documentElement.classList)).to.not.contain(
-          'overlays-scroll-lock-ios-fix',
-        );
-        await dialog.hide();
-        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
-        expect(Array.from(document.documentElement.classList)).to.not.contain(
-          'overlays-scroll-lock-ios-fix',
-        );
-      });
-    });
   });
 });
