@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.19.0
+
+### Minor Changes
+
+- 9827228: - use globby again
+  - fix ast cache (prevent from endless expanding); expose amountOfCachedProjects
+
 ## 0.18.4
 
 ### Patch Changes
