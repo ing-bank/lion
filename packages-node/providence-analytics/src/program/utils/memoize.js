@@ -3,11 +3,26 @@
  * @typedef {function & {clearCache: () => void}} MemoizedFn
  */
 
+// https://www.nearform.com/insights/tracking-memory-allocation-node-js/
+
+/**
+ * @param {number} memoryPercentage
+ */
+function hasEnoughMemory(memoryPercentage) {
+  const memUsage = process.memoryUsage();
+  return memUsage.heapUsed / memUsage.heapTotal < memoryPercentage / 100;
+}
+
+function getDefaultMaxCacheStack() {
+  return { memoryPercentage: 90, length: undefined };
+}
+
 /** @type {CacheStrategyItem[]} */
-let cacheStrategyItems = [];
+let cacheStack = [];
 /** @type {'lfu'|'lru'} */
 let cacheStrategy = 'lfu';
-let limitForCacheStrategy = 100;
+/** @type {{memoryPercentage?:number;length?:number}} */
+let maxCacheStack = getDefaultMaxCacheStack();
 /** For testing purposes, it is possible to disable caching. */
 let shouldCache = true;
 
@@ -30,21 +45,24 @@ function createCachableArg(arg) {
   }
 }
 
-function updateCacheStrategyItemsList() {
-  const hasReachedlimitForCacheStrategy = cacheStrategyItems.length >= limitForCacheStrategy;
-  if (!hasReachedlimitForCacheStrategy) return;
+function makeRoomOnCacheStackIfNeeded() {
+  const hasRoomLeft = maxCacheStack.memoryPercentage
+    ? hasEnoughMemory(maxCacheStack.memoryPercentage)
+    : cacheStack.length < (maxCacheStack.length || 0);
+  // We're done if room is left
+  if (hasRoomLeft) return;
 
   if (cacheStrategy === 'lfu') {
     // eslint-disable-next-line no-case-declarations
-    const lowestCount = Math.min(...cacheStrategyItems.map(({ count }) => count));
-    const leastUsedIndex = cacheStrategyItems.findIndex(({ count }) => count === lowestCount);
-    const [itemToClear] = cacheStrategyItems.splice(leastUsedIndex, 1);
+    const lowestCount = Math.min(...cacheStack.map(({ count }) => count));
+    const leastUsedIndex = cacheStack.findIndex(({ count }) => count === lowestCount);
+    const [itemToClear] = cacheStack.splice(leastUsedIndex, 1);
     itemToClear?.fn.clearCache();
     return;
   }
 
   // acheStrategy === 'lru'
-  const itemToClear = /** @type {CacheStrategyItem} */ (cacheStrategyItems.pop());
+  const itemToClear = /** @type {CacheStrategyItem} */ (cacheStack.pop());
   itemToClear?.fn.clearCache();
 }
 
@@ -54,12 +72,12 @@ function updateCacheStrategyItemsList() {
  */
 function addCacheStrategyItem(newlyMemoizedFn) {
   if (cacheStrategy === 'lfu') {
-    cacheStrategyItems.push({ fn: newlyMemoizedFn, count: 1 });
-    return cacheStrategyItems[cacheStrategyItems.length - 1];
+    cacheStack.push({ fn: newlyMemoizedFn, count: 1 });
+    return cacheStack[cacheStack.length - 1];
   }
   // lru
-  cacheStrategyItems.unshift({ fn: newlyMemoizedFn, count: 1 });
-  return cacheStrategyItems[0];
+  cacheStack.unshift({ fn: newlyMemoizedFn, count: 1 });
+  return cacheStack[0];
 }
 /**
  *
@@ -72,8 +90,8 @@ function updateCacheStrategyItem(currentCacheStrategyItem) {
   if (cacheStrategy === 'lfu') return;
 
   // 'lru': move recently used to top
-  cacheStrategyItems.splice(cacheStrategyItems.indexOf(currentCacheStrategyItem), 1);
-  cacheStrategyItems.unshift(currentCacheStrategyItem);
+  cacheStack.splice(cacheStack.indexOf(currentCacheStrategyItem), 1);
+  cacheStack.unshift(currentCacheStrategyItem);
 }
 
 /**
@@ -93,13 +111,13 @@ export function memoize(functionToMemoize, { cacheStorage = {} } = {}) {
     // @ts-expect-error
     if (shouldCache && cachableArgs in cacheStorage) {
       updateCacheStrategyItem(/** @type {CacheStrategyItem} */ (currentCacheStrategyItem));
-
       // @ts-expect-error
       return cacheStorage[cachableArgs];
     }
 
+    // Do we already track an item in our list?
     if (!currentCacheStrategyItem) {
-      updateCacheStrategyItemsList();
+      makeRoomOnCacheStackIfNeeded();
       currentCacheStrategyItem = addCacheStrategyItem(memoizedFn);
     }
 
@@ -132,8 +150,8 @@ memoize.disableCaching = () => {
  */
 memoize.restoreCaching = initialValue => {
   shouldCache = initialValue || true;
-  limitForCacheStrategy = 100;
-  cacheStrategyItems = [];
+  maxCacheStack = getDefaultMaxCacheStack();
+  cacheStack = [];
   cacheStrategy = 'lfu';
 };
 
@@ -143,18 +161,27 @@ Object.defineProperty(memoize, 'isCacheEnabled', {
   },
 });
 
-Object.defineProperty(memoize, 'limitForCacheStrategy', {
+/**
+ * The amount of functions that are memoized.
+ * N.B. memoryPercentage takes precedence
+ */
+Object.defineProperty(memoize, 'maxCacheStack', {
   get() {
-    return limitForCacheStrategy;
+    return maxCacheStack;
   },
-  set(/** @type {number} */ newValue) {
-    if (typeof newValue !== 'number') {
-      throw new Error('Please provide a number');
+  set(/** @type {{ length: number; memoryPercentage: number; }} */ newValue) {
+    if (
+      !(
+        ['undefined', 'number'].includes(typeof newValue?.memoryPercentage) ||
+        typeof newValue?.length === 'number'
+      )
+    ) {
+      throw new Error('Please provide {memoryPercantage:number} or {length:number}');
     }
-    if (cacheStrategyItems.length) {
-      throw new Error('Please configure limitForCacheStrategy before using memoize');
+    if (cacheStack.length) {
+      throw new Error('Please configure maxCacheStack before using memoize');
     }
-    limitForCacheStrategy = newValue;
+    maxCacheStack = newValue;
   },
 });
 
@@ -166,15 +193,15 @@ Object.defineProperty(memoize, 'cacheStrategy', {
     if (!['lfu', 'lru'].includes(newStrategy)) {
       throw new Error("Please provide 'lfu' or 'lru'");
     }
-    if (cacheStrategyItems.length) {
+    if (cacheStack.length) {
       throw new Error('Please configure a strategy before using memoize');
     }
     cacheStrategy = newStrategy;
   },
 });
 
-Object.defineProperty(memoize, 'cacheStrategyItems', {
+Object.defineProperty(memoize, 'cacheStack', {
   get() {
-    return cacheStrategyItems;
+    return cacheStack;
   },
 });

@@ -5,9 +5,20 @@ import sinon from 'sinon';
 import { memoize } from '../../../src/program/utils/memoize.js';
 
 describe('Memoize', () => {
-  // This is important, since memoization only works when cache is disabled.
-  // We want to prevent that another test unintentionally disabled caching.
-  memoize.restoreCaching();
+  /** @type {sinon.SinonStub<* & NodeJS.MemoryUsage>} */
+  let memUsageStub;
+  before(() => {
+    // This is important, since memoization only works when cache is disabled.
+    // We want to prevent that another test unintentionally disabled caching.
+    memoize.restoreCaching();
+    memUsageStub = sinon
+      .stub(process, 'memoryUsage')
+      // This will be enough to put data on cacheStack (as 90% is allowed)
+      .returns({ heapUsed: 10, heapTotal: 100, rss: 20, external: 2 });
+  });
+  after(() => {
+    memUsageStub.restore();
+  });
 
   describe('With primitives', () => {
     describe('Numbers', () => {
@@ -355,7 +366,7 @@ describe('Memoize', () => {
         });
 
         it('removes least used from cache', async () => {
-          memoize.limitForCacheStrategy = 2;
+          memoize.maxCacheStack = { length: 2 };
 
           const spy1 = sinon.spy(() => {});
           const spy2 = sinon.spy(() => {});
@@ -368,64 +379,64 @@ describe('Memoize', () => {
           // Call spy1 3 times
           spy1Memoized();
           expect(spy1.callCount).to.equal(1);
-          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 1 }]);
+          expect(memoize.cacheStack).to.deep.equal([{ fn: spy1Memoized, count: 1 }]);
 
           spy1Memoized();
           expect(spy1.callCount).to.equal(1);
-          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 2 }]);
+          expect(memoize.cacheStack).to.deep.equal([{ fn: spy1Memoized, count: 2 }]);
 
           spy1Memoized();
           expect(spy1.callCount).to.equal(1);
-          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 3 }]);
+          expect(memoize.cacheStack).to.deep.equal([{ fn: spy1Memoized, count: 3 }]);
 
           // Call spy2 2 times (so it's the least frequently used)
           spy2Memoized();
           expect(spy2.callCount).to.equal(1);
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy1Memoized, count: 3 },
             { fn: spy2Memoized, count: 1 },
           ]);
 
           spy2Memoized();
           expect(spy2.callCount).to.equal(1);
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy1Memoized, count: 3 },
             { fn: spy2Memoized, count: 2 },
           ]);
 
-          // When we add number 3, we exceed limitForCacheStrategy
+          // When we add number 3, we exceed maxCacheStack
           // This means that we 'free' the least frequently used (spy2)
           spy3Memoized();
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy1Memoized, count: 3 },
             { fn: spy3Memoized, count: 1 },
           ]);
 
           spy2Memoized();
           expect(spy2.callCount).to.equal(2);
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy1Memoized, count: 3 },
             { fn: spy2Memoized, count: 1 }, // we start over
           ]);
 
           spy2Memoized(); // 2
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy1Memoized, count: 3 }, // we start over
             { fn: spy2Memoized, count: 2 },
           ]);
           spy2Memoized(); // 3
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy1Memoized, count: 3 }, // we start over
             { fn: spy2Memoized, count: 3 },
           ]);
           spy2Memoized(); // 4
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy1Memoized, count: 3 }, // we start over
             { fn: spy2Memoized, count: 4 },
           ]);
 
           spy3Memoized();
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy2Memoized, count: 4 },
             { fn: spy3Memoized, count: 1 }, // we start over
           ]);
@@ -439,7 +450,7 @@ describe('Memoize', () => {
         });
 
         it('removes least recently used from cache', async () => {
-          memoize.limitForCacheStrategy = 2;
+          memoize.maxCacheStack = { length: 2 };
           memoize.cacheStrategy = 'lru';
 
           const spy1 = sinon.spy(() => {});
@@ -453,44 +464,46 @@ describe('Memoize', () => {
           // Call spy1 3 times
           spy1Memoized();
           expect(spy1.callCount).to.equal(1);
-          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 1 }]);
+          expect(memoize.cacheStack).to.deep.equal([{ fn: spy1Memoized, count: 1 }]);
 
           spy1Memoized();
           expect(spy1.callCount).to.equal(1);
-          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 2 }]);
+          expect(memoize.cacheStack).to.deep.equal([{ fn: spy1Memoized, count: 2 }]);
 
           spy1Memoized();
           expect(spy1.callCount).to.equal(1);
-          expect(memoize.cacheStrategyItems).to.deep.equal([{ fn: spy1Memoized, count: 3 }]);
+          expect(memoize.cacheStack).to.deep.equal([{ fn: spy1Memoized, count: 3 }]);
 
           spy2Memoized();
           expect(spy2.callCount).to.equal(1);
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy2Memoized, count: 1 },
             { fn: spy1Memoized, count: 3 },
           ]);
 
           spy2Memoized();
           expect(spy2.callCount).to.equal(1);
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy2Memoized, count: 2 },
             { fn: spy1Memoized, count: 3 },
           ]);
 
           spy3Memoized();
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy3Memoized, count: 1 },
             { fn: spy2Memoized, count: 2 },
           ]);
 
           spy1Memoized();
           expect(spy1.callCount).to.equal(2);
-          expect(memoize.cacheStrategyItems).to.deep.equal([
+          expect(memoize.cacheStack).to.deep.equal([
             { fn: spy1Memoized, count: 1 }, // we start over
             { fn: spy3Memoized, count: 1 },
           ]);
         });
       });
+
+      // TODO: test maxCacheStack strategy for > memUsage (90%) explicitly
     });
   });
 });

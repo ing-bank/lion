@@ -2,11 +2,10 @@
 import semver from 'semver';
 import path from 'path';
 
-import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
 import { InputDataService } from './InputDataService.js';
 import { toPosixPath } from '../utils/to-posix-path.js';
 import { ReportService } from './ReportService.js';
-import { QueryService } from './QueryService.js';
+import { AstService } from './AstService.js';
 import { LogService } from './LogService.js';
 
 /**
@@ -38,14 +37,21 @@ function displayProjectsInLog(identifier) {
  * @param {ProjectInputDataWithMeta} projectData
  * @param {function} astAnalysis
  * @param {object} analyzerCfg
+ * @param {'oxc'|'swc'} requiredAst
  */
-async function analyzePerAstFile(projectData, astAnalysis, analyzerCfg) {
+async function analyzePerAstFile(projectData, astAnalysis, analyzerCfg, requiredAst) {
   const entries = [];
-  for (const { file, ast, context: astContext } of projectData.entries) {
-    const relativePath = getFilePathRelativeFromRoot(file, projectData.project.path);
+
+  for (const { file: relativePath, context: astContext } of projectData.entries) {
+    const fullPath = /** @type {PathFromSystemRoot} */ (
+      path.join(projectData.project.path, relativePath)
+    );
+    const ast = await AstService.getAst(astContext.code, requiredAst, {
+      filePath: fullPath,
+    });
+
     const context = { code: astContext.code, relativePath, projectData, analyzerCfg };
 
-    const fullPath = path.resolve(projectData.project.path, file);
     LogService.debug(`[analyzePerAstFile]: ${fullPath}`);
 
     // We do a try and catch here, so that unparseable files do not block all metrics we're gathering in a run
@@ -280,7 +286,7 @@ export class Analyzer {
 
     if (!cfg.suppressNonCriticalLogs) {
       LogService.info(
-        `${LogService.pad(`starting ${this.name}`)}${displayProjectsInLog(this.identifier)}`,
+        `${LogService.pad(`starting  ${this.name}`)}${displayProjectsInLog(this.identifier)}`,
       );
     }
 
@@ -333,7 +339,7 @@ export class Analyzer {
     const analyzerResult = ensureAnalyzerResultFormat(queryOutput, cfg, this);
     if (!cfg.suppressNonCriticalLogs) {
       LogService.success(
-        `${LogService.pad(`finished ${this.name}`)}${displayProjectsInLog(this.identifier)}`,
+        `${LogService.pad(`finished  ${this.name}`)}${displayProjectsInLog(this.identifier)}`,
       );
     }
     performance.mark('analyzer--finalize-end');
@@ -372,17 +378,19 @@ export class Analyzer {
       ]);
     }
 
-    /**
-     * Create ASTs for our inputData
-     */
-    const astDataProjects = await QueryService.addAstToProjectsData(
-      finalTargetData,
-      this.requiredAst,
-    );
+    // /**
+    //  * Create ASTs for our inputData
+    //  */
+    // const astDataProjects = await QueryService.addAstToProjectsData(
+    //   finalTargetData,
+    //   this.requiredAst,
+    // );
+
     return analyzePerAstFile(
-      astDataProjects[0],
+      finalTargetData[0],
       analyzeFileCfg.traverseEntryFn,
       analyzeFileCfg.config,
+      this.requiredAst,
     );
   }
 

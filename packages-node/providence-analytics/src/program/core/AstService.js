@@ -1,5 +1,6 @@
 import * as parse5 from 'parse5';
 import { traverseHtml } from '../utils/traverse-html.js';
+import { memoize } from '../utils/memoize.js';
 import { LogService } from './LogService.js';
 
 /** @type {import('@babel/parser')} */
@@ -13,7 +14,6 @@ let oxcParser;
  * @typedef {import('../../../types/index.js').PathFromSystemRoot} PathFromSystemRoot
  * @typedef {import('../../../types/index.js').AnalyzerAst} AnalyzerAst
  * @typedef {import("oxc-parser").ParseResult} OxcParseResult
- * @typedef {import("@babel/parser").ParserOptions} ParserOptions
  * @typedef {import("@swc/core").Module} SwcAstModule
  * @typedef {import("@babel/types").File} File
  */
@@ -142,3 +142,4 @@ export class AstService {
  * (for instance when @babel/generator expects a different ast structure and fails).
  */
 AstService.fallbackToBabel = false;
+AstService.getAst = memoize(AstService.getAst);

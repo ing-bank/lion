@@ -39,8 +39,8 @@
         {
           "project": "importing-target-project",
           "files": [
-            "./target-src/match-imports/root-level-imports.js",
-            "./target-src/match-subclasses/internalProxy.js"
+            "./target-src/match-subclasses/internalProxy.js",
+            "./target-src/match-imports/root-level-imports.js"
           ]
         }
       ]

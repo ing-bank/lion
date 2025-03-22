@@ -1,11 +1,7 @@
 import path from 'path';
 
 import { getCurrentDir } from '../utils/get-current-dir.js';
-import { AstService } from './AstService.js';
 import { LogService } from './LogService.js';
-// import { memoize } from '../utils/memoize.js';
-
-const memoize = fn => fn;
 
 /**
  * @typedef {import('../../../types/index.js').PathRelativeFromProjectRoot} PathRelativeFromProjectRoot
@@ -26,8 +22,6 @@ const memoize = fn => fn;
  * @typedef {import('../../../types/index.js').Feature} Feature
  * @typedef {import('./Analyzer.js').Analyzer} Analyzer
  */
-
-const astProjectsDataCache = new Map();
 
 export class QueryService {
   /**
@@ -101,57 +95,6 @@ export class QueryService {
       };
     return queryResult;
   }
-
-  /**
-   * @param {ProjectInputData[]} projectsData
-   * @param {AnalyzerAst} requiredAst
-   */
-  static async addAstToProjectsData(projectsData, requiredAst) {
-    const resultWithAsts = [];
-
-    for (const projectData of projectsData) {
-      const cachedData = astProjectsDataCache.get(projectData.project.path);
-      if (cachedData) {
-        resultWithAsts.push(cachedData);
-        continue; // eslint-disable-line no-continue
-      }
-
-      const resultEntries = [];
-      for (const entry of projectData.entries) {
-        const ast = await AstService.getAst(entry.context.code, requiredAst, {
-          filePath: entry.file,
-        });
-        resultEntries.push({ ...entry, ast });
-      }
-      const astData = { ...projectData, entries: resultEntries };
-      this._addToProjectsDataCache(`${projectData.project.path}#${requiredAst}`, astData);
-      resultWithAsts.push(astData);
-    }
-
-    return resultWithAsts;
-  }
-
-  /**
-   * We need to make sure we don't run into memory issues (ASTs are huge),
-   * so we only store one project in cache now. This will be a performance benefit for
-   * lion-based-ui-cli, that runs providence consecutively for the same project
-   * TODO: instead of storing one result in cache, use sizeof and a memory limit
-   * to allow for more projects
-   * @param {string} pathAndRequiredAst
-   * @param {ProjectInputData} astData
-   */
-  static _addToProjectsDataCache(pathAndRequiredAst, astData) {
-    if (this.cacheDisabled) {
-      return;
-    }
-    // In order to prevent running out of memory, there is a limit to the number of
-    // project ASTs in cache. For a session running multiple analyzers for reference
-    if (astProjectsDataCache.size >= this.amountOfCachedProjects) {
-      astProjectsDataCache.delete(astProjectsDataCache.keys().next().value);
-    }
-    astProjectsDataCache.set(pathAndRequiredAst, astData);
-  }
 }
 QueryService.cacheDisabled = false;
 QueryService.amountOfCachedProjects = 2;
-QueryService.addAstToProjectsData = memoize(QueryService.addAstToProjectsData);
