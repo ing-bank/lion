@@ -1,15 +1,3 @@
----
-parts:
-  - TypeScript
-  - Rationales
-title: 'Rationales: TypeScript'
-eleventyNavigation:
-  key: Rationales >> TypeScript
-  title: TypeScript
-  order: 30
-  parent: Rationales
----
-
 # Rationales >> TypeScript ||30
 
 [TypeScript](https://www.typescriptlang.org) is superset of JavaScript and a popular tool for getting strongly typed syntax and better autocompletion in JavaScript.

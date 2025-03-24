@@ -1,13 +1,3 @@
----
-parts:
-  - Dialog
-title: Dialog
-eleventyNavigation:
-  key: Dialog
-  order: 20
-  title: Dialog
----
-
-# Dialog
+# Dialog ||20
 
 -> go to Overview

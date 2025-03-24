@@ -1,16 +1,3 @@
----
-parts:
-  - Overview
-  - Publish Docs
-  - Node Tools
-title: 'Publish Docs: Overview'
-eleventyNavigation:
-  key: Node Tools >> Publish Docs >> Overview
-  title: Overview
-  order: 10
-  parent: Node Tools >> Publish Docs
----
-
 # Node Tools >> Publish Docs >> Overview ||10
 
 A tool that copies and processes your documentation (in a monorepo) so it can be published/shipped with your package.

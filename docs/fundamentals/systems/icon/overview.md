@@ -1,16 +1,3 @@
----
-parts:
-  - Overview
-  - Icon
-  - Systems
-title: 'Icon: Overview'
-eleventyNavigation:
-  key: Systems >> Icon >> Overview
-  title: Overview
-  order: 10
-  parent: Systems >> Icon
----
-
 # Systems >> Icon >> Overview ||10
 
 The icon system provides a way of defining icon sets which are lazily loaded on demand when

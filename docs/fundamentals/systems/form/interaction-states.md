@@ -1,16 +1,3 @@
----
-parts:
-  - Interaction States
-  - Form
-  - Systems
-title: 'Form: Interaction States'
-eleventyNavigation:
-  key: Systems >> Form >> Interaction States
-  title: Interaction States
-  order: 22
-  parent: Systems >> Form
----
-
 # Systems >> Form >> Interaction States ||22
 
 ```js script

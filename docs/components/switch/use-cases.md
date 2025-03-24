@@ -1,16 +1,4 @@
----
-parts:
-  - Switch
-  - Use Cases
-title: 'Switch: Use Cases'
-eleventyNavigation:
-  key: 'Switch: Use Cases'
-  order: 20
-  parent: Switch
-  title: Use Cases
----
-
-# Switch: Use Cases
+# Switch >> Use Cases ||20
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

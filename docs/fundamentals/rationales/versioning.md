@@ -1,15 +1,3 @@
----
-parts:
-  - Versioning Lion
-  - Rationales
-title: 'Rationales: Versioning Lion'
-eleventyNavigation:
-  key: Rationales >> Versioning Lion
-  title: Versioning Lion
-  order: 20
-  parent: Rationales
----
-
 # Rationales >> Versioning Lion ||20
 
 Since Lion is a monorepository where each package is published separately under the `@lion` scope, we have packages that depend on other packages.

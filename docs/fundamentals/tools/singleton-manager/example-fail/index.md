@@ -1,16 +1,3 @@
----
-parts:
-  - Example Fail
-  - Singleton Manager
-  - Tools
-title: 'Singleton Manager: Example Fail'
-eleventyNavigation:
-  key: Tools >> Singleton Manager >> Example Fail
-  title: Example Fail
-  order: 20
-  parent: Tools >> Singleton Manager
----
-
 # Tools >> Singleton Manager >> Example Fail ||20
 
 In this SPA (Single Page Application) demo you will be able to reproduce the issue.

@@ -1,16 +1,4 @@
----
-parts:
-  - Input Tel Dropdown
-  - Extensions
-title: 'Input Tel Dropdown: Extensions'
-eleventyNavigation:
-  key: 'Input Tel Dropdown: Extensions'
-  order: 30
-  parent: Input Tel Dropdown
-  title: Extensions
----
-
-# Input Tel Dropdown: Extensions
+# Input Tel Dropdown >> Extensions ||30
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

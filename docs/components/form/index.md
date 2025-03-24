@@ -1,13 +1,3 @@
----
-parts:
-  - Form
-title: Form
-eleventyNavigation:
-  key: Form
-  order: 20
-  title: Form
----
-
-# Form
+# Form ||20
 
 -> go to Overview

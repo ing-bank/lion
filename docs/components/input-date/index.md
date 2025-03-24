@@ -1,13 +1,3 @@
----
-parts:
-  - Input Date
-title: Input Date
-eleventyNavigation:
-  key: Input Date
-  order: 20
-  title: Input Date
----
-
-# Input Date
+# Input Date ||20
 
 -> go to Overview

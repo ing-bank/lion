@@ -1,16 +1,3 @@
----
-parts:
-  - Overview
-  - Remark Extend
-  - Node Tools
-title: 'Remark Extend: Overview'
-eleventyNavigation:
-  key: Node Tools >> Remark Extend >> Overview
-  title: Overview
-  order: 10
-  parent: Node Tools >> Remark Extend
----
-
 # Node Tools >> Remark Extend >> Overview ||10
 
 A plugin for remark to extend markdown by importing from source files.

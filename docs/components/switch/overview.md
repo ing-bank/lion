@@ -1,16 +1,4 @@
----
-parts:
-  - Switch
-  - Overview
-title: 'Switch: Overview'
-eleventyNavigation:
-  key: 'Switch: Overview'
-  order: 10
-  parent: Switch
-  title: Overview
----
-
-# Switch: Overview
+# Switch >> Overview ||10
 
 <p class="lion-paragraph--emphasis">The Switch is used to toggle a property or feature on or off.</p>
 

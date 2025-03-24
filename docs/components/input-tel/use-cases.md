@@ -1,16 +1,4 @@
----
-parts:
-  - Input Tel
-  - Use Cases
-title: 'Input Tel: Use Cases'
-eleventyNavigation:
-  key: 'Input Tel: Use Cases'
-  order: 20
-  parent: Input Tel
-  title: Use Cases
----
-
-# Input Tel: Use Cases
+# Input Tel >> Use Cases ||20
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

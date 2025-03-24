@@ -78,7 +78,6 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-wc": "^2.2.0",
     "globby": "^14.0.2",
-    "gray-matter": "^4.0.3",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "looks-same": "^9.0.1",

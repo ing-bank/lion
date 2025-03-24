@@ -1,13 +1,3 @@
----
-parts:
-  - Calendar
-title: Calendar
-eleventyNavigation:
-  key: Calendar
-  order: 10
-  title: Calendar
----
-
-# Calendar
+# Calendar ||10
 
 -> go to Overview

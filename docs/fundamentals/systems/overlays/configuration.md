@@ -1,16 +1,3 @@
----
-parts:
-  - Configuration
-  - Overlays
-  - Systems
-title: 'Overlays: Configuration'
-eleventyNavigation:
-  key: Systems >> Overlays >> Configuration
-  title: Configuration
-  order: 40
-  parent: Systems >> Overlays
----
-
 # Systems >> Overlays >> Configuration ||40
 
 ```js script

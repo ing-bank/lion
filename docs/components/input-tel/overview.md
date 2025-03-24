@@ -1,16 +1,4 @@
----
-parts:
-  - Input Tel
-  - Overview
-title: 'Input Tel: Overview'
-eleventyNavigation:
-  key: 'Input Tel: Overview'
-  order: 10
-  parent: Input Tel
-  title: Overview
----
-
-# Input Tel: Overview
+# Input Tel >> Overview ||10
 
 Input field for entering phone numbers, including validation, formatting and mobile keyboard support.
 

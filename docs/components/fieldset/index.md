@@ -1,13 +1,3 @@
----
-parts:
-  - Fieldset
-title: Fieldset
-eleventyNavigation:
-  key: Fieldset
-  order: 20
-  title: Fieldset
----
-
-# Fieldset
+# Fieldset ||20
 
 -> go to Overview

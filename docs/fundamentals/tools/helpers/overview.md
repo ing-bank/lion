@@ -1,16 +1,3 @@
----
-parts:
-  - Overview
-  - Helpers
-  - Tools
-title: 'Helpers: Overview'
-eleventyNavigation:
-  key: Tools >> Helpers >> Overview
-  title: Overview
-  order: 10
-  parent: Tools >> Helpers
----
-
 # Tools >> Helpers >> Overview ||10
 
 A helpers package that contains several helpers that are used inside lion but can be used outside as well.

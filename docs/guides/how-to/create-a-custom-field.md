@@ -1,16 +1,4 @@
----
-parts:
-  - How To
-  - Create a custom field
-title: 'How To: Create a custom field'
-eleventyNavigation:
-  key: 'How To: Create a custom field'
-  order: 20
-  parent: How To
-  title: Create a custom field
----
-
-# How To: Create a custom field
+# How To >> Create a custom field ||20
 
 ```js script
 import { html, css, LitElement } from '@mdjs/mdjs-preview';

@@ -1,13 +1,3 @@
----
-parts:
-  - Select Rich
-title: Select Rich
-eleventyNavigation:
-  key: Select Rich
-  order: 40
-  title: Select Rich
----
-
-# Select Rich
+# Select Rich ||40
 
 -> go to Overview

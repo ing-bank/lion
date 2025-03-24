@@ -1,16 +1,3 @@
----
-parts:
-  - Example Complex
-  - Singleton Manager
-  - Tools
-title: 'Singleton Manager: Example Complex'
-eleventyNavigation:
-  key: Tools >> Singleton Manager >> Example Complex
-  title: Example Complex
-  order: 40
-  parent: Tools >> Singleton Manager
----
-
 # Tools >> Singleton Manager >> Example Complex ||40
 
 In this SPA (Single Page Application) demo you will be able to reproduce the solution.

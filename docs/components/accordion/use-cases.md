@@ -1,16 +1,4 @@
----
-parts:
-  - Accordion
-  - Use Cases
-title: 'Accordion: Use Cases'
-eleventyNavigation:
-  key: 'Accordion: Use Cases'
-  order: 20
-  parent: Accordion
-  title: Use Cases
----
-
-# Accordion: Use Cases
+# Accordion >> Use Cases ||20
 
 ```js script
 import { html as previewHtml } from '@mdjs/mdjs-preview';

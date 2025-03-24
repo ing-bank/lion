@@ -1,16 +1,4 @@
----
-parts:
-  - How To
-  - Create a form
-title: 'How To: Create a form'
-eleventyNavigation:
-  key: 'How To: Create a form'
-  order: 15
-  parent: How To
-  title: Create a form
----
-
-# How To: Create a form
+# How To >> Create a form ||15
 
 Creating your own forms as an Application Developer is really simple. Only two rules need to be followed.
 

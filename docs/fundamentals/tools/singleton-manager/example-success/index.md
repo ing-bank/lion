@@ -1,16 +1,3 @@
----
-parts:
-  - Example Success
-  - Singleton Manager
-  - Tools
-title: 'Singleton Manager: Example Success'
-eleventyNavigation:
-  key: Tools >> Singleton Manager >> Example Success
-  title: Example Success
-  order: 30
-  parent: Tools >> Singleton Manager
----
-
 # Tools >> Singleton Manager >> Example Success ||30
 
 In this SPA (Single Page Application) demo you will be able to reproduce the solution.

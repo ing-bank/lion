@@ -1,16 +1,4 @@
----
-parts:
-  - Combobox
-  - Overview
-title: 'Combobox: Overview'
-eleventyNavigation:
-  key: 'Combobox: Overview'
-  order: 10
-  parent: Combobox
-  title: Overview
----
-
-# Combobox: Overview
+# Combobox >> Overview ||10
 
 A combobox is a widget made up of the combination of two distinct elements:
 

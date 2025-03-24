@@ -1,13 +1,3 @@
----
-parts:
-  - Listbox
-title: Listbox
-eleventyNavigation:
-  key: Listbox
-  order: 20
-  title: Listbox
----
-
-# Listbox
+# Listbox ||20
 
 -> go to Overview

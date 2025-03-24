@@ -1,16 +1,4 @@
----
-parts:
-  - Principles
-  - Definitions and Terms
-title: 'Principles: Definitions and Terms'
-eleventyNavigation:
-  key: 'Principles: Definitions and Terms'
-  order: 20
-  parent: Principles
-  title: Definitions and Terms
----
-
-# Principles: Definitions and Terms
+# Principles >> Definitions and Terms ||20
 
 Below you will find a list of definitions and terms that will be used throughout our code
 documentation.

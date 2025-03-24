@@ -1,16 +1,4 @@
----
-parts:
-  - Fieldset
-  - Overview
-title: 'Fieldset: Overview'
-eleventyNavigation:
-  key: 'Fieldset: Overview'
-  order: 10
-  parent: Fieldset
-  title: Overview
----
-
-# Fieldset: Overview
+# Fieldset >> Overview ||10
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

@@ -1,16 +1,3 @@
----
-parts:
-  - Use Cases
-  - Ajax
-  - Tools
-title: 'Ajax: Use Cases'
-eleventyNavigation:
-  key: Tools >> Ajax >> Use Cases
-  title: Use Cases
-  order: 20
-  parent: Tools >> Ajax
----
-
 # Tools >> Ajax >> Use Cases ||20
 
 ```js script

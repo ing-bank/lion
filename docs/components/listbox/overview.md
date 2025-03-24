@@ -1,16 +1,4 @@
----
-parts:
-  - Listbox
-  - Overview
-title: 'Listbox: Overview'
-eleventyNavigation:
-  key: 'Listbox: Overview'
-  order: 10
-  parent: Listbox
-  title: Overview
----
-
-# Listbox: Overview
+# Listbox >> Overview ||10
 
 A widget that presents a list of options and allows a user to select one or more of them.
 A listbox that allows a single option to be chosen is a `single-select listbox`; one that allows

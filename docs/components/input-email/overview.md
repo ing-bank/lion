@@ -1,16 +1,4 @@
----
-parts:
-  - Input Email
-  - Overview
-title: 'Input Email: Overview'
-eleventyNavigation:
-  key: 'Input Email: Overview'
-  order: 10
-  parent: Input Email
-  title: Overview
----
-
-# Input Email: Overview
+# Input Email >> Overview ||10
 
 A web component based on the generic text input field. Its purpose is to provide a way for users to fill in an email.
 

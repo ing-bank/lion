@@ -1,13 +1,3 @@
----
-parts:
-  - Icon
-title: Icon
-eleventyNavigation:
-  key: Icon
-  order: 20
-  title: Icon
----
-
-# Icon
+# Icon ||20
 
 -> go to Overview

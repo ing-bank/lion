@@ -1,16 +1,4 @@
----
-parts:
-  - Listbox
-  - Use Cases
-title: 'Listbox: Use Cases'
-eleventyNavigation:
-  key: 'Listbox: Use Cases'
-  order: 20
-  parent: Listbox
-  title: Use Cases
----
-
-# Listbox: Use Cases
+# Listbox >> Use Cases ||20
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

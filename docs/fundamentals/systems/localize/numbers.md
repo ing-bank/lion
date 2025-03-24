@@ -1,16 +1,3 @@
----
-parts:
-  - Format Numbers
-  - Localize
-  - Systems
-title: 'Localize: Format Numbers'
-eleventyNavigation:
-  key: Systems >> Localize >> Format Numbers
-  title: Format Numbers
-  order: 30
-  parent: Systems >> Localize
----
-
 # Systems >> Localize >> Format Numbers ||30
 
 ## Features

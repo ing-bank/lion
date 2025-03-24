@@ -1,16 +1,4 @@
----
-parts:
-  - Textarea
-  - Use Cases
-title: 'Textarea: Use Cases'
-eleventyNavigation:
-  key: 'Textarea: Use Cases'
-  order: 20
-  parent: Textarea
-  title: Use Cases
----
-
-# Textarea: Use Cases
+# Textarea >> Use Cases ||20
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

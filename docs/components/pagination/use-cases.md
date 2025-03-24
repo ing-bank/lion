@@ -1,16 +1,4 @@
----
-parts:
-  - Pagination
-  - Use Cases
-title: 'Pagination: Use Cases'
-eleventyNavigation:
-  key: 'Pagination: Use Cases'
-  order: 20
-  parent: Pagination
-  title: Use Cases
----
-
-# Pagination: Use Cases
+# Pagination >> Use Cases ||20
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

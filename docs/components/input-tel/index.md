@@ -1,13 +1,3 @@
----
-parts:
-  - Input Tel
-title: Input Tel
-eleventyNavigation:
-  key: Input Tel
-  order: 20
-  title: Input Tel
----
-
-# Input Tel
+# Input Tel ||20
 
 -> go to Overview

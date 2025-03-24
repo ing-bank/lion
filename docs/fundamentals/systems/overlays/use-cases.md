@@ -1,16 +1,3 @@
----
-parts:
-  - Use Cases
-  - Overlays
-  - Systems
-title: 'Overlays: Use Cases'
-eleventyNavigation:
-  key: Systems >> Overlays >> Use Cases
-  title: Use Cases
-  order: 20
-  parent: Systems >> Overlays
----
-
 # Systems >> Overlays >> Use Cases ||20
 
 ```js script

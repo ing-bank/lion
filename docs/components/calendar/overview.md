@@ -1,16 +1,4 @@
----
-parts:
-  - Calendar
-  - Overview
-title: 'Calendar: Overview'
-eleventyNavigation:
-  key: 'Calendar: Overview'
-  order: 10
-  parent: Calendar
-  title: Overview
----
-
-# Calendar: Overview
+# Calendar >> Overview ||10
 
 A reusable and accessible calendar view web component.
 

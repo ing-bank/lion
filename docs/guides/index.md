@@ -1,14 +1,4 @@
----
-parts:
-  - Guides
-title: Guides
-eleventyNavigation:
-  key: Guides
-  order: 30
-  title: Guides
----
-
-# Guides
+# Guides ||30
 
 Lion is a set of white label Web Components that can be extended to your own styled layer of components.
 

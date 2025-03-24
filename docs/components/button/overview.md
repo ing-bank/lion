@@ -1,16 +1,4 @@
----
-parts:
-  - Button
-  - Overview
-title: 'Button: Overview'
-eleventyNavigation:
-  key: 'Button: Overview'
-  order: 10
-  parent: Button
-  title: Overview
----
-
-# Button: Overview
+# Button >> Overview ||10
 
 A button web component that is easily stylable and accessible.
 

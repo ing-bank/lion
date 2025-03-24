@@ -1,13 +1,3 @@
----
-parts:
-  - Button
-title: Button
-eleventyNavigation:
-  key: Button
-  order: 10
-  title: Button
----
-
-# Button
+# Button ||10
 
 -> go to Overview

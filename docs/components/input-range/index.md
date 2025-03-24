@@ -1,13 +1,3 @@
----
-parts:
-  - Input Range
-title: Input Range
-eleventyNavigation:
-  key: Input Range
-  order: 20
-  title: Input Range
----
-
-# Input Range
+# Input Range ||20
 
 -> go to Overview

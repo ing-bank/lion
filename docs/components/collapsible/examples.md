@@ -1,16 +1,4 @@
----
-parts:
-  - Collapsible
-  - Examples
-title: 'Collapsible: Examples'
-eleventyNavigation:
-  key: 'Collapsible: Examples'
-  order: 30
-  parent: Collapsible
-  title: Examples
----
-
-# Collapsible: Examples
+# Collapsible >> Examples ||30
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

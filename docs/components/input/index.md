@@ -1,13 +1,3 @@
----
-parts:
-  - Input
-title: Input
-eleventyNavigation:
-  key: Input
-  order: 20
-  title: Input
----
-
-# Input
+# Input ||20
 
 -> go to Overview

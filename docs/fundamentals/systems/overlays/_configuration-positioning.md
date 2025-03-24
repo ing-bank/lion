@@ -1,16 +1,5 @@
 ---
 eleventyExcludeFromCollections: true
-parts:
-  - Positioning
-  - Configuration
-  - Overlays
-  - Systems
-title: 'Configuration: Positioning'
-eleventyNavigation:
-  key: Systems >> Overlays >> Configuration >> Positioning
-  title: Positioning
-  order: 40
-  parent: Systems >> Overlays >> Configuration
 ---
 
 # Systems >> Overlays >> Configuration >> Positioning ||40

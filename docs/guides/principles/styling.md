@@ -1,16 +1,4 @@
----
-parts:
-  - Principles
-  - Styling
-title: 'Principles: Styling'
-eleventyNavigation:
-  key: 'Principles: Styling'
-  order: 30
-  parent: Principles
-  title: Styling
----
-
-# Principles: Styling
+# Principles >> Styling ||30
 
 ## Markup and styling
 

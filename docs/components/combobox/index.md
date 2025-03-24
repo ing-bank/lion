@@ -1,13 +1,3 @@
----
-parts:
-  - Combobox
-title: Combobox
-eleventyNavigation:
-  key: Combobox
-  order: 10
-  title: Combobox
----
-
-# Combobox
+# Combobox ||10
 
 -> go to Overview

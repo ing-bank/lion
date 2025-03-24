@@ -1,15 +1,3 @@
----
-parts:
-  - Accessibility
-  - Rationales
-title: 'Rationales: Accessibility'
-eleventyNavigation:
-  key: Rationales >> Accessibility
-  title: Accessibility
-  order: 5
-  parent: Rationales
----
-
 # Rationales >> Accessibility ||5
 
 In Lion accessibility is a first class citizen. That means accessibility is never an afterthought.

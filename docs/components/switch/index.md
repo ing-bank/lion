@@ -1,13 +1,3 @@
----
-parts:
-  - Switch
-title: Switch
-eleventyNavigation:
-  key: Switch
-  order: 50
-  title: Switch
----
-
-# Switch
+# Switch ||50
 
 -> go to Overview

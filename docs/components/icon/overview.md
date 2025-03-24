@@ -1,16 +1,4 @@
----
-parts:
-  - Icon
-  - Overview
-title: 'Icon: Overview'
-eleventyNavigation:
-  key: 'Icon: Overview'
-  order: 10
-  parent: Icon
-  title: Overview
----
-
-# Icon: Overview
+# Icon >> Overview ||10
 
 A web component for displaying icons.
 

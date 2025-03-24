@@ -1,16 +1,4 @@
----
-parts:
-  - Input Tel Dropdown
-  - Overview
-title: 'Input Tel Dropdown: Overview'
-eleventyNavigation:
-  key: 'Input Tel Dropdown: Overview'
-  order: 10
-  parent: Input Tel Dropdown
-  title: Overview
----
-
-# Input Tel Dropdown: Overview
+# Input Tel Dropdown >> Overview ||10
 
 Extension of Input Tel that prefixes a dropdown list that shows all possible regions / countries.
 

@@ -1,15 +1,3 @@
----
-parts:
-  - Side Effects
-  - Rationales
-title: 'Rationales: Side Effects'
-eleventyNavigation:
-  key: Rationales >> Side Effects
-  title: Side Effects
-  order: 10
-  parent: Rationales
----
-
 # Rationales >> Side Effects ||10
 
 All our packages are side effect free due to the fact that es modules are always side effect free even when changing other es modules. Only code which accesses browser globals like `window`, `console` in the root of the module will be treated a side effect and always included.

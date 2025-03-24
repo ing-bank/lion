@@ -1,16 +1,4 @@
----
-parts:
-  - How To
-  - Get Started
-title: 'How To: Get Started'
-eleventyNavigation:
-  key: 'How To: Get Started'
-  order: 10
-  parent: How To
-  title: Get Started
----
-
-# How To: Get Started
+# How To >> Get Started ||10
 
 ## Technologies Used
 

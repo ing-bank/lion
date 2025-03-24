@@ -1,16 +1,4 @@
----
-parts:
-  - Form
-  - Use Cases
-title: 'Form: Use Cases'
-eleventyNavigation:
-  key: 'Form: Use Cases'
-  order: 20
-  parent: Form
-  title: Use Cases
----
-
-# Form: Use Cases
+# Form >> Use Cases ||20
 
 ```js script
 import { html as previewHtml } from '@mdjs/mdjs-preview';

@@ -1,15 +1,5 @@
 ---
 eleventyExcludeFromCollections: true
-parts:
-  - Edge cases
-  - Overlays
-  - Systems
-title: 'Overlays: Edge cases'
-eleventyNavigation:
-  key: Systems >> Overlays >> Edge cases
-  title: Edge cases
-  order: 10
-  parent: Systems >> Overlays
 ---
 
 # Systems >> Overlays >> Edge cases ||10

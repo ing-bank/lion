@@ -1,16 +1,4 @@
----
-parts:
-  - Textarea
-  - Overview
-title: 'Textarea: Overview'
-eleventyNavigation:
-  key: 'Textarea: Overview'
-  order: 10
-  parent: Textarea
-  title: Overview
----
-
-# Textarea: Overview
+# Textarea >> Overview ||10
 
 A webcomponent that enhances the functionality of the native `<input type="textarea">` element.
 Its purpose is to provide a way for users to write text that is multiple lines long.

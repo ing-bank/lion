@@ -1,13 +1,3 @@
----
-parts:
-  - Input Email
-title: Input Email
-eleventyNavigation:
-  key: Input Email
-  order: 20
-  title: Input Email
----
-
-# Input Email
+# Input Email ||20
 
 -> go to Overview

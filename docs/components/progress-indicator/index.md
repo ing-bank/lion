@@ -1,13 +1,3 @@
----
-parts:
-  - Progress Indicator
-title: Progress Indicator
-eleventyNavigation:
-  key: Progress Indicator
-  order: 30
-  title: Progress Indicator
----
-
-# Progress Indicator
+# Progress Indicator ||30
 
 -> go to Overview

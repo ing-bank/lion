@@ -1,16 +1,3 @@
----
-parts:
-  - Overview
-  - Babel Extend Docs
-  - Node Tools
-title: 'Babel Extend Docs: Overview'
-eleventyNavigation:
-  key: Node Tools >> Babel Extend Docs >> Overview
-  title: Overview
-  order: 10
-  parent: Node Tools >> Babel Extend Docs
----
-
 # Node Tools >> Babel Extend Docs >> Overview ||10
 
 A plugin which rewrites imports and templates according to a configuration.

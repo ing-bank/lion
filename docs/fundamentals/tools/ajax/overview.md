@@ -1,16 +1,3 @@
----
-parts:
-  - Overview
-  - Ajax
-  - Tools
-title: 'Ajax: Overview'
-eleventyNavigation:
-  key: Tools >> Ajax >> Overview
-  title: Overview
-  order: 10
-  parent: Tools >> Ajax
----
-
 # Tools >> Ajax >> Overview ||10
 
 `Ajax` is a small wrapper around `fetch` which:

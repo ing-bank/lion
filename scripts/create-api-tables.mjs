@@ -1,6 +1,5 @@
 import fs from 'fs';
 import { customElementsManifestToMarkdown } from '@custom-elements-manifest/to-markdown';
-import matter from 'gray-matter';
 
 /**
  * @param {string} text
@@ -48,24 +47,8 @@ for (let dir of componentDirs) {
     dir = 'form';
   }
 
-  const titleFromDir = toSplitAndUpperCase(dir);
-  const parts = ['API Table', titleFromDir];
-  if (isSystem) {
-    parts.push('Systems');
-  }
-  const title = `${titleFromDir}: API Table`;
-  const eleventyNavigation = {
-    key: parts.join(' >> '),
-    title: 'API Table',
-    order: 90,
-    parent: parts.slice(1).reverse().join(' >> ')
-  }
-
-  let dirApiTableMd = matter.stringify(`# ${title}`, {
-    parts,
-    title,
-    eleventyNavigation,
-  });
+  const folderHeading = isSystem ? 'Systems >> ' : '';
+  let dirApiTableMd = `# ${folderHeading}${toSplitAndUpperCase(dir)} >> API Table ||90`;
 
   for (const c of classes) {
     for (const mod of customElementsJson.modules) {

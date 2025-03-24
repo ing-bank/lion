@@ -1,16 +1,4 @@
----
-parts:
-  - Input Range
-  - Overview
-title: 'Input Range: Overview'
-eleventyNavigation:
-  key: 'Input Range: Overview'
-  order: 10
-  parent: Input Range
-  title: Overview
----
-
-# Input Range: Overview
+# Input Range >> Overview ||10
 
 A web component based on the native range input. Its purpose is to provide a way for users to select one value from a range of values.
 

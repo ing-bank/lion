@@ -1,16 +1,4 @@
----
-parts:
-  - Input Date
-  - Overview
-title: 'Input Date: Overview'
-eleventyNavigation:
-  key: 'Input Date: Overview'
-  order: 10
-  parent: Input Date
-  title: Overview
----
-
-# Input Date: Overview
+# Input Date >> Overview ||10
 
 A web component based on the generic text input field. Its purpose is to provide a way for users to fill in a date.
 

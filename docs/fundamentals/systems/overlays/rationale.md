@@ -1,16 +1,3 @@
----
-parts:
-  - Rationale
-  - Overlays
-  - Systems
-title: 'Overlays: Rationale'
-eleventyNavigation:
-  key: Systems >> Overlays >> Rationale
-  title: Rationale
-  order: 30
-  parent: Systems >> Overlays
----
-
 # Systems >> Overlays >> Rationale ||30
 
 This page describes the goal and duties of the overlay system, mainly by identifying all different

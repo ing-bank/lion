@@ -1,16 +1,3 @@
----
-parts:
-  - Validate
-  - Form
-  - Systems
-title: 'Form: Validate'
-eleventyNavigation:
-  key: Systems >> Form >> Validate
-  title: Validate
-  order: 30
-  parent: Systems >> Form
----
-
 # Systems >> Form >> Validate ||30
 
 ```js script

@@ -1,16 +1,3 @@
----
-parts:
-  - Rationale
-  - Localize
-  - Systems
-title: 'Localize: Rationale'
-eleventyNavigation:
-  key: Systems >> Localize >> Rationale
-  title: Rationale
-  order: 60
-  parent: Systems >> Localize
----
-
 # Systems >> Localize >> Rationale ||60
 
 ## Requirements

@@ -1,16 +1,4 @@
----
-parts:
-  - Radio Group
-  - Overview
-title: 'Radio Group: Overview'
-eleventyNavigation:
-  key: 'Radio Group: Overview'
-  order: 10
-  parent: Radio Group
-  title: Overview
----
-
-# Radio Group: Overview
+# Radio Group >> Overview ||10
 
 A web component that enhances the functionality of the native `<input type="radio">` element. Its purpose is to provide a way for users to check a **single** option amongst a set of choices.
 

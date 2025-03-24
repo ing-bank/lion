@@ -1,13 +1,3 @@
----
-parts:
-  - Select
-title: Select
-eleventyNavigation:
-  key: Select
-  order: 40
-  title: Select
----
-
-# Select
+# Select ||40
 
 -> go to Overview

@@ -1,13 +1,3 @@
----
-parts:
-  - Steps
-title: Steps
-eleventyNavigation:
-  key: Steps
-  order: 50
-  title: Steps
----
-
-# Steps
+# Steps ||50
 
 -> go to Overview
