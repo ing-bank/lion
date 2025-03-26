@@ -19,15 +19,29 @@ const path = require('path');
  *   // execute function
  *   virtualMod.fn();
  *
- * @param {*} src
- * @param {*} filename
+ * @param {string} src
+ * @param {string} filename
+ * @returns {object}
  */
 function requireFromString(src, filename = 'tmp.js') {
   const srcWithPath = `const path = require('path');\n${src}`;
+  // @ts-expect-error
   const m = new module.constructor();
+  // @ts-expect-error
   m.paths = module.paths;
   m._compile(srcWithPath, filename);
   return m.exports;
+}
+
+/**
+ * Frontmatter is problematic when traversing md files with
+ * unist-util-select: https://github.com/syntax-tree/unist-util-select/blob/main/index.js.
+ * So we remove it before parsing
+ * @param {string} mdFileString
+ * @returns {string}
+ */
+function stripFrontMatter(mdFileString) {
+  return mdFileString.replace(/^\s*---(.|\n)*?---/, '');
 }
 
 let toInsertNodes = [];
@@ -39,11 +53,12 @@ function handleImportedFile({
   globalReplaceFunction,
   filePath,
   missingEndSelectorMeansUntilEndOfFile = false,
+  currentFile,
 }) {
   return tree => {
     const start = select(startSelector, tree);
     if (!start) {
-      const msg = `The start selector "${startSelector}" could not find a matching node in "${filePath}".`;
+      const msg = `The start selector "${startSelector}", imported in "${currentFile}", could not find a matching node in "${filePath}".`;
       throw new Error(msg);
     }
     const startIsNode = { ...start };
@@ -54,7 +69,7 @@ function handleImportedFile({
       const end = select(endSelector, tree);
       if (!end) {
         if (missingEndSelectorMeansUntilEndOfFile === false) {
-          const msg = `The end selector "${endSelector}" could not find a matching node in "${filePath}".`;
+          const msg = `The end selector "${endSelector}", imported in "${currentFile}", could not find a matching node in "${filePath}".`;
           throw new Error(msg);
         }
       } else {
@@ -92,6 +107,8 @@ function handleImportedFile({
 // unified expect direct
 // eslint-disable-next-line consistent-return
 function remarkExtend({ rootDir = process.cwd(), page, globalReplaceFunction } = {}) {
+  const currentFile = path.resolve(rootDir, page.inputPath);
+
   return tree => {
     visit(tree, (node, index, parent) => {
       if (
@@ -186,11 +203,12 @@ function remarkExtend({ rootDir = process.cwd(), page, globalReplaceFunction } =
             filePath,
             fileImport,
             missingEndSelectorMeansUntilEndOfFile,
+            currentFile,
           })
           .use(function plugin() {
             this.Compiler = () => '';
           });
-        parser.processSync(importFileContent.toString());
+        parser.processSync(stripFrontMatter(importFileContent.toString()));
 
         if (node.type === 'root') {
           node.children.splice(0, 0, ...toInsertNodes);

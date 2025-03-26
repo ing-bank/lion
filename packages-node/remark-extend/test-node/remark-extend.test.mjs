@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import unified from 'unified';
 import markdown from 'remark-parse';
 import mdStringify from 'remark-html';
+import gfm from 'remark-gfm';
 
 import { remarkExtend } from '../src/remarkExtend.js';
 
@@ -22,6 +23,9 @@ async function expectThrowsAsync(method, { errorMatch, errorMessage } = {}) {
   } catch (err) {
     error = err;
   }
+
+  console.debug(error);
+
   expect(error).to.be.an('Error', 'No error was thrown');
   if (errorMatch) {
     expect(error.message).to.match(errorMatch);
@@ -31,18 +35,40 @@ async function expectThrowsAsync(method, { errorMatch, errorMessage } = {}) {
   }
 }
 
-async function execute(input, { globalReplaceFunction } = {}) {
+/**
+ *
+ * @param {string} input
+ * @param {{shouldStringify?: boolean; globalReplaceFunction?: Function;}} param1
+ */
+async function execute(input, { shouldStringify = true, globalReplaceFunction } = {}) {
   const parser = unified()
     //
     .use(markdown)
+    .use(gfm)
     .use(remarkExtend, {
       rootDir: __dirname,
       page: { inputPath: 'test-file.md' },
       globalReplaceFunction,
+    });
+
+  if (shouldStringify) {
+    parser.use(mdStringify);
+    const result = await parser.process(input);
+    return result.contents;
+  }
+
+  let tree;
+  parser
+    .use(() => _tree => {
+      tree = _tree;
     })
-    .use(mdStringify);
-  const result = await parser.process(input);
-  return result.contents;
+    // @ts-expect-error
+    .use(function plugin() {
+      this.Compiler = () => '';
+    });
+
+  await parser.process(input);
+  return tree;
 }
 
 describe('remarkExtend', () => {
@@ -196,7 +222,7 @@ describe('remarkExtend', () => {
       "```js ::import('./fixtures/three-sections-red.md', 'heading:has([value=Does not exit])')\n```";
     await expectThrowsAsync(() => execute(input), {
       errorMatch:
-        /The start selector "heading:has\(\[value=Does not exit\]\)" could not find a matching node in ".*"\.$/,
+        /The start selector "heading:has\(\[value=Does not exit\]\)", imported in ".*", could not find a matching node in ".*"\.$/,
     });
   });
 
@@ -205,7 +231,7 @@ describe('remarkExtend', () => {
       "```js ::import('./fixtures/three-sections-red.md', 'heading:has([value=More Red])', 'heading:has([value=Does not exit])')\n```";
     await expectThrowsAsync(() => execute(input), {
       errorMatch:
-        /The end selector "heading:has\(\[value=Does not exit\]\)" could not find a matching node in ".*"\./,
+        /The end selector "heading:has\(\[value=Does not exit\]\)", imported in ".*", could not find a matching node in ".*"\./,
     });
   });
 
@@ -400,6 +426,27 @@ describe('remarkExtend', () => {
         '</tr>',
         '</tbody>',
         '</table>',
+        '',
+      ].join('\n'),
+    );
+  });
+
+  it('supports files with frontmatter', async () => {
+    const result = await execute(
+      [
+        //
+        '### Static Headline',
+        "```js ::importBlock('./fixtures/three-sections-red-with-frontmatter.md', '## More Red')",
+        '```',
+      ].join('\n'),
+    );
+
+    expect(result).to.equal(
+      [
+        //
+        '<h3>Static Headline</h3>',
+        '<h2>More Red</h2>',
+        '<p>the sun can get red</p>',
         '',
       ].join('\n'),
     );
