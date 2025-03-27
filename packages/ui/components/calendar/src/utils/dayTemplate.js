@@ -11,14 +11,14 @@ const lastDaysOfYear = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
  * @param {{ weekdays: string[], monthsLabels?: string[] }} opts
  */
 export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }) {
-  const { dayNumber, monthName, year, weekdayName } = getDayMonthYear(day, weekdays, monthsLabels);
+  const { dayNumber, monthName, year } = getDayMonthYear(day, weekdays, monthsLabels);
 
-  function __getFullDate() {
-    return `${monthName} ${year} ${weekdayName}`;
+  function __getMonthAndYear() {
+    return `${monthName} ${year}.`;
   }
 
   function __getAccessibleMessage() {
-    return `${day.disabledInfo}`;
+    return ` ${day.disabledInfo}`;
   }
 
   const firstDay = dayNumber === 1;
@@ -66,7 +66,7 @@ export function dayTemplate(day, { weekdays, monthsLabels = defaultMonthLabels }
         ?next-month=${day.nextMonth}
       >
         <span class="calendar__day-button__text">${dayNumber}</span>
-        <span class="u-sr-only">${__getFullDate()} ${__getAccessibleMessage()}</span>
+        <span class="u-sr-only">${__getMonthAndYear()}${__getAccessibleMessage()}</span>
       </div>
     </td>
   `;
