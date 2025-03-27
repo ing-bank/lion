@@ -24,8 +24,6 @@ async function expectThrowsAsync(method, { errorMatch, errorMessage } = {}) {
     error = err;
   }
 
-  console.debug(error);
-
   expect(error).to.be.an('Error', 'No error was thrown');
   if (errorMatch) {
     expect(error.message).to.match(errorMatch);
