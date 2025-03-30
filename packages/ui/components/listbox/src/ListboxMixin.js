@@ -348,6 +348,7 @@ const ListboxMixinImplementation = superclass =>
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
+      console.log('firstUpdated from listbox mixin',changedProperties)
       this.__moveOptionsToListboxNode();
       this.registrationComplete.then(() => {
         /** @type {any[]} */
@@ -809,6 +810,13 @@ const ListboxMixinImplementation = superclass =>
       if (cfgOrEvent.stopPropagation) {
         cfgOrEvent.stopPropagation();
       }
+      if (this._initialModelValue && target.modelValue.value === this._initialModelValue) {
+        const checked = target.modelValue.value === this._initialModelValue
+        target.checked = checked
+        target.modelValue.checked = checked
+      }
+
+      // TODO Why we only verify Checked without checking the modelValue/ChoiceValue
       if (target.checked && !this.multipleChoice) {
         this._uncheckChildren(target);
       }
