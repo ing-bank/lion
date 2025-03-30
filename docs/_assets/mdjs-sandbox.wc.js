@@ -2,8 +2,6 @@ import { LitElement, html, css } from 'lit';
 import { editOnStackblitz } from './stackblitz.js';
 import { editOnCodepen } from './codepen.js';
 import { CodeIcon, CodeSandbox, Stackblitz } from './sandbox-icons.js';
-// import { LionButton } from '@lion/ui/button.js';
-// import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 
 class MdjsSandbox extends LitElement {
   static styles = css`
@@ -43,10 +41,6 @@ class MdjsSandbox extends LitElement {
     };
   }
 
-  // static scopedElements = {
-  //   'lion-button': LionButton,
-  // };
-
   firstUpdated() {
     this.__getAssignedNodes();
   }
@@ -72,7 +66,7 @@ class MdjsSandbox extends LitElement {
 
         this.renderRoot.querySelector('.mdjs-sandbox__demo')?.appendChild(demoElement);
 
-        document.head.appendChild(codeSnippets);
+        document.body.appendChild(codeSnippets);
       } catch (error) {
         console.error('Demo is not loaded: ', error);
       }
