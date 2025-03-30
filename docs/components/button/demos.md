@@ -37,8 +37,6 @@ class ButtonDemo extends ScopedElementsMixin(LitElement) {
 }
 
 customElements.define('button-demo', ButtonDemo);
-
-window.__ButtonDemo = ButtonDemo;
 ```
 
 ## With click handler
@@ -112,7 +110,7 @@ class ButtonMinimumClickDemo extends ScopedElementsMixin(LitElement) {
   ];
 
   render() {
-    return html` <lion-button class="small">Click Me</lion-button> `;
+    return html` <lion-button class="small">xs</lion-button> `;
   }
 }
 
