@@ -223,7 +223,7 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
         expect(prefixSlot.parentElement).to.equal(el);
       });
 
-      it('rerenders light dom when PhoneUtil loaded', async () => {
+      it('rerenders light dom when CurrencyUtil loaded', async () => {
         const { resolveLoaded } = mockCurrencyUtilManager();
         const el = await fixture(html` <${tag} .allowedCurrencies="${['GBP']}"></${tag}> `);
         // @ts-ignore
