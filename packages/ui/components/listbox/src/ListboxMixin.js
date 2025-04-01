@@ -410,6 +410,7 @@ const ListboxMixinImplementation = superclass =>
           } else if (this.multipleChoice) {
             this.formElements[index].checked = !this.formElements[index].checked;
           } else {
+            console.debug('lbm setCheckedIndex');
             this.formElements[index].checked = true;
           }
         }
@@ -501,6 +502,10 @@ const ListboxMixinImplementation = superclass =>
      * @protected
      */
     _getCheckedElements() {
+      //   console.debug(
+      //   '_getCheckedElements',
+      //   this.formElements.filter(el => el.checked && !el.disabled).map(o => o.value),
+      // );
       return this.formElements.filter(el => el.checked);
     }
 
@@ -794,6 +799,8 @@ const ListboxMixinImplementation = superclass =>
       const excludes = Array.isArray(exclude) ? exclude : [exclude];
       this.formElements.forEach(option => {
         if (!excludes.includes(option)) {
+          console.trace('lbm,', option.value);
+
           // eslint-disable-next-line no-param-reassign
           option.checked = false;
         }

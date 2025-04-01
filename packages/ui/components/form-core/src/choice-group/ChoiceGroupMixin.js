@@ -36,9 +36,12 @@ const ChoiceGroupMixinImplementation = superclass =>
 
     get modelValue() {
       const elems = this._getCheckedElements();
+
+      // console.debug(elems.length);
       if (this.multipleChoice) {
         return elems.map(el => el.choiceValue);
       }
+
       return elems[0] ? elems[0].choiceValue : '';
     }
 
@@ -56,6 +59,7 @@ const ChoiceGroupMixinImplementation = superclass =>
 
       if (this.__isInitialModelValue) {
         this.registrationComplete.then(() => {
+          console.debug(this.autocomplete, value);
           this.__isInitialModelValue = false;
           this._setCheckedElements(value, checkCondition);
           this.requestUpdate('modelValue', this._oldModelValue);
@@ -312,6 +316,7 @@ const ChoiceGroupMixinImplementation = superclass =>
         .filter(i => i.name === groupName)
         .forEach(choice => {
           if (choice !== target) {
+            console.debug('_checkSingleChoiceElements');
             choice.checked = false; // eslint-disable-line no-param-reassign
           }
         });
@@ -333,6 +338,7 @@ const ChoiceGroupMixinImplementation = superclass =>
      */
     _setCheckedElements(value, check) {
       if (value === null || value === undefined) {
+        console.debug('hmmmm');
         // Uncheck all
         // eslint-disable-next-line no-return-assign, no-param-reassign
         this.formElements.forEach(fe => (fe.checked = false));
@@ -348,12 +354,16 @@ const ChoiceGroupMixinImplementation = superclass =>
               .map(/** @param {Object} v */ v => JSON.stringify(v))
               .includes(JSON.stringify(this.formElements[i].modelValue.value));
           }
+          console.debug('multi');
 
           this.formElements[i].checked = valueIsIncluded;
         } else if (check(this.formElements[i], value)) {
+          console.debug('halloo');
           // Allows checking against custom values e.g. formattedValue or serializedValue
           this.formElements[i].checked = true;
         } else {
+          console.debug('halloo2');
+
           this.formElements[i].checked = false;
         }
       }
@@ -385,6 +395,7 @@ const ChoiceGroupMixinImplementation = superclass =>
       }
       this.formElements.forEach(option => {
         if (target.choiceValue !== option.choiceValue) {
+          console.debug('_onBeforeRepropagateChildrenValues', option.value);
           option.checked = false; // eslint-disable-line no-param-reassign
         }
       });
