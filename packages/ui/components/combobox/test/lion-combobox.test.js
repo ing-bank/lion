@@ -985,6 +985,35 @@ describe('lion-combobox', () => {
       await el.updateComplete;
       expect(el.modelValue).to.eql(['Art']);
     });
+
+    it.only('allows prefilling the combobox', async () => {
+      const autocompleteValues = [/* 'inline', 'none', */ 'both', 'list'];
+
+      for (const autocompleteValue of autocompleteValues) {
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox autocomplete="${autocompleteValue}" .modelValue="${'Chard'}" name="foo">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
+        const { _inputNode } = getComboboxMembers(el);
+
+        console.debug({ autocompleteValue });
+
+        expect(el.modelValue).to.equal('Chard');
+
+        // el.setCheckedIndex(-1);
+        // _inputNode.value = 'Foo123';
+        // el.__shouldAutocompleteNextUpdate = true;
+        // await el.updateComplete;
+        // expect(el.modelValue).to.equal('Foo');
+        // expect(el.formElements[0].checked).to.be.false;
+      }
+    });
   });
 
   describe('Overlay visibility', () => {
