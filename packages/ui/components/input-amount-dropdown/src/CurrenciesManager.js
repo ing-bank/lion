@@ -8,7 +8,7 @@ let resolveLoaded;
  */
 export class CurrencyUtilManager {
   static async loadCurrencies() {
-    const countryToCurrencyMap = await import('./countryToCurrencyMap.js');
+    const countryToCurrencyMap = await import('./currencyUtil.js');
     this.countryToCurrencyMap = countryToCurrencyMap;
     resolveLoaded(undefined);
     return countryToCurrencyMap;

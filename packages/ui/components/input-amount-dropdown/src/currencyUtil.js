@@ -250,4 +250,20 @@ const countryToCurrencyList = {
   ZW: 'ZWG',
 };
 
+/**
+ * @type {Map<import("../../input-tel/types/index.js").RegionCode, import("./LionInputAmountDropdown.js").CurrencyCode>}
+ */
 export const countryToCurrencyMap = new Map(Object.entries(countryToCurrencyList));
+
+export const allCurrencies = new Set(Object.values(countryToCurrencyList));
+
+const getSymbol = (currency, locale) =>
+  new Intl.NumberFormat(locale, { style: 'currency', currency })
+    .formatToParts(1)
+    .find(x => x.type === 'currency').value;
+
+export const currencyUtil = {
+  countryToCurrencyMap,
+  allCurrencies,
+  getSymbol,
+};

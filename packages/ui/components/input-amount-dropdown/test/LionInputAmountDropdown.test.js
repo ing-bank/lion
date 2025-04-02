@@ -103,9 +103,9 @@ describe('WithFormControlInputAmountDropdown', () => {
             >
               ${repeat(
                 data.regionMetaList,
-                regionMeta => regionMeta.regionCode,
+                regionMeta => regionMeta.currencyCode,
                 regionMeta => html`
-                  <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option>
+                  <lion-option .choiceValue="${regionMeta.currencyCode}"> </lion-option>
                 `,
               )}
             </lion-select-rich>

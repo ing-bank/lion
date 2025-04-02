@@ -1,6 +1,7 @@
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { OverlayController } from '../../overlays/src/OverlayController.js';
+import { RegionCode } from '../../input-tel/types/index.js';
 
 type RefTemplateData = {
   ref?: { value?: HTMLElement };
@@ -11,6 +12,8 @@ type RefTemplateData = {
 
 export type RegionMeta = {
   currencyCode: CurrencyCode;
+  nameForLocale?: string;
+  currencySymbol?: string;
 };
 
 export type OnDropdownChangeEvent = Event & {
@@ -34,7 +37,7 @@ export type TemplateDataForDropdownInputAmount = {
     input: HTMLInputElement;
   };
   data: {
-    currency: string | undefined;
+    activeCurrency: CurrencyCode | undefined;
     regionMetaList: RegionMeta[];
     regionMetaListPreferred: RegionMeta[];
   };
