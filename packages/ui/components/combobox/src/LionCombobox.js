@@ -1177,7 +1177,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   // eslint-disable-next-line no-unused-vars
   _syncToTextboxCondition(modelValue, oldModelValue, { phase } = {}) {
     return (
-      this.autocomplete === 'inline' || this.autocomplete === 'both' || phase === 'overlay-close'
+      modelValue !== oldModelValue ||
+      this.autocomplete === 'inline' ||
+      this.autocomplete === 'both' ||
+      phase === 'overlay-close'
     );
   }
 
