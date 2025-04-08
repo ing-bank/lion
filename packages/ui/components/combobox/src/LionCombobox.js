@@ -1134,7 +1134,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
         }
         break;
       case 'Enter':
-        if (this.multipleChoice && this.opened) {
+        if (this.opened) {
           ev.preventDefault();
         }
 
@@ -1145,8 +1145,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
             this.formElements[this.activeIndex].hasAttribute('aria-hidden') ||
             !this.opened)
         ) {
-          ev.preventDefault();
-
           this.modelValue = this.parser([...this.modelValue, this._inputNode.value]);
           this._inputNode.value = '';
           this.opened = false;
