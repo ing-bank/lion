@@ -16,5 +16,6 @@ export { getSeparatorsFromNumber } from '../components/localize/src/number/getSe
 export { normalizeCurrencyLabel } from '../components/localize/src/number/normalizeCurrencyLabel.js';
 export { parseNumber } from '../components/localize/src/number/parseNumber.js';
 export { getLocale } from '../components/localize/src/utils/getLocale.js';
+export { resolveLocaleConfig } from '../components/localize/src/utils/resolveLocaleConfig.js';
 
 export { getLocalizeManager } from '../components/localize/src/getLocalizeManager.js';
