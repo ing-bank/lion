@@ -1,0 +1,167 @@
+<html theme="light" platform="web" lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <style type="text/css">
+      body {
+        margin: 0;
+        height: fit-content;
+      }
+      html[edge-distance] body {
+        padding: 8px;
+      }
+    </style>
+
+    <script type="module">
+      import '@webcomponents/scoped-custom-element-registry';
+
+      import 'playground-elements/playground-ide.js';
+      import { render } from '@mdjs/mdjs-story';
+
+      function sanitize(input, type) {
+        return `${document.location.origin}/${input.match(/[a-zA-Z0-9\/\-_]*/)[0]}.${type}`;
+      }
+
+      function sanitizeParentCalls(fileString) {
+        // For security, we make sure the iframe can never call its parent
+        // This needs to be cheap and simple (no in-browser ast parsing), but solid =>
+        // `content.replace(/(document\.defaultView\.|window\.|\n|\r|\s)(parent|top)/g, '$1$$2');`.
+        // All calls to `parent` or `window.parent` for instance, will become `$parent` and `window.$parent`
+
+        return fileString.replace(/(document\.defaultView\.|window\.|\n|\r|\s)(parent|top)/g, '$1$$2');
+      }
+
+      async function onHashChange() {
+        const urlParts = new URLSearchParams(document.location.hash.substr(1));
+
+        if (urlParts.get('stylesheets')) {
+          for (const stylesheet of urlParts.getAll('stylesheets')) {
+            const safeStylesheetUrl = sanitize(stylesheet, 'css');
+            if (!document.querySelector(`link[rel="stylesheet"][href="${safeStylesheetUrl}"]`)) {
+              const link = document.createElement('link');
+              link.rel = 'stylesheet';
+              link.href = safeStylesheetUrl;
+              document.head.appendChild(link);
+            }
+          }
+        }
+
+        if (urlParts.get('moduleUrls')) {
+          for (const moduleUrl of urlParts.getAll('moduleUrls')) {
+            const safeModuleUrl = sanitize(moduleUrl, 'js');
+            if (!document.querySelector(`script[type=module][src="${safeModuleUrl}"]`)) {
+              const script = document.createElement('script');
+              script.type = 'module';
+              script.src = safeModuleUrl;
+              document.head.appendChild(script);
+            }
+          }
+        }
+
+        if (urlParts.get('theme')) {
+          document.documentElement.setAttribute('theme', urlParts.get('theme'));
+        }
+        if (urlParts.get('platform')) {
+          document.documentElement.setAttribute('platform', urlParts.get('platform'));
+        }
+        if (urlParts.get('language')) {
+          document.documentElement.setAttribute('lang', urlParts.get('language'));
+          document.documentElement.setAttribute('data-lang', urlParts.get('language'));
+        }
+        if (urlParts.get('story-key')) {
+          document.documentElement.setAttribute('story-key', urlParts.get('story-key'));
+        }
+        if (urlParts.get('edge-distance') === 'true') {
+          document.documentElement.setAttribute('edge-distance', '');
+        } else {
+          document.documentElement.removeAttribute('edge-distance');
+        }
+
+        const safeStoryUrl = sanitize(urlParts.get('story-file'), 'js');
+        const mod = await import(safeStoryUrl);
+        render(mod[urlParts.get('story-key')]({ shadowRoot: document }), document.body);
+
+
+        const fileToFetch = await fetch(safeStoryUrl);
+        const text = await fileToFetch.text();
+        const [ , , script, , stories, , storiesSetup] = text.split(/\/\*\* (script|stories|stories setup) code \*\*\//);
+        console.log({script, stories, storiesSetup});
+
+        const htmlRe = /((.|\n)*)export (const|function)\s(.*)(\(|\s*=).*(previewHtml|html)`((.|\n)*)`.*;/;
+        const [ , jsString, , ,exportName, , , htmlString] = stories.match(htmlRe);
+
+
+        console.log({jsString, exportName, htmlString});
+                console.log(text);
+
+
+        const demoFileName = exportName.split(/\s/)[0] + '.js';
+
+
+  // N.B. We need below string concatenation to prevent path rewrites from Rocket
+    
+    const basePath = `${location.origin}/__wds-outside-root__/1`;
+    const ide = document.querySelector('playground-ide');
+    ide.sandboxBaseUrl = `${basePath}/node_modules/playground-elements`;
+    ide.config = {
+      importMap: {
+        "imports": {
+          "@webcomponents/scoped-custom-element-registry": `${basePath}/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js`,
+          "@lion/ui/button.js": `${basePath}/packages/ui/exports/button.js`,
+          "lit": `${basePath}/node_modules/lit/index.js`,
+        },
+      },
+      files: {
+        'index.html': {
+          contentType: 'sample/html',
+          content: `<!-- playground-fold -->
+<!doctype html>
+<head>
+  <script type="module">
+    
+
+    import ` + `'./${demoFileName}';
+  <` + `/script>
+</head>
+<body>
+<!-- playground-fold-end -->
+${htmlString}
+<!-- playground-fold -->
+</body>
+<!-- playground-fold-end -->`,
+        },
+        [demoFileName]: {
+          filename: demoFileName,
+          contentType: 'sample/js',
+          content: ["import '@webcomponents/scoped-custom-element-registry';\n", sanitizeParentCalls(jsString).trim()].join('\n'),
+        },
+      },
+    };
+
+
+      }
+
+      window.addEventListener('hashchange', onHashChange, false);
+      onHashChange();
+
+      const observer = new ResizeObserver(() => {
+        const dimensions = document.body.getBoundingClientRect();
+        const data = {
+          action: 'mdjs-viewer-resize',
+          storyKey: document.documentElement.getAttribute('story-key'),
+          width: dimensions.width,
+          height: dimensions.height,
+        };
+        parent.postMessage(JSON.stringify(data), '*');
+      });
+      observer.observe(document.body);
+    </script>
+  </head>
+  <body>
+  
+  <playground-ide editable-file-system line-numbers resizable>
+  </playground-ide>
+
+
+  </body>
+</html>
