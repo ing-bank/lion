@@ -257,7 +257,13 @@ export const countryToCurrencyMap = new Map(Object.entries(countryToCurrencyList
 
 export const allCurrencies = new Set(Object.values(countryToCurrencyList));
 
-const getSymbol = (currency, locale) =>
+/**
+ * Matches a currency symbol to a currency code, with a given locale.
+ * @param {import("./LionInputAmountDropdown.js").CurrencyCode} currency
+ * @param {string} locale
+ * @returns {string}
+ */
+const getCurrencySymbol = (currency, locale) =>
   new Intl.NumberFormat(locale, { style: 'currency', currency })
     .formatToParts(1)
     .find(x => x.type === 'currency').value;
@@ -265,5 +271,5 @@ const getSymbol = (currency, locale) =>
 export const currencyUtil = {
   countryToCurrencyMap,
   allCurrencies,
-  getSymbol,
+  getCurrencySymbol,
 };

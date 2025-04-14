@@ -5,6 +5,10 @@ import { ifDefined } from 'lit/directives/if-defined.js';
 import { LionInputAmount } from '@lion/ui/input-amount.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { currencyUtil } from './currencyUtil.js';
+import { parseAmount } from './parsers.js';
+import { formatAmount } from './formatters.js';
+import { deserializer, serializer } from './serializers.js';
+import { CurrencyAndAmount } from './validators.js';
 
 /**
  * Note: one could consider to implement LionInputTelDropdown as a
@@ -31,6 +35,8 @@ import { currencyUtil } from './currencyUtil.js';
  * @typedef {import('../types/index.js').CurrencyCode} CurrencyCode
  * @typedef {import('../../select-rich/src/LionSelectRich.js').LionSelectRich} LionSelectRich
  * @typedef {import('../../overlays/src/OverlayController.js').OverlayController} OverlayController
+ * @typedef {import('../../form-core/types/FormatMixinTypes.js').FormatOptions} FormatOptions
+ * @typedef {FormatOptions & {locale?:string;currency:string|undefined}} AmountFormatOptions
  * @typedef {TemplateDataForDropdownInputAmount & {data: {regionMetaList:RegionMeta[]}}} TemplateDataForIntlInputAmount
  */
 
@@ -53,7 +59,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
     preferredCurrencies: { type: Array },
     allowedCurrencies: { type: Array },
     _dropdownSlot: { type: String, state: true },
-    activeCurrency: { type: String },
+    _currencyUtil: { type: Object, state: true },
   };
 
   refs = {
@@ -99,12 +105,13 @@ export class LionInputAmountDropdown extends LionInputAmount {
           'model-value-changed': this._onDropdownValueChange,
         },
         labels: {
-          selectCountry: localizeManager.msg('lion-input-tel:selectCountry'),
+          selectCountry: localizeManager.msg('lion-input-amount-dropdown:selectCountry'),
           allCountries:
-            this._allCountriesLabel || localizeManager.msg('lion-input-tel:allCountries'),
+            this._allCountriesLabel ||
+            localizeManager.msg('lion-input-amount-dropdown:allCountries'),
           preferredCountries:
             this._preferredCountriesLabel ||
-            localizeManager.msg('lion-input-tel:suggestedCountries'),
+            localizeManager.msg('lion-input-amount-dropdown:suggestedCountries'),
         },
       },
       input: this._inputNode,
@@ -113,7 +120,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
     return {
       refs,
       data: {
-        activeCurrency: this.activeCurrency,
+        currency: this.currency,
         regionMetaList: this.__regionMetaList,
         regionMetaListPreferred: this.__regionMetaListPreferred,
       },
@@ -242,13 +249,21 @@ export class LionInputAmountDropdown extends LionInputAmount {
   constructor() {
     super();
 
-    this.dropdownSlot = 'prefix';
+    // disable the input-amount currency display
+    this._currencyDisplayNodeSlot = '';
+
+    this.parser = parseAmount;
+    this.formatter = formatAmount;
+    this.serializer = serializer;
+    this.deserializer = deserializer;
+
+    this.defaultValidators = [new CurrencyAndAmount()];
 
     /**
-     * Regions that will be shown on top of the dropdown
-     * @type {CurrencyCode|undefined}
+     * Slot position to render the dropdown in
+     * @type {string}
      */
-    this.activeCurrency = undefined;
+    this.dropdownSlot = 'prefix';
 
     /**
      * Regions that will be shown on top of the dropdown
@@ -326,6 +341,10 @@ export class LionInputAmountDropdown extends LionInputAmount {
     if (changedProperties.has('allowedCurrencies')) {
       this.__calculateActiveCurrency();
     }
+
+    if (changedProperties.has('_currencyUtil')) {
+      this._initModelValueBasedOnDropdown();
+    }
   }
 
   /**
@@ -335,11 +354,10 @@ export class LionInputAmountDropdown extends LionInputAmount {
     if (!this._initialModelValue && !this.dirty && this._currencyUtil?.countryToCurrencyMap) {
       const countryCode =
         this._langIso && this._currencyUtil?.countryToCurrencyMap.get(this._langIso);
-      this.__initializedRegionCode = countryCode || '';
+      this.__initializedCurrencyCode = countryCode || '';
 
-      // on init we set the value to the _inputNode and not the modelValue to prevent validation
-      this._inputNode.value = this.__initializedRegionCode;
-      this._initialModelValue = this.__initializedRegionCode;
+      this._initialModelValue = { currency: this.__initializedCurrencyCode };
+      this.modelValue = this._initialModelValue;
       this.initInteractionState();
     }
   }
@@ -354,7 +372,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
    */
   _isEmpty(modelValue = this.modelValue) {
     // the activeCurrency is not synced on time, so it can't be used in this check
-    return super._isEmpty(modelValue) || this.value === this.__initializedRegionCode;
+    return super._isEmpty(modelValue) || this.currency === this.__initializedCurrencyCode;
   }
 
   /**
@@ -367,17 +385,29 @@ export class LionInputAmountDropdown extends LionInputAmount {
     const dropdownValue = /** @type {RegionCode} */ (
       dropdownElement.modelValue || dropdownElement.value
     );
-    if (isInitializing || this.activeCurrency === dropdownValue) {
+    if (isInitializing || this.currency === dropdownValue) {
       return;
     }
 
-    this.activeCurrency = dropdownValue;
+    const prevCurrency = this.currency;
+
+    this.currency = dropdownValue;
+
+    if (prevCurrency !== this.currency && !this.focused) {
+      if (!this.value) {
+        this.modelValue = { currency: this.currency, amount: this.value };
+      } else {
+        /** @type {AmountFormatOptions} */
+        (this.formatOptions).currency = this.currency;
+        this.modelValue = this._callParser(this.value);
+      }
+    }
   }
 
   /**
    * @private
    */
-  __syncRegionWithDropdown(currencyCode = this.activeCurrency) {
+  __syncRegionWithDropdown(currencyCode = this.currency) {
     const dropdownElement = this.refs.dropdown?.value;
     if (!dropdownElement || !currencyCode) {
       return;
@@ -423,7 +453,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
       destinationList.push({
         currencyCode,
         nameForLocale: this.__namesForLocale?.of(currencyCode),
-        currencySymbol: this._currencyUtil.getSymbol(currencyCode, this._langIso),
+        currencySymbol: this._currencyUtil.getCurrencySymbol(currencyCode, this._langIso),
       });
     });
   }
@@ -445,7 +475,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
   __calculateActiveCurrency() {
     // 1. Get the currency from pre-configured allowed currencies (if one entry)
     if (this.allowedCurrencies?.length === 1) {
-      [this.activeCurrency] = this.allowedCurrencies;
+      [this.currency] = this.allowedCurrencies;
       return;
     }
 
@@ -456,12 +486,12 @@ export class LionInputAmountDropdown extends LionInputAmount {
         this._currencyUtil?.countryToCurrencyMap.get(this._langIso),
       )
     ) {
-      this.activeCurrency = this._currencyUtil?.countryToCurrencyMap.get(this._langIso);
+      this.currency = this._currencyUtil?.countryToCurrencyMap.get(this._langIso);
       return;
     }
 
     // 3. Not derivable
-    this.activeCurrency = undefined;
+    this.currency = undefined;
   }
 
   /**
