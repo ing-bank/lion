@@ -1,5 +1,6 @@
 import { html, css } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
+import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { LionInputAmount } from '@lion/ui/input-amount.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
@@ -167,8 +168,8 @@ export class LionInputAmountDropdown extends LionInputAmount {
       templateDataForDropdown,
       { currencyCode, nameForLocale, currencySymbol },
     ) => html`
-      <option value="${currencyCode}">
-        ${currencyCode} (${currencySymbol} ${nameForLocale}) &nbsp;
+      <option value="${currencyCode}" aria-label="${ifDefined(nameForLocale)}">
+        ${currencyCode} (${currencySymbol})&nbsp;
       </option>
     `,
   };
