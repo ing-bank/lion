@@ -51,6 +51,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
   static properties = {
     preferredCurrencies: { type: Array },
     allowedCurrencies: { type: Array },
+    _dropdownSlot: { type: String, state: true },
     activeCurrency: { type: String },
   };
 
@@ -118,6 +119,18 @@ export class LionInputAmountDropdown extends LionInputAmount {
     };
   }
 
+  get dropdownSlot() {
+    return /** @type {string} */ this._dropdownSlot;
+  }
+
+  set dropdownSlot(position) {
+    if (position !== 'suffix' && position !== 'prefix') {
+      throw new Error('Only the suffix and prefix slots are valid positions for the dropdown.');
+    }
+
+    this._dropdownSlot = position;
+  }
+
   static templates = {
     dropdown: (/** @type {TemplateDataForDropdownInputAmount} */ templateDataForDropdown) => {
       const { refs, data } = templateDataForDropdown;
@@ -173,7 +186,8 @@ export class LionInputAmountDropdown extends LionInputAmount {
        * [data-ref=dropdown], receives a 100% height as well via inline styles (since we
        * can't target from shadow styles).
        */
-      ::slotted([slot='prefix']) {
+      ::slotted([slot='prefix']),
+      ::slotted([slot='suffix']) {
         height: 100%;
       }
     `,
@@ -185,7 +199,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
   get slots() {
     return {
       ...super.slots,
-      prefix: () => {
+      [this.dropdownSlot]: () => {
         const ctor = /** @type {typeof LionInputAmountDropdown} */ (this.constructor);
         const { templates } = ctor;
 
@@ -226,6 +240,8 @@ export class LionInputAmountDropdown extends LionInputAmount {
    */
   constructor() {
     super();
+
+    this.dropdownSlot = 'prefix';
 
     /**
      * Regions that will be shown on top of the dropdown
