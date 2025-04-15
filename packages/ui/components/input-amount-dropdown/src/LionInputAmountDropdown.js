@@ -58,7 +58,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
   static properties = {
     preferredCurrencies: { type: Array },
     allowedCurrencies: { type: Array },
-    _dropdownSlot: { type: String, state: true },
+    dropdownSlot: { type: String, reflect: true, attribute: 'dropdown-slot' },
     _currencyUtil: { type: Object, state: true },
   };
 
@@ -136,7 +136,9 @@ export class LionInputAmountDropdown extends LionInputAmount {
       throw new Error('Only the suffix and prefix slots are valid positions for the dropdown.');
     }
 
+    const oldSlot = this._dropdownSlot;
     this._dropdownSlot = position;
+    this.requestUpdate('dropdownSlot', oldSlot);
   }
 
   static templates = {

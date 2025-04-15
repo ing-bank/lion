@@ -73,3 +73,21 @@ export const preferredRegionCodes = () => {
   `;
 };
 ```
+
+## Suffix or prefix
+
+`dropdown-slot` can be set to either `suffix` or `prefix`.
+
+```js preview-story
+export const suffixSlot = () => {
+  loadDefaultFeedbackMessages();
+  return html`
+    <lion-input-amount-dropdown
+      label="Select region via dropdown"
+      dropdown-slot="suffix"
+      help-text="the dropdown shows in the suffix slot"
+      name="amount"
+    ></lion-input-amount-dropdown>
+  `;
+};
+```
