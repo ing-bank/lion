@@ -3,12 +3,13 @@ import { ref, createRef } from 'lit/directives/ref.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { LionInputAmount } from '@lion/ui/input-amount.js';
-import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { currencyUtil } from './currencyUtil.js';
 import { parseAmount } from './parsers.js';
 import { formatAmount } from './formatters.js';
 import { deserializer, serializer } from './serializers.js';
 import { CurrencyAndAmount } from './validators.js';
+import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * Note: one could consider to implement LionInputTelDropdown as a
@@ -50,7 +51,7 @@ import { CurrencyAndAmount } from './validators.js';
  *
  * @customElement lion-input-amount-dropdown
  */
-export class LionInputAmountDropdown extends LionInputAmount {
+export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
   /**
    * @configure LitElement
    * @type {any}
@@ -61,6 +62,11 @@ export class LionInputAmountDropdown extends LionInputAmount {
     dropdownSlot: { type: String, reflect: true, attribute: 'dropdown-slot' },
     _currencyUtil: { type: Object, state: true },
   };
+
+  static localizeNamespaces = [
+    { 'lion-input-amount-dropdown': localizeNamespaceLoader },
+    ...super.localizeNamespaces,
+  ];
 
   refs = {
     /** @type {DropdownRef} */
@@ -93,7 +99,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * @type {TemplateDataForDropdownInputAmount}
    */
   get _templateDataDropdown() {
-    const localizeManager = getLocalizeManager();
     const refs = {
       dropdown: {
         ref: this.refs.dropdown,
@@ -105,13 +110,13 @@ export class LionInputAmountDropdown extends LionInputAmount {
           'model-value-changed': this._onDropdownValueChange,
         },
         labels: {
-          selectCountry: localizeManager.msg('lion-input-amount-dropdown:selectCountry'),
-          allCountries:
-            this._allCountriesLabel ||
-            localizeManager.msg('lion-input-amount-dropdown:allCountries'),
-          preferredCountries:
-            this._preferredCountriesLabel ||
-            localizeManager.msg('lion-input-amount-dropdown:suggestedCountries'),
+          selectCurrency: this._localizeManager.msg('lion-input-amount-dropdown:selectCurrency'),
+          allCurrencies:
+            this._allCurrenciesLabel ||
+            this._localizeManager.msg('lion-input-amount-dropdown:allCurrencies'),
+          preferredCurrencies:
+            this._preferredCurrenciesLabel ||
+            this._localizeManager.msg('lion-input-amount-dropdown:suggestedCurrencies'),
         },
       },
       input: this._inputNode,
