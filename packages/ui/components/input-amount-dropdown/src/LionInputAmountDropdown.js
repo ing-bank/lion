@@ -260,7 +260,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
     this._currencyDisplayNodeSlot = '';
 
     this.parser = parseAmount;
-    this.formatter = formatAmount;
+    this.formatter = (modelValue, givenOptions) => formatAmount(modelValue, givenOptions, this);
     this.serializer = serializer;
     this.deserializer = deserializer;
 
@@ -277,16 +277,17 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
      * @type {string[]}
      */
     this.preferredCurrencies = [];
+
     /**
      * Group label for all countries, when preferredCountries are shown
      * @protected
      */
-    this._allCountriesLabel = '';
+    this._allCurrenciesLabel = '';
     /**
      * Group label for preferred countries, when preferredCountries are shown
      * @protected
      */
-    this._preferredCountriesLabel = '';
+    this._preferredCurrenciesLabel = '';
 
     /**
      * Contains everything needed for rendering region options:
@@ -312,7 +313,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
      * @private
      * @type {EventListener}
      */
-    this.__syncRegionWithDropdown = this.__syncRegionWithDropdown.bind(this);
+    this.__syncCurrencyWithDropdown = this.__syncCurrencyWithDropdown.bind(this);
 
     this._currencyUtil = currencyUtil;
   }
@@ -335,7 +336,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
   updated(changedProperties) {
     super.updated(changedProperties);
 
-    this.__syncRegionWithDropdown();
+    this.__syncCurrencyWithDropdown();
 
     if (changedProperties.has('disabled') || changedProperties.has('readOnly')) {
       if (this.disabled || this.readOnly) {
@@ -345,7 +346,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
       }
     }
 
-    if (changedProperties.has('allowedCurrencies')) {
+    if (changedProperties.has('modelValue') || changedProperties.has('allowedCurrencies')) {
       this.__calculateActiveCurrency();
     }
 
@@ -359,9 +360,9 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
    */
   _initModelValueBasedOnDropdown() {
     if (!this._initialModelValue && !this.dirty && this._currencyUtil?.countryToCurrencyMap) {
-      const countryCode =
+      const currencyCode =
         this._langIso && this._currencyUtil?.countryToCurrencyMap.get(this._langIso);
-      this.__initializedCurrencyCode = countryCode || '';
+      this.__initializedCurrencyCode = currencyCode || '';
 
       this._initialModelValue = { currency: this.__initializedCurrencyCode };
       this.modelValue = this._initialModelValue;
@@ -378,7 +379,6 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
    * @protected
    */
   _isEmpty(modelValue = this.modelValue) {
-    // the activeCurrency is not synced on time, so it can't be used in this check
     return super._isEmpty(modelValue) || this.currency === this.__initializedCurrencyCode;
   }
 
@@ -414,7 +414,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
   /**
    * @private
    */
-  __syncRegionWithDropdown(currencyCode = this.currency) {
+  __syncCurrencyWithDropdown(currencyCode = this.currency) {
     const dropdownElement = this.refs.dropdown?.value;
     if (!dropdownElement || !currencyCode) {
       return;
@@ -486,7 +486,13 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
       return;
     }
 
-    // 2. Try to get the region from locale
+    // 2. Try to get the currency from user input
+    if (this.modelValue?.currency && this.allowedCurrencies?.includes(this.modelValue?.currency)) {
+      this.currency = this.modelValue.currency;
+      return;
+    }
+
+    // 3. Try to get the currency from locale
     if (
       this._langIso &&
       this._allowedOrAllCurrencies.includes(
@@ -497,7 +503,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
       return;
     }
 
-    // 3. Not derivable
+    // 4. Not derivable
     this.currency = undefined;
   }
 

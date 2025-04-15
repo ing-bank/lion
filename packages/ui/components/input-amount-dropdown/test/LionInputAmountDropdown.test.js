@@ -8,10 +8,6 @@ import { LionOption } from '@lion/ui/listbox.js';
 import { ref } from 'lit/directives/ref.js';
 import { html } from 'lit';
 
-import {
-  mockCurrencyUtilManager,
-  restoreCurrencyUtilManager,
-} from '@lion/ui/input-amount-test-helpers.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import '@lion/ui/define/lion-input-amount-dropdown.js';
@@ -51,9 +47,9 @@ class WithFormControlInputAmountDropdown extends ScopedElementsMixin(LionInputAm
         >
           ${repeat(
             data.regionMetaList,
-            regionMeta => regionMeta.regionCode,
+            regionMeta => regionMeta.currencyCode,
             regionMeta => html`
-              <lion-option .choiceValue="${regionMeta.regionCode}"> </lion-option>
+              <lion-option .choiceValue="${regionMeta.currencyCode}"> </lion-option>
             `,
           )}
         </lion-select-rich>
@@ -69,18 +65,6 @@ describe('WithFormControlInputAmountDropdown', () => {
   // @ts-expect-error
   // Runs it for LionSelectRich, which uses .modelValue/@model-value-changed instead of .value/@change
   runInputAmountDropdownSuite({ klass: WithFormControlInputAmountDropdown });
-
-  it("it doesn't set the country as modelValue, only as viewValue", async () => {
-    const el = /** @type {LionInputAmountDropdown} */ (
-      await fixture(html`
-        <lion-input-amount-dropdown ..allowedCurrencies="${['EUR']}"></lion-input-amount-dropdown>
-      `)
-    );
-
-    // @ts-expect-error [allow-protected-in-tests]
-    expect(el._inputNode.value).to.equal('+31');
-    expect(el.modelValue).to.equal('');
-  });
 
   it('focuses the textbox right after selection if selected via opened dropdown if interaction-mode is mac', async () => {
     class InputAmountDropdownMac extends LionInputAmountDropdown {
@@ -189,23 +173,12 @@ describe('WithFormControlInputAmountDropdown', () => {
   });
 
   describe('defaultValidators', () => {
-    /** @type {(value:any) => void} */
-    let resolveLoaded;
-    beforeEach(() => {
-      ({ resolveLoaded } = mockCurrencyUtilManager());
-    });
-
-    afterEach(() => {
-      restoreCurrencyUtilManager();
-    });
-
     it('without interaction are not called', async () => {
       const el = /** @type {LionInputAmountDropdown} */ (
         await fixture(html`
           <lion-input-amount-dropdown ..allowedCurrencies="${['EUR']}"></lion-input-amount-dropdown>
         `)
       );
-      resolveLoaded(undefined);
       await aTimeout(0);
       expect(el.hasFeedbackFor).to.deep.equal([]);
     });
@@ -213,13 +186,14 @@ describe('WithFormControlInputAmountDropdown', () => {
     it('with interaction are called', async () => {
       const el = /** @type {LionInputAmountDropdown} */ (
         await fixture(html`
-          <lion-input-amount-dropdown ..allowedCurrencies="${['GBP']}"></lion-input-amount-dropdown>
+          <lion-input-amount-dropdown
+            .allowedCurrencies="${['GBP', 'EUR']}"
+          ></lion-input-amount-dropdown>
         `)
       );
-      el.modelValue = 'GBP';
-
-      resolveLoaded(undefined);
+      el.modelValue = { currency: 'EUR' };
       await aTimeout(0);
+      el.modelValue = { currency: 'EUR', amount: '' };
       expect(el.hasFeedbackFor).to.deep.equal(['error']);
     });
   });

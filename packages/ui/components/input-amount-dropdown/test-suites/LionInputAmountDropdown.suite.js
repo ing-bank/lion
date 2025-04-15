@@ -1,4 +1,3 @@
-import { mimicUserChangingDropdown } from '@lion/ui/input-amount-dropdown-test-helpers.js';
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
 import sinon from 'sinon';
 import {
@@ -12,11 +11,7 @@ import {
 } from '@open-wc/testing';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
-import { CurrencyUtilManager } from '../src/CurrenciesManager.js';
-import {
-  mockCurrencyUtilManager,
-  restoreCurrencyUtilManager,
-} from '../test-helpers/mockCurrenciesManager.js';
+import { mimicUserChangingDropdown } from '../test-helpers/mimicUserChangingDropdown.js';
 
 /**
  * @typedef {import('../types/index.js').TemplateDataForDropdownInputAmount} TemplateDataForDropdownInputAmount
@@ -52,27 +47,23 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
   const tag = unsafeStatic(tagName);
 
   describe('LionInputAmountDropdown', () => {
-    beforeEach(async () => {
-      // Wait till CurrencyUtilManager has been loaded
-      await CurrencyUtilManager.loadComplete;
-    });
-
     it('syncs value of dropdown on init if input has no value', async () => {
       const el = await fixture(html` <${tag}></${tag}> `);
-      expect(el.value).to.equal("{ currency: 'GBP', amount: '123' }");
+      expect(el.value).to.equal('');
       expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
-        "{ currency: 'GBP', amount: '123' }",
+        'GBP',
       );
+      expect(el.modelValue).to.eql({ currency: 'GBP' });
     });
 
     it('syncs value of dropdown on reset if input has no value', async () => {
       const el = await fixture(html` <${tag}></${tag}> `);
-      el.modelValue = "{ currency: 'EUR', amount: '123' }";
+      el.modelValue = { currency: 'EUR', amount: 123 };
       await el.updateComplete;
       el.reset();
       await el.updateComplete;
-      expect(el.modelValue).to.equal("{ currency: 'GBP', amount: '' }");
-      expect(el.value).to.equal("{ currency: 'GBP', amount: '' }");
+      expect(el.modelValue).to.eql({ currency: 'GBP' });
+      expect(el.value).to.equal('');
     });
 
     it('syncs value of dropdown on init if input has no value does not influence interaction states', async () => {
@@ -83,7 +74,7 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
 
     it('syncs value of dropdown on reset also resets interaction states', async () => {
       const el = await fixture(html` <${tag}></${tag}> `);
-      el.modelValue = "{ currency: 'EUR', amount: '123' }";
+      el.modelValue = { currency: 'EUR', amount: 123 };
       await el.updateComplete;
 
       expect(el.dirty).to.be.true;
@@ -96,7 +87,7 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
 
     it('sets correct interaction states on init if input has a value', async () => {
       const el = await fixture(
-        html` <${tag} .modelValue="${"{ currency: 'EUR', amount: '123' }"}"></${tag}> `,
+        html` <${tag} .modelValue="${{ currency: 'EUR', amount: 123 }}"></${tag}> `,
       );
       expect(el.dirty).to.be.false;
       expect(el.prefilled).to.be.true;
@@ -104,8 +95,9 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
 
     describe('Dropdown display', () => {
       it('calls `templates.dropdown` with TemplateDataForDropdownInputAmount object', async () => {
+        const modelValue = { currency: 'EUR', amount: 123 };
         const el = fixtureSync(html` <${tag}
-          .modelValue="${"{ currency: 'EUR', amount: '123' }"}"
+          .modelValue="${modelValue}"
           .allowedCurrencies="${['EUR', 'GBP']}"
           .preferredCurrencies="${['GBP']}"
           ></${tag}> `);
@@ -113,6 +105,7 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
           /** @type {typeof LionInputAmountDropdown} */ (el.constructor).templates,
           'dropdown',
         );
+
         await el.updateComplete;
         const dropdownNode = el.refs.dropdown.value;
         const templateDataForDropdown = /** @type {TemplateDataForDropdownInputAmount} */ (
@@ -125,20 +118,24 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
               regionMetaList: [
                 {
                   currencyCode: 'EUR',
+                  currencySymbol: '€',
+                  nameForLocale: 'Euro',
                 },
               ],
               regionMetaListPreferred: [
                 {
                   currencyCode: 'GBP',
+                  currencySymbol: '£',
+                  nameForLocale: 'British Pound',
                 },
               ],
             },
             refs: {
               dropdown: {
                 labels: {
-                  selectCountry: 'Select currency',
-                  allCountries: 'All currencies',
-                  preferredCountries: 'Suggested currencies',
+                  selectCurrency: 'Select currency',
+                  allCurrencies: 'All currencies',
+                  preferredCurrencies: 'Suggested currencies',
                 },
                 listeners: {
                   // @ts-expect-error [allow-protected]
@@ -147,7 +144,9 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
                   'model-value-changed': el._onDropdownValueChange,
                 },
                 props: { style: 'height: 100%;' },
-                ref: { value: dropdownNode },
+                ref: {
+                  value: dropdownNode,
+                },
               },
               // @ts-expect-error [allow-protected]
               input: el._inputNode,
@@ -157,7 +156,7 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
         spy.restore();
       });
 
-      it('can override "all-countries-label"', async () => {
+      it('can override "all-currencies-label"', async () => {
         const el = fixtureSync(html` <${tag}
           .preferredCurrencies="${['GBP']}"
           ></${tag}> `);
@@ -172,11 +171,11 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
           spy.args[0][0]
         );
 
-        expect(templateDataForDropdown.refs.dropdown.labels.allCountries).to.eql('foo');
+        expect(templateDataForDropdown.refs.dropdown.labels.allCurrencies).to.eql('foo');
         spy.restore();
       });
 
-      it('can override "preferred-countries-label"', async () => {
+      it('can override "preferred-currencies-label"', async () => {
         const el = fixtureSync(html` <${tag}
           .preferredCurrencies="${['GBP']}"
           ></${tag}> `);
@@ -185,20 +184,23 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
           'dropdown',
         );
         // @ts-expect-error [allow-protected]
-        el._preferredCountriesLabel = 'foo';
+        el._preferredCurrenciesLabel = 'foo';
         await el.updateComplete;
         const templateDataForDropdown = /** @type {TemplateDataForDropdownInputAmount} */ (
           spy.args[0][0]
         );
-        expect(templateDataForDropdown.refs.dropdown.labels.preferredCountries).to.eql('foo');
+        expect(templateDataForDropdown.refs.dropdown.labels.preferredCurrencies).to.eql('foo');
         spy.restore();
       });
 
-      it('syncs dropdown value initially from activeRegion', async () => {
+      it('syncs dropdown value initially from locale', async () => {
         const el = await fixture(html` <${tag} .allowedCurrencies="${['GBP']}"></${tag}> `);
         expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
-          "{ currency: 'GBP', amount: '' }",
+          'GBP',
         );
+        expect(el.modelValue).to.eql({
+          currency: 'GBP',
+        });
       });
 
       it('syncs disabled attribute to dropdown', async () => {
@@ -223,34 +225,43 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
         expect(prefixSlot.parentElement).to.equal(el);
       });
 
+      it('renders to suffix slot in light dom', async () => {
+        const el = await fixture(
+          html` <${tag} .allowedCurrencies="${['GBP']}" dropdown-slot="suffix"></${tag}> `,
+        );
+        const prefixSlot = /** @type {HTMLElement} */ (
+          /** @type {HTMLElement} */ (el.refs.dropdown.value)
+        );
+        expect(prefixSlot.getAttribute('slot')).to.equal('suffix');
+        expect(prefixSlot.slot).to.equal('suffix');
+        expect(prefixSlot.parentElement).to.equal(el);
+      });
+
       it('rerenders light dom when CurrencyUtil loaded', async () => {
-        const { resolveLoaded } = mockCurrencyUtilManager();
         const el = await fixture(html` <${tag} .allowedCurrencies="${['GBP']}"></${tag}> `);
         // @ts-ignore
         const spy = sinon.spy(el, '__rerenderSlot');
-        resolveLoaded(undefined);
         await aTimeout(0);
         expect(spy).to.have.been.calledWith('prefix');
-        restoreCurrencyUtilManager();
         spy.restore();
       });
     });
 
     describe('On dropdown value change', () => {
-      it('changes the currently active country code in the textbox', async () => {
+      it('changes the currently active currency code in the textbox', async () => {
         const el = await fixture(html`
           <${tag}
             .allowedCurrencies="${['GBP', 'EUR']}"
-            .modelValue="{ currency: 'GBP', amount: '123' }"
+            .modelValue="${{ currency: 'GBP', amount: 123 }}"
           ></${tag}>
         `);
         // @ts-ignore
         mimicUserChangingDropdown(el.refs.dropdown.value, 'EUR');
         await el.updateComplete;
         expect(el.currency).to.equal('EUR');
-        expect(el.modelValue).to.equal("{ currency: 'EUR', amount: '123' }");
+        expect(el.modelValue).to.eql({ amount: 123, currency: 'EUR' });
         await el.updateComplete;
-        expect(el.value).to.equal("{ currency: 'EUR', amount: '123' }");
+        expect(el.value).to.equal('123.00');
       });
 
       it('changes the currently active country code in the textbox when empty', async () => {
@@ -260,16 +271,8 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
         mimicUserChangingDropdown(el.refs.dropdown.value, 'EUR');
         await el.updateComplete;
         await el.updateComplete;
-        expect(el.value).to.equal("{ currency: 'EUR', amount: '' }");
-      });
 
-      it('changes the currently active country code in the textbox when invalid', async () => {
-        const el = await fixture(html` <${tag} .allowedCurrencies="${['GBP', 'EUR']}"></${tag}> `);
-        // @ts-ignore
-        mimicUserChangingDropdown(el.refs.dropdown.value, 'JPY');
-        await el.updateComplete;
-        await el.updateComplete;
-        expect(el.value).to.equal("{ currency: 'GBP', amount: '' }");
+        expect(el.modelValue).to.eql({ currency: 'EUR', amount: '' });
       });
 
       it('keeps focus on dropdownElement after selection if selected via unopened dropdown', async () => {
@@ -277,7 +280,7 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
           html` <${tag} .allowedCurrencies="${[
             'GBP',
             'EUR',
-          ]}" .modelValue="${"{ currency: 'GBP', amount: '123 }"}"></${tag}> `,
+          ]}" .modelValue="${{ currency: 'GBP', amount: 123 }}"></${tag}> `,
         );
         const dropdownElement = el.refs.dropdown.value;
         // @ts-ignore
@@ -287,20 +290,13 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
         expect(isActiveElement(el._inputNode)).to.be.false;
       });
     });
+  });
 
-    describe('On currency change', () => {
-      it('updates dropdown value ', async () => {
-        const el = await fixture(
-          html` <${tag} .modelValue="${"{ currency: 'GBP', amount: '' }"}"></${tag}> `,
-        );
-        expect(el.currency).to.equal('EUR');
-        // @ts-expect-error [allow protected]
-        el._setActiveRegion('EUR');
-        await el.updateComplete;
-        expect(getDropdownValue(/** @type {DropdownElement} */ (el.refs.dropdown.value))).to.equal(
-          'EUR',
-        );
-      });
+  describe('is empty', () => {
+    it('ignores initial currencyCode', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+      // @ts-ignore
+      expect(el._isEmpty(), 'empty').to.be.true;
     });
   });
 }
