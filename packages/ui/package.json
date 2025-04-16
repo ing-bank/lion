@@ -25,6 +25,7 @@
     "./input-range-translations/*": "./components/input-range/translations/*",
     "./input-stepper-translations/*": "./components/input-stepper/translations/*",
     "./input-tel-translations/*": "./components/input-tel/translations/*",
+    "./input-amount-dropdown-translations/*": "./components/input-amount-dropdown/translations/*",
     "./overlays-translations/*": "./components/overlays/translations/*",
     "./pagination-translations/*": "./components/pagination/translations/*",
     "./progress-indicator-translations/*": "./components/progress-indicator/translations/*",
