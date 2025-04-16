@@ -14,7 +14,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 /**
  * Note: one could consider to implement LionInputTelDropdown as a
  * [combobox](https://www.w3.org/TR/wai-aria-practices-1.2/#combobox).
- * However, the country dropdown does not directly set the textbox value, it only determines
+ * However, the currency dropdown does not directly set the textbox value, it only determines
  * its region code. Therefore it does not comply to this criterium:
  * "A combobox is an input widget with an associated popup that enables users to select a value for
  * the combobox from a collection of possible values. In some implementations,
@@ -156,16 +156,16 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
       return html`
         <select
           ${ref(refs?.dropdown?.ref)}
-          aria-label="${refs?.dropdown?.labels?.selectCountry}"
+          aria-label="${refs?.dropdown?.labels?.selectCurrency}"
           @change="${refs?.dropdown?.listeners?.change}"
           style="${refs?.dropdown?.props?.style}"
         >
           ${data?.regionMetaListPreferred?.length
             ? html`
-                <optgroup label="${refs?.dropdown?.labels?.preferredCountries}">
+                <optgroup label="${refs?.dropdown?.labels?.preferredCurrencies}">
                   ${data.regionMetaListPreferred.map(renderOption)}
                 </optgroup>
-                <optgroup label="${refs?.dropdown?.labels?.allCountries}">
+                <optgroup label="${refs?.dropdown?.labels?.allCurrencies}">
                   ${data?.regionMetaList?.map(renderOption)}
                 </optgroup>
               `
@@ -291,7 +291,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
 
     /**
      * Contains everything needed for rendering region options:
-     * region code, country code, display name according to locale, display name
+     * region code, currency code, display name according to locale, display name
      * @private
      * @type {RegionMeta[]}
      */
@@ -421,14 +421,14 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
     }
 
     if ('modelValue' in dropdownElement) {
-      const dropdownCountryCode = dropdownElement.modelValue;
-      if (dropdownCountryCode === currencyCode) {
+      const dropdownCurrencyCode = dropdownElement.modelValue;
+      if (dropdownCurrencyCode === currencyCode) {
         return;
       }
       /** @type {* & FormatHost} */ (dropdownElement).modelValue = currencyCode;
     } else {
-      const dropdownCountryCode = dropdownElement.value;
-      if (dropdownCountryCode === currencyCode) {
+      const dropdownCurrencyCode = dropdownElement.value;
+      if (dropdownCurrencyCode === currencyCode) {
         return;
       }
       /** @type {HTMLSelectElement} */ (dropdownElement).value = currencyCode;
@@ -508,7 +508,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
   }
 
   /**
-   * Used for rendering the region/country list
+   * Used for rendering the region/currency list
    * @property _allowedOrAllRegions
    * @type {CurrencyCode[]}
    */
