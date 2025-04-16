@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "searchType": "ast-analyzer",
+    "analyzerMeta": {
+      "name": "find-exports",
+      "requiredAst": "oxc",
+      "identifier": "exporting-ref-project_1.0.0__-466866270",
+      "targetProject": {
+        "mainEntry": "./index.js",
+        "name": "exporting-ref-project",
+        "version": "1.0.0",
+        "commitHash": "[not-a-git-root]"
+      },
+      "configuration": {
+        "skipFileImports": false,
+        "gatherFilesConfig": {},
+        "skipCheckMatchCompatibility": false,
+        "addSystemPathsInResult": false
+      }
+    }
+  },
+  "queryOutput": [
+    {
+      "file": "./index.js",
+      "result": [
+        {
+          "exportSpecifiers": [
+            "[default]"
+          ],
+          "source": "./ref-src/core.js",
+          "normalizedSource": "./ref-src/core.js",
+          "rootFileMap": [
+            {
+              "currentFileSpecifier": "[default]",
+              "rootFile": {
+                "file": "./ref-src/core.js",
+                "specifier": "[default]"
+              }
+            }
+          ]
+        },
+        {
+          "exportSpecifiers": [
+            "RefClass",
+            "RefRenamedClass"
+          ],
+          "localMap": [
+            {
+              "local": "RefClass",
+              "exported": "RefRenamedClass"
+            }
+          ],
+          "source": "./ref-src/core.js",
+          "normalizedSource": "./ref-src/core.js",
+          "rootFileMap": [
+            {
+              "currentFileSpecifier": "RefClass",
+              "rootFile": {
+                "file": "./ref-src/core.js",
+                "specifier": "RefClass"
+              }
+            },
+            {
+              "currentFileSpecifier": "RefRenamedClass",
+              "rootFile": {
+                "file": "./ref-src/core.js",
+                "specifier": "RefClass"
+              }
+            }
+          ]
+        },
+        {
+          "exportSpecifiers": [
+            "[file]"
+          ],
+          "rootFileMap": [
+            null
+          ]
+        }
+      ]
+    },
+    {
+      "file": "./not-imported.js",
+      "result": [
+        {
+          "exportSpecifiers": [
+            "notImported"
+          ],
+          "localMap": [],
+          "rootFileMap": [
+            {
+              "currentFileSpecifier": "notImported",
+              "rootFile": {
+                "file": "[current]",
+                "specifier": "notImported"
+              }
+            }
+          ]
+        },
+        {
+          "exportSpecifiers": [
+            "[file]"
+          ],
+          "rootFileMap": [
+            null
+          ]
+        }
+      ]
+    },
+    {
+      "file": "./ref-component.js",
+      "result": [
+        {
+          "exportSpecifiers": [
+            "[file]"
+          ],
+          "rootFileMap": [
+            null
+          ]
+        }
+      ]
+    },
+    {
+      "file": "./ref-src/core.js",
+      "result": [
+        {
+          "exportSpecifiers": [
+            "RefClass"
+          ],
+          "localMap": [],
+          "rootFileMap": [
+            {
+              "currentFileSpecifier": "RefClass",
+              "rootFile": {
+                "file": "[current]",
+                "specifier": "RefClass"
+              }
+            }
+          ]
+        },
+        {
+          "exportSpecifiers": [
+            "[default]"
+          ],
+          "rootFileMap": [
+            {
+              "currentFileSpecifier": "[default]",
+              "rootFile": {
+                "file": "[current]",
+                "specifier": "[default]"
+              }
+            }
+          ]
+        },
+        {
+          "exportSpecifiers": [
+            "[file]"
+          ],
+          "rootFileMap": [
+            null
+          ]
+        }
+      ]
+    },
+    {
+      "file": "./ref-src/folder/index.js",
+      "result": [
+        {
+          "exportSpecifiers": [
+            "resolvePathCorrect"
+          ],
+          "localMap": [],
+          "rootFileMap": [
+            {
+              "currentFileSpecifier": "resolvePathCorrect",
+              "rootFile": {
+                "file": "[current]",
+                "specifier": "resolvePathCorrect"
+              }
+            }
+          ]
+        },
+        {
+          "exportSpecifiers": [
+            "[file]"
+          ],
+          "rootFileMap": [
+            null
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,7 @@
+/**
+ * This list was exported from Java.
+ * As Java contains a country:currency map according to the i18n spec, but JS does not.
+ */
 const countryToCurrencyList = {
   AD: 'EUR',
   AE: 'AED',
