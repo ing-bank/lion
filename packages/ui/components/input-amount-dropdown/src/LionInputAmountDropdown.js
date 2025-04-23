@@ -47,7 +47,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  * By default, the native `<select>` element is used for this, so that it's as lightweight as
  * possible. Also, it doesn't need to be a `FormControl`, because it's purely a helper element
  * to provide better UX: the modelValue (the text field) contains all needed info:
- * the currency code following ISO 4217 and its corresponding currency symbol.
+ * the currency code following ISO 4217 and its corresponding currency symbol using Intl.
  *
  * @customElement lion-input-amount-dropdown
  */
