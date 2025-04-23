@@ -12,7 +12,7 @@ import { CurrencyAndAmount } from './validators.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
- * Note: one could consider to implement LionInputTelDropdown as a
+ * Note: one could consider to implement LionInputAmountDropdown as a
  * [combobox](https://www.w3.org/TR/wai-aria-practices-1.2/#combobox).
  * However, the currency dropdown does not directly set the textbox value, it only determines
  * its region code. Therefore it does not comply to this criterium:
@@ -42,12 +42,12 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  */
 
 /**
- * LionInputTelDropdown renders a dropdown like element next to the text field, inside the
- * prefix slot. This could be a LionSelect, a LionSelectRich or a native select.
+ * LionInputAmountDropdown renders a dropdown like element next to the text field, inside the
+ * prefix, or suffix, slot. This could be a LionSelect, a LionSelectRich or a native select.
  * By default, the native `<select>` element is used for this, so that it's as lightweight as
  * possible. Also, it doesn't need to be a `FormControl`, because it's purely a helper element
- * to provide better UX: the modelValue (the text field) contains all needed info, since it's in
- * `e164` format that contains all info (both region code and national phone number).
+ * to provide better UX: the modelValue (the text field) contains all needed info:
+ * the currency code following ISO 4217 and its corresponding currency symbol.
  *
  * @customElement lion-input-amount-dropdown
  */
