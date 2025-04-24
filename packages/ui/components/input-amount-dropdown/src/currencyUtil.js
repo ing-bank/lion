@@ -1,6 +1,38 @@
 /**
- * This list was exported from Java.
- * As Java contains a country:currency map according to the i18n spec, but JS does not.
+ * This country to currency list was exported from Java.
+ * Java contains a country:currency map according to the i18n spec, but JS does not.
+ *
+ * @type {import("../types/index.js").countryToCurrencyList}
+ *
+ * @example
+ * // The following Java code can be used to export the countryToCurrencyList
+ *
+ * import java.util.Currency;
+ * import java.util.Locale;
+ *
+ * public class Main {
+ *     public static void main(String[] args) {
+ *         // get all ISO countries
+ *         String[] ISOCountryCodes = Locale.getISOCountries();
+ *
+ *         // loop over all the countries.
+ *         for (String country : ISOCountryCodes) {
+ *             try {
+ *                 // get the locale for said country
+ *                 Locale locale = new Locale("", country);
+ *
+ *                 // creates a Currency instance which has a bunch of standardized information.
+ *                 // from that class we can get the currency linked to the country.
+ *                 String currencyCode = Currency.getInstance(locale).getCurrencyCode();
+ *
+ *                 // prints to the console, which can be copied to update the map if changes occurred
+ *                 String output = country + ": '" + currencyCode + "',\n";
+ *                 System.out.print(output);
+ *             } catch (Exception e) {
+ *             }
+ *         }
+ *     }
+ * }
  */
 const countryToCurrencyList = {
   AD: 'EUR',
@@ -11,7 +43,6 @@ const countryToCurrencyList = {
   AL: 'ALL',
   AM: 'AMD',
   AO: 'AOA',
-  AQ: 'EUR',
   AR: 'ARS',
   AS: 'USD',
   AT: 'EUR',
@@ -255,22 +286,36 @@ const countryToCurrencyList = {
 };
 
 /**
- * @type {Map<import("../../input-tel/types/index.js").RegionCode, import("./LionInputAmountDropdown.js").CurrencyCode>}
+ * Map containing all countries and its corresponding currency, following the i18n standard.
+ * @type {import("../types/index.js").RegionToCurrencyMap}
  */
-export const countryToCurrencyMap = new Map(Object.entries(countryToCurrencyList));
+export const countryToCurrencyMap = /** @type {import("../types/index.js").RegionToCurrencyMap} */ (
+  new Map(Object.entries(countryToCurrencyList))
+);
 
+/**
+ * Set with all possible currencies derived from the i18n standard.
+ * @type {import("../types/index.js").AllCurrenciesSet}
+ */
 export const allCurrencies = new Set(Object.values(countryToCurrencyList));
 
 /**
- * Matches a currency symbol to a currency code, with a given locale.
+ * Matches a currency symbol to a currency code, with a given locale based on Intl.numberFormat.
  * @param {import("./LionInputAmountDropdown.js").CurrencyCode} currency
  * @param {string} locale
  * @returns {string}
  */
-const getCurrencySymbol = (currency, locale) =>
-  new Intl.NumberFormat(locale, { style: 'currency', currency })
-    .formatToParts(1)
-    .find(x => x.type === 'currency').value;
+const getCurrencySymbol = (currency, locale) => {
+  if (!locale || !currency) {
+    return '';
+  }
+
+  return (
+    new Intl.NumberFormat(locale, { style: 'currency', currency })
+      .formatToParts(1)
+      .find(x => x.type === 'currency')?.value || ''
+  );
+};
 
 export const currencyUtil = {
   countryToCurrencyMap,

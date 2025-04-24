@@ -207,3 +207,27 @@ export type CurrencyCode =
   | 'ZAR'
   | 'ZMW'
   | 'ZWG';
+
+/**
+ * Type for country to currency list.
+ * The type is set to Partial as there are some islands that don't have a corresponding
+ * currencyCode as a standard (at the time of writing at least).
+ *
+ * Said missing countries code: AC, TA, XK
+ */
+export type countryToCurrencyList = Partial<{
+  [key in import('../../input-tel/types/index.js').RegionCode]: CurrencyCode;
+}>;
+
+/**
+ * Represents a mapping of region codes to currency codes using a Map.
+ */
+export type RegionToCurrencyMap = Map<
+  import('../../input-tel/types/index.js').RegionCode,
+  CurrencyCode
+>;
+
+/**
+ * Represents a set of all unique currency codes derived from the RegionToCurrencyMap values.
+ */
+export type AllCurrenciesSet = Set<CurrencyCode>;
