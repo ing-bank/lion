@@ -15,6 +15,7 @@ eleventyNavigation:
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
+import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
 import '@lion/ui/define/lion-input-amount-dropdown.js';
 ```
 
@@ -55,16 +56,16 @@ export const allowedCurrencies = () => {
 };
 ```
 
-## Preferred regions
+## Preferred currencies
 
-When `.preferredRegions` is configured, they will show up on top of the dropdown list to enhance user experience.
+When `.preferredCurrencies` is configured, they will show up on top of the dropdown list to enhance user experience.
 
 ```js preview-story
-export const preferredRegionCodes = () => {
+export const preferredCurrencies = () => {
   loadDefaultFeedbackMessages();
   return html`
     <lion-input-amount-dropdown
-      label="Select region via dropdown"
+      label="Select currency via dropdown"
       help-text="Preferred currencies show on top"
       name="amount"
       .allowedCurrencies=${['EUR', 'GBP', 'USD', 'JPY']}
@@ -76,18 +77,27 @@ export const preferredRegionCodes = () => {
 
 ## Suffix or prefix
 
-`dropdown-slot` can be set to either `suffix` or `prefix`.
+Subclassers can decide the dropdown location via `_dropdownSlot`, this can be set to either `suffix` or `prefix`.
 
 ```js preview-story
+class FooBarAmountDropdown extends LionInputAmountDropdown {
+  constructor() {
+    super();
+
+    this._dropdownSlot = 'suffix';
+  }
+}
+
+customElements.define('foo-bar-amount-dropdown', FooBarAmountDropdown);
+
 export const suffixSlot = () => {
   loadDefaultFeedbackMessages();
   return html`
-    <lion-input-amount-dropdown
+    <foo-bar-amount-dropdown
       label="Select region via dropdown"
-      dropdown-slot="suffix"
       help-text="the dropdown shows in the suffix slot"
       name="amount"
-    ></lion-input-amount-dropdown>
+    ></foo-bar-amount-dropdown>
   `;
 };
 ```

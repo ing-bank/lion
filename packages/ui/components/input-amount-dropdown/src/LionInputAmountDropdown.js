@@ -3,7 +3,6 @@ import { ref, createRef } from 'lit/directives/ref.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { LionInputAmount } from '@lion/ui/input-amount.js';
-import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { currencyUtil } from './currencyUtil.js';
 import { parseAmount } from './parsers.js';
 import { formatAmount } from './formatters.js';
@@ -51,7 +50,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  *
  * @customElement lion-input-amount-dropdown
  */
-export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
+export class LionInputAmountDropdown extends LionInputAmount {
   /**
    * @configure LitElement
    * @type {any}
@@ -59,7 +58,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
   static properties = {
     preferredCurrencies: { type: Array },
     allowedCurrencies: { type: Array },
-    dropdownSlot: { type: String, reflect: true, attribute: 'dropdown-slot' },
+    __dropdownSlot: { type: String },
     _currencyUtil: { type: Object, state: true },
   };
 
@@ -132,18 +131,19 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
     };
   }
 
-  get dropdownSlot() {
-    return /** @type {string} */ this._dropdownSlot;
+  /**
+   * @returns {string}
+   */
+  get _dropdownSlot() {
+    return /** @type {string} */ this.__dropdownSlot;
   }
 
-  set dropdownSlot(position) {
+  set _dropdownSlot(position) {
     if (position !== 'suffix' && position !== 'prefix') {
       throw new Error('Only the suffix and prefix slots are valid positions for the dropdown.');
     }
 
-    const oldSlot = this._dropdownSlot;
-    this._dropdownSlot = position;
-    this.requestUpdate('dropdownSlot', oldSlot);
+    this.__dropdownSlot = position;
   }
 
   static templates = {
@@ -214,7 +214,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
   get slots() {
     return {
       ...super.slots,
-      [this.dropdownSlot]: () => {
+      [this._dropdownSlot]: () => {
         const ctor = /** @type {typeof LionInputAmountDropdown} */ (this.constructor);
         const { templates } = ctor;
 
@@ -270,7 +270,7 @@ export class LionInputAmountDropdown extends LocalizeMixin(LionInputAmount) {
      * Slot position to render the dropdown in
      * @type {string}
      */
-    this.dropdownSlot = 'prefix';
+    this.__dropdownSlot = 'prefix';
 
     /**
      * Regions that will be shown on top of the dropdown
