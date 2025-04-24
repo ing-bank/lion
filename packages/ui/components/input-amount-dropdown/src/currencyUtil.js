@@ -297,7 +297,7 @@ export const countryToCurrencyMap = /** @type {import("../types/index.js").Regio
  * Set with all possible currencies derived from the i18n standard.
  * @type {import("../types/index.js").AllCurrenciesSet}
  */
-export const allCurrencies = new Set(Object.values(countryToCurrencyList));
+export const allCurrencies = new Set(Object.values(countryToCurrencyList).sort());
 
 /**
  * Matches a currency symbol to a currency code, with a given locale based on Intl.numberFormat.
