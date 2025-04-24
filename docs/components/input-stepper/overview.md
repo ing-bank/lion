@@ -34,6 +34,7 @@ loadDefaultFeedbackMessages();
 - Set `min` and `max` value to define the range.
 - Set `step` value in integer or decimal to increase and decrease the value.
 - Use `ArrowUp` or `ArrowDown` to update the value.
+- Set `alignToStep` to keep the value aligned with the defined step size on increase and decrease button.
 
 ## Installation
 
