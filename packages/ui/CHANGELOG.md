@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.11.3
+
+### Patch Changes
+
+- 23cd984: [combobox] do not submit form if overlay of combobox is opened and ENTER is hit
+
 ## 0.11.2
 
 ### Patch Changes
