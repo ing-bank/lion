@@ -17,19 +17,22 @@
 
       import 'playground-elements/playground-ide.js';
       import { render } from '@mdjs/mdjs-story';
+      import { 
+        sanitizeIframeFromSameDomain, 
+        createScopedLitElementDemo, 
+        getMdJsStoriesFileSections,
+        extractWebComponentObject, 
+        extractImports, 
+        setupIde,
+      } from '@lion/playground';
 
       function sanitize(input, type) {
         return `${document.location.origin}/${input.match(/[a-zA-Z0-9\/\-_]*/)[0]}.${type}`;
       }
 
-      function sanitizeParentCalls(fileString) {
-        // For security, we make sure the iframe can never call its parent
-        // This needs to be cheap and simple (no in-browser ast parsing), but solid =>
-        // `content.replace(/(document\.defaultView\.|window\.|\n|\r|\s)(parent|top)/g, '$1$$2');`.
-        // All calls to `parent` or `window.parent` for instance, will become `$parent` and `window.$parent`
 
-        return fileString.replace(/(document\.defaultView\.|window\.|\n|\r|\s)(parent|top)/g, '$1$$2');
-      }
+
+
 
       async function onHashChange() {
         const urlParts = new URLSearchParams(document.location.hash.substr(1));
@@ -77,69 +80,49 @@
           document.documentElement.removeAttribute('edge-distance');
         }
 
+        const storyKey = urlParts.get('story-key');
         const safeStoryUrl = sanitize(urlParts.get('story-file'), 'js');
-        const mod = await import(safeStoryUrl);
-        render(mod[urlParts.get('story-key')]({ shadowRoot: document }), document.body);
-
-
+ 
         const fileToFetch = await fetch(safeStoryUrl);
-        const text = await fileToFetch.text();
-        const [ , , script, , stories, , storiesSetup] = text.split(/\/\*\* (script|stories|stories setup) code \*\*\//);
-        console.log({script, stories, storiesSetup});
+        const mdjsStoriesFile = await fileToFetch.text();
 
-        const htmlRe = /((.|\n)*)export (const|function)\s(.*)(\(|\s*=).*(previewHtml|html)`((.|\n)*)`.*;/;
+        const { script, stories, storiesSetup } = getMdJsStoriesFileSections(mdjsStoriesFile);
+        console.log({ script, stories, storiesSetup, storyKey });
+
+ 
+        // const htmlReOld = /((.|\n)*)export (const|function)\s(.*)(\(|\s*=).*(previewHtml|html)`((.|\n)*)`.*;/;
+        const htmlRe = new RegExp(`((.|\\n)*)export (const|function)\\s(${storyKey})(\\(|\\s*=).*(previewHtml|html)\`((.|\\n)*)\`.*;`);
         const [ , jsString, , ,exportName, , , htmlString] = stories.match(htmlRe);
 
-
-        console.log({jsString, exportName, htmlString});
-                console.log(text);
+        console.log({ jsString, exportName, htmlString });
+        console.log(mdjsStoriesFile);
 
 
         const demoFileName = exportName.split(/\s/)[0] + '.js';
 
+        let htmlToRenderInJsContext = '';
+        const isAlreadyInLitEl = jsString.includes(' extends ScopedElementsMixin') || jsString.includes(' extends LitElement');
+        // When we are already in a demo, just pick the html part...
+        if (isAlreadyInLitEl) {
+          // N.B. we need to use a parser for more accuracy in the future...
+          const [, klassString] = jsString.match(/(class.*extends.*LitElement.*{(.|\n)*?\n})/);
+          // we pick the first html template we find ...
+          [, htmlToRenderInJsContext] = klassString.match(/html`((.|\n)*)?`;/);
+        } else {
+          // We were already in 
+          htmlToRenderInJsContext = htmlString;
+        }
 
-  // N.B. We need below string concatenation to prevent path rewrites from Rocket
-    
-    const basePath = `${location.origin}/__wds-outside-root__/1`;
-    const ide = document.querySelector('playground-ide');
-    ide.sandboxBaseUrl = `${basePath}/node_modules/playground-elements`;
-    ide.config = {
-      importMap: {
-        "imports": {
-          "@webcomponents/scoped-custom-element-registry": `${basePath}/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js`,
-          "@lion/ui/button.js": `${basePath}/packages/ui/exports/button.js`,
-          "lit": `${basePath}/node_modules/lit/index.js`,
-        },
-      },
-      files: {
-        'index.html': {
-          contentType: 'sample/html',
-          content: `<!-- playground-fold -->
-<!doctype html>
-<head>
-  <script type="module">
-    
+        // TODO: generate webComponents from "htmlToRenderInJsContext"
+        // Get the tag name from the template, then look for klass and source in ce manifest
+        // 
+        const webComponents = [{ tag:'lion-accordion', klass: 'LionAccordion', source: '@lion/ui/accordion.js' }];
+        const { jsFile, indexHtmlFile } = createScopedLitElementDemo(htmlToRenderInJsContext, { webComponents });
 
-    import ` + `'./${demoFileName}';
-  <` + `/script>
-</head>
-<body>
-<!-- playground-fold-end -->
-${htmlString}
-<!-- playground-fold -->
-</body>
-<!-- playground-fold-end -->`,
-        },
-        [demoFileName]: {
-          filename: demoFileName,
-          contentType: 'sample/js',
-          content: ["import '@webcomponents/scoped-custom-element-registry';\n", sanitizeParentCalls(jsString).trim()].join('\n'),
-        },
-      },
-    };
-
-
+        const ide = document.querySelector('playground-ide');
+        setupIde(ide, { demoFileName, indexHtmlFile, jsFile });
       }
+
 
       window.addEventListener('hashchange', onHashChange, false);
       onHashChange();
