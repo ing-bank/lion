@@ -46,6 +46,7 @@
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@custom-elements-manifest/to-markdown": "^0.1.0",
     "@lit-labs/testing": "^0.2.5",
+    "@lit/reactive-element": "^2.1.0",
     "@open-wc/building-rollup": "^2.2.3",
     "@open-wc/eslint-config": "^12.0.3",
     "@open-wc/scoped-elements": "^3.0.5",
@@ -153,6 +154,9 @@
       ],
       "@web/dev-server-legacy": [
         "Only needed for browserstack config. Can be achieved via @web/dev-server"
+      ],
+      "@lit/reactive-element": [
+        "We make sure latest version is hoisted and resolved, until we move to astro (when we can regenerate the package-lock.json file w/o breaking Rocket)."
       ]
     }
   },
