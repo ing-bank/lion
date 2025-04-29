@@ -62,7 +62,13 @@ export const localizeNamespaceLoader = /** @param {string} locale */ locale => {
         import('@lion/ui/overlays-translations/en.js'),
         import('@lion/ui/input-datepicker-translations/en.js'),
       ]);
-
+    case 'tr-TR':
+      return import('@lion/ui/input-datepicker-translations/tr-TR.js');
+    case 'tr':
+      return combineLocalizeImports([
+        import('@lion/ui/overlays-translations/tr.js'),
+        import('@lion/ui/input-datepicker-translations/tr.js'),
+      ]); 
     case 'es-ES':
       return combineLocalizeImports([
         import('@lion/ui/overlays-translations/es-ES.js'),
