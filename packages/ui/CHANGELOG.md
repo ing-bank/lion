@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.11.4
+
+### Patch Changes
+
+- 3c77296: [form-core] make sure that slots with property fallbacks ignore initialization updates (not defined on firstUpdated). See https://stackblitz.com/edit/vitejs-vite-encdg2xd?file=lion-demo.js
+
 ## 0.11.3
 
 ### Patch Changes
