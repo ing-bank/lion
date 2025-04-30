@@ -4,7 +4,6 @@
 
 ### Patch Changes
 
-- c3021f8: [form-core] make sure that slots with property fallbacks ignore initialization updates (undefined on firstUpdated). See https://stackblitz.com/edit/vitejs-vite-encdg2xd?file=lion-demo.js
 - 1769e29: [combobox] do not submit form if overlay of combobox is opened and ENTER is hit
 
 ## 0.11.2
