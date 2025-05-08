@@ -265,6 +265,104 @@ describe('<lion-input-stepper>', () => {
       await nextFrame();
       expect(incrementButton?.getAttribute('disabled')).to.equal('true');
     });
+
+    describe('alignToStep', () => {
+      let inputStepperWithAlignToStep = html``;
+      beforeEach(() => {
+        inputStepperWithAlignToStep = html`<lion-input-stepper
+          step="10"
+          min="0"
+          max="100"
+          alignToStep
+        ></lion-input-stepper>`;
+      });
+      it('aligns the value to the nearest step when incrementing', async () => {
+        let el = await fixture(
+          html`<lion-input-stepper
+            step="10"
+            min="0"
+            max="100"
+            alignToStep
+            value="55"
+          ></lion-input-stepper>`,
+        );
+        let incrementButton = el.querySelector('[slot=suffix]');
+        incrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(60, 'Fail for min 0, (0 > 100 by 10 start 0)');
+
+        // min 1
+        el = await fixture(
+          html`<lion-input-stepper
+            step="10"
+            min="1"
+            max="100"
+            alignToStep
+            value="55"
+          ></lion-input-stepper>`,
+        );
+        incrementButton = el.querySelector('[slot=suffix]');
+        incrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(61, 'Fail for min above 0, (0 > 100 by 10 start 1)');
+      });
+
+      it('aligns the value to the nearest step when decrementing', async () => {
+        let el = await fixture(
+          html`<lion-input-stepper
+            step="10"
+            min="0"
+            max="100"
+            alignToStep
+            value="55"
+          ></lion-input-stepper>`,
+        );
+        let decrementButton = el.querySelector('[slot=prefix]');
+        decrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(50, 'Fail for min 0, (0 > 100 by 10 start 0)');
+
+        // min 1
+        el = await fixture(
+          html`<lion-input-stepper
+            step="10"
+            min="1"
+            max="100"
+            alignToStep
+            value="55"
+          ></lion-input-stepper>`,
+        );
+        decrementButton = el.querySelector('[slot=prefix]');
+        decrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(51, 'Fail for min above 0, (0 > 100 by 10 start 1)');
+      });
+
+      it('does not align the value if alignToStep is false when incrementing', async () => {
+        const el = await fixture(inputStepperWithAlignToStep);
+        el.modelValue = 55;
+        el.alignToStep = false;
+        const incrementButton = el.querySelector('[slot=suffix]');
+        incrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(65);
+      });
+
+      it('does not align the value if alignToStep is falsewhen decrementing', async () => {
+        const el = await fixture(inputStepperWithAlignToStep);
+        el.modelValue = 55;
+        el.alignToStep = false;
+        const decrementButton = el.querySelector('[slot=prefix]');
+        decrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(45);
+      });
+
+      it('by default that property is disabled', async () => {
+        const el = await fixture(defaultInputStepper);
+        expect(el.alignToStep).to.be.false;
+      });
+    });
   });
 
   describe('Accessibility', () => {
