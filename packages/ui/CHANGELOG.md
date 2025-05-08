@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.11.5
+
+### Patch Changes
+
+- 07b089e: [validate-mixin] determine if a required validator or result validator has been registered based on characteristics
+
 ## 0.11.4
 
 ### Patch Changes
