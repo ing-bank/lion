@@ -1197,7 +1197,29 @@ describe('lion-input-file', () => {
         );
       });
 
-      it('after contains upload name of file when SUCCESS', async () => {
+      it('after contains upload name of file when uploadOnSelect is true and status is SUCCESS', async () => {
+        const uploadResponse = [
+          {
+            name: 'file1.txt',
+            status: 'SUCCESS',
+            errorMessage: '',
+            downloadUrl: '/downloadFile',
+          },
+        ];
+        const el = await fixture(html`
+          <lion-input-file label="Select" upload-on-select></lion-input-file>
+        `);
+
+        expect(el.querySelector('[slot="after"]')?.textContent).to.equal('No files uploaded.');
+        // @ts-expect-error
+        el.uploadResponse = uploadResponse;
+        await el.updateComplete;
+        expect(el.querySelector('[slot="after"]')?.textContent).to.equal(
+          'Uploaded file: file1.txt',
+        );
+      });
+
+      it('after contains upload name of file when uploadOnSelect is false and status is SUCCESS', async () => {
         const uploadResponse = [
           {
             name: 'file1.txt',
@@ -1212,7 +1234,9 @@ describe('lion-input-file', () => {
         // @ts-expect-error
         el.uploadResponse = uploadResponse;
         await el.updateComplete;
-        expect(el.querySelector('[slot="after"]')?.textContent).to.equal('file1.txt');
+        expect(el.querySelector('[slot="after"]')?.textContent).to.equal(
+          'Selected file: file1.txt',
+        );
       });
 
       it('after contains upload validator message of file when FAIL', async () => {
@@ -1233,7 +1257,34 @@ describe('lion-input-file', () => {
         expect(el.querySelector('[slot="after"]')?.textContent).to.equal('something went wrong');
       });
 
-      it('after contains upload status of files when multiple files have been uploaded', async () => {
+      it('after contains upload status of files when uploadOnSelect is true and multiple files have been selected', async () => {
+        const uploadResponse = [
+          {
+            name: 'file1.txt',
+            status: 'SUCCESS',
+            errorMessage: '',
+            downloadUrl: '/downloadFile',
+          },
+          {
+            name: 'file2.txt',
+            status: 'FAIL',
+            errorMessage: 'something went wrong',
+            downloadUrl: '/downloadFile',
+          },
+        ];
+        const el = await fixture(html`
+          <lion-input-file label="Select" multiple upload-on-select></lion-input-file>
+        `);
+        // @ts-expect-error
+        el.uploadResponse = uploadResponse;
+
+        await el.updateComplete;
+        expect(el.querySelector('[slot="after"]')?.textContent?.trim()).to.equal(
+          'Uploaded files: 2 files. "something went wrong", for file2.txt.',
+        );
+      });
+
+      it('after contains upload status of files when uploadOnSelect is false and multiple files have been selected', async () => {
         const uploadResponse = [
           {
             name: 'file1.txt',
@@ -1256,7 +1307,7 @@ describe('lion-input-file', () => {
 
         await el.updateComplete;
         expect(el.querySelector('[slot="after"]')?.textContent?.trim()).to.equal(
-          '2 files. "something went wrong", for file2.txt.',
+          'Selected files: 2 files. "something went wrong", for file2.txt.',
         );
       });
     });
