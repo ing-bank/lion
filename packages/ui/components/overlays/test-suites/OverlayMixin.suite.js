@@ -8,7 +8,6 @@ import {
   html,
 } from '@open-wc/testing';
 import { overlays as overlaysManager, OverlayController } from '@lion/ui/overlays.js';
-import { browserDetection } from '@lion/ui/core.js';
 import { cache } from 'lit/directives/cache.js';
 import '@lion/ui/define/lion-dialog.js';
 import { LitElement } from 'lit';
@@ -103,10 +102,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         )
       );
 
-      // For now, we skip this test for MacSafari, since the body.overlays-scroll-lock-ios-fix
-      // class results in a scrollbar when preventsScroll is true.
-      // However, fully functioning interacive elements (input fields) in the dialog are more important
-      if (browserDetection.isMacSafari && elWithBigParent._overlayCtrl.preventsScroll) {
+      if (elWithBigParent._overlayCtrl.preventsScroll) {
         return;
       }
 

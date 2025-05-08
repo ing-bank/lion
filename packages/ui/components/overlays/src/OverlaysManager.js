@@ -1,5 +1,3 @@
-import { browserDetection } from '@lion/ui/core.js';
-
 /**
  * @typedef {import('lit').CSSResult} CSSResult
  * @typedef {import('./OverlayController.js').OverlayController} OverlayController
@@ -171,17 +169,8 @@ export class OverlaysManager {
 
   // eslint-disable-next-line class-methods-use-this
   requestToPreventScroll() {
-    const { isIOS, isMacSafari } = browserDetection;
     // no check as classList will dedupe it anyways
     document.body.classList.add('overlays-scroll-lock');
-    if (isIOS || isMacSafari) {
-      // iOS and safar for mac have issues with overlays with input fields. This is fixed by applying
-      // position: fixed to the body. As a side effect, this will scroll the body to the top.
-      document.body.classList.add('overlays-scroll-lock-ios-fix');
-    }
-    if (isIOS) {
-      document.documentElement.classList.add('overlays-scroll-lock-ios-fix');
-    }
   }
 
   requestToEnableScroll() {
@@ -192,14 +181,7 @@ export class OverlaysManager {
       return;
     }
 
-    const { isIOS, isMacSafari } = browserDetection;
     document.body.classList.remove('overlays-scroll-lock');
-    if (isIOS || isMacSafari) {
-      document.body.classList.remove('overlays-scroll-lock-ios-fix');
-    }
-    if (isIOS) {
-      document.documentElement.classList.remove('overlays-scroll-lock-ios-fix');
-    }
   }
 
   /**
