@@ -8,10 +8,10 @@ import { AsyncQueue } from '../utils/AsyncQueue.js';
 import { pascalCase } from '../utils/pascalCase.js';
 import { SyncUpdatableMixin } from '../utils/SyncUpdatableMixin.js';
 import { LionValidationFeedback } from './LionValidationFeedback.js';
-import { ResultValidator as MetaValidator } from './ResultValidator.js';
 import { Unparseable } from './Unparseable.js';
-import { Required } from './validators/Required.js';
 import { FormControlMixin } from '../FormControlMixin.js';
+// eslint-disable-next-line no-unused-vars
+import { ResultValidator as MetaValidator } from './ResultValidator.js';
 // eslint-disable-next-line no-unused-vars
 import { Validator } from './Validator.js';
 // TODO: [v1] make all @readOnly => @readonly and actually make sure those values cannot be set
@@ -134,7 +134,7 @@ export const ValidateMixinImplementation = superclass =>
 
     /**
      * Combination of validators provided by Application Developer and the default validators
-     * @type {Validator[]}
+     * @type {(Validator | MetaValidator)[]}
      * @protected
      */
     get _allValidators() {
@@ -480,9 +480,9 @@ export const ValidateMixinImplementation = superclass =>
       const asyncValidators = /** @type {Validator[]} */ [];
 
       for (const v of this._allValidators) {
-        if (v instanceof MetaValidator) {
-          metaValidators.push(v);
-        } else if (v instanceof Required) {
+        if (/** @type {MetaValidator} */ (v)?.executeOnResults) {
+          metaValidators.push(/** @type {MetaValidator} */ (v));
+        } else if (/** @type {typeof Validator} */ (v.constructor)?.validatorName === 'Required') {
           // Required validator was already handled
         } else if (/** @type {typeof Validator} */ (v.constructor).async) {
           asyncValidators.push(v);

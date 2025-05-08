@@ -130,6 +130,121 @@ export function runValidateMixinSuite(customConfig) {
         expect(el.hasFeedbackFor).to.deep.equal(['error']);
       });
 
+      it('determines whether the "Required" validator was already handled by judging the validatorName', async () => {
+        class BundledValidator extends EventTarget {
+          static ['_$isValidator$'] = true;
+
+          static validatorName = '';
+
+          constructor() {
+            super();
+
+            this.type = 'error';
+          }
+
+          get config() {
+            // simplified version of the actual config
+            return {};
+          }
+
+          execute() {
+            // simplified version of the action execution
+            return true;
+          }
+
+          onFormControlConnect() {}
+
+          onFormControlDisconnect() {}
+
+          async _getMessage() {
+            // simplified version of the actual logic
+            return 'You need to enter something.';
+          }
+        }
+
+        class BundledRequired extends BundledValidator {
+          static get validatorName() {
+            return 'Required';
+          }
+        }
+
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+            <${tag}
+            .validators=${[new BundledRequired()]}
+            .modelValue=${'myValue'}
+          >${lightDom}</${tag}>
+          `)
+        );
+
+        expect(el.hasFeedbackFor).to.deep.equal([]);
+      });
+
+      it('determines whether the passed Validators are ResultValidators judging by the presence of "executeOnResults"', async () => {
+        class ValidateElementWithSuccessType extends ValidateElement {
+          static get validationTypes() {
+            return ['error', 'success'];
+          }
+        }
+
+        const elTagString = defineCE(ValidateElementWithSuccessType);
+        const elTag = unsafeStatic(elTagString);
+
+        class BundledValidator extends EventTarget {
+          static ['_$isValidator$'] = true;
+
+          static validatorName = '';
+
+          constructor() {
+            super();
+
+            this.type = 'error';
+          }
+
+          get config() {
+            // simplified version of the actual config
+            return {};
+          }
+
+          execute() {
+            // simplified version of the action execution
+            return true;
+          }
+
+          onFormControlConnect() {}
+
+          onFormControlDisconnect() {}
+
+          async _getMessage() {
+            // simplified version of the actual logic
+            return 'Success message.';
+          }
+        }
+
+        class BundledDefaultSuccess extends BundledValidator {
+          constructor() {
+            super();
+
+            this.type = 'success';
+          }
+
+          executeOnResults() {
+            return true;
+          }
+        }
+
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+            <${elTag}
+            .validators=${[new Required(), new BundledDefaultSuccess()]}
+            .modelValue=${'myValue'}
+          >${lightDom}</${elTag}>
+          `)
+        );
+
+        expect(el.hasFeedbackFor).to.deep.equal(['success']);
+      });
+
       it('revalidates when ".modelValue" changes', async () => {
         const el = /** @type {ValidateElement} */ (
           await fixture(html`
@@ -791,7 +906,7 @@ export function runValidateMixinSuite(customConfig) {
               // @ts-expect-error
               new EqualsLength(4, { getMessage: () => html`<div id="test123">test</div>` }),
             ]}" })]}"
-            .modelValue="${'123'}"            
+            .modelValue="${'123'}"
             label="Custom message for validator instance"
           ></${tag}>
         `)
