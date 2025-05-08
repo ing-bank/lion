@@ -33,14 +33,15 @@
     "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
     "types": "npm run types --workspaces --if-present",
-    "types-check-only": "npm run types-check-only --workspaces --if-present"
+    "types-check-only": "npm run types-check-only --workspaces --if-present",
+    "prepare-lion-playground": "node packages-node/lion-playground/src/cli/generateAssets.js --package packages/ui --destination docs/_assets/lion-playground --deps '@lion/ui|lit'"
   },
   "workspaces": [
     "packages/*",
     "packages-node/*"
   ],
   "devDependencies": {
-    "@babel/core": "^7.25.8",
+    "@babel/core": "^7.26.0",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
     "@changesets/cli": "^2.27.9",
     "@custom-elements-manifest/analyzer": "^0.10.3",

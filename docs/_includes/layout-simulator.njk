@@ -24,15 +24,13 @@
         extractWebComponentObject, 
         extractImports, 
         setupIde,
-      } from '@lion/playground';
+      } from '@lion/playground/src/browser/index';
+      import importMapPerPackage from "{{ '/_assets/lion-playground/importMapPerPackage.js' | asset | url }}";
+      import ceManifestObject from "{{ '/_assets/lion-playground/ceManifestObject.js' | asset | url }}";
 
       function sanitize(input, type) {
         return `${document.location.origin}/${input.match(/[a-zA-Z0-9\/\-_]*/)[0]}.${type}`;
       }
-
-
-
-
 
       async function onHashChange() {
         const urlParts = new URLSearchParams(document.location.hash.substr(1));
@@ -89,10 +87,17 @@
         const { script, stories, storiesSetup } = getMdJsStoriesFileSections(mdjsStoriesFile);
         console.log({ script, stories, storiesSetup, storyKey });
 
- 
-        // const htmlReOld = /((.|\n)*)export (const|function)\s(.*)(\(|\s*=).*(previewHtml|html)`((.|\n)*)`.*;/;
-        const htmlRe = new RegExp(`((.|\\n)*)export (const|function)\\s(${storyKey})(\\(|\\s*=).*(previewHtml|html)\`((.|\\n)*)\`.*;`);
-        const [ , jsString, , ,exportName, , , htmlString] = stories.match(htmlRe);
+        const htmlRe = new RegExp(`((.|\\n)*)export (const|function)\\s(${storyKey})(\\(|\\s*=)(.|\\n)*(previewHtml|html)\`((.|\\n)*)\`.*;`);
+        let jsString, exportName, htmlString;
+        for (const story of stories) {
+          if (!story.includes(storyKey)) continue;
+          const match = story.match(htmlRe);
+          if (match) {
+            [ , jsString, , ,exportName, , , , htmlString] = match;
+            break;
+          }
+        }
+        // const [ , jsString, , ,exportName, , , htmlString] = stories.match(htmlRe) ;
 
         console.log({ jsString, exportName, htmlString });
         console.log(mdjsStoriesFile);
@@ -109,23 +114,21 @@
           // we pick the first html template we find ...
           [, htmlToRenderInJsContext] = klassString.match(/html`((.|\n)*)?`;/);
         } else {
-          // We were already in 
           htmlToRenderInJsContext = htmlString;
         }
 
-        // TODO: generate webComponents from "htmlToRenderInJsContext"
-        // Get the tag name from the template, then look for klass and source in ce manifest
-        // 
-        const webComponents = [{ tag:'lion-accordion', klass: 'LionAccordion', source: '@lion/ui/accordion.js' }];
+
+        const webComponents = extractWebComponentObject(htmlToRenderInJsContext, { ceManifestObject, importMapPerPackage });
         const { jsFile, indexHtmlFile } = createScopedLitElementDemo(htmlToRenderInJsContext, { webComponents });
 
         const ide = document.querySelector('playground-ide');
-        setupIde(ide, { demoFileName, indexHtmlFile, jsFile });
+        setupIde(ide, { demoFileName, indexHtmlFile, jsFile, importMapPerPackage });
       }
-
 
       window.addEventListener('hashchange', onHashChange, false);
       onHashChange();
+
+
 
       const observer = new ResizeObserver(() => {
         const dimensions = document.body.getBoundingClientRect();
