@@ -85,6 +85,10 @@ export async function loadValidateNamespace({ localize }) {
             return import('@lion/ui/validate-messages-translations/sk-SK.js');
           case 'sk':
             return import('@lion/ui/validate-messages-translations/sk.js');
+          case 'tr-TR':
+            return import('@lion/ui/validate-messages-translations/tr-TR.js');
+          case 'tr':
+            return import('@lion/ui/validate-messages-translations/tr.js');
           case 'uk-UA':
             return import('@lion/ui/validate-messages-translations/uk-UA.js');
           case 'uk':
