@@ -80,7 +80,7 @@ export const preferredCurrencies = () => {
 Subclassers can decide the dropdown location via `_dropdownSlot`, this can be set to either `suffix` or `prefix`.
 
 ```js preview-story
-class FooBarAmountDropdown extends LionInputAmountDropdown {
+class DemoAmountDropdown extends LionInputAmountDropdown {
   constructor() {
     super();
 
@@ -88,16 +88,16 @@ class FooBarAmountDropdown extends LionInputAmountDropdown {
   }
 }
 
-customElements.define('foo-bar-amount-dropdown', FooBarAmountDropdown);
+customElements.define('demo-amount-dropdown', DemoAmountDropdown);
 
 export const suffixSlot = () => {
   loadDefaultFeedbackMessages();
   return html`
-    <foo-bar-amount-dropdown
+    <demo-amount-dropdown
       label="Select region via dropdown"
       help-text="the dropdown shows in the suffix slot"
       name="amount"
-    ></foo-bar-amount-dropdown>
+    ></demo-amount-dropdown>
   `;
 };
 ```
