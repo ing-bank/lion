@@ -4,7 +4,7 @@ export default {
   allowedFileValidatorComplex:
     'Завантажте файл {allowedTypesArray} або {allowedTypesLastItem} розміром до {maxSize}.',
   dragAndDropText: 'Перетягніть файли сюди або',
-  fileNameDescriptionLabel: 'Ім’я файлу: {fileName}',
+  fileNameDescriptionLabel: 'Ім’я файлу: ',
   generalValidatorMessage: '"{validatorMessage}", для {listOfErroneousFiles}.',
   noFilesSelected: 'Не вибрано жодного файлу.',
   numberOfFiles: '{numberOfFiles} файли(-ів).',

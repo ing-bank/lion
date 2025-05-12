@@ -4,7 +4,7 @@ export default {
   allowedFileValidatorComplex:
     'Моля, качете файл от тип {allowedTypesArray} или {allowedTypesLastItem} с макс. размер {maxSize}.',
   dragAndDropText: 'Плъзнете и пуснете Вашите файлове тук или',
-  fileNameDescriptionLabel: 'Име на файл: {fileName}',
+  fileNameDescriptionLabel: 'Име на файл: ',
   generalValidatorMessage: '"{validatorMessage}", за {listOfErroneousFiles}.',
   noFilesSelected: 'Не са избрани файлове.',
   numberOfFiles: '{numberOfFiles} файла.',

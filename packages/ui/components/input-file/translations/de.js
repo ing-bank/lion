@@ -4,7 +4,7 @@ export default {
   allowedFileValidatorComplex:
     'Laden Sie eine {allowedTypesArray} oder {allowedTypesLastItem}-Datei mit max. {maxSize} hoch.',
   dragAndDropText: 'Ziehen Sie Ihre Dateien per Drag & Drop hierher oder',
-  fileNameDescriptionLabel: 'Dateiname: {fileName}',
+  fileNameDescriptionLabel: 'Dateiname: ',
   generalValidatorMessage: '"{validatorMessage}", für {listOfErroneousFiles}.',
   noFilesSelected: 'Keine Dateien ausgewählt.',
   noFilesUploaded: 'Keine Dateien hochgeladen.',
