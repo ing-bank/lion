@@ -440,7 +440,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * "Ελλάδα" `nameForRegion`.
    * This should be run on change of:
    * - allowedCurrencies
-   * - _phoneUtil loaded
    * - locale
    * @private
    */
