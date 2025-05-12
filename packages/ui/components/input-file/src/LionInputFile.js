@@ -768,17 +768,14 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
           );
         }
       } else if (this._selectedFilesMetaData.length === 1) {
+        const { name } = this._selectedFilesMetaData[0].systemFile;
         if (this.uploadOnSelect) {
           selectedFiles.textContent = /** @type {string} */ (
-            errorMessage ||
-              this.msgLit('lion-input-file:fileUploaded') +
-                this._selectedFilesMetaData[0].systemFile.name
+            errorMessage || this.msgLit('lion-input-file:fileUploaded') + (name ?? '')
           );
         } else {
           selectedFiles.textContent = /** @type {string} */ (
-            errorMessage ||
-              this.msgLit('lion-input-file:fileSelected') +
-                this._selectedFilesMetaData[0].systemFile.name
+            errorMessage || this.msgLit('lion-input-file:fileSelected') + (name ?? '')
           );
         }
       } else if (this.uploadOnSelect) {
