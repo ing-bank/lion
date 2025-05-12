@@ -249,6 +249,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
     return html`
       <li>
         <button
+          type="button"
           aria-label=${this.msgLit(`${namespace}-pagination:${label}`)}
           @click=${() => this.__fire(pageNumber)}
         >
@@ -268,7 +269,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
   _disabledButtonTemplate(label) {
     return html`
       <li>
-        <button disabled>${this._prevNextIconTemplate(label)}</button>
+        <button type="button" disabled>${this._prevNextIconTemplate(label)}</button>
       </li>
     `;
   }
@@ -285,6 +286,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
         : html`
             <li>
               <button
+                type="button"
                 aria-label="${this.msgLit('lion-pagination:page', { page })}"
                 aria-current=${page === this.current}
                 aria-live="${page === this.current ? 'polite' : 'off'}"

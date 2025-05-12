@@ -217,6 +217,7 @@ export class LionInputDatepicker extends ScopedElementsMixin(
           <div class="calendar-overlay__header">
             <h1 class="calendar-overlay__heading">${this.calendarHeading}</h1>
             <button
+              type="button"
               @click="${() => this._overlayCtrl.hide()}"
               id="close-button"
               title="${this.msgLit('lion-input-datepicker:close')}"

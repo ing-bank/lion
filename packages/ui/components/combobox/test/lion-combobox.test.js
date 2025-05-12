@@ -1069,7 +1069,7 @@ describe('lion-combobox', () => {
       const tag = unsafeStatic(tagName);
 
       const el = /** @type {LionCombobox} */ (
-        await fixture(html` 
+        await fixture(html`
           <${tag} name="combo" label="Display only the label once selected">
             <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
             <lion-option .choiceValue="${'Chard'}">Chard</lion-option>

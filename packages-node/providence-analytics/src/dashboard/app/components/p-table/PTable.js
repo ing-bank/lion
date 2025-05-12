@@ -92,7 +92,11 @@ export class PTable extends DecorateMixin(LitElement) {
             ${headers.map(
               header => html`
                 <div role="columnheader" class="c-table__columnheader">
-                  <button @click="${() => this._sortBy(header)}" class="c-table__sort-button">
+                  <button
+                    type="button"
+                    @click="${() => this._sortBy(header)}"
+                    class="c-table__sort-button"
+                  >
                     ${header}
                     <span class="c-table__sort-indicator">
                       ${sortMap[header] === 'desc' ? this._descTemplate() : this._ascTemplate()}

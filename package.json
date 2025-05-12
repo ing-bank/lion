@@ -45,6 +45,8 @@
     "@changesets/cli": "^2.27.9",
     "@custom-elements-manifest/analyzer": "^0.10.3",
     "@custom-elements-manifest/to-markdown": "^0.1.0",
+    "@html-eslint/eslint-plugin": "^0.40.3",
+    "@html-eslint/parser": "^0.40.0",
     "@lit-labs/testing": "^0.2.5",
     "@lit/reactive-element": "^2.1.0",
     "@open-wc/building-rollup": "^2.2.3",
