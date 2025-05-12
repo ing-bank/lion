@@ -226,9 +226,22 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
       });
 
       it('renders to suffix slot in light dom', async () => {
-        const el = await fixture(
-          html` <${tag} .allowedCurrencies="${['GBP']}" dropdown-slot="suffix"></${tag}> `,
-        );
+        class WithSuffixRenderInputAmountDropdown extends LionInputAmountDropdown {
+          constructor() {
+            super();
+
+            this._dropdownSlot = 'suffix';
+          }
+        }
+
+        const suffixTagName = defineCE(WithSuffixRenderInputAmountDropdown);
+        const suffixTag = unsafeStatic(suffixTagName);
+
+        const el = await fixture(html`
+          <${suffixTag}
+            .allowedCurrencies="${['GBP']}"
+          ></${suffixTag}>
+        `);
         const prefixSlot = /** @type {HTMLElement} */ (
           /** @type {HTMLElement} */ (el.refs.dropdown.value)
         );
