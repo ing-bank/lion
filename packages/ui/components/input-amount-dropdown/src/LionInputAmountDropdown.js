@@ -346,7 +346,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
       }
     }
 
-    if (changedProperties.has('modelValue') || changedProperties.has('allowedCurrencies')) {
+    if (changedProperties.has('allowedCurrencies')) {
       this.__calculateActiveCurrency();
     }
 
@@ -397,7 +397,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
     }
 
     const prevCurrency = this.currency;
-
     this.currency = dropdownValue;
 
     if (prevCurrency !== this.currency && !this.focused) {
