@@ -4,7 +4,7 @@ export default {
   allowedFileValidatorComplex:
     'Caricare un file {allowedTypesArray} o {allowedTypesLastItem} di {maxSize} max.',
   dragAndDropText: 'Trascinare i file qui o',
-  fileNameDescriptionLabel: 'Nome file: {fileName}',
+  fileNameDescriptionLabel: 'Nome file: ',
   generalValidatorMessage: '"{validatorMessage}", per {listOfErroneousFiles}.',
   noFilesSelected: 'Nessun file selezionato.',
   numberOfFiles: '{numberOfFiles} file.',

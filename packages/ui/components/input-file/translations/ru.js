@@ -4,7 +4,7 @@ export default {
   allowedFileValidatorComplex:
     'Загрузите файл {allowedTypesArray} или {allowedTypesLastItem} размером не более {maxSize}.',
   dragAndDropText: 'Перетащите файлы сюда или',
-  fileNameDescriptionLabel: 'Название файла: {fileName}',
+  fileNameDescriptionLabel: 'Название файла: ',
   generalValidatorMessage: '"{validatorMessage}", для {listOfErroneousFiles}.',
   noFilesSelected: 'Не выбрано ни одного файла.',
   noFilesUploaded: 'Не загружено ни одного файла.',

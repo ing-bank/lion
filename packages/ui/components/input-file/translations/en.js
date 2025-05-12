@@ -4,7 +4,7 @@ export default {
   allowedFileValidatorComplex:
     'Please select a {allowedTypesArray} or {allowedTypesLastItem} file with max {maxSize}.',
   dragAndDropText: 'Drag & Drop your files here or', // TODO: or what? Why is Drag & Drop capitalized?
-  fileNameDescriptionLabel: 'File name: {fileName}',
+  fileNameDescriptionLabel: 'File name: ',
   generalValidatorMessage: '"{validatorMessage}", for {listOfErroneousFiles}.',
   noFilesSelected: 'No files selected.',
   noFilesUploaded: 'No files uploaded.',

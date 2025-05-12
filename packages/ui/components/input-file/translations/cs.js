@@ -5,7 +5,7 @@ export default {
   allowedFileValidatorComplex:
     'Nahrajte soubor typu {allowedTypesArray} nebo {allowedTypesLastItem} s max. velikostí {maxSize}.',
   dragAndDropText: 'Přetáhněte soubory sem nebo',
-  fileNameDescriptionLabel: 'Název souboru: {fileName}',
+  fileNameDescriptionLabel: 'Název souboru: ',
   generalValidatorMessage: '"{validatorMessage}", pro {listOfErroneousFiles}.',
   noFilesSelected: 'Nebyly vybrány žádné soubory.',
   numberOfFiles: '{numberOfFiles} soubory/souborů.',
