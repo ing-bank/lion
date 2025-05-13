@@ -758,15 +758,39 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     const selectedFiles = this.querySelector('[slot="after"]');
     if (selectedFiles) {
       if (!this._selectedFilesMetaData || this._selectedFilesMetaData.length === 0) {
-        selectedFiles.textContent = /** @type {string} */ (
-          this.msgLit('lion-input-file:noFilesSelected')
-        );
+        if (this.uploadOnSelect) {
+          selectedFiles.textContent = /** @type {string} */ (
+            this.msgLit('lion-input-file:noFilesUploaded')
+          );
+        } else {
+          selectedFiles.textContent = /** @type {string} */ (
+            this.msgLit('lion-input-file:noFilesSelected')
+          );
+        }
       } else if (this._selectedFilesMetaData.length === 1) {
-        selectedFiles.textContent = /** @type {string} */ (
-          errorMessage || this._selectedFilesMetaData[0].systemFile.name
-        );
+        const { name } = this._selectedFilesMetaData[0].systemFile;
+        if (this.uploadOnSelect) {
+          selectedFiles.textContent = /** @type {string} */ (
+            errorMessage || this.msgLit('lion-input-file:fileUploaded') + (name ?? '')
+          );
+        } else {
+          selectedFiles.textContent = /** @type {string} */ (
+            errorMessage || this.msgLit('lion-input-file:fileSelected') + (name ?? '')
+          );
+        }
+      } else if (this.uploadOnSelect) {
+        selectedFiles.textContent = `${this.msgLit('lion-input-file:filesUploaded', {
+          numberOfFiles: this._selectedFilesMetaData.length,
+        })} ${
+          errorMessage
+            ? this.msgLit('lion-input-file:generalValidatorMessage', {
+                validatorMessage: errorMessage,
+                listOfErroneousFiles: erroneousFilesNames.join(', '),
+              })
+            : ''
+        }`;
       } else {
-        selectedFiles.textContent = `${this.msgLit('lion-input-file:numberOfFiles', {
+        selectedFiles.textContent = `${this.msgLit('lion-input-file:filesSelected', {
           numberOfFiles: this._selectedFilesMetaData.length,
         })} ${
           errorMessage
