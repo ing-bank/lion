@@ -182,7 +182,12 @@ export class LionInputAmountDropdown extends LionInputAmount {
       templateDataForDropdown,
       { currencyCode, nameForLocale, currencySymbol },
     ) => html`
-      <option value="${currencyCode}" aria-label="${ifDefined(nameForLocale)}">
+      <option
+        value="${currencyCode}"
+        aria-label="${ifDefined(
+          nameForLocale && currencySymbol ? `${nameForLocale}, ${currencySymbol}` : '',
+        )}"
+      >
         ${currencyCode} (${currencySymbol})&nbsp;
       </option>
     `,
