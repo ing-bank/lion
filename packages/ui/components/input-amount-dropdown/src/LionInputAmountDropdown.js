@@ -210,6 +210,20 @@ export class LionInputAmountDropdown extends LionInputAmount {
       ::slotted([slot='suffix']) {
         height: 100%;
       }
+
+      /**
+      * visually hiding the 'after' slot, leaving it as sr-only (screen-reader only)
+      * source: https://www.scottohara.me/blog/2017/04/14/inclusively-hidden.html
+      */
+      ::slotted([slot='after']:not(:focus):not(:active)) {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+      }
     `,
   ];
 
@@ -260,9 +274,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
    */
   constructor() {
     super();
-
-    // disable the input-amount currency display
-    this._currencyDisplayNodeSlot = '';
 
     this.parser = parseAmount;
     this.formatter = (modelValue, givenOptions) => formatAmount(modelValue, givenOptions, this);
