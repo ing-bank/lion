@@ -116,7 +116,7 @@ describe('<lion-input-stepper>', () => {
       expect(el.value).to.equal('');
       el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
       await el.updateComplete;
-      expect(el.value).to.equal('-1');
+      expect(el.value).to.equal('−1');
     });
 
     it('should increment the value to minValue on [ArrowDown] if value is below min', async () => {
@@ -140,7 +140,7 @@ describe('<lion-input-stepper>', () => {
       expect(el.value).to.equal('');
       const decrementButton = el.querySelector('[slot=prefix]');
       decrementButton?.dispatchEvent(new Event('click'));
-      expect(el.value).to.equal('-1');
+      expect(el.value).to.equal('−1');
     });
 
     it('fires one "user-input-changed" event on + button click', async () => {
@@ -188,7 +188,7 @@ describe('<lion-input-stepper>', () => {
       decrementButton?.dispatchEvent(new Event('focus'));
       decrementButton?.dispatchEvent(new Event('click'));
       decrementButton?.dispatchEvent(new Event('blur'));
-      expect(el.value).to.equal('-1');
+      expect(el.value).to.equal('−1');
       expect(blurSpy.calledOnce).to.be.true;
       expect(el.touched).to.be.true;
 
@@ -274,7 +274,7 @@ describe('<lion-input-stepper>', () => {
         let incrementButton = el.querySelector('[slot=suffix]');
         incrementButton?.dispatchEvent(new Event('click'));
         await el.updateComplete;
-        expect(el.modelValue).to.equal(60, 'Fail for min 0, (0 > 100 by 10 start 0)');
+        expect(el.modelValue).to.equal(60, 'Fail + : (0 > 100 by 10; val 55)');
 
         // min 1
         el = await fixture(
@@ -283,7 +283,34 @@ describe('<lion-input-stepper>', () => {
         incrementButton = el.querySelector('[slot=suffix]');
         incrementButton?.dispatchEvent(new Event('click'));
         await el.updateComplete;
-        expect(el.modelValue).to.equal(61, 'Fail for min above 0, (0 > 100 by 10 start 1)');
+        expect(el.modelValue).to.equal(61, 'Fail + : (1 > 100 by 10; val 55)');
+
+        // min 34
+        el = await fixture(
+          html`<lion-input-stepper step="10" min="34" max="100" value="55"></lion-input-stepper>`,
+        );
+        incrementButton = el.querySelector('[slot=suffix]');
+        incrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(64, 'Fail + : (34 > 100 by 10; val 55)');
+
+        // min -23
+        el = await fixture(
+          html`<lion-input-stepper step="10" min="-23" max="100" value="55"></lion-input-stepper>`,
+        );
+        incrementButton = el.querySelector('[slot=suffix]');
+        incrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(57, 'Fail + : (-23 > 100 by 10; val 55)'); // -23 > -13 > -3 > 7 > ... > 57
+
+        // min -23
+        el = await fixture(
+          html`<lion-input-stepper step="10" min="-23" max="100" value="-9"></lion-input-stepper>`,
+        );
+        incrementButton = el.querySelector('[slot=suffix]');
+        incrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(-3, 'Fail + : (-23 > 100 by 10; val 55)'); // -23 > -13 > -3 > 7
       });
 
       it('aligns the value to the nearest step when decrementing', async () => {
@@ -293,7 +320,7 @@ describe('<lion-input-stepper>', () => {
         let decrementButton = el.querySelector('[slot=prefix]');
         decrementButton?.dispatchEvent(new Event('click'));
         await el.updateComplete;
-        expect(el.modelValue).to.equal(50, 'Fail for min 0, (0 > 100 by 10 start 0)');
+        expect(el.modelValue).to.equal(50, 'Fail - : (0 > 100 by 10; val 55)');
 
         // min 1
         el = await fixture(
@@ -302,7 +329,34 @@ describe('<lion-input-stepper>', () => {
         decrementButton = el.querySelector('[slot=prefix]');
         decrementButton?.dispatchEvent(new Event('click'));
         await el.updateComplete;
-        expect(el.modelValue).to.equal(51, 'Fail for min above 0, (0 > 100 by 10 start 1)');
+        expect(el.modelValue).to.equal(51, 'Fail - : (1 > 100 by 10; val 55)');
+
+        // min 34
+        el = await fixture(
+          html`<lion-input-stepper step="10" min="34" max="100" value="55"></lion-input-stepper>`,
+        );
+        decrementButton = el.querySelector('[slot=prefix]');
+        decrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(54, 'Fail - : (34 > 100 by 10; val 55)');
+
+        // min -23
+        el = await fixture(
+          html`<lion-input-stepper step="10" min="-23" max="100" value="55"></lion-input-stepper>`,
+        );
+        decrementButton = el.querySelector('[slot=prefix]');
+        decrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(47, 'Fail - : (-23 > 100 by 10; val 55)'); // -23 > -13 > -3 > 7 > ... > 47
+
+        // min -23
+        el = await fixture(
+          html`<lion-input-stepper step="10" min="-23" max="100" value="-9"></lion-input-stepper>`,
+        );
+        decrementButton = el.querySelector('[slot=prefix]');
+        decrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(-13, 'Fail - : (-23 > 100 by 10; val 55)'); // -23 > -13 > -3 > 7
       });
     });
   });
