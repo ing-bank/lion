@@ -265,8 +265,19 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    * @private
    */
   __increment() {
-    const { step, min, max } = this.values;
-    const newValue = this.currentValue + step;
+    const { step, max } = this.values;
+    let { min } = this.values;
+    if (min === Infinity) {
+      min = 0;
+    }
+
+    let newValue = this.currentValue + step;
+
+    if ((this.currentValue + min) % step !== 0) {
+      // If the value is not aligned to step, align it to the nearest step
+      newValue = Math.floor(this.currentValue / step) * step + step + (min % step);
+    }
+
     if (newValue <= max || max === Infinity) {
       this.modelValue = newValue < min && min !== Infinity ? `${min}` : `${newValue}`;
       this.__toggleSpinnerButtonsState();
@@ -279,8 +290,16 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    * @private
    */
   __decrement() {
-    const { step, min, max } = this.values;
-    const newValue = this.currentValue - step;
+    const { step, max, min } = this.values;
+    const stepMin = min !== Infinity ? min : 0;
+
+    let newValue = this.currentValue - step;
+
+    if ((this.currentValue + stepMin) % step !== 0) {
+      // If the value is not aligned to step, align it to the nearest step
+      newValue = Math.floor(this.currentValue / step) * step + (stepMin % step);
+    }
+
     if (newValue >= min || min === Infinity) {
       this.modelValue = newValue > max && max !== Infinity ? `${max}` : `${newValue}`;
       this.__toggleSpinnerButtonsState();
