@@ -56,10 +56,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
         type: Number,
         reflect: true,
       },
-      alignToStep: {
-        type: Boolean,
-        reflect: true,
-      },
     };
   }
 
@@ -86,7 +82,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     this.formatter = formatNumber;
     this.min = Infinity;
     this.max = Infinity;
-    this.alignToStep = false;
     /**
      * The aria-valuetext attribute defines the human-readable text alternative of aria-valuenow.
      * @type {{[key: number]: string}}
@@ -97,7 +92,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       max: this.max,
       min: this.min,
       step: this.step,
-      alignToStep: this.alignToStep,
     };
 
     this.__increment = this.__increment.bind(this);
@@ -112,7 +106,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       max: this.max,
       min: this.min,
       step: this.step,
-      alignToStep: this.alignToStep,
     };
     if (this._inputNode) {
       this._inputNode.role = 'spinbutton';
@@ -161,10 +154,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
     if (changedProperties.has('valueTextMapping')) {
       this._updateAriaAttributes();
-    }
-
-    if (changedProperties.has('alignToStep')) {
-      this.values.alignToStep = this.alignToStep;
     }
 
     if (changedProperties.has('step')) {
@@ -279,7 +268,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     const { step, min, max } = this.values;
     let newValue = this.currentValue + step;
 
-    if (this.alignToStep && (this.currentValue + min) % step !== 0) {
+    if ((this.currentValue + min) % step !== 0) {
       // If the value is not aligned to step, align it to the nearest step
       newValue = Math.floor(this.currentValue / step) * step + step + min;
     }
@@ -299,7 +288,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     const { step, min, max } = this.values;
     let newValue = this.currentValue - step;
 
-    if (this.alignToStep && (this.currentValue + min) % step !== 0) {
+    if ((this.currentValue + min) % step !== 0) {
       // If the value is not aligned to step, align it to the nearest step
       newValue = Math.floor(this.currentValue / step) * step + min;
     }

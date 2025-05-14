@@ -112,10 +112,9 @@ export const formatting = () => {
 };
 ```
 
-### Align to step
+### Aligning to step
 
-Use `.alignToStep` property to keep the value aligned with the defined step size on increase and decrease button. So the input value will be aligned to the nearest step multiple value.
-So for a step of `10` starting from `1`, if user enter `55` and click increase button, the value will aligned on `61` instead of `65`.
+The value is always aligned with the defined step size when using the increase or decrease buttons. The input value will be adjusted to the nearest valid step multiple. For example, with a step of `10` starting from `1`, if the user enters `55` and clicks the increase button, the value will align to `61` instead of `65` (1 > 11 > 21 > ... > 51 > 61).
 
 ```html preview-story
 <lion-input-stepper
