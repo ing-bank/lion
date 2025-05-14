@@ -4,10 +4,10 @@ export default {
   ...tr,
   error: {
     ...tr.error,
-    IsDate: 'Please enter a valid date (MM/DD/YYYY).',
+    IsDate: 'Lütfen geçerli bir tarih girin (GG/AA/YYYY).',
   },
   warning: {
     ...tr.warning,
-    IsDate: 'Please enter a valid date (MM/DD/YYYY).',
+    IsDate: 'Lütfen geçerli bir tarih girin (GG/AA/YYYY).',
   },
 };
