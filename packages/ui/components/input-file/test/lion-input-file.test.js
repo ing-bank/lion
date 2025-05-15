@@ -151,6 +151,31 @@ describe('lion-input-file', () => {
     expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('bar.txt');
   });
 
+  describe('structure', async () => {
+    it('can has a button label by default', async () => {
+      const el = await fixture(html`<lion-input-file></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Select file');
+    });
+
+    it('can has a button label by default when multiple', async () => {
+      const el = await fixture(html`<lion-input-file multiple></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Select files');
+    });
+
+    it('can update the button label', async () => {
+      const el = await fixture(html`<lion-input-file .buttonLabel="${'Foo'}"></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Foo');
+
+      el.buttonLabel = 'Bar';
+      await el.updateComplete;
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Bar');
+    });
+  });
+
   describe('invalid file types', async () => {
     const fileWrongType = /** @type {InputFile} */ (
       new File(['foobar'], 'foobar.txt', {
