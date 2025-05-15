@@ -27,8 +27,10 @@ export function formatAmount(modelValue, givenOptions) {
   if (typeof options.maximumFractionDigits === 'undefined') {
     options.maximumFractionDigits = getFractionDigits(options.currency);
   }
+  const formatted = formatNumber(modelValue, options);
 
-  return formatNumber(modelValue, options);
+  // ✅ // Convert Unicode minus to normal minus for consistency
+  return formatted.replace(/\u2212/g, '-');
 }
 
 /**
