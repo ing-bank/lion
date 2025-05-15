@@ -1573,7 +1573,7 @@ export function runFormGroupMixinSuite(cfg = {}) {
       it(`prefilled children values take precedence over parent values`, async () => {
         const el = /** @type {DynamicCWrapper} */ (
           await fixture(html`
-        <${dynamicChildrenTag}  .modelValue="${{
+        <${dynamicChildrenTag} .modelValue="${{
           firstName: 'foo',
           lastName: 'bar',
         }}">

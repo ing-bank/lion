@@ -121,6 +121,7 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
   _listItemAfterTemplate(file, fileUuid) {
     return html`
       <button
+        type="button"
         class="selected__list__item__remove-button"
         aria-label="${this.msgLit('lion-input-file:removeButtonLabel', {
           fileName: file.systemFile.name,

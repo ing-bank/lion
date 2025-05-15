@@ -199,7 +199,7 @@ describe('<lion-field>', () => {
         await fixture(html`<${tag}>
             ${inputSlot}
             <span slot="before" data-label>[before]</span>
-            <span slot="after"  data-label>[after]</span>
+            <span slot="after" data-label>[after]</span>
             <span slot="prefix" data-description>[prefix]</span>
             <span slot="suffix" data-description>[suffix]</span>
           </${tag}>
