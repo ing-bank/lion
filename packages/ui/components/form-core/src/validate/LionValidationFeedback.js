@@ -1,6 +1,5 @@
-import { css, html, LitElement, nothing } from 'lit';
-import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
-import { localizeNamespaceLoader } from '../localizeNamespaceLoader.js';
+import { css, html, LitElement } from 'lit';
+import { LocalizeMixin, resolveLocaleConfig } from '@lion/ui/localize-no-side-effects.js';
 
 /**
  * @typedef {import('./Validator.js').Validator} Validator
@@ -24,10 +23,10 @@ export class LionValidationFeedback extends LocalizeMixin(LitElement) {
     };
   }
 
-  static localizeNamespaces = [
-    { 'lion-form-core': localizeNamespaceLoader },
-    ...super.localizeNamespaces,
-  ];
+  static get localizeNamespaces() {
+    const localePath = new URL('../../translations', import.meta.url);
+    return [resolveLocaleConfig('lion-form-core', localePath), ...super.localizeNamespaces];
+  }
 
   static get styles() {
     return [

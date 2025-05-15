@@ -5,6 +5,7 @@ import {
   getWeekdayNames,
   LocalizeMixin,
   normalizeDateTime,
+  resolveLocaleConfig,
 } from '@lion/ui/localize-no-side-effects.js';
 
 import { calendarStyle } from './calendarStyle.js';
@@ -39,68 +40,8 @@ function isDisabledDayButton(el) {
  */
 export class LionCalendar extends LocalizeMixin(LitElement) {
   static get localizeNamespaces() {
-    return [
-      {
-        'lion-calendar': /** @param {string} locale */ locale => {
-          switch (locale) {
-            case 'bg-BG':
-            case 'bg':
-              return import('@lion/ui/calendar-translations/bg.js');
-            case 'cs-CZ':
-            case 'cs':
-              return import('@lion/ui/calendar-translations/cs.js');
-            case 'de-AT':
-            case 'de-DE':
-            case 'de':
-              return import('@lion/ui/calendar-translations/de.js');
-            case 'en-AU':
-            case 'en-GB':
-            case 'en-PH':
-            case 'en-US':
-            case 'en':
-              return import('@lion/ui/calendar-translations/en.js');
-            case 'es-ES':
-            case 'es':
-              return import('@lion/ui/calendar-translations/es.js');
-            case 'fr-FR':
-            case 'fr-BE':
-            case 'fr':
-              return import('@lion/ui/calendar-translations/fr.js');
-            case 'hu-HU':
-            case 'hu':
-              return import('@lion/ui/calendar-translations/hu.js');
-            case 'it-IT':
-            case 'it':
-              return import('@lion/ui/calendar-translations/it.js');
-            case 'nl-BE':
-            case 'nl-NL':
-            case 'nl':
-              return import('@lion/ui/calendar-translations/nl.js');
-            case 'pl-PL':
-            case 'pl':
-              return import('@lion/ui/calendar-translations/pl.js');
-            case 'ro-RO':
-            case 'ro':
-              return import('@lion/ui/calendar-translations/ro.js');
-            case 'ru-RU':
-            case 'ru':
-              return import('@lion/ui/calendar-translations/ru.js');
-            case 'sk-SK':
-            case 'sk':
-              return import('@lion/ui/calendar-translations/sk.js');
-            case 'uk-UA':
-            case 'uk':
-              return import('@lion/ui/calendar-translations/uk.js');
-            case 'zh-CN':
-            case 'zh':
-              return import('@lion/ui/calendar-translations/zh.js');
-            default:
-              return import('@lion/ui/calendar-translations/en.js');
-          }
-        },
-      },
-      ...super.localizeNamespaces,
-    ];
+    const localePath = new URL('../translations', import.meta.url);
+    return [resolveLocaleConfig('lion-calendar', localePath), ...super.localizeNamespaces];
   }
 
   static get properties() {

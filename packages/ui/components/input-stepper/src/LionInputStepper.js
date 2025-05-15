@@ -1,8 +1,12 @@
 import { html, css, render } from 'lit';
-import { formatNumber, LocalizeMixin, parseNumber } from '@lion/ui/localize-no-side-effects.js';
+import {
+  formatNumber,
+  LocalizeMixin,
+  parseNumber,
+  resolveLocaleConfig,
+} from '@lion/ui/localize-no-side-effects.js';
 import { LionInput } from '@lion/ui/input.js';
 import { IsNumber, MinNumber, MaxNumber } from '@lion/ui/form-core.js';
-import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
  * @typedef {import('lit').RenderOptions} RenderOptions
@@ -59,10 +63,10 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     };
   }
 
-  static localizeNamespaces = [
-    { 'lion-input-stepper': localizeNamespaceLoader },
-    ...super.localizeNamespaces,
-  ];
+  static get localizeNamespaces() {
+    const localePath = new URL('../translations', import.meta.url);
+    return [resolveLocaleConfig('lion-input-stepper', localePath), ...super.localizeNamespaces];
+  }
 
   /**
    * @returns {number}
