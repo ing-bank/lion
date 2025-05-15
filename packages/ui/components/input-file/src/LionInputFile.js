@@ -164,8 +164,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     this.enableDropZone = false;
     this.maxFileSize = MAX_FILE_SIZE;
     this.accept = '';
-    this.buttonLabel = '';
-    this._initialButtonLabel = '';
     /**
      * @type {InputFile[]}
      */
@@ -198,7 +196,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   connectedCallback() {
     super.connectedCallback();
     this.__initialUploadResponse = this.uploadResponse;
-    this._initialButtonLabel = this.buttonLabel;
     this._inputNode.addEventListener('change', this._onChange);
     this._inputNode.addEventListener('click', this._onClick);
   }
@@ -216,12 +213,10 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     super.onLocaleUpdated();
     if (this.multiple) {
       // @ts-ignore
-      this.buttonLabel =
-        this._initialButtonLabel || this.msgLit('lion-input-file:selectTextMultipleFile');
+      this.buttonLabel = this.buttonLabel || this.msgLit('lion-input-file:selectTextMultipleFile');
     } else {
       // @ts-ignore
-      this.buttonLabel =
-        this._initialButtonLabel || this.msgLit('lion-input-file:selectTextSingleFile');
+      this.buttonLabel = this.buttonLabel || this.msgLit('lion-input-file:selectTextSingleFile');
     }
   }
 
