@@ -85,4 +85,14 @@ describe('formatAmount()', () => {
       '12,345,678,987,654,321.42',
     );
   });
+
+  // Ensures formatter uses a normal dash (-) instead of unicode minus (\u2212)
+  it('does not return unicode minus sign in formatted output', async () => {
+    const result = formatAmount(-123.45, {
+      locale: 'en-GB',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    expect(result).to.equal('-123.45'); // Should be a normal dash
+  });
 });
