@@ -59,7 +59,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
     preferredCurrencies: { type: Array },
     allowedCurrencies: { type: Array },
     __dropdownSlot: { type: String },
-    _currencyUtil: { type: Object, state: true },
   };
 
   static localizeNamespaces = [
@@ -365,10 +364,15 @@ export class LionInputAmountDropdown extends LionInputAmount {
     if (changedProperties.has('allowedCurrencies')) {
       this.__calculateActiveCurrency();
     }
+  }
 
-    if (changedProperties.has('_currencyUtil')) {
-      this._initModelValueBasedOnDropdown();
-    }
+  /**
+   * @lifecycle LitElement
+   * @param {import('lit-element').PropertyValues } changedProperties
+   */
+  firstUpdated(changedProperties) {
+    super.firstUpdated?.(changedProperties);
+    this._initModelValueBasedOnDropdown();
   }
 
   /**

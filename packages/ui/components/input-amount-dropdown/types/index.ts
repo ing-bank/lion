@@ -1,7 +1,6 @@
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { OverlayController } from '../../overlays/src/OverlayController.js';
-import { RegionCode } from '../../input-tel/types/index.js';
 
 type RefTemplateData = {
   ref?: { value?: HTMLElement };
