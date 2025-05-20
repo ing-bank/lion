@@ -133,7 +133,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
                   countryCode: 63,
                   flagSymbol: '🇵🇭',
                   nameForLocale: 'Philippines',
-                  nameForRegion: 'Philippines',
+                  nameForRegion: 'Pilipinas',
                   regionCode: 'PH',
                 },
               ],
