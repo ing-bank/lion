@@ -1,6 +1,8 @@
 import '@lion/ui/define/lion-input-file.js';
 import { Required } from '@lion/ui/form-core.js';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { expect, fixture as _fixture, html, oneEvent, elementUpdated } from '@open-wc/testing';
 import sinon from 'sinon';
 
@@ -59,6 +61,10 @@ const file4 = /** @type {InputFile} */ (
 );
 
 describe('lion-input-file', () => {
+  const localizeManager = getLocalizeManager();
+
+  afterEach(localizeTearDown);
+
   it('has a type of "file"', async () => {
     const el = await fixture(html`<lion-input-file></lion-input-file>`);
     // @ts-expect-error [allow-protected-in-tests]
@@ -149,6 +155,43 @@ describe('lion-input-file', () => {
     expect(el._selectedFilesMetaData.length).to.equal(1);
     // @ts-expect-error [allow-protected-in-test]
     expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('bar.txt');
+  });
+
+  describe('structure', async () => {
+    it('can has a button label by default', async () => {
+      const el = await fixture(html`<lion-input-file></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Select file');
+    });
+
+    it('can has a button label by default when multiple', async () => {
+      const el = await fixture(html`<lion-input-file multiple></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Select files');
+    });
+
+    it('will update the button label on locale change', async () => {
+      const el = await fixture(html`<lion-input-file></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Select file');
+
+      localizeManager.locale = 'nl-NL';
+      await localizeManager.loadingComplete;
+      await el.updateComplete;
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Selecteer bestand');
+    });
+
+    it('can overwrite the button label', async () => {
+      const el = await fixture(html`<lion-input-file .buttonLabel="${'Foo'}"></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Foo');
+
+      el.buttonLabel = 'Bar';
+      await el.updateComplete;
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Bar');
+    });
   });
 
   describe('invalid file types', async () => {
