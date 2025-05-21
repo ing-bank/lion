@@ -1,5 +1,23 @@
 # @lion/ui
 
+## 0.11.5
+
+### Patch Changes
+
+- a0d334d: Added initial Turkish (tr.js / tr-TR.js) translation files for the following components:
+
+  - input-datepicker
+  - calendar
+  - form-core
+  - overlays
+  - pagination
+  - validate-messages
+
+- cbe8f86: [input-file] set buttonLabel initially
+- f9f5519: LionInputFile: Customize the text content of the selected files for screen reader if uploadOnSelect is enabled
+- cf4a8fd: [input-stepper] align value with step value
+- 07b089e: [validate-mixin] determine if a required validator or result validator has been registered based on characteristics
+
 ## 0.11.4
 
 ### Patch Changes
