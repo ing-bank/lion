@@ -64,3 +64,5 @@ packages/ui/new-exports/
 packages/ui/test-exports/
 
 
+# Ignore the e2e output under test-node
+test-node/program/analyzers/e2e/
