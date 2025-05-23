@@ -38,6 +38,12 @@ npm run test
 npm run start
 ```
 
+_Note: **playwright** is required for running tests._
+
+```
+npx playwright install
+```
+
 Create a Pull Request:
 
 - At <https://github.com/ing-bank/lion> click on fork (at the right top)
