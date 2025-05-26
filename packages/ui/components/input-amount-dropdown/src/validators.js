@@ -13,6 +13,7 @@ export class CurrencyAndAmount extends Validator {
    */
   // eslint-disable-next-line class-methods-use-this
   execute(modelValue) {
+    // @ts-expect-error - cannot cast string to CurrencyCode outside a TS file
     const validCurrencyCode = currencyUtil.allCurrencies.has(modelValue?.currency);
     const isNumber = new IsNumber().execute(modelValue.amount);
 

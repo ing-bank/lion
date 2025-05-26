@@ -12,9 +12,11 @@ import { currencyUtil } from './currencyUtil.js';
  * @param {FormatOptions} [givenOptions]
  */
 export const formatAmount = (modelValue, givenOptions, context) => {
+  // @ts-expect-error - cannot cast string to CurrencyCode outside a TS file
   if (currencyUtil.allCurrencies.has(modelValue?.currency)) {
     // TODO: better way of setting parent currency
     context.currency = modelValue?.currency;
   }
+  // @ts-expect-error - cannot cast string to CurrencyCode outside a TS file
   return _formatAmount(modelValue?.amount || '', givenOptions);
 };

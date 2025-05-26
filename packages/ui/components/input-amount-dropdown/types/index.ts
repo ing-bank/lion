@@ -31,7 +31,7 @@ export type TemplateDataForDropdownInputAmount = {
         change: (event: OnDropdownChangeEvent) => void;
         'model-value-changed': (event: OnDropdownChangeEvent) => void;
       };
-      labels: { selectCountry: string };
+      labels: { selectCurrency: string };
     };
     input: HTMLInputElement;
   };

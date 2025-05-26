@@ -123,6 +123,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
     return {
       refs,
       data: {
+        // @ts-expect-error - cannot cast string to CurrencyCode outside a TS file
         currency: this.currency,
         regionMetaList: this.__regionMetaList,
         regionMetaListPreferred: this.__regionMetaListPreferred,
@@ -275,6 +276,11 @@ export class LionInputAmountDropdown extends LionInputAmount {
     super();
 
     this.parser = parseAmount;
+
+    /**
+     * @param {import("../types/index.js").AmountDropdownModelValue} modelValue
+     * @param {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} [givenOptions] Locale Options
+     */
     this.formatter = (modelValue, givenOptions) => formatAmount(modelValue, givenOptions, this);
     this.serializer = serializer;
     this.deserializer = deserializer;
@@ -289,9 +295,15 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
     /**
      * Regions that will be shown on top of the dropdown
-     * @type {string[]}
+     * @type {CurrencyCode[]}
      */
     this.preferredCurrencies = [];
+
+    /**
+     * Regions that are allowed to be selected in the dropdown.
+     * @type {CurrencyCode[]}
+     */
+    this.allowedCurrencies = [];
 
     /**
      * Group label for all countries, when preferredCountries are shown
@@ -478,7 +490,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
       destinationList.push({
         currencyCode,
         nameForLocale: this.__namesForLocale?.of(currencyCode),
-        currencySymbol: this._currencyUtil.getCurrencySymbol(currencyCode, this._langIso),
+        currencySymbol: this._currencyUtil.getCurrencySymbol(currencyCode, this._langIso ?? ''),
       });
     });
   }
@@ -513,7 +525,9 @@ export class LionInputAmountDropdown extends LionInputAmount {
     // 3. Try to get the currency from locale
     if (
       this._langIso &&
+      this._currencyUtil?.countryToCurrencyMap.has(this._langIso) &&
       this._allowedOrAllCurrencies.includes(
+        // @ts-expect-error - Set.get always returns a CurrencyCode.
         this._currencyUtil?.countryToCurrencyMap.get(this._langIso),
       )
     ) {
