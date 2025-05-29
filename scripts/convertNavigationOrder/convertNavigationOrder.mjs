@@ -36,7 +36,6 @@ for (const path of paths) {
   const { eleventyNavigation, ...rest } = grayMatterFile.data;
   // rocket values
   const { eleventyNavigation: rocketEleventyNavigation, ...rocketRest } = processContentWithTitle(grayMatterFile.content) || {};
-  console.log(rocketEleventyNavigation);
   if (!rocketEleventyNavigation) {
     // not all pages need to change
     continue;
