@@ -73,6 +73,8 @@ export class LionPagination extends LocalizeMixin(LitElement) {
               return import('@lion/ui/pagination-translations/ru.js');
             case 'sk-SK':
               return import('@lion/ui/pagination-translations/sk.js');
+            case 'tr-TR':
+              return import('@lion/ui/pagination-translations/tr.js');
             case 'uk-UA':
               return import('@lion/ui/pagination-translations/uk.js');
             case 'zh-CN':

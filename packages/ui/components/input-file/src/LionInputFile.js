@@ -110,7 +110,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @type {string}
    */
   get buttonLabel() {
-    return this.__buttonLabel || this._buttonNode?.textContent || '';
+    return this.__buttonLabel || this._buttonNode?.textContent?.trim() || '';
   }
 
   /**
@@ -164,6 +164,8 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     this.enableDropZone = false;
     this.maxFileSize = MAX_FILE_SIZE;
     this.accept = '';
+    this.buttonLabel = '';
+    this._initialButtonLabel = '';
     /**
      * @type {InputFile[]}
      */
@@ -196,7 +198,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   connectedCallback() {
     super.connectedCallback();
     this.__initialUploadResponse = this.uploadResponse;
-
+    this._initialButtonLabel = this.buttonLabel;
     this._inputNode.addEventListener('change', this._onChange);
     this._inputNode.addEventListener('click', this._onClick);
   }
@@ -214,10 +216,12 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     super.onLocaleUpdated();
     if (this.multiple) {
       // @ts-ignore
-      this.buttonLabel = this.msgLit('lion-input-file:selectTextMultipleFile');
+      this.buttonLabel =
+        this._initialButtonLabel || this.msgLit('lion-input-file:selectTextMultipleFile');
     } else {
       // @ts-ignore
-      this.buttonLabel = this.msgLit('lion-input-file:selectTextSingleFile');
+      this.buttonLabel =
+        this._initialButtonLabel || this.msgLit('lion-input-file:selectTextSingleFile');
     }
   }
 
@@ -758,15 +762,39 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     const selectedFiles = this.querySelector('[slot="after"]');
     if (selectedFiles) {
       if (!this._selectedFilesMetaData || this._selectedFilesMetaData.length === 0) {
-        selectedFiles.textContent = /** @type {string} */ (
-          this.msgLit('lion-input-file:noFilesSelected')
-        );
+        if (this.uploadOnSelect) {
+          selectedFiles.textContent = /** @type {string} */ (
+            this.msgLit('lion-input-file:noFilesUploaded')
+          );
+        } else {
+          selectedFiles.textContent = /** @type {string} */ (
+            this.msgLit('lion-input-file:noFilesSelected')
+          );
+        }
       } else if (this._selectedFilesMetaData.length === 1) {
-        selectedFiles.textContent = /** @type {string} */ (
-          errorMessage || this._selectedFilesMetaData[0].systemFile.name
-        );
+        const { name } = this._selectedFilesMetaData[0].systemFile;
+        if (this.uploadOnSelect) {
+          selectedFiles.textContent = /** @type {string} */ (
+            errorMessage || this.msgLit('lion-input-file:fileUploaded') + (name ?? '')
+          );
+        } else {
+          selectedFiles.textContent = /** @type {string} */ (
+            errorMessage || this.msgLit('lion-input-file:fileSelected') + (name ?? '')
+          );
+        }
+      } else if (this.uploadOnSelect) {
+        selectedFiles.textContent = `${this.msgLit('lion-input-file:filesUploaded', {
+          numberOfFiles: this._selectedFilesMetaData.length,
+        })} ${
+          errorMessage
+            ? this.msgLit('lion-input-file:generalValidatorMessage', {
+                validatorMessage: errorMessage,
+                listOfErroneousFiles: erroneousFilesNames.join(', '),
+              })
+            : ''
+        }`;
       } else {
-        selectedFiles.textContent = `${this.msgLit('lion-input-file:numberOfFiles', {
+        selectedFiles.textContent = `${this.msgLit('lion-input-file:filesSelected', {
           numberOfFiles: this._selectedFilesMetaData.length,
         })} ${
           errorMessage

@@ -1,5 +1,13 @@
 # rocket-preset-extend-lion-docs
 
+## 0.4.1
+
+### Patch Changes
+
+- 48ee70e: update remark-extend (support frontmatter)
+- Updated dependencies [7eb8588]
+  - remark-extend@0.5.3
+
 ## 0.4.0
 
 ### Minor Changes

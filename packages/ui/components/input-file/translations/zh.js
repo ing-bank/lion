@@ -4,7 +4,7 @@ export default {
   allowedFileValidatorComplex:
     '请上传最大 {maxSize} 的 {allowedTypesArray} 或 {allowedTypesLastItem} 文件。',
   dragAndDropText: '将您的文件拖放到此处，或',
-  fileNameDescriptionLabel: '文件名: {fileName}',
+  fileNameDescriptionLabel: '文件名: ',
   generalValidatorMessage: '"{validatorMessage}", 例如 {listOfErroneousFiles}。',
   noFilesSelected: '未选择任何文件。',
   numberOfFiles: '{numberOfFiles}  个文件。',

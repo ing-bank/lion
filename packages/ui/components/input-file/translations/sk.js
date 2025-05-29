@@ -4,7 +4,7 @@ export default {
   allowedFileValidatorComplex:
     'Nahrajte súbor {allowedTypesArray} alebo {allowedTypesLastItem} s maximálnou veľkosťou {maxSize}.',
   dragAndDropText: 'Súbory presuňte sem alebo',
-  fileNameDescriptionLabel: 'Názov súboru: {fileName}',
+  fileNameDescriptionLabel: 'Názov súboru: ',
   generalValidatorMessage: '"{validatorMessage}", pre {listOfErroneousFiles}.',
   noFilesSelected: 'Neboli vybrané žiadne súbory.',
   numberOfFiles: 'Počet súborov: {numberOfFiles}.',

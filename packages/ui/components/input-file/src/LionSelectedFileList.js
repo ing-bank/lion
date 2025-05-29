@@ -212,7 +212,6 @@ export class LionSelectedFileList extends LocalizeMixin(ScopedElementsMixin(LitE
 
         .sr-only {
           position: absolute;
-          top: 0;
           width: 1px;
           height: 1px;
           overflow: hidden;

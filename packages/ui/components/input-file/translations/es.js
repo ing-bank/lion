@@ -4,7 +4,7 @@ export default {
   allowedFileValidatorComplex:
     'Cargue un archivo {allowedTypesArray} o {allowedTypesLastItem} de {maxSize} como máximo.',
   dragAndDropText: 'Arrastre y suelte los archivos aquí o',
-  fileNameDescriptionLabel: 'Nombre de archivo: {fileName}',
+  fileNameDescriptionLabel: 'Nombre de archivo: ',
   generalValidatorMessage: '"{validatorMessage}", para {listOfErroneousFiles}.',
   noFilesSelected: 'No se han seleccionado archivos.',
   numberOfFiles: '{numberOfFiles} archivos.',

@@ -52,11 +52,13 @@ describe('FormControlMixin', () => {
       const elElem = /** @type {FormControlMixinClass} */ (
         await fixture(html`
         <${tag}>
-          <label slot="label">Email address</label>
+          <label slot="label"><b>Email</b> address</label>
           ${inputSlot}
         </${tag}>`)
       );
       expect(elElem.label).to.equal('Email address', 'as an element');
+      // @ts-expect-error
+      expect(elElem._labelNode.innerHTML).to.equal('<b>Email</b> address', 'html as an element');
     });
 
     it('has a label that supports inner html', async () => {
@@ -68,6 +70,8 @@ describe('FormControlMixin', () => {
         </${tag}>`)
       );
       expect(el.label).to.equal('Email address');
+      // @ts-expect-error
+      expect(el._labelNode.innerHTML).to.equal('Email <span>address</span>');
     });
 
     it('only takes label of direct child', async () => {
@@ -139,11 +143,13 @@ describe('FormControlMixin', () => {
       const elElem = /** @type {FormControlMixinClass} */ (
         await fixture(html`
         <${tag}>
-          <div slot="help-text">We will not send you any spam</div>
+          <div slot="help-text">We will <b>not</b> send you any spam</div>
           ${inputSlot}
         </${tag}>`)
       );
       expect(elElem.helpText).to.equal('We will not send you any spam', 'as an element');
+      // @ts-expect-error
+      expect(elElem._helpTextNode.innerHTML).to.equal('We will <b>not</b> send you any spam');
     });
 
     it('can have a help-text that supports inner html', async () => {
@@ -155,6 +161,8 @@ describe('FormControlMixin', () => {
         </${tag}>`)
       );
       expect(el.helpText).to.equal('We will not send you any spam');
+      // @ts-expect-error
+      expect(el._helpTextNode.innerHTML).to.equal('We will not send you any <span>spam</span>');
     });
 
     it('only takes help-text of direct child', async () => {

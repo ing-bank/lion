@@ -1,8 +1,8 @@
 import child_process from 'child_process'; // eslint-disable-line camelcase
+import { globby } from 'globby';
 import path from 'path';
 
 import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
-import { optimisedGlob } from '../utils/optimised-glob.js';
 import { toPosixPath } from '../utils/to-posix-path.js';
 import { fsAdapter } from '../utils/fs-adapter.js';
 import { memoize } from '../utils/memoize.js';
@@ -83,7 +83,7 @@ const getPathsFromGlobList = memoize(
     const results = [];
     for (const pathOrGlob of list) {
       if (pathOrGlob.includes('*')) {
-        const globResults = await optimisedGlob(pathOrGlob, {
+        const globResults = await globby(pathOrGlob, {
           cwd: rootPath,
           absolute: false,
           onlyFiles: false,
@@ -547,13 +547,13 @@ export class InputDataService {
       absolute: true,
       cwd: startPath,
     };
-    let filteredGlobRes = await optimisedGlob(combinedGlobs, globbyCfg);
+    let filteredGlobRes = await globby(combinedGlobs, globbyCfg);
 
     // Unfortunatly, globby does not correctly remove the negated globs,
     // so we have to do it manually
     const negatedGlobs = combinedGlobs.filter(p => p.startsWith('!'));
     if (negatedGlobs.length) {
-      const subtract = await optimisedGlob(
+      const subtract = await globby(
         negatedGlobs.map(p => p.slice(1)),
         globbyCfg,
       );
@@ -563,7 +563,7 @@ export class InputDataService {
 
     // Make sure we don't delete to much by giving customConfig.allowlist priority
     if (customConfig.allowlist?.length) {
-      const customResults = await optimisedGlob(customConfig.allowlist, globbyCfg);
+      const customResults = await globby(customConfig.allowlist, globbyCfg);
       filteredGlobRes = Array.from(new Set([...filteredGlobRes, ...customResults]));
     }
 
@@ -649,7 +649,7 @@ export class InputDataService {
       const valueToUseForGlob = stripDotSlashFromLocalPath(resolvedVal).replace('*', '**/*');
 
       // Generate all possible entries via glob, first strip './'
-      const internalExportMapPathsForKeyRaw = await optimisedGlob(valueToUseForGlob, {
+      const internalExportMapPathsForKeyRaw = await globby(valueToUseForGlob, {
         cwd: packageRootPath,
         onlyFiles: true,
       });

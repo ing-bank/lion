@@ -5,7 +5,7 @@ export default {
   allowedFileValidatorComplex:
     'Veuillez télécharger un fichier {allowedTypesArray} ou {allowedTypesLastItem} avec une taille maximale de {maxSize}.',
   dragAndDropText: 'Glissez et déposez vos fichiers ici ou',
-  fileNameDescriptionLabel: 'Nom de fichier: {fileName}',
+  fileNameDescriptionLabel: 'Nom de fichier: ',
   generalValidatorMessage: '"{validatorMessage}", pour {listOfErroneousFiles}.',
   noFilesSelected: 'Aucun fichier sélectionné.',
   numberOfFiles: '{numberOfFiles} fichiers.',

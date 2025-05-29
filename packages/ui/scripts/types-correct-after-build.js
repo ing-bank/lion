@@ -11,9 +11,8 @@
  */
 
 import fs from 'fs';
-// @ts-expect-error
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { optimisedGlob as globby } from 'providence-analytics/utils.js';
+import { globby } from 'globby';
 import { fileURLToPath } from 'url';
 
 const packageRoot = fileURLToPath(new URL('../', import.meta.url));

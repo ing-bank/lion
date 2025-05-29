@@ -1,5 +1,42 @@
 # @lion/ui
 
+## 0.11.5
+
+### Patch Changes
+
+- a0d334d: Added initial Turkish (tr.js / tr-TR.js) translation files for the following components:
+
+  - input-datepicker
+  - calendar
+  - form-core
+  - overlays
+  - pagination
+  - validate-messages
+
+- cbe8f86: [input-file] set buttonLabel initially
+- f9f5519: LionInputFile: Customize the text content of the selected files for screen reader if uploadOnSelect is enabled
+- cf4a8fd: [input-stepper] align value with step value
+- 07b089e: [validate-mixin] determine if a required validator or result validator has been registered based on characteristics
+
+## 0.11.4
+
+### Patch Changes
+
+- 3c77296: [form-core] make sure that slots with property fallbacks ignore initialization updates (not defined on firstUpdated). See https://stackblitz.com/edit/vitejs-vite-encdg2xd?file=lion-demo.js
+
+## 0.11.3
+
+### Patch Changes
+
+- 1769e29: [combobox] do not submit form if overlay of combobox is opened and ENTER is hit
+
+## 0.11.2
+
+### Patch Changes
+
+- a181a03: [localize] Fix bug that accepted 3 digit year
+- 163af2e: prepared documentation for cross-compatibility rocket and astro
+
 ## 0.11.1
 
 ### Patch Changes

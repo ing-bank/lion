@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.3
+
+### Patch Changes
+
+- 7eb8588: support md files with frontmatter
+
 ## 0.5.2
 
 ### Patch Changes

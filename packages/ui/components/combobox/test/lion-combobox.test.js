@@ -1,4 +1,4 @@
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { defineCE, expect, fixture, html, unsafeStatic, waitUntil } from '@open-wc/testing';
 import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { sendKeys } from '@web/test-runner-commands';
 import { LionCombobox } from '@lion/ui/combobox.js';
@@ -48,6 +48,80 @@ async function fruitFixture({ autocomplete, matchMode } = {}) {
 }
 
 describe('lion-combobox', () => {
+  describe('Rendering on API change', () => {
+    it('renders when options changed', async () => {
+      const entries = [
+        {
+          id: '1',
+          label: 'Apple',
+        },
+        {
+          id: '2',
+          label: 'Artichoke',
+        },
+        {
+          id: '3',
+          label: 'Asparagus',
+        },
+        {
+          id: '4',
+          label: 'Banana',
+        },
+        {
+          id: '5',
+          label: 'Pineapple',
+        },
+      ];
+
+      class Wrapper extends LitElement {
+        static properties = {
+          ...super.properties,
+          entries: { type: Array },
+        };
+
+        constructor() {
+          super();
+          this.entries = entries;
+        }
+
+        render() {
+          return html`<lion-combobox name="foo">
+            ${this.entries.map(
+              entry => html`<lion-option .choiceValue="${entry.id}">${entry.label}</lion-option>`,
+            )}
+          </lion-combobox>`;
+        }
+      }
+
+      const tagString = defineCE(Wrapper);
+      const tag = unsafeStatic(tagString);
+      const wrapperElement = /** @type {Wrapper} */ (await fixture(html`<${tag}></${tag}>`));
+      await waitUntil(
+        () =>
+          wrapperElement?.shadowRoot?.querySelector('lion-options')?.querySelectorAll('lion-option')
+            .length === entries.length,
+      );
+
+      wrapperElement.entries = [
+        {
+          id: '4',
+          label: 'Banana',
+        },
+      ];
+
+      await waitUntil(
+        () =>
+          wrapperElement?.shadowRoot?.querySelector('lion-options')?.querySelectorAll('lion-option')
+            .length === wrapperElement.entries.length,
+      );
+
+      const optionElements = wrapperElement.shadowRoot?.querySelectorAll('lion-option');
+      expect(optionElements?.length).to.equal(wrapperElement.entries.length);
+      const optionElement = optionElements?.item(0);
+      expect(optionElement?.textContent).to.equal('Banana');
+    });
+  });
+
   describe('Options visibility', () => {
     it('hides options when text in input node is cleared after typing something by default', async () => {
       const el = /** @type {LionCombobox} */ (
@@ -910,6 +984,57 @@ describe('lion-combobox', () => {
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
       expect(el.modelValue).to.eql(['Art']);
+    });
+
+    it('submits form on [Enter] when listbox is closed', async () => {
+      const submitSpy = sinon.spy(e => e.preventDefault());
+      const el = /** @type {HTMLFormElement}  */ (
+        await fixture(html`
+          <form @submit=${submitSpy}>
+            <lion-combobox name="foo">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+            <button type="submit">submit</button>
+          </form>
+        `)
+      );
+      const combobox = /** @type {LionCombobox} */ (el.querySelector('[name="foo"]'));
+      const { _inputNode } = getComboboxMembers(combobox);
+      await combobox.updateComplete;
+      _inputNode.focus();
+      await sendKeys({
+        press: 'Enter',
+      });
+      expect(submitSpy.callCount).to.equal(1);
+    });
+
+    it('does not submit form on [Enter] when listbox is opened', async () => {
+      const submitSpy = sinon.spy(e => e.preventDefault());
+      const el = /** @type {HTMLFormElement}  */ (
+        await fixture(html`
+          <form @submit=${submitSpy}>
+            <lion-combobox name="foo">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+            <button type="submit">submit</button>
+          </form>
+        `)
+      );
+      const combobox = /** @type {LionCombobox} */ (el.querySelector('[name="foo"]'));
+      const { _inputNode } = getComboboxMembers(combobox);
+      combobox.opened = true;
+      await combobox.updateComplete;
+      _inputNode.focus();
+      await sendKeys({
+        press: 'Enter',
+      });
+      expect(submitSpy.callCount).to.equal(0);
     });
   });
 

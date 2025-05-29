@@ -88,6 +88,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
             case 'sk-SK':
             case 'sk':
               return import('@lion/ui/calendar-translations/sk.js');
+            case 'tr-TR':
+            case 'tr':
+              return import('@lion/ui/calendar-translations/tr.js');
             case 'uk-UA':
             case 'uk':
               return import('@lion/ui/calendar-translations/uk.js');

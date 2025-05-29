@@ -62,6 +62,10 @@ export const localizeNamespaceLoader = /** @param {string} locale */ locale => {
       return import('@lion/ui/form-core-translations/sk-SK.js');
     case 'sk':
       return import('@lion/ui/form-core-translations/sk.js');
+    case 'tr-TR':
+      return import('@lion/ui/form-core-translations/tr-TR.js');
+    case 'tr':
+      return import('@lion/ui/form-core-translations/tr.js');
     case 'uk-UA':
       return import('@lion/ui/form-core-translations/uk-UA.js');
     case 'uk':

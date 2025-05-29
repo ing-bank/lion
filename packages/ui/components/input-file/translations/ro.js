@@ -4,7 +4,7 @@ export default {
   allowedFileValidatorComplex:
     'Încărcaţi un fişier {allowedTypesArray} sau {allowedTypesLastItem} de max. {maxSize}.',
   dragAndDropText: 'Glisaţi şi fixaţi fişierele aici sau',
-  fileNameDescriptionLabel: 'Nume fişier: {fileName}',
+  fileNameDescriptionLabel: 'Nume fişier: ',
   generalValidatorMessage: '"{validatorMessage}", pentru {listOfErroneousFiles}.',
   noFilesSelected: 'Niciun fișier selectat.',
   numberOfFiles: '{numberOfFiles} fișiere.',

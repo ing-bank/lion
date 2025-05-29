@@ -293,11 +293,11 @@ const FormControlMixinImplementation = superclass =>
         );
       }
 
-      if (changedProperties.has('label') && this._labelNode) {
+      if (changedProperties.has('label') && this.__label && this._labelNode) {
         this._labelNode.textContent = this.label;
       }
 
-      if (changedProperties.has('helpText') && this._helpTextNode) {
+      if (changedProperties.has('helpText') && this.__helpText && this._helpTextNode) {
         this._helpTextNode.textContent = this.helpText;
       }
 

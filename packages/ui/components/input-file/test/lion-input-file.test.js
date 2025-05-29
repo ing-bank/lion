@@ -1,6 +1,8 @@
 import '@lion/ui/define/lion-input-file.js';
 import { Required } from '@lion/ui/form-core.js';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 import { expect, fixture as _fixture, html, oneEvent, elementUpdated } from '@open-wc/testing';
 import sinon from 'sinon';
 
@@ -59,6 +61,10 @@ const file4 = /** @type {InputFile} */ (
 );
 
 describe('lion-input-file', () => {
+  const localizeManager = getLocalizeManager();
+
+  afterEach(localizeTearDown);
+
   it('has a type of "file"', async () => {
     const el = await fixture(html`<lion-input-file></lion-input-file>`);
     // @ts-expect-error [allow-protected-in-tests]
@@ -149,6 +155,43 @@ describe('lion-input-file', () => {
     expect(el._selectedFilesMetaData.length).to.equal(1);
     // @ts-expect-error [allow-protected-in-test]
     expect(el._selectedFilesMetaData[0].systemFile.name).to.equal('bar.txt');
+  });
+
+  describe('structure', async () => {
+    it('can has a button label by default', async () => {
+      const el = await fixture(html`<lion-input-file></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Select file');
+    });
+
+    it('can has a button label by default when multiple', async () => {
+      const el = await fixture(html`<lion-input-file multiple></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Select files');
+    });
+
+    it('will update the button label on locale change', async () => {
+      const el = await fixture(html`<lion-input-file></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Select file');
+
+      localizeManager.locale = 'nl-NL';
+      await localizeManager.loadingComplete;
+      await el.updateComplete;
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Selecteer bestand');
+    });
+
+    it('can overwrite the button label', async () => {
+      const el = await fixture(html`<lion-input-file .buttonLabel="${'Foo'}"></lion-input-file>`);
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Foo');
+
+      el.buttonLabel = 'Bar';
+      await el.updateComplete;
+      // @ts-expect-error [allow-protected-in-test]
+      expect(el._buttonNode.textContent).to.equal('Bar');
+    });
   });
 
   describe('invalid file types', async () => {
@@ -1197,7 +1240,29 @@ describe('lion-input-file', () => {
         );
       });
 
-      it('after contains upload name of file when SUCCESS', async () => {
+      it('after contains upload name of file when uploadOnSelect is true and status is SUCCESS', async () => {
+        const uploadResponse = [
+          {
+            name: 'file1.txt',
+            status: 'SUCCESS',
+            errorMessage: '',
+            downloadUrl: '/downloadFile',
+          },
+        ];
+        const el = await fixture(html`
+          <lion-input-file label="Select" upload-on-select></lion-input-file>
+        `);
+
+        expect(el.querySelector('[slot="after"]')?.textContent).to.equal('No files uploaded.');
+        // @ts-expect-error
+        el.uploadResponse = uploadResponse;
+        await el.updateComplete;
+        expect(el.querySelector('[slot="after"]')?.textContent).to.equal(
+          'Uploaded file: file1.txt',
+        );
+      });
+
+      it('after contains upload name of file when uploadOnSelect is false and status is SUCCESS', async () => {
         const uploadResponse = [
           {
             name: 'file1.txt',
@@ -1212,7 +1277,9 @@ describe('lion-input-file', () => {
         // @ts-expect-error
         el.uploadResponse = uploadResponse;
         await el.updateComplete;
-        expect(el.querySelector('[slot="after"]')?.textContent).to.equal('file1.txt');
+        expect(el.querySelector('[slot="after"]')?.textContent).to.equal(
+          'Selected file: file1.txt',
+        );
       });
 
       it('after contains upload validator message of file when FAIL', async () => {
@@ -1233,7 +1300,34 @@ describe('lion-input-file', () => {
         expect(el.querySelector('[slot="after"]')?.textContent).to.equal('something went wrong');
       });
 
-      it('after contains upload status of files when multiple files have been uploaded', async () => {
+      it('after contains upload status of files when uploadOnSelect is true and multiple files have been selected', async () => {
+        const uploadResponse = [
+          {
+            name: 'file1.txt',
+            status: 'SUCCESS',
+            errorMessage: '',
+            downloadUrl: '/downloadFile',
+          },
+          {
+            name: 'file2.txt',
+            status: 'FAIL',
+            errorMessage: 'something went wrong',
+            downloadUrl: '/downloadFile',
+          },
+        ];
+        const el = await fixture(html`
+          <lion-input-file label="Select" multiple upload-on-select></lion-input-file>
+        `);
+        // @ts-expect-error
+        el.uploadResponse = uploadResponse;
+
+        await el.updateComplete;
+        expect(el.querySelector('[slot="after"]')?.textContent?.trim()).to.equal(
+          'Uploaded files: 2 files. "something went wrong", for file2.txt.',
+        );
+      });
+
+      it('after contains upload status of files when uploadOnSelect is false and multiple files have been selected', async () => {
         const uploadResponse = [
           {
             name: 'file1.txt',
@@ -1256,7 +1350,7 @@ describe('lion-input-file', () => {
 
         await el.updateComplete;
         expect(el.querySelector('[slot="after"]')?.textContent?.trim()).to.equal(
-          '2 files. "something went wrong", for file2.txt.',
+          'Selected files: 2 files. "something went wrong", for file2.txt.',
         );
       });
     });
