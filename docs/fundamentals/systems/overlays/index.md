@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Systems
 ---
 
-# Systems >> Overlays ||40
+# Overlays
 
 -> go to Overview

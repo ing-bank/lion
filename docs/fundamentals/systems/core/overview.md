@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Core
 ---
 
-# Systems >> Core >> Overview ||10
+# Overview
 
 The core package is mostly for in-depth usage.
 It handles the version of `lit-element` and `lit-html`.

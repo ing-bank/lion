@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Tools
 ---
 
-# Tools >> Singleton Manager ||20
+# Singleton Manager
 
 -> go to Overview
