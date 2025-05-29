@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Systems >> Localize >> Format Numbers ||30
+# Format Numbers
 
 ## Features
 
