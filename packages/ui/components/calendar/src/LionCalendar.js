@@ -542,6 +542,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
     return html`
       <button
+        type="button"
         class="calendar__previous-button"
         aria-label=${previousButtonTitle}
         title=${previousButtonTitle}
@@ -578,6 +579,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
     return html`
       <button
+        type="button"
         class="calendar__next-button"
         aria-label=${nextButtonTitle}
         title=${nextButtonTitle}

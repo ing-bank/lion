@@ -724,7 +724,7 @@ export function runFormatMixinSuite(customConfig) {
             const valInitial = generateValueBasedOnType();
             const el = /** @type {FormatClass} */ (
               await fixture(
-                html`<${tag} .modelValue="${valInitial}"  .preprocessor=${spy}><input slot="input"></${tag}>`,
+                html`<${tag} .modelValue="${valInitial}" .preprocessor=${spy}><input slot="input"></${tag}>`,
               )
             );
             const viewValInitial = el.value;

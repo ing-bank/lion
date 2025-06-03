@@ -195,7 +195,7 @@ export class SbActionLogger extends LitElement {
         <div class="header__info">
           <p class="header__title">${this.title}</p>
           <div class="header__counter">${this.__logCounter}</div>
-          <button class="header__clear" @click=${this.__clearLogs}>Clear</button>
+          <button type="button" class="header__clear" @click=${this.__clearLogs}>Clear</button>
         </div>
         <div class="header__log-cue">
           <div class="header__log-cue-overlay"></div>
