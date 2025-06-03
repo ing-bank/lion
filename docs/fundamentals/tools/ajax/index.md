@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Tools
 ---
 
-# Tools >> Ajax ||20
+# Ajax
 
 -> go to Overview

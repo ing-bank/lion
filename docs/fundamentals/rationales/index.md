@@ -8,4 +8,4 @@ eleventyNavigation:
   order: 50
 ---
 
-# Rationales ||50
+# Rationales
