@@ -193,8 +193,7 @@ export class LionInputTelDropdown extends LionInputTel {
   onLocaleUpdated() {
     super.onLocaleUpdated();
 
-    // @ts-expect-error relatively new platform api
-    this.__namesForLocale = new Intl.DisplayNames([this._langIso], {
+    this.__namesForLocale = new Intl.DisplayNames([this._localizeManager.locale], {
       type: 'region',
     });
     this.__createRegionMeta();
