@@ -1,0 +1,317 @@
+---
+import { getCollection } from "astro:content";
+import { SEO } from "astro-seo";
+
+import { UIPortalFooter } from "../components/ui-portal-footer.js";
+import { UIPortalMainNav } from "../components/ui-portal-main-nav.js";
+
+import '../styles/components.css';
+
+const site = Astro.site || Astro.url.origin;
+const canonicalURL = new URL(Astro.url.pathname, site).toString();
+const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
+const { title, layout = 'layout-general' } = Astro.props;
+
+async function buildCollectionTree(collectionName) {
+  const entries = await getCollection(collectionName);
+  const entriesSortedByLevel = entries
+    .map((entry) => {
+      const level = entry.id.split('/').length;
+      return { ...entry, level };
+    })
+    .sort((a, b) => a.level - b.level);
+  const navigationMap = { children: [] };
+
+  for (const entry of entriesSortedByLevel) {
+    if (entry.id === 'index' || entry.id.endsWith('/index')) {
+      // Skip index pages, as they are represented as folders
+      continue;
+    }
+
+    navigationMap[entry.id] = { entry, children: [] };
+    const parentUrl = entry.id.split('/').slice(0, -1).join('/');
+    if (navigationMap[parentUrl]) {
+      navigationMap[parentUrl].children.push(navigationMap[entry.id]);
+    } else {
+      navigationMap.children.push(navigationMap[entry.id]);
+    }
+
+  }
+
+  return navigationMap.children;
+}
+
+function convertCollectionTreeToNavigation(collectionTree, baseUrl = '/', isSortedAlphabetically = true) {
+  const navigation = [];
+  collectionTree.forEach((collectionNode) => {
+    const { entry, children } = collectionNode;
+    const navigationNode = {
+      name: entry.data?.eleventyNavigation?.title || entry.id,
+      url: [baseUrl, entry.id].join('/'),
+      priority: entry.data?.eleventyNavigation?.order || 0,
+    };
+
+    if (children.length > 0) {
+      navigationNode.children = convertCollectionTreeToNavigation(children, baseUrl, false);
+    }
+
+    navigation.push(navigationNode);
+  });
+
+  if (isSortedAlphabetically) {
+    navigation.sort((a, b) => a.name.localeCompare(b.name));
+  } else {
+    // Sort child items by priority
+    navigation.sort((a, b) => a.priority - b.priority);
+  }
+
+  // if page has a child, we sent to the first child
+  // this preserves the logic of the previous implementation
+  // see @rocket/navigation@0.2.1 /src/RocketNavigation.js
+  navigation.forEach((navigationNode) => {
+    if (navigationNode.children?.length > 0) {
+      navigationNode.redirect = navigationNode.children[0].redirect || navigationNode.children[0].url; // Set the URL to the first child's URL
+    }
+  });
+
+  // we need to prune the children that are not active
+  navigation.forEach((navigationNode) => {
+    if (
+        navigationNode.children?.length > 0
+        && !Astro.url.pathname.startsWith(navigationNode.url)
+    ) {
+      delete navigationNode.children;
+    }
+  });
+
+  return navigation;
+}
+
+async function getNavigation(collectionName, baseUrl = '/', isSortedAlphabetically = true) {
+  const collectionTree = await buildCollectionTree(collectionName);
+
+  return convertCollectionTreeToNavigation(collectionTree, baseUrl, isSortedAlphabetically);
+}
+
+const components = await getNavigation("lionComponents", '/components');
+const fundamentals = await getNavigation("lionFundamentals", '/fundamentals', false);
+const guides = await getNavigation("lionGuides", '/guides', false);
+const blogEntries = await getNavigation("lionBlog", '/blog', false);
+
+/**
+ * @typedef {{name: string; url: string; active?:boolean; hasActiveChild?: boolean; iconId?: string; children?: NavItemData[]}} NavItem
+ */
+
+ /** @type {NavItem[]} */
+     // todo:pavlik auto-generate from the docs
+const navData = [
+  { name: "home", url: "/", iconId: 'lion:portal:home' },
+       { name: "fundamentals", url: "/fundamentals", iconId: 'lion:portal:sdk',
+         children: fundamentals,
+       },
+       { name: "guides", url: "/guides", iconId: 'lion:portal:extension',
+         children: guides,
+       },
+  {
+    name: "components",
+    url: "/components",
+    iconId: 'lion:portal:deployedCode',
+    children: components,
+  },
+     {
+       name: "blog",
+       url: "/blog",
+       iconId: 'lion:portal:deployedCode',
+       children: blogEntries,
+     },
+];
+
+
+
+/** @type WeakMap<{NavItem},{NavItem}> */
+const itemParents = new WeakMap();
+
+function _setParentsActive(navItem) {
+  const parentItem = itemParents.get(navItem);
+  if (parentItem) {
+    parentItem.hasActiveChild = true;
+    _setParentsActive(parentItem);
+  }
+}
+
+function setParents(navData, parentItem = null) {
+  for (const navItem of navData) {
+    if (parentItem) {
+      itemParents.set(navItem, parentItem);
+    }
+    if (navItem.children?.length) {
+      setParents(navItem.children, navItem);
+    }
+  }
+}
+
+let activeItem;
+function setActive(navData, currentUrl) {
+  // for home page we need to check with the exact match
+  const isActive = (navItem) => navItem.url === '/'
+      ? currentUrl === navItem.url
+      : currentUrl.startsWith(navItem.url);
+
+  for (const navItem of navData) {
+    if (isActive(navItem)) {
+      navItem.active = true;
+      activeItem = navItem;
+    }
+    if (navItem.children?.length) {
+      setActive(navItem.children, currentUrl);
+    }
+  }
+}
+
+setParents(navData);
+setActive(navData, Astro.url.pathname);
+_setParentsActive(activeItem);
+
+const footerData = [
+  {
+    name: "discover",
+    children: [
+      {
+        name: "blog",
+        url: "/blog",
+      },
+      {
+        name: "help and feedback",
+        url: "https://github.com/ing-bank/lion/issues",
+      },
+    ],
+  },
+  {
+    name: "follow",
+    children: [
+      {
+        name: "github",
+        url: "https://github.com/ing-bank/lion",
+      },
+      {
+        name: "slack",
+        url: "/about/slack/",
+      },
+    ],
+  },
+  {
+    name: "support",
+    children: [
+      {
+        name: "contribute",
+        url: "https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md",
+      },
+    ],
+  },
+];
+
+console.log('layout', layout);
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <link href="/styles/open-props@1.6.11.min.css" rel="stylesheet" type="text/css">
+    <link href="/styles/global.css" rel="stylesheet" type="text/css">
+    <link href="/styles/lion/variables.css" rel="stylesheet" type="text/css">
+    <link href="/styles/lion/markdown.css" rel="stylesheet" type="text/css">
+    <link href="/styles/lion/layout.css" rel="stylesheet" type="text/css">
+    <link href="/styles/lion/style.css" rel="stylesheet" type="text/css">
+
+    <!-- <link
+      href="http://fonts.googleapis.com/css?family=Roboto"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+        font-size: 16px;
+      }
+    </style> -->
+
+    <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
+    <script src="@webcomponents/scoped-custom-element-registry"></script>
+
+    <SEO
+      title={title}
+      description="High quality UI web components"
+      canonical={canonicalURL}
+      openGraph={{
+        basic: {
+          url: canonicalURL,
+          type: "website",
+          title: "Lion",
+          image: resolvedImageWithDomain,
+        },
+        image: {
+          alt: "Lion Homepage screen",
+        },
+      }}
+    />
+
+  </head>
+  <body class="ui-portal-grid" data-layout={layout}>
+    <div class="ui-portal-grid__nav">
+      <UIPortalMainNav client:only nav-data={JSON.stringify(navData)} />
+    </div>
+    <main class="ui-portal-grid__main markdown-body">
+      <slot />
+    </main>
+    <div class="ui-portal-grid__footer">
+      <UIPortalFooter footer-data={JSON.stringify(footerData)} />
+    </div>
+    <style is:global>
+      /* Improve Page speed */
+      /* https://css-tricks.com/almanac/properties/c/content-visibility/ */
+      img {
+        content-visibility: auto;
+      }
+
+      .ui-portal-grid {
+        display: grid;
+        grid-template-columns: min-content 1fr;
+        grid-template-rows: 1fr min-content;
+        grid-template-areas:
+          "nav main"
+          "nav footer";
+      }
+
+      .ui-portal-grid__nav {
+        grid-area: nav;
+      }
+
+      .ui-portal-grid__main {
+        grid-area: main;
+      }
+
+      .ui-portal-grid__footer {
+        grid-area: footer;
+      }
+
+      .ui-portal-collection {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 300px));
+      }
+
+      .ui-portal-card {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+    </style>
+  </body>
+</html>

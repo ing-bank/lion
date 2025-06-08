@@ -20,19 +20,6 @@ import './assets/iconset-misc.js';
 import * as spaceSet from './assets/iconset-space.js';
 
 import '@lion/ui/define/lion-icon.js';
-
-icons.addIconResolver('lion', (iconset, name) => {
-  switch (iconset) {
-    case 'bugs':
-      return import('./assets/iconset-bugs.js').then(module => module[name]);
-    case 'space':
-      return import('./assets/iconset-space.js').then(module => module[name]);
-    case 'misc':
-      return import('./assets/iconset-misc.js').then(module => module[name]);
-    default:
-      throw new Error(`Unknown iconset ${iconset}`);
-  }
-});
 ```
 
 ## Icon sets

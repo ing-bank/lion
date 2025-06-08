@@ -1,0 +1,39 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import { getEntry } from "astro:content";
+
+const entry = await getEntry('lionIndex', 'index');
+
+const {
+  title,
+  slogan,
+  callToActionItems,
+  reasonHeader,
+  reasons,
+} = entry.data;
+---
+
+<MainLayout layout="layout-home">
+  <img class="page-logo" src="/logo.svg" alt="{title} Logo"/>
+
+  <h1 class="page-title">{title}</h1>
+
+  <p class="page-slogan">{slogan}</p>
+
+  <div class="call-to-action-list" role="list">
+    {callToActionItems.map((callToAction) => (
+      <a class="call-to-action" href={callToAction.href} role="listitem">{callToAction.text}</a>
+    ))}
+  </div>
+
+  <h2 class="reason-header">{reasonHeader}</h2>
+
+  <section class="reasons">
+    {reasons.map((reason) => (
+      <article>
+        <h3>{reason.header}</h3>
+        {reason.text}
+      </article>
+    ))}
+  </section>
+</MainLayout>

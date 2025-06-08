@@ -1,0 +1,27 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+
+export async function getStaticPaths() {
+    const entries = await getCollection("lionFundamentals");
+
+    return [
+        ...entries.map(entry => ({ params: { path: entry.id }})),
+        {params: { path: undefined }}
+    ]
+}
+
+const { path } = Astro.params;
+const entry = await getEntry("lionFundamentals", path);
+
+if (!entry) {
+    // Handle Error, for example:
+    throw new Error(`Could not find component by URL ${path}`);
+}
+const { Content, headings } = await render(entry);
+
+---
+
+<MainLayout>
+    <Content />
+</MainLayout>

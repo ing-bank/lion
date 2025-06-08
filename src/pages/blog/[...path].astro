@@ -1,0 +1,74 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+
+export async function getStaticPaths() {
+    const entries = await getCollection("lionBlog");
+
+    return [
+        ...entries.map(entry => ({ params: { path: entry.id }})),
+        {params: { path: undefined }}
+    ]
+}
+
+const { path } = Astro.params;
+const entry = await getEntry("lionBlog", path);
+
+if (!entry) {
+    // Handle Error, for example:
+    throw new Error(`Could not find component by URL ${path}`);
+}
+
+const { title, cover_image, tags = [] } = entry.data;
+const tagsArr = Array.isArray(tags) ? tags : tags.split(',').map(tag => tag.trim());
+const site  = Astro.locals;
+
+const { Content } = await render(entry);
+---
+
+<MainLayout>
+  <div id="content-wrapper">
+    <div class="content-area">
+      <rocket-navigation>
+        <ul>
+          <li class="current">
+            <h3>Headings</h3>
+            ... todo: inline navigation
+          </li>
+        </ul>
+        <div class="sidebar-tags">
+          <h3>Date</h3>
+          <div>{entry.date?.toDateString()}</div>
+        </div>
+        <div class="sidebar-tags">
+          <h3>Tags</h3>
+          <div class="tags">
+            {tagsArr.map(tag => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        </div>
+        <div class="sidebar-bottom">
+          <hr/>
+          <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+          {site.helpUrl && <a href={site.helpUrl}>Help and Feedback</a>}
+        </div>
+      </rocket-navigation>
+
+      <main class="markdown-body">
+        {title && <h1>{title}</h1>}
+
+        {cover_image && <img src={cover_image} alt="">}
+
+        <Content />
+
+        <div class="content-footer">
+          <p>
+            Caught a mistake or want to improve the blog?
+            <a href={`${site.gitSiteUrl}/edit/${site.gitBranch}/${entry.inputPath}`}>Edit this blog post on GitHub!</a>
+          </p>
+        </div>
+      </main>
+    </div>
+  </div>
+</MainLayout>

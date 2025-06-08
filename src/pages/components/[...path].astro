@@ -1,0 +1,50 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+
+export async function getStaticPaths() {
+    const components = await getCollection("lionComponents");
+
+    return [
+        ...components.map(lionComponent => ({ params: { path: lionComponent.id }})),
+        {params: { path: undefined }}
+    ]
+}
+
+const { path } = Astro.params;
+const components = await getCollection("lionComponents");
+const component = await getEntry("lionComponents", path);
+const inPageNavData = components.map(component => {
+    const [componentName, sectionName] = component.id.split('/');
+
+    return {
+        name: sectionName,
+        url: `/component.id`,
+    }
+});
+if (!component) {
+    // Handle Error, for example:
+    throw new Error(`Could not find component by URL ${path}`);
+}
+const { Content, headings } = await render(component);
+// console.log(component);
+// const inPageNavData = [
+//     {
+//         name: component.name,
+//         url: getAnchorTitle(component.name),
+//     },
+//     {
+//         name: "Examples",
+//         url: "#examples",
+//         children: demosForCurrentComponent.map((entry) => ({
+//             name: entry.data.title,
+//             url: `#${getAnchorTitle(entry.data.title)}`,
+//         })),
+//     },
+// ];
+
+---
+
+<MainLayout>
+    <Content />
+</MainLayout>

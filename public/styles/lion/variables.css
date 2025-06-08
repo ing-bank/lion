@@ -1,0 +1,58 @@
+html {
+  --primary-color: #e63946;
+  --primary-color-lighter: #e25761;
+  --primary-color-darker: #a22831;
+  --primary-color-accent: #cee5f6;
+  --primary-text-color: #2c3e50;
+  --primary-lines-color: #ccc;
+  --primary-text-inverse-color: #eee;
+
+  /* Contrast colors */
+  --contrast-color-light: #fff;
+  --contrast-color-dark: #1d3557;
+
+  /* background-colors */
+  --page-background: white;
+  --footer-background: rgba(0, 0, 0, 0.1);
+
+  /* typography */
+  --text-color: black;
+  --primary-font-family: 'Open Sans', sans-serif;
+  --secondary-font-family: 'Montserrat', sans-serif;
+  --monospace-font-family:
+    'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
+
+  /* controls */
+  --switch-unselected-color: #808080;
+  --switch-selected-color: #42b983;
+}
+
+html.dark {
+  --primary-color: #e63946;
+  --primary-color-lighter: #e25761;
+  --primary-color-darker: #a22831;
+  --primary-color-accent: #cee5f6;
+  --primary-text-color: #eee;
+  --primary-text-inverse-color: #2c3e50;
+
+  /* Contrast colors */
+  --contrast-color-light: #fff;
+  --contrast-color-dark: #1d3557;
+
+  /* background-colors */
+  --page-background: #333;
+  --footer-background: #4f4f4f;
+
+  /* typography */
+  --text-color: white;
+
+  /* controls */
+  --switch-unselected-color: #808080;
+  --switch-selected-color: #42b983;
+
+  /* markdown */
+  --markdown-octicon-link: white;
+  --markdown-syntax-background-color: #a0a0a0;
+  --markdown-link-color: #fb7881;
+  --markdown-blockquote-color: #c9e3ff;
+}

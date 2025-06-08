@@ -1,3 +1,13 @@
+# build output
+dist/
+# generated types
+.astro/
+
+.astro
+
+# generated __mdjs-stories.js files
+public/docs
+
 ## editors
 /.idea
 ## disable this line one commit before changing contents that should be shared
@@ -51,9 +61,6 @@ docs/_merged_includes/
 docs/**/api-table.md
 
 debug.log
-
-_site
-_site-dev
 
 ## generated test fiels
 __output

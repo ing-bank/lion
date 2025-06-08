@@ -3,14 +3,19 @@
   "name": "@lion/root",
   "license": "MIT",
   "scripts": {
-    "build": "rocket build",
+    "build": "export PROD=true && npm run build-docs && npx astro build && node -e 'require(\"./src/utils/post-build-dist/post-build-dist.js\").postBuildDist()'",
+    "build-docs": "npm run clean && node -e 'require(\"./src/utils/copy-docs\").copyDocs()' && node -e 'require(\"./src/utils/copy-docs\").processImports()'",
+    "build-docs:watch": "node -e 'require(\"./src/utils/copy-docs\").watch()'",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
+    "clean": "rm -rf ./public/docs && rm -rf ./src/content/docs && rm -rf ./dist",
+    "clean:full": "npm run clean && rm -rf ./node_modules",
     "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present && node ./scripts/create-api-tables.mjs",
     "debug": "web-test-runner --watch --config web-test-runner-chrome.config.mjs",
     "debug:firefox": "web-test-runner --watch --config web-test-runner-firefox.config.mjs",
     "debug:no-scoped-registries-polyfill": "npm run debug -- --no-scoped-registries-polyfill",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
+    "dev": "astro dev",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
     "format:prettier": "prettier \"**/*.{js,md}\" \"packages/*/package.json\" \"package.json\" --write",
@@ -22,10 +27,13 @@
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
+    "preview": "astro preview",
     "release": "changeset publish",
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
-    "start": "rocket start",
+    "rm-all-node_modules": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules",
+    "start": "astro dev",
+    "start:prod": "npm run preview",
     "test": "run-p test:browser test:node",
     "test:browser": "web-test-runner --coverage",
     "test:browserstack": "web-test-runner --config ./web-test-runner-browserstack.config.js",
@@ -33,12 +41,28 @@
     "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
     "types": "npm run types --workspaces --if-present",
-    "types-check-only": "npm run types-check-only --workspaces --if-present"
+    "types-check-only": "npm run types-check-only --workspaces --if-present",
+    "watch": "npm-watch"
   },
   "workspaces": [
     "packages/*",
     "packages-node/*"
   ],
+  "dependencies": {
+    "@astrojs/lit": "^4.3.0",
+    "@astrojs/mdx": "^4.0.8",
+    "@mdjs/core": "^0.21.1",
+    "@mdjs/mdjs-preview": "^0.6.0",
+    "@mdjs/mdjs-story": "^0.4.0",
+    "@open-wc/scoped-elements": "^3.0.5",
+    "@webcomponents/scoped-custom-element-registry": "^0.0.10",
+    "@webcomponents/template-shadowroot": "^0.2.1",
+    "astro": "^5.3.0",
+    "astro-seo": "^0.7.5",
+    "lit": "^3.2.1",
+    "rocket-preset-extend-lion-docs": "^0.4.0",
+    "unist-util-visit": "^5.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.25.8",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
@@ -168,5 +192,15 @@
     "singleQuote": true,
     "arrowParens": "avoid",
     "trailingComma": "all"
+  },
+  "watch": {
+    "build-docs:watch": {
+      "patterns": [
+        "docs"
+      ],
+      "extensions": [
+        "*"
+      ]
+    }
   }
 }

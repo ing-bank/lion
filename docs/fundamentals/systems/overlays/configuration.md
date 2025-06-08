@@ -15,8 +15,9 @@ eleventyNavigation:
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import './assets/demo-el-using-overlaymixin.mjs';
-import './assets/applyDemoOverlayStyles.mjs';
+import './assets/demo-el-using-overlaymixin.js';
+import './assets/applyDemoOverlayStyles.js';
+import { withDropdownConfig, withTooltipConfig } from '@lion/ui/overlays.js';
 import { withDropdownConfig, withModalDialogConfig, withTooltipConfig } from '@lion/ui/overlays.js';
 ```
 
