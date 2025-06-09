@@ -1,0 +1,60 @@
+.ui-portal-grid__main {
+  padding: 50px;
+}
+
+h1 {
+  color: var(--Primary-Gray600, #333);
+  font-family: 'ING Me';
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 56px; /* 116.667% */
+
+  border-bottom: 1px solid var(--Primary-Gray200, #d9d9d9);
+  margin: 0 -230px 0 -50px;
+  padding: 0 230px 0 50px;
+}
+
+@media (max-width: 1200px) {
+  .ui-portal-grid__main {
+    padding: 30px;
+  }
+
+  h1 {
+    margin: 0 -30px;
+    padding: 0 30px;
+  }
+}
+
+@media (max-width: 899px) {
+  .ui-portal-grid__main {
+    padding: 20px;
+  }
+
+  h1 {
+    margin: 0 -20px;
+    padding: 0 20px;
+  }
+}
+
+h2 {
+  color: var(--Primary-Gray600, #333);
+
+  /* 36px/Bold */
+  font-family: 'ING Me';
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 48px; /* 133.333% */
+}
+
+h3 {
+  color: var(--Primary-Gray600, #333);
+
+  /* 19px/Bold */
+  font-family: 'ING Me';
+  font-size: 19px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 28px; /* 147.368% */
+}

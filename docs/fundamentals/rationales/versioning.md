@@ -10,7 +10,7 @@ eleventyNavigation:
   parent: Rationales
 ---
 
-# Rationales >> Versioning Lion ||20
+# Rationales: Versioning Lion
 
 Since Lion is a monorepository where each package is published separately under the `@lion` scope, we have packages that depend on other packages.
 

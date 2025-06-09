@@ -13,13 +13,13 @@ eleventyNavigation:
   parent: Systems >> Overlays >> Configuration
 ---
 
-# Systems >> Overlays >> Configuration >> Positioning ||40
+# Configuration: Positioning
 
 ```js script
 import { html, render, LitElement } from '@mdjs/mdjs-preview';
 import { ref, createRef } from 'lit/directives/ref.js';
-import './assets/demo-el-using-overlaymixin.mjs';
-import './assets/applyDemoOverlayStyles.mjs';
+import './assets/demo-el-using-overlaymixin.js';
+import './assets/applyDemoOverlayStyles.js';
 import './assets/demo-overlay-positioning.mjs';
 ```
 

@@ -64,8 +64,11 @@ export const ArrowMixinImplementation = superclass =>
 
           [data-popper-placement^='left'] .arrow {
             right: calc(
-              -1 * (var(--tooltip-arrow-height) +
-                    (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
+              -1 *
+                (
+                  var(--tooltip-arrow-height) +
+                    (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2
+                )
             );
           }
 
@@ -75,8 +78,11 @@ export const ArrowMixinImplementation = superclass =>
 
           [data-popper-placement^='right'] .arrow {
             left: calc(
-              -1 * (var(--tooltip-arrow-height) +
-                    (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2)
+              -1 *
+                (
+                  var(--tooltip-arrow-height) +
+                    (var(--tooltip-arrow-width) - var(--tooltip-arrow-height)) / 2
+                )
             );
           }
 

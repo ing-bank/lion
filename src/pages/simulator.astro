@@ -10,8 +10,10 @@
         padding: 8px;
       }
     </style>
-    <script type="module">
-      import { render } from '/node_modules/@mdjs/mdjs-story/index.js';
+
+    <script>
+      import { render } from '@mdjs/mdjs-story';
+      import '@webcomponents/scoped-custom-element-registry';
 
       function sanitize(input, type) {
         return `${document.location.origin}/${input.match(/[a-zA-Z0-9\/\-_]*/)[0]}.${type}`;
@@ -64,8 +66,8 @@
           document.documentElement.removeAttribute('edge-distance');
         }
 
-        const safeStoryUrl = sanitize(urlParts.get('story-file'), 'js');
-        const mod = await import(safeStoryUrl);
+        const [page, storyUrl] = urlParts.get('story-file').split('/');
+        const mod = await import(`./${page}/_demos/${storyUrl}.js`);
         render(mod[urlParts.get('story-key')]({ shadowRoot: document }), document.body);
       }
 
