@@ -4,6 +4,9 @@ published: false
 description: Lion introduces the new package @lion/ui which is a collection of all lion UI components.
 date: 2023-03-20
 tags: [javascript]
+eleventyNavigation:
+  key: Introducing Lion UI
+  title: Introducing Lion UI
 ---
 
 ### A new package

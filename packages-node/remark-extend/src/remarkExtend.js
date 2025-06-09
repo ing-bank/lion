@@ -1,6 +1,6 @@
 // unified works my modifying the original passed node
 /* eslint-disable no-param-reassign */
-const visit = require('unist-util-visit');
+const { visit } = require('unist-util-visit');
 const { select } = require('unist-util-select');
 const unified = require('unified');
 const markdown = require('remark-parse');

@@ -5,6 +5,9 @@ description: Extending a component library and its documentation for a speedy de
 date: 2020-12-01
 tags: javascript, documentation, demos
 cover_image: https://miro.medium.com/max/2000/1*NZ6tdtJHHJjxtPmIFxWpGw.jpeg
+eleventyNavigation:
+  key: Extending Lion Documentation
+  title: Extending Lion Documentation
 ---
 
 If you extend [Lion](https://lion.js.org/) components, you don't only want to reuse the components, but you probably want to reuse the documentation (Storybook demos) as well. Wouldn't it be nice to just take it all from lion, but replace it with your own design system extension, so you don't have the extra maintenance of essentially copying the docs from `Lion` for your own design system implementation?

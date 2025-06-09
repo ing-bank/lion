@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Ajax
 ---
 
-# Tools >> Ajax >> Overview ||10
+# Ajax: Overview
 
 `Ajax` is a small wrapper around `fetch` which:
 

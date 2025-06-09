@@ -5,6 +5,9 @@ description: Maintainer can now define their public api of a package itself.
 date: 2021-03-09
 tags: [javascript, exports]
 cover_image: /blog/images/controlling-exports-cover-image.jpg
+eleventyNavigation:
+  key: Controlling exports
+  title: Controlling exports
 ---
 
 When publishing npm packages it can often be hard to understand what users are actually using.

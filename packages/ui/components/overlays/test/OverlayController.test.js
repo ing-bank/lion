@@ -1040,7 +1040,7 @@ describe('OverlayController', () => {
         // Don't hide on inside shadowDom click
         /** @type {ShadowRoot} */
         // @ts-expect-error
-        (ctrl.contentNode.querySelector(tagString).shadowRoot).querySelector('button').click();
+        ctrl.contentNode.querySelector(tagString).shadowRoot.querySelector('button').click();
 
         await aTimeout(0);
         expect(ctrl.isShown).to.be.true;

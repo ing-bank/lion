@@ -1,3 +1,8 @@
+---
+title: Slack
+description: Fundamental white label web components for building your design system
+---
+
 # Slack
 
 You can also find us on the Lit & Friends Slack in the [#lion](https://lit-and-friends.slack.com/archives/CJGFWJN9J) channel.

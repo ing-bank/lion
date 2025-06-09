@@ -1,40 +1,96 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { LitElement, html, nothing, css } from 'lit';
+import { LitElement, html, css } from 'lit';
 
 const tagName = 'ui-portal-footer';
 
 export class UIPortalFooter extends LitElement {
-  static properties = {
-    footerData: { type: Array, attribute: 'footer-data' },
-  };
-
   static styles = [
     css`
-      footer > ul {
+      /** FOOTER ****************************************************************************************/
+      #main-footer {
+        margin-top: 50px;
+        border-top: 1px solid #eaeaea;
+        background-color: var(--footer-background, rgba(0, 0, 0, 0.1));
+        color: var(--text-color);
+        padding: 40px 50px;
+        flex-grow: 1;
         display: flex;
-        gap: 8em;
+        flex-flow: column;
+        justify-content: center;
+      }
+
+      #footer-menu .content-area {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      @media screen and (min-width: 1024px) {
+        #footer-menu .content-area {
+          flex-direction: row;
+          text-align: left;
+        }
+      }
+
+      #footer-menu ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      #footer-menu a {
+        text-decoration: none;
+        color: var(--primary-text-color);
+        padding: 5px 0;
+        display: block;
       }
     `,
   ];
 
-  constructor() {
-    super();
-    this.footerData = [];
-  }
-
   render() {
-    return html` <footer>${this._renderNavLevel({ children: this.footerData })}</footer> `;
-  }
-
-  _renderNavLevel({ children }) {
-    return html`<ul>
-      ${children.map(
-        item => html`<li>
-          <a href="${item.url}">${item.name}</a>
-          ${item.children?.length ? this._renderNavLevel({ children: item.children }) : nothing}
-        </li>`,
-      )}
-    </ul>`;
+    return html`
+      <footer id="main-footer">
+        <div id="footer-menu">
+          <div class="content-area">
+            <nav>
+              <h3>Discover</h3>
+              <ul>
+                <li>
+                  <a href="/blog">Blog</a>
+                </li>
+                <li>
+                  <a href="https://github.com/ing-bank/lion/issues" rel="noopener noreferrer"
+                    >Help and Feedback</a
+                  >
+                </li>
+              </ul>
+            </nav>
+            <nav>
+              <h3>Follow</h3>
+              <ul>
+                <li>
+                  <a href="https://github.com/ing-bank/lion" rel="noopener noreferrer">GitHub</a>
+                </li>
+                <li>
+                  <a href="/about/slack/">Slack</a>
+                </li>
+              </ul>
+            </nav>
+            <nav>
+              <h3>Support</h3>
+              <ul>
+                <li>
+                  <a
+                    href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md"
+                    rel="noopener noreferrer"
+                    >Contribute</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </footer>
+    `;
   }
 }
 

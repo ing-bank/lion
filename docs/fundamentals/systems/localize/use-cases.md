@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Systems >> Localize >> Use Cases ||50
+# Localize: Use Cases
 
 The localization system helps to manage localization data split into locales and automate its loading.
 The loading of data tries to be as unobtrusive as possible for a typical workflow while providing a flexible and controllable mechanism for non-trivial use cases.

@@ -6,7 +6,7 @@ dist/
 .astro
 
 # generated __mdjs-stories.js files
-public/docs
+_demos/*
 
 ## editors
 /.idea
@@ -54,6 +54,9 @@ local.log
 browserstack.err
 
 debug.log
+
+_site
+_site-dev
 
 ## generated test fiels
 __output

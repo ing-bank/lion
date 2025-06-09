@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Singleton Manager
 ---
 
-# Tools >> Singleton Manager >> Example Success ||30
+# Singleton Manager: Example Success
 
 In this SPA (Single Page Application) demo you will be able to reproduce the solution.
 
