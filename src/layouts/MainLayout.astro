@@ -10,10 +10,10 @@ import '../styles/components.css';
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
 const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
-const { title, layout = 'layout-general' } = Astro.props;
+const { title, layout = 'layout-general', bodyCssClass = 'markdown-body' } = Astro.props;
 
-async function buildCollectionTree(collectionName) {
-  const entries = await getCollection(collectionName);
+async function buildCollectionTree(collectionName, filter) {
+  const entries = await getCollection(collectionName, filter);
   const entriesSortedByLevel = entries
     .map((entry) => {
       const level = entry.id.split('/').length;
@@ -87,8 +87,8 @@ function convertCollectionTreeToNavigation(collectionTree, baseUrl = '/', isSort
   return navigation;
 }
 
-async function getNavigation(collectionName, baseUrl = '/', isSortedAlphabetically = true) {
-  const collectionTree = await buildCollectionTree(collectionName);
+async function getNavigation(collectionName, baseUrl = '/', isSortedAlphabetically = true, filter = () => true) {
+  const collectionTree = await buildCollectionTree(collectionName, filter);
 
   return convertCollectionTreeToNavigation(collectionTree, baseUrl, isSortedAlphabetically);
 }
@@ -96,7 +96,7 @@ async function getNavigation(collectionName, baseUrl = '/', isSortedAlphabetical
 const components = await getNavigation("lionComponents", '/components');
 const fundamentals = await getNavigation("lionFundamentals", '/fundamentals', false);
 const guides = await getNavigation("lionGuides", '/guides', false);
-const blogEntries = await getNavigation("lionBlog", '/blog', false);
+const blogEntries = await getNavigation("lionBlog", '/blog', false, entry => entry.data?.published);
 
 /**
  * @typedef {{name: string; url: string; active?:boolean; hasActiveChild?: boolean; iconId?: string; children?: NavItemData[]}} NavItem
@@ -209,8 +209,6 @@ const footerData = [
     ],
   },
 ];
-
-console.log('layout', layout);
 ---
 
 <!DOCTYPE html>
@@ -267,7 +265,7 @@ console.log('layout', layout);
     <div class="ui-portal-grid__nav">
       <UIPortalMainNav client:only nav-data={JSON.stringify(navData)} />
     </div>
-    <main class="ui-portal-grid__main markdown-body">
+    <main class={`ui-portal-grid__main ${bodyCssClass}`}>
       <slot />
     </main>
     <div class="ui-portal-grid__footer">

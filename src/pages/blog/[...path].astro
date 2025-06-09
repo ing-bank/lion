@@ -3,7 +3,7 @@ import { getCollection, getEntry, render } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 
 export async function getStaticPaths() {
-    const entries = await getCollection("lionBlog");
+    const entries = await getCollection("lionBlog", entry => entry.data?.published);
 
     return [
         ...entries.map(entry => ({ params: { path: entry.id }})),
@@ -19,26 +19,35 @@ if (!entry) {
     throw new Error(`Could not find component by URL ${path}`);
 }
 
-const { title, cover_image, tags = [] } = entry.data;
+const { title, cover_image, tags = [], createdAt } = entry.data;
 const tagsArr = Array.isArray(tags) ? tags : tags.split(',').map(tag => tag.trim());
 const site  = Astro.locals;
+const { headings = [] } = entry.rendered?.metadata;
 
 const { Content } = await render(entry);
 ---
 
-<MainLayout>
+<MainLayout bodyCssClass="">
   <div id="content-wrapper">
     <div class="content-area">
+      <script src="../../../docs/_merged_assets/scripts/init-navigation.js"></script>
+
       <rocket-navigation>
         <ul>
           <li class="current">
             <h3>Headings</h3>
-            ... todo: inline navigation
+            <ul>
+              {headings.filter(heading => heading.depth === 2).map(heading => (
+                <li class="menu-item">
+                  <a href={`${Astro.url.pathname}#${heading.slug}`}">{heading.text}</a>
+                </li>
+              ))}
+            </ul>
           </li>
         </ul>
         <div class="sidebar-tags">
           <h3>Date</h3>
-          <div>{entry.date?.toDateString()}</div>
+          <div>{new Date(createdAt)?.toDateString()}</div>
         </div>
         <div class="sidebar-tags">
           <h3>Tags</h3>

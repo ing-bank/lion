@@ -2,7 +2,7 @@
 import { getCollection, getEntry, render } from "astro:content";
 import MainLayout from "../../layouts/MainLayout.astro";
 
-const entries = await getCollection('lionBlog');
+const entries = await getCollection("lionBlog", entry => entry.data?.published);
 const entry = await getEntry('lionBlog', 'index');
 console.log(entries);
 
@@ -23,7 +23,7 @@ const { Content } = await render(entry);
     <Content />
 
   <div class="articles">
-    {entries.filter(post => post.data?.published).map((post) => (
+    {entries.map((post) => (
       <article>
         {post.data.cover_image && <a href={getUrl(post)} class="thumbnail" style={`background-image: url(${post.data.cover_image});`}></a>}
 
