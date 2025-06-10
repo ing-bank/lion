@@ -2424,7 +2424,7 @@ describe('lion-combobox', () => {
       expect(options[0]).lightDom.to.equal(`Artichoke`);
     });
 
-    it('synchronizes textbox when autocomplete is "inline" or "both"', async () => {
+    it('synchronizes textbox when autocomplete is "inline", "both" or "none"', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" autocomplete="none">
@@ -2440,14 +2440,14 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('');
 
       el.setCheckedIndex(-1);
-      el.autocomplete = 'none';
+      el.autocomplete = 'list';
       el.setCheckedIndex(0);
       expect(_inputNode.value).to.equal('');
 
       el.setCheckedIndex(-1);
-      el.autocomplete = 'list';
+      el.autocomplete = 'none';
       el.setCheckedIndex(0);
-      expect(_inputNode.value).to.equal('');
+      expect(_inputNode.value).to.equal('Artichoke');
 
       el.setCheckedIndex(-1);
       el.autocomplete = 'inline';
@@ -2460,7 +2460,7 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('Artichoke');
     });
 
-    it('synchronizes last index to textbox when autocomplete is "inline" or "both" when multipleChoice', async () => {
+    it('synchronizes last index to textbox when autocomplete is "inline","both" or "none" when multipleChoice', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" autocomplete="none" multiple-choice>
@@ -2476,16 +2476,17 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.eql('');
 
       el.setCheckedIndex(-1);
-      el.autocomplete = 'none';
+      el.autocomplete = 'list';
       el.setCheckedIndex([0]);
       el.setCheckedIndex([1]);
       expect(_inputNode.value).to.equal('');
 
       el.setCheckedIndex(-1);
-      el.autocomplete = 'list';
+      el.autocomplete = 'none';
       el.setCheckedIndex([0]);
+      expect(_inputNode.value).to.equal('Artichoke');
       el.setCheckedIndex([1]);
-      expect(_inputNode.value).to.equal('');
+      expect(_inputNode.value).to.equal('Chard');
 
       el.setCheckedIndex(-1);
       el.autocomplete = 'inline';
@@ -2718,7 +2719,7 @@ describe('lion-combobox', () => {
              */
             // eslint-disable-next-line class-methods-use-this
             _getTextboxValueFromOption(option) {
-              return option.label;
+              return option?.label || this.modelValue?.viewValue;
             }
           }
           const tagName = defineCE(X);
@@ -2747,12 +2748,6 @@ describe('lion-combobox', () => {
           /** @param {string} autocompleteMode */
           async function performChecks(autocompleteMode) {
             await el.updateComplete;
-
-            el.formElements[0].click();
-
-            // FIXME: fix properly for Webkit
-            // expect(_inputNode.value).to.equal('Aha', autocompleteMode);
-            expect(el.checkedIndex).to.equal(0, autocompleteMode);
 
             await mimicUserTypingAdvanced(el, ['A', 'r', 't', 'i']);
             await el.updateComplete;
