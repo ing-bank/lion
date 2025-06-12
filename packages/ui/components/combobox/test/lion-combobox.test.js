@@ -2294,28 +2294,19 @@ describe('lion-combobox', () => {
 
     describe('Subclassers', () => {
       it('allows to configure autoselect', async () => {
-        class X extends LionCombobox {
-          _autoSelectCondition() {
-            return true;
-          }
-        }
-        const tagName = defineCE(X);
-        const tag = unsafeStatic(tagName);
-
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
-          <${tag} name="foo" opened>
-            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-          </${tag}>
-        `)
+            <lion-combobox name="foo" autocomplete="both">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
         );
         // This ensures autocomplete would be off originally
-        el.autocomplete = 'list';
-        await mimicUserTypingAdvanced(el, ['v', 'i']); // so we have options ['Victoria Plum']
-        await el.updateComplete;
+        el.checkedIndex = -1;
+        await mimicUserTypingAdvanced(el, ['v', 'i', 'c']); // so we have options ['Victoria Plum']
         expect(el.checkedIndex).to.equal(3);
       });
     });
@@ -2424,7 +2415,7 @@ describe('lion-combobox', () => {
       expect(options[0]).lightDom.to.equal(`Artichoke`);
     });
 
-    it('synchronizes textbox when autocomplete is "inline", "both" or "none"', async () => {
+    it('synchronizes textbox when autocomplete is "inline" or "both"', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" autocomplete="none">
@@ -2441,26 +2432,29 @@ describe('lion-combobox', () => {
 
       el.setCheckedIndex(-1);
       el.autocomplete = 'list';
-      el.setCheckedIndex(0);
-      expect(_inputNode.value).to.equal('');
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
+      expect(_inputNode.value).to.equal('art');
 
       el.setCheckedIndex(-1);
+      el.value = '';
       el.autocomplete = 'none';
-      el.setCheckedIndex(0);
-      expect(_inputNode.value).to.equal('Artichoke');
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
+      expect(_inputNode.value).to.equal('art');
 
       el.setCheckedIndex(-1);
+      el.value = '';
       el.autocomplete = 'inline';
-      el.setCheckedIndex(0);
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
       expect(_inputNode.value).to.equal('Artichoke');
 
       el.setCheckedIndex(-1);
+      el.value = '';
       el.autocomplete = 'both';
-      el.setCheckedIndex(0);
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
       expect(_inputNode.value).to.equal('Artichoke');
     });
 
-    it('synchronizes last index to textbox when autocomplete is "inline","both" or "none" when multipleChoice', async () => {
+    it('synchronizes last index to textbox when autocomplete is "inline" or "both" when multipleChoice', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo" autocomplete="none" multiple-choice>
@@ -2476,31 +2470,28 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.eql('');
 
       el.setCheckedIndex(-1);
+      el.setCheckedIndex(-1);
       el.autocomplete = 'list';
-      el.setCheckedIndex([0]);
-      el.setCheckedIndex([1]);
-      expect(_inputNode.value).to.equal('');
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
+      expect(_inputNode.value).to.equal('art');
 
       el.setCheckedIndex(-1);
+      el.value = '';
       el.autocomplete = 'none';
-      el.setCheckedIndex([0]);
-      expect(_inputNode.value).to.equal('Artichoke');
-      el.setCheckedIndex([1]);
-      expect(_inputNode.value).to.equal('Chard');
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
+      expect(_inputNode.value).to.equal('art');
 
       el.setCheckedIndex(-1);
+      el.value = '';
       el.autocomplete = 'inline';
-      el.setCheckedIndex([0]);
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
       expect(_inputNode.value).to.equal('Artichoke');
-      el.setCheckedIndex([1]);
-      expect(_inputNode.value).to.equal('Chard');
 
       el.setCheckedIndex(-1);
+      el.value = '';
       el.autocomplete = 'both';
-      el.setCheckedIndex([0]);
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
       expect(_inputNode.value).to.equal('Artichoke');
-      el.setCheckedIndex([1]);
-      expect(_inputNode.value).to.equal('Chard');
     });
 
     describe('Subclassers', () => {
