@@ -179,6 +179,7 @@ export const OverlayMixinImplementation = superclass =>
       super.connectedCallback();
 
       this.updateComplete.then(() => {
+        if (!this.isConnected) return;
         if (this.#hasSetup) return;
         this._setupOverlayCtrl();
         this.#hasSetup = true;
