@@ -1177,7 +1177,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     return (
       this.autocomplete === 'both' ||
       this.autocomplete === 'none' ||
-      (modelValue && modelValue !== oldModelValue) ||
+      modelValue !== oldModelValue ||
       phase === 'overlay-close'
     );
   }
