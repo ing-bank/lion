@@ -239,6 +239,74 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         restorePhoneUtilManager();
         spy.restore();
       });
+
+      it('has the correct nameForLocale, based on browser language', async () => {
+        const el = fixtureSync(html` <${tag}
+          .modelValue="${'+31612345678'}"
+          .allowedRegions="${['NL', 'PH']}"
+          .preferredRegions="${['PH']}"
+          ></${tag}> `);
+        const spy = sinon.spy(
+          /** @type {typeof LionInputTelDropdown} */ (el.constructor).templates,
+          'dropdown',
+        );
+        // @ts-ignore
+        const originalLocale = el._localizeManager.locale;
+        // @ts-ignore
+        el._localizeManager.locale = 'nl-NL';
+        await el.updateComplete;
+        const dropdownNode = el.refs.dropdown.value;
+        const templateDataForDropdown = /** @type {TemplateDataForDropdownInputTel} */ (
+          spy.args[0][0]
+        );
+        expect(templateDataForDropdown).to.eql(
+          /** @type {TemplateDataForDropdownInputTel} */ ({
+            data: {
+              activeRegion: 'NL',
+              regionMetaList: [
+                {
+                  countryCode: 31,
+                  flagSymbol: '🇳🇱',
+                  nameForLocale: 'Nederland',
+                  nameForRegion: 'Nederland',
+                  regionCode: 'NL',
+                },
+              ],
+              regionMetaListPreferred: [
+                {
+                  countryCode: 63,
+                  flagSymbol: '🇵🇭',
+                  nameForLocale: 'Filipijnen',
+                  nameForRegion: 'Pilipinas',
+                  regionCode: 'PH',
+                },
+              ],
+            },
+            refs: {
+              dropdown: {
+                labels: {
+                  allCountries: 'Alle landen',
+                  preferredCountries: 'Voor gestelde landen',
+                  selectCountry: 'Selecteer land',
+                },
+                listeners: {
+                  // @ts-expect-error [allow-protected]
+                  change: el._onDropdownValueChange,
+                  // @ts-expect-error [allow-protected]
+                  'model-value-changed': el._onDropdownValueChange,
+                },
+                props: { style: 'height: 100%;' },
+                ref: { value: dropdownNode },
+              },
+              // @ts-expect-error [allow-protected]
+              input: el._inputNode,
+            },
+          }),
+        );
+        spy.restore();
+        // @ts-ignore
+        el._localizeManager.locale = originalLocale; // restore the locale back to original
+      });
     });
 
     describe('On dropdown value change', () => {
