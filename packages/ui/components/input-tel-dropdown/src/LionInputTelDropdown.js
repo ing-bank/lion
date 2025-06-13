@@ -4,6 +4,7 @@ import { ref, createRef } from 'lit/directives/ref.js';
 import { LionInputTel } from '@lion/ui/input-tel.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { getFlagSymbol } from './getFlagSymbol.js';
+import { regionCodeToLocale } from './regionCodeToLocale.js';
 
 /**
  * Note: one could consider to implement LionInputTelDropdown as a
@@ -193,8 +194,7 @@ export class LionInputTelDropdown extends LionInputTel {
   onLocaleUpdated() {
     super.onLocaleUpdated();
 
-    // @ts-expect-error relatively new platform api
-    this.__namesForLocale = new Intl.DisplayNames([this._langIso], {
+    this.__namesForLocale = new Intl.DisplayNames([this._localizeManager.locale], {
       type: 'region',
     });
     this.__createRegionMeta();
@@ -408,7 +408,7 @@ export class LionInputTelDropdown extends LionInputTel {
     this.__regionMetaListPreferred = [];
     this._allowedOrAllRegions.forEach(regionCode => {
       // @ts-ignore relatively new platform api
-      const namesForRegion = new Intl.DisplayNames([regionCode.toLowerCase()], {
+      const namesForRegion = new Intl.DisplayNames([regionCodeToLocale(regionCode)], {
         type: 'region',
       });
       const countryCode =
