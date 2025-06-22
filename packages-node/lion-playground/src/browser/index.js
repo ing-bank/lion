@@ -1,5 +1,8 @@
+// import * as prettier from 'prettier/standalone.js';
+// import * as prettier from 'https://unpkg.com/prettier@3.5.3/standalone.mjs';
+
 /**
- * @typedef {import('custom-elements-manifest/schema').Package} CustomElementsManifestSchema;
+ * @typedef {import('custom-elements-manifest/schema.js').Package} CustomElementsManifestSchema;
  */
 
 /**
@@ -49,20 +52,25 @@ export function sanitizeIframeFromSameDomain(fileString) {
  *    klass: string;
  *    tag: string;
  *  }[];
+ *  extraSetupCode: string;
  * }} opts
  */
-export function createScopedLitElementDemo(demo, { webComponents = [] }) {
+export async function createScopedLitElementDemo(
+  demo,
+  { webComponents = [], extraSetupCode = '' },
+) {
   const demoTag = 'my-app';
   const scopedMap = [];
   for (const { tag, klass } of webComponents) {
     scopedMap.push(`'${tag}': ${klass}`);
   }
-
-  const jsFile = `/* playground-fold */
+  const jsFileUnformatted = `/* playground-fold */
 import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { html, LitElement } from 'lit';
 
 ${webComponents.map(({ source, klass }) => `import { ${klass} } from '${source}';`).join('\n')}
+
+${extraSetupCode}
 
 export class MyApp extends ScopedElementsMixin(LitElement) {
   static scopedElements = { ${scopedMap.join(', ')} };
@@ -79,6 +87,10 @@ customElements.define('${demoTag}', MyApp);
 /* playground-fold-end */
 `;
 
+  const jsFile = jsFileUnformatted; // await prettier.format(jsFileUnformatted, {
+  //   parser: 'babel',
+  // });
+
   const indexHtmlFile = `<${demoTag}></${demoTag}>`;
   return { jsFile, indexHtmlFile };
 }
@@ -86,23 +98,63 @@ customElements.define('${demoTag}', MyApp);
 /**
  *
  * @param {string} fileString
+ * @returns {{ imports: { importParts: string[]; source: string }[]; remainingCode: string }}
  */
 export function extractImports(fileString) {
-  const re = /import(\s+\{(.*)\})?\s+from\s+(("|').*("|'));?\n/;
+  const re = /import\s+(.*)?(\s+from\s+)?("|')(.*)("|');?\n?/;
 
   // Get imports... we either find a ce definition or a constructors
   const importString = fileString.match(new RegExp(re, 'gm'));
   if (!importString) {
-    return [];
+    return { imports: [], remainingCode: fileString };
   }
 
   const imports = [];
   for (const imp of importString) {
-    const [, , classes, , , source] = imp.match(re) || [];
-    const [, tag, klass] = imp.match(/(.*)\s+as\s+(.*)/) || imp.match(/(.*)\s+from\s+(.*)/);
-    imports.push({ tag, klass, source });
+    const [, _importsStr, , , source] = imp.match(re) || [];
+    const importParts = _importsStr
+      ? _importsStr
+          .replace(/\sfrom\s$/, '')
+          .split(',')
+          .map(i => i.trim())
+      : [];
+    imports.push({ importParts, source });
   }
-  return imports;
+  const remainingCode = fileString.replace(new RegExp(re, 'gm'), '');
+  return { imports, remainingCode };
+}
+
+// N.B. this is fuzzy code. Ideally, we clean up the demos (both in node and in our demos) before processing them here
+
+/**
+ * @param {string} source
+ * @returns {boolean}
+ */
+function isCeDefinitionImport(source) {
+  return source.includes('/define/');
+}
+
+/**
+ * @param {string} source
+ * @returns {boolean}
+ */
+function isMdjsImport(source) {
+  return source.includes('mdjs');
+}
+
+/**
+ * @param {string} script the setup globally available on the mdjs page
+ */
+export function extractExtraSetupCode(script) {
+  extractImports(script);
+  const { imports, remainingCode } = extractImports(script);
+  const relevantImports = [];
+  for (const { importParts, source } of imports) {
+    if (isCeDefinitionImport(source) || isMdjsImport(source)) continue; // eslint-disable-line no-continue
+    relevantImports.push(`import ${importParts.join(', ')} from '${source}';`);
+  }
+
+  return `${relevantImports.join('\n')}\n\n${remainingCode}`;
 }
 
 /**
@@ -217,7 +269,14 @@ function getCustomElementTagNamesFromHtml(htmlToRenderInJsContext) {
 
 /**
  * @param {string} htmlToRenderInJsContext like `<lion-accordion .prop="${someJs}">some content</lion-accordion>`
- * @param {{ceManifestObject: { packageName: string; packagePath: string; customElementsJson: CustomElementsManifestSchema}; importMapPerPackage: {[pkgName:string]: {[exposedRelative:string]: string}}  }} opts
+ * @param {{
+ *  ceManifestObject: {
+ *    packageName: string;
+ *    packagePath: string;
+ *    customElementsJson: CustomElementsManifestSchema;
+ *  };
+ *  importMapPerPackage: {[pkgName:string]: {[exposedRelative:string]: string}}
+ * }} opts
  * @returns {{tag: string; klass: string; source: string}[]} like [{ tag:'lion-accordion', klass: 'LionAccordion', source: '@lion/ui/accordion.js' }];
  */
 export function extractWebComponentObject(
@@ -238,8 +297,7 @@ export function extractWebComponentObject(
       module.exports?.find(m => m.kind === 'custom-element-definition' && m.name === tagName),
     );
     if (!moduleContainingTagDefinition) {
-      // eslint-disable-next-line no-console
-      console.warn(`No module found for tag name ${tagName}`);
+      console.warn(`No module found for tag name ${tagName}`); // eslint-disable-line no-console
       continue; // eslint-disable-line no-continue
     }
     const { declaration } =

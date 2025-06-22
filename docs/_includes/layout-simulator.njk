@@ -22,6 +22,7 @@
         createScopedLitElementDemo, 
         getMdJsStoriesFileSections,
         extractWebComponentObject, 
+        extractExtraSetupCode,
         extractImports, 
         setupIde,
       } from '@lion/playground/src/browser/index';
@@ -102,7 +103,6 @@
         console.log({ jsString, exportName, htmlString });
         console.log(mdjsStoriesFile);
 
-
         const demoFileName = exportName.split(/\s/)[0] + '.js';
 
         let htmlToRenderInJsContext = '';
@@ -119,7 +119,8 @@
 
 
         const webComponents = extractWebComponentObject(htmlToRenderInJsContext, { ceManifestObject, importMapPerPackage });
-        const { jsFile, indexHtmlFile } = createScopedLitElementDemo(htmlToRenderInJsContext, { webComponents });
+        const extraSetupCode = extractExtraSetupCode(script, {webComponents});
+        const { jsFile, indexHtmlFile } = await createScopedLitElementDemo(htmlToRenderInJsContext, { webComponents, extraSetupCode });
 
         const ide = document.querySelector('playground-ide');
         setupIde(ide, { demoFileName, indexHtmlFile, jsFile, importMapPerPackage });
