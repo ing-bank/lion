@@ -869,7 +869,11 @@ const ListboxMixinImplementation = superclass =>
 
       // Try to find the next / previous option
       for (let i = currentIndex + offset; until(i); i += offset) {
-        if (this.formElements[i] && !this.formElements[i].hasAttribute('aria-hidden')) {
+        if (
+          this.formElements[i] &&
+          !this.formElements[i].hasAttribute('aria-hidden') &&
+          !this.formElements[i].disabled
+        ) {
           return i;
         }
       }
@@ -879,7 +883,11 @@ const ListboxMixinImplementation = superclass =>
       if (this.rotateKeyboardNavigation) {
         const startIndex = offset === -1 ? this.formElements.length - 1 : 0;
         for (let i = startIndex; until(i); i += offset) {
-          if (this.formElements[i] && !this.formElements[i].hasAttribute('aria-hidden')) {
+          if (
+            this.formElements[i] &&
+            !this.formElements[i].hasAttribute('aria-hidden') &&
+            !this.formElements[i].disabled
+          ) {
             return i;
           }
         }
