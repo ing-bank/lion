@@ -655,8 +655,7 @@ describe('lion-combobox', () => {
         el.formElements[0].click();
         await el.updateComplete;
 
-        // FIXME: fix properly for Webkit
-        // expect(_inputNode.value).to.equal('Aha', `autocompleteMode is ${autocompleteMode}`);
+        expect(_inputNode.value).to.equal('Aha', `autocompleteMode is ${autocompleteMode}`);
         expect(el.checkedIndex).to.equal(0, `autocompleteMode is ${autocompleteMode}`);
 
         await mimicUserTyping(el, 'Ah');
@@ -2319,19 +2318,27 @@ describe('lion-combobox', () => {
 
     describe('Subclassers', () => {
       it('allows to configure autoselect', async () => {
+        class X extends LionCombobox {
+          _autoSelectCondition() {
+            return true;
+          }
+        }
+        const tagName = defineCE(X);
+        const tag = unsafeStatic(tagName);
+
         const el = /** @type {LionCombobox} */ (
           await fixture(html`
-            <lion-combobox name="foo" autocomplete="both">
-              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
-              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
-              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
-              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
-            </lion-combobox>
-          `)
+          <${tag} name="foo" opened>
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </${tag}>
+        `)
         );
-        // This ensures autocomplete would be off originally
-        el.checkedIndex = -1;
-        await mimicUserTypingAdvanced(el, ['v', 'i', 'c']); // so we have options ['Victoria Plum']
+
+        await mimicUserTypingAdvanced(el, ['v', 'i']); // so we have options ['Victoria Plum']
+        await el.updateComplete;
         expect(el.checkedIndex).to.equal(3);
       });
     });
@@ -2735,7 +2742,7 @@ describe('lion-combobox', () => {
              */
             // eslint-disable-next-line class-methods-use-this
             _getTextboxValueFromOption(option) {
-              return option?.label || this.modelValue?.viewValue;
+              return option.label;
             }
           }
           const tagName = defineCE(X);
