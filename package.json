@@ -15,7 +15,7 @@
     "debug:firefox": "web-test-runner --watch --config web-test-runner-firefox.config.mjs",
     "debug:no-scoped-registries-polyfill": "npm run debug -- --no-scoped-registries-polyfill",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
-    "dev": "astro dev",
+    "dev": "astro dev --force",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
     "format:prettier": "prettier \"**/*.{js,md,astro}\" \"packages/*/package.json\" \"package.json\" --write",
