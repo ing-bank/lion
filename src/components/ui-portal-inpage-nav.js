@@ -1,4 +1,5 @@
 import { LitElement, html, nothing, css } from 'lit';
+
 const tagName = 'ui-portal-inpage-nav';
 
 function scrollInView(event) {
@@ -14,7 +15,7 @@ function scrollInView(event) {
   if (link.hash === '') {
     event.preventDefault();
     window.scroll({ top: 0, behavior: 'smooth' });
-    history.pushState(undefined, undefined, location.pathname);
+    window.history.pushState(undefined, undefined, window.location.pathname);
   }
 
   // Scroll to an id
@@ -24,7 +25,7 @@ function scrollInView(event) {
     if (target) {
       event.preventDefault();
       window.scroll({ top: target.offsetTop, behavior: 'smooth' });
-      history.pushState(undefined, undefined, `#${id}`);
+      window.history.pushState(undefined, undefined, `#${id}`);
     }
   }
 }

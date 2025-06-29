@@ -54,8 +54,11 @@ export class BootstrapButton extends LionButton {
         border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
         border-radius: var(--bs-btn-border-radius);
         background-color: var(--bs-btn-bg);
-        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
-          border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        transition:
+          color 0.15s ease-in-out,
+          background-color 0.15s ease-in-out,
+          border-color 0.15s ease-in-out,
+          box-shadow 0.15s ease-in-out;
         text-transform: none;
       }
 

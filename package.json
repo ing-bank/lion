@@ -18,7 +18,7 @@
     "dev": "astro dev",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
-    "format:prettier": "prettier \"**/*.{js,md}\" \"packages/*/package.json\" \"package.json\" --write",
+    "format:prettier": "prettier \"**/*.{js,md,astro}\" \"packages/*/package.json\" \"package.json\" --write",
     "postinstall": "npx patch-package && npm run custom-elements-manifest",
     "lint": "run-p lint:*",
     "lint:eslint": "eslint --ext .js,.html .",
@@ -59,6 +59,7 @@
     "@webcomponents/template-shadowroot": "^0.2.1",
     "astro": "^5.3.0",
     "astro-seo": "^0.7.5",
+    "es-module-lexer": "^1.7.0",
     "lit": "^3.2.1",
     "rocket-preset-extend-lion-docs": "^0.4.0",
     "unist-util-visit": "^5.0.0"

@@ -1,4 +1,4 @@
-import { LitElement, html, nothing, css } from 'lit';
+import { LitElement, html, css } from 'lit';
 
 const tagName = 'ui-portal-footer';
 

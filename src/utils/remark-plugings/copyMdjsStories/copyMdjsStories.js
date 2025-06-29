@@ -6,13 +6,66 @@ import { createRequire } from 'module';
 const nodeModulesText = '/node_modules';
 const require = createRequire(import.meta.url);
 
+/**
+ * @param {string} source
+ * @param {string} mode
+ * @param {string} inputPath
+ */
+async function processImports(source, mode, inputPath) {
+  if (mode !== 'development') return source;
+
+  // return source;
+  if (!source || !source.includes('import')) {
+    return source;
+  }
+
+  let newSource = '';
+  let lastPos = 0;
+  await init;
+  const [imports] = parse(source);
+  for (const importObj of imports) {
+    newSource += source.substring(lastPos, importObj.s);
+
+    const importSrc = source.substring(importObj.s, importObj.e);
+    try {
+      if (importSrc.startsWith('.')) {
+        newSource +=
+          nodeModulesText +
+          require
+            .resolve(importSrc, { paths: [path.dirname(inputPath)] })
+            .split(nodeModulesText)[1];
+      } else if (importSrc.startsWith('/')) {
+        newSource += importSrc;
+      } else {
+        const isDynamicImport = importSrc.startsWith("'");
+        if (isDynamicImport) {
+          newSource += `'${nodeModulesText}${
+            require.resolve(importSrc.replace(/'/g, '')).split(nodeModulesText)[1]
+          }'`;
+        } else {
+          newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
+        }
+      }
+    } catch (error) {
+      console.error(`Error resolving import: ${importSrc}`, error);
+      newSource += importSrc; // Fallback to original import if resolution fails
+    }
+
+    lastPos = importObj.e;
+  }
+
+  newSource += source.substring(lastPos, source.length);
+
+  return newSource;
+}
+
 export function copyMdjsStories({ mode } = {}) {
   /**
    * @param {Node} tree
    * @param {VFileOptions} file
    */
   async function transformer(tree, file) {
-    const setupJsCode = file.data.setupJsCode;
+    const { setupJsCode } = file.data;
     if (!setupJsCode) {
       return tree;
     }
@@ -25,10 +78,12 @@ export function copyMdjsStories({ mode } = {}) {
     let parsedPath = '';
 
     if (currentMarkdownFile) {
-      const separator = currentMarkdownFile.includes('components/') ? 'components/' : 'fundamentals/';
+      const separator = currentMarkdownFile.includes('components/')
+        ? 'components/'
+        : 'fundamentals/';
       const rightSideParsedPath = currentMarkdownFile.split(separator)[1];
       // console.log(currentMarkdownFile, leftSideParsedPath);
-      parsedPath = rightSideParsedPath.split('.md')[0];
+      [parsedPath] = rightSideParsedPath.split('.md');
     }
 
     const parsedSetupJsCode = await processImports(setupJsCode, mode, currentMarkdownFile);
@@ -53,57 +108,6 @@ export function copyMdjsStories({ mode } = {}) {
   }
 
   return transformer;
-}
-
-/**
- * @param {string} source
- * @param {string} mode
- * @param {string} inputPath
- */
-async function processImports(source, mode, inputPath) {
-  if (mode !== 'development') return source;
-
-  // return source;
-  if (!source || !source.includes('import')) {
-    return source;
-  }
-
-  let newSource = '';
-  let lastPos = 0;
-  await init;
-  const [imports] = parse(source);
-  for (const importObj of imports) {
-    newSource += source.substring(lastPos, importObj.s);
-
-    const importSrc = source.substring(importObj.s, importObj.e);
-    try {
-      if (importSrc.startsWith('.')) {
-        newSource += nodeModulesText + require.resolve(importSrc, { paths: [path.dirname(inputPath)] }).split(nodeModulesText)[1];
-      } else if (importSrc.startsWith('/')) {
-        newSource += importSrc;
-      } else {
-        const isDynamicImport = importSrc.startsWith("'");
-        if (isDynamicImport) {
-          newSource +=
-            "'" +
-            nodeModulesText +
-            require.resolve(importSrc.replace(/'/g, '')).split(nodeModulesText)[1] +
-            "'";
-        } else {
-          newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
-        }
-      }
-    } catch (error) {
-      console.error(`Error resolving import: ${importSrc}`, error);
-      newSource += importSrc; // Fallback to original import if resolution fails
-    }
-
-    lastPos = importObj.e;
-  }
-
-  newSource += source.substring(lastPos, source.length);
-
-  return newSource;
 }
 
 // module.exports = {

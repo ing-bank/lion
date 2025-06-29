@@ -1,25 +1,11 @@
-import { html, nothing, css } from 'lit';
-import { directive, AsyncDirective } from 'lit/async-directive.js';
+/* eslint-disable lit-a11y/anchor-is-valid */
+import { css, html, nothing } from 'lit';
 import '@lion/ui/define/lion-icon.js';
 import { UIBaseElement } from './shared/UIBaseElement.js';
 import { addIconResolverForPortal } from './iconset-portal/addIconResolverForPortal.js';
+import { navItemDirective } from '../directives/nav-item.js';
 
 addIconResolverForPortal();
-
-export class NavItemDirective extends AsyncDirective {
-  update(part, [item]) {
-    const anchorEl = part.element;
-    if (!(anchorEl instanceof HTMLAnchorElement)) {
-      throw new Error('[NavItemDirective] Please apply to HTMLAnchorElement');
-    }
-
-    anchorEl.href = item.redirect || item.url;
-    if (item.active) {
-      anchorEl.setAttribute('aria-current', 'page');
-    }
-  }
-}
-const navItemDirective = directive(NavItemDirective);
 
 // TODO: apply https://web.dev/website-navigation/ (aria-current="page" etc.)
 
@@ -87,7 +73,7 @@ export class UIPortalMainNav extends UIBaseElement {
         )}
       </ul>`;
     },
-    navItem(context, { item, level }) {
+    navItem(context, { item }) {
       const { directives } = context;
 
       return html`<a ${directives.navItem(item)}>${item.name}</a>`;
@@ -145,13 +131,13 @@ const baseUINavMarkup = {
         data-level="${level}"
         ?data-:has-active-child="${hasActiveChild}"
       >
-          <ul data-part="list" data-level="${level}">
+        <ul data-part="list" data-level="${level}">
           ${children.map(
             item =>
               html`<li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
                 ${templates.navItem(context, { item, level })}
                 ${item.children?.length
-                  ? templates['navLevel'](context, {
+                  ? templates.navLevel(context, {
                       level: level + 1,
                       children: item.children,
                       hasActiveChild: item.hasActiveChild,
@@ -162,16 +148,16 @@ const baseUINavMarkup = {
         </ul>
       </div>`;
     },
-    navLevel3(context, { children, level, item, hasActiveChild = false }) {
+    navLevel3(context, { children, level, item }) {
       const { templates, directives } = context;
 
       return html`<div>
         <a ${directives.navItem(item)} class="second-level-title">${item.name}</a>
         <ul data-part="list" class="second-level-list">
           ${children.map(
-            item =>
-              html`<li ?data-:active="${item.active}">
-                ${templates.navItem(context, { item, level })}
+            child =>
+              html`<li ?data-:active="${child.active}">
+                ${templates.navItem(context, { child, level })}
               </li>`,
           )}
         </ul>
