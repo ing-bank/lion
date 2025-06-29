@@ -43,7 +43,16 @@ async function processImports(source, mode, inputPath) {
             require.resolve(importSrc.replace(/'/g, '')).split(nodeModulesText)[1]
           }'`;
         } else {
-          newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
+          const resolvedPath = require.resolve(importSrc, { preserveSymlinks: true });
+          if (resolvedPath.includes(nodeModulesText)) {
+            newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
+          } else if (resolvedPath.includes('/lion/packages')) {
+            // it can be from a local package, e.g. @lion/ui
+            newSource += `${nodeModulesText}/@lion${require.resolve(importSrc).split('/lion/packages')[1]}`;
+          } else {
+            // what is this?
+            throw new Error(`Unexpected import source: ${importSrc} resolved to ${resolvedPath}`);
+          }
         }
       }
     } catch (error) {
@@ -69,7 +78,7 @@ export function copyMdjsStories({ mode } = {}) {
     if (!setupJsCode) {
       return tree;
     }
-    // console.log(file);
+
     const currentMarkdownFile = file.history[0];
     const pwd = file.cwd;
     const mdJsStoriesUrlPath = '/mdjs-stories';

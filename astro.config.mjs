@@ -47,12 +47,11 @@ export default defineConfig({
   markdown: {
     // ing-web
     remarkPlugins: [
-      /*...extendLionDocsInstance,*/ mdjsParse,
+      mdjsParse,
       mdjsStoryParse,
       [mdjsSetupCode, mdjsSetupConfig],
       [copyMdjsStories, { mode: import.meta.env.MODE }],
       remarkModifiedTime,
-      // cleanRocketMarkdown,
     ],
     shikiConfig: {
       themes: {
