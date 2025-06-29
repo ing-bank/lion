@@ -1,140 +1,108 @@
-const path = require('path');
-const fs = require('fs');
-// eslint-disable-next-line import/no-extraneous-dependencies
-const { init, parse } = require('es-module-lexer');
-
-let visit;
-(async () => {
-  // eslint-disable-next-line import/no-extraneous-dependencies
-  const result = await import('unist-util-visit');
-  visit = result.visit;
-})();
+import path from 'path';
+import fs from 'fs';
+import { init, parse } from 'es-module-lexer';
+import { createRequire } from 'module';
 
 const nodeModulesText = '/node_modules';
-const mdJsStoriesFileNameWithoutExtension = '__mdjs-stories';
-const mdJsStoriesFileName = `${mdJsStoriesFileNameWithoutExtension}.js`;
-const isDistBuild = process.env.PROD === 'true';
+const require = createRequire(import.meta.url);
 
 /**
  * @param {string} source
+ * @param {string} mode
  * @param {string} inputPath
  */
-async function processImports(source) {
-  if (source !== '' && source.includes('import')) {
-    let newSource = '';
-    let lastPos = 0;
-    await init;
-    const [imports] = parse(source);
-    for (const importObj of imports) {
-      newSource += source.substring(lastPos, importObj.s);
-      const importSrc = source.substring(importObj.s, importObj.e);
-      const isDynamicImport = importObj.d > -1;
+async function processImports(source, mode, inputPath) {
+  if (mode !== 'development') return source;
 
-      if (
-        importSrc.startsWith('.') ||
-        importSrc.startsWith('/') ||
-        isDynamicImport ||
-        importSrc.startsWith('import.')
-      ) {
-        if (importSrc === `'@mdjs/mdjs-preview/define'`) {
-          newSource += `'${nodeModulesText}/@mdjs/mdjs-preview/src/define/define.js'`;
-        } else if (importSrc === `'@mdjs/mdjs-story/define'`) {
-          newSource += `'${nodeModulesText}/@mdjs/mdjs-story/src/define.js'`;
-        } else {
-          newSource += importSrc;
-        }
+  // return source;
+  if (!source || !source.includes('import')) {
+    return source;
+  }
+
+  let newSource = '';
+  let lastPos = 0;
+  await init;
+  const [imports] = parse(source);
+  for (const importObj of imports) {
+    newSource += source.substring(lastPos, importObj.s);
+
+    const importSrc = source.substring(importObj.s, importObj.e);
+    try {
+      if (importSrc.startsWith('.')) {
+        newSource +=
+          nodeModulesText +
+          require
+            .resolve(importSrc, { paths: [path.dirname(inputPath)] })
+            .split(nodeModulesText)[1];
+      } else if (importSrc.startsWith('/')) {
+        newSource += importSrc;
       } else {
-        const resolvedPath = require.resolve(importSrc);
-        const packagesPath = '/packages/';
-        if (resolvedPath.includes(packagesPath)) {
-          newSource += packagesPath + resolvedPath.split(packagesPath)[1];
+        const isDynamicImport = importSrc.startsWith("'");
+        if (isDynamicImport) {
+          newSource += `'${nodeModulesText}${
+            require.resolve(importSrc.replace(/'/g, '')).split(nodeModulesText)[1]
+          }'`;
         } else {
           newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
         }
       }
-
-      lastPos = importObj.e;
+    } catch (error) {
+      console.error(`Error resolving import: ${importSrc}`, error);
+      newSource += importSrc; // Fallback to original import if resolution fails
     }
-    newSource += source.substring(lastPos, source.length);
-    return newSource;
+
+    lastPos = importObj.e;
   }
 
-  return source;
+  newSource += source.substring(lastPos, source.length);
+
+  return newSource;
 }
 
-function copyMdjsStories() {
+export function copyMdjsStories({ mode } = {}) {
   /**
    * @param {Node} tree
    * @param {VFileOptions} file
    */
   async function transformer(tree, file) {
-    let pathToMdDirectoryInPublic = '';
-    let currentMarkdownFile = '';
-    let currentMarkdownFileMdJsStoryName = '';
-
-    /**
-     * @param {UnistNode} _node
-     */
-    async function nodeCodeVisitor(_node, index, parent) {
-      if (
-        parent.type === 'heading' &&
-        parent.depth === 1 &&
-        currentMarkdownFile.includes('/components')
-      ) {
-        const commonMdjsStoriesFileName = `${pathToMdDirectoryInPublic}/${mdJsStoriesFileName}`;
-        let commonMdjsStoriesContent = '';
-        try {
-          commonMdjsStoriesContent = fs.readFileSync(commonMdjsStoriesFileName).toString();
-        } catch (ex) {
-          // noop. File is not yet created for the component
-        }
-
-        const exportCmd = `import('./${currentMarkdownFileMdJsStoryName}');\n`;
-        if (commonMdjsStoriesContent.indexOf(exportCmd) === -1) {
-          fs.writeFileSync(commonMdjsStoriesFileName, commonMdjsStoriesContent + exportCmd, 'utf8');
-        }
-      }
-    }
-
-    let { setupJsCode } = file.data;
+    const { setupJsCode } = file.data;
     if (!setupJsCode) {
       return tree;
     }
-
-    // eslint-disable-next-line prefer-destructuring
-    currentMarkdownFile = file.history[0];
-    const { cwd } = file;
-    const publicDir = `${cwd}/public`;
+    // console.log(file);
+    const currentMarkdownFile = file.history[0];
+    const pwd = file.cwd;
+    const mdJsStoriesUrlPath = '/mdjs-stories';
+    const mdJsStoriesDir = `${pwd}/public${mdJsStoriesUrlPath}`;
+    const mdJsStoriesFileName = '__mdjs-stories.js';
     let parsedPath = '';
 
     if (currentMarkdownFile) {
-      const leftSideParsedPath = currentMarkdownFile.split('src/content/')[1];
-      // eslint-disable-next-line prefer-destructuring
-      parsedPath = path.dirname(leftSideParsedPath);
+      const separator = currentMarkdownFile.includes('components/')
+        ? 'components/'
+        : 'fundamentals/';
+      const rightSideParsedPath = currentMarkdownFile.split(separator)[1];
+      // console.log(currentMarkdownFile, leftSideParsedPath);
+      [parsedPath] = rightSideParsedPath.split('.md');
     }
 
-    let parsedSetupJsCode;
-    // This is copied from @mdjs/core/src/mdjsSetupCode.js
-    const initialImprorts = `
-import '@mdjs/mdjs-preview/define';
-import '@mdjs/mdjs-story/define'; \n`;
-    setupJsCode = initialImprorts + setupJsCode;
-    if (isDistBuild) {
-      parsedSetupJsCode += await setupJsCode;
-    } else {
-      parsedSetupJsCode += await processImports(setupJsCode);
-    }
-    pathToMdDirectoryInPublic = `${publicDir}/${parsedPath}`;
-    currentMarkdownFileMdJsStoryName = `${mdJsStoriesFileNameWithoutExtension}--${
-      path.basename(currentMarkdownFile).split('.md')[0]
-    }.js`;
-    const newName = path.join(pathToMdDirectoryInPublic, currentMarkdownFileMdJsStoryName);
-    await fs.promises.mkdir(pathToMdDirectoryInPublic, { recursive: true });
+    const parsedSetupJsCode = await processImports(setupJsCode, mode, currentMarkdownFile);
+    // console.log({ parsedSetupJsCode });
+    const newFolder = `${mdJsStoriesDir}/${parsedPath}`;
+    const newName = path.join(newFolder, mdJsStoriesFileName);
+    await fs.promises.mkdir(newFolder, { recursive: true });
     await fs.promises.writeFile(newName, parsedSetupJsCode, 'utf8');
 
-    // unifiedjs expects node changes to be made on the given node...
-    await init;
-    visit(tree, 'text', nodeCodeVisitor);
+    // const mdjsStoriesJsNode = {
+    //   type: 'html',
+    //   value: `<script type="module" mdjs-setup>${parsedSetupJsCode}</script>`,
+    // };
+    const mdjsStoriesJsNode = {
+      type: 'html',
+      value: `<script type="module" src="${mdJsStoriesUrlPath}/${parsedPath}/${mdJsStoriesFileName}" mdjs-setup></script>`,
+    };
+    // astro does not see this update?
+    tree.children.push(mdjsStoriesJsNode);
 
     return tree;
   }
@@ -142,6 +110,6 @@ import '@mdjs/mdjs-story/define'; \n`;
   return transformer;
 }
 
-module.exports = {
-  copyMdjsStories,
-};
+// module.exports = {
+//   copyMdjsStories,
+// };
