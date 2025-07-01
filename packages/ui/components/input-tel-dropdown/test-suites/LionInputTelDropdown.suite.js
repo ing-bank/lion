@@ -253,7 +253,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
         // @ts-ignore
         const originalLocale = el._localizeManager.locale;
         // @ts-ignore
-        el._localizeManager.locale = 'nl-NL';
+        el._localizeManager.locale = 'fr-BE';
         await el.updateComplete;
         const dropdownNode = el.refs.dropdown.value;
         const templateDataForDropdown = /** @type {TemplateDataForDropdownInputTel} */ (
@@ -267,7 +267,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
                 {
                   countryCode: 31,
                   flagSymbol: '🇳🇱',
-                  nameForLocale: 'Nederland',
+                  nameForLocale: 'Pays-Bas',
                   nameForRegion: 'Nederland',
                   regionCode: 'NL',
                 },
@@ -276,7 +276,7 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
                 {
                   countryCode: 63,
                   flagSymbol: '🇵🇭',
-                  nameForLocale: 'Filipijnen',
+                  nameForLocale: 'Philippines',
                   nameForRegion: 'Pilipinas',
                   regionCode: 'PH',
                 },
@@ -285,9 +285,9 @@ export function runInputTelDropdownSuite({ klass } = { klass: LionInputTelDropdo
             refs: {
               dropdown: {
                 labels: {
-                  allCountries: 'Alle landen',
-                  preferredCountries: 'Voor gestelde landen',
-                  selectCountry: 'Selecteer land',
+                  allCountries: 'Tous les pays',
+                  preferredCountries: 'Pays suggérés',
+                  selectCountry: 'Sélectionnez un pays',
                 },
                 listeners: {
                   // @ts-expect-error [allow-protected]
