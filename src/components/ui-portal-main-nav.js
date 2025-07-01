@@ -3,14 +3,9 @@ import { css, html, nothing } from 'lit';
 import '@lion/ui/define/lion-icon.js';
 import { UIBaseElement } from './shared/UIBaseElement.js';
 import { addIconResolverForPortal } from './iconset-portal/addIconResolverForPortal.js';
-import uiPortalMainNavBurgerCss from './ui-portal-main-nav-burger.css.js';
+import { navItemDirective } from '../directives/nav-item.js';
 
-try {
-  addIconResolverForPortal();
-} catch (e) {
-  // do nothing
-  // icons can be registered by somebody else?
-}
+addIconResolverForPortal();
 
 // TODO: apply https://web.dev/website-navigation/ (aria-current="page" etc.)
 
@@ -20,7 +15,6 @@ try {
 export class UIPortalMainNav extends UIBaseElement {
   static properties = {
     navData: { type: Array, attribute: 'nav-data' },
-    layoutWide: { type: Boolean, attribute: 'layout-wide' }, // true or false
   };
 
   constructor() {
@@ -30,31 +24,12 @@ export class UIPortalMainNav extends UIBaseElement {
      */
     this.navData = [];
     this.layoutWide = false;
-    this.getLink = item =>
-      html`<a href="${item.redirect || item.url}" aria-current=${item.active ? 'page' : ''}
-        >${item.name}</a
-      >`;
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    if (window) {
-      // only on the client
-      window.setTimeout(() => {
-        // remove the second navigation
-        // its rendered twice due to lack of lit/ssr
-        // https://github.com/lit/lit/issues/4472
-        const $navs = this.renderRoot.querySelectorAll('[data-part="nav"]');
-        if ($navs.length > 1) {
-          $navs[1].remove();
-        }
-      });
-    }
   }
 
   get templateContext() {
     return {
       ...super.templateContext,
+      directives: { navItem: navItemDirective },
       data: { navData: this.navData },
     };
   }
@@ -66,7 +41,7 @@ export class UIPortalMainNav extends UIBaseElement {
       return html` <nav>${templates.navLevel(context, { children: data.navData })}</nav> `;
     },
     navLevel(context, { children }) {
-      const { templates } = context;
+      const { templates, directives } = context;
 
       return html`<ul>
         ${children.map(
@@ -78,7 +53,7 @@ export class UIPortalMainNav extends UIBaseElement {
                     <li>
                       ${item.children.map(
                         child1 => html`
-                          ${this.getLink(child1)}
+                          <a ${directives.navItem(child1)}>${child1.name}</a>
                           ${child1.children?.length
                             ? html` collapsible
                                 <ul>
@@ -99,14 +74,16 @@ export class UIPortalMainNav extends UIBaseElement {
       </ul>`;
     },
     navItem(context, { item }) {
-      return this.getLink(item);
+      const { directives } = context;
+
+      return html`<a ${directives.navItem(item)}>${item.name}</a>`;
     },
   };
 
   attributeChangedCallback(attrName, oldVal, newVal) {
     super.attributeChangedCallback(attrName, oldVal, newVal);
-    if (attrName === 'layout-wide') {
-      if (newVal === true || newVal === 'true') {
+    if (attrName === 'nav-data') {
+      if (this.navData.find(item => item.active)?.url !== '/') {
         this.setAttribute('data-wide', 'true');
       } else {
         this.removeAttribute('data-wide');
@@ -136,14 +113,11 @@ const baseUINavMarkup = {
 
       return html`
         <nav data-part="nav">
-          <input type="checkbox" id="burger-toggle" hidden />
-          <label for="burger-toggle" class="burger">
-            <span></span>
-            <span></span>
-            <span></span>
-          </label>
+          ${data.shouldToggleL1
+            ? html`<button popovertarget="l1-wrapper" data-part="l1-invoker">Open Menu</button>`
+            : nothing}
 
-          <div id="l1-wrapper" data-part="l1-wrapper">
+          <div ?popover="${data.shouldToggleL1}" id="l1-wrapper" data-part="l1-wrapper">
             ${templates.navLevel(context, { children: data.navData, level: 1 })}
           </div>
         </nav>
@@ -155,7 +129,7 @@ const baseUINavMarkup = {
       return html`<div
         data-part="level"
         data-level="${level}"
-        data-has-active-child="${hasActiveChild}"
+        ?data-:has-active-child="${hasActiveChild}"
       >
         <ul data-part="list" data-level="${level}">
           ${children.map(
@@ -172,27 +146,13 @@ const baseUINavMarkup = {
               </li>`,
           )}
         </ul>
-        ${level === 1
-          ? html`
-              <div class="nav-item-last">
-                <a href="/search" data-part="anchor" data-level="${level}">
-                  <lion-icon
-                    data-part="icon"
-                    data-level="${level}"
-                    icon-id="lion-portal:portal:search"
-                  ></lion-icon>
-                  <span>Search</span>
-                </a>
-              </div>
-            `
-          : nothing}
       </div>`;
     },
     navLevel3(context, { children, level, item }) {
-      const { templates } = context;
+      const { templates, directives } = context;
 
       return html`<div>
-        ${this.getLink(item)}
+        <a ${directives.navItem(item)} class="second-level-title">${item.name}</a>
         <ul data-part="list" class="second-level-list">
           ${children.map(
             child =>
@@ -218,11 +178,9 @@ const baseUINavMarkup = {
       // </div>`;
     },
     navItem(context, { item, level }) {
-      return html`<a
-        data-part="anchor"
-        data-level="${level}"
-        href="${item.redirect || item.url}"
-        aria-current=${item.active ? 'page' : ''}
+      const { directives } = context;
+
+      return html`<a data-part="anchor" data-level="${level}" ${directives.navItem(item)}
         >${level === 1
           ? html`<lion-icon
               data-part="icon"
@@ -243,9 +201,8 @@ UIPortalMainNav.provideStylesAndMarkup({
   /** 2 columns */
   styles: () => [
     sharedGlobalStyles,
-    uiPortalMainNavBurgerCss,
     css`
-      :host {
+      :host([data-layout='inline-columns']) {
         --_width-l0: var(--size-12);
         --_width-l1: var(--size-13);
         height: 100vh;
@@ -261,38 +218,35 @@ UIPortalMainNav.provideStylesAndMarkup({
         width: calc(var(--_width-l0) + var(--_width-l1));
       }
 
-      :host [data-part='nav'] {
+      :host([data-layout='inline-columns']) [data-part='nav'] {
         height: 100%;
       }
 
-      :host [data-part='level'][data-level='1'],
-      :host [data-part='level'][data-level='2'] {
+      :host([data-layout='inline-columns']) [data-part='level'][data-level='1'],
+      :host([data-layout='inline-columns']) [data-part='level'][data-level='2'] {
         padding-block-start: var(--size-6);
         padding-inline: var(--size-2);
         overflow-y: scroll;
       }
 
-      :host [data-part='level'][data-level='1'] {
+      :host([data-layout='inline-columns']) [data-part='level'][data-level='1'] {
         width: var(--_width-l0);
         height: 100vh;
         border-right: 1px solid #ccc;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
       }
 
       /**
        * When a l0 child is active, or a l1 child => open correct l1
        */
-      :host
+      :host([data-layout='inline-columns'])
         [data-part='listitem']:not([data-\:active])
-        [data-part='level'][data-level='2']:not([data-has-active-child]) {
+        [data-part='level'][data-level='2']:not([data-\:has-active-child]) {
         /** TODO: sr-only, because we want to present all links to the screen reader */
         display: none;
       }
 
-      :host [data-part='level'][data-level='2'] {
+      :host([data-layout='inline-columns']) [data-part='level'][data-level='2'] {
         width: var(--_width-l1);
         position: absolute;
         left: var(--_width-l0);
@@ -302,45 +256,45 @@ UIPortalMainNav.provideStylesAndMarkup({
         height: 100%;
       }
 
-      :host [data-part='list'] {
+      :host([data-layout='inline-columns']) [data-part='list'] {
         list-style-type: none;
         margin: 4px;
         padding: 0;
       }
 
-      :host [data-part='anchor'][data-level='1'] {
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='1'] {
         display: block;
         padding-block: var(--size-6);
         padding-inline: var(--size-6);
       }
 
-      :host [data-part='anchor'][data-level='2'] {
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='2'] {
         display: block;
         padding-block: var(--size-3);
         padding-inline: var(--size-6);
       }
-
-      :host [data-part='anchor'][data-level='2'][aria-current='page']:not(:last-child) {
+      
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='2'][aria-current='page'] {
         padding-block: var(--size-2);
       }
 
-      :host [data-part='icon'][data-level='1'] {
+      :host([data-layout='inline-columns']) [data-part='icon'][data-level='1'] {
         display: block;
         width: var(--size-7);
         height: var(--size-7);
         margin-bottom: var(--size-1);
       }
 
-      :host [data-part='anchor'][data-level='1'] {
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='1'] {
         display: flex;
         flex-direction: column;
         align-items: center;
         margin-block-end: 6px;
       }
 
-      :host [data-part='anchor'] {
+      :host([data-layout='inline-columns']) [data-part='anchor'] {
         display: block;
-        color: var(--text-color);
+        color: inherit;
         text-decoration: inherit;
         font-size: 1rem;
         fill: var(--primary-icon-color);
@@ -348,38 +302,36 @@ UIPortalMainNav.provideStylesAndMarkup({
         border-radius: var(--radius-4);
       }
 
-      :host [data-part='anchor'][aria-current='page'][data-level='1'],
-      :host [data-part='anchor'][aria-current='page'][data-level='3']:last-child,
-      :host [data-part='anchor'][aria-current='page'][data-level='4'] {
+      :host([data-layout='inline-columns']) [data-part='anchor'][aria-current='page'] {
         font-weight: bold;
-        background-color: var(--secondary-color);
+        background-color: var(--primary-color-lighter);
       }
 
-      :host [data-part='anchor']:hover {
+      :host([data-layout='inline-columns']) [data-part='anchor']:hover {
         text-decoration: underline;
         text-underline-offset: 0.3em;
-        background-color: var(--secondary-color-lighter);
+        background-color: var(--primary-color);
       }
 
-      :host [data-part='anchor']:focus {
+      :host([data-layout='inline-columns']) [data-part='anchor']:focus {
         outline: 2px solid var(--contrast-color-dark);
       }
 
-      :host [data-part='anchor'][data-level='2']:focus,
-      :host [data-part='anchor'][data-level='2']:focus {
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='2']:focus,
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='2']:focus {
         outline-offset: 2px;
       }
 
-      :host [data-part='level'][data-level='2'] {
+      :host([data-layout='inline-columns']) [data-part='level'][data-level='2'] {
         display: none;
       }
 
-      :host [data-\\:active] [data-part='level'][data-level='2'] {
+      :host([data-layout='inline-columns']) [data-\\:active] [data-part='level'][data-level='2'] {
         display: block;
       }
 
-      :host [data-part='level'][data-level='2'] {
-        color: var(--text-color, #333);
+      :host([data-layout='inline-columns']) [data-part='level'][data-level='2'] {
+        color: var(--primary-text-color, #333);
 
         /* 14px/Regular */
         font-family: 'ING Me';
@@ -390,19 +342,19 @@ UIPortalMainNav.provideStylesAndMarkup({
         text-decoration: none;
       }
 
-      :host [data-part='listitem'][data-level='2'][data-\\:active] {
+      :host([data-layout='inline-columns']) [data-part='listitem'][data-level='2'][data-\\:active] {
         border-radius: var(--radius-4);
-        background: var(--neutral-color-lightest);
+        background: var(--primary-color-lighter, #f0f0f0);
+        padding-block-end: 12px;
         margin-block: 6px;
       }
 
-      :host [data-part='level'][data-level='3'] {
+      :host([data-layout='inline-columns']) [data-part='level'][data-level='3'] {
         overflow: hidden;
-        padding-block-end: 12px;
       }
 
-      :host [data-part='anchor'][data-level='3'],
-      :host [data-part='anchor'][data-level='4'] {
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='3'],
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='4'] {
         /* 14px/Regular */
         font-family: 'ING Me';
         font-size: 0.875rem;
@@ -410,22 +362,132 @@ UIPortalMainNav.provideStylesAndMarkup({
         font-weight: 400;
         line-height: 20px; /* 142.857% */
         text-decoration: none;
-        margin-left: var(--size-7);
-        padding-inline: var(--size-3);
+        margin-left: var(--size-8);
+        padding-inline: var(--size-2);
       }
 
-      :host [data-part='anchor'][data-level='3'][aria-current='page'],
-      :host [data-part='anchor'][data-level='4'][aria-current='page'] {
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='3'][aria-current='page'],
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='4'][aria-current='page'] {
         font-weight: bold;
       }
 
-      :host [data-level='2'] > [aria-current='page'] {
+      :host([data-layout='inline-columns']) [data-level='2'] > [aria-current='page'] {
         background: transparent;
         font-weight: bold;
       }
 
-      :host [data-part='list'][data-level='4'] {
-        margin-left: var(--size-3);
+      :host([data-layout='inline-columns']) [data-part='list'][data-level='4'] {
+        margin-left: var(--size-4);
+      }
+    `,
+    css`
+      /* ----------------------------
+       * part: root
+       */
+
+      :host([data-layout='floating-toggle']) {
+        --_width-l0: var(--size-11);
+        --_width-l1: var(--size-13);
+        height: 100vh;
+        /** Make this the positioning parent of l0 and l1 */
+        position: relative;
+        width: calc(var(--_width-l0) + var(--_width-l1));
+        display: block;
+        position: sticky;
+        top: 0;
+      }
+
+      /* ----------------------------
+       * part: nav
+       */
+
+      :host([data-layout='floating-toggle']) [data-part='nav'] {
+        height: 100%;
+      }
+
+      /* ----------------------------
+       * part: l1-wrapper
+       */
+
+      :host([data-layout='floating-toggle']) [data-part='l1-wrapper'] {
+        height: 100%;
+        width: 100%;
+      }
+
+      /* ----------------------------
+       * part: level
+       */
+
+      :host([data-layout='floating-toggle']) [data-part='level'] {
+        padding-top: var(--size-6);
+        overflow-y: scroll;
+      }
+
+      :host([data-layout='floating-toggle']) [data-part='level'][data-level='1'] {
+        width: var(--_width-l0);
+        height: 100%;
+        border-right: 1px solid var(--primary-lines-color);
+      }
+
+      /**
+         * When a l0 child is active, or a l1 child => open correct l1
+         */
+
+      :host([data-layout='floating-toggle'])
+        [data-part='listitem']:not([data-\:active])
+        [data-part='level'][data-level='2']:not([data-\:has-active-child]) {
+        /** TODO: sr-only, because we want to present all links to the screen reader */
+        display: none;
+      }
+
+      :host([data-layout='floating-toggle']) [data-part='level'][data-level='2'] {
+        width: var(--_width-l1);
+        position: fixed;
+        left: 0;
+        top: 0;
+        background-color: var(--page-background);
+        padding-inline: var(--size-6);
+        border-right: 1px solid var(--primary-lines-color);
+        height: 100%;
+      }
+
+      :host([data-layout='floating-toggle']) [data-part='list'] {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      :host([data-layout='floating-toggle']) [data-part='listitem'] {
+        display: block;
+        margin-bottom: var(--size-6);
+      }
+
+      :host([data-layout='floating-toggle']) [data-part='icon'][data-level='1'] {
+        display: block;
+        width: var(--size-7);
+        height: var(--size-7);
+        margin-bottom: var(--size-1);
+      }
+
+      :host([data-layout='floating-toggle']) [data-part='anchor'][data-level='1'] {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      :host([data-layout='floating-toggle']) [data-part='anchor'] {
+        color: inherit;
+        text-decoration: inherit;
+        font-size: 0.875rem;
+        fill: var(--primary-icon-color);
+      }
+
+      :host([data-layout='floating-toggle']) [data-part='anchor']:hover {
+        text-decoration: underline;
+        text-underline-offset: 0.3em;
+      }
+
+      :host([data-layout='floating-toggle']) [data-part='listitem'][data-\:active] {
       }
     `,
   ],
