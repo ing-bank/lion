@@ -1,38 +1,61 @@
 html {
-  --primary-color: #e63946;
-  --primary-color-lighter: #e25761;
-  --primary-color-darker: #a22831;
-  --primary-color-accent: #cee5f6;
-  --primary-text-color: #2c3e50;
-  --primary-lines-color: #ccc;
-  --primary-text-inverse-color: #eee;
+  /* Base colors */
+  --dandilion-100: #fff6cc;
+  --dandilion-300: #ffe366;
+  --dandilion-500: #ffd100;
+  --dandilion-700: #997d00;
+  --dandilion-900: #332a00;
+
+  --blue-500: #002eff;
+
+  --green-500: #00ff51;
+
+  --black: #080700;
+  --white: #ffffff;
+
+  --gray-100: #e6e6e6;
+  --gray-300: #b3b3b3;
+  --gray-500: #808080;
+  --gray-700: #4d4d4d;
+  --gray-900: #1a1a1a;
+
+  /* Alias tokens */
+  --primary-color: var(--dandilion-500);
+  --secondary-color: var(--blue-500);
+  --primary-color-lighter: var(--dandilion-300);
+  --primary-color-darker: var(--dandilion-700);
+  --primary-text-color: var(--black);
+  --primary-icon-color: var(--dandilion-900);
+  --primary-lines-color: var(--gray-300);
+  --primary-text-inverse-color: var(--gray-100);
+  --markdown-link-color: var(--blue-500);
 
   /* Contrast colors */
-  --contrast-color-light: #fff;
-  --contrast-color-dark: #1d3557;
+  --contrast-color-light: var(--white);
+  --contrast-color-dark: var(--dandilion-900);
 
   /* background-colors */
-  --page-background: white;
+  --page-background: var(--white);
+  --secondary-background: var(--gray-100);
   --footer-background: rgba(0, 0, 0, 0.1);
 
   /* typography */
-  --text-color: black;
+  --text-color: var(--black);
   --primary-font-family: 'Open Sans', sans-serif;
   --secondary-font-family: 'Montserrat', sans-serif;
   --monospace-font-family:
     'SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', monospace;
 
   /* controls */
-  --switch-unselected-color: #808080;
-  --switch-selected-color: #42b983;
+  --switch-unselected-color: var(--gray-500);
+  --switch-selected-color: var(--green-500);
 }
 
 html.dark {
   --primary-color: #e63946;
   --primary-color-lighter: #e25761;
   --primary-color-darker: #a22831;
-  --primary-color-accent: #cee5f6;
-  --primary-text-color: #eee;
+  --primary-text-color: var(--white);
   --primary-text-inverse-color: #2c3e50;
 
   /* Contrast colors */

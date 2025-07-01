@@ -26,6 +26,10 @@ export class UIPortalFooter extends LitElement {
       }
 
       @media screen and (min-width: 1024px) {
+        #main-footer {
+          padding-inline: 96px;
+        }
+        
         #footer-menu .content-area {
           flex-direction: row;
           text-align: left;
