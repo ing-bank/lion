@@ -203,7 +203,7 @@ UIPortalMainNav.provideStylesAndMarkup({
     sharedGlobalStyles,
     css`
       :host([data-layout='inline-columns']) {
-        --_width-l0: var(--size-11);
+        --_width-l0: var(--size-12);
         --_width-l1: var(--size-13);
         height: 100vh;
         /** Make this the positioning parent of l0 and l1 */
@@ -224,7 +224,8 @@ UIPortalMainNav.provideStylesAndMarkup({
 
       :host([data-layout='inline-columns']) [data-part='level'][data-level='1'],
       :host([data-layout='inline-columns']) [data-part='level'][data-level='2'] {
-        padding-top: var(--size-6);
+        padding-block-start: var(--size-6);
+        padding-inline: var(--size-2);
         overflow-y: scroll;
       }
 
@@ -250,26 +251,31 @@ UIPortalMainNav.provideStylesAndMarkup({
         position: absolute;
         left: var(--_width-l0);
         top: 0;
-        padding-inline: var(--size-6);
+        /* padding-inline: var(--size-6); */
         border-right: 1px solid #ccc;
         height: 100%;
       }
 
       :host([data-layout='inline-columns']) [data-part='list'] {
         list-style-type: none;
-        margin: 0;
+        margin: 4px;
         padding: 0;
       }
 
-      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='1'],
-      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='2'] {
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='1'] {
         display: block;
-        padding: var(--size-3) var(--size-6);
+        padding-block: var(--size-6);
+        padding-inline: var(--size-6);
       }
 
-      :host([data-layout='inline-columns'])
-        [data-part='anchor'][data-level='2'][aria-current='page'] {
-        padding-bottom: 0;
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='2'] {
+        display: block;
+        padding-block: var(--size-3);
+        padding-inline: var(--size-6);
+      }
+      
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='2'][aria-current='page'] {
+        padding-block: var(--size-2);
       }
 
       :host([data-layout='inline-columns']) [data-part='icon'][data-level='1'] {
@@ -283,23 +289,37 @@ UIPortalMainNav.provideStylesAndMarkup({
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin-block-end: 6px;
       }
 
       :host([data-layout='inline-columns']) [data-part='anchor'] {
         display: block;
         color: inherit;
         text-decoration: inherit;
-        font-size: 14px;
-        fill: #666666;
+        font-size: 1rem;
+        fill: var(--primary-icon-color);
+        margin-inline: var(--size-1);
+        border-radius: var(--radius-4);
+      }
+
+      :host([data-layout='inline-columns']) [data-part='anchor'][aria-current='page'] {
+        font-weight: bold;
+        background-color: var(--primary-color-lighter);
       }
 
       :host([data-layout='inline-columns']) [data-part='anchor']:hover {
         text-decoration: underline;
         text-underline-offset: 0.3em;
+        background-color: var(--primary-color);
       }
 
-      :host([data-layout='inline-columns']) [data-part='anchor'][aria-current='page'] {
-        font-weight: bold;
+      :host([data-layout='inline-columns']) [data-part='anchor']:focus {
+        outline: 2px solid var(--contrast-color-dark);
+      }
+
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='2']:focus,
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='2']:focus {
+        outline-offset: 2px;
       }
 
       :host([data-layout='inline-columns']) [data-part='level'][data-level='2'] {
@@ -311,11 +331,11 @@ UIPortalMainNav.provideStylesAndMarkup({
       }
 
       :host([data-layout='inline-columns']) [data-part='level'][data-level='2'] {
-        color: var(--Primary-Gray600, #333);
+        color: var(--primary-text-color, #333);
 
         /* 14px/Regular */
         font-family: 'ING Me';
-        font-size: 14px;
+        font-size: 0.875rem;
         font-style: normal;
         font-weight: 400;
         line-height: 20px; /* 142.857% */
@@ -323,36 +343,36 @@ UIPortalMainNav.provideStylesAndMarkup({
       }
 
       :host([data-layout='inline-columns']) [data-part='listitem'][data-level='2'][data-\\:active] {
-        border-radius: 7px;
-        background: var(--Primary-Gray100, #f0f0f0);
-        font-weight: bold;
-        padding-bottom: 12px;
+        border-radius: var(--radius-4);
+        background: var(--primary-color-lighter, #f0f0f0);
+        padding-block-end: 12px;
+        margin-block: 6px;
       }
 
       :host([data-layout='inline-columns']) [data-part='level'][data-level='3'] {
         overflow: hidden;
       }
 
-      :host([data-layout='inline-columns']) [data-part='list'][data-level='3'] {
-        color: var(--Primary-Gray600, #333);
-
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='3'],
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='4'] {
         /* 14px/Regular */
         font-family: 'ING Me';
-        font-size: 13px;
+        font-size: 0.875rem;
         font-style: normal;
         font-weight: 400;
         line-height: 20px; /* 142.857% */
         text-decoration: none;
         margin-left: var(--size-8);
+        padding-inline: var(--size-2);
       }
 
-      :host([data-layout='inline-columns']) [data-part='listitem'][data-level='3'] {
-        padding: 4px 0;
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='3'][aria-current='page'],
+      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='4'][aria-current='page'] {
+        font-weight: bold;
       }
 
       :host([data-layout='inline-columns']) [data-level='2'] > [aria-current='page'] {
-        border-radius: 7px;
-        background: var(--Primary-Gray100, #f0f0f0);
+        background: transparent;
         font-weight: bold;
       }
 
@@ -406,7 +426,7 @@ UIPortalMainNav.provideStylesAndMarkup({
       :host([data-layout='floating-toggle']) [data-part='level'][data-level='1'] {
         width: var(--_width-l0);
         height: 100%;
-        border-right: 1px solid #ccc;
+        border-right: 1px solid var(--primary-lines-color);
       }
 
       /**
@@ -425,9 +445,9 @@ UIPortalMainNav.provideStylesAndMarkup({
         position: fixed;
         left: 0;
         top: 0;
-        background-color: white;
+        background-color: var(--page-background);
         padding-inline: var(--size-6);
-        border-right: 1px solid #ccc;
+        border-right: 1px solid var(--primary-lines-color);
         height: 100%;
       }
 
@@ -458,8 +478,8 @@ UIPortalMainNav.provideStylesAndMarkup({
       :host([data-layout='floating-toggle']) [data-part='anchor'] {
         color: inherit;
         text-decoration: inherit;
-        font-size: 14px;
-        fill: #666666;
+        font-size: 0.875rem;
+        fill: var(--primary-icon-color);
       }
 
       :host([data-layout='floating-toggle']) [data-part='anchor']:hover {

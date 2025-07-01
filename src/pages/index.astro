@@ -14,26 +14,28 @@ const {
 ---
 
 <MainLayout layout="layout-home">
-  <img class="page-logo" src="/logo.svg" alt="{title} Logo"/>
+  <section class="banner">
+    <div class="page-title--container">
+      <h1 class="page-title">{title}</h1>
+      <p class="page-slogan">{slogan}</p>
+      <div class="call-to-action-list" role="list">
+        {callToActionItems.map((callToAction) => (
+          <a class="call-to-action" href={callToAction.href} role="listitem">{callToAction.text}</a>
+        ))}
+      </div>
+    </div>
+    <img class="page-logo" src="/logo.svg" alt="{title} Logo"/>
+  </section>
 
-  <h1 class="page-title">{title}</h1>
-
-  <p class="page-slogan">{slogan}</p>
-
-  <div class="call-to-action-list" role="list">
-    {callToActionItems.map((callToAction) => (
-      <a class="call-to-action" href={callToAction.href} role="listitem">{callToAction.text}</a>
-    ))}
-  </div>
-
-  <h2 class="reason-header">{reasonHeader}</h2>
-
-  <section class="reasons">
+  <section>
+    <h2 class="reason-header">{reasonHeader}</h2>
+    <div class="reasons">
     {reasons.map((reason) => (
       <article>
         <h3>{reason.header}</h3>
         {reason.text}
       </article>
     ))}
+    </div>
   </section>
 </MainLayout>
