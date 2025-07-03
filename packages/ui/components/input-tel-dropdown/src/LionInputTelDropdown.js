@@ -42,14 +42,6 @@ import { regionCodeToLocale } from './regionCodeToLocale.js';
  * `e164` format that contains all info (both region code and national phone number).
  */
 export class LionInputTelDropdown extends LionInputTel {
-  /**
-   * @configure LitElement
-   * @type {any}
-   */
-  static properties = {
-    preferredRegions: { type: Array },
-  };
-
   refs = {
     /** @type {DropdownRef} */
     dropdown: /** @type {DropdownRef} */ (createRef()),
@@ -214,11 +206,6 @@ export class LionInputTelDropdown extends LionInputTel {
   constructor() {
     super();
 
-    /**
-     * Regions that will be shown on top of the dropdown
-     * @type {string[]}
-     */
-    this.preferredRegions = [];
     /**
      * Group label for all countries, when preferredCountries are shown
      * @protected
