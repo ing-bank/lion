@@ -71,4 +71,10 @@ describe('parseAmount()', async () => {
       parseAmount('123.456,78', { mode: 'user-edited', viewValueStates: ['formatted'] }),
     ).to.equal(123456.78);
   });
+
+  // Tests parsing of negative numbers with both normal dash and unicode minus
+  it('parses negative numbers with unicode minus sign and normal dash', async () => {
+    expect(parseAmount('−123')).to.equal(-123); // Unicode minus: \u2212
+    expect(parseAmount('-123')).to.equal(-123); // Normal dash
+  });
 });
