@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Systems
 ---
 
-# Systems >> Icon ||40
+# Icon
 
 -> go to Overview
