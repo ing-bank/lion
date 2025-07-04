@@ -108,7 +108,7 @@ export function runFormGroupMixinInputSuite(cfg = {}) {
             </${childTag}>
 
             <div slot="${msgSlotType}" id="msg_l2_g"></div>
-            <!-- group referred by: #msg_l2_g (local), #msg_l1_g (parent/group)  -->
+            <!-- group referred by: #msg_l2_g (local), #msg_l1_g (parent/group) -->
           </${tag}>
 
           <!-- [ / INNER FIELDSET ] -->
