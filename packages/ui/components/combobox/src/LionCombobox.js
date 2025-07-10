@@ -1213,8 +1213,8 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   __setComboboxDisabledAndReadOnly() {
     if (this._comboboxNode) {
-      this._comboboxNode.setAttribute('disabled', `${this.disabled}`);
-      this._comboboxNode.setAttribute('readonly', `${this.readOnly}`);
+      this._comboboxNode.disabled = !!this.disabled;
+      this._comboboxNode.readonly = !!this.readOnly;
     }
   }
 
