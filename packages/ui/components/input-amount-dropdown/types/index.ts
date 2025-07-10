@@ -36,14 +36,14 @@ export type TemplateDataForDropdownInputAmount = {
     input: HTMLInputElement;
   };
   data: {
-    currency: CurrencyCode | undefined;
+    currency: CurrencyCode | string;
     regionMetaList: RegionMeta[];
     regionMetaListPreferred: RegionMeta[];
   };
 };
 
 export type AmountDropdownModelValue = {
-  currency?: CurrencyCode;
+  currency?: CurrencyCode | string;
   amount?: number | string;
 };
 

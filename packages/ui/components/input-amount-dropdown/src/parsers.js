@@ -18,7 +18,6 @@ export const parseAmount = (value, givenOptions) => {
 
   return {
     amount: parsedAmount,
-    // @ts-expect-error - cannot cast string to CurrencyCode outside a TS file
     currency: givenOptions?.currency,
   };
 };

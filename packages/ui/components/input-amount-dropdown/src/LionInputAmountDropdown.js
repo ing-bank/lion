@@ -50,6 +50,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  *
  * @customElement lion-input-amount-dropdown
  */
+// @ts-expect-error - The types returned by 'parser(...)' are incompatible between these types. AmountDropdownModelValue' is not assignable to type 'number' */
 export class LionInputAmountDropdown extends LionInputAmount {
   /**
    * @configure LitElement
@@ -260,7 +261,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
       localeSplitted[localeSplitted.length - 1].toUpperCase()
     );
 
-    // @ts-expect-error relatively new platform api
     this.__namesForLocale = new Intl.DisplayNames([this._langIso], {
       type: 'currency',
     });
@@ -373,7 +373,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
       }
     }
 
-    if (changedProperties.has('allowedCurrencies')) {
+    if (changedProperties.has('allowedCurrencies') && this.allowedCurrencies.length > 0) {
       this.__calculateActiveCurrency();
     }
   }
@@ -429,6 +429,8 @@ export class LionInputAmountDropdown extends LionInputAmount {
     }
 
     const prevCurrency = this.currency;
+
+    /** @type {RegionCode | string} */
     this.currency = dropdownValue;
 
     if (prevCurrency !== this.currency && !this.focused) {

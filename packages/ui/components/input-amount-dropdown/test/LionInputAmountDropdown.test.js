@@ -58,7 +58,6 @@ class WithFormControlInputAmountDropdown extends ScopedElementsMixin(LionInputAm
   };
 }
 
-// @ts-expect-error
 runInputAmountDropdownSuite();
 
 describe('WithFormControlInputAmountDropdown', () => {
