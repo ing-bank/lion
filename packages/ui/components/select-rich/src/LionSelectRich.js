@@ -51,66 +51,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
   }
 
   /**
-   * @param {number} currentIndex
-   * @param {number} offset
-   * @returns {number}
-   */
-  _getNextEnabledOption(currentIndex, offset = 1) {
-    return this.__getEnabledOption(currentIndex, offset);
-  }
-
-  /**
-   * @param {number} currentIndex
-   * @param {number} offset
-   * @returns {number}
-   */
-  _getPreviousEnabledOption(currentIndex, offset = -1) {
-    return this.__getEnabledOption(currentIndex, offset);
-  }
-
-  /**
-   * @param {number} currentIndex
-   * @param {number} offset
-   * @returns {number}
-   */
-  __getEnabledOption(currentIndex, offset) {
-    /**
-     * @param {number} i
-     * @returns {boolean}
-     */
-    const until = i => (offset === 1 ? i < this.formElements.length : i >= 0);
-
-    // Try to find the next / previous option
-    for (let i = currentIndex + offset; until(i); i += offset) {
-      if (
-        this.formElements[i] &&
-        !this.formElements[i].hasAttribute('aria-hidden') &&
-        !this.formElements[i].disabled
-      ) {
-        return i;
-      }
-    }
-
-    // If above was unsuccessful, try to find the next/previous either
-    // from end --> start or start --> end
-    if (this.rotateKeyboardNavigation) {
-      const startIndex = offset === -1 ? this.formElements.length - 1 : 0;
-      for (let i = startIndex; until(i); i += offset) {
-        if (
-          this.formElements[i] &&
-          !this.formElements[i].hasAttribute('aria-hidden') &&
-          !this.formElements[i].disabled
-        ) {
-          return i;
-        }
-      }
-    }
-
-    // If above was unsuccessful, return currentIndex that we started with
-    return currentIndex;
-  }
-
-  /**
    * @enhance FormControlMixin
    * @protected
    */
