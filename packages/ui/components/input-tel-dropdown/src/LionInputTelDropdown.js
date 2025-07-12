@@ -4,6 +4,7 @@ import { ref, createRef } from 'lit/directives/ref.js';
 import { LionInputTel } from '@lion/ui/input-tel.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { getFlagSymbol } from './getFlagSymbol.js';
+import { regionCodeToLocale } from './regionCodeToLocale.js';
 
 /**
  * Note: one could consider to implement LionInputTelDropdown as a
@@ -41,14 +42,6 @@ import { getFlagSymbol } from './getFlagSymbol.js';
  * `e164` format that contains all info (both region code and national phone number).
  */
 export class LionInputTelDropdown extends LionInputTel {
-  /**
-   * @configure LitElement
-   * @type {any}
-   */
-  static properties = {
-    preferredRegions: { type: Array },
-  };
-
   refs = {
     /** @type {DropdownRef} */
     dropdown: /** @type {DropdownRef} */ (createRef()),
@@ -193,8 +186,7 @@ export class LionInputTelDropdown extends LionInputTel {
   onLocaleUpdated() {
     super.onLocaleUpdated();
 
-    // @ts-expect-error relatively new platform api
-    this.__namesForLocale = new Intl.DisplayNames([this._langIso], {
+    this.__namesForLocale = new Intl.DisplayNames([this._localizeManager.locale], {
       type: 'region',
     });
     this.__createRegionMeta();
@@ -214,11 +206,6 @@ export class LionInputTelDropdown extends LionInputTel {
   constructor() {
     super();
 
-    /**
-     * Regions that will be shown on top of the dropdown
-     * @type {string[]}
-     */
-    this.preferredRegions = [];
     /**
      * Group label for all countries, when preferredCountries are shown
      * @protected
@@ -408,7 +395,7 @@ export class LionInputTelDropdown extends LionInputTel {
     this.__regionMetaListPreferred = [];
     this._allowedOrAllRegions.forEach(regionCode => {
       // @ts-ignore relatively new platform api
-      const namesForRegion = new Intl.DisplayNames([regionCode.toLowerCase()], {
+      const namesForRegion = new Intl.DisplayNames([regionCodeToLocale(regionCode)], {
         type: 'region',
       });
       const countryCode =

@@ -27,6 +27,7 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
     formatStrategy: { type: String, attribute: 'format-strategy' },
     formatCountryCodeStyle: { type: String, attribute: 'format-country-code-style' },
     activeRegion: { type: String },
+    preferredRegions: { type: Array },
     _phoneUtil: { type: Object, state: true },
   };
 
@@ -155,6 +156,12 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
      * @type {RegionCode[]}
      */
     this.allowedRegions = [];
+
+    /**
+     * Regions that will be shown on top of the dropdown
+     * @type {RegionCode[]}
+     */
+    this.preferredRegions = [];
 
     /** @private */
     this.__isPhoneNumberValidatorInstance = new PhoneNumber();
@@ -326,13 +333,19 @@ export class LionInputTel extends LocalizeMixin(LionInput) {
       return;
     }
 
-    // 3. Try to get the region from locale
+    // 3. Get the first region in the list of preferred regions
+    if (this.preferredRegions?.length > 0) {
+      this._setActiveRegion(this.preferredRegions[0]);
+      return;
+    }
+
+    // 4. Try to get the region from locale
     if (this._langIso && this._allowedOrAllRegions.includes(this._langIso)) {
       this._setActiveRegion(this._langIso);
       return;
     }
 
-    // 4. Not derivable
+    // 5. Not derivable
     this._setActiveRegion(undefined);
   }
 }
