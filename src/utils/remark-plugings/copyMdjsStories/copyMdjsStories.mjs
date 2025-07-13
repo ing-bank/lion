@@ -3,8 +3,27 @@ import fs from 'fs';
 import { init, parse } from 'es-module-lexer';
 import { createRequire } from 'module';
 
-const nodeModulesText = '/node_modules';
+const NODE_MODULES_PATH = '/node_modules';
+const NODE_MODULES_LION_DOCS = '_lion_docs';
 const require = createRequire(import.meta.url);
+
+console.log('meta', import.meta, process.cwd());
+
+const resolveLionImport = moduleResolvedPath => {
+  const lionDirectorPackages = 'lion/packages';
+  if (moduleResolvedPath.includes(lionDirectorPackages)) {
+    // it can be from a local package, e.g. @lion/ui
+    return `/@lion${moduleResolvedPath.split(`/${lionDirectorPackages}`)[1]}`;
+  }
+
+  const lionDirectoryDocs = 'lion/docs';
+  if (moduleResolvedPath.includes(lionDirectoryDocs)) {
+    // it can be from a local package, e.g. @lion/ui
+    return `/${NODE_MODULES_LION_DOCS}${moduleResolvedPath.split(`/${lionDirectoryDocs}`)[1]}`;
+  }
+
+  return moduleResolvedPath.split(NODE_MODULES_PATH)[1];
+};
 
 /**
  * @param {string} source
@@ -19,6 +38,10 @@ async function processImports(source, mode, inputPath) {
     return source;
   }
 
+  // for the debug purposes
+  // const log = inputPath.includes('combobox') ? console.log.bind(console) : () => {};
+  const log = () => {};
+
   let newSource = '';
   let lastPos = 0;
   await init;
@@ -28,33 +51,40 @@ async function processImports(source, mode, inputPath) {
 
     const importSrc = source.substring(importObj.s, importObj.e);
     try {
+      log('path to resolve', importSrc);
+      let resolvedImportFullPath = importSrc;
       if (importSrc.startsWith('.')) {
-        newSource +=
-          nodeModulesText +
-          require
-            .resolve(importSrc, { paths: [path.dirname(inputPath)] })
-            .split(nodeModulesText)[1];
+        const resolvedPath = require.resolve(importSrc, { paths: [path.dirname(inputPath)] });
+        const resolvedLionImport = resolveLionImport(resolvedPath);
+        const relativePath = `.${NODE_MODULES_PATH}${resolvedLionImport}`;
+        if (!fs.existsSync(relativePath)) {
+          log('does not exist, going to create', path.dirname(relativePath));
+          // to be able to serve the files from the docs folder, we need to move them to /node_modules
+          await fs.promises.mkdir(path.dirname(relativePath), { recursive: true });
+          await fs.promises.symlink(resolvedPath, relativePath);
+        }
+
+        resolvedImportFullPath = `${NODE_MODULES_PATH}${resolvedLionImport}`;
+
+        log('relative', { relativePath, resolvedPath, resolvedImportFullPath });
       } else if (importSrc.startsWith('/')) {
-        newSource += importSrc;
+        log('absolute', resolvedImportFullPath);
       } else {
         const isDynamicImport = importSrc.startsWith("'");
         if (isDynamicImport) {
-          newSource += `'${nodeModulesText}${
-            require.resolve(importSrc.replace(/'/g, '')).split(nodeModulesText)[1]
-          }'`;
+          const resolvedPath = require.resolve(importSrc.replace(/'/g, ''));
+
+          resolvedImportFullPath = `'${NODE_MODULES_PATH}${resolveLionImport(resolvedPath)}'`;
+          log('dynamic', resolvedImportFullPath);
         } else {
-          const resolvedPath = require.resolve(importSrc, { preserveSymlinks: true });
-          if (resolvedPath.includes(nodeModulesText)) {
-            newSource += nodeModulesText + require.resolve(importSrc).split(nodeModulesText)[1];
-          } else if (resolvedPath.includes('/lion/packages')) {
-            // it can be from a local package, e.g. @lion/ui
-            newSource += `${nodeModulesText}/@lion${require.resolve(importSrc).split('/lion/packages')[1]}`;
-          } else {
-            // what is this?
-            throw new Error(`Unexpected import source: ${importSrc} resolved to ${resolvedPath}`);
-          }
+          const resolvedPath = require.resolve(importSrc);
+
+          resolvedImportFullPath = `${NODE_MODULES_PATH}${resolveLionImport(resolvedPath)}`;
+          log('regular', resolvedImportFullPath);
         }
       }
+
+      newSource += resolvedImportFullPath;
     } catch (error) {
       console.error(`Error resolving import: ${importSrc}`, error);
       newSource += importSrc; // Fallback to original import if resolution fails

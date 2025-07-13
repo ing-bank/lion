@@ -1,1 +1,1 @@
-export { copyMdjsStories } from './copyMdjsStories.js';
+export { copyMdjsStories } from './copyMdjsStories.mjs';
