@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.11.6
+
+### Patch Changes
+
+- 85666d6: feat(input-tel): use first preferred region to set a default region
+- dc5d224: fix(input-tel): use full locale to translate country names in dropdown
+
 ## 0.11.5
 
 ### Patch Changes

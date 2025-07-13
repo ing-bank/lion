@@ -100,6 +100,20 @@ function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
       expect(el.activeRegion).to.equal('NL');
     });
 
+    it('.modelValue takes precedence over .preferredRegions when both preconfigured and .modelValue updated', async () => {
+      const el = await fixture(
+        html` <${tag} .preferredRegions="${[
+          'DE',
+          'BE',
+        ]}" .modelValue="${'+31612345678'}" ></${tag}> `,
+      );
+      if (resolvePhoneUtilLoaded) {
+        resolvePhoneUtilLoaded(undefined);
+        await el.updateComplete;
+      }
+      expect(el.activeRegion).to.equal('NL');
+    });
+
     it('deducts it from value when modelValue is unparseable', async () => {
       const modelValue = new Unparseable('+316');
       const el = await fixture(html` <${tag} .modelValue=${modelValue}></${tag}> `);
@@ -122,7 +136,18 @@ function runActiveRegionTests({ tag, phoneUtilLoadedAfterInit }) {
       expect(el.activeRegion).to.equal('NL');
     });
 
-    // 3. **locale**: try to get the region from locale (`html[lang]` attribute)
+    // 3. **preferred-region**: get the first element in the preferred regions list
+    it('deducts it from the .preferredRegions when provided', async () => {
+      const el = await fixture(html` <${tag} .preferredRegions="${['DE', 'NL']}"></${tag}> `);
+      if (resolvePhoneUtilLoaded) {
+        resolvePhoneUtilLoaded(undefined);
+        await el.updateComplete;
+      }
+      // Region code for country code '+49' is 'DE'
+      expect(el.activeRegion).to.equal('DE');
+    });
+
+    // 4. **locale**: try to get the region from locale (`html[lang]` attribute)
     it('automatically bases it on current locale when nothing preconfigured', async () => {
       const el = await fixture(html` <${tag}></${tag}> `);
       if (resolvePhoneUtilLoaded) {
