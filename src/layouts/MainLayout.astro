@@ -153,9 +153,7 @@ function setParents(navData, parentItem = null) {
 let activeItem;
 function setActive(navData, currentUrl) {
   // for home page we need to check with the exact match
-  const isActive = (navItem) => navItem.url === '/'
-      ? currentUrl === navItem.url
-      : currentUrl.startsWith(navItem.url);
+  const isActive = (navItem) => currentUrl === navItem.url || currentUrl.startsWith(`${navItem.url}/`);
 
   for (const navItem of navData) {
     if (isActive(navItem)) {
