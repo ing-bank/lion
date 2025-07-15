@@ -239,7 +239,7 @@ const footerData = [
     </style> -->
 
     <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
-    <script src="@webcomponents/scoped-custom-element-registry"></script>
+    <script src="@webcomponents/scoped-custom-element-registry" />
 
     <SEO
       title={title}
@@ -261,7 +261,7 @@ const footerData = [
   </head>
   <body class="ui-portal-grid" data-layout={layout}>
     <div class="ui-portal-grid__nav">
-      <UIPortalMainNav client:only nav-data={JSON.stringify(navData)} />
+      <UIPortalMainNav client:load nav-data={JSON.stringify(navData)} layout-wide={layout !== 'layout-home' && layout !== 'layout-one-column'} />
     </div>
     <main class={`ui-portal-grid__main ${bodyCssClass}`}>
       <slot />

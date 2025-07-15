@@ -15,6 +15,7 @@ addIconResolverForPortal();
 export class UIPortalMainNav extends UIBaseElement {
   static properties = {
     navData: { type: Array, attribute: 'nav-data' },
+    layoutWide: { type: Boolean, attribute: 'layout-wide' }, // true or false
   };
 
   constructor() {
@@ -82,8 +83,8 @@ export class UIPortalMainNav extends UIBaseElement {
 
   attributeChangedCallback(attrName, oldVal, newVal) {
     super.attributeChangedCallback(attrName, oldVal, newVal);
-    if (attrName === 'nav-data') {
-      if (this.navData.find(item => item.active)?.url !== '/') {
+    if (attrName === 'layout-wide') {
+      if (newVal === true || newVal === 'true') {
         this.setAttribute('data-wide', 'true');
       } else {
         this.removeAttribute('data-wide');
@@ -146,6 +147,20 @@ const baseUINavMarkup = {
               </li>`,
           )}
         </ul>
+        ${level === 1
+          ? html`
+              <div class="nav-item-last">
+                <a href="/search" data-part="anchor" data-level="${level}">
+                  <lion-icon
+                    data-part="icon"
+                    data-level="${level}"
+                    icon-id="lion:portal:search"
+                  ></lion-icon>
+                  <span>Search</span>
+                </a>
+              </div>
+            `
+          : nothing}
       </div>`;
     },
     navLevel3(context, { children, level, item }) {
@@ -234,6 +249,9 @@ UIPortalMainNav.provideStylesAndMarkup({
         height: 100vh;
         border-right: 1px solid #ccc;
         overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
       }
 
       /**
@@ -273,8 +291,9 @@ UIPortalMainNav.provideStylesAndMarkup({
         padding-block: var(--size-3);
         padding-inline: var(--size-6);
       }
-      
-      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='2'][aria-current='page'] {
+
+      :host([data-layout='inline-columns'])
+        [data-part='anchor'][data-level='2'][aria-current='page'] {
         padding-block: var(--size-2);
       }
 
@@ -366,8 +385,10 @@ UIPortalMainNav.provideStylesAndMarkup({
         padding-inline: var(--size-2);
       }
 
-      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='3'][aria-current='page'],
-      :host([data-layout='inline-columns']) [data-part='anchor'][data-level='4'][aria-current='page'] {
+      :host([data-layout='inline-columns'])
+        [data-part='anchor'][data-level='3'][aria-current='page'],
+      :host([data-layout='inline-columns'])
+        [data-part='anchor'][data-level='4'][aria-current='page'] {
         font-weight: bold;
       }
 
