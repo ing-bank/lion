@@ -4,7 +4,6 @@ import MainLayout from "../../layouts/MainLayout.astro";
 
 const entries = await getCollection("lionBlog", entry => entry.data?.published);
 const entry = await getEntry('lionBlog', 'index');
-console.log(entries);
 
 const getUrl = (post) => {
   if (post.data?.url) {

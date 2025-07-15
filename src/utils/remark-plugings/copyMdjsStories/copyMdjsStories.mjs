@@ -7,8 +7,6 @@ const NODE_MODULES_PATH = '/node_modules';
 const NODE_MODULES_LION_DOCS = '_lion_docs';
 const require = createRequire(import.meta.url);
 
-console.log('meta', import.meta, process.cwd());
-
 const resolveLionImport = moduleResolvedPath => {
   const lionDirectorPackages = 'lion/packages';
   if (moduleResolvedPath.includes(lionDirectorPackages)) {

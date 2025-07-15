@@ -4,9 +4,9 @@ import { globby } from 'globby';
 import lit from '@astrojs/lit';
 import { defineConfig } from 'astro/config';
 import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
+import pagefind from 'astro-pagefind';
 import { copyMdjsStories } from './src/utils/remark-plugings/copyMdjsStories/index.js';
 import { remarkModifiedTime } from './src/utils/remark-plugings/remark-modified-time.mjs';
-
 
 const publicJsFiles = await globby('public/**/*.js');
 const publicMdFilesObj = Object.fromEntries(
@@ -38,12 +38,7 @@ console.log('mode', import.meta.env.MODE);
 
 // https://astro.build/config
 export default defineConfig({
-  // redirect /components/accordion to /components/accordion/overview
-  // this is done in Lion via index.md: -> go to Overview
-  redirects: {
-    '/components/[component]': '/components/[component]/overview',
-  },
-  integrations: [lit()],
+  integrations: [lit(), pagefind()],
   markdown: {
     // ing-web
     remarkPlugins: [
