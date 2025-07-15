@@ -1305,7 +1305,7 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
 
       describe('Disabled Options', () => {
-        it('does not skip disabled options but prevents checking them', async () => {
+        it('can skip disabled options and without checking them', async () => {
           const el = await fixture(html`
             <${tag} opened autocomplete="inline" .selectionFollowsFocus="${false}">
               <${optionTag} .choiceValue=${'Item 1'} checked>Item 1</${optionTag}>
@@ -1318,14 +1318,13 @@ export function runListboxMixinSuite(customConfig = {}) {
 
           // Normalize activeIndex across multiple implementers of ListboxMixinSuite
           el.activeIndex = 0;
-
+          // Check the main option
+          expect(el.activeIndex).to.equal(0);
           mimicKeyPress(_listboxNode, 'ArrowDown');
-          expect(el.activeIndex).to.equal(1);
-
-          expect(el.checkedIndex).to.equal(0);
+          // Check the option disabled option has been omitted
+          expect(el.activeIndex).to.equal(2);
           mimicKeyPress(_listboxNode, 'Enter');
-          // Checked index stays where it was
-          expect(el.checkedIndex).to.equal(0);
+          expect(el.checkedIndex).to.equal(2);
         });
         it('does not check disabled options when selection-follow-focus is enabled', async () => {
           const el = await fixture(html`
@@ -1342,12 +1341,12 @@ export function runListboxMixinSuite(customConfig = {}) {
           el.activeIndex = 0;
 
           mimicKeyPress(_listboxNode, 'ArrowDown');
-          expect(el.activeIndex).to.equal(1);
-          expect(el.checkedIndex).to.equal(-1);
-
-          mimicKeyPress(_listboxNode, 'ArrowDown');
           expect(el.activeIndex).to.equal(2);
           expect(el.checkedIndex).to.equal(2);
+
+          mimicKeyPress(_listboxNode, 'ArrowUp');
+          expect(el.activeIndex).to.equal(0);
+          expect(el.checkedIndex).to.equal(0);
         });
       });
 
