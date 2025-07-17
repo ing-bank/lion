@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.12.0
+
+### Minor Changes
+
+- 9a4a873: Editing negative numbers in LionInputAmount become possible both with '-' and '\u2212'
+
 ## 0.11.6
 
 ### Patch Changes
