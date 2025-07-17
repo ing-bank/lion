@@ -1,3 +1,4 @@
 /providence-output
 providence-input-data
 /.nyc_output
+/test-node/program/analyzers/e2e
