@@ -29,6 +29,7 @@ import { LitElement, html, repeat } from '@mdjs/mdjs-preview';
 import { listboxData, listboxComplexData } from '../listbox/src/listboxData.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { Required } from '@lion/ui/form-core.js';
+import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
 import './src/demo-selection-display.js';
@@ -174,6 +175,94 @@ export const customMatchCondition = () => html`
     )}
   </lion-combobox>
 `;
+```
+
+## Disabled option
+
+```js preview-story
+class DemoDisabledState extends LitElement {
+  static get properties() {
+    return { disabled: { type: Boolean } };
+  }
+
+  constructor() {
+    super();
+    /** @type {string[]} */
+    this.disabled = true;
+  }
+
+  get combobox() {
+    return /** @type {LionCombobox} */ (this.shadowRoot?.querySelector('#combobox'));
+  }
+
+  /**
+   * @param {InputEvent & {target: HTMLInputElement}} e
+   */
+  toggleDisabled(e) {
+    this.disabled = !this.disabled;
+    this.requestUpdate();
+  }
+
+  render() {
+    return html`
+      <lion-button @click=${this.toggleDisabled}>Toggle disabled</lion-button> Disabled state:
+      ${this.disabled}
+      <lion-combobox name="search" label="Search" ?disabled=${this.disabled}>
+        ${lazyRender(
+          listboxData.map(
+            entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `,
+          ),
+        )}
+      </lion-combobox>
+    `;
+  }
+}
+customElements.define('demo-disabled-state', DemoDisabledState);
+export const disabledState = () => html`<demo-disabled-state></demo-disabled-state>`;
+```
+
+## Readonly option
+
+```js preview-story
+class DemoReadonlyState extends LitElement {
+  static get properties() {
+    return { readOnly: { type: Boolean } };
+  }
+
+  constructor() {
+    super();
+    /** @type {string[]} */
+    this.readOnly = true;
+  }
+
+  get combobox() {
+    return /** @type {LionCombobox} */ (this.shadowRoot?.querySelector('#combobox'));
+  }
+
+  /**
+   * @param {InputEvent & {target: HTMLInputElement}} e
+   */
+  toggleReadonly(e) {
+    this.readOnly = !this.readOnly;
+    this.requestUpdate();
+  }
+
+  render() {
+    return html`
+      <lion-button @click=${this.toggleReadonly}>Toggle readonly</lion-button> ReadOnly state:
+      ${this.readOnly}
+      <lion-combobox name="search" label="Search" ?readOnly=${this.readOnly}>
+        ${lazyRender(
+          listboxData.map(
+            entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `,
+          ),
+        )}
+      </lion-combobox>
+    `;
+  }
+}
+customElements.define('demo-readonly-state', DemoReadonlyState);
+export const readonlyState = () => html`<demo-readonly-state></demo-readonly-state>`;
 ```
 
 ## Options
