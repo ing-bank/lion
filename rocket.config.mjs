@@ -3,9 +3,10 @@ import { rocketSearch } from '@rocket/search';
 import { rocketBlog } from '@rocket/blog';
 import { absoluteBaseUrlNetlify } from '@rocket/core/helpers';
 import { TitleMetaPlugin } from '@rocket/cli';
-import { adjustPluginOptions, removePlugin } from 'plugins-manager';
-import { mdjsSetupCode } from '@mdjs/core';
+import { adjustPluginOptions, removePlugin, addPlugin } from 'plugins-manager';
+import { mdjsSetupCode, mdjsStoryParse } from '@mdjs/core';
 import { copy } from '@web/rollup-plugin-copy';
+import { mdjsSandbox } from './mdjsSandbox.js';
 
 export default {
   presets: [rocketLaunch(), rocketSearch(), rocketBlog()],
@@ -25,6 +26,7 @@ export default {
         ],
       },
     }),
+    addPlugin(mdjsSandbox, {}, { location: mdjsStoryParse, how: 'before' }),
   ],
   setupBuildPlugins: [
     adjustPluginOptions(copy, config => {
