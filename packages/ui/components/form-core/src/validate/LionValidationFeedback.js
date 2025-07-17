@@ -89,11 +89,11 @@ export class LionValidationFeedback extends LocalizeMixin(LitElement) {
       ${this.feedbackData &&
       this.feedbackData.map(
         ({ message, type, validator }) => html`
-          <div class="validation-feedback__type">
+          <span class="validation-feedback__type">
             ${message && type
               ? this._localizeManager.msg(`lion-form-core:validation${capitalize(type)}`)
               : nothing}
-          </div>
+          </span>
           ${this._messageTemplate({ message, type, validator })}
         `,
       )}
