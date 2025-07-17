@@ -502,6 +502,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     if (this._selectionDisplayNode) {
       this._selectionDisplayNode.comboboxElement = this;
     }
+
+    if (this.disabled || this.readOnly) {
+      this.__setComboboxDisabledAndReadOnly();
+    }
   }
 
   /**
@@ -1213,8 +1217,12 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   __setComboboxDisabledAndReadOnly() {
     if (this._comboboxNode) {
-      this._comboboxNode.disabled = !!this.disabled;
-      this._comboboxNode.readonly = !!this.readOnly;
+      this._comboboxNode.toggleAttribute('disabled', this.disabled);
+      this._comboboxNode.toggleAttribute('readOnly', this.readOnly);
+    }
+    if (this._inputNode) {
+      this._inputNode.toggleAttribute('disabled', this.disabled);
+      this._inputNode.toggleAttribute('readOnly', this.readOnly);
     }
   }
 
