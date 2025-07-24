@@ -52,7 +52,7 @@ const FormControlMixinImplementation = superclass =>
      * @type {string}
      */
     get label() {
-      return this.__label || (this._labelNode && this._labelNode.textContent) || '';
+      return this.__label ?? (this._labelNode?.textContent || '');
     }
 
     /**
@@ -71,7 +71,7 @@ const FormControlMixinImplementation = superclass =>
      * @type {string}
      */
     get helpText() {
-      return this.__helpText || (this._helpTextNode && this._helpTextNode.textContent) || '';
+      return this.__helpText ?? (this._helpTextNode?.textContent || '');
     }
 
     /**
@@ -158,6 +158,21 @@ const FormControlMixinImplementation = superclass =>
      */
     static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
+    // N.B. add these label/helpText props for types + ce manifest output
+    // (explicity setting them to undefined does not have desired result)
+
+    /**
+     * The label text for the input node.
+     * When no value is defined, textContent of [slot=label] will be used
+     * @property {string} label
+     */
+
+    /**
+     * The helpt text for the input node.
+     * When no value is defined, textContent of [slot=help-text] will be used
+     * @property {string} helpText
+     */
+
     constructor() {
       super();
 
@@ -172,24 +187,10 @@ const FormControlMixinImplementation = superclass =>
       this.readOnly = false;
 
       /**
-       * The label text for the input node.
-       * When no value is defined, textContent of [slot=label] will be used
-       * @type {string}
-       */
-      this.label = '';
-
-      /**
        * The label will only be visible for srceen readers when true
        * @type {boolean}
        */
       this.labelSrOnly = false;
-
-      /**
-       * The helpt text for the input node.
-       * When no value is defined, textContent of [slot=help-text] will be used
-       * @type {string}
-       */
-      this.helpText = '';
 
       /**
        * The model value is the result of the parser function(when available).
@@ -293,11 +294,15 @@ const FormControlMixinImplementation = superclass =>
         );
       }
 
-      if (changedProperties.has('label') && this.__label && this._labelNode) {
+      if (changedProperties.has('label') && this.__label !== undefined && this._labelNode) {
         this._labelNode.textContent = this.label;
       }
 
-      if (changedProperties.has('helpText') && this.__helpText && this._helpTextNode) {
+      if (
+        changedProperties.has('helpText') &&
+        this.__helpText !== undefined &&
+        this._helpTextNode
+      ) {
         this._helpTextNode.textContent = this.helpText;
       }
 
