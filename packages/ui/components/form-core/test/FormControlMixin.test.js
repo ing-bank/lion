@@ -86,6 +86,40 @@ describe('FormControlMixin', () => {
       expect(el.label).to.equal('');
     });
 
+    it('supports empty string as label', async () => {
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
+        <${tag} label="With Value">${inputSlot}</${tag}>
+      `)
+      );
+
+      expect(el.label).to.equal('With Value');
+      // @ts-expect-error
+      expect(el._labelNode.innerHTML).to.equal('With Value');
+
+      el.label = '';
+      await el.updateComplete;
+
+      expect(el.label).to.equal('');
+      // @ts-expect-error
+      expect(el._labelNode.innerHTML).to.equal('');
+
+      // Reset
+      el.label = 'With Value';
+      await el.updateComplete;
+
+      expect(el.label).to.equal('With Value');
+      // @ts-expect-error
+      expect(el._labelNode.innerHTML).to.equal('With Value');
+
+      el.setAttribute('label', '');
+      await el.updateComplete;
+
+      expect(el.label).to.equal('');
+      // @ts-expect-error
+      expect(el._labelNode.innerHTML).to.equal('');
+    });
+
     /**
      * N.B. For platform controls, the same would be achieved with <input aria-label="My label">
      * However, since FormControl is usually not the activeElement (_inputNode is), this
@@ -175,6 +209,40 @@ describe('FormControlMixin', () => {
         </${tag}>`)
       );
       expect(el.helpText).to.equal('');
+    });
+
+    it('supports empty string as help-text', async () => {
+      const el = /** @type {FormControlMixinClass} */ (
+        await fixture(html`
+        <${tag} help-text="With Value">${inputSlot}</${tag}>
+      `)
+      );
+
+      expect(el.helpText).to.equal('With Value');
+      // @ts-expect-error
+      expect(el._helpTextNode.innerHTML).to.equal('With Value');
+
+      el.helpText = '';
+      await el.updateComplete;
+
+      expect(el.helpText).to.equal('');
+      // @ts-expect-error
+      expect(el._helpTextNode.innerHTML).to.equal('');
+
+      // Reset
+      el.helpText = 'With Value';
+      await el.updateComplete;
+
+      expect(el.helpText).to.equal('With Value');
+      // @ts-expect-error
+      expect(el._helpTextNode.innerHTML).to.equal('With Value');
+
+      el.setAttribute('help-text', '');
+      await el.updateComplete;
+
+      expect(el.helpText).to.equal('');
+      // @ts-expect-error
+      expect(el._helpTextNode.innerHTML).to.equal('');
     });
   });
 
