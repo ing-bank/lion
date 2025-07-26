@@ -9,6 +9,7 @@ import {
   html,
 } from '@open-wc/testing';
 import { overlays as overlaysManager, OverlayController } from '@lion/ui/overlays.js';
+import { sendKeys } from '@web/test-runner-commands';
 import { browserDetection } from '@lion/ui/core.js';
 import { cache } from 'lit/directives/cache.js';
 import '@lion/ui/define/lion-dialog.js';
@@ -29,6 +30,28 @@ function getGlobalOverlayCtrls() {
 
 function resetOverlaysManager() {
   overlaysManager.list.forEach(overlayCtrl => overlaysManager.remove(overlayCtrl));
+}
+
+/**
+ * A small wrapper function that closely mimics an escape press from a user
+ * (prevents common mistakes like no bubbling or keydown)
+ * @param {HTMLElement|Document} element
+ */
+async function mimicEscapePress(element) {
+  // Make sure that the element inside the dialog is focusable (and cleanup after)
+  if (element instanceof HTMLElement) {
+    const { tabIndex: tabIndexBefore } = element;
+    // eslint-disable-next-line no-param-reassign
+    element.tabIndex = -1;
+    element.focus();
+    // eslint-disable-next-line no-param-reassign
+    element.tabIndex = tabIndexBefore; // make sure element is focusable
+  }
+
+  // Send the event
+  await sendKeys({ press: 'Escape' });
+  // Wait for at least a microtask, so that possible property effects are performed
+  await aTimeout(0);
 }
 
 /**
@@ -365,6 +388,26 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         el.config = { ...el.config };
       }).to.not.throw;
       stub.restore();
+    });
+
+    it('should not visually hide when hidesOnEsc / hidesOnOutsideEsc is not configured', async () => {
+      const el = /** @type {OverlayEl} */ (
+        await fixture(html`
+        <${tag} .config="${{ hidesOnEsc: false, hidesOnOutsideEsc: false }}" opened>
+          <div slot="content">content of the overlay</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `)
+      );
+
+      const dialogEl = /** @type {HTMLDialogElement} */ (el._overlayCtrl.__wrappingDialogNode);
+
+      // @ts-expect-error [allow-protected-in-tests]
+      expect(dialogEl.checkVisibility()).to.be.true;
+      // @ts-expect-error [allow-protected-in-tests]
+      await mimicEscapePress(el._overlayContentNode);
+      // @ts-expect-error [allow-protected-in-tests]
+      expect(dialogEl.checkVisibility()).to.be.true;
     });
 
     describe('Teardown', () => {
