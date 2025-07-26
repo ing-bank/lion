@@ -528,8 +528,6 @@ export class OverlayController extends EventTarget {
       this.__contentHasBeenInitialized = true;
     }
 
-    this.__wrappingDialogNode?.addEventListener('cancel', this.__cancelHandler);
-
     // Reset all positioning styles (local, c.q. Popper) and classes (global)
     this.contentWrapperNode.removeAttribute('style');
     this.contentWrapperNode.removeAttribute('class');
@@ -618,8 +616,9 @@ export class OverlayController extends EventTarget {
       contentWrapperNodeL2: this.contentWrapperNode,
       contentNodeL3: this.contentNode,
     });
-    // @ts-ignore
+    // @ts-expect-error
     wrappingDialogElement.open = true;
+
     if (this.isTooltip) {
       // needed to prevent tooltip getting focus in Safari and Firefox
       wrappingDialogElement.setAttribute('tabindex', '-1');
@@ -632,6 +631,35 @@ export class OverlayController extends EventTarget {
       // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
       // computed height of 0...
       this.contentNode.style.position = 'static';
+    }
+
+    // Here we prevent any interference of the native <dialog> element with the keyboard behavior
+    // as defined by the OverlayController. This is needed until we can configure `closedby="none"`
+    // on the native dialog for all browsers: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
+    const hasClosedBySupport = HTMLDialogElement && 'closedBy' in HTMLDialogElement.prototype;
+    if (hasClosedBySupport) {
+      // @ts-expect-error
+      wrappingDialogElement.closedBy = 'none';
+    } else {
+      wrappingDialogElement.addEventListener(
+        'keydown',
+        (/** @type {* & KeyboardEvent} */ event) => {
+          if (event.key === 'Escape') {
+            event.preventDefault();
+          }
+        },
+      );
+      wrappingDialogElement.addEventListener('keyup', (/** @type {* & KeyboardEvent} */ event) => {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+        }
+      });
+      wrappingDialogElement.addEventListener('cancel', event => {
+        event.stopPropagation();
+      });
+      wrappingDialogElement.addEventListener('close', event => {
+        event.stopPropagation();
+      });
     }
   }
 
@@ -1188,6 +1216,7 @@ export class OverlayController extends EventTarget {
     const hasPressedInside =
       event.composedPath().includes(this.contentNode) ||
       deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
+
     if (hasPressedInside) {
       this.hide();
       // We could do event.stopPropagation() here, but we don't want to hide info for
@@ -1384,8 +1413,6 @@ export class OverlayController extends EventTarget {
   teardown() {
     this.__handleOverlayStyles({ phase: 'teardown' });
     this._handleFeatures({ phase: 'teardown' });
-    this.__wrappingDialogNode?.removeEventListener('cancel', this.__cancelHandler);
-
     if (this.#isRegisteredOnManager()) {
       this.manager.remove(this);
     }

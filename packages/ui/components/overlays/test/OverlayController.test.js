@@ -1,6 +1,7 @@
 /* eslint-disable no-new */
 import { OverlayController, overlays } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
+import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import {
   unsafeStatic,
@@ -28,12 +29,22 @@ const wrappingDialogNodeStyle = 'display: none; z-index: 9999; padding: 0px;';
 /**
  * A small wrapper function that closely mimics an escape press from a user
  * (prevents common mistakes like no bubbling or keydown)
- * @param {Element|Document} element
+ * @param {HTMLElement|Document} element
  */
 async function mimicEscapePress(element) {
-  element.dispatchEvent(
-    new KeyboardEvent('keyup', { key: 'Escape', bubbles: true, composed: true }),
-  );
+  // Make sure that the element inside the dialog is focusable (and cleanup after)
+  if (element instanceof HTMLElement) {
+    const { tabIndex: tabIndexBefore } = element;
+    // eslint-disable-next-line no-param-reassign
+    element.tabIndex = -1;
+    element.focus();
+    // eslint-disable-next-line no-param-reassign
+    element.tabIndex = tabIndexBefore; // make sure element is focusable
+  }
+
+  // Send the event
+  await sendKeys({ press: 'Escape' });
+  // Wait for at least a microtask, so that possible property effects are performed
   await aTimeout(0);
 }
 
@@ -726,6 +737,7 @@ describe('OverlayController', () => {
           )
         );
         const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+
         await mimicEscapePress(childOverlay.contentNode);
 
         expect(parentOverlay.isShown).to.be.true;
