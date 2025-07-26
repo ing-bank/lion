@@ -1,5 +1,6 @@
 import {
   unsafeStatic,
+  fixtureSync,
   nextFrame,
   aTimeout,
   defineCE,
@@ -313,6 +314,33 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       await nextFrame();
       expect(el.opened).to.be.true;
       expect(getComputedStyle(el._overlayCtrl.contentWrapperNode).display).not.to.equal('none');
+    });
+
+    it('does not run setup when disconnected', async () => {
+      const el = /** @type {OverlayEl} */ (
+        fixtureSync(html`
+        <${tag}>
+          <div slot="content">content</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `)
+      );
+
+      const parentOfEl = /** @type {HTMLDivElement} */ (el.parentElement);
+
+      // @ts-expect-error [allow-protected-in-tests]
+      const setupSpy = sinon.spy(el, '_setupOverlayCtrl');
+      // In some client apps, this sync disconnect happens...
+      parentOfEl.removeChild(el);
+      await el.updateComplete;
+      expect(setupSpy.callCount).to.equal(0);
+
+      // Now add el again...
+      parentOfEl.appendChild(el);
+      await el.updateComplete;
+      expect(setupSpy.callCount).to.equal(1);
+
+      setupSpy.restore();
     });
 
     /** Prevent unnecessary reset side effects, such as show animation. See: https://github.com/ing-bank/lion/issues/1075 */
