@@ -1221,6 +1221,8 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       this._comboboxNode.toggleAttribute('readOnly', this.readOnly);
     }
     if (this._inputNode) {
+      // N.B. in case ._inputNode === ._comboboxNode (we have <input role="combobox">)
+      // this value has already been set above. This is fine, as a toggle with boolean flag is idempotent.
       this._inputNode.toggleAttribute('disabled', this.disabled);
       this._inputNode.toggleAttribute('readOnly', this.readOnly);
     }
