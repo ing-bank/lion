@@ -20,5 +20,5 @@ export const formatAmount = (modelValue, givenOptions, context) => {
     context.currency = modelValue?.currency;
   }
   // @ts-expect-error - cannot cast string to CurrencyCode outside a TS file
-  return _formatAmount(modelValue?.amount || '', givenOptions);
+  return _formatAmount(modelValue?.amount, givenOptions);
 };
