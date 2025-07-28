@@ -175,7 +175,7 @@ describe('WithFormControlInputAmountDropdown', () => {
     it('without interaction are not called', async () => {
       const el = /** @type {LionInputAmountDropdown} */ (
         await fixture(html`
-          <lion-input-amount-dropdown ..allowedCurrencies="${['EUR']}"></lion-input-amount-dropdown>
+          <lion-input-amount-dropdown .allowedCurrencies="${['EUR']}"></lion-input-amount-dropdown>
         `)
       );
       await aTimeout(0);

@@ -391,12 +391,9 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * @protected
    */
   _initModelValueBasedOnDropdown() {
-    if (!this._initialModelValue && !this.dirty && this._currencyUtil?.countryToCurrencyMap) {
-      const currencyCode =
-        this._langIso && this._currencyUtil?.countryToCurrencyMap.get(this._langIso);
-      this.__initializedCurrencyCode = currencyCode || '';
-
-      this._initialModelValue = { currency: this.__initializedCurrencyCode };
+    if (!this._initialModelValue && !this.dirty) {
+      this.__initializedCurrencyCode = this.currency;
+      this._initialModelValue = { currency: this.currency };
       this.modelValue = this._initialModelValue;
       this.initInteractionState();
     }
@@ -404,7 +401,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
   /**
    * Used for Required validation and computation of interaction states.
-   * We need to override this, because we prefill the input with the region code (like +31), but for proper UX,
+   * We need to override this, because we prefill the input with the currency code, but for proper UX,
    * we don't consider this as having interaction state `prefilled`
    * @param {string} modelValue
    * @return {boolean}
@@ -524,7 +521,13 @@ export class LionInputAmountDropdown extends LionInputAmount {
       return;
     }
 
-    // 3. Try to get the currency from locale
+    // 3. Try to get the currency from the preferred currencies
+    if (this.preferredCurrencies?.length > 0) {
+      [this.currency] = this.preferredCurrencies;
+      return;
+    }
+
+    // 4. Try to get the currency from locale
     if (
       this._langIso &&
       this._currencyUtil?.countryToCurrencyMap.has(this._langIso) &&
@@ -537,7 +540,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
       return;
     }
 
-    // 4. Not derivable
+    // 5. Not derivable
     this.currency = undefined;
   }
 

@@ -85,6 +85,13 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
       expect(el.prefilled).to.be.false;
     });
 
+    it('syncs value of dropdown when preferredCurrency is set', async () => {
+      const el = await fixture(html` <${tag}
+          .preferredCurrencies="${['JPY', 'EUR']}"
+          ></${tag}> `);
+      expect(el.modelValue).to.eql({ currency: 'JPY' });
+    });
+
     it('sets correct interaction states on init if input has a value', async () => {
       const el = await fixture(
         html` <${tag} .modelValue="${{ currency: 'EUR', amount: 123 }}"></${tag}> `,
