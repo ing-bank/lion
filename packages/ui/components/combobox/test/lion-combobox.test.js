@@ -24,12 +24,12 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
  */
 
 /**
- * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all' }} config
+ * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all', disabled?: boolean, readonly?: boolean }} config
  */
-async function fruitFixture({ autocomplete, matchMode } = {}) {
+async function fruitFixture({ autocomplete, matchMode, disabled, readonly } = {}) {
   const el = /** @type {LionCombobox} */ (
     await fixture(html`
-      <lion-combobox name="foo">
+      <lion-combobox label="Search" name="foo">
         <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
         <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
         <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -42,6 +42,12 @@ async function fruitFixture({ autocomplete, matchMode } = {}) {
   }
   if (matchMode) {
     el.matchMode = matchMode;
+  }
+  if (disabled) {
+    el.disabled = disabled;
+  }
+  if (readonly) {
+    el.readOnly = readonly;
   }
   await el.updateComplete;
   return [el, el.formElements];
@@ -3429,6 +3435,133 @@ describe('lion-combobox', () => {
         await el.updateComplete;
         expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([]);
       });
+    });
+  });
+
+  describe('Disabled state', () => {
+    it('does not open overlay or allow input when disabled', async () => {
+      const [el] = await fruitFixture({ disabled: true });
+      expect(el.disabled).to.equal(true);
+
+      const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
+      expect(el.disabled).to.be.true;
+      expect(_inputNode.disabled).to.be.true;
+
+      // Try to open overlay by clicking input
+      _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
+      await el.updateComplete;
+      expect(el.opened).to.be.false;
+    });
+
+    it('does open overlay or allow input when disabled state is removed after it was previously disabled', async () => {
+      const [el] = await fruitFixture({ disabled: true });
+      expect(el.disabled).to.equal(true);
+
+      const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
+      expect(el.disabled).to.be.true;
+      expect(_inputNode.disabled).to.be.true;
+
+      // Try to open overlay by clicking input
+      _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
+      await el.updateComplete;
+      expect(el.opened).to.be.false;
+
+      el.disabled = false;
+      await el.updateComplete;
+
+      expect(el.disabled).to.be.false;
+      expect(_inputNode.disabled).to.be.false;
+
+      // Try to open overlay by clicking input
+      async function open() {
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+        return el.updateComplete;
+      }
+
+      await open();
+      expect(el.opened).to.be.true;
+    });
+
+    it('sets aria-disabled and disables focus when combobox is disabled', async () => {
+      const [el] = await fruitFixture({ disabled: true });
+      const { _comboboxNode, _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
+      // input should not be focusable
+      expect(_comboboxNode.tabIndex).to.equal(-1);
+      expect(_inputNode.tabIndex).to.equal(-1);
+
+      // aria-disabled should be set
+      expect(el.getAttribute('aria-disabled')).to.equal('true');
+
+      // aria-disabled should be set
+      expect(_inputNode.getAttribute('aria-disabled')).to.equal('true');
+
+      await expect(el).to.be.accessible();
+    });
+
+    it('ensure focus when combobox is readonly', async () => {
+      const [el] = await fruitFixture({ readonly: true });
+      const { _comboboxNode, _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
+      // input should be focusable
+      expect(_inputNode.tabIndex).to.equal(0);
+
+      // aria-disabled should be set
+      expect(_comboboxNode.getAttribute('aria-readonly')).to.equal('true');
+
+      // aria-disabled should be set
+      expect(_inputNode.getAttribute('aria-readonly')).to.equal('true');
+
+      await expect(el).to.be.accessible();
+    });
+  });
+
+  describe('Readonly state', () => {
+    it('does not open overlay or allow input when readonly', async () => {
+      const [el] = await fruitFixture({ readonly: true });
+
+      const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+      expect(el.readOnly).to.equal(true);
+
+      expect(el.readOnly).to.be.true;
+      expect(_inputNode.readOnly).to.be.true;
+
+      // Try to open overlay by clicking input
+      _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
+      await el.updateComplete;
+      expect(el.opened).to.be.false;
+    });
+
+    it('does open overlay or allow input when readonly state is removed after it was previously set', async () => {
+      const [el] = await fruitFixture({ readonly: true });
+      expect(el.readOnly).to.equal(true);
+
+      const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
+      expect(el.readOnly).to.be.true;
+      expect(_inputNode.readOnly).to.be.true;
+
+      // Try to open overlay by clicking input
+      _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
+      await el.updateComplete;
+      expect(el.opened).to.be.false;
+
+      el.readOnly = false;
+      await el.updateComplete;
+
+      expect(el.readOnly).to.be.false;
+      expect(_inputNode.readOnly).to.be.false;
+
+      // Try to open overlay by clicking input
+      async function open() {
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+        return el.updateComplete;
+      }
+
+      await open();
+      expect(el.opened).to.be.true;
     });
   });
 });
