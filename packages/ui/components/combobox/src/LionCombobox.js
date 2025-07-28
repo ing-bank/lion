@@ -661,9 +661,11 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     const alwaysHideOn = ['Tab', 'Escape'];
     const notMultipleChoiceHideOn = ['Enter'];
     if (
-      lastKey &&
-      (alwaysHideOn.includes(lastKey) ||
-        (!this.multipleChoice && notMultipleChoiceHideOn.includes(lastKey)))
+      this.disabled ||
+      this.readOnly ||
+      (lastKey &&
+        (alwaysHideOn.includes(lastKey) ||
+          (!this.multipleChoice && notMultipleChoiceHideOn.includes(lastKey))))
     ) {
       return false;
     }
@@ -1222,13 +1224,17 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
       this._comboboxNode.toggleAttribute('disabled', this.disabled);
       this._comboboxNode.setAttribute('aria-disabled', `${this.disabled}`);
       this._comboboxNode.toggleAttribute('readonly', this.readOnly);
-      this._comboboxNode.setAttribute('aria-readonly', `${this.readOnly}`);      
+      this._comboboxNode.setAttribute('aria-readonly', `${this.readOnly}`);
     }
+
     if (this._inputNode) {
       // N.B. in case ._inputNode === ._comboboxNode (we have <input role="combobox">)
       // this value has already been set above. This is fine, as a toggle with boolean flag is idempotent.
       this._inputNode.toggleAttribute('disabled', this.disabled);
       this._inputNode.toggleAttribute('readOnly', this.readOnly);
+
+      this._inputNode.setAttribute('aria-readonly', `${this.readOnly}`);
+      this._inputNode.tabIndex = this.disabled ? -1 : 0;
     }
   }
 
