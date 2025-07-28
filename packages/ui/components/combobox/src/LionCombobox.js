@@ -1217,7 +1217,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   __setComboboxDisabledAndReadOnly() {
     if (this._comboboxNode) {
+      // Since `._comboboxNode` can either be `<div "role=combobox">` or `<input>`,
+      // we need to cater for both scenarios (aria for semantics, "native attr" for operability)
       this._comboboxNode.toggleAttribute('disabled', this.disabled);
+      this._comboboxNode.setAttribute('aria-disabled', `${this.disabled}`);
       this._comboboxNode.toggleAttribute('readOnly', this.readOnly);
     }
     if (this._inputNode) {
