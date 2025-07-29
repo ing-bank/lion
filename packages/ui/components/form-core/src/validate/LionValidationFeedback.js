@@ -51,9 +51,9 @@ export class LionValidationFeedback extends LocalizeMixin(LitElement) {
   constructor() {
     super();
     /**
-     * @type {FeedbackMessage[]}
+     * @type {FeedbackMessage[] | undefined}
      */
-    this.feedbackData = [];
+    this.feedbackData = undefined;
   }
 
   /**

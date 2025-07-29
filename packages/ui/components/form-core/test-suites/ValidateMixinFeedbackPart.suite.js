@@ -349,6 +349,125 @@ export function runValidateMixinFeedbackPart() {
       expect(_feedbackNode.feedbackData?.[0].message).to.equal('Nachricht für MinLength');
     });
 
+    it('shows success message and clears after 3s', async () => {
+      class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
+        static get validationTypes() {
+          return ['error', 'success'];
+        }
+      }
+      const clock = sinon.useFakeTimers();
+      const elTagString = defineCE(ValidateElementCustomTypes);
+      const elTag = unsafeStatic(elTagString);
+      const el = /** @type {ValidateElementCustomTypes} */ (
+        await fixture(html`
+        <${elTag}
+          .submitted=${true}
+          .validators=${[
+            new MinLength(3),
+            new DefaultSuccess(null, { getMessage: () => 'This is a success message' }),
+          ]}
+        >${lightDom}</${elTag}>
+      `)
+      );
+      const { _feedbackNode } = getFormControlMembers(el);
+
+      el.modelValue = 'a';
+      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Message for MinLength');
+
+      el.modelValue = 'abcd';
+      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
+      clock.tick(2900);
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
+      clock.tick(200);
+      expect(_feedbackNode.feedbackData).to.be.empty;
+    });
+
+    it('shows success message and clears after configured time', async () => {
+      class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
+        static get validationTypes() {
+          return ['error', 'success'];
+        }
+      }
+      const clock = sinon.useFakeTimers();
+      const elTagString = defineCE(ValidateElementCustomTypes);
+      const elTag = unsafeStatic(elTagString);
+      const el = /** @type {ValidateElementCustomTypes} */ (
+        await fixture(html`
+        <${elTag}
+          .submitted=${true}
+          .validators=${[
+            new MinLength(3),
+            new DefaultSuccess(null, {
+              getMessage: () => 'This is a success message',
+              displayOptions: { duration: 6000 },
+            }),
+          ]}
+        >${lightDom}</${elTag}>
+      `)
+      );
+      const { _feedbackNode } = getFormControlMembers(el);
+
+      el.modelValue = 'a';
+      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Message for MinLength');
+
+      el.modelValue = 'abcd';
+      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
+      clock.tick(5900);
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
+      clock.tick(200);
+      expect(_feedbackNode.feedbackData).to.be.empty;
+    });
+
+    it('shows success message and stays persistent', async () => {
+      class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
+        static get validationTypes() {
+          return ['error', 'success'];
+        }
+      }
+      const clock = sinon.useFakeTimers();
+      const elTagString = defineCE(ValidateElementCustomTypes);
+      const elTag = unsafeStatic(elTagString);
+      const el = /** @type {ValidateElementCustomTypes} */ (
+        await fixture(html`
+        <${elTag}
+          .submitted=${true}
+          .validators=${[
+            new MinLength(3),
+            new DefaultSuccess(null, {
+              getMessage: () => 'This is a success message',
+              displayOptions: { persistent: true },
+            }),
+          ]}
+        >${lightDom}</${elTag}>
+      `)
+      );
+      const { _feedbackNode } = getFormControlMembers(el);
+
+      el.modelValue = 'a';
+      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('Message for MinLength');
+
+      el.modelValue = 'abcd';
+      await el.updateComplete;
+      await el.feedbackComplete;
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
+      clock.tick(2900);
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
+      clock.tick(200);
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
+      clock.tick(20000);
+      expect(_feedbackNode.feedbackData?.[0].message).to.equal('This is a success message');
+    });
+
     it('shows success message after fixing an error', async () => {
       class ValidateElementCustomTypes extends ValidateMixin(LitElement) {
         static get validationTypes() {

@@ -836,6 +836,7 @@ export const ValidateMixinImplementation = superclass =>
           _feedbackNode.feedbackData = messageMap || [];
 
           if (
+            messageMap?.[0] &&
             messageMap[0].type === 'success' &&
             messageMap[0].displayOptions?.persistent !== true
           ) {
