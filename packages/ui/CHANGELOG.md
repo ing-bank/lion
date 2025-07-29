@@ -1,5 +1,24 @@
 # @lion/ui
 
+## 0.13.0
+
+### Minor Changes
+
+- fb0813b: [overlays]: don't use hidesOnOutsideEsc in configs, as it disallows nested overlays (a11y concern)
+- da46980: [overlays]: avoid interference of native dialog escape handler and escape handlers defined by OverlayController.
+  This is needed until we can configure `closedby="none"` on the native dialog for all browsers: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby.
+  (We release this as a minor change, as we stop propagation of HTMLDialogElement 'cancel' and 'close' events, and some consumers might (ab)use them...)
+
+### Patch Changes
+
+- 9a80ba9: [form-core]: make focusableNode teardown defensive in case the node doesn't exist
+- 9a80ba9: [overlays]: make sure that edge cases where overlays are connected and immediately disconnected, are covered well
+- 4460db7: Fix @open-wc/dedupe-mixin version conflict
+- 57eec5b: fix: make sure helpText and label respond to empty strings
+- f19befe: [combobox] fix preselection in combobox when modelValue present
+- 64b72a0: [form-core] make sure renamed Required validator are identified as such, while remaining compatible with multiple versions
+- 765a1a2: Fixed disabled and readonly attribute handling for lion-combobox
+
 ## 0.12.0
 
 ### Minor Changes
