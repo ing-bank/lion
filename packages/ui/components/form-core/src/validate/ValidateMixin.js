@@ -421,6 +421,22 @@ export const ValidateMixinImplementation = superclass =>
     }
 
     /**
+     * @param {Validator} validator
+     * @returns {boolean}
+     */
+    #isInstanceOfRequiredValidator(validator) {
+      // walk prototype and check if validatorName is 'Required'
+      let validatorLvlInPrototype = validator;
+      while (validatorLvlInPrototype) {
+        const ctor = /** @type {typeof Validator} */ (validatorLvlInPrototype.constructor);
+        if (ctor.validatorName === 'Required') return true;
+
+        validatorLvlInPrototype = Object.getPrototypeOf(validatorLvlInPrototype);
+      }
+      return false;
+    }
+
+    /**
      * @desc step a1-3 + b (as explained in `validate()`)
      */
     async __executeValidators() {
@@ -482,7 +498,7 @@ export const ValidateMixinImplementation = superclass =>
       for (const v of this._allValidators) {
         if (/** @type {MetaValidator} */ (v)?.executeOnResults) {
           metaValidators.push(/** @type {MetaValidator} */ (v));
-        } else if (/** @type {typeof Validator} */ (v.constructor)?.validatorName === 'Required') {
+        } else if (this.#isInstanceOfRequiredValidator(v)) {
           // Required validator was already handled
         } else if (/** @type {typeof Validator} */ (v.constructor).async) {
           asyncValidators.push(v);
