@@ -640,37 +640,39 @@ describe('lion-combobox', () => {
     });
 
     it('syncs textbox to modelValue', async () => {
-      const el = /** @type {LionCombobox} */ (
-        await fixture(html`
-          <lion-combobox name="foo" show-all-on-empty>
-            <lion-option .choiceValue="${'Aha'}" checked>Aha</lion-option>
-            <lion-option .choiceValue="${'Bhb'}">Bhb</lion-option>
-          </lion-combobox>
-        `)
-      );
-      const { _inputNode } = getComboboxMembers(el);
+      for (const autocompleteMode of ['none', 'list', 'inline', 'both']) {
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" show-all-on-empty .autocomplete="${autocompleteMode}">
+              <lion-option .choiceValue="${'Aa'}" checked>Aa</lion-option>
+              <lion-option .choiceValue="${'Bb'}">Bb</lion-option>
+            </lion-combobox>
+          `)
+        );
+        const { _inputNode } = getComboboxMembers(el);
 
-      /** @param {string} autocompleteMode */
-      async function performChecks(autocompleteMode) {
+        expect(_inputNode.value).to.equal('Aa', `autocompleteMode is ${autocompleteMode}`);
+
         el.formElements[0].click();
         await el.updateComplete;
 
-        expect(_inputNode.value).to.equal('Aha', `autocompleteMode is ${autocompleteMode}`);
+        expect(_inputNode.value).to.equal('Aa', `autocompleteMode is ${autocompleteMode}`);
         expect(el.checkedIndex).to.equal(0, `autocompleteMode is ${autocompleteMode}`);
 
-        await mimicUserTyping(el, 'Ah');
+        await mimicUserTyping(el, 'B');
         await el.updateComplete;
-        expect(_inputNode.value).to.equal('Ah', `autocompleteMode is ${autocompleteMode}`);
-
-        await el.updateComplete;
-        expect(el.checkedIndex).to.equal(-1, `autocompleteMode is ${autocompleteMode}`);
+        if (autocompleteMode === 'none' || autocompleteMode === 'list') {
+          expect(el.modelValue).to.deep.equal(
+            { type: 'unparseable', viewValue: 'B' },
+            `autocompleteMode is ${autocompleteMode}`,
+          );
+          await el.updateComplete;
+          expect(el.checkedIndex).to.equal(-1, `autocompleteMode is ${autocompleteMode}`);
+        } else {
+          expect(el.modelValue).to.equal('Bb', `autocompleteMode is ${autocompleteMode}`);
+          expect(el.checkedIndex).to.equal(1, `autocompleteMode is ${autocompleteMode}`);
+        }
       }
-
-      el.autocomplete = 'none';
-      await performChecks('none');
-
-      el.autocomplete = 'list';
-      await performChecks('list');
     });
 
     it('works with Required validator', async () => {
@@ -1007,6 +1009,8 @@ describe('lion-combobox', () => {
         );
 
         expect(el.modelValue).to.equal('Chard');
+        // @ts-expect-error
+        expect(el._inputNode.value).to.equal('Chard');
       }
     });
 
