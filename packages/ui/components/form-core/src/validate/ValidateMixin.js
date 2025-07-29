@@ -747,6 +747,9 @@ export const ValidateMixinImplementation = superclass =>
      * @property {string} type will be 'error' for messages from default Validators. Could be
      * 'warning', 'info' etc. for Validators with custom types. Needed as a directive for
      * feedbackNode how to render a message of a certain type
+     * @property {object} displayOptions
+     * @property {Boolean} [displayOptions.persistent] to overwrite the disappearing of a message
+     * @property {Number} displayOptions.duration duration in ms for how long the message should be shown
      * @property {Validator} [validator] when the message is directly coupled to a Validator
      * (in most cases), this property is filled. When a message is not coupled to a Validator
      * (in case of success feedback which is based on a diff or current and previous validation
@@ -772,7 +775,12 @@ export const ValidateMixinImplementation = superclass =>
             fieldName,
             outcome,
           });
-          return { message, type: validator.type, validator };
+          return {
+            message,
+            type: validator.type,
+            validator,
+            displayOptions: { duration: 3000, ...validator.config?.displayOptions },
+          };
         }),
       );
     }
@@ -793,6 +801,8 @@ export const ValidateMixinImplementation = superclass =>
      * @protected
      */
     _updateFeedbackComponent() {
+      window.clearTimeout(this.removeMessage);
+
       const { _feedbackNode } = this;
       if (!_feedbackNode) {
         return;
@@ -824,6 +834,17 @@ export const ValidateMixinImplementation = superclass =>
 
           const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);
           _feedbackNode.feedbackData = messageMap || [];
+
+          if (
+            messageMap[0].type === 'success' &&
+            messageMap[0].displayOptions?.persistent !== true
+          ) {
+            this.removeMessage = window.setTimeout(() => {
+              _feedbackNode.removeAttribute('type');
+              /** @type {FeedbackMessage[]} */
+              _feedbackNode.feedbackData = [];
+            }, messageMap[0].displayOptions?.duration);
+          }
         });
       } else {
         this.__feedbackQueue.add(async () => {

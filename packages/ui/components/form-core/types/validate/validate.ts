@@ -31,6 +31,10 @@ export type ValidatorConfig = {
   type?: ValidationType;
   node?: FormControlHost;
   fieldName?: string | Promise<string>;
+  displayOptions?: {
+    duration?: number;
+    persistent?: boolean;
+  };
 };
 
 /**
