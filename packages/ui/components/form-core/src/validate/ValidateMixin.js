@@ -574,7 +574,7 @@ export const ValidateMixinImplementation = superclass =>
         return [];
       }
 
-      // If empty, do not show the ResulValidation message (e.g. Correct!)
+      // If empty, do not show the ResultValidation message (e.g. Correct!)
       if (this._isEmpty(this.modelValue)) {
         this.__prevShownValidationResult = [];
         return [];
@@ -603,7 +603,7 @@ export const ValidateMixinImplementation = superclass =>
      * - on sync validation
      * - on async validation (can depend on server response)
      *
-     * This method inishes a pass by adding the properties to the instance:
+     * This method finishes a pass by adding the properties to the instance:
      * - validationStates
      * - hasFeedbackFor
      *
