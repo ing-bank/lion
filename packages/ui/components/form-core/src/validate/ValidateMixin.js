@@ -748,7 +748,6 @@ export const ValidateMixinImplementation = superclass =>
      * 'warning', 'info' etc. for Validators with custom types. Needed as a directive for
      * feedbackNode how to render a message of a certain type
      * @property {object} displayOptions
-     * @property {Boolean} [displayOptions.persistent] to overwrite the disappearing of a message
      * @property {Number} displayOptions.duration duration in ms for how long the message should be shown
      * @property {Validator} [validator] when the message is directly coupled to a Validator
      * (in most cases), this property is filled. When a message is not coupled to a Validator
@@ -838,7 +837,7 @@ export const ValidateMixinImplementation = superclass =>
           if (
             messageMap?.[0] &&
             messageMap[0].type === 'success' &&
-            messageMap[0].displayOptions?.persistent !== true
+            messageMap[0].displayOptions?.duration !== Infinity
           ) {
             this.removeMessage = window.setTimeout(() => {
               _feedbackNode.removeAttribute('type');

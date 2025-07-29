@@ -33,7 +33,6 @@ export type ValidatorConfig = {
   fieldName?: string | Promise<string>;
   displayOptions?: {
     duration?: number;
-    persistent?: boolean;
   };
 };
 

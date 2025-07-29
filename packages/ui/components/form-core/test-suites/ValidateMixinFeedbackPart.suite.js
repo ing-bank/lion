@@ -443,7 +443,7 @@ export function runValidateMixinFeedbackPart() {
             new MinLength(3),
             new DefaultSuccess(null, {
               getMessage: () => 'This is a success message',
-              displayOptions: { persistent: true },
+              displayOptions: { duration: Infinity },
             }),
           ]}
         >${lightDom}</${elTag}>
