@@ -18,7 +18,6 @@ export const withTooltipConfig = ({
     placementMode: 'local',
     elementToFocusAfterHide: undefined,
     hidesOnEsc: true,
-    hidesOnOutsideEsc: true,
     handlesAccessibility: true,
     isTooltip: true,
     invokerRelation,
