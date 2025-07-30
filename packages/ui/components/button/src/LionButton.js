@@ -1,8 +1,10 @@
 import { html, LitElement, css } from 'lit';
-import { browserDetection, DisabledWithTabIndexMixin, uuid } from '@lion/ui/core.js';
+import { DisabledWithTabIndexMixin } from '@lion/ui/core.js';
 
 const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' || e.key === 'Enter';
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
+
+// TODO: simplify html structure, as we got rid of the wrapper element for IE11
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
@@ -37,7 +39,7 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
   }
 
   render() {
-    return html` <div class="button-content" id="${this._buttonId}"><slot></slot></div> `;
+    return html` <div class="button-content"><slot></slot></div> `;
   }
 
   static get styles() {
@@ -126,14 +128,6 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
     this.type = 'button';
     this.active = false;
 
-    this._buttonId = uuid('button');
-    if (browserDetection.isIE11) {
-      this.updateComplete.then(() => {
-        if (!this.hasAttribute('aria-labelledby')) {
-          this.setAttribute('aria-labelledby', this._buttonId);
-        }
-      });
-    }
     this.__setupEvents();
   }
 
