@@ -38,7 +38,18 @@ console.log('mode', import.meta.env.MODE);
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [lit(), pagefind()],
+  integrations: [
+    lit(),
+    pagefind(),
+    // {
+    //   name: 'lion-mdjs-preview',
+    //   hooks: {
+    //     'astro:config:setup': ({ injectScript }) => {
+    //       injectScript('page', "import './mdjs-stories/accordion/overview/__mdjs-stories.js';");
+    //     },
+    //   },
+    // },
+  ],
   markdown: {
     // ing-web
     remarkPlugins: [
