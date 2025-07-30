@@ -2,7 +2,9 @@ import { LitElement } from 'lit';
 import { ChoiceGroupMixin, FormGroupMixin } from '@lion/ui/form-core.js';
 
 /**
- * A wrapper around multiple radios.
+ * LionRadioGroup: A wrapper around multiple radios.
+ *
+ * @customElement lion-radio-group
  */
 export class LionRadioGroup extends ChoiceGroupMixin(FormGroupMixin(LitElement)) {
   connectedCallback() {

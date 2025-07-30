@@ -14,10 +14,11 @@ import { uuid } from '@lion/ui/core.js';
  */
 
 /**
- * # <lion-accordion> webcomponent
+ * @slot invoker - The invoker element for the accordion
+ * @slot content - The content element for the accordion
+ * @slot _accordion - The slot for the accordion, used to rearrange invokers and content
  *
  * @customElement lion-accordion
- * @extends LitElement
  */
 export class LionAccordion extends LitElement {
   static get properties() {

@@ -109,6 +109,14 @@ function handleButtonKeydown(ev) {
   }
 }
 
+/**
+ * LionTabs: A tabbed interface component
+ *
+ * @slot tab - The tab elements for the tabs
+ * @slot panel - The panel elements for the tabs
+ *
+ * @customElement lion-tabs
+ */
 export class LionTabs extends LitElement {
   static get properties() {
     return {

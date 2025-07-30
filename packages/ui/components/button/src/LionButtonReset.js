@@ -17,6 +17,8 @@ import { LionButton } from './LionButton.js';
  * implicit form submission logic), but LionButtonReset is an easier to grasp name for
  * Application Developers: for reset buttons, always use LionButtonReset, for submit
  * buttons always use LionButtonSubmit.
+ *
+ * @customElement lion-button-reset
  */
 export class LionButtonReset extends LionButton {
   constructor() {

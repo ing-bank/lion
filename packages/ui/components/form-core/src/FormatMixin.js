@@ -25,7 +25,7 @@ import { Unparseable } from './validate/Unparseable.js';
 // formattedValue condition needs to be evaluated right before syncing back to the view
 
 /**
- * @desc Designed to be applied on top of a LionField.
+ * Designed to be applied on top of a LionField.
  * To understand all concepts within the Mixin, please consult the flow diagram in the
  * documentation.
  *

@@ -15,7 +15,6 @@ const throwFormNodeError = () => {
  *
  * @customElement lion-form
  */
-// eslint-disable-next-line no-unused-vars
 export class LionForm extends LionFieldset {
   constructor() {
     super();

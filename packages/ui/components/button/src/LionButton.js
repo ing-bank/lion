@@ -25,6 +25,8 @@ const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === 
  * `<form>` support is needed:
  * - When type="reset|submit" should be supported, use LionButtonReset.
  * - When implicit form submission should be supported on top, use LionButtonSubmit.
+ *
+ * @customElement lion-button
  */
 export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
   static get properties() {

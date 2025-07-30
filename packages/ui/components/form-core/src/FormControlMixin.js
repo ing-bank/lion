@@ -24,6 +24,16 @@ import { FormRegisteringMixin } from './registration/FormRegisteringMixin.js';
  * This Mixin is a shared fundament for all form components, it's applied on:
  * - LionField (which is extended to LionInput, LionTextarea, LionSelect etc. etc.)
  * - LionFieldset (which is extended to LionRadioGroup, LionCheckboxGroup, LionForm)
+ *
+ * @slot label - The label for the form control
+ * @slot help-text - The help text for the form control
+ * @slot input - The input element for the form control, e.g. <input>, <textarea>, <select>
+ * @slot feedback - The validation feedback for the form control
+ * @slot prefix - The prefix for the form control, e.g. currency symbol
+ * @slot suffix - The suffix for the form control, e.g. currency symbol
+ * @slot before - The before element for the form control, e.g. a label
+ * @slot after - The after element for the form control, e.g. a label
+ *
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  * @type {FormControlMixin}
  */

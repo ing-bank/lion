@@ -18,6 +18,9 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
  * @typedef {FormatOptions & {regionCode: RegionCode; formatStrategy: PhoneNumberFormat; formatCountryCodeStyle: string;}} FormatOptionsTel
  */
 
+/**
+ * @customElement lion-input-tel
+ */
 export class LionInputTel extends LocalizeMixin(LionInput) {
   /**
    * @configure LitElement

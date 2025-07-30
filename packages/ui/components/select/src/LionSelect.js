@@ -4,6 +4,10 @@ import { LionField } from '@lion/ui/form-core.js';
 /**
  * @typedef {import('../../localize/types/LocalizeMixinTypes.js').FormatNumberOptions} FormatOptions
  */
+
+/**
+ * @customElement lion-field-with-select
+ */
 class LionFieldWithSelect extends LionField {
   /** @type {any} */
   static get properties() {

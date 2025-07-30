@@ -7,6 +7,8 @@ import { ListboxMixin } from './ListboxMixin.js';
 /**
  * LionListbox: implements the wai-aria listbox design pattern and integrates it as a Lion
  * FormControl
+ *
+ * @customElement lion-listbox
  */
 export class LionListbox extends ListboxMixin(
   FocusMixin(InteractionStateMixin(ValidateMixin(LitElement))),

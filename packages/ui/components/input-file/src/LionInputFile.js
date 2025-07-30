@@ -31,6 +31,15 @@ function formatBytes(bytes, decimals = 2) {
   return `${parseFloat((bytes / k ** i).toFixed(dm))}${sizes[i]}`;
 }
 
+/**
+ * LionInputFile: A file input component
+ * This component allows users to select files, displays selected files, and handles file uploads.
+ *
+ * @slot file-select-button - [private] The button to open the file dialog
+ * @slot selected-file-list - [private] The list of selected files
+ *
+ * @customElement lion-input-file
+ */
 export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField)) {
   static get scopedElements() {
     return {
