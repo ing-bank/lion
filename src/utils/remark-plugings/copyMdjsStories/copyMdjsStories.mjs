@@ -6,6 +6,9 @@ import { createRequire } from 'module';
 const NODE_MODULES_PATH = '/node_modules';
 const NODE_MODULES_LION_DOCS = '_lion_docs';
 const require = createRequire(import.meta.url);
+const DEBUG = 1;
+const DEBUG_COMPONENT = 'accordion';
+const SHOW_MODULE_NOT_FOUND = false;
 
 const resolveLionImport = moduleResolvedPath => {
   const lionDirectorPackages = 'lion/packages';
@@ -37,8 +40,7 @@ async function processImports(source, mode, inputPath) {
   }
 
   // for the debug purposes
-  // const log = inputPath.includes('combobox') ? console.log.bind(console) : () => {};
-  const log = () => {};
+  const log = DEBUG && inputPath.includes(DEBUG_COMPONENT) ? console.log.bind(console) : () => {};
 
   let newSource = '';
   let lastPos = 0;
@@ -84,7 +86,10 @@ async function processImports(source, mode, inputPath) {
 
       newSource += resolvedImportFullPath;
     } catch (error) {
-      console.error(`Error resolving import: ${importSrc}`, error);
+      if (SHOW_MODULE_NOT_FOUND && error.code === 'MODULE_NOT_FOUND') {
+        console.error(`Error resolving import: ${importSrc}`, error);
+      }
+
       newSource += importSrc; // Fallback to original import if resolution fails
     }
 
@@ -102,6 +107,9 @@ export function copyMdjsStories({ mode } = {}) {
    * @param {VFileOptions} file
    */
   async function transformer(tree, file) {
+    const log =
+      DEBUG && file.history[0].includes(DEBUG_COMPONENT) ? console.log.bind(console) : () => {};
+    log(tree, file.data.frontmatter);
     const { setupJsCode } = file.data;
     if (!setupJsCode) {
       return tree;
@@ -110,14 +118,14 @@ export function copyMdjsStories({ mode } = {}) {
     const currentMarkdownFile = file.history[0];
     const pwd = file.cwd;
     const mdJsStoriesUrlPath = '/mdjs-stories';
-    const mdJsStoriesDir = `${pwd}/public${mdJsStoriesUrlPath}`;
-    const mdJsStoriesFileName = '__mdjs-stories.js';
+    const mdJsStoriesDir = `${pwd}/node_modules/${mdJsStoriesUrlPath}`;
+    const mdJsStoriesFileName = '__mdjs-stories';
     let parsedPath = '';
 
     if (currentMarkdownFile) {
-      const separator = currentMarkdownFile.includes('components/')
-        ? 'components/'
-        : 'fundamentals/';
+      const separator = ['components/', 'fundamentals/', '/guides'].find(sep =>
+        currentMarkdownFile.includes(sep),
+      );
       const rightSideParsedPath = currentMarkdownFile.split(separator)[1];
       // console.log(currentMarkdownFile, leftSideParsedPath);
       [parsedPath] = rightSideParsedPath.split('.md');
@@ -134,12 +142,17 @@ export function copyMdjsStories({ mode } = {}) {
     //   type: 'html',
     //   value: `<script type="module" mdjs-setup>${parsedSetupJsCode}</script>`,
     // };
-    const mdjsStoriesJsNode = {
-      type: 'html',
-      value: `<script type="module" src="${mdJsStoriesUrlPath}/${parsedPath}/${mdJsStoriesFileName}" mdjs-setup></script>`,
-    };
+    // const mdjsStoriesJsNode = {
+    //   type: 'html',
+    //   value: `<script type="module" src="/node_modules/${mdJsStoriesUrlPath}/${parsedPath}/${mdJsStoriesFileName}" mdjs-setup></script>`,
+    // };
     // astro does not see this update?
-    tree.children.push(mdjsStoriesJsNode);
+    // tree.children.push(mdjsStoriesJsNode);
+    if (!file.data.astro.frontmatter) {
+      file.data.astro.frontmatter = {};
+    }
+    //file.data.astro.frontmatter.mdjsStoriesPath = `${mdJsStoriesUrlPath}/${parsedPath}/${mdJsStoriesFileName}`;
+    file.data.astro.frontmatter.mdjsStoriesPath = `${parsedPath.replaceAll('/', '-')}${mdJsStoriesFileName}`;
 
     return tree;
   }
