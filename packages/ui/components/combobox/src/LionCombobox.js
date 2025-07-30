@@ -28,6 +28,11 @@ const matchA11ySpanReverseFns = new WeakMap();
 /**
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
+ *
+ * @slot listbox - The listbox element for the combobox, e.g. <lion-options>
+ * @slot selection-display - The selection display element for the combobox, e.g. <lion-selection-display>
+ *
+ * @customElement lion-combobox
  */
 export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMixin(LionListbox))) {
   /** @type {any} */

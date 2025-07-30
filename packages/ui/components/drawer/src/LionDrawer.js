@@ -7,6 +7,15 @@ const EVENT = {
   TRANSITION_START: 'transitionstart',
 };
 
+/**
+ * LionDrawer: extension of lion-collapsible with drawer specific styles and animations
+ *
+ * @slot invoker - The invoker element for the drawer
+ * @slot content - The content element for the drawer
+ * @slot headline - The headline element for the drawer
+ *
+ * @customElement lion-drawer
+ */
 export class LionDrawer extends LionCollapsible {
   static get properties() {
     return {

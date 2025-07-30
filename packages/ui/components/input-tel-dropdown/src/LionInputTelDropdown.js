@@ -40,6 +40,8 @@ import { regionCodeToLocale } from './regionCodeToLocale.js';
  * possible. Also, it doesn't need to be a `FormControl`, because it's purely a helper element
  * to provide better UX: the modelValue (the text field) contains all needed info, since it's in
  * `e164` format that contains all info (both region code and national phone number).
+ *
+ * @customElement lion-input-tel-dropdown
  */
 export class LionInputTelDropdown extends LionInputTel {
   refs = {

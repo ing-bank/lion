@@ -22,6 +22,8 @@ function detectInteractionMode() {
 
 /**
  * LionSelectRich: wraps the <lion-listbox> element
+ *
+ * @customElement lion-field-with-select
  */
 export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(LionListbox))) {
   static get scopedElements() {
