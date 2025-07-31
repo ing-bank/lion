@@ -66,10 +66,10 @@
     "@open-wc/dedupe-mixin": "^2.0.1",
     "@open-wc/scoped-elements": "^3.0.6",
     "@popperjs/core": "^2.11.8",
-    "autosize": "^6.0.0",
-    "awesome-phonenumber": "^6.4.0",
-    "ibantools": "^4.3.9",
-    "lit": "^3.1.2",
+    "autosize": "^6.0.1",
+    "awesome-phonenumber": "^7.5.0",
+    "ibantools": "^4.5.1",
+    "lit": "^3.3.1",
     "singleton-manager": "^1.7.0"
   },
   "keywords": [
