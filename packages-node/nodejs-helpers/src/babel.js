@@ -10,7 +10,10 @@ const traverse = _traverse.default;
 const generate = _generate.default;
 
 /**
- * @typedef {import('@babel/parser').ParserOptions} ParserOptions
+ * @typedef {object} ParserOptions
+ * @property {string} [sourceType]
+ * @property {string[]} [plugins]
+ * // Add other public properties as needed from Babel parser docs
  * @typedef {import('@babel/parser').ParseResult<babelTypes.File>} AST
  */
 
@@ -29,6 +32,7 @@ export const parseCode = (code, options = {}) => {
     plugins: ['importMeta', 'dynamicImport', 'classProperties'],
     ...options,
   };
+  // @ts-expect-error
   const ast = parse(code, parserOptions);
   return ast;
 };
