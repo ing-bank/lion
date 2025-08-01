@@ -12,3 +12,5 @@ patches/
 /docs/_assets/scoped-custom-element-registry.min.js
 /docs/_assets/scoped-custom-element-registry.min.js.map
 /docs/_merged_assets/scoped-custom-element-registry.min.js
+
+/packages/ui/components/core/src/mime-types.js

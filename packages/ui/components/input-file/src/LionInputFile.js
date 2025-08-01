@@ -3,6 +3,7 @@ import { LocalizeMixin } from '@lion/ui/localize.js';
 import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import { mimeTypes } from '../../core/src/mime-types.js';
 import { FileHandle, MAX_FILE_SIZE } from './FileHandle.js';
 import { LionSelectedFileList } from './LionSelectedFileList.js';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
@@ -29,6 +30,27 @@ function formatBytes(bytes, decimals = 2) {
   const sizes = [' bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return `${parseFloat((bytes / k ** i).toFixed(dm))}${sizes[i]}`;
+}
+
+/**
+ * @param {string[]} acceptedFiles
+ */
+function buildAllowedFileTypes(acceptedFiles) {
+  /** @type {Set<string>} */
+  const allowedFileTypes = new Set();
+
+  for (const acceptedFile of acceptedFiles) {
+    const acceptedFileCaseInsensitive = acceptedFile.toLowerCase();
+    if (acceptedFileCaseInsensitive in mimeTypes) {
+      for (const mimeType of mimeTypes[acceptedFileCaseInsensitive]) {
+        allowedFileTypes.add(mimeType);
+      }
+    } else if (acceptedFile.includes('/')) {
+      allowedFileTypes.add(acceptedFile);
+    }
+  }
+
+  return [...allowedFileTypes];
 }
 
 /**
@@ -246,7 +268,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
     let allowedFileExtensions = [];
     if (this.accept) {
       const acceptedFiles = this.accept.replace(/\s+/g, '').split(',');
-      allowedFileTypes = acceptedFiles.filter(acceptedFile => acceptedFile.includes('/'));
+      allowedFileTypes = buildAllowedFileTypes(acceptedFiles);
       allowedFileExtensions = acceptedFiles.filter(acceptedFile => !acceptedFile.includes('/'));
     }
     return {
