@@ -82,6 +82,7 @@
     "gray-matter": "^4.0.3",
     "husky": "^9.1.7",
     "lint-staged": "^15.5.2",
+    "lit-element": "^4.2.1",
     "looks-same": "^9.0.1",
     "markdownlint-cli": "^0.45.0",
     "mocha": "^10.8.2",
@@ -93,7 +94,7 @@
     "remark-html": "^13.0.2",
     "semver": "^7.7.2",
     "sinon": "^19.0.5",
-    "typescript": "^4.9.5",
+    "typescript": "~4.9.5",
     "wireit": "^0.14.12"
   },
   "bundlesize": [
@@ -111,6 +112,9 @@
         "Version of 'sharp' package we get via '@rocket/cli' is too old to be built on a Mac.",
         "But updating package '@rocket-cli' causes our portal to break. Reason unknown.",
         "So, we override the sharp version in here until '@rocket-cli' can be updated."
+      ],
+      "oxc-resolver": [
+        "Dep of ce-manifest analyzer. Linux binaries give problems for older versions, so use latest version."
       ]
     },
     "olderVersions": {
@@ -157,11 +161,15 @@
       ],
       "@lit/reactive-element": [
         "We make sure latest version is hoisted and resolved, until we move to astro (when we can regenerate the package-lock.json file w/o breaking Rocket)."
+      ],
+      "lit-element": [
+        "We make sure latest version is hoisted and resolved. This makes sure that @lion/ui and its deps resolve to the same (hoisted) version of lit-element."
       ]
     }
   },
   "overrides": {
-    "sharp": "^0.29.x"
+    "sharp": "^0.29.x",
+    "oxc-resolver": "^11.6.1"
   },
   "prettier": {
     "printWidth": 100,

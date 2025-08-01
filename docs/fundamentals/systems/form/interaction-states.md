@@ -79,7 +79,6 @@ We show the validity feedback when one of the following conditions is met:
   when the form is initially rendered.
 
 - **touched** && **dirty**
-
   - When a user starts typing for the first time in a field with for instance `required` validation,
     error message should not be shown until a field becomes `touched` (a user leaves(blurs) a field).
   - When a user enters a field without altering the value (making it `dirty` but not `touched`),

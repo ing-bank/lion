@@ -11,7 +11,6 @@ import {
   fixture,
   expect,
   html,
-  // getDiffableHTML
 } from '@open-wc/testing';
 import { getDiffableHTML } from '@open-wc/semantic-dom-diff';
 
@@ -227,16 +226,22 @@ describe('OverlayController', () => {
         await ctrl.show();
         // @ts-expect-error find out why config would/could be undfined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
-        ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
+        ctrl.updateConfig({
+          contentNode: await createZNode('auto', { mode: 'inline' }),
+        });
         await ctrl.show();
         // @ts-expect-error find out why config would/could be undfined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
 
-        ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'global' }) });
+        ctrl.updateConfig({
+          contentNode: await createZNode('0', { mode: 'global' }),
+        });
         await ctrl.show();
         // @ts-expect-error find out why config would/could be undfined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
-        ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'inline' }) });
+        ctrl.updateConfig({
+          contentNode: await createZNode('0', { mode: 'inline' }),
+        });
         await ctrl.show();
         // @ts-expect-error find out why config would/could be undfined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
@@ -249,14 +254,20 @@ describe('OverlayController', () => {
         });
         await ctrl.show();
         expect(ctrl.content.style.zIndex).to.equal('');
-        ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
+        ctrl.updateConfig({
+          contentNode: await createZNode('auto', { mode: 'inline' }),
+        });
         await ctrl.show();
         expect(ctrl.content.style.zIndex).to.equal('');
 
-        ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'global' }) });
+        ctrl.updateConfig({
+          contentNode: await createZNode('2', { mode: 'global' }),
+        });
         await ctrl.show();
         expect(ctrl.content.style.zIndex).to.equal('');
-        ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'inline' }) });
+        ctrl.updateConfig({
+          contentNode: await createZNode('2', { mode: 'inline' }),
+        });
         await ctrl.show();
         expect(ctrl.content.style.zIndex).to.equal('');
       });
@@ -283,7 +294,10 @@ describe('OverlayController', () => {
 
       it('succeeds when passing a content node that was created "online"', async () => {
         const contentNode = /** @type {HTMLElement} */ (fixtureSync('<div>'));
-        const overlay = new OverlayController({ ...withLocalTestConfig(), contentNode });
+        const overlay = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode,
+        });
         expect(overlay.contentNode.isConnected).to.be.true;
       });
     });
@@ -345,7 +359,7 @@ describe('OverlayController', () => {
             normalizeOverlayContentWapper(ctrl.contentWrapperNode);
 
             // The total dom structure created...
-            expect(getNormalizedDialogHtml(el.shadowRoot)).to.equal(
+            expect(getNormalizedDialogHtml(/** @type {ShadowRoot} */ (el.shadowRoot))).to.equal(
               [
                 '<dialog',
                 '  data-overlay-outer-wrapper=""',
@@ -430,7 +444,7 @@ describe('OverlayController', () => {
             normalizeOverlayContentWapper(ctrl.contentWrapperNode);
 
             // The total dom structure created...
-            expect(getNormalizedDialogHtml(el.shadowRoot)).to.equal(
+            expect(getNormalizedDialogHtml(/** @type {ShadowRoot} */ (el.shadowRoot))).to.equal(
               [
                 '<dialog',
                 '  data-overlay-outer-wrapper=""',
@@ -482,7 +496,7 @@ describe('OverlayController', () => {
             normalizeOverlayContentWapper(ctrl.contentWrapperNode);
 
             // The total dom structure created...
-            expect(getNormalizedDialogHtml(el.shadowRoot)).to.equal(
+            expect(getNormalizedDialogHtml(/** @type {ShadowRoot} */ (el.shadowRoot))).to.equal(
               [
                 '<dialog',
                 '  data-overlay-outer-wrapper=""',
@@ -558,7 +572,7 @@ describe('OverlayController', () => {
         normalizeOverlayContentWapper(ctrl.contentWrapperNode);
 
         // The total dom structure created...
-        expect(getNormalizedDialogHtml(el.shadowRoot)).to.equal(
+        expect(getNormalizedDialogHtml(/** @type {ShadowRoot} */ (el.shadowRoot))).to.equal(
           [
             '<dialog',
             '  data-overlay-outer-wrapper=""',
@@ -607,7 +621,10 @@ describe('OverlayController', () => {
   describe('Feature Configuration', () => {
     describe('trapsKeyboardFocus', () => {
       it('offers an hasActiveTrapsKeyboardFocus flag', async () => {
-        const ctrl = new OverlayController({ ...withGlobalTestConfig(), trapsKeyboardFocus: true });
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+        });
         expect(ctrl.hasActiveTrapsKeyboardFocus).to.be.false;
 
         await ctrl.show();
@@ -615,7 +632,10 @@ describe('OverlayController', () => {
       });
 
       it('focuses the overlay on show', async () => {
-        const ctrl = new OverlayController({ ...withGlobalTestConfig(), trapsKeyboardFocus: true });
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+        });
         await ctrl.show();
 
         expect(isActiveElement(ctrl.contentNode)).to.be.true;
@@ -718,21 +738,30 @@ describe('OverlayController', () => {
 
     describe('hidesOnEsc', () => {
       it('hides on [Escape] press', async () => {
-        const ctrl = new OverlayController({ ...withGlobalTestConfig(), hidesOnEsc: true });
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnEsc: true,
+        });
         await ctrl.show();
         await mimicEscapePress(ctrl.contentNode);
         expect(ctrl.isShown).to.be.false;
       });
 
       it('stays shown on [Escape] press with `.hidesOnEsc` set to false', async () => {
-        const ctrl = new OverlayController({ ...withGlobalTestConfig(), hidesOnEsc: false });
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnEsc: false,
+        });
         await ctrl.show();
         await mimicEscapePress(ctrl.contentNode);
         expect(ctrl.isShown).to.be.true;
       });
 
       it('stays shown on [Escape] press on outside element', async () => {
-        const ctrl = new OverlayController({ ...withGlobalTestConfig(), hidesOnEsc: true });
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnEsc: true,
+        });
         await ctrl.show();
         await mimicEscapePress(document);
         expect(ctrl.isShown).to.be.true;
@@ -769,14 +798,20 @@ describe('OverlayController', () => {
 
     describe('hidesOnOutsideEsc', () => {
       it('hides on [Escape] press on outside element', async () => {
-        const ctrl = new OverlayController({ ...withGlobalTestConfig(), hidesOnOutsideEsc: true });
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideEsc: true,
+        });
         await ctrl.show();
         await mimicEscapePress(document);
         expect(ctrl.isShown).to.be.false;
       });
 
       it('stays shown on [Escape] press on inside element', async () => {
-        const ctrl = new OverlayController({ ...withGlobalTestConfig(), hidesOnOutsideEsc: true });
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideEsc: true,
+        });
         await ctrl.show();
         await mimicEscapePress(ctrl.contentNode);
         expect(ctrl.isShown).to.be.true;
@@ -963,7 +998,10 @@ describe('OverlayController', () => {
         expect(ctrl.isShown).to.be.true;
 
         // Don't hide on inside mousedown & outside mouseup
-        await mimicClick(ctrl.contentNode, { releaseElement: document.body, isAsync: true });
+        await mimicClick(ctrl.contentNode, {
+          releaseElement: document.body,
+          isAsync: true,
+        });
 
         await aTimeout(0);
         expect(ctrl.isShown).to.be.true;
@@ -1292,7 +1330,10 @@ describe('OverlayController', () => {
 
     describe('preventsScroll', () => {
       it('prevent scrolling the background', async () => {
-        const ctrl = new OverlayController({ ...withGlobalTestConfig(), preventsScroll: true });
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
 
         await ctrl.show();
         expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock');
@@ -1302,8 +1343,14 @@ describe('OverlayController', () => {
       });
 
       it('keeps preventing of scrolling when multiple overlays are opened and closed', async () => {
-        const ctrl0 = new OverlayController({ ...withGlobalTestConfig(), preventsScroll: true });
-        const ctrl1 = new OverlayController({ ...withGlobalTestConfig(), preventsScroll: true });
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
 
         await ctrl0.show();
         await ctrl1.show();
@@ -1320,7 +1367,10 @@ describe('OverlayController', () => {
       });
 
       it('supports a backdrop option', async () => {
-        const ctrl = new OverlayController({ ...withGlobalTestConfig(), hasBackdrop: false });
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: false,
+        });
         await ctrl.show();
         expect(ctrl.backdropNode).to.be.undefined;
         await ctrl.hide();
@@ -1334,7 +1384,10 @@ describe('OverlayController', () => {
       });
 
       it('reenables the backdrop when shown/hidden/shown', async () => {
-        const ctrl = new OverlayController({ ...withGlobalTestConfig(), hasBackdrop: true });
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: true,
+        });
         await ctrl.show();
         expect(ctrl.backdropNode).to.have.class('overlays__backdrop');
         await ctrl.hide();
@@ -1343,16 +1396,25 @@ describe('OverlayController', () => {
       });
 
       it('adds and stacks backdrops if .hasBackdrop is enabled', async () => {
-        const ctrl0 = new OverlayController({ ...withGlobalTestConfig(), hasBackdrop: true });
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: true,
+        });
         await ctrl0.show();
         expect(ctrl0.backdropNode).to.have.class('overlays__backdrop');
 
-        const ctrl1 = new OverlayController({ ...withGlobalTestConfig(), hasBackdrop: false });
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: false,
+        });
         await ctrl1.show();
         expect(ctrl0.backdropNode).to.have.class('overlays__backdrop');
         expect(ctrl1.backdropNode).to.be.undefined;
 
-        const ctrl2 = new OverlayController({ ...withGlobalTestConfig(), hasBackdrop: true });
+        const ctrl2 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hasBackdrop: true,
+        });
         await ctrl2.show();
 
         expect(ctrl0.backdropNode).to.have.class('overlays__backdrop');
@@ -1369,7 +1431,10 @@ describe('OverlayController', () => {
       });
 
       it('supports a backdrop option', async () => {
-        const ctrl = new OverlayController({ ...withLocalTestConfig(), hasBackdrop: false });
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          hasBackdrop: false,
+        });
         await ctrl.show();
         expect(ctrl.backdropNode).to.be.undefined;
         await ctrl.hide();
@@ -1414,7 +1479,10 @@ describe('OverlayController', () => {
         await ctrl0.show();
         expect(ctrl0.backdropNode).to.have.class('custom-backdrop-zero');
 
-        const ctrl1 = new OverlayController({ ...withLocalTestConfig(), hasBackdrop: false });
+        const ctrl1 = new OverlayController({
+          ...withLocalTestConfig(),
+          hasBackdrop: false,
+        });
         await ctrl1.show();
         expect(ctrl0.backdropNode).to.have.class('custom-backdrop-zero');
         expect(ctrl1.backdropNode).to.be.undefined;
@@ -1437,10 +1505,22 @@ describe('OverlayController', () => {
 
     describe('isBlocking', () => {
       it('prevents showing of other overlays', async () => {
-        const ctrl0 = new OverlayController({ ...withGlobalTestConfig(), isBlocking: false });
-        const ctrl1 = new OverlayController({ ...withGlobalTestConfig(), isBlocking: false });
-        const ctrl2 = new OverlayController({ ...withGlobalTestConfig(), isBlocking: true });
-        const ctrl3 = new OverlayController({ ...withGlobalTestConfig(), isBlocking: false });
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+        });
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+        });
+        const ctrl2 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: true,
+        });
+        const ctrl3 = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+        });
 
         await ctrl0.show();
         await ctrl1.show();
@@ -1761,7 +1841,10 @@ describe('OverlayController', () => {
     });
 
     it('creates unique id for content', async () => {
-      const ctrl = new OverlayController({ ...withLocalTestConfig(), handlesAccessibility: true });
+      const ctrl = new OverlayController({
+        ...withLocalTestConfig(),
+        handlesAccessibility: true,
+      });
       const { contentId } = getProtectedMembers(ctrl);
       expect(ctrl.contentNode.id).to.contain(contentId);
     });
