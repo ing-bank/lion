@@ -47,7 +47,8 @@
     "debug:firefox": "cd ../../ && npm run debug:firefox",
     "debug:webkit": "cd ../../ && npm run debug:webkit",
     "generate-lion-exports": "node ./scripts/generate-lion-exports.js",
-    "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-lion-exports",
+    "generate-mime-types": "node ./scripts/generate-mime-types.js",
+    "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-mime-types && npm run generate-lion-exports",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "test": "cd ../../ && npm run test:browser",
     "types": "wireit",
@@ -71,6 +72,9 @@
     "ibantools": "^4.3.9",
     "lit": "^3.1.2",
     "singleton-manager": "^1.7.0"
+  },
+  "devDependencies": {
+    "mime-db": "^1.54.0"
   },
   "keywords": [
     "design-system",
