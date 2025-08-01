@@ -6,6 +6,8 @@ const getDirectories = (/** @type {string} */ source) =>
     .filter(pathMeta => pathMeta.isDirectory())
     .map(pathMeta => pathMeta.name);
 
+const tempExceptions = ['chai'];
+
 /**
  * @param {string} filePath
  */
@@ -15,13 +17,10 @@ function readPackageJsonDeps(filePath) {
     const merged = { ...jsonData.dependencies, ...jsonData.devDependencies };
     const result = {};
     Object.keys(merged).forEach(dep => {
-      if (merged[dep] && !merged[dep].includes('file:')) {
+      if (merged[dep] && !merged[dep].includes('file:') && !tempExceptions.includes(dep)) {
         result[dep] = merged[dep];
       }
     });
-    // Note: we IGNORE singleton manager here as we NEED it to be a broad range of version
-    // the singleton-manager should never have a breaking change
-    delete result['singleton-manager'];
     return result;
   }
   return {};
@@ -74,10 +73,7 @@ function compareVersions(versionsA, versionsB) {
     }
   });
 
-  return {
-    output,
-    newVersions,
-  };
+  return { output, newVersions };
 }
 
 let endReturn = 0;
