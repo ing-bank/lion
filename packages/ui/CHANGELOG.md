@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.13.1
+
+### Patch Changes
+
+- 63454c2: add `@slot` and `@customElements` meta data for custom-elements manifest
+- 63454c2: cleanup IE11 code in LionButton
+
 ## 0.13.0
 
 ### Minor Changes
