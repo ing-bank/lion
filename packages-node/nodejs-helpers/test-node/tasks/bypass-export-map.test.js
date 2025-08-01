@@ -3,7 +3,7 @@ import { createRequire } from 'module';
 import { readFile, rm } from 'fs/promises';
 import { existsSync } from 'fs';
 import { globby } from 'globby';
-import chai from 'chai';
+import * as chai from 'chai';
 // eslint-disable-next-line import/no-unresolved
 import chaiAsPromised from 'chai-as-promised';
 import { isImportDeclaration, isExportDeclaration } from '@babel/types';

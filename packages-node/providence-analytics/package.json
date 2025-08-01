@@ -41,8 +41,8 @@
     "commander": "^2.20.3",
     "globby": "^14.1.0",
     "oxc-parser": "0.48.0",
-    "parse5": "^7.2.1",
-    "semver": "^7.7.1"
+    "parse5": "^8.0.0",
+    "semver": "^7.7.2"
   },
   "peerDependencies": {
     "@babel/parser": "^7.25.8",
@@ -50,16 +50,17 @@
     "@swc/core": "~1.10.12"
   },
   "devDependencies": {
-    "@babel/parser": "^7.26.10",
-    "@babel/plugin-syntax-import-assertions": "^7.26.0",
-    "@babel/traverse": "^7.26.10",
+    "@babel/parser": "^7.28.0",
+    "@babel/plugin-syntax-import-assertions": "^7.27.1",
+    "@babel/traverse": "^7.28.0",
     "@swc/core": "~1.10.12",
-    "@types/inquirer": "^9.0.7",
+    "@types/inquirer": "^9.0.8",
     "@types/mocha": "^10.0.10",
     "@web/dev-server": "^0.4.6",
     "@web/dev-server-core": "^0.7.5",
-    "lit-element": "^4.1.1",
-    "mock-fs": "^5.5.0"
+    "lit-element": "^4.2.1",
+    "mock-fs": "^5.5.0",
+    "chai": "^4.5.0"
   },
   "keywords": [
     "analysis",

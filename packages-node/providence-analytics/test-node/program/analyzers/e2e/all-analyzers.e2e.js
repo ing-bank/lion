@@ -28,6 +28,20 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 setupAnalyzerTest();
 
+/**
+ * @param {{ files: any[]; }[]} queryOutput
+ */
+function normalizeFileOrderToCompensateForNodeVersionDifferences(queryOutput) {
+  // This is a workaround for the fact that the order of files in the output
+  // can differ between Node.js versions, so we sort them to make the test stable.
+  return queryOutput.map((/** @type {{ files: any[]; }} */ item) => {
+    if (item.files) {
+      item.files.sort();
+    }
+    return item;
+  });
+}
+
 describe('Analyzers file-system integration', () => {
   /**
    * Flag to enable mode that generates e2e mocks.
@@ -76,30 +90,10 @@ describe('Analyzers file-system integration', () => {
     ReportService.getCachedResult = () => undefined;
   }
   const analyzers = [
-    {
-      providenceConfig: {
-        targetProjectPaths: [targetPath],
-      },
-      ctor: FindCustomelementsAnalyzer,
-    },
-    {
-      providenceConfig: {
-        targetProjectPaths: [targetPath],
-      },
-      ctor: FindImportsAnalyzer,
-    },
-    {
-      providenceConfig: {
-        targetProjectPaths: [referencePath],
-      },
-      ctor: FindExportsAnalyzer,
-    },
-    {
-      providenceConfig: {
-        targetProjectPaths: [targetPath],
-      },
-      ctor: FindClassesAnalyzer,
-    },
+    { providenceConfig: { targetProjectPaths: [targetPath] }, ctor: FindCustomelementsAnalyzer },
+    { providenceConfig: { targetProjectPaths: [targetPath] }, ctor: FindImportsAnalyzer },
+    { providenceConfig: { targetProjectPaths: [referencePath] }, ctor: FindExportsAnalyzer },
+    { providenceConfig: { targetProjectPaths: [targetPath] }, ctor: FindClassesAnalyzer },
     {
       providenceConfig: {
         targetProjectPaths: [targetPath],
@@ -146,8 +140,9 @@ describe('Analyzers file-system integration', () => {
         ),
       );
       const { queryOutput } = JSON.parse(JSON.stringify(queryResults[0]));
-      // expect(queryOutput).not.to.deep.equal([]);
-      expect(queryOutput).to.deep.equal(expectedOutput.queryOutput);
+      expect(normalizeFileOrderToCompensateForNodeVersionDifferences(queryOutput)).to.deep.equal(
+        normalizeFileOrderToCompensateForNodeVersionDifferences(expectedOutput.queryOutput),
+      );
     });
   }
 });

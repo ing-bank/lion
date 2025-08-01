@@ -23,7 +23,6 @@ Functional styling can be divided into defaults for `basic layout` and `accessib
 Examples for both categories can be found below:
 
 - Basic layout examples:
-
   - A dropdown menu has `position: absolute;`.
   - A lion-button might behave as an `display: inline-block;` element.
   - A suffix attached to an input is horizontally positioned (instead of vertically stacked).
