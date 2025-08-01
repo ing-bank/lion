@@ -3,9 +3,31 @@ import { rocketSearch } from '@rocket/search';
 import { rocketBlog } from '@rocket/blog';
 import { absoluteBaseUrlNetlify } from '@rocket/core/helpers';
 import { TitleMetaPlugin } from '@rocket/cli';
-import { adjustPluginOptions, removePlugin } from 'plugins-manager';
+import { adjustPluginOptions, addPlugin, removePlugin } from 'plugins-manager';
+import matter from 'gray-matter';
 import { mdjsSetupCode } from '@mdjs/core';
 import { copy } from '@web/rollup-plugin-copy';
+
+/**
+ * Plugin SocialMediaImagePlugin depends on titleMeta property
+ * This property is wrapped into Proxy so it cannot be dynamically enhanced inside SocialMediaImagePlugin
+ * It should really come from another plugin with "dataName" key eq to "titleMeta"
+ */
+class LionTitleMetaPlugin {
+  static dataName = 'titleMeta';
+
+  async execute(data) {
+    if (data.titleMeta) {
+      return data.titleMeta;
+    }
+    const grayMatterFile = await matter.read(data.page.inputPath);
+    if (grayMatterFile.data) {
+      return grayMatterFile.data;
+    }
+
+    return {};
+  }
+}
 
 export default {
   presets: [rocketLaunch(), rocketSearch(), rocketBlog()],
@@ -33,5 +55,5 @@ export default {
       return config;
     }),
   ],
-  setupEleventyComputedConfig: [removePlugin(TitleMetaPlugin)]
+  setupEleventyComputedConfig: [removePlugin(TitleMetaPlugin), addPlugin(LionTitleMetaPlugin)],
 };
