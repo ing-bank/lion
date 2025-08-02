@@ -29,6 +29,8 @@ function validateSvg(svg) {
 
 /**
  * Custom element for rendering SVG icons
+ *
+ * @customElement lion-icon
  */
 export class LionIcon extends LitElement {
   static get properties() {

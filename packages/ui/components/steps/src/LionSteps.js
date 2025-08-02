@@ -8,7 +8,6 @@ import { css, html, LitElement } from 'lit';
  * `LionSteps` is a controller for a multi step system.
  *
  * @customElement lion-steps
- * @extends {LitElement}
  */
 export class LionSteps extends LitElement {
   static get styles() {

@@ -31,7 +31,7 @@ function round(value, decimals) {
  * @param {FormatNumberOptions} [givenOptions] Locale Options
  */
 export function parseAmount(value, givenOptions) {
-  const unmatchedInput = value.match(/[^0-9,.\- ]/g);
+  const unmatchedInput = value.match(/[^0-9,.\-\u2212 ]/g);
   // for the full paste behavior documentation:
   // ./docs/components/input-amount/use-cases.md#paste-behavior
   if (unmatchedInput && givenOptions?.mode !== 'pasted') {

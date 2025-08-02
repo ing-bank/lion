@@ -5,6 +5,9 @@ import { LionCheckbox } from './LionCheckbox.js';
  * @typedef {import('./LionCheckboxGroup.js').LionCheckboxGroup} LionCheckboxGroup
  */
 
+/**
+ * @customElement lion-checkbox-indeterminate
+ */
 export class LionCheckboxIndeterminate extends LionCheckbox {
   static get styles() {
     return [

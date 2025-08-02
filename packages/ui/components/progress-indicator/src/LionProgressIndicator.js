@@ -5,6 +5,10 @@ import { getLocalizeManager, LocalizeMixin } from '@lion/ui/localize-no-side-eff
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
+
+/**
+ * @customElement lion-progress-indicator
+ */
 export class LionProgressIndicator extends LocalizeMixin(LitElement) {
   static get properties() {
     return {

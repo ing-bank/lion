@@ -39,6 +39,8 @@ function createImplicitSubmitHelperButton() {
  * - the Application Developer should be able to switch types between 'submit'|'reset'|'button'
  * (this is similar to how native HTMLButtonElement works)
  * - a submit button with native form support is needed
+ *
+ * @customElement lion-button-submit
  */
 export class LionButtonSubmit extends LionButtonReset {
   /**

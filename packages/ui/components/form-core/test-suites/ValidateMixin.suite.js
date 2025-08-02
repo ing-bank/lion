@@ -130,6 +130,7 @@ export function runValidateMixinSuite(customConfig) {
         expect(el.hasFeedbackFor).to.deep.equal(['error']);
       });
 
+      // TODO: keep this use case for backwards compatibility or just required extending Required?
       it('determines whether the "Required" validator was already handled by judging the validatorName', async () => {
         class BundledValidator extends EventTarget {
           static ['_$isValidator$'] = true;
@@ -163,15 +164,30 @@ export function runValidateMixinSuite(customConfig) {
         }
 
         class BundledRequired extends BundledValidator {
-          static get validatorName() {
-            return 'Required';
-          }
+          static validatorName = 'Required';
         }
 
         const el = /** @type {ValidateElement} */ (
           await fixture(html`
             <${tag}
             .validators=${[new BundledRequired()]}
+            .modelValue=${'myValue'}
+          >${lightDom}</${tag}>
+          `)
+        );
+
+        expect(el.hasFeedbackFor).to.deep.equal([]);
+      });
+
+      it('determines whether the "Required" validator was already handled by judging the validatorName', async () => {
+        class MyRequired extends Required {
+          static validatorName = 'SomethingOtherThanRequired';
+        }
+
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+            <${tag}
+            .validators=${[new MyRequired()]}
             .modelValue=${'myValue'}
           >${lightDom}</${tag}>
           `)

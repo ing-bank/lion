@@ -1,6 +1,11 @@
 import { html, css, LitElement } from 'lit';
 import { DisabledWithTabIndexMixin } from '@lion/ui/core.js';
 
+/**
+ * `LionSwitchButton` is a custom switch button component. It's a private component used within LionSwitch
+ *
+ * @customElement lion-switch-button
+ */
 export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
   static get properties() {
     return {

@@ -12,13 +12,18 @@ for (const path of paths) {
   // save original values
   const { eleventyNavigation, ...rest } = grayMatterFile.data;
   // rocket values
-  const { eleventyNavigation: rocketEleventyNavigation, ...rocketRest } = processContentWithTitle(grayMatterFile.content) || {};
+  const { eleventyNavigation: rocketEleventyNavigation, ...rocketRest } =
+    processContentWithTitle(grayMatterFile.content) || {};
   if (!rocketEleventyNavigation) {
     // not all pages need to change
     continue;
   }
   // merge them
-  grayMatterFile.data = { ...rest, ...rocketRest, eleventyNavigation: { ...eleventyNavigation, ...rocketEleventyNavigation } };
+  grayMatterFile.data = {
+    ...rest,
+    ...rocketRest,
+    eleventyNavigation: { ...eleventyNavigation, ...rocketEleventyNavigation },
+  };
 
   await writeFile(grayMatterFile.path, matter.stringify(grayMatterFile));
 }

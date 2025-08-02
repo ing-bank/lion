@@ -3,6 +3,9 @@ import { ChoiceInputMixin, LionField } from '@lion/ui/form-core.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { LionSwitchButton } from './LionSwitchButton.js';
 
+/**
+ * @customElement lion-switch
+ */
 export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField)) {
   static get styles() {
     return [

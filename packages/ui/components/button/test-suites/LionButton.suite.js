@@ -203,20 +203,6 @@ export function LionButtonSuite({ klass = LionButton } = {}) {
         expect(el.getAttribute('tabindex')).to.equal('5');
       });
 
-      it('has an aria-labelledby and wrapper element in IE11', async () => {
-        const browserDetectionStub = sinon.stub(browserDetection, 'isIE11').value(true);
-        const el = /** @type {LionButton} */ (
-          await fixture(html`<${tagButton}>foo</${tagButton}>`)
-        );
-        expect(el.hasAttribute('aria-labelledby')).to.be.true;
-        const wrapperId = el.getAttribute('aria-labelledby');
-        expect(/** @type {ShadowRoot} */ (el.shadowRoot).querySelector(`#${wrapperId}`)).to.exist;
-        expect(
-          /** @type {ShadowRoot} */ (el.shadowRoot).querySelector(`#${wrapperId}`),
-        ).dom.to.equal(`<div class="button-content" id="${wrapperId}"><slot></slot></div>`);
-        browserDetectionStub.restore();
-      });
-
       it('does not override aria-labelledby when provided by user', async () => {
         const browserDetectionStub = sinon.stub(browserDetection, 'isIE11').value(true);
         const el = /** @type {LionButton} */ (

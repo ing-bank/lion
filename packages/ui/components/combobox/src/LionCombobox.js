@@ -28,6 +28,11 @@ const matchA11ySpanReverseFns = new WeakMap();
 /**
  * LionCombobox: implements the wai-aria combobox design pattern and integrates it as a Lion
  * FormControl
+ *
+ * @slot listbox - The listbox element for the combobox, e.g. <lion-options>
+ * @slot selection-display - The selection display element for the combobox, e.g. <lion-selection-display>
+ *
+ * @customElement lion-combobox
  */
 export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMixin(LionListbox))) {
   /** @type {any} */
@@ -502,6 +507,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     if (this._selectionDisplayNode) {
       this._selectionDisplayNode.comboboxElement = this;
     }
+
+    if (this.disabled || this.readOnly) {
+      this.__setComboboxDisabledAndReadOnly();
+    }
   }
 
   /**
@@ -657,9 +666,11 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     const alwaysHideOn = ['Tab', 'Escape'];
     const notMultipleChoiceHideOn = ['Enter'];
     if (
-      lastKey &&
-      (alwaysHideOn.includes(lastKey) ||
-        (!this.multipleChoice && notMultipleChoiceHideOn.includes(lastKey)))
+      this.disabled ||
+      this.readOnly ||
+      (lastKey &&
+        (alwaysHideOn.includes(lastKey) ||
+          (!this.multipleChoice && notMultipleChoiceHideOn.includes(lastKey))))
     ) {
       return false;
     }
@@ -1174,9 +1185,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   // eslint-disable-next-line no-unused-vars
   _syncToTextboxCondition(modelValue, oldModelValue, { phase } = {}) {
-    return (
-      this.autocomplete === 'inline' || this.autocomplete === 'both' || phase === 'overlay-close'
-    );
+    return this.autocomplete === 'both' || this.autocomplete === 'inline' || !this.focused;
   }
 
   /**
@@ -1213,8 +1222,22 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   __setComboboxDisabledAndReadOnly() {
     if (this._comboboxNode) {
-      this._comboboxNode.setAttribute('disabled', `${this.disabled}`);
-      this._comboboxNode.setAttribute('readonly', `${this.readOnly}`);
+      // Since `._comboboxNode` can either be `<div "role=combobox">` or `<input>`,
+      // we need to cater for both scenarios (aria for semantics, "native attr" for operability)
+      this._comboboxNode.toggleAttribute('disabled', this.disabled);
+      this._comboboxNode.setAttribute('aria-disabled', `${this.disabled}`);
+      this._comboboxNode.toggleAttribute('readonly', this.readOnly);
+      this._comboboxNode.setAttribute('aria-readonly', `${this.readOnly}`);
+    }
+
+    if (this._inputNode) {
+      // N.B. in case ._inputNode === ._comboboxNode (we have <input role="combobox">)
+      // this value has already been set above. This is fine, as a toggle with boolean flag is idempotent.
+      this._inputNode.toggleAttribute('disabled', this.disabled);
+      this._inputNode.toggleAttribute('readOnly', this.readOnly);
+
+      this._inputNode.setAttribute('aria-readonly', `${this.readOnly}`);
+      this._inputNode.tabIndex = this.disabled ? -1 : 0;
     }
   }
 

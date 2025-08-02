@@ -21,30 +21,13 @@ import '@lion/ui/define/lion-button.js';
 
 ## Label
 
-Can be provided via the `label` attribute, but the slot can be used to change the `html` and `CSS` of the label.
-For example add an `u-sr-only` class to the label to make it (partially) visually hidden.
-A label is always needed for accessibility reasons.
+Can be provided via the `label` attribute, but the slot can be used to change the html and css of the label.
+A label is always needed to provide an accessible user experience.
 
 ```js preview-story
 export const label = () => html`
-  <style>
-    .u-sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(100%);
-      clip: rect(1px, 1px, 1px, 1px);
-      white-space: nowrap;
-      border: 0;
-      margin: 0;
-      padding: 0;
-    }
-  </style>
   <lion-input>
-    <label slot="label"
-      >Label <span class="u-sr-only">partially only visible for screen-readers</span></label
-    >
+    <label slot="label"> Label with <b>html tag</b> inside </label>
   </lion-input>
 `;
 ```

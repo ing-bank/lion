@@ -1,5 +1,6 @@
 import {
   unsafeStatic,
+  fixtureSync,
   nextFrame,
   aTimeout,
   defineCE,
@@ -8,6 +9,7 @@ import {
   html,
 } from '@open-wc/testing';
 import { overlays as overlaysManager, OverlayController } from '@lion/ui/overlays.js';
+import { sendKeys } from '@web/test-runner-commands';
 import { browserDetection } from '@lion/ui/core.js';
 import { cache } from 'lit/directives/cache.js';
 import '@lion/ui/define/lion-dialog.js';
@@ -28,6 +30,28 @@ function getGlobalOverlayCtrls() {
 
 function resetOverlaysManager() {
   overlaysManager.list.forEach(overlayCtrl => overlaysManager.remove(overlayCtrl));
+}
+
+/**
+ * A small wrapper function that closely mimics an escape press from a user
+ * (prevents common mistakes like no bubbling or keydown)
+ * @param {HTMLElement|Document} element
+ */
+async function mimicEscapePress(element) {
+  // Make sure that the element inside the dialog is focusable (and cleanup after)
+  if (element instanceof HTMLElement) {
+    const { tabIndex: tabIndexBefore } = element;
+    // eslint-disable-next-line no-param-reassign
+    element.tabIndex = -1;
+    element.focus();
+    // eslint-disable-next-line no-param-reassign
+    element.tabIndex = tabIndexBefore; // make sure element is focusable
+  }
+
+  // Send the event
+  await sendKeys({ press: 'Escape' });
+  // Wait for at least a microtask, so that possible property effects are performed
+  await aTimeout(0);
 }
 
 /**
@@ -315,6 +339,33 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       expect(getComputedStyle(el._overlayCtrl.contentWrapperNode).display).not.to.equal('none');
     });
 
+    it('does not run setup when disconnected', async () => {
+      const el = /** @type {OverlayEl} */ (
+        fixtureSync(html`
+        <${tag}>
+          <div slot="content">content</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `)
+      );
+
+      const parentOfEl = /** @type {HTMLDivElement} */ (el.parentElement);
+
+      // @ts-expect-error [allow-protected-in-tests]
+      const setupSpy = sinon.spy(el, '_setupOverlayCtrl');
+      // In some client apps, this sync disconnect happens...
+      parentOfEl.removeChild(el);
+      await el.updateComplete;
+      expect(setupSpy.callCount).to.equal(0);
+
+      // Now add el again...
+      parentOfEl.appendChild(el);
+      await el.updateComplete;
+      expect(setupSpy.callCount).to.equal(1);
+
+      setupSpy.restore();
+    });
+
     /** Prevent unnecessary reset side effects, such as show animation. See: https://github.com/ing-bank/lion/issues/1075 */
     it('does not call updateConfig on equivalent config change', async () => {
       const el = /** @type {OverlayEl} */ (
@@ -337,6 +388,26 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         el.config = { ...el.config };
       }).to.not.throw;
       stub.restore();
+    });
+
+    it('should not visually hide when hidesOnEsc / hidesOnOutsideEsc is not configured', async () => {
+      const el = /** @type {OverlayEl} */ (
+        await fixture(html`
+        <${tag} .config="${{ hidesOnEsc: false, hidesOnOutsideEsc: false }}" opened>
+          <div slot="content">content of the overlay</div>
+          <button slot="invoker">invoker button</button>
+        </${tag}>
+      `)
+      );
+
+      const dialogEl = /** @type {HTMLDialogElement} */ (el._overlayCtrl.__wrappingDialogNode);
+
+      // @ts-expect-error [allow-protected-in-tests]
+      expect(dialogEl.checkVisibility()).to.be.true;
+      // @ts-expect-error [allow-protected-in-tests]
+      await mimicEscapePress(el._overlayContentNode);
+      // @ts-expect-error [allow-protected-in-tests]
+      expect(dialogEl.checkVisibility()).to.be.true;
     });
 
     describe('Teardown', () => {

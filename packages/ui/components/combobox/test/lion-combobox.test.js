@@ -24,12 +24,12 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
  */
 
 /**
- * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all' }} config
+ * @param {{ autocomplete?:'none'|'list'|'both', matchMode?:'begin'|'all', disabled?: boolean, readonly?: boolean }} config
  */
-async function fruitFixture({ autocomplete, matchMode } = {}) {
+async function fruitFixture({ autocomplete, matchMode, disabled, readonly } = {}) {
   const el = /** @type {LionCombobox} */ (
     await fixture(html`
-      <lion-combobox name="foo">
+      <lion-combobox label="Search" name="foo">
         <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
         <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
         <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
@@ -42,6 +42,12 @@ async function fruitFixture({ autocomplete, matchMode } = {}) {
   }
   if (matchMode) {
     el.matchMode = matchMode;
+  }
+  if (disabled) {
+    el.disabled = disabled;
+  }
+  if (readonly) {
+    el.readOnly = readonly;
   }
   await el.updateComplete;
   return [el, el.formElements];
@@ -634,38 +640,39 @@ describe('lion-combobox', () => {
     });
 
     it('syncs textbox to modelValue', async () => {
-      const el = /** @type {LionCombobox} */ (
-        await fixture(html`
-          <lion-combobox name="foo" show-all-on-empty>
-            <lion-option .choiceValue="${'Aha'}" checked>Aha</lion-option>
-            <lion-option .choiceValue="${'Bhb'}">Bhb</lion-option>
-          </lion-combobox>
-        `)
-      );
-      const { _inputNode } = getComboboxMembers(el);
+      for (const autocompleteMode of ['none', 'list', 'inline', 'both']) {
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox name="foo" show-all-on-empty .autocomplete="${autocompleteMode}">
+              <lion-option .choiceValue="${'Aa'}" checked>Aa</lion-option>
+              <lion-option .choiceValue="${'Bb'}">Bb</lion-option>
+            </lion-combobox>
+          `)
+        );
+        const { _inputNode } = getComboboxMembers(el);
 
-      /** @param {string} autocompleteMode */
-      async function performChecks(autocompleteMode) {
+        expect(_inputNode.value).to.equal('Aa', `autocompleteMode is ${autocompleteMode}`);
+
         el.formElements[0].click();
         await el.updateComplete;
 
-        // FIXME: fix properly for Webkit
-        // expect(_inputNode.value).to.equal('Aha', `autocompleteMode is ${autocompleteMode}`);
+        expect(_inputNode.value).to.equal('Aa', `autocompleteMode is ${autocompleteMode}`);
         expect(el.checkedIndex).to.equal(0, `autocompleteMode is ${autocompleteMode}`);
 
-        await mimicUserTyping(el, 'Ah');
+        await mimicUserTyping(el, 'B');
         await el.updateComplete;
-        expect(_inputNode.value).to.equal('Ah', `autocompleteMode is ${autocompleteMode}`);
-
-        await el.updateComplete;
-        expect(el.checkedIndex).to.equal(-1, `autocompleteMode is ${autocompleteMode}`);
+        if (autocompleteMode === 'none' || autocompleteMode === 'list') {
+          expect(el.modelValue).to.deep.equal(
+            { type: 'unparseable', viewValue: 'B' },
+            `autocompleteMode is ${autocompleteMode}`,
+          );
+          await el.updateComplete;
+          expect(el.checkedIndex).to.equal(-1, `autocompleteMode is ${autocompleteMode}`);
+        } else {
+          expect(el.modelValue).to.equal('Bb', `autocompleteMode is ${autocompleteMode}`);
+          expect(el.checkedIndex).to.equal(1, `autocompleteMode is ${autocompleteMode}`);
+        }
       }
-
-      el.autocomplete = 'none';
-      await performChecks('none');
-
-      el.autocomplete = 'list';
-      await performChecks('list');
     });
 
     it('works with Required validator', async () => {
@@ -984,6 +991,27 @@ describe('lion-combobox', () => {
       mimicKeyPress(_inputNode, 'Enter');
       await el.updateComplete;
       expect(el.modelValue).to.eql(['Art']);
+    });
+
+    it('allows prefilling the combobox', async () => {
+      const autocompleteValues = ['inline', 'none', 'both', 'list'];
+
+      for (const autocompleteValue of autocompleteValues) {
+        const el = /** @type {LionCombobox} */ (
+          await fixture(html`
+            <lion-combobox autocomplete="${autocompleteValue}" .modelValue="${'Chard'}" name="foo">
+              <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+              <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+              <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+              <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+            </lion-combobox>
+          `)
+        );
+
+        expect(el.modelValue).to.equal('Chard');
+        // @ts-expect-error
+        expect(el._inputNode.value).to.equal('Chard');
+      }
     });
 
     it('submits form on [Enter] when listbox is closed', async () => {
@@ -2312,8 +2340,7 @@ describe('lion-combobox', () => {
           </${tag}>
         `)
         );
-        // This ensures autocomplete would be off originally
-        el.autocomplete = 'list';
+
         await mimicUserTypingAdvanced(el, ['v', 'i']); // so we have options ['Victoria Plum']
         await el.updateComplete;
         expect(el.checkedIndex).to.equal(3);
@@ -2440,23 +2467,26 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('');
 
       el.setCheckedIndex(-1);
-      el.autocomplete = 'none';
-      el.setCheckedIndex(0);
-      expect(_inputNode.value).to.equal('');
-
-      el.setCheckedIndex(-1);
       el.autocomplete = 'list';
-      el.setCheckedIndex(0);
-      expect(_inputNode.value).to.equal('');
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
+      expect(_inputNode.value).to.equal('art');
 
       el.setCheckedIndex(-1);
+      el.value = '';
+      el.autocomplete = 'none';
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
+      expect(_inputNode.value).to.equal('art');
+
+      el.setCheckedIndex(-1);
+      el.value = '';
       el.autocomplete = 'inline';
-      el.setCheckedIndex(0);
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
       expect(_inputNode.value).to.equal('Artichoke');
 
       el.setCheckedIndex(-1);
+      el.value = '';
       el.autocomplete = 'both';
-      el.setCheckedIndex(0);
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
       expect(_inputNode.value).to.equal('Artichoke');
     });
 
@@ -2476,30 +2506,28 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.eql('');
 
       el.setCheckedIndex(-1);
-      el.autocomplete = 'none';
-      el.setCheckedIndex([0]);
-      el.setCheckedIndex([1]);
-      expect(_inputNode.value).to.equal('');
-
       el.setCheckedIndex(-1);
       el.autocomplete = 'list';
-      el.setCheckedIndex([0]);
-      el.setCheckedIndex([1]);
-      expect(_inputNode.value).to.equal('');
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
+      expect(_inputNode.value).to.equal('art');
 
       el.setCheckedIndex(-1);
+      el.value = '';
+      el.autocomplete = 'none';
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
+      expect(_inputNode.value).to.equal('art');
+
+      el.setCheckedIndex(-1);
+      el.value = '';
       el.autocomplete = 'inline';
-      el.setCheckedIndex([0]);
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
       expect(_inputNode.value).to.equal('Artichoke');
-      el.setCheckedIndex([1]);
-      expect(_inputNode.value).to.equal('Chard');
 
       el.setCheckedIndex(-1);
+      el.value = '';
       el.autocomplete = 'both';
-      el.setCheckedIndex([0]);
+      await mimicUserTypingAdvanced(el, ['a', 'r', 't']);
       expect(_inputNode.value).to.equal('Artichoke');
-      el.setCheckedIndex([1]);
-      expect(_inputNode.value).to.equal('Chard');
     });
 
     describe('Subclassers', () => {
@@ -2747,12 +2775,6 @@ describe('lion-combobox', () => {
           /** @param {string} autocompleteMode */
           async function performChecks(autocompleteMode) {
             await el.updateComplete;
-
-            el.formElements[0].click();
-
-            // FIXME: fix properly for Webkit
-            // expect(_inputNode.value).to.equal('Aha', autocompleteMode);
-            expect(el.checkedIndex).to.equal(0, autocompleteMode);
 
             await mimicUserTypingAdvanced(el, ['A', 'r', 't', 'i']);
             await el.updateComplete;
@@ -3429,6 +3451,133 @@ describe('lion-combobox', () => {
         await el.updateComplete;
         expect(getFilteredOptionValues(/** @type {LionCombobox} */ (el))).to.eql([]);
       });
+    });
+  });
+
+  describe('Disabled state', () => {
+    it('does not open overlay or allow input when disabled', async () => {
+      const [el] = await fruitFixture({ disabled: true });
+      expect(el.disabled).to.equal(true);
+
+      const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
+      expect(el.disabled).to.be.true;
+      expect(_inputNode.disabled).to.be.true;
+
+      // Try to open overlay by clicking input
+      _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
+      await el.updateComplete;
+      expect(el.opened).to.be.false;
+    });
+
+    it('does open overlay or allow input when disabled state is removed after it was previously disabled', async () => {
+      const [el] = await fruitFixture({ disabled: true });
+      expect(el.disabled).to.equal(true);
+
+      const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
+      expect(el.disabled).to.be.true;
+      expect(_inputNode.disabled).to.be.true;
+
+      // Try to open overlay by clicking input
+      _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
+      await el.updateComplete;
+      expect(el.opened).to.be.false;
+
+      el.disabled = false;
+      await el.updateComplete;
+
+      expect(el.disabled).to.be.false;
+      expect(_inputNode.disabled).to.be.false;
+
+      // Try to open overlay by clicking input
+      async function open() {
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+        return el.updateComplete;
+      }
+
+      await open();
+      expect(el.opened).to.be.true;
+    });
+
+    it('sets aria-disabled and disables focus when combobox is disabled', async () => {
+      const [el] = await fruitFixture({ disabled: true });
+      const { _comboboxNode, _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
+      // input should not be focusable
+      expect(_comboboxNode.tabIndex).to.equal(-1);
+      expect(_inputNode.tabIndex).to.equal(-1);
+
+      // aria-disabled should be set
+      expect(el.getAttribute('aria-disabled')).to.equal('true');
+
+      // aria-disabled should be set
+      expect(_inputNode.getAttribute('aria-disabled')).to.equal('true');
+
+      await expect(el).to.be.accessible();
+    });
+
+    it('ensure focus when combobox is readonly', async () => {
+      const [el] = await fruitFixture({ readonly: true });
+      const { _comboboxNode, _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
+      // input should be focusable
+      expect(_inputNode.tabIndex).to.equal(0);
+
+      // aria-disabled should be set
+      expect(_comboboxNode.getAttribute('aria-readonly')).to.equal('true');
+
+      // aria-disabled should be set
+      expect(_inputNode.getAttribute('aria-readonly')).to.equal('true');
+
+      await expect(el).to.be.accessible();
+    });
+  });
+
+  describe('Readonly state', () => {
+    it('does not open overlay or allow input when readonly', async () => {
+      const [el] = await fruitFixture({ readonly: true });
+
+      const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+      expect(el.readOnly).to.equal(true);
+
+      expect(el.readOnly).to.be.true;
+      expect(_inputNode.readOnly).to.be.true;
+
+      // Try to open overlay by clicking input
+      _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
+      await el.updateComplete;
+      expect(el.opened).to.be.false;
+    });
+
+    it('does open overlay or allow input when readonly state is removed after it was previously set', async () => {
+      const [el] = await fruitFixture({ readonly: true });
+      expect(el.readOnly).to.equal(true);
+
+      const { _inputNode } = getComboboxMembers(/** @type {LionCombobox} */ (el));
+
+      expect(el.readOnly).to.be.true;
+      expect(_inputNode.readOnly).to.be.true;
+
+      // Try to open overlay by clicking input
+      _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
+      await el.updateComplete;
+      expect(el.opened).to.be.false;
+
+      el.readOnly = false;
+      await el.updateComplete;
+
+      expect(el.readOnly).to.be.false;
+      expect(_inputNode.readOnly).to.be.false;
+
+      // Try to open overlay by clicking input
+      async function open() {
+        await mimicUserTyping(/** @type {LionCombobox} */ (el), 'ch');
+        return el.updateComplete;
+      }
+
+      await open();
+      expect(el.opened).to.be.true;
     });
   });
 });

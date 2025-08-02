@@ -1,10 +1,13 @@
 import { LitElement, html, css } from 'lit';
 import { uuid } from '@lion/ui/core.js';
+
 /**
  * `LionCollapsible` is a class for custom collapsible element (`<lion-collapsible>` web component).
  *
+ * @slot invoker - The invoker element for the collapsible
+ * @slot content - The content element for the collapsible
+ *
  * @customElement lion-collapsible
- * @extends LitElement
  */
 export class LionCollapsible extends LitElement {
   static get styles() {

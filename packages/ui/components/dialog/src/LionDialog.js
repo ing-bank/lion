@@ -1,6 +1,9 @@
 import { html, LitElement } from 'lit';
 import { OverlayMixin, withModalDialogConfig } from '@lion/ui/overlays.js';
 
+/**
+ * @customElement lion-dialog
+ */
 export class LionDialog extends OverlayMixin(LitElement) {
   /** @type {any} */
   static get properties() {

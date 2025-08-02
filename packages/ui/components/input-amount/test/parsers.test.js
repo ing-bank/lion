@@ -71,4 +71,9 @@ describe('parseAmount()', async () => {
       parseAmount('123.456,78', { mode: 'user-edited', viewValueStates: ['formatted'] }),
     ).to.equal(123456.78);
   });
+
+  it('parses negative numbers', async () => {
+    expect(parseAmount('−15.00')).to.equal(-15);
+    expect(parseAmount('-333.33')).to.equal(-333.33);
+  });
 });

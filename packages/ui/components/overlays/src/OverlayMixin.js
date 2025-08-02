@@ -9,6 +9,10 @@ import { isEqualConfig } from './utils/is-equal-config.js';
  */
 
 /**
+ * @slot backdrop - The backdrop element for the overlay
+ * @slot content - The content element for the overlay
+ * @slot invoker - The invoker element for the overlay
+ *
  * @type {OverlayMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
@@ -179,6 +183,7 @@ export const OverlayMixinImplementation = superclass =>
       super.connectedCallback();
 
       this.updateComplete.then(() => {
+        if (!this.isConnected) return;
         if (this.#hasSetup) return;
         this._setupOverlayCtrl();
         this.#hasSetup = true;
