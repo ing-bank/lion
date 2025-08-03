@@ -1,0 +1,50 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+
+export async function getStaticPaths() {
+    const entries = await getCollection("lionGuides");
+
+    return [
+        ...entries.map(entry => ({ params: { path: entry.id }})),
+        {params: { path: undefined }}
+    ]
+}
+
+const { path } = Astro.params;
+const entry = await getEntry("lionGuides", path);
+
+if (!entry) {
+    // Handle Error, for example:
+    throw new Error(`Could not find component by URL ${path}`);
+}
+const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+
+const importPath = `${remarkPluginFrontmatter.mdjsStoriesPath}`;
+---
+
+<MainLayout>
+  <load-demo data-import-path={importPath}></load-demo>
+
+  <script>
+    class LoadDemo extends HTMLElement {
+      connectedCallback() {
+        // a weird hack for Astro
+        // in order to have script type=module, we cant specify any attributes to it
+        // this MDJS breaks, because we need msjs-setup attribute
+        // if we specify this attribute, then it's suddenly loses "type=module" and lazy import cannot be used inside
+
+        // on top of that, to pass the variable from template (importPath) we can only do this through HTML element
+        import(`./_demos/${this.dataset.importPath}.js`);
+      }
+    }
+
+    customElements.define('load-demo', LoadDemo);
+
+    const currentScript = [...document.scripts].find(script => script.src === import.meta.url);
+
+    currentScript.setAttribute('mdjs-setup', 'true');
+  </script>
+
+  <Content />
+</MainLayout>

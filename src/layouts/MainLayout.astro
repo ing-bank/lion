@@ -105,23 +105,23 @@ const blogEntries = await getNavigation("lionBlog", '/blog', false, entry => ent
  /** @type {NavItem[]} */
      // todo:pavlik auto-generate from the docs
 const navData = [
-  { name: "home", url: "/", iconId: 'lion:portal:home' },
-       { name: "fundamentals", url: "/fundamentals", iconId: 'lion:portal:sdk',
+  { name: "home", url: "/", iconId: 'lion-portal:portal:home' },
+       { name: "fundamentals", url: "/fundamentals", iconId: 'lion-portal:portal:sdk',
          children: fundamentals,
        },
-       { name: "guides", url: "/guides", iconId: 'lion:portal:extension',
+       { name: "guides", url: "/guides", iconId: 'lion-portal:portal:extension',
          children: guides,
        },
   {
     name: "components",
     url: "/components",
-    iconId: 'lion:portal:deployedCode',
+    iconId: 'lion-portal:portal:deployedCode',
     children: components,
   },
      {
        name: "blog",
        url: "/blog",
-       iconId: 'lion:portal:deployedCode',
+       iconId: 'lion-portal:portal:deployedCode',
        children: blogEntries,
      },
 ];

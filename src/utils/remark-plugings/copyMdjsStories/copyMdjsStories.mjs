@@ -7,7 +7,7 @@ const NODE_MODULES_PATH = '/node_modules';
 const NODE_MODULES_LION_DOCS = '_lion_docs';
 const require = createRequire(import.meta.url);
 const DEBUG = 1;
-const DEBUG_COMPONENT = 'accordion';
+const DEBUG_COMPONENT = 'icon';
 const SHOW_MODULE_NOT_FOUND = false;
 
 const resolveLionImport = moduleResolvedPath => {
@@ -72,15 +72,17 @@ async function processImports(source, mode, inputPath) {
       } else {
         const isDynamicImport = importSrc.startsWith("'");
         if (isDynamicImport) {
-          const resolvedPath = require.resolve(importSrc.replace(/'/g, ''));
+          const resolvedPath = require.resolve(importSrc.replace(/'/g, ''), {
+            paths: [path.dirname(inputPath)],
+          });
 
           resolvedImportFullPath = `'${NODE_MODULES_PATH}${resolveLionImport(resolvedPath)}'`;
           log('dynamic', resolvedImportFullPath);
         } else {
-          const resolvedPath = require.resolve(importSrc);
-
-          resolvedImportFullPath = `${NODE_MODULES_PATH}${resolveLionImport(resolvedPath)}`;
-          log('regular', resolvedImportFullPath);
+          // const resolvedPath = require.resolve(importSrc);
+          //
+          // resolvedImportFullPath = `${NODE_MODULES_PATH}${resolveLionImport(resolvedPath)}`;
+          // log('regular', resolvedImportFullPath);
         }
       }
 
@@ -106,6 +108,7 @@ export function copyMdjsStories({ mode } = {}) {
    * @param {Node} tree
    * @param {VFileOptions} file
    */
+
   async function transformer(tree, file) {
     const log =
       DEBUG && file.history[0].includes(DEBUG_COMPONENT) ? console.log.bind(console) : () => {};
@@ -116,43 +119,37 @@ export function copyMdjsStories({ mode } = {}) {
     }
 
     const currentMarkdownFile = file.history[0];
+    const separator = ['components', 'fundamentals', 'guides'].find(sep =>
+      currentMarkdownFile.includes(sep),
+    );
+
     const pwd = file.cwd;
-    const mdJsStoriesUrlPath = '/mdjs-stories';
-    const mdJsStoriesDir = `${pwd}/node_modules/${mdJsStoriesUrlPath}`;
-    const mdJsStoriesFileName = '__mdjs-stories';
+    const PATHS = {
+      MDJS_STORIES: path.join(pwd, 'src', 'pages', separator, '_demos'),
+    };
+
     let parsedPath = '';
 
     if (currentMarkdownFile) {
-      const separator = ['components/', 'fundamentals/', '/guides'].find(sep =>
-        currentMarkdownFile.includes(sep),
-      );
-      const rightSideParsedPath = currentMarkdownFile.split(separator)[1];
-      // console.log(currentMarkdownFile, leftSideParsedPath);
-      [parsedPath] = rightSideParsedPath.split('.md');
+      const rightSideParsedPath = currentMarkdownFile.split(`${separator}${path.sep}`)[1];
+      parsedPath = rightSideParsedPath.split('.md')[0].replaceAll(path.sep, '_');
     }
 
+    // in theory, processing imports is not needed anymore, but it also does symlinks
+    // for the relative files and these symlinks we do need
     const parsedSetupJsCode = await processImports(setupJsCode, mode, currentMarkdownFile);
-    // console.log({ parsedSetupJsCode });
-    const newFolder = `${mdJsStoriesDir}/${parsedPath}`;
-    const newName = path.join(newFolder, mdJsStoriesFileName);
-    await fs.promises.mkdir(newFolder, { recursive: true });
-    await fs.promises.writeFile(newName, parsedSetupJsCode, 'utf8');
+    await fs.promises.mkdir(PATHS.MDJS_STORIES, { recursive: true });
+    await fs.promises.writeFile(
+      path.join(PATHS.MDJS_STORIES, `${parsedPath}.js`),
+      parsedSetupJsCode,
+      'utf8',
+    );
 
-    // const mdjsStoriesJsNode = {
-    //   type: 'html',
-    //   value: `<script type="module" mdjs-setup>${parsedSetupJsCode}</script>`,
-    // };
-    // const mdjsStoriesJsNode = {
-    //   type: 'html',
-    //   value: `<script type="module" src="/node_modules/${mdJsStoriesUrlPath}/${parsedPath}/${mdJsStoriesFileName}" mdjs-setup></script>`,
-    // };
-    // astro does not see this update?
-    // tree.children.push(mdjsStoriesJsNode);
     if (!file.data.astro.frontmatter) {
       file.data.astro.frontmatter = {};
     }
-    //file.data.astro.frontmatter.mdjsStoriesPath = `${mdJsStoriesUrlPath}/${parsedPath}/${mdJsStoriesFileName}`;
-    file.data.astro.frontmatter.mdjsStoriesPath = `${parsedPath.replaceAll('/', '-')}${mdJsStoriesFileName}`;
+
+    file.data.astro.frontmatter.mdjsStoriesPath = parsedPath;
 
     return tree;
   }

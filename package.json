@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "export PROD=true && npm run build-docs && npx astro build && node -e 'require(\"./src/utils/post-build-dist/post-build-dist.js\").postBuildDist()'",
-    "build:astro": "export PROD=true && npx astro build",
+    "build:astro": "npx astro build",
     "build-docs": "npm run clean && node -e 'require(\"./src/utils/copy-docs\").copyDocs()' && node -e 'require(\"./src/utils/copy-docs\").processImports()'",
     "build-docs:watch": "node -e 'require(\"./src/utils/copy-docs\").watch()'",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
