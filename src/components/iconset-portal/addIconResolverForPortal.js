@@ -12,6 +12,6 @@ function resolveLionIcon(iconset, name) {
 let registered = false;
 export function addIconResolverForPortal() {
   if (registered) return;
-  iconsManager.addIconResolver('lion', resolveLionIcon);
+  iconsManager.addIconResolver('lion-portal', resolveLionIcon);
   registered = true;
 }

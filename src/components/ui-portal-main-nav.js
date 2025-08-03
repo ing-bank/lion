@@ -5,7 +5,12 @@ import { UIBaseElement } from './shared/UIBaseElement.js';
 import { addIconResolverForPortal } from './iconset-portal/addIconResolverForPortal.js';
 import { navItemDirective } from '../directives/nav-item.js';
 
-addIconResolverForPortal();
+try {
+  addIconResolverForPortal();
+} catch (e) {
+  // do nothing
+  // icons can be registered by somebody else?
+}
 
 // TODO: apply https://web.dev/website-navigation/ (aria-current="page" etc.)
 
@@ -154,7 +159,7 @@ const baseUINavMarkup = {
                   <lion-icon
                     data-part="icon"
                     data-level="${level}"
-                    icon-id="lion:portal:search"
+                    icon-id="lion-portal:portal:search"
                   ></lion-icon>
                   <span>Search</span>
                 </a>

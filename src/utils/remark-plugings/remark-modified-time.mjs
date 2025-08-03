@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { execSync } from 'child_process';
 
 export function remarkModifiedTime() {
   return function (tree, file) {
@@ -7,7 +7,9 @@ export function remarkModifiedTime() {
       return;
     }
 
-    const result = execSync(`git log --follow --format=%ad --date default "${filepath}" | tail -1 `);
+    const result = execSync(
+      `git log --follow --format=%ad --date default "${filepath}" | tail -1 `,
+    );
     file.data.astro.frontmatter.createdAt = result.toString();
   };
 }

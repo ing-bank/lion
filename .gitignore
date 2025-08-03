@@ -6,7 +6,7 @@ dist/
 .astro
 
 # generated __mdjs-stories.js files
-public/mdjs-stories
+_demos/*
 
 ## editors
 /.idea
