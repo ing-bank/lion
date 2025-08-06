@@ -747,7 +747,7 @@ export const ValidateMixinImplementation = superclass =>
      * @property {string} type will be 'error' for messages from default Validators. Could be
      * 'warning', 'info' etc. for Validators with custom types. Needed as a directive for
      * feedbackNode how to render a message of a certain type
-     * @property {Number} visibilityDuration duration in ms for how long the message should be shown
+     * @property {number} visibilityDuration duration in ms for how long the message should be shown
      * @property {Validator} [validator] when the message is directly coupled to a Validator
      * (in most cases), this property is filled. When a message is not coupled to a Validator
      * (in case of success feedback which is based on a diff or current and previous validation

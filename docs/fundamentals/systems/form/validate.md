@@ -701,7 +701,7 @@ new DefaultSuccess({}, { visibilityDuration: 4000 });
 `Infinity` can be added to the `duration` property to allow the success message to stay on screen, like the behaviour of the other validation types' messages.
 
 ```js
-new DefaultSuccess({}, { displayOptions: { duration: Infinity } });
+new DefaultSuccess({}, visibilityDuration: Infinity });
 ```
 
 ## Asynchronous validation
