@@ -2,7 +2,7 @@ import path from 'path';
 import { promisify } from 'util';
 import { exec } from 'child_process';
 import { readFile } from 'fs/promises';
-import chai from 'chai';
+import * as chai from 'chai';
 // eslint-disable-next-line import/no-unresolved
 import chaiAsPromised from 'chai-as-promised';
 import { prettify, bypassImportMap } from '@lion/nodejs-helpers';
