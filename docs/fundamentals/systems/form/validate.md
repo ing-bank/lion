@@ -695,7 +695,7 @@ By default the success message will disappear, both the duration and the removal
 The `duration` property overwrites the default 3000ms timer.
 
 ```js
-new DefaultSuccess({}, { displayOptions: { duration: 1000 } });
+new DefaultSuccess({}, { visibilityDuration: 4000 });
 ```
 
 `Infinity` can be added to the `duration` property to allow the success message to stay on screen, like the behaviour of the other validation types' messages.
