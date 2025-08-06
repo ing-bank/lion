@@ -747,8 +747,7 @@ export const ValidateMixinImplementation = superclass =>
      * @property {string} type will be 'error' for messages from default Validators. Could be
      * 'warning', 'info' etc. for Validators with custom types. Needed as a directive for
      * feedbackNode how to render a message of a certain type
-     * @property {object} displayOptions
-     * @property {Number} displayOptions.duration duration in ms for how long the message should be shown
+     * @property {Number} visibilityDuration duration in ms for how long the message should be shown
      * @property {Validator} [validator] when the message is directly coupled to a Validator
      * (in most cases), this property is filled. When a message is not coupled to a Validator
      * (in case of success feedback which is based on a diff or current and previous validation
@@ -778,7 +777,7 @@ export const ValidateMixinImplementation = superclass =>
             message,
             type: validator.type,
             validator,
-            displayOptions: { duration: 3000, ...validator.config?.displayOptions },
+            visibilityDuration: validator.config?.visibilityDuration || 3000,
           };
         }),
       );
@@ -837,13 +836,13 @@ export const ValidateMixinImplementation = superclass =>
           if (
             messageMap?.[0] &&
             messageMap[0].type === 'success' &&
-            messageMap[0].displayOptions?.duration !== Infinity
+            messageMap[0].visibilityDuration !== Infinity
           ) {
             this.removeMessage = window.setTimeout(() => {
               _feedbackNode.removeAttribute('type');
               /** @type {FeedbackMessage[]} */
               _feedbackNode.feedbackData = [];
-            }, messageMap[0].displayOptions?.duration);
+            }, messageMap[0].visibilityDuration);
           }
         });
       } else {

@@ -403,7 +403,7 @@ export function runValidateMixinFeedbackPart() {
             new MinLength(3),
             new DefaultSuccess(null, {
               getMessage: () => 'This is a success message',
-              displayOptions: { duration: 6000 },
+              visibilityDuration: 6000,
             }),
           ]}
         >${lightDom}</${elTag}>
@@ -443,7 +443,7 @@ export function runValidateMixinFeedbackPart() {
             new MinLength(3),
             new DefaultSuccess(null, {
               getMessage: () => 'This is a success message',
-              displayOptions: { duration: Infinity },
+              visibilityDuration: Infinity,
             }),
           ]}
         >${lightDom}</${elTag}>
