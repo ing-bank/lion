@@ -3,8 +3,11 @@ import { expect, fixture } from '@open-wc/testing';
 import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-dialog.js';
 import '@lion/ui/define/lion-option.js';
+import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-radio.js';
+import '@lion/ui/define/lion-form.js';
 import { html } from 'lit';
+import { sendKeys } from '@web/test-runner-commands';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { getAllTagNames } from './helpers/helpers.js';
@@ -95,5 +98,36 @@ describe('Form inside dialog Integrations', () => {
     const lionInput = el.querySelector('[name="input"]');
     // @ts-expect-error [allow-protected-in-tests]
     expect(isActiveElement(lionInput._focusableNode)).to.be.true;
+  });
+
+  it.only('does not re-open when closed via submit event using lion-button as invoker', async () => {
+    const el = await fixture(html`
+      <lion-dialog opened>
+        <div slot="content">
+          <lion-form id="myForm" @submit="${() => el.close()}">
+            <form id="myForm" @submit="${e => e.preventDefault()}">
+              <input type="text" name="name" />
+              <button type="submit">Submit</button>
+            </form>
+          </lion-form>
+        </div>
+        <lion-button slot="invoker">Invoker</lion-button>
+      </lion-dialog>
+    `);
+
+    const dialogEl = /** @type {HTMLDialogElement} */ (el._overlayCtrl.__wrappingDialogNode);
+
+    // @ts-expect-error [allow-protected-in-tests]
+    expect(dialogEl.checkVisibility()).to.be.true;
+
+    /** @type {HTMLInputElement} */ (el.querySelector('input[type="text"]')).focus();
+
+    await sendKeys({ press: 'Enter' });
+
+    await el.updateComplete;
+    await el.updateComplete;
+
+    expect(dialogEl.checkVisibility()).to.be.false;
+    expect(isActiveElement(el._overlayInvokerNode)).to.be.true;
   });
 });

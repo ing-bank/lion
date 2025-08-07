@@ -181,15 +181,10 @@ export class OverlayController extends EventTarget {
               offset: [0, 8], // horizontal and vertical margin (distance between popper and referenceElement)
             },
           },
-          {
-            name: 'arrow',
-            enabled: false,
-          },
+          { name: 'arrow', enabled: false },
         ],
       },
-      viewportConfig: {
-        placement: 'center',
-      },
+      viewportConfig: { placement: 'center' },
       zIndex: 9999,
     };
 
@@ -640,27 +635,25 @@ export class OverlayController extends EventTarget {
     if (hasClosedBySupport) {
       // @ts-expect-error
       wrappingDialogElement.closedBy = 'none';
-    } else {
-      wrappingDialogElement.addEventListener(
-        'keydown',
-        (/** @type {* & KeyboardEvent} */ event) => {
-          if (event.key === 'Escape') {
-            event.preventDefault();
-          }
-        },
-      );
-      wrappingDialogElement.addEventListener('keyup', (/** @type {* & KeyboardEvent} */ event) => {
-        if (event.key === 'Escape') {
-          event.preventDefault();
-        }
-      });
-      wrappingDialogElement.addEventListener('cancel', event => {
-        event.stopPropagation();
-      });
-      wrappingDialogElement.addEventListener('close', event => {
-        event.stopPropagation();
-      });
     }
+    // else {
+    wrappingDialogElement.addEventListener('keydown', (/** @type {* & KeyboardEvent} */ event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+      }
+    });
+    wrappingDialogElement.addEventListener('keyup', (/** @type {* & KeyboardEvent} */ event) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+      }
+    });
+    wrappingDialogElement.addEventListener('cancel', event => {
+      event.stopPropagation();
+    });
+    wrappingDialogElement.addEventListener('close', event => {
+      event.stopPropagation();
+    });
+    // }
   }
 
   /**
@@ -928,7 +921,7 @@ export class OverlayController extends EventTarget {
       this._handleFeatures({ phase: 'hide' });
       this._keepBodySize({ phase: 'hide' });
       this.dispatchEvent(new Event('hide'));
-      this._restoreFocus();
+      // this._restoreFocus();
     }
     /** @type {function} */ (this._hideResolve)();
   }

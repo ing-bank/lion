@@ -39,21 +39,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
   static get properties() {
     return {
       autocomplete: { type: String, reflect: true },
-      matchMode: {
-        type: String,
-        attribute: 'match-mode',
-      },
-      showAllOnEmpty: {
-        type: Boolean,
-        attribute: 'show-all-on-empty',
-      },
-      requireOptionMatch: {
-        type: Boolean,
-      },
-      allowCustomChoice: {
-        type: Boolean,
-        attribute: 'allow-custom-choice',
-      },
+      matchMode: { type: String, attribute: 'match-mode' },
+      showAllOnEmpty: { type: Boolean, attribute: 'show-all-on-empty' },
+      requireOptionMatch: { type: Boolean },
+      allowCustomChoice: { type: Boolean, attribute: 'allow-custom-choice' },
       __shouldAutocompleteNextUpdate: Boolean,
     };
   }
@@ -1282,10 +1271,7 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   _onKeyUp(ev) {
     const lastKey = ev && ev.key;
-    this.opened = this._showOverlayCondition({
-      lastKey,
-      currentValue: this._inputNode.value,
-    });
+    this.opened = this._showOverlayCondition({ lastKey, currentValue: this._inputNode.value });
   }
 
   /**

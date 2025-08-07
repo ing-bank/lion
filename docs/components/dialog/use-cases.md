@@ -18,6 +18,9 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-dialog.js';
+import '@lion/ui/define/lion-form.js';
+import '@lion/ui/define/lion-button.js';
+
 import { demoStyle } from './src/demoStyle.js';
 import './src/styled-dialog-content.js';
 import './src/slots-dialog-content.js';
@@ -195,5 +198,25 @@ Configuration passed to `config` property:
   hidesOnEscape: true,
   preventsScroll: true,
   elementToFocusAfterHide: document.body
+}
+```
+
+
+## With form submit
+
+
+```js preview-story
+export const withFormSubmit = () => {
+      return html`<lion-dialog>
+        <div slot="content">
+          <lion-form id="myForm" @submit="${({currentTarget}) => currentTarget.closest('lion-dialog').close()}">
+            <form id="myForm" @submit="${e => e.preventDefault()}">
+              <input type="text" name="name" />
+              <button type="submit">Submit</button>
+            </form>
+          </lion-form>
+        </div>
+        <lion-button slot="invoker">Invoker</lion-button>
+      </lion-dialog>`;
 }
 ```

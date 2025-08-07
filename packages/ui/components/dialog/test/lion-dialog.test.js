@@ -25,11 +25,7 @@ describe('lion-dialog', () => {
     const tagString = 'lion-dialog';
     const tag = unsafeStatic(tagString);
 
-    runOverlayMixinSuite({
-      tagString,
-      tag,
-      suffix: ' for lion-dialog',
-    });
+    runOverlayMixinSuite({ tagString, tag, suffix: ' for lion-dialog' });
   });
 
   describe('Basic', () => {
