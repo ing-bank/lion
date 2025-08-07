@@ -5,7 +5,7 @@ import { formatNumberToParts } from './formatNumberToParts.js';
  * getFractionDigits('JOD'); // return 3
  *
  * @typedef {import('../../types/LocalizeMixinTypes.js').FormatNumberPart} FormatNumberPart
- * @param {string} [currency="EUR"] Currency code e.g. EUR
+ * @param {import('../../../input-amount-dropdown/types/index.js').CurrencyCode | string} [currency="EUR"] Currency code e.g. EUR
  * @returns {number} fraction for the given currency
  */
 export function getFractionDigits(currency = 'EUR') {
