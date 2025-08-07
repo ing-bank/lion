@@ -48,6 +48,14 @@ export class LionValidationFeedback extends LocalizeMixin(LitElement) {
     ];
   }
 
+  constructor() {
+    super();
+    /**
+     * @type {FeedbackMessage[] | undefined}
+     */
+    this.feedbackData = undefined;
+  }
+
   /**
    * @overridable
    * @param {Object} opts
@@ -69,16 +77,6 @@ export class LionValidationFeedback extends LocalizeMixin(LitElement) {
     if (this.feedbackData && this.feedbackData[0]) {
       this.setAttribute('type', this.feedbackData[0].type);
       this.currentType = this.feedbackData[0].type;
-      window.clearTimeout(this.removeMessage);
-      // TODO: this logic should be in ValidateMixin, so that [show-feedback-for] is in sync,
-      // plus duration should be configurable
-      if (this.currentType === 'success') {
-        this.removeMessage = window.setTimeout(() => {
-          this.removeAttribute('type');
-          /** @type {FeedbackMessage[]} */
-          this.feedbackData = [];
-        }, 3000);
-      }
     } else if (this.currentType !== 'success') {
       this.removeAttribute('type');
     }

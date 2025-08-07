@@ -590,7 +590,7 @@ export const ValidateMixinImplementation = superclass =>
         return [];
       }
 
-      // If empty, do not show the ResulValidation message (e.g. Correct!)
+      // If empty, do not show the ResultValidation message (e.g. Correct!)
       if (this._isEmpty(this.modelValue)) {
         this.__prevShownValidationResult = [];
         return [];
@@ -619,7 +619,7 @@ export const ValidateMixinImplementation = superclass =>
      * - on sync validation
      * - on async validation (can depend on server response)
      *
-     * This method inishes a pass by adding the properties to the instance:
+     * This method finishes a pass by adding the properties to the instance:
      * - validationStates
      * - hasFeedbackFor
      *
@@ -763,6 +763,7 @@ export const ValidateMixinImplementation = superclass =>
      * @property {string} type will be 'error' for messages from default Validators. Could be
      * 'warning', 'info' etc. for Validators with custom types. Needed as a directive for
      * feedbackNode how to render a message of a certain type
+     * @property {number} visibilityDuration duration in ms for how long the message should be shown
      * @property {Validator} [validator] when the message is directly coupled to a Validator
      * (in most cases), this property is filled. When a message is not coupled to a Validator
      * (in case of success feedback which is based on a diff or current and previous validation
@@ -788,7 +789,12 @@ export const ValidateMixinImplementation = superclass =>
             fieldName,
             outcome,
           });
-          return { message, type: validator.type, validator };
+          return {
+            message,
+            type: validator.type,
+            validator,
+            visibilityDuration: validator.config?.visibilityDuration || 3000,
+          };
         }),
       );
     }
@@ -809,6 +815,8 @@ export const ValidateMixinImplementation = superclass =>
      * @protected
      */
     _updateFeedbackComponent() {
+      window.clearTimeout(this.removeMessage);
+
       const { _feedbackNode } = this;
       if (!_feedbackNode) {
         return;
@@ -840,6 +848,18 @@ export const ValidateMixinImplementation = superclass =>
 
           const messageMap = await this.__getFeedbackMessages(this.__prioritizedResult);
           _feedbackNode.feedbackData = messageMap || [];
+
+          if (
+            messageMap?.[0] &&
+            messageMap[0].type === 'success' &&
+            messageMap[0].visibilityDuration !== Infinity
+          ) {
+            this.removeMessage = window.setTimeout(() => {
+              _feedbackNode.removeAttribute('type');
+              /** @type {FeedbackMessage[]} */
+              _feedbackNode.feedbackData = [];
+            }, messageMap[0].visibilityDuration);
+          }
         });
       } else {
         this.__feedbackQueue.add(async () => {
