@@ -9,7 +9,7 @@ export class CurrencyAndAmount extends Validator {
   static validatorName = 'CurrencyAndAmount';
 
   /**
-   * @param {import('../types/index.js').AmountDropdownModelValue} modelValue telephone number without country prefix
+   * @param {import('../types/index.js').AmountDropdownModelValue} modelValue amount and currency symbol
    */
   // eslint-disable-next-line class-methods-use-this
   execute(modelValue) {

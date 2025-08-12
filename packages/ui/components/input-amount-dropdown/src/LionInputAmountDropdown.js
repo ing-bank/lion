@@ -196,7 +196,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
   /**
    * @configure LitElement
-   * @enhance LionInputTel
+   * @enhance LionInputAmountDropdown
    */
   static styles = [
     super.styles,
