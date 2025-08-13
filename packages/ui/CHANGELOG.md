@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.14.0
+
+### Minor Changes
+
+- 57800c4: adds the lion-input-amount-dropdown component
+
 ## 0.13.1
 
 ### Patch Changes
