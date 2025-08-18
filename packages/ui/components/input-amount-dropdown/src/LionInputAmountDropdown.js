@@ -102,7 +102,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
       dropdown: {
         ref: this.refs.dropdown,
         props: {
-          style: `height: 100%;`,
+          style: '',
         },
         listeners: {
           change: this._onDropdownValueChange,
