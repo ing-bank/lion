@@ -308,6 +308,22 @@ const footerData = [
         padding: 1rem;
         border-radius: 0.5rem;
       }
+
+      @media (max-width: 899px) {
+        .ui-portal-grid__nav {
+          position: absolute;
+          background: #fff;
+          z-index: 100;
+        }
+
+        .ui-portal-grid {
+          grid-template-columns: 1fr;
+          grid-template-rows: 1fr;
+          grid-template-areas:
+            "main"
+            "footer";
+        }
+      }
     </style>
   </body>
 </html>
