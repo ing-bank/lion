@@ -26,7 +26,7 @@ export type TemplateDataForDropdownInputAmount = {
   refs: {
     dropdown: RefTemplateData & {
       ref: DropdownRef;
-      props: { style: string };
+      props?: { style?: string };
       listeners: {
         change: (event: OnDropdownChangeEvent) => void;
         'model-value-changed': (event: OnDropdownChangeEvent) => void;

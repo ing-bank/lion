@@ -101,9 +101,6 @@ export class LionInputAmountDropdown extends LionInputAmount {
     const refs = {
       dropdown: {
         ref: this.refs.dropdown,
-        props: {
-          style: '',
-        },
         listeners: {
           change: this._onDropdownValueChange,
           'model-value-changed': this._onDropdownValueChange,
@@ -159,7 +156,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
           ${ref(refs?.dropdown?.ref)}
           aria-label="${refs?.dropdown?.labels?.selectCurrency}"
           @change="${refs?.dropdown?.listeners?.change}"
-          style="${refs?.dropdown?.props?.style}"
+          style="${ifDefined(refs?.dropdown?.props?.style)}"
         >
           ${data?.regionMetaListPreferred?.length
             ? html`
