@@ -8,6 +8,7 @@ import { LionOption } from '@lion/ui/listbox.js';
 import { ref } from 'lit/directives/ref.js';
 import { html } from 'lit';
 
+import { ifDefined } from 'lit/directives/if-defined.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import '@lion/ui/define/lion-input-amount-dropdown.js';
@@ -43,7 +44,7 @@ class WithFormControlInputAmountDropdown extends ScopedElementsMixin(LionInputAm
           label="${refs?.dropdown?.labels?.country}"
           label-sr-only
           @model-value-changed="${refs?.dropdown?.listeners['model-value-changed']}"
-          style="${refs?.dropdown?.props?.style}"
+          style="${ifDefined(refs?.dropdown?.props?.style)}"
         >
           ${repeat(
             data.regionMetaList,
@@ -81,7 +82,7 @@ describe('WithFormControlInputAmountDropdown', () => {
               label="${refs?.dropdown?.labels?.country}"
               label-sr-only
               @model-value-changed="${refs?.dropdown?.listeners['model-value-changed']}"
-              style="${refs?.dropdown?.props?.style}"
+              style="${ifDefined(refs?.dropdown?.props?.style)}"
               interaction-mode="mac"
             >
               ${repeat(
@@ -134,7 +135,7 @@ describe('WithFormControlInputAmountDropdown', () => {
               label="${refs?.dropdown?.labels?.country}"
               label-sr-only
               @model-value-changed="${refs?.dropdown?.listeners['model-value-changed']}"
-              style="${refs?.dropdown?.props?.style}"
+              style="${ifDefined(refs?.dropdown?.props?.style)}"
               interaction-mode="windows/linux"
             >
               ${repeat(

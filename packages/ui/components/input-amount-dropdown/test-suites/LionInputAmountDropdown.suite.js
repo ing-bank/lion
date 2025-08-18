@@ -150,7 +150,6 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
                   // @ts-expect-error [allow-protected]
                   'model-value-changed': el._onDropdownValueChange,
                 },
-                props: { style: 'height: 100%;' },
                 ref: {
                   value: dropdownNode,
                 },
