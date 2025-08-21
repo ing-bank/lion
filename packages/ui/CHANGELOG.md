@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.14.1
+
+### Patch Changes
+
+- f6860c4: exports amount-dropdown types
+
 ## 0.14.0
 
 ### Minor Changes
