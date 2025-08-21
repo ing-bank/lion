@@ -18,28 +18,75 @@ Its purpose is to make it easy to use our Overlay System declaratively.
 ```js script
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-dialog.js';
-
+import { LitElement, nothing } from 'lit';
+import { cache } from 'lit/directives/cache.js';
+import '@lion/ui/define/lion-tabs.js';
 import { demoStyle } from './src/demoStyle.js';
 ```
 
 ```js preview-story
-export const main = () => html`
-  <style>
-    ${demoStyle}
-  </style>
-  <lion-dialog>
-    <button slot="invoker">Click me to open dialog</button>
+export const main = () => {
+  const dialog = html` <lion-dialog>
+    <button slot="invoker" class="invoker-button">Click me to open dialog</button>
     <div slot="content" class="demo-dialog-content">
       Hello! You can close this dialog here:
       <button
-        class="demo-dialog-content__close-button"
+        class="close-button"
         @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
       >
         ⨯
       </button>
     </div>
-  </lion-dialog>
-`;
+  </lion-dialog>`;
+
+  /**
+   * Note, inactive tab content is **destroyed** on every tab switch.
+   */
+  class Wrapper extends LitElement {
+    static properties = {
+      ...super.properties,
+      activeTabIndex: { type: Number },
+    };
+
+    constructor() {
+      super();
+      this.activeTabIndex = 0;
+    }
+
+    /**
+     * @param {number} index
+     */
+    changeActiveTabIndex(index) {
+      this.activeTabIndex = index;
+    }
+
+    render() {
+      const changeActiveTabIndexRef = this.changeActiveTabIndex.bind(this);
+      return html`
+        <lion-tabs>
+          <button slot="tab" class="first-button" @click=${() => changeActiveTabIndexRef(0)}>
+            First
+          </button>
+          <p slot="panel">
+            <!-- buggy case -->
+            <!-- ${cache(this.activeTabIndex === 0 ? dialog : nothing)} -->
+            <!-- working case -->
+            ${this.activeTabIndex === 0 ? dialog : nothing}
+          </p>
+          <button slot="tab" class="second-button" @click=${() => changeActiveTabIndexRef(1)}>
+            Second
+          </button>
+          <p slot="panel">Info page with lots of information about us.</p>
+        </lion-tabs>
+      `;
+    }
+  }
+  customElements.define('lion-wrapper', Wrapper);
+  return html`<style>
+    ${demoStyle}
+  </style>
+  <lion-wrapper></ing-wrapper>`;
+};
 ```
 
 ## Features
