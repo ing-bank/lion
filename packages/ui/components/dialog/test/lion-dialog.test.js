@@ -365,33 +365,46 @@ describe('lion-dialog', () => {
         }
       }
 
+      const wrapperFixture = /** @type {(arg: TemplateResult) => Promise<Wrapper>} */ (_fixture);
       const tagString = defineCE(Wrapper);
       const wrapperTag = unsafeStatic(tagString);
       const wrapperElement = /** @type {Wrapper} */ (
-        await fixture(html`<${wrapperTag}></${wrapperTag}>`)
+        await wrapperFixture(html`<${wrapperTag}></${wrapperTag}>`)
       );
       await wrapperElement.updateComplete;
       const wrapperElementShadowRoot = wrapperElement.shadowRoot;
-      const getFirstButton = () => wrapperElementShadowRoot.querySelector('.first-button');
-      const getSecondButton = () => wrapperElementShadowRoot.querySelector('.second-button');
-      const getInvokerButton = () => wrapperElementShadowRoot.querySelector('.invoker-button');
-      const getCloseButton = () => wrapperElementShadowRoot.querySelector('.close-button');
+      /**
+       * @returns { HTMLElement | null | undefined }
+       */
+      const getFirstButton = () => wrapperElementShadowRoot?.querySelector('.first-button');
+      /**
+       * @returns { HTMLElement | null | undefined }
+       */
+      const getSecondButton = () => wrapperElementShadowRoot?.querySelector('.second-button');
+      /**
+       * @returns { HTMLElement | null | undefined }
+       */
+      const getInvokerButton = () => wrapperElementShadowRoot?.querySelector('.invoker-button');
+      /**
+       * @returns { HTMLElement | null | undefined }
+       */
+      const getCloseButton = () => wrapperElementShadowRoot?.querySelector('.close-button');
       const getDialog = () =>
-        wrapperElementShadowRoot?.querySelector('lion-dialog')?.shadowRoot.querySelector('dialog');
-      const isDialogVisible = () => getDialog().checkVisibility() === true;
+        wrapperElementShadowRoot?.querySelector('lion-dialog')?.shadowRoot?.querySelector('dialog');
+      const isDialogVisible = () => getDialog()?.checkVisibility() === true;
       const isDialogRendered = () =>
-        !!wrapperElement.shadowRoot?.querySelector('lion-dialog')?.shadowRoot.childNodes.length;
-      getInvokerButton().click();
+        !!wrapperElement.shadowRoot?.querySelector('lion-dialog')?.shadowRoot?.childNodes.length;
+      getInvokerButton()?.click();
       await waitUntil(isDialogVisible);
-      getCloseButton().click();
+      getCloseButton()?.click();
       await waitUntil(() => !isDialogVisible());
-      getSecondButton().click();
+      getSecondButton()?.click();
       await waitUntil(() => !isDialogRendered());
-      getFirstButton().click();
+      getFirstButton()?.click();
       await waitUntil(isDialogRendered);
-      getInvokerButton().click();
+      getInvokerButton()?.click();
       await waitUntil(isDialogVisible);
-      getCloseButton().click();
+      getCloseButton()?.click();
       await waitUntil(() => !isDialogVisible());
       expect(isDialogVisible()).to.equal(false);
     });
