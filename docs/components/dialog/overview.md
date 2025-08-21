@@ -69,9 +69,9 @@ export const main = () => {
           </button>
           <p slot="panel">
             <!-- buggy case -->
-            <!-- ${cache(this.activeTabIndex === 0 ? dialog : nothing)} -->
+            ${cache(this.activeTabIndex === 0 ? dialog : nothing)}
             <!-- working case -->
-            ${this.activeTabIndex === 0 ? dialog : nothing}
+            <!-- ${this.activeTabIndex === 0 ? dialog : nothing} -->
           </p>
           <button slot="tab" class="second-button" @click=${() => changeActiveTabIndexRef(1)}>
             Second
