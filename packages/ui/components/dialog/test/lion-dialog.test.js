@@ -1,9 +1,20 @@
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture as _fixture, html, unsafeStatic, aTimeout } from '@open-wc/testing';
+import {
+  expect,
+  fixture as _fixture,
+  html,
+  unsafeStatic,
+  aTimeout,
+  defineCE,
+  waitUntil,
+} from '@open-wc/testing';
+import { cache } from 'lit/directives/cache.js';
+import { LitElement, nothing } from 'lit';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import '../test-helpers/test-router.js';
 import '@lion/ui/define/lion-dialog.js';
+import '@lion/ui/define/lion-tabs.js';
 
 /**
  * @typedef {import('../src/LionDialog.js').LionDialog} LionDialog
@@ -295,6 +306,92 @@ describe('lion-dialog', () => {
       // @ts-expect-error [allow-protected-in-tests]
       await dialogAfterRouteChange._overlayCtrl._showComplete;
       expect(dialogAfterRouteChange.opened).to.be.true;
+    });
+
+    it('should close the popup dialog after rendered from cache', async () => {
+      const dialog = html` <lion-dialog>
+        <button slot="invoker" class="invoker-button">Click me to open dialog</button>
+        <div slot="content" class="demo-dialog-content">
+          Hello! You can close this dialog here:
+          <button
+            class="close-button"
+            @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+          >
+            ⨯
+          </button>
+        </div>
+      </lion-dialog>`;
+
+      /**
+       * Note, inactive tab content is **destroyed** on every tab switch.
+       */
+      class Wrapper extends LitElement {
+        static properties = {
+          ...super.properties,
+          activeTabIndex: { type: Number },
+        };
+
+        constructor() {
+          super();
+          this.activeTabIndex = 0;
+        }
+
+        /**
+         * @param {number} index
+         */
+        changeActiveTabIndex(index) {
+          this.activeTabIndex = index;
+        }
+
+        render() {
+          const changeActiveTabIndexRef = this.changeActiveTabIndex.bind(this);
+          return html`
+            <lion-tabs>
+              <button slot="tab" class="first-button" @click=${() => changeActiveTabIndexRef(0)}>
+                First
+              </button>
+              <p slot="panel">
+                <!-- buggy case -->
+                ${cache(this.activeTabIndex === 0 ? dialog : nothing)}
+                <!-- working case -->
+                <!-- ${this.activeTabIndex === 0 ? dialog : nothing} -->
+              </p>
+              <button slot="tab" class="second-button" @click=${() => changeActiveTabIndexRef(1)}>
+                Second
+              </button>
+              <p slot="panel">Info page with lots of information about us.</p>
+            </lion-tabs>
+          `;
+        }
+      }
+
+      const tagString = defineCE(Wrapper);
+      const wrapperTag = unsafeStatic(tagString);
+      const wrapperElement = /** @type {Wrapper} */ (
+        await fixture(html`<${wrapperTag}></${wrapperTag}>`)
+      );
+      await wrapperElement.updateComplete;
+      const wrapperElementShadowRoot = wrapperElement.shadowRoot;
+      const getFirstButton = () => wrapperElementShadowRoot.querySelector('.first-button');
+      const getSecondButton = () => wrapperElementShadowRoot.querySelector('.second-button');
+      const getInvokerButton = () => wrapperElementShadowRoot.querySelector('.invoker-button');
+      const getCloseButton = () => wrapperElementShadowRoot.querySelector('.close-button');
+      const getDialog = () =>
+        wrapperElementShadowRoot?.querySelector('lion-dialog')?.shadowRoot.querySelector('dialog');
+      const isDialogVisible = () => getDialog().checkVisibility() === true;
+      const isDialogRendered = () =>
+        !!wrapperElement.shadowRoot?.querySelector('lion-dialog')?.shadowRoot.childNodes.length;
+      getInvokerButton().click();
+      await waitUntil(isDialogVisible);
+      getCloseButton().click();
+      await waitUntil(() => !isDialogVisible());
+      getSecondButton().click();
+      await waitUntil(() => !isDialogRendered());
+      getFirstButton().click();
+      await waitUntil(isDialogRendered);
+      getInvokerButton().click();
+      await waitUntil(isDialogVisible);
+      expect(isDialogVisible()).to.equal(true);
     });
   });
 });
