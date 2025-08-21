@@ -246,16 +246,23 @@ export const OverlayMixinImplementation = superclass =>
 
     /** @protected */
     _setupOverlayCtrl() {
-      if (this._overlayCtrl) return;
-
-      /** @type {OverlayController} */
-      this._overlayCtrl = this._defineOverlay({
+      if (this.#hasSetup) return;
+      const config = {
         contentNode: this._overlayContentNode,
         contentWrapperNode: this._overlayContentWrapperNode,
         invokerNode: this._overlayInvokerNode,
         referenceNode: this._overlayReferenceNode,
         backdropNode: this._overlayBackdropNode,
-      });
+      };
+
+      if (this._overlayCtrl) {
+        // whet `lit` `cache` attaches node to the DOM, register the controller back in the OverlaysManager
+        this._overlayCtrl.updateConfig(config);
+      } else {
+        /** @type {OverlayController} */
+        this._overlayCtrl = this._defineOverlay(config);
+      }
+
       this.__syncToOverlayController();
       this.__setupSyncFromOverlayController();
       this._setupOpenCloseListeners();

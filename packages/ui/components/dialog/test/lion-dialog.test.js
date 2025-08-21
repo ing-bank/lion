@@ -391,7 +391,9 @@ describe('lion-dialog', () => {
       await waitUntil(isDialogRendered);
       getInvokerButton().click();
       await waitUntil(isDialogVisible);
-      expect(isDialogVisible()).to.equal(true);
+      getCloseButton().click();
+      await waitUntil(() => !isDialogVisible());
+      expect(isDialogVisible()).to.equal(false);
     });
   });
 });
