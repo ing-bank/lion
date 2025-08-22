@@ -352,12 +352,7 @@ describe('lion-dialog', () => {
               <button slot="tab" class="first-button" @click=${() => changeActiveTabIndexRef(0)}>
                 First
               </button>
-              <p slot="panel">
-                <!-- buggy case -->
-                ${cache(this.activeTabIndex === 0 ? dialog : nothing)}
-                <!-- working case -->
-                <!-- ${this.activeTabIndex === 0 ? dialog : nothing} -->
-              </p>
+              <p slot="panel">${cache(this.activeTabIndex === 0 ? dialog : nothing)}</p>
               <button slot="tab" class="second-button" @click=${() => changeActiveTabIndexRef(1)}>
                 Second
               </button>

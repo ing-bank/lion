@@ -153,6 +153,7 @@ async function createNestedEscControllers(parentContent) {
 
 afterEach(() => {
   overlays.teardown();
+  // clean document.body from the DOM nodes left by previous tests
   document.body.innerHTML = '';
 });
 
