@@ -533,8 +533,11 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
         el.switched = false;
         await el.updateComplete;
-
         expect(setupSpy.callCount).to.equal(1);
+
+        const elCtrl = /** @type {OverlayEl} */ (el.overlayEl)?._overlayCtrl;
+        const isCtrlRegisteredAtOverlaysManager = elCtrl.manager.list.some(ctrl => elCtrl === ctrl);
+        expect(isCtrlRegisteredAtOverlaysManager).to.equal(true);
       });
 
       it('correctly removes event listeners when disconnected from dom', async () => {

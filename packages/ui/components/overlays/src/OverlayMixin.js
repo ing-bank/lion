@@ -256,7 +256,7 @@ export const OverlayMixinImplementation = superclass =>
       };
 
       if (this._overlayCtrl) {
-        // whet `lit` `cache` attaches node to the DOM, register the controller back in the OverlaysManager
+        // when `lit` `cache` attaches node to the DOM, register the controller back in the OverlaysManager
         this._overlayCtrl.updateConfig(config);
       } else {
         /** @type {OverlayController} */
