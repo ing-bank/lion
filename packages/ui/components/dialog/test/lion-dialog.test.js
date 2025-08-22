@@ -309,16 +309,18 @@ describe('lion-dialog', () => {
     });
 
     it('should close the popup dialog after rendered from cache', async () => {
+      /**
+       *
+       * @param {Event} e
+       * @returns
+       */
+      const closeButtonHandler = e =>
+        e.target?.dispatchEvent(new Event('close-overlay', { bubbles: true }));
       const dialog = html` <lion-dialog>
         <button slot="invoker" class="invoker-button">Click me to open dialog</button>
         <div slot="content" class="demo-dialog-content">
           Hello! You can close this dialog here:
-          <button
-            class="close-button"
-            @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
-          >
-            ⨯
-          </button>
+          <button class="close-button" @click="${closeButtonHandler}">⨯</button>
         </div>
       </lion-dialog>`;
 
@@ -389,8 +391,12 @@ describe('lion-dialog', () => {
        * @returns { HTMLElement | null | undefined }
        */
       const getCloseButton = () => wrapperElementShadowRoot?.querySelector('.close-button');
+      /**
+       * @returns { Element | null | undefined }
+       */
       const getDialog = () =>
         wrapperElementShadowRoot?.querySelector('lion-dialog')?.shadowRoot?.querySelector('dialog');
+      // @ts-ignore
       const isDialogVisible = () => getDialog()?.checkVisibility() === true;
       const isDialogRendered = () =>
         !!wrapperElement.shadowRoot?.querySelector('lion-dialog')?.shadowRoot?.childNodes.length;
