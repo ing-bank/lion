@@ -153,6 +153,7 @@ async function createNestedEscControllers(parentContent) {
 
 afterEach(() => {
   overlays.teardown();
+  document.body.innerHTML = '';
 });
 
 describe('OverlayController', () => {
