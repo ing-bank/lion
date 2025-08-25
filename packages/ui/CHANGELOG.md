@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.14.2
+
+### Patch Changes
+
+- da22fdb: [overlays] allow the popup dialog to close when it is setup by `lit` `cache`
+
 ## 0.14.1
 
 ### Patch Changes
