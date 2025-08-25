@@ -698,6 +698,43 @@ describe('lion-input-file', () => {
     });
   });
 
+  it('should be able to add any image, video or audio file', async () => {
+    const videoFile = /** @type {InputFile} */ (
+      new File(['file'], 'file.mp4', {
+        type: 'video/mp4',
+      })
+    );
+
+    const audioFile = /** @type {InputFile} */ (
+      new File(['file'], 'file.mp3', {
+        type: 'audio/mp3',
+      })
+    );
+
+    const imageFile = /** @type {InputFile} */ (
+      new File(['file'], 'file.png', {
+        type: 'image/png',
+      })
+    );
+
+    const el = await fixture(html`
+      <lion-input-file multiple accept="image/*, AUDIO/*, video/*"></lion-input-file>
+    `);
+
+    setTimeout(() => {
+      mimicSelectFile(el, [imageFile, audioFile, videoFile]);
+    });
+
+    const fileListChangedEvent = await oneEvent(el, 'file-list-changed');
+    // @ts-expect-error [allow-protected-in-test]
+    expect(el._selectedFilesMetaData.length).to.equal(3);
+    expect(fileListChangedEvent).to.exist;
+    expect(fileListChangedEvent.detail.newFiles.length).to.equal(3);
+    expect(fileListChangedEvent.detail.newFiles[0].name).to.equal('file.png');
+    expect(fileListChangedEvent.detail.newFiles[1].name).to.equal('file.mp3');
+    expect(fileListChangedEvent.detail.newFiles[2].name).to.equal('file.mp4');
+  });
+
   describe('status and error', () => {
     /**
      * @type {LionInputFile}
