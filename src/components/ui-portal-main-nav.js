@@ -139,7 +139,7 @@ const baseUINavMarkup = {
       return html`<div
         data-part="level"
         data-level="${level}"
-        ?data-:has-active-child="${hasActiveChild}"
+        data-has-active-child="${hasActiveChild}"
       >
         <ul data-part="list" data-level="${level}">
           ${children.map(
@@ -269,7 +269,7 @@ UIPortalMainNav.provideStylesAndMarkup({
        */
       :host
         [data-part='listitem']:not([data-\:active])
-        [data-part='level'][data-level='2']:not([data-\:has-active-child]) {
+        [data-part='level'][data-level='2']:not([data-has-active-child]) {
         /** TODO: sr-only, because we want to present all links to the screen reader */
         display: none;
       }
