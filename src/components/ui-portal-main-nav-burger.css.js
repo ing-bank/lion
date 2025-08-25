@@ -13,7 +13,7 @@ export default css`
     flex-direction: column;
     width: 32px;
     height: 32px;
-    justify-content: center;
+    justify-content: space-around;
     cursor: pointer;
     left: 20px;
     top: 20px;
@@ -21,7 +21,6 @@ export default css`
 
   :host([data-layout='floating-toggle']) .burger span {
     height: 4px;
-    margin: 4px 0;
     background: #333;
     border-radius: 2px;
     transition: 0.3s;
@@ -33,10 +32,13 @@ export default css`
     z-index: 100;
     background: #fff;
   }
-  :host([data-layout='floating-toggle']) [data-part='level'] {
+
+  :host([data-layout='floating-toggle']) [data-part='level'][data-level='1'],
+  :host([data-layout='floating-toggle']) [data-part='level'][data-level='2'] {
     z-index: 100;
     background: #fff;
   }
+
   :host([data-layout='floating-toggle']) #burger-toggle:checked ~ #l1-wrapper {
     display: block;
     position: absolute;
