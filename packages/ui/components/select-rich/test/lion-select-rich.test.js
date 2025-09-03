@@ -933,9 +933,6 @@ describe('lion-select-rich', () => {
         await waitUntil(isSelectRichRendered);
         getInvoker()?.click();
         await waitUntil(isDialogVisible);
-        /**
-         *
-         */
         const optionBlue = /** @type { HTMLElement | undefined } */ (
           wrapperElementShadowRoot?.querySelectorAll('lion-option')
         )?.[1];
