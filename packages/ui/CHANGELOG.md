@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.14.3
+
+### Patch Changes
+
+- 5360c5a: [select-rich] improve rendering by the `lit` `cache` function
+
 ## 0.14.2
 
 ### Patch Changes
