@@ -20,10 +20,23 @@ import '@lion/ui/define/lion-option.js';
 
 ## Model value
 
+### Setting model by `modelValue` property
+
 You can set the full `modelValue` for each option, which includes the checked property for whether it is checked or not.
 
 ```html
-<lion-option .modelValue="${{ value: 'red', checked: false }}">Red</lion-option>
+<lion-option .modelValue="${ value: 'red', checked: false }">Red</lion-option>
+```
+
+Note, when rendering with the help of the `cache` function imported from `lit/directives/cache.js`, setting model for `lion-select-rich` by `.modelValue` is not fully supported. Consider setting the model by `choiceValue` property instead. See [Setting model by `choiceValue` property](#setting-model-by-choicevalue-property) for more details.
+
+### Setting model by `choiceValue` property
+
+You can set the model for each option, providing the value and the checked status as follows:
+
+```html
+<lion-option .choiceValue="${'red'}" checked>Red</lion-option>
+<lion-option .choiceValue="${'blue'}">Blue</lion-option>
 ```
 
 ## Options with HTML

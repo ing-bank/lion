@@ -725,9 +725,11 @@ describe('lion-select-rich', () => {
       expect(selectRich.modelValue).to.equal('hotpink');
       expect(/** @type {LionOption} */ (_invokerNode.selectedElement).value).to.equal('hotpink');
     });
+  });
 
-    describe('when render from cache', () => {
-      it('should display the default option', async () => {
+  describe('Render from `lit` `cache`', () => {
+    describe('when `lion-option` is set by `.choiceValue` property with and no `checked` attribute', () => {
+      it('should display the second option', async () => {
         const colours = [
           {
             label: 'Red',
@@ -809,7 +811,7 @@ describe('lion-select-rich', () => {
         /**
          * @returns { HTMLElement | null | undefined }
          */
-        const getInvoker = () => wrapperElement.shadowRoot?.querySelector('lion-select-invoker');
+        const getInvoker = () => wrapperElementShadowRoot?.querySelector('lion-select-invoker');
         /**
          * @returns { boolean }
          */
@@ -819,26 +821,44 @@ describe('lion-select-rich', () => {
          */
         const getSelectedColourLabel = () =>
           getInvoker()?.shadowRoot?.querySelector('#content-wrapper')?.textContent?.trim();
+        const getDialog = () =>
+          wrapperElementShadowRoot
+            ?.querySelector('lion-select-rich')
+            ?.shadowRoot?.querySelector('dialog');
+        const isDialogVisible = () =>
+          // @ts-ignore
+          getDialog()?.checkVisibility() === true &&
+          getDialog()?.querySelector('#overlay-content-node-wrapper[data-popper-placement]');
         await waitUntil(isSelectRichRendered);
+        getInvoker()?.click();
+        await waitUntil(isDialogVisible);
+        const optionBlue = /** @type { HTMLElement | undefined } */ (
+          wrapperElementShadowRoot?.querySelectorAll('lion-option')
+        )?.[1];
+        optionBlue?.click();
+        await waitUntil(() => !isDialogVisible());
         const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
+        expect(selectedColourLabelBeforeTabSwitch).to.equal('Blue');
         getSecondButton()?.click();
         await waitUntil(() => !isSelectRichRendered());
         getFirstButton()?.click();
         await waitUntil(isSelectRichRendered);
-        const selectedColourLabelAfterTabSwitch = getSelectedColourLabel();
-        expect(selectedColourLabelBeforeTabSwitch).to.equal('Red');
-        expect(selectedColourLabelBeforeTabSwitch).to.equal(selectedColourLabelAfterTabSwitch);
+        const selectedColourAfterTabSwitch = getSelectedColourLabel();
+        expect(selectedColourAfterTabSwitch).to.equal('Blue');
       });
-
+    });
+    describe('when `lion-option` is set by `.choiceValue` property and `checked` attribute', () => {
       it('should display the second option', async () => {
         const colours = [
           {
             label: 'Red',
             value: 'red',
+            checked: true,
           },
           {
             label: 'Blue',
             value: 'blue',
+            checked: false,
           },
         ];
 
@@ -876,7 +896,136 @@ describe('lion-select-rich', () => {
                       ? html`<lion-select-rich name="favoriteColor" label="Favorite color">
                           ${colours.map(
                             colour =>
-                              html`<lion-option .choiceValue="${colour.value}"
+                              html`<lion-option
+                                .choiceValue="${colour.value}"
+                                checked="${colour.checked || nothing}"
+                                >${colour.label}</lion-option
+                              >`,
+                          )}
+                        </lion-select-rich>`
+                      : nothing,
+                  )}
+                </p>
+                <button slot="tab" class="second-button" @click=${() => changeActiveTabIndexRef(1)}>
+                  Work
+                </button>
+                <p slot="panel">Info page with lots of information about us.</p>
+              </lion-tabs>
+            `;
+          }
+        }
+
+        const wrapperFixture = /** @type {(arg: TemplateResult) => Promise<Wrapper>} */ (_fixture);
+        const tagString = defineCE(Wrapper);
+        const wrapperTag = unsafeStatic(tagString);
+        const wrapperElement = /** @type {Wrapper} */ (
+          await wrapperFixture(html`<${wrapperTag}></${wrapperTag}>`)
+        );
+        await wrapperElement.updateComplete;
+        const wrapperElementShadowRoot = wrapperElement.shadowRoot;
+        /**
+         * @returns { HTMLElement | null | undefined }
+         */
+        const getFirstButton = () => wrapperElementShadowRoot?.querySelector('.first-button');
+        /**
+         * @returns { HTMLElement | null | undefined }
+         */
+        const getSecondButton = () => wrapperElementShadowRoot?.querySelector('.second-button');
+        /**
+         * @returns { HTMLElement | null | undefined }
+         */
+        const getInvoker = () => wrapperElementShadowRoot?.querySelector('lion-select-invoker');
+        /**
+         * @returns { boolean }
+         */
+        const isSelectRichRendered = () => !!getInvoker()?.shadowRoot?.childNodes.length;
+        /**
+         * @returns { string | undefined }
+         */
+        const getSelectedColourLabel = () =>
+          getInvoker()?.shadowRoot?.querySelector('#content-wrapper')?.textContent?.trim();
+        const getDialog = () =>
+          wrapperElementShadowRoot
+            ?.querySelector('lion-select-rich')
+            ?.shadowRoot?.querySelector('dialog');
+        const isDialogVisible = () =>
+          // @ts-ignore
+          getDialog()?.checkVisibility() === true &&
+          getDialog()?.querySelector('#overlay-content-node-wrapper[data-popper-placement]');
+        await waitUntil(isSelectRichRendered);
+        getInvoker()?.click();
+        await waitUntil(isDialogVisible);
+        const optionBlue = /** @type { HTMLElement | undefined } */ (
+          wrapperElementShadowRoot?.querySelectorAll('lion-option')
+        )?.[1];
+        optionBlue?.click();
+        await waitUntil(() => !isDialogVisible());
+        const selectedColourLabelBeforeTabSwitch = getSelectedColourLabel();
+        expect(selectedColourLabelBeforeTabSwitch).to.equal('Blue');
+        getSecondButton()?.click();
+        await waitUntil(() => !isSelectRichRendered());
+        getFirstButton()?.click();
+        await waitUntil(isSelectRichRendered);
+        const selectedColourAfterTabSwitch = getSelectedColourLabel();
+        expect(selectedColourAfterTabSwitch).to.equal('Blue');
+      });
+    });
+    describe('when `lion-option` is set by `.modelValue` property', () => {
+      it('should display the second option', async () => {
+        const colours = [
+          {
+            label: 'Red',
+            value: 'red',
+            checked: true,
+          },
+          {
+            label: 'Blue',
+            value: 'blue',
+            checked: false,
+          },
+        ];
+
+        /**
+         * Note, inactive tab content is **destroyed** on every tab switch.
+         */
+        class Wrapper extends LitElement {
+          static properties = {
+            ...super.properties,
+            activeTabIndex: { type: Number },
+          };
+
+          constructor() {
+            super();
+            this.activeTabIndex = 0;
+          }
+
+          /**
+           * @param {number} index
+           */
+          changeActiveTabIndex(index) {
+            this.activeTabIndex = index;
+          }
+
+          render() {
+            const changeActiveTabIndexRef = this.changeActiveTabIndex.bind(this);
+            return html`
+              <lion-tabs>
+                <button slot="tab" class="first-button" @click=${() => changeActiveTabIndexRef(0)}>
+                  Info
+                </button>
+                <p slot="panel">
+                  ${cache(
+                    this.activeTabIndex === 0
+                      ? html`<lion-select-rich name="favoriteColor" label="Favorite color">
+                          ${colours.map(
+                            colour =>
+                              html`<lion-option
+                                @model-value-changed=${(/** @type {Event} */ ev) => {
+                                  const lionOption = /** @type {LionOption} */ (ev.target);
+                                  // eslint-disable-next-line no-param-reassign
+                                  colour.checked = lionOption.modelValue.checked;
+                                }}
+                                .modelValue=${{ value: colour.value, checked: colour.checked }}
                                 >${colour.label}</lion-option
                               >`,
                           )}
