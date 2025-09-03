@@ -28,9 +28,10 @@ You can set the full `modelValue` for each option, which includes the checked pr
 <lion-option .modelValue="${ value: 'red', checked: false }">Red</lion-option>
 ```
 
-Note, when rendering with the help of the `cache` function imported from `lit/directives/cache.js`, setting model for `lion-select-rich` by `.modelValue` is not fully supported. Consider setting the model by `choiceValue` property instead. See [Setting model by `choiceValue` property](#setting-model-by-choicevalue-property) for more details.
+Note, when rendering with the help of the `cache` function imported from `lit/directives/cache.js`, setting model by
+the `modelValue` property is not fully supported. Consider setting the model by the `choiceValue` property instead. See [Setting model by `choiceValue` property](#setting-model-by-the-choicevalue-property) for more details.
 
-### Setting model by `choiceValue` property
+### Setting model by the `choiceValue` property
 
 You can set the model for each option, providing the value and the checked status as follows:
 
