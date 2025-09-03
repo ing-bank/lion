@@ -727,7 +727,7 @@ describe('lion-select-rich', () => {
     });
 
     describe('when render from cache', () => {
-      it('should display the same default option', async () => {
+      it('should display the default option', async () => {
         const colours = [
           {
             label: 'Red',
@@ -830,7 +830,7 @@ describe('lion-select-rich', () => {
         expect(selectedColourLabelBeforeTabSwitch).to.equal(selectedColourLabelAfterTabSwitch);
       });
 
-      it('should display the same second option', async () => {
+      it('should display the second option', async () => {
         const colours = [
           {
             label: 'Red',
