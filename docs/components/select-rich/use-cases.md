@@ -20,7 +20,7 @@ import '@lion/ui/define/lion-option.js';
 
 ## Model value
 
-### Setting model by `modelValue` property
+### Setting model by the `modelValue` property
 
 You can set the full `modelValue` for each option, which includes the checked property for whether it is checked or not.
 
