@@ -94,8 +94,8 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       step: this.step,
     };
 
-    this.__increment = this.__increment.bind(this);
-    this.__decrement = this.__decrement.bind(this);
+    this._increment = this._increment.bind(this);
+    this._decrement = this._decrement.bind(this);
     this._onEnterButton = this._onEnterButton.bind(this);
     this._onLeaveButton = this._onLeaveButton.bind(this);
   }
@@ -192,11 +192,11 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    */
   __keyDownHandler(ev) {
     if (ev.key === 'ArrowUp') {
-      this.__increment();
+      this._increment();
     }
 
     if (ev.key === 'ArrowDown') {
-      this.__decrement();
+      this._decrement();
     }
   }
 
@@ -262,9 +262,9 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
   /**
    * Increment the value based on given step or default step value is 1
-   * @private
+   * @protected
    */
-  __increment() {
+  _increment() {
     const { step, min, max } = this.values;
     const stepMin = min !== Infinity ? min : 0;
 
@@ -284,9 +284,9 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
   /**
    * Decrement the value based on given step or default step value is 1
-   * @private
+   * @protected
    */
-  __decrement() {
+  _decrement() {
     const { step, max, min } = this.values;
     const stepMin = min !== Infinity ? min : 0;
 
@@ -379,7 +379,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     return html`
       <button
         ?disabled=${this.disabled || this.readOnly}
-        @click=${this.__decrement}
+        @click=${this._decrement}
         @focus=${this._onEnterButton}
         @blur=${this._onLeaveButton}
         type="button"
@@ -399,7 +399,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     return html`
       <button
         ?disabled=${this.disabled || this.readOnly}
-        @click=${this.__increment}
+        @click=${this._increment}
         @focus=${this._onEnterButton}
         @blur=${this._onLeaveButton}
         type="button"
