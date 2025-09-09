@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Node Tools >> Remark Extend
 ---
 
-# Node Tools >> Remark Extend >> Overview ||10
+# Remark Extend: Overview
 
 A plugin for remark to extend markdown by importing from source files.
 

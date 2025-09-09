@@ -6,10 +6,10 @@ title: 'Tools: Singleton Manager'
 eleventyNavigation:
   key: Tools >> Singleton Manager
   title: Singleton Manager
-  order: 20
+  order: 30
   parent: Tools
 ---
 
-# Tools >> Singleton Manager ||30
+# Tools: Singleton Manager
 
 -> go to Overview

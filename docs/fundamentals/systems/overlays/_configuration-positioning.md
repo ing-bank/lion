@@ -13,7 +13,7 @@ eleventyNavigation:
   parent: Systems >> Overlays >> Configuration
 ---
 
-# Systems >> Overlays >> Configuration >> Positioning ||40
+# Configuration: Positioning
 
 ```js script
 import { html, render, LitElement } from '@mdjs/mdjs-preview';

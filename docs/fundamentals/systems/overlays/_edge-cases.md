@@ -12,7 +12,7 @@ eleventyNavigation:
   parent: Systems >> Overlays
 ---
 
-# Systems >> Overlays >> Edge cases ||10
+# Overlays: Edge cases
 
 ```js script
 import { html, render, LitElement } from '@mdjs/mdjs-preview';

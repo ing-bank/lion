@@ -6,10 +6,10 @@ title: 'Tools: Helpers'
 eleventyNavigation:
   key: Tools >> Helpers
   title: Helpers
-  order: 0
+  order: 5
   parent: Tools
 ---
 
-# Tools >> Helpers ||5
+# Tools: Helpers
 
 -> go to Overview
