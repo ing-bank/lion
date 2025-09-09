@@ -1,6 +1,6 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
-import MainLayout from "../../layouts/MainLayout.astro";
+import InPageNavLayout from "../../layouts/InPageNavLayout.astro";
 
 export async function getStaticPaths() {
     const entries = await getCollection("lionFundamentals");
@@ -18,13 +18,13 @@ if (!entry) {
     // Handle Error, for example:
     throw new Error(`Could not find component by URL ${path}`);
 }
-const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+const { remarkPluginFrontmatter } = await render(entry);
 
 const importPath = `${remarkPluginFrontmatter.mdjsStoriesPath}`;
 
 ---
 
-<MainLayout>
+<InPageNavLayout entry={entry}>
   <load-demo data-import-path={importPath}></load-demo>
 
   <script>
@@ -46,6 +46,4 @@ const importPath = `${remarkPluginFrontmatter.mdjsStoriesPath}`;
 
     currentScript.setAttribute('mdjs-setup', 'true');
   </script>
-
-  <Content />
-</MainLayout>
+</InPageNavLayout>

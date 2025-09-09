@@ -322,7 +322,7 @@ UIPortalMainNav.provideStylesAndMarkup({
 
       :host [data-part='anchor'] {
         display: block;
-        color: inherit;
+        color: var(--primary-text-color);
         text-decoration: inherit;
         font-size: 1rem;
         fill: var(--primary-icon-color);
@@ -332,7 +332,7 @@ UIPortalMainNav.provideStylesAndMarkup({
 
       :host [data-part='anchor'][aria-current='page'] {
         font-weight: bold;
-        background-color: var(--primary-color-lighter);
+        background-color: var(--primary-color);
       }
 
       :host [data-part='anchor']:hover {
@@ -372,7 +372,7 @@ UIPortalMainNav.provideStylesAndMarkup({
 
       :host [data-part='listitem'][data-level='2'][data-\\:active] {
         border-radius: var(--radius-4);
-        background: var(--primary-color-lighter, #f0f0f0);
+        background: var(--primary-color, #f0f0f0);
         padding-block-end: 12px;
         margin-block: 6px;
       }
