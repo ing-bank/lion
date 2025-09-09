@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Ajax
 ---
 
-# Tools >> Ajax >> Use Cases ||20
+# Ajax: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

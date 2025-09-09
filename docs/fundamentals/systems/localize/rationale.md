@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Systems >> Localize >> Rationale ||60
+# Localize: Rationale
 
 ## Requirements
 

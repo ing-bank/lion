@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Node Tools >> Providence Analytics
 ---
 
-# Node Tools >> Providence Analytics >> Overview ||10
+# Providence Analytics: Overview
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

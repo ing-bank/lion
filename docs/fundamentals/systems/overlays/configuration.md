@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Overlays
 ---
 
-# Systems >> Overlays >> Configuration ||40
+# Overlays: Configuration
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';

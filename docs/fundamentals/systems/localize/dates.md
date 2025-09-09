@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Systems >> Localize >> Format Dates ||40
+# Localize: Format Dates
 
 ## Features
 
