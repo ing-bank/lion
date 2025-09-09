@@ -20,7 +20,7 @@ html {
   --gray-900: #1a1a1a;
 
   /* Alias tokens */
-  --primary-color: var(--dandilion-500);
+  --primary-color: var(--dandilion-700);
   --secondary-color: var(--blue-500);
   --primary-color-lighter: var(--dandilion-300);
   --primary-color-darker: var(--dandilion-700);
