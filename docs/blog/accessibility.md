@@ -5,6 +5,9 @@ description: What does the term Accessibility mean within the context of Lion?
 date: 2021-12-07
 tags: [ux, accessibility]
 cover_image: /blog/images/accessibility.png
+eleventyNavigation:
+  key: The Accessibility of Lion
+  title: The Accessibility of Lion
 ---
 
 ## Accessibility within Design Systems

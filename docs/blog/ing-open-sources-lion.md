@@ -5,6 +5,9 @@ description: A library of performant, accessible & flexible Web Components
 date: 2020-08-10
 tags: [javascript, tests, demos]
 cover_image: https://miro.medium.com/max/1400/1*FT8CF6G-1IVa88G04nkf5w.png
+eleventyNavigation:
+  key: ING open sources Lion
+  title: ING open sources Lion
 ---
 
 **TL;DR:** Web development can be hard, whether you're making your own components, implementing Design Systems, support many different browsers, incorporating accessibility, or adding third party dependencies. Lion aims to make your life a little bit easier, by taking the groundwork of feature complete, accessible, performant, and framework agnostic components out of your hands! Check out the repo at [ing-bank/lion](https://github.com/ing-bank/lion).
