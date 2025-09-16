@@ -917,8 +917,8 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
    *
    * @param {number} modify
    * @param {Object} opts
-   * @param {string} opts.dateType
-   * @param {string} opts.type
+   * @param {'centralDate' | '__focusedDate'} opts.dateType
+   * @param {'Month' | 'FullYear' | 'Date'} opts.type
    * @private
    */
   __modifyDate(modify, { dateType, type }) {

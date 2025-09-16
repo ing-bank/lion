@@ -201,6 +201,7 @@ export class Ajax {
     };
 
     if (lionInit?.body) {
+      // @ts-expect-error
       // eslint-disable-next-line no-param-reassign
       lionInit.headers['content-type'] = 'application/json';
       lionInit.body = JSON.stringify(lionInit.body);

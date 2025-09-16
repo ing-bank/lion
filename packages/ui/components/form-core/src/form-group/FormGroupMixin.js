@@ -156,8 +156,14 @@ const FormGroupMixinImplementation = superclass =>
 
       this.__descriptionElementsInParentChain = new Set();
 
-      /** @type {{modelValue?:{[key:string]: any}, serializedValue?:{[key:string]: any}}} */
-      this.__pendingValues = { modelValue: {}, serializedValue: {} };
+      /**
+       * @type {{
+       *   modelValue?: { [key:string]: any };
+       *   serializedValue?: { [key:string]: any };
+       *   formattedValue?: { [key:string]: any };
+       * }}
+       */
+      this.__pendingValues = { modelValue: {}, serializedValue: {}, formattedValue: {} };
     }
 
     connectedCallback() {
@@ -343,6 +349,7 @@ const FormGroupMixinImplementation = superclass =>
      * @returns {{[name:string]: any}}
      */
     _getFromAllFormElements(property, filterFn) {
+      /** @type {{[name:string]: any}} */
       const result = {};
 
       // Prioritizes imperatively passed filter function over the protected method
@@ -377,7 +384,7 @@ const FormGroupMixinImplementation = superclass =>
 
     /**
      * Allows to set formElements values via a keyed object structure
-     * @param {string} property
+     * @param {'modelValue' | 'serializedValue'| 'formattedValue'} property
      * @param {{ [x: string]: any; }} values
      */
     _setValueMapForAllFormElements(property, values) {
@@ -386,13 +393,14 @@ const FormGroupMixinImplementation = superclass =>
           if (Array.isArray(this.formElements[name])) {
             this.formElements[name].forEach(
               (/** @type {FormControl} */ el, /** @type {number} */ index) => {
+                // @ts-expect-error we should filter out readonly properties for param "property"
                 el[property] = values[name][index]; // eslint-disable-line no-param-reassign
               },
             );
           }
           if (this.formElements[name]) {
             this.formElements[name][property] = values[name];
-          } else {
+          } else if (this.__pendingValues[property]?.[name]) {
             this.__pendingValues[property][name] = values[name];
           }
         });
@@ -401,7 +409,7 @@ const FormGroupMixinImplementation = superclass =>
 
     /**
      * Returns true when one of the formElements has requested
-     * @param {string} property
+     * @param {keyof (FormControl)} property
      */
     _anyFormElementHas(property) {
       return Object.keys(this.formElements).some(name => {
@@ -431,7 +439,7 @@ const FormGroupMixinImplementation = superclass =>
 
     /**
      * Returns true when all of the formElements have requested property
-     * @param {string} property
+     * @param {keyof (FormControl)} property
      */
     _everyFormElementHas(property) {
       return Object.keys(this.formElements).every(name => {

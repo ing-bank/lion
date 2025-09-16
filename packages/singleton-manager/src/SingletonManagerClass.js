@@ -9,9 +9,12 @@ const globalThisOrWindow = globalThis || window;
 export class SingletonManagerClass {
   constructor() {
     /** @protected */
+    // @ts-expect-error
     this._map = globalThisOrWindow[sym]
-      ? globalThisOrWindow[sym]
-      : (globalThisOrWindow[sym] = new Map());
+      ? // @ts-expect-error
+        globalThisOrWindow[sym]
+      : // @ts-expect-error
+        (globalThisOrWindow[sym] = new Map());
   }
 
   /**

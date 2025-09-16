@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "lib": ["es2017", "dom"],
     "allowJs": true,
@@ -13,7 +13,6 @@
     "alwaysStrict": true,
     "types": ["node", "mocha", "chai", "sinon"],
     "esModuleInterop": true,
-    "suppressImplicitAnyIndexErrors": true,
     "skipLibCheck": true,
     "incremental": true,
     "declaration": true,

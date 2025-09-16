@@ -14,11 +14,12 @@ export function isEqualConfig(a, b) {
   if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) {
     return a === b;
   }
-  const aProps = Object.keys(a);
-  const bProps = Object.keys(b);
+  const aProps = /** @type {Array<keyof OverlayConfig>} */ (Object.keys(a));
+  const bProps = /** @type {Array<keyof OverlayConfig>} */ (Object.keys(b));
   if (aProps.length !== bProps.length) {
     return false;
   }
-  const isEqual = /** @param {string} prop */ prop => isEqualConfig(a[prop], b[prop]);
+  // @ts-expect-error
+  const isEqual = /** @param {keyof OverlayConfig} prop */ prop => isEqualConfig(a[prop], b[prop]);
   return aProps.every(isEqual);
 }

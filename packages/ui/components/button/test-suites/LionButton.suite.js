@@ -254,9 +254,9 @@ export function LionButtonSuite({ klass = LionButton } = {}) {
       });
 
       describe('Native button behavior', async () => {
-        /** @type {Event} */
+        /** @type {MouseEvent} */
         let nativeButtonEvent;
-        /** @type {Event} */
+        /** @type {MouseEvent} */
         let lionButtonEvent;
 
         before(async () => {
@@ -264,10 +264,13 @@ export function LionButtonSuite({ klass = LionButton } = {}) {
           const lionButtonEl = /** @type {LionButton} */ (
             await fixture(html`<${tagButton}>foo</${tagButton}>`)
           );
-          nativeButtonEvent = await prepareClickEvent(nativeButtonEl);
-          lionButtonEvent = await prepareClickEvent(lionButtonEl);
+          nativeButtonEvent = /** @type {* & MouseEvent} */ (
+            await prepareClickEvent(nativeButtonEl)
+          );
+          lionButtonEvent = /** @type {* & MouseEvent} */ (await prepareClickEvent(lionButtonEl));
         });
 
+        /** @type {(keyof MouseEvent|'constructor')[]} */
         const sameProperties = [
           'constructor',
           'composed',

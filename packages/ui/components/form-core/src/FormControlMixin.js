@@ -166,6 +166,7 @@ const FormControlMixinImplementation = superclass =>
      * TODO: check if this is a false positive or if we can improve
      * @configure ReactiveElement
      */
+    // @ts-expect-error
     static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
     // N.B. add these label/helpText props for types + ce manifest output

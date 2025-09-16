@@ -50,6 +50,8 @@ export function supportsScopedRegistry() {
  * @template {LitElementConstructor} T
  * @param {T} superclass
  * @return {T & ScopedElementsHostConstructor & ScopedElementsHostV2Constructor}
+ *
+ * @type {OpenWcLitScopedElementsMixin}
  */
 const ScopedElementsMixinImplementation = superclass =>
   /** @type {ScopedElementsHost} */
@@ -88,7 +90,7 @@ const ScopedElementsMixinImplementation = superclass =>
      * @param {typeof HTMLElement} classToBeRegistered
      */
     defineScopedElement(tagName, classToBeRegistered) {
-      const registeredClass = this.registry.get(tagName);
+      const registeredClass = this.registry?.get(tagName);
       const isNewClassWithSameName = registeredClass && registeredClass !== classToBeRegistered;
       if (!supportsScopedRegistry() && isNewClassWithSameName) {
         // eslint-disable-next-line no-console
@@ -104,9 +106,9 @@ const ScopedElementsMixinImplementation = superclass =>
         );
       }
       if (!registeredClass) {
-        return this.registry.define(tagName, classToBeRegistered);
+        return this.registry?.define(tagName, classToBeRegistered);
       }
-      return this.registry.get(tagName);
+      return this.registry?.get(tagName);
     }
 
     /**

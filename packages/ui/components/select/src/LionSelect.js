@@ -98,7 +98,7 @@ export class LionSelect extends LionFieldWithSelect {
     }
 
     if (changedProperties.has('autocomplete')) {
-      this._inputNode.autocomplete = /** @type {string} */ (this.autocomplete);
+      this._inputNode.autocomplete = /** @type {AutoFill} */ (this.autocomplete);
     }
   }
 

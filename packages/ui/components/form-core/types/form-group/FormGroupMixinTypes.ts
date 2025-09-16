@@ -3,10 +3,14 @@ import { LitElement } from 'lit';
 import { DisabledHost } from '../../../core/types/DisabledMixinTypes.js';
 import { SlotHost } from '../../../core/types/SlotMixinTypes.js';
 import { FormControlHost } from '../FormControlMixinTypes.js';
+import { FocusHost } from '../FocusMixinTypes.js';
+import { InteractionStateHost } from '../InteractionStateMixinTypes.js';
 import { FormRegistrarHost } from '../registration/FormRegistrarMixinTypes.js';
 import { ValidateHost } from '../validate/ValidateMixinTypes.js';
 
 export declare type FormControl = FormControlHost &
+  InteractionStateHost &
+  FocusHost &
   HTMLElement & {
     _parentFormGroup?: HTMLElement;
     checked?: boolean;

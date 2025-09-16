@@ -3159,7 +3159,10 @@ describe('lion-combobox', () => {
         const [el, options] = await fruitFixture({ autocomplete: 'both', matchMode: 'all' });
         await mimicUserTyping(/** @type {LionCombobox} */ (el), 'choke');
         await el.updateComplete;
-        const labelledElement = options[0].querySelector('span[aria-label="Artichoke"]');
+
+        const labelledElement = /** @type {HTMLElement} */ (
+          /** @type {LionOption[]} */ (options)[0].querySelector('span[aria-label="Artichoke"]')
+        );
         expect(labelledElement).to.not.be.null;
         expect(labelledElement.innerText).to.equal('Artichoke');
       });

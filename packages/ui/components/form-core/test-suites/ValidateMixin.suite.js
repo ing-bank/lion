@@ -1540,13 +1540,17 @@ export function runValidateMixinSuite(customConfig) {
           let counter = 0;
           // for ... of is already allowed we should update eslint...
           // eslint-disable-next-line no-restricted-syntax
-          for (const state of ['dirty', 'touched', 'prefilled', 'submitted']) {
+          /** @type {Array<keyof LionField>} */
+          const interactionStates = ['dirty', 'touched', 'prefilled', 'submitted'];
+          for (const state of interactionStates) {
             counter += 1;
+            // @ts-expect-error
             el[state] = false;
             // eslint-disable-next-line no-await-in-loop
             await el.updateComplete;
             expect(spy.callCount).to.equal(counter);
             counter += 1;
+            // @ts-expect-error
             el[state] = true;
             // eslint-disable-next-line no-await-in-loop
             await el.updateComplete;

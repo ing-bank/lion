@@ -402,11 +402,9 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
       const dialogEl = /** @type {HTMLDialogElement} */ (el._overlayCtrl.__wrappingDialogNode);
 
-      // @ts-expect-error [allow-protected-in-tests]
       expect(dialogEl.checkVisibility()).to.be.true;
       // @ts-expect-error [allow-protected-in-tests]
       await mimicEscapePress(el._overlayContentNode);
-      // @ts-expect-error [allow-protected-in-tests]
       expect(dialogEl.checkVisibility()).to.be.true;
     });
 

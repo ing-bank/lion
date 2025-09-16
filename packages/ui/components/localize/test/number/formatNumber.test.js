@@ -3,13 +3,13 @@ import { getLocalizeManager, formatNumber } from '@lion/ui/localize-no-side-effe
 import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
 
 const currencyCode = /** @param {string} currency */ currency => ({
-  style: 'currency',
-  currencyDisplay: 'code',
+  style: /** @type {keyof Intl.NumberFormatOptionsStyleRegistry} */ ('currency'),
+  currencyDisplay: /** @type {Intl.NumberFormatOptions['currencyDisplay']} */ ('code'),
   currency,
 });
 const currencySymbol = /** @param {string} currency */ currency => ({
-  style: 'currency',
-  currencyDisplay: 'symbol',
+  style: /** @type {keyof Intl.NumberFormatOptionsStyleRegistry} */ ('currency'),
+  currencyDisplay: /** @type {Intl.NumberFormatOptions['currencyDisplay']} */ ('symbol'),
   currency,
 });
 

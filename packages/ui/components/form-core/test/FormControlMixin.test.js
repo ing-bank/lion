@@ -149,10 +149,11 @@ describe('FormControlMixin', () => {
       };
 
       const labelStyle = window.getComputedStyle(
-        // @ts-ignore
+        // @ts-expect-error
         el.shadowRoot?.querySelector('.form-field__label'),
       );
       Object.entries(expectedValues).forEach(([key, val]) => {
+        // @ts-expect-error
         expect(labelStyle[key]).to.equal(val);
       });
     });

@@ -191,8 +191,8 @@ describe('Validator', () => {
   it('adds static ["_$isValidator$"] property as a marker to identify the Validator class across different lion versions (as instanceof cannot be used)', async () => {
     const myValidator = new Validator();
 
-    expect(myValidator.constructor['_$isValidator$']).to.exist;
-    expect(myValidator.constructor['_$isValidator$']).to.be.true;
+    expect(/** @type {typeof Validator} */ (myValidator.constructor)['_$isValidator$']).to.exist;
+    expect(/** @type {typeof Validator} */ (myValidator.constructor)['_$isValidator$']).to.be.true;
   });
 
   describe('Types', () => {

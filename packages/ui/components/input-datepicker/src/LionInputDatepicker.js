@@ -18,6 +18,7 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 /**
  * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator
  * @typedef {import('lit').RenderOptions} RenderOptions
+ * @typedef {import('@open-wc/scoped-elements/lit-element.js').ScopedElementsMixin} ScopedElementsMixin
  */
 
 /**
@@ -26,12 +27,11 @@ import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 export class LionInputDatepicker extends ScopedElementsMixin(
   ArrowMixin(OverlayMixin(LocalizeMixin(LionInputDate))),
 ) {
-  static get scopedElements() {
-    return {
-      ...super.scopedElements,
-      'lion-calendar': LionCalendar,
-    };
-  }
+  static scopedElements = {
+    // @ts-expect-error
+    ...super.scopedElements,
+    'lion-calendar': LionCalendar,
+  };
 
   static get styles() {
     return [

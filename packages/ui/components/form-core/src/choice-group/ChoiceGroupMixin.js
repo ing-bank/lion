@@ -247,6 +247,7 @@ const ChoiceGroupMixinImplementation = superclass =>
      * @returns {{[name:string]: any}}
      * @protected
      */
+    // @ts-expect-error
     _getFromAllFormElements(property, filterFn) {
       // Prioritizes imperatively passed filter function over the protected method
       const _filterFn = filterFn || this._getFromAllFormElementsFilter;

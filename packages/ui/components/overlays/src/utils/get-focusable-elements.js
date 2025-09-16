@@ -7,21 +7,18 @@
 import { isVisible } from './is-visible.js';
 import { sortByTabIndex } from './sort-by-tabindex.js';
 
-// IE11 supports matches as 'msMatchesSelector'
-const matchesFunc = 'matches' in Element.prototype ? 'matches' : 'msMatchesSelector';
-
 /**
  * @param {HTMLElement} element
  * @returns {boolean} Whether the element matches
  */
 function isFocusable(element) {
   // Elements that cannot be focused if they have [disabled] attribute.
-  if (element[matchesFunc]('input, select, textarea, button, object')) {
-    return element[matchesFunc](':not([disabled])');
+  if (element.matches('input, select, textarea, button, object')) {
+    return element.matches(':not([disabled])');
   }
 
   // Elements that can be focused even if they have [disabled] attribute.
-  return element[matchesFunc]('a[href], area[href], iframe, [tabindex], [contentEditable]');
+  return element.matches('a[href], area[href], iframe, [tabindex], [contentEditable]');
 }
 
 /**

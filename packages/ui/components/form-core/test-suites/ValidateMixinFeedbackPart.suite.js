@@ -711,6 +711,7 @@ export function runValidateMixinFeedbackPart() {
            * @returns
            */
           static async getMessage({ outcome }) {
+            /** @type {{[key: string]: string}} */
             const results = {
               'a-string-instead-of-bool': 'Msg based on enum output',
             };

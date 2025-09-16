@@ -867,9 +867,7 @@ export class OverlayController extends EventTarget {
         const newMarginBottom = this.__bodyMarginBottom + scrollbarHeight;
         // @ts-expect-error [external]: CSS not yet typed
         if (window.CSS?.number && document.body.attributeStyleMap?.set) {
-          // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
           document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
-          // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
           document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
         } else {
           document.body.style.marginRight = `${newMarginRight}px`;
