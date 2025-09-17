@@ -183,13 +183,19 @@ describe('lion-icon', () => {
     try {
       icons.addIconResolver(
         'foo',
-        // eslint-disable-next-line no-promise-executor-return
-        () => new Promise(resolve => setTimeout(() => resolve(heartSvg), 10)),
+        () =>
+          /** @type {Promise<TemplateResult>} */ (
+            // eslint-disable-next-line no-promise-executor-return
+            new Promise(resolve => setTimeout(() => resolve(heartSvg)))
+          ),
       );
       icons.addIconResolver(
         'bar',
-        // eslint-disable-next-line no-promise-executor-return
-        () => new Promise(resolve => setTimeout(() => resolve(hammerSvg), 4)),
+        () =>
+          /** @type {Promise<TemplateResult>} */ (
+            // eslint-disable-next-line no-promise-executor-return
+            new Promise(resolve => setTimeout(() => resolve(hammerSvg)))
+          ),
       );
       const el = await fixture(html`<lion-icon icon-id="foo:lorem:ipsum"></lion-icon>`);
 
