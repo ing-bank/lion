@@ -18,6 +18,7 @@ yarn-error.log
 /build/
 /bundlesize/dist/
 **/custom-elements.json
+packages/ui/components/core/src/mime-types.js
 dist
 dist-types
 *.tsbuildinfo
