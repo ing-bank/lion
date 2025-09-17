@@ -1,5 +1,17 @@
 # @lion/ui
 
+## 0.15.0
+
+### Minor Changes
+
+- 6e0ed97: Make the manager singletons get instantiated and registered lazily.
+
+### Patch Changes
+
+- 02d0106: [input-stepper] make decrement and increment functions protected instead of private
+- Updated dependencies [6e0ed97]
+  - singleton-manager@1.8.0
+
 ## 0.14.3
 
 ### Patch Changes
