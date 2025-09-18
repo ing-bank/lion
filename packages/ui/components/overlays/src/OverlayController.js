@@ -847,7 +847,6 @@ export class OverlayController extends EventTarget {
       case 'before-show':
         this.__bodyClientWidth = document.body.clientWidth;
         this.__bodyClientHeight = document.body.clientHeight;
-        this.__bodyMarginRightInline = document.body.style.marginRight;
         this.__bodyMarginBottomInline = document.body.style.marginBottom;
         break;
       case 'show': {
@@ -863,22 +862,20 @@ export class OverlayController extends EventTarget {
           document.body.clientWidth - /** @type {number} */ (this.__bodyClientWidth);
         const scrollbarHeight =
           document.body.clientHeight - /** @type {number} */ (this.__bodyClientHeight);
-        const newMarginRight = this.__bodyMarginRight + scrollbarWidth;
         const newMarginBottom = this.__bodyMarginBottom + scrollbarHeight;
         // @ts-expect-error [external]: CSS not yet typed
         if (window.CSS?.number && document.body.attributeStyleMap?.set) {
           // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
-          document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
-          // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
           document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
         } else {
-          document.body.style.marginRight = `${newMarginRight}px`;
           document.body.style.marginBottom = `${newMarginBottom}px`;
         }
+        // set negative margin on contentWrapperNode to compensate for the extra margin on body
+        // so that the overlay content does not shift when a scrollbar appears/disappears
+        this.contentWrapperNode.style.marginLeft = `-${scrollbarWidth}px`;
         break;
       }
       case 'hide':
-        document.body.style.marginRight = this.__bodyMarginRightInline || '';
         document.body.style.marginBottom = this.__bodyMarginBottomInline || '';
         break;
       /* no default */
