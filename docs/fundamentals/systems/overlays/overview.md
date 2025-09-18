@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Overlays
 ---
 
-# Systems >> Overlays >> Overview ||10
+# Overlays: Overview
 
 Supports different types of overlays like dialogs, toasts, tooltips, dropdown, etc.
 

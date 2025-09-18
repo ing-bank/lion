@@ -1,0 +1,8 @@
+diff --git a/node_modules/lit/index.js b/node_modules/lit/index.js
+index 599d7d0..68a9dcb 100644
+--- a/node_modules/lit/index.js
++++ b/node_modules/lit/index.js
+@@ -1,2 +1,2 @@
+-import"@lit/reactive-element";import"lit-html";export*from"lit-element/lit-element.js";export*from"lit-html/is-server.js";
++import"@lit/reactive-element";import"lit-html";export { nothing } from 'lit-html';export*from"lit-element/lit-element.js";export*from"lit-html/is-server.js";
+ //# sourceMappingURL=index.js.map

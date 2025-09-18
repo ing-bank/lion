@@ -10,4 +10,4 @@ eleventyNavigation:
   parent: Node Tools
 ---
 
-# Node Tools >> Remark Extend ||30
+# Node Tools: Remark Extend

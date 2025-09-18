@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Helpers
 ---
 
-# Tools >> Helpers >> Overview ||10
+# Helpers: Overview
 
 A helpers package that contains several helpers that are used inside lion but can be used outside as well.
 

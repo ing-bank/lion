@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Ajax
 ---
 
-# Tools >> Ajax >> Overview ||10
+# Ajax: Overview
 
 `Ajax` is a small wrapper around `fetch` which:
 
@@ -201,7 +201,7 @@ const cacheOptions = {
   maxAge: TEN_MINUTES,
 };
 
-const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
   getCacheIdentifier,
   cacheOptions,
 );

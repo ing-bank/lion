@@ -3,6 +3,20 @@ import { globby } from 'globby';
 import matter from 'gray-matter';
 import { processContentWithTitle } from '@rocket/core/title';
 
+const getTitleLineNumber = content => {
+  let captureHeading = true;
+  let lineNumber = 0;
+  for (const line of content.split('\n')) {
+    if (line.startsWith('```')) {
+      captureHeading = !captureHeading;
+    }
+    if (captureHeading && line.startsWith('# ')) {
+      return lineNumber;
+    }
+    lineNumber += 1;
+  }
+};
+
 // since it's a one-time script, the path is just hardcoded
 const paths = await globby('docs/fundamentals/**/*.md');
 
@@ -14,6 +28,7 @@ for (const path of paths) {
   // rocket values
   const { eleventyNavigation: rocketEleventyNavigation, ...rocketRest } =
     processContentWithTitle(grayMatterFile.content) || {};
+  const titleLineNumber = getTitleLineNumber(grayMatterFile.content);
   if (!rocketEleventyNavigation) {
     // not all pages need to change
     continue;
@@ -24,6 +39,11 @@ for (const path of paths) {
     ...rocketRest,
     eleventyNavigation: { ...eleventyNavigation, ...rocketEleventyNavigation },
   };
+  const contentArray = grayMatterFile.content.split('\n');
+  console.log(grayMatterFile.content, contentArray, titleLineNumber);
+  contentArray[titleLineNumber] = `# ${grayMatterFile.data.title}`;
+  grayMatterFile.content = contentArray.join('\n');
+  console.log(grayMatterFile.content);
 
   await writeFile(grayMatterFile.path, matter.stringify(grayMatterFile));
 }

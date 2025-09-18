@@ -35,7 +35,7 @@
     "unified": "^9.2.0",
     "unist-util-is": "^4.0.2",
     "unist-util-select": "^3.0.1",
-    "unist-util-visit": "^2.0.2"
+    "unist-util-visit": "^5.0.0"
   },
   "keywords": [
     "remark"

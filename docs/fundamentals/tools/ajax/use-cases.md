@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Ajax
 ---
 
-# Tools >> Ajax >> Use Cases ||20
+# Ajax: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
@@ -35,7 +35,7 @@ const cacheOptions = {
   maxAge: TEN_MINUTES,
 };
 
-const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
   getCacheIdentifier,
   cacheOptions,
 );
@@ -204,7 +204,7 @@ const globalCacheOptions = {
 // for instance when a current user is logged out
 const getCacheIdentifier = () => getActiveProfile().profileId;
 
-const [cacheRequestInterceptor, cacheResponseInterceptor] = createCacheInterceptors(
+const { cacheRequestInterceptor, cacheResponseInterceptor } = createCacheInterceptors(
   getCacheIdentifier,
   globalCacheOptions,
 );

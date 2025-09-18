@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Systems
 ---
 
-# Systems >> Localize ||30
+# Systems: Localize
 
 -> go to Overview

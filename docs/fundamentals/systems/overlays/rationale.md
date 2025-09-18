@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Overlays
 ---
 
-# Systems >> Overlays >> Rationale ||30
+# Overlays: Rationale
 
 This page describes the goal and duties of the overlay system, mainly by identifying all different
 appearances and types of overlays.

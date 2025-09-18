@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Systems >> Localize >> Overview ||10
+# Localize: Overview
 
 Is meant to translate text into multiple languages.
 In it's simplest form it is a function that returns the translated text for a namespace + key.

@@ -1,3 +1,13 @@
+# build output
+dist/
+# generated types
+.astro/
+
+.astro
+
+# generated __mdjs-stories.js files
+_demos/*
+
 ## editors
 /.idea
 ## disable this line one commit before changing contents that should be shared

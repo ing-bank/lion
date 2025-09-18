@@ -5,6 +5,9 @@ description: Lion has been a long user of the scoped registry - always requiring
 date: 2022-04-05
 tags: [javascript, polyfills]
 cover_image: /blog/images/introducing-lions-website-cover-image.jpg
+eleventyNavigation:
+  key: Lion without polyfills
+  title: Lion without polyfills
 ---
 
 The only reason Lion always loaded a polyfill was because of its usage of [@open-wc/scoped-elements](https://open-wc.org/docs/development/scoped-elements/). From today on this polyfill became optional.

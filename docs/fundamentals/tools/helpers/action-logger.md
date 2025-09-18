@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Helpers
 ---
 
-# Tools >> Helpers >> Action Logger ||20
+# Helpers: Action Logger
 
 A visual element to show action logs in demos `sb-action-logger`
 

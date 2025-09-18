@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Icon
 ---
 
-# Systems >> Icon >> Overview ||10
+# Icon: Overview
 
 The icon system provides a way of defining icon sets which are lazily loaded on demand when
 icons are rendered on the page. This way icon imports do not block the initial render of your

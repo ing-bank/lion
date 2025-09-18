@@ -1,0 +1,12 @@
+---
+import { getEntry, render } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+
+const entry = await getEntry('lionGuides','index');
+
+const { Content, headings } = await render(entry);
+---
+
+<MainLayout>
+    <Content />
+</MainLayout>

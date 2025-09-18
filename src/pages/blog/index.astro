@@ -1,0 +1,39 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import MainLayout from "../../layouts/MainLayout.astro";
+
+const entries = await getCollection("lionBlog", entry => entry.data?.published);
+const entry = await getEntry('lionBlog', 'index');
+
+const getUrl = (post) => {
+  if (post.data?.url) {
+    return post.data.url;
+  }
+  if (post.url) {
+    return post.url;
+  }
+  return `/blog/${post.id}`;
+};
+
+const { Content } = await render(entry);
+---
+
+<MainLayout>
+    <Content />
+
+  <div class="articles">
+    {entries.map((post) => (
+      <article>
+        {post.data.cover_image && <a href={getUrl(post)} class="thumbnail" style={`background-image: url(${post.data.cover_image});`}></a>}
+
+        <div class="content">
+          <h2>
+            <a href={getUrl(post)}>{post.data.title}</a>
+          </h2>
+          <p>{post.data.description}</p>
+          <a class="read" href={getUrl(post)}>...read more</a>
+        </div>
+      </article>
+    ))}
+  </div>
+</MainLayout>
