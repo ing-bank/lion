@@ -3,7 +3,6 @@ import { css, html, nothing } from 'lit';
 import '@lion/ui/define/lion-icon.js';
 import { UIBaseElement } from './shared/UIBaseElement.js';
 import { addIconResolverForPortal } from './iconset-portal/addIconResolverForPortal.js';
-import { navItemDirective } from '../directives/nav-item.js';
 import uiPortalMainNavBurgerCss from './ui-portal-main-nav-burger.css.js';
 
 try {
@@ -31,12 +30,15 @@ export class UIPortalMainNav extends UIBaseElement {
      */
     this.navData = [];
     this.layoutWide = false;
+    this.getLink = item =>
+      html`<a href="${item.redirect || item.url}" aria-current=${item.active ? 'page' : ''}
+        >${item.name}</a
+      >`;
   }
 
   get templateContext() {
     return {
       ...super.templateContext,
-      directives: { navItem: navItemDirective },
       data: { navData: this.navData },
     };
   }
@@ -48,7 +50,7 @@ export class UIPortalMainNav extends UIBaseElement {
       return html` <nav>${templates.navLevel(context, { children: data.navData })}</nav> `;
     },
     navLevel(context, { children }) {
-      const { templates, directives } = context;
+      const { templates } = context;
 
       return html`<ul>
         ${children.map(
@@ -60,7 +62,7 @@ export class UIPortalMainNav extends UIBaseElement {
                     <li>
                       ${item.children.map(
                         child1 => html`
-                          <a ${directives.navItem(child1)}>${child1.name}</a>
+                          ${this.getLink(child1)}
                           ${child1.children?.length
                             ? html` collapsible
                                 <ul>
@@ -81,9 +83,7 @@ export class UIPortalMainNav extends UIBaseElement {
       </ul>`;
     },
     navItem(context, { item }) {
-      const { directives } = context;
-
-      return html`<a ${directives.navItem(item)}>${item.name}</a>`;
+      return this.getLink(item);
     },
   };
 
@@ -173,10 +173,10 @@ const baseUINavMarkup = {
       </div>`;
     },
     navLevel3(context, { children, level, item }) {
-      const { templates, directives } = context;
+      const { templates } = context;
 
       return html`<div>
-        <a ${directives.navItem(item)} class="second-level-title">${item.name}</a>
+        ${this.getLink(item)}
         <ul data-part="list" class="second-level-list">
           ${children.map(
             child =>
@@ -202,9 +202,11 @@ const baseUINavMarkup = {
       // </div>`;
     },
     navItem(context, { item, level }) {
-      const { directives } = context;
-
-      return html`<a data-part="anchor" data-level="${level}" ${directives.navItem(item)}
+      return html`<a
+        data-part="anchor"
+        data-level="${level}"
+        href="${item.redirect || item.url}"
+        aria-current=${item.active ? 'page' : ''}
         >${level === 1
           ? html`<lion-icon
               data-part="icon"
