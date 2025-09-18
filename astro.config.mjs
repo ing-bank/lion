@@ -19,6 +19,8 @@ const mdjsSetupConfig = {
 
 // https://astro.build/config
 export default defineConfig({
+  base: '/next',
+  trailingSlash: 'never',
   integrations: [lit(), pagefind()],
   markdown: {
     // ing-web
