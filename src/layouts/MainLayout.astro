@@ -93,10 +93,26 @@ async function getNavigation(collectionName, baseUrl = '/', isSortedAlphabetical
   return convertCollectionTreeToNavigation(collectionTree, baseUrl, isSortedAlphabetically);
 }
 
-const components = await getNavigation("lionComponents", '/components');
-const fundamentals = await getNavigation("lionFundamentals", '/fundamentals', false);
-const guides = await getNavigation("lionGuides", '/guides', false);
-const blogEntries = await getNavigation("lionBlog", '/blog', false, entry => entry.data?.published);
+const components = await getNavigation(
+  "lionComponents",
+  `${import.meta.env.BASE_URL}/components`
+);
+const fundamentals = await getNavigation(
+  "lionFundamentals",
+  `${import.meta.env.BASE_URL}/fundamentals`,
+  false
+);
+const guides = await getNavigation(
+  "lionGuides",
+  `${import.meta.env.BASE_URL}/guides`,
+  false
+);
+const blogEntries = await getNavigation(
+  "lionBlog",
+  `${import.meta.env.BASE_URL}/blog`,
+  false,
+  entry => entry.data?.published
+);
 
 /**
  * @typedef {{name: string; url: string; active?:boolean; hasActiveChild?: boolean; iconId?: string; children?: NavItemData[]}} NavItem
@@ -105,25 +121,35 @@ const blogEntries = await getNavigation("lionBlog", '/blog', false, entry => ent
  /** @type {NavItem[]} */
      // todo:pavlik auto-generate from the docs
 const navData = [
-  { name: "home", url: "/", iconId: 'lion-portal:portal:home' },
-       { name: "fundamentals", url: "/fundamentals", iconId: 'lion-portal:portal:sdk',
-         children: fundamentals,
-       },
-       { name: "guides", url: "/guides", iconId: 'lion-portal:portal:extension',
-         children: guides,
-       },
+  {
+    name: "home",
+    url: import.meta.env.BASE_URL,
+    iconId: 'lion-portal:portal:home'
+  },
+  {
+    name: "fundamentals",
+    url: `${import.meta.env.BASE_URL}/fundamentals`,
+    iconId: 'lion-portal:portal:sdk',
+    children: fundamentals,
+  },
+  {
+    name: "guides",
+    url: `${import.meta.env.BASE_URL}/guides`,
+    iconId: 'lion-portal:portal:extension',
+    children: guides,
+  },
   {
     name: "components",
-    url: "/components",
+    url: `${import.meta.env.BASE_URL}/components`,
     iconId: 'lion-portal:portal:deployedCode',
     children: components,
   },
-     {
-       name: "blog",
-       url: "/blog",
-       iconId: 'lion-portal:portal:deployedCode',
-       children: blogEntries,
-     },
+  {
+    name: "blog",
+    url: `${import.meta.env.BASE_URL}/blog`,
+    iconId: 'lion-portal:portal:deployedCode',
+    children: blogEntries,
+  },
 ];
 
 
@@ -152,7 +178,16 @@ function setParents(navData, parentItem = null) {
 let activeItem;
 function setActive(navData, currentUrl) {
   // for home page we need to check with the exact match
-  const isActive = (navItem) => currentUrl === navItem.url || currentUrl.startsWith(`${navItem.url}/`);
+  const isActive = (navItem) => {
+    if (navItem.url === import.meta.env.BASE_URL) {
+      // homepage
+      return `${navItem.url}/` === currentUrl;
+    }
+
+    // /components/form
+    // /components/form-input problem
+    return `${currentUrl}/`.startsWith(`${navItem.url}/`);
+  }
 
   for (const navItem of navData) {
     if (isActive(navItem)) {
@@ -211,17 +246,19 @@ const footerData = [
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <base href="/next">
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
     <meta name="generator" content={Astro.generator} />
 
-    <link href="/styles/open-props@1.6.11.min.css" rel="stylesheet" type="text/css">
-    <link href="/styles/global.css" rel="stylesheet" type="text/css">
-    <link href="/styles/lion/variables.css" rel="stylesheet" type="text/css">
-    <link href="/styles/lion/markdown.css" rel="stylesheet" type="text/css">
-    <link href="/styles/lion/layout.css" rel="stylesheet" type="text/css">
-    <link href="/styles/lion/style.css" rel="stylesheet" type="text/css">
+    <link href=`${import.meta.env.BASE_URL}/styles/open-props@1.6.11.min.css` rel="stylesheet" type="text/css">
+    <link href=`${import.meta.env.BASE_URL}/styles/global.css` rel="stylesheet" type="text/css">
+    <link href=`${import.meta.env.BASE_URL}/styles/lion/variables.css` rel="stylesheet" type="text/css">
+    <link href=`${import.meta.env.BASE_URL}/styles/lion/markdown.css` rel="stylesheet" type="text/css">
+    <link href=`${import.meta.env.BASE_URL}/styles/lion/layout.css` rel="stylesheet" type="text/css">
+    <link href=`${import.meta.env.BASE_URL}/styles/lion/style.css` rel="stylesheet" type="text/css">
 
     <script src="@webcomponents/scoped-custom-element-registry" />
 
