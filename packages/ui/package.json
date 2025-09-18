@@ -1,6 +1,6 @@
 {
   "name": "@lion/ui",
-  "version": "0.13.0",
+  "version": "0.15.0",
   "description": "A package of extendable web components",
   "license": "MIT",
   "author": "ing-bank",
@@ -25,6 +25,7 @@
     "./input-range-translations/*": "./components/input-range/translations/*",
     "./input-stepper-translations/*": "./components/input-stepper/translations/*",
     "./input-tel-translations/*": "./components/input-tel/translations/*",
+    "./input-amount-dropdown-translations/*": "./components/input-amount-dropdown/translations/*",
     "./overlays-translations/*": "./components/overlays/translations/*",
     "./pagination-translations/*": "./components/pagination/translations/*",
     "./progress-indicator-translations/*": "./components/progress-indicator/translations/*",
@@ -70,7 +71,7 @@
     "awesome-phonenumber": "^6.4.0",
     "ibantools": "^4.3.9",
     "lit": "^3.1.2",
-    "singleton-manager": "^1.7.0"
+    "singleton-manager": "^1.8.0"
   },
   "keywords": [
     "design-system",

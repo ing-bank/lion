@@ -1,8 +1,10 @@
 import { expect } from '@open-wc/testing';
+import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 // @ts-ignore
 import { singletonManager } from 'singleton-manager';
 import { LocalizeManager } from '../src/LocalizeManager.js';
-import { getLocalizeManager } from '../src/getLocalizeManager.js';
+
+/** @typedef {LocalizeManager & { __instance_for_testing?: LocalizeManager }} LocalizeManagerForTesting */
 
 describe('getLocalizeManager', () => {
   beforeEach(() => {
@@ -12,20 +14,26 @@ describe('getLocalizeManager', () => {
 
   it('gets a default instance when nothing registered on singletonManager with "@lion/ui::localize::0.x"', () => {
     expect(singletonManager.get('@lion/ui::localize::0.x')).to.be.undefined;
-    const localizeManager = getLocalizeManager();
-    expect(localizeManager).to.equal(singletonManager.get('@lion/ui::localize::0.x'));
+    const /** @type {LocalizeManagerForTesting} */ localizeManager = getLocalizeManager();
+    expect(localizeManager.__instance_for_testing).to.equal(
+      singletonManager.get('@lion/ui::localize::0.x'),
+    );
   });
 
   it('gets the same instance when called multiple times', () => {
-    const localizeManager = getLocalizeManager();
-    const localizeManagerSecondCall = getLocalizeManager();
-    expect(localizeManager).to.equal(localizeManagerSecondCall);
+    const /** @type {LocalizeManagerForTesting} */ localizeManager = getLocalizeManager();
+    const /** @type {LocalizeManagerForTesting} */ localizeManagerSecondCall = getLocalizeManager();
+    expect(localizeManager.__instance_for_testing).not.to.be.undefined;
+    expect(localizeManager.__instance_for_testing).to.equal(
+      localizeManagerSecondCall.__instance_for_testing,
+    );
   });
 
   it('gets the instance that was registered on singletonManager with "@lion/ui::localize::0.x"', () => {
     // Set your own for custom behavior or for deduping purposes
     class MyLocalizeManager extends LocalizeManager {}
     singletonManager.set('@lion/ui::localize::0.x', MyLocalizeManager);
-    expect(getLocalizeManager()).to.equal(MyLocalizeManager);
+    const /** @type {LocalizeManagerForTesting} */ localizeManager = getLocalizeManager();
+    expect(localizeManager.__instance_for_testing).to.equal(MyLocalizeManager);
   });
 });

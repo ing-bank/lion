@@ -1,5 +1,5 @@
 // @ts-ignore
-import { singletonManager } from 'singleton-manager';
+import { singletonManager, lazifyInstantiation } from 'singleton-manager';
 import { LocalizeManager } from './LocalizeManager.js';
 
 /**
@@ -57,18 +57,24 @@ import { LocalizeManager } from './LocalizeManager.js';
  * }
  * ```
  *
+ * @deprecated Use `localize` directly instead (as this is always side-effect free now)
+ *
  * @returns {LocalizeManager}
  */
-export function getLocalizeManager() {
-  if (singletonManager.has('@lion/ui::localize::0.x')) {
-    return singletonManager.get('@lion/ui::localize::0.x');
+function getLocalizeManager() {
+  if (!singletonManager.has('@lion/ui::localize::0.x')) {
+    const localizeManager = new LocalizeManager({
+      autoLoadOnLocaleChange: true,
+      fallbackLocale: 'en-GB',
+    });
+    singletonManager.set('@lion/ui::localize::0.x', localizeManager);
   }
 
-  const localizeManager = new LocalizeManager({
-    autoLoadOnLocaleChange: true,
-    fallbackLocale: 'en-GB',
-  });
-  singletonManager.set('@lion/ui::localize::0.x', localizeManager);
-
-  return localizeManager;
+  return singletonManager.get('@lion/ui::localize::0.x');
 }
+
+function getLocalizeManagerLazily() {
+  return lazifyInstantiation(getLocalizeManager);
+}
+
+export { getLocalizeManagerLazily as getLocalizeManager };

@@ -684,9 +684,25 @@ export const validationTypes = () => {
 };
 ```
 
+### Success
+
 Success validators work a bit differently. Their success state is defined by the lack of a previously existing erroneous state (which can be an error or warning state).
 
 So, an error validator going from invalid (true) state to invalid(false) state, will trigger the success validator.
+
+By default the success message will disappear, both the duration and the removal can be configured by passing `displayOptions` to the validator configuration:
+
+The `duration` property overwrites the default 3000ms timer.
+
+```js
+new DefaultSuccess({}, { visibilityDuration: 4000 });
+```
+
+`Infinity` can be added to the `duration` property to allow the success message to stay on screen, like the behaviour of the other validation types' messages.
+
+```js
+new DefaultSuccess({}, visibilityDuration: Infinity });
+```
 
 ## Asynchronous validation
 
@@ -873,7 +889,7 @@ export const backendValidation = () => {
 
 ## Multiple field validation
 
-When validation is dependent on muliple fields, two approaches can be considered:
+When validation is dependent on multiple fields, two approaches can be considered:
 
 - Fieldset validation
 - Validators with knowledge about context

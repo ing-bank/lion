@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.8.0
+
+### Minor Changes
+
+- 6e0ed97: Add `lazifyInstantiation` method to singleton-manager. It will help create side-effect-free app setups, avoiding hosisting problems during bundling conflicts and/or long-winded, multi-file setup logic.
+
 ## 1.7.0
 
 ### Minor Changes

@@ -1,5 +1,49 @@
 # @lion/ui
 
+## 0.15.0
+
+### Minor Changes
+
+- 6e0ed97: Make the manager singletons get instantiated and registered lazily.
+
+### Patch Changes
+
+- 02d0106: [input-stepper] make decrement and increment functions protected instead of private
+- Updated dependencies [6e0ed97]
+  - singleton-manager@1.8.0
+
+## 0.14.3
+
+### Patch Changes
+
+- 5360c5a: [select-rich] improve rendering by the `lit` `cache` function
+
+## 0.14.2
+
+### Patch Changes
+
+- da22fdb: [overlays] allow the popup dialog to close when it is setup by `lit` `cache`
+
+## 0.14.1
+
+### Patch Changes
+
+- f6860c4: exports amount-dropdown types
+
+## 0.14.0
+
+### Minor Changes
+
+- 57800c4: adds the lion-input-amount-dropdown component
+
+## 0.13.1
+
+### Patch Changes
+
+- 63454c2: add `@slot` and `@customElements` meta data for custom-elements manifest
+- 63454c2: cleanup IE11 code in LionButton
+- 713429a: adds configuration options to the success message validation
+
 ## 0.13.0
 
 ### Minor Changes

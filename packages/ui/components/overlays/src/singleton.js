@@ -1,6 +1,16 @@
-import { singletonManager } from 'singleton-manager';
+import { singletonManager, lazifyInstantiation } from 'singleton-manager';
 import { OverlaysManager } from './OverlaysManager.js';
 
-export const overlays =
-  /** @type {OverlaysManager} */
-  (singletonManager.get('@lion/ui::overlays::0.x')) || new OverlaysManager();
+/**
+ * @returns {OverlaysManager}
+ */
+function getOverlaysManager() {
+  if (!singletonManager.has('@lion/ui::overlays::0.x')) {
+    const overlaysManager = new OverlaysManager();
+    singletonManager.set('@lion/ui::overlays::0.x', overlaysManager);
+  }
+
+  return singletonManager.get('@lion/ui::overlays::0.x');
+}
+
+export const overlays = lazifyInstantiation(getOverlaysManager);

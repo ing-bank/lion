@@ -33,28 +33,6 @@ describe('lion-validation-feedback', () => {
     expect(el.getAttribute('type')).to.equal('warning');
   });
 
-  it('success message clears after 3s', async () => {
-    const el = /** @type {LionValidationFeedback} */ (
-      await fixture(html`<lion-validation-feedback></lion-validation-feedback>`)
-    );
-
-    const clock = sinon.useFakeTimers();
-
-    el.feedbackData = [{ message: 'hello', type: 'success', validator: new AlwaysValid() }];
-    await el.updateComplete;
-    expect(el.getAttribute('type')).to.equal('success');
-
-    clock.tick(2900);
-
-    expect(el.getAttribute('type')).to.equal('success');
-
-    clock.tick(200);
-
-    expect(el).to.not.have.attribute('type');
-
-    clock.restore();
-  });
-
   it('does not clear error messages', async () => {
     const el = /** @type {LionValidationFeedback} */ (
       await fixture(html`<lion-validation-feedback></lion-validation-feedback>`)
