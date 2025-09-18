@@ -35,14 +35,19 @@ const importPath = `${remarkPluginFrontmatter.mdjsStoriesPath}`;
         // if we specify this attribute, then it's suddenly loses "type=module" and lazy import cannot be used inside
 
         // on top of that, to pass the variable from template (importPath) we can only do this through HTML element
-        import(`./_demos/${this.dataset.importPath}.js`);
+        if (this.dataset.importPath) {
+          import(`./_demos/${this.dataset.importPath}.js`);
+
+          const currentScript = [...document.scripts].find(script => script.src === import.meta.url);
+          currentScript.setAttribute('mdjs-setup', 'true');
+          // another rocket - astro compatibility magic
+          // we mast pass ".js" because it is stripped by rocket
+          // so we get story file variable in simulator without it (as we want)
+          currentScript.setAttribute('src', `/guides/${this.dataset.importPath}`);
+        }
       }
     }
 
     customElements.define('load-demo', LoadDemo);
-
-    const currentScript = [...document.scripts].find(script => script.src === import.meta.url);
-
-    currentScript.setAttribute('mdjs-setup', 'true');
   </script>
 </InPageNavLayout>
