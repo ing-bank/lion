@@ -1,0 +1,9 @@
+node_modules/**
+/docs/_assets
+/docs/_includes
+/docs/_data
+
+# this means we have no endless loops with refreshing pages
+/docs/_merged_includes
+/docs/_merged_assets
+/docs/_merged_data

@@ -62,6 +62,9 @@ docs/**/api-table.md
 
 debug.log
 
+_site
+_site-dev
+
 ## generated test fiels
 __output
 .wireit

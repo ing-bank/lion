@@ -3,10 +3,9 @@
   "name": "@lion/root",
   "license": "MIT",
   "scripts": {
-    "build": "export PROD=true && npm run build-docs && npx astro build && node -e 'require(\"./src/utils/post-build-dist/post-build-dist.js\").postBuildDist()'",
+    "build": "npm run build:astro && mv dist next && mkdir dist && npm run build:rocket && mv next dist",
     "build:astro": "npx astro build",
-    "build-docs": "npm run clean && node -e 'require(\"./src/utils/copy-docs\").copyDocs()' && node -e 'require(\"./src/utils/copy-docs\").processImports()'",
-    "build-docs:watch": "node -e 'require(\"./src/utils/copy-docs\").watch()'",
+    "build:rocket": "npx astro build",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
     "clean": "rm -rf ./public/docs && rm -rf ./src/content/docs && rm -rf ./dist",
@@ -34,7 +33,8 @@
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
     "rm-all-node_modules": "npm exec --workspaces -- npx rimraf node_modules && npx rimraf node_modules",
-    "start": "astro dev",
+    "start": "rocket start",
+    "start:astro": "astro dev",
     "start:prod": "npm run preview",
     "test": "run-p test:browser test:node",
     "test:browser": "web-test-runner --coverage",
@@ -43,8 +43,7 @@
     "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
     "types": "npm run types --workspaces --if-present",
-    "types-check-only": "npm run types-check-only --workspaces --if-present",
-    "watch": "npm-watch"
+    "types-check-only": "npm run types-check-only --workspaces --if-present"
   },
   "workspaces": [
     "packages/*",
@@ -196,15 +195,5 @@
     "singleQuote": true,
     "arrowParens": "avoid",
     "trailingComma": "all"
-  },
-  "watch": {
-    "build-docs:watch": {
-      "patterns": [
-        "docs"
-      ],
-      "extensions": [
-        "*"
-      ]
-    }
   }
 }
