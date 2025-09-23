@@ -29,7 +29,7 @@ This way the shared variables instantiated on every `transformer` function call.
 
 ### mdjsSetupCode.js
 
-Dynamic `imports` for `@mdjs/mdjs-preview/define` and `@mdjs/mdjs-story/define` were removed. These imports are inlined into `__mdjs-story.js` by `copyMdjsStories.mjs` remark plugin. This is done to enable `dist` bundling.
+Dynamic `imports` for `@mdjs/mdjs-preview/define` and `@mdjs/mdjs-story/define` were removed. These imports are inlined into `__mdjs-story.js` by `remarkProcessDemos.mjs` remark plugin. This is done to enable `dist` bundling.
 
 ## @astrojs/markdown-remark
 

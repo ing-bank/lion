@@ -6,8 +6,8 @@ import { createRequire } from 'module';
 const NODE_MODULES_PATH = '/node_modules';
 const NODE_MODULES_LION_DOCS = '_lion_docs';
 const require = createRequire(import.meta.url);
-const DEBUG = 0;
-const DEBUG_COMPONENT = 'overlays';
+const DEBUG = 1;
+const DEBUG_COMPONENT = 'extend-a-native-input';
 const SHOW_MODULE_NOT_FOUND = false;
 
 const resolveLionImport = moduleResolvedPath => {
@@ -28,13 +28,9 @@ const resolveLionImport = moduleResolvedPath => {
 
 /**
  * @param {string} source
- * @param {string} mode
  * @param {string} inputPath
  */
-async function processImports(source, mode, inputPath) {
-  if (mode !== 'development') return source;
-
-  // return source;
+async function processImports(source, inputPath) {
   if (!source || !source.includes('import')) {
     return source;
   }
@@ -103,13 +99,13 @@ async function processImports(source, mode, inputPath) {
   return newSource;
 }
 
-export function copyMdjsStories({ mode } = {}) {
+export function remarkProcessDemos() {
   /**
    * @param {Node} tree
    * @param {VFileOptions} file
    */
-
   async function transformer(tree, file) {
+    // throw new Error('no transformer');
     const log =
       DEBUG && file.history[0].includes(DEBUG_COMPONENT) ? console.log.bind(console) : () => {};
     log(tree, file.data.frontmatter);
@@ -137,7 +133,7 @@ export function copyMdjsStories({ mode } = {}) {
 
     // in theory, processing imports is not needed anymore, but it also does symlinks
     // for the relative files and these symlinks we do need
-    const parsedSetupJsCode = await processImports(setupJsCode, mode, currentMarkdownFile);
+    const parsedSetupJsCode = await processImports(setupJsCode, currentMarkdownFile);
     await fs.promises.mkdir(PATHS.MDJS_STORIES, { recursive: true });
     await fs.promises.writeFile(
       path.join(PATHS.MDJS_STORIES, `${parsedPath}.js`),
@@ -156,7 +152,3 @@ export function copyMdjsStories({ mode } = {}) {
 
   return transformer;
 }
-
-// module.exports = {
-//   copyMdjsStories,
-// };

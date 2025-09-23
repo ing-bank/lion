@@ -3,8 +3,9 @@
   "name": "@lion/root",
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:astro && npm run build:rocket && mv dist _site-dev/next",
-    "build:astro": "npx astro build",
+    "build": "npm run build:astro && npm run build:rocket && mv dist _site-dev/next && npm run build:astro:update-links",
+    "build:astro": "ASTRO_BASE_URL=/next npx astro build --force",
+    "build:astro:update-links": "node ./src/utils/rewrite-links.mjs",
     "build:rocket": "rocket build",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
