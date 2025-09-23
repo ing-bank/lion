@@ -6,7 +6,7 @@ import { createRequire } from 'module';
 const NODE_MODULES_PATH = '/node_modules';
 const NODE_MODULES_LION_DOCS = '_lion_docs';
 const require = createRequire(import.meta.url);
-const DEBUG = 1;
+const DEBUG = 0;
 const DEBUG_COMPONENT = 'overlays';
 const SHOW_MODULE_NOT_FOUND = false;
 

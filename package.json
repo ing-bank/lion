@@ -3,7 +3,7 @@
   "name": "@lion/root",
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:astro && mv dist next && mkdir dist && npm run build:rocket && mv next dist",
+    "build": "npm run build:astro && npm run build:rocket && mv dist _site-dev/next",
     "build:astro": "npx astro build",
     "build:rocket": "rocket build",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
@@ -24,7 +24,6 @@
     "lint:prettier": "prettier \"**/*.js\" --list-different || (echo '↑↑ these files are not prettier formatted ↑↑' && exit 1)",
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
-    "pagefind": "npx -y pagefind --site dist --serve",
     "prepare": "husky install",
     "preview": "astro preview",
     "release": "changeset publish",
@@ -185,7 +184,14 @@
     }
   },
   "overrides": {
-    "sharp": "^0.29.x"
+    "sharp": "^0.29.x",
+    "@mdjs/core": "^0.21.1",
+    "@mdjs/mdjs-story": "^0.4.0",
+    "remark-rehype": "^8",
+    "@mdjs/mdjs-preview": {
+      ".": "^0.6.0",
+      "@lion/ui": "^0.15.0"
+    }
   },
   "prettier": {
     "printWidth": 100,

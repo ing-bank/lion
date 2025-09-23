@@ -59,11 +59,12 @@ export const Github = () => html`
 
 ```js preview-story
 export const Whatsapp = () => {
-  const obamaImgUrl = new URL('./src/wa-combobox/assets/obama.jpeg', import.meta.url).href;
-  const trumpImgUrl = new URL('./src/wa-combobox/assets/trump.jpeg', import.meta.url).href;
-  const bidenImgUrl = new URL('./src/wa-combobox/assets/biden.jpeg', import.meta.url).href;
-  const bushImgUrl = new URL('./src/wa-combobox/assets/bush.jpeg', import.meta.url).href;
-  const clintonImgUrl = new URL('./src/wa-combobox/assets/clinton.jpeg', import.meta.url).href;
+  // in Rocket this is resolved based on the URL, in astro this is resolved based on filesystem (or is it?)
+  const obamaImgUrl = new URL('../src/wa-combobox/assets/obama.jpeg', import.meta.url).href;
+  const trumpImgUrl = new URL('../src/wa-combobox/assets/trump.jpeg', import.meta.url).href;
+  const bidenImgUrl = new URL('../src/wa-combobox/assets/biden.jpeg', import.meta.url).href;
+  const bushImgUrl = new URL('../src/wa-combobox/assets/bush.jpeg', import.meta.url).href;
+  const clintonImgUrl = new URL('../src/wa-combobox/assets/clinton.jpeg', import.meta.url).href;
 
   return html`
     <wa-combobox name="combo" label="Filter chats">
