@@ -354,6 +354,7 @@
 .markdown-body h4,
 .markdown-body h5,
 .markdown-body h6 {
+  color: var(--text-color);
   font-weight: 600;
   line-height: 1.25;
   margin-bottom: 1rem;
@@ -366,7 +367,7 @@
 
 .markdown-body h1,
 .markdown-body h2 {
-  border-bottom: 1px solid #eaecef;
+  border-bottom: 1px solid var(--primary-lines-color);
   padding-bottom: 0.3em;
 }
 

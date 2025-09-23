@@ -304,7 +304,7 @@ UIPortalMainNav.provideStylesAndMarkup({
         padding-inline: var(--size-6);
       }
 
-      :host [data-part='anchor'][data-level='2'][aria-current='page'] {
+      :host [data-part='anchor'][data-level='2'][aria-current='page']:not(:last-child) {
         padding-block: var(--size-2);
       }
 
@@ -324,7 +324,7 @@ UIPortalMainNav.provideStylesAndMarkup({
 
       :host [data-part='anchor'] {
         display: block;
-        color: var(--primary-text-color);
+        color: var(--text-color);
         text-decoration: inherit;
         font-size: 1rem;
         fill: var(--primary-icon-color);
@@ -332,15 +332,17 @@ UIPortalMainNav.provideStylesAndMarkup({
         border-radius: var(--radius-4);
       }
 
-      :host [data-part='anchor'][aria-current='page'] {
+      :host [data-part='anchor'][aria-current='page'][data-level='1'],
+      :host [data-part='anchor'][aria-current='page'][data-level='3']:last-child,
+      :host [data-part='anchor'][aria-current='page'][data-level='4'] {
         font-weight: bold;
-        background-color: var(--primary-color);
+        background-color: var(--secondary-color);
       }
 
       :host [data-part='anchor']:hover {
         text-decoration: underline;
         text-underline-offset: 0.3em;
-        background-color: var(--primary-color);
+        background-color: var(--secondary-color-lighter);
       }
 
       :host [data-part='anchor']:focus {
@@ -361,7 +363,7 @@ UIPortalMainNav.provideStylesAndMarkup({
       }
 
       :host [data-part='level'][data-level='2'] {
-        color: var(--primary-text-color, #333);
+        color: var(--text-color, #333);
 
         /* 14px/Regular */
         font-family: 'ING Me';
@@ -374,13 +376,13 @@ UIPortalMainNav.provideStylesAndMarkup({
 
       :host [data-part='listitem'][data-level='2'][data-\\:active] {
         border-radius: var(--radius-4);
-        background: var(--primary-color, #f0f0f0);
-        padding-block-end: 12px;
+        background: var(--neutral-color-lightest);
         margin-block: 6px;
       }
 
       :host [data-part='level'][data-level='3'] {
         overflow: hidden;
+        padding-block-end: 12px;
       }
 
       :host [data-part='anchor'][data-level='3'],
@@ -392,8 +394,8 @@ UIPortalMainNav.provideStylesAndMarkup({
         font-weight: 400;
         line-height: 20px; /* 142.857% */
         text-decoration: none;
-        margin-left: var(--size-8);
-        padding-inline: var(--size-2);
+        margin-left: var(--size-7);
+        padding-inline: var(--size-3);
       }
 
       :host [data-part='anchor'][data-level='3'][aria-current='page'],
@@ -407,7 +409,7 @@ UIPortalMainNav.provideStylesAndMarkup({
       }
 
       :host [data-part='list'][data-level='4'] {
-        margin-left: var(--size-4);
+        margin-left: var(--size-3);
       }
     `,
   ],
