@@ -835,48 +835,41 @@ export class OverlayController extends EventTarget {
   }
 
   /**
+   * Prevents unwanted layout shifts when scrollbars are disabled.
+   * Keeps the body (content) size consistent on show by applying margin-right/bottom
+   * to compensate for the missing scrollbar.
    * @param {{ phase: OverlayPhase }} config
    * @protected
    */
   _keepBodySize({ phase }) {
-    if (!this.preventsScroll) {
-      return;
-    }
+    if (!this.preventsScroll) return;
 
     switch (phase) {
       case 'before-show':
         this.__bodyClientWidth = document.body.clientWidth;
         this.__bodyClientHeight = document.body.clientHeight;
         this.__bodyMarginBottomInline = document.body.style.marginBottom;
+        this.__bodyMarginRightInline = document.body.style.marginRight;
         break;
       case 'show': {
-        if (window.getComputedStyle) {
-          const bodyStyle = window.getComputedStyle(document.body);
-          this.__bodyMarginRight = parseInt(bodyStyle.getPropertyValue('margin-right'), 10);
-          this.__bodyMarginBottom = parseInt(bodyStyle.getPropertyValue('margin-bottom'), 10);
-        } else {
-          this.__bodyMarginRight = 0;
-          this.__bodyMarginBottom = 0;
-        }
+        const bodyStyle = window.getComputedStyle(document.body);
+        const bodyMarginRight = parseInt(bodyStyle.getPropertyValue('margin-right'), 10);
+        const bodyMarginBottom = parseInt(bodyStyle.getPropertyValue('margin-bottom'), 10);
+
         const scrollbarWidth =
           document.body.clientWidth - /** @type {number} */ (this.__bodyClientWidth);
         const scrollbarHeight =
           document.body.clientHeight - /** @type {number} */ (this.__bodyClientHeight);
-        const newMarginBottom = this.__bodyMarginBottom + scrollbarHeight;
-        // @ts-expect-error [external]: CSS not yet typed
-        if (window.CSS?.number && document.body.attributeStyleMap?.set) {
-          // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
-          document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
-        } else {
-          document.body.style.marginBottom = `${newMarginBottom}px`;
-        }
-        // set negative margin on contentWrapperNode to compensate for the extra margin on body
-        // so that the overlay content does not shift when a scrollbar appears/disappears
-        this.contentWrapperNode.style.marginLeft = `-${scrollbarWidth}px`;
+        const newMarginBottom = bodyMarginBottom + scrollbarHeight;
+        const newMarginRight = bodyMarginRight + scrollbarWidth;
+
+        document.body.style.marginBottom = `${newMarginBottom}px`;
+        document.body.style.marginRight = `${newMarginRight}px`;
         break;
       }
       case 'hide':
         document.body.style.marginBottom = this.__bodyMarginBottomInline || '';
+        document.body.style.marginRight = this.__bodyMarginRightInline || '';
         break;
       /* no default */
     }
