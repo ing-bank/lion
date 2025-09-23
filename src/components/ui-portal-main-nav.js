@@ -20,6 +20,7 @@ try {
 export class UIPortalMainNav extends UIBaseElement {
   static properties = {
     navData: { type: Array, attribute: 'nav-data' },
+    layoutWide: { type: Boolean, attribute: 'layout-wide' }, // true or false
   };
 
   constructor() {
@@ -28,6 +29,7 @@ export class UIPortalMainNav extends UIBaseElement {
      * @type {NavItem[]}
      */
     this.navData = [];
+    this.layoutWide = false;
     this.getLink = item =>
       html`<a href="${item.redirect || item.url}" aria-current=${item.active ? 'page' : ''}
         >${item.name}</a
@@ -84,6 +86,17 @@ export class UIPortalMainNav extends UIBaseElement {
       return this.getLink(item);
     },
   };
+
+  attributeChangedCallback(attrName, oldVal, newVal) {
+    super.attributeChangedCallback(attrName, oldVal, newVal);
+    if (attrName === 'layout-wide') {
+      if (newVal === true || newVal === 'true') {
+        this.setAttribute('data-wide', 'true');
+      } else {
+        this.removeAttribute('data-wide');
+      }
+    }
+  }
 }
 export const tagName = 'ui-portal-main-nav';
 
@@ -115,49 +128,13 @@ const baseUINavMarkup = {
           </label>
 
           <div id="l1-wrapper" data-part="l1-wrapper">
-            ${templates.navRootLevel(context, { children: data.navData, level: 1 })}
-            ${templates.navNestedLevel(context, {
-              children: data.navData.find(item => item.active)?.children,
-              level: 2,
-            })}
+            ${templates.navLevel(context, { children: data.navData, level: 1 })}
           </div>
         </nav>
       `;
     },
-    navRootLevel(context, { children, level, hasActiveChild = false }) {
+    navLevel(context, { children, level, hasActiveChild = false }) {
       const { templates } = context;
-
-      return html`<div
-        data-part="level"
-        data-level="${level}"
-        data-has-active-child="${hasActiveChild}"
-      >
-        <ul data-part="list" data-level="${level}">
-          ${children.map(
-            item =>
-              html`<li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
-                ${templates.navItem(context, { item, level })}
-              </li>`,
-          )}
-        </ul>
-        <div class="nav-item-last">
-          <a href="/search" data-part="anchor" data-level="${level}">
-            <lion-icon
-              data-part="icon"
-              data-level="${level}"
-              icon-id="lion-portal:portal:search"
-            ></lion-icon>
-            <span>Search</span>
-          </a>
-        </div>
-      </div>`;
-    },
-    navNestedLevel(context, { children, level, hasActiveChild = false }) {
-      const { templates } = context;
-
-      if (!children?.length) {
-        return nothing;
-      }
 
       return html`<div
         data-part="level"
@@ -170,7 +147,7 @@ const baseUINavMarkup = {
               html`<li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
                 ${templates.navItem(context, { item, level })}
                 ${item.children?.length
-                  ? templates.navNestedLevel(context, {
+                  ? templates.navLevel(context, {
                       level: level + 1,
                       children: item.children,
                       hasActiveChild: item.hasActiveChild,
@@ -179,7 +156,50 @@ const baseUINavMarkup = {
               </li>`,
           )}
         </ul>
+        ${level === 1
+          ? html`
+              <div class="nav-item-last">
+                <a href="/search" data-part="anchor" data-level="${level}">
+                  <lion-icon
+                    data-part="icon"
+                    data-level="${level}"
+                    icon-id="lion-portal:portal:search"
+                  ></lion-icon>
+                  <span>Search</span>
+                </a>
+              </div>
+            `
+          : nothing}
       </div>`;
+    },
+    navLevel3(context, { children, level, item }) {
+      const { templates } = context;
+
+      return html`<div>
+        ${this.getLink(item)}
+        <ul data-part="list" class="second-level-list">
+          ${children.map(
+            child =>
+              html`<li ?data-:active="${child.active}">
+                ${templates.navItem(context, { child, level })}
+              </li>`,
+          )}
+        </ul>
+      </div>`;
+
+      // accordion with all the links
+      // return html`<lion-accordion>
+      //     <h3 slot="invoker"><button>${item.name}</button></h3>
+      //     <div slot="content">
+      //       <ul>
+      //           ${children.map(
+      //                   item => html`<li ?data-:active="${item.isActive}">
+      //                 ${templates.navItem(context, { item, level })}
+      //
+      //         </li>`)}
+      //       </ul>
+      //     </div>
+      // </div>`;
     },
     navItem(context, { item, level }) {
       return html`<a
@@ -210,16 +230,19 @@ UIPortalMainNav.provideStylesAndMarkup({
     uiPortalMainNavBurgerCss,
     css`
       :host {
+        --_width-l0: var(--size-12);
+        --_width-l1: var(--size-13);
         height: 100vh;
         /** Make this the positioning parent of l0 and l1 */
         position: relative;
+        width: var(--_width-l0);
         display: block;
         position: sticky;
         top: 0;
       }
 
-      #l1-wrapper {
-        display: flex;
+      :host([data-layout='inline-columns'][data-wide='true']) {
+        width: calc(var(--_width-l0) + var(--_width-l1));
       }
 
       :host [data-part='nav'] {
@@ -231,19 +254,16 @@ UIPortalMainNav.provideStylesAndMarkup({
         padding-block-start: var(--size-6);
         padding-inline: var(--size-2);
         overflow-y: scroll;
-        height: 100vh;
       }
 
       :host [data-part='level'][data-level='1'] {
-        width: 160px;
+        width: var(--_width-l0);
+        height: 100vh;
         border-right: 1px solid #ccc;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-      }
-
-      :host [data-part='level'][data-level='2'] {
-        width: 200px;
       }
 
       /**
@@ -254,6 +274,16 @@ UIPortalMainNav.provideStylesAndMarkup({
         [data-part='level'][data-level='2']:not([data-has-active-child]) {
         /** TODO: sr-only, because we want to present all links to the screen reader */
         display: none;
+      }
+
+      :host [data-part='level'][data-level='2'] {
+        width: var(--_width-l1);
+        position: absolute;
+        left: var(--_width-l0);
+        top: 0;
+        /* padding-inline: var(--size-6); */
+        border-right: 1px solid #ccc;
+        height: 100%;
       }
 
       :host [data-part='list'] {
@@ -274,7 +304,7 @@ UIPortalMainNav.provideStylesAndMarkup({
         padding-inline: var(--size-6);
       }
 
-      :host [data-part='anchor'][data-level='2'][aria-current='page'] {
+      :host [data-part='anchor'][data-level='2'][aria-current='page']:not(:last-child) {
         padding-block: var(--size-2);
       }
 
@@ -294,7 +324,7 @@ UIPortalMainNav.provideStylesAndMarkup({
 
       :host [data-part='anchor'] {
         display: block;
-        color: var(--primary-text-color);
+        color: var(--text-color);
         text-decoration: inherit;
         font-size: 1rem;
         fill: var(--primary-icon-color);
@@ -302,15 +332,17 @@ UIPortalMainNav.provideStylesAndMarkup({
         border-radius: var(--radius-4);
       }
 
-      :host [data-part='anchor'][aria-current='page'] {
+      :host [data-part='anchor'][aria-current='page'][data-level='1'],
+      :host [data-part='anchor'][aria-current='page'][data-level='3']:last-child,
+      :host [data-part='anchor'][aria-current='page'][data-level='4'] {
         font-weight: bold;
-        background-color: var(--primary-color);
+        background-color: var(--secondary-color);
       }
 
       :host [data-part='anchor']:hover {
         text-decoration: underline;
         text-underline-offset: 0.3em;
-        background-color: var(--primary-color);
+        background-color: var(--secondary-color-lighter);
       }
 
       :host [data-part='anchor']:focus {
@@ -323,7 +355,15 @@ UIPortalMainNav.provideStylesAndMarkup({
       }
 
       :host [data-part='level'][data-level='2'] {
-        color: var(--primary-text-color, #333);
+        display: none;
+      }
+
+      :host [data-\\:active] [data-part='level'][data-level='2'] {
+        display: block;
+      }
+
+      :host [data-part='level'][data-level='2'] {
+        color: var(--text-color, #333);
 
         /* 14px/Regular */
         font-family: 'ING Me';
@@ -336,13 +376,13 @@ UIPortalMainNav.provideStylesAndMarkup({
 
       :host [data-part='listitem'][data-level='2'][data-\\:active] {
         border-radius: var(--radius-4);
-        background: var(--primary-color, #f0f0f0);
-        padding-block-end: 12px;
+        background: var(--neutral-color-lightest);
         margin-block: 6px;
       }
 
       :host [data-part='level'][data-level='3'] {
         overflow: hidden;
+        padding-block-end: 12px;
       }
 
       :host [data-part='anchor'][data-level='3'],
@@ -354,8 +394,8 @@ UIPortalMainNav.provideStylesAndMarkup({
         font-weight: 400;
         line-height: 20px; /* 142.857% */
         text-decoration: none;
-        margin-left: var(--size-8);
-        padding-inline: var(--size-2);
+        margin-left: var(--size-7);
+        padding-inline: var(--size-3);
       }
 
       :host [data-part='anchor'][data-level='3'][aria-current='page'],
@@ -369,7 +409,7 @@ UIPortalMainNav.provideStylesAndMarkup({
       }
 
       :host [data-part='list'][data-level='4'] {
-        margin-left: var(--size-4);
+        margin-left: var(--size-3);
       }
     `,
   ],

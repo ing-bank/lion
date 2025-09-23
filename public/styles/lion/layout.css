@@ -11,7 +11,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 16px;
-  color: var(--primary-text-color);
+  color: var(--text-color);
   background-color: var(--page-background);
   display: flex;
   flex-flow: column;
@@ -149,14 +149,14 @@ body[data-layout='layout-home'] #main-header {
 
 #main-header a {
   text-decoration: none;
-  color: var(--primary-text-color);
+  color: var(--text-color);
   transition: color 0.3s ease-in-out;
   font-weight: bold;
   order: 2;
 }
 
 #main-header a:hover {
-  color: var(--primary-color);
+  color: var(--secondary-color-lighter);
 }
 
 body[data-layout='layout-home'] #main-header a:hover {
@@ -274,7 +274,7 @@ rocket-navigation .light-dark-switch::part(label) {
 
 rocket-navigation a {
   text-decoration: none;
-  color: var(--primary-text-color);
+  color: var(--text-color);
 }
 
 rocket-navigation a:hover {
@@ -286,7 +286,7 @@ rocket-navigation > ul > li > ul li.current ul li.anchor.current::before {
   content: '';
   height: 1.6em;
   width: 3px;
-  background: var(--primary-color);
+  background: var(--secondary-color);
   position: absolute;
   left: 0;
   margin-top: -2px;
@@ -358,7 +358,7 @@ rocket-navigation > ul {
 
   /* same as header */
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-  color: var(--primary-text-color);
+  color: var(--text-color);
   font-weight: bold;
 }
 
@@ -511,7 +511,6 @@ main > * {
   font-weight: bold;
   vertical-align: middle;
   padding: 8px 24px;
-  border: 1px solid var(--primary-color);
   border-radius: 24px;
   background: var(--contrast-color-dark);
   color: var(--contrast-color-light, #fff);
@@ -569,7 +568,7 @@ body[data-layout='layout-home'] section {
 body[data-layout='layout-home'] .banner {
   display: flex;
   flex-direction: column;
-  background-color: var(--primary-color);
+  background-color: var(--secondary-color);
   padding-block-start: 96px;
 }
 
@@ -581,7 +580,7 @@ body[data-layout='layout-home'] .page-title--container {
 }
 
 body[data-layout='layout-home'] .page-title {
-  color: var(--primary-text-color);
+  color: var(--text-color);
   font-size: 64px;
 }
 
@@ -595,6 +594,10 @@ body[data-layout='layout-home'] .page-logo {
   width: 35vw;
   max-width: 500px;
   align-self: flex-end;
+}
+
+html.dark body[data-layout='layout-home'] .page-logo {
+  filter: brightness(0.8);
 }
 
 body[data-layout='layout-home'] .page-title,
