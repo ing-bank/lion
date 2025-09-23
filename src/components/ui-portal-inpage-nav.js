@@ -26,13 +26,17 @@ export class UIPortalInpageNav extends LitElement {
         list-style-type: none;
         margin: 0;
         padding: 0 0 0 20px;
-        border-left: #d9d9d9 solid 1px;
+        border-left: 1px solid var(--primary-lines-color);
       }
 
       [data-part='anchor'] {
         color: inherit;
         text-decoration: inherit;
         font-size: 14px;
+      }
+
+      [data-part='anchor']:hover {
+        text-decoration: underline;
       }
 
       h4 {
