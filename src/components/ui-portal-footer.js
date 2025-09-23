@@ -26,6 +26,10 @@ export class UIPortalFooter extends LitElement {
       }
 
       @media screen and (min-width: 1024px) {
+        #main-footer {
+          padding-inline: 96px;
+        }
+
         #footer-menu .content-area {
           flex-direction: row;
           text-align: left;
@@ -39,9 +43,13 @@ export class UIPortalFooter extends LitElement {
 
       #footer-menu a {
         text-decoration: none;
-        color: var(--primary-text-color);
+        color: var(--text-color);
         padding: 5px 0;
         display: block;
+      }
+
+      #footer-menu a:hover {
+        text-decoration: underline;
       }
     `,
   ];
