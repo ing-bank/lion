@@ -20,7 +20,6 @@ try {
 export class UIPortalMainNav extends UIBaseElement {
   static properties = {
     navData: { type: Array, attribute: 'nav-data' },
-    layoutWide: { type: Boolean, attribute: 'layout-wide' }, // true or false
   };
 
   constructor() {
@@ -29,7 +28,6 @@ export class UIPortalMainNav extends UIBaseElement {
      * @type {NavItem[]}
      */
     this.navData = [];
-    this.layoutWide = false;
     this.getLink = item =>
       html`<a href="${item.redirect || item.url}" aria-current=${item.active ? 'page' : ''}
         >${item.name}</a
@@ -86,17 +84,6 @@ export class UIPortalMainNav extends UIBaseElement {
       return this.getLink(item);
     },
   };
-
-  attributeChangedCallback(attrName, oldVal, newVal) {
-    super.attributeChangedCallback(attrName, oldVal, newVal);
-    if (attrName === 'layout-wide') {
-      if (newVal === true || newVal === 'true') {
-        this.setAttribute('data-wide', 'true');
-      } else {
-        this.removeAttribute('data-wide');
-      }
-    }
-  }
 }
 export const tagName = 'ui-portal-main-nav';
 
@@ -128,12 +115,16 @@ const baseUINavMarkup = {
           </label>
 
           <div id="l1-wrapper" data-part="l1-wrapper">
-            ${templates.navLevel(context, { children: data.navData, level: 1 })}
+            ${templates.navRootLevel(context, { children: data.navData, level: 1 })}
+            ${templates.navNestedLevel(context, {
+              children: data.navData.find(item => item.active)?.children,
+              level: 2,
+            })}
           </div>
         </nav>
       `;
     },
-    navLevel(context, { children, level, hasActiveChild = false }) {
+    navRootLevel(context, { children, level, hasActiveChild = false }) {
       const { templates } = context;
 
       return html`<div
@@ -146,8 +137,40 @@ const baseUINavMarkup = {
             item =>
               html`<li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
                 ${templates.navItem(context, { item, level })}
+              </li>`,
+          )}
+        </ul>
+        <div class="nav-item-last">
+          <a href="/search" data-part="anchor" data-level="${level}">
+            <lion-icon
+              data-part="icon"
+              data-level="${level}"
+              icon-id="lion-portal:portal:search"
+            ></lion-icon>
+            <span>Search</span>
+          </a>
+        </div>
+      </div>`;
+    },
+    navNestedLevel(context, { children, level, hasActiveChild = false }) {
+      const { templates } = context;
+
+      if (!children?.length) {
+        return nothing;
+      }
+
+      return html`<div
+        data-part="level"
+        data-level="${level}"
+        data-has-active-child="${hasActiveChild}"
+      >
+        <ul data-part="list" data-level="${level}">
+          ${children.map(
+            item =>
+              html`<li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
+                ${templates.navItem(context, { item, level })}
                 ${item.children?.length
-                  ? templates.navLevel(context, {
+                  ? templates.navNestedLevel(context, {
                       level: level + 1,
                       children: item.children,
                       hasActiveChild: item.hasActiveChild,
@@ -156,50 +179,7 @@ const baseUINavMarkup = {
               </li>`,
           )}
         </ul>
-        ${level === 1
-          ? html`
-              <div class="nav-item-last">
-                <a href="/search" data-part="anchor" data-level="${level}">
-                  <lion-icon
-                    data-part="icon"
-                    data-level="${level}"
-                    icon-id="lion-portal:portal:search"
-                  ></lion-icon>
-                  <span>Search</span>
-                </a>
-              </div>
-            `
-          : nothing}
       </div>`;
-    },
-    navLevel3(context, { children, level, item }) {
-      const { templates } = context;
-
-      return html`<div>
-        ${this.getLink(item)}
-        <ul data-part="list" class="second-level-list">
-          ${children.map(
-            child =>
-              html`<li ?data-:active="${child.active}">
-                ${templates.navItem(context, { child, level })}
-              </li>`,
-          )}
-        </ul>
-      </div>`;
-
-      // accordion with all the links
-      // return html`<lion-accordion>
-      //     <h3 slot="invoker"><button>${item.name}</button></h3>
-      //     <div slot="content">
-      //       <ul>
-      //           ${children.map(
-      //                   item => html`<li ?data-:active="${item.isActive}">
-      //                 ${templates.navItem(context, { item, level })}
-      //
-      //         </li>`)}
-      //       </ul>
-      //     </div>
-      // </div>`;
     },
     navItem(context, { item, level }) {
       return html`<a
@@ -230,19 +210,16 @@ UIPortalMainNav.provideStylesAndMarkup({
     uiPortalMainNavBurgerCss,
     css`
       :host {
-        --_width-l0: var(--size-12);
-        --_width-l1: var(--size-13);
         height: 100vh;
         /** Make this the positioning parent of l0 and l1 */
         position: relative;
-        width: var(--_width-l0);
         display: block;
         position: sticky;
         top: 0;
       }
 
-      :host([data-layout='inline-columns'][data-wide='true']) {
-        width: calc(var(--_width-l0) + var(--_width-l1));
+      #l1-wrapper {
+        display: flex;
       }
 
       :host [data-part='nav'] {
@@ -254,16 +231,19 @@ UIPortalMainNav.provideStylesAndMarkup({
         padding-block-start: var(--size-6);
         padding-inline: var(--size-2);
         overflow-y: scroll;
+        height: 100vh;
       }
 
       :host [data-part='level'][data-level='1'] {
-        width: var(--_width-l0);
-        height: 100vh;
+        width: 160px;
         border-right: 1px solid #ccc;
-        overflow: hidden;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+      }
+
+      :host [data-part='level'][data-level='2'] {
+        width: 200px;
       }
 
       /**
@@ -274,16 +254,6 @@ UIPortalMainNav.provideStylesAndMarkup({
         [data-part='level'][data-level='2']:not([data-has-active-child]) {
         /** TODO: sr-only, because we want to present all links to the screen reader */
         display: none;
-      }
-
-      :host [data-part='level'][data-level='2'] {
-        width: var(--_width-l1);
-        position: absolute;
-        left: var(--_width-l0);
-        top: 0;
-        /* padding-inline: var(--size-6); */
-        border-right: 1px solid #ccc;
-        height: 100%;
       }
 
       :host [data-part='list'] {
@@ -350,14 +320,6 @@ UIPortalMainNav.provideStylesAndMarkup({
       :host [data-part='anchor'][data-level='2']:focus,
       :host [data-part='anchor'][data-level='2']:focus {
         outline-offset: 2px;
-      }
-
-      :host [data-part='level'][data-level='2'] {
-        display: none;
-      }
-
-      :host [data-\\:active] [data-part='level'][data-level='2'] {
-        display: block;
       }
 
       :host [data-part='level'][data-level='2'] {

@@ -40,7 +40,7 @@ export default css`
   }
 
   :host([data-layout='floating-toggle']) #burger-toggle:checked ~ #l1-wrapper {
-    display: block;
+    display: flex;
     position: absolute;
   }
 `;

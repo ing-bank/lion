@@ -282,7 +282,7 @@ const footerData = [
   </head>
   <body class="ui-portal-grid" data-layout={layout}>
     <div class="ui-portal-grid__nav">
-      <UIPortalMainNav client:load nav-data={JSON.stringify(navData)} layout-wide={layout !== 'layout-home' && layout !== 'layout-one-column'} />
+      <UIPortalMainNav client:load nav-data={JSON.stringify(navData)} />
     </div>
     <main class={`ui-portal-grid__main ${bodyCssClass}`}>
       <slot />
