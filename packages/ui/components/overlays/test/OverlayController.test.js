@@ -2105,14 +2105,14 @@ describe('OverlayController', () => {
     it('should run with scroll prevention', async () => {
       await overlayControllerPreventsScroll.show();
 
-      expect(overlayControllerPreventsScroll.__bodyMarginRightInline).to.not.equal(undefined);
+      expect(overlayControllerPreventsScroll.__bodyPaddingRightInline).to.not.equal(undefined);
       expect(overlayControllerPreventsScroll.__bodyMarginBottomInline).to.not.equal(undefined);
     });
 
     it('should not run without scroll prevention', async () => {
       await overlayControllerNoPrevent.show();
 
-      expect(overlayControllerNoPrevent.__bodyMarginRightInline).to.equal(undefined);
+      expect(overlayControllerNoPrevent.__bodyPaddingRightInline).to.equal(undefined);
       expect(overlayControllerNoPrevent.__bodyMarginBottomInline).to.equal(undefined);
     });
   });
