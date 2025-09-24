@@ -848,28 +848,28 @@ export class OverlayController extends EventTarget {
       case 'before-show':
         this.__bodyClientWidth = document.body.clientWidth;
         this.__bodyClientHeight = document.body.clientHeight;
-        this.__bodyMarginBottomInline = document.body.style.marginBottom;
         this.__bodyPaddingRightInline = document.body.style.paddingRight;
+        this.__bodyPaddingBottomInline = document.body.style.paddingBottom;
         break;
       case 'show': {
         const bodyStyle = window.getComputedStyle(document.body);
         const bodyPaddingRight = parseInt(bodyStyle.getPropertyValue('padding-right'), 10);
-        const bodyMarginBottom = parseInt(bodyStyle.getPropertyValue('margin-bottom'), 10);
+        const bodyPaddingBottom = parseInt(bodyStyle.getPropertyValue('padding-bottom'), 10);
 
         const scrollbarWidth =
           document.body.clientWidth - /** @type {number} */ (this.__bodyClientWidth);
         const scrollbarHeight =
           document.body.clientHeight - /** @type {number} */ (this.__bodyClientHeight);
-        const newMarginBottom = bodyMarginBottom + scrollbarHeight;
         const newPaddingRight = bodyPaddingRight + scrollbarWidth;
+        const newPaddingBottom = bodyPaddingBottom + scrollbarHeight;
 
-        document.body.style.marginBottom = `${newMarginBottom}px`;
         document.body.style.paddingRight = `${newPaddingRight}px`;
+        document.body.style.paddingBottom = `${newPaddingBottom}px`;
         break;
       }
       case 'hide':
-        document.body.style.marginBottom = this.__bodyMarginBottomInline || '';
         document.body.style.paddingRight = this.__bodyPaddingRightInline || '';
+        document.body.style.paddingBottom = this.__bodyPaddingBottomInline || '';
         break;
       /* no default */
     }
