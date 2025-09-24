@@ -1,9 +1,7 @@
 /* eslint-disable lit-a11y/no-autofocus */
 import { expect, fixture as _fixture, html, waitUntil, aTimeout } from '@open-wc/testing';
 import { sendKeys, setViewport } from '@web/test-runner-commands';
-import '../test-helpers/test-router.js';
 import '@lion/ui/define/lion-dialog.js';
-import '@lion/ui/define/lion-tabs.js';
 
 /**
  * @typedef {import('../src/LionDialog.js').LionDialog} LionDialog
@@ -88,6 +86,7 @@ describe.skip('lion-dialog', () => {
       await waitUntil(isDialogVisible);
       // mimic the case when clicking inside the dialog leads to the rerouting and dialog DOM removal
       el.remove();
+      await aTimeout(0);
 
       // Scroll up until we can see the second paragraph.
       await sendKeys({

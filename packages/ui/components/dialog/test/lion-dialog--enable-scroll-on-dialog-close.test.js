@@ -1,9 +1,7 @@
 /* eslint-disable lit-a11y/no-autofocus */
 import { expect, fixture as _fixture, html, waitUntil } from '@open-wc/testing';
 import { sendKeys, setViewport } from '@web/test-runner-commands';
-import '../test-helpers/test-router.js';
 import '@lion/ui/define/lion-dialog.js';
-import '@lion/ui/define/lion-tabs.js';
 
 /**
  * @typedef {import('../src/LionDialog.js').LionDialog} LionDialog
@@ -13,31 +11,31 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionDialog>} */ (_fi
 
 describe('lion-dialog', () => {
   describe('when dialog is opened and then closed', () => {
-    it('should scroll vertically after the dialog is opened and then closed', async () => {
+    it('should scroll the page vertically', async () => {
       const appendBody = () => {
         const container = document.createElement('div');
         container.className = 'testContainer';
         container.innerHTML = `
-      <p class="paragraph first">
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-        Lorem ipsum dolor sit amet<br />
-      </p>
-      <p class="paragraph second">
-        Sagittis id consectetur purus ut faucibus pulvinar elementum integer. Ante in nibh
-        mauris cursus. Et netus et malesuada fames ac turpis. Id eu nisl nunc mi ipsum. Sagittis
-        orci a scelerisque purus. Placerat vestibulum lectus mauris ultrices eros in.
-      </p>  
-    `;
+          <p class="paragraph first">
+            Lorem ipsum dolor sit amet<br />
+            Lorem ipsum dolor sit amet<br />
+            Lorem ipsum dolor sit amet<br />
+            Lorem ipsum dolor sit amet<br />
+            Lorem ipsum dolor sit amet<br />
+            Lorem ipsum dolor sit amet<br />
+            Lorem ipsum dolor sit amet<br />
+            Lorem ipsum dolor sit amet<br />
+              Lorem ipsum dolor sit amet<br />
+              Lorem ipsum dolor sit amet<br />
+              Lorem ipsum dolor sit amet<br />
+              Lorem ipsum dolor sit amet<br />
+            </p>
+            <p class="paragraph second">
+              Sagittis id consectetur purus ut faucibus pulvinar elementum integer. Ante in nibh
+              mauris cursus. Et netus et malesuada fames ac turpis. Id eu nisl nunc mi ipsum. Sagittis
+              orci a scelerisque purus. Placerat vestibulum lectus mauris ultrices eros in.
+            </p>  
+          `;
         document.body.append(container);
       };
 
