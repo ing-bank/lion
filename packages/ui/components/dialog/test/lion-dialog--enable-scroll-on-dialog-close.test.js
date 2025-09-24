@@ -25,17 +25,17 @@ describe('lion-dialog', () => {
             Lorem ipsum dolor sit amet<br />
             Lorem ipsum dolor sit amet<br />
             Lorem ipsum dolor sit amet<br />
-              Lorem ipsum dolor sit amet<br />
-              Lorem ipsum dolor sit amet<br />
-              Lorem ipsum dolor sit amet<br />
-              Lorem ipsum dolor sit amet<br />
-            </p>
-            <p class="paragraph second">
-              Sagittis id consectetur purus ut faucibus pulvinar elementum integer. Ante in nibh
-              mauris cursus. Et netus et malesuada fames ac turpis. Id eu nisl nunc mi ipsum. Sagittis
-              orci a scelerisque purus. Placerat vestibulum lectus mauris ultrices eros in.
-            </p>  
-          `;
+            Lorem ipsum dolor sit amet<br />
+            Lorem ipsum dolor sit amet<br />
+            Lorem ipsum dolor sit amet<br />
+            Lorem ipsum dolor sit amet<br />
+          </p>
+          <p class="paragraph second">
+            Sagittis id consectetur purus ut faucibus pulvinar elementum integer. Ante in nibh
+            mauris cursus. Et netus et malesuada fames ac turpis. Id eu nisl nunc mi ipsum. Sagittis
+            orci a scelerisque purus. Placerat vestibulum lectus mauris ultrices eros in.
+          </p>  
+        `;
         document.body.append(container);
       };
 
