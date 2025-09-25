@@ -13,29 +13,22 @@ describe.skip('lion-dialog', () => {
   describe('when dialog is opened and then removed from DOM', () => {
     // mimic the case when clicking inside the dialog leads to the rerouting and dialog DOM removal
     it('should scroll the page vertically', async () => {
+      const container = document.createElement('div');
       const appendBody = () => {
-        const container = document.createElement('div');
         container.className = 'testContainer';
         container.innerHTML = `
-          <p class="paragraph first">
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-            Lorem ipsum dolor sit amet<br />
-          </p>
-          <p class="paragraph second">
-            Sagittis id consectetur purus ut faucibus pulvinar elementum integer. Ante in nibh
-            mauris cursus. Et netus et malesuada fames ac turpis. Id eu nisl nunc mi ipsum. Sagittis
-            orci a scelerisque purus. Placerat vestibulum lectus mauris ultrices eros in.
-          </p>  
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
+          Lorem ipsum dolor sit amet<br />
         `;
         document.body.append(container);
       };
@@ -66,27 +59,12 @@ describe.skip('lion-dialog', () => {
       // @ts-ignore
       const isDialogVisible = () => getDialog()?.checkVisibility() === true;
       const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
-      const secondParagraph = /** @type {HTMLElement} */ (document.querySelector('.second'));
-      const isSecondParagraphIntersectedPromise = new Promise(resolve => {
-        const observer = new IntersectionObserver(
-          entries => {
-            if (entries[0].isIntersecting) {
-              resolve(true);
-            }
-          },
-          {
-            root: null,
-            threshold: [0, 0.01, 0.5, 1],
-          },
-        );
-        observer.observe(secondParagraph);
-      });
-
       invoker.click();
       await waitUntil(isDialogVisible);
       // mimic the case when clicking inside the dialog leads to the rerouting and dialog DOM removal
       el.remove();
       await aTimeout(0);
+      const containerYPositionBeforeScroll = container.getBoundingClientRect().y;
 
       // Scroll up until we can see the second paragraph.
       await sendKeys({
@@ -102,8 +80,10 @@ describe.skip('lion-dialog', () => {
         press: 'ArrowDown',
       });
 
-      const isSecondParagraphIntersected = await isSecondParagraphIntersectedPromise;
-      expect(isSecondParagraphIntersected).to.equals(true);
+      await waitUntil(() => containerYPositionBeforeScroll !== container.getBoundingClientRect().y);
+      // If the code flow reaches this line it means the page got scrolled and the test is passed
+      const hasScrolled = true;
+      expect(hasScrolled).to.equals(true);
     });
 
     it('should remove "overlays-scroll-lock" CSS class from "body"', async () => {
