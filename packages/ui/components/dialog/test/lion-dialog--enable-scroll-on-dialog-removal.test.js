@@ -66,16 +66,6 @@ describe.skip('lion-dialog', () => {
       await aTimeout(0);
       const containerYPositionBeforeScroll = container.getBoundingClientRect().y;
 
-      // Scroll up until we can see the second paragraph.
-      await sendKeys({
-        press: 'ArrowDown',
-      });
-      await sendKeys({
-        press: 'ArrowDown',
-      });
-      await sendKeys({
-        press: 'ArrowDown',
-      });
       await sendKeys({
         press: 'ArrowDown',
       });
