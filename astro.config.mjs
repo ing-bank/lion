@@ -7,7 +7,7 @@ import { remarkModifiedTime } from './src/utils/remark-plugings/remark-modified-
 
 const mdjsSetupConfig = {
   simulationSettings: {
-    simulatorUrl: '/simulator/',
+    simulatorUrl: '/next/simulator/',
     languages: [
       { key: 'de-DE', name: 'German' },
       { key: 'en-GB', name: 'English (United Kingdom)' },
