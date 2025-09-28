@@ -36,6 +36,22 @@ export class UIPortalMainNav extends UIBaseElement {
       >`;
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    if (window) {
+      // only on the client
+      window.setTimeout(() => {
+        // remove the second navigation
+        // its rendered twice due to lack of lit/ssr
+        // https://github.com/lit/lit/issues/4472
+        const $navs = this.renderRoot.querySelectorAll('[data-part="nav"]');
+        if ($navs.length > 1) {
+          $navs[1].remove();
+        }
+      });
+    }
+  }
+
   get templateContext() {
     return {
       ...super.templateContext,
