@@ -24,7 +24,7 @@ const importPath = `${remarkPluginFrontmatter.mdjsStoriesPath}`;
 ---
 
 <InPageNavLayout entry={entry}>
-  <load-demo data-import-path={importPath}></load-demo>
+  <load-demo ?data-import-path={importPath}></load-demo>
 
   <script>
     class LoadDemo extends HTMLElement {
