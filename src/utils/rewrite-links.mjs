@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import { globby } from 'globby';
 
 // Get all HTML files from the output directory
-const files = await globby(`./_site-dev/next/**/*.html`);
+const files = await globby(`./dist/**/*.html`);
 
 let DEBUG = false;
 await Promise.all(

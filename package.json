@@ -3,7 +3,7 @@
   "name": "@lion/root",
   "license": "MIT",
   "scripts": {
-    "build": "npm run build:astro && npm run build:rocket && mv dist _site-dev/next && npm run build:astro:update-links",
+    "build": "npm run build:astro && npm run build:rocket && npm run build:astro:update-links && mv dist _site/next",
     "build:astro": "ASTRO_BASE_URL=/next npx astro build --force",
     "build:astro:update-links": "node ./src/utils/rewrite-links.mjs",
     "build:rocket": "rocket build",
@@ -26,7 +26,7 @@
     "lint:types": "npm run types",
     "lint:versions": "node ./scripts/lint-versions.js",
     "prepare": "husky install",
-    "preview": "astro preview",
+    "preview": "npx serve _site",
     "release": "changeset publish",
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
