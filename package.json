@@ -46,6 +46,9 @@
     "packages/*",
     "packages-node/*"
   ],
+  "dependencies": {
+    "lit": "^3.2.1"
+  },
   "devDependencies": {
     "@astrojs/lit": "^4.3.0",
     "@astrojs/mdx": "^4.0.8",
@@ -99,7 +102,6 @@
     "gray-matter": "^4.0.3",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "lit": "^3.2.1",
     "looks-same": "^9.0.1",
     "markdownlint-cli": "^0.42.0",
     "mocha": "^10.7.3",
