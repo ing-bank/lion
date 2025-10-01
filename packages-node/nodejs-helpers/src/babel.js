@@ -1,7 +1,5 @@
 import { parse } from '@babel/parser';
-// @ts-expect-error
 import _traverse from '@babel/traverse';
-// @ts-expect-error
 import _generate from '@babel/generator';
 // eslint-disable-next-line no-unused-vars
 import * as babelTypes from '@babel/types';
