@@ -2,9 +2,14 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { expect } from 'chai';
-import { mdjsProcess } from '@mdjs/core';
+// we need to have "defaultMetaPlugins" because node can install
+// packages as sub node_modules
+// in this case, even if the version is the same (which is not in our case)
+// it won't be able to detect plugin
+// accessing the plugins by index is dangerous
+// @mdjs/core needs to export all the package it uses as plugins
+import { mdjsProcess, defaultMetaPlugins } from '@mdjs/core';
 import { addPlugin } from 'plugins-manager';
-import markdownPkg from 'remark-parse';
 
 import { remarkExtendLionDocsTransformJs } from '../src/remarkExtendLionDocsTransformJs.js';
 
@@ -57,7 +62,7 @@ async function execute(input) {
         // @ts-ignore
         { extendDocsConfig },
         {
-          location: markdownPkg,
+          location: defaultMetaPlugins[0].plugin,
         },
       ),
     ],

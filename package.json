@@ -204,7 +204,6 @@
     "@mdjs/core": "^0.21.1",
     "@mdjs/mdjs-story": "^0.4.0",
     "remark-rehype": "^8",
-    "remark-parse": "9",
     "@mdjs/mdjs-preview": {
       ".": "^0.6.0",
       "@lion/ui": "^0.15.0"
