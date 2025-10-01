@@ -87,18 +87,18 @@ describe('remarkExtendLionDocsTransformJs', () => {
     expect(result.html).to.include('ing-accordion');
     expect(result.html).to.equal(
       [
-        '<mdjs-preview mdjs-story-name="main">',
-        '',
-        '',
-        '',
-        '<pre class="language-js"><code class="language-js"><span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token function-variable function">main</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">',
-        '  &#x3C;ing-accordion>&#x3C;/ing-accordion>',
-        '</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>',
-        '</code></pre>',
-        '',
-        '',
-        '',
-        '</mdjs-preview>',
+        '<mdjs-preview mdjs-story-name="main">\n' +
+          '\n' +
+          '\n' +
+          '\n' +
+          '<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">main</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=></span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">\n' +
+          '</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  <span class="token tag"><span class="token tag"><span class="token punctuation">&#x3C;</span>ing-accordion</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&#x3C;/</span>ing-accordion</span><span class="token punctuation">></span></span>\n' +
+          '</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>\n' +
+          '</span></code></pre>\n' +
+          '\n' +
+          '\n' +
+          '\n' +
+          '</mdjs-preview>',
       ].join('\n'),
     );
 

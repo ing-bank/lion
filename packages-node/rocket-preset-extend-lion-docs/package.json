@@ -37,6 +37,7 @@
     "glob": "^7.1.6",
     "plugins-manager": "^0.3.0",
     "remark-extend": "^0.5.3",
+    "remark-parse": "^9.0.0",
     "unist-util-visit": "^5.0.0"
   },
   "keywords": [
