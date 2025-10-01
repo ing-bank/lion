@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Core
 ---
 
-# Systems >> Core >> SlotMixin ||20
+# Core: SlotMixin
 
 The SlotMixin is made for solving accessibility challenges that inherently come with the usage of shadow dom.
 Until [AOM](https://wicg.github.io/aom/explainer.html) is in place, it is not possible to create relations between different shadow doms.

@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import babelPkg from '@babel/core';
-import visit from 'unist-util-visit';
+import { visit } from 'unist-util-visit';
 
 const { transformSync } = babelPkg;
 

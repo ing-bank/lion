@@ -1,0 +1,12 @@
+diff --git a/node_modules/@mdjs/mdjs-preview/src/MdJsPreview.js b/node_modules/@mdjs/mdjs-preview/src/MdJsPreview.js
+index a8a829c..4f556c8 100644
+--- a/node_modules/@mdjs/mdjs-preview/src/MdJsPreview.js
++++ b/node_modules/@mdjs/mdjs-preview/src/MdJsPreview.js
+@@ -1,6 +1,6 @@
+ import { LitElement, html, css, nothing, render } from 'lit';
+ import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
+-import { LionAccordion } from '@lion/ui/accordion';
++import { LionAccordion } from '@lion/ui/accordion.js';
+ 
+ import {
+   subscribe,

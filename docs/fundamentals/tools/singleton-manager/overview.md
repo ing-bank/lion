@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Singleton Manager
 ---
 
-# Tools >> Singleton Manager >> Overview ||10
+# Singleton Manager: Overview
 
 A singleton manager provides a way to make sure a singleton instance loaded from multiple file locations stays a singleton.
 Primarily useful if two major version of a package with a singleton is used.

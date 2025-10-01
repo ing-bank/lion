@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Systems >> Localize
 ---
 
-# Systems >> Localize >> Translate Text ||20
+# Localize: Translate Text
 
 ## As a function
 

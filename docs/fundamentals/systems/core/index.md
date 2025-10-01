@@ -10,6 +10,6 @@ eleventyNavigation:
   parent: Systems
 ---
 
-# Systems >> Core ||10
+# Systems: Core
 
 -> go to Overview

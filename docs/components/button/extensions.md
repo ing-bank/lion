@@ -14,7 +14,7 @@ eleventyNavigation:
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
-import './extensions/bootstrap-button.mjs';
+import './extensions/bootstrap-button.js';
 ```
 
 ## Bootstrap button

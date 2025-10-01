@@ -11,7 +11,7 @@ eleventyNavigation:
   parent: Tools >> Singleton Manager
 ---
 
-# Tools >> Singleton Manager >> Example Fail ||20
+# Singleton Manager: Example Fail
 
 In this SPA (Single Page Application) demo you will be able to reproduce the issue.
 
@@ -23,7 +23,7 @@ In this SPA (Single Page Application) demo you will be able to reproduce the iss
 
 In an real application this would now mean that your users can no longer interact with your application.
 
-<demo-app>Loading App...</demo-app>
+<demo-app-fail>Loading App...</demo-app-fail>
 
 <div id="overlay-target" style="margin-top: 50px;"></div>
 

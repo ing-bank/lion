@@ -59,6 +59,7 @@ export const Github = () => html`
 
 ```js preview-story
 export const Whatsapp = () => {
+  // in Rocket this is resolved based on the URL, in astro this is resolved based on filesystem (or is it?)
   const obamaImgUrl = new URL('../src/wa-combobox/assets/obama.jpeg', import.meta.url).href;
   const trumpImgUrl = new URL('../src/wa-combobox/assets/trump.jpeg', import.meta.url).href;
   const bidenImgUrl = new URL('../src/wa-combobox/assets/biden.jpeg', import.meta.url).href;
