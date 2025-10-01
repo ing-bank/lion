@@ -1,0 +1,27 @@
+diff --git a/node_modules/@mdjs/core/index.js b/node_modules/@mdjs/core/index.js
+index d1b2d32..5575106 100644
+--- a/node_modules/@mdjs/core/index.js
++++ b/node_modules/@mdjs/core/index.js
+@@ -6,7 +6,7 @@ import { mdjsParse } from './src/mdjsParse.js';
+ import { mdjsSetupCode } from './src/mdjsSetupCode.js';
+ import { mdjsStoryParse } from './src/mdjsStoryParse.js';
+ import { mdjsDocPage } from './src/mdjsDocPage.js';
+-import { mdjsProcess } from './src/mdjsProcess.js';
++import { mdjsProcess, defaultMetaPlugins } from './src/mdjsProcess.js';
+ import { isMdjsContent } from './src/isMdjsContent.js';
+ 
+-export { mdjsParse, mdjsStoryParse, mdjsDocPage, mdjsProcess, isMdjsContent, mdjsSetupCode };
++export { mdjsParse, mdjsStoryParse, mdjsDocPage, mdjsProcess, isMdjsContent, mdjsSetupCode, defaultMetaPlugins };
+diff --git a/node_modules/@mdjs/core/src/mdjsProcess.js b/node_modules/@mdjs/core/src/mdjsProcess.js
+index 26806e8..e40637e 100644
+--- a/node_modules/@mdjs/core/src/mdjsProcess.js
++++ b/node_modules/@mdjs/core/src/mdjsProcess.js
+@@ -24,7 +24,7 @@ import { mdjsStoryParse } from './mdjsStoryParse.js';
+ import { mdjsSetupCode } from './mdjsSetupCode.js';
+ 
+ /** @type {MdjsProcessPlugin[]} */
+-const defaultMetaPlugins = [
++export const defaultMetaPlugins = [
+   { plugin: markdown, options: {} },
+   { plugin: gfm, options: {} },
+   { plugin: mdjsParse, options: {} },
