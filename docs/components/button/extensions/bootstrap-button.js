@@ -18,8 +18,9 @@ export class BootstrapButton extends LionButton {
         --bs-border-radius: 0.375rem;
         --bs-border-width: 1px;
 
-        --bs-btn-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-          'Noto Sans', 'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        --bs-btn-font-family:
+          system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans',
+          'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
           'Segoe UI Symbol', 'Noto Color Emoji';
         margin: 0.25rem 0.125rem;
 
@@ -34,7 +35,8 @@ export class BootstrapButton extends LionButton {
         --bs-btn-border-color: transparent;
         --bs-btn-border-radius: var(--bs-border-radius);
         --bs-btn-hover-border-color: transparent;
-        --bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+        --bs-btn-box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
         --bs-btn-disabled-opacity: 0.65;
         --bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), 0.5);
         display: inline-block;

@@ -5,6 +5,7 @@ _site
 _site-dev
 .history
 
+_demos
 /docs/_assets/scoped-custom-element-registry.min.js
 /docs/_assets/scoped-custom-element-registry.min.js.map
 /docs/_merged_data/
