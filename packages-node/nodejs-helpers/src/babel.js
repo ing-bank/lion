@@ -1,3 +1,4 @@
+// @ts-expect-error
 import { parse } from '@babel/parser';
 import _traverse from '@babel/traverse';
 import _generate from '@babel/generator';
