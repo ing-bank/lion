@@ -42,17 +42,70 @@ import { LionOptions } from './LionOptions.js';
  *    <opt-ion></opt-ion>
  *  </div>
  * </sel-ect>
+ *
+ * Note, the function does not move the slottable nodes as well as the drafts of slottable nodes.
+ * What is `a draft of slottable node`? Consider this example of a subclasser:
+    class MyEl extends SlotMixin(LionCombobox) {
+      get slots() {
+        return {
+          ...super.slots,
+          _label1: () => ({
+            template: this.renderLabel1 ? html`<span>label1</span>` : html`${nothing}`,
+            renderAsDirectHostChild: true,
+          }),
+          _label2: () => ({
+            template: html`<span>label2</span>`,
+            renderAsDirectHostChild: true,
+          }),
+        };
+      }
+      constructor() {
+        super();
+        this.renderLabel1 = false;
+      }
+    }
+ *   
+ * Here `_label2` (a slottable node) is going to be rendered on the first render. 
+ * But `_label1` is going to be rendered by SlotMixin only as a `draft` via comments on the first render. F.e.:
+ * <!--_start_slot__label_-->
+ * <!---->
+ * <!--?lit$737104145$-->
+ * <!--?-->
+ * <!--_end_slot__label-optional_-->
+ * 
+ * Note `<!--?lit$737104145$-->` is a comment and it is going to be rendred as `<span>label1</span>`
+ * only when this.renderLabel1 is true on demand. Those comments referred as `a draft of a slottable node` here
  * @param {HTMLElement} source host of ShadowRoot with default <slot>
  * @param {HTMLElement} target the desired target in light dom
  */
 function moveDefaultSlottablesToTarget(source, target) {
+  let isInsideSlotComment = false;
   Array.from(source.childNodes).forEach((/** @type {* & Element} */ c) => {
     const isNamedSlottable = c.hasAttribute && c.hasAttribute('slot');
+    const isComment = c.nodeType === Node.COMMENT_NODE;
+    if (isComment && !isInsideSlotComment) {
+      isInsideSlotComment = c.textContent.includes('_start_slot_');
+    }
+    if (isInsideSlotComment) {
+      if (c.textContent.includes('_end_slot_')) {
+        isInsideSlotComment = false;
+      }
+      return;
+    }
     if (!isNamedSlottable) {
       target.appendChild(c);
     }
   });
 }
+
+// function moveDefaultSlottablesToTarget(source, target) {
+//   Array.from(source.childNodes).forEach((/** @type {* & Element} */ c) => {
+//     const isNamedSlottable = c.hasAttribute && c.hasAttribute('slot');
+//     if (!isNamedSlottable) {
+//       target.appendChild(c);
+//     }
+//   });
+// }
 
 /**
  * @type {ListboxMixin}

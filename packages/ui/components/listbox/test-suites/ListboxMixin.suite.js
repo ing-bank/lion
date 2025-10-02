@@ -1,6 +1,7 @@
-import { LitElement } from 'lit';
+import { LitElement, nothing } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { Required } from '@lion/ui/form-core.js';
+import { SlotMixin } from '@lion/ui/core.js';
 import { LionOptions } from '@lion/ui/listbox.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
@@ -17,6 +18,7 @@ import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { getListboxMembers } from '../../../exports/listbox-test-helpers.js';
 import { browserDetection } from '../../core/src/browserDetection.js';
+import { LionCombobox } from '../../combobox/src/LionCombobox.js';
 
 /**
  * @typedef {import('../src/LionListbox.js').LionListbox} LionListbox
@@ -1688,42 +1690,42 @@ export function runListboxMixinSuite(customConfig = {}) {
     });
 
     describe('Subclassers', () => {
-      class MyEl extends LitElement {
-        constructor() {
-          super();
-          /** @type {string[]} */
-          this.options = ['option 1', 'option 2'];
-        }
-
-        clearOptions() {
-          /** @type {string[]} */
-          this.options = [];
-          this.requestUpdate();
-        }
-
-        addOption() {
-          this.options.push(`option ${this.options.length + 1}`);
-          this.requestUpdate();
-        }
-
-        get listbox() {
-          return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#listbox'));
-        }
-
-        render() {
-          return html`
-            <${tag} id="listbox">
-              ${this.options.map(
-                option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
-              )}
-            </${tag}>
-          `;
-        }
-      }
-      const tagName = defineCE(MyEl);
-      const wrappingTag = unsafeStatic(tagName);
-
       it('calls "_onListboxContentChanged" after externally changing options', async () => {
+        class MyEl extends LitElement {
+          constructor() {
+            super();
+            /** @type {string[]} */
+            this.options = ['option 1', 'option 2'];
+          }
+
+          clearOptions() {
+            /** @type {string[]} */
+            this.options = [];
+            this.requestUpdate();
+          }
+
+          addOption() {
+            this.options.push(`option ${this.options.length + 1}`);
+            this.requestUpdate();
+          }
+
+          get listbox() {
+            return /** @type {LionListbox} */ (this.shadowRoot?.querySelector('#listbox'));
+          }
+
+          render() {
+            return html`
+              <${tag} id="listbox">
+                ${this.options.map(
+                  option => html` <lion-option .choiceValue="${option}">${option}</lion-option> `,
+                )}
+              </${tag}>
+            `;
+          }
+        }
+        const tagName = defineCE(MyEl);
+        const wrappingTag = unsafeStatic(tagName);
+
         const el = /** @type {MyEl} */ (await _fixture(html`<${wrappingTag}></${wrappingTag}>`));
         await el.listbox.registrationComplete;
         // @ts-ignore [allow-protected] in test
@@ -1734,6 +1736,42 @@ export function runListboxMixinSuite(customConfig = {}) {
         el.clearOptions();
         await el.updateComplete;
         expect(spy).to.have.been.calledTwice;
+      });
+
+      it('should not move nodes instantiated by SlotMixin ', async () => {
+        class MyEl extends SlotMixin(LionCombobox) {
+          // @ts-ignore
+          get slots() {
+            return {
+              ...super.slots,
+              _mylabel: () => ({
+                template: this.renderLabel ? html`<span>text</span>` : html`${nothing}`,
+                renderAsDirectHostChild: true,
+              }),
+            };
+          }
+
+          constructor() {
+            super();
+            this.renderLabel = false;
+          }
+        }
+        const tagName = defineCE(MyEl);
+        const wrappingTag = unsafeStatic(tagName);
+
+        const el = /** @type {MyEl} */ (
+          await _fixture(html`
+          <${wrappingTag} id="listbox">
+            <lion-option .choiceValue="${'1'}">${'one'}</lion-option>
+          </${wrappingTag}>
+        `)
+        );
+        await el.registrationComplete;
+        el.renderLabel = true;
+        await el.updateComplete;
+        const isLazySlottableDirectChildOfHost =
+          el.querySelector('[slot=_mylabel]')?.parentElement === el;
+        expect(isLazySlottableDirectChildOfHost).to.be.true;
       });
     });
   });
