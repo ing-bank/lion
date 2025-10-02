@@ -98,15 +98,6 @@ function moveDefaultSlottablesToTarget(source, target) {
   });
 }
 
-// function moveDefaultSlottablesToTarget(source, target) {
-//   Array.from(source.childNodes).forEach((/** @type {* & Element} */ c) => {
-//     const isNamedSlottable = c.hasAttribute && c.hasAttribute('slot');
-//     if (!isNamedSlottable) {
-//       target.appendChild(c);
-//     }
-//   });
-// }
-
 /**
  * @type {ListboxMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
