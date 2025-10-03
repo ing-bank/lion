@@ -45,36 +45,81 @@ import { LionOptions } from './LionOptions.js';
  *
  * Note, the function does not move the slottable nodes as well as the drafts of slottable nodes.
  * What is `a draft of slottable node`? Consider this example of a subclasser:
-    class MyEl extends SlotMixin(LionCombobox) {
+    class MyEl extends SlotMixin(LionCombobox) {          
       get slots() {
         return {
           ...super.slots,
-          _label1: () => ({
-            template: this.renderLabel1 ? html`<span>label1</span>` : html`${nothing}`,
+          '_label-optional': () => ({
+            template: this.renderOptionalLabel
+              ? html`<span>(Optional)</span>`
+              : html`${nothing}`,
             renderAsDirectHostChild: true,
           }),
-          _label2: () => ({
-            template: html`<span>label2</span>`,
+          '_label-favorite': () => ({
+            template: html`<span>(Favorite)</span>`,
             renderAsDirectHostChild: true,
           }),
         };
       }
+      // renders the label section in Shadow DOM
+      _labelTemplate() {
+        return html`
+          <div class="form-field__label">
+            <slot name="label"></slot>
+            <slot name="_label-optional"></slot>
+            <slot name="_label-favorite"></slot>
+          </div>
+        `;
+      }
       constructor() {
         super();
-        this.renderLabel1 = false;
+        this.renderOptionalLabel = false;
       }
     }
  *   
- * Here `_label2` (a slottable node) is going to be rendered on the first render. 
- * But `_label1` is going to be rendered by SlotMixin only as a `draft` via comments on the first render. F.e.:
- * <!--_start_slot__label_-->
- * <!---->
- * <!--?lit$737104145$-->
- * <!--?-->
- * <!--_end_slot__label-optional_-->
+ * And its usage looks as follows:
+ * <combobox-subclasser label="my combobox">
+ *   <lion-option .choiceValue="${'1'}">${'one'}</lion-option>
+ * </combobox-subclasser>
+ * 
+ * Then after rendering the DOM is going to look as follow:
+ * 
+ * <combobox-subclasser label="my combobox">
+ *   <label slot="label">my combobox</label>
+ *   <lion-options slot="listbox">
+ *     <lion-option .choiceValue="${'1'}">${'one'}</lion-option>    
+ *   </lion-options>
+ *   <!--_start_slot__label_-->
+ *   <!---->
+ *   <!--?lit$737104145$-->
+ *   <!--?-->
+ *   <!--_end_slot__label-optional_-->
+ *   <span slot="_label-favorite">(Favorite)</span>
+ * </combobox-subclasser>
+ *    
+ * Here `_label-favorite` is a slottable node that is rendered on the first render. And since it's 
+ * slottable, it's not moved under `lion-options`  by the function.
+ * `lion-option` is moved by the function under `lion-options`.
+ * `_label-optional` on the first render is going to be rendered by SlotMixin only as a `draft` via comments. F.e.:
+ *   <!--_start_slot__label_-->
+ *   <!---->
+ *   <!--?lit$737104145$-->
+ *   <!--?-->
+ *   <!--_end_slot__label-optional_-->
  * 
  * Note `<!--?lit$737104145$-->` is a comment and it is going to be rendred as `<span>label1</span>`
- * only when this.renderLabel1 is true on demand. Those comments referred as `a draft of a slottable node` here
+ * only when this.renderOptionalLabel is true on demand. Those comments referred as `a draft of a slottable node` here.
+ * 
+ * When this.renderOptionalLabel is true later the DOM looks as follows:
+ * <combobox-subclasser label="my combobox">
+ *   <label slot="label">my combobox</label>
+ *   <lion-options slot="listbox">
+ *     <lion-option .choiceValue="${'1'}">${'one'}</lion-option>    
+ *   </lion-options>
+ *   <span slot="_label-optional">(Optional)</span>
+ *   <span slot="_label-favorite">(Favorite)</span>
+ * </combobox-subclasser>
+ * 
  * @param {HTMLElement} source host of ShadowRoot with default <slot>
  * @param {HTMLElement} target the desired target in light dom
  */

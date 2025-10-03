@@ -1744,16 +1744,33 @@ export function runListboxMixinSuite(customConfig = {}) {
           get slots() {
             return {
               ...super.slots,
-              _mylabel: () => ({
-                template: this.renderLabel ? html`<span>text</span>` : html`${nothing}`,
+              '_label-optional': () => ({
+                template: this.renderOptionalLabel
+                  ? html`<span>(Optional)</span>`
+                  : html`${nothing}`,
                 renderAsDirectHostChild: true,
               }),
             };
           }
 
+          /**
+           * Override `_labelTemplate` to have extra label information.
+           * In this case in addition to the existing label we add a suffix `(Optional)`
+           * F.e. label `my combobox` will tranfrom into `my combobox (Optional)` when
+           * `this.renderOptionalLabel` is `true`
+           */
+          _labelTemplate() {
+            return html`
+              <div class="form-field__label">
+                <slot name="label"></slot>
+                <slot name="_label-optional"></slot>
+              </div>
+            `;
+          }
+
           constructor() {
             super();
-            this.renderLabel = false;
+            this.renderOptionalLabel = false;
           }
         }
         const tagName = defineCE(MyEl);
@@ -1761,16 +1778,16 @@ export function runListboxMixinSuite(customConfig = {}) {
 
         const el = /** @type {MyEl} */ (
           await _fixture(html`
-          <${wrappingTag} id="listbox">
+          <${wrappingTag} label="my combobox">
             <lion-option .choiceValue="${'1'}">${'one'}</lion-option>
           </${wrappingTag}>
         `)
         );
         await el.registrationComplete;
-        el.renderLabel = true;
+        el.renderOptionalLabel = true;
         await el.updateComplete;
         const isLazySlottableDirectChildOfHost =
-          el.querySelector('[slot=_mylabel]')?.parentElement === el;
+          el.querySelector('[slot=_label-optional]')?.parentElement === el;
         expect(isLazySlottableDirectChildOfHost).to.be.true;
       });
     });
