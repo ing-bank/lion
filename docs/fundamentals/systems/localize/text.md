@@ -36,9 +36,10 @@ export const asFunction = () => {
     );
   }
   localize
-    .loadNamespace({
-      'lit-html-example': locale => import(`./assets/${locale}.js`),
-    })
+    // TODO: look for Astro fix...
+    // .loadNamespace({
+    //   'lit-html-example': locale => import(`./assets/${locale}.js`),
+    // })
     .then(() => {
       update();
     });
