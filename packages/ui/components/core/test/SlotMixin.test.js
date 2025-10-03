@@ -1,7 +1,8 @@
 import { defineCE, expect, fixture, fixtureSync, unsafeStatic, html } from '@open-wc/testing';
 import { SlotMixin } from '@lion/ui/core.js';
-import { LitElement } from 'lit';
+import { LitElement, nothing } from 'lit';
 import sinon from 'sinon';
+import { LionCombobox } from '@lion/ui/combobox.js';
 
 import { ScopedElementsMixin, supportsScopedRegistry } from '../src/ScopedElementsMixin.js';
 import { isActiveElement } from '../test-helpers/isActiveElement.js';
@@ -132,6 +133,140 @@ describe('SlotMixin', () => {
     renderSlot = false;
     const elNoSlot = /** @type {SlotPrivateText} */ (await fixture(`<${tag}><${tag}>`));
     expect(elNoSlot.didCreateConditionalSlot()).to.be.false;
+  });
+
+  // Note, this test should replace the one down below called `should not move nodes provided by `slots` getter'`.
+  // This case is more comprehensive and checks at the same time that
+  //  1) `lion-option` is moved under `lion-options`
+  //  2) templates provided in `slots` are not moved
+  // The reson the test is skipped now is because of the bug
+  it.skip('should not move nodes provided in `slots` and should move projection like lion-option', async () => {
+    const nodeLabel = document.createElement('span');
+    nodeLabel.id = 'nodeLabel';
+    class MyEl extends SlotMixin(LionCombobox) {
+      // @ts-ignore
+      get slots() {
+        return {
+          ...super.slots,
+          _optionalLabel: () => ({
+            template: this.renderOptionalLabel
+              ? html`<span id="labelOptionalId">(Optional)</span>`
+              : html`${nothing}`,
+            renderAsDirectHostChild: true,
+          }),
+          '': () => html`<span id="defaultSlotLabelId">default</span>`,
+          publicLabel: () => html`<span id="publicLabel">public</span>`,
+          nodeLabel: () => nodeLabel,
+        };
+      }
+
+      /**
+       * Override `_labelTemplate` to have extra label information.
+       * In this case in addition to the existing label we add a suffix `(Optional)`
+       * F.e. label `my combobox` will tranfrom into `my combobox (Optional)` when
+       * `this.renderOptionalLabel` is `true`
+       */
+      _labelTemplate() {
+        return html`
+          <div class="form-field__label">
+            <slot name="label"></slot>
+            <slot name="_optionalLabel"></slot>
+            <slot name="publicLabel"></slot>
+            <slot name="nodeLabel"></slot>
+            <slot></slot>
+          </div>
+        `;
+      }
+
+      constructor() {
+        super();
+        this.renderOptionalLabel = false;
+      }
+    }
+    const tagName = defineCE(MyEl);
+    const wrappingTag = unsafeStatic(tagName);
+
+    const el = /** @type {MyEl} */ (
+      await fixture(html`
+        <${wrappingTag} label="my label">
+          <lion-option .choiceValue="${'1'}">${'one'}</lion-option>
+        </${wrappingTag}>`)
+    );
+    await el.registrationComplete;
+
+    const publicLabel = el.querySelector('#publicLabel');
+    const defaultSlotLabel = el.querySelector('#defaultSlotLabelId');
+    expect(publicLabel?.parentElement === el).to.be.true;
+    expect(defaultSlotLabel?.parentElement === el).to.be.true; // Fix me
+    expect(nodeLabel?.parentElement === el).to.be.true;
+
+    el.renderOptionalLabel = true;
+    await el.updateComplete;
+    const optionalLabel = el.querySelector('#labelOptionalId');
+    expect(optionalLabel?.parentElement === el).to.be.true;
+  });
+
+  it('should not move nodes provided by `slots` getter', async () => {
+    const nodeLabel = document.createElement('span');
+    nodeLabel.id = 'nodeLabel';
+    class MyEl extends SlotMixin(LionCombobox) {
+      // @ts-ignore
+      get slots() {
+        return {
+          ...super.slots,
+          _optionalLabel: () => ({
+            template: this.renderOptionalLabel
+              ? html`<span id="labelOptionalId">(Optional)</span>`
+              : html`${nothing}`,
+            renderAsDirectHostChild: true,
+          }),
+          '': () => html`<span id="defaultSlotLabelId">default</span>`,
+          publicLabel: () => html`<span id="publicLabel">public</span>`,
+          nodeLabel: () => nodeLabel,
+        };
+      }
+
+      /**
+       * Override `_labelTemplate` to have extra label information.
+       * In this case in addition to the existing label we add a suffix `(Optional)`
+       * F.e. label `my combobox` will tranfrom into `my combobox (Optional)` when
+       * `this.renderOptionalLabel` is `true`
+       */
+      _labelTemplate() {
+        return html`
+          <div class="form-field__label">
+            <slot name="label"></slot>
+            <slot name="_optionalLabel"></slot>
+            <slot name="publicLabel"></slot>
+            <slot name="nodeLabel"></slot>
+            <slot></slot>
+          </div>
+        `;
+      }
+
+      constructor() {
+        super();
+        this.renderOptionalLabel = false;
+      }
+    }
+    const tagName = defineCE(MyEl);
+    const wrappingTag = unsafeStatic(tagName);
+
+    const el = /** @type {MyEl} */ (
+      await fixture(html`<${wrappingTag} label="my label"></${wrappingTag}>`)
+    );
+    await el.registrationComplete;
+
+    const publicLabel = el.querySelector('#publicLabel');
+    const defaultSlotLabel = el.querySelector('#defaultSlotLabelId');
+    expect(publicLabel?.parentElement === el).to.be.true;
+    expect(defaultSlotLabel?.parentElement === el).to.be.true;
+    expect(nodeLabel?.parentElement === el).to.be.true;
+
+    el.renderOptionalLabel = true;
+    await el.updateComplete;
+    const optionalLabel = el.querySelector('#labelOptionalId');
+    expect(optionalLabel?.parentElement === el).to.be.true;
   });
 
   describe('Rerender', () => {

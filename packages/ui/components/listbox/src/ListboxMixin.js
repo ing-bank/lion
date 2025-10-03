@@ -1,5 +1,5 @@
 import { css, html } from 'lit';
-import { SlotMixin, uuid } from '@lion/ui/core.js';
+import { SlotMixin, uuid, moveDefaultSlottablesToTarget } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { ChoiceGroupMixin, FormControlMixin, FormRegistrarMixin } from '@lion/ui/form-core.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
@@ -20,39 +20,6 @@ import { LionOptions } from './LionOptions.js';
  */
 
 // TODO: consider adding methods below to @lion/helpers
-
-/**
- * Sometimes, we want to provide best DX (direct slottables) and be accessible
- * at the same time.
- * In the first example below, we need to wrap our options in light dom in an element with
- * [role=listbox]. We could achieve this via the second example, but it would affect our
- * public api negatively. not allowing us to be forward compatible with the AOM spec:
- * https://wicg.github.io/aom/explainer.html
- * With this method, it's possible to watch elements in the default slot and move them
- * to the desired target (the element with [role=listbox]) in light dom.
- *
- * @example
- * # desired api
- * <sel-ect>
- *  <opt-ion></opt-ion>
- * </sel-ect>
- * # desired end state
- * <sel-ect>
- *  <div role="listbox" slot="lisbox">
- *    <opt-ion></opt-ion>
- *  </div>
- * </sel-ect>
- * @param {HTMLElement} source host of ShadowRoot with default <slot>
- * @param {HTMLElement} target the desired target in light dom
- */
-function moveDefaultSlottablesToTarget(source, target) {
-  Array.from(source.childNodes).forEach((/** @type {* & Element} */ c) => {
-    const isNamedSlottable = c.hasAttribute && c.hasAttribute('slot');
-    if (!isNamedSlottable) {
-      target.appendChild(c);
-    }
-  });
-}
 
 /**
  * @type {ListboxMixin}
