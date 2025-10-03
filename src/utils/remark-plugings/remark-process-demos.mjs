@@ -7,7 +7,7 @@ const NODE_MODULES_PATH = '/node_modules';
 const NODE_MODULES_LION_DOCS = '_lion_docs';
 const require = createRequire(import.meta.url);
 const DEBUG = 1;
-const DEBUG_COMPONENT = 'extend-a-native-input';
+const DEBUG_COMPONENTS = ['extend-a-native-input', 'combobox/overview'];
 const SHOW_MODULE_NOT_FOUND = false;
 
 const resolveLionImport = moduleResolvedPath => {
@@ -26,6 +26,11 @@ const resolveLionImport = moduleResolvedPath => {
   return moduleResolvedPath.split(NODE_MODULES_PATH)[1];
 };
 
+const getLog = input =>
+  DEBUG && DEBUG_COMPONENTS.some(DEBUG_COMPONENT => input.includes(DEBUG_COMPONENT))
+    ? console.log.bind(console)
+    : () => {};
+
 /**
  * @param {string} source
  * @param {string} inputPath
@@ -36,8 +41,8 @@ async function processImports(source, inputPath) {
   }
 
   // for the debug purposes
-  const log = DEBUG && inputPath.includes(DEBUG_COMPONENT) ? console.log.bind(console) : () => {};
-
+  const log = getLog(inputPath);
+  log('*** input path', inputPath);
   let newSource = '';
   let lastPos = 0;
   await init;
@@ -47,7 +52,7 @@ async function processImports(source, inputPath) {
 
     const importSrc = source.substring(importObj.s, importObj.e);
     try {
-      log('path to resolve', importSrc);
+      log('*** path to resolve', importSrc);
       let resolvedImportFullPath = importSrc;
       if (importSrc.startsWith('.')) {
         const resolvedPath = require.resolve(importSrc, { paths: [path.dirname(inputPath)] });
@@ -56,8 +61,12 @@ async function processImports(source, inputPath) {
         if (!fs.existsSync(relativePath)) {
           log('does not exist, going to create', path.dirname(relativePath));
           // to be able to serve the files from the docs folder, we need to move them to /node_modules
-          await fs.promises.mkdir(path.dirname(relativePath), { recursive: true });
-          await fs.promises.symlink(resolvedPath, relativePath);
+          try {
+            await fs.promises.mkdir(path.dirname(relativePath), { recursive: true });
+            await fs.promises.symlink(resolvedPath, relativePath);
+          } catch (err) {
+            // symlink can already be there, do nothing
+          }
         }
 
         resolvedImportFullPath = `${NODE_MODULES_PATH}${resolvedLionImport}`;
@@ -84,6 +93,7 @@ async function processImports(source, inputPath) {
 
       newSource += resolvedImportFullPath;
     } catch (error) {
+      console.error(error);
       if (SHOW_MODULE_NOT_FOUND && error.code === 'MODULE_NOT_FOUND') {
         console.error(`Error resolving import: ${importSrc}`, error);
       }
@@ -106,8 +116,8 @@ export function remarkProcessDemos() {
    */
   async function transformer(tree, file) {
     // throw new Error('no transformer');
-    const log =
-      DEBUG && file.history[0].includes(DEBUG_COMPONENT) ? console.log.bind(console) : () => {};
+    const log = getLog(file.history[0]);
+
     log(tree, file.data.frontmatter);
     const { setupJsCode } = file.data;
     if (!setupJsCode) {
