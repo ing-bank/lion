@@ -13,6 +13,58 @@ import { render } from 'lit';
  */
 
 /**
+ * Sometimes, we want to provide best DX (direct slottables) and be accessible
+ * at the same time.
+ * In the first example below, we need to wrap our options in light dom in an element with
+ * [role=listbox]. We could achieve this via the second example, but it would affect our
+ * public api negatively. not allowing us to be forward compatible with the AOM spec:
+ * https://wicg.github.io/aom/explainer.html
+ * With this method, it's possible to watch elements in the default slot and move them
+ * to the desired target (the element with [role=listbox]) in light dom.
+ *
+ * @example
+ * # desired api
+ * <sel-ect>
+ *  <opt-ion></opt-ion>
+ * </sel-ect>
+ * # desired end state
+ * <sel-ect>
+ *  <div role="listbox" slot="lisbox">
+ *    <opt-ion></opt-ion>
+ *  </div>
+ * </sel-ect>
+ *
+ * Note, the function does not move the nodes specified by a subclasser in the `slots` getter
+ * @param {HTMLElement} source host of ShadowRoot with default <slot>
+ * @param {HTMLElement} target the desired target in light dom
+ */
+export function moveDefaultSlottablesToTarget(source, target) {
+  /**
+   * Nodes injected via `slots` getter are going to be added as host's children
+   * starting by a comment node like <!--_start_slot_*-->
+   * and ending by a comment node like <!--_end_slot_*-->
+   * So we ignore everything that comes between those `start_slot` and `end_slot` comments
+   */
+  let isInsideSlotSection = false;
+  Array.from(source.childNodes).forEach((/** @type {* & Element} */ c) => {
+    const isNamedSlottable = c.hasAttribute && c.hasAttribute('slot');
+    const isComment = c.nodeType === Node.COMMENT_NODE;
+    if (isComment && !isInsideSlotSection) {
+      isInsideSlotSection = c.textContent.includes('_start_slot_');
+    }
+    if (isInsideSlotSection) {
+      if (c.textContent.includes('_end_slot_')) {
+        isInsideSlotSection = false;
+      }
+      return;
+    }
+    if (!isNamedSlottable) {
+      target.appendChild(c);
+    }
+  });
+}
+
+/**
  * @param {SlotFunctionResult} slotFunctionResult
  * @returns {'template-result'|'node'|'slot-rerender-object'|null}
  */
