@@ -1,13 +1,12 @@
 ---
 parts:
-  - Textarea
-  - Overview
+  - 'Textarea: Overview'
 title: 'Textarea: Overview'
 eleventyNavigation:
   key: 'Textarea: Overview'
   order: 10
   parent: Textarea
-  title: Overview
+  title: 'Textarea: Overview'
 ---
 
 # Textarea: Overview

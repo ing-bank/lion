@@ -1,13 +1,12 @@
 ---
 parts:
-  - Form
-  - Overview
+  - 'Form: Overview'
 title: 'Form: Overview'
 eleventyNavigation:
   key: 'Form: Overview'
   order: 10
   parent: Form
-  title: Overview
+  title: 'Form: Overview'
 ---
 
 # Form: Overview

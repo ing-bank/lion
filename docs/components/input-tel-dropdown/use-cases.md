@@ -1,13 +1,12 @@
 ---
 parts:
-  - Input Tel Dropdown
-  - Use Cases
+  - 'Input Tel Dropdown: Use Cases'
 title: 'Input Tel Dropdown: Use Cases'
 eleventyNavigation:
   key: 'Input Tel Dropdown: Use Cases'
   order: 20
   parent: Input Tel Dropdown
-  title: Use Cases
+  title: 'Input Tel Dropdown: Use Cases'
 ---
 
 # Input Tel Dropdown: Use Cases

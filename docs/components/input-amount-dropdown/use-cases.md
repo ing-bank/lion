@@ -1,13 +1,12 @@
 ---
 parts:
-  - Input Amount Dropdown
-  - Use Cases
+  - 'Input Amount Dropdown: Use Cases'
 title: 'Input Amount Dropdown: Use Cases'
 eleventyNavigation:
   key: 'Input Amount Dropdown: Use Cases'
   order: 20
   parent: Input Amount Dropdown
-  title: Use Cases
+  title: 'Input Amount Dropdown: Use Cases'
 ---
 
 # Input Amount Dropdown: Use Cases

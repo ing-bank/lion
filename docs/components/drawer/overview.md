@@ -1,13 +1,12 @@
 ---
 parts:
-  - Drawer
-  - Overview
+  - 'Drawer: Overview'
 title: 'Drawer: Overview'
 eleventyNavigation:
   key: 'Drawer: Overview'
   order: 10
   parent: Drawer
-  title: Overview
+  title: 'Drawer: Overview'
 ---
 
 # Drawer: Overview

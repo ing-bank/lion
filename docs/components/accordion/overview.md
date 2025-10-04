@@ -1,13 +1,12 @@
 ---
 parts:
-  - Accordion
-  - Overview
+  - 'Accordion: Overview'
 title: 'Accordion: Overview'
 eleventyNavigation:
   key: 'Accordion: Overview'
   order: 10
   parent: Accordion
-  title: Overview
+  title: 'Accordion: Overview'
 ---
 
 # Accordion: Overview

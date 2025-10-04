@@ -1,13 +1,12 @@
 ---
 parts:
-  - Tooltip
-  - Overview
+  - 'Tooltip: Overview'
 title: 'Tooltip: Overview'
 eleventyNavigation:
   key: 'Tooltip: Overview'
   order: 10
   parent: Tooltip
-  title: Overview
+  title: 'Tooltip: Overview'
 ---
 
 # Tooltip: Overview

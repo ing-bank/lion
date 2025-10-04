@@ -1,13 +1,12 @@
 ---
 parts:
-  - Select
-  - Overview
+  - 'Select: Overview'
 title: 'Select: Overview'
 eleventyNavigation:
   key: 'Select: Overview'
   order: 10
   parent: Select
-  title: Overview
+  title: 'Select: Overview'
 ---
 
 # Select: Overview

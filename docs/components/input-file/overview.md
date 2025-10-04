@@ -1,13 +1,12 @@
 ---
 parts:
-  - Input File
-  - Overview
+  - 'Input File: Overview'
 title: 'Input File: Overview'
 eleventyNavigation:
   key: 'Input File: Overview'
   order: 10
   parent: Input File
-  title: Overview
+  title: 'Input File: Overview'
 ---
 
 # Input File: Overview

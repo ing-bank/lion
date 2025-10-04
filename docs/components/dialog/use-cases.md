@@ -1,13 +1,12 @@
 ---
 parts:
-  - Dialog
-  - Use Cases
+  - 'Dialog: Use Cases'
 title: 'Dialog: Use Cases'
 eleventyNavigation:
   key: 'Dialog: Use Cases'
   order: 20
   parent: Dialog
-  title: Use Cases
+  title: 'Dialog: Use Cases'
 ---
 
 # Dialog: Use Cases

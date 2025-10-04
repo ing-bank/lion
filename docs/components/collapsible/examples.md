@@ -1,13 +1,12 @@
 ---
 parts:
-  - Collapsible
-  - Examples
+  - 'Collapsible: Examples'
 title: 'Collapsible: Examples'
 eleventyNavigation:
   key: 'Collapsible: Examples'
   order: 30
   parent: Collapsible
-  title: Examples
+  title: 'Collapsible: Examples'
 ---
 
 # Collapsible: Examples

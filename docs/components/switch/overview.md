@@ -1,13 +1,12 @@
 ---
 parts:
-  - Switch
-  - Overview
+  - 'Switch: Overview'
 title: 'Switch: Overview'
 eleventyNavigation:
   key: 'Switch: Overview'
   order: 10
   parent: Switch
-  title: Overview
+  title: 'Switch: Overview'
 ---
 
 # Switch: Overview

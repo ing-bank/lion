@@ -1,13 +1,12 @@
 ---
 parts:
-  - Input Date
-  - Overview
+  - 'Input Date: Overview'
 title: 'Input Date: Overview'
 eleventyNavigation:
   key: 'Input Date: Overview'
   order: 10
   parent: Input Date
-  title: Overview
+  title: 'Input Date: Overview'
 ---
 
 # Input Date: Overview

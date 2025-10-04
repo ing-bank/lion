@@ -1,13 +1,12 @@
 ---
 parts:
-  - Combobox
-  - Use Cases
+  - 'Combobox: Use Cases'
 title: 'Combobox: Use Cases'
 eleventyNavigation:
   key: 'Combobox: Use Cases'
   order: 20
   parent: Combobox
-  title: Use Cases
+  title: 'Combobox: Use Cases'
 ---
 
 # Combobox: Use Cases

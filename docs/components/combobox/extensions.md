@@ -1,13 +1,12 @@
 ---
 parts:
-  - Combobox
-  - Extensions
+  - 'Combobox: Extensions'
 title: 'Combobox: Extensions'
 eleventyNavigation:
   key: 'Combobox: Extensions'
   order: 30
   parent: Combobox
-  title: Extensions
+  title: 'Combobox: Extensions'
 ---
 
 # Combobox: Extensions

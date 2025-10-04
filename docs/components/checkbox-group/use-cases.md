@@ -1,13 +1,12 @@
 ---
 parts:
-  - Checkbox Group
-  - Use Cases
+  - 'Checkbox Group: Use Cases'
 title: 'Checkbox Group: Use Cases'
 eleventyNavigation:
   key: 'Checkbox Group: Use Cases'
   order: 20
   parent: Checkbox Group
-  title: Use Cases
+  title: 'Checkbox Group: Use Cases'
 ---
 
 # Checkbox Group: Use Cases

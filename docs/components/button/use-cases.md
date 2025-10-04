@@ -1,4 +1,16 @@
-# Button >> Use Cases ||20
+---
+parts:
+  - Use Cases
+  - Button
+title: 'Button: Use Cases'
+eleventyNavigation:
+  key: Button >> Use Cases
+  title: Use Cases
+  order: 20
+  parent: Button
+---
+
+# Button: Use Cases
 
 ```js script
 import { html } from '@mdjs/mdjs-preview';
@@ -28,16 +40,17 @@ export const disabled = () => html`<lion-button disabled>Disabled</lion-button>`
 The minimum click area needs to be at least `44px` by `44px` according to [WCAG Success Criterion 2.5.5 Target Size (Enhanced)](https://www.w3.org/TR/WCAG22/#target-size-enhanced).
 
 ```js preview-story
-export const minimumClickArea = () => html` <style>
-    .small {
-      padding: 4px;
-      line-height: 1em;
-    }
-    .small::before {
-      border: 1px dashed #000;
-    }
-  </style>
-  <lion-button class="small">xs</lion-button>`;
+export const minimumClickArea = () =>
+  html` <style>
+      .small {
+        padding: 4px;
+        line-height: 1em;
+      }
+      .small::before {
+        border: 1px dashed #000;
+      }
+    </style>
+    <lion-button class="small">xs</lion-button>`;
 ```
 
 ## Usage with native form

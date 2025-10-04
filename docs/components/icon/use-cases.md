@@ -1,13 +1,12 @@
 ---
 parts:
-  - Icon
-  - Use Cases
+  - 'Icon: Use Cases'
 title: 'Icon: Use Cases'
 eleventyNavigation:
   key: 'Icon: Use Cases'
   order: 20
   parent: Icon
-  title: Use Cases
+  title: 'Icon: Use Cases'
 ---
 
 # Icon: Use Cases

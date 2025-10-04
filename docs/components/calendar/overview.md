@@ -1,13 +1,12 @@
 ---
 parts:
-  - Calendar
-  - Overview
+  - 'Calendar: Overview'
 title: 'Calendar: Overview'
 eleventyNavigation:
   key: 'Calendar: Overview'
   order: 10
   parent: Calendar
-  title: Overview
+  title: 'Calendar: Overview'
 ---
 
 # Calendar: Overview

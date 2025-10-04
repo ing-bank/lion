@@ -1,13 +1,12 @@
 ---
 parts:
-  - Drawer
-  - Use Cases
+  - 'Drawer: Use Cases'
 title: 'Drawer: Use Cases'
 eleventyNavigation:
   key: 'Drawer: Use Cases'
   order: 20
   parent: Drawer
-  title: Use Cases
+  title: 'Drawer: Use Cases'
 ---
 
 # Drawer: Use Cases

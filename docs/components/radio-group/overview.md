@@ -1,13 +1,12 @@
 ---
 parts:
-  - Radio Group
-  - Overview
+  - 'Radio Group: Overview'
 title: 'Radio Group: Overview'
 eleventyNavigation:
   key: 'Radio Group: Overview'
   order: 10
   parent: Radio Group
-  title: Overview
+  title: 'Radio Group: Overview'
 ---
 
 # Radio Group: Overview

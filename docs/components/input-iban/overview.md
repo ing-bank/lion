@@ -1,13 +1,12 @@
 ---
 parts:
-  - Input Iban
-  - Overview
+  - 'Input Iban: Overview'
 title: 'Input Iban: Overview'
 eleventyNavigation:
   key: 'Input Iban: Overview'
   order: 10
   parent: Input Iban
-  title: Overview
+  title: 'Input Iban: Overview'
 ---
 
 # Input Iban: Overview

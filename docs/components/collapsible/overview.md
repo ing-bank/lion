@@ -1,13 +1,12 @@
 ---
 parts:
-  - Collapsible
-  - Overview
+  - 'Collapsible: Overview'
 title: 'Collapsible: Overview'
 eleventyNavigation:
   key: 'Collapsible: Overview'
   order: 10
   parent: Collapsible
-  title: Overview
+  title: 'Collapsible: Overview'
 ---
 
 # Collapsible: Overview

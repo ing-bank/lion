@@ -1,13 +1,12 @@
 ---
 parts:
-  - Input
-  - Use Cases
+  - 'Input: Use Cases'
 title: 'Input: Use Cases'
 eleventyNavigation:
   key: 'Input: Use Cases'
   order: 20
   parent: Input
-  title: Use Cases
+  title: 'Input: Use Cases'
 ---
 
 # Input: Use Cases

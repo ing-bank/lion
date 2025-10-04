@@ -1,13 +1,12 @@
 ---
 parts:
-  - Input Email
-  - Use Cases
+  - 'Input Email: Use Cases'
 title: 'Input Email: Use Cases'
 eleventyNavigation:
   key: 'Input Email: Use Cases'
   order: 20
   parent: Input Email
-  title: Use Cases
+  title: 'Input Email: Use Cases'
 ---
 
 # Input Email: Use Cases

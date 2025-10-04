@@ -1,13 +1,12 @@
 ---
 parts:
-  - Combobox
-  - Overview
+  - 'Combobox: Overview'
 title: 'Combobox: Overview'
 eleventyNavigation:
   key: 'Combobox: Overview'
   order: 10
   parent: Combobox
-  title: Overview
+  title: 'Combobox: Overview'
 ---
 
 # Combobox: Overview

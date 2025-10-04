@@ -1,13 +1,12 @@
 ---
 parts:
-  - Dialog
-  - Overview
+  - 'Dialog: Overview'
 title: 'Dialog: Overview'
 eleventyNavigation:
   key: 'Dialog: Overview'
   order: 10
   parent: Dialog
-  title: Overview
+  title: 'Dialog: Overview'
 ---
 
 # Dialog: Overview

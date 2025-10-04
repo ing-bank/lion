@@ -1,13 +1,12 @@
 ---
 parts:
-  - Input Range
-  - Overview
+  - 'Input Range: Overview'
 title: 'Input Range: Overview'
 eleventyNavigation:
   key: 'Input Range: Overview'
   order: 10
   parent: Input Range
-  title: Overview
+  title: 'Input Range: Overview'
 ---
 
 # Input Range: Overview

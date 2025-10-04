@@ -1,13 +1,12 @@
 ---
 parts:
-  - Pagination
-  - Use Cases
+  - 'Pagination: Use Cases'
 title: 'Pagination: Use Cases'
 eleventyNavigation:
   key: 'Pagination: Use Cases'
   order: 20
   parent: Pagination
-  title: Use Cases
+  title: 'Pagination: Use Cases'
 ---
 
 # Pagination: Use Cases

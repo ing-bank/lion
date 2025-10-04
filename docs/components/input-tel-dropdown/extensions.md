@@ -1,13 +1,12 @@
 ---
 parts:
-  - Input Tel Dropdown
-  - Extensions
+  - 'Input Tel Dropdown: Extensions'
 title: 'Input Tel Dropdown: Extensions'
 eleventyNavigation:
   key: 'Input Tel Dropdown: Extensions'
   order: 30
   parent: Input Tel Dropdown
-  title: Extensions
+  title: 'Input Tel Dropdown: Extensions'
 ---
 
 # Input Tel Dropdown: Extensions

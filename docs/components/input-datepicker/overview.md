@@ -1,13 +1,12 @@
 ---
 parts:
-  - Input Datepicker
-  - Overview
+  - 'Input Datepicker: Overview'
 title: 'Input Datepicker: Overview'
 eleventyNavigation:
   key: 'Input Datepicker: Overview'
   order: 10
   parent: Input Datepicker
-  title: Overview
+  title: 'Input Datepicker: Overview'
 ---
 
 # Input Datepicker: Overview

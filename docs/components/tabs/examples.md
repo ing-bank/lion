@@ -1,13 +1,12 @@
 ---
 parts:
-  - Tabs
-  - Examples
+  - 'Tabs: Examples'
 title: 'Tabs: Examples'
 eleventyNavigation:
   key: 'Tabs: Examples'
   order: 30
   parent: Tabs
-  title: Examples
+  title: 'Tabs: Examples'
 ---
 
 # Tabs: Examples

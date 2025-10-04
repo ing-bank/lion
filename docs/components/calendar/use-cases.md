@@ -1,13 +1,12 @@
 ---
 parts:
-  - Calendar
-  - Use Cases
+  - 'Calendar: Use Cases'
 title: 'Calendar: Use Cases'
 eleventyNavigation:
   key: 'Calendar: Use Cases'
-  order: 20
+  order: 0
   parent: Calendar
-  title: Use Cases
+  title: 'Calendar: Use Cases'
 ---
 
 # Calendar: Use Cases

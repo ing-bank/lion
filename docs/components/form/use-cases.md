@@ -1,13 +1,12 @@
 ---
 parts:
-  - Form
-  - Use Cases
+  - 'Form: Use Cases'
 title: 'Form: Use Cases'
 eleventyNavigation:
   key: 'Form: Use Cases'
   order: 20
   parent: Form
-  title: Use Cases
+  title: 'Form: Use Cases'
 ---
 
 # Form: Use Cases
