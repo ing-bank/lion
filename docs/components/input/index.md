@@ -1,7 +1,7 @@
 ---
+title: Input
 parts:
   - Input
-title: Input
 eleventyNavigation:
   key: Input
   order: 20

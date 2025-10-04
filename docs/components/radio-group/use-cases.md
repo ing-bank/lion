@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Radio Group: Use Cases'
 title: 'Radio Group: Use Cases'
+parts:
+  - Radio Group
+  - Use Cases
 eleventyNavigation:
   key: 'Radio Group: Use Cases'
   order: 20
   parent: Radio Group
-  title: 'Radio Group: Use Cases'
+  title: Use Cases
 ---
 
 # Radio Group: Use Cases

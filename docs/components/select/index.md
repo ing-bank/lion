@@ -1,7 +1,7 @@
 ---
+title: Select
 parts:
   - Select
-title: Select
 eleventyNavigation:
   key: Select
   order: 40

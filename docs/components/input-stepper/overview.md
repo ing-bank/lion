@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Input Stepper: Overview'
 title: 'Input Stepper: Overview'
+parts:
+  - Input Stepper
+  - Overview
 eleventyNavigation:
   key: 'Input Stepper: Overview'
   order: 10
   parent: Input Stepper
-  title: 'Input Stepper: Overview'
+  title: Overview
 ---
 
 # Input Stepper: Overview

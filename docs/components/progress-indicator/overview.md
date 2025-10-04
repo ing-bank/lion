@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Progress Indicator: Overview'
 title: 'Progress Indicator: Overview'
+parts:
+  - Progress Indicator
+  - Overview
 eleventyNavigation:
   key: 'Progress Indicator: Overview'
   order: 10
   parent: Progress Indicator
-  title: 'Progress Indicator: Overview'
+  title: Overview
 ---
 
 # Progress Indicator: Overview

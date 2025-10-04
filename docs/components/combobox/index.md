@@ -1,7 +1,7 @@
 ---
+title: Combobox
 parts:
   - Combobox
-title: Combobox
 eleventyNavigation:
   key: Combobox
   order: 10

@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Fieldset: Use Cases'
 title: 'Fieldset: Use Cases'
+parts:
+  - Fieldset
+  - Use Cases
 eleventyNavigation:
   key: 'Fieldset: Use Cases'
   order: 20
   parent: Fieldset
-  title: 'Fieldset: Use Cases'
+  title: Use Cases
 ---
 
 # Fieldset: Use Cases

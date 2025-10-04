@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Listbox: Use Cases'
 title: 'Listbox: Use Cases'
+parts:
+  - Listbox
+  - Use Cases
 eleventyNavigation:
   key: 'Listbox: Use Cases'
   order: 20
   parent: Listbox
-  title: 'Listbox: Use Cases'
+  title: Use Cases
 ---
 
 # Listbox: Use Cases

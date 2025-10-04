@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Textarea: Use Cases'
 title: 'Textarea: Use Cases'
+parts:
+  - Textarea
+  - Use Cases
 eleventyNavigation:
   key: 'Textarea: Use Cases'
   order: 20
   parent: Textarea
-  title: 'Textarea: Use Cases'
+  title: Use Cases
 ---
 
 # Textarea: Use Cases

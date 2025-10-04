@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Button: Extensions'
 title: 'Button: Extensions'
+parts:
+  - Button
+  - Extensions
 eleventyNavigation:
   key: 'Button: Extensions'
   order: 90
   parent: Button
-  title: 'Button: Extensions'
+  title: Extensions
 ---
 
 # Button: Extensions

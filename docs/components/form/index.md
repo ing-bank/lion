@@ -1,7 +1,7 @@
 ---
+title: Form
 parts:
   - Form
-title: Form
 eleventyNavigation:
   key: Form
   order: 20

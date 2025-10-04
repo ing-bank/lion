@@ -1,7 +1,7 @@
 ---
+title: Input Range
 parts:
   - Input Range
-title: Input Range
 eleventyNavigation:
   key: Input Range
   order: 20

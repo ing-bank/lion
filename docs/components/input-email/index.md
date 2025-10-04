@@ -1,7 +1,7 @@
 ---
+title: Input Email
 parts:
   - Input Email
-title: Input Email
 eleventyNavigation:
   key: Input Email
   order: 20

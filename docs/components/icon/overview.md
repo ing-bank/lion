@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Icon: Overview'
 title: 'Icon: Overview'
+parts:
+  - Icon
+  - Overview
 eleventyNavigation:
   key: 'Icon: Overview'
   order: 10
   parent: Icon
-  title: 'Icon: Overview'
+  title: Overview
 ---
 
 # Icon: Overview

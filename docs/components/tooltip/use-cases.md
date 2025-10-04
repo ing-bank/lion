@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Tooltip: Use Cases'
 title: 'Tooltip: Use Cases'
+parts:
+  - Tooltip
+  - Use Cases
 eleventyNavigation:
   key: 'Tooltip: Use Cases'
   order: 20
   parent: Tooltip
-  title: 'Tooltip: Use Cases'
+  title: Use Cases
 ---
 
 # Tooltip: Use Cases

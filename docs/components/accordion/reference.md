@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Accordion: Reference'
 title: 'Accordion: Reference'
+parts:
+  - Accordion
+  - Reference
 eleventyNavigation:
   key: 'Accordion: Reference'
   order: 30
   parent: Accordion
-  title: 'Accordion: Reference'
+  title: Reference
 ---
 
 # Accordion: Reference

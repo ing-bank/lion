@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Input Iban: Use Cases'
 title: 'Input Iban: Use Cases'
+parts:
+  - Input Iban
+  - Use Cases
 eleventyNavigation:
   key: 'Input Iban: Use Cases'
   order: 20
   parent: Input Iban
-  title: 'Input Iban: Use Cases'
+  title: Use Cases
 ---
 
 # Input Iban: Use Cases

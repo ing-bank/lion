@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Collapsible: Use Cases'
 title: 'Collapsible: Use Cases'
+parts:
+  - Collapsible
+  - Use Cases
 eleventyNavigation:
   key: 'Collapsible: Use Cases'
   order: 20
   parent: Collapsible
-  title: 'Collapsible: Use Cases'
+  title: Use Cases
 ---
 
 # Collapsible: Use Cases

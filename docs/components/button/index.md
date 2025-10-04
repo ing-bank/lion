@@ -1,7 +1,7 @@
 ---
+title: Button
 parts:
   - Button
-title: Button
 eleventyNavigation:
   key: Button
   title: Button

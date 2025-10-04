@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Select Rich: Use Cases'
 title: 'Select Rich: Use Cases'
+parts:
+  - Select Rich
+  - Use Cases
 eleventyNavigation:
   key: 'Select Rich: Use Cases'
   order: 20
   parent: Select Rich
-  title: 'Select Rich: Use Cases'
+  title: Use Cases
 ---
 
 # Select Rich: Use Cases

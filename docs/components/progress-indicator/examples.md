@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Progress Indicator: Examples'
 title: 'Progress Indicator: Examples'
+parts:
+  - Progress Indicator
+  - Examples
 eleventyNavigation:
   key: 'Progress Indicator: Examples'
   order: 30
   parent: Progress Indicator
-  title: 'Progress Indicator: Examples'
+  title: Examples
 ---
 
 # Progress Indicator: Examples

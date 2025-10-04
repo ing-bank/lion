@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Switch: Reference'
 title: 'Switch: Reference'
+parts:
+  - Switch
+  - Reference
 eleventyNavigation:
   key: 'Switch: Reference'
   order: 30
   parent: Switch
-  title: 'Switch: Reference'
+  title: Reference
 ---
 
 # Switch: Reference

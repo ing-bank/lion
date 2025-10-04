@@ -1,8 +1,8 @@
 ---
+title: 'Button: Overview'
 parts:
   - Overview
   - Button
-title: 'Button: Overview'
 eleventyNavigation:
   key: Button >> Overview
   title: Overview

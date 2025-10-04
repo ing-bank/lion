@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Listbox: Overview'
 title: 'Listbox: Overview'
+parts:
+  - Listbox
+  - Overview
 eleventyNavigation:
   key: 'Listbox: Overview'
   order: 10
   parent: Listbox
-  title: 'Listbox: Overview'
+  title: Overview
 ---
 
 # Listbox: Overview

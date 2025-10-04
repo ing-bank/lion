@@ -1,7 +1,7 @@
 ---
+title: Input Date
 parts:
   - Input Date
-title: Input Date
 eleventyNavigation:
   key: Input Date
   order: 20

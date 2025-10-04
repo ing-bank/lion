@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Input Datepicker: Use Cases'
 title: 'Input Datepicker: Use Cases'
+parts:
+  - Input Datepicker
+  - Use Cases
 eleventyNavigation:
   key: 'Input Datepicker: Use Cases'
   order: 20
   parent: Input Datepicker
-  title: 'Input Datepicker: Use Cases'
+  title: Use Cases
 ---
 
 # Input Datepicker: Use Cases

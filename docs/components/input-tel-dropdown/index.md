@@ -1,7 +1,7 @@
 ---
+title: Input Tel Dropdown
 parts:
   - Input Tel Dropdown
-title: Input Tel Dropdown
 eleventyNavigation:
   key: Input Tel Dropdown
   order: 20

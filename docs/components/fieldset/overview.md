@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Fieldset: Overview'
 title: 'Fieldset: Overview'
+parts:
+  - Fieldset
+  - Overview
 eleventyNavigation:
   key: 'Fieldset: Overview'
   order: 10
   parent: Fieldset
-  title: 'Fieldset: Overview'
+  title: Overview
 ---
 
 # Fieldset: Overview

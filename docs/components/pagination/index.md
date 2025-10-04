@@ -1,7 +1,7 @@
 ---
+title: Pagination
 parts:
   - Pagination
-title: Pagination
 eleventyNavigation:
   key: Pagination
   order: 30

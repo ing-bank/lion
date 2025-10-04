@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Accordion: Use Cases'
 title: 'Accordion: Use Cases'
+parts:
+  - Accordion
+  - Use Cases
 eleventyNavigation:
   key: 'Accordion: Use Cases'
   order: 20
   parent: Accordion
-  title: 'Accordion: Use Cases'
+  title: Use Cases
 ---
 
 # Accordion: Use Cases

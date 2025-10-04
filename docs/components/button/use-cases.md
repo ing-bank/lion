@@ -1,8 +1,8 @@
 ---
+title: 'Button: Use Cases'
 parts:
   - Use Cases
   - Button
-title: 'Button: Use Cases'
 eleventyNavigation:
   key: Button >> Use Cases
   title: Use Cases

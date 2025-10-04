@@ -1,7 +1,7 @@
 ---
+title: Steps
 parts:
   - Steps
-title: Steps
 eleventyNavigation:
   key: Steps
   order: 50

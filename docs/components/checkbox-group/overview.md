@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Checkbox Group: Overview'
 title: 'Checkbox Group: Overview'
+parts:
+  - Checkbox Group
+  - Overview
 eleventyNavigation:
   key: 'Checkbox Group: Overview'
   order: 10
   parent: Checkbox Group
-  title: 'Checkbox Group: Overview'
+  title: Overview
 ---
 
 # Checkbox Group: Overview

@@ -1,12 +1,13 @@
 ---
-parts:
-  - 'Pagination: Overview'
 title: 'Pagination: Overview'
+parts:
+  - Pagination
+  - Overview
 eleventyNavigation:
   key: 'Pagination: Overview'
   order: 10
   parent: Pagination
-  title: 'Pagination: Overview'
+  title: Overview
 ---
 
 # Pagination: Overview
