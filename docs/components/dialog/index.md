@@ -1,7 +1,7 @@
 ---
+title: Dialog
 parts:
   - Dialog
-title: Dialog
 eleventyNavigation:
   key: Dialog
   order: 20

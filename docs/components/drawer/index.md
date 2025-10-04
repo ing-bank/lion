@@ -1,7 +1,7 @@
 ---
+title: Drawer
 parts:
   - Drawer
-title: Drawer
 eleventyNavigation:
   key: Drawer
   order: 20

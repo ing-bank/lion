@@ -1,7 +1,7 @@
 ---
+title: Fieldset
 parts:
   - Fieldset
-title: Fieldset
 eleventyNavigation:
   key: Fieldset
   order: 20

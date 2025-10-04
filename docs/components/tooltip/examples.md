@@ -1,8 +1,8 @@
 ---
+title: 'Tooltip: Examples'
 parts:
   - Tooltip
   - Examples
-title: 'Tooltip: Examples'
 eleventyNavigation:
   key: 'Tooltip: Examples'
   order: 30

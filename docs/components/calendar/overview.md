@@ -1,8 +1,8 @@
 ---
+title: 'Calendar: Overview'
 parts:
   - Calendar
   - Overview
-title: 'Calendar: Overview'
 eleventyNavigation:
   key: 'Calendar: Overview'
   order: 10

@@ -1,7 +1,7 @@
 ---
+title: Input Amount
 parts:
   - Input Amount
-title: Input Amount
 eleventyNavigation:
   key: Input Amount
   order: 20

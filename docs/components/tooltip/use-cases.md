@@ -1,8 +1,8 @@
 ---
+title: 'Tooltip: Use Cases'
 parts:
   - Tooltip
   - Use Cases
-title: 'Tooltip: Use Cases'
 eleventyNavigation:
   key: 'Tooltip: Use Cases'
   order: 20

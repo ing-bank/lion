@@ -1,8 +1,8 @@
 ---
+title: 'Textarea: Use Cases'
 parts:
   - Textarea
   - Use Cases
-title: 'Textarea: Use Cases'
 eleventyNavigation:
   key: 'Textarea: Use Cases'
   order: 20

@@ -1,8 +1,8 @@
 ---
+title: 'Input Date: Use Cases'
 parts:
   - Input Date
   - Use Cases
-title: 'Input Date: Use Cases'
 eleventyNavigation:
   key: 'Input Date: Use Cases'
   order: 20

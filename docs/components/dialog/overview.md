@@ -1,8 +1,8 @@
 ---
+title: 'Dialog: Overview'
 parts:
   - Dialog
   - Overview
-title: 'Dialog: Overview'
 eleventyNavigation:
   key: 'Dialog: Overview'
   order: 10

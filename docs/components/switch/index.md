@@ -1,7 +1,7 @@
 ---
+title: Switch
 parts:
   - Switch
-title: Switch
 eleventyNavigation:
   key: Switch
   order: 50

@@ -1,8 +1,8 @@
 ---
+title: 'Button: Examples'
 parts:
   - Button
   - Examples
-title: 'Button: Examples'
 eleventyNavigation:
   key: 'Button: Examples'
   order: 30

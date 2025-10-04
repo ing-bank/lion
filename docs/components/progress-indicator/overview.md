@@ -1,8 +1,8 @@
 ---
+title: 'Progress Indicator: Overview'
 parts:
   - Progress Indicator
   - Overview
-title: 'Progress Indicator: Overview'
 eleventyNavigation:
   key: 'Progress Indicator: Overview'
   order: 10

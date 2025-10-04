@@ -1,7 +1,7 @@
 ---
+title: Select Rich
 parts:
   - Select Rich
-title: Select Rich
 eleventyNavigation:
   key: Select Rich
   order: 40

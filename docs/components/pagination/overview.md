@@ -1,8 +1,8 @@
 ---
+title: 'Pagination: Overview'
 parts:
   - Pagination
   - Overview
-title: 'Pagination: Overview'
 eleventyNavigation:
   key: 'Pagination: Overview'
   order: 10

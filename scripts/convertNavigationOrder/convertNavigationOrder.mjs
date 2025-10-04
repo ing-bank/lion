@@ -18,7 +18,7 @@ const getTitleLineNumber = content => {
 };
 
 // since it's a one-time script, the path is just hardcoded
-const paths = await globby('docs/fundamentals/**/*.md');
+const paths = await globby('docs/components/**/*.md');
 
 for (const path of paths) {
   const grayMatterFile = await matter.read(path);

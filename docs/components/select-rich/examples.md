@@ -1,8 +1,8 @@
 ---
+title: 'Select Rich: Examples'
 parts:
   - Select Rich
   - Examples
-title: 'Select Rich: Examples'
 eleventyNavigation:
   key: 'Select Rich: Examples'
   order: 30

@@ -1,8 +1,8 @@
 ---
+title: 'Icon: Use Cases'
 parts:
   - Icon
   - Use Cases
-title: 'Icon: Use Cases'
 eleventyNavigation:
   key: 'Icon: Use Cases'
   order: 20

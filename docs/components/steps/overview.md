@@ -1,8 +1,8 @@
 ---
+title: 'Steps: Overview'
 parts:
   - Steps
   - Overview
-title: 'Steps: Overview'
 eleventyNavigation:
   key: 'Steps: Overview'
   order: 10

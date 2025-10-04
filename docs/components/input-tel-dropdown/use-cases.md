@@ -1,8 +1,8 @@
 ---
+title: 'Input Tel Dropdown: Use Cases'
 parts:
   - Input Tel Dropdown
   - Use Cases
-title: 'Input Tel Dropdown: Use Cases'
 eleventyNavigation:
   key: 'Input Tel Dropdown: Use Cases'
   order: 20

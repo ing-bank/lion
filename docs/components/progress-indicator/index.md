@@ -1,7 +1,7 @@
 ---
+title: Progress Indicator
 parts:
   - Progress Indicator
-title: Progress Indicator
 eleventyNavigation:
   key: Progress Indicator
   order: 30

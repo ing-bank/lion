@@ -1,7 +1,7 @@
 ---
+title: Listbox
 parts:
   - Listbox
-title: Listbox
 eleventyNavigation:
   key: Listbox
   order: 20

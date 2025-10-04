@@ -1,7 +1,7 @@
 ---
+title: Accordion
 parts:
   - Accordion
-title: Accordion
 eleventyNavigation:
   key: Accordion
   order: 0

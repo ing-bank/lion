@@ -1,8 +1,8 @@
 ---
+title: 'Switch: Overview'
 parts:
   - Switch
   - Overview
-title: 'Switch: Overview'
 eleventyNavigation:
   key: 'Switch: Overview'
   order: 10

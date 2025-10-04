@@ -1,7 +1,7 @@
 ---
+title: Input Datepicker
 parts:
   - Input Datepicker
-title: Input Datepicker
 eleventyNavigation:
   key: Input Datepicker
   order: 20

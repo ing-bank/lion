@@ -1,8 +1,8 @@
 ---
+title: 'Icon: Overview'
 parts:
   - Icon
   - Overview
-title: 'Icon: Overview'
 eleventyNavigation:
   key: 'Icon: Overview'
   order: 10
