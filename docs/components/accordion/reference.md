@@ -1,8 +1,8 @@
 ---
+title: 'Accordion: Reference'
 parts:
   - Accordion
   - Reference
-title: 'Accordion: Reference'
 eleventyNavigation:
   key: 'Accordion: Reference'
   order: 30

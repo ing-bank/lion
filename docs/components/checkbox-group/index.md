@@ -1,7 +1,7 @@
 ---
+title: Checkbox Group
 parts:
   - Checkbox Group
-title: Checkbox Group
 eleventyNavigation:
   key: Checkbox Group
   order: 10

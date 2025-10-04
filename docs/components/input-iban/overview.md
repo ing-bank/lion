@@ -1,8 +1,8 @@
 ---
+title: 'Input Iban: Overview'
 parts:
   - Input Iban
   - Overview
-title: 'Input Iban: Overview'
 eleventyNavigation:
   key: 'Input Iban: Overview'
   order: 10

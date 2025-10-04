@@ -1,8 +1,8 @@
 ---
+title: 'Tabs: Examples'
 parts:
   - Tabs
   - Examples
-title: 'Tabs: Examples'
 eleventyNavigation:
   key: 'Tabs: Examples'
   order: 30

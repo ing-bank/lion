@@ -1,8 +1,8 @@
 ---
+title: 'Select: Overview'
 parts:
   - Select
   - Overview
-title: 'Select: Overview'
 eleventyNavigation:
   key: 'Select: Overview'
   order: 10

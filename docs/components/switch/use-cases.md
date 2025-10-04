@@ -1,8 +1,8 @@
 ---
+title: 'Switch: Use Cases'
 parts:
   - Switch
   - Use Cases
-title: 'Switch: Use Cases'
 eleventyNavigation:
   key: 'Switch: Use Cases'
   order: 20

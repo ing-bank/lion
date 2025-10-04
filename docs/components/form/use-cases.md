@@ -1,8 +1,8 @@
 ---
+title: 'Form: Use Cases'
 parts:
   - Form
   - Use Cases
-title: 'Form: Use Cases'
 eleventyNavigation:
   key: 'Form: Use Cases'
   order: 20

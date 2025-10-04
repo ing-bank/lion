@@ -1,7 +1,7 @@
 ---
+title: Tabs
 parts:
   - Tabs
-title: Tabs
 eleventyNavigation:
   key: Tabs
   order: 50

@@ -1,7 +1,7 @@
 ---
+title: Calendar
 parts:
   - Calendar
-title: Calendar
 eleventyNavigation:
   key: Calendar
   order: 10

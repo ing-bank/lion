@@ -1,7 +1,7 @@
 ---
+title: Input File
 parts:
   - Input File
-title: Input File
 eleventyNavigation:
   key: Input File
   order: 20

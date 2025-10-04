@@ -1,7 +1,7 @@
 ---
+title: Input Iban
 parts:
   - Input Iban
-title: Input Iban
 eleventyNavigation:
   key: Input Iban
   order: 20

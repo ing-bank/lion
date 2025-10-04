@@ -1,8 +1,8 @@
 ---
+title: 'Input Tel Dropdown: Overview'
 parts:
   - Input Tel Dropdown
   - Overview
-title: 'Input Tel Dropdown: Overview'
 eleventyNavigation:
   key: 'Input Tel Dropdown: Overview'
   order: 10

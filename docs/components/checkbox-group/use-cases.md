@@ -1,8 +1,8 @@
 ---
+title: 'Checkbox Group: Use Cases'
 parts:
   - Checkbox Group
   - Use Cases
-title: 'Checkbox Group: Use Cases'
 eleventyNavigation:
   key: 'Checkbox Group: Use Cases'
   order: 20

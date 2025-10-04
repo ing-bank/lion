@@ -1,8 +1,8 @@
 ---
+title: 'Accordion: Use Cases'
 parts:
   - Accordion
   - Use Cases
-title: 'Accordion: Use Cases'
 eleventyNavigation:
   key: 'Accordion: Use Cases'
   order: 20

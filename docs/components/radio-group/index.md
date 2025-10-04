@@ -1,7 +1,7 @@
 ---
+title: Radio Group
 parts:
   - Radio Group
-title: Radio Group
 eleventyNavigation:
   key: Radio Group
   order: 30

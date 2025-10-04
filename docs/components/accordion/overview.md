@@ -1,8 +1,8 @@
 ---
+title: 'Accordion: Overview'
 parts:
   - Accordion
   - Overview
-title: 'Accordion: Overview'
 eleventyNavigation:
   key: 'Accordion: Overview'
   order: 10

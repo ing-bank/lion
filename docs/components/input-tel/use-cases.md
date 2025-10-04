@@ -1,8 +1,8 @@
 ---
+title: 'Input Tel: Use Cases'
 parts:
   - Input Tel
   - Use Cases
-title: 'Input Tel: Use Cases'
 eleventyNavigation:
   key: 'Input Tel: Use Cases'
   order: 20

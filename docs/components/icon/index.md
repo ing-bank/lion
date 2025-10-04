@@ -1,7 +1,7 @@
 ---
+title: Icon
 parts:
   - Icon
-title: Icon
 eleventyNavigation:
   key: Icon
   order: 20

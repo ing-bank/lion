@@ -1,8 +1,8 @@
 ---
+title: 'Tabs: Overview'
 parts:
   - Tabs
   - Overview
-title: 'Tabs: Overview'
 eleventyNavigation:
   key: 'Tabs: Overview'
   order: 10

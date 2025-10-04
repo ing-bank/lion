@@ -1,8 +1,8 @@
 ---
+title: 'Input Stepper: Use Cases'
 parts:
   - Input Stepper
   - Use Cases
-title: 'Input Stepper: Use Cases'
 eleventyNavigation:
   key: 'Input Stepper: Use Cases'
   order: 20

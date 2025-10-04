@@ -1,8 +1,8 @@
 ---
+title: 'Combobox: Extensions'
 parts:
   - Combobox
   - Extensions
-title: 'Combobox: Extensions'
 eleventyNavigation:
   key: 'Combobox: Extensions'
   order: 30

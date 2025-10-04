@@ -1,7 +1,7 @@
 ---
+title: Textarea
 parts:
   - Textarea
-title: Textarea
 eleventyNavigation:
   key: Textarea
   order: 50

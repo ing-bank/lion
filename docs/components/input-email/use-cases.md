@@ -1,8 +1,8 @@
 ---
+title: 'Input Email: Use Cases'
 parts:
   - Input Email
   - Use Cases
-title: 'Input Email: Use Cases'
 eleventyNavigation:
   key: 'Input Email: Use Cases'
   order: 20

@@ -1,7 +1,7 @@
 ---
+title: Components
 parts:
   - Components
-title: Components
 eleventyNavigation:
   key: Components
   order: 40

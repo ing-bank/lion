@@ -1,8 +1,8 @@
 ---
+title: 'Listbox: Overview'
 parts:
   - Listbox
   - Overview
-title: 'Listbox: Overview'
 eleventyNavigation:
   key: 'Listbox: Overview'
   order: 10

@@ -1,7 +1,7 @@
 ---
+title: Tooltip
 parts:
   - Tooltip
-title: Tooltip
 eleventyNavigation:
   key: Tooltip
   order: 60

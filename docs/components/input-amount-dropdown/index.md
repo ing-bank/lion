@@ -1,7 +1,7 @@
 ---
+title: Input Amount Dropdown
 parts:
   - Input Amount Dropdown
-title: Input Amount Dropdown
 eleventyNavigation:
   key: Input Amount Dropdown
   order: 20

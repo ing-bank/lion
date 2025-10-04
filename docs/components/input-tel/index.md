@@ -1,7 +1,7 @@
 ---
+title: Input Tel
 parts:
   - Input Tel
-title: Input Tel
 eleventyNavigation:
   key: Input Tel
   order: 20
