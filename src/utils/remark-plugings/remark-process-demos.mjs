@@ -12,13 +12,13 @@ const SHOW_MODULE_NOT_FOUND = false;
 const ROOT_DIR = path.basename(path.resolve(import.meta.dirname, '..', '..', '..'));
 
 const resolveLionImport = moduleResolvedPath => {
-  const lionDirectorPackages = `${path.join(ROOT_DIR, 'packages')}`;
+  const lionDirectorPackages = path.join(ROOT_DIR, 'packages');
   if (moduleResolvedPath.includes(lionDirectorPackages)) {
     // it can be from a local package, e.g. @lion/ui
     return `/@lion${moduleResolvedPath.split(`/${lionDirectorPackages}`)[1]}`;
   }
 
-  const lionDirectoryDocs = `${path.join(ROOT_DIR, 'docs')}`;
+  const lionDirectoryDocs = path.join(ROOT_DIR, 'docs');
   if (moduleResolvedPath.includes(lionDirectoryDocs)) {
     // it can be from a local package, e.g. @lion/ui
     return `/${NODE_MODULES_LION_DOCS}${moduleResolvedPath.split(`/${lionDirectoryDocs}`)[1]}`;
