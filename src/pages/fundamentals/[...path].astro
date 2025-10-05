@@ -20,12 +20,15 @@ if (!entry) {
 }
 const { remarkPluginFrontmatter } = await render(entry);
 
-const importPath = `${remarkPluginFrontmatter.mdjsStoriesPath}`;
+const loadDemoAttributes = {};
+if (remarkPluginFrontmatter.mdjsStoriesPath) {
+  loadDemoAttributes['data-import-path'] = remarkPluginFrontmatter.mdjsStoriesPath;
+}
 
 ---
 
 <InPageNavLayout entry={entry}>
-  <load-demo ?data-import-path={importPath}></load-demo>
+  <load-demo {...loadDemoAttributes}></load-demo>
 
   <script>
     class LoadDemo extends HTMLElement {
