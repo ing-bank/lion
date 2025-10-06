@@ -414,7 +414,7 @@ describe('lion-combobox', () => {
       expect(el.validationStates.error).to.have.property('MatchesOption');
     });
 
-    it('kepes slottable provided in `slots` getter as direct host child', async () => {
+    it('keeps slottable provided in `slots` getter as direct host child', async () => {
       class MyEl extends SlotMixin(LionCombobox) {
         // @ts-ignore
         get slots() {

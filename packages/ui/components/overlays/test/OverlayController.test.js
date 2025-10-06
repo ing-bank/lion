@@ -798,6 +798,7 @@ describe('OverlayController', () => {
           );
           const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
           await mimicEscapePress(childOverlay.contentNode);
+          await aTimeout(10);
 
           expect(parentOverlay.isShown).to.be.false;
           expect(childOverlay.isShown).to.be.true;
