@@ -38,7 +38,7 @@ import { render } from 'lit';
  * @param {HTMLElement} source host of ShadowRoot with default <slot>
  * @param {HTMLElement} target the desired target in light dom
  */
-export function moveDefaultSlottablesToTarget(source, target) {
+export function moveUserProvidedDefaultSlottablesToTarget(source, target) {
   /**
    * Nodes injected via `slots` getter are going to be added as host's children
    * starting by a comment node like <!--_start_slot_*-->
