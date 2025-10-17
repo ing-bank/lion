@@ -69,7 +69,6 @@ async function resolveImportPathFn(importee, importer, opts = {}) {
   // @ts-expect-error
   rollupResolve.buildStart.call(fakePluginContext, { preserveSymlinks });
 
-  // @ts-expect-error
   const result = await rollupResolve.resolveId.handler.call(
     fakePluginContext,
     importee,
