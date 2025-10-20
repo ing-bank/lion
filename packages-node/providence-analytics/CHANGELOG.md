@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.19.1
+
+### Patch Changes
+
+- f7e73f8: enhance getSourceCodeFragmentOfDeclaration api
+
 ## 0.19.0
 
 ### Minor Changes
@@ -62,12 +68,10 @@
 ### Minor Changes
 
 - 615472c: - use oxc for all analyzers (oxc is way smaller and more performant than swc, let alone babel)
-
   - make swcTraverse compatible with oxc
   - expand scope functionality of swcTraverse
 
   BREAKING:
-
   - make parsers peerDependencies (babel or swc should be loaded by external analyzers)
   - rename `swcTraverse` to `oxcTraverse`
 
@@ -162,14 +166,12 @@
 ### Minor Changes
 
 - bdb038e1: Many improvements:
-
   - rewritten from babel to swc
   - oxcTraverse tool, compatible with babel traverse api
   - increased performance
   - better windows compatibility
 
   BREAKING:
-
   - package fully written as esm
   - entrypoints changed:
     - `@providence-analytics/src/cli` => `@providence-analytics/cli.js`
@@ -180,7 +182,6 @@
 ### Patch Changes
 
 - d40fd90b: Fixes:
-
   - allow absence of config file
   - remove package=lock of non-root packages
   - fix conflicting package entries
@@ -251,12 +252,10 @@
 ### Minor Changes
 
 - 96ae18c4: Improved dashboard:
-
   - allows to configure categories in `providence.conf.(m)js`that show up in dashboard
   - exposes dashboard in cli: `npx providence dashboard`
 
   BREAKING CHANGES:
-
   - `providence.conf.(m)js` must be in ESM format.
 
 ### Patch Changes
@@ -400,11 +399,9 @@
 - 2dc85b14: Monorepo support for extend-docs
 
   ### Features
-
   - add monorepo support for extend-docs
 
   ### Fixes
-
   - allow custom element and class definitions to be in same file for 'match-paths'
 
 ## 0.6.3
@@ -412,7 +409,6 @@
 ### Patch Changes
 
 - b71bd7f2: Providence windows support
-
   - fix: make all tests run on Windows
 
 ## 0.6.2
@@ -434,13 +430,11 @@
 - 623b10a3: Custom '--allowlist' takes precedence over '--allowlist-mode'
 
   #### Features
-
   - Custom '--allowlist' takes precedence over '--allowlist-mode' when conflicting.
     For instance, when running CLI with '--allowlist-mode git --allowlist ./dist'
     (and .gitignore contained '/dist'), './dist' will still be analyzed.
 
   #### Patches
-
   - Align naming conventions between CLI and InputDataService.gatherFilesFromDir
 
 ## 0.5.0
@@ -450,13 +444,11 @@
 - ca6c8e62: Allowlist modes
 
   #### Features
-
   - Allowlist mode: autodetects whether analyzed repository is a "git" or "npm" (published artifact) repository.
     Via the cli `--allowlist-mode 'npm|git|all'` and `--allowlist-mode-reference 'npm|git|all'` can be
     configured to override the autodetected mode.
 
   #### Bugfixes
-
   - Clean output extend-docs: strings like '[no-dependency]' will not end up in aggregated result
 
 ## 0.4.0
@@ -466,13 +458,11 @@
 - c702e47c: Providence update to fix some issues with target/reference and to allow filtering target project dependencies.
 
   #### Features
-
   - Allow specifying target project dependencies via CLI using `--target-dependencies` flag:
     When `--target-dependencies` is applied without argument, it will act as boolean and include all dependencies for all search targets (node_modules and bower_components).
     When a regex is supplied like `--target-dependencies /^my-brand-/`, it will filter all packages that comply with the regex.
 
   #### Bugfixes
-
   - Use the correct gatherFilesConfig for references/targets
   - Provide target/reference result match
   - Edit `from-import-to-export` helper function to work without filesystem lookup. This will allow to supply target/reference result matches to `match-imports` analyzer
