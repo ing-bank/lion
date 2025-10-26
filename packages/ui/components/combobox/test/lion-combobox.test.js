@@ -1,4 +1,12 @@
-import { defineCE, expect, fixture, html, unsafeStatic, waitUntil } from '@open-wc/testing';
+import {
+  aTimeout,
+  defineCE,
+  expect,
+  fixture,
+  html,
+  unsafeStatic,
+  waitUntil,
+} from '@open-wc/testing';
 import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { sendKeys } from '@web/test-runner-commands';
 import { LionCombobox } from '@lion/ui/combobox.js';
@@ -1262,8 +1270,11 @@ describe('lion-combobox', () => {
       await el.updateComplete;
       expect(el.opened).to.equal(true);
       expect(_inputNode.value).to.equal('Artichoke');
-
-      _inputNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      _inputNode.focus();
+      await sendKeys({
+        press: 'Escape',
+      });
+      await aTimeout(100);
       expect(el.opened).to.equal(false);
       expect(_inputNode.value).to.equal('');
     });

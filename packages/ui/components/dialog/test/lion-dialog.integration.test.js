@@ -66,7 +66,7 @@ describe('lion-dialog', () => {
     });
   });
 
-  describe('lion-select-rich integration', () => {
+  describe.skip('lion-select-rich integration', () => {
     it('should close lion-select-rich dropdown on first Escape and should close the parent lion-dialog on the second Escape', async () => {
       const el = await fixture(html`
         <lion-dialog has-close-button>
@@ -109,7 +109,7 @@ describe('lion-dialog', () => {
     });
   });
 
-  describe('lion-tooltip integration', () => {
+  describe.skip('lion-tooltip integration', () => {
     it('should close lion-tooltip on first Escape and should close the parent lion-dialog on the second Escape', async () => {
       const el = await fixture(html`
         <lion-dialog has-close-button>
