@@ -5,9 +5,9 @@ import { sendKeys } from '@web/test-runner-commands';
 import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-select-rich.js';
-import '@lion/ui/define/lion-options.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-dialog.js';
+import '@lion/ui/define/lion-tooltip.js';
 
 import { mimicUserTyping } from '@lion/ui/combobox-test-helpers.js';
 
@@ -71,7 +71,7 @@ describe('lion-dialog', () => {
       const el = await fixture(html`
         <lion-dialog has-close-button>
           <lion-button slot="invoker">Open Dialog</lion-button>
-          <div slot="header">Combobox example</div>
+          <div slot="header">Select rich example</div>
           <div slot="content">
             <lion-select-rich label="Select a fruit">
               ${dropDownEntries.map(
@@ -105,6 +105,49 @@ describe('lion-dialog', () => {
         press: 'Escape',
       });
       expect(isDropdownVisible()).to.equal(false);
+      expect(isDialogVisible()).to.equal(false);
+    });
+  });
+
+  describe('lion-tooltip integration', () => {
+    it('should close lion-tooltip on first Escape and should close the parent lion-dialog on the second Escape', async () => {
+      const el = await fixture(html`
+        <lion-dialog has-close-button>
+          <lion-button slot="invoker" class="dialog-invoker">Open Dialog</lion-button>
+          <div slot="header">Tooltip example</div>
+          <div slot="content">
+            <lion-tooltip has-arrow>
+              <button slot="invoker" class="demo-tooltip-invoker">Focus on me</button>
+              <div slot="content">This is a tooltip</div>
+            </lion-tooltip>
+          </div>
+        </lion-dialog>
+      `);
+
+      await el.updateComplete;
+      const dialogInvoker = /** @type {HTMLElement} */ (el.querySelector('.dialog-invoker'));
+      dialogInvoker.click();
+      const tooltip = /** @type {HTMLElement} */ el.querySelector('lion-tooltip');
+      const isTooltipRendered = () => !!tooltip?.shadowRoot?.childNodes.length;
+      await waitUntil(isTooltipRendered);
+      const tooltipButton = /** @type {HTMLElement} */ el.querySelector('.demo-tooltip-invoker');
+      tooltipButton?.focus();
+      const getTooltipContent = () =>
+        el
+          .querySelector('lion-tooltip')
+          ?.shadowRoot?.querySelector('#overlay-content-node-wrapper');
+      const isTooltipContentVisible = () => getTooltipContent()?.checkVisibility();
+      await waitUntil(isTooltipContentVisible);
+      await sendKeys({
+        press: 'Escape',
+      });
+      const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
+      expect(isTooltipContentVisible()).to.equal(false);
+      expect(isDialogVisible()).to.equal(true);
+      await sendKeys({
+        press: 'Escape',
+      });
+      expect(isTooltipContentVisible()).to.equal(false);
       expect(isDialogVisible()).to.equal(false);
     });
   });
