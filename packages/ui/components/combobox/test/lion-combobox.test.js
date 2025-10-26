@@ -1,12 +1,4 @@
-import {
-  aTimeout,
-  defineCE,
-  expect,
-  fixture,
-  html,
-  unsafeStatic,
-  waitUntil,
-} from '@open-wc/testing';
+import { defineCE, expect, fixture, html, unsafeStatic, waitUntil } from '@open-wc/testing';
 import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { sendKeys } from '@web/test-runner-commands';
 import { LionCombobox } from '@lion/ui/combobox.js';
@@ -320,9 +312,10 @@ describe('lion-combobox', () => {
         await el.updateComplete;
 
         const { _inputNode } = getComboboxMembers(el);
-
-        _inputNode.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
-        await el.updateComplete;
+        _inputNode.focus();
+        await sendKeys({
+          press: 'Escape',
+        });
         expect(el.opened).to.be.false;
       });
 
@@ -1252,7 +1245,7 @@ describe('lion-combobox', () => {
       expect(el.opened).to.equal(true);
     });
 
-    it('hides (and clears) overlay on [Escape]', async () => {
+    it('hides overlay on [Escape]', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
           <lion-combobox name="foo">
@@ -1274,9 +1267,8 @@ describe('lion-combobox', () => {
       await sendKeys({
         press: 'Escape',
       });
-      await aTimeout(100);
       expect(el.opened).to.equal(false);
-      expect(_inputNode.value).to.equal('');
+      expect(_inputNode.value).to.equal('Artichoke');
     });
 
     it('hides overlay on [Enter]', async () => {
