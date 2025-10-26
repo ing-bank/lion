@@ -33,6 +33,8 @@ import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
 import './src/demo-selection-display.js';
+import '@lion/ui/define/lion-dialog.js';
+import { demoStyle } from '../dialog/src/demoStyle.js';
 import { lazyRender } from './src/lazyRender.js';
 import levenshtein from './src/levenshtein.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
@@ -117,11 +119,21 @@ This is the default value for `autocomplete`.
 
 ```js preview-story
 export const autocompleteBoth = () => html`
-  <lion-combobox name="combo" label="Autocomplete 'both'" autocomplete="both">
-    ${lazyRender(
-      listboxData.map(entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `),
-    )}
-  </lion-combobox>
+  <style>
+    ${demoStyle}
+  </style>
+  <lion-dialog>
+    <div slot="content" class="demo-dialog-content">
+      <lion-combobox name="combo" label="Autocomplete 'both'" autocomplete="both">
+        ${lazyRender(
+          listboxData.map(
+            entry => html` <lion-option .choiceValue="${entry}">${entry}</lion-option> `,
+          ),
+        )}
+      </lion-combobox>
+    </div>
+    <button slot="invoker" class="demo-dialog-content__close-button">Popup button</button>
+  </lion-dialog>
 `;
 ```
 

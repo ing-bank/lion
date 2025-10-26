@@ -1215,14 +1215,18 @@ export class OverlayController extends EventTarget {
 
     const hasPressedInside =
       event.composedPath().includes(this.contentNode) ||
+      // In case of combobox the focus is set to input node.
+      // So when Escape is pressed event.composedPath() does not contain this.contentNode
+      event.composedPath().includes(this.referenceNode) ||
       deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 
     if (hasPressedInside) {
-      this.hide();
       // We could do event.stopPropagation() here, but we don't want to hide info for
       // the outside world about user interactions. Instead, we store the event in a WeakMap
       // that will be garbage collected after the event loop.
       childDialogsClosedInEventLoopWeakmap.set(event, this);
+
+      this.hide();
     }
   }
 

@@ -1132,7 +1132,6 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
     const { key } = ev;
     switch (key) {
       case 'Escape':
-        this.opened = false;
         super._listboxOnKeyDown(ev);
         this._setTextboxValue('');
         break;
@@ -1282,10 +1281,12 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
    */
   _onKeyUp(ev) {
     const lastKey = ev && ev.key;
-    this.opened = this._showOverlayCondition({
-      lastKey,
-      currentValue: this._inputNode.value,
-    });
+    if (lastKey !== 'Escape') {
+      this.opened = this._showOverlayCondition({
+        lastKey,
+        currentValue: this._inputNode.value,
+      });
+    }
   }
 
   /**
