@@ -38,7 +38,6 @@ export default {
     config: { timeout: '5000' },
   },
   testRunnerHtml: config.shouldLoadPolyfill ? testRunnerHtmlWithPolyfill : undefined,
-  testsFinishTimeout: 240000,
   browsers: [
     playwrightLauncher({ product: 'firefox', concurrency: 1 }),
     playwrightLauncher({ product: 'chromium' }),
