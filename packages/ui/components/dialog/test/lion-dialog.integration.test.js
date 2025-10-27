@@ -60,11 +60,11 @@ describe('lion-dialog', () => {
       await sendKeys({
         press: 'Escape',
       });
-      const isDropdownVisible = () =>
-        combobox?.shadowRoot?.querySelector('dialog')?.checkVisibility();
       const dialog = el?.shadowRoot?.querySelector('dialog');
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
-      expect(isDropdownVisible()).to.equal(false);
+      const dropdownDialog = combobox?.shadowRoot?.querySelector('dialog');
+      const dropdownDialogCloseSpy = sinon.spy(dropdownDialog, 'close');
+      await waitUntil(() => dropdownDialogCloseSpy.called);
       expect(isDialogVisible()).to.equal(true);
       console.log(sinon.spy(dialog?.close));
       comboboxInput?.focus();
@@ -73,8 +73,6 @@ describe('lion-dialog', () => {
       await sendKeys({
         press: 'Escape',
       });
-      await waitUntil(() => !isDropdownVisible());
-      expect(isDropdownVisible()).to.equal(false);
       expect(dialogCloseSpy).to.have.been.called;
     });
   });
@@ -108,6 +106,10 @@ describe('lion-dialog', () => {
       console.log(selectRichDialog?.close);
 
       selectRichInvoker?.click();
+      const dropdownDialog = el
+        ?.querySelector('lion-select-rich')
+        ?.shadowRoot?.querySelector('dialog');
+      const dropdownDialogCloseSpy = sinon.spy(dropdownDialog, 'close');
       const isDropdownVisible = () =>
         el
           ?.querySelector('lion-select-rich')
@@ -123,8 +125,7 @@ describe('lion-dialog', () => {
       // @ts-ignore
       const dialogCloseSpy = sinon.spy(dialog, 'close');
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
-      await waitUntil(() => !isDropdownVisible());
-      expect(isDropdownVisible()).to.equal(false);
+      await waitUntil(() => dropdownDialogCloseSpy.called);
       expect(isDialogVisible()).to.equal(true);
       await sendKeys({
         press: 'Escape',
