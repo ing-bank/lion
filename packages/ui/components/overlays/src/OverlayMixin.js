@@ -186,8 +186,7 @@ export const OverlayMixinImplementation = superclass =>
         if (!this.isConnected) return;
         if (this.#hasSetup) return;
         this._setupOverlayCtrl();
-        // We let OverlayController handle Escape key press.
-        // When OverlayController hides the overlay, sync `this.opened` accordingly
+
         this._overlayCtrl?.addEventListener('hide', () => {
           this.opened = false;
         });
