@@ -186,10 +186,6 @@ export const OverlayMixinImplementation = superclass =>
         if (!this.isConnected) return;
         if (this.#hasSetup) return;
         this._setupOverlayCtrl();
-
-        this._overlayCtrl?.addEventListener('hide', () => {
-          this.opened = false;
-        });
         this.#hasSetup = true;
       });
     }
