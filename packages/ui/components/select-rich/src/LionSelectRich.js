@@ -156,10 +156,6 @@ export class LionSelectRich extends SlotMixin(ScopedElementsMixin(OverlayMixin(L
     this.__setupInvokerNode();
     this.__toggleInvokerDisabled();
     this.addEventListener('keyup', this.__onKeyUp);
-
-    this._overlayCtrl?.addEventListener('hide', () => {
-      this.opened = false;
-    });
   }
 
   disconnectedCallback() {
