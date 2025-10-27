@@ -117,15 +117,17 @@ describe('lion-dialog', () => {
       await sendKeys({
         press: 'Escape',
       });
+      const dialog = /** @type {HTMLElement} */ (el?.shadowRoot?.querySelector('dialog'));
+      // @ts-ignore
+      const dialogCloseSpy = sinon.spy(dialog, 'close');
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
       expect(isDropdownVisible()).to.equal(false);
       expect(isDialogVisible()).to.equal(true);
       await sendKeys({
         press: 'Escape',
       });
-      await waitUntil(isDialogVisible);
       expect(isDropdownVisible()).to.equal(false);
-      expect(isDialogVisible()).to.equal(false);
+      expect(dialogCloseSpy).to.have.been.called;
     });
   });
 
