@@ -66,7 +66,7 @@ describe('lion-dialog', () => {
     });
   });
 
-  describe.skip('lion-select-rich integration', () => {
+  describe('lion-select-rich integration', () => {
     it('should close lion-select-rich dropdown on first Escape and should close the parent lion-dialog on the second Escape', async () => {
       const el = await fixture(html`
         <lion-dialog has-close-button>
@@ -95,6 +95,21 @@ describe('lion-dialog', () => {
           ?.shadowRoot?.querySelector('dialog')
           ?.checkVisibility();
       await waitUntil(isDropdownVisible);
+      const lionOptions = /** @type {HTMLElement} */ el.querySelector('lion-options');
+      lionOptions?.focus();
+
+      const comboboxDialog = /** @type {HTMLElement} */ el
+        .querySelector('lion-select-rich')
+        ?.shadowRoot?.querySelector('dialog');
+
+      // There is a bug in the test engine.
+      // In the code dialog.close() is called but the dialog is not getting closed actually when running in web-test-runner.
+      // Same snippet works fine in a non-test enviornment.
+      // To work around the bug, we reassing the `close` function to itself
+      // @ts-ignore
+      // eslint-disable-next-line no-self-assign
+      comboboxDialog.close = comboboxDialog.close;
+
       await sendKeys({
         press: 'Escape',
       });

@@ -9,6 +9,7 @@ import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-tabs.js';
 import { LitElement, nothing } from 'lit';
 import sinon from 'sinon';
+import { sendKeys } from '@web/test-runner-commands';
 import {
   fixture as _fixture,
   unsafeStatic,
@@ -531,7 +532,11 @@ describe('lion-select-rich', () => {
     it('closes the listbox with [Escape] key once opened', async () => {
       const el = await fixture(html` <lion-select-rich opened> </lion-select-rich> `);
       const { _listboxNode } = getSelectRichMembers(el);
-      _listboxNode.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+      _listboxNode.focus();
+      await sendKeys({
+        press: 'Escape',
+      });
+      await waitUntil(() => !el.opened);
       expect(el.opened).to.be.false;
     });
 
