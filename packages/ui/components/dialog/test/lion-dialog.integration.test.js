@@ -57,13 +57,13 @@ describe('lion-dialog', () => {
       console.log(sinon.spy(comboboxDialog?.close));
       const comboboxInput = combobox?.querySelector('input');
       comboboxInput?.focus();
+      const dropdownDialog = combobox?.shadowRoot?.querySelector('dialog');
+      const dropdownDialogCloseSpy = sinon.spy(dropdownDialog, 'close');
       await sendKeys({
         press: 'Escape',
       });
       const dialog = el?.shadowRoot?.querySelector('dialog');
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
-      const dropdownDialog = combobox?.shadowRoot?.querySelector('dialog');
-      const dropdownDialogCloseSpy = sinon.spy(dropdownDialog, 'close');
       await waitUntil(() => dropdownDialogCloseSpy.called);
       expect(isDialogVisible()).to.equal(true);
       console.log(sinon.spy(dialog?.close));
