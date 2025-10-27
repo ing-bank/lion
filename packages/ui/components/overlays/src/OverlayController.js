@@ -1215,9 +1215,8 @@ export class OverlayController extends EventTarget {
 
     const hasPressedInside =
       event.composedPath().includes(this.contentNode) ||
-      // In case of combobox the focus is set to input node.
-      // So when Escape is pressed event.composedPath() does not contain this.contentNode
       event.composedPath().includes(this.referenceNode) ||
+      (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
       deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 
     if (hasPressedInside) {

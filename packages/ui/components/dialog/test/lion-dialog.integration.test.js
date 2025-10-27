@@ -112,7 +112,7 @@ describe('lion-dialog', () => {
     });
   });
 
-  describe.skip('lion-tooltip integration', () => {
+  describe('lion-tooltip integration', () => {
     it('should close lion-tooltip on first Escape and should close the parent lion-dialog on the second Escape', async () => {
       const el = await fixture(html`
         <lion-dialog has-close-button>
