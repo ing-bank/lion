@@ -62,9 +62,11 @@ describe('lion-dialog', () => {
       });
       const isDropdownVisible = () =>
         combobox?.shadowRoot?.querySelector('dialog')?.checkVisibility();
+      const dialog = el?.shadowRoot?.querySelector('dialog');
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
       expect(isDropdownVisible()).to.equal(false);
       expect(isDialogVisible()).to.equal(true);
+      console.log(sinon.spy(dialog?.close));
       await sendKeys({
         press: 'Escape',
       });
