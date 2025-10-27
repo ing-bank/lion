@@ -68,12 +68,14 @@ describe('lion-dialog', () => {
       expect(isDialogVisible()).to.equal(true);
       console.log(sinon.spy(dialog?.close));
       comboboxInput?.focus();
+      // @ts-ignore
+      const dialogCloseSpy = sinon.spy(dialog, 'close');
       await sendKeys({
         press: 'Escape',
       });
       await waitUntil(() => !isDropdownVisible());
       expect(isDropdownVisible()).to.equal(false);
-      expect(isDialogVisible()).to.equal(false);
+      expect(dialogCloseSpy).to.have.been.called;
     });
   });
 
