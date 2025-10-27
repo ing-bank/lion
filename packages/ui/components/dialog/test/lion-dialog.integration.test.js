@@ -88,6 +88,10 @@ describe('lion-dialog', () => {
       const selectRichInvoker = /** @type {HTMLElement} */ el.querySelector('lion-select-invoker');
       const isSelectRichInvokerRendered = () => !!selectRichInvoker?.shadowRoot?.childNodes.length;
       await waitUntil(isSelectRichInvokerRendered);
+      const selectRich = el?.querySelector('lion-select-rich');
+      const selectRichDialog = selectRich?.shadowRoot?.querySelector('dialog');
+      console.log(selectRichDialog?.close);
+
       selectRichInvoker?.click();
       const isDropdownVisible = () =>
         el
