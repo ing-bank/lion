@@ -22,7 +22,7 @@ const dropDownEntries = ['Apple', 'Banana'];
 
 describe('lion-dialog', () => {
   describe('lion-combobox integration', () => {
-    it('should close lion-combobox dropdown on first Escape and should close the parent lion-dialog on the second Escape', async () => {
+    it('should close lion-combobox dropdown on Escape and should not close the parent lion-dialog', async () => {
       const el = await fixture(html`
         <lion-dialog has-close-button>
           <lion-button slot="invoker">Open Dialog</lion-button>
@@ -37,7 +37,6 @@ describe('lion-dialog', () => {
           </div>
         </lion-dialog>
       `);
-
       const dialogInvoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
       dialogInvoker.click();
       const combobox = /** @type {HTMLElement} */ el.querySelector('lion-combobox');
@@ -48,7 +47,6 @@ describe('lion-dialog', () => {
       const firstOption = /** @type { HTMLElement | undefined } */ (
         el.querySelectorAll('lion-option')?.[0]
       );
-
       const isComboboxFirstOptionInDropdownVisible = () => firstOption?.checkVisibility();
       await waitUntil(isComboboxFirstOptionInDropdownVisible);
       const comboboxDialog = combobox?.shadowRoot?.querySelector('dialog');
@@ -62,23 +60,14 @@ describe('lion-dialog', () => {
       await sendKeys({
         press: 'Escape',
       });
-      // const dialog = el?.shadowRoot?.querySelector('dialog');
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
       await waitUntil(() => dropdownDialogCloseSpy.called);
       expect(isDialogVisible()).to.equal(true);
-      // console.log(sinon.spy(dialog?.close));
-      // comboboxInput?.focus();
-      // // @ts-ignore
-      // const dialogCloseSpy = sinon.spy(dialog, 'close');
-      // await sendKeys({
-      //   press: 'Escape',
-      // });
-      // expect(dialogCloseSpy).to.have.been.called;
     });
   });
 
   describe('lion-select-rich integration', () => {
-    it('should close lion-select-rich dropdown on first Escape and should close the parent lion-dialog on the second Escape', async () => {
+    it('should close lion-select-rich dropdown on Escape and should not close the parent lion-dialog', async () => {
       const el = await fixture(html`
         <lion-dialog has-close-button>
           <lion-button slot="invoker">Open Dialog</lion-button>
@@ -93,7 +82,6 @@ describe('lion-dialog', () => {
           </div>
         </lion-dialog>
       `);
-
       const dialogInvoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
       dialogInvoker.click();
       const selectRichInvoker = /** @type {HTMLElement} */ el.querySelector('lion-select-invoker');
@@ -121,17 +109,9 @@ describe('lion-dialog', () => {
       await sendKeys({
         press: 'Escape',
       });
-      // const dialog = /** @type {HTMLElement} */ (el?.shadowRoot?.querySelector('dialog'));
-      // @ts-ignore
-      // const dialogCloseSpy = sinon.spy(dialog, 'close');
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
       await waitUntil(() => dropdownDialogCloseSpy.called);
       expect(isDialogVisible()).to.equal(true);
-      // await sendKeys({
-      //   press: 'Escape',
-      // });
-      // expect(isDropdownVisible()).to.equal(false);
-      // expect(dialogCloseSpy).to.have.been.called;
     });
   });
 
