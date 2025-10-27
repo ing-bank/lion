@@ -11,6 +11,7 @@ import {
   fixture,
   expect,
   html,
+  waitUntil,
 } from '@open-wc/testing';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
@@ -799,10 +800,8 @@ describe('OverlayController', () => {
           const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
           await mimicEscapePress(childOverlay.contentNode);
 
-          // without this line, the test is unstable on FF sometimes
-          await aTimeout(0);
-
           expect(parentOverlay.isShown).to.be.false;
+          await waitUntil(() => childOverlay.isShown);
           expect(childOverlay.isShown).to.be.true;
 
           await childOverlay.teardown();
