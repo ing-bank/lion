@@ -50,6 +50,10 @@ describe('lion-dialog', () => {
 
       const isComboboxFirstOptionInDropdownVisible = () => firstOption?.checkVisibility();
       await waitUntil(isComboboxFirstOptionInDropdownVisible);
+      const comboboxDialog = combobox?.shadowRoot?.querySelector('dialog');
+      // Note, do not remove `console.log` down below. There is a bug in test engine.
+      // Referring dialog.close from the test environement fixes the bug
+      console.log(comboboxDialog?.close);
       await sendKeys({
         press: 'Escape',
       });
@@ -90,6 +94,8 @@ describe('lion-dialog', () => {
       await waitUntil(isSelectRichInvokerRendered);
       const selectRich = el?.querySelector('lion-select-rich');
       const selectRichDialog = selectRich?.shadowRoot?.querySelector('dialog');
+      // Note, do not remove `console.log` down below. There is a bug in test engine.
+      // Referring dialog.close from the test environement fixes the bug
       console.log(selectRichDialog?.close);
 
       selectRichInvoker?.click();

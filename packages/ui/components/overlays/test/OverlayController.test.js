@@ -800,7 +800,7 @@ describe('OverlayController', () => {
           await mimicEscapePress(childOverlay.contentNode);
 
           // without this line, the test is unstable on FF sometimes
-          await aTimeout(100);
+          await aTimeout(0);
 
           expect(parentOverlay.isShown).to.be.false;
           expect(childOverlay.isShown).to.be.true;
