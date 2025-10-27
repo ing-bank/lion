@@ -98,18 +98,6 @@ describe('lion-dialog', () => {
       const lionOptions = /** @type {HTMLElement} */ el.querySelector('lion-options');
       lionOptions?.focus();
 
-      const comboboxDialog = /** @type {HTMLElement} */ el
-        .querySelector('lion-select-rich')
-        ?.shadowRoot?.querySelector('dialog');
-
-      // There is a bug in the test engine.
-      // In the code dialog.close() is called but the dialog is not getting closed actually when running in web-test-runner.
-      // Same snippet works fine in a non-test enviornment.
-      // To work around the bug, we reassing the `close` function to itself
-      // @ts-ignore
-      // eslint-disable-next-line no-self-assign
-      comboboxDialog.close = comboboxDialog.close;
-
       await sendKeys({
         press: 'Escape',
       });
