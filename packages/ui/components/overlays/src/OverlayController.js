@@ -1220,12 +1220,11 @@ export class OverlayController extends EventTarget {
       deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 
     if (hasPressedInside) {
+      this.hide();
       // We could do event.stopPropagation() here, but we don't want to hide info for
       // the outside world about user interactions. Instead, we store the event in a WeakMap
       // that will be garbage collected after the event loop.
       childDialogsClosedInEventLoopWeakmap.set(event, this);
-
-      this.hide();
     }
   }
 
