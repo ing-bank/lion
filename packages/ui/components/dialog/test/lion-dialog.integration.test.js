@@ -54,6 +54,8 @@ describe('lion-dialog', () => {
       // Note, do not remove `console.log` down below. There is a bug in test engine.
       // Referring dialog.close from the test environement fixes the bug
       console.log(comboboxDialog?.close);
+      const comboboxInput = combobox?.querySelector('input');
+      comboboxInput?.focus();
       await sendKeys({
         press: 'Escape',
       });
