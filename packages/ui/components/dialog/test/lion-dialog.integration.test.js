@@ -1,5 +1,5 @@
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture as _fixture, html, waitUntil } from '@open-wc/testing';
+import { expect, fixture as _fixture, html, waitUntil, aTimeout } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 
 import '@lion/ui/define/lion-button.js';
@@ -71,6 +71,7 @@ describe('lion-dialog', () => {
       await sendKeys({
         press: 'Escape',
       });
+      await aTimeout(100);
       expect(isDropdownVisible()).to.equal(false);
       expect(isDialogVisible()).to.equal(false);
     });
