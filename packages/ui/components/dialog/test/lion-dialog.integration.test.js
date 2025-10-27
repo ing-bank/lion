@@ -121,6 +121,7 @@ describe('lion-dialog', () => {
       // @ts-ignore
       const dialogCloseSpy = sinon.spy(dialog, 'close');
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
+      await waitUntil(() => !isDropdownVisible());
       expect(isDropdownVisible()).to.equal(false);
       expect(isDialogVisible()).to.equal(true);
       await sendKeys({
