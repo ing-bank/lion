@@ -792,17 +792,15 @@ describe('OverlayController', () => {
             await fixture(
               html` <!-- -->
                 <div id="parent-overlay--hidesOnEsc">
-                  PPP
                   <div id="child-overlay--hidesOnOutsideEsc">we press [Escape] here</div>
                 </div>`,
             )
           );
           const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
-          await aTimeout(0);
           await mimicEscapePress(childOverlay.contentNode);
 
           // without this line, the test is unstable on FF sometimes
-          await aTimeout(100);
+          await aTimeout(0);
 
           expect(parentOverlay.isShown).to.be.false;
           expect(childOverlay.isShown).to.be.true;
