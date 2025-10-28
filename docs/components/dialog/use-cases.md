@@ -23,6 +23,7 @@ import './src/styled-dialog-content.js';
 import './src/slots-dialog-content.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
+import '@lion/ui/define/lion-tooltip.js';
 import './src/external-dialog.js';
 ```
 
@@ -47,15 +48,14 @@ export const alertDialog = () => {
     <style>
       ${demoStyle}
     </style>
-    <lion-dialog is-alert-dialog class="dialog">
-      <button type="button" slot="invoker">Reset</button>
-      <div slot="content" class="demo-box">
-        <lion-combobox name="combo" label="Select a fruit">
-          ${dropDownEntries.map(
-            (/** @type { string } */ entry) =>
-              html` <lion-option .choiceValue="${entry}">${entry}</lion-option>`,
-          )}
-        </lion-combobox>
+    <lion-dialog has-close-button>
+      <lion-button slot="invoker" class="dialog-invoker">Open Dialog</lion-button>
+      <div slot="header">Tooltip example</div>
+      <div slot="content">
+        <lion-tooltip has-arrow>
+          <button slot="invoker" class="demo-tooltip-invoker">Focus on me</button>
+          <div slot="content">This is a tooltip</div>
+        </lion-tooltip>
       </div>
     </lion-dialog>
   `;
