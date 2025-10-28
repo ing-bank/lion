@@ -206,6 +206,14 @@ export class OverlayController extends EventTarget {
     this.__hasActiveBackdrop = true;
     /** @private */
     this.__cancelHandler = this.__cancelHandler.bind(this);
+    /**
+     * The property is used to skip `__escKeyHandler` handler for overlays that have been closed
+     * by `__escKeyHandlerCalled` previously.
+     * `__escKeyHandlerCalled` is set to `true` when `__escKeyHandler` is called at least one time.
+     * `__escKeyHandlerCalled` is set to `false` right before overlay show up
+     * @private
+     */
+    this.__escKeyHandlerCalled = false;
   }
 
   /**
@@ -1211,14 +1219,12 @@ export class OverlayController extends EventTarget {
    * @returns {void}
    */
   __escKeyHandler(event) {
-    if (event.key !== 'Escape' || childDialogsClosedInEventLoopWeakmap.has(event)) {
+    if (
+      event.key !== 'Escape' ||
+      childDialogsClosedInEventLoopWeakmap.has(event) ||
+      (!this.isShown && this.__escKeyHandlerCalled)
+    ) {
       return;
-    }
-    if (!this.isShown) {
-      if (this._hideFromEscHandler) {
-        this._hideFromEscHandler = false;
-        return;
-      }
     }
 
     const hasPressedInside =
@@ -1227,7 +1233,7 @@ export class OverlayController extends EventTarget {
       deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 
     if (hasPressedInside) {
-      this._hideFromEscHandler = true;
+      this.__escKeyHandlerCalled = true;
       this.hide();
       // We could do event.stopPropagation() here, but we don't want to hide info for
       // the outside world about user interactions. Instead, we store the event in a WeakMap
@@ -1255,7 +1261,14 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _handleHidesOnEsc({ phase }) {
+    if (phase === 'show') {
+      this.__escKeyHandlerCalled = false;
+    }
     if (phase === 'init') {
+      // we remove previously added (if any) event listener to guarantee
+      // there is only one Escape handler added here.
+      // Note `init` phase triggered on every `updateConfig` call and that
+      // could happen multiple times during the component life cycle
       this.contentNode.removeEventListener('keydown', this.__escKeyHandler);
       this.contentNode.addEventListener('keydown', this.__escKeyHandler);
       if (this.invokerNode) {

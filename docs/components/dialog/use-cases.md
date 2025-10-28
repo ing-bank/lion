@@ -21,9 +21,6 @@ import '@lion/ui/define/lion-dialog.js';
 import { demoStyle } from './src/demoStyle.js';
 import './src/styled-dialog-content.js';
 import './src/slots-dialog-content.js';
-import '@lion/ui/define/lion-combobox.js';
-import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-tooltip.js';
 import './src/external-dialog.js';
 ```
 
@@ -43,19 +40,26 @@ In some cases the dialog should act like an [alertdialog](https://www.w3.org/WAI
 
 ```js preview-story
 export const alertDialog = () => {
-  const dropDownEntries = ['Apple', 'Banana'];
   return html`
     <style>
       ${demoStyle}
     </style>
-    <lion-dialog has-close-button>
-      <lion-button slot="invoker" class="dialog-invoker">Open Dialog</lion-button>
-      <div slot="header">Tooltip example</div>
-      <div slot="content">
-        <lion-tooltip has-arrow>
-          <button slot="invoker" class="demo-tooltip-invoker">Focus on me</button>
-          <div slot="content">This is a tooltip</div>
-        </lion-tooltip>
+    <lion-dialog is-alert-dialog class="dialog">
+      <button type="button" slot="invoker">Reset</button>
+      <div slot="content" class="demo-box">
+        Are you sure you want to clear the input field?
+        <button
+          type="button"
+          @click="${ev => ev.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+        >
+          Yes
+        </button>
+        <button
+          type="button"
+          @click="${ev => ev.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+        >
+          No
+        </button>
       </div>
     </lion-dialog>
   `;
