@@ -47,6 +47,7 @@ describe('lion-dialog', () => {
       const firstOption = /** @type { HTMLElement | undefined } */ (
         el.querySelectorAll('lion-option')?.[0]
       );
+      // @ts-ignore
       const isComboboxFirstOptionInDropdownVisible = () => firstOption?.checkVisibility();
       await waitUntil(isComboboxFirstOptionInDropdownVisible);
       const comboboxDialog = combobox?.shadowRoot?.querySelector('dialog');
@@ -56,10 +57,12 @@ describe('lion-dialog', () => {
       const comboboxInput = combobox?.querySelector('input');
       comboboxInput?.focus();
       const dropdownDialog = combobox?.shadowRoot?.querySelector('dialog');
+      // @ts-ignore
       const dropdownDialogCloseSpy = sinon.spy(dropdownDialog, 'close');
       await sendKeys({
         press: 'Escape',
       });
+      // @ts-ignore
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
       await waitUntil(() => dropdownDialogCloseSpy.called);
       expect(isDialogVisible()).to.equal(true);
@@ -84,7 +87,9 @@ describe('lion-dialog', () => {
       `);
       const dialogInvoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
       dialogInvoker.click();
-      const selectRichInvoker = /** @type {HTMLElement} */ el.querySelector('lion-select-invoker');
+      const selectRichInvoker = /** @type {HTMLElement} */ (
+        el.querySelector('lion-select-invoker')
+      );
       const isSelectRichInvokerRendered = () => !!selectRichInvoker?.shadowRoot?.childNodes.length;
       await waitUntil(isSelectRichInvokerRendered);
       const selectRich = el?.querySelector('lion-select-rich');
@@ -97,18 +102,21 @@ describe('lion-dialog', () => {
       const dropdownDialog = el
         ?.querySelector('lion-select-rich')
         ?.shadowRoot?.querySelector('dialog');
+      // @ts-ignore
       const dropdownDialogCloseSpy = sinon.spy(dropdownDialog, 'close');
       const isDropdownVisible = () =>
         el
           ?.querySelector('lion-select-rich')
           ?.shadowRoot?.querySelector('dialog')
+          // @ts-ignore
           ?.checkVisibility();
       await waitUntil(isDropdownVisible);
-      const lionOptions = /** @type {HTMLElement} */ el.querySelector('lion-options');
+      const lionOptions = /** @type {HTMLElement} */ (el.querySelector('lion-options'));
       lionOptions?.focus();
       await sendKeys({
         press: 'Escape',
       });
+      // @ts-ignore
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
       await waitUntil(() => dropdownDialogCloseSpy.called);
       expect(isDialogVisible()).to.equal(true);
@@ -136,17 +144,19 @@ describe('lion-dialog', () => {
       const tooltip = /** @type {HTMLElement} */ el.querySelector('lion-tooltip');
       const isTooltipRendered = () => !!tooltip?.shadowRoot?.childNodes.length;
       await waitUntil(isTooltipRendered);
-      const tooltipButton = /** @type {HTMLElement} */ el.querySelector('.demo-tooltip-invoker');
+      const tooltipButton = /** @type {HTMLElement} */ (el.querySelector('.demo-tooltip-invoker'));
       tooltipButton?.focus();
       const getTooltipContent = () =>
         el
           .querySelector('lion-tooltip')
           ?.shadowRoot?.querySelector('#overlay-content-node-wrapper');
+      // @ts-ignore
       const isTooltipContentVisible = () => getTooltipContent()?.checkVisibility();
       await waitUntil(isTooltipContentVisible);
       await sendKeys({
         press: 'Escape',
       });
+      // @ts-ignore
       const isDialogVisible = () => el?.shadowRoot?.querySelector('dialog')?.checkVisibility();
       expect(isTooltipContentVisible()).to.equal(false);
       expect(isDialogVisible()).to.equal(true);
