@@ -1274,10 +1274,11 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _handleHidesOnOutsideEsc({ phase }) {
-    if (phase === 'show') {
-      document.addEventListener('keyup', this.#outsideEscKeyHandler);
-    } else if (phase === 'hide' || phase === 'teardown') {
-      document.removeEventListener('keyup', this.#outsideEscKeyHandler);
+    if (phase === 'init') {
+      document.removeEventListener('keydown', this.#outsideEscKeyHandler);
+      document.addEventListener('keydown', this.#outsideEscKeyHandler);
+    } else if (phase === 'teardown') {
+      document.removeEventListener('keydown', this.#outsideEscKeyHandler);
     }
   }
 
