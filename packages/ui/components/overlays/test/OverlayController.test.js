@@ -745,6 +745,35 @@ describe('OverlayController', () => {
         expect(parentOverlay.isShown).to.be.true;
         expect(childOverlay.isShown).to.be.false;
       });
+
+      describe('When checking whether Escape is pressed from inside of the overlay', () => {
+        it('should hide when Escape is pressed from inside `contentNode`', async () => {
+          const ctrl = new OverlayController({
+            ...withGlobalTestConfig(),
+            hidesOnEsc: true,
+          });
+          await ctrl.show();
+          expect(ctrl.isShown).to.be.true;
+          await mimicEscapePress(ctrl.contentNode);
+          expect(ctrl.isShown).to.be.false;
+        });
+        it('should hide when Escape is pressed from inside `invokerNode`', async () => {
+          const invokerNode = /** @type {HTMLDivElement} */ (
+            await fixture(html`<div>content</div>`)
+          );
+          const ctrl = new OverlayController({
+            ...withGlobalTestConfig(),
+            hidesOnEsc: true,
+            invokerNode,
+          });
+          await ctrl.show();
+          expect(ctrl.isShown).to.be.true;
+          if (ctrl.invokerNode) {
+            await mimicEscapePress(ctrl.invokerNode);
+          }
+          expect(ctrl.isShown).to.be.false;
+        });
+      });
     });
 
     describe('hidesOnOutsideEsc', () => {

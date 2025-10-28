@@ -1215,7 +1215,6 @@ export class OverlayController extends EventTarget {
 
     const hasPressedInside =
       event.composedPath().includes(this.contentNode) ||
-      event.composedPath().includes(this.referenceNode) ||
       (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
       deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 
