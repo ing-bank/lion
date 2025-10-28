@@ -209,8 +209,9 @@ export class OverlayController extends EventTarget {
     /**
      * The property is used to skip `__escKeyHandler` handler for overlays that have been closed
      * by `__escKeyHandlerCalled` previously.
-     * `__escKeyHandlerCalled` is set to `true` when `__escKeyHandler` is called at least one time.
      * `__escKeyHandlerCalled` is set to `false` right before overlay show up
+     * `__escKeyHandlerCalled` is set to `true` when `__escKeyHandler` is called at least one time
+     * after each 'show' phase
      * @private
      */
     this.__escKeyHandlerCalled = false;
