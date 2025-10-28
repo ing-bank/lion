@@ -4,7 +4,7 @@ import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/ui/form-core
 import { aTimeout, defineCE, expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import sinon from 'sinon';
-import { sendKeys, setViewport } from '@web/test-runner-commands';
+import { setViewport } from '@web/test-runner-commands';
 import { DatepickerInputObject } from '@lion/ui/input-datepicker-test-helpers.js';
 import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
 
@@ -97,9 +97,11 @@ describe('<lion-input-datepicker>', () => {
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
       expect(elObj.overlayController.isShown).to.equal(true);
-      await sendKeys({
-        press: 'Escape',
-      });
+
+      elObj.overlayController.contentNode.dispatchEvent(
+        new KeyboardEvent('keyup', { key: 'Escape' }),
+      );
+      await nextFrame();
       expect(elObj.overlayController.isShown).to.equal(false);
     });
 

@@ -1270,15 +1270,15 @@ export class OverlayController extends EventTarget {
       // there is only one Escape handler added here.
       // Note `init` phase triggered on every `updateConfig` call and that
       // could happen multiple times during the component life cycle
-      this.contentNode.removeEventListener('keydown', this.__escKeyHandler);
-      this.contentNode.addEventListener('keydown', this.__escKeyHandler);
+      this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
+      this.contentNode.addEventListener('keyup', this.__escKeyHandler);
       if (this.invokerNode) {
-        this.invokerNode.addEventListener('keydown', this.__escKeyHandler);
+        this.invokerNode.addEventListener('keyup', this.__escKeyHandler);
       }
     } else if (phase === 'teardown') {
-      this.contentNode.removeEventListener('keydown', this.__escKeyHandler);
+      this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
       if (this.invokerNode) {
-        this.invokerNode.removeEventListener('keydown', this.__escKeyHandler);
+        this.invokerNode.removeEventListener('keyup', this.__escKeyHandler);
       }
     }
   }
@@ -1289,10 +1289,10 @@ export class OverlayController extends EventTarget {
    */
   _handleHidesOnOutsideEsc({ phase }) {
     if (phase === 'init') {
-      document.removeEventListener('keydown', this.#outsideEscKeyHandler);
-      document.addEventListener('keydown', this.#outsideEscKeyHandler);
+      document.removeEventListener('keyup', this.#outsideEscKeyHandler);
+      document.addEventListener('keyup', this.#outsideEscKeyHandler);
     } else if (phase === 'teardown') {
-      document.removeEventListener('keydown', this.#outsideEscKeyHandler);
+      document.removeEventListener('keyup', this.#outsideEscKeyHandler);
     }
   }
 
