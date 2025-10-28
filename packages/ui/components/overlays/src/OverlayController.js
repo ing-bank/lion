@@ -197,13 +197,13 @@ export class OverlayController extends EventTarget {
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
     /** @private */
     this.__originalAttrs = new Map();
+    /** @private */
+    this.__escKeyHandler = this.__escKeyHandler.bind(this);
     this.updateConfig(config);
     /** @private */
     this.__hasActiveTrapsKeyboardFocus = false;
     /** @private */
     this.__hasActiveBackdrop = true;
-    /** @private */
-    this.__escKeyHandler = this.__escKeyHandler.bind(this);
     /** @private */
     this.__cancelHandler = this.__cancelHandler.bind(this);
   }
@@ -1211,13 +1211,23 @@ export class OverlayController extends EventTarget {
    * @returns {void}
    */
   __escKeyHandler(event) {
-    if (event.key !== 'Escape' || childDialogsClosedInEventLoopWeakmap.has(event)) return;
+    if (event.key !== 'Escape' || childDialogsClosedInEventLoopWeakmap.has(event)) {
+      return;
+    }
+    if (!this.isShown) {
+      if (this._hideFromEscHandler) {
+        this._hideFromEscHandler = false;
+        return;
+      }
+    }
 
     const hasPressedInside =
       event.composedPath().includes(this.contentNode) ||
+      (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
       deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 
     if (hasPressedInside) {
+      this._hideFromEscHandler = true;
       this.hide();
       // We could do event.stopPropagation() here, but we don't want to hide info for
       // the outside world about user interactions. Instead, we store the event in a WeakMap
@@ -1245,15 +1255,16 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _handleHidesOnEsc({ phase }) {
-    if (phase === 'show') {
-      this.contentNode.addEventListener('keyup', this.__escKeyHandler);
+    if (phase === 'init') {
+      this.contentNode.removeEventListener('keydown', this.__escKeyHandler);
+      this.contentNode.addEventListener('keydown', this.__escKeyHandler);
       if (this.invokerNode) {
-        this.invokerNode.addEventListener('keyup', this.__escKeyHandler);
+        this.invokerNode.addEventListener('keydown', this.__escKeyHandler);
       }
-    } else if (phase === 'hide' || phase === 'teardown') {
-      this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
+    } else if (phase === 'teardown') {
+      this.contentNode.removeEventListener('keydown', this.__escKeyHandler);
       if (this.invokerNode) {
-        this.invokerNode.removeEventListener('keyup', this.__escKeyHandler);
+        this.invokerNode.removeEventListener('keydown', this.__escKeyHandler);
       }
     }
   }
