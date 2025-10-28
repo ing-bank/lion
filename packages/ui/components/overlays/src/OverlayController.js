@@ -1262,9 +1262,6 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _handleHidesOnEsc({ phase }) {
-    if (phase === 'show') {
-      this.__escKeyHandlerCalled = false;
-    }
     if (phase === 'init') {
       // we remove previously added (if any) event listener to guarantee
       // there is only one Escape handler added here.
@@ -1275,7 +1272,11 @@ export class OverlayController extends EventTarget {
       if (this.invokerNode) {
         this.invokerNode.addEventListener('keyup', this.__escKeyHandler);
       }
-    } else if (phase === 'teardown') {
+    }
+    if (phase === 'show') {
+      this.__escKeyHandlerCalled = false;
+    }
+    if (phase === 'teardown') {
       this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
       if (this.invokerNode) {
         this.invokerNode.removeEventListener('keyup', this.__escKeyHandler);
