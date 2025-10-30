@@ -54,6 +54,25 @@ They provide an unopinionated, white-label layer that can be extended to your ow
   <a href="https://lion-web.netlify.app/guides/"><strong>Explore the Lion Guides&nbsp;&nbsp;▶</strong></a>
 </p>
 
+## Table of Contents
+  - [Astro migration](#astro-migration)
+    - [Astro how to](#astro-how-to)
+    - [Issues which are not caused by migration](#issues-which-are-not-caused-by-the-migration-not-to-be-fixed-now)
+    - [TODO](#todo)
+  - [Installation](#how-to-install)
+  - [How to use](#how-to-use)
+    - [Extend a web component](#extend-a-web-component)
+    - [Use a JavaScript system](#use-a-javascript-system)
+    - [Use a Web Component](#use-a-web-component)
+  - [Issues](#issues)
+  - [Feature request](#feature-requests)
+  - [Content](#content)
+  - [Technologies](#technologies)
+  - [Rationale](#rationale)
+  - [Coding guidelines](#coding-guidelines)
+  - [How to contribute](#how-to-contribute)
+  - [Contact](#contact)
+
 ## Astro migration
 
 - Keep using `/docs` on the root level as we used it in the `master` branch. The documentation is copied into Astro related directories on `npm run start` and when when anything in `/docs` is updated.
