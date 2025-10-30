@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.15.2
+
+### Patch Changes
+
+- e6a8fa7: [input-amount-dropdown] add translations
+- abcc6fd: fix hidesOnEsc for nested overlays
+
 ## 0.15.1
 
 ### Patch Changes
