@@ -77,8 +77,6 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
   Note. There is the same error on master. This issue is not caused by the migration
 
-<!-- ### TODO -->
-
 ## How to install
 
 ```bash
