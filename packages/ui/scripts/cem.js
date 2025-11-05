@@ -8,7 +8,7 @@ import { create, ts } from '@custom-elements-manifest/analyzer';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { litPlugin } from '@custom-elements-manifest/analyzer/src/features/framework-plugins/lit/lit.js';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { generateCustomData } from 'cem-plugin-vs-code-custom-data-generator';
+import { customElementVsCodePlugin } from 'custom-element-vs-code-integration';
 
 /**
  * Find all entrypoints for lion to create the CEM from
@@ -68,7 +68,7 @@ const cem = create({
   modules,
   plugins: [
     ...litPlugin(),
-    generateCustomData(),
+    customElementVsCodePlugin(),
     {
       packageLinkPhase({ customElementsManifest }) {
         for (const definition of customElementsManifest.modules) {
