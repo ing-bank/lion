@@ -1,0 +1,1489 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/next/favicon.svg"><meta name="generator" content="Astro v5.13.9"><link href="/next/styles/open-props@1.6.11.min.css" rel="stylesheet" type="text/css"><link href="/next/styles/global.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/variables.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/markdown.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/layout.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/style.css" rel="stylesheet" type="text/css"><script type="module" src="/next/_astro/MainLayout.astro_astro_type_script_index_0_lang.BoVk2TqR.js"></script><link rel="canonical" href="http://localhost:4321/next/fundamentals/systems/overlays/use-cases"><meta name="description" content="High quality UI web components"><meta name="robots" content="index, follow"><meta property="og:title" content="Lion"><meta property="og:type" content="website"><meta property="og:image" content="http://localhost:4321/opengraph.jpg"><meta property="og:url" content="http://localhost:4321/next/fundamentals/systems/overlays/use-cases"><meta property="og:image:url" content="http://localhost:4321/opengraph.jpg"><meta property="og:image:alt" content="Lion Homepage screen"><style>.container[data-astro-cid-2dr2cpgs]{display:flex;flex-direction:row;width:100%}.content[data-astro-cid-2dr2cpgs]{flex:1 1 0;min-width:0}ui-portal-inpage-nav[data-astro-cid-2dr2cpgs]{width:180px;flex:0 0 180px}
+.ui-portal-grid__main{padding:50px}h1{color:var(--Primary-Gray600, #333);font-family:ING Me;font-size:48px;font-style:normal;font-weight:700;line-height:56px;border-bottom:1px solid var(--Primary-Gray200, #d9d9d9);margin:0 -230px 0 -50px;padding:0 230px 0 50px}@media (max-width: 1200px){.ui-portal-grid__main{padding:30px}h1{margin:0 -30px;padding:0 30px}}@media (max-width: 899px){.ui-portal-grid__main{padding:20px}h1{margin:0 -20px;padding:0 20px}}h2{color:var(--Primary-Gray600, #333);font-family:ING Me;font-size:36px;font-style:normal;font-weight:700;line-height:48px}h3{color:var(--Primary-Gray600, #333);font-family:ING Me;font-size:19px;font-style:normal;font-weight:700;line-height:28px}img{content-visibility:auto}.ui-portal-grid{display:grid;grid-template-columns:min-content 1fr;grid-template-rows:1fr min-content;grid-template-areas:"nav main" "nav footer"}.ui-portal-grid__nav{grid-area:nav}.ui-portal-grid__main{grid-area:main}.ui-portal-grid__footer{grid-area:footer}.ui-portal-collection{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,300px))}.ui-portal-card{display:flex;flex-direction:column;padding:1rem;border-radius:.5rem}@media (max-width: 899px){.ui-portal-grid__nav{position:absolute;background:#fff;z-index:100}.ui-portal-grid{grid-template-columns:1fr;grid-template-rows:1fr;grid-template-areas:"main" "footer"}}
+</style><script>/** @license Copyright 2020 Google LLC (BSD-3-Clause) */
+/** Bundled JS generated from "@astrojs/lit/client-shim.js" */
+var N = Object.defineProperty;
+var i = (t, n) => () => (t && (n = t((t = 0))), n);
+var b = (t, n) => {
+	for (var a in n) N(t, a, { get: n[a], enumerable: !0 });
+};
+function s() {
+	if (d === void 0) {
+		let t = document.createElement('div');
+		(t.innerHTML = '<div><template shadowrootmode="open"></template></div>'),
+			(d = !!t.firstElementChild.shadowRoot);
+	}
+	return d;
+}
+var d,
+	m = i(() => {});
+var p,
+	c,
+	f,
+	u = i(() => {
+		(p = (t) => t.parentElement === null),
+			(c = (t) => t.tagName === 'TEMPLATE'),
+			(f = (t) => t.nodeType === Node.ELEMENT_NODE);
+	});
+var h,
+	E = i(() => {
+		m();
+		u();
+		h = (t) => {
+			var n;
+			if (s()) return;
+			let a = [],
+				e = t.firstElementChild;
+			for (; e !== t && e !== null; )
+				if (c(e)) a.push(e), (e = e.content);
+				else if (e.firstElementChild !== null) e = e.firstElementChild;
+				else if (f(e) && e.nextElementSibling !== null) e = e.nextElementSibling;
+				else {
+					let o;
+					for (; e !== t && e !== null; )
+						if (p(e)) {
+							o = a.pop();
+							let r = o.parentElement,
+								l = o.getAttribute('shadowroot');
+							if (((e = o), l === 'open' || l === 'closed')) {
+								let y = o.hasAttribute('shadowrootdelegatesfocus');
+								try {
+									r.attachShadow({ mode: l, delegatesFocus: y }).append(o.content);
+								} catch {}
+							} else o = void 0;
+						} else {
+							let r = e.nextElementSibling;
+							if (r != null) {
+								(e = r), o !== void 0 && o.parentElement.removeChild(o);
+								break;
+							}
+							let l =
+								(n = e.parentElement) === null || n === void 0 ? void 0 : n.nextElementSibling;
+							if (l != null) {
+								(e = l), o !== void 0 && o.parentElement.removeChild(o);
+								break;
+							}
+							(e = e.parentElement), o !== void 0 && (o.parentElement.removeChild(o), (o = void 0));
+						}
+				}
+		};
+	});
+var w = i(() => {
+	E();
+});
+var v = {};
+b(v, { hasNativeDeclarativeShadowRoots: () => s, hydrateShadowRoots: () => h });
+var S = i(() => {
+	m();
+	w();
+});
+async function g() {
+	let { hydrateShadowRoots: t } = await Promise.resolve().then(() => (S(), v));
+	window.addEventListener('DOMContentLoaded', () => t(document.body), { once: true });
+}
+var x = Document.parseHTMLUnsafe(
+	'<p><template shadowrootmode="open"></template></p>'
+).querySelector('p');
+(!x || !x.shadowRoot) && g();
+</script></head> <body class="ui-portal-grid" data-layout="layout-general"> <div class="ui-portal-grid__nav"> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="ZYttJQ" component-url="/next/_astro/ui-portal-main-nav.DWL6Xyou.js" component-export="UIPortalMainNav" renderer-url="/next/_astro/client.DEGHhFmz.js" props="{&quot;nav-data&quot;:[0,&quot;[{\&quot;name\&quot;:\&quot;home\&quot;,\&quot;url\&quot;:\&quot;/next\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:home\&quot;},{\&quot;name\&quot;:\&quot;fundamentals\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:sdk\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Systems\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems\&quot;,\&quot;priority\&quot;:20,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Core\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/core\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/core/overview\&quot;},{\&quot;name\&quot;:\&quot;Form\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/form\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/form/overview\&quot;},{\&quot;name\&quot;:\&quot;Localize\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/localize\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/localize/overview\&quot;},{\&quot;name\&quot;:\&quot;Icon\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/icon\&quot;,\&quot;priority\&quot;:40,\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/icon/overview\&quot;},{\&quot;name\&quot;:\&quot;Overlays\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/overlays\&quot;,\&quot;priority\&quot;:40,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Overview\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/overlays/overview\&quot;,\&quot;priority\&quot;:10},{\&quot;name\&quot;:\&quot;Edge cases\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/overlays/_edge-cases\&quot;,\&quot;priority\&quot;:10},{\&quot;name\&quot;:\&quot;Use Cases\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/overlays/use-cases\&quot;,\&quot;priority\&quot;:20,\&quot;active\&quot;:true},{\&quot;name\&quot;:\&quot;Rationale\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/overlays/rationale\&quot;,\&quot;priority\&quot;:30},{\&quot;name\&quot;:\&quot;Positioning\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/overlays/_configuration-positioning\&quot;,\&quot;priority\&quot;:40},{\&quot;name\&quot;:\&quot;Configuration\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/overlays/configuration\&quot;,\&quot;priority\&quot;:40},{\&quot;name\&quot;:\&quot;API Table\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/overlays/api-table\&quot;,\&quot;priority\&quot;:90}],\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/overlays/overview\&quot;,\&quot;active\&quot;:true,\&quot;hasActiveChild\&quot;:true}],\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/core/overview\&quot;,\&quot;active\&quot;:true,\&quot;hasActiveChild\&quot;:true},{\&quot;name\&quot;:\&quot;Tools\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/tools\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/fundamentals/tools/helpers/overview\&quot;},{\&quot;name\&quot;:\&quot;Node Tools\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/node-tools\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview\&quot;},{\&quot;name\&quot;:\&quot;Rationales\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/rationales\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/fundamentals/rationales/accessibility\&quot;}],\&quot;active\&quot;:true,\&quot;hasActiveChild\&quot;:true},{\&quot;name\&quot;:\&quot;guides\&quot;,\&quot;url\&quot;:\&quot;/next/guides\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:extension\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Principles\&quot;,\&quot;url\&quot;:\&quot;/next/guides/principles\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/guides/principles/definitions-and-terms\&quot;},{\&quot;name\&quot;:\&quot;How To\&quot;,\&quot;url\&quot;:\&quot;/next/guides/how-to\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/guides/how-to/get-started\&quot;}]},{\&quot;name\&quot;:\&quot;components\&quot;,\&quot;url\&quot;:\&quot;/next/components\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:deployedCode\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Accordion\&quot;,\&quot;url\&quot;:\&quot;/next/components/accordion\&quot;,\&quot;priority\&quot;:0,\&quot;redirect\&quot;:\&quot;/next/components/accordion/overview\&quot;},{\&quot;name\&quot;:\&quot;Button\&quot;,\&quot;url\&quot;:\&quot;/next/components/button\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/button/overview\&quot;},{\&quot;name\&quot;:\&quot;Calendar\&quot;,\&quot;url\&quot;:\&quot;/next/components/calendar\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/calendar/use-cases\&quot;},{\&quot;name\&quot;:\&quot;Checkbox Group\&quot;,\&quot;url\&quot;:\&quot;/next/components/checkbox-group\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/checkbox-group/overview\&quot;},{\&quot;name\&quot;:\&quot;Collapsible\&quot;,\&quot;url\&quot;:\&quot;/next/components/collapsible\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/collapsible/overview\&quot;},{\&quot;name\&quot;:\&quot;Combobox\&quot;,\&quot;url\&quot;:\&quot;/next/components/combobox\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/combobox/overview\&quot;},{\&quot;name\&quot;:\&quot;Dialog\&quot;,\&quot;url\&quot;:\&quot;/next/components/dialog\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/dialog/overview\&quot;},{\&quot;name\&quot;:\&quot;Drawer\&quot;,\&quot;url\&quot;:\&quot;/next/components/drawer\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/drawer/overview\&quot;},{\&quot;name\&quot;:\&quot;Fieldset\&quot;,\&quot;url\&quot;:\&quot;/next/components/fieldset\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/fieldset/overview\&quot;},{\&quot;name\&quot;:\&quot;Form\&quot;,\&quot;url\&quot;:\&quot;/next/components/form\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/form/overview\&quot;},{\&quot;name\&quot;:\&quot;Icon\&quot;,\&quot;url\&quot;:\&quot;/next/components/icon\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/icon/overview\&quot;},{\&quot;name\&quot;:\&quot;Input\&quot;,\&quot;url\&quot;:\&quot;/next/components/input\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Amount\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-amount\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-amount/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Amount Dropdown\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-amount-dropdown\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-amount-dropdown/use-cases\&quot;},{\&quot;name\&quot;:\&quot;Input Date\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-date\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-date/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Datepicker\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-datepicker\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-datepicker/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Email\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-email\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-email/overview\&quot;},{\&quot;name\&quot;:\&quot;Input File\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-file\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-file/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Iban\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-iban\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-iban/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Range\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-range\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-range/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Stepper\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-stepper\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-stepper/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Tel\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-tel\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-tel/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Tel Dropdown\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-tel-dropdown\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-tel-dropdown/overview\&quot;},{\&quot;name\&quot;:\&quot;Listbox\&quot;,\&quot;url\&quot;:\&quot;/next/components/listbox\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/listbox/overview\&quot;},{\&quot;name\&quot;:\&quot;Pagination\&quot;,\&quot;url\&quot;:\&quot;/next/components/pagination\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/components/pagination/overview\&quot;},{\&quot;name\&quot;:\&quot;Progress Indicator\&quot;,\&quot;url\&quot;:\&quot;/next/components/progress-indicator\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/components/progress-indicator/overview\&quot;},{\&quot;name\&quot;:\&quot;Radio Group\&quot;,\&quot;url\&quot;:\&quot;/next/components/radio-group\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/components/radio-group/overview\&quot;},{\&quot;name\&quot;:\&quot;Select\&quot;,\&quot;url\&quot;:\&quot;/next/components/select\&quot;,\&quot;priority\&quot;:40,\&quot;redirect\&quot;:\&quot;/next/components/select/overview\&quot;},{\&quot;name\&quot;:\&quot;Select Rich\&quot;,\&quot;url\&quot;:\&quot;/next/components/select-rich\&quot;,\&quot;priority\&quot;:40,\&quot;redirect\&quot;:\&quot;/next/components/select-rich/overview\&quot;},{\&quot;name\&quot;:\&quot;Steps\&quot;,\&quot;url\&quot;:\&quot;/next/components/steps\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/steps/overview\&quot;},{\&quot;name\&quot;:\&quot;Switch\&quot;,\&quot;url\&quot;:\&quot;/next/components/switch\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/switch/overview\&quot;},{\&quot;name\&quot;:\&quot;Tabs\&quot;,\&quot;url\&quot;:\&quot;/next/components/tabs\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/tabs/overview\&quot;},{\&quot;name\&quot;:\&quot;Textarea\&quot;,\&quot;url\&quot;:\&quot;/next/components/textarea\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/textarea/overview\&quot;},{\&quot;name\&quot;:\&quot;Tooltip\&quot;,\&quot;url\&quot;:\&quot;/next/components/tooltip\&quot;,\&quot;priority\&quot;:60,\&quot;redirect\&quot;:\&quot;/next/components/tooltip/overview\&quot;}]},{\&quot;name\&quot;:\&quot;blog\&quot;,\&quot;url\&quot;:\&quot;/next/blog\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:deployedCode\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;The Accessibility of Lion\&quot;,\&quot;url\&quot;:\&quot;/next/blog/accessibility\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Controlling exports\&quot;,\&quot;url\&quot;:\&quot;/next/blog/controlling-exports\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Introducing lions website\&quot;,\&quot;url\&quot;:\&quot;/next/blog/introducing-lions-website\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Extending Lion Documentation\&quot;,\&quot;url\&quot;:\&quot;/next/blog/extending-documentation\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;ING open sources Lion\&quot;,\&quot;url\&quot;:\&quot;/next/blog/ing-open-sources-lion\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Lion without polyfills\&quot;,\&quot;url\&quot;:\&quot;/next/blog/lion-without-polyfills\&quot;,\&quot;priority\&quot;:0}]}]&quot;]}" ssr client="load" before-hydration-url="/next/_astro/astro_scripts/before-hydration.js.Ci4ZmlXW.js" opts="{&quot;name&quot;:&quot;UIPortalMainNav&quot;,&quot;value&quot;:true}" await-children><ui-portal-main-nav nav-data="[{&quot;name&quot;:&quot;home&quot;,&quot;url&quot;:&quot;/next&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:home&quot;},{&quot;name&quot;:&quot;fundamentals&quot;,&quot;url&quot;:&quot;/next/fundamentals&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:sdk&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Systems&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems&quot;,&quot;priority&quot;:20,&quot;children&quot;:[{&quot;name&quot;:&quot;Core&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/core&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/fundamentals/systems/core/overview&quot;},{&quot;name&quot;:&quot;Form&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/form&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/fundamentals/systems/form/overview&quot;},{&quot;name&quot;:&quot;Localize&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/localize&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/fundamentals/systems/localize/overview&quot;},{&quot;name&quot;:&quot;Icon&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/icon&quot;,&quot;priority&quot;:40,&quot;redirect&quot;:&quot;/next/fundamentals/systems/icon/overview&quot;},{&quot;name&quot;:&quot;Overlays&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/overlays&quot;,&quot;priority&quot;:40,&quot;children&quot;:[{&quot;name&quot;:&quot;Overview&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/overlays/overview&quot;,&quot;priority&quot;:10},{&quot;name&quot;:&quot;Edge cases&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/overlays/_edge-cases&quot;,&quot;priority&quot;:10},{&quot;name&quot;:&quot;Use Cases&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/overlays/use-cases&quot;,&quot;priority&quot;:20,&quot;active&quot;:true},{&quot;name&quot;:&quot;Rationale&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/overlays/rationale&quot;,&quot;priority&quot;:30},{&quot;name&quot;:&quot;Positioning&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/overlays/_configuration-positioning&quot;,&quot;priority&quot;:40},{&quot;name&quot;:&quot;Configuration&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/overlays/configuration&quot;,&quot;priority&quot;:40},{&quot;name&quot;:&quot;API Table&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/overlays/api-table&quot;,&quot;priority&quot;:90}],&quot;redirect&quot;:&quot;/next/fundamentals/systems/overlays/overview&quot;,&quot;active&quot;:true,&quot;hasActiveChild&quot;:true}],&quot;redirect&quot;:&quot;/next/fundamentals/systems/core/overview&quot;,&quot;active&quot;:true,&quot;hasActiveChild&quot;:true},{&quot;name&quot;:&quot;Tools&quot;,&quot;url&quot;:&quot;/next/fundamentals/tools&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/fundamentals/tools/helpers/overview&quot;},{&quot;name&quot;:&quot;Node Tools&quot;,&quot;url&quot;:&quot;/next/fundamentals/node-tools&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview&quot;},{&quot;name&quot;:&quot;Rationales&quot;,&quot;url&quot;:&quot;/next/fundamentals/rationales&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/fundamentals/rationales/accessibility&quot;}],&quot;active&quot;:true,&quot;hasActiveChild&quot;:true},{&quot;name&quot;:&quot;guides&quot;,&quot;url&quot;:&quot;/next/guides&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:extension&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Principles&quot;,&quot;url&quot;:&quot;/next/guides/principles&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/guides/principles/definitions-and-terms&quot;},{&quot;name&quot;:&quot;How To&quot;,&quot;url&quot;:&quot;/next/guides/how-to&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/guides/how-to/get-started&quot;}]},{&quot;name&quot;:&quot;components&quot;,&quot;url&quot;:&quot;/next/components&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:deployedCode&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Accordion&quot;,&quot;url&quot;:&quot;/next/components/accordion&quot;,&quot;priority&quot;:0,&quot;redirect&quot;:&quot;/next/components/accordion/overview&quot;},{&quot;name&quot;:&quot;Button&quot;,&quot;url&quot;:&quot;/next/components/button&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/button/overview&quot;},{&quot;name&quot;:&quot;Calendar&quot;,&quot;url&quot;:&quot;/next/components/calendar&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/calendar/use-cases&quot;},{&quot;name&quot;:&quot;Checkbox Group&quot;,&quot;url&quot;:&quot;/next/components/checkbox-group&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/checkbox-group/overview&quot;},{&quot;name&quot;:&quot;Collapsible&quot;,&quot;url&quot;:&quot;/next/components/collapsible&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/collapsible/overview&quot;},{&quot;name&quot;:&quot;Combobox&quot;,&quot;url&quot;:&quot;/next/components/combobox&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/combobox/overview&quot;},{&quot;name&quot;:&quot;Dialog&quot;,&quot;url&quot;:&quot;/next/components/dialog&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/dialog/overview&quot;},{&quot;name&quot;:&quot;Drawer&quot;,&quot;url&quot;:&quot;/next/components/drawer&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/drawer/overview&quot;},{&quot;name&quot;:&quot;Fieldset&quot;,&quot;url&quot;:&quot;/next/components/fieldset&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/fieldset/overview&quot;},{&quot;name&quot;:&quot;Form&quot;,&quot;url&quot;:&quot;/next/components/form&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/form/overview&quot;},{&quot;name&quot;:&quot;Icon&quot;,&quot;url&quot;:&quot;/next/components/icon&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/icon/overview&quot;},{&quot;name&quot;:&quot;Input&quot;,&quot;url&quot;:&quot;/next/components/input&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input/overview&quot;},{&quot;name&quot;:&quot;Input Amount&quot;,&quot;url&quot;:&quot;/next/components/input-amount&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-amount/overview&quot;},{&quot;name&quot;:&quot;Input Amount Dropdown&quot;,&quot;url&quot;:&quot;/next/components/input-amount-dropdown&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-amount-dropdown/use-cases&quot;},{&quot;name&quot;:&quot;Input Date&quot;,&quot;url&quot;:&quot;/next/components/input-date&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-date/overview&quot;},{&quot;name&quot;:&quot;Input Datepicker&quot;,&quot;url&quot;:&quot;/next/components/input-datepicker&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-datepicker/overview&quot;},{&quot;name&quot;:&quot;Input Email&quot;,&quot;url&quot;:&quot;/next/components/input-email&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-email/overview&quot;},{&quot;name&quot;:&quot;Input File&quot;,&quot;url&quot;:&quot;/next/components/input-file&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-file/overview&quot;},{&quot;name&quot;:&quot;Input Iban&quot;,&quot;url&quot;:&quot;/next/components/input-iban&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-iban/overview&quot;},{&quot;name&quot;:&quot;Input Range&quot;,&quot;url&quot;:&quot;/next/components/input-range&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-range/overview&quot;},{&quot;name&quot;:&quot;Input Stepper&quot;,&quot;url&quot;:&quot;/next/components/input-stepper&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-stepper/overview&quot;},{&quot;name&quot;:&quot;Input Tel&quot;,&quot;url&quot;:&quot;/next/components/input-tel&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-tel/overview&quot;},{&quot;name&quot;:&quot;Input Tel Dropdown&quot;,&quot;url&quot;:&quot;/next/components/input-tel-dropdown&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-tel-dropdown/overview&quot;},{&quot;name&quot;:&quot;Listbox&quot;,&quot;url&quot;:&quot;/next/components/listbox&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/listbox/overview&quot;},{&quot;name&quot;:&quot;Pagination&quot;,&quot;url&quot;:&quot;/next/components/pagination&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/components/pagination/overview&quot;},{&quot;name&quot;:&quot;Progress Indicator&quot;,&quot;url&quot;:&quot;/next/components/progress-indicator&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/components/progress-indicator/overview&quot;},{&quot;name&quot;:&quot;Radio Group&quot;,&quot;url&quot;:&quot;/next/components/radio-group&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/components/radio-group/overview&quot;},{&quot;name&quot;:&quot;Select&quot;,&quot;url&quot;:&quot;/next/components/select&quot;,&quot;priority&quot;:40,&quot;redirect&quot;:&quot;/next/components/select/overview&quot;},{&quot;name&quot;:&quot;Select Rich&quot;,&quot;url&quot;:&quot;/next/components/select-rich&quot;,&quot;priority&quot;:40,&quot;redirect&quot;:&quot;/next/components/select-rich/overview&quot;},{&quot;name&quot;:&quot;Steps&quot;,&quot;url&quot;:&quot;/next/components/steps&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/steps/overview&quot;},{&quot;name&quot;:&quot;Switch&quot;,&quot;url&quot;:&quot;/next/components/switch&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/switch/overview&quot;},{&quot;name&quot;:&quot;Tabs&quot;,&quot;url&quot;:&quot;/next/components/tabs&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/tabs/overview&quot;},{&quot;name&quot;:&quot;Textarea&quot;,&quot;url&quot;:&quot;/next/components/textarea&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/textarea/overview&quot;},{&quot;name&quot;:&quot;Tooltip&quot;,&quot;url&quot;:&quot;/next/components/tooltip&quot;,&quot;priority&quot;:60,&quot;redirect&quot;:&quot;/next/components/tooltip/overview&quot;}]},{&quot;name&quot;:&quot;blog&quot;,&quot;url&quot;:&quot;/next/blog&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:deployedCode&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;The Accessibility of Lion&quot;,&quot;url&quot;:&quot;/next/blog/accessibility&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Controlling exports&quot;,&quot;url&quot;:&quot;/next/blog/controlling-exports&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Introducing lions website&quot;,&quot;url&quot;:&quot;/next/blog/introducing-lions-website&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Extending Lion Documentation&quot;,&quot;url&quot;:&quot;/next/blog/extending-documentation&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;ING open sources Lion&quot;,&quot;url&quot;:&quot;/next/blog/ing-open-sources-lion&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Lion without polyfills&quot;,&quot;url&quot;:&quot;/next/blog/lion-without-polyfills&quot;,&quot;priority&quot;:0}]}]"><template shadowroot="open" shadowrootmode="open"><style>
+  * {
+    box-sizing: border-box;
+  }
+
+  :host([data-layout='floating-toggle']) {
+    width: 0;
+  }
+
+  :host([data-layout='floating-toggle']) .burger {
+    position: absolute;
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    width: 32px;
+    height: 32px;
+    justify-content: space-around;
+    cursor: pointer;
+    left: 20px;
+    top: 20px;
+  }
+
+  :host([data-layout='floating-toggle']) .burger span {
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    transition: 0.3s;
+    display: block;
+  }
+
+  :host([data-layout='floating-toggle']) #l1-wrapper {
+    display: none;
+    z-index: 100;
+    background: #fff;
+  }
+
+  :host([data-layout='floating-toggle']) [data-part='level'][data-level='1'],
+  :host([data-layout='floating-toggle']) [data-part='level'][data-level='2'] {
+    z-index: 100;
+    background: #fff;
+  }
+
+  :host([data-layout='floating-toggle']) #burger-toggle:checked ~ #l1-wrapper {
+    display: flex;
+    position: absolute;
+  }
+
+      :host {
+        height: 100vh;
+        /** Make this the positioning parent of l0 and l1 */
+        position: relative;
+        display: block;
+        position: sticky;
+        top: 0;
+      }
+
+      #l1-wrapper {
+        display: flex;
+      }
+
+      :host [data-part='nav'] {
+        height: 100%;
+      }
+
+      :host [data-part='level'][data-level='1'],
+      :host [data-part='level'][data-level='2'] {
+        padding-block-start: var(--size-6);
+        padding-inline: var(--size-2);
+        overflow-y: scroll;
+        height: 100vh;
+      }
+
+      :host [data-part='level'][data-level='1'] {
+        width: 160px;
+        border-right: 1px solid #ccc;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      :host [data-part='level'][data-level='2'] {
+        width: 200px;
+      }
+
+      /**
+       * When a l0 child is active, or a l1 child => open correct l1
+       */
+      :host
+        [data-part='listitem']:not([data-:active])
+        [data-part='level'][data-level='2']:not([data-has-active-child]) {
+        /** TODO: sr-only, because we want to present all links to the screen reader */
+        display: none;
+      }
+
+      :host [data-part='list'] {
+        list-style-type: none;
+        margin: 4px;
+        padding: 0;
+      }
+
+      :host [data-part='anchor'][data-level='1'] {
+        display: block;
+        padding-block: var(--size-6);
+        padding-inline: var(--size-6);
+      }
+
+      :host [data-part='anchor'][data-level='2'] {
+        display: block;
+        padding-block: var(--size-3);
+        padding-inline: var(--size-6);
+      }
+
+      :host [data-part='anchor'][data-level='2'][aria-current='page']:not(:last-child) {
+        padding-block: var(--size-2);
+      }
+
+      :host [data-part='icon'][data-level='1'] {
+        display: block;
+        width: var(--size-7);
+        height: var(--size-7);
+        margin-bottom: var(--size-1);
+      }
+
+      :host [data-part='anchor'][data-level='1'] {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-block-end: 6px;
+      }
+
+      :host [data-part='anchor'] {
+        display: block;
+        color: var(--text-color);
+        text-decoration: inherit;
+        font-size: 1rem;
+        fill: var(--primary-icon-color);
+        margin-inline: var(--size-1);
+        border-radius: var(--radius-4);
+      }
+
+      :host [data-part='anchor'][aria-current='page'][data-level='1'],
+      :host [data-part='anchor'][aria-current='page'][data-level='3']:last-child,
+      :host [data-part='anchor'][aria-current='page'][data-level='4'] {
+        font-weight: bold;
+        background-color: var(--secondary-color);
+      }
+
+      :host [data-part='anchor']:hover {
+        text-decoration: underline;
+        text-underline-offset: 0.3em;
+        background-color: var(--secondary-color-lighter);
+      }
+
+      :host [data-part='anchor']:focus {
+        outline: 2px solid var(--contrast-color-dark);
+      }
+
+      :host [data-part='anchor'][data-level='2']:focus,
+      :host [data-part='anchor'][data-level='2']:focus {
+        outline-offset: 2px;
+      }
+
+      :host [data-part='level'][data-level='2'] {
+        color: var(--text-color, #333);
+
+        /* 14px/Regular */
+        font-family: 'ING Me';
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px; /* 142.857% */
+        text-decoration: none;
+      }
+
+      :host [data-part='listitem'][data-level='2'][data-\:active] {
+        border-radius: var(--radius-4);
+        background: var(--neutral-color-lightest);
+        margin-block: 6px;
+      }
+
+      :host [data-part='level'][data-level='3'] {
+        overflow: hidden;
+        padding-block-end: 12px;
+      }
+
+      :host [data-part='anchor'][data-level='3'],
+      :host [data-part='anchor'][data-level='4'] {
+        /* 14px/Regular */
+        font-family: 'ING Me';
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px; /* 142.857% */
+        text-decoration: none;
+        margin-left: var(--size-7);
+        padding-inline: var(--size-3);
+      }
+
+      :host [data-part='anchor'][data-level='3'][aria-current='page'],
+      :host [data-part='anchor'][data-level='4'][aria-current='page'] {
+        font-weight: bold;
+      }
+
+      :host [data-level='2'] > [aria-current='page'] {
+        background: transparent;
+        font-weight: bold;
+      }
+
+      :host [data-part='list'][data-level='4'] {
+        margin-left: var(--size-3);
+      }
+    </style><!--lit-part 1PVbJ+oM0tw=-->
+        <nav data-part="nav">
+          <input type="checkbox" id="burger-toggle" hidden />
+          <label for="burger-toggle" class="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+
+          <div id="l1-wrapper" data-part="l1-wrapper">
+            <!--lit-part ICi22XWCZrw=--><!--lit-node 0--><div
+        data-part="level"
+        data-level="1"
+        data-has-active-child="false"
+      >
+        <!--lit-node 1--><ul data-part="list" data-level="1">
+          <!--lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:home" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->home<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" data-:active>
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/fundamentals"
+        aria-current="page"
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:sdkFilled" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->fundamentals<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/guides"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:extension" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->guides<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/components"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:deployedCode" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->components<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/blog"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:deployedCode" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->blog<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--/lit-part-->
+        </ul>
+        <div class="nav-item-last">
+          <!--lit-node 4--><a href="/next/search" data-part="anchor" data-level="1">
+            <!--lit-node 5--><lion-icon
+              
+              
+              
+             data-part="icon" icon-id="lion-portal:portal:search" data-level="1" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon>
+            <span>Search</span>
+          </a>
+        </div>
+      </div><!--/lit-part-->
+            <!--lit-part 4Xfrjoki3Io=--><!--lit-node 0--><div
+        data-part="level"
+        data-level="2"
+        data-has-active-child="false"
+      >
+        <!--lit-node 1--><ul data-part="list" data-level="2">
+          <!--lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" data-:active>
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/fundamentals/systems/core/overview"
+        aria-current="page"
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Systems<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part 4Xfrjoki3Io=--><!--lit-node 0--><div
+        data-part="level"
+        data-level="3"
+        data-has-active-child="true"
+      >
+        <!--lit-node 1--><ul data-part="list" data-level="3">
+          <!--lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="3" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="3"
+        href="/next/fundamentals/systems/core/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Core<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="3" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="3"
+        href="/next/fundamentals/systems/form/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Form<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="3" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="3"
+        href="/next/fundamentals/systems/localize/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Localize<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="3" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="3"
+        href="/next/fundamentals/systems/icon/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Icon<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="3" data-:active>
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="3"
+        href="/next/fundamentals/systems/overlays/overview"
+        aria-current="page"
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Overlays<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part 4Xfrjoki3Io=--><!--lit-node 0--><div
+        data-part="level"
+        data-level="4"
+        data-has-active-child="true"
+      >
+        <!--lit-node 1--><ul data-part="list" data-level="4">
+          <!--lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/overlays/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Overview<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/overlays/_edge-cases"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Edge cases<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" data-:active>
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/overlays/use-cases"
+        aria-current="page"
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Use Cases<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/overlays/rationale"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Rationale<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/overlays/_configuration-positioning"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Positioning<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/overlays/configuration"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Configuration<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/overlays/api-table"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->API Table<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--/lit-part-->
+        </ul>
+      </div><!--/lit-part-->
+              </li><!--/lit-part--><!--/lit-part-->
+        </ul>
+      </div><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/fundamentals/tools/helpers/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Tools<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Node Tools<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/fundamentals/rationales/accessibility"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Rationales<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--/lit-part-->
+        </ul>
+      </div><!--/lit-part-->
+          </div>
+        </nav>
+      <!--/lit-part--></template></ui-portal-main-nav><!--astro:end--></astro-island> </div> <main class="ui-portal-grid__main markdown-body">   <load-demo data-import-path="systems_overlays_use-cases"></load-demo> <script type="module" src="/next/_astro/_...path_.astro_astro_type_script_index_0_lang.BJ-imuf3.js"></script>  <script type="module" src="/next/_astro/InPageNavLayout.astro_astro_type_script_index_0_lang.B2PN3HX8.js"></script>  <div class="container" data-astro-cid-2dr2cpgs> <div class="content" data-astro-cid-2dr2cpgs> <h1 id="overlays-use-cases">Overlays: Use Cases</h1>
+<p>The overlay system allows to create different types of overlays like dialogs, toasts, tooltips, dropdown, etc.
+It’s designed to be highly flexible, while still delivering sensible defaults.
+On top of this, the system was built having accessibility in mind.</p>
+<p>For a detailed rationale, please consult <a href="./rationale.md">Rationale</a>.</p>
+<mdjs-preview mdjs-story-name="main">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> main</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  &#x3C;demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;button slot="invoker">Click me to open the overlay!&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;div slot="content" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h2 id="overlaycontroller">OverlayController</h2>
+<p>OverlayController is the single class we instantiate whenever creating an overlay instance.
+Based on provided config, it will handle:</p>
+<ul>
+<li>DOM position (local vs global)</li>
+<li>positioning logic</li>
+<li>accessibility</li>
+<li>interaction patterns</li>
+</ul>
+<p>and has the following public functions:</p>
+<ul>
+<li><strong>show()</strong>, to show the overlay</li>
+<li><strong>hide()</strong>, to hide the overlay</li>
+<li><strong>toggle()</strong>, to toggle between show and hide</li>
+</ul>
+<p>All overlays contain an invokerNode and a contentNode</p>
+<ul>
+<li><strong>contentNode</strong>, the toggleable content of the overlay.</li>
+<li><strong>invokerNode</strong>, the element toggles the visibility of the content. For local overlays, this is the relative element the content is positioned to</li>
+</ul>
+<blockquote>
+<p>Make sure you pass a DOM-connected contentNode, an offline rendered (e.g. with just <code>document.createElement</code> or <code>renderLitAsNode</code>) will not work, because then we cannot determine the renderTarget to render the content to.</p>
+</blockquote>
+<p>For DOM position, local refers to overlays where the content is positioned next to the invokers they are related to, DOM-wise.
+Global refers to overlays where the content is positioned in a global root node at the bottom of <code>&#x3C;body></code>.</p>
+<h2 id="configuration">Configuration</h2>
+<p>Overlays can be configured in many ways to suit your needs. We go in-depth into each option in the Overlay System - Configuration chapter.</p>
+<p>We also export a few <a href="./configuration.md">preset configuration objects</a>.</p>
+<ul>
+<li>withModalDialogConfig</li>
+<li>withDropdownConfig</li>
+<li>withBottomSheetConfig</li>
+</ul>
+<p>You import these using ES Modules, and then simply call them inside your <code>OverlayController</code> instantiation:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ctrl</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#D73A49;--shiki-dark:#F97583"> new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> OverlayController</span><span style="color:#24292E;--shiki-dark:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  ...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(),</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  invokerNode,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  contentNode,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">});</span></span></code></pre>
+<p>or in your Web Component with <code>OverlayMixin</code>, make sure you override these methods to:</p>
+<ul>
+<li>Define configuration</li>
+<li>Handle setting up event listeners of toggling the opened state of your overlay</li>
+<li>Handle the tearing down of those event listeners</li>
+<li>Define a template which includes:
+<ul>
+<li>invoker slot for your user to provide the invoker node (the element that invokes the overlay content)</li>
+<li>content slot for your user to provide the content that shows when the overlay is opened,
+make sure to put it inside a div with id <code>overlay-content-node-wrapper</code> which is necessary for positioning logic to work properly.</li>
+</ul>
+</li>
+</ul>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">_defineOverlayConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    ...</span><span style="color:#24292E;--shiki-dark:#E1E4E8">withModalDialogConfig</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  };</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">_setupOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">_setupOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">__toggle</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.opened </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#D73A49;--shiki-dark:#F97583"> !</span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.opened;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  };</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode) {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">addEventListener</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'click'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.__toggle);</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">_teardownOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">_teardownOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode) {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">removeEventListener</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'click'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.__toggle);</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">render</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;slot name="invoker">&#x3C;/slot></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;div id="overlay-content-node-wrapper"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;slot name="content">&#x3C;/slot></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>or declaratively in your template with the <code>.config</code> property</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="jsx"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="color:#005CC5;--shiki-dark:#79B8FF">demo-el-using-overlaymixin</span><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic"> .config="${{</span><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic"> ...withModalDialogConfig()</span><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic"> }}"></span></span>
+<span class="line"><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic">  &#x3C;button</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> slot</span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"invoker"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">>Click me to open the overlay!&#x3C;/</span><span style="color:#22863A;--shiki-dark:#85E89D">button</span><span style="color:#24292E;--shiki-dark:#E1E4E8">></span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  &#x3C;</span><span style="color:#22863A;--shiki-dark:#85E89D">div</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> slot</span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"content"</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> class</span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"demo-overlay"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">></span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    &#x3C;</span><span style="color:#22863A;--shiki-dark:#85E89D">button</span><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic"> @click="${e</span><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic"> =></span><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic"> e.target.dispatchEvent(new</span><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic"> Event('close-overlay',</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> }</span><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic">))}"></span></span>
+<span class="line"><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic">    &#x3C;/button></span></span>
+<span class="line"><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic">  &#x3C;/div></span></span>
+<span class="line"><span style="color:#B31D28;--shiki-light-font-style:italic;--shiki-dark:#FDAEB7;--shiki-dark-font-style:italic">&#x3C;/demo-el-using-overlaymixin></span></span></code></pre>
+<h3 id="backdrop">Backdrop</h3>
+<p>There are multiple ways to pass a backdrop node for your overlay.</p>
+<p>The easiest way is declarative. This can be achieved by adding a <code>&#x3C;slot name="backdrop"></code> to your <code>render</code> method. The component user can then insert a backdrop slottable declaratively:</p>
+<mdjs-preview mdjs-story-name="backdrop">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> backdrop</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> responsiveModalDialogConfig</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin .config="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">responsiveModalDialogConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;demo-overlay-backdrop slot="backdrop">&#x3C;/demo-overlay-backdrop></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button slot="invoker">Click me to open the overlay!&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<p>You can also pass a backdropNode imperatively to the OverlayConfig. Either use <code>hasBackdrop: true</code>, which will spawn a default <code>backdropNode</code>.
+For more control, pass a <code>backdropNode</code> yourself, e.g. a webcomponent so you can easily encapsulate styles.</p>
+<mdjs-preview mdjs-story-name="backdropImperative">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> backdropImperative</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> backdropNode</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> document.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">createElement</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'demo-overlay-backdrop'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">);</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> responsiveModalDialogConfig</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(), backdropNode };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin .config="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">responsiveModalDialogConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button slot="invoker">Click me to open the overlay!&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h4 id="backdrop-animation">Backdrop animation</h4>
+<p>By default our overlay system comes with a backdrop animation.
+This will add <code>overlays__backdrop--animation-in</code> and <code>overlays__backdrop--animation-out</code> classes to your backdrop node.
+If you have <code>placementMode: 'local'</code> it will replace those <code>global</code> strings in the CSS classes with <code>local</code>.</p>
+<p>It expects from you that you act on these classes in your CSS with an animation. For example if you have your own backdrop webcomponent (to encapsulate styles):</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="css"><code><span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">:host</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#6F42C1;--shiki-dark:#B392F0">.local-overlays__backdrop--animation-in</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  animation</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: local-overlays-backdrop-fade-in </span><span style="color:#005CC5;--shiki-dark:#79B8FF">300</span><span style="color:#D73A49;--shiki-dark:#F97583">ms</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">:host</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#6F42C1;--shiki-dark:#B392F0">.local-overlays__backdrop--animation-out</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  animation</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: local-overlays-backdrop-fade-out </span><span style="color:#005CC5;--shiki-dark:#79B8FF">300</span><span style="color:#D73A49;--shiki-dark:#F97583">ms</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">  opacity</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">@keyframes</span><span style="color:#E36209;--shiki-dark:#FFAB70"> local-overlays-backdrop-fade-in</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">  from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    opacity</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">@keyframes</span><span style="color:#E36209;--shiki-dark:#FFAB70"> local-overlays-backdrop-fade-out</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">  from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    opacity</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">0.3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<p>Under the hood, the OverlayController listens to <code>animationend</code> event, only then it will remove the animation-out/animation-in classes.</p>
+<blockquote>
+<p>If you don’t intend on having a backdrop animation at all, as a subclasser you should override <code>transitionHide</code> and <code>transitionShow</code> OverlayMixin methods.
+Otherwise the <code>hide</code> will await an <code>animationend</code> event that will never happen.</p>
+</blockquote>
+<mdjs-preview mdjs-story-name="backdropAnimation">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> backdropAnimation</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> responsiveModalDialogConfig</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin .config="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">responsiveModalDialogConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button slot="invoker">Click me to open the overlay!&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;demo-overlay-backdrop slot="backdrop">&#x3C;/demo-overlay-backdrop></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h3 id="responsive-switching">Responsive switching</h3>
+<p>Currently we support switching between overlay configurations.
+Keep in mind however that we do not yet support switching between overlay configurations while the content is shown.
+If you try, it will close the content if it is open, and the user will need to re-open.
+Will be supported in the near future.</p>
+<p>This can be done declaratively as shown below.
+Drag the viewport under 600px and open the overlay to see the <code>withBottomSheetConfig</code> applied.</p>
+<mdjs-preview mdjs-story-name="responsiveSwitching">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> responsiveSwitching</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> responsiveBottomSheetConfig</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withBottomSheetConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      .config="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">responsiveBottomSheetConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      @before-opened=${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#032F62;--shiki-dark:#9ECBFF"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        if</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> (</span><span style="color:#24292E;--shiki-dark:#E1E4E8">window</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">innerWidth</span><span style="color:#D73A49;--shiki-dark:#F97583"> >=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 600</span><span style="color:#032F62;--shiki-dark:#9ECBFF">) {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">          e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">config</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">() };</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        } </span><span style="color:#D73A49;--shiki-dark:#F97583">else</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">          e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">config</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withBottomSheetConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">() };</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        }</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      }</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button slot="invoker">Click me to open the overlay!&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<p>Alternative ways to do it is by setting the event listener manually on the <code>OverlayController</code> instance.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">myOverlayCtrl.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">addEventListener</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'before-show'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (window.innerWidth </span><span style="color:#D73A49;--shiki-dark:#F97583">>=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 600</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    ctrl.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">updateConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  } </span><span style="color:#D73A49;--shiki-dark:#F97583">else</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    ctrl.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">updateConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withBottomSheetConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">});</span></span></code></pre>
+<p>Or inside of a Web Component that uses the <code>OverlayMixin</code>, by overriding protected method <code>_defineOverlay</code>,
+where we can access the OverlayController instance and use the <code>updateConfig</code> method on the controller:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">_defineOverlay</span><span style="color:#24292E;--shiki-dark:#E1E4E8">({ invokerNode, contentNode }) {</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">  // initial</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ctrl</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#D73A49;--shiki-dark:#F97583"> new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> OverlayController</span><span style="color:#24292E;--shiki-dark:#E1E4E8">({</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    ...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withBottomSheetConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(),</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    hidesOnOutsideClick: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    invokerNode,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    contentNode,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  });</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">  // responsive</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  ctrl.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">addEventListener</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'before-show'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (window.innerWidth </span><span style="color:#D73A49;--shiki-dark:#F97583">>=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 600</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      ctrl.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">updateConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    } </span><span style="color:#D73A49;--shiki-dark:#F97583">else</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      ctrl.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">updateConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withBottomSheetConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">());</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  });</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> ctrl;</span></span></code></pre>
+<p>Below is another demo where you can toggle between configurations using buttons.</p>
+<mdjs-preview mdjs-story-name="responsiveSwitching2">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> responsiveSwitching2</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> overlayRef</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> createRef</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> selectRef</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> createRef</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> getConfig</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#E36209;--shiki-dark:#FFAB70"> selectValue</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    switch</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (selectValue) {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      case</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> 'modaldialog'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(), hasBackdrop: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      case</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> 'bottomsheet'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withBottomSheetConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      case</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> 'dropdown'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withDropdownConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(), hasBackdrop: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">false</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, inheritsReferenceWidth: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      default</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(), hasBackdrop: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> };</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> onSelectChange</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#E36209;--shiki-dark:#FFAB70"> e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    overlayRef.value.config </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> getConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(e.target.value);</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  };</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;style></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      .demo-overlay {</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        background-color: white;</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        border: 1px solid black;</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      }</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/style></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    Change config to:</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;select ${</span><span style="color:#6F42C1;--shiki-dark:#B392F0">ref</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#24292E;--shiki-dark:#E1E4E8">selectRef</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">} @change="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">onSelectChange</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;option value="modaldialog">Modal Dialog&#x3C;/option></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;option value="bottomsheet">Bottom Sheet&#x3C;/option></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;option value="dropdown">Dropdown&#x3C;/option></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/select></span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;br /></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin ${</span><span style="color:#6F42C1;--shiki-dark:#B392F0">ref</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#24292E;--shiki-dark:#E1E4E8">overlayRef</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">} .config="${</span><span style="color:#6F42C1;--shiki-dark:#B392F0">getConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#24292E;--shiki-dark:#E1E4E8">selectRef</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">value</span><span style="color:#032F62;--shiki-dark:#9ECBFF">?.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">value</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button slot="invoker">Click me to open the overlay!&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h2 id="opened-state">Opened state</h2>
+<p>For any overlay that implements the OverlayMixin, there is a Boolean property <code>opened</code> that reflects whether the overlay content is displayed or not.</p>
+<p>You can also listen to the event <code>opened-changed</code> which is fired whenever <code>opened</code> is toggled. This can be useful e.g. if somewhere in your application you need to rely on this “state”.</p>
+<mdjs-preview mdjs-story-name="openedState">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> openedState</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> appState</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    opened: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">false</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> myRefs</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    overlay: </span><span style="color:#6F42C1;--shiki-dark:#B392F0">createRef</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(),</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    openedState: </span><span style="color:#6F42C1;--shiki-dark:#B392F0">createRef</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(),</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  function</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> onOpenClosed</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#E36209;--shiki-dark:#FFAB70">ev</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    appState.opened </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> ev.target.opened;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    myRefs.openedState.value.innerText </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> appState.opened;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    appState.opened: &#x3C;span ${</span><span style="color:#6F42C1;--shiki-dark:#B392F0">ref</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#24292E;--shiki-dark:#E1E4E8">myRefs</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">openedState</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}>${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">appState</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">opened</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}&#x3C;/span></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      ${</span><span style="color:#6F42C1;--shiki-dark:#B392F0">ref</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#24292E;--shiki-dark:#E1E4E8">myRefs</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">overlay</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      .opened="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">appState</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">opened</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      @opened-changed="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">onOpenClosed</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button slot="invoker">Overlay&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h2 id="intercepting-openclose">Intercepting open/close</h2>
+<p>It is possible to intercept the open/close process by calling <code>.preventDefault()</code> on
+the <code>before-closed</code> or <code>before-opened</code> events.</p>
+<mdjs-preview mdjs-story-name="interceptingOpenClose">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> interceptingOpenClose</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">  // Application code</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  let</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> blockOverlay </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> true</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> myRefs</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    statusButton: </span><span style="color:#6F42C1;--shiki-dark:#B392F0">createRef</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(),</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    overlay: </span><span style="color:#6F42C1;--shiki-dark:#B392F0">createRef</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(),</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  function</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> intercept</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#E36209;--shiki-dark:#FFAB70">ev</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (blockOverlay) {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      ev.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">preventDefault</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    Overlay blocked state:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      ${</span><span style="color:#6F42C1;--shiki-dark:#B392F0">ref</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#24292E;--shiki-dark:#E1E4E8">myRefs</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">statusButton</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      @click="${</span><span style="color:#032F62;--shiki-dark:#9ECBFF">() </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#032F62;--shiki-dark:#9ECBFF"> {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        blockOverlay</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#D73A49;--shiki-dark:#F97583"> !</span><span style="color:#24292E;--shiki-dark:#E1E4E8">blockOverlay</span><span style="color:#032F62;--shiki-dark:#9ECBFF">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        myRefs</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">statusButton</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">value</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">textContent</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> blockOverlay</span><span style="color:#032F62;--shiki-dark:#9ECBFF">;</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      }</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      ${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">blockOverlay</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      ${</span><span style="color:#6F42C1;--shiki-dark:#B392F0">ref</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#24292E;--shiki-dark:#E1E4E8">myRefs</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">overlay</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      @before-closed="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">intercept</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      @before-opened="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">intercept</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        slot="invoker"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        @click=${</span><span style="color:#032F62;--shiki-dark:#9ECBFF">() </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">          console</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">log</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'blockOverlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#24292E;--shiki-dark:#E1E4E8">blockOverlay</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'opened'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#24292E;--shiki-dark:#E1E4E8">myRefs</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">overlay</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">value</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">opened</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Overlay</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button @click="${</span><span style="color:#032F62;--shiki-dark:#9ECBFF">() </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#032F62;--shiki-dark:#9ECBFF"> (</span><span style="color:#24292E;--shiki-dark:#E1E4E8">myRefs</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">overlay</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">value</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">opened</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> false</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}">⨯&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h2 id="overlaymixin">OverlayMixin</h2>
+<p>OverlayMixin is a mixin anyone can use to create a Web Component which has a <code>content node</code> (<code>slot="content"</code>) and <code>invoker node</code> (<code>slot="invoker"</code>).</p>
+<p>Under the hood, the <code>OverlayMixin</code> will instantiate an OverlayController with these nodes.</p>
+<p>By default, there are only a few <code>OverlayMixin</code> methods you need to override to create a working Web Component using an overlay:</p>
+<ul>
+<li><code>render</code>, the template needs to include a <code>&#x3C;slot name="invoker"></code> and <code>&#x3C;slot name="content"></code> inside a div with id <code>overlay-content-node-wrapper</code> (for positioning).</li>
+<li><code>_defineOverlayConfig</code>, in this protected method, return an object that contains the default configuration for your Web Component’s overlay. See configuration section of OverlayController.</li>
+<li><code>_setupOpenCloseListeners</code>, use this lifecycle hook to setup the open and close event listeners on your <code>_overlayInvokerNode</code>.</li>
+<li><code>_teardownOpenCloseListeners</code>, use this lifecycle hook to ensure that the listeners are removed when the OverlayController is tearing down. For example when the Web Component is disconnected from the DOM.</li>
+</ul>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { LitElement } </span><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> '@mdjs/mdjs-preview'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { OverlayMixin } </span><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> '@lion/ui/overlays.js'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> MyOverlayWC</span><span style="color:#D73A49;--shiki-dark:#F97583"> extends</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> OverlayMixin</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(LitElement) {</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">  _defineOverlayConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      placementMode: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'global'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      hasBackdrop: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">  _setupOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">_setupOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">__toggle</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">      // opened is the public boolean property to use in the WC for opening/closing</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.opened </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#D73A49;--shiki-dark:#F97583"> !</span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.opened;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    };</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    // Always guard this, because your user may toggle the opened state through something else (e.g. event) and not an invoker node.</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode) {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">addEventListener</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'click'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.__toggle);</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">  _teardownOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">_teardownOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode) {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">removeEventListener</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'click'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.__toggle);</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">  render</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;slot name="invoker">&#x3C;/slot></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div id="overlay-content-node-wrapper"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;slot name="content">&#x3C;/slot></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<h2 id="overlaysmanager">OverlaysManager</h2>
+<p>The <code>OverlaysManager</code> is a global registry keeping track of all different types of overlays. The need for a global housekeeping mainly arises when multiple overlays are opened simultaneously.</p>
+<p>For example, you may have a modal dialog that opens another modal dialog. The second dialog needs to block the first. When the second dialog is closed, the first one is available again.</p>
+<p>The overlay manager keeps track of all registered overlays and controls which one to show.</p>
+<p>Below an example is shown with the <code>isBlocking</code> option, which makes use of the OverlaysManager’s capabilities.</p>
+<mdjs-preview mdjs-story-name="overlayManager">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> overlayManager</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> hasBackdropConfig</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(), hasBackdrop: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin .config="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">hasBackdropConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button slot="invoker">Click me to open the overlay!&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;br /></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#032F62;--shiki-dark:#9ECBFF"> (</span><span style="color:#24292E;--shiki-dark:#E1E4E8">document</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">querySelector</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'#secondOverlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">).</span><span style="color:#24292E;--shiki-dark:#E1E4E8">opened</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> true</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          Click me to open another overlay which is blocking</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      id="secondOverlay"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      .config="${</span><span style="color:#032F62;--shiki-dark:#9ECBFF">{ </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(), hasBackdrop: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, isBlocking: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" class="demo-overlay demo-overlay--second"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h2 id="local-backdrop">Local Backdrop</h2>
+<p>We provide a possibility to add a backdrop to a locally placed overlay.
+You can pass your backdropNode as a configuration parameter and control its styling reacting upon OverlayController events.
+Here is the example below</p>
+<mdjs-preview mdjs-story-name="localBackdrop">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> localBackdrop</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> localBackdropConfig</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { </span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withDropdownConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin .config="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">localBackdropConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;demo-overlay-backdrop slot="backdrop">&#x3C;/demo-overlay-backdrop></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button slot="invoker">Click me to open the overlay!&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        Hello! You can close this notification here:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h3 id="nested-overlays">Nested Overlays</h3>
+<p>Overlays can be nested, as the demo below shows.
+It’s also possible to compose a nested construction by moving around dom nodes.</p>
+<mdjs-preview mdjs-story-name="nestedOverlays">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> nestedOverlays</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;demo-el-using-overlaymixin .config="${</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">()</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;div slot="content" id="mainContent" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        open nested overlay:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;demo-el-using-overlaymixin .config="${</span><span style="color:#6F42C1;--shiki-dark:#B392F0">withModalDialogConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">()</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          &#x3C;div slot="content" id="nestedContent" class="demo-overlay"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">            Nested content</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">            &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">              @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">            ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">              ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">            &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          &#x3C;button slot="invoker" id="nestedInvoker">nested invoker button&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          @click="${</span><span style="color:#005CC5;--shiki-dark:#79B8FF">e</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">target</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">dispatchEvent</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Event</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'close-overlay'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, { bubbles: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">true</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> }))</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">          ⨯</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;button slot="invoker" id="mainInvoker">invoker button&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/demo-el-using-overlaymixin></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h2 id="local-overlay-with-an-arrow">Local overlay with an arrow</h2>
+<p>To add an arrow to the localOverlay you can add <code>ArrowMixin</code> to your component.
+And add the <code>arrowPopperConfig</code> to the <code>_defineOverlayConfig</code>.</p>
+<mdjs-preview mdjs-story-name="LocalWithArrow">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> LocalWithArrow</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> placementRightConfig</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { popperConfig: { placement: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'right'</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> } };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> placementBottomConfig</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { popperConfig: { placement: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'bottom'</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> } };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> placementLeftConfig</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { popperConfig: { placement: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'left'</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> } };</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> ArrowExample</span><span style="color:#D73A49;--shiki-dark:#F97583"> extends</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> ArrowMixin</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#6F42C1;--shiki-dark:#B392F0">OverlayMixin</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(LitElement)) {</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    _defineOverlayConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        ...</span><span style="color:#005CC5;--shiki-dark:#79B8FF">super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">_defineOverlayConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(),</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        popperConfig: {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">          ...</span><span style="color:#005CC5;--shiki-dark:#79B8FF">super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">_defineOverlayConfig</span><span style="color:#24292E;--shiki-dark:#E1E4E8">().popperConfig,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">          placement: </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'top'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        },</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      };</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    _setupOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">_setupOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode) {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">addEventListener</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'click'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.toggle);</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    _teardownOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">      super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">_teardownOpenCloseListeners</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode) {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._overlayInvokerNode.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">removeEventListener</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'click'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.toggle);</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="color:#D73A49;--shiki-dark:#F97583">!</span><span style="color:#24292E;--shiki-dark:#E1E4E8">customElements.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">get</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'arrow-example'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)) {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    customElements.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">define</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'arrow-example'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, ArrowExample);</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;style></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      .demo-box-placements {</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        display: flex;</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        flex-direction: column;</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        margin: 40px 0 0 200px;</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      }</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      .demo-box-placements arrow-example {</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        margin: 20px;</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      }</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/style></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;div class="demo-box-placements"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;arrow-example></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button slot="invoker">Top&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;div slot="content">This is a tooltip with an arrow&#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/arrow-example></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;arrow-example .config="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">placementRightConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button slot="invoker">Right&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;div slot="content">This is a tooltip with an arrow&#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/arrow-example></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;arrow-example .config="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">placementBottomConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button slot="invoker">Bottom&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;div slot="content">This is a tooltip with an arrow&#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/arrow-example></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;arrow-example .config="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">placementLeftConfig</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button slot="invoker">Left&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;div slot="content">This is a tooltip with an arrow&#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/arrow-example></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/div></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview> </div> <ui-portal-inpage-nav nav-data="[{&#34;name&#34;:&#34;Overlays: Use Cases&#34;,&#34;url&#34;:&#34;overlays-use-cases&#34;},{&#34;name&#34;:&#34;OverlayController&#34;,&#34;url&#34;:&#34;overlaycontroller&#34;},{&#34;name&#34;:&#34;Configuration&#34;,&#34;url&#34;:&#34;configuration&#34;},{&#34;name&#34;:&#34;Backdrop&#34;,&#34;url&#34;:&#34;backdrop&#34;},{&#34;name&#34;:&#34;Backdrop animation&#34;,&#34;url&#34;:&#34;backdrop-animation&#34;},{&#34;name&#34;:&#34;Responsive switching&#34;,&#34;url&#34;:&#34;responsive-switching&#34;},{&#34;name&#34;:&#34;Opened state&#34;,&#34;url&#34;:&#34;opened-state&#34;},{&#34;name&#34;:&#34;Intercepting open/close&#34;,&#34;url&#34;:&#34;intercepting-openclose&#34;},{&#34;name&#34;:&#34;OverlayMixin&#34;,&#34;url&#34;:&#34;overlaymixin&#34;},{&#34;name&#34;:&#34;OverlaysManager&#34;,&#34;url&#34;:&#34;overlaysmanager&#34;},{&#34;name&#34;:&#34;Local Backdrop&#34;,&#34;url&#34;:&#34;local-backdrop&#34;},{&#34;name&#34;:&#34;Nested Overlays&#34;,&#34;url&#34;:&#34;nested-overlays&#34;},{&#34;name&#34;:&#34;Local overlay with an arrow&#34;,&#34;url&#34;:&#34;local-overlay-with-an-arrow&#34;}]" data-astro-cid-2dr2cpgs="true"></ui-portal-inpage-nav> </div>  </main> <div class="ui-portal-grid__footer"> <ui-portal-footer footer-data="[{&quot;name&quot;:&quot;discover&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;blog&quot;,&quot;url&quot;:&quot;/blog&quot;},{&quot;name&quot;:&quot;help and feedback&quot;,&quot;url&quot;:&quot;https://github.com/ing-bank/lion/issues&quot;}]},{&quot;name&quot;:&quot;follow&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://github.com/ing-bank/lion&quot;},{&quot;name&quot;:&quot;slack&quot;,&quot;url&quot;:&quot;/about/slack/&quot;}]},{&quot;name&quot;:&quot;support&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;contribute&quot;,&quot;url&quot;:&quot;https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md&quot;}]}]"><template shadowroot="open" shadowrootmode="open"><style>
+      /** FOOTER ****************************************************************************************/
+      #main-footer {
+        margin-top: 50px;
+        border-top: 1px solid #eaeaea;
+        background-color: var(--footer-background, rgba(0, 0, 0, 0.1));
+        color: var(--text-color);
+        padding: 40px 50px;
+        flex-grow: 1;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+      }
+
+      #footer-menu .content-area {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      @media screen and (min-width: 1024px) {
+        #main-footer {
+          padding-inline: 96px;
+        }
+
+        #footer-menu .content-area {
+          flex-direction: row;
+          text-align: left;
+        }
+      }
+
+      #footer-menu ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      #footer-menu a {
+        text-decoration: none;
+        color: var(--text-color);
+        padding: 5px 0;
+        display: block;
+      }
+
+      #footer-menu a:hover {
+        text-decoration: underline;
+      }
+    </style><!--lit-part XdODVFi+K9w=-->
+      <footer id="main-footer">
+        <div id="footer-menu">
+          <div class="content-area">
+            <nav>
+              <h3>Discover</h3>
+              <ul>
+                <li>
+                  <a href="/next/blog">Blog</a>
+                </li>
+                <li>
+                  <a href="https://github.com/ing-bank/lion/issues" rel="noopener noreferrer"
+                    >Help and Feedback</a
+                  >
+                </li>
+              </ul>
+            </nav>
+            <nav>
+              <h3>Follow</h3>
+              <ul>
+                <li>
+                  <a href="https://github.com/ing-bank/lion" rel="noopener noreferrer">GitHub</a>
+                </li>
+                <li>
+                  <a href="/next/about/slack/">Slack</a>
+                </li>
+              </ul>
+            </nav>
+            <nav>
+              <h3>Support</h3>
+              <ul>
+                <li>
+                  <a
+                    href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md"
+                    rel="noopener noreferrer"
+                    >Contribute</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </footer>
+    <!--/lit-part--></template></ui-portal-footer> </div>  </body> </html>

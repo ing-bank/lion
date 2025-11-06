@@ -1,9 +1,0 @@
-{
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "./dist-types",
-    "rootDir": "."
-  },
-  "include": ["src", "test", "test-node", "test-suites", "types"],
-  "exclude": ["dist-types"]
-}

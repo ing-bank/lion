@@ -1,0 +1,857 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/next/favicon.svg"><meta name="generator" content="Astro v5.13.9"><link href="/next/styles/open-props@1.6.11.min.css" rel="stylesheet" type="text/css"><link href="/next/styles/global.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/variables.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/markdown.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/layout.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/style.css" rel="stylesheet" type="text/css"><script type="module" src="/next/_astro/MainLayout.astro_astro_type_script_index_0_lang.BoVk2TqR.js"></script><link rel="canonical" href="http://localhost:4321/next/blog/ing-open-sources-lion"><meta name="description" content="High quality UI web components"><meta name="robots" content="index, follow"><meta property="og:title" content="Lion"><meta property="og:type" content="website"><meta property="og:image" content="http://localhost:4321/opengraph.jpg"><meta property="og:url" content="http://localhost:4321/next/blog/ing-open-sources-lion"><meta property="og:image:url" content="http://localhost:4321/opengraph.jpg"><meta property="og:image:alt" content="Lion Homepage screen"><style>.ui-portal-grid__main{padding:50px}h1{color:var(--Primary-Gray600, #333);font-family:ING Me;font-size:48px;font-style:normal;font-weight:700;line-height:56px;border-bottom:1px solid var(--Primary-Gray200, #d9d9d9);margin:0 -230px 0 -50px;padding:0 230px 0 50px}@media (max-width: 1200px){.ui-portal-grid__main{padding:30px}h1{margin:0 -30px;padding:0 30px}}@media (max-width: 899px){.ui-portal-grid__main{padding:20px}h1{margin:0 -20px;padding:0 20px}}h2{color:var(--Primary-Gray600, #333);font-family:ING Me;font-size:36px;font-style:normal;font-weight:700;line-height:48px}h3{color:var(--Primary-Gray600, #333);font-family:ING Me;font-size:19px;font-style:normal;font-weight:700;line-height:28px}img{content-visibility:auto}.ui-portal-grid{display:grid;grid-template-columns:min-content 1fr;grid-template-rows:1fr min-content;grid-template-areas:"nav main" "nav footer"}.ui-portal-grid__nav{grid-area:nav}.ui-portal-grid__main{grid-area:main}.ui-portal-grid__footer{grid-area:footer}.ui-portal-collection{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,300px))}.ui-portal-card{display:flex;flex-direction:column;padding:1rem;border-radius:.5rem}@media (max-width: 899px){.ui-portal-grid__nav{position:absolute;background:#fff;z-index:100}.ui-portal-grid{grid-template-columns:1fr;grid-template-rows:1fr;grid-template-areas:"main" "footer"}}
+</style><script>/** @license Copyright 2020 Google LLC (BSD-3-Clause) */
+/** Bundled JS generated from "@astrojs/lit/client-shim.js" */
+var N = Object.defineProperty;
+var i = (t, n) => () => (t && (n = t((t = 0))), n);
+var b = (t, n) => {
+	for (var a in n) N(t, a, { get: n[a], enumerable: !0 });
+};
+function s() {
+	if (d === void 0) {
+		let t = document.createElement('div');
+		(t.innerHTML = '<div><template shadowrootmode="open"></template></div>'),
+			(d = !!t.firstElementChild.shadowRoot);
+	}
+	return d;
+}
+var d,
+	m = i(() => {});
+var p,
+	c,
+	f,
+	u = i(() => {
+		(p = (t) => t.parentElement === null),
+			(c = (t) => t.tagName === 'TEMPLATE'),
+			(f = (t) => t.nodeType === Node.ELEMENT_NODE);
+	});
+var h,
+	E = i(() => {
+		m();
+		u();
+		h = (t) => {
+			var n;
+			if (s()) return;
+			let a = [],
+				e = t.firstElementChild;
+			for (; e !== t && e !== null; )
+				if (c(e)) a.push(e), (e = e.content);
+				else if (e.firstElementChild !== null) e = e.firstElementChild;
+				else if (f(e) && e.nextElementSibling !== null) e = e.nextElementSibling;
+				else {
+					let o;
+					for (; e !== t && e !== null; )
+						if (p(e)) {
+							o = a.pop();
+							let r = o.parentElement,
+								l = o.getAttribute('shadowroot');
+							if (((e = o), l === 'open' || l === 'closed')) {
+								let y = o.hasAttribute('shadowrootdelegatesfocus');
+								try {
+									r.attachShadow({ mode: l, delegatesFocus: y }).append(o.content);
+								} catch {}
+							} else o = void 0;
+						} else {
+							let r = e.nextElementSibling;
+							if (r != null) {
+								(e = r), o !== void 0 && o.parentElement.removeChild(o);
+								break;
+							}
+							let l =
+								(n = e.parentElement) === null || n === void 0 ? void 0 : n.nextElementSibling;
+							if (l != null) {
+								(e = l), o !== void 0 && o.parentElement.removeChild(o);
+								break;
+							}
+							(e = e.parentElement), o !== void 0 && (o.parentElement.removeChild(o), (o = void 0));
+						}
+				}
+		};
+	});
+var w = i(() => {
+	E();
+});
+var v = {};
+b(v, { hasNativeDeclarativeShadowRoots: () => s, hydrateShadowRoots: () => h });
+var S = i(() => {
+	m();
+	w();
+});
+async function g() {
+	let { hydrateShadowRoots: t } = await Promise.resolve().then(() => (S(), v));
+	window.addEventListener('DOMContentLoaded', () => t(document.body), { once: true });
+}
+var x = Document.parseHTMLUnsafe(
+	'<p><template shadowrootmode="open"></template></p>'
+).querySelector('p');
+(!x || !x.shadowRoot) && g();
+</script></head> <body class="ui-portal-grid" data-layout="layout-general"> <div class="ui-portal-grid__nav"> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="Zg678y" component-url="/next/_astro/ui-portal-main-nav.DWL6Xyou.js" component-export="UIPortalMainNav" renderer-url="/next/_astro/client.DEGHhFmz.js" props="{&quot;nav-data&quot;:[0,&quot;[{\&quot;name\&quot;:\&quot;home\&quot;,\&quot;url\&quot;:\&quot;/next\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:home\&quot;},{\&quot;name\&quot;:\&quot;fundamentals\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:sdk\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Systems\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/core/overview\&quot;},{\&quot;name\&quot;:\&quot;Tools\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/tools\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/fundamentals/tools/helpers/overview\&quot;},{\&quot;name\&quot;:\&quot;Node Tools\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/node-tools\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview\&quot;},{\&quot;name\&quot;:\&quot;Rationales\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/rationales\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/fundamentals/rationales/accessibility\&quot;}]},{\&quot;name\&quot;:\&quot;guides\&quot;,\&quot;url\&quot;:\&quot;/next/guides\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:extension\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Principles\&quot;,\&quot;url\&quot;:\&quot;/next/guides/principles\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/guides/principles/definitions-and-terms\&quot;},{\&quot;name\&quot;:\&quot;How To\&quot;,\&quot;url\&quot;:\&quot;/next/guides/how-to\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/guides/how-to/get-started\&quot;}]},{\&quot;name\&quot;:\&quot;components\&quot;,\&quot;url\&quot;:\&quot;/next/components\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:deployedCode\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Accordion\&quot;,\&quot;url\&quot;:\&quot;/next/components/accordion\&quot;,\&quot;priority\&quot;:0,\&quot;redirect\&quot;:\&quot;/next/components/accordion/overview\&quot;},{\&quot;name\&quot;:\&quot;Button\&quot;,\&quot;url\&quot;:\&quot;/next/components/button\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/button/overview\&quot;},{\&quot;name\&quot;:\&quot;Calendar\&quot;,\&quot;url\&quot;:\&quot;/next/components/calendar\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/calendar/use-cases\&quot;},{\&quot;name\&quot;:\&quot;Checkbox Group\&quot;,\&quot;url\&quot;:\&quot;/next/components/checkbox-group\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/checkbox-group/overview\&quot;},{\&quot;name\&quot;:\&quot;Collapsible\&quot;,\&quot;url\&quot;:\&quot;/next/components/collapsible\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/collapsible/overview\&quot;},{\&quot;name\&quot;:\&quot;Combobox\&quot;,\&quot;url\&quot;:\&quot;/next/components/combobox\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/combobox/overview\&quot;},{\&quot;name\&quot;:\&quot;Dialog\&quot;,\&quot;url\&quot;:\&quot;/next/components/dialog\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/dialog/overview\&quot;},{\&quot;name\&quot;:\&quot;Drawer\&quot;,\&quot;url\&quot;:\&quot;/next/components/drawer\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/drawer/overview\&quot;},{\&quot;name\&quot;:\&quot;Fieldset\&quot;,\&quot;url\&quot;:\&quot;/next/components/fieldset\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/fieldset/overview\&quot;},{\&quot;name\&quot;:\&quot;Form\&quot;,\&quot;url\&quot;:\&quot;/next/components/form\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/form/overview\&quot;},{\&quot;name\&quot;:\&quot;Icon\&quot;,\&quot;url\&quot;:\&quot;/next/components/icon\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/icon/overview\&quot;},{\&quot;name\&quot;:\&quot;Input\&quot;,\&quot;url\&quot;:\&quot;/next/components/input\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Amount\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-amount\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-amount/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Amount Dropdown\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-amount-dropdown\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-amount-dropdown/use-cases\&quot;},{\&quot;name\&quot;:\&quot;Input Date\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-date\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-date/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Datepicker\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-datepicker\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-datepicker/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Email\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-email\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-email/overview\&quot;},{\&quot;name\&quot;:\&quot;Input File\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-file\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-file/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Iban\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-iban\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-iban/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Range\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-range\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-range/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Stepper\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-stepper\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-stepper/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Tel\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-tel\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-tel/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Tel Dropdown\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-tel-dropdown\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-tel-dropdown/overview\&quot;},{\&quot;name\&quot;:\&quot;Listbox\&quot;,\&quot;url\&quot;:\&quot;/next/components/listbox\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/listbox/overview\&quot;},{\&quot;name\&quot;:\&quot;Pagination\&quot;,\&quot;url\&quot;:\&quot;/next/components/pagination\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/components/pagination/overview\&quot;},{\&quot;name\&quot;:\&quot;Progress Indicator\&quot;,\&quot;url\&quot;:\&quot;/next/components/progress-indicator\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/components/progress-indicator/overview\&quot;},{\&quot;name\&quot;:\&quot;Radio Group\&quot;,\&quot;url\&quot;:\&quot;/next/components/radio-group\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/components/radio-group/overview\&quot;},{\&quot;name\&quot;:\&quot;Select\&quot;,\&quot;url\&quot;:\&quot;/next/components/select\&quot;,\&quot;priority\&quot;:40,\&quot;redirect\&quot;:\&quot;/next/components/select/overview\&quot;},{\&quot;name\&quot;:\&quot;Select Rich\&quot;,\&quot;url\&quot;:\&quot;/next/components/select-rich\&quot;,\&quot;priority\&quot;:40,\&quot;redirect\&quot;:\&quot;/next/components/select-rich/overview\&quot;},{\&quot;name\&quot;:\&quot;Steps\&quot;,\&quot;url\&quot;:\&quot;/next/components/steps\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/steps/overview\&quot;},{\&quot;name\&quot;:\&quot;Switch\&quot;,\&quot;url\&quot;:\&quot;/next/components/switch\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/switch/overview\&quot;},{\&quot;name\&quot;:\&quot;Tabs\&quot;,\&quot;url\&quot;:\&quot;/next/components/tabs\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/tabs/overview\&quot;},{\&quot;name\&quot;:\&quot;Textarea\&quot;,\&quot;url\&quot;:\&quot;/next/components/textarea\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/textarea/overview\&quot;},{\&quot;name\&quot;:\&quot;Tooltip\&quot;,\&quot;url\&quot;:\&quot;/next/components/tooltip\&quot;,\&quot;priority\&quot;:60,\&quot;redirect\&quot;:\&quot;/next/components/tooltip/overview\&quot;}]},{\&quot;name\&quot;:\&quot;blog\&quot;,\&quot;url\&quot;:\&quot;/next/blog\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:deployedCode\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;The Accessibility of Lion\&quot;,\&quot;url\&quot;:\&quot;/next/blog/accessibility\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Controlling exports\&quot;,\&quot;url\&quot;:\&quot;/next/blog/controlling-exports\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Introducing lions website\&quot;,\&quot;url\&quot;:\&quot;/next/blog/introducing-lions-website\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Extending Lion Documentation\&quot;,\&quot;url\&quot;:\&quot;/next/blog/extending-documentation\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;ING open sources Lion\&quot;,\&quot;url\&quot;:\&quot;/next/blog/ing-open-sources-lion\&quot;,\&quot;priority\&quot;:0,\&quot;active\&quot;:true},{\&quot;name\&quot;:\&quot;Lion without polyfills\&quot;,\&quot;url\&quot;:\&quot;/next/blog/lion-without-polyfills\&quot;,\&quot;priority\&quot;:0}],\&quot;active\&quot;:true,\&quot;hasActiveChild\&quot;:true}]&quot;]}" ssr client="load" before-hydration-url="/next/_astro/astro_scripts/before-hydration.js.Ci4ZmlXW.js" opts="{&quot;name&quot;:&quot;UIPortalMainNav&quot;,&quot;value&quot;:true}" await-children><ui-portal-main-nav nav-data="[{&quot;name&quot;:&quot;home&quot;,&quot;url&quot;:&quot;/next&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:home&quot;},{&quot;name&quot;:&quot;fundamentals&quot;,&quot;url&quot;:&quot;/next/fundamentals&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:sdk&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Systems&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/fundamentals/systems/core/overview&quot;},{&quot;name&quot;:&quot;Tools&quot;,&quot;url&quot;:&quot;/next/fundamentals/tools&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/fundamentals/tools/helpers/overview&quot;},{&quot;name&quot;:&quot;Node Tools&quot;,&quot;url&quot;:&quot;/next/fundamentals/node-tools&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview&quot;},{&quot;name&quot;:&quot;Rationales&quot;,&quot;url&quot;:&quot;/next/fundamentals/rationales&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/fundamentals/rationales/accessibility&quot;}]},{&quot;name&quot;:&quot;guides&quot;,&quot;url&quot;:&quot;/next/guides&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:extension&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Principles&quot;,&quot;url&quot;:&quot;/next/guides/principles&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/guides/principles/definitions-and-terms&quot;},{&quot;name&quot;:&quot;How To&quot;,&quot;url&quot;:&quot;/next/guides/how-to&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/guides/how-to/get-started&quot;}]},{&quot;name&quot;:&quot;components&quot;,&quot;url&quot;:&quot;/next/components&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:deployedCode&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Accordion&quot;,&quot;url&quot;:&quot;/next/components/accordion&quot;,&quot;priority&quot;:0,&quot;redirect&quot;:&quot;/next/components/accordion/overview&quot;},{&quot;name&quot;:&quot;Button&quot;,&quot;url&quot;:&quot;/next/components/button&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/button/overview&quot;},{&quot;name&quot;:&quot;Calendar&quot;,&quot;url&quot;:&quot;/next/components/calendar&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/calendar/use-cases&quot;},{&quot;name&quot;:&quot;Checkbox Group&quot;,&quot;url&quot;:&quot;/next/components/checkbox-group&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/checkbox-group/overview&quot;},{&quot;name&quot;:&quot;Collapsible&quot;,&quot;url&quot;:&quot;/next/components/collapsible&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/collapsible/overview&quot;},{&quot;name&quot;:&quot;Combobox&quot;,&quot;url&quot;:&quot;/next/components/combobox&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/combobox/overview&quot;},{&quot;name&quot;:&quot;Dialog&quot;,&quot;url&quot;:&quot;/next/components/dialog&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/dialog/overview&quot;},{&quot;name&quot;:&quot;Drawer&quot;,&quot;url&quot;:&quot;/next/components/drawer&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/drawer/overview&quot;},{&quot;name&quot;:&quot;Fieldset&quot;,&quot;url&quot;:&quot;/next/components/fieldset&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/fieldset/overview&quot;},{&quot;name&quot;:&quot;Form&quot;,&quot;url&quot;:&quot;/next/components/form&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/form/overview&quot;},{&quot;name&quot;:&quot;Icon&quot;,&quot;url&quot;:&quot;/next/components/icon&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/icon/overview&quot;},{&quot;name&quot;:&quot;Input&quot;,&quot;url&quot;:&quot;/next/components/input&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input/overview&quot;},{&quot;name&quot;:&quot;Input Amount&quot;,&quot;url&quot;:&quot;/next/components/input-amount&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-amount/overview&quot;},{&quot;name&quot;:&quot;Input Amount Dropdown&quot;,&quot;url&quot;:&quot;/next/components/input-amount-dropdown&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-amount-dropdown/use-cases&quot;},{&quot;name&quot;:&quot;Input Date&quot;,&quot;url&quot;:&quot;/next/components/input-date&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-date/overview&quot;},{&quot;name&quot;:&quot;Input Datepicker&quot;,&quot;url&quot;:&quot;/next/components/input-datepicker&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-datepicker/overview&quot;},{&quot;name&quot;:&quot;Input Email&quot;,&quot;url&quot;:&quot;/next/components/input-email&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-email/overview&quot;},{&quot;name&quot;:&quot;Input File&quot;,&quot;url&quot;:&quot;/next/components/input-file&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-file/overview&quot;},{&quot;name&quot;:&quot;Input Iban&quot;,&quot;url&quot;:&quot;/next/components/input-iban&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-iban/overview&quot;},{&quot;name&quot;:&quot;Input Range&quot;,&quot;url&quot;:&quot;/next/components/input-range&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-range/overview&quot;},{&quot;name&quot;:&quot;Input Stepper&quot;,&quot;url&quot;:&quot;/next/components/input-stepper&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-stepper/overview&quot;},{&quot;name&quot;:&quot;Input Tel&quot;,&quot;url&quot;:&quot;/next/components/input-tel&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-tel/overview&quot;},{&quot;name&quot;:&quot;Input Tel Dropdown&quot;,&quot;url&quot;:&quot;/next/components/input-tel-dropdown&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-tel-dropdown/overview&quot;},{&quot;name&quot;:&quot;Listbox&quot;,&quot;url&quot;:&quot;/next/components/listbox&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/listbox/overview&quot;},{&quot;name&quot;:&quot;Pagination&quot;,&quot;url&quot;:&quot;/next/components/pagination&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/components/pagination/overview&quot;},{&quot;name&quot;:&quot;Progress Indicator&quot;,&quot;url&quot;:&quot;/next/components/progress-indicator&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/components/progress-indicator/overview&quot;},{&quot;name&quot;:&quot;Radio Group&quot;,&quot;url&quot;:&quot;/next/components/radio-group&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/components/radio-group/overview&quot;},{&quot;name&quot;:&quot;Select&quot;,&quot;url&quot;:&quot;/next/components/select&quot;,&quot;priority&quot;:40,&quot;redirect&quot;:&quot;/next/components/select/overview&quot;},{&quot;name&quot;:&quot;Select Rich&quot;,&quot;url&quot;:&quot;/next/components/select-rich&quot;,&quot;priority&quot;:40,&quot;redirect&quot;:&quot;/next/components/select-rich/overview&quot;},{&quot;name&quot;:&quot;Steps&quot;,&quot;url&quot;:&quot;/next/components/steps&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/steps/overview&quot;},{&quot;name&quot;:&quot;Switch&quot;,&quot;url&quot;:&quot;/next/components/switch&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/switch/overview&quot;},{&quot;name&quot;:&quot;Tabs&quot;,&quot;url&quot;:&quot;/next/components/tabs&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/tabs/overview&quot;},{&quot;name&quot;:&quot;Textarea&quot;,&quot;url&quot;:&quot;/next/components/textarea&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/textarea/overview&quot;},{&quot;name&quot;:&quot;Tooltip&quot;,&quot;url&quot;:&quot;/next/components/tooltip&quot;,&quot;priority&quot;:60,&quot;redirect&quot;:&quot;/next/components/tooltip/overview&quot;}]},{&quot;name&quot;:&quot;blog&quot;,&quot;url&quot;:&quot;/next/blog&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:deployedCode&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;The Accessibility of Lion&quot;,&quot;url&quot;:&quot;/next/blog/accessibility&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Controlling exports&quot;,&quot;url&quot;:&quot;/next/blog/controlling-exports&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Introducing lions website&quot;,&quot;url&quot;:&quot;/next/blog/introducing-lions-website&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Extending Lion Documentation&quot;,&quot;url&quot;:&quot;/next/blog/extending-documentation&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;ING open sources Lion&quot;,&quot;url&quot;:&quot;/next/blog/ing-open-sources-lion&quot;,&quot;priority&quot;:0,&quot;active&quot;:true},{&quot;name&quot;:&quot;Lion without polyfills&quot;,&quot;url&quot;:&quot;/next/blog/lion-without-polyfills&quot;,&quot;priority&quot;:0}],&quot;active&quot;:true,&quot;hasActiveChild&quot;:true}]"><template shadowroot="open" shadowrootmode="open"><style>
+  * {
+    box-sizing: border-box;
+  }
+
+  :host([data-layout='floating-toggle']) {
+    width: 0;
+  }
+
+  :host([data-layout='floating-toggle']) .burger {
+    position: absolute;
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    width: 32px;
+    height: 32px;
+    justify-content: space-around;
+    cursor: pointer;
+    left: 20px;
+    top: 20px;
+  }
+
+  :host([data-layout='floating-toggle']) .burger span {
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    transition: 0.3s;
+    display: block;
+  }
+
+  :host([data-layout='floating-toggle']) #l1-wrapper {
+    display: none;
+    z-index: 100;
+    background: #fff;
+  }
+
+  :host([data-layout='floating-toggle']) [data-part='level'][data-level='1'],
+  :host([data-layout='floating-toggle']) [data-part='level'][data-level='2'] {
+    z-index: 100;
+    background: #fff;
+  }
+
+  :host([data-layout='floating-toggle']) #burger-toggle:checked ~ #l1-wrapper {
+    display: flex;
+    position: absolute;
+  }
+
+      :host {
+        height: 100vh;
+        /** Make this the positioning parent of l0 and l1 */
+        position: relative;
+        display: block;
+        position: sticky;
+        top: 0;
+      }
+
+      #l1-wrapper {
+        display: flex;
+      }
+
+      :host [data-part='nav'] {
+        height: 100%;
+      }
+
+      :host [data-part='level'][data-level='1'],
+      :host [data-part='level'][data-level='2'] {
+        padding-block-start: var(--size-6);
+        padding-inline: var(--size-2);
+        overflow-y: scroll;
+        height: 100vh;
+      }
+
+      :host [data-part='level'][data-level='1'] {
+        width: 160px;
+        border-right: 1px solid #ccc;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      :host [data-part='level'][data-level='2'] {
+        width: 200px;
+      }
+
+      /**
+       * When a l0 child is active, or a l1 child => open correct l1
+       */
+      :host
+        [data-part='listitem']:not([data-:active])
+        [data-part='level'][data-level='2']:not([data-has-active-child]) {
+        /** TODO: sr-only, because we want to present all links to the screen reader */
+        display: none;
+      }
+
+      :host [data-part='list'] {
+        list-style-type: none;
+        margin: 4px;
+        padding: 0;
+      }
+
+      :host [data-part='anchor'][data-level='1'] {
+        display: block;
+        padding-block: var(--size-6);
+        padding-inline: var(--size-6);
+      }
+
+      :host [data-part='anchor'][data-level='2'] {
+        display: block;
+        padding-block: var(--size-3);
+        padding-inline: var(--size-6);
+      }
+
+      :host [data-part='anchor'][data-level='2'][aria-current='page']:not(:last-child) {
+        padding-block: var(--size-2);
+      }
+
+      :host [data-part='icon'][data-level='1'] {
+        display: block;
+        width: var(--size-7);
+        height: var(--size-7);
+        margin-bottom: var(--size-1);
+      }
+
+      :host [data-part='anchor'][data-level='1'] {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-block-end: 6px;
+      }
+
+      :host [data-part='anchor'] {
+        display: block;
+        color: var(--text-color);
+        text-decoration: inherit;
+        font-size: 1rem;
+        fill: var(--primary-icon-color);
+        margin-inline: var(--size-1);
+        border-radius: var(--radius-4);
+      }
+
+      :host [data-part='anchor'][aria-current='page'][data-level='1'],
+      :host [data-part='anchor'][aria-current='page'][data-level='3']:last-child,
+      :host [data-part='anchor'][aria-current='page'][data-level='4'] {
+        font-weight: bold;
+        background-color: var(--secondary-color);
+      }
+
+      :host [data-part='anchor']:hover {
+        text-decoration: underline;
+        text-underline-offset: 0.3em;
+        background-color: var(--secondary-color-lighter);
+      }
+
+      :host [data-part='anchor']:focus {
+        outline: 2px solid var(--contrast-color-dark);
+      }
+
+      :host [data-part='anchor'][data-level='2']:focus,
+      :host [data-part='anchor'][data-level='2']:focus {
+        outline-offset: 2px;
+      }
+
+      :host [data-part='level'][data-level='2'] {
+        color: var(--text-color, #333);
+
+        /* 14px/Regular */
+        font-family: 'ING Me';
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px; /* 142.857% */
+        text-decoration: none;
+      }
+
+      :host [data-part='listitem'][data-level='2'][data-\:active] {
+        border-radius: var(--radius-4);
+        background: var(--neutral-color-lightest);
+        margin-block: 6px;
+      }
+
+      :host [data-part='level'][data-level='3'] {
+        overflow: hidden;
+        padding-block-end: 12px;
+      }
+
+      :host [data-part='anchor'][data-level='3'],
+      :host [data-part='anchor'][data-level='4'] {
+        /* 14px/Regular */
+        font-family: 'ING Me';
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px; /* 142.857% */
+        text-decoration: none;
+        margin-left: var(--size-7);
+        padding-inline: var(--size-3);
+      }
+
+      :host [data-part='anchor'][data-level='3'][aria-current='page'],
+      :host [data-part='anchor'][data-level='4'][aria-current='page'] {
+        font-weight: bold;
+      }
+
+      :host [data-level='2'] > [aria-current='page'] {
+        background: transparent;
+        font-weight: bold;
+      }
+
+      :host [data-part='list'][data-level='4'] {
+        margin-left: var(--size-3);
+      }
+    </style><!--lit-part 1PVbJ+oM0tw=-->
+        <nav data-part="nav">
+          <input type="checkbox" id="burger-toggle" hidden />
+          <label for="burger-toggle" class="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+
+          <div id="l1-wrapper" data-part="l1-wrapper">
+            <!--lit-part ICi22XWCZrw=--><!--lit-node 0--><div
+        data-part="level"
+        data-level="1"
+        data-has-active-child="false"
+      >
+        <!--lit-node 1--><ul data-part="list" data-level="1">
+          <!--lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:home" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->home<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/fundamentals"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:sdk" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->fundamentals<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/guides"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:extension" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->guides<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/components"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:deployedCode" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->components<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" data-:active>
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/blog"
+        aria-current="page"
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:deployedCodeFilled" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->blog<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--/lit-part-->
+        </ul>
+        <div class="nav-item-last">
+          <!--lit-node 4--><a href="/next/search" data-part="anchor" data-level="1">
+            <!--lit-node 5--><lion-icon
+              
+              
+              
+             data-part="icon" icon-id="lion-portal:portal:search" data-level="1" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon>
+            <span>Search</span>
+          </a>
+        </div>
+      </div><!--/lit-part-->
+            <!--lit-part 4Xfrjoki3Io=--><!--lit-node 0--><div
+        data-part="level"
+        data-level="2"
+        data-has-active-child="false"
+      >
+        <!--lit-node 1--><ul data-part="list" data-level="2">
+          <!--lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/blog/accessibility"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->The Accessibility of Lion<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/blog/controlling-exports"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Controlling exports<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/blog/introducing-lions-website"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Introducing lions website<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/blog/extending-documentation"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Extending Lion Documentation<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" data-:active>
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/blog/ing-open-sources-lion"
+        aria-current="page"
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->ING open sources Lion<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/blog/lion-without-polyfills"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Lion without polyfills<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--/lit-part-->
+        </ul>
+      </div><!--/lit-part-->
+          </div>
+        </nav>
+      <!--/lit-part--></template></ui-portal-main-nav><!--astro:end--></astro-island> </div> <main class="ui-portal-grid__main ">  <div id="content-wrapper"> <div class="content-area"> <!--<script src="../../../docs/_merged_assets/scripts/init-navigation.js"></script>--> <rocket-navigation> <ul> <li class="current"> <h3>Headings</h3> <ul> <li class="menu-item"> <a href="/next/blog/ing-open-sources-lion#why-lion" ">Why Lion?</a> </li><li class="menu-item"> <a href="/next/blog/ing-open-sources-lion#what-is-lion" ">What is Lion?</a> </li><li class="menu-item"> <a href="/next/blog/ing-open-sources-lion#-join-us" ">🙋‍ Join us!</a> </li><li class="menu-item"> <a href="/next/blog/ing-open-sources-lion#-extend-the-components" ">🔨 Extend the components</a> </li><li class="menu-item"> <a href="/next/blog/ing-open-sources-lion#thanks" ">Thanks</a> </li> </ul> </li> </ul> <div class="sidebar-tags"> <h3>Date</h3> <div>Thu Jan 30 2020</div> </div> <div class="sidebar-tags"> <h3>Tags</h3> <div class="tags"> <span class="tag">javascript</span><span class="tag">tests</span><span class="tag">demos</span> </div> </div> <div class="sidebar-bottom"> <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>  </div> </rocket-navigation> <main class="markdown-body"> <h1>ING open sources Lion</h1> <img src="https://miro.medium.com/max/1400/1*FT8CF6G-1IVa88G04nkf5w.png" alt=""> <p><strong>TL;DR:</strong> Web development can be hard, whether you’re making your own components, implementing Design Systems, support many different browsers, incorporating accessibility, or adding third party dependencies. Lion aims to make your life a little bit easier, by taking the groundwork of feature complete, accessible, performant, and framework agnostic components out of your hands! Check out the repo at <a href="https://github.com/ing-bank/lion">ing-bank/lion</a>.</p>
+<p>As some of you may already know, ING has a long and rich history of building Web Components, starting out with the Polymer library, all the way up to the recently released LitElement.</p>
+<p><a href="https://medium.com/ing-blog/ing-%EF%B8%8F-web-components-f52aacc71d7a">Need a refresher?</a> Web Components are a set of browser standards that allow us to write browser native, reusable, encapsulated, and modular components.</p>
+<p>Web Components standards have finally matured, and today, there are many ways to build and consume your Web Components, like: <a href="https://angular.io/guide/elements">Angular Elements</a>, <a href="https://stenciljs.com/docs/introduction/">Stencil</a>, <a href="https://vuejsdevelopers.com/2018/05/21/vue-js-web-component/">Vue</a>, <a href="https://svelte.dev/">Svelte</a> and many, many more. And with the release of the new <a href="https://www.theverge.com/2020/1/15/21066767/microsoft-edge-chromium-new-browser-windows-mac-download-os">Chromium Edge</a>, this means that all major browsers support Web Components natively.</p>
+<p>So today, I’m happy to share with you all that ING is open-sourcing its own core library of Web Components: Lion! 🎉</p>
+<h2 id="why-lion">Why Lion?</h2>
+<p>Imagine the following fictional scenario:</p>
+<blockquote>
+<p>Lea is a developer who works at Betatech, and is working on a new in-house application.</p>
+</blockquote>
+<h3 id="framework-agnostic">Framework Agnostic</h3>
+<p>Finding components is hard, and can lead to a lot of frustration.</p>
+<blockquote>
+<p>Lea finds a perfect component for his use case, but unfortunately, it’s written in a specific JavaScript framework, and Betatech uses a different framework, so sadly she’s not able to use it.</p>
+</blockquote>
+<p>Additionally, companies have their own visual identities and overriding fully styled components to make them look like the companies identity, can sometimes be more work than start styling from scratch.</p>
+<blockquote>
+<p>Lea finds a component that offers all the needed functionalities, however, it looks vastly different from Betatechs identity.</p>
+</blockquote>
+<h3 id="customize-functionality">Customize Functionality</h3>
+<p>Once you’ve found your perfect component, at some point down the line you may discover that the component lacks some kind of functionality that you would like to achieve.</p>
+<blockquote>
+<p>Lea decides to copy over the code of a component she found, and implement the feature herself, and as a result now has to maintain the entire component as well, which becomes an added burden to the project.</p>
+</blockquote>
+<h3 id="accessibility">Accessibility</h3>
+<p>Your components should be usable by every kind of user. Accessibility is hard to get right, but an essential feature, additionally, accessibility issues can be impossible to fix at a later stage without breaking changes, so it is crucial to incorporate accessibility right from the start.</p>
+<blockquote>
+<p>Somewhere down the line, Lea finds an accessibility issue with a component she found online. she can’t fix this issue in his code, so she asks the maintainers to help her out. They tell her they can’t fix it because they don’t want to do a breaking change.</p>
+</blockquote>
+<p>Or, alternatively</p>
+<blockquote>
+<p>Lea writes her own component, and the accessibility issue is hard to fix because of the way she initially wrote the HTML structure, and will also lead to a breaking change.</p>
+</blockquote>
+<h3 id="summary">Summary</h3>
+<p>Does Lea’s story feel relatable?</p>
+<p>It highlights multiple common issues in modern web development:</p>
+<ul>
+<li>Finding and adding a dependency is a big deal</li>
+<li>Picking something because of looks alone might not always be the best choice</li>
+<li>Adjusting behavior or styling can be tough to maintain</li>
+<li>If a package is popular it doesn’t mean it has good accessibility or performance</li>
+</ul>
+<h3 id="what-can-we-do-to-tackle-these-issues">What can we do to tackle these issues?</h3>
+<p>🤔 Imagine having components that purely focus on functionality, and leave the design up to you<br>
+🤔 Imagine that these components come with great accessibility and performance<br>
+🤔 Imagine these components are highly extendable and flexible</p>
+<p>Now stop imagining, and look at Lion 🦁</p>
+<h2 id="what-is-lion">What is Lion?</h2>
+<blockquote>
+<p>We want to bring the web forward - one component at a time.</p>
+</blockquote>
+<p>Lion is a white-label, open-source, framework-agnostic component library, and can be the foundation for your codified in-house Design System. Aligning on design and usability is already a tough challenge, with Lion, we hope to take some of the work out of your hands.</p>
+<h3 id="white-label">White Label</h3>
+<p>Lion is a core package of white label Web Components. What this means is that the core components only consist of very minimal styling, yet has all the fundamental functionalities. White label products are often created so others can easily rebrand them with their own visual identity. This is great because it means that everyone can use the core functionalities of our components while bringing their own branding or Design System because surprisingly, not everyone loves orange.</p>
+<p>And this is exactly what we at ING do as well. Our very own ing-web components extend the Lion components and apply our own ING visual identity which mostly is a thin layer on top of Lion.</p>
+<p>Check out the <a href="http://lion-web.netlify.app/">Lion demo’s</a>. Looks plain, doesn’t it? And now compare Lion to ing-web:</p>
+<p><img alt="Lion - ing-web side by side" loading="lazy" decoding="async" fetchpriority="auto" width="4879" height="4629" src="/next/_astro/ing-open-sources-lion-side-by-side.D42T_e4f_1pznxM.webp" ></p>
+<h3 id="-focus">🎯 Focus</h3>
+<p>Lion was designed with a focus on global usage and reusability in mind. And as such, the following features were incorporated right from the start:</p>
+<p>♻️ Reusability - Our components are meant to be distributed and used on a global scale<br>
+🚹 Accessibility - Our components are meant to be accessible for everyone<br>
+🚀 Performance - Our components are meant to be small, performant and fast</p>
+<p>These features allow us to roll out our components globally and have a single point of truth. It ensures that everyone in ING has a solid set of building blocks to build their application with, and get up and running in no time.</p>
+<h3 id="lessons-learned">Lessons learned</h3>
+<p>ING started using web components very early on, and Lion is not the first component library we built. So you may wonder, how are these components different from the previous generation?</p>
+<p>Lion is built from the ground up to allow for accessibility and extendability as we learned that these things are almost impossible to change/achieve at a later point in development. We’d like to highlight a few of the lessons learned while making Lion:</p>
+<ul>
+<li>Not everything has to be a Web Component, for certain functionality regular JavaScript is better.</li>
+<li>Stay as close to native semantic HTML elements as possible.</li>
+<li>Incorporate accessibility from the start.</li>
+<li>Not everything needs to be in the shadow DOM, this is especially important for aria relations and accessibility.</li>
+<li>UI components are hard</li>
+</ul>
+<blockquote>
+<p>Everyone should use web components but not everyone should write them</p>
+</blockquote>
+<p><em>- <a href="https://twitter.com/erikkroes">Erik Kroes</a></em></p>
+<h2 id="-join-us">🙋‍ Join us!</h2>
+<h3 id="adopt-lion">Adopt Lion!</h3>
+<p>Lion can help you implement your Design System by providing a white-label, functional, accessible and performant foundation for your component library. All you need to do is bring your own design! So if your company is looking to codify your Design System, Lion makes a great base to start from.</p>
+<p>Alternatively, you could use Lion to create a web component version of your favorite design systems, such as: <a href="https://bulma.io/expo/">Bulma</a>, <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://material.io/design/">Material</a>, <a href="https://boltdesignsystem.com/">Bolt</a>, <a href="https://demos.creative-tim.com/vue-argon-design-system/documentation/">Argon</a>, <a href="https://tailwindcss.com/">Tailwind</a>.</p>
+<p>Additionally, the more users and contributors Lion has, the more stable the Lion base will become, which helps everyone who uses Lion.</p>
+<h3 id="contribute-to-lion">Contribute to Lion!</h3>
+<p>At the time of writing, Lion is still in beta phase. We’d love to have your feedback before going to a stable release, so: Do you like open source, and do you want to help Lion out?
+You can do so by:</p>
+<ul>
+<li>Reporting/fixing issues</li>
+<li>Working on a completely new component (start with an issue for discussion first)</li>
+<li>Improving documentation</li>
+<li>… every contribution counts! Even typo fixes in the docs 🤓</li>
+</ul>
+<p>Feel free to create a github issue for any feedback or questions you might have.
+You can also find us on the Lit &#x26; Friends slack in the <a href="https://lit-and-friends.slack.com/archives/CJGFWJN9J">#lion</a> channel.</p>
+<p>You can join the Lit &#x26; Friends slack by visiting <a href="https://lit.dev/slack-invite/">https://lit.dev/slack-invite/</a>.</p>
+<h2 id="-extend-the-components">🔨 Extend the components</h2>
+<p>You can use Lion as the base to implement your own codified Design System.</p>
+<p>Let see how Lea’s story would have panned out if she would have chosen Lion instead.</p>
+<p>First, install what you need</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">npm</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> i</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> lit-element</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> @lion/tabs</span></span></code></pre>
+<p>Create a <code>lea-tabs</code> component by reusing the functionality of Lion. This gives Lea all the functionality and accessible core that she needs for his custom tabs component.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { css } </span><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> 'lit'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { LionTabs } </span><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> '@lion/tabs'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> LeaTabs</span><span style="color:#D73A49;--shiki-dark:#F97583"> extends</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> LionTabs</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  static</span><span style="color:#D73A49;--shiki-dark:#F97583"> get</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> styles</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> [</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      ...</span><span style="color:#005CC5;--shiki-dark:#79B8FF">super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.styles,</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">      css</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        /* my stylings */</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">,</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    ];</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">  connectedCallback</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">connectedCallback</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    this</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">_setupFeature</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">  _setupFeature</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    // being awesome</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">customElements.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">define</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'lea-tabs'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, LeaTabs);</span></span></code></pre>
+<p>Lea also wants to be able to style the tab and tab-panel according to Betatechs visual identity. In order to do so, she creates a <code>lea-tab-panel</code> component and a <code>lea-tab</code> component, which she can then fully style however she desires, and eventually place inside the <code>lea-tabs</code> component. You can see how Lea achieved this in the example down below.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> { LitElement, html, css } </span><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> 'lit-element'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> LeaTab</span><span style="color:#D73A49;--shiki-dark:#F97583"> extends</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> LitElement</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  static</span><span style="color:#D73A49;--shiki-dark:#F97583"> get</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> styles</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> css</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      /* my stylings */</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">  render</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;!-- dom as needed --></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;slot>&#x3C;/slot></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">customElements.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">define</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'lea-tab'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, LeaTab);</span></span></code></pre>
+<p>Excellent! Lea can now use the tabs component like so:</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="html"><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">&#x3C;</span><span style="color:#22863A;--shiki-dark:#85E89D">lea-tabs</span><span style="color:#24292E;--shiki-dark:#E1E4E8">></span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  &#x3C;</span><span style="color:#22863A;--shiki-dark:#85E89D">lea-tab</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> slot</span><span style="color:#24292E;--shiki-dark:#E1E4E8">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"tab"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">>Info&#x3C;/</span><span style="color:#22863A;--shiki-dark:#85E89D">lea-tab</span><span style="color:#24292E;--shiki-dark:#E1E4E8">></span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  &#x3C;</span><span style="color:#22863A;--shiki-dark:#85E89D">lea-tab-panel</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> slot</span><span style="color:#24292E;--shiki-dark:#E1E4E8">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"panel"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">> Info page with lots of information about us. &#x3C;/</span><span style="color:#22863A;--shiki-dark:#85E89D">lea-tab-panel</span><span style="color:#24292E;--shiki-dark:#E1E4E8">></span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  &#x3C;</span><span style="color:#22863A;--shiki-dark:#85E89D">lea-tab</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> slot</span><span style="color:#24292E;--shiki-dark:#E1E4E8">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"tab"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">>Work&#x3C;/</span><span style="color:#22863A;--shiki-dark:#85E89D">lea-tab</span><span style="color:#24292E;--shiki-dark:#E1E4E8">></span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  &#x3C;</span><span style="color:#22863A;--shiki-dark:#85E89D">lea-tab-panel</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> slot</span><span style="color:#24292E;--shiki-dark:#E1E4E8">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"panel"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">> Work page that showcases our work. &#x3C;/</span><span style="color:#22863A;--shiki-dark:#85E89D">lea-tab-panel</span><span style="color:#24292E;--shiki-dark:#E1E4E8">></span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">&#x3C;/</span><span style="color:#22863A;--shiki-dark:#85E89D">lea-tabs</span><span style="color:#24292E;--shiki-dark:#E1E4E8">></span></span></code></pre>
+<p>There we go, Lea’s component is already done, so let’s write some documentation. See the <a href="../components/tabs/examples.md">live Lea tabs documentation page</a>. You can see the full code of <code>lea-tabs</code> <a href="https://github.com/ing-bank/lion/tree/master/demo/">on github</a>.</p>
+<p>P.S.: Do note that Lea is now responsible for keeping the documentation of <code>lea-tabs</code> up to date herself, and improvements on Lion’s documentation will not automatically be reflected on Lea’s documentation.</p>
+<h3 id="why-open-source">Why Open Source?</h3>
+<p>Component libraries are in huge demand. By open-sourcing our extendable components, we help people to <em>do your thing</em>, while reaping all the benefits from the open-source community. What’s more, is that any contribution made to Lion directly impacts and benefits every design system using it (including ing-web) on a global scale. This means we get the best of both worlds by helping people with our components, and getting valuable contributions from the community!</p>
+<p><a href="https://github.com/ing-bank/lion/">Take a look at our repository!</a> and if you wanna stay up to date be sure to watch and/or star it - there is no twitter (yet) but you can follow me <a href="https://twitter.com/daKmoR">Thomas Allmer</a> - hey there 👋</p>
+<h3 id="but-theres-more">But there’s more!</h3>
+<p>Building applications is hard, and sometimes, you need a little bit more than just the right component alone, but also things like: Validation, Forms, Overlays, Localization, etc. But fear not; Lion has got you covered!</p>
+<p>You can check them out in our <a href="http://lion-web.netlify.app/">documentation</a>, and we’ll go into more depth about Lion’s additional systems in future blog posts.</p>
+<h2 id="thanks">Thanks</h2>
+<p>Finally, we’d like to close this announcement by saying a few thank yous:</p>
+<p>ING, for giving us the opportunity to work on this project, and make it great together with the open-source community.</p>
+<p>Everyone who has worked on Lion (especially the Lion team), including all the contributors (36 contributors and counting!).</p>
+<p>And last but not least <a href="https://twitter.com/passle_">Pascal Schilp</a>, for turning my scribbles into a followable story.</p> <div class="content-footer"> <p>
+Caught a mistake or want to improve the blog?
+<a href="undefined/edit/undefined/undefined">Edit this blog post on GitHub!</a> </p> </div> </main> </div> </div>  </main> <div class="ui-portal-grid__footer"> <ui-portal-footer footer-data="[{&quot;name&quot;:&quot;discover&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;blog&quot;,&quot;url&quot;:&quot;/blog&quot;},{&quot;name&quot;:&quot;help and feedback&quot;,&quot;url&quot;:&quot;https://github.com/ing-bank/lion/issues&quot;}]},{&quot;name&quot;:&quot;follow&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://github.com/ing-bank/lion&quot;},{&quot;name&quot;:&quot;slack&quot;,&quot;url&quot;:&quot;/about/slack/&quot;}]},{&quot;name&quot;:&quot;support&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;contribute&quot;,&quot;url&quot;:&quot;https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md&quot;}]}]"><template shadowroot="open" shadowrootmode="open"><style>
+      /** FOOTER ****************************************************************************************/
+      #main-footer {
+        margin-top: 50px;
+        border-top: 1px solid #eaeaea;
+        background-color: var(--footer-background, rgba(0, 0, 0, 0.1));
+        color: var(--text-color);
+        padding: 40px 50px;
+        flex-grow: 1;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+      }
+
+      #footer-menu .content-area {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      @media screen and (min-width: 1024px) {
+        #main-footer {
+          padding-inline: 96px;
+        }
+
+        #footer-menu .content-area {
+          flex-direction: row;
+          text-align: left;
+        }
+      }
+
+      #footer-menu ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      #footer-menu a {
+        text-decoration: none;
+        color: var(--text-color);
+        padding: 5px 0;
+        display: block;
+      }
+
+      #footer-menu a:hover {
+        text-decoration: underline;
+      }
+    </style><!--lit-part XdODVFi+K9w=-->
+      <footer id="main-footer">
+        <div id="footer-menu">
+          <div class="content-area">
+            <nav>
+              <h3>Discover</h3>
+              <ul>
+                <li>
+                  <a href="/next/blog">Blog</a>
+                </li>
+                <li>
+                  <a href="https://github.com/ing-bank/lion/issues" rel="noopener noreferrer"
+                    >Help and Feedback</a
+                  >
+                </li>
+              </ul>
+            </nav>
+            <nav>
+              <h3>Follow</h3>
+              <ul>
+                <li>
+                  <a href="https://github.com/ing-bank/lion" rel="noopener noreferrer">GitHub</a>
+                </li>
+                <li>
+                  <a href="/next/about/slack/">Slack</a>
+                </li>
+              </ul>
+            </nav>
+            <nav>
+              <h3>Support</h3>
+              <ul>
+                <li>
+                  <a
+                    href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md"
+                    rel="noopener noreferrer"
+                    >Contribute</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </footer>
+    <!--/lit-part--></template></ui-portal-footer> </div>  </body> </html>

@@ -1,7 +1,0 @@
-{
-  "name": "@lion/ui",
-  "type": "module",
-  "exports": {
-    "./docs/*": "./docs/*"
-  }
-}

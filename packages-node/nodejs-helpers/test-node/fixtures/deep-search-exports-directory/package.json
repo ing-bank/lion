@@ -1,9 +1,0 @@
-{
-  "private": true,
-  "name": "deep-search-exports-directory",
-  "author": "ing-bank",
-  "type": "module",
-  "exports": {
-    "./*": "./exports/*"
-  }
-}
