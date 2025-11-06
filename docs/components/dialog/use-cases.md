@@ -162,7 +162,7 @@ No backdrop, hides on escape, prevents scrolling while opened, and focuses the b
 export const otherOverrides = () => {
   const cfg = {
     hasBackdrop: false,
-    hidesOnEscape: true,
+    hidesOnEsc: true,
     preventsScroll: true,
     elementToFocusAfterHide: document.body,
   };
@@ -192,7 +192,7 @@ Configuration passed to `config` property:
 ```js
 {
   hasBackdrop: false,
-  hidesOnEscape: true,
+  hidesOnEsc: true,
   preventsScroll: true,
   elementToFocusAfterHide: document.body
 }

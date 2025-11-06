@@ -7,9 +7,9 @@ const tagString = defineCE(
   class extends OverlayMixin(LitElement) {
     render() {
       return html`
-        <button slot="invoker">invoker button</button>
+        <slot name="invoker"></slot>
         <div id="overlay-content-node-wrapper">
-          <div slot="content">content of the overlay</div>
+          <slot name="content"></slot>
         </div>
       `;
     }
