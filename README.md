@@ -55,23 +55,23 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 </p>
 
 ## Table of Contents
- - [Astro migration](#astro-migration)
-  - [Astro how to](#astro-how-to)
-  - [Issues which are not caused by migration](#issues-which-are-not-caused-by-the-migration-not-to-be-fixed-now)
- - [Installation](#how-to-install)
- - [How to use](#how-to-use)
-  - [Extend a web component](#extend-a-web-component)
-  - [Use a JavaScript system](#use-a-javascript-system)
-  - [Use a Web Component](#use-a-web-component)
- - [Issues](#issues)
- - [Feature request](#feature-requests)
- - [Content](#content)
- - [Technologies](#technologies)
- - [Rationale](#rationale)
- - [Coding guidelines](#coding-guidelines)
- - [How to contribute](#how-to-contribute)
- - [Contact](#contact)
 
+- [Astro migration](#astro-migration)
+- [Astro how to](#astro-how-to)
+- [Issues which are not caused by migration](#issues-which-are-not-caused-by-the-migration-not-to-be-fixed-now)
+- [Installation](#how-to-install)
+- [How to use](#how-to-use)
+- [Extend a web component](#extend-a-web-component)
+- [Use a JavaScript system](#use-a-javascript-system)
+- [Use a Web Component](#use-a-web-component)
+- [Issues](#issues)
+- [Feature request](#feature-requests)
+- [Content](#content)
+- [Technologies](#technologies)
+- [Rationale](#rationale)
+- [Coding guidelines](#coding-guidelines)
+- [How to contribute](#how-to-contribute)
+- [Contact](#contact)
 
 ## Astro migration
 
