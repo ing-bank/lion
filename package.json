@@ -101,6 +101,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-wc": "^2.2.0",
+    "gh-pages": "^6.3.0",
     "globby": "^14.0.2",
     "gray-matter": "^4.0.3",
     "husky": "^9.1.6",
