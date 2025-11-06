@@ -193,7 +193,7 @@ Read our [contribution guide](https://github.com/ing-bank/lion/blob/master/CONTR
 
 ## Site deployment
 
-We use [GitHub Pages](https://docs.github.com/en/pages) to host our static website. Collaborators with push permission to the repository branch `gh-pages` can trigger a deploy by simply running:
+We use [GitHub Pages](https://docs.github.com/en/pages) to host our static website. Collaborators with push permission to the repository branch [`gh-pages`](https://github.com/ing-bank/lion/tree/gh-pages) can trigger a deploy by simply running:
 
 ```bash
 npm run deploy
