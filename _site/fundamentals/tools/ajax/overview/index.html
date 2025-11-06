@@ -1,0 +1,803 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajax: Overview: Lion</title>
+<meta property="og:title" content="Ajax: Overview: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/fundamentals/tools/ajax/overview/">
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system">
+<meta property="og:description" content="Fundamental white label web components for building your design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/fc0d442b.png">
+<meta property="og:url" content="http://localhost:8080/fundamentals/tools/ajax/overview/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../../../db12e37b.css">
+<link rel="stylesheet" href="../../../../0f4765a3.css">
+<link rel="stylesheet" href="../../../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../../../b1403e10.css">
+  
+
+<link rel="preload" href="../../../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+           active 
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item">
+<a href="/fundamentals/systems/">Systems</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/">Core</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/SlotMixin/">SlotMixin</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/model-value/">ModelValue</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/formatting-and-parsing/">Formatting and Parsing</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/interaction-states/">Interaction States</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/validate/">Validate</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/styling/">Styling</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/">Localize</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/localize/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/text/">Translate Text</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/numbers/">Format Numbers</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/dates/">Format Dates</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/icon/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/">Overlays</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/overlays/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/configuration/">Configuration</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/api-table/">API Table</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/tools/">Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/">Helpers</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/helpers/action-logger/">Action Logger</a>
+
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/tools/ajax/">Ajax</a>
+<ul><li class="menu-item current">
+<a href="/fundamentals/tools/ajax/overview/">Overview</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#installation" class="anchor">Installation</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#interceptors" class="anchor">Interceptors</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#ajax-class-options" class="anchor">Ajax class options</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#caching" class="anchor">Caching</a>
+  </li>
+</ul>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/">Singleton Manager</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-fail/">Example Fail</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-success/">Example Success</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-complex/">Example Complex</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/">Node Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/">Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/">Babel Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/">Publish Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/">Providence Analytics</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/">Remark Extend</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/overview/">Overview</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/">Rationales</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/rationales/accessibility/">Accessibility</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/side-effects/">Side Effects</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/versioning/">Versioning Lion</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/TypeScript/">TypeScript</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="ajax-overview"><a class="anchor" href="#ajax-overview"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Ajax: Overview</h1>
+<p><code>Ajax</code> is a small wrapper around <code>fetch</code> which:</p>
+<ul>
+<li>Allows globally registering request and response interceptors</li>
+<li>Throws on 4xx and 5xx status codes</li>
+<li>Supports caching, so a request can be prevented from reaching to network, by returning the cached response.</li>
+<li>Supports JSON with <code>ajax.fetchJson</code> by automatically serializing request body and deserializing response payload as JSON, and adding the correct Content-Type and Accept headers.</li>
+<li>Adds accept-language header to requests based on application language</li>
+<li>Adds XSRF header to request if the cookie is present and the request is for a mutable action (POST/PUT/PATCH/DELETE) and if the origin is the same as current origin or the request origin is in the xsrfTrustedOrigins list.</li>
+</ul>
+<h2 id="installation"><a class="anchor" href="#installation"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Installation</h2>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> i <span class="token parameter variable">--save</span> @lion/ajax
+</span></code></pre>
+<h3 id="relation-to-fetch"><a class="anchor" href="#relation-to-fetch"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Relation to fetch</h3>
+<p><code>Ajax</code> delegates all requests to fetch. <code>ajax.fetch</code> and <code>ajax.fetchJson</code> have the same function signature as <code>window.fetch</code>, you can use any online resource to learn more about fetch. <a href="http://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">MDN</a> is a great start.</p>
+<h2 id="ajaxfetch"><a class="anchor" href="#ajaxfetch"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><code>ajax.fetch</code></h2>
+<p>The <code>fetch</code> method of <code>ajax</code> is a very small wrapper around native <code>window.fetch</code> and returns a native <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response"><code>Response</code></a> object, the main differences with native <code>window.fetch</code> are:</p>
+<ul>
+<li>it will use any caching options that you've configured in the <code>Ajax</code> class</li>
+<li>it will throw on response statuses between 400 and 600 (native fetch doesn't throw)</li>
+<li>it will run any interceptors that you've configured</li>
+<li>it will add a XSRF header to the request if the XSRF cookie is present</li>
+</ul>
+<p>Otherwise, you can expect the same usage as from <code>window.fetch</code>. Here are some simple examples:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// A simple GET request</span>
+</span><span class="code-line"><span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword control-flow">await</span> ajax<span class="token punctuation">.</span><span class="token method function property-access">fetch</span><span class="token punctuation">(</span><span class="token string">'/api/foo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">const</span> data <span class="token operator">=</span> <span class="token keyword control-flow">await</span> response<span class="token punctuation">.</span><span class="token method function property-access">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// or .text(), .clone(), .formData(), etc</span>
+</span></code></pre>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// A simple POST request</span>
+</span><span class="code-line"><span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword control-flow">await</span> ajax<span class="token punctuation">.</span><span class="token method function property-access">fetch</span><span class="token punctuation">(</span><span class="token string">'/api/foo'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">method</span><span class="token operator">:</span> <span class="token string">'POST'</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token literal-property property">body</span><span class="token operator">:</span> <span class="token known-class-name class-name">JSON</span><span class="token punctuation">.</span><span class="token method function property-access">stringify</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">foo</span><span class="token operator">:</span> <span class="token string">'bar'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h2 id="ajaxfetchjson"><a class="anchor" href="#ajaxfetchjson"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><code>ajax.fetchJson</code></h2>
+<p>The <code>fetchJson</code> method of <code>ajax</code> has some additional features, added for convenience and ease of use. For example, the <code>fetchJson</code> method:</p>
+<ul>
+<li>adds the <code>accept</code> header with a value of <code>application/json</code></li>
+<li>adds the <code>content-type</code> header with a value of <code>application/json</code>, if a request body is provided</li>
+<li>automatically <code>JSON.stringifies</code> the request body, if one is provided</li>
+<li>will attempt to parse the response body as JSON if available
+<ul>
+<li>and also automatically remove a JSON prefix from the response body if one is configured</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>Note that instead of returning only a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response"><code>Response</code></a>, <code>fetchJson</code> returns an object containing the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response"><code>Response</code></a> and a <code>JSON.parse</code>'d <code>body</code></p>
+</blockquote>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// A simple GET request</span>
+</span><span class="code-line"><span class="token keyword">const</span> <span class="token punctuation">{</span> response<span class="token punctuation">,</span> body <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token keyword control-flow">await</span> ajax<span class="token punctuation">.</span><span class="token method function property-access">fetchJson</span><span class="token punctuation">(</span><span class="token string">'/api/foo'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token comment">// body.foo === 'bar';</span>
+</span></code></pre>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// A simple POST request</span>
+</span><span class="code-line"><span class="token keyword">const</span> <span class="token punctuation">{</span> response<span class="token punctuation">,</span> body <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token keyword control-flow">await</span> ajax<span class="token punctuation">.</span><span class="token method function property-access">fetchJson</span><span class="token punctuation">(</span><span class="token string">'/api/foo'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">method</span><span class="token operator">:</span> <span class="token string">'POST'</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token literal-property property">body</span><span class="token operator">:</span> <span class="token punctuation">{</span> <span class="token literal-property property">foo</span><span class="token operator">:</span> <span class="token string">'bar'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h2 id="interceptors"><a class="anchor" href="#interceptors"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Interceptors</h2>
+<p>Interceptors are functions that can be used to inspect or modify the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Request"><code>Request</code></a> or <code>Response</code> objects of a network request.</p>
+<h3 id="request-interceptors"><a class="anchor" href="#request-interceptors"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Request interceptors</h3>
+<p>A request interceptor is a function that takes a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Request"><code>Request</code></a> object, and returns a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Request"><code>Request</code></a> object, or a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response"><code>Response</code></a> object, and runs <em>before</em> the native <code>window.fetch</code> call is done, allowing you to modify or inspect a request before it's made.</p>
+<p>If you return a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response"><code>Response</code></a> object, the response will be returned by the <code>fetch</code>
+or <code>fetchJson</code> methods, instead of passing the <code>Request</code> to the native <code>window.fetch</code> function.</p>
+<p>Returning a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Request"><code>Request</code></a>:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword">function</span> <span class="token function">addAcceptLanguage</span><span class="token punctuation">(</span><span class="token parameter">request</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  request<span class="token punctuation">.</span><span class="token property-access">headers</span><span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'accept-language'</span><span class="token punctuation">,</span> <span class="token string">'EN_GB'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> request<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">ajax<span class="token punctuation">.</span><span class="token method function property-access">addRequestInterceptor</span><span class="token punctuation">(</span>addAcceptLanguage<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>Returning a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response"><code>Response</code></a>:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword">function</span> <span class="token function">interceptFooRequest</span><span class="token punctuation">(</span><span class="token parameter">request</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token property-access">headers</span><span class="token punctuation">.</span><span class="token method function property-access">get</span><span class="token punctuation">(</span><span class="token string">'foo'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token maybe-class-name">Response</span><span class="token punctuation">.</span><span class="token method function property-access">json</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">foo</span><span class="token operator">:</span> <span class="token string">'bar'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> request<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">ajax<span class="token punctuation">.</span><span class="token method function property-access">addRequestInterceptor</span><span class="token punctuation">(</span>interceptFooRequest<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>Request interceptors can be async and will be awaited.</p>
+<h3 id="response-interceptors"><a class="anchor" href="#response-interceptors"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Response interceptors</h3>
+<p>A response interceptor is a function that takes a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response"><code>Response</code></a> object, and returns a <a href="https://developer.mozilla.org/en-US/docs/Web/API/Response"><code>Response</code></a> object, and runs <em>after</em> the native <code>window.fetch</code> call is done, allowing you to modify or inspect the response before it's returned by <code>fetch</code>/<code>fetchJson</code>.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">rewriteFoo</span><span class="token punctuation">(</span><span class="token parameter">response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">const</span> body <span class="token operator">=</span> <span class="token keyword control-flow">await</span> response<span class="token punctuation">.</span><span class="token method function property-access">clone</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">text</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> <span class="token keyword">new</span> <span class="token class-name">Response</span><span class="token punctuation">(</span>body<span class="token punctuation">.</span><span class="token method function property-access">replaceAll</span><span class="token punctuation">(</span><span class="token string">'foo'</span><span class="token punctuation">,</span> <span class="token string">'bar'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">ajax<span class="token punctuation">.</span><span class="token method function property-access">addResponseInterceptor</span><span class="token punctuation">(</span>rewriteFoo<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>Response interceptors can be async and will be awaited.</p>
+<h3 id="response-json-object-interceptors"><a class="anchor" href="#response-json-object-interceptors"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Response JSON object interceptors</h3>
+<p>A response JSON object interceptor is a function that takes a successfully parsed response JSON object and <code>response</code> object and returns a new response JSON object.
+It's used only when the request is made with the <code>fetchJson</code> method, providing a convenience API to directly modify or inspect the parsed JSON without the need to parse it and handle errors manually.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">interceptJson</span><span class="token punctuation">(</span><span class="token parameter">jsonObject<span class="token punctuation">,</span> response</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>response<span class="token punctuation">.</span><span class="token property-access">url</span> <span class="token operator">===</span> <span class="token string">'/my-api'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span>
+</span><span class="code-line">      <span class="token spread operator">...</span>jsonObject<span class="token punctuation">,</span>
+</span><span class="code-line">      <span class="token literal-property property">changed</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> jsonObject<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">ajax<span class="token punctuation">.</span><span class="token method function property-access">addResponseJsonInterceptor</span><span class="token punctuation">(</span>interceptJson<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>Response JSON object interceptors can be async and will be awaited.</p>
+<h2 id="ajax-class-options"><a class="anchor" href="#ajax-class-options"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Ajax class options</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Property</th><th>Type</th><th>Default Value</th><th>Description</th></tr></thead><tbody><tr><td>addAcceptLanguage</td><td>boolean</td><td><code>true</code></td><td>Whether to add the Accept-Language header from the <code>data-localize-lang</code> document property</td></tr><tr><td>addCaching</td><td>boolean</td><td><code>false</code></td><td>Whether to add the cache interceptor and start storing responses in the cache, even if <code>cacheOptions.useCache</code> is <code>false</code></td></tr><tr><td>xsrfCookieName</td><td>string</td><td><code>"XSRF-TOKEN"</code></td><td>The name for the Cross Site Request Forgery cookie</td></tr><tr><td>xsrfHeaderName</td><td>string</td><td><code>"X-XSRF-TOKEN"</code></td><td>The name for the Cross Site Request Forgery header</td></tr><tr><td>xsrfTrustedOrigins</td><td>string[]</td><td>[]</td><td>List of trusted origins, the XSRF header will also be added if the origin is in this list.</td></tr><tr><td>jsonPrefix</td><td>string</td><td><code>""</code></td><td>The prefix to add to add to responses for the <code>.fetchJson</code> functions</td></tr><tr><td>cacheOptions.useCache</td><td>boolean</td><td><code>false</code></td><td>Whether to use the default cache interceptors to cache requests</td></tr><tr><td>cacheOptions.getCacheIdentifier</td><td>function</td><td>a function returning the string <code>_default</code>.</td><td>A function to determine the cache that should be used for each request; used to make sure responses for one session are not used in the next. Can be async.</td></tr><tr><td>cacheOptions.methods</td><td>string[]</td><td><code>["get"]</code></td><td>The HTTP methods to cache reponses for. Any other method will invalidate the cache for this request, see "Invalidating cache", below</td></tr><tr><td>cacheOptions.maxAge</td><td>number</td><td><code>360000</code></td><td>The time to keep a response in the cache before invalidating it automatically</td></tr><tr><td>cacheOptions.invalidateUrls</td><td>string[]</td><td><code>undefined</code></td><td>Urls to invalidate each time a method not in <code>cacheOptions.methods</code> is encountered, see "Invalidating cache", below</td></tr><tr><td>cacheOptions.invalidateUrlsRegex</td><td>regex</td><td><code>undefined</code></td><td>Regular expression matching urls to invalidate each time a method not in <code>cacheOptions.methods</code> is encountered, see "Invalidating cache", below</td></tr><tr><td>cacheOptions.requestIdFunction</td><td>function</td><td>a function returning the base url and serialized search parameters</td><td>Function to determine what defines a unique URL</td></tr><tr><td>cacheOptions.contentTypes</td><td>string[]</td><td><code>undefined</code></td><td>Whitelist of content types that will be stored to or retrieved from the cache</td></tr><tr><td>cacheOptions.maxResponseSize</td><td>number</td><td><code>undefined</code></td><td>The maximum response size in bytes that will be stored to or retrieved from the cache</td></tr><tr><td>cacheOptions.maxCacheSize</td><td>number</td><td><code>undefined</code></td><td>The maxiumum total size in bytes of the cache; when the cache gets larger it is truncated</td></tr></tbody></table>
+<h2 id="caching"><a class="anchor" href="#caching"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Caching</h2>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> ajax<span class="token punctuation">,</span> createCacheInterceptors <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@lion/ajax'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment">// Note: getCacheIdentifier can be async</span>
+</span><span class="code-line"><span class="token keyword">const</span> <span class="token function-variable function">getCacheIdentifier</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">let</span> userId <span class="token operator">=</span> <span class="token dom variable">localStorage</span><span class="token punctuation">.</span><span class="token method function property-access">getItem</span><span class="token punctuation">(</span><span class="token string">'lion-ajax-cache-demo-user-id'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>userId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token dom variable">localStorage</span><span class="token punctuation">.</span><span class="token method function property-access">setItem</span><span class="token punctuation">(</span><span class="token string">'lion-ajax-cache-demo-user-id'</span><span class="token punctuation">,</span> <span class="token string">'1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">    userId <span class="token operator">=</span> <span class="token string">'1'</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> userId<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">const</span> <span class="token constant">TEN_MINUTES</span> <span class="token operator">=</span> <span class="token number">1000</span> <span class="token operator">*</span> <span class="token number">60</span> <span class="token operator">*</span> <span class="token number">10</span><span class="token punctuation">;</span> <span class="token comment">// in milliseconds</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">const</span> cacheOptions <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">useCache</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token literal-property property">maxAge</span><span class="token operator">:</span> <span class="token constant">TEN_MINUTES</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">const</span> <span class="token punctuation">{</span> cacheRequestInterceptor<span class="token punctuation">,</span> cacheResponseInterceptor <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">createCacheInterceptors</span><span class="token punctuation">(</span>
+</span><span class="code-line">  getCacheIdentifier<span class="token punctuation">,</span>
+</span><span class="code-line">  cacheOptions<span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line">ajax<span class="token punctuation">.</span><span class="token method function property-access">addRequestInterceptor</span><span class="token punctuation">(</span>cacheRequestInterceptor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">ajax<span class="token punctuation">.</span><span class="token method function property-access">addResponseInterceptor</span><span class="token punctuation">(</span>cacheResponseInterceptor<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>Or use a custom cache object and add the cache config to the constructor:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">Ajax</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@lion/ajax'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">const</span> storeButDontRetrieveByDefaultConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">addCaching</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token literal-property property">cacheOptions</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    getCacheIdentifier<span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">useCache</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">maxAge</span><span class="token operator">:</span> <span class="token constant">TEN_MINUTES</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">const</span> customAjax <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Ajax</span><span class="token punctuation">(</span>storeButDontRetrieveByDefaultConfig<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h3 id="invalidating-the-cache"><a class="anchor" href="#invalidating-the-cache"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Invalidating the cache</h3>
+<p>Invalidating the cache, or cache busting, can be done in multiple ways:</p>
+<ul>
+<li>Going past the <code>maxAge</code> of the cache object</li>
+<li>Changing cache identifier (e.g. user session or active profile changes)</li>
+<li>Doing a non GET request to the cached endpoint
+<ul>
+<li>Invalidates the cache of that endpoint</li>
+<li>Invalidates the cache of all other endpoints matching <code>invalidatesUrls</code> and <code>invalidateUrlsRegex</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="restricting-what-to-cache"><a class="anchor" href="#restricting-what-to-cache"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Restricting what to cache</h3>
+<p>The library has a number of options available to restrict what should be cached. They include:</p>
+<h4 id="by-content-type"><a class="anchor" href="#by-content-type"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>By content type</h4>
+<p><code>cacheOptions.contentTypes</code></p>
+<p>If this option is set, it is interpreted as a whitelist for which content types to cache. The content types of a given
+response is derived from its <code>Content-Type</code> header. If this option is set, responses that do not have a <code>Content-Type</code>
+header are never added to or retrieved from the cache.</p>
+<h4 id="by-response-size"><a class="anchor" href="#by-response-size"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>By response size</h4>
+<p><code>cacheOptions.maxResponseSize</code></p>
+<p>This option sets a maximum size (in bytes) for a single response to be cached. The size of the response is determined first by looking
+at the <code>Content-Length</code> header; if this header is not available, the response is inspected (through the <code>blob()</code> function)
+and its size retrieved.</p>
+<h3 id="limiting-the-cache-size"><a class="anchor" href="#limiting-the-cache-size"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Limiting the cache size</h3>
+<p><code>cacheOptions.maxCacheSize</code></p>
+<p>This option sets a maximum size (in bytes) for the whole cache. The size of a response is determined first by looking
+at the <code>Content-Length</code> header; if this header is not available, the response is inspected (through the <code>blob()</code> function)
+and its size retrieved.</p>
+<p>If the cache grows larger than the <code>maxCacheSize</code> option, the cache is truncated according to a First-In-First-Out
+(FIFO) algorithm that simply removes the oldest entries until the cache is smaller than <code>options.maxCacheSize</code>.</p>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/fundamentals/tools/ajax/overview.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../../../e3e8d065.js"></script>
+<script type="module" src="../../../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

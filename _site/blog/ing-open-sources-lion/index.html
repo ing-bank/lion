@@ -1,0 +1,504 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ING open sources Lion: Lion</title>
+<meta property="og:title" content="ING open sources Lion: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/blog/ing-open-sources-lion/">
+
+
+
+  
+
+<meta name="description" content="A library of performant, accessible &amp; flexible Web Components">
+<meta property="og:description" content="A library of performant, accessible &amp; flexible Web Components">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/e8063cd4.png">
+<meta property="og:url" content="http://localhost:8080/blog/ing-open-sources-lion/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../db12e37b.css">
+<link rel="stylesheet" href="../../0f4765a3.css">
+<link rel="stylesheet" href="../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../b1403e10.css">
+  
+
+<link rel="preload" href="../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-blog-details">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+          
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+           active 
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+	<rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul>
+    <li class="current">
+      <h3>Headings</h3>
+      <ul><li class="menu-item">
+<a href="/blog/ing-open-sources-lion/#why-lion">Why Lion?</a>
+</li>
+<li class="menu-item">
+<a href="/blog/ing-open-sources-lion/#what-is-lion">What is Lion?</a>
+</li>
+<li class="menu-item">
+<a href="/blog/ing-open-sources-lion/#-join-us">🙋‍ Join us!</a>
+</li>
+<li class="menu-item">
+<a href="/blog/ing-open-sources-lion/#-extend-the-components">🔨 Extend the components</a>
+</li>
+<li class="menu-item">
+<a href="/blog/ing-open-sources-lion/#thanks">Thanks</a>
+</li></ul>
+    </li>
+  </ul>
+  <div class="sidebar-tags">
+    <h3>Date</h3>
+    <div>Mon Aug 10 2020</div>
+  </div>
+  <div class="sidebar-tags">
+    <h3>Tags</h3>
+    <div class="tags">
+      
+        <span class="tag">javascript</span>
+      
+        <span class="tag">tests</span>
+      
+        <span class="tag">demos</span>
+      
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+
+      
+  <main class="markdown-body">
+    <main class="markdown-body">
+  
+    
+  <h1>ING open sources Lion</h1>
+
+
+  <img src="https://miro.medium.com/max/1400/1*FT8CF6G-1IVa88G04nkf5w.png" alt="">
+
+
+  
+    <p><strong>TL;DR:</strong> Web development can be hard, whether you're making your own components, implementing Design Systems, support many different browsers, incorporating accessibility, or adding third party dependencies. Lion aims to make your life a little bit easier, by taking the groundwork of feature complete, accessible, performant, and framework agnostic components out of your hands! Check out the repo at <a href="https://github.com/ing-bank/lion">ing-bank/lion</a>.</p>
+<p>As some of you may already know, ING has a long and rich history of building Web Components, starting out with the Polymer library, all the way up to the recently released LitElement.</p>
+<p><a href="https://medium.com/ing-blog/ing-%EF%B8%8F-web-components-f52aacc71d7a">Need a refresher?</a> Web Components are a set of browser standards that allow us to write browser native, reusable, encapsulated, and modular components.</p>
+<p>Web Components standards have finally matured, and today, there are many ways to build and consume your Web Components, like: <a href="https://angular.io/guide/elements">Angular Elements</a>, <a href="https://stenciljs.com/docs/introduction/">Stencil</a>, <a href="https://vuejsdevelopers.com/2018/05/21/vue-js-web-component/">Vue</a>, <a href="https://svelte.dev/">Svelte</a> and many, many more. And with the release of the new <a href="https://www.theverge.com/2020/1/15/21066767/microsoft-edge-chromium-new-browser-windows-mac-download-os">Chromium Edge</a>, this means that all major browsers support Web Components natively.</p>
+<p>So today, I'm happy to share with you all that ING is open-sourcing its own core library of Web Components: Lion! 🎉</p>
+<h2 id="why-lion"><a class="anchor" href="#why-lion"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Why Lion?</h2>
+<p>Imagine the following fictional scenario:</p>
+<blockquote>
+<p>Lea is a developer who works at Betatech, and is working on a new in-house application.</p>
+</blockquote>
+<h3 id="framework-agnostic"><a class="anchor" href="#framework-agnostic"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Framework Agnostic</h3>
+<p>Finding components is hard, and can lead to a lot of frustration.</p>
+<blockquote>
+<p>Lea finds a perfect component for his use case, but unfortunately, it's written in a specific JavaScript framework, and Betatech uses a different framework, so sadly she's not able to use it.</p>
+</blockquote>
+<p>Additionally, companies have their own visual identities and overriding fully styled components to make them look like the companies identity, can sometimes be more work than start styling from scratch.</p>
+<blockquote>
+<p>Lea finds a component that offers all the needed functionalities, however, it looks vastly different from Betatechs identity.</p>
+</blockquote>
+<h3 id="customize-functionality"><a class="anchor" href="#customize-functionality"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Customize Functionality</h3>
+<p>Once you've found your perfect component, at some point down the line you may discover that the component lacks some kind of functionality that you would like to achieve.</p>
+<blockquote>
+<p>Lea decides to copy over the code of a component she found, and implement the feature herself, and as a result now has to maintain the entire component as well, which becomes an added burden to the project.</p>
+</blockquote>
+<h3 id="accessibility"><a class="anchor" href="#accessibility"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Accessibility</h3>
+<p>Your components should be usable by every kind of user. Accessibility is hard to get right, but an essential feature, additionally, accessibility issues can be impossible to fix at a later stage without breaking changes, so it is crucial to incorporate accessibility right from the start.</p>
+<blockquote>
+<p>Somewhere down the line, Lea finds an accessibility issue with a component she found online. she can't fix this issue in his code, so she asks the maintainers to help her out. They tell her they can't fix it because they don't want to do a breaking change.</p>
+</blockquote>
+<p>Or, alternatively</p>
+<blockquote>
+<p>Lea writes her own component, and the accessibility issue is hard to fix because of the way she initially wrote the HTML structure, and will also lead to a breaking change.</p>
+</blockquote>
+<h3 id="summary"><a class="anchor" href="#summary"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Summary</h3>
+<p>Does Lea's story feel relatable?</p>
+<p>It highlights multiple common issues in modern web development:</p>
+<ul>
+<li>Finding and adding a dependency is a big deal</li>
+<li>Picking something because of looks alone might not always be the best choice</li>
+<li>Adjusting behavior or styling can be tough to maintain</li>
+<li>If a package is popular it doesn't mean it has good accessibility or performance</li>
+</ul>
+<h3 id="what-can-we-do-to-tackle-these-issues"><a class="anchor" href="#what-can-we-do-to-tackle-these-issues"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>What can we do to tackle these issues?</h3>
+<p>🤔 Imagine having components that purely focus on functionality, and leave the design up to you<br>
+🤔 Imagine that these components come with great accessibility and performance<br>
+🤔 Imagine these components are highly extendable and flexible</p>
+<p>Now stop imagining, and look at Lion 🦁</p>
+<h2 id="what-is-lion"><a class="anchor" href="#what-is-lion"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>What is Lion?</h2>
+<blockquote>
+<p>We want to bring the web forward - one component at a time.</p>
+</blockquote>
+<p>Lion is a white-label, open-source, framework-agnostic component library, and can be the foundation for your codified in-house Design System. Aligning on design and usability is already a tough challenge, with Lion, we hope to take some of the work out of your hands.</p>
+<h3 id="white-label"><a class="anchor" href="#white-label"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>White Label</h3>
+<p>Lion is a core package of white label Web Components. What this means is that the core components only consist of very minimal styling, yet has all the fundamental functionalities. White label products are often created so others can easily rebrand them with their own visual identity. This is great because it means that everyone can use the core functionalities of our components while bringing their own branding or Design System because surprisingly, not everyone loves orange.</p>
+<p>And this is exactly what we at ING do as well. Our very own ing-web components extend the Lion components and apply our own ING visual identity which mostly is a thin layer on top of Lion.</p>
+<p>Check out the <a href="http://lion-web.netlify.app/">Lion demo's</a>. Looks plain, doesn't it? And now compare Lion to ing-web:</p>
+<p>
+      
+        <picture>
+<source type="image/avif" srcset="../../0899d5af.avif 600w, ../../e3906812.avif 900w, ../../b069f84a.avif 1640w" sizes="(min-width: 1024px) 820px, calc(100vw - 40px)">
+<source type="image/jpeg" srcset="../../f5b1ba66.jpeg 600w, ../../0cf3ab45.jpeg 900w, ../../0ec86608.jpeg 1640w" sizes="(min-width: 1024px) 820px, calc(100vw - 40px)">
+          <img alt="Lion - ing-web side by side" rocket-image="responsive" src="../../f5b1ba66.jpeg" width="600" height="569" loading="lazy" decoding="async">
+        </picture>
+      
+    </p>
+<h3 id="-focus"><a class="anchor" href="#-focus"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>🎯 Focus</h3>
+<p>Lion was designed with a focus on global usage and reusability in mind. And as such, the following features were incorporated right from the start:</p>
+<p>♻️ Reusability - Our components are meant to be distributed and used on a global scale<br>
+🚹 Accessibility - Our components are meant to be accessible for everyone<br>
+🚀 Performance - Our components are meant to be small, performant and fast</p>
+<p>These features allow us to roll out our components globally and have a single point of truth. It ensures that everyone in ING has a solid set of building blocks to build their application with, and get up and running in no time.</p>
+<h3 id="lessons-learned"><a class="anchor" href="#lessons-learned"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Lessons learned</h3>
+<p>ING started using web components very early on, and Lion is not the first component library we built. So you may wonder, how are these components different from the previous generation?</p>
+<p>Lion is built from the ground up to allow for accessibility and extendability as we learned that these things are almost impossible to change/achieve at a later point in development. We'd like to highlight a few of the lessons learned while making Lion:</p>
+<ul>
+<li>Not everything has to be a Web Component, for certain functionality regular JavaScript is better.</li>
+<li>Stay as close to native semantic HTML elements as possible.</li>
+<li>Incorporate accessibility from the start.</li>
+<li>Not everything needs to be in the shadow DOM, this is especially important for aria relations and accessibility.</li>
+<li>UI components are hard</li>
+</ul>
+<blockquote>
+<p>Everyone should use web components but not everyone should write them</p>
+</blockquote>
+<p><em>- <a href="https://twitter.com/erikkroes">Erik Kroes</a></em></p>
+<h2 id="-join-us"><a class="anchor" href="#-join-us"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>🙋‍ Join us!</h2>
+<h3 id="adopt-lion"><a class="anchor" href="#adopt-lion"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Adopt Lion!</h3>
+<p>Lion can help you implement your Design System by providing a white-label, functional, accessible and performant foundation for your component library. All you need to do is bring your own design! So if your company is looking to codify your Design System, Lion makes a great base to start from.</p>
+<p>Alternatively, you could use Lion to create a web component version of your favorite design systems, such as: <a href="https://bulma.io/expo/">Bulma</a>, <a href="https://getbootstrap.com/">Bootstrap</a>, <a href="https://material.io/design/">Material</a>, <a href="https://boltdesignsystem.com/">Bolt</a>, <a href="https://demos.creative-tim.com/vue-argon-design-system/documentation/">Argon</a>, <a href="https://tailwindcss.com/">Tailwind</a>.</p>
+<p>Additionally, the more users and contributors Lion has, the more stable the Lion base will become, which helps everyone who uses Lion.</p>
+<h3 id="contribute-to-lion"><a class="anchor" href="#contribute-to-lion"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Contribute to Lion!</h3>
+<p>At the time of writing, Lion is still in beta phase. We'd love to have your feedback before going to a stable release, so: Do you like open source, and do you want to help Lion out?
+You can do so by:</p>
+<ul>
+<li>Reporting/fixing issues</li>
+<li>Working on a completely new component (start with an issue for discussion first)</li>
+<li>Improving documentation</li>
+<li>... every contribution counts! Even typo fixes in the docs 🤓</li>
+</ul>
+<p>Feel free to create a github issue for any feedback or questions you might have.
+You can also find us on the Lit &amp; Friends slack in the <a href="https://lit-and-friends.slack.com/archives/CJGFWJN9J">#lion</a> channel.</p>
+<p>You can join the Lit &amp; Friends slack by visiting <a href="https://lit.dev/slack-invite/">https://lit.dev/slack-invite/</a>.</p>
+<h2 id="-extend-the-components"><a class="anchor" href="#-extend-the-components"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>🔨 Extend the components</h2>
+<p>You can use Lion as the base to implement your own codified Design System.</p>
+<p>Let see how Lea's story would have panned out if she would have chosen Lion instead.</p>
+<p>First, install what you need</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> i lit-element @lion/tabs
+</span></code></pre>
+<p>Create a <code>lea-tabs</code> component by reusing the functionality of Lion. This gives Lea all the functionality and accessible core that she needs for his custom tabs component.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> css <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'lit'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">LionTabs</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@lion/tabs'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">class</span> <span class="token class-name">LeaTabs</span> <span class="token keyword">extends</span> <span class="token class-name">LionTabs</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">static</span> <span class="token keyword">get</span> <span class="token function">styles</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token punctuation">[</span>
+</span><span class="code-line">      <span class="token spread operator">...</span><span class="token keyword">super</span><span class="token punctuation">.</span><span class="token property-access">styles</span><span class="token punctuation">,</span>
+</span><span class="code-line">      css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token css language-css">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token css language-css">        <span class="token comment">/* my stylings */</span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token css language-css">      </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">connectedCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token method function property-access">connectedCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">_setupFeature</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">_setupFeature</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token comment">// being awesome</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">customElements<span class="token punctuation">.</span><span class="token method function property-access">define</span><span class="token punctuation">(</span><span class="token string">'lea-tabs'</span><span class="token punctuation">,</span> <span class="token maybe-class-name">LeaTabs</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>Lea also wants to be able to style the tab and tab-panel according to Betatechs visual identity. In order to do so, she creates a <code>lea-tab-panel</code> component and a <code>lea-tab</code> component, which she can then fully style however she desires, and eventually place inside the <code>lea-tabs</code> component. You can see how Lea achieved this in the example down below.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">LitElement</span><span class="token punctuation">,</span> html<span class="token punctuation">,</span> css <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'lit-element'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">class</span> <span class="token class-name">LeaTab</span> <span class="token keyword">extends</span> <span class="token class-name">LitElement</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">static</span> <span class="token keyword">get</span> <span class="token function">styles</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> css<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token css language-css">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token css language-css">      <span class="token comment">/* my stylings */</span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token css language-css">    </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token comment">&lt;!-- dom as needed --&gt;</span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>slot</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slot</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">customElements<span class="token punctuation">.</span><span class="token method function property-access">define</span><span class="token punctuation">(</span><span class="token string">'lea-tab'</span><span class="token punctuation">,</span> <span class="token maybe-class-name">LeaTab</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>Excellent! Lea can now use the tabs component like so:</p>
+<pre class="language-html"><code class="language-html code-highlight"><span class="code-line"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lea-tabs</span><span class="token punctuation">&gt;</span></span>
+</span><span class="code-line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lea-tab</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Info<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lea-tab</span><span class="token punctuation">&gt;</span></span>
+</span><span class="code-line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lea-tab-panel</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>panel<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span> Info page with lots of information about us. <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lea-tab-panel</span><span class="token punctuation">&gt;</span></span>
+</span><span class="code-line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lea-tab</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Work<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lea-tab</span><span class="token punctuation">&gt;</span></span>
+</span><span class="code-line">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lea-tab-panel</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>panel<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span> Work page that showcases our work. <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lea-tab-panel</span><span class="token punctuation">&gt;</span></span>
+</span><span class="code-line"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lea-tabs</span><span class="token punctuation">&gt;</span></span>
+</span></code></pre>
+<p>There we go, Lea's component is already done, so let's write some documentation. See the <a href="../../components/tabs/examples/">live Lea tabs documentation page</a>. You can see the full code of <code>lea-tabs</code> <a href="https://github.com/ing-bank/lion/tree/master/demo/">on github</a>.</p>
+<p>P.S.: Do note that Lea is now responsible for keeping the documentation of <code>lea-tabs</code> up to date herself, and improvements on Lion's documentation will not automatically be reflected on Lea's documentation.</p>
+<h3 id="why-open-source"><a class="anchor" href="#why-open-source"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Why Open Source?</h3>
+<p>Component libraries are in huge demand. By open-sourcing our extendable components, we help people to <em>do your thing</em>, while reaping all the benefits from the open-source community. What's more, is that any contribution made to Lion directly impacts and benefits every design system using it (including ing-web) on a global scale. This means we get the best of both worlds by helping people with our components, and getting valuable contributions from the community!</p>
+<p><a href="https://github.com/ing-bank/lion/">Take a look at our repository!</a> and if you wanna stay up to date be sure to watch and/or star it - there is no twitter (yet) but you can follow me <a href="https://twitter.com/daKmoR">Thomas Allmer</a> - hey there 👋</p>
+<h3 id="but-theres-more"><a class="anchor" href="#but-theres-more"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>But there's more!</h3>
+<p>Building applications is hard, and sometimes, you need a little bit more than just the right component alone, but also things like: Validation, Forms, Overlays, Localization, etc. But fear not; Lion has got you covered!</p>
+<p>You can check them out in our <a href="http://lion-web.netlify.app/">documentation</a>, and we'll go into more depth about Lion's additional systems in future blog posts.</p>
+<h2 id="thanks"><a class="anchor" href="#thanks"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Thanks</h2>
+<p>Finally, we'd like to close this announcement by saying a few thank yous:</p>
+<p>ING, for giving us the opportunity to work on this project, and make it great together with the open-source community.</p>
+<p>Everyone who has worked on Lion (especially the Lion team), including all the contributors (36 contributors and counting!).</p>
+<p>And last but not least <a href="https://twitter.com/passle_">Pascal Schilp</a>, for turning my scribbles into a followable story.</p>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to improve the blog?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/blog/ing-open-sources-lion.md">Edit this blog post on GitHub!</a>
+  </p>
+</div>
+
+
+  
+</main>
+
+  </main>
+
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../e3e8d065.js"></script>
+<script type="module" src="../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

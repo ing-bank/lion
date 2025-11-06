@@ -1,0 +1,716 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Remark Extend: Overview: Lion</title>
+<meta property="og:title" content="Remark Extend: Overview: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/fundamentals/node-tools/remark-extend/overview/">
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system">
+<meta property="og:description" content="Fundamental white label web components for building your design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/704b598c.png">
+<meta property="og:url" content="http://localhost:8080/fundamentals/node-tools/remark-extend/overview/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../../../db12e37b.css">
+<link rel="stylesheet" href="../../../../0f4765a3.css">
+<link rel="stylesheet" href="../../../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../../../b1403e10.css">
+  
+
+<link rel="preload" href="../../../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+           active 
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item">
+<a href="/fundamentals/systems/">Systems</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/">Core</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/SlotMixin/">SlotMixin</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/model-value/">ModelValue</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/formatting-and-parsing/">Formatting and Parsing</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/interaction-states/">Interaction States</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/validate/">Validate</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/styling/">Styling</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/">Localize</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/localize/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/text/">Translate Text</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/numbers/">Format Numbers</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/dates/">Format Dates</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/icon/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/">Overlays</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/overlays/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/configuration/">Configuration</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/api-table/">API Table</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/">Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/">Helpers</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/helpers/action-logger/">Action Logger</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/">Ajax</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/ajax/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/">Singleton Manager</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-fail/">Example Fail</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-success/">Example Success</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-complex/">Example Complex</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/node-tools/">Node Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/">Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/">Babel Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/">Publish Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/">Providence Analytics</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/node-tools/remark-extend/">Remark Extend</a>
+<ul><li class="menu-item current">
+<a href="/fundamentals/node-tools/remark-extend/overview/">Overview</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#installation" class="anchor">Installation</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#importing-a-block" class="anchor">Importing a block</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#block-variations" class="anchor">Block Variations</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#adjusting-imported-content" class="anchor">Adjusting imported content</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#import-selection" class="anchor">Import selection</a>
+  </li>
+</ul>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/">Rationales</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/rationales/accessibility/">Accessibility</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/side-effects/">Side Effects</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/versioning/">Versioning Lion</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/TypeScript/">TypeScript</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="remark-extend-overview"><a class="anchor" href="#remark-extend-overview"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Remark Extend: Overview</h1>
+<p>A plugin for remark to extend markdown by importing from source files.</p>
+<p><code>remark-extend</code> is build to be integrated within the <a href="https://unifiedjs.com/">unifiedjs</a> system.</p>
+<h2 id="installation"><a class="anchor" href="#installation"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Installation</h2>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> i <span class="token parameter variable">-D</span> remark-extend
+</span></code></pre>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword">const</span> unified <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'unified'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">const</span> markdown <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'remark-parse'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">const</span> mdStringify <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'remark-html'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">const</span> <span class="token punctuation">{</span> remarkExtend <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'remark-extend'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">const</span> sourceMd <span class="token operator">=</span> <span class="token punctuation">[</span>
+</span><span class="code-line">  <span class="token comment">//</span>
+</span><span class="code-line">  <span class="token string">'# Headline'</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token string">"```js ::import('@name/pkg/README.md')"</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token string">'```'</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token method function property-access">join</span><span class="token punctuation">(</span><span class="token string">'\n'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">const</span> parser <span class="token operator">=</span> <span class="token function">unified</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">use</span><span class="token punctuation">(</span>markdown<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">use</span><span class="token punctuation">(</span>remarkExtend<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">use</span><span class="token punctuation">(</span>mdStringify<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword control-flow">await</span> parser<span class="token punctuation">.</span><span class="token method function property-access">process</span><span class="token punctuation">(</span>sourceMd<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h2 id="importing-a-block"><a class="anchor" href="#importing-a-block"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Importing a block</h2>
+<p>In many cases, the full file might be too much so you want to import a "block".
+A block starts with a headline and ends when the next headline of an equal level starts.</p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token title important"><span class="token punctuation">##</span> Block one</span>
+</span><span class="code-line">
+</span><span class="code-line">Content of block one
+</span><span class="code-line">
+</span><span class="code-line"><span class="token title important"><span class="token punctuation">##</span> Block two</span>
+</span><span class="code-line">
+</span><span class="code-line">Content of block two
+</span><span class="code-line">
+</span><span class="code-line"><span class="token title important"><span class="token punctuation">###</span> Sub headline in block two</span>
+</span><span class="code-line">
+</span><span class="code-line">Still content of block two
+</span><span class="code-line">
+</span><span class="code-line"><span class="token title important"><span class="token punctuation">##</span> Block three</span>
+</span><span class="code-line">
+</span><span class="code-line">Content of block three
+</span></code></pre>
+<p>Now if you wish to import only block two you can write.</p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token title important"><span class="token punctuation">#</span> Blew you will find Block two</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token code"><span class="token punctuation">```</span><span class="token code-language">js ::importBlock('./path/to/file.md', '## Block two')</span>
+</span></span><span class="code-line"><span class="token code">
+</span></span><span class="code-line"><span class="token code"><span class="token punctuation">```</span></span>
+</span></code></pre>
+<h3 id="result-after-import"><a class="anchor" href="#result-after-import"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Result after import</h3>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token title important"><span class="token punctuation">#</span> Blew you will find Block two</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token title important"><span class="token punctuation">##</span> Block two</span>
+</span><span class="code-line">
+</span><span class="code-line">Content of block two
+</span><span class="code-line">
+</span><span class="code-line"><span class="token title important"><span class="token punctuation">###</span> Sub headline in block two</span>
+</span><span class="code-line">
+</span><span class="code-line">Still content of block two
+</span></code></pre>
+<p>PS: importBlock is a faster way of writing imports for headlines</p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line">::importBlock('./path/to/file.md', '## red')
+</span><span class="code-line">// is the same as
+</span><span class="code-line">::import('./path/to/file.md', 'heading[depth=2]:has([value=red])', 'heading[depth=2]:has([value=red]) ~heading[depth=2]')
+</span></code></pre>
+<h2 id="block-variations"><a class="anchor" href="#block-variations"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Block Variations</h2>
+<p>Besides block there are is also <code>::importBlockContent</code>, <code>::importSmallBlock</code> and <code>::importSmallBlockContent</code>.</p>
+<ul>
+<li><code>::importBlockContent</code> will take the same block (headline to next headline of equal level) but excludes the headline.</li>
+<li><code>::importSmallBlock</code> will import a small block (headline to any next headline)</li>
+</ul>
+<p>Given the following content let's compare what the content would be.</p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token title important"><span class="token punctuation">#</span> My Package</span>
+</span><span class="code-line">
+</span><span class="code-line">Intro to my Package
+</span><span class="code-line">
+</span><span class="code-line"><span class="token title important"><span class="token punctuation">##</span> Installation</span>
+</span><span class="code-line">
+</span><span class="code-line">How to install my package
+</span></code></pre>
+<h3 id="importblockpathtofilemd--my-package"><a class="anchor" href="#importblockpathtofilemd--my-package"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><code>::importBlock('./path/to/file.md', '# My Package')</code></h3>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token title important"><span class="token punctuation">#</span> My Package</span>
+</span><span class="code-line">
+</span><span class="code-line">Intro to my Package
+</span><span class="code-line">
+</span><span class="code-line"><span class="token title important"><span class="token punctuation">##</span> Installation</span>
+</span><span class="code-line">
+</span><span class="code-line">How to install my package
+</span></code></pre>
+<h3 id="importblockcontentpathtofilemd--my-package"><a class="anchor" href="#importblockcontentpathtofilemd--my-package"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><code>::importBlockContent('./path/to/file.md', '# My Package')</code></h3>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line">Intro to my Package
+</span><span class="code-line">
+</span><span class="code-line"><span class="token title important"><span class="token punctuation">##</span> Installation</span>
+</span><span class="code-line">
+</span><span class="code-line">How to install my package
+</span></code></pre>
+<h3 id="importsmallblockpathtofilemd--my-package"><a class="anchor" href="#importsmallblockpathtofilemd--my-package"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><code>::importSmallBlock('./path/to/file.md', '# My Package')</code></h3>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token title important"><span class="token punctuation">#</span> My Package</span>
+</span><span class="code-line">
+</span><span class="code-line">Intro to my Package
+</span></code></pre>
+<h3 id="importsmallblockcontentpathtofilemd--my-package"><a class="anchor" href="#importsmallblockcontentpathtofilemd--my-package"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a><code>::importSmallBlockContent('./path/to/file.md', '# My Package')</code></h3>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line">Intro to my Package
+</span></code></pre>
+<hr>
+<h2 id="adjusting-imported-content"><a class="anchor" href="#adjusting-imported-content"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Adjusting imported content</h2>
+<p>If a function gets placed in the import code block then it does get called for every node from the starting point (including the starting point).</p>
+<p>Note: does work for <code>::import</code> and <code>::importBlock</code></p>
+<h3 id="adjustment-input-file"><a class="anchor" href="#adjustment-input-file"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Adjustment Input File</h3>
+<p>👉 <code>file.md</code></p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token title important"><span class="token punctuation">###</span> Red</span>
+</span><span class="code-line">
+</span><span class="code-line">red is the fire
+</span></code></pre>
+<h4 id="adjustment-extending-file"><a class="anchor" href="#adjustment-extending-file"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Adjustment Extending File</h4>
+<p>The goal is to replace all red with green.</p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token title important"><span class="token punctuation">#</span> Below you will not find any read</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token code"><span class="token punctuation">```</span><span class="token code-language">js ::import('./path/to/file.md')</span>
+</span></span><span class="code-line"><span class="token code"><span class="token code-block language-js">module<span class="token punctuation">.</span><span class="token property-access">exports</span><span class="token punctuation">.</span><span class="token method-variable function-variable method function property-access">replaceSection</span> <span class="token operator">=</span> <span class="token parameter">node</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span></span></span><span class="code-line"><span class="token code"><span class="token code-block language-js">  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>node<span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span></span></span><span class="code-line"><span class="token code"><span class="token code-block language-js">    node<span class="token punctuation">.</span><span class="token property-access">value</span> <span class="token operator">=</span> node<span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">.</span><span class="token method function property-access">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">red</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">'green'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">Red</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">'Green'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span></span><span class="code-line"><span class="token code"><span class="token code-block language-js">  <span class="token punctuation">}</span>
+</span></span></span><span class="code-line"><span class="token code"><span class="token code-block language-js">  <span class="token keyword control-flow">return</span> node<span class="token punctuation">;</span>
+</span></span></span><span class="code-line"><span class="token code"><span class="token code-block language-js"><span class="token punctuation">}</span><span class="token punctuation">;</span></span>
+</span></span><span class="code-line"><span class="token code"><span class="token punctuation">```</span></span>
+</span></code></pre>
+<p>This function gets called with these nodes in order.</p>
+<ol>
+<li>root</li>
+<li>heading</li>
+<li>text</li>
+<li>paragraph</li>
+<li>text</li>
+</ol>
+<h4 id="adjustment-result"><a class="anchor" href="#adjustment-result"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Adjustment Result</h4>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token title important"><span class="token punctuation">#</span> Below you will not find any 'red'</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token title important"><span class="token punctuation">###</span> Green</span>
+</span><span class="code-line">
+</span><span class="code-line">green is the fire
+</span></code></pre>
+<hr>
+<p>It's also possible to globally define a replace function.
+The example below shows the config object that is provided to the <code>remarkExtend</code> function.
+Note that local replacements are run after global replacements.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token punctuation">{</span> <span class="token function-variable function">globalReplaceFunction</span><span class="token operator">:</span> <span class="token parameter">node</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>node<span class="token punctuation">.</span><span class="token property-access">type</span> <span class="token operator">===</span> <span class="token string">'link'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token comment">// All internal links to '/systems/' (like '(../../fundamentals/systems/overlays/configuration.md)'),</span>
+</span><span class="code-line">    <span class="token comment">// will be changed into '/web-systems/' ('(../../fundamentals/web-systems/overlays/configuration.md)').</span>
+</span><span class="code-line">    node<span class="token punctuation">.</span><span class="token property-access">url</span> <span class="token operator">=</span> node<span class="token punctuation">.</span><span class="token property-access">url</span><span class="token punctuation">.</span><span class="token method function property-access">replace</span><span class="token punctuation">(</span><span class="token operator">/</span>\systems\<span class="token operator">/</span>g<span class="token punctuation">,</span> <span class="token string">'/web-systems/'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> node<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h2 id="import-selection"><a class="anchor" href="#import-selection"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Import selection</h2>
+<p>For <code>::import</code> you can provide a start and end selector based on <a href="https://github.com/syntax-tree/unist-util-select#support">unist-util-select</a>.</p>
+<p>Some examples are:</p>
+<ul>
+<li><code>:root</code> for the top of the markdown file</li>
+<li><code>:scope:last-child</code> for the end of the markdown file</li>
+<li><code>heading:has([value=Red])</code> first heading with a text value of Red (e.g. ### Red)</li>
+<li><code>heading[depth=2]</code> first second level heading (e.g. ## Something)</li>
+<li><code>heading[depth=2]:has([value=Red]) ~ heading[depth=2]</code> following h2 after h2 with "Red" (e.g. ## Red ... ## Something)</li>
+</ul>
+<h3 id="markdown-ast"><a class="anchor" href="#markdown-ast"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Markdown AST</h3>
+<p>All adjustments to the markdown file happen via the markdown AST (Abstract Syntax Tree).</p>
+<p>You can explore it via the <a href="https://astexplorer.net/">ASTExplorer</a>. (&gt; Markdown &gt; remark)</p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token title important"><span class="token punctuation">###</span> Red</span>
+</span><span class="code-line">
+</span><span class="code-line">red is the fire
+</span></code></pre>
+<p>Resulting AST.</p>
+<pre class="language-json"><code class="language-json code-highlight"><span class="code-line"><span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"root"</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token property">"children"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+</span><span class="code-line">    <span class="token punctuation">{</span>
+</span><span class="code-line">      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"heading"</span><span class="token punctuation">,</span>
+</span><span class="code-line">      <span class="token property">"depth"</span><span class="token operator">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+</span><span class="code-line">      <span class="token property">"children"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+</span><span class="code-line">        <span class="token punctuation">{</span>
+</span><span class="code-line">          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"text"</span><span class="token punctuation">,</span>
+</span><span class="code-line">          <span class="token property">"value"</span><span class="token operator">:</span> <span class="token string">"Red"</span>
+</span><span class="code-line">        <span class="token punctuation">}</span>
+</span><span class="code-line">      <span class="token punctuation">]</span>
+</span><span class="code-line">    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token punctuation">{</span>
+</span><span class="code-line">      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"paragraph"</span><span class="token punctuation">,</span>
+</span><span class="code-line">      <span class="token property">"children"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+</span><span class="code-line">        <span class="token punctuation">{</span>
+</span><span class="code-line">          <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"text"</span><span class="token punctuation">,</span>
+</span><span class="code-line">          <span class="token property">"value"</span><span class="token operator">:</span> <span class="token string">"red is the fire"</span>
+</span><span class="code-line">        <span class="token punctuation">}</span>
+</span><span class="code-line">      <span class="token punctuation">]</span>
+</span><span class="code-line">    <span class="token punctuation">}</span>
+</span><span class="code-line">  <span class="token punctuation">]</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<h3 id="usage-in-import"><a class="anchor" href="#usage-in-import"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Usage in import</h3>
+<p>If you full control of what the start and end selector should be then you can use <code>::import</code>.</p>
+<p>To for example import everything that is between <code>## Red</code> and <code>## More Red</code> you can use something like this.</p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line"><span class="token code"><span class="token punctuation">```</span><span class="token code-language">::import('./path/to/file.md', 'heading[depth=2]:has([value=Red])', 'heading[depth=2]:has([value=More Red])')</span>
+</span></span><span class="code-line"><span class="token code">
+</span></span><span class="code-line"><span class="token code"><span class="token punctuation">```</span></span>
+</span></code></pre>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/fundamentals/node-tools/remark-extend/overview.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../../../e3e8d065.js"></script>
+<script type="module" src="../../../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Principles: Scoped Elements: Lion</title>
+<meta property="og:title" content="Principles: Scoped Elements: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/guides/principles/scoped-elements/">
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system">
+<meta property="og:description" content="Fundamental white label web components for building your design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/bd8b5d1a.png">
+<meta property="og:url" content="http://localhost:8080/guides/principles/scoped-elements/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../../db12e37b.css">
+<link rel="stylesheet" href="../../../0f4765a3.css">
+<link rel="stylesheet" href="../../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../../b1403e10.css">
+  
+
+<link rel="preload" href="../../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+          
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+           active 
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item active">
+<a href="/guides/principles/">Principles</a>
+<ul><li class="menu-item">
+<a href="/guides/principles/definitions-and-terms/">Definitions and Terms</a>
+
+</li>
+<li class="menu-item">
+<a href="/guides/principles/styling/">Styling</a>
+
+</li>
+<li class="menu-item current">
+<a href="/guides/principles/scoped-elements/">Scoped Elements</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#polyfill" class="anchor">Polyfill</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#edge-cases" class="anchor">Edge cases</a>
+  </li>
+</ul>
+
+</li>
+<li class="menu-item">
+<a href="/guides/principles/subclasser-apis/">Subclasser apis</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/guides/how-to/">How To</a>
+<ul><li class="menu-item">
+<a href="/guides/how-to/get-started/">Get Started</a>
+
+</li>
+<li class="menu-item">
+<a href="/guides/how-to/create-a-form/">Create a form</a>
+
+</li>
+<li class="menu-item">
+<a href="/guides/how-to/create-a-custom-field/">Create a custom field</a>
+
+</li>
+<li class="menu-item">
+<a href="/guides/how-to/extend-a-native-input/">Extend a native input</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="principles-scoped-elements"><a class="anchor" href="#principles-scoped-elements"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Principles: Scoped Elements</h1>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry">CustomElementRegistry</a> provides methods for registering custom elements. One of the limitations of working with this global registry is that multiple versions of the same element cannot co-exist. This causes bottlenecks in software delivery that should be managed by the teams and complex build systems. <a href="https://github.com/w3c/webcomponents/issues/716">Scoped Custom Element Registries</a> is a proposal that will solve the problem. Since this functionality won't be available (especially not cross browser) anytime soon, we've adopted <a href="https://open-wc.org/docs/development/scoped-elements/">OpenWC's Scoped Elements</a>.</p>
+<p>Whenever a lion component uses composition (meaning it uses another lion component inside), we
+apply ScopedElementsMixin to make sure it uses the right version of this internal component.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">LitElement</span><span class="token punctuation">,</span> html <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@lion/ui/core.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">ScopedElementsMixin</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@open-wc/scoped-elements/lit-element.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> html<span class="token punctuation">,</span> <span class="token maybe-class-name">LitElement</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'lit'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">LionInput</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@lion/ui/input.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">LionButton</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@lion/ui/button.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">class</span> <span class="token class-name">MyElement</span> <span class="token keyword">extends</span> <span class="token class-name">ScopedElementsMixin</span><span class="token punctuation">(</span><span class="token maybe-class-name">LitElement</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">static</span> <span class="token keyword">get</span> <span class="token function">scopedElements</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token punctuation">{</span>
+</span><span class="code-line">      <span class="token string-property property">'lion-input'</span><span class="token operator">:</span> <span class="token maybe-class-name">LionInput</span><span class="token punctuation">,</span>
+</span><span class="code-line">      <span class="token string-property property">'lion-button'</span><span class="token operator">:</span> <span class="token maybe-class-name">LionButton</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Greeting<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>greeting<span class="token punctuation">"</span></span> <span class="token attr-name">.modelValue</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token string">'Hello world'</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lion-input</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-button</span><span class="token punctuation">&gt;</span></span>Save<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lion-button</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<h2 id="polyfill"><a class="anchor" href="#polyfill"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Polyfill</h2>
+<p>This package requires use of the Scoped Custom Element Registry polyfill. Make sure to load it as the first thing in your application:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token string">'@webcomponents/scoped-custom-element-registry'</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>If you're using <code>@web/rollup-plugin-polyfills-loader</code>, you can use it in your rollup config like this:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token function">polyfillsLoader</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">polyfills</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token literal-property property">scopedCustomElementRegistry</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>If you're using <code>@web/dev-server</code> for local development, you can use the <code>@web/dev-server-polyfill</code> plugin:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token function">polyfill</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">scopedCustomElementRegistry</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h2 id="edge-cases"><a class="anchor" href="#edge-cases"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Edge cases</h2>
+<p>Sometimes we need to render parts of a template to light dom for <a href="https://wicg.github.io/aom/explainer.html">accessibility</a>. For instance we render a node via <code>lit-html</code> that we append to the host element, so it gets slotted in the right position.
+In this case, we should also make sure that we also scope the rendered element.</p>
+<p>We can do this as follows:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token function">_myLightTemplate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    This template may be overridden by a Subclasser.
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    Even I don't end up in shadow root, I need to be scoped to constructor.scopedElements as well.
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-button</span><span class="token punctuation">&gt;</span></span>True<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lion-button</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-input</span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>xyz<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lion-input</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token function">__getLightDomNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">const</span> renderParent <span class="token operator">=</span> <span class="token dom variable">document</span><span class="token punctuation">.</span><span class="token method function property-access">createElement</span><span class="token punctuation">(</span><span class="token string">'div'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">constructor</span><span class="token punctuation">.</span><span class="token method function property-access">render</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">_myLightTemplate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> renderParent<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token literal-property property">scopeName</span><span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">localName</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">eventContext</span><span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token comment">// this node will be appended to the host</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> renderParent<span class="token punctuation">.</span><span class="token property-access">firstElementChild</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token function">connectedCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token method function property-access">connectedCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">appendChild</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">__getLightDomNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<p>In a less complex case, we might just want to add a child node to the dom.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">LitElement</span>  <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'lit'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">ScopedElementsMixin</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@open-wc/scoped-elements/lit-element.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token spread operator">...</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token method function property-access">__getLightDomNode</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> <span class="token dom variable">document</span><span class="token punctuation">.</span><span class="token method function property-access">createElement</span><span class="token punctuation">(</span><span class="token string">'lion-input'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">constructor</span><span class="token punctuation">.</span><span class="token property-access">scopedElements</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<p>We encourage you to have a look at <a href="https://open-wc.org/docs/development/scoped-elements/">OpenWC's Scoped elements</a>.</p>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/guides/principles/scoped-elements.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../../e3e8d065.js"></script>
+<script type="module" src="../../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

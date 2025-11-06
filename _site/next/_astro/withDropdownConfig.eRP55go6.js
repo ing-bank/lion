@@ -1,0 +1,1 @@
+import{w as e}from"./withClickInteraction.B1DPetIk.js";const i=()=>({placementMode:"local",inheritsReferenceWidth:"min",hidesOnOutsideClick:!0,hidesOnEsc:!0,popperConfig:{placement:"bottom-start",modifiers:[{name:"offset",enabled:!1}]},handlesAccessibility:!0,...e()});export{i as w};

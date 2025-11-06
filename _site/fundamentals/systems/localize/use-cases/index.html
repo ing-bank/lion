@@ -1,0 +1,769 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Localize: Use Cases: Lion</title>
+<meta property="og:title" content="Localize: Use Cases: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/fundamentals/systems/localize/use-cases/">
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system">
+<meta property="og:description" content="Fundamental white label web components for building your design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/2026a8fa.png">
+<meta property="og:url" content="http://localhost:8080/fundamentals/systems/localize/use-cases/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../../../db12e37b.css">
+<link rel="stylesheet" href="../../../../0f4765a3.css">
+<link rel="stylesheet" href="../../../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../../../b1403e10.css">
+  
+
+<link rel="preload" href="../../../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+           active 
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item active">
+<a href="/fundamentals/systems/">Systems</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/">Core</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/SlotMixin/">SlotMixin</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/model-value/">ModelValue</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/formatting-and-parsing/">Formatting and Parsing</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/interaction-states/">Interaction States</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/validate/">Validate</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/styling/">Styling</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/systems/localize/">Localize</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/localize/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/text/">Translate Text</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/numbers/">Format Numbers</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/dates/">Format Dates</a>
+
+</li>
+<li class="menu-item current">
+<a href="/fundamentals/systems/localize/use-cases/">Use Cases</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#localizemanager" class="anchor">LocalizeManager</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#usage-for-component-developers" class="anchor">Usage for component developers</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#usage-for-application-developers" class="anchor">Usage for application developers</a>
+  </li>
+</ul>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/icon/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/">Overlays</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/overlays/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/configuration/">Configuration</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/api-table/">API Table</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/">Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/">Helpers</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/helpers/action-logger/">Action Logger</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/">Ajax</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/ajax/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/">Singleton Manager</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-fail/">Example Fail</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-success/">Example Success</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-complex/">Example Complex</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/">Node Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/">Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/">Babel Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/">Publish Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/">Providence Analytics</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/">Remark Extend</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/overview/">Overview</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/">Rationales</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/rationales/accessibility/">Accessibility</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/side-effects/">Side Effects</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/versioning/">Versioning Lion</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/TypeScript/">TypeScript</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="localize-use-cases"><a class="anchor" href="#localize-use-cases"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Localize: Use Cases</h1>
+<p>The localization system helps to manage localization data split into locales and automate its loading.
+The loading of data tries to be as unobtrusive as possible for a typical workflow while providing a flexible and controllable mechanism for non-trivial use cases.
+The formatting of data containing numbers and dates takes current locale into account by using Intl MessageFormat specification.</p>
+<h2 id="localizemanager"><a class="anchor" href="#localizemanager"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>LocalizeManager</h2>
+<p>The core of the system is a <code>LocalizeManager</code> instance which is responsible for data loading and working with these data.
+It is exposed as a <code>localize</code> singleton instance.
+This ensures that the data can be cached in the single place and reused across different components and same component instances.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> localize <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@lion/ui/localize.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token comment">// localize is the instance of LocalizeManager</span>
+</span></code></pre>
+<p>The system is designed for two different groups of developers: component developers and application developers.
+Component developers will have a unified way to integrate with localization system while application developers will be able to customize the loading behavior.</p>
+<h2 id="usage-for-component-developers"><a class="anchor" href="#usage-for-component-developers"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Usage for component developers</h2>
+<p>As a component developer you get:</p>
+<ul>
+<li>unified data structure for different locales;</li>
+<li>async helper to load data;</li>
+<li>notification about page locale changes;</li>
+<li>formatting using Intl MessageFormat;</li>
+<li>mixins simplifying integration with components.</li>
+</ul>
+<h3 id="storing-data"><a class="anchor" href="#storing-data"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Storing data</h3>
+<p>Data are split into locales.
+Typically the locale is an ES module which is by convention put into the <code>/translations</code> directory of your project.
+But there is also a possibility to serve data from an API using JSON format.
+Localization data modules for <code>my-hello-component</code> might look like these:</p>
+<ul>
+<li><code>/path/to/my-hello-component/translations/en-GB.js</code></li>
+</ul>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">greeting</span><span class="token operator">:</span> <span class="token string">'Hello {name}!'</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+<ul>
+<li><code>/path/to/my-hello-component/translations/nl-NL.js</code></li>
+</ul>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">greeting</span><span class="token operator">:</span> <span class="token string">'Hallo {name}!'</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>The approach with ES modules is great because it allows to simply reuse basic locale data and override only the needed parts for more specific locales.</p>
+<ul>
+<li><code>/path/to/my-family-component/translations/en.js</code></li>
+</ul>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">havePartnerQuestion</span><span class="token operator">:</span> <span class="token string">'Do you have a partner?'</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token literal-property property">haveChildrenQuestion</span><span class="token operator">:</span> <span class="token string">'Do you have children?'</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+<ul>
+<li><code>/path/to/my-family-component/translations/en-GB.js</code></li>
+</ul>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports">en</span> <span class="token keyword module">from</span> <span class="token string">'./en.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword module">default</span> en<span class="token punctuation">;</span>
+</span></code></pre>
+<ul>
+<li><code>/path/to/my-family-component/translations/en-US.js</code></li>
+</ul>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports">en</span> <span class="token keyword module">from</span> <span class="token string">'./en.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword module">default</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token spread operator">...</span>en<span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token literal-property property">haveChildrenQuestion</span><span class="token operator">:</span> <span class="token string">'Do you have kids?'</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h3 id="loading-data"><a class="anchor" href="#loading-data"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Loading data</h3>
+<p>Async method <code>loadNamespace()</code> can be used to load these data.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line">localize<span class="token punctuation">.</span><span class="token method function property-access">loadNamespace</span><span class="token punctuation">(</span>namespace<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token comment">// do smth when data are loaded</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>The <code>namespace</code> can be one of two types: an object with an explicit loader function and just a simple string for which the loader has been preconfigured.
+Let's look at both cases in depth.</p>
+<ol>
+<li>Using explicit loader functions:</li>
+</ol>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// use the dynamic import to load static assets</span>
+</span><span class="code-line">localize<span class="token punctuation">.</span><span class="token method function property-access">loadNamespace</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token string-property property">'my-hello-component'</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token parameter">locale</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token comment">// resolves to a module with the module.default `{ greeting: 'Hallo {name}!' }`</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token keyword module">import</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">./translations/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>locale<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.js</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<blockquote>
+<p>Note: dynamic variables inside dynamic imports may cause problems with tools that do static analysis, and may not work out of the box</p>
+</blockquote>
+<p>Usage of dynamic imports is recommended if you want to be able to create smart bundles later on for a certain locale.
+The module must have a <code>default</code> export as shown above to be handled properly.</p>
+<p>But in fact you are not limited in the way how exactly the data are loaded.
+If you want to fetch it from some API this is also possible.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// fetch from an API</span>
+</span><span class="code-line">localize<span class="token punctuation">.</span><span class="token method function property-access">loadNamespace</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token string-property property">'my-hello-component'</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token parameter">locale</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span>
+</span><span class="code-line">      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://api.example.com/?namespace=my-hello-component&amp;locale="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>locale<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> response<span class="token punctuation">.</span><span class="token method function property-access">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// resolves to the JSON object `{ greeting: 'Hallo {name}!' }`</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>But it does not make much sense to have such a loader function for each of your namespaces.
+And this is there the second option comes in handy.</p>
+<ol>
+<li>Using the loaders preconfigured via <code>setupNamespaceLoader()</code>:</li>
+</ol>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// using the regexp to match all component names staring with 'my-'</span>
+</span><span class="code-line">localize<span class="token punctuation">.</span><span class="token method function property-access">setupNamespaceLoader</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">my-<span class="token char-set class-name">.</span><span class="token quantifier number">+</span></span><span class="token regex-delimiter">/</span></span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">locale<span class="token punctuation">,</span> namespace</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://api.example.com/?namespace="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>namespace<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&amp;locale=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>locale<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> response<span class="token punctuation">.</span><span class="token method function property-access">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword control-flow">await</span> <span class="token known-class-name class-name">Promise</span><span class="token punctuation">.</span><span class="token method function property-access">all</span><span class="token punctuation">(</span><span class="token punctuation">[</span>
+</span><span class="code-line">  localize<span class="token punctuation">.</span><span class="token method function property-access">loadNamespace</span><span class="token punctuation">(</span><span class="token string">'my-hello-component'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  localize<span class="token punctuation">.</span><span class="token method function property-access">loadNamespace</span><span class="token punctuation">(</span><span class="token string">'my-goodbye-component'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>Thus there is a loader function for all components having a certain prefix in a name.</p>
+<h3 id="page-locale"><a class="anchor" href="#page-locale"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Page locale</h3>
+<p>The single source of truth for page locale is <code>&lt;html lang="my-LOCALE"&gt;</code>.
+Accessing it via <code>localize.locale</code> getter/setter is preferable.</p>
+<p>External tools like Google Chrome translate or a demo plugin to change a page locale (e.g. in the Storybook) can directly change the attribute on the <code>&lt;html&gt;</code> tag.</p>
+<p>If <code>&lt;html lang&gt;</code> is empty the default locale will be set to <code>en-GB</code>.</p>
+<h4 id="changing-the-page-locale"><a class="anchor" href="#changing-the-page-locale"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Changing the page locale</h4>
+<p>Changing the locale is simple yet powerful way to change the language on the page without reloading it:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line">localize<span class="token punctuation">.</span><span class="token method function property-access">addEventListener</span><span class="token punctuation">(</span><span class="token string">'localeChanged'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token comment">// do smth when data are loaded for a new locale</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment">// change locale (syncs to `&lt;html lang="es-ES"&gt;` and fires the event above)</span>
+</span><span class="code-line">localize<span class="token punctuation">.</span><span class="token property-access">locale</span> <span class="token operator">=</span> <span class="token string">'es-ES'</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>If the locale is changed when a few namespaces have been already loaded for the previous one, all the data will be requested for existing namespaces for a new locale and only after that the event listeners will be called.
+This ensures that all data necessary for localization is loaded prior to rendering.
+If a certain namespace for a certain locale has been loaded previously, it will never be fetched again until the tab is reloaded in the browser.</p>
+<h4 id="fallback-locale"><a class="anchor" href="#fallback-locale"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Fallback locale</h4>
+<p>Due to the need to develop application code with not everything translated (yet) to all languages, it is good to have a fallback.
+By default the fallback is <code>en-GB</code>, meaning that if some namespace does not have data for the current page locale, the <code>en-GB</code> will be loaded, making it an important foundation for all other locales data.
+In addition to that the fallback is a necessary mechanism to allow some features of the browsers like Google Chrome translate to work and use the same original data for translations into all not officially supported languages.</p>
+<blockquote>
+<p>We highly discourage using fallback locales as a user, because it is bug-prone with things like date and number formatting. Please use full locales whenever possible.</p>
+</blockquote>
+<h3 id="rendering-data"><a class="anchor" href="#rendering-data"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Rendering data</h3>
+<p>When all necessary data are loaded and you want to show localized content on the page you need to format the data.
+<code>localize.msg</code> comes into play here.
+It expects a key in the format of <code>namespace:name</code> and can also receive variables as a second argument.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token function">_onNameChanged</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token comment">// inserts 'Hello John!' into the element with id="name"</span>
+</span><span class="code-line">  <span class="token keyword">const</span> greeting <span class="token operator">=</span> localize<span class="token punctuation">.</span><span class="token method function property-access">msg</span><span class="token punctuation">(</span><span class="token string">'my-hello-component:greeting'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'John'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">shadowRoot</span><span class="token punctuation">.</span><span class="token method function property-access">querySelector</span><span class="token punctuation">(</span><span class="token string">'#greeting'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token property-access">innerText</span> <span class="token operator">=</span> greeting<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<p><code>localize.msg</code> uses <a href="https://www.npmjs.com/package/message-format">Intl MessageFormat implementation</a> under the hood, so you can use all of its powerful features like placing a little bit different content based on number ranges or format a date according to the current locale.</p>
+<h4 id="rendering-with-localizemixin"><a class="anchor" href="#rendering-with-localizemixin"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Rendering with LocalizeMixin</h4>
+<p>This mixin was created to significantly simplify integration with LitElement.
+It provides many capabilities:</p>
+<ul>
+<li>automatic loading of specified namespaces;</li>
+<li>control of the rendering flow via <code>waitForLocalizeNamespaces</code>;</li>
+<li>smart wrapper <code>msgLit</code> for <code>localize.msg</code>;</li>
+<li>life-cycle callbacks and properties for localization events;</li>
+<li>automatic update of DOM after locale was changed.</li>
+</ul>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword">class</span> <span class="token class-name">MyHelloComponent</span> <span class="token keyword">extends</span> <span class="token class-name">LocalizeMixin</span><span class="token punctuation">(</span><span class="token maybe-class-name">LitElement</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">static</span> <span class="token keyword">get</span> <span class="token function">localizeNamespaces</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token comment">// using an explicit loader function</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token punctuation">[</span>
+</span><span class="code-line">      <span class="token punctuation">{</span> <span class="token string-property property">'my-hello-component'</span><span class="token operator">:</span> <span class="token parameter">locale</span> <span class="token arrow operator">=&gt;</span> <span class="token keyword module">import</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">./translations/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>locale<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.js</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span> <span class="token punctuation">}</span>
+</span><span class="code-line">      <span class="token spread operator">...</span><span class="token keyword">super</span><span class="token punctuation">.</span><span class="token property-access">localizeNamespaces</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line">    <span class="token comment">// using a preconfigured loader function</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token punctuation">[</span><span class="token string">'my-hello-component'</span><span class="token punctuation">,</span> <span class="token spread operator">...</span><span class="token keyword">super</span><span class="token punctuation">.</span><span class="token property-access">localizeNamespaces</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token keyword">static</span> <span class="token keyword">get</span> <span class="token function">waitForLocalizeNamespaces</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token comment">// return false to unblock the rendering till the data are loaded</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token comment">&lt;!-- use this.msgLit() here to inject data, e.g.: --&gt;</span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>span</span><span class="token punctuation">&gt;</span></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">msgLit</span><span class="token punctuation">(</span><span class="token string">'my-hello-component:greeting'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>span</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">onLocaleReady</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token method function property-access">onLocaleReady</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token comment">// life-cycle callback - when data are loaded for initial locale</span>
+</span><span class="code-line">    <span class="token comment">// (reaction to loaded namespaces defined in `localizeNamespaces`)</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">onLocaleChanged</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token method function property-access">onLocaleChanged</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token comment">// life-cycle callback - when data are loaded for new locale</span>
+</span><span class="code-line">    <span class="token comment">// (reaction to `localize.locale` change and namespaces loaded for it)</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">onLocaleUpdated</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token method function property-access">onLocaleUpdated</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token comment">// life-cycle callback - when localized content needs to be updated</span>
+</span><span class="code-line">    <span class="token comment">// (literally after `onLocaleReady` or `onLocaleChanged`)</span>
+</span><span class="code-line">    <span class="token comment">// most DOM updates should be done here with the help of `this.msgLit()` and cached id selectors</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token keyword">async</span> <span class="token function">inYourOwnMethod</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token comment">// before data are loaded or reloaded</span>
+</span><span class="code-line">    <span class="token keyword control-flow">await</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">localizeNamespacesLoaded</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token comment">// after data are loaded or reloaded</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<p>In the majority of cases defining <code>localizeNamespaces</code> and using <code>msgLit</code> in the <code>render</code> is enough to have a fully working localized component.</p>
+<h2 id="usage-for-application-developers"><a class="anchor" href="#usage-for-application-developers"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Usage for application developers</h2>
+<p>As an application developer you get:</p>
+<ul>
+<li>ability to inline localization data for any locales and namespaces to prevent async loading and improve rendering speed in critical cases;</li>
+<li>smart defaults for data loading;</li>
+<li>simple customization of paths where the data are loaded from for common use cases;</li>
+<li>full control over how the data are loaded for very specific use cases;</li>
+</ul>
+<h3 id="inlining-of-data"><a class="anchor" href="#inlining-of-data"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Inlining of data</h3>
+<p>If you want to optimize the page rendering and you can inline some of your localization data upfront then there is a simple way to do it:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// my-inlined-data.js</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> localize <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@lion/ui/localize.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line">localize<span class="token punctuation">.</span><span class="token method function property-access">addData</span><span class="token punctuation">(</span><span class="token string">'en-GB'</span><span class="token punctuation">,</span> <span class="token string">'my-namespace'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token comment">/* data */</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">localize<span class="token punctuation">.</span><span class="token method function property-access">addData</span><span class="token punctuation">(</span><span class="token string">'nl-NL'</span><span class="token punctuation">,</span> <span class="token string">'my-namespace'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token comment">/* data */</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment">// my-app.js</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token string">'./my-inlined-data.js'</span><span class="token punctuation">;</span> <span class="token comment">// must be on top to be executed before any other code using the data</span>
+</span></code></pre>
+<p>This code must come before any other code which might potentially render before the data are added.
+You can inline as much locales as you support or sniff request headers on the server side and inline only the needed one.</p>
+<h3 id="customize-loading"><a class="anchor" href="#customize-loading"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Customize loading</h3>
+<p>By convention most components will keep their localization data in ES modules at <code>/translations/%locale%.js</code>.
+But as we have already covered in the documentation for component developers there is a way to change the loading for certain namespaces.</p>
+<p>The configuration is done via <code>setupNamespaceLoader()</code>.
+This is sort of a router for the data and is typically needed to fetch it from an API.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// for one specific component</span>
+</span><span class="code-line">localize<span class="token punctuation">.</span><span class="token method function property-access">setupNamespaceLoader</span><span class="token punctuation">(</span><span class="token string">'my-hello-component'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token parameter">locale</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span>
+</span><span class="code-line">    <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://api.example.com/?namespace=my-hello-component&amp;locale="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>locale<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> response<span class="token punctuation">.</span><span class="token method function property-access">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment">// for all components which have a prefix in their names</span>
+</span><span class="code-line">localize<span class="token punctuation">.</span><span class="token method function property-access">setupNamespaceLoader</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">my-<span class="token char-set class-name">.</span><span class="token quantifier number">+</span></span><span class="token regex-delimiter">/</span></span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token parameter">locale<span class="token punctuation">,</span> namespace</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">const</span> response <span class="token operator">=</span> <span class="token keyword control-flow">await</span> <span class="token function">fetch</span><span class="token punctuation">(</span>
+</span><span class="code-line">    <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">https://api.example.com/?namespace="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>namespace<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&amp;locale=</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>locale<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> response<span class="token punctuation">.</span><span class="token method function property-access">json</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>Typically in the application you have a prefix in all of your application specific components.
+Having a way to load their corresponding localization data in a unified way is handy in such cases.
+But you need to make sure this configuration happens before you run any other code using these namespaces.</p>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/fundamentals/systems/localize/use-cases.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../../../e3e8d065.js"></script>
+<script type="module" src="../../../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

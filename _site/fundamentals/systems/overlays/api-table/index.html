@@ -1,0 +1,1251 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Overlays: API Table: Lion</title>
+<meta property="og:title" content="Overlays: API Table: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/fundamentals/systems/overlays/api-table/">
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system">
+<meta property="og:description" content="Fundamental white label web components for building your design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/32328019.png">
+<meta property="og:url" content="http://localhost:8080/fundamentals/systems/overlays/api-table/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../../../db12e37b.css">
+<link rel="stylesheet" href="../../../../0f4765a3.css">
+<link rel="stylesheet" href="../../../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../../../b1403e10.css">
+  
+
+<link rel="preload" href="../../../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+           active 
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item active">
+<a href="/fundamentals/systems/">Systems</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/">Core</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/SlotMixin/">SlotMixin</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/model-value/">ModelValue</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/formatting-and-parsing/">Formatting and Parsing</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/interaction-states/">Interaction States</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/validate/">Validate</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/styling/">Styling</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/">Localize</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/localize/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/text/">Translate Text</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/numbers/">Format Numbers</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/dates/">Format Dates</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/icon/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/systems/overlays/">Overlays</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/overlays/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/configuration/">Configuration</a>
+
+</li>
+<li class="menu-item current">
+<a href="/fundamentals/systems/overlays/api-table/">API Table</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#class-overlaycontroller" class="anchor">class: </a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#class-overlaysmanager" class="anchor">class: </a>
+  </li>
+</ul>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/">Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/">Helpers</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/helpers/action-logger/">Action Logger</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/">Ajax</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/ajax/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/">Singleton Manager</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-fail/">Example Fail</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-success/">Example Success</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-complex/">Example Complex</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/">Node Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/">Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/">Babel Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/">Publish Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/">Providence Analytics</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/">Remark Extend</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/overview/">Overview</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/">Rationales</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/rationales/accessibility/">Accessibility</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/side-effects/">Side Effects</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/versioning/">Versioning Lion</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/TypeScript/">TypeScript</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="overlays-api-table"><a class="anchor" href="#overlays-api-table"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Overlays: API Table</h1>
+<h2 id="class-overlaycontroller"><a class="anchor" href="#class-overlaycontroller"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>class: <code>OverlayController</code></h2>
+<h3 id="fields"><a class="anchor" href="#fields"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Fields</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Type</th><th>Default</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>backdropNode</code></td><td>public</td><td><code>HTMLElement</code></td><td></td><td>The element that is placed behind the contentNode. When not provided and `hasBackdrop` is true,
+a backdropNode will be automatically created</td><td></td></tr><tr><td><code>config</code></td><td>public</td><td><code>OverlayConfig</code></td><td><code>{}</code></td><td></td><td></td></tr><tr><td><code>content</code></td><td>public</td><td><code>HTMLDialogElement | HTMLDivElement</code></td><td></td><td>The contentWrapperNode</td><td></td></tr><tr><td><code>contentNode</code></td><td>public</td><td><code>HTMLElement</code></td><td></td><td>The most important element: the overlay itself</td><td></td></tr><tr><td><code>contentWrapperNode</code></td><td>public</td><td><code>HTMLElement</code></td><td></td><td>The wrapper element of contentNode, used to supply inline positioning styles. When a Popper
+arrow is needed, it acts as parent of the arrow node. Will be automatically created for global
+and non projected contentNodes. Required when used in shadow dom mode or when Popper arrow is
+supplied. Essential for allowing webcomponents to style their projected contentNodes</td><td></td></tr><tr><td><code>elementToFocusAfterHide</code></td><td>public</td><td><code>HTMLElement</code></td><td></td><td>The element that should be called `.focus()` on after dialog closes</td><td></td></tr><tr><td><code>elevation</code></td><td>public</td><td><code>number</code></td><td></td><td></td><td></td></tr><tr><td><code>handlesAccessibility</code></td><td>public</td><td><code>boolean</code></td><td></td><td>For non `isTooltip`:
+- sets aria-expanded="true/false" and aria-haspopup="true" on invokerNode
+- sets aria-controls on invokerNode
+- returns focus to invokerNode on hide
+- sets focus to overlay content(?)
+
+For `isTooltip`:
+- sets role="tooltip" and aria-labelledby/aria-describedby on the content</td><td></td></tr><tr><td><code>hasActiveBackdrop</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>hasActiveTrapsKeyboardFocus</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>hasBackdrop</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Whether it should have a backdrop (currently exclusive to globalOverlayController)</td><td></td></tr><tr><td><code>hidesOnEsc</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides the overlay when pressing [ esc ]</td><td></td></tr><tr><td><code>hidesOnOutsideClick</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides the overlay when clicking next to it, exluding invoker</td><td></td></tr><tr><td><code>hidesOnOutsideEsc</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides the overlay when pressing esc, even when contentNode has no focus</td><td></td></tr><tr><td><code>inheritsReferenceWidth</code></td><td>public</td><td><code>'max' | 'full' | 'min' | 'none' | undefined</code></td><td></td><td>Will align contentNode with referenceNode (invokerNode by default) for local overlays.
+Usually needed for dropdowns. 'max' will prevent contentNode from exceeding width of
+referenceNode, 'min' guarantees that contentNode will be at least as wide as referenceNode.
+'full' will make sure that the invoker width always is the same.</td><td></td></tr><tr><td><code>invoker</code></td><td>public</td><td><code>HTMLElement | undefined</code></td><td></td><td>The invokerNode</td><td></td></tr><tr><td><code>invokerNode</code></td><td>public</td><td><code>HTMLElement | undefined</code></td><td></td><td>The interactive element (usually a button) invoking the dialog or tooltip</td><td></td></tr><tr><td><code>invokerRelation</code></td><td>public</td><td><code>'label' | 'description'| undefined</code></td><td></td><td>By default, the tooltip content is a 'description' for the invoker (uses aria-describedby).
+Setting this property to 'label' makes the content function as a label (via aria-labelledby)</td><td></td></tr><tr><td><code>isAlertDialog</code></td><td>public</td><td></td><td></td><td>The alertdialog role is to be used on modal alert dialogs that interrupt a user's workflow
+to communicate an important message and require a response.</td><td></td></tr><tr><td><code>isBlocking</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides other overlays when mutiple are opened (currently exclusive to globalOverlayController)</td><td></td></tr><tr><td><code>isShown</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>isTooltip</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Has a totally different interaction- and accessibility pattern from all other overlays.
+Will behave as role="tooltip" element instead of a role="dialog" element</td><td></td></tr><tr><td><code>manager</code></td><td>public</td><td></td><td><code>manager</code></td><td></td><td></td></tr><tr><td><code>placementMode</code></td><td>public</td><td><code>'global' | 'local' | undefined</code></td><td></td><td>Determines the connection point in DOM (body vs next to invoker).</td><td></td></tr><tr><td><code>popperConfig</code></td><td>public</td><td><code>PopperOptions</code></td><td></td><td>Popper configuration. Will be used when placementMode is 'local'</td><td></td></tr><tr><td><code>preventsScroll</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides other overlays when mutiple are opened (currently exclusive to globalOverlayController)</td><td></td></tr><tr><td><code>referenceNode</code></td><td>public</td><td><code>HTMLElement</code></td><td></td><td>The element that is used to position the overlay content relative to. Usually,
+this is the same element as invokerNode. Should only be provided when invokerNode should not
+be positioned against.</td><td></td></tr><tr><td><code>trapsKeyboardFocus</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Rotates tab, implicitly set when 'isModal'</td><td></td></tr><tr><td><code>viewportConfig</code></td><td>public</td><td><code>ViewportConfig</code></td><td></td><td>Viewport configuration. Will be used when placementMode is 'global'</td><td></td></tr><tr><td><code>visibilityTriggerFunction</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_contentId</code></td><td>protected</td><td></td><td><code>`overlay-content--${Math.random().toString(36).slice(2, 10)}`</code></td><td></td><td></td></tr><tr><td><code>_defaultConfig</code></td><td>protected</td><td><code>OverlayConfig</code></td><td><code>{ placementMode: undefined, contentNode: config.contentNode, contentWrapperNode: config.contentWrapperNode, invokerNode: config.invokerNode, backdropNode: config.backdropNode, referenceNode: undefined, elementToFocusAfterHide: config.invokerNode, inheritsReferenceWidth: 'none', hasBackdrop: false, isBlocking: false, preventsScroll: false, trapsKeyboardFocus: false, hidesOnEsc: false, hidesOnOutsideEsc: false, hidesOnOutsideClick: false, isTooltip: false, isAlertDialog: false, invokerRelation: 'description', visibilityTriggerFunction: undefined, handlesAccessibility: false, popperConfig: { placement: 'top', strategy: 'fixed', modifiers: [ { name: 'preventOverflow', enabled: true, options: { boundariesElement: 'viewport', padding: 8, // viewport-margin for shifting/sliding }, }, { name: 'flip', options: { boundariesElement: 'viewport', padding: 16, // viewport-margin for flipping }, }, { name: 'offset', enabled: true, options: { offset: [0, 8], // horizontal and vertical margin (distance between popper and referenceElement) }, }, { name: 'arrow', enabled: false, }, ], }, viewportConfig: { placement: 'center', }, zIndex: 9999, }</code></td><td></td><td></td></tr><tr><td><code>_referenceNode</code></td><td>protected</td><td><code>HTMLElement | undefined</code></td><td></td><td></td><td></td></tr></tbody></table>
+<h3 id="methods"><a class="anchor" href="#methods"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Methods</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Description</th><th>Parameters</th><th>Return</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>addEventListener</code></td><td>public</td><td></td><td><code>type, callback, options</code></td><td></td><td>EventTarget</td></tr><tr><td><code>disableTrapsKeyboardFocus</code></td><td>public</td><td></td><td><code>{ findNewTrap = true }</code></td><td></td><td></td></tr><tr><td><code>dispatchEvent</code></td><td>public</td><td></td><td><code>event</code></td><td></td><td>EventTarget</td></tr><tr><td><code>enableTrapsKeyboardFocus</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>hide</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>removeEventListener</code></td><td>public</td><td></td><td><code>type, callback, options</code></td><td></td><td>EventTarget</td></tr><tr><td><code>show</code></td><td>public</td><td></td><td><code>elementToFocusAfterHide: HTMLElement</code></td><td></td><td></td></tr><tr><td><code>teardown</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>toggle</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>transitionHide</code></td><td>public</td><td>Method to be overriden by subclassers</td><td><code>hideConfig: {backdropNode:HTMLElement, contentNode:HTMLElement}</code></td><td></td><td></td></tr><tr><td><code>transitionShow</code></td><td>public</td><td>To be overridden by subclassers</td><td><code>showConfig: {backdropNode:HTMLElement; contentNode:HTMLElement}</code></td><td></td><td></td></tr><tr><td><code>updateConfig</code></td><td>public</td><td>Allows to dynamically change the overlay configuration. Needed in case the
+presentation of the overlay changes depending on screen size.
+Note that this method is the only allowed way to update a configuration of an
+OverlayController instance.</td><td><code>cfgToAdd: OverlayConfig</code></td><td></td><td></td></tr><tr><td><code>_handleAccessibility</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleBackdrop</code></td><td>protected</td><td>Sets up backdrop on the given overlay. If there was a backdrop on another element
+it is removed. Otherwise this is the first time displaying a backdrop, so a animation-in
+animation is played.</td><td><code>{ phase }, config: { animation?: boolean, phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleBlocking</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleFeatures</code></td><td>protected</td><td>All features are handled here.</td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleHidesOnEsc</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleHidesOnOutsideClick</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleHidesOnOutsideEsc</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleInheritsReferenceWidth</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_handlePosition</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handlePreventsScroll</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleTrapsKeyboardFocus</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleVisibilityTriggers</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleZIndex</code></td><td>protected</td><td>Display local overlays on top of elements with no z-index that appear later in the DOM</td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_hasDisabledInvoker</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_init</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_keepBodySize</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_restoreFocus</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_transitionHide</code></td><td>protected</td><td></td><td><code>{ backdropNode, contentNode }, hideConfig: {backdropNode:HTMLElement, contentNode:HTMLElement}</code></td><td></td><td></td></tr><tr><td><code>_transitionShow</code></td><td>protected</td><td></td><td><code>showConfig: {backdropNode:HTMLElement; contentNode:HTMLElement}</code></td><td></td><td></td></tr></tbody></table>
+<h3 id="events"><a class="anchor" href="#events"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Events</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Type</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>show</code></td><td><code>Event</code></td><td></td><td></td></tr><tr><td><code>hide</code></td><td><code>Event</code></td><td></td><td></td></tr></tbody></table>
+<hr>
+<h2 id="class-overlaysmanager"><a class="anchor" href="#class-overlaysmanager"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>class: <code>OverlaysManager</code></h2>
+<h3 id="fields-1"><a class="anchor" href="#fields-1"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Fields</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Type</th><th>Default</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>list</code></td><td>public</td><td></td><td></td><td>no setter as .list is intended to be read-only
+You can use .add or .remove to modify it</td><td></td></tr><tr><td><code>shownList</code></td><td>public</td><td></td><td></td><td>no setter as .shownList is intended to be read-only
+You can use .show or .hide on individual controllers to modify</td><td></td></tr><tr><td><code>siblingsInert</code></td><td>public</td><td></td><td></td><td>Features right now only for Global Overlay Manager</td><td></td></tr></tbody></table>
+<h3 id="methods-1"><a class="anchor" href="#methods-1"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Methods</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Description</th><th>Parameters</th><th>Return</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>add</code></td><td>public</td><td>Registers an overlay controller.</td><td><code>ctrlToAdd: OverlayController</code></td><td><code>OverlayController</code></td><td></td></tr><tr><td><code>disableTrapsKeyboardFocusForAll</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>hide</code></td><td>public</td><td></td><td><code>ctrlToHide: any</code></td><td></td><td></td></tr><tr><td><code>informTrapsKeyboardFocusGotDisabled</code></td><td>public</td><td></td><td><code>{ disabledCtrl, findNewTrap = true }, options: { disabledCtrl?:OverlayController, findNewTrap?:boolean }</code></td><td></td><td></td></tr><tr><td><code>informTrapsKeyboardFocusGotEnabled</code></td><td>public</td><td></td><td><code>placementMode: 'local' | 'global' | undefined</code></td><td></td><td></td></tr><tr><td><code>remove</code></td><td>public</td><td></td><td><code>ctrlToRemove: OverlayController</code></td><td></td><td></td></tr><tr><td><code>requestToEnableScroll</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>requestToPreventScroll</code></td><td>public</td><td>PreventsScroll</td><td></td><td></td><td></td></tr><tr><td><code>requestToShowOnly</code></td><td>public</td><td>Blocking</td><td><code>blockingCtrl: OverlayController</code></td><td></td><td></td></tr><tr><td><code>retractRequestToShowOnly</code></td><td>public</td><td></td><td><code>blockingCtrl: OverlayController</code></td><td></td><td></td></tr><tr><td><code>show</code></td><td>public</td><td></td><td><code>ctrlToShow: OverlayController</code></td><td></td><td></td></tr><tr><td><code>teardown</code></td><td>public</td><td></td><td></td><td></td><td></td></tr></tbody></table>
+<hr>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/fundamentals/systems/overlays/api-table.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../../../e3e8d065.js"></script>
+<script type="module" src="../../../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

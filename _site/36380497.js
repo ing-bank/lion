@@ -1,0 +1,1 @@
+import r from"./737c35ad.js";var i={...r,error:{...r.error,IsDate:"Lütfen geçerli bir tarih girin (GG/AA/YYYY)."},warning:{...r.warning,IsDate:"Lütfen geçerli bir tarih girin (GG/AA/YYYY)."}};export{i as default};

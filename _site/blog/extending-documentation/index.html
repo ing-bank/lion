@@ -1,0 +1,517 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Extending Lion Documentation: Lion</title>
+<meta property="og:title" content="Extending Lion Documentation: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/blog/extending-documentation/">
+
+
+
+  
+
+<meta name="description" content="Extending a component library and its documentation for a speedy design system">
+<meta property="og:description" content="Extending a component library and its documentation for a speedy design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/c9419dd2.png">
+<meta property="og:url" content="http://localhost:8080/blog/extending-documentation/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../db12e37b.css">
+<link rel="stylesheet" href="../../0f4765a3.css">
+<link rel="stylesheet" href="../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../b1403e10.css">
+  
+
+<link rel="preload" href="../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-blog-details">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+          
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+           active 
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+	<rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul>
+    <li class="current">
+      <h3>Headings</h3>
+      <ul><li class="menu-item">
+<a href="/blog/extending-documentation/#steps-involved">Steps involved</a>
+</li>
+<li class="menu-item">
+<a href="/blog/extending-documentation/#storybook-main-file">Storybook Main file</a>
+</li>
+<li class="menu-item">
+<a href="/blog/extending-documentation/#replacing-imports-and-tagnames">Replacing imports and tagnames</a>
+</li>
+<li class="menu-item">
+<a href="/blog/extending-documentation/#adjust-documentation-content">Adjust documentation content</a>
+</li>
+<li class="menu-item">
+<a href="/blog/extending-documentation/#summary">Summary</a>
+</li></ul>
+    </li>
+  </ul>
+  <div class="sidebar-tags">
+    <h3>Date</h3>
+    <div>Tue Dec 01 2020</div>
+  </div>
+  <div class="sidebar-tags">
+    <h3>Tags</h3>
+    <div class="tags">
+      
+        <span class="tag">javascript, documentation, demos</span>
+      
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+
+      
+  <main class="markdown-body">
+    <main class="markdown-body">
+  
+    
+  <h1>Extending Lion Documentation</h1>
+
+
+  <img src="https://miro.medium.com/max/2000/1*NZ6tdtJHHJjxtPmIFxWpGw.jpeg" alt="">
+
+
+  
+    <p>If you extend <a href="https://lion.js.org/">Lion</a> components, you don't only want to reuse the components, but you probably want to reuse the documentation (Storybook demos) as well. Wouldn't it be nice to just take it all from lion, but replace it with your own design system extension, so you don't have the extra maintenance of essentially copying the docs from <code>Lion</code> for your own design system implementation?</p>
+<p>In this blog we will explain how <code>Lion</code> supports this use case, and allows you to extend not just the components, but also the documentation.</p>
+<blockquote>
+<p>Important to note is that you must have a naming convention in your extension that is similar to <code>Lion*</code> for class names and <code>lion-*</code> for tag names, e.g. <code>LeaTabs</code> and <code>lea-tabs</code>. So essentially, have a consistent prefix for all your extension classes and tagnames.</p>
+</blockquote>
+<h2 id="steps-involved"><a class="anchor" href="#steps-involved"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Steps involved</h2>
+<p>In order to extend documentation, there are a few things that we need to enable you to do:</p>
+<ol>
+<li>Control which documentation MD files you extend, and which you leave out entirely. Because perhaps <code>LionTabs</code> is the only component that you extend.</li>
+<li>Support codified demos but replace the <code>Lion</code> component with the design system component equivalent. This means that the import paths for the component need to be altered to the path where your design system component lives.</li>
+<li>Allow to create overrides for the documentation. If we reference <code>lion-tabs</code>, but your tabs is called <code>lea-tabs</code>, you should be able to replace this piece of text easily. Or maybe we reference that amongst a list of browsers, we support IE11, but your design system doesn't. Then it should be easy to remove that piece of text from your extension docs.</li>
+<li>Allow to remove sections of documentation from Lion, add sections, and replace sections easily.</li>
+</ol>
+<p>Lastly, it needs to be possible for this to work locally (when running Storybook prebuilt using es-dev-server) as well as in production (when building the full storybook with rollup and deploying it).</p>
+<h2 id="storybook-main-file"><a class="anchor" href="#storybook-main-file"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Storybook Main file</h2>
+<p>For step 1, we can use <code>@open-wc/demoing-storybook</code> version 2 or higher, which uses <a href="https://open-wc.org/demoing/">Prebuilt Storybook</a> with <a href="https://open-wc.org/mdjs/">MDJS</a>. Using this is a prerequisite for the rest of this blog.</p>
+<p>Install it manually (and see the docs for configuring):</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> i @open-wc/demoing-storybook --save-dev
+</span></code></pre>
+<p>Or scaffold it with basic configuration by doing</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> init @open-wc
+</span></code></pre>
+<p>And adding/upgrading <code>Demoing</code>.</p>
+<p>Now we need to specify in our <code>.storybook/main.js</code> which stories to load, as well as specifying some <code>es-dev-server</code> configuration options. Only <code>nodeResolve</code> is required, but <code>watch</code> and <code>open</code> are a nice bonus!</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line">module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">stories</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'../node_modules/@lion/tabs/README.md'</span><span class="token punctuation">,</span> <span class="token string">'../packages/**/!(*.override)*.md'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token literal-property property">esDevServer</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token literal-property property">nodeResolve</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">watch</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">open</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+<blockquote>
+<p>Later in this blog in the <code>Adjust Documentation</code> section we will explain about why we exclude *.override.md files here, since they are used for specific overrides and not to be included as independent story files. This file name syntax is configurable.</p>
+</blockquote>
+<p>So here we only extend the documentation of <code>LionTabs</code>, for our own <code>LeaTabs</code>. But our repository is a monorepository with multiple other packages that don't use <code>Lion</code>, which we want to include as well, so we also add the second line to include those.</p>
+<p>This step alone should already give you the <code>LionTabs</code> docs inside your own Storybook, but not yet transformed to your <code>LeaTabs</code> extension of it, which we will explain next.</p>
+<h2 id="replacing-imports-and-tagnames"><a class="anchor" href="#replacing-imports-and-tagnames"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Replacing imports and tagnames</h2>
+<h3 id="analysing-paths"><a class="anchor" href="#analysing-paths"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Analysing paths</h3>
+<p>Potentially the hardest part is to analyse your extension <code>LeaTabs</code>, and to figure out how we should transform the import paths for <code>LionTabs</code> to new paths to your <code>LeaTabs</code>.</p>
+<p>To do this we make use of <a href="https://lion.js.org/?path=/docs/tools-providence-main--run-providence">Providence</a>. This tool has a command that creates a full map of all the import paths of a reference project (<code>Lion</code>) and can replace them with the correct paths of a target project (<code>Lea</code>).</p>
+<p>So lets install it:</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> i providence-analytics --save-dev
+</span></code></pre>
+<p>And to use it, let's add a script to your projects <code>package.json</code>:</p>
+<pre class="language-json"><code class="language-json code-highlight"><span class="code-line"><span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token property">"providence:extend"</span><span class="token operator">:</span> <span class="token string">"providence extend-docs -r 'node_modules/@lion/*' --prefix-from lion --prefix-to lea"</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<p>The <code>--prefix-from</code> and <code>--prefix-to</code> are the prefixes of the project you extend from (most of the times <code>lion</code>) and your own projects prefix (in this case <code>lea</code>). For classnames it will look for <code>Lion*</code> and <code>Lea*</code> respectively, for tagnames it will look for <code>lion-*</code> and <code>lea-*</code> respectively.</p>
+<p>If you know you only use a single component from lion, you can reduce the time the tool needs for analysis, by specifying this package <code>-r 'node_modules/@lion/tabs'</code>.</p>
+<p>Running the script will create a <code>providence-extend-docs-data.json</code> file, with all from/to information. You can change the name / location of the output file, refer to <a href="https://lion.js.org/?path=/docs/tools-providence-main--run-providence">Providence Documentation</a> for this.</p>
+<h4 id="running-it-automatically-when-upgrading-lion-dependency"><a class="anchor" href="#running-it-automatically-when-upgrading-lion-dependency"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Running it automatically when upgrading lion dependency</h4>
+<p>Inside ING, our design system also makes use of this providence tool to create this data JSON file. But since the analysis takes a few minutes, we only run it, automatically, when we upgrade our lion dependencies. We do this with the following two <code>package.json</code> scripts:</p>
+<pre class="language-json"><code class="language-json code-highlight"><span class="code-line"><span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token property">"upgrade:lion"</span><span class="token operator">:</span> <span class="token string">"npm upgrade --scope @lion --latest --exact &amp;&amp; npm run providence:extend"</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token property">"providence:extend"</span><span class="token operator">:</span> <span class="token string">"providence extend-docs -r 'node_modules/@lion/*' --prefix-from lion --prefix-to ing"</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<h3 id="replacing-paths--template-tagnames"><a class="anchor" href="#replacing-paths--template-tagnames"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Replacing paths &amp; template tagnames</h3>
+<p>Now that we have a JSON file with all the information we need to know about to replace import paths and tagnames inside templates, we can start transforming the <code>LionTabs</code> documentation to <code>LeaTabs</code> documentation.</p>
+<p>For this, we created a <code>babel-plugin</code> called <a href="https://lion.js.org/?path=/docs/tools-babelpluginextenddocs--page">babel-plugin-extend-docs</a>.</p>
+<p>This will analyse the JavaScript script and story content inside the markdown files, which uses <a href="https://open-wc.org/mdjs/">MDJS</a> syntax, and transform it on the fly in <code>es-dev-server</code>, as well as on rollup build for production.</p>
+<p>So all you need to do is to install this plugin:</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> i babel-plugin-extend-docs --save-dev
+</span></code></pre>
+<p>and create a <code>babel.config.js</code> file in the root of your project:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword">const</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">const</span> providenceExtendConfig <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'./providence-extend-docs-data.json'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">const</span> extendDocsConfig <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">rootPath</span><span class="token operator">:</span> path<span class="token punctuation">.</span><span class="token method function property-access">resolve</span><span class="token punctuation">(</span><span class="token string">'.'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token literal-property property">changes</span><span class="token operator">:</span> providenceExtendConfig<span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line">module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">overrides</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+</span><span class="code-line">    <span class="token punctuation">{</span>
+</span><span class="code-line">      <span class="token literal-property property">test</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'./node_modules/@lion/*/README.md'</span><span class="token punctuation">,</span> <span class="token string">'./node_modules/@lion/*/docs/*.md'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+</span><span class="code-line">      <span class="token literal-property property">plugins</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token string">'babel-plugin-extend-docs'</span><span class="token punctuation">,</span> extendDocsConfig<span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>As you can see, we import the providence output file and pass it to the plugin options as the <code>changes</code> property.</p>
+<p>Now, the babel plugin will run for the files that we specify in <code>test</code> property, and replace the imports properly, as well as the tag names inside JavaScript code snippets!</p>
+<blockquote>
+<p>For the JavaScript code snippets, it only transforms the ones that use <a href="https://open-wc.org/mdjs/">MDJS</a> syntax, e.g. ```js script, ```js story and ```js preview-story</p>
+</blockquote>
+<p>To ensure babel actually runs for your Storybook, you will have to add it to your es-dev-server configuration:</p>
+<p><code>.storybook/main.js</code>:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line">module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token literal-property property">stories</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'../node_modules/@lion/tabs/README.md'</span><span class="token punctuation">,</span> <span class="token string">'../packages/**/!(*.override)*.md'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token literal-property property">esDevServer</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token literal-property property">nodeResolve</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">watch</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">open</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">    <span class="token literal-property property">babel</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>You should now see the <code>LionTabs</code> instances transformed into your own <code>LeaTabs</code>!</p>
+<h2 id="adjust-documentation-content"><a class="anchor" href="#adjust-documentation-content"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Adjust documentation content</h2>
+<p>In some cases you don't want to show all examples of how to use a component. Sometimes information is <code>Lion</code> specific, or perhaps in your design system you are not allowed to use a certain feature that we documented in <code>Lion</code>.</p>
+<p>In our example, we will show you have to remove the <code>Rationale</code> section that you would normally inherit from the <code>Lion</code> documentation.</p>
+<p>For this step we make use of a remark plugin for the MD content, similar to how you would use a babel plugin for JS content. It is called <a href="https://lion.js.org/?path=/docs/tools-remark-extend--page">Remark extend</a>.
+It will let you add, remove or replace sections or specific words.</p>
+<p>First of all we need to add the plugin to the <code>.storybook/main.js</code>:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword">const</span> <span class="token punctuation">{</span> remarkExtend <span class="token punctuation">}</span> <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'remark-extend'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">function</span> <span class="token function">isLion</span><span class="token punctuation">(</span><span class="token parameter">filePath</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> filePath<span class="token punctuation">.</span><span class="token method function property-access">indexOf</span><span class="token punctuation">(</span><span class="token string">'@lion/'</span><span class="token punctuation">)</span> <span class="token operator">!==</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">function</span> <span class="token function">getLocalOverridePath</span><span class="token punctuation">(</span><span class="token parameter">filePath<span class="token punctuation">,</span> root <span class="token operator">=</span> process<span class="token punctuation">.</span><span class="token method function property-access">cwd</span><span class="token punctuation">(</span><span class="token punctuation">)</span></span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">const</span> rel <span class="token operator">=</span> filePath<span class="token punctuation">.</span><span class="token method function property-access">substring</span><span class="token punctuation">(</span>filePath<span class="token punctuation">.</span><span class="token method function property-access">indexOf</span><span class="token punctuation">(</span><span class="token string">'/@lion/'</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">7</span><span class="token punctuation">,</span> filePath<span class="token punctuation">.</span><span class="token property-access">length</span> <span class="token operator">-</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>root<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/packages/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>rel<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">.override.md</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">module<span class="token punctuation">.</span><span class="token property-access">exports</span> <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token punctuation">[</span><span class="token spread operator">...</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token function-variable function">setupMdjsPlugins</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token parameter">plugins<span class="token punctuation">,</span> filePath</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">isLion</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">      <span class="token keyword control-flow">return</span> plugins<span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token punctuation">}</span>
+</span><span class="code-line">    <span class="token keyword">const</span> newPlugins <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token spread operator">...</span>plugins<span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token keyword">const</span> markdownIndex <span class="token operator">=</span> newPlugins<span class="token punctuation">.</span><span class="token method function property-access">findIndex</span><span class="token punctuation">(</span><span class="token parameter">plugin</span> <span class="token arrow operator">=&gt;</span> plugin<span class="token punctuation">.</span><span class="token property-access">name</span> <span class="token operator">===</span> <span class="token string">'markdown'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token keyword">const</span> overridePaths <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token function">getLocalOverridePath</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>process<span class="token punctuation">.</span><span class="token method function property-access">cwd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">/.storybook/all.override.md</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line">    <span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token keyword control-flow">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> overridePath <span class="token keyword">of</span> overridePaths<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">      <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>fs<span class="token punctuation">.</span><span class="token method function property-access">existsSync</span><span class="token punctuation">(</span>overridePath<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">        <span class="token keyword">const</span> extendMd <span class="token operator">=</span> fs<span class="token punctuation">.</span><span class="token method function property-access">readFileSync</span><span class="token punctuation">(</span>overridePath<span class="token punctuation">,</span> <span class="token string">'utf8'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">        newPlugins<span class="token punctuation">.</span><span class="token method function property-access">splice</span><span class="token punctuation">(</span>markdownIndex<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span><span class="code-line">          <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">remarkExtend</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>i<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span>
+</span><span class="code-line">          <span class="token literal-property property">plugin</span><span class="token operator">:</span> remarkExtend<span class="token punctuation">.</span><span class="token method function property-access">bind</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+</span><span class="code-line">          <span class="token literal-property property">options</span><span class="token operator">:</span> <span class="token punctuation">{</span> extendMd<span class="token punctuation">,</span> filePath<span class="token punctuation">,</span> <span class="token literal-property property">overrideFilePath</span><span class="token operator">:</span> overridePath <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line">        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">      <span class="token punctuation">}</span>
+</span><span class="code-line">      i <span class="token operator">+=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token punctuation">}</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> newPlugins<span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">[</span><span class="token spread operator">...</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>In the code above we have 2 places in where you can do overrides: <code>./.storybook/all.override.md</code> for generic overrides and via <code>getLocalOverridePath</code> for each component, when needed, the <code>rel</code> needs to be the same in <code>lion</code> and your own project to be able to override the right file.</p>
+<p>We insert a remarkExtend plugin instance for both the local overrides and the global overrides, and pass the necessary arguments. Then we return the new array of plugins for Mdjs.</p>
+<p>In each file you need to add a specifier which section you want to override. As a first step we want to load <code>lea-tab</code> and <code>lea-tab-panel</code> also in the project. We need to add some imports to the top of the file.</p>
+<p>Use triple backtick ` to create a fenced codeblock <code>```</code>, and put inside it:</p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line">::addMdAfter(':root')
+</span></code></pre>
+<p>Then below that, create another fenced codeblock with <code>js script</code> annotation with your imports inside it:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token string">'../lea-tab.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token string">'../lea-tab-panel.js'</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>And then replace each reference to <code>lion-tab</code> with <code>lea-tab</code> inside the documentation content, this also covers <code>lion-tab</code> and <code>lion-tab-panel</code>. We exclude JS snippets 'nodes', those are handled by the babel plugin already.</p>
+<p>Create another fenced codeblock with <code>js ::replaceFrom(':root')</code> annotation:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line">module<span class="token punctuation">.</span><span class="token property-access">exports</span><span class="token punctuation">.</span><span class="token method-variable function-variable method function property-access">replaceSection</span> <span class="token operator">=</span> <span class="token parameter">node</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span>node<span class="token punctuation">.</span><span class="token property-access">type</span> <span class="token operator">!==</span> <span class="token string">'code'</span> <span class="token operator">&amp;&amp;</span> node<span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">let</span> newCode <span class="token operator">=</span> node<span class="token punctuation">.</span><span class="token property-access">value</span><span class="token punctuation">;</span>
+</span><span class="code-line">    newCode <span class="token operator">=</span> newCode<span class="token punctuation">.</span><span class="token method function property-access">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">lion-tab</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">'lea-tab'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">    node<span class="token punctuation">.</span><span class="token property-access">value</span> <span class="token operator">=</span> newCode<span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> node<span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>You can remove content as well. Create a fenced codeblock:</p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line">::removeFrom('heading:has([value=Distribute New Elements])')
+</span></code></pre>
+<p>Or you can add an extra paragraph below the content. Create a fenced codeblock:</p>
+<pre class="language-md"><code class="language-md code-highlight"><span class="code-line">::removeMdAfter(':scope:last-child')
+</span></code></pre>
+<blockquote>
+<p>See <a href="https://lion.js.org/?path=/docs/tools-remark-extend--page">Remark extend</a> for more information</p>
+</blockquote>
+<h3 id="lea-tabs-special-feature"><a class="anchor" href="#lea-tabs-special-feature"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Lea Tabs Special Feature</h3>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">specialFeature</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lea-tabs</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lea-tab</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Info<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lea-tab</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lea-tab-panel</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>panel<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span> Info page with lots of information about us. <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lea-tab-panel</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lea-tab</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>tab<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>Work<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lea-tab</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lea-tab-panel</span> <span class="token attr-name">slot</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>panel<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span> Work page that showcases our work. <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lea-tab-panel</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lea-tabs</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span></code></pre>
+<h2 id="summary"><a class="anchor" href="#summary"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Summary</h2>
+<p>Writing good extensive documentation is hard and time consuming, so being able to extend not only the code, but also the documentation will increase your work speed.</p>
+<p>We showed you how to set it up and how you can adjust the documentation to fit your extended component.</p>
+<p>And since this can be achieved with 3 separate tools, you can also use it to extend other documentation.</p>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to improve the blog?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/blog/extending-documentation.md">Edit this blog post on GitHub!</a>
+  </p>
+</div>
+
+
+  
+</main>
+
+  </main>
+
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../e3e8d065.js"></script>
+<script type="module" src="../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

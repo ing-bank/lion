@@ -1,0 +1,1 @@
+import{i as t}from"./lit-element.qDHKJJma.js";import{x as r}from"./lit-html.C7L4dwLU.js";class e extends t{static get properties(){return{story:{attribute:!1}}}constructor(){super(),this.story=()=>r`<p>Loading...</p>`}createRenderRoot(){return this}render(){return this.story({shadowRoot:this})}}customElements.define("mdjs-story",e);

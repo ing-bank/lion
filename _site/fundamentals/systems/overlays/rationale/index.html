@@ -1,0 +1,704 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Overlays: Rationale: Lion</title>
+<meta property="og:title" content="Overlays: Rationale: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/fundamentals/systems/overlays/rationale/">
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system">
+<meta property="og:description" content="Fundamental white label web components for building your design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/3c6ac46a.png">
+<meta property="og:url" content="http://localhost:8080/fundamentals/systems/overlays/rationale/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../../../db12e37b.css">
+<link rel="stylesheet" href="../../../../0f4765a3.css">
+<link rel="stylesheet" href="../../../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../../../b1403e10.css">
+  
+
+<link rel="preload" href="../../../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+           active 
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item active">
+<a href="/fundamentals/systems/">Systems</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/">Core</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/SlotMixin/">SlotMixin</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/model-value/">ModelValue</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/formatting-and-parsing/">Formatting and Parsing</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/interaction-states/">Interaction States</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/validate/">Validate</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/styling/">Styling</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/">Localize</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/localize/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/text/">Translate Text</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/numbers/">Format Numbers</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/dates/">Format Dates</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/icon/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/systems/overlays/">Overlays</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/overlays/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item current">
+<a href="/fundamentals/systems/overlays/rationale/">Rationale</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#what-is-an-overlay" class="anchor">What is an overlay?</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#overlay-controllers" class="anchor">Overlay Controllers</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#managing-overlays" class="anchor">Managing overlays</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#types-of-overlays" class="anchor">Types of overlays</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#common-overlay-components" class="anchor">Common Overlay Components</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#considerations" class="anchor">Considerations</a>
+  </li>
+</ul>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/configuration/">Configuration</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/api-table/">API Table</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/">Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/">Helpers</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/helpers/action-logger/">Action Logger</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/">Ajax</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/ajax/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/">Singleton Manager</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-fail/">Example Fail</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-success/">Example Success</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-complex/">Example Complex</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/">Node Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/">Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/">Babel Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/">Publish Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/">Providence Analytics</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/">Remark Extend</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/overview/">Overview</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/">Rationales</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/rationales/accessibility/">Accessibility</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/side-effects/">Side Effects</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/versioning/">Versioning Lion</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/TypeScript/">TypeScript</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="overlays-rationale"><a class="anchor" href="#overlays-rationale"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Overlays: Rationale</h1>
+<p>This page describes the goal and duties of the overlay system, mainly by identifying all different
+appearances and types of overlays.</p>
+<h2 id="what-is-an-overlay"><a class="anchor" href="#what-is-an-overlay"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>What is an overlay?</h2>
+<p>An overlay is a visual element that is painted on top of a page, breaking out of the regular
+document flow.
+Overlays come in many forms (dialog, popover, dropdown, tooltip etc.)
+For a more exhaustive list, see 'Types of overlays' below.
+Our system tries to focus on mapping all these forms to officially supported aria widgets.
+Hence, all occurrences of overlays we offer will be accessible out of the box.</p>
+<h2 id="overlay-controllers"><a class="anchor" href="#overlay-controllers"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Overlay Controllers</h2>
+<p>Every overlay is created from the same base class <code>OverlayController</code>.
+This leads to a predictable api for all different occurrences of an overlay.</p>
+<p>Please see Configuration for all different options that an OverlayController offers.</p>
+<ul>
+<li>Its ‘physical position’ (where the dialog is connected to the DOM). This can either be:
+<ul>
+<li>globally: at root level of the DOM. This guarantees a total control over its painting, since
+the stacking context can be controlled from here and interfering parents (that set overflow
+values or transforms) can’t be apparent. Additionally, making a modal dialog requiring
+all surroundings to have aria-hidden="true", will be easier when the overlay is attached on
+body level.</li>
+<li>locally: next to the invoking element. This gives advantages for accessibility and
+(performant) rendering of an overlay next to its invoker on scroll and window resizes</li>
+</ul>
+</li>
+<li>Toggling of the ‘shown’ state of the overlay</li>
+<li>Positioning preferences(for instance ‘bottom-left’) and strategies (ordered fallback preferences)</li>
+</ul>
+<h2 id="managing-overlays"><a class="anchor" href="#managing-overlays"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Managing overlays</h2>
+<p>An overlay manager is a global repository keeping track of all different types of overlays.
+The need for a global housekeeping mainly arises when multiple overlays are opened simultaneously.
+As opposed to a single overlay, the overlay manager stores knowledge about:</p>
+<ul>
+<li>whether the scroll behaviour of the body element can be manipulated</li>
+<li>what space is available in the window for drawing new overlays</li>
+</ul>
+<p>Presentational css of the overlay is out of the scope of the manager, except for its positioning
+in its context.</p>
+<p>For every overlay, the manager has access to the overlay element and the invoker (and possible
+other elements that are needed for focus delegation as described in
+<a href="https://www.w3.org/TR/wai-aria-practices/#dialog_modal">https://www.w3.org/TR/wai-aria-practices/#dialog_modal</a> (notes).</p>
+<h2 id="types-of-overlays"><a class="anchor" href="#types-of-overlays"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Types of overlays</h2>
+<p>When browsing through the average ui library, one can encounter multiple names for occurrences of
+overlays. Here is a list of names encountered throughout the years:</p>
+<ul>
+<li>dialog</li>
+<li>modal</li>
+<li>popover</li>
+<li>popup</li>
+<li>popdown</li>
+<li>popper</li>
+<li>bubble</li>
+<li>balloon</li>
+<li>dropdown</li>
+<li>dropup</li>
+<li>tooltip</li>
+<li>layover</li>
+<li>overlay</li>
+<li>toast</li>
+<li>snackbar</li>
+<li>sheet (bottom, top, left, right)</li>
+<li>etc..</li>
+</ul>
+<p>The problem with most of those terms is their lack of clear definition: what might be considered a
+tooltip in UI framework A, can be considered a popover in framework B. What can be called a modal
+in framework C, might actually be just a dialog. Etc etc…</p>
+<h3 id="official-specifications"><a class="anchor" href="#official-specifications"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Official specifications</h3>
+<p>In order to avoid confusion and be as specification compliant as possible, it’s always a good idea
+to consult the W3C. This website shows a full list with specifications of accessible web widgets:
+<a href="https://www.w3.org/TR/wai-aria-practices/">https://www.w3.org/TR/wai-aria-practices/</a>.
+A great overview of all widget-, structure- and role relations can be found in the ontology diagram
+below:</p>
+<p><a href="https://www.w3.org/WAI/PF/aria-1.1/rdf_model.svg">https://www.w3.org/WAI/PF/aria-1.1/rdf_model.svg</a></p>
+<p>Out of all the overlay names mentioned above, we can only identify the dialog and the tooltip as
+official roles.
+Let’s take a closer look at their definitions...</p>
+<h3 id="dialog"><a class="anchor" href="#dialog"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Dialog</h3>
+<p>The dialog is described as follows by the W3C:</p>
+<blockquote>
+<p>“A dialog is a window overlaid on either the primary window or another dialog window. Windows
+under a modal dialog are inert. That is, users cannot interact with content outside an active
+dialog window. Inert content outside an active dialog is typically visually obscured or dimmed so
+it is difficult to discern, and in some implementations, attempts to interact with the inert
+content cause the dialog to close.
+Like non-modal dialogs, modal dialogs contain their tab sequence. That is, Tab and Shift + Tab do
+not move focus outside the dialog. However, unlike most non-modal dialogs, modal dialogs do not
+provide means for moving keyboard focus outside the dialog window without closing the dialog.”</p>
+</blockquote>
+<ul>
+<li>specification: <a href="https://www.w3.org/TR/wai-aria-1.1/#dialog">https://www.w3.org/TR/wai-aria-1.1/#dialog</a></li>
+<li>widget description: <a href="https://www.w3.org/TR/wai-aria-practices/#dialog_modal">https://www.w3.org/TR/wai-aria-practices/#dialog_modal</a></li>
+</ul>
+<h3 id="tooltip"><a class="anchor" href="#tooltip"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Tooltip</h3>
+<p>According to W3C, a tooltip is described by the following:</p>
+<blockquote>
+<p>“A tooltip is a popup that displays information related to an element when the element receives
+keyboard focus or the mouse hovers over it. It typically appears after a small delay and disappears
+when Escape is pressed or on mouse out.
+Tooltip widgets do not receive focus. A hover that contains focusable elements can be made using
+a non-modal dialog.”</p>
+</blockquote>
+<ul>
+<li>specification: <a href="https://www.w3.org/TR/wai-aria-1.1/#tooltip">https://www.w3.org/TR/wai-aria-1.1/#tooltip</a></li>
+<li>widget description: <a href="https://www.w3.org/TR/wai-aria-practices/#tooltip">https://www.w3.org/TR/wai-aria-practices/#tooltip</a></li>
+</ul>
+<p>What needs to be mentioned is that the W3C taskforce didn’t reach consensus yet about the above
+tooltip description. A good alternative resource:
+<a href="https://inclusive-components.design/tooltips-toggletips/">https://inclusive-components.design/tooltips-toggletips/</a></p>
+<h3 id="dialog-vs-tooltip"><a class="anchor" href="#dialog-vs-tooltip"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Dialog vs tooltip</h3>
+<p>Summarizing, the main differences between dialogs and tooltips are:</p>
+<ul>
+<li>Dialogs have a modal option, tooltips don’t</li>
+<li>Dialogs have interactive content, tooltips don’t</li>
+<li>Dialogs are opened via regular buttons (click/space/enter), tooltips act on focus/mouseover</li>
+</ul>
+<h3 id="other-roles-and-concepts"><a class="anchor" href="#other-roles-and-concepts"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Other roles and concepts</h3>
+<p>Other roles worth mentioning are <em>alertdialog</em> (a specific instance of the dialog for system
+alerts), select (an abstract role), <em>combobox</em> and <em>menu</em>.</p>
+<p>Also, the W3C document often refers to <em>popup</em>. This term is mentioned in the context of <em>combobox</em>,
+<em>listbox</em>, <em>grid</em>, <em>tree</em>, <em>dialog</em> and <em>tooltip</em>. It can be considered as a synonym of <em>overlay</em>.</p>
+<p><em>aria-haspopup</em> attribute needs to be mentioned: it can have values ‘menu’, ‘listbox’, ‘grid’,
+’tree’ and ‘dialog’.</p>
+<h2 id="common-overlay-components"><a class="anchor" href="#common-overlay-components"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Common Overlay Components</h2>
+<p>In our component library, we want to have the following overlay ‘child’ components:</p>
+<ul>
+<li>Dialog</li>
+<li>Tooltip</li>
+<li>Popover</li>
+<li>Dropdown</li>
+<li>Toast</li>
+<li>Sheet (bottom, top, left, right)</li>
+<li>Select</li>
+<li>Combobox/autocomplete</li>
+<li>Application menu</li>
+</ul>
+<h3 id="dialog-component"><a class="anchor" href="#dialog-component"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Dialog Component</h3>
+<p>The dialog is pretty much the dialog as described in the W3C spec, having the modal option applied
+by default.
+The flexibility in focus delegation (see <a href="https://www.w3.org/TR/wai-aria-practices/#dialog_modal">https://www.w3.org/TR/wai-aria-practices/#dialog_modal</a> notes) is not implemented, however.
+Addressing these:</p>
+<ul>
+<li>The first focusable element in the content: although delegate this focus management to the
+implementing developer is highly preferred, since this is highly dependent on the moment the dialog
+content has finished rendering. This is something the overlay manager or dialog widget should not
+be aware of in order to provide.a clean and reliable component.</li>
+<li>The focusable element after a close: by default, this is the invoker. For different behaviour, a
+reference should be supplied to a more logical element in the particular workflow.</li>
+</ul>
+<h3 id="tooltip-component"><a class="anchor" href="#tooltip-component"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Tooltip Component</h3>
+<p>The tooltip is always invoked on hover and has no interactive content. See
+<a href="https://inclusive-components.design/tooltips-toggletips/">https://inclusive-components.design/tooltips-toggletips/</a> (the tooltip example, not the toggle tip).</p>
+<h3 id="popover-component"><a class="anchor" href="#popover-component"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Popover Component</h3>
+<p>The popover looks like a crossover between the dialog and the tooltip. Popovers are invoked on
+click. For non interactive content, the <a href="https://inclusive-components.design/tooltips-toggletips/">https://inclusive-components.design/tooltips-toggletips/</a> toggletip could be applied.
+Whenever there would be a close button present, the ‘non interactiveness’ wouldn’t apply.</p>
+<p>An alternative implementation: <a href="https://whatsock.com/tsg/Coding%20Arena/Popups/Popup%20(Internal%20Content)/demo.htm">https://whatsock.com/tsg/Coding%20Arena/Popups/Popup%20(Internal%20Content)/demo.htm</a>
+This looks more like a small dialog, except that the page flow is respected (no rotating tab)</p>
+<h3 id="dropdown-component"><a class="anchor" href="#dropdown-component"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Dropdown Component</h3>
+<p>The dropdown is not an official aria-widget and thus can’t be tied to a specific role. It exists
+in a lot of UI libraries and most of them share these properties:</p>
+<ul>
+<li>Preferred position is ‘down’</li>
+<li>When no space at bottom, they show ‘up’ (in which. Case it behaves a as a dropup)</li>
+<li>Unlike popovers and tooltips, it will never be positioned horizontally</li>
+</ul>
+<p>Aliases are ‘popdown’, ‘pulldown’ and many others.</p>
+<h3 id="select-component"><a class="anchor" href="#select-component"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Select Component</h3>
+<p>Implemented as a dropdown listbox with invoker button. Depending on the content of the options,
+the child list can either be of type listbox or grid.
+See: <a href="https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html">https://www.w3.org/TR/wai-aria-practices/examples/listbox/listbox-collapsible.html</a></p>
+<h3 id="combobox-component"><a class="anchor" href="#combobox-component"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Combobox Component</h3>
+<p>Implemented as a dropdown combobox with invoker input. Input is used as search filter
+and can contain autocomplete or autosuggest functionality:
+See: <a href="https://www.w3.org/TR/wai-aria-practices/#combobox">https://www.w3.org/TR/wai-aria-practices/#combobox</a></p>
+<h3 id="application-menu-component"><a class="anchor" href="#application-menu-component"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>(Application) menu Component</h3>
+<p>Or sometimes called context-menu. Uses a dropdown to position its content.
+See: <a href="https://www.w3.org/WAI/tutorials/menus/flyout/">https://www.w3.org/WAI/tutorials/menus/flyout/</a>
+Be aware not to use role=“menu”: <a href="https://www.w3.org/WAI/tutorials/menus/application-menus/">https://www.w3.org/WAI/tutorials/menus/application-menus/</a></p>
+<h3 id="toast-component"><a class="anchor" href="#toast-component"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Toast Component</h3>
+<p>See: <a href="https://www.webcomponents.org/element/@polymer/paper-toast">https://www.webcomponents.org/element/@polymer/paper-toast</a>. Should probably be implemented as
+an alertdialog.</p>
+<h3 id="sheet-component"><a class="anchor" href="#sheet-component"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Sheet Component</h3>
+<p>See: <a href="https://material.io/design/components/sheets-bottom.html">https://material.io/design/components/sheets-bottom.html</a>. Should probably be a
+global(modal) dialog.</p>
+<h2 id="considerations"><a class="anchor" href="#considerations"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Considerations</h2>
+<p>We use the native dialog purely because it renders to the "top layer". Not because of its accessible role, which varies per component. In the future we can use the popover attribute(<a href="https://open-ui.org/components/popover.research.explainer/">https://open-ui.org/components/popover.research.explainer/</a>) for this (which neatly differentiates between presentation and semantics).</p>
+<p>So in our use of the dialog we want also a dialog that only does presentation (rendering on top layer in this case), but we want to check the semantics ourselves. Hence: <code>role="none"</code>. Even though the outcome is completely accessible, AXE-core uses this rule as a kind of "precautionary measure".</p>
+<p>After a cost/benefit analysis, we choose to be temporarily incompatible with AXE-core. Therefore, we recommend running tests with <code>{ ignoredRules: ['aria-allowed-role'] }</code>. When the popover is stable and used underwater in lion overlays, AXE can again be run without this ignoredRule.</p>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/fundamentals/systems/overlays/rationale.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../../../e3e8d065.js"></script>
+<script type="module" src="../../../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

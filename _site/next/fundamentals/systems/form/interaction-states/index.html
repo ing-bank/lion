@@ -1,0 +1,986 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/next/favicon.svg"><meta name="generator" content="Astro v5.13.9"><link href="/next/styles/open-props@1.6.11.min.css" rel="stylesheet" type="text/css"><link href="/next/styles/global.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/variables.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/markdown.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/layout.css" rel="stylesheet" type="text/css"><link href="/next/styles/lion/style.css" rel="stylesheet" type="text/css"><script type="module" src="/next/_astro/MainLayout.astro_astro_type_script_index_0_lang.BoVk2TqR.js"></script><link rel="canonical" href="http://localhost:4321/next/fundamentals/systems/form/interaction-states"><meta name="description" content="High quality UI web components"><meta name="robots" content="index, follow"><meta property="og:title" content="Lion"><meta property="og:type" content="website"><meta property="og:image" content="http://localhost:4321/opengraph.jpg"><meta property="og:url" content="http://localhost:4321/next/fundamentals/systems/form/interaction-states"><meta property="og:image:url" content="http://localhost:4321/opengraph.jpg"><meta property="og:image:alt" content="Lion Homepage screen"><style>.container[data-astro-cid-2dr2cpgs]{display:flex;flex-direction:row;width:100%}.content[data-astro-cid-2dr2cpgs]{flex:1 1 0;min-width:0}ui-portal-inpage-nav[data-astro-cid-2dr2cpgs]{width:180px;flex:0 0 180px}
+.ui-portal-grid__main{padding:50px}h1{color:var(--Primary-Gray600, #333);font-family:ING Me;font-size:48px;font-style:normal;font-weight:700;line-height:56px;border-bottom:1px solid var(--Primary-Gray200, #d9d9d9);margin:0 -230px 0 -50px;padding:0 230px 0 50px}@media (max-width: 1200px){.ui-portal-grid__main{padding:30px}h1{margin:0 -30px;padding:0 30px}}@media (max-width: 899px){.ui-portal-grid__main{padding:20px}h1{margin:0 -20px;padding:0 20px}}h2{color:var(--Primary-Gray600, #333);font-family:ING Me;font-size:36px;font-style:normal;font-weight:700;line-height:48px}h3{color:var(--Primary-Gray600, #333);font-family:ING Me;font-size:19px;font-style:normal;font-weight:700;line-height:28px}img{content-visibility:auto}.ui-portal-grid{display:grid;grid-template-columns:min-content 1fr;grid-template-rows:1fr min-content;grid-template-areas:"nav main" "nav footer"}.ui-portal-grid__nav{grid-area:nav}.ui-portal-grid__main{grid-area:main}.ui-portal-grid__footer{grid-area:footer}.ui-portal-collection{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,300px))}.ui-portal-card{display:flex;flex-direction:column;padding:1rem;border-radius:.5rem}@media (max-width: 899px){.ui-portal-grid__nav{position:absolute;background:#fff;z-index:100}.ui-portal-grid{grid-template-columns:1fr;grid-template-rows:1fr;grid-template-areas:"main" "footer"}}
+</style><script>/** @license Copyright 2020 Google LLC (BSD-3-Clause) */
+/** Bundled JS generated from "@astrojs/lit/client-shim.js" */
+var N = Object.defineProperty;
+var i = (t, n) => () => (t && (n = t((t = 0))), n);
+var b = (t, n) => {
+	for (var a in n) N(t, a, { get: n[a], enumerable: !0 });
+};
+function s() {
+	if (d === void 0) {
+		let t = document.createElement('div');
+		(t.innerHTML = '<div><template shadowrootmode="open"></template></div>'),
+			(d = !!t.firstElementChild.shadowRoot);
+	}
+	return d;
+}
+var d,
+	m = i(() => {});
+var p,
+	c,
+	f,
+	u = i(() => {
+		(p = (t) => t.parentElement === null),
+			(c = (t) => t.tagName === 'TEMPLATE'),
+			(f = (t) => t.nodeType === Node.ELEMENT_NODE);
+	});
+var h,
+	E = i(() => {
+		m();
+		u();
+		h = (t) => {
+			var n;
+			if (s()) return;
+			let a = [],
+				e = t.firstElementChild;
+			for (; e !== t && e !== null; )
+				if (c(e)) a.push(e), (e = e.content);
+				else if (e.firstElementChild !== null) e = e.firstElementChild;
+				else if (f(e) && e.nextElementSibling !== null) e = e.nextElementSibling;
+				else {
+					let o;
+					for (; e !== t && e !== null; )
+						if (p(e)) {
+							o = a.pop();
+							let r = o.parentElement,
+								l = o.getAttribute('shadowroot');
+							if (((e = o), l === 'open' || l === 'closed')) {
+								let y = o.hasAttribute('shadowrootdelegatesfocus');
+								try {
+									r.attachShadow({ mode: l, delegatesFocus: y }).append(o.content);
+								} catch {}
+							} else o = void 0;
+						} else {
+							let r = e.nextElementSibling;
+							if (r != null) {
+								(e = r), o !== void 0 && o.parentElement.removeChild(o);
+								break;
+							}
+							let l =
+								(n = e.parentElement) === null || n === void 0 ? void 0 : n.nextElementSibling;
+							if (l != null) {
+								(e = l), o !== void 0 && o.parentElement.removeChild(o);
+								break;
+							}
+							(e = e.parentElement), o !== void 0 && (o.parentElement.removeChild(o), (o = void 0));
+						}
+				}
+		};
+	});
+var w = i(() => {
+	E();
+});
+var v = {};
+b(v, { hasNativeDeclarativeShadowRoots: () => s, hydrateShadowRoots: () => h });
+var S = i(() => {
+	m();
+	w();
+});
+async function g() {
+	let { hydrateShadowRoots: t } = await Promise.resolve().then(() => (S(), v));
+	window.addEventListener('DOMContentLoaded', () => t(document.body), { once: true });
+}
+var x = Document.parseHTMLUnsafe(
+	'<p><template shadowrootmode="open"></template></p>'
+).querySelector('p');
+(!x || !x.shadowRoot) && g();
+</script></head> <body class="ui-portal-grid" data-layout="layout-general"> <div class="ui-portal-grid__nav"> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="u8Wlz" component-url="/next/_astro/ui-portal-main-nav.DWL6Xyou.js" component-export="UIPortalMainNav" renderer-url="/next/_astro/client.DEGHhFmz.js" props="{&quot;nav-data&quot;:[0,&quot;[{\&quot;name\&quot;:\&quot;home\&quot;,\&quot;url\&quot;:\&quot;/next\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:home\&quot;},{\&quot;name\&quot;:\&quot;fundamentals\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:sdk\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Systems\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems\&quot;,\&quot;priority\&quot;:20,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Core\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/core\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/core/overview\&quot;},{\&quot;name\&quot;:\&quot;Form\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/form\&quot;,\&quot;priority\&quot;:20,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Overview\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/form/overview\&quot;,\&quot;priority\&quot;:10},{\&quot;name\&quot;:\&quot;ModelValue\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/form/model-value\&quot;,\&quot;priority\&quot;:20},{\&quot;name\&quot;:\&quot;Formatting and Parsing\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/form/formatting-and-parsing\&quot;,\&quot;priority\&quot;:21},{\&quot;name\&quot;:\&quot;Interaction States\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/form/interaction-states\&quot;,\&quot;priority\&quot;:22,\&quot;active\&quot;:true},{\&quot;name\&quot;:\&quot;Validate\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/form/validate\&quot;,\&quot;priority\&quot;:30},{\&quot;name\&quot;:\&quot;Styling\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/form/styling\&quot;,\&quot;priority\&quot;:40},{\&quot;name\&quot;:\&quot;Use Cases\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/form/use-cases\&quot;,\&quot;priority\&quot;:50},{\&quot;name\&quot;:\&quot;API Table\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/form/api-table\&quot;,\&quot;priority\&quot;:90}],\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/form/overview\&quot;,\&quot;active\&quot;:true,\&quot;hasActiveChild\&quot;:true},{\&quot;name\&quot;:\&quot;Localize\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/localize\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/localize/overview\&quot;},{\&quot;name\&quot;:\&quot;Icon\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/icon\&quot;,\&quot;priority\&quot;:40,\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/icon/overview\&quot;},{\&quot;name\&quot;:\&quot;Overlays\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/systems/overlays\&quot;,\&quot;priority\&quot;:40,\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/overlays/overview\&quot;}],\&quot;redirect\&quot;:\&quot;/next/fundamentals/systems/core/overview\&quot;,\&quot;active\&quot;:true,\&quot;hasActiveChild\&quot;:true},{\&quot;name\&quot;:\&quot;Tools\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/tools\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/fundamentals/tools/helpers/overview\&quot;},{\&quot;name\&quot;:\&quot;Node Tools\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/node-tools\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview\&quot;},{\&quot;name\&quot;:\&quot;Rationales\&quot;,\&quot;url\&quot;:\&quot;/next/fundamentals/rationales\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/fundamentals/rationales/accessibility\&quot;}],\&quot;active\&quot;:true,\&quot;hasActiveChild\&quot;:true},{\&quot;name\&quot;:\&quot;guides\&quot;,\&quot;url\&quot;:\&quot;/next/guides\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:extension\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Principles\&quot;,\&quot;url\&quot;:\&quot;/next/guides/principles\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/guides/principles/definitions-and-terms\&quot;},{\&quot;name\&quot;:\&quot;How To\&quot;,\&quot;url\&quot;:\&quot;/next/guides/how-to\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/guides/how-to/get-started\&quot;}]},{\&quot;name\&quot;:\&quot;components\&quot;,\&quot;url\&quot;:\&quot;/next/components\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:deployedCode\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;Accordion\&quot;,\&quot;url\&quot;:\&quot;/next/components/accordion\&quot;,\&quot;priority\&quot;:0,\&quot;redirect\&quot;:\&quot;/next/components/accordion/overview\&quot;},{\&quot;name\&quot;:\&quot;Button\&quot;,\&quot;url\&quot;:\&quot;/next/components/button\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/button/overview\&quot;},{\&quot;name\&quot;:\&quot;Calendar\&quot;,\&quot;url\&quot;:\&quot;/next/components/calendar\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/calendar/use-cases\&quot;},{\&quot;name\&quot;:\&quot;Checkbox Group\&quot;,\&quot;url\&quot;:\&quot;/next/components/checkbox-group\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/checkbox-group/overview\&quot;},{\&quot;name\&quot;:\&quot;Collapsible\&quot;,\&quot;url\&quot;:\&quot;/next/components/collapsible\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/collapsible/overview\&quot;},{\&quot;name\&quot;:\&quot;Combobox\&quot;,\&quot;url\&quot;:\&quot;/next/components/combobox\&quot;,\&quot;priority\&quot;:10,\&quot;redirect\&quot;:\&quot;/next/components/combobox/overview\&quot;},{\&quot;name\&quot;:\&quot;Dialog\&quot;,\&quot;url\&quot;:\&quot;/next/components/dialog\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/dialog/overview\&quot;},{\&quot;name\&quot;:\&quot;Drawer\&quot;,\&quot;url\&quot;:\&quot;/next/components/drawer\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/drawer/overview\&quot;},{\&quot;name\&quot;:\&quot;Fieldset\&quot;,\&quot;url\&quot;:\&quot;/next/components/fieldset\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/fieldset/overview\&quot;},{\&quot;name\&quot;:\&quot;Form\&quot;,\&quot;url\&quot;:\&quot;/next/components/form\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/form/overview\&quot;},{\&quot;name\&quot;:\&quot;Icon\&quot;,\&quot;url\&quot;:\&quot;/next/components/icon\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/icon/overview\&quot;},{\&quot;name\&quot;:\&quot;Input\&quot;,\&quot;url\&quot;:\&quot;/next/components/input\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Amount\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-amount\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-amount/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Amount Dropdown\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-amount-dropdown\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-amount-dropdown/use-cases\&quot;},{\&quot;name\&quot;:\&quot;Input Date\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-date\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-date/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Datepicker\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-datepicker\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-datepicker/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Email\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-email\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-email/overview\&quot;},{\&quot;name\&quot;:\&quot;Input File\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-file\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-file/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Iban\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-iban\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-iban/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Range\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-range\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-range/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Stepper\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-stepper\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-stepper/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Tel\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-tel\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-tel/overview\&quot;},{\&quot;name\&quot;:\&quot;Input Tel Dropdown\&quot;,\&quot;url\&quot;:\&quot;/next/components/input-tel-dropdown\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/input-tel-dropdown/overview\&quot;},{\&quot;name\&quot;:\&quot;Listbox\&quot;,\&quot;url\&quot;:\&quot;/next/components/listbox\&quot;,\&quot;priority\&quot;:20,\&quot;redirect\&quot;:\&quot;/next/components/listbox/overview\&quot;},{\&quot;name\&quot;:\&quot;Pagination\&quot;,\&quot;url\&quot;:\&quot;/next/components/pagination\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/components/pagination/overview\&quot;},{\&quot;name\&quot;:\&quot;Progress Indicator\&quot;,\&quot;url\&quot;:\&quot;/next/components/progress-indicator\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/components/progress-indicator/overview\&quot;},{\&quot;name\&quot;:\&quot;Radio Group\&quot;,\&quot;url\&quot;:\&quot;/next/components/radio-group\&quot;,\&quot;priority\&quot;:30,\&quot;redirect\&quot;:\&quot;/next/components/radio-group/overview\&quot;},{\&quot;name\&quot;:\&quot;Select\&quot;,\&quot;url\&quot;:\&quot;/next/components/select\&quot;,\&quot;priority\&quot;:40,\&quot;redirect\&quot;:\&quot;/next/components/select/overview\&quot;},{\&quot;name\&quot;:\&quot;Select Rich\&quot;,\&quot;url\&quot;:\&quot;/next/components/select-rich\&quot;,\&quot;priority\&quot;:40,\&quot;redirect\&quot;:\&quot;/next/components/select-rich/overview\&quot;},{\&quot;name\&quot;:\&quot;Steps\&quot;,\&quot;url\&quot;:\&quot;/next/components/steps\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/steps/overview\&quot;},{\&quot;name\&quot;:\&quot;Switch\&quot;,\&quot;url\&quot;:\&quot;/next/components/switch\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/switch/overview\&quot;},{\&quot;name\&quot;:\&quot;Tabs\&quot;,\&quot;url\&quot;:\&quot;/next/components/tabs\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/tabs/overview\&quot;},{\&quot;name\&quot;:\&quot;Textarea\&quot;,\&quot;url\&quot;:\&quot;/next/components/textarea\&quot;,\&quot;priority\&quot;:50,\&quot;redirect\&quot;:\&quot;/next/components/textarea/overview\&quot;},{\&quot;name\&quot;:\&quot;Tooltip\&quot;,\&quot;url\&quot;:\&quot;/next/components/tooltip\&quot;,\&quot;priority\&quot;:60,\&quot;redirect\&quot;:\&quot;/next/components/tooltip/overview\&quot;}]},{\&quot;name\&quot;:\&quot;blog\&quot;,\&quot;url\&quot;:\&quot;/next/blog\&quot;,\&quot;iconId\&quot;:\&quot;lion-portal:portal:deployedCode\&quot;,\&quot;children\&quot;:[{\&quot;name\&quot;:\&quot;The Accessibility of Lion\&quot;,\&quot;url\&quot;:\&quot;/next/blog/accessibility\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Introducing lions website\&quot;,\&quot;url\&quot;:\&quot;/next/blog/introducing-lions-website\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Controlling exports\&quot;,\&quot;url\&quot;:\&quot;/next/blog/controlling-exports\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Extending Lion Documentation\&quot;,\&quot;url\&quot;:\&quot;/next/blog/extending-documentation\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;ING open sources Lion\&quot;,\&quot;url\&quot;:\&quot;/next/blog/ing-open-sources-lion\&quot;,\&quot;priority\&quot;:0},{\&quot;name\&quot;:\&quot;Lion without polyfills\&quot;,\&quot;url\&quot;:\&quot;/next/blog/lion-without-polyfills\&quot;,\&quot;priority\&quot;:0}]}]&quot;]}" ssr client="load" before-hydration-url="/next/_astro/astro_scripts/before-hydration.js.Ci4ZmlXW.js" opts="{&quot;name&quot;:&quot;UIPortalMainNav&quot;,&quot;value&quot;:true}" await-children><ui-portal-main-nav nav-data="[{&quot;name&quot;:&quot;home&quot;,&quot;url&quot;:&quot;/next&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:home&quot;},{&quot;name&quot;:&quot;fundamentals&quot;,&quot;url&quot;:&quot;/next/fundamentals&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:sdk&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Systems&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems&quot;,&quot;priority&quot;:20,&quot;children&quot;:[{&quot;name&quot;:&quot;Core&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/core&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/fundamentals/systems/core/overview&quot;},{&quot;name&quot;:&quot;Form&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/form&quot;,&quot;priority&quot;:20,&quot;children&quot;:[{&quot;name&quot;:&quot;Overview&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/form/overview&quot;,&quot;priority&quot;:10},{&quot;name&quot;:&quot;ModelValue&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/form/model-value&quot;,&quot;priority&quot;:20},{&quot;name&quot;:&quot;Formatting and Parsing&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/form/formatting-and-parsing&quot;,&quot;priority&quot;:21},{&quot;name&quot;:&quot;Interaction States&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/form/interaction-states&quot;,&quot;priority&quot;:22,&quot;active&quot;:true},{&quot;name&quot;:&quot;Validate&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/form/validate&quot;,&quot;priority&quot;:30},{&quot;name&quot;:&quot;Styling&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/form/styling&quot;,&quot;priority&quot;:40},{&quot;name&quot;:&quot;Use Cases&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/form/use-cases&quot;,&quot;priority&quot;:50},{&quot;name&quot;:&quot;API Table&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/form/api-table&quot;,&quot;priority&quot;:90}],&quot;redirect&quot;:&quot;/next/fundamentals/systems/form/overview&quot;,&quot;active&quot;:true,&quot;hasActiveChild&quot;:true},{&quot;name&quot;:&quot;Localize&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/localize&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/fundamentals/systems/localize/overview&quot;},{&quot;name&quot;:&quot;Icon&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/icon&quot;,&quot;priority&quot;:40,&quot;redirect&quot;:&quot;/next/fundamentals/systems/icon/overview&quot;},{&quot;name&quot;:&quot;Overlays&quot;,&quot;url&quot;:&quot;/next/fundamentals/systems/overlays&quot;,&quot;priority&quot;:40,&quot;redirect&quot;:&quot;/next/fundamentals/systems/overlays/overview&quot;}],&quot;redirect&quot;:&quot;/next/fundamentals/systems/core/overview&quot;,&quot;active&quot;:true,&quot;hasActiveChild&quot;:true},{&quot;name&quot;:&quot;Tools&quot;,&quot;url&quot;:&quot;/next/fundamentals/tools&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/fundamentals/tools/helpers/overview&quot;},{&quot;name&quot;:&quot;Node Tools&quot;,&quot;url&quot;:&quot;/next/fundamentals/node-tools&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview&quot;},{&quot;name&quot;:&quot;Rationales&quot;,&quot;url&quot;:&quot;/next/fundamentals/rationales&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/fundamentals/rationales/accessibility&quot;}],&quot;active&quot;:true,&quot;hasActiveChild&quot;:true},{&quot;name&quot;:&quot;guides&quot;,&quot;url&quot;:&quot;/next/guides&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:extension&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Principles&quot;,&quot;url&quot;:&quot;/next/guides/principles&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/guides/principles/definitions-and-terms&quot;},{&quot;name&quot;:&quot;How To&quot;,&quot;url&quot;:&quot;/next/guides/how-to&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/guides/how-to/get-started&quot;}]},{&quot;name&quot;:&quot;components&quot;,&quot;url&quot;:&quot;/next/components&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:deployedCode&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;Accordion&quot;,&quot;url&quot;:&quot;/next/components/accordion&quot;,&quot;priority&quot;:0,&quot;redirect&quot;:&quot;/next/components/accordion/overview&quot;},{&quot;name&quot;:&quot;Button&quot;,&quot;url&quot;:&quot;/next/components/button&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/button/overview&quot;},{&quot;name&quot;:&quot;Calendar&quot;,&quot;url&quot;:&quot;/next/components/calendar&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/calendar/use-cases&quot;},{&quot;name&quot;:&quot;Checkbox Group&quot;,&quot;url&quot;:&quot;/next/components/checkbox-group&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/checkbox-group/overview&quot;},{&quot;name&quot;:&quot;Collapsible&quot;,&quot;url&quot;:&quot;/next/components/collapsible&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/collapsible/overview&quot;},{&quot;name&quot;:&quot;Combobox&quot;,&quot;url&quot;:&quot;/next/components/combobox&quot;,&quot;priority&quot;:10,&quot;redirect&quot;:&quot;/next/components/combobox/overview&quot;},{&quot;name&quot;:&quot;Dialog&quot;,&quot;url&quot;:&quot;/next/components/dialog&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/dialog/overview&quot;},{&quot;name&quot;:&quot;Drawer&quot;,&quot;url&quot;:&quot;/next/components/drawer&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/drawer/overview&quot;},{&quot;name&quot;:&quot;Fieldset&quot;,&quot;url&quot;:&quot;/next/components/fieldset&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/fieldset/overview&quot;},{&quot;name&quot;:&quot;Form&quot;,&quot;url&quot;:&quot;/next/components/form&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/form/overview&quot;},{&quot;name&quot;:&quot;Icon&quot;,&quot;url&quot;:&quot;/next/components/icon&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/icon/overview&quot;},{&quot;name&quot;:&quot;Input&quot;,&quot;url&quot;:&quot;/next/components/input&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input/overview&quot;},{&quot;name&quot;:&quot;Input Amount&quot;,&quot;url&quot;:&quot;/next/components/input-amount&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-amount/overview&quot;},{&quot;name&quot;:&quot;Input Amount Dropdown&quot;,&quot;url&quot;:&quot;/next/components/input-amount-dropdown&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-amount-dropdown/use-cases&quot;},{&quot;name&quot;:&quot;Input Date&quot;,&quot;url&quot;:&quot;/next/components/input-date&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-date/overview&quot;},{&quot;name&quot;:&quot;Input Datepicker&quot;,&quot;url&quot;:&quot;/next/components/input-datepicker&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-datepicker/overview&quot;},{&quot;name&quot;:&quot;Input Email&quot;,&quot;url&quot;:&quot;/next/components/input-email&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-email/overview&quot;},{&quot;name&quot;:&quot;Input File&quot;,&quot;url&quot;:&quot;/next/components/input-file&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-file/overview&quot;},{&quot;name&quot;:&quot;Input Iban&quot;,&quot;url&quot;:&quot;/next/components/input-iban&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-iban/overview&quot;},{&quot;name&quot;:&quot;Input Range&quot;,&quot;url&quot;:&quot;/next/components/input-range&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-range/overview&quot;},{&quot;name&quot;:&quot;Input Stepper&quot;,&quot;url&quot;:&quot;/next/components/input-stepper&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-stepper/overview&quot;},{&quot;name&quot;:&quot;Input Tel&quot;,&quot;url&quot;:&quot;/next/components/input-tel&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-tel/overview&quot;},{&quot;name&quot;:&quot;Input Tel Dropdown&quot;,&quot;url&quot;:&quot;/next/components/input-tel-dropdown&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/input-tel-dropdown/overview&quot;},{&quot;name&quot;:&quot;Listbox&quot;,&quot;url&quot;:&quot;/next/components/listbox&quot;,&quot;priority&quot;:20,&quot;redirect&quot;:&quot;/next/components/listbox/overview&quot;},{&quot;name&quot;:&quot;Pagination&quot;,&quot;url&quot;:&quot;/next/components/pagination&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/components/pagination/overview&quot;},{&quot;name&quot;:&quot;Progress Indicator&quot;,&quot;url&quot;:&quot;/next/components/progress-indicator&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/components/progress-indicator/overview&quot;},{&quot;name&quot;:&quot;Radio Group&quot;,&quot;url&quot;:&quot;/next/components/radio-group&quot;,&quot;priority&quot;:30,&quot;redirect&quot;:&quot;/next/components/radio-group/overview&quot;},{&quot;name&quot;:&quot;Select&quot;,&quot;url&quot;:&quot;/next/components/select&quot;,&quot;priority&quot;:40,&quot;redirect&quot;:&quot;/next/components/select/overview&quot;},{&quot;name&quot;:&quot;Select Rich&quot;,&quot;url&quot;:&quot;/next/components/select-rich&quot;,&quot;priority&quot;:40,&quot;redirect&quot;:&quot;/next/components/select-rich/overview&quot;},{&quot;name&quot;:&quot;Steps&quot;,&quot;url&quot;:&quot;/next/components/steps&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/steps/overview&quot;},{&quot;name&quot;:&quot;Switch&quot;,&quot;url&quot;:&quot;/next/components/switch&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/switch/overview&quot;},{&quot;name&quot;:&quot;Tabs&quot;,&quot;url&quot;:&quot;/next/components/tabs&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/tabs/overview&quot;},{&quot;name&quot;:&quot;Textarea&quot;,&quot;url&quot;:&quot;/next/components/textarea&quot;,&quot;priority&quot;:50,&quot;redirect&quot;:&quot;/next/components/textarea/overview&quot;},{&quot;name&quot;:&quot;Tooltip&quot;,&quot;url&quot;:&quot;/next/components/tooltip&quot;,&quot;priority&quot;:60,&quot;redirect&quot;:&quot;/next/components/tooltip/overview&quot;}]},{&quot;name&quot;:&quot;blog&quot;,&quot;url&quot;:&quot;/next/blog&quot;,&quot;iconId&quot;:&quot;lion-portal:portal:deployedCode&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;The Accessibility of Lion&quot;,&quot;url&quot;:&quot;/next/blog/accessibility&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Introducing lions website&quot;,&quot;url&quot;:&quot;/next/blog/introducing-lions-website&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Controlling exports&quot;,&quot;url&quot;:&quot;/next/blog/controlling-exports&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Extending Lion Documentation&quot;,&quot;url&quot;:&quot;/next/blog/extending-documentation&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;ING open sources Lion&quot;,&quot;url&quot;:&quot;/next/blog/ing-open-sources-lion&quot;,&quot;priority&quot;:0},{&quot;name&quot;:&quot;Lion without polyfills&quot;,&quot;url&quot;:&quot;/next/blog/lion-without-polyfills&quot;,&quot;priority&quot;:0}]}]"><template shadowroot="open" shadowrootmode="open"><style>
+  * {
+    box-sizing: border-box;
+  }
+
+  :host([data-layout='floating-toggle']) {
+    width: 0;
+  }
+
+  :host([data-layout='floating-toggle']) .burger {
+    position: absolute;
+    z-index: 1000;
+
+    display: flex;
+    flex-direction: column;
+    width: 32px;
+    height: 32px;
+    justify-content: space-around;
+    cursor: pointer;
+    left: 20px;
+    top: 20px;
+  }
+
+  :host([data-layout='floating-toggle']) .burger span {
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+    transition: 0.3s;
+    display: block;
+  }
+
+  :host([data-layout='floating-toggle']) #l1-wrapper {
+    display: none;
+    z-index: 100;
+    background: #fff;
+  }
+
+  :host([data-layout='floating-toggle']) [data-part='level'][data-level='1'],
+  :host([data-layout='floating-toggle']) [data-part='level'][data-level='2'] {
+    z-index: 100;
+    background: #fff;
+  }
+
+  :host([data-layout='floating-toggle']) #burger-toggle:checked ~ #l1-wrapper {
+    display: flex;
+    position: absolute;
+  }
+
+      :host {
+        height: 100vh;
+        /** Make this the positioning parent of l0 and l1 */
+        position: relative;
+        display: block;
+        position: sticky;
+        top: 0;
+      }
+
+      #l1-wrapper {
+        display: flex;
+      }
+
+      :host [data-part='nav'] {
+        height: 100%;
+      }
+
+      :host [data-part='level'][data-level='1'],
+      :host [data-part='level'][data-level='2'] {
+        padding-block-start: var(--size-6);
+        padding-inline: var(--size-2);
+        overflow-y: scroll;
+        height: 100vh;
+      }
+
+      :host [data-part='level'][data-level='1'] {
+        width: 160px;
+        border-right: 1px solid #ccc;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      :host [data-part='level'][data-level='2'] {
+        width: 200px;
+      }
+
+      /**
+       * When a l0 child is active, or a l1 child => open correct l1
+       */
+      :host
+        [data-part='listitem']:not([data-:active])
+        [data-part='level'][data-level='2']:not([data-has-active-child]) {
+        /** TODO: sr-only, because we want to present all links to the screen reader */
+        display: none;
+      }
+
+      :host [data-part='list'] {
+        list-style-type: none;
+        margin: 4px;
+        padding: 0;
+      }
+
+      :host [data-part='anchor'][data-level='1'] {
+        display: block;
+        padding-block: var(--size-6);
+        padding-inline: var(--size-6);
+      }
+
+      :host [data-part='anchor'][data-level='2'] {
+        display: block;
+        padding-block: var(--size-3);
+        padding-inline: var(--size-6);
+      }
+
+      :host [data-part='anchor'][data-level='2'][aria-current='page']:not(:last-child) {
+        padding-block: var(--size-2);
+      }
+
+      :host [data-part='icon'][data-level='1'] {
+        display: block;
+        width: var(--size-7);
+        height: var(--size-7);
+        margin-bottom: var(--size-1);
+      }
+
+      :host [data-part='anchor'][data-level='1'] {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-block-end: 6px;
+      }
+
+      :host [data-part='anchor'] {
+        display: block;
+        color: var(--text-color);
+        text-decoration: inherit;
+        font-size: 1rem;
+        fill: var(--primary-icon-color);
+        margin-inline: var(--size-1);
+        border-radius: var(--radius-4);
+      }
+
+      :host [data-part='anchor'][aria-current='page'][data-level='1'],
+      :host [data-part='anchor'][aria-current='page'][data-level='3']:last-child,
+      :host [data-part='anchor'][aria-current='page'][data-level='4'] {
+        font-weight: bold;
+        background-color: var(--secondary-color);
+      }
+
+      :host [data-part='anchor']:hover {
+        text-decoration: underline;
+        text-underline-offset: 0.3em;
+        background-color: var(--secondary-color-lighter);
+      }
+
+      :host [data-part='anchor']:focus {
+        outline: 2px solid var(--contrast-color-dark);
+      }
+
+      :host [data-part='anchor'][data-level='2']:focus,
+      :host [data-part='anchor'][data-level='2']:focus {
+        outline-offset: 2px;
+      }
+
+      :host [data-part='level'][data-level='2'] {
+        color: var(--text-color, #333);
+
+        /* 14px/Regular */
+        font-family: 'ING Me';
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px; /* 142.857% */
+        text-decoration: none;
+      }
+
+      :host [data-part='listitem'][data-level='2'][data-\:active] {
+        border-radius: var(--radius-4);
+        background: var(--neutral-color-lightest);
+        margin-block: 6px;
+      }
+
+      :host [data-part='level'][data-level='3'] {
+        overflow: hidden;
+        padding-block-end: 12px;
+      }
+
+      :host [data-part='anchor'][data-level='3'],
+      :host [data-part='anchor'][data-level='4'] {
+        /* 14px/Regular */
+        font-family: 'ING Me';
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px; /* 142.857% */
+        text-decoration: none;
+        margin-left: var(--size-7);
+        padding-inline: var(--size-3);
+      }
+
+      :host [data-part='anchor'][data-level='3'][aria-current='page'],
+      :host [data-part='anchor'][data-level='4'][aria-current='page'] {
+        font-weight: bold;
+      }
+
+      :host [data-level='2'] > [aria-current='page'] {
+        background: transparent;
+        font-weight: bold;
+      }
+
+      :host [data-part='list'][data-level='4'] {
+        margin-left: var(--size-3);
+      }
+    </style><!--lit-part 1PVbJ+oM0tw=-->
+        <nav data-part="nav">
+          <input type="checkbox" id="burger-toggle" hidden />
+          <label for="burger-toggle" class="burger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </label>
+
+          <div id="l1-wrapper" data-part="l1-wrapper">
+            <!--lit-part ICi22XWCZrw=--><!--lit-node 0--><div
+        data-part="level"
+        data-level="1"
+        data-has-active-child="false"
+      >
+        <!--lit-node 1--><ul data-part="list" data-level="1">
+          <!--lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:home" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->home<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" data-:active>
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/fundamentals"
+        aria-current="page"
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:sdkFilled" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->fundamentals<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/guides"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:extension" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->guides<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/components"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:deployedCode" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->components<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part hPNMx9QXWr0=--><!--lit-node 0--><li data-part="listitem" data-level="1" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="1"
+        href="/next/blog"
+        aria-current=""
+        ><!--lit-part amjOR5mF62s=--><!--lit-node 0--><lion-icon
+              
+              
+              
+             data-part="icon" data-level="1" icon-id="lion-portal:portal:deployedCode" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon><!--/lit-part--><span><!--lit-part-->blog<!--/lit-part--></span></a
+      ><!--/lit-part-->
+              </li><!--/lit-part--><!--/lit-part-->
+        </ul>
+        <div class="nav-item-last">
+          <!--lit-node 4--><a href="/next/search" data-part="anchor" data-level="1">
+            <!--lit-node 5--><lion-icon
+              
+              
+              
+             data-part="icon" icon-id="lion-portal:portal:search" data-level="1" aria-label defer-hydration><template shadowroot="open" shadowrootmode="open"><style>
+        :host {
+          box-sizing: border-box;
+          display: inline-block;
+          width: 1em;
+          height: 1em;
+        }
+
+        :host([hidden]) {
+          display: none;
+        }
+
+        :host:first-child {
+          margin-left: 0;
+        }
+
+        :host:last-child {
+          margin-right: 0;
+        }
+
+        ::slotted(svg) {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      </style><!--lit-part Pz0gobCCM4E=--><slot></slot><!--/lit-part--></template></lion-icon>
+            <span>Search</span>
+          </a>
+        </div>
+      </div><!--/lit-part-->
+            <!--lit-part 4Xfrjoki3Io=--><!--lit-node 0--><div
+        data-part="level"
+        data-level="2"
+        data-has-active-child="false"
+      >
+        <!--lit-node 1--><ul data-part="list" data-level="2">
+          <!--lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" data-:active>
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/fundamentals/systems/core/overview"
+        aria-current="page"
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Systems<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part 4Xfrjoki3Io=--><!--lit-node 0--><div
+        data-part="level"
+        data-level="3"
+        data-has-active-child="true"
+      >
+        <!--lit-node 1--><ul data-part="list" data-level="3">
+          <!--lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="3" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="3"
+        href="/next/fundamentals/systems/core/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Core<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="3" data-:active>
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="3"
+        href="/next/fundamentals/systems/form/overview"
+        aria-current="page"
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Form<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part 4Xfrjoki3Io=--><!--lit-node 0--><div
+        data-part="level"
+        data-level="4"
+        data-has-active-child="true"
+      >
+        <!--lit-node 1--><ul data-part="list" data-level="4">
+          <!--lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/form/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Overview<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/form/model-value"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->ModelValue<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/form/formatting-and-parsing"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Formatting and Parsing<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" data-:active>
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/form/interaction-states"
+        aria-current="page"
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Interaction States<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/form/validate"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Validate<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/form/styling"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Styling<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/form/use-cases"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Use Cases<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="4" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="4"
+        href="/next/fundamentals/systems/form/api-table"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->API Table<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--/lit-part-->
+        </ul>
+      </div><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="3" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="3"
+        href="/next/fundamentals/systems/localize/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Localize<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="3" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="3"
+        href="/next/fundamentals/systems/icon/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Icon<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="3" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="3"
+        href="/next/fundamentals/systems/overlays/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Overlays<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--/lit-part-->
+        </ul>
+      </div><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/fundamentals/tools/helpers/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Tools<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Node Tools<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--lit-part DlvCPdQh0B4=--><!--lit-node 0--><li data-part="listitem" data-level="2" >
+                <!--lit-part vz6uNiG93i0=--><!--lit-node 0--><a
+        data-part="anchor"
+        data-level="2"
+        href="/next/fundamentals/rationales/accessibility"
+        aria-current=""
+        ><!--lit-part--><!--/lit-part--><span><!--lit-part-->Rationales<!--/lit-part--></span></a
+      ><!--/lit-part-->
+                <!--lit-part--><!--/lit-part-->
+              </li><!--/lit-part--><!--/lit-part-->
+        </ul>
+      </div><!--/lit-part-->
+          </div>
+        </nav>
+      <!--/lit-part--></template></ui-portal-main-nav><!--astro:end--></astro-island> </div> <main class="ui-portal-grid__main markdown-body">   <load-demo data-import-path="systems_form_interaction-states"></load-demo> <script type="module" src="/next/_astro/_...path_.astro_astro_type_script_index_0_lang.BJ-imuf3.js"></script>  <script type="module" src="/next/_astro/InPageNavLayout.astro_astro_type_script_index_0_lang.B2PN3HX8.js"></script>  <div class="container" data-astro-cid-2dr2cpgs> <div class="content" data-astro-cid-2dr2cpgs> <h1 id="form-interaction-states">Form: Interaction States</h1>
+<p><code>InteractionStateMixin</code> saves meta information about interaction states.
+It allows for creating advanced UX scenarios.</p>
+<p>Examples of such scenarios already in our fields:</p>
+<ul>
+<li>Show the validation message of an input only after the user has blurred the input field</li>
+<li>Hide the validation message when an invalid value becomes valid</li>
+</ul>
+<p>Something our subclassers can implement:</p>
+<ul>
+<li>Show a red border around the input right after the input became invalid</li>
+</ul>
+<p>The meta information that InteractionStateMixin collects, is stored in the Boolean properties on our fields:</p>
+<ul>
+<li><code>touched</code>, the user blurred the field.</li>
+<li><code>dirty</code>, the value in the field has changed.</li>
+<li><code>prefilled</code>, a prepopulated field is not empty.</li>
+</ul>
+<blockquote>
+<p>You can listen to the events <code>touched-changed</code> and <code>dirty-changed</code>.</p>
+</blockquote>
+<mdjs-preview mdjs-story-name="interactionStates">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> interactionStates</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  &#x3C;lion-input</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    label="Interaction States"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    help-text="Interact with this field to see how dirty, touched and prefilled change"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    .modelValue="${'myValue'}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  >&#x3C;/lion-input></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  &#x3C;h-output .show="${</span><span style="color:#032F62;--shiki-dark:#9ECBFF">[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'touched'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'dirty'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'prefilled'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'focused'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'submitted'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">]</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}">&#x3C;/h-output></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h2 id="advanced-use-cases">Advanced use cases</h2>
+<h3 id="overriding-interaction-states">Overriding interaction states</h3>
+<p>When creating an extension of LionField or LionInput, it can be needed to override the way prefilled values are ‘computed’.</p>
+<p>The example below shows how this is done for checkboxes/radio-inputs.</p>
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">/**</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"> * </span><span style="color:#D73A49;--shiki-dark:#F97583">@override</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"> */</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">static </span><span style="color:#6F42C1;--shiki-dark:#B392F0">_isPrefilled</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(modelValue) {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> modelValue.checked;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span></code></pre>
+<h2 id="when-is-feedback-shown-to-the-user">When is feedback shown to the user</h2>
+<p>We show the validity feedback when one of the following conditions is met:</p>
+<ul>
+<li>
+<p><strong>prefilled</strong>,
+the user already filled in something, or the value is prefilled
+when the form is initially rendered.</p>
+</li>
+<li>
+<p><strong>touched</strong> &#x26;&#x26; <strong>dirty</strong></p>
+<ul>
+<li>When a user starts typing for the first time in a field with for instance <code>required</code> validation,
+error message should not be shown until a field becomes <code>touched</code> (a user leaves(blurs) a field).</li>
+<li>When a user enters a field without altering the value (making it <code>dirty</code> but not <code>touched</code>),
+an error message shouldn’t be shown either.</li>
+</ul>
+</li>
+<li>
+<p><strong>submitted</strong>,
+if the form is submitted, always show the error message.</p>
+</li>
+</ul>
+<h3 id="changing-the-feedback-show-condition-subclassers">Changing the feedback show condition (Subclassers)</h3>
+<p>You can change the condition upon which feedback gets shown.</p>
+<p>In order to override the feedback show conditions, you need to create a custom field and override <code>_showFeedbackConditionFor</code> method.
+This method accepts the a <code>type</code> parameter which is a String representing the type of feedback (e.g. ‘error’).
+Then, it returns true of false, depending on whether feedback for that type should be shown or not. That part, you can control.</p>
+<p>In the following example we will demonstrate this with interaction states, the most common use case for feedback visibility conditions.</p>
+<mdjs-preview mdjs-story-name="feedbackCondition">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> feedbackCondition</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">  // 1. Initialize variables</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">  // properties we want to check conditions for</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> props</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> [</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'touched'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'dirty'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'prefilled'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'focused'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'filled'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'submitted'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">];</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">  // 2. Create a validator</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> OddValidator</span><span style="color:#D73A49;--shiki-dark:#F97583"> extends</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Validator</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    static</span><span style="color:#D73A49;--shiki-dark:#F97583"> get</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> validatorName</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      return</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> 'OddValidator'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    // eslint-disable-next-line class-methods-use-this</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    execute</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#E36209;--shiki-dark:#FFAB70">value</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      let</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> hasError </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> false</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (</span><span style="color:#D73A49;--shiki-dark:#F97583">!</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(value.</span><span style="color:#005CC5;--shiki-dark:#79B8FF">length</span><span style="color:#D73A49;--shiki-dark:#F97583"> %</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 2</span><span style="color:#D73A49;--shiki-dark:#F97583"> !==</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)) {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        hasError </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> true</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">      }</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> hasError;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    _getMessage</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      return</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> 'Add or remove one character'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  }</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">  // 3. Create field that applies the validator and store the node reference</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> fieldElement</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> renderLitAsNode</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#6F42C1;--shiki-dark:#B392F0">html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;lion-input</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      name="interactionField"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      label="Only an odd amount of characters allowed"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      help-text="Change feedback condition"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      .modelValue="${'notodd'}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      .validators="${</span><span style="color:#032F62;--shiki-dark:#9ECBFF">[</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> OddValidator</span><span style="color:#032F62;--shiki-dark:#9ECBFF">()]</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    >&#x3C;/lion-input></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">);</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">  // 4. When checkboxes change, set the feedbackCondition method to a new method that checks</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">  // whether every condition that is checked, is true on the field. Otherwise, don't show the feedback.</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> fetchConditionsAndReevaluate</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> ({ </span><span style="color:#E36209;--shiki-dark:#FFAB70">currentTarget</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: { </span><span style="color:#E36209;--shiki-dark:#FFAB70">modelValue</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> } }) </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    fieldElement.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">_showFeedbackConditionFor</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#E36209;--shiki-dark:#FFAB70"> type</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> modelValue.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">every</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#E36209;--shiki-dark:#FFAB70">condition</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#24292E;--shiki-dark:#E1E4E8"> fieldElement[condition]);</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    };</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    fieldElement.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">validate</span><span style="color:#24292E;--shiki-dark:#E1E4E8">();</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">  };</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">  return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;lion-form></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;form></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        ${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">fieldElement</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        &#x3C;button>Submit&#x3C;/button></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      &#x3C;/form></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/lion-form></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;h-output .field="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">fieldElement</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}" .show="${</span><span style="color:#032F62;--shiki-dark:#9ECBFF">[</span><span style="color:#D73A49;--shiki-dark:#F97583">...</span><span style="color:#24292E;--shiki-dark:#E1E4E8">props</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'hasFeedbackFor'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">]</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"> &#x3C;/h-output></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;h3>Set conditions for validation feedback visibility&#x3C;/h3></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;lion-checkbox-group name="props[]" @model-value-changed="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">fetchConditionsAndReevaluate</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      ${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">props</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#6F42C1;--shiki-dark:#B392F0">map</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">p</span><span style="color:#D73A49;--shiki-dark:#F97583"> =></span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">` &#x3C;lion-checkbox .label="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">p</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}" .choiceValue="${</span><span style="color:#24292E;--shiki-dark:#E1E4E8">p</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"> &#x3C;/lion-checkbox> `</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    &#x3C;/lion-checkbox-group></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  `</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">};</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h3 id="changing-the-feedback-show-condition-application-developers">Changing the feedback show condition (Application Developers)</h3>
+<p>In some situations, the default condition for showing feedback messages might not apply.
+The conditions as described in ‘When is feedback shown to the user’ can be overidden via
+the <code>feedbackCondition</code> method.
+In this example, we want to implement the following situation:</p>
+<ul>
+<li>for an <code>input-date</code>, we have a MinDate condition</li>
+<li>we want to send feedback as soon as we know the user intentionally typed a full Date
+(we know if modelValue is not Unparseable)</li>
+</ul>
+<mdjs-preview mdjs-story-name="feedbackVisibility">
+
+
+
+<pre class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">export</span><span style="color:#D73A49;--shiki-dark:#F97583"> const</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> feedbackVisibility</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#6F42C1;--shiki-dark:#B392F0"> html</span><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  &#x3C;lion-input-date</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    .validators="${</span><span style="color:#032F62;--shiki-dark:#9ECBFF">[</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Required</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(),</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> MinDate</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#D73A49;--shiki-dark:#F97583">new</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Date</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'2000/10/10'</span><span style="color:#032F62;--shiki-dark:#9ECBFF">), {</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">        getMessage</span><span style="color:#032F62;--shiki-dark:#9ECBFF">: () </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#032F62;--shiki-dark:#9ECBFF"> `You provided a correctly formatted date, but it's below MinData`</span><span style="color:#032F62;--shiki-dark:#9ECBFF">,</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      }),</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    ]</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    .feedbackCondition="${</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">type</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">meta</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">originalCondition</span><span style="color:#032F62;--shiki-dark:#9ECBFF">) </span><span style="color:#D73A49;--shiki-dark:#F97583">=></span><span style="color:#032F62;--shiki-dark:#9ECBFF"> {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      if</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> (</span><span style="color:#24292E;--shiki-dark:#E1E4E8">meta</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">modelValue</span><span style="color:#D73A49;--shiki-dark:#F97583"> &#x26;&#x26;</span><span style="color:#D73A49;--shiki-dark:#F97583"> !</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#24292E;--shiki-dark:#E1E4E8">meta</span><span style="color:#032F62;--shiki-dark:#9ECBFF">.</span><span style="color:#24292E;--shiki-dark:#E1E4E8">modelValue</span><span style="color:#D73A49;--shiki-dark:#F97583"> instanceof</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Unparseable</span><span style="color:#032F62;--shiki-dark:#9ECBFF">)) {</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> true</span><span style="color:#032F62;--shiki-dark:#9ECBFF">;</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">      }</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">      return</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> originalCondition</span><span style="color:#032F62;--shiki-dark:#9ECBFF">(</span><span style="color:#24292E;--shiki-dark:#E1E4E8">type</span><span style="color:#032F62;--shiki-dark:#9ECBFF">, </span><span style="color:#24292E;--shiki-dark:#E1E4E8">meta</span><span style="color:#032F62;--shiki-dark:#9ECBFF">);</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    }</span><span style="color:#032F62;--shiki-dark:#9ECBFF">}"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    help-text="Error appears as soon as a Parseable date before 10/10/2000 is typed"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    label="Custom feedback visibility"</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">  >&#x3C;/lion-input-date></span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">`</span><span style="color:#24292E;--shiki-dark:#E1E4E8">;</span></span></code></pre>
+
+
+
+</mdjs-preview>
+<h2 id="resetting">Resetting</h2>
+<p>In some situations, resetting the interaction state might be desired, e.g., to clear an entire form or a single input field from errors.</p>
+<p>In those cases, using the <code>resetInteractionState</code> on a field or a form resets its respective interaction state without resetting the modelValue.</p> </div> <ui-portal-inpage-nav nav-data="[{&#34;name&#34;:&#34;Form: Interaction States&#34;,&#34;url&#34;:&#34;form-interaction-states&#34;},{&#34;name&#34;:&#34;Advanced use cases&#34;,&#34;url&#34;:&#34;advanced-use-cases&#34;},{&#34;name&#34;:&#34;Overriding interaction states&#34;,&#34;url&#34;:&#34;overriding-interaction-states&#34;},{&#34;name&#34;:&#34;When is feedback shown to the user&#34;,&#34;url&#34;:&#34;when-is-feedback-shown-to-the-user&#34;},{&#34;name&#34;:&#34;Changing the feedback show condition (Subclassers)&#34;,&#34;url&#34;:&#34;changing-the-feedback-show-condition-subclassers&#34;},{&#34;name&#34;:&#34;Changing the feedback show condition (Application Developers)&#34;,&#34;url&#34;:&#34;changing-the-feedback-show-condition-application-developers&#34;},{&#34;name&#34;:&#34;Resetting&#34;,&#34;url&#34;:&#34;resetting&#34;}]" data-astro-cid-2dr2cpgs="true"></ui-portal-inpage-nav> </div>  </main> <div class="ui-portal-grid__footer"> <ui-portal-footer footer-data="[{&quot;name&quot;:&quot;discover&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;blog&quot;,&quot;url&quot;:&quot;/blog&quot;},{&quot;name&quot;:&quot;help and feedback&quot;,&quot;url&quot;:&quot;https://github.com/ing-bank/lion/issues&quot;}]},{&quot;name&quot;:&quot;follow&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;github&quot;,&quot;url&quot;:&quot;https://github.com/ing-bank/lion&quot;},{&quot;name&quot;:&quot;slack&quot;,&quot;url&quot;:&quot;/about/slack/&quot;}]},{&quot;name&quot;:&quot;support&quot;,&quot;children&quot;:[{&quot;name&quot;:&quot;contribute&quot;,&quot;url&quot;:&quot;https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md&quot;}]}]"><template shadowroot="open" shadowrootmode="open"><style>
+      /** FOOTER ****************************************************************************************/
+      #main-footer {
+        margin-top: 50px;
+        border-top: 1px solid #eaeaea;
+        background-color: var(--footer-background, rgba(0, 0, 0, 0.1));
+        color: var(--text-color);
+        padding: 40px 50px;
+        flex-grow: 1;
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+      }
+
+      #footer-menu .content-area {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      @media screen and (min-width: 1024px) {
+        #main-footer {
+          padding-inline: 96px;
+        }
+
+        #footer-menu .content-area {
+          flex-direction: row;
+          text-align: left;
+        }
+      }
+
+      #footer-menu ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      #footer-menu a {
+        text-decoration: none;
+        color: var(--text-color);
+        padding: 5px 0;
+        display: block;
+      }
+
+      #footer-menu a:hover {
+        text-decoration: underline;
+      }
+    </style><!--lit-part XdODVFi+K9w=-->
+      <footer id="main-footer">
+        <div id="footer-menu">
+          <div class="content-area">
+            <nav>
+              <h3>Discover</h3>
+              <ul>
+                <li>
+                  <a href="/next/blog">Blog</a>
+                </li>
+                <li>
+                  <a href="https://github.com/ing-bank/lion/issues" rel="noopener noreferrer"
+                    >Help and Feedback</a
+                  >
+                </li>
+              </ul>
+            </nav>
+            <nav>
+              <h3>Follow</h3>
+              <ul>
+                <li>
+                  <a href="https://github.com/ing-bank/lion" rel="noopener noreferrer">GitHub</a>
+                </li>
+                <li>
+                  <a href="/next/about/slack/">Slack</a>
+                </li>
+              </ul>
+            </nav>
+            <nav>
+              <h3>Support</h3>
+              <ul>
+                <li>
+                  <a
+                    href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md"
+                    rel="noopener noreferrer"
+                    >Contribute</a
+                  >
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </footer>
+    <!--/lit-part--></template></ui-portal-footer> </div>  </body> </html>

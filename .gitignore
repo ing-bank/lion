@@ -55,7 +55,8 @@ browserstack.err
 
 debug.log
 
-_site
+# we include the site assets on the gh-pages branch
+# _site
 _site-dev
 
 ## generated test fiels

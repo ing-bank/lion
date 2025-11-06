@@ -1,0 +1,428 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lion without polyfills: Lion</title>
+<meta property="og:title" content="Lion without polyfills: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/blog/lion-without-polyfills/">
+
+
+
+  
+
+<meta name="description" content="Lion has been a long user of the scoped registry - always requiring a polyfill - but no more. Load the polyfill only if you need it.">
+<meta property="og:description" content="Lion has been a long user of the scoped registry - always requiring a polyfill - but no more. Load the polyfill only if you need it.">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/c9419dd2.png">
+<meta property="og:url" content="http://localhost:8080/blog/lion-without-polyfills/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../db12e37b.css">
+<link rel="stylesheet" href="../../0f4765a3.css">
+<link rel="stylesheet" href="../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../b1403e10.css">
+  
+
+<link rel="preload" href="../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-blog-details">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+          
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+           active 
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+	<rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul>
+    <li class="current">
+      <h3>Headings</h3>
+      <ul><li class="menu-item">
+<a href="/blog/lion-without-polyfills/#how-does-it-work">How does it work?</a>
+</li>
+<li class="menu-item">
+<a href="/blog/lion-without-polyfills/#known-challenges-in-previous-releases">Known challenges in previous releases</a>
+</li>
+<li class="menu-item">
+<a href="/blog/lion-without-polyfills/#how-do-we-fix-it">How do we fix it?</a>
+</li>
+<li class="menu-item">
+<a href="/blog/lion-without-polyfills/#be-explicit-and-stay-forward-compatible">Be explicit and stay forward compatible</a>
+</li>
+<li class="menu-item">
+<a href="/blog/lion-without-polyfills/#how-to-get-scoping">How to get scoping</a>
+</li>
+<li class="menu-item">
+<a href="/blog/lion-without-polyfills/#learn-more">Learn more</a>
+</li></ul>
+    </li>
+  </ul>
+  <div class="sidebar-tags">
+    <h3>Date</h3>
+    <div>Tue Apr 05 2022</div>
+  </div>
+  <div class="sidebar-tags">
+    <h3>Tags</h3>
+    <div class="tags">
+      
+        <span class="tag">javascript</span>
+      
+        <span class="tag">polyfills</span>
+      
+    </div>
+  </div>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+
+      
+  <main class="markdown-body">
+    <main class="markdown-body">
+  
+    
+  <h1>Lion without polyfills</h1>
+
+
+  <img src="../../8c9ea82f.jpg" alt="">
+
+
+  
+    <p>The only reason Lion always loaded a polyfill was because of its usage of <a href="https://open-wc.org/docs/development/scoped-elements/">@open-wc/scoped-elements</a>. From today on this polyfill became optional.</p>
+<p>When using <a href="https://lit.dev/docs/composition/component-composition/">component composition</a> in a Lion Component we always made it very explicit which sub-components are used.
+On top of that we scoped these <a href="https://open-wc.org/docs/development/scoped-elements/">sub components</a> to the <a href="https://github.com/WICG/webcomponents/blob/gh-pages/proposals/Scoped-Custom-Element-Registries.md">current shadow root</a> allowing multiple version to be used simultaneously.</p>
+<p>This means that you can use a Lion Component like <code>lion-listbox</code> (which uses component composition) and never have to worry about if the internally used components clash with others you are already using.</p>
+<h2 id="how-does-it-work"><a class="anchor" href="#how-does-it-work"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>How does it work?</h2>
+<ol>
+<li>Within Lion classes we only import other classes (e.g. in class <code>MyCard</code> we use <code>MyCardHeader</code> via composition)</li>
+<li>We define them as <code>scopedElements</code> (<code>my-card-header: MyCardHeader</code>) and let the ScopedElementsMixin handle the rest</li>
+</ol>
+<p>To clarify: within Lion class files we never import files that run <code>customElement.define</code></p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">LitElement</span><span class="token punctuation">,</span> html <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'lit'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">ScopedElementsMixin</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@open-wc/scoped-elements/lit-element.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">MyCardHeader</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'./MyCardHeader.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">class</span> <span class="token class-name">MyCard</span> <span class="token keyword">extends</span> <span class="token class-name">ScopedElementsMixin</span><span class="token punctuation">(</span><span class="token maybe-class-name">LitElement</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">static</span> scopedElements <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token string-property property">'my-card-header'</span><span class="token operator">:</span> <span class="token maybe-class-name">MyCardHeader</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-card-header</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-card-header</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>slot</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slot</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<h2 id="known-challenges-in-previous-releases"><a class="anchor" href="#known-challenges-in-previous-releases"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Known challenges in previous releases</h2>
+<p>The code above totally makes sense - however we always assumed that a scoped registry will be available.
+Which was somewhat of a valid assumption as all our components are using the <code>ScopedElementsMixin</code> and it in turn loads a polyfill for the scoped registry.</p>
+<p>We however over time got feedback from multiple consumers that lion components "break the app as soon as you load them".
+The reasons is/was that not everyone is always using <code>ScopedElementsMixin</code> or in full control of the app (or its load order).</p>
+<p>To quote the release notes of the latest version of <code>ScopedElementsMixin</code>:</p>
+<blockquote>
+<p>ScopedElementsMixin 2.x tried to be as convenient as possible by automatically loading the scoped custom elements registry polyfill.
+This however led to a fatal error whenever you registered any component before ScopedElementsMixin was used.</p>
+</blockquote>
+<p>And this was the case.</p>
+<h2 id="how-do-we-fix-it"><a class="anchor" href="#how-do-we-fix-it"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>How do we fix it?</h2>
+<p>With the latest release of Lion we now updated to the latest version of <code>ScopedElementsMixin</code> which means Lion now works in all apps as long as there is no need for actual scoping.</p>
+<p>To rephrase it:</p>
+<blockquote>
+<p>Lion works without loading any polyfills</p>
+</blockquote>
+<p>If you extend Lion components and you imperatively create scoped custom elements, you should now use a helper function that will work in scoped and unscoped cases.</p>
+<pre class="language-diff"><code class="language-diff code-highlight"><span class="code-line deleted"><span class="token deleted-sign deleted"><span class="token prefix deleted">-</span><span class="token line">  const myButton = this.shadowRoot.createElement('my-button');
+</span></span></span><span class="code-line inserted"><span class="token deleted-sign deleted"><span class="token line"></span></span><span class="token inserted-sign inserted"><span class="token prefix inserted">+</span><span class="token line">  const myButton = this.createScopedElement('my-button');
+</span></span></span></code></pre>
+<h2 id="be-explicit-and-stay-forward-compatible"><a class="anchor" href="#be-explicit-and-stay-forward-compatible"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Be explicit and stay forward compatible</h2>
+<p>Be sure to always define <strong>ALL</strong> the sub elements you are using in your template within your <code>scopedElements</code> property.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">LitElement</span><span class="token punctuation">,</span> html <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'lit'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">ScopedElementsMixin</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'@open-wc/scoped-elements/lit-element.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">MyCardHeader</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'./MyCardHeader.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">class</span> <span class="token class-name">MyCard</span> <span class="token keyword">extends</span> <span class="token class-name">ScopedElementsMixin</span><span class="token punctuation">(</span><span class="token maybe-class-name">LitElement</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">static</span> scopedElements <span class="token operator">=</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token string-property property">'my-card-header'</span><span class="token operator">:</span> <span class="token maybe-class-name">MyCardHeader</span><span class="token punctuation">,</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-card-header</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-card-header</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>slot</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>slot</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>my-card-footer</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>my-card-footer</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<p>☝️ here we are missing a definition for <code>my-card-footer</code> in <code>scopedElements</code>.</p>
+<p>This means as soon as there is support for the scoped registry (be it native of via a polyfill) this component will not be available anymore because every new scoped registry starts off empty (there is no inheritance of a global or parent registry).</p>
+<p>Therefore <strong>always</strong> define all your sub elements.</p>
+<h2 id="how-to-get-scoping"><a class="anchor" href="#how-to-get-scoping"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>How to get scoping</h2>
+<p>You need scoping if you want to:</p>
+<ul>
+<li>use 2 major versions of a web component (e.g. in an SPA pageA uses 1.x and pageB uses 2.x of color-picker)</li>
+<li>use the same tag name with different implementations (use tag color-picker from foo here and from bar here)</li>
+</ul>
+<p>This usually is only needed in bigger Single Page Applications.
+In smaller applications or static sites (like 11ty, wordpress, ...) these tag name clashes are unlikely.</p>
+<p>If you need scoping and the browser you are using does not support a <a href="https://github.com/WICG/webcomponents/blob/gh-pages/proposals/Scoped-Custom-Element-Registries.md">scoped registry</a> yet (which is none in April 2022) then you need to install and load a polyfill first thing in your HTML.</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> i @webcomponents/scoped-custom-element-registry
+</span></code></pre>
+<p>It could look something like this:</p>
+<pre class="language-html"><code class="language-html code-highlight"><span class="code-line"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/node_modules/@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</span></code></pre>
+<p>or if you have an SPA you can load it at the top of your app shell code</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token string">'@webcomponents/scoped-custom-element-registry'</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h2 id="learn-more"><a class="anchor" href="#learn-more"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Learn more</h2>
+<p>If you want to learn more please check the</p>
+<ul>
+<li><a href="https://open-wc.org/blog/scoped-elements-without-polyfill/">Release blog post</a></li>
+<li><a href="https://github.com/open-wc/open-wc/blob/master/packages/scoped-elements/CHANGELOG.md#210">Change log of ScopedElementsMixin</a></li>
+</ul>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to improve the blog?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/blog/lion-without-polyfills.md">Edit this blog post on GitHub!</a>
+  </p>
+</div>
+
+
+  
+</main>
+
+  </main>
+
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../e3e8d065.js"></script>
+<script type="module" src="../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

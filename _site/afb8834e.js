@@ -1,0 +1,6 @@
+import{f as t}from"./19d2607c.js";import{i as s,t as i}from"./05905ff1.js";
+/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const e=(t,s)=>{const i=t._$AN;if(void 0===i)return!1;for(const t of i)t._$AO?.(s,!1),e(t,s);return!0},o=t=>{let s,i;do{if(void 0===(s=t._$AM))break;i=s._$AN,i.delete(t),t=s}while(0===i?.size)},n=t=>{for(let s;s=t._$AM;t=s){let i=s._$AN;if(void 0===i)s._$AN=i=new Set;else if(i.has(t))break;i.add(t),_(s)}};function h(t){void 0!==this._$AN?(o(this),this._$AM=t,n(this)):this._$AM=t}function $(t,s=!1,i=0){const n=this._$AH,h=this._$AN;if(void 0!==h&&0!==h.size)if(s)if(Array.isArray(n))for(let t=i;t<n.length;t++)e(n[t],!1),o(n[t]);else null!=n&&(e(n,!1),o(n));else e(this,t)}const _=t=>{t.type==i.CHILD&&(t._$AP??=$,t._$AQ??=h)};class r extends s{constructor(){super(...arguments),this._$AN=void 0}_$AT(t,s,i){super._$AT(t,s,i),n(this),this.isConnected=t._$AU}_$AO(t,s=!0){t!==this.isConnected&&(this.isConnected=t,t?this.reconnected?.():this.disconnected?.()),s&&(e(this,t),o(this))}setValue(s){if(t(this._$Ct))this._$Ct._$AI(s,this);else{const t=[...this._$Ct._$AH];t[this._$Ci]=s,this._$Ct._$AI(t,this,0)}}disconnected(){}reconnected(){}}export{r as f};

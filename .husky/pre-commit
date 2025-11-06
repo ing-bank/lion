@@ -1,1 +1,2 @@
-npx --no-install lint-staged
+# disable husky on gh-pages branch
+# npx --no-install lint-staged

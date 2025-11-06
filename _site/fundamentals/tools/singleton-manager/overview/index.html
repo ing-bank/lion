@@ -1,0 +1,746 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Singleton Manager: Overview: Lion</title>
+<meta property="og:title" content="Singleton Manager: Overview: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/fundamentals/tools/singleton-manager/overview/">
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system">
+<meta property="og:description" content="Fundamental white label web components for building your design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/3992d4a2.png">
+<meta property="og:url" content="http://localhost:8080/fundamentals/tools/singleton-manager/overview/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../../../db12e37b.css">
+<link rel="stylesheet" href="../../../../0f4765a3.css">
+<link rel="stylesheet" href="../../../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../../../b1403e10.css">
+  
+
+<link rel="preload" href="../../../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+           active 
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item">
+<a href="/fundamentals/systems/">Systems</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/">Core</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/SlotMixin/">SlotMixin</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/model-value/">ModelValue</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/formatting-and-parsing/">Formatting and Parsing</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/interaction-states/">Interaction States</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/validate/">Validate</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/styling/">Styling</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/">Localize</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/localize/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/text/">Translate Text</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/numbers/">Format Numbers</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/dates/">Format Dates</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/icon/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/">Overlays</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/overlays/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/configuration/">Configuration</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/api-table/">API Table</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/tools/">Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/">Helpers</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/helpers/action-logger/">Action Logger</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/">Ajax</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/ajax/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/tools/singleton-manager/">Singleton Manager</a>
+<ul><li class="menu-item current">
+<a href="/fundamentals/tools/singleton-manager/overview/">Overview</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#installation" class="anchor">Installation</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#convention-singleton-key" class="anchor">Convention Singleton Key</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#singleton-manager-rationale" class="anchor">Singleton Manager Rationale</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#example-a-fail" class="anchor">Example A (fail)</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#example-b-singleton-manager" class="anchor">Example B (singleton manager)</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#example-c-singleton-and-complex-patching-on-app-level" class="anchor">Example C (singleton and complex patching on app level)</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#how-does-it-work" class="anchor">How does it work?</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#non-goals" class="anchor">Non Goals</a>
+  </li>
+</ul>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-fail/">Example Fail</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-success/">Example Success</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-complex/">Example Complex</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/">Node Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/">Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/">Babel Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/">Publish Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/">Providence Analytics</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/">Remark Extend</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/overview/">Overview</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/">Rationales</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/rationales/accessibility/">Accessibility</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/side-effects/">Side Effects</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/versioning/">Versioning Lion</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/TypeScript/">TypeScript</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="singleton-manager-overview"><a class="anchor" href="#singleton-manager-overview"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Singleton Manager: Overview</h1>
+<p>A singleton manager provides a way to make sure a singleton instance loaded from multiple file locations stays a singleton.
+Primarily useful if two major version of a package with a singleton is used.</p>
+<h2 id="installation"><a class="anchor" href="#installation"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Installation</h2>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> i <span class="token parameter variable">--save</span> singleton-manager
+</span></code></pre>
+<p>⚠️ You need to make SURE that only ONE version of <code>singleton-manager</code> is installed. For how see <a href="#non-goals">Non Goals</a>.</p>
+<h3 id="example-singleton-users"><a class="anchor" href="#example-singleton-users"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Example Singleton Users</h3>
+<p>Use the same singleton for both versions (as we don't use any of the breaking features)</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// managed-my-singleton.js</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> singletonManager <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'singleton-manager'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> mySingleton <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'my-singleton'</span><span class="token punctuation">;</span> <span class="token comment">// is available as 1.x and 2.x via node resolution</span>
+</span><span class="code-line">
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'my-singleton::index.js::1.x'</span><span class="token punctuation">,</span> mySingleton<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'my-singleton::index.js::2.x'</span><span class="token punctuation">,</span> mySingleton<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>OR create a special compatible version of the singleton</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// managed-my-singleton.js</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> singletonManager <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'singleton-manager'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">MySingleton</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'my-singleton'</span><span class="token punctuation">;</span> <span class="token comment">// is available as 1.x and 2.x via node resolution</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">class</span> <span class="token class-name">CompatibleSingleton</span> <span class="token keyword">extends</span> <span class="token class-name">MySingleton</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token comment">// add forward or backward compatibility code</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span><span class="code-line"><span class="token keyword">const</span> compatibleSingleton <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CompatibleSingleton</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'my-singleton::index.js::1.x'</span><span class="token punctuation">,</span> compatibleSingleton<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'my-singleton::index.js::2.x'</span><span class="token punctuation">,</span> compatibleSingleton<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>AND in you App then you need to load the above code BEFORE loading the singleton or any feature using it.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token string">'./managed-my-singleton.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> mySingleton <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'my-singleton'</span><span class="token punctuation">;</span> <span class="token comment">// will no always be what is "defined" in managed-my-singleton.js</span>
+</span></code></pre>
+<h3 id="warning"><a class="anchor" href="#warning"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Warning</h3>
+<p>Overriding version is an App level concern hence components or "features" are not allowed to use it.
+If you try to call it multiple times for the same key then it will be ignored.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// on app level</span>
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'my-singleton/index.js::1.x'</span><span class="token punctuation">,</span> compatibleSingleton<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment">// somewhere in a dependency</span>
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'my-singleton/index.js::1.x'</span><span class="token punctuation">,</span> otherSingleton<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment">// .get('my-singleton/index.js::1.x') will always return the first set value</span>
+</span><span class="code-line"><span class="token comment">// e.g. the app can set it and no one can later override it</span>
+</span></code></pre>
+<h3 id="example-singleton-maintainers"><a class="anchor" href="#example-singleton-maintainers"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Example Singleton Maintainers</h3>
+<p>If you are a maintainer of a singleton be sure to check if a singleton manager version is set.
+If that is the case return it instead of your default instance.</p>
+<p>It could look something like this:</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token comment">// my-singleton.js</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> singletonManager <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'singleton-manager'</span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">MySingleton</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'./src/MySingleton.js'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">const</span> overlays <span class="token operator">=</span>
+</span><span class="code-line">  singletonManager<span class="token punctuation">.</span><span class="token method function property-access">get</span><span class="token punctuation">(</span><span class="token string">'my-singleton/my-singleton.js::1.x'</span><span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token keyword">new</span> <span class="token class-name">MySingleton</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h2 id="convention-singleton-key"><a class="anchor" href="#convention-singleton-key"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Convention Singleton Key</h2>
+<p>The key for a singleton needs to be "unique" for the package.
+Hence the following convention helps maintaining this.</p>
+<p>As a key use the <code>&lt;package&gt;::&lt;unique-variable&gt;::&lt;semver-range&gt;</code>.</p>
+<p>Examples Do:</p>
+<ul>
+<li><code>overlays::overlays::1.x</code> - instance created in index.js</li>
+<li><code>@scope/overlays::overlays::1.x</code> - with scope</li>
+<li><code>overlays::overlays::1.x</code> - version 1.x.x (&gt; 1.0.0 you do 1.x, 2.x)</li>
+<li><code>overlays::overlays::2.x</code> - version 2.x.x (&gt; 1.0.0 you do 1.x, 2.x)</li>
+<li><code>overlays::overlays::0.10.x</code> - version 0.10.x (&lt; 1.0.0 you do 0.1.x, 0.2.x)</li>
+</ul>
+<p>Examples Don't:</p>
+<ul>
+<li><code>overlays</code> - too generic</li>
+<li><code>overlays::overlays</code> - you should include a version</li>
+<li><code>overlays::1.x</code> - you should include a package name &amp; unique var</li>
+<li><code>./index.js::1.x</code> - it should start with a package name</li>
+</ul>
+<hr>
+<h2 id="singleton-manager-rationale"><a class="anchor" href="#singleton-manager-rationale"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Singleton Manager Rationale</h2>
+<p>We have an app with 2 pages.</p>
+<ul>
+<li>page-a uses overlays 1.x</li>
+<li>page-b uses overlays 2.x (gets installed nested)</li>
+</ul>
+<pre class="language-markdown"><code class="language-markdown code-highlight"><span class="code-line">my-app (node_modules)
+</span><span class="code-line">├── overlays (1.x)
+</span><span class="code-line">├── page-a
+</span><span class="code-line">│ └── page-a.js
+</span><span class="code-line">└── page-b
+</span><span class="code-line">├── node_modules
+</span><span class="code-line">│ └── overlays (2.x)
+</span><span class="code-line">└── page-b.js
+</span></code></pre>
+<p>The tough part in this case is the OverlaysManager within the overlays package as it needs to be a singleton.</p>
+<p>It starts of simplified like this</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">class</span> <span class="token class-name">OverlaysManager</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  name <span class="token operator">=</span> <span class="token string">'OverlayManager 1.x'</span><span class="token punctuation">;</span>
+</span><span class="code-line">  blockBody <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token function">constructor</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">_setupBlocker</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">  <span class="token function">_setupBlocker</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token comment">/* ... */</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">  <span class="token function">block</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">blockBody</span> <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span> <span class="token comment">// ...</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">
+</span><span class="code-line">  <span class="token function">unBlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token property-access">blockBody</span> <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token comment">// ...</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<h2 id="example-a-fail"><a class="anchor" href="#example-a-fail"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Example A (fail)</h2>
+<p>See it "fail" e.g. 2 separate OverlaysManager are at work and are "fighting" over the way to block the body.</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> run start:fail
+</span></code></pre>
+<p>Steps to reproduce:</p>
+<ol>
+<li>Page A click on block</li>
+<li>Page B =&gt; "Blocked: false" (even when hitting the refresh button)</li>
+</ol>
+<p>➡️ See <a href="../example-fail/">it on the example page</a>. <br>
+➡️ See <a href="https://github.com/ing-bank/lion/tree/master/docs/fundamentals/tools/singleton-manager/example-fail/demo-app.js">the code</a>.</p>
+<hr>
+<h2 id="example-b-singleton-manager"><a class="anchor" href="#example-b-singleton-manager"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Example B (singleton manager)</h2>
+<p>The breaking change in <code>OverlayManager</code> was renaming of 2 function (which has been deprecated before).</p>
+<ul>
+<li><code>block()</code> =&gt; <code>blockingBody()</code></li>
+<li><code>unBlock()</code> =&gt; <code>unBlockingBody()</code></li>
+</ul>
+<p>knowing that we can create a Manager that is compatible with both via</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> <span class="token maybe-class-name">OverlaysManager</span> <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'overlays'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">class</span> <span class="token class-name">CompatibleOverlaysManager</span> <span class="token keyword">extends</span> <span class="token class-name">OverlaysManager</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token function">blockingBody</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">block</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line">  <span class="token function">unBlockingBody</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token method function property-access">unBlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span>
+</span><span class="code-line"><span class="token punctuation">}</span>
+</span></code></pre>
+<p>all that is left is a to "override" the default instance of the "users"</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">import</span> <span class="token imports"><span class="token punctuation">{</span> singletonManager <span class="token punctuation">}</span></span> <span class="token keyword module">from</span> <span class="token string">'singleton-manager'</span><span class="token punctuation">;</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token keyword">const</span> compatibleOverlaysManager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CompatibleOverlaysManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'overlays::overlays::1.x'</span><span class="token punctuation">,</span> compatibleOverlaysManager<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'overlays::overlays::2.x'</span><span class="token punctuation">,</span> compatibleOverlaysManager<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>See it in action</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> run start:singleton
+</span></code></pre>
+<p>➡️ See <a href="../example-success/">it on the example page</a>. <br>
+➡️ See <a href="https://github.com/ing-bank/lion/tree/master/docs/fundamentals/tools/singleton-manager/example-success/demo-app.js">the code</a>.</p>
+<hr>
+<h2 id="example-c-singleton-and-complex-patching-on-app-level"><a class="anchor" href="#example-c-singleton-and-complex-patching-on-app-level"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Example C (singleton and complex patching on app level)</h2>
+<p>The breaking change in <code>OverlayManager</code> was converting a property to a function and a rename of a function.</p>
+<ul>
+<li><code>blockBody</code> =&gt; <code>_blockBody</code></li>
+<li><code>block()</code> =&gt; <code>blockBody()</code></li>
+<li><code>unBlock()</code> =&gt; <code>unBlockBody()</code></li>
+</ul>
+<p>e.g. what is impossible to make compatible with a single instance is to have <code>blockBody</code> act as a property for 1.x and as a function <code>blockBody()</code> for 2.x.</p>
+<p>So how do we solve it then?</p>
+<p>We will make 2 separate instances of the <code>OverlayManager</code>.</p>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line">compatibleManager1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CompatibleManager1</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 1.x</span>
+</span><span class="code-line">compatibleManager2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CompatibleManager2</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 2.x</span>
+</span><span class="code-line"><span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> compatibleManager1<span class="token punctuation">.</span><span class="token property-access">blockBody</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Boolean</span>
+</span><span class="code-line"><span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> compatibleManager2<span class="token punctuation">.</span><span class="token property-access">blockBody</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Function</span>
+</span><span class="code-line">
+</span><span class="code-line"><span class="token comment">// and override</span>
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'overlays::overlays::1.x'</span><span class="token punctuation">,</span> compatibleManager1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'overlays::overlays::2.x'</span><span class="token punctuation">,</span> compatibleManager2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<p>and they are "compatible" to each other because they sync the important data to each other.
+e.g. even though there are 2 instances there is only <code>one</code> dom element inserted which both can write to.
+When syncing data only the initiator will update the dom.
+This makes sure even though functions and data is separate it will be always consistent.</p>
+<p>See it in action</p>
+<pre class="language-bash"><code class="language-bash code-highlight"><span class="code-line"><span class="token function">npm</span> run start:singleton-complex
+</span></code></pre>
+<p>➡️ See <a href="../example-complex/">it on the example page</a>. <br>
+➡️ See <a href="https://github.com/ing-bank/lion/tree/master/docs/fundamentals/tools/singleton-manager/example-complex/demo-app.js">the code</a>.</p>
+<hr>
+<h2 id="how-does-it-work"><a class="anchor" href="#how-does-it-work"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>How does it work?</h2>
+<p>As a user you can override what the import of <code>overlays/instance.js</code> provides.
+You do this via a singletonManager and a "magic" string.</p>
+<ul>
+<li>Reason be that you can target ranges of versions</li>
+</ul>
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'overlays::overlays::1.x'</span><span class="token punctuation">,</span> compatibleManager1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">singletonManager<span class="token punctuation">.</span><span class="token method function property-access">set</span><span class="token punctuation">(</span><span class="token string">'overlays::overlays::2.x'</span><span class="token punctuation">,</span> compatibleManager2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></code></pre>
+<h3 id="potential-improvements"><a class="anchor" href="#potential-improvements"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Potential Improvements</h3>
+<p>Potentially we could have "range", "exacts version" and symbol for unique filename.
+So you can override with increasing specificity.
+If you have a use case for that please open an issue.</p>
+<h2 id="non-goals"><a class="anchor" href="#non-goals"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Non Goals</h2>
+<p>Making sure that there are only 2 major versions of a specific packages.
+npm is not meant to handle it - and it never will</p>
+<pre class="language-markdown"><code class="language-markdown code-highlight"><span class="code-line">my-app
+</span><span class="code-line">├─┬ feat-a@x
+</span><span class="code-line">│ └── foo@2.x
+</span><span class="code-line">├─┬ feat-a@x
+</span><span class="code-line">│ └── foo@2.x
+</span><span class="code-line">└── foo@1.x
+</span></code></pre>
+<p>Dedupe works by moving dependencies up the tree</p>
+<pre class="language-markdown"><code class="language-markdown code-highlight"><span class="code-line">// this app
+</span><span class="code-line">my-app
+</span><span class="code-line">my-app/node_modules/feat-a/node_modules/foo
+</span><span class="code-line">my-app/node_modules/foo
+</span><span class="code-line">
+</span><span class="code-line">// can become if versions match
+</span><span class="code-line">my-app
+</span><span class="code-line">my-app/node_modules/foo
+</span></code></pre>
+<p>in there <code>feat-a</code> will grab the version of it's "parent" because of the node resolution system.
+If however the versions do not match or there is no "common" folder to move it up to then it needs to be "duplicated" by npm/yarn.</p>
+<p>Only by using a more controlled way like</p>
+<ul>
+<li><a href="https://github.com/WICG/import-maps">import-maps</a></li>
+<li><a href="https://classic.yarnpkg.com/en/docs/selective-version-resolutions/">yarn resolutions</a></li>
+</ul>
+<p>you can "hard" code it to the same versions.</p>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/fundamentals/tools/singleton-manager/overview.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../../../e3e8d065.js"></script>
+<script type="module" src="../../../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

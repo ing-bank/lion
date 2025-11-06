@@ -1,0 +1,10 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["_astro/define.DYUong5B.js","_astro/node-tools_providence-analytics_overview.LFFQBZzG.js","_astro/lit-element.qDHKJJma.js","_astro/lit-html.C7L4dwLU.js","_astro/unsafe-html.J0GGe2Q7.js","_astro/directive.CGE4aKEl.js","_astro/define.m2CvvXyF.js"])))=>i.map(i=>d[i]);
+import{_ as i}from"./preload-helper.4zY6-HO4.js";import"./node-tools_providence-analytics_overview.LFFQBZzG.js";import"./lit-element.qDHKJJma.js";import{x as n}from"./lit-html.C7L4dwLU.js";import"./unsafe-html.J0GGe2Q7.js";import"./lion-listbox.C2RtB8pZ.js";import"./lion-option.BK1gXvzd.js";import"./directive.CGE4aKEl.js";import"./LionOption.81NUo0Oz.js";import"./InteractionStateMixin.BzvQ4Mf0.js";import"./dedupeMixin.6XPTJgK8.js";import"./LocalizeMixin.VYu75dkK.js";import"./directive-helpers.CLllgGgm.js";import"./async-directive.CHVe8p0E.js";import"./getLocalizeManager.W5d_ICRU.js";import"./index.BNCfcFQh.js";import"./lazifyInstantiation.CgYLRMC3.js";import"./DisabledMixin.Bm1nsErI.js";import"./ChoiceGroupMixin.v2API64R.js";import"./FormRegistrarMixin.YCZ6eayn.js";import"./ChoiceInputMixin.BwyQsGXW.js";const r=()=>n`
+  <lion-listbox name="listbox" label="Default">
+    <lion-option .choiceValue="${"Apple"}">Apple</lion-option>
+    <lion-option checked .choiceValue="${"Artichoke"}">Artichoke</lion-option>
+    <lion-option .choiceValue="${"Asparagus"}">Asparagus</lion-option>
+    <lion-option .choiceValue="${"Banana"}">Banana</lion-option>
+    <lion-option .choiceValue="${"Beets"}">Beets</lion-option>
+  </lion-listbox>
+`,m=document,s=[{key:"main",story:r}];let e=!1;for(const t of s){const o=m.querySelector(`[mdjs-story-name="${t.key}"]`);o&&(o.story=t.story,o.key=t.key,e=!0,Object.assign(o,{simulatorUrl:"/next/simulator/",languages:[{key:"de-DE",name:"German"},{key:"en-GB",name:"English (United Kingdom)"},{key:"en-US",name:"English (United States)"},{key:"nl-NL",name:"Dutch"}]}))}e&&(customElements.get("mdjs-preview")||i(()=>import("./define.DYUong5B.js"),__vite__mapDeps([0,1,2,3,4,5])),customElements.get("mdjs-story")||i(()=>import("./define.m2CvvXyF.js"),__vite__mapDeps([6,2,3])));export{r as main};

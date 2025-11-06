@@ -1,0 +1,1 @@
+let e;class t{static async loadLibPhoneNumber(){const t=await import("./90ef65d2.js");return this.PhoneUtil={...t},e(void 0),t}static get isLoaded(){return Boolean(this.PhoneUtil)}}t.loadComplete=new Promise(t=>{e=t}),t.loadLibPhoneNumber();export{t as P};

@@ -1,0 +1,830 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Input Amount: Lion</title>
+<meta property="og:title" content="Input Amount: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/components/input-amount/">
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system">
+<meta property="og:description" content="Fundamental white label web components for building your design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/49c4660d.png">
+<meta property="og:url" content="http://localhost:8080/components/input-amount/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../db12e37b.css">
+<link rel="stylesheet" href="../../0f4765a3.css">
+<link rel="stylesheet" href="../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../b1403e10.css">
+  
+
+<link rel="preload" href="../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-index">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+          
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+           active 
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item">
+<a href="/components/accordion/">Accordion</a>
+<ul><li class="menu-item">
+<a href="/components/accordion/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/accordion/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/accordion/reference/">Reference</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/accordion/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/button/">Button</a>
+<ul><li class="menu-item">
+<a href="/components/button/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/button/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/button/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/button/api-table/">API Table</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/button/extensions/">Extensions</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/calendar/">Calendar</a>
+<ul><li class="menu-item">
+<a href="/components/calendar/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/calendar/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/calendar/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/checkbox-group/">Checkbox Group</a>
+<ul><li class="menu-item">
+<a href="/components/checkbox-group/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/checkbox-group/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/checkbox-group/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/collapsible/">Collapsible</a>
+<ul><li class="menu-item">
+<a href="/components/collapsible/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/collapsible/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/collapsible/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/collapsible/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/combobox/">Combobox</a>
+<ul><li class="menu-item">
+<a href="/components/combobox/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/combobox/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/combobox/extensions/">Extensions</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/combobox/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/dialog/">Dialog</a>
+<ul><li class="menu-item">
+<a href="/components/dialog/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/dialog/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/dialog/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/drawer/">Drawer</a>
+<ul><li class="menu-item">
+<a href="/components/drawer/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/drawer/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/drawer/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/fieldset/">Fieldset</a>
+<ul><li class="menu-item">
+<a href="/components/fieldset/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/fieldset/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/fieldset/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/components/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/form/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/form/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/components/icon/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/icon/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/icon/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-amount-dropdown/">Input Amount Dropdown</a>
+<ul><li class="menu-item">
+<a href="/components/input-amount-dropdown/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-amount-dropdown/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item current">
+<a href="/components/input-amount/">Input Amount</a>
+
+<ul><li class="menu-item">
+<a href="/components/input-amount/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-amount/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-amount/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-date/">Input Date</a>
+<ul><li class="menu-item">
+<a href="/components/input-date/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-date/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-date/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-datepicker/">Input Datepicker</a>
+<ul><li class="menu-item">
+<a href="/components/input-datepicker/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-datepicker/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-datepicker/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-email/">Input Email</a>
+<ul><li class="menu-item">
+<a href="/components/input-email/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-email/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-email/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-file/">Input File</a>
+<ul><li class="menu-item">
+<a href="/components/input-file/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-file/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-file/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-iban/">Input Iban</a>
+<ul><li class="menu-item">
+<a href="/components/input-iban/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-iban/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-iban/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-range/">Input Range</a>
+<ul><li class="menu-item">
+<a href="/components/input-range/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-range/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-range/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-stepper/">Input Stepper</a>
+<ul><li class="menu-item">
+<a href="/components/input-stepper/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-stepper/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-stepper/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-tel-dropdown/">Input Tel Dropdown</a>
+<ul><li class="menu-item">
+<a href="/components/input-tel-dropdown/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-tel-dropdown/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-tel-dropdown/extensions/">Extensions</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-tel-dropdown/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-tel/">Input Tel</a>
+<ul><li class="menu-item">
+<a href="/components/input-tel/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-tel/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-tel/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input/">Input</a>
+<ul><li class="menu-item">
+<a href="/components/input/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/listbox/">Listbox</a>
+<ul><li class="menu-item">
+<a href="/components/listbox/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/listbox/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/listbox/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/pagination/">Pagination</a>
+<ul><li class="menu-item">
+<a href="/components/pagination/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/pagination/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/pagination/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/progress-indicator/">Progress Indicator</a>
+<ul><li class="menu-item">
+<a href="/components/progress-indicator/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/progress-indicator/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/progress-indicator/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/radio-group/">Radio Group</a>
+<ul><li class="menu-item">
+<a href="/components/radio-group/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/radio-group/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/radio-group/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/select-rich/">Select Rich</a>
+<ul><li class="menu-item">
+<a href="/components/select-rich/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/select-rich/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/select-rich/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/select-rich/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/select/">Select</a>
+<ul><li class="menu-item">
+<a href="/components/select/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/select/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/select/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/steps/">Steps</a>
+<ul><li class="menu-item">
+<a href="/components/steps/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/steps/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/steps/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/switch/">Switch</a>
+<ul><li class="menu-item">
+<a href="/components/switch/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/switch/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/switch/reference/">Reference</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/switch/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/tabs/">Tabs</a>
+<ul><li class="menu-item">
+<a href="/components/tabs/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tabs/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tabs/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tabs/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/textarea/">Textarea</a>
+<ul><li class="menu-item">
+<a href="/components/textarea/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/textarea/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/textarea/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/tooltip/">Tooltip</a>
+<ul><li class="menu-item">
+<a href="/components/tooltip/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tooltip/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tooltip/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tooltip/api-table/">API Table</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+	<main class="markdown-body">
+  
+    <h1 id="input-amount"><a class="anchor" href="#input-amount"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Input Amount</h1>
+<p>-&gt; go to Overview</p>
+
+  
+    <button id="layout-index-open-navigation" class="call-to-action" data-action="trigger-mobile-menu">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+  <span>Show Navigation</span>
+</button>
+
+  
+</main>
+
+
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../e3e8d065.js"></script>
+<script type="module" src="../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

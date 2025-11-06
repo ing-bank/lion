@@ -1,0 +1,1 @@
+import{w as e}from"./0ed5d59c.js";const o=()=>({hasBackdrop:!0,preventsScroll:!0,trapsKeyboardFocus:!0,hidesOnEsc:!0,placementMode:"global",viewportConfig:{placement:"bottom"},handlesAccessibility:!0,...e()});export{o as w};

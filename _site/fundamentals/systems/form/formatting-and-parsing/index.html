@@ -1,0 +1,790 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form: Formatting and Parsing: Lion</title>
+<meta property="og:title" content="Form: Formatting and Parsing: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/fundamentals/systems/form/formatting-and-parsing/">
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system">
+<meta property="og:description" content="Fundamental white label web components for building your design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/78f12b3b.png">
+<meta property="og:url" content="http://localhost:8080/fundamentals/systems/form/formatting-and-parsing/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../../../db12e37b.css">
+<link rel="stylesheet" href="../../../../0f4765a3.css">
+<link rel="stylesheet" href="../../../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../../../b1403e10.css">
+  
+
+<link rel="preload" href="../../../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../a055aa7d.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../b6adfbc2.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../24f95583.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../b4be29f1.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../05905ff1.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../c7db7091.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../74b104922.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../c6fab747.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../9a16257f.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../c2aef983.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../7077221a.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../dc2f5f5a.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../f12ecf0e.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../bbaa6280.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../bfba5e5f.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../ec06148e.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../4dc0ac82.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../143fde17.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../d45984a3.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../4afec9a2.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../11b71ee2.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../4cc99b59.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../19d2607c.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../afb8834e.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../../a06c5caf.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+           active 
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+          
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item active">
+<a href="/fundamentals/systems/">Systems</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/">Core</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/core/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/SlotMixin/">SlotMixin</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/core/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/fundamentals/systems/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/model-value/">ModelValue</a>
+
+</li>
+<li class="menu-item current">
+<a href="/fundamentals/systems/form/formatting-and-parsing/">Formatting and Parsing</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#different-values" class="anchor">Different values</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#flow-diagrams" class="anchor">Flow Diagrams</a>
+  </li>
+</ul>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/interaction-states/">Interaction States</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/validate/">Validate</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/styling/">Styling</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/form/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/">Localize</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/localize/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/text/">Translate Text</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/numbers/">Format Numbers</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/dates/">Format Dates</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/localize/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/icon/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/">Overlays</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/systems/overlays/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/rationale/">Rationale</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/configuration/">Configuration</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/systems/overlays/api-table/">API Table</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/">Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/">Helpers</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/helpers/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/helpers/action-logger/">Action Logger</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/">Ajax</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/ajax/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/ajax/use-cases/">Use Cases</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/">Singleton Manager</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-fail/">Example Fail</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-success/">Example Success</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/tools/singleton-manager/example-complex/">Example Complex</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/">Node Tools</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/">Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/rocket-preset-extend-lion-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/">Babel Extend Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/babel-plugin-extend-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/">Publish Docs</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/publish-docs/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/">Providence Analytics</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/providence-analytics/overview/">Overview</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/">Remark Extend</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/node-tools/remark-extend/overview/">Overview</a>
+
+</li></ul>
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/">Rationales</a>
+<ul><li class="menu-item">
+<a href="/fundamentals/rationales/accessibility/">Accessibility</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/side-effects/">Side Effects</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/versioning/">Versioning Lion</a>
+
+</li>
+<li class="menu-item">
+<a href="/fundamentals/rationales/TypeScript/">TypeScript</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="form-formatting-and-parsing"><a class="anchor" href="#form-formatting-and-parsing"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Form: Formatting and Parsing</h1>
+<blockquote>
+<p>For demo purposes, below we use <code>&lt;lion-input&gt;</code> which is a basic extension of <code>&lt;lion-field&gt;</code>.
+Almost all fields share the same functionality as <code>&lt;lion-input&gt;</code>.</p>
+</blockquote>
+<h2 id="different-values"><a class="anchor" href="#different-values"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Different values</h2>
+<p>The <code>FormatMixin</code> which is used in all lion fields automatically keeps track of:</p>
+<ul>
+<li><code>modelValue</code>, which is a result of parsing</li>
+<li><code>formattedValue</code>, which is a result of formatting</li>
+<li><code>serializedValue</code>, which is a result of serializing</li>
+</ul>
+<p>Our fields can automatically format/parse/serialize user input or an input set imperatively by an Application Developer.</p>
+<p>Below are some concrete examples of implementations of formatters and parsers mimicking a (basic) amount input.</p>
+<blockquote>
+<p>For an actual amount input, check out <a href="../../../../components/input-amount/overview/">lion-input-amount</a>.
+This comes with its own formatter, parser, serializer.</p>
+</blockquote>
+<h3 id="parsers--modelvalue"><a class="anchor" href="#parsers--modelvalue"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Parsers &amp; modelValue</h3>
+<p>A parser should return a <code>modelValue</code>.</p>
+<p>The <code>modelValue</code> is the result of the parser function.
+It should be considered as the <strong>internal value used for validation and reasoning/logic</strong>.
+The <code>modelValue</code> is 'ready for consumption' by the outside world (think of a Date object or a float).
+The <code>modelValue</code> can (and is recommended to) be used as both input value and output value of the <code>&lt;lion-input&gt;</code>.</p>
+<p>In essence, the <code>modelValue</code> acts as a Single Source of Truth in our form fields and therefore a single way of programmatical interaction.
+Formatted values, serialized values and reflected-back view values are derived from it.</p>
+<p>You can listen to <code>model-value-changed</code> event on all fields.
+Internally this is also used as the main trigger for re-evaluating validation, visibility and interaction states.</p>
+<p>Examples:</p>
+<ul>
+<li>For a <code>date input</code>: a String '20/01/1999' will be converted to new Date('1999/01/20')</li>
+<li>For an <code>amount input</code>: a formatted String '1.234,56' will be converted to a Number: 1234.56</li>
+</ul>
+<p>You can set a parser function on the <code>&lt;lion-input&gt;</code> to set parsing behavior.
+In this example, we parse the input and try to convert it to a <code>Number</code>.</p>
+<mdjs-preview mdjs-story-name="parser">
+
+
+
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">parser</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-input</span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Number Example<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Uses .parser to create model values from view values<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token attr-name">.parser</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token parameter">viewValue</span> <span class="token arrow operator">=&gt;</span> <span class="token known-class-name class-name">Number</span><span class="token punctuation">(</span>viewValue<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token attr-name">.modelValue</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token number">1234567890</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token attr-name">@model-value-changed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> target <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token console class-name">console</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">  <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lion-input</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h-output</span> <span class="token attr-name">.show</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">[</span><span class="token string">'modelValue'</span><span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h-output</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span></code></pre>
+
+
+
+</mdjs-preview>
+<h4 id="unparseable"><a class="anchor" href="#unparseable"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Unparseable</h4>
+<p>If a parser tries to parse and it returns undefined, the <code>modelValue</code> will be an instance of
+<code>Unparseable</code>.</p>
+<p>This object contains a type <code>'unparseable'</code>, and a <code>viewValue</code> which contains the String value of
+what the user tried to input.</p>
+<p>The formatted result of this that is reflected to the user will be the <code>viewValue</code> of the
+<code>Unparseable</code> instance, so basically nothing happens for the user.</p>
+<mdjs-preview mdjs-story-name="unparseable">
+
+
+
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">unparseable</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-input</span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Number Example<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Uses .parser and return undefined if Number() cannot parse<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token attr-name">.parser</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token parameter">viewValue</span> <span class="token arrow operator">=&gt;</span> <span class="token known-class-name class-name">Number</span><span class="token punctuation">(</span>viewValue<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token keyword nil">undefined</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token string">'1234abc567890'</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">  <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lion-input</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h-output</span> <span class="token attr-name">.show</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">[</span><span class="token string">'modelValue'</span><span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h-output</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span></code></pre>
+
+
+
+</mdjs-preview>
+<h3 id="formatters"><a class="anchor" href="#formatters"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Formatters</h3>
+<p>A formatter should return a <code>formattedValue</code>. It accepts the current modelValue and an options object.</p>
+<p>Below is a very naive and limited parser that ignores non-digits. The formatter then uses <code>Intl.NumberFormat</code> to format it with group (thousand) separators.</p>
+<p>Formatted value is reflected back to the user <code>on-blur</code> of the field, but only if the field has no errors (validation).</p>
+<mdjs-preview mdjs-story-name="formatters">
+
+
+
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">formatters</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">const</span> <span class="token function-variable function">formatDate</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">modelValue<span class="token punctuation">,</span> options</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token punctuation">(</span><span class="token keyword">typeof</span> modelValue <span class="token operator">===</span> <span class="token string">'number'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+</span><span class="code-line">      <span class="token keyword control-flow">return</span> options<span class="token punctuation">.</span><span class="token property-access">formattedValue</span><span class="token punctuation">;</span>
+</span><span class="code-line">    <span class="token punctuation">}</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token keyword">new</span> <span class="token class-name">Intl<span class="token punctuation">.</span>NumberFormat</span><span class="token punctuation">(</span><span class="token string">'en-GB'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">format</span><span class="token punctuation">(</span>modelValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-input</span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Number Example<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Uses .formatter to create view value<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">.parser</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token parameter">viewValue</span> <span class="token arrow operator">=&gt;</span> <span class="token known-class-name class-name">Number</span><span class="token punctuation">(</span>viewValue<span class="token punctuation">.</span><span class="token method function property-access">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex"><span class="token char-class"><span class="token char-class-punctuation punctuation">[</span><span class="token char-class-negation operator">^</span><span class="token range">0<span class="token range-punctuation operator">-</span>9</span><span class="token char-class-punctuation punctuation">]</span></span></span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">.formatter</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>formatDate<span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">.modelValue</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token number">1234567890</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lion-input</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h-output</span> <span class="token attr-name">.show</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">[</span><span class="token string">'modelValue'</span><span class="token punctuation">,</span> <span class="token string">'formattedValue'</span><span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h-output</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+
+
+
+</mdjs-preview>
+<blockquote>
+<p>The options object holds a fallback value that shows what should be presented on
+screen when the user input resulted in an invalid <code>modelValue</code>.</p>
+</blockquote>
+<h3 id="serializers-and-deserializers"><a class="anchor" href="#serializers-and-deserializers"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Serializers and deserializers</h3>
+<p>A serializer converts the <code>modelValue</code> to a <code>serializedValue</code>. In this example, we decide we want to store the user input to our hypothetical database, but by parsing it with radix 8 first.</p>
+<p>A deserializer converts a value, for example one received from an API, to a <code>modelValue</code>. This can be useful for prefilling forms with data from APIs.</p>
+<blockquote>
+<p>There is no <code>.deserializedValue</code> property that stays in sync by default.
+You need to call <code>el.deserializer(el.modelValue)</code> manually yourself.</p>
+</blockquote>
+<mdjs-preview mdjs-story-name="deserializers">
+
+
+
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">deserializers</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">const</span> <span class="token function-variable function">mySerializer</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">modelValue<span class="token punctuation">,</span> options</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>modelValue<span class="token punctuation">,</span> <span class="token number">8</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword">const</span> <span class="token function-variable function">myDeserializer</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">myValue<span class="token punctuation">,</span> options</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> <span class="token keyword">new</span> <span class="token class-name">Number</span><span class="token punctuation">(</span>myValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-input</span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Date Example<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Uses .(de)serializer to restore serialized modelValues<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">.parser</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token parameter">viewValue</span> <span class="token arrow operator">=&gt;</span> <span class="token known-class-name class-name">Number</span><span class="token punctuation">(</span>viewValue<span class="token punctuation">.</span><span class="token method function property-access">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex"><span class="token char-class"><span class="token char-class-punctuation punctuation">[</span><span class="token char-class-negation operator">^</span><span class="token range">0<span class="token range-punctuation operator">-</span>9</span><span class="token char-class-punctuation punctuation">]</span></span></span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">.serializer</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>mySerializer<span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">.deserializer</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>myDeserializer<span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">.modelValue</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token number">1234567890</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lion-input</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h-output</span> <span class="token attr-name">.show</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">[</span><span class="token string">'modelValue'</span><span class="token punctuation">,</span> <span class="token string">'serializedValue'</span><span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h-output</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+
+
+
+</mdjs-preview>
+<h3 id="preprocessors"><a class="anchor" href="#preprocessors"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Preprocessors</h3>
+<p>A preprocessor converts the user input immediately on input.
+This makes it useful for preventing invalid input or doing other processing tasks before the viewValue hits the parser.</p>
+<p>In the example below, we do not allow you to write digits.</p>
+<mdjs-preview mdjs-story-name="preprocessors">
+
+
+
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">preprocessors</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword">const</span> <span class="token function-variable function">preprocess</span> <span class="token operator">=</span> <span class="token parameter">value</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">    <span class="token keyword control-flow">return</span> value<span class="token punctuation">.</span><span class="token method function property-access">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex"><span class="token char-class"><span class="token char-class-punctuation punctuation">[</span><span class="token range">0<span class="token range-punctuation operator">-</span>9</span><span class="token char-class-punctuation punctuation">]</span></span></span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-input</span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Date Example<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Uses .preprocessor to prevent digits<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">.preprocessor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>preprocess<span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lion-input</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h-output</span> <span class="token attr-name">.show</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">[</span><span class="token string">'modelValue'</span><span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h-output</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+
+
+
+</mdjs-preview>
+<h3 id="live-formatters"><a class="anchor" href="#live-formatters"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Live formatters</h3>
+<p>Live formatters are a specific type of preprocessor, that format a view value during typing.
+Examples:</p>
+<ul>
+<li>a phone number that, during typing formats <code>+316</code> as <code>+31 6</code></li>
+<li>a date that follows a date mask and automatically inserts '-' characters</li>
+</ul>
+<p>Type '6' in the example below and see that a space will be added and the caret in the text box
+will be automatically moved along.</p>
+<mdjs-preview mdjs-story-name="liveFormatters">
+
+
+
+<pre class="language-js"><code class="language-js code-highlight"><span class="code-line"><span class="token keyword module">export</span> <span class="token keyword">const</span> <span class="token function-variable function">liveFormatters</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span><span class="code-line">  <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-input</span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Live Format<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">.modelValue</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">new</span> <span class="token class-name">Unparseable</span><span class="token punctuation">(</span><span class="token string">'+31'</span><span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">help-text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Uses .preprocessor to format during typing<span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">.preprocessor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">(</span><span class="token parameter">viewValue<span class="token punctuation">,</span> <span class="token punctuation">{</span> currentCaretIndex<span class="token punctuation">,</span> prevViewValue <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span></span></span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag"><span class="token attr-value"><span class="token interpolation">        <span class="token keyword control-flow">return</span> <span class="token function">liveFormatPhoneNumber</span><span class="token punctuation">(</span>viewValue<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+</span></span></span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag"><span class="token attr-value"><span class="token interpolation">          <span class="token literal-property property">regionCode</span><span class="token operator">:</span> <span class="token string">'NL'</span><span class="token punctuation">,</span>
+</span></span></span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag"><span class="token attr-value"><span class="token interpolation">          <span class="token literal-property property">formatStrategy</span><span class="token operator">:</span> <span class="token string">'international'</span><span class="token punctuation">,</span>
+</span></span></span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag"><span class="token attr-value"><span class="token interpolation">          currentCaretIndex<span class="token punctuation">,</span>
+</span></span></span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag"><span class="token attr-value"><span class="token interpolation">          prevViewValue<span class="token punctuation">,</span>
+</span></span></span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag"><span class="token attr-value"><span class="token interpolation">        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span></span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag"><span class="token attr-value"><span class="token interpolation">      <span class="token punctuation">}</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>lion-input</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h-output</span> <span class="token attr-name">.show</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token punctuation">[</span><span class="token string">'modelValue'</span><span class="token punctuation">]</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h-output</span><span class="token punctuation">&gt;</span></span>
+</span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">  </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+</span><span class="code-line"><span class="token punctuation">}</span><span class="token punctuation">;</span>
+</span></code></pre>
+
+
+
+</mdjs-preview>
+<p>Note that these live formatters need to make an educated guess based on the current (incomplete) view
+value what the users intentions are. When implemented correctly, they can create a huge improvement
+in user experience.
+Next to a changed viewValue, they are also responsible for taking care of the
+caretIndex. For instance, if <code>+316</code> is changed to <code>+31 6</code>, the caret needs to be moved one position
+to the right (to compensate for the extra inserted space).</p>
+<h4 id="when-to-use-a-live-formatter-and-when-a-regular-formatter"><a class="anchor" href="#when-to-use-a-live-formatter-and-when-a-regular-formatter"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>When to use a live formatter and when a regular formatter?</h4>
+<p>Although it might feel more logical to configure live formatters inside the <code>.formatter</code> function,
+it should be configured inside the <code>.preprocessor</code> function. The table below shows differences
+between the two mentioned methods</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th align="left">Function</th><th align="left">Value type recieved</th><th align="left">Reflected back to user on</th><th align="left">Supports incomplete values</th><th align="left">Supports caret index</th></tr></thead><tbody><tr><td align="left">.formatter</td><td align="left">modelValue</td><td align="left">blur (leave)</td><td align="left">No</td><td align="left">No</td></tr><tr><td align="left">.preprocessor</td><td align="left">viewValue</td><td align="left">keyup (live)</td><td align="left">Yes</td><td align="left">Yes</td></tr></tbody></table>
+<h2 id="flow-diagrams"><a class="anchor" href="#flow-diagrams"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Flow Diagrams</h2>
+<p>Below we show three flow diagrams to show the flow of formatting, serializing and parsing user input, with the example of a date input:</p>
+<h3 id="standard-flow"><a class="anchor" href="#standard-flow"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Standard flow</h3>
+<p>Where a user changes the input with their keyboard:</p>
+<p><img src="../../../../229e98d7.svg" alt="Standard flow" rocket-image="responsive" title="Standard flow"></p>
+<h3 id="unparseable-flow"><a class="anchor" href="#unparseable-flow"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Unparseable flow</h3>
+<p>Where a user sets the input to something that is not parseable by the parser:</p>
+<p><img src="../../../../62ce9c98.svg" alt="Unparseable flow" rocket-image="responsive" title="Unparseable flow"></p>
+<h3 id="imperative--programmatic-flow"><a class="anchor" href="#imperative--programmatic-flow"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Imperative / programmatic flow</h3>
+<p>Where the developer sets the modelValue of the input programmatically:</p>
+<p><img src="../../../../78a4f095.svg" alt="Imperative flow" rocket-image="responsive" title="Imperative flow"></p>
+        
+      
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/fundamentals/systems/form/formatting-and-parsing.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../../../e3e8d065.js"></script>
+<script type="module" src="../../../../a055aa7d.js" inject-service-worker=""></script>
+<script type="module" src="../../../../b6adfbc2.js" mdjs-setup=""></script>
+
+</body></html>

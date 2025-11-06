@@ -1,0 +1,1 @@
+const s=Symbol.for("lion::SingletonManagerClassStorage"),t=globalThis||window;const a=new class{constructor(){this._map=t[s]?t[s]:t[s]=new Map}set(s,t){this.has(s)||this._map.set(s,t)}get(s){return this._map.get(s)}has(s){return this._map.has(s)}};export{a as s};

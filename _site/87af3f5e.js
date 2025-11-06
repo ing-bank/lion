@@ -1,0 +1,1 @@
+import a from"./40b7aab4.js";var e={...a,error:{...a.error,IsDate:"Please enter a valid date (MM/DD/YYYY)."},warning:{...a.warning,IsDate:"Please enter a valid date (MM/DD/YYYY)."}};export{e as default};

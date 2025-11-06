@@ -1,0 +1,62 @@
+/** BLOG OVERVIEW **************************************************************************/
+
+body[layout='layout-blog-details'] rocket-navigation > ul > li.current::before {
+  display: none;
+}
+
+body[layout='layout-blog-details'] #sidebar-nav li.anchor a:hover::before {
+  display: none;
+}
+
+.articles {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 40px;
+
+  /* css flexbox gap workaround https://coryrylan.com/blog/css-gap-space-with-flexbox */
+  --gap: 60px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  margin: calc(-1 * var(--gap)) 0 0 calc(-1 * var(--gap));
+  width: calc(100% + var(--gap));
+
+  align-items: flex-start;
+}
+
+.articles article {
+  flex: 0 1 360px;
+  margin: var(--gap) 0 0 var(--gap);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.articles article h2 {
+  margin: 0;
+  border: none;
+  padding-top: 1rem;
+}
+
+.articles article .thumbnail {
+  display: block;
+  height: 200px;
+}
+
+.articles article .read {
+  display: block;
+  text-align: right;
+}
+
+.articles article .content {
+  padding: 10px;
+}
+
+.articles article:hover {
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (min-width: 1024px) {
+  body[layout='layout-blog-details'] #sidebar {
+    display: block;
+  }
+}

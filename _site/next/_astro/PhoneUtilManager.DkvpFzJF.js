@@ -1,0 +1,1 @@
+import{_ as a}from"./preload-helper.4zY6-HO4.js";let t;class i{static async loadLibPhoneNumber(){const o=await a(()=>import("./index-esm.BEEDzKyl.js"),[]);return this.PhoneUtil={...o},t(void 0),o}static get isLoaded(){return!!this.PhoneUtil}}i.loadComplete=new Promise(e=>{t=e});i.loadLibPhoneNumber();export{i as P};

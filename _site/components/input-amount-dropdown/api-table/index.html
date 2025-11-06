@@ -1,0 +1,2336 @@
+<!DOCTYPE html><html lang="en-GB" dir="ltr"><head>
+  
+    <script src="../../../5e5d8adb.js"></script>
+
+  
+    
+
+  
+
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Input Amount Dropdown: API Table: Lion</title>
+<meta property="og:title" content="Input Amount Dropdown: API Table: Lion">
+
+<meta name="generator" content="rocket 0.1">
+<link rel="canonical" href="http://localhost:8080/components/input-amount-dropdown/api-table/">
+
+
+
+<meta name="description" content="Fundamental white label web components for building your design system">
+<meta property="og:description" content="Fundamental white label web components for building your design system">
+
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../../assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../../assets/favicon-16x16.png">
+<link rel="manifest" href="../../../assets/webmanifest.json">
+<link rel="mask-icon" href="../../../assets/safari-pinned-tab.svg" color="#3f93ce">
+<meta name="msapplication-TileColor" content="#1d3557">
+<meta name="theme-color" content="#1d3557">
+
+  
+    <meta property="og:site_name" content="Lion">
+<meta property="og:type" content="website">
+
+<meta property="og:image" content="http://localhost:8080/bfb708cb.png">
+<meta property="og:url" content="http://localhost:8080/components/input-amount-dropdown/api-table/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=optional" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=optional" rel="stylesheet">
+
+  
+    <link rel="stylesheet" href="../../../db12e37b.css">
+<link rel="stylesheet" href="../../../0f4765a3.css">
+<link rel="stylesheet" href="../../../ac2ea3b8.css">
+<link rel="stylesheet" href="../../../dbad39b3.css">
+
+  
+    <noscript><link rel="stylesheet" href="/_merged_assets/_static/noscript.css"/></noscript>
+
+  
+    <link rel="stylesheet" href="../../../b1403e10.css">
+  
+
+<link rel="preload" href="../../../e3e8d065.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../962426a7.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../a055aa7d.js" as="script" crossorigin="anonymous" />
+</head>
+
+  
+
+  
+  <body layout="layout-sidebar">
+  
+
+    
+      <header id="main-header">
+  <div class="content-area">
+    
+      <button id="mobile-menu-trigger" data-action="trigger-mobile-menu">
+	<span class="sr-only">Show Menu</span>
+	      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon">
+        <path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path>
+      </svg>
+
+</button>
+
+    
+      
+	<a class="logo-link" href="/">
+  <img src="../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+
+    
+      
+    
+      
+  <a href="/fundamentals/" class="
+          
+          
+        ">Fundamentals</a>
+  <a href="/guides/" class="
+          
+          
+        ">Guides</a>
+  <a href="/components/" class="
+          
+           active 
+        ">Components</a>
+  <a href="/blog/" class="
+          
+          
+        ">Blog</a>
+
+    
+      <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+
+    
+      
+	<a class="social-link" href="https://github.com/ing-bank/lion" aria-label="Lion on GitHub" rel="noopener noreferrer" target="_blank">
+		<span class="sr-only">GitHub</span>
+		
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none">
+  <title>GitHub</title>
+  <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
+</svg>
+
+		
+	</a>
+
+    
+  </div>
+</header>
+
+    
+
+    
+  <div id="content-wrapper">
+    <div class="content-area">
+      
+        <rocket-drawer id="sidebar">
+  <nav slot="content" id="sidebar-nav">
+    
+      <a class="logo-link" href="/">
+  <img src="../../../d5fa0103.svg" alt="Lion Logo">
+  <span>Lion</span>
+</a>
+
+
+    
+      <rocket-navigation>
+  <ul><li class="menu-item">
+<a href="/components/accordion/">Accordion</a>
+<ul><li class="menu-item">
+<a href="/components/accordion/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/accordion/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/accordion/reference/">Reference</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/accordion/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/button/">Button</a>
+<ul><li class="menu-item">
+<a href="/components/button/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/button/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/button/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/button/api-table/">API Table</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/button/extensions/">Extensions</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/calendar/">Calendar</a>
+<ul><li class="menu-item">
+<a href="/components/calendar/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/calendar/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/calendar/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/checkbox-group/">Checkbox Group</a>
+<ul><li class="menu-item">
+<a href="/components/checkbox-group/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/checkbox-group/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/checkbox-group/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/collapsible/">Collapsible</a>
+<ul><li class="menu-item">
+<a href="/components/collapsible/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/collapsible/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/collapsible/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/collapsible/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/combobox/">Combobox</a>
+<ul><li class="menu-item">
+<a href="/components/combobox/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/combobox/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/combobox/extensions/">Extensions</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/combobox/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/dialog/">Dialog</a>
+<ul><li class="menu-item">
+<a href="/components/dialog/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/dialog/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/dialog/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/drawer/">Drawer</a>
+<ul><li class="menu-item">
+<a href="/components/drawer/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/drawer/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/drawer/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/fieldset/">Fieldset</a>
+<ul><li class="menu-item">
+<a href="/components/fieldset/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/fieldset/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/fieldset/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/form/">Form</a>
+<ul><li class="menu-item">
+<a href="/components/form/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/form/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/form/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/icon/">Icon</a>
+<ul><li class="menu-item">
+<a href="/components/icon/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/icon/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/icon/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item active">
+<a href="/components/input-amount-dropdown/">Input Amount Dropdown</a>
+<ul><li class="menu-item">
+<a href="/components/input-amount-dropdown/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item current">
+<a href="/components/input-amount-dropdown/api-table/">API Table</a>
+<ul>
+  <li class="menu-item anchor">
+    <a href="#class-lioninputamountdropdown-lion-input-amount-dropdown" class="anchor">class: , </a>
+  </li>
+</ul>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-amount/">Input Amount</a>
+<ul><li class="menu-item">
+<a href="/components/input-amount/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-amount/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-amount/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-date/">Input Date</a>
+<ul><li class="menu-item">
+<a href="/components/input-date/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-date/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-date/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-datepicker/">Input Datepicker</a>
+<ul><li class="menu-item">
+<a href="/components/input-datepicker/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-datepicker/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-datepicker/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-email/">Input Email</a>
+<ul><li class="menu-item">
+<a href="/components/input-email/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-email/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-email/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-file/">Input File</a>
+<ul><li class="menu-item">
+<a href="/components/input-file/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-file/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-file/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-iban/">Input Iban</a>
+<ul><li class="menu-item">
+<a href="/components/input-iban/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-iban/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-iban/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-range/">Input Range</a>
+<ul><li class="menu-item">
+<a href="/components/input-range/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-range/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-range/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-stepper/">Input Stepper</a>
+<ul><li class="menu-item">
+<a href="/components/input-stepper/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-stepper/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-stepper/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-tel-dropdown/">Input Tel Dropdown</a>
+<ul><li class="menu-item">
+<a href="/components/input-tel-dropdown/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-tel-dropdown/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-tel-dropdown/extensions/">Extensions</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-tel-dropdown/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input-tel/">Input Tel</a>
+<ul><li class="menu-item">
+<a href="/components/input-tel/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-tel/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input-tel/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/input/">Input</a>
+<ul><li class="menu-item">
+<a href="/components/input/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/input/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/listbox/">Listbox</a>
+<ul><li class="menu-item">
+<a href="/components/listbox/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/listbox/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/listbox/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/pagination/">Pagination</a>
+<ul><li class="menu-item">
+<a href="/components/pagination/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/pagination/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/pagination/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/progress-indicator/">Progress Indicator</a>
+<ul><li class="menu-item">
+<a href="/components/progress-indicator/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/progress-indicator/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/progress-indicator/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/radio-group/">Radio Group</a>
+<ul><li class="menu-item">
+<a href="/components/radio-group/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/radio-group/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/radio-group/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/select-rich/">Select Rich</a>
+<ul><li class="menu-item">
+<a href="/components/select-rich/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/select-rich/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/select-rich/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/select-rich/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/select/">Select</a>
+<ul><li class="menu-item">
+<a href="/components/select/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/select/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/select/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/steps/">Steps</a>
+<ul><li class="menu-item">
+<a href="/components/steps/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/steps/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/steps/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/switch/">Switch</a>
+<ul><li class="menu-item">
+<a href="/components/switch/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/switch/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/switch/reference/">Reference</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/switch/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/tabs/">Tabs</a>
+<ul><li class="menu-item">
+<a href="/components/tabs/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tabs/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tabs/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tabs/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/textarea/">Textarea</a>
+<ul><li class="menu-item">
+<a href="/components/textarea/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/textarea/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/textarea/api-table/">API Table</a>
+
+</li></ul>
+</li>
+<li class="menu-item">
+<a href="/components/tooltip/">Tooltip</a>
+<ul><li class="menu-item">
+<a href="/components/tooltip/overview/">Overview</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tooltip/use-cases/">Use Cases</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tooltip/examples/">Examples</a>
+
+</li>
+<li class="menu-item">
+<a href="/components/tooltip/api-table/">API Table</a>
+
+</li></ul>
+</li></ul>
+  <div class="sidebar-bottom">
+  <hr> <launch-dark-switch class="light-dark-switch" label="Toggle darkmode">Toggle darkmode</launch-dark-switch>
+
+  
+    <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+  
+</div>
+
+</rocket-navigation>
+
+    
+  </nav>
+</rocket-drawer>
+
+      
+      
+        <main class="markdown-body">
+  
+    <h1 id="input-amount-dropdown-api-table"><a class="anchor" href="#input-amount-dropdown-api-table"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Input Amount Dropdown: API Table</h1>
+<h2 id="class-lioninputamountdropdown-lion-input-amount-dropdown"><a class="anchor" href="#class-lioninputamountdropdown-lion-input-amount-dropdown"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>class: <code>LionInputAmountDropdown</code>, <code>lion-input-amount-dropdown</code></h2>
+<h3 id="fields"><a class="anchor" href="#fields"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Fields</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Type</th><th>Default</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>allowCrossRootRegistration</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>To encourage accessibility best practices, `form-element-register` events
+do not pierce through shadow roots. This forces the developer to create form groups and fieldsets that automatically allow the creation of accessible relationships in the same dom tree.
+Use this option if you know what you're doing. It will then be possible to nest FormControls
+inside shadow dom. See <a href="https://lion.js.org/fundamentals/rationales/accessibility/#shadow-roots-and-accessibility">https://lion.js.org/fundamentals/rationales/accessibility/#shadow-roots-and-accessibility</a></td><td>LionField</td></tr><tr><td><code>allowedCurrencies</code></td><td>public</td><td><code>CurrencyCode[]</code></td><td><code>[]</code></td><td>Regions that are allowed to be selected in the dropdown.</td><td></td></tr><tr><td><code>autocomplete</code></td><td>public</td><td><code>string | undefined</code></td><td><code>undefined</code></td><td>Delegates this property to input/textarea/select.</td><td>NativeTextFieldMixin</td></tr><tr><td><code>autofocus</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td></td><td>LionField</td></tr><tr><td><code>currency</code></td><td>public</td><td><code>string | undefined</code></td><td><code>undefined</code></td><td></td><td>LionInputAmount</td></tr><tr><td><code>defaultValidators</code></td><td>public</td><td><code>Validator[]</code></td><td><code>[new CurrencyAndAmount()]</code></td><td>Used by Subclassers to add default Validators to a particular FormControl.
+A date input for instance, always needs the isDate validator.</td><td>LionField</td></tr><tr><td><code>deserializer</code></td><td>public</td><td></td><td><code>deserializer</code></td><td>Converts `.serializedValue` to `.modelValue`
+For instance, an iso formatted date string to a Date object</td><td>LionField</td></tr><tr><td><code>dirty</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>True when user has changed the value of the field.</td><td>LionField</td></tr><tr><td><code>disabled</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td></td><td>LionField</td></tr><tr><td><code>fieldName</code></td><td>public</td><td><code>string</code></td><td></td><td>Will be used in validation messages to refer to the current field</td><td>LionField</td></tr><tr><td><code>filled</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>True when the modelValue is non-empty (see _isEmpty in FormControlMixin)</td><td>LionField</td></tr><tr><td><code>focused</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>Whether the focusable element within (`._focusableNode`) is focused.
+Reflects to attribute '[focused]' as a styling hook</td><td>LionField</td></tr><tr><td><code>focusedVisible</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>Whether the focusable element within (`._focusableNode`) matches ':focus-visible'
+Reflects to attribute '[focused-visible]' as a styling hook
+See: <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible">https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible</a></td><td>LionField</td></tr><tr><td><code>formatOn</code></td><td>protected</td><td><code>string</code></td><td><code>'change'</code></td><td>Event that will trigger formatting (more precise, visual update of the view, so the
+user sees the formatted value)
+Default: 'change'</td><td>LionField</td></tr><tr><td><code>formatOptions</code></td><td>public</td><td></td><td><code>({ mode: 'auto' })</code></td><td>Configuration object that will be available inside the formatter function</td><td>LionField</td></tr><tr><td><code>formattedValue</code></td><td>public</td><td><code>string|undefined</code></td><td><code>undefined</code></td><td>The view value is the result of the formatter function (when available).
+The result will be stored in the native _inputNode (usually an input[type=text]).
+
+Examples:
+- For a date input, this would be '20/01/1999' (dependent on locale).
+- For a number input, this could be '1,234.56' (a String representation of modelValue
+1234.56)</td><td>LionField</td></tr><tr><td><code>formatter</code></td><td>public</td><td></td><td><code>formatAmount</code></td><td>Converts modelValue to formattedValue (formattedValue will be synced with
+`._inputNode.value`)
+For instance, a Date object to a localized date.</td><td>LionField</td></tr><tr><td><code>hasFeedbackFor</code></td><td>public</td><td><code>ValidationType[]</code></td><td><code>[]</code></td><td>As soon as validation happens (after modelValue/validators/validator param change), this
+array is updated with the active ValidationTypes ('error'|'warning'|'success'|'info' etc.).
+Notice the difference with `.showsFeedbackFor`, which filters `.hasFeedbackFor` based on
+`.feedbackCondition()`.
+
+For styling purposes, will be reflected to [has-feedback-for="error warning"]. This can
+be useful for subtle visual feedback on keyup, like a red/green border around an input.</td><td>LionField</td></tr><tr><td><code>helpText</code></td><td>public</td><td><code>string</code></td><td></td><td>The helpt text for the input node.
+When no light dom defined via [slot=help-text], this value will be used</td><td>LionField</td></tr><tr><td><code>isPending</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>Flag indicating whether async validation is pending.
+Creates attribute [is-pending] as a styling hook</td><td>LionField</td></tr><tr><td><code>label</code></td><td>public</td><td><code>string</code></td><td></td><td>The label text for the input node.
+When no light dom defined via [slot=label], this value will be used.</td><td>LionField</td></tr><tr><td><code>labelSrOnly</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>The label will only be visible for srceen readers when true</td><td>LionField</td></tr><tr><td><code>locale</code></td><td>public</td><td><code>string | undefined</code></td><td><code>undefined</code></td><td></td><td>LionInputAmount</td></tr><tr><td><code>modelValue</code></td><td>public</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>name</code></td><td>public</td><td><code>string</code></td><td><code>''</code></td><td>The name the element will be registered with to the .formElements collection
+of the parent. Also, it serves as the key of key/value pairs in
+modelValue/serializedValue objects</td><td>LionField</td></tr><tr><td><code>operationMode</code></td><td>public</td><td><code>OperationMode</code></td><td></td><td>Types of input interaction of the FormControl (for instance 'enter'|'select'|'upload')</td><td>LionField</td></tr><tr><td><code>parser</code></td><td>public</td><td></td><td><code>parseAmount</code></td><td>Converts viewValue to modelValue
+For instance, a localized date to a Date Object</td><td>LionField</td></tr><tr><td><code>placeholder</code></td><td>public</td><td><code>string</code></td><td><code>''</code></td><td></td><td>LionInput</td></tr><tr><td><code>preferredCurrencies</code></td><td>public</td><td><code>CurrencyCode[]</code></td><td><code>[]</code></td><td>Regions that will be shown on top of the dropdown</td><td></td></tr><tr><td><code>prefilled</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>True when user has left non-empty field or input is prefilled.
+The name must be seen from the point of view of the input field:
+once the user enters the input field, the value is non-empty.</td><td>LionField</td></tr><tr><td><code>readOnly</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>A Boolean attribute which, if present, indicates that the user should not be able to edit
+the value of the input. The difference between disabled and readonly is that read-only
+controls can still function, whereas disabled controls generally do not function as
+controls until they are enabled.
+(From: <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly">https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-readonly</a>)</td><td>LionField</td></tr><tr><td><code>refs</code></td><td>public</td><td><code>object</code></td><td><code>{ /** @type {DropdownRef} */ dropdown: /** @type {DropdownRef} */ (createRef()), }</code></td><td></td><td></td></tr><tr><td><code>selectionEnd</code></td><td>public</td><td><code>number</code></td><td></td><td></td><td>NativeTextFieldMixin</td></tr><tr><td><code>selectionStart</code></td><td>public</td><td><code>number</code></td><td></td><td></td><td>NativeTextFieldMixin</td></tr><tr><td><code>serializedValue</code></td><td>public</td><td><code>string|undefined</code></td><td><code>undefined</code></td><td>The serialized version of the model value.
+This value exists for maximal compatibility with the platform API.
+The serialized value can be an interface in context where data binding is not
+supported and a serialized string needs to be set.
+
+Examples:
+- For a date input, this would be the iso format of a date, e.g. '1999-01-20'.
+- For a number input this would be the String representation of a float ('1234.56'
+instead of 1234.56)
+
+When no parser is available, the value is usually the same as the formattedValue
+(being _inputNode.value)</td><td>LionField</td></tr><tr><td><code>serializer</code></td><td>public</td><td></td><td><code>serializer</code></td><td>Converts `.modelValue` to `.serializedValue`
+For instance, a Date object to an iso formatted date string</td><td>LionField</td></tr><tr><td><code>showsFeedbackFor</code></td><td>public</td><td><code>ValidationType[]</code></td><td><code>[]</code></td><td>Based on outcome of feedbackCondition, this array decides what ValidationTypes should be
+shown in validationFeedback, based on meta data like interaction states.
+
+For styling purposes, it reflects it `[shows-feedback-for="error warning"]`</td><td>LionField</td></tr><tr><td><code>slots</code></td><td>public</td><td></td><td></td><td>Adds "._feedbackNode" as described below</td><td>LionField</td></tr><tr><td><code>submitted</code></td><td>public</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>touched</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>True when user has focused and left(blurred) the field.</td><td>LionField</td></tr><tr><td><code>type</code></td><td>public</td><td><code>string</code></td><td><code>'text'</code></td><td></td><td>LionInput</td></tr><tr><td><code>validationStates</code></td><td>public</td><td><code>ValidationStates</code></td><td><code>{}</code></td><td>The outcome of a validation 'round'. Keyed by ValidationType and Validator name</td><td>LionField</td></tr><tr><td><code>validators</code></td><td>public</td><td><code>Validator[]</code></td><td><code>[]</code></td><td>Used by Application Developers to add Validators to a FormControl.</td><td>LionField</td></tr><tr><td><code>value</code></td><td>public</td><td></td><td></td><td>The view value. Will be delegated to `._inputNode.value`
+
+Note: Overrides the implementation from FormatMixin</td><td>LionField</td></tr><tr><td><code>_allCurrenciesLabel</code></td><td>protected</td><td><code>string</code></td><td><code>''</code></td><td>Group label for all countries, when preferredCountries are shown</td><td></td></tr><tr><td><code>_allowedOrAllCurrencies</code></td><td>protected</td><td><code>CurrencyCode[]</code></td><td></td><td>Used for rendering the region/currency list</td><td></td></tr><tr><td><code>_allValidators</code></td><td>protected</td><td><code>(Validator | MetaValidator)[]</code></td><td></td><td>Combination of validators provided by Application Developer and the default validators</td><td>LionField</td></tr><tr><td><code>_ariaDescribedNodes</code></td><td>public</td><td><code>HTMLElement[]</code></td><td><code>[]</code></td><td>Contains all elements that should end up in aria-describedby of `._inputNode`</td><td>LionField</td></tr><tr><td><code>_ariaLabelledNodes</code></td><td>public</td><td><code>HTMLElement[]</code></td><td><code>[]</code></td><td>Contains all elements that should end up in aria-labelledby of `._inputNode`</td><td>LionField</td></tr><tr><td><code>_currencyDisplayNodeSlot</code></td><td>protected</td><td><code>string</code></td><td><code>'after'</code></td><td>The slot to put the currency display node in. Can be 'prefix', 'suffix', 'before' and 'after'.
+Default will be 'after'.</td><td>LionInputAmount</td></tr><tr><td><code>_currencyUtil</code></td><td>protected</td><td></td><td><code>currencyUtil</code></td><td></td><td></td></tr><tr><td><code>_dropdownSlot</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_feedbackConditionMeta</code></td><td>protected</td><td></td><td></td><td>Allows Subclassers to add meta info for feedbackCondition</td><td>LionField</td></tr><tr><td><code>_feedbackNode</code></td><td>protected</td><td></td><td></td><td>Element where validation feedback will be rendered to</td><td>LionField</td></tr><tr><td><code>_focusableNode</code></td><td>protected</td><td><code>HTMLElement</code></td><td></td><td>The focusable element:
+could be an input, textarea, select, button or any other element with tabindex &gt; -1</td><td>LionField</td></tr><tr><td><code>_helpTextNode</code></td><td>protected</td><td></td><td></td><td>Element where help text will be rendered to</td><td>LionField</td></tr><tr><td><code>_inputId</code></td><td>protected</td><td><code>string</code></td><td></td><td>Unique id that can be used in all light dom</td><td>LionField</td></tr><tr><td><code>_inputNode</code></td><td>protected</td><td><code>HTMLInputElement | HTMLTextAreaElement</code></td><td></td><td>The interactive (form) element. Can be a native element like input/textarea/select or
+an element with tabindex &gt; -1</td><td>LionField</td></tr><tr><td><code>_isHandlingUserInput</code></td><td>protected</td><td><code>boolean</code></td><td><code>false</code></td><td>Flag that will be set when user interaction takes place (for instance after an 'input'
+event). Will be added as meta info to the `model-value-changed` event. Depending on
+whether a user is interacting, formatting logic will be handled differently.</td><td>LionField</td></tr><tr><td><code>_isPasting</code></td><td>protected</td><td><code>boolean</code></td><td><code>false</code></td><td>Whether the user is pasting content. Allows Subclassers to do this in their subclass:</td><td>LionField</td></tr><tr><td><code>_isRepropagationEndpoint</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>By default, a field with _repropagationRole 'choice-group' will act as an
+'endpoint'. This means it will be considered as an individual field: for
+a select, individual options will not be part of the formPath. They
+will.
+Similarly, components that (a11y wise) need to be fieldsets, but 'interaction wise'
+(from Application Developer perspective) need to be more like fields
+(think of an amount-input with a currency select box next to it), can set this
+to true to hide private internals in the formPath.</td><td>LionField</td></tr><tr><td><code>_labelNode</code></td><td>protected</td><td></td><td></td><td>Element where label will be rendered to</td><td>LionField</td></tr><tr><td><code>_leaveEvent</code></td><td>protected</td><td><code>string</code></td><td><code>'blur'</code></td><td>The event that triggers the touched state</td><td>LionField</td></tr><tr><td><code>_parentFormGroup</code></td><td>protected</td><td><code>FormRegistrarHost | undefined</code></td><td><code>undefined</code></td><td>The registrar this FormControl registers to, Usually a descendant of FormGroup or
+ChoiceGroup</td><td>LionField</td></tr><tr><td><code>_preferredCurrenciesLabel</code></td><td>protected</td><td><code>string</code></td><td><code>''</code></td><td>Group label for preferred countries, when preferredCountries are shown</td><td></td></tr><tr><td><code>_repropagationRole</code></td><td>public</td><td><code>'child'|'choice-group'|'fieldset'</code></td><td><code>'child'</code></td><td>Based on the role, details of handling model-value-changed repropagation differ.</td><td>LionField</td></tr><tr><td><code>_requestedToBeDisabled</code></td><td>protected</td><td><code>boolean</code></td><td><code>false</code></td><td></td><td>LionField</td></tr><tr><td><code>_templateDataDropdown</code></td><td>protected</td><td><code>TemplateDataForDropdownInputAmount</code></td><td></td><td>This method provides a TemplateData object to be fed to pure template functions, a.k.a.
+Pure Templates™. The goal is to totally decouple presentation from logic here, so that
+Subclassers can override all content without having to loose private info contained
+within the template function that was overridden.
+
+Subclassers would need to make sure all the contents of the TemplateData object are implemented
+by making sure they are coupled to the right 'ref' ([data-ref=dropdown] in this example),
+with the help of lit's spread operator directive.
+To enhance this process, the TemplateData object is completely typed. Ideally, this would be
+enhanced by providing linters that make sure all of their required members are implemented by
+a Subclasser.
+When a Subclasser wants to add more data, this can be done via:</td><td></td></tr><tr><td><code>_valueChangedEvent</code></td><td>protected</td><td><code>string</code></td><td><code>'model-value-changed'</code></td><td>The event that triggers the dirty state</td><td>LionField</td></tr><tr><td><code>_visibleMessagesAmount</code></td><td>protected</td><td><code>number</code></td><td><code>1</code></td><td>The amount of feedback messages that will visible in LionValidationFeedback</td><td>LionField</td></tr></tbody></table>
+<h3 id="methods"><a class="anchor" href="#methods"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Methods</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Description</th><th>Parameters</th><th>Return</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>addToAriaDescribedBy</code></td><td>public</td><td>Allows to add element references to aria-describedby attribute.</td><td><code>element: HTMLElement, { idPrefix = '', reorder = true }, customConfig: {idPrefix?:string; reorder?: boolean}</code></td><td></td><td>LionField</td></tr><tr><td><code>addToAriaLabelledBy</code></td><td>public</td><td>Allows to add extra element references to aria-labelledby attribute.</td><td><code>element: HTMLElement, { idPrefix = '', reorder = true }, customConfig: {idPrefix?:string; reorder?: boolean}</code></td><td></td><td>LionField</td></tr><tr><td><code>attachShadow</code></td><td>public</td><td></td><td><code>options: ShadowRootInit</code></td><td><code>ShadowRoot</code></td><td>LionField</td></tr><tr><td><code>blur</code></td><td>public</td><td>Calls `blur()` on focusable element within</td><td></td><td></td><td>LionField</td></tr><tr><td><code>clear</code></td><td>public</td><td>Clears modelValue.
+Interaction states are not cleared (use resetInteractionState for this)</td><td></td><td></td><td>LionField</td></tr><tr><td><code>click</code></td><td>public</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>createScopedElement</code></td><td>public</td><td></td><td><code>tagName</code></td><td></td><td>LionField</td></tr><tr><td><code>defineScopedElement</code></td><td>public</td><td>Defines a scoped element.</td><td><code>tagName: string, classToBeRegistered: typeof HTMLElement</code></td><td></td><td>LionField</td></tr><tr><td><code>feedbackCondition</code></td><td>public</td><td>Allows the Application Developer to specify when a feedback message should be shown</td><td><code>type: string, meta: object, currentCondition: ((type: string, meta: object) =&gt; boolean)</code></td><td><code>boolean</code></td><td>LionField</td></tr><tr><td><code>focus</code></td><td>public</td><td>Calls `focus()` on focusable element within</td><td></td><td></td><td>LionField</td></tr><tr><td><code>initInteractionState</code></td><td>public</td><td>Evaluations performed on connectedCallback.
+This method is public, so it can be called at a later moment (when we need to wait for
+registering children for instance) as well.
+Since this method will be called twice in last mentioned scenario, it must stay idempotent.</td><td></td><td></td><td>LionField</td></tr><tr><td><code>makeRequestToBeDisabled</code></td><td>public</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>preprocessor</code></td><td>public</td><td>Preprocessors could be considered 'live formatters'. Their result is shown to the user
+on keyup instead of after blurring the field. The biggest difference between preprocessors
+and formatters is their moment of execution: preprocessors are run before modelValue is
+computed (and work based on view value), whereas formatters are run after the parser (and
+are based on modelValue)
+Automatically formats code while typing. It depends on a preprocessro that smartly
+updates the viewValue and caret position for best UX.</td><td><code>v: string, opts: FormatOptions &amp; { prevViewValue: string; currentCaretIndex: number }</code></td><td><code>{ viewValue:string; caretIndex:number; }|string|undefined</code></td><td>LionField</td></tr><tr><td><code>removeFromAriaDescribedBy</code></td><td>public</td><td>Allows to remove element references from aria-describedby attribute.</td><td><code>element: HTMLElement</code></td><td></td><td>LionField</td></tr><tr><td><code>removeFromAriaLabelledBy</code></td><td>public</td><td>Allows to remove element references from aria-labelledby attribute.</td><td><code>element: HTMLElement</code></td><td></td><td>LionField</td></tr><tr><td><code>reset</code></td><td>public</td><td>Resets modelValue to initial value.
+Interaction states are cleared</td><td></td><td></td><td>LionField</td></tr><tr><td><code>resetInteractionState</code></td><td>public</td><td>Resets touched and dirty, and recomputes prefilled</td><td></td><td></td><td>LionField</td></tr><tr><td><code>retractRequestToBeDisabled</code></td><td>public</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>updateSync</code></td><td>public</td><td>An abstraction that has the exact same api as `requestUpdate`, but taking
+into account:
+- [member order independence](<a href="https://github.com/webcomponents/gold-standard/wiki/Member-Order-Independence">https://github.com/webcomponents/gold-standard/wiki/Member-Order-Independence</a>)
+- property effects start when all (light) dom has initialized (on firstUpdated)
+- property effects don't interrupt the first meaningful paint
+- compatible with propertyAccessor.`hasChanged`: no manual checks needed or accidentally
+run property effects / events when no change happened
+effects when values didn't change
+All code previously present in requestUpdate can be placed in this method.</td><td><code>name: string, oldValue: ?</code></td><td></td><td>LionField</td></tr><tr><td><code>validate</code></td><td>public</td><td>Triggered by:
+- modelValue change
+- change in the 'validators' array
+- change in the config of an individual Validator
+
+Three situations are handled:
+- a1) the FormControl is empty: further execution is halted. When the Required Validator
+(being mutually exclusive to the other Validators) is applied, it will end up in the
+validation result (as the only Validator, since further execution was halted).
+- a2) there are synchronous Validators: this is the most common flow. When modelValue hasn't
+changed since last async results were generated, 'sync results' are merged with the
+'async results'.
+- a3) there are asynchronous Validators: for instance when server side evaluation is needed.
+Executions are scheduled and awaited and the 'async results' are merged with the
+'sync results'.
+
+- b) there are MetaValidators. After steps a1, a2, or a3 are finished, the holistic
+MetaValidators (evaluating the total result of the 'regular' (a1, a2 and a3) validators)
+will be run...
+
+Situations a2 and a3 are not mutually exclusive and can be triggered within one `validate()`
+call. Situation b will occur after every call.</td><td><code>{ clearCurrentResult = false }, opts: { clearCurrentResult?: boolean }</code></td><td></td><td>LionField</td></tr><tr><td><code>_calculateValues</code></td><td>protected</td><td>Responsible for storing all representations(modelValue, serializedValue, formattedValue
+and value) of the input value. Prevents infinite loops, so all value observers can be
+treated like they will only be called once, without indirectly calling other observers.
+(in fact, some are called twice, but the __preventRecursiveTrigger lock prevents the
+second call from having effect).</td><td><code>{ source }, config: {source:'model'|'serialized'|'formatted'|null}</code></td><td></td><td>LionField</td></tr><tr><td><code>_connectSlotMixin</code></td><td>protected</td><td>Upon connecting slot mixin, we should check if
+the required slot was created by the slot mixin,
+and if so, we should execute the currency changed flow
+which evaluates whether the slot node should be
+removed for invalid currencies</td><td></td><td></td><td>LionField</td></tr><tr><td><code>_dispatchInitialModelValueChangedEvent</code></td><td>protected</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>_dispatchModelValueChangedEvent</code></td><td>protected</td><td>This is wrapped in a distinct method, so that parents can control when the changed event
+is fired. For objects, a deep comparison might be needed.</td><td><code>args: { modelValue: unknown; }[]</code></td><td></td><td>LionField</td></tr><tr><td><code>_enhanceLightDomA11y</code></td><td>protected</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>_enhanceLightDomA11yForAdditionalSlots</code></td><td>protected</td><td>Enhances additional slots(prefix, suffix, before, after) defined by developer.
+
+When boolean attribute data-label or data-description is found,
+the slot element will be connected to the input via aria-labelledby or aria-describedby</td><td><code>additionalSlots: string[]</code></td><td></td><td>LionField</td></tr><tr><td><code>_enhanceLightDomClasses</code></td><td>protected</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>_feedbackTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult</code></td><td>LionField</td></tr><tr><td><code>_getAriaDescriptionElements</code></td><td>protected</td><td>This function exposes descripion elements that a FormGroup should expose to its
+children. See FormGroupMixin.__getAllDescriptionElementsInParentChain()</td><td></td><td><code>Array.&lt;HTMLElement&gt;</code></td><td>LionField</td></tr><tr><td><code>_groupOneTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult</code></td><td>LionField</td></tr><tr><td><code>_groupTwoTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult</code></td><td>LionField</td></tr><tr><td><code>_hasFeedbackVisibleFor</code></td><td>protected</td><td>Used to translate `.hasFeedbackFor` and `.shouldShowFeedbackFor` to `.showsFeedbackFor`</td><td><code>type: string</code></td><td></td><td>LionField</td></tr><tr><td><code>_helpTextTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult</code></td><td>LionField</td></tr><tr><td><code>_initModelValueBasedOnDropdown</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_inputGroupAfterTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult</code></td><td>LionField</td></tr><tr><td><code>_inputGroupBeforeTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult</code></td><td>LionField</td></tr><tr><td><code>_inputGroupInputTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult</code></td><td>LionField</td></tr><tr><td><code>_inputGroupPrefixTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult | nothing</code></td><td>LionField</td></tr><tr><td><code>_inputGroupSuffixTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult | nothing</code></td><td>LionField</td></tr><tr><td><code>_inputGroupTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult</code></td><td>LionField</td></tr><tr><td><code>_isEmpty</code></td><td>protected</td><td>Used for Required validation and computation of interaction states.
+We need to override this, because we prefill the input with the currency code, but for proper UX,
+we don't consider this as having interaction state `prefilled`</td><td><code>modelValue: string</code></td><td><code>boolean</code></td><td>LionField</td></tr><tr><td><code>_isPrivateSlot</code></td><td>protected</td><td></td><td><code>slotName: string</code></td><td><code>boolean</code></td><td>LionField</td></tr><tr><td><code>_iStateOnLeave</code></td><td>protected</td><td>Sets touched value to true and reevaluates prefilled state.
+When false, on next interaction, user will start with a clean state.</td><td></td><td></td><td>LionField</td></tr><tr><td><code>_iStateOnValueChange</code></td><td>protected</td><td>Sets dirty value and validates when already touched or invalid</td><td></td><td></td><td>LionField</td></tr><tr><td><code>_labelTemplate</code></td><td>protected</td><td></td><td></td><td><code>TemplateResult</code></td><td>LionField</td></tr><tr><td><code>_onBeforeRepropagateChildrenValues</code></td><td>protected</td><td>Hook for Subclassers to add logic before repropagation</td><td><code>ev: CustomEvent</code></td><td></td><td>LionField</td></tr><tr><td><code>_onChange</code></td><td>protected</td><td>Dispatches custom bubble event</td><td><code>ev: Event=</code></td><td></td><td>LionField</td></tr><tr><td><code>_onCurrencyChanged</code></td><td>protected</td><td></td><td><code>{ currency }, opts: @param {string?} opts.currency    * </code></td><td></td><td>LionInputAmount</td></tr><tr><td><code>_onDirtyChanged</code></td><td>protected</td><td>Dispatches event on touched state change</td><td></td><td></td><td>LionField</td></tr><tr><td><code>_onDropdownValueChange</code></td><td>protected</td><td></td><td><code>event: OnDropdownChangeEvent</code></td><td></td><td></td></tr><tr><td><code>_onLabelClick</code></td><td>protected</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>_onModelValueChanged</code></td><td>protected</td><td>Responds to modelValue changes in the synchronous cycle (most subclassers should listen to
+the asynchronous cycle ('modelValue' in the .updated lifecycle))</td><td><code>args: { modelValue: unknown; }[]</code></td><td></td><td>LionField</td></tr><tr><td><code>_onTouchedChanged</code></td><td>protected</td><td>Dispatches event on touched state change</td><td></td><td></td><td>LionField</td></tr><tr><td><code>_onUserInputChanged</code></td><td>protected</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>_onValidatorUpdated</code></td><td>protected</td><td></td><td><code>e: Event|CustomEvent</code></td><td></td><td>LionField</td></tr><tr><td><code>_prioritizeAndFilterFeedback</code></td><td>protected</td><td>Orders all active validators in this.__validationResult.
+Can also filter out occurrences (based on interaction states)</td><td><code>{ validationResult }, opts: { validationResult: Validator[] }</code></td><td><code>Validator[]</code></td><td>LionField</td></tr><tr><td><code>_proxyInputEvent</code></td><td>protected</td><td>This can be called whenever the view value should be updated. Dependent on component type
+("input" for &lt;input&gt; or "change" for &lt;select&gt;(mainly for IE)) a different event should be
+used  as source for the "user-input-changed" event (which can be seen as an abstraction
+layer on top of other events (input, change, whatever))</td><td></td><td></td><td>LionField</td></tr><tr><td><code>_reflectBackFormattedValueToUser</code></td><td>protected</td><td>Note: Overrides the implementation from FormatMixin</td><td></td><td></td><td>LionField</td></tr><tr><td><code>_reflectBackOn</code></td><td>protected</td><td>Every time .formattedValue is attempted to sync to the view value (on change/blur and on
+modelValue change), this condition is checked. When enhancing it, it's recommended to
+call via `return this._myExtraCondition &amp;&amp; super._reflectBackOn()`</td><td></td><td><code>boolean</code></td><td>LionField</td></tr><tr><td><code>_repropagationCondition</code></td><td>protected</td><td>Usually, we don't use composition in regular LionFields (non choice-groups). Here we use a LionSelect(Rich) inside.
+We don't want to repropagate any children, since an Application Developer is not concerned with these internals (see repropate logic in FormControlMixin)
+Also, we don't want to give (wrong) info to InteractionStateMixin, that will set the wrong interaction states based on child info.
+TODO: Make "this._repropagationRole !== 'child'" the default for FormControlMixin
+(so that FormControls used within are never repropagated for LionFields)</td><td><code>target: FormControlHost</code></td><td></td><td>LionField</td></tr><tr><td><code>_setValueAndPreserveCaret</code></td><td>protected</td><td>Restores the cursor to its original position after updating the value.</td><td><code>newValue: string</code></td><td></td><td>NativeTextFieldMixin</td></tr><tr><td><code>_showFeedbackConditionFor</code></td><td>protected</td><td>Default feedbackCondition condition, used by Subclassers, that will be used when
+`feedbackCondition()` is not overridden by Application Developer.
+Show the validity feedback when returning true, don't show when false</td><td><code>type: string, meta: InteractionStates</code></td><td></td><td>LionField</td></tr><tr><td><code>_syncValueUpwards</code></td><td>protected</td><td>Synchronization from `._inputNode.value` to `LionField` (flow [2])
+Downwards syncing should only happen for `LionField`.value changes from 'above'.
+This triggers _onModelValueChanged and connects user input
+to the parsing/formatting/serializing loop.</td><td></td><td></td><td>LionField</td></tr><tr><td><code>_triggerInitialModelValueChangedEvent</code></td><td>protected</td><td></td><td></td><td></td><td>LionField</td></tr><tr><td><code>_updateFeedbackComponent</code></td><td>protected</td><td>Responsible for retrieving messages from Validators and
+(delegation of) rendering them.
+
+For `._feedbackNode` (extension of LionValidationFeedback):
+- retrieve messages from highest prio Validators
+- provide the result to custom feedback node and let the
+custom node decide on their renderings
+
+In both cases:
+- we compute the 'show' flag (like 'hasErrorVisible') for all types
+- we set the customValidity message of the highest prio Validator
+- we set aria-invalid="true" in case hasErrorVisible is true</td><td></td><td></td><td>LionField</td></tr><tr><td><code>_updateShouldShowFeedbackFor</code></td><td>protected</td><td></td><td></td><td></td><td>LionField</td></tr></tbody></table>
+<h3 id="events"><a class="anchor" href="#events"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Events</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Type</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>model-value-changed</code></td><td><code>CustomEvent</code></td><td></td><td>LionField</td></tr><tr><td><code>user-input-changed</code></td><td><code>Event</code></td><td></td><td>LionField</td></tr><tr><td><code>focus</code></td><td><code>Event</code></td><td></td><td>LionField</td></tr><tr><td><code>blur</code></td><td><code>Event</code></td><td></td><td>LionField</td></tr><tr><td><code>focusin</code></td><td><code>Event</code></td><td></td><td>LionField</td></tr><tr><td><code>focusout</code></td><td><code>Event</code></td><td></td><td>LionField</td></tr><tr><td><code>form-element-name-changed</code></td><td><code>CustomEvent</code></td><td></td><td>LionField</td></tr><tr><td><code>form-element-register</code></td><td><code>CustomEvent</code></td><td></td><td>LionField</td></tr><tr><td><code>touched-changed</code></td><td><code>Event</code></td><td></td><td>LionField</td></tr><tr><td><code>dirty-changed</code></td><td><code>Event</code></td><td></td><td>LionField</td></tr><tr><td><code>showsFeedbackForChanged</code></td><td><code>Event</code></td><td></td><td>LionField</td></tr><tr><td></td><td><code>Event</code></td><td></td><td>LionField</td></tr><tr><td><code>shouldShowFeedbackForChanged</code></td><td><code>Event</code></td><td></td><td>LionField</td></tr><tr><td><code>validate-performed</code></td><td><code>Event</code></td><td>private event that should be listened to by LionFieldSet</td><td>LionField</td></tr></tbody></table>
+<h3 id="attributes"><a class="anchor" href="#attributes"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Attributes</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Field</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>preferredCurrencies</code></td><td>preferredCurrencies</td><td></td></tr><tr><td><code>allowedCurrencies</code></td><td>allowedCurrencies</td><td></td></tr><tr><td><code>__dropdownSlot</code></td><td>__dropdownSlot</td><td></td></tr><tr><td><code>currency</code></td><td>currency</td><td>LionInputAmount</td></tr><tr><td><code>modelValue</code></td><td>modelValue</td><td>LionInputAmount</td></tr><tr><td><code>autocomplete</code></td><td>autocomplete</td><td>NativeTextFieldMixin</td></tr><tr><td><code>focused</code></td><td>focused</td><td>LionField</td></tr><tr><td><code>focused-visible</code></td><td>focusedVisible</td><td>LionField</td></tr><tr><td><code>autofocus</code></td><td>autofocus</td><td>LionField</td></tr><tr><td><code>readonly</code></td><td>readOnly</td><td>LionField</td></tr><tr><td><code>label</code></td><td>label</td><td>LionField</td></tr><tr><td><code>label-sr-only</code></td><td>labelSrOnly</td><td>LionField</td></tr><tr><td><code>help-text</code></td><td>helpText</td><td>LionField</td></tr><tr><td><code>type</code></td><td>type</td><td>LionInput</td></tr><tr><td><code>placeholder</code></td><td>placeholder</td><td>LionInput</td></tr><tr><td><code>name</code></td><td>name</td><td>LionField</td></tr><tr><td><code>allow-cross-root-registration</code></td><td>allowCrossRootRegistration</td><td>LionField</td></tr><tr><td><code>disabled</code></td><td>disabled</td><td>LionField</td></tr><tr><td><code>touched</code></td><td>touched</td><td>LionField</td></tr><tr><td><code>dirty</code></td><td>dirty</td><td>LionField</td></tr><tr><td><code>filled</code></td><td>filled</td><td>LionField</td></tr><tr><td><code>shows-feedback-for</code></td><td>showsFeedbackFor</td><td>LionField</td></tr><tr><td><code>is-pending</code></td><td>isPending</td><td>LionField</td></tr></tbody></table>
+<hr>
+
+  
+    <div class="content-footer">
+  <p>
+    Caught a mistake or want to contribute to the documentation?
+    <a href="https://github.com/ing-bank/lion/edit/master/./docs/components/input-amount-dropdown/api-table.md">Edit this page on GitHub!</a>
+  </p>
+</div>
+
+  
+</main>
+
+      
+    </div>
+  </div>
+
+
+    
+      <footer id="main-footer">
+  
+    
+
+  
+    <div id="footer-menu">
+  <div class="content-area">
+    
+      <nav>
+        <h3>Discover</h3>
+        <ul>
+          
+            <li>
+              <a href="/blog/">Blog</a>
+            </li>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/issues">Help and Feedback</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Follow</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion">Github</a>
+            </li>
+          
+            <li>
+              <a href="/about/slack/">Slack</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+      <nav>
+        <h3>Support</h3>
+        <ul>
+          
+            <li>
+              <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+            </li>
+          
+        </ul>
+      </nav>
+    
+  </div>
+</div>
+
+  
+</footer>
+
+    
+
+    
+  
+
+
+  
+
+<script>
+  window.__rocketServiceWorkerUrl = '/service-worker.js';
+</script>
+
+
+
+
+
+
+  
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-151V7YV71K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-151V7YV71K');
+  </script>
+
+
+
+
+  
+
+
+<script type="module" src="../../../e3e8d065.js"></script>
+<script type="module" src="../../../a055aa7d.js" inject-service-worker=""></script>
+
+</body></html>

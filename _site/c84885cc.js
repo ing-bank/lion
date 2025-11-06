@@ -1,0 +1,1 @@
+import{w as e}from"./0ed5d59c.js";const s=()=>({placementMode:"global",viewportConfig:{placement:"center"},hasBackdrop:!0,preventsScroll:!0,trapsKeyboardFocus:!0,hidesOnEsc:!0,handlesAccessibility:!0,...e()});export{s as w};

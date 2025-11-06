@@ -1,0 +1,1 @@
+import{w as e}from"./withClickInteraction.B1DPetIk.js";const o=()=>({placementMode:"global",viewportConfig:{placement:"center"},hasBackdrop:!0,preventsScroll:!0,trapsKeyboardFocus:!0,hidesOnEsc:!0,handlesAccessibility:!0,...e()});export{o as w};
