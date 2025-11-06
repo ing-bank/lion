@@ -1,3 +1,8 @@
+# temp files (vim/nvim)
+*~
+*swo
+*swp
+
 # build output
 dist/
 # generated types

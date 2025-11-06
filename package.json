@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "build": "npm run build:astro && npm run build:rocket && npm run build:astro:update-links && mv dist _site/next",
-    "build:astro": "ASTRO_BASE_URL=/next npx astro build --force",
+    "build:astro": "astro telemetry disable && ASTRO_BASE_URL=/next astro build --force",
     "build:astro:update-links": "node ./src/utils/rewrite-links.mjs",
     "build:clean": "find src/pages -path \"*/_demos/*.js\" -type f -delete && rm -rf node_modules/_lion_docs && npm run build",
     "build:rocket": "rocket build",
