@@ -593,7 +593,9 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         expect(setupSpy.callCount).to.equal(1);
 
         const elCtrl = /** @type {OverlayEl} */ (el.overlayEl)?._overlayCtrl;
-        const isCtrlRegisteredAtOverlaysManager = elCtrl.manager.list.some(ctrl => elCtrl === ctrl);
+        const isCtrlRegisteredAtOverlaysManager = elCtrl.manager?.list.some(
+          ctrl => elCtrl === ctrl,
+        );
         expect(isCtrlRegisteredAtOverlaysManager).to.equal(true);
       });
 

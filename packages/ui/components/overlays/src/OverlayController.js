@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+
 import { overlays } from './singleton.js';
 import { containFocus } from './utils/contain-focus.js';
 import { deepContains } from './utils/deep-contains.js';
@@ -118,7 +120,7 @@ export class OverlayController extends EventTarget {
    * @param {OverlayConfig} config initial config. Will be remembered as shared config
    * when `.updateConfig()` is called.
    */
-  constructor(config = {}, manager = overlays) {
+  constructor(config = {}, /** @type {typeof overlays | null} */ manager = overlays) {
     super();
     this.manager = manager;
     /** @private */
@@ -493,13 +495,13 @@ export class OverlayController extends EventTarget {
     /** @private */
     this.__elementToFocusAfterHide = undefined;
 
-    if (!this.#isRegisteredOnManager()) {
+    if (this.manager && !this.#isRegisteredOnManager()) {
       this.manager.add(this);
     }
   }
 
   #isRegisteredOnManager() {
-    return Boolean(this.manager.list.find(ctrl => this === ctrl));
+    return Boolean(this.manager?.list.find(ctrl => this === ctrl));
   }
 
   /**
@@ -1023,7 +1025,7 @@ export class OverlayController extends EventTarget {
     if (this.preventsScroll) {
       this._handlePreventsScroll({ phase });
     }
-    if (this.isBlocking) {
+    if (this.isBlocking && this.manager) {
       this._handleBlocking({ phase });
     }
     if (this.hasBackdrop) {
@@ -1076,10 +1078,10 @@ export class OverlayController extends EventTarget {
   _handlePreventsScroll({ phase }) {
     switch (phase) {
       case 'show':
-        this.manager.requestToPreventScroll();
+        overlays.requestToPreventScroll();
         break;
       case 'hide':
-        this.manager.requestToEnableScroll();
+        overlays.requestToEnableScroll();
         break;
       /* no default */
     }
@@ -1092,10 +1094,10 @@ export class OverlayController extends EventTarget {
   _handleBlocking({ phase }) {
     switch (phase) {
       case 'show':
-        this.manager.requestToShowOnly(this);
+        this.manager?.requestToShowOnly(this);
         break;
       case 'hide':
-        this.manager.retractRequestToShowOnly(this);
+        this.manager?.retractRequestToShowOnly(this);
         break;
       /* no default */
     }
@@ -1159,10 +1161,10 @@ export class OverlayController extends EventTarget {
         // @ts-ignore
         this.__wrappingDialogNode.showModal();
       }
-      // else {
-      this.enableTrapsKeyboardFocus();
-      // }
-    } else if (phase === 'hide' || phase === 'teardown') {
+      if (this.manager) {
+        this.enableTrapsKeyboardFocus();
+      }
+    } else if ((phase === 'hide' || phase === 'teardown') && this.manager) {
       this.disableTrapsKeyboardFocus();
     }
   }
@@ -1440,7 +1442,7 @@ export class OverlayController extends EventTarget {
   teardown() {
     this.__handleOverlayStyles({ phase: 'teardown' });
     this._handleFeatures({ phase: 'teardown' });
-    if (this.#isRegisteredOnManager()) {
+    if (this.manager && this.#isRegisteredOnManager()) {
       this.manager.remove(this);
     }
   }
