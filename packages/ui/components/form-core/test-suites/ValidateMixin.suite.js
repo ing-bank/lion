@@ -1,26 +1,26 @@
-import { LitElement } from 'lit';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import {
-  getFormControlMembers,
-  AsyncAlwaysInvalid,
-  AsyncAlwaysValid,
   AlwaysInvalid,
   AlwaysValid,
+  AsyncAlwaysInvalid,
+  AsyncAlwaysValid,
+  getFormControlMembers,
 } from '@lion/ui/form-core-test-helpers.js';
-import sinon from 'sinon';
 import {
-  ResultValidator,
-  ValidateMixin,
   EqualsLength,
-  Unparseable,
   MaxLength,
   MinLength,
-  Validator,
   Required,
+  ResultValidator,
+  Unparseable,
+  ValidateMixin,
+  Validator,
 } from '@lion/ui/form-core.js';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { LitElement } from 'lit';
+import sinon from 'sinon';
 
-import '@lion/ui/define/lion-validation-feedback.js';
 import '@lion/ui/define/lion-field.js';
+import '@lion/ui/define/lion-validation-feedback.js';
 
 /**
  * @typedef {import('@lion/ui/form-core.js').LionField} LionField
@@ -630,6 +630,18 @@ export function runValidateMixinSuite(customConfig) {
         expect(catSpy.callCount).to.equal(1);
         isCatValidator.param = 'Garfield';
         expect(catSpy.callCount).to.equal(2);
+      });
+
+      it('Validators will not be called on readOnly fields', async () => {
+        const el = /** @type {ValidateElement} */ (
+          await fixture(html`
+          <${tag} .validators=${[new IsCat()]}>${lightDom}</${tag}>
+        `)
+        );
+
+        el.readOnly = true;
+        el.modelValue = 'dog';
+        expect(el.validationStates.error.IsCat).to.be.undefined;
       });
     });
 
