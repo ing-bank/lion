@@ -2,11 +2,11 @@ import { defineCE, expect, fixture, html, unsafeStatic, waitUntil } from '@open-
 import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { sendKeys } from '@web/test-runner-commands';
 import { LionCombobox } from '@lion/ui/combobox.js';
-import { browserDetection } from '@lion/ui/core.js';
+import { browserDetection, SlotMixin } from '@lion/ui/core.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
-import { LitElement } from 'lit';
+import { LitElement, nothing } from 'lit';
 import sinon from 'sinon';
 import {
   getFilteredOptionValues,
@@ -412,6 +412,54 @@ describe('lion-combobox', () => {
       expect(el.hasFeedbackFor).to.include('error');
       expect(el.validationStates).to.have.property('error');
       expect(el.validationStates.error).to.have.property('MatchesOption');
+    });
+
+    it('keeps slottable provided in `slots` getter as direct host child', async () => {
+      class MyEl extends SlotMixin(LionCombobox) {
+        // @ts-ignore
+        get slots() {
+          return {
+            ...super.slots,
+            _lazyRenderedSlot: () => ({
+              template: this.renderSlot
+                ? html`<span id="lazyRenderedSlotId">(Optional)</span>`
+                : html`${nothing}`,
+              renderAsDirectHostChild: true,
+            }),
+          };
+        }
+
+        _labelTemplate() {
+          return html`
+            <div class="form-field__label">
+              <slot name="label"></slot>
+              <slot name="_lazyRenderedSlot"></slot>
+              <slot></slot>
+            </div>
+          `;
+        }
+
+        constructor() {
+          super();
+          this.renderSlot = false;
+        }
+      }
+      const tagName = defineCE(MyEl);
+      const wrappingTag = unsafeStatic(tagName);
+
+      const el = /** @type {MyEl} */ (
+        await fixture(html`
+          <${wrappingTag} label="my label">
+            <lion-option .choiceValue="${'1'}">${'one'}</lion-option>
+          </${wrappingTag}>
+        `)
+      );
+      await el.registrationComplete;
+
+      el.renderSlot = true;
+      await el.updateComplete;
+      const lazyRenderedSlot = el.querySelector('#lazyRenderedSlotId');
+      expect(lazyRenderedSlot?.parentElement === el).to.be.true;
     });
   });
 

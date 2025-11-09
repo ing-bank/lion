@@ -111,6 +111,63 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       expect(el.opened).to.be.false;
     });
 
+    /**
+     * In case OverlayMixin has a handler for Escape which sets `opened` to `false`,
+     * make sure it does not conflict with the Escape handler in OverlayController.
+     * */
+    it('syncs opened between overlayController and OverlayMixin on Escape', async () => {
+      const config = { hidesOnEsc: true };
+      const el = /** @type {OverlayEl} */ (
+        await fixture(html`
+        <${tag} id="main-dialog" .config="${config}">
+          <div slot="content" id="mainContent">
+            open nested overlay:
+            <${tag} id="sub-dialog" .config="${config}">
+              <div slot="content" id="nestedContent">
+                <input id="nestedContentInput">
+              </div>
+              <button slot="invoker" id="nestedInvoker">nested invoker button</button>
+            </${tag}>
+          </div>
+          <button slot="invoker" id="mainInvoker">invoker button</button>
+        </${tag}>
+      `)
+      );
+      await el.updateComplete;
+      const subDialog = /** @type {OverlayEl} */ (el.querySelector('#sub-dialog'));
+      const nestedContentInput = /** @type {OverlayEl} */ (el.querySelector('#nestedContentInput'));
+
+      // Note, OverlayController has Escape key listener added to "#nestedContent".
+      // And the sub-dialog adds the Escape key listener to "#nestedContentInput" which is a child evelement of "#nestedContent"
+      // In this case when "#nestedContentInput" is focused and Escape is pressed, the listener of "#nestedContentInput"
+      // is always called before the listener set for "#nestedContent" inside OverlayController.
+      // This way we check the scenario when OverlayController's `hide()` is called first from
+      // The OverlayMixin and it does not prevent OverlayController `hidesOnEsc` handler from being called
+      nestedContentInput?.addEventListener('keyup', (/** @type {* & KeyboardEvent} */ event) => {
+        if (event.key === 'Escape') {
+          subDialog.opened = false;
+        }
+      });
+
+      el.opened = true;
+      await el.updateComplete;
+      await el._overlayCtrl._showComplete;
+      expect(el.opened).to.be.true;
+      expect(el._overlayCtrl.isShown).to.be.true;
+
+      subDialog.opened = true;
+      await subDialog.updateComplete;
+      await subDialog._overlayCtrl._showComplete;
+      expect(subDialog.opened).to.be.true;
+      expect(subDialog._overlayCtrl.isShown).to.be.true;
+
+      await mimicEscapePress(nestedContentInput);
+      expect(subDialog.opened).to.be.false;
+      expect(subDialog._overlayCtrl.isShown).to.be.false;
+      expect(el.opened).to.be.true;
+      expect(el._overlayCtrl.isShown).to.be.true;
+    });
+
     // TODO: put this tests in OverlayController.test.js instead?
     it('does not change the body size when opened', async () => {
       const parentNode = document.createElement('div');

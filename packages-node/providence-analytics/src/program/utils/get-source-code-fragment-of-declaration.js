@@ -98,7 +98,7 @@ export function getReferencedDeclaration({ referencedIdentifierName, globalScope
  * await getSourceCodeFragmentOfDeclaration(code) // finds "88"
  * ```
  *
- * @param {{ filePath: PathFromSystemRoot; exportedIdentifier: string; projectRootPath: PathFromSystemRoot; parser: AnalyzerAst }} opts
+ * @param {{ code?: string; ast?: object; filePath: PathFromSystemRoot; exportedIdentifier: string; projectRootPath: PathFromSystemRoot; parser?: AnalyzerAst }} opts
  * @returns {Promise<{ sourceNodePath: SwcPath; sourceFragment: string|null; externalImportSource: string|null; }>}
  */
 export async function getSourceCodeFragmentOfDeclaration({
@@ -106,17 +106,28 @@ export async function getSourceCodeFragmentOfDeclaration({
   projectRootPath,
   parser = 'oxc',
   filePath,
+  code,
+  ast,
 }) {
-  const code = await fsAdapter.fs.promises.readFile(filePath, 'utf8');
+  if (!code) {
+    // eslint-disable-next-line no-param-reassign
+    code = await fsAdapter.fs.promises.readFile(filePath, 'utf8');
+  }
+
+  if (!ast) {
+    // eslint-disable-next-line no-param-reassign
+    ast = await AstService.getAst(code, parser);
+  }
 
   // compensate for swc span bug: https://github.com/swc-project/swc/issues/1366#issuecomment-1516539812
   const offset = parser === 'swc' ? await AstService._getSwcOffset() : -1;
-  const ast = await AstService.getAst(code, parser);
 
   /** @type {SwcPath} */
   let finalNodePath;
 
-  const moduleOrProgramHandler = astPath => {
+  const moduleOrProgramHandler = (
+    /** @type {{ stop: () => void; node: { body: any[]; }; scope: { bindings: { [x: string]: { path: any; }; }; }; }} */ astPath,
+  ) => {
     astPath.stop();
 
     // Situations
@@ -209,6 +220,7 @@ export async function getSourceCodeFragmentOfDeclaration({
       currentFilePath,
       projectRootPath,
     );
+
     const filePathOrSrc = getFilePathOrExternalSource({
       rootPath: projectRootPath,
       localPath: /** @type {PathRelativeFromProjectRoot} */ (rootFile.file),
@@ -233,8 +245,10 @@ export async function getSourceCodeFragmentOfDeclaration({
     });
   }
 
-  const startOf = node => node.start || node.span.start;
-  const endOf = node => node.end || node.span.end;
+  const startOf = (/** @type {{ start: number; span: { start: number; }; }} */ node) =>
+    node.start || node.span.start;
+  const endOf = (/** @type {{ end: number; span: { end: number; }; }} */ node) =>
+    node.end || node.span.end;
   return {
     // @ts-expect-error
     sourceNodePath: finalNodePath,

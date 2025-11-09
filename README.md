@@ -77,8 +77,6 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
   Note. There is the same error on master. This issue is not caused by the migration
 
-### TODO
-
 ## How to install
 
 ```bash
@@ -192,6 +190,14 @@ Check out our [coding guidelines](https://lion-web.netlify.app/guides/principles
 
 Lion Web Components are only as good as its contributions.
 Read our [contribution guide](https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md) and feel free to enhance/improve Lion. We keep feature requests closed while we're not working on them.
+
+## Site deployment
+
+We use [GitHub Pages](https://docs.github.com/en/pages) to host our static website. Collaborators with push permission to the repository branch [`gh-pages`](https://github.com/ing-bank/lion/tree/gh-pages) can trigger a deploy by simply running:
+
+```bash
+npm run deploy
+```
 
 ## Contact
 

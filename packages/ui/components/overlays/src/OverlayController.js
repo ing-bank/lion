@@ -197,15 +197,24 @@ export class OverlayController extends EventTarget {
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
     /** @private */
     this.__originalAttrs = new Map();
+    /** @private */
+    this.__escKeyHandler = this.__escKeyHandler.bind(this);
     this.updateConfig(config);
     /** @private */
     this.__hasActiveTrapsKeyboardFocus = false;
     /** @private */
     this.__hasActiveBackdrop = true;
     /** @private */
-    this.__escKeyHandler = this.__escKeyHandler.bind(this);
-    /** @private */
     this.__cancelHandler = this.__cancelHandler.bind(this);
+    /**
+     * The property is used to skip `__escKeyHandler` handler for overlays that have been closed
+     * by `__escKeyHandlerCalled` previously.
+     * `__escKeyHandlerCalled` is set to `false` right before overlay show up
+     * `__escKeyHandlerCalled` is set to `true` when `__escKeyHandler` is called at least one time
+     * after each 'show' phase
+     * @private
+     */
+    this.__escKeyHandlerCalled = false;
   }
 
   /**
@@ -1211,13 +1220,21 @@ export class OverlayController extends EventTarget {
    * @returns {void}
    */
   __escKeyHandler(event) {
-    if (event.key !== 'Escape' || childDialogsClosedInEventLoopWeakmap.has(event)) return;
+    if (
+      event.key !== 'Escape' ||
+      childDialogsClosedInEventLoopWeakmap.has(event) ||
+      (!this.isShown && this.__escKeyHandlerCalled)
+    ) {
+      return;
+    }
 
     const hasPressedInside =
       event.composedPath().includes(this.contentNode) ||
+      (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
       deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 
     if (hasPressedInside) {
+      this.__escKeyHandlerCalled = true;
       this.hide();
       // We could do event.stopPropagation() here, but we don't want to hide info for
       // the outside world about user interactions. Instead, we store the event in a WeakMap
@@ -1245,12 +1262,21 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _handleHidesOnEsc({ phase }) {
-    if (phase === 'show') {
+    if (phase === 'init') {
+      // we remove previously added (if any) event listener to guarantee
+      // there is only one Escape handler added here.
+      // Note `init` phase triggered on every `updateConfig` call and that
+      // could happen multiple times during the component life cycle
+      this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
       this.contentNode.addEventListener('keyup', this.__escKeyHandler);
       if (this.invokerNode) {
         this.invokerNode.addEventListener('keyup', this.__escKeyHandler);
       }
-    } else if (phase === 'hide' || phase === 'teardown') {
+    }
+    if (phase === 'show') {
+      this.__escKeyHandlerCalled = false;
+    }
+    if (phase === 'teardown') {
       this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
       if (this.invokerNode) {
         this.invokerNode.removeEventListener('keyup', this.__escKeyHandler);
@@ -1263,9 +1289,10 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _handleHidesOnOutsideEsc({ phase }) {
-    if (phase === 'show') {
+    if (phase === 'init') {
+      document.removeEventListener('keyup', this.#outsideEscKeyHandler);
       document.addEventListener('keyup', this.#outsideEscKeyHandler);
-    } else if (phase === 'hide' || phase === 'teardown') {
+    } else if (phase === 'teardown') {
       document.removeEventListener('keyup', this.#outsideEscKeyHandler);
     }
   }

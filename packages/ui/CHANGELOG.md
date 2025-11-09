@@ -1,5 +1,18 @@
 # @lion/ui
 
+## 0.15.2
+
+### Patch Changes
+
+- e6a8fa7: [input-amount-dropdown] add translations
+- abcc6fd: fix hidesOnEsc for nested overlays
+
+## 0.15.1
+
+### Patch Changes
+
+- f8dda40: [listbox] fix rendering for lazy slottables
+
 ## 0.15.0
 
 ### Minor Changes
@@ -81,7 +94,6 @@
 ### Patch Changes
 
 - a0d334d: Added initial Turkish (tr.js / tr-TR.js) translation files for the following components:
-
   - input-datepicker
   - calendar
   - form-core
@@ -500,7 +512,6 @@ BREAKING:
 ### Patch Changes
 
 - b44bfc5d: [calendar] updates:
-
   - Enables focus to disabled dates to make it more reasonable for screen readers
   - Do not automatically force selection of a valid date
   - Add helper functions to find next/previous/nearest enabled date
@@ -572,7 +583,6 @@ BREAKING:
 - 3256892c: lion-switch: checked-changed event is no longer fired on element initialization when checked is set through attribute
 - 3f1c83a1: lion-accordion: changed selectors for invokers and content to only select slotted elements that are direct descendants. This is to prevent that slotted elements in accordion content and invokers are also selected and the amount of invokers and content is incorrect
 - a2b81b26: [combobox] Multiple improvements:
-
   - Allow textbox values to be entered that do not match a listbox option, via `requireOptionMatch` flag.
   - Added an `MatchesOption` validator to check if the value is matching an option.
   - Exports combobox test helpers
@@ -615,7 +625,6 @@ BREAKING:
 - cee40e55: Side-effect-free alternative for `localize` (the globally shared instance of LocalizeManager).
   When this function is imported, no side-effect happened yet, i.e. no global instance was registered yet.
   The side effect-free approach generates:
-
   - smaller, optimized bundles
   - a predictable loading order, that allows for:
     - deduping strategies when multiple instances of the localizeManager are on a page
@@ -724,7 +733,6 @@ BREAKING:
   This means overlays positioned relative to viewport won't be moved to the body.
 
   This has many benefits for the App Developer:
-
   - "context" will be kept:
     - css variables and parts/theme will work
     - events work without the need for "repropagation" (from body to original context)
@@ -738,7 +746,6 @@ BREAKING:
 
   There could be small differences in timings though (usually we're done rendering quicker now).
   Code that relies on side effects could be affected. Like:
-
   - the existence of a global Root node)
   - the fact that global styles would reach a dialog placed in the body
 
@@ -846,7 +853,6 @@ BREAKING:
   This package will have a new single CHANGELOG.md for the whole package. If you are interested the older individual changelogs then you can find them in the [\_legacy-changelogs folder](https://github.com/ing-bank/lion/tree/master/packages/ui/_legacy-changelogs).
 
   This new version also includes the following changes for it's containing components:
-
   - fix(switch): SwitchButton do not dispatch checked-change event when is disabled
   - fix(calendar): calendar translation de.js strings corrected
 
@@ -1153,7 +1159,6 @@ BREAKING:
 ### Patch Changes
 
 - b44bfc5d: [calendar] updates:
-
   - Enables focus to disabled dates to make it more reasonable for screen readers
   - Do not automatically force selection of a valid date
   - Add helper functions to find next/previous/nearest enabled date
@@ -1225,7 +1230,6 @@ BREAKING:
 - 3256892c: lion-switch: checked-changed event is no longer fired on element initialization when checked is set through attribute
 - 3f1c83a1: lion-accordion: changed selectors for invokers and content to only select slotted elements that are direct descendants. This is to prevent that slotted elements in accordion content and invokers are also selected and the amount of invokers and content is incorrect
 - a2b81b26: [combobox] Multiple improvements:
-
   - Allow textbox values to be entered that do not match a listbox option, via `requireOptionMatch` flag.
   - Added an `MatchesOption` validator to check if the value is matching an option.
   - Exports combobox test helpers
@@ -1268,7 +1272,6 @@ BREAKING:
 - cee40e55: Side-effect-free alternative for `localize` (the globally shared instance of LocalizeManager).
   When this function is imported, no side-effect happened yet, i.e. no global instance was registered yet.
   The side effect-free approach generates:
-
   - smaller, optimized bundles
   - a predictable loading order, that allows for:
     - deduping strategies when multiple instances of the localizeManager are on a page
@@ -1377,7 +1380,6 @@ BREAKING:
   This means overlays positioned relative to viewport won't be moved to the body.
 
   This has many benefits for the App Developer:
-
   - "context" will be kept:
     - css variables and parts/theme will work
     - events work without the need for "repropagation" (from body to original context)
@@ -1391,7 +1393,6 @@ BREAKING:
 
   There could be small differences in timings though (usually we're done rendering quicker now).
   Code that relies on side effects could be affected. Like:
-
   - the existence of a global Root node)
   - the fact that global styles would reach a dialog placed in the body
 
@@ -1499,7 +1500,6 @@ BREAKING:
   This package will have a new single CHANGELOG.md for the whole package. If you are interested the older individual changelogs then you can find them in the [\_legacy-changelogs folder](https://github.com/ing-bank/lion/tree/master/packages/ui/_legacy-changelogs).
 
   This new version also includes the following changes for it's containing components:
-
   - fix(switch): SwitchButton do not dispatch checked-change event when is disabled
   - fix(calendar): calendar translation de.js strings corrected
 

@@ -2,6 +2,7 @@ import { defineCE, expect, fixture, fixtureSync, unsafeStatic, html } from '@ope
 import { SlotMixin } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { moveUserProvidedDefaultSlottablesToTarget } from '../src/SlotMixin.js';
 
 import { ScopedElementsMixin, supportsScopedRegistry } from '../src/ScopedElementsMixin.js';
 import { isActiveElement } from '../test-helpers/isActiveElement.js';
@@ -132,6 +133,90 @@ describe('SlotMixin', () => {
     renderSlot = false;
     const elNoSlot = /** @type {SlotPrivateText} */ (await fixture(`<${tag}><${tag}>`));
     expect(elNoSlot.didCreateConditionalSlot()).to.be.false;
+  });
+
+  it('should move default slots to target', async () => {
+    const target = document.createElement('div');
+    const source = document.createElement('div');
+    /**
+     * Exmple of usage:
+     * get slots() {
+     *   return {
+     *     _nothing: () => ({
+     *       template: html`${nothing}`,
+     *       renderAsDirectHostChild: true,
+     *     }),
+     *   }
+     * }
+     */
+    const variableNothing = `
+      <!--_start_slot_lit-el-->
+      <!-- {lit-el} -->
+      <!--_end_slot_lit-el-->`;
+
+    /**
+     * Exmple of usage:
+     * get slots() {
+     *   return {
+     *     '': () => ({
+     *       template: html`<div>text<div>`,
+     *       renderAsDirectHostChild: true,
+     *     }),
+     *   }
+     * }
+     */
+    const defaultSlottableProvidedViaSlotsGetter = `
+      <!--_start_slot_-->
+      <div>text</div>
+      <!--_end_slot_-->
+    `;
+
+    /**
+     * Exmple of usage:
+     * get slots() {
+     *   return {
+     *     label: () => ({
+     *       template: html`<div>text<div>`,
+     *       renderAsDirectHostChild: true,
+     *     }),
+     *   }
+     * }
+     */
+    const namedSlottable = `
+      <!--_start_slot_label-->
+      <div slot="label">text</div>
+      <!--_end_slot_label-->
+    `;
+
+    /**
+     * Here we assume .test1, .test2 and .test3 are the ones provided as content projection f.e.:
+     * <my-comp>
+     *  <div class="test1"><div>
+     *  <div class="test2"><div>
+     *  <div class="test3"><div>
+     * </my-comp>
+     *
+     * And the rest of content is added via `slots` getter by SlotMixin
+     * The function should move only content projection and ignore the rest
+     * */
+
+    source.innerHTML = `
+      <div class="test1"></div>
+      ${variableNothing}
+      <div class="test2"></div>
+      ${defaultSlottableProvidedViaSlotsGetter}
+      <div class="test3"></div>
+      ${namedSlottable}
+    `;
+
+    moveUserProvidedDefaultSlottablesToTarget(source, target);
+    expect(target.children.length).to.equal(3);
+    const test1Element = target.querySelector('.test1');
+    const test2Element = target.querySelector('.test2');
+    const test3Element = target.querySelector('.test3');
+    expect(test1Element?.parentElement === target).to.equal(true);
+    expect(test2Element?.parentElement === target).to.equal(true);
+    expect(test3Element?.parentElement === target).to.equal(true);
   });
 
   describe('Rerender', () => {
