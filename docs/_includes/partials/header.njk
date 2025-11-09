@@ -1,0 +1,11 @@
+<div style="background: linear-gradient(to right, var(--primary-color-lighter), var(--primary-color)); padding: 2px 20px;">
+   <p style="color: #fff">A new portal is coming! <a href="/about/astro">Check this out.</a></p>
+</div>
+
+<header id="main-header" style="top: 20px;">
+  <div class="content-area">
+    {% for blockName, blockPath in _joiningBlocks.header %}
+      {% include blockPath %}
+    {% endfor %}
+  </div>
+</header>

@@ -33,6 +33,9 @@ export default {
   eleventy(eleventyConfig) {
     eleventyConfig.setUseGitIgnore(false);
   },
+  checkLinks: {
+    ignoreLinkPatterns: ['**/astro'],
+  },
   absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
   setupUnifiedPlugins: [
     adjustPluginOptions(mdjsSetupCode, {
