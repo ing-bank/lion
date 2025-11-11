@@ -23,7 +23,7 @@ const navData = {
   // Also notice this automatically implies that the content is automatically shown and the invoker is invisible
   hideToggle: true,
   items:[
-  { name: "home", url: "/", iconId: 'lion:portal:home', iconActiveId: 'lion:portal:homeFilled' },
+  // { name: "home", url: "/", iconId: 'lion:portal:home', iconActiveId: 'lion:portal:homeFilled' },
   {
     name: "components",
     // url: "/components",
@@ -68,9 +68,14 @@ const navData = {
   //     ],
   //   }
   // },  
-  { name: "develop", url: "/develop", iconId: 'lion:portal:sdk', iconActiveId: 'lion:portal:sdkFilled' },
-  { name: "design", url: "/design", iconId: 'lion:portal:stylusNote', iconActiveId: 'lion:portal:stylusNoteFilled'  },
-  { name: "extend", url: "/extend", iconId: 'lion:portal:deployedCodeAccount', iconActiveId: 'lion:portal:deployedCodeAccountFilled'  },
+  // { name: "develop", url: "/develop", iconId: 'lion:portal:sdk', iconActiveId: 'lion:portal:sdkFilled' },
+  // { name: "design", url: "/design", iconId: 'lion:portal:stylusNote', iconActiveId: 'lion:portal:stylusNoteFilled'  },
+  // { name: "extend", url: "/extend", iconId: 'lion:portal:deployedCodeAccount', iconActiveId: 'lion:portal:deployedCodeAccountFilled'  },
+
+
+  { name: "fundamentals", url: "/fundamentals", iconId: 'lion:portal:sdk', iconActiveId: 'lion:portal:sdkFilled' },
+  { name: "guides", url: "/guides", iconId: 'lion:portal:sdk', iconActiveId: 'lion:portal:sdkFilled' },
+
   { name: "blog", url: "/blog", iconId: 'lion:portal:newsmode', iconActiveId: 'lion:portal:newsmodeFilled'},
   ]};
 
@@ -179,7 +184,7 @@ const footerData = [
         <a href="/" slot="l0-after">lion portal</a>
       </UIMainNav>
       <slot />
-      <UIPortalFooterContent client:load slot="footer" footer-data={JSON.stringify(footerData)} />
+      <UIPortalFooterContent slot="footer" footer-data={JSON.stringify(footerData)} />
     </UIPageLayout>
   </body>
 

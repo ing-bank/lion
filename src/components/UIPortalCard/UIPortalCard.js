@@ -146,6 +146,7 @@ export class UIPortalCard extends UIBaseElement {
     };
   }
 
+  
   static templates = {
     root(context) {
       const { templates, data, fns, part } = context;

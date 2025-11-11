@@ -1,0 +1,228 @@
+:root {
+  --_subtle-border-color: #ccc;
+}
+
+h1:first-of-type:first-child {
+  --height: 14rem;
+  /* background-color: #000; */
+  /* border-bottom: 1px solid var(--_subtle-border-color); */
+  background-color: #e8f3fa;
+  font-weight: 600;
+  /* color: #fff; */
+  display: flex;
+  flex-direction: column;
+  height: 20rem;
+  height: var(--height);
+  justify-content: flex-end;
+  width: 100%;
+
+  text-transform: capitalize;
+
+  margin-inline: -100%;
+  padding-inline: 100%;
+  padding-top: 5rem;
+  padding-bottom: 6rem;
+  font-size: 2.625rem;
+  /* font-weight: 300; */
+  letter-spacing: 0;
+  line-height: 1.19;
+  margin-bottom: 2rem;
+  margin-top: auto;
+}
+
+h1:first-of-type:first-child span {
+  background-color: black;
+  color: #e8f3fa;
+}
+
+@media (min-width: 42rem) {
+  h1:first-of-type:first-child {
+    font-size: 2.625rem;
+    font-size: calc(1.3125rem + 3.125vw);
+  }
+}
+
+@media (min-width: 82rem) {
+  h1:first-of-type:first-child {
+    font-size: 3.75rem;
+    font-size: calc(-1.07353rem + 5.88235vw);
+    line-height: 1.17;
+  }
+}
+
+@media (min-width: 99rem) {
+  h1:first-of-type:first-child {
+    font-size: 4.75rem;
+    line-height: 1.13;
+  }
+}
+
+/** paragraphs */
+
+p {
+  font-size: var(--cds-body-long-02-font-size, 1rem);
+  font-weight: var(--cds-body-long-02-font-weight, 400);
+  letter-spacing: var(--cds-body-long-02-letter-spacing, 0);
+  line-height: var(--cds-body-long-02-line-height, 1.5);
+  padding-right: 1rem;
+}
+
+h1 + p:first-of-type {
+  /* font-size: 1.25rem; */
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.4;
+
+  font-weight: 100;
+  font-size: 1.5rem;
+}
+
+/** responsive */
+@media (min-width: 42rem) {
+  h1 + p:first-of-type {
+    width: 75%;
+  }
+}
+
+@media (min-width: 66rem) {
+  h1 + p:first-of-type {
+    width: 66.667%;
+  }
+}
+
+@media (min-width: 42rem) {
+  p {
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 66rem) {
+  h1 + p:first-of-type {
+    width: 66.667%;
+  }
+}
+
+@media (min-width: 82rem) {
+  h1 + p:first-of-type {
+    font-size: 1.25rem;
+    font-size: calc(0.04412rem + 1.47059vw);
+    line-height: 1.4;
+  }
+}
+
+@media (min-width: 99rem) {
+  h1 + p:first-of-type {
+    font-size: 1.5rem;
+    line-height: 1.334;
+  }
+}
+
+/* h2 */
+
+h2 {
+  --space: 5rem;
+  font-size: 1.75rem;
+  font-size: calc(1.66935rem + 0.40323vw);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.28572;
+  margin-top: var(--space);
+}
+
+@media (min-width: 82rem) {
+  h2 {
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.25;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-left: 0;
+  margin-right: 0;
+  padding-right: 1rem;
+}
+
+@media (min-width: 42rem) {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-left: 0;
+    margin-right: 0;
+    padding-right: 2rem;
+    width: 75%;
+  }
+}
+
+@media (min-width: 66rem) {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    width: 66.667%;
+  }
+}
+
+@media (min-width: 99rem) {
+  h2 {
+    font-size: 2rem;
+    font-weight: 400;
+  }
+}
+
+/** h3 */
+
+h3 {
+  --space: 4rem;
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.4;
+  margin-top: var(--space);
+}
+
+@media (min-width: 82rem) {
+  h3 {
+    font-size: 1.25rem;
+    font-size: calc(0.04412rem + 1.47059vw);
+    line-height: 1.4;
+  }
+}
+
+@media (min-width: 99rem) {
+  h3 {
+    font-size: 1.5rem;
+    line-height: 1.334;
+  }
+}
+
+/* Improve Page speed */
+/* https://css-tricks.com/almanac/properties/c/content-visibility/ */
+img {
+  content-visibility: auto;
+}
+
+/** TODO: refactor into smth like PageLayout */
+.ui-portal-collection {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin-top: 56px;
+}
+
+html:focus-within,
+html,
+body {
+  scroll-behavior: smooth;
+}
