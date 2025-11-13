@@ -383,7 +383,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
         @focus=${this._onEnterButton}
         @blur=${this._onLeaveButton}
         type="button"
-        aria-label="${this.msgLit('lion-input-stepper:decrease')}"
+        aria-label="${this.msgLit('lion-input-stepper:decrease')} ${this.fieldName}"
       >
         ${this._decrementorSignTemplate()}
       </button>
@@ -403,7 +403,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
         @focus=${this._onEnterButton}
         @blur=${this._onLeaveButton}
         type="button"
-        aria-label="${this.msgLit('lion-input-stepper:increase')}"
+        aria-label="${this.msgLit('lion-input-stepper:increase')} ${this.fieldName}"
       >
         ${this._incrementorSignTemplate()}
       </button>
