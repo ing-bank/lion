@@ -17,6 +17,7 @@ const inputStepperWithAttrs = html`<lion-input-stepper
   step="10"
   min="100"
   max="200"
+  label="Label"
 ></lion-input-stepper>`;
 
 describe('<lion-input-stepper>', () => {
@@ -472,6 +473,22 @@ describe('<lion-input-stepper>', () => {
 
       incrementButton?.dispatchEvent(new Event('blur'));
       expect(stepperValue?.hasAttribute('aria-live')).to.be.false;
+    });
+
+    it('decrease button should have aria-label with the component label', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const decrementButton = el.querySelector('[slot=prefix]');
+
+      expect(decrementButton?.hasAttribute('aria-label')).to.be.true;
+      expect(decrementButton?.getAttribute('aria-label')).to.equal('Decrease Label');
+    });
+
+    it('increase button should have aria-label with the component label', async () => {
+      const el = await fixture(inputStepperWithAttrs);
+      const incrementButton = el.querySelector('[slot=suffix]');
+
+      expect(incrementButton?.hasAttribute('aria-label')).to.be.true;
+      expect(incrementButton?.getAttribute('aria-label')).to.equal('Increase Label');
     });
   });
 });
