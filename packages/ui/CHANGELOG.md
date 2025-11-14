@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.15.3
+
+### Patch Changes
+
+- 9105f50: fix(ValidateMixin): no dispatch validators on readOnly form items
+- b64f520: [lion-input-stepper]: add component label to aria-label of increase and decrease buttons
+
 ## 0.15.2
 
 ### Patch Changes
