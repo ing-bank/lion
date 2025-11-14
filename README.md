@@ -57,26 +57,31 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 <details>
 <summary><h2>Table of Contents</h2></summary>
 <ul>
-  <li><a href="#astro-migration"> Astro migration </a></li>
-  <li><a href="#astro-how-to"> Astro how to </a></li>
-  <li><a href="#issues-which-are-not-caused-by-the-migration-not-to-be-fixed-now"> Issues which are not caused by migration </a></li>
-  <li><a href="#how-to-install"> Installation </a></li>
-  <li><a href="#how-to-use"> How to use </a></li>
-  <li><a href="#extend-a-web-component"> Extend a web component </a></li>
-  <li><a href="#use-a-javascript-system"> Use a JavaScript system </a></li>
-  <li><a href="#use-a-web-component"> Use a Web Component </a></li>
-  <li><a href="#issues"> Issues </a></li>
-  <li><a href="#feature-requests"> Feature request </a></li>
-  <li><a href="#content"> Content </a></li>
-  <li><a href="#technologies"> Technologies </a></li>
-  <li><a href="#rationale"> Rationale </a></li>
-  <li><a href="#coding-guidelines"> Coding guidelines </a></li>
-  <li><a href="#how-to-contribute"> How to contribute </a></li>
-  <li><a href="#site-deployment"> Site deployment </a></li>
-  <li><a href="#content"> Contact </a></li>
+  <li><a href="#astro-migration"> Astro migration </a>
+  <ul>
+   <li><a href="#astro-how-to"> Astro how to </a></li>
+   <li><a href="#issues-which-are-not-caused-by-the-migration-not-to-be-fixed-now"> Issues which are not caused by migration </a></li>
+  </ul>
+ </li>
+ <li><a href="#how-to-install"> Installation </a></li>
+ <li><a href="#how-to-use"> How to use </a>
+  <ul>
+   <li><a href="#extend-a-web-component"> Extend a web component </a></li>
+   <li><a href="#use-a-javascript-system"> Use a JavaScript system </a></li>
+   <li><a href="#use-a-web-component"> Use a Web Component </a></li>
+  </ul>
+ </li>
+ <li><a href="#issues"> Issues </a></li>
+ <li><a href="#feature-requests"> Feature request </a></li>
+ <li><a href="#content"> Content </a></li>
+ <li><a href="#technologies"> Technologies </a></li>
+ <li><a href="#rationale"> Rationale </a></li>
+ <li><a href="#coding-guidelines"> Coding guidelines </a></li>
+ <li><a href="#how-to-contribute"> How to contribute </a></li>
+ <li><a href="#site-deployment"> Site deployment </a></li>
+ <li><a href="#content"> Contact </a></li>
 </ul>
 </details>
-
 
 ## Astro migration
 
