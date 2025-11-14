@@ -55,7 +55,7 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 </p>
 
 <details>
-  <summary><h2> Table of Contents </h2></summary>
+<summary><h2>Table of Contents</h2></summary>
   <ul>
   <ul>
    <li>
