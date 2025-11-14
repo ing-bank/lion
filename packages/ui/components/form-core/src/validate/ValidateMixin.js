@@ -1,15 +1,15 @@
 /* eslint-disable class-methods-use-this, camelcase, no-param-reassign, max-classes-per-file */
-import { SlotMixin, DisabledMixin } from '@lion/ui/core.js';
+import { DisabledMixin, SlotMixin } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // TODO: make form-core independent from localize
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { ScopedElementsMixin } from '../../../core/src/ScopedElementsMixin.js';
+import { FormControlMixin } from '../FormControlMixin.js';
 import { AsyncQueue } from '../utils/AsyncQueue.js';
 import { pascalCase } from '../utils/pascalCase.js';
 import { SyncUpdatableMixin } from '../utils/SyncUpdatableMixin.js';
 import { LionValidationFeedback } from './LionValidationFeedback.js';
 import { Unparseable } from './Unparseable.js';
-import { FormControlMixin } from '../FormControlMixin.js';
 // eslint-disable-next-line no-unused-vars
 import { ResultValidator as MetaValidator } from './ResultValidator.js';
 // eslint-disable-next-line no-unused-vars
@@ -399,7 +399,7 @@ export const ValidateMixinImplementation = superclass =>
         this.__validateCompleteResolve = resolve;
       });
 
-      if (this.disabled) {
+      if (this.disabled || this.readOnly) {
         this.__clearValidationResults();
         this.__finishValidationPass();
         this._updateFeedbackComponent();

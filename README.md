@@ -26,15 +26,15 @@
 </p>
 
 <p align="center">
-  <a href="https://lion-web.netlify.app">Website</a>
+  <a href="https://lion.js.org">Website</a>
   ·
-  <a href="https://lion-web.netlify.app/fundamentals/">Fundamentals</a>
+  <a href="https://lion.js.org/fundamentals/">Fundamentals</a>
   ·
-  <a href="https://lion-web.netlify.app/guides/">Guides</a>
+  <a href="https://lion.js.org/guides/">Guides</a>
   ·
-  <a href="https://lion-web.netlify.app/components/">Components</a>
+  <a href="https://lion.js.org/components/">Components</a>
   ·
-  <a href="https://lion-web.netlify.app/blog/">Blog</a>
+  <a href="https://lion.js.org/blog/">Blog</a>
 </p>
 
 **Lion is a set of highly performant, accessible and flexible Web Components.!**
@@ -51,7 +51,7 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 > This makes sense as the main use case is to extend those components and if you do you do not want to override existing stylings.
 
 <p align="center">
-  <a href="https://lion-web.netlify.app/guides/"><strong>Explore the Lion Guides&nbsp;&nbsp;▶</strong></a>
+  <a href="https://lion.js.org/guides/"><strong>Explore the Lion Guides&nbsp;&nbsp;▶</strong></a>
 </p>
 
 ## Table of Contents
@@ -201,7 +201,7 @@ This means you only have to apply your own Design System: by delivering styles, 
 
 ## Coding guidelines
 
-Check out our [coding guidelines](https://lion-web.netlify.app/guides/principles/definitions-and-terms/) for more detailed information.
+Check out our [coding guidelines](https://lion.js.org/guides/principles/definitions-and-terms/) for more detailed information.
 
 ## How to contribute
 
@@ -209,6 +209,14 @@ Check out our [coding guidelines](https://lion-web.netlify.app/guides/principles
 
 Lion Web Components are only as good as its contributions.
 Read our [contribution guide](https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md) and feel free to enhance/improve Lion. We keep feature requests closed while we're not working on them.
+
+## Site deployment
+
+We use [GitHub Pages](https://docs.github.com/en/pages) to host our static website. Collaborators with push permission to the repository branch [`gh-pages`](https://github.com/ing-bank/lion/tree/gh-pages) can trigger a deploy by simply running:
+
+```bash
+npm run deploy
+```
 
 ## Contact
 
