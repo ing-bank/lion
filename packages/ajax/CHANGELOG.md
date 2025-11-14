@@ -147,7 +147,6 @@
   With the upgrade to `@open-wc/scoped-elements` v2.1.1 Lion now no longer automatically loads the polyfill through `ScopedElementsMixin`.
 
   This essentially means the polyfill became optional which results in the following behavior
-
   1. If polyfill is not loaded it will use the global registry as a fallback
   2. Log error if actually scoping is needed and polyfill is not loaded
   3. If you manually create elements you will need to handle polyfilled and not polyfilled cases now
@@ -179,8 +178,7 @@
   or you want to use the same tag name with different implementations (use tag color-picker from foo here and from bar here)
 
   See more details at
-
-  - [Lion release blog post](https://lion-web.netlify.app/blog/lion-without-polyfills/)
+  - [Lion release blog post](https://lion.js.org/blog/lion-without-polyfills/)
   - [@open-wc/scoped-elements release blog post](https://open-wc.org/blog/scoped-elements-without-polyfill/)
   - [Change log of ScopedElementsMixin](https://github.com/open-wc/open-wc/blob/master/packages/scoped-elements/CHANGELOG.md#210)
 
@@ -192,7 +190,7 @@
 
   **We also unfixed lion's dependencies (now using caret ^) on its own packages**, because it caused a lot of problems with duplicate installations for end users as well as subclassers and its end users. Both of these changes may affect subclassers in a breaking manner, hence the minor bump.
 
-  Be sure to [read our Rationale on this change](https://lion-web.netlify.app/docs/rationales/versioning/) and what this means for you as a user.
+  Be sure to [read our Rationale on this change](https://lion.js.org/fundamentals/rationales/versioning/) and what this means for you as a user.
 
 ## 0.12.1
 
@@ -205,7 +203,6 @@
 ### Minor Changes
 
 - 87959850: **BREAKING** public API changes:
-
   - Changed `timeToLive` to `maxAge`
   - Renamed `requestIdentificationFn` to `requestIdFunction`
 
@@ -224,7 +221,6 @@
 ### Minor Changes
 
 - 73d4e222: **BREAKING** public API changes:
-
   - `AjaxClient` is now `Ajax`
   - `AjaxClientFetchError` is now `AjaxFetchError`
   - `request` and `requestJson` methods of `Ajax` class are renamed as `fetch` and `fetchJson` respectively
@@ -244,7 +240,6 @@
 ### Minor Changes
 
 - 43e4bb81: Type fixes and enhancements:
-
   - all protected/private entries added to form-core type definitions, and their dependents were fixed
   - a lot @ts-expect-error and @ts-ignore (all `get slots()` and `get modelValue()` issues are fixed)
   - categorized @ts-expect-error / @ts-ignore into:
