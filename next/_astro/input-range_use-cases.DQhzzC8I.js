@@ -1,0 +1,34 @@
+const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["_astro/define.DYUong5B.js","_astro/node-tools_providence-analytics_overview.LFFQBZzG.js","_astro/lit-element.qDHKJJma.js","_astro/lit-html.C7L4dwLU.js","_astro/unsafe-html.J0GGe2Q7.js","_astro/directive.CGE4aKEl.js","_astro/define.m2CvvXyF.js"])))=>i.map(i=>d[i]);
+import{_ as r}from"./preload-helper.4zY6-HO4.js";import"./node-tools_providence-analytics_overview.LFFQBZzG.js";import"./lit-element.qDHKJJma.js";import{x as e}from"./lit-html.C7L4dwLU.js";import"./unsafe-html.J0GGe2Q7.js";import"./lion-input-range.Dc4QcVaz.js";import"./directive.CGE4aKEl.js";import"./LocalizeMixin.VYu75dkK.js";import"./directive-helpers.CLllgGgm.js";import"./async-directive.CHVe8p0E.js";import"./getLocalizeManager.W5d_ICRU.js";import"./index.BNCfcFQh.js";import"./lazifyInstantiation.CgYLRMC3.js";import"./dedupeMixin.6XPTJgK8.js";import"./LionInput.B2KYRD9B.js";import"./NativeTextFieldMixin.CsE2kjU6.js";import"./InteractionStateMixin.DC1PvWzb.js";import"./DisabledMixin.Bm1nsErI.js";import"./LionField.gZkYIwXF.js";import"./ScopedStylesController.JZrBxnCH.js";import"./formatNumber.aN4wfHaw.js";import"./getLocale.PZ4ia-vo.js";const n=()=>e`<style>
+  lion-input-range {
+    max-width: 400px;
+  }
+</style>
+<lion-input-range
+  min="0"
+  max="100"
+  .modelValue="${50}"
+  unit="%"
+  label="Percentage"
+></lion-input-range>`,m=()=>e`<lion-input-range
+  style="max-width: 400px;"
+  min="200"
+  max="500"
+  step="50"
+  .modelValue="${300}"
+  label="Input range"
+  help-text="This slider uses increments of 50"
+></lion-input-range>`,l=()=>e`<lion-input-range
+  style="max-width: 400px;"
+  no-min-max-labels
+  min="0"
+  max="100"
+  label="Input range"
+></lion-input-range>`,s=()=>e`<lion-input-range
+  style="max-width: 400px;"
+  disabled
+  min="200"
+  max="500"
+  .modelValue="${300}"
+  label="Input range"
+></lion-input-range>`,a=document,p=[{key:"HtmlStory15",story:n},{key:"HtmlStory16",story:m},{key:"HtmlStory17",story:l},{key:"HtmlStory18",story:s}];let i=!1;for(const o of p){const t=a.querySelector(`[mdjs-story-name="${o.key}"]`);t&&(t.story=o.story,t.key=o.key,i=!0,Object.assign(t,{simulatorUrl:"/next/simulator/",languages:[{key:"de-DE",name:"German"},{key:"en-GB",name:"English (United Kingdom)"},{key:"en-US",name:"English (United States)"},{key:"nl-NL",name:"Dutch"}]}))}i&&(customElements.get("mdjs-preview")||r(()=>import("./define.DYUong5B.js"),__vite__mapDeps([0,1,2,3,4,5])),customElements.get("mdjs-story")||r(()=>import("./define.m2CvvXyF.js"),__vite__mapDeps([6,2,3])));export{n as HtmlStory15,m as HtmlStory16,l as HtmlStory17,s as HtmlStory18};

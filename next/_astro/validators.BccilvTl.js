@@ -1,1 +1,0 @@
-import{V as t}from"./Validator.DAOhFpDH.js";import{U as a}from"./InteractionStateMixin.BzvQ4Mf0.js";class l extends t{static get validatorName(){return"MatchesOption"}execute(r,s,e){return e?.node.modelValue instanceof a}}export{l as M};
