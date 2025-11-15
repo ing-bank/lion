@@ -16,7 +16,7 @@
     "debug:no-scoped-registries-polyfill": "npm run debug -- --no-scoped-registries-polyfill",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d _site -r git@github.com:ing-bank/lion",
+    "deploy": "gh-pages -d _site -r git@github.com:ing-bank/lion --nojekyll",
     "dev": "astro dev --force",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
