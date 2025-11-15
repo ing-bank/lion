@@ -267,12 +267,19 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
   _increment() {
     const { step, min, max } = this.values;
     const stepMin = min !== Infinity ? min : 0;
+    const epsilon = 1e-10; // Tolerance for floating-point comparison
 
-    let newValue = this.currentValue + step;
+    let newValue;
 
-    if ((this.currentValue + stepMin) % step !== 0) {
-      // If the value is not aligned to step, align it to the nearest step
-      newValue = Math.floor(this.currentValue / step) * step + step + (stepMin % step);
+    const remainder = (this.currentValue - stepMin) % step;
+    const isAligned = Math.abs(remainder) < epsilon || Math.abs(remainder - step) < epsilon;
+
+    if (!isAligned) {
+      // If the value is not aligned to step, align it to the next valid step
+      newValue = Math.ceil((this.currentValue - stepMin) / step) * step + stepMin;
+    } else {
+      // If the value is aligned, just add the step
+      newValue = this.currentValue + step;
     }
 
     if (newValue <= max || max === Infinity) {
@@ -289,12 +296,19 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
   _decrement() {
     const { step, max, min } = this.values;
     const stepMin = min !== Infinity ? min : 0;
+    const epsilon = 1e-10; // Tolerance for floating-point comparison
 
-    let newValue = this.currentValue - step;
+    let newValue;
 
-    if ((this.currentValue + stepMin) % step !== 0) {
-      // If the value is not aligned to step, align it to the nearest step
-      newValue = Math.floor(this.currentValue / step) * step + (stepMin % step);
+    const remainder = (this.currentValue - stepMin) % step;
+    const isAligned = Math.abs(remainder) < epsilon || Math.abs(remainder - step) < epsilon;
+
+    if (!isAligned) {
+      // If the value is not aligned to step, align it to the previous valid step
+      newValue = Math.floor((this.currentValue - stepMin) / step) * step + stepMin;
+    } else {
+      // If the value is aligned, just subtract the step
+      newValue = this.currentValue - step;
     }
 
     if (newValue >= min || min === Infinity) {

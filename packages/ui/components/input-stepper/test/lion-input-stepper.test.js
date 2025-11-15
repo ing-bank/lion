@@ -359,6 +359,47 @@ describe('<lion-input-stepper>', () => {
         await el.updateComplete;
         expect(el.modelValue).to.equal(-13, 'Fail - : (-23 > 100 by 10; val 55)'); // -23 > -13 > -3 > 7
       });
+
+      it('handles decimal step values correctly', async () => {
+        // Test with decimal step 0.1
+        let el = await fixture(
+          html`<lion-input-stepper step="0.1" min="0" max="9" value="5.55"></lion-input-stepper>`,
+        );
+
+        // Test increment with decimal step
+        let incrementButton = el.querySelector('[slot=suffix]');
+        incrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(5.6, 'Fail + : (0 > 9 by 0.1; val 5.55)');
+
+        // Test decrement with decimal step
+        let decrementButton = el.querySelector('[slot=prefix]');
+        decrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(5.5, 'Fail - : (0 > 9 by 0.1; val 5.6)');
+
+        // Test with value that needs alignment
+        el = await fixture(
+          html`<lion-input-stepper step="0.1" min="0" max="9" value="3.27"></lion-input-stepper>`,
+        );
+
+        // Should align to next step when incrementing
+        incrementButton = el.querySelector('[slot=suffix]');
+        incrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(3.3, 'Fail + alignment: (0 > 9 by 0.1; val 3.27)');
+
+        // Reset and test decrement alignment
+        el = await fixture(
+          html`<lion-input-stepper step="0.1" min="0" max="9" value="3.27"></lion-input-stepper>`,
+        );
+
+        // Should align to previous step when decrementing
+        decrementButton = el.querySelector('[slot=prefix]');
+        decrementButton?.dispatchEvent(new Event('click'));
+        await el.updateComplete;
+        expect(el.modelValue).to.equal(3.2, 'Fail - alignment: (0 > 9 by 0.1; val 3.27)');
+      });
     });
   });
 
