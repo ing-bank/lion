@@ -130,3 +130,13 @@ rocket-navigation ul > li:nth-child(n + 6).active > ul {
   font-size: inherit;
   color: inherit;
 }
+
+.announcement-bar {
+  background: var(--primary-color);
+  color: white;
+  text-align: center;
+
+  & a {
+    color: white;
+  }
+}
