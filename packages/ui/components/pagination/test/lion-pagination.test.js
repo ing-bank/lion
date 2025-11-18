@@ -164,4 +164,19 @@ describe('Pagination', () => {
       expect(buttons[3].getAttribute('aria-current')).to.equal('false');
     });
   });
+
+  describe('Ellipsis display', () => {
+    it('should not show ellipsis when count is visiblePages + 1 (count=6, visiblePages=5)', async () => {
+      const el = await fixture(html` <lion-pagination count="6" current="1"></lion-pagination> `);
+      const navItems = Array.from(/** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li'));
+      // Check that no ellipsis is rendered (no <span> elements with '...')
+      const spans = Array.from(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li span'),
+      );
+      expect(spans.length).to.equal(0);
+
+      // There should be 8 nav items: previous button + 6 page buttons + next button
+      expect(navItems.length).to.equal(8);
+    });
+  });
 });
