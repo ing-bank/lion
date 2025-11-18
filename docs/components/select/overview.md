@@ -26,7 +26,7 @@ import '@lion/ui/define/lion-select.js';
 export const main = () => html`
   <lion-select name="favoriteColor" label="Favorite color">
     <select slot="input">
-      <option selected hidden value>Please select</option>
+      <option selected value>Please select</option>
       <option value="red">Red</option>
       <option value="hotpink">Hotpink</option>
       <option value="teal">Teal</option>
