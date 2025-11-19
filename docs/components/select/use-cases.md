@@ -27,7 +27,7 @@ You can preselect an option by setting the property modelValue.
 ```html preview-story
 <lion-select name="favoriteColor" label="Favorite color" .modelValue="${'hotpink'}">
   <select slot="input">
-    <option selected hidden value>Please select</option>
+    <option selected value>Please select</option>
     <option value="red">Red</option>
     <option value="hotpink">Hotpink</option>
     <option value="teal">Teal</option>
@@ -42,7 +42,7 @@ You can disable an option by adding the `disabled` attribute to an option.
 ```html preview-story
 <lion-select name="favoriteColor" label="Favorite color">
   <select slot="input">
-    <option selected hidden value>Please select</option>
+    <option selected value>Please select</option>
     <option value="red">Red</option>
     <option value="hotpink" disabled>Hotpink</option>
     <option value="teal">Teal</option>
@@ -55,7 +55,7 @@ Or by setting the `disabled` attribute on the entire `lion-select` field.
 ```html preview-story
 <lion-select name="favoriteColor" label="Favorite color" disabled>
   <select slot="input">
-    <option selected hidden value>Please select</option>
+    <option selected value>Please select</option>
     <option value="red">Red</option>
     <option value="hotpink">Hotpink</option>
     <option value="teal">Teal</option>
@@ -89,7 +89,7 @@ class MyOptions extends LitElement {
     return html`
       <lion-select name="favoriteColor" label="Favorite color" disabled>
         <select slot="input">
-          <option selected hidden value>Please select</option>
+          <option selected value>Please select</option>
           ${this.colours.map(colour => html`<option value="${colour}">${colour}</option>`)}
         </select>
       </lion-select>
@@ -115,7 +115,7 @@ render() {
   return html`
     <lion-select name="favoriteColor" label="Favorite color" disabled>
       <select slot="input">
-        <option selected hidden value>Please select</option>
+        <option selected value>Please select</option>
         ${repeat(
           this.colours,
           (colour) => colour,
