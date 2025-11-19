@@ -47,7 +47,8 @@
   },
   "workspaces": [
     "packages/*",
-    "packages-node/*"
+    "packages-node/*",
+    "site"
   ],
   "dependencies": {
     "lit": "^3.2.1"
