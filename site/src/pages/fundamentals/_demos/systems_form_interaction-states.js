@@ -4,7 +4,7 @@ import { renderLitAsNode } from '@lion/ui/helpers.js';
 import '@lion/ui/define/lion-input.js';
 import '@lion/ui/define/lion-input-date.js';
 import { Validator, Unparseable, MinDate, Required } from '@lion/ui/form-core.js';
-import '/node_modules/_lion_docs/fundamentals/systems/form/assets/h-output.js';
+import '@lion/demo-systems/form/assets/h-output.js';
 /** stories code **/
 export const interactionStates = () => html`
   <lion-input

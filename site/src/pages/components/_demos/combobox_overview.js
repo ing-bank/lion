@@ -1,9 +1,9 @@
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
-import { listboxData } from '/node_modules/_lion_docs/components/listbox/src/listboxData.js';
+import { listboxData } from '@lion/demo-components/listbox/src/listboxData.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
-import { lazyRender } from '/node_modules/_lion_docs/components/combobox/src/lazyRender.js';
+import { lazyRender } from '@lion/demo-components/combobox/src/lazyRender.js';
 /** stories code **/
 export const main = () => html`
   <lion-combobox name="combo" label="Default">

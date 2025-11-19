@@ -5,7 +5,7 @@ import { ref, createRef } from 'lit/directives/ref.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
 import '@lion/ui/define/lion-input-tel.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import '/node_modules/_lion_docs/fundamentals/systems/form/assets/h-output.js';
+import '@lion/demo-systems/form/assets/h-output.js';
 /** stories code **/
 export const main = () => {
   loadDefaultFeedbackMessages();

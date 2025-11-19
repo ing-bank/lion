@@ -4,7 +4,7 @@ import { LionField } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 
-import '/node_modules/_lion_docs/fundamentals/systems/form/assets/h-output.js';
+import '@lion/demo-systems/form/assets/h-output.js';
 
 // A) the custom [slot=input] or 'HTMLElementWithValue'
 class DummySlider extends LitElement {

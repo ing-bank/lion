@@ -1,9 +1,9 @@
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
 import { icons } from '@lion/ui/icon.js';
-import '/node_modules/_lion_docs/components/icon/assets/iconset-bugs.js';
-import '/node_modules/_lion_docs/components/icon/assets/iconset-misc.js';
-import * as spaceSet from '/node_modules/_lion_docs/components/icon/assets/iconset-space.js';
+import '@lion/demo-components/icon/assets/iconset-bugs.js';
+import '@lion/demo-components/icon/assets/iconset-misc.js';
+import * as spaceSet from '@lion/demo-components/icon/assets/iconset-space.js';
 
 import '@lion/ui/define/lion-icon.js';
 /** stories code **/

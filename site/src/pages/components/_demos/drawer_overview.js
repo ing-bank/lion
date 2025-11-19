@@ -3,12 +3,12 @@ import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-drawer.js';
 import '@lion/ui/define/lion-icon.js';
 import { icons } from '@lion/ui/icon.js';
-import { demoStyle } from '/node_modules/_lion_docs/components/drawer/src/demoStyle.js';
+import { demoStyle } from '@lion/demo-components/drawer/src/demoStyle.js';
 
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {
     case 'misc':
-      return import('/node_modules/_lion_docs/components/icon/assets/iconset-misc.js').then(module => module[name]);
+      return import('@lion/demo-components/icon/assets/iconset-misc.js').then(module => module[name]);
     default:
       throw new Error(`Unknown iconset ${iconset}`);
   }

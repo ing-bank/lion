@@ -2,8 +2,8 @@
 import { html } from '@mdjs/mdjs-preview';
 import { repeat } from 'lit/directives/repeat.js';
 import '@lion/ui/define/lion-select-rich.js';
-import '/node_modules/_lion_docs/components/select-rich/src/intl-select-rich.js';
-import { regionMetaList } from '/node_modules/_lion_docs/components/select-rich/src/regionMetaList.js';
+import '@lion/demo-components/select-rich/src/intl-select-rich.js';
+import { regionMetaList } from '@lion/demo-components/select-rich/src/regionMetaList.js';
 /** stories code **/
 export const IntlSelectRich = () => html`
   <intl-select-rich label="Choose a region" name="regions">

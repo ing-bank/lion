@@ -3,7 +3,7 @@ import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-input.js';
 import { Unparseable } from '@lion/ui/form-core.js';
 import { liveFormatPhoneNumber } from '@lion/ui/input-tel.js';
-import '/node_modules/_lion_docs/fundamentals/systems/form/assets/h-output.js';
+import '@lion/demo-systems/form/assets/h-output.js';
 /** stories code **/
 export const parser = () => html`
   <lion-input

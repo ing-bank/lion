@@ -2,7 +2,7 @@
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-dialog.js';
 
-import { demoStyle } from '/node_modules/_lion_docs/components/dialog/src/demoStyle.js';
+import { demoStyle } from '@lion/demo-components/dialog/src/demoStyle.js';
 /** stories code **/
 export const main = () => html`
   <style>

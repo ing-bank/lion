@@ -1,6 +1,6 @@
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
-import '/node_modules/_lion_docs/components/button/assets/bootstrap-button.js';
+import '@lion/demo-components/button/assets/bootstrap-button.js';
 /** stories code **/
 const capitalize = s => s[0].toUpperCase() + s.slice(1);
 

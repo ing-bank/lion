@@ -6,11 +6,11 @@ import '@lion/ui/define/lion-icon.js';
 icons.addIconResolver('lion', (iconset, name) => {
   switch (iconset) {
     case 'bugs':
-      return import('/node_modules/_lion_docs/components/icon/assets/iconset-bugs.js').then(module => module[name]);
+      return import('@lion/demo-components/icon/assets/iconset-bugs.js').then(module => module[name]);
     case 'space':
-      return import('/node_modules/_lion_docs/components/icon/assets/iconset-space.js').then(module => module[name]);
+      return import('@lion/demo-components/icon/assets/iconset-space.js').then(module => module[name]);
     case 'misc':
-      return import('/node_modules/_lion_docs/components/icon/assets/iconset-misc.js').then(module => module[name]);
+      return import('@lion/demo-components/icon/assets/iconset-misc.js').then(module => module[name]);
     default:
       throw new Error(`Unknown iconset ${iconset}`);
   }

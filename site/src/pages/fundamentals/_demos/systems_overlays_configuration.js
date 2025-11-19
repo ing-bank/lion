@@ -1,7 +1,7 @@
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
-import '/node_modules/_lion_docs/fundamentals/systems/overlays/assets/demo-el-using-overlaymixin.js';
-import '/node_modules/_lion_docs/fundamentals/systems/overlays/assets/applyDemoOverlayStyles.js';
+import '@lion/demo-systems/overlays/assets/demo-el-using-overlaymixin.js';
+import '@lion/demo-systems/overlays/assets/applyDemoOverlayStyles.js';
 import { withDropdownConfig, withModalDialogConfig, withTooltipConfig } from '@lion/ui/overlays.js';
 /** stories code **/
 export const placementLocal = () => {

@@ -1,14 +1,14 @@
 /** script code **/
 import { LitElement, html, repeat } from '@mdjs/mdjs-preview';
-import { listboxData, listboxComplexData } from '/node_modules/_lion_docs/components/listbox/src/listboxData.js';
+import { listboxData, listboxComplexData } from '@lion/demo-components/listbox/src/listboxData.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { Required } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
-import '/node_modules/_lion_docs/components/combobox/src/demo-selection-display.js';
-import { lazyRender } from '/node_modules/_lion_docs/components/combobox/src/lazyRender.js';
-import levenshtein from '/node_modules/_lion_docs/components/combobox/src/levenshtein.js';
+import '@lion/demo-components/combobox/src/demo-selection-display.js';
+import { lazyRender } from '@lion/demo-components/combobox/src/lazyRender.js';
+import levenshtein from '@lion/demo-components/combobox/src/levenshtein.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 loadDefaultFeedbackMessages();
 /** stories code **/

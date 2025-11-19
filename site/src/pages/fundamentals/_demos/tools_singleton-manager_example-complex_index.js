@@ -1,1 +1,1 @@
-import '/node_modules/_lion_docs/fundamentals/tools/singleton-manager/example-complex/demo-app.js';
+import '@lion/demo-tools/singleton-manager/example-complex/demo-app.js';

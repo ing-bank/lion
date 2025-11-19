@@ -1,7 +1,7 @@
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-select-rich.js';
-import '/node_modules/_lion_docs/components/input-tel-dropdown/src/intl-input-tel-dropdown.js';
+import '@lion/demo-components/input-tel-dropdown/src/intl-input-tel-dropdown.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 /** stories code **/
 export const IntlInputTelDropdown = () => {

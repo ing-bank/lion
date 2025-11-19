@@ -1,8 +1,8 @@
 /** script code **/
 import { LitElement, html } from '@mdjs/mdjs-preview';
-import '/node_modules/_lion_docs/components/tabs/src/lea-tabs.js';
-import '/node_modules/_lion_docs/components/tabs/src/lea-tab.js';
-import '/node_modules/_lion_docs/components/tabs/src/lea-tab-panel.js';
+import '@lion/demo-components/tabs/src/lea-tabs.js';
+import '@lion/demo-components/tabs/src/lea-tab.js';
+import '@lion/demo-components/tabs/src/lea-tab-panel.js';
 /** stories code **/
 export const main = () => html`
   <lea-tabs>

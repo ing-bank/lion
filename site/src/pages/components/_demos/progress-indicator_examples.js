@@ -1,8 +1,8 @@
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-progress-indicator.js';
-import '/node_modules/_lion_docs/components/progress-indicator/assets/my-indeterminate-progress-spinner.js';
-import '/node_modules/_lion_docs/components/progress-indicator/assets/my-determinate-progress-bar.js';
+import '@lion/demo-components/progress-indicator/assets/my-indeterminate-progress-spinner.js';
+import '@lion/demo-components/progress-indicator/assets/my-determinate-progress-bar.js';
 
 const changeProgress = () => {
   const progressBar = document.getElementsByName('my-bar')[0];

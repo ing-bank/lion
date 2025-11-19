@@ -1,9 +1,9 @@
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
-import '/node_modules/_lion_docs/components/combobox/src/md-combobox/md-combobox.js';
-import '/node_modules/_lion_docs/components/combobox/src/gh-combobox/gh-combobox.js';
-import '/node_modules/_lion_docs/components/combobox/src/wa-combobox/wa-combobox.js';
-import '/node_modules/_lion_docs/components/combobox/src/google-combobox/google-combobox.js';
+import '@lion/demo-components/combobox/src/md-combobox/md-combobox.js';
+import '@lion/demo-components/combobox/src/gh-combobox/gh-combobox.js';
+import '@lion/demo-components/combobox/src/wa-combobox/wa-combobox.js';
+import '@lion/demo-components/combobox/src/google-combobox/google-combobox.js';
 /** stories code **/
 export const MaterialDesign = () => html`
   <md-combobox name="combo" label="Default">

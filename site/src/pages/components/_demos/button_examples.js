@@ -1,7 +1,7 @@
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-button.js';
-import iconSvg from '/node_modules/_lion_docs/components/button/src/icon.svg.js';
+import iconSvg from '@lion/demo-components/button/src/icon.svg.js';
 /** stories code **/
 export const iconButton = () => html`<lion-button>${iconSvg(html)}Bug</lion-button>`;
 export const iconOnly = () => html`<lion-button aria-label="Bug">${iconSvg(html)}</lion-button>`;

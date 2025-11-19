@@ -4,7 +4,7 @@ import { LionInput } from '@lion/ui/input.js';
 import { LionInputDate } from '@lion/ui/input-date.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import '@lion/ui/define/lion-input.js';
-import '/node_modules/_lion_docs/fundamentals/systems/form/assets/h-output.js';
+import '@lion/demo-systems/form/assets/h-output.js';
 
 loadDefaultFeedbackMessages();
 /** stories code **/

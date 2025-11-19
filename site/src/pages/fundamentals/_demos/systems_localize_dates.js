@@ -1,7 +1,7 @@
 /** script code **/
 import { css, html } from '@mdjs/mdjs-preview';
 import { formatNumber, formatNumberToParts, formatDate } from '@lion/ui/localize.js';
-import allLocales from '/node_modules/_lion_docs/fundamentals/systems/localize/assets/all-locales.js';
+import allLocales from '@lion/demo-systems/localize/assets/all-locales.js';
 
 const formatDateDemoStyle = css`
   .demo-table {

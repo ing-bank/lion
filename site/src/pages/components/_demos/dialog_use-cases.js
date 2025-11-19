@@ -1,10 +1,10 @@
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-dialog.js';
-import { demoStyle } from '/node_modules/_lion_docs/components/dialog/src/demoStyle.js';
-import '/node_modules/_lion_docs/components/dialog/src/styled-dialog-content.js';
-import '/node_modules/_lion_docs/components/dialog/src/slots-dialog-content.js';
-import '/node_modules/_lion_docs/components/dialog/src/external-dialog.js';
+import { demoStyle } from '@lion/demo-components/dialog/src/demoStyle.js';
+import '@lion/demo-components/dialog/src/styled-dialog-content.js';
+import '@lion/demo-components/dialog/src/slots-dialog-content.js';
+import '@lion/demo-components/dialog/src/external-dialog.js';
 /** stories code **/
 export const alertDialog = () => {
   return html`

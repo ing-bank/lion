@@ -1,7 +1,7 @@
 /** script code **/
 import { html, css } from '@mdjs/mdjs-preview';
 import { formatNumber, formatNumberToParts } from '@lion/ui/localize.js';
-import allLocales from '/node_modules/_lion_docs/fundamentals/systems/localize/assets/all-locales.js';
+import allLocales from '@lion/demo-systems/localize/assets/all-locales.js';
 
 const formatNumberDemoStyle = css`
   .demo-table {

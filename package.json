@@ -49,7 +49,10 @@
   "workspaces": [
     "packages/*",
     "packages-node/*",
-    "site"
+    "site",
+    "docs/components",
+    "docs/fundamentals/systems",
+    "docs/fundamentals/tools"
   ],
   "dependencies": {
     "lit": "^3.2.1"

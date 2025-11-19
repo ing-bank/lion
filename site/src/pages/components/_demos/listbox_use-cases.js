@@ -1,6 +1,6 @@
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
-import { listboxData } from '/node_modules/_lion_docs/components/listbox/src/listboxData.js';
+import { listboxData } from '@lion/demo-components/listbox/src/listboxData.js';
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 import '@lion/ui/define/lion-listbox.js';

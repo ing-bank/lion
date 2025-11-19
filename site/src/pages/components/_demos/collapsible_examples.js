@@ -2,8 +2,8 @@
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-collapsible.js';
 import '@lion/ui/define/lion-button.js';
-import '/node_modules/_lion_docs/components/collapsible/assets/CustomCollapsible.js';
-import '/node_modules/_lion_docs/components/collapsible/assets/applyDemoCollapsibleStyles.js';
+import '@lion/demo-components/collapsible/assets/CustomCollapsible.js';
+import '@lion/demo-components/collapsible/assets/applyDemoCollapsibleStyles.js';
 /** stories code **/
 export const customInvokerTemplate = () => html`
   <lion-collapsible style="margin-top:16px;">

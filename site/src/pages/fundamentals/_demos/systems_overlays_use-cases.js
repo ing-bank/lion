@@ -9,9 +9,9 @@ import {
   withModalDialogConfig,
 } from '@lion/ui/overlays.js';
 
-import '/node_modules/_lion_docs/fundamentals/systems/overlays/assets/demo-el-using-overlaymixin.js';
-import '/node_modules/_lion_docs/fundamentals/systems/overlays/assets/demo-overlay-backdrop.js';
-import '/node_modules/_lion_docs/fundamentals/systems/overlays/assets/applyDemoOverlayStyles.js';
+import '@lion/demo-systems/overlays/assets/demo-el-using-overlaymixin.js';
+import '@lion/demo-systems/overlays/assets/demo-overlay-backdrop.js';
+import '@lion/demo-systems/overlays/assets/applyDemoOverlayStyles.js';
 import { ref, createRef } from 'lit/directives/ref.js';
 /** stories code **/
 export const main = () => html`
