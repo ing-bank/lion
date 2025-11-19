@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "@lion/demo-systems",
   "version": "1.0.0",
   "description": "Systems for demonstration",
