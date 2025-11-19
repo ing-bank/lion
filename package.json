@@ -4,7 +4,7 @@
   "license": "MIT",
   "author": "ing-bank",
   "scripts": {
-    "build": "npm run build:site && npm run build:rocket && npm run build:site:update-links && mv dist _site/next",
+    "build": "npm run build:site && npm run build:rocket && npm run build:site:update-links && mv site/dist _site/next",
     "build:clean": "find src/pages -path \"*/_demos/*.js\" -type f -delete && rm -rf node_modules/_lion_docs && npm run build",
     "build:rocket": "rocket build",
     "build:site": "npm run build -w site",

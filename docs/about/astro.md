@@ -5,7 +5,7 @@ description: Technically live with Astro (while still fully compatible with Rock
 
 # Astro Portal Announcement
 
-We are excited to introduce the new version of our portal, now built with the Astro framework! You can access it at <a href="https://lion.js.org/next" rel="noopener noreferrer">/next</a>.
+We are excited to introduce the new version of our portal, now built with the Astro framework! You can access it at <a href="/next" rel="noopener noreferrer">/next</a>.
 
 ## What’s New?
 

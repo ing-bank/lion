@@ -3,7 +3,6 @@ import lit from '@astrojs/lit';
 import { defineConfig } from 'astro/config';
 import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
 import pagefind from 'astro-pagefind';
-// import { remarkProcessDemos } from './src/utils/remark-plugings/remark-process-demos.mjs';
 import { remarkModifiedTime } from './src/utils/remark-plugings/remark-modified-time.mjs';
 
 const mdjsSetupConfig = {
@@ -29,7 +28,6 @@ export default defineConfig({
       mdjsParse,
       mdjsStoryParse,
       [mdjsSetupCode, mdjsSetupConfig],
-      // remarkProcessDemos,
       remarkModifiedTime,
     ],
     shikiConfig: {
