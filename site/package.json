@@ -1,5 +1,6 @@
 {
-  "name": "lion-site",
+  "private": true,
+  "name": "@lion/site",
   "bugs": {
     "url": "https://github.com/ing-bank/lion/issues"
   },
@@ -14,7 +15,30 @@
   },
   "main": "index.js",
   "scripts": {
+    "build": "astro telemetry disable && ASTRO_BASE_URL=/next astro build --force",
+    "build:update-links": "node ./src/utils/rewrite-links.mjs",
+    "dev": "astro dev --force",
+    "start": "astro dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {}
+  "dependencies": {
+    "@lion/ui": "^0.15.2",
+    "lit": "^3.2.1"
+  },
+  "devDependencies": {
+    "@astrojs/lit": "^4.3.0",
+    "@astrojs/mdx": "^4.0.8",
+    "@mdjs/core": "^0.21.1",
+    "@mdjs/mdjs-preview": "^0.6.0",
+    "@mdjs/mdjs-story": "^0.4.0",
+    "@open-wc/scoped-elements": "^3.0.5",
+    "@webcomponents/scoped-custom-element-registry": "^0.0.10",
+    "@webcomponents/template-shadowroot": "^0.2.1",
+    "astro": "^5.3.0",
+    "astro-pagefind": "^1.8.3",
+    "astro-seo": "^0.7.5",
+    "es-module-lexer": "^1.7.0",
+    "rocket-preset-extend-lion-docs": "^0.4.0",
+    "unist-util-visit": "^5.0.0"
+  }
 }

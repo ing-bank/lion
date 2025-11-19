@@ -1,3 +1,4 @@
+// @ts-check
 import lit from '@astrojs/lit';
 import { defineConfig } from 'astro/config';
 import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
