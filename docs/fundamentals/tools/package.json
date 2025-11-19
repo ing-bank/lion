@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "@lion/demo-tools",
+  "version": "1.0.0",
+  "description": "Tools for demonstration",
+  "license": "MIT",
+  "author": "ing-bank",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {}
+}
