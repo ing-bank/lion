@@ -1,4 +1,4 @@
-import { html, css, render } from 'lit';
+import { html, css, render, nothing } from 'lit';
 import { formatNumber, LocalizeMixin, parseNumber } from '@lion/ui/localize-no-side-effects.js';
 import { LionInput } from '@lion/ui/input.js';
 import { IsNumber, MinNumber, MaxNumber } from '@lion/ui/form-core.js';
@@ -96,8 +96,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
     this._increment = this._increment.bind(this);
     this._decrement = this._decrement.bind(this);
-    this._onEnterButton = this._onEnterButton.bind(this);
-    this._onLeaveButton = this._onLeaveButton.bind(this);
   }
 
   connectedCallback() {
@@ -243,6 +241,26 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
     } else {
       this._inputNode.removeAttribute('aria-valuenow');
       this._inputNode.removeAttribute('aria-valuetext');
+    }
+    this._destroyOutputContent();
+  }
+
+  _destroyOutputContent() {
+    const outputElement = /** @type {HTMLElement} */ (
+      this.shadowRoot?.querySelector('.input-stepper__value')
+    );
+
+    const timeoutValue = outputElement?.dataset?.selfDestruct
+      ? Number(outputElement.dataset.selfDestruct)
+      : 2000;
+    clearTimeout(this.timer);
+    if (outputElement) {
+      this.timer = setTimeout(() => {
+        if (outputElement.parentNode) {
+          this.__valueText = nothing;
+          this.requestUpdate();
+        }
+      }, timeoutValue);
     }
   }
 
@@ -394,8 +412,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       <button
         ?disabled=${this.disabled || this.readOnly}
         @click=${this._decrement}
-        @focus=${this._onEnterButton}
-        @blur=${this._onLeaveButton}
         type="button"
         aria-label="${this.msgLit('lion-input-stepper:decrease')} ${this.fieldName}"
       >
@@ -414,8 +430,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
       <button
         ?disabled=${this.disabled || this.readOnly}
         @click=${this._increment}
-        @focus=${this._onEnterButton}
-        @blur=${this._onLeaveButton}
         type="button"
         aria-label="${this.msgLit('lion-input-stepper:increase')} ${this.fieldName}"
       >
@@ -427,7 +441,9 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
   /** @protected */
   _inputGroupTemplate() {
     return html`
-      <div class="input-stepper__value">${this.__valueText}</div>
+      <output for="${this.fieldName}" data-self-destruct="2000" class="input-stepper__value"
+        >${this.__valueText}</output
+      >
       <div class="input-group">
         ${this._inputGroupBeforeTemplate()}
         <div class="input-group__container">
@@ -437,39 +453,5 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
         ${this._inputGroupAfterTemplate()}
       </div>
     `;
-  }
-
-  /**
-   * @protected
-   * @param {Event} ev
-   */
-  // eslint-disable-next-line no-unused-vars
-  _onEnterButton(ev) {
-    const valueNode = /** @type {HTMLElement} */ (
-      this.shadowRoot?.querySelector('.input-stepper__value')
-    );
-    valueNode.setAttribute('aria-live', 'assertive');
-  }
-
-  /**
-   * Redispatch leave event on host when catching leave event
-   * on the incrementor and decrementor button.
-   *
-   * This redispatched leave event will be caught by
-   * InteractionStateMixin to set "touched" state to true.
-   *
-   * Interacting with the buttons is "user interactions"
-   * the same way as focusing + blurring the field (native input)
-   *
-   * @protected
-   * @param {Event} ev
-   */
-  // eslint-disable-next-line no-unused-vars
-  _onLeaveButton(ev) {
-    const valueNode = /** @type {HTMLElement} */ (
-      this.shadowRoot?.querySelector('.input-stepper__value')
-    );
-    valueNode.removeAttribute('aria-live');
-    this.dispatchEvent(new Event(this._leaveEvent));
   }
 }
