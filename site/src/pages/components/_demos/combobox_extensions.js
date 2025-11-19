@@ -1,9 +1,17 @@
+// @ts-check
 /** script code **/
 import { html } from '@mdjs/mdjs-preview';
 import '@lion/demo-components/combobox/src/md-combobox/md-combobox.js';
 import '@lion/demo-components/combobox/src/gh-combobox/gh-combobox.js';
 import '@lion/demo-components/combobox/src/wa-combobox/wa-combobox.js';
 import '@lion/demo-components/combobox/src/google-combobox/google-combobox.js';
+
+import obamaImgUrlMeta from '@lion/demo-components/combobox/src/wa-combobox/assets/obama.jpeg';
+import trumpImgUrlMeta from '@lion/demo-components/combobox/src/wa-combobox/assets/trump.jpeg';
+import bidenImgUrlMeta from '@lion/demo-components/combobox/src/wa-combobox/assets/biden.jpeg';
+import bushImgUrlMeta from '@lion/demo-components/combobox/src/wa-combobox/assets/bush.jpeg';
+import clintonImgUrlMeta from '@lion/demo-components/combobox/src/wa-combobox/assets/clinton.jpeg';
+
 /** stories code **/
 export const MaterialDesign = () => html`
   <md-combobox name="combo" label="Default">
@@ -24,12 +32,11 @@ export const Github = () => html`
   </gh-combobox>
 `;
 export const Whatsapp = () => {
-  // in Rocket this is resolved based on the URL, in astro this is resolved based on filesystem (or is it?)
-  const obamaImgUrl = new URL('../src/wa-combobox/assets/obama.jpeg', import.meta.url).href;
-  const trumpImgUrl = new URL('../src/wa-combobox/assets/trump.jpeg', import.meta.url).href;
-  const bidenImgUrl = new URL('../src/wa-combobox/assets/biden.jpeg', import.meta.url).href;
-  const bushImgUrl = new URL('../src/wa-combobox/assets/bush.jpeg', import.meta.url).href;
-  const clintonImgUrl = new URL('../src/wa-combobox/assets/clinton.jpeg', import.meta.url).href;
+  const obamaImgUrl = obamaImgUrlMeta.src
+  const trumpImgUrl = trumpImgUrlMeta.src
+  const bidenImgUrl = bidenImgUrlMeta.src
+  const bushImgUrl = bushImgUrlMeta.src
+  const clintonImgUrl = clintonImgUrlMeta.src
 
   return html`
     <wa-combobox name="combo" label="Filter chats">
@@ -130,6 +137,6 @@ for (const story of stories) {
   }
 };
 if (needsMdjsElements) {
-  if (!customElements.get('mdjs-preview')) { import('/node_modules/@mdjs/mdjs-preview/src/define/define.js'); }
-  if (!customElements.get('mdjs-story')) { import('/node_modules/@mdjs/mdjs-story/src/define.js'); }
+  if (!customElements.get('mdjs-preview')) { import('@mdjs/mdjs-preview/define'); }
+  if (!customElements.get('mdjs-story')) { import('@mdjs/mdjs-story/define'); }
 }
