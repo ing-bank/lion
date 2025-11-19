@@ -23,13 +23,6 @@ export default defineConfig({
   base: '/next',
   trailingSlash: 'never',
   integrations: [lit(), pagefind()],
-  vite: {
-    build: {
-      rollupOptions: {
-        external: ['/node_modules/@mdjs/mdjs-preview/src/define/define.js'],
-      },
-    },
-  },
   markdown: {
     // ing-web
     remarkPlugins: [
