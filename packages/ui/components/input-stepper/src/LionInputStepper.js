@@ -441,7 +441,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
   /** @protected */
   _inputGroupTemplate() {
     return html`
-      <output for="${this.fieldName}" data-self-destruct="2000" class="input-stepper__value"
+      <output for="${this._inputId}" data-self-destruct="2000" class="input-stepper__value"
         >${this.__valueText}</output
       >
       <div class="input-group">
