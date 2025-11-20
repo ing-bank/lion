@@ -197,7 +197,7 @@ export class LionPagination extends LocalizeMixin(LitElement) {
     // If there are more pages then we want to display we have to redo the list each time
     // Else we can just return the same list every time.
     // Allow one extra page without ellipsis (e.g., count=6 when visiblePages=5)
-    if (this.count > this.__visiblePages + 1) {
+    if (this.count > this.__visiblePages + 2) {
       // Calculate left side of current page and right side
       const pos3 = this.current - 1;
       const pos4 = this.current;
