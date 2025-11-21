@@ -178,5 +178,31 @@ describe('Pagination', () => {
       // There should be 8 nav items: previous button + 6 page buttons + next button
       expect(navItems.length).to.equal(8);
     });
+
+    it('should not show ellipsis when count is visiblePages + 2 (count=7, visiblePages=5)', async () => {
+      const el = await fixture(html` <lion-pagination count="7" current="1"></lion-pagination> `);
+      // Check that no ellipsis is rendered (no <span> elements with '...')
+      const spans = Array.from(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li span'),
+      );
+      expect(spans.length).to.equal(0);
+
+      // There should be 9 nav items: previous button + 7 page buttons + next button
+      const navItems = Array.from(/** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li'));
+      expect(navItems.length).to.equal(9);
+    });
+
+    it('should show ellipsis when count is visiblePages + 3 (count=8, visiblePages=5)', async () => {
+      const el = await fixture(html` <lion-pagination count="8" current="1"></lion-pagination> `);
+      // Check that ellipsis is rendered (should have <span> elements with '...')
+      const spans = Array.from(
+        /** @type {ShadowRoot} */ (el.shadowRoot).querySelectorAll('li span'),
+      );
+      expect(spans.length).to.be.greaterThan(0);
+
+      // Verify the ellipsis contains '...'
+      const ellipsisText = Array.from(spans).map(span => span.textContent);
+      expect(ellipsisText).to.include('...');
+    });
   });
 });
