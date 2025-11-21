@@ -81,19 +81,13 @@ You can use `slot="label"` instead of the `label` attribute for defining more co
 ```html preview-story
 <lion-checkbox-group name="scientists[]" label="Favorite scientists">
   <lion-checkbox .choiceValue="${'Archimedes'}">
-    <label slot="label"
-      ><a href="https://wikipedia.org/wiki/Archimedes" target="_blank">Archimedes</a></label
-    >
+    <label slot="label"><strong>Archimedes</strong></label>
   </lion-checkbox>
   <lion-checkbox .choiceValue="${'Francis Bacon'}">
-    <label slot="label"
-      ><a href="https://wikipedia.org/wiki/Francis_Bacon" target="_blank">Francis Bacon</a></label
-    >
+    <label slot="label"><strong>Francis Bacon</strong></label>
   </lion-checkbox>
   <lion-checkbox .choiceValue="${'Marie Curie'}">
-    <label slot="label"
-      ><a href="https://wikipedia.org/wiki/Marie_Curie" target="_blank">Marie Curie</a></label
-    >
+    <label slot="label"><strong>Marie Curie</strong></label>
   </lion-checkbox>
 </lion-checkbox-group>
 ```

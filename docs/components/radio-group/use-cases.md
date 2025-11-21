@@ -86,19 +86,13 @@ You can use `slot="label"` instead of the `label` attribute for defining more co
 export const label = () => html`
   <lion-radio-group name="dinos_7" label="Favourite dinosaur">
     <lion-radio .choiceValue="${'allosaurus'}">
-      <label slot="label"
-        ><a href="https://wikipedia.org/wiki/allosaurus" target="_blank">allosaurus</a></label
-      >
+      <label slot="label"><strong>allosaurus</strong></label>
     </lion-radio>
     <lion-radio .choiceValue="${'brontosaurus'}">
-      <label slot="label"
-        ><a href="https://wikipedia.org/wiki/brontosaurus" target="_blank">brontosaurus</a></label
-      >
+      <label slot="label"><strong>brontosaurus</strong></label>
     </lion-radio>
     <lion-radio .choiceValue="${'diplodocus'}">
-      <label slot="label"
-        ><a href="https://wikipedia.org/wiki/diplodocus" target="_blank">diplodocus</a></label
-      >
+      <label slot="label"><strong>diplodocus</strong></label>
     </lion-radio>
   </lion-radio-group>
 `;
