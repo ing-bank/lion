@@ -1,4 +1,5 @@
 import { expect, fixture as _fixture, nextFrame } from '@open-wc/testing';
+import { nothing } from 'lit';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import { formatNumber } from '@lion/ui/localize-no-side-effects.js';
@@ -176,31 +177,6 @@ describe('<lion-input-stepper>', () => {
       const decrementButton = el.querySelector('[slot=prefix]');
       decrementButton?.dispatchEvent(new Event('click'));
       expect(counter).to.equal(1);
-    });
-
-    it('fires a leave event ("blur") on button clicks', async () => {
-      const blurSpy = sinon.spy();
-      const el = await fixture(html`
-        <lion-input-stepper @blur=${blurSpy} name="year" label="Years"></lion-input-stepper>
-      `);
-
-      expect(el.value).to.equal('');
-      const decrementButton = el.querySelector('[slot=prefix]');
-      decrementButton?.dispatchEvent(new Event('focus'));
-      decrementButton?.dispatchEvent(new Event('click'));
-      decrementButton?.dispatchEvent(new Event('blur'));
-      expect(el.value).to.equal('−1');
-      expect(blurSpy.calledOnce).to.be.true;
-      expect(el.touched).to.be.true;
-
-      el.touched = false;
-      const incrementButton = el.querySelector('[slot=suffix]');
-      incrementButton?.dispatchEvent(new Event('focus'));
-      incrementButton?.dispatchEvent(new Event('click'));
-      incrementButton?.dispatchEvent(new Event('blur'));
-      expect(el.value).to.equal('0');
-      expect(blurSpy.calledTwice).to.be.true;
-      expect(el.touched).to.be.true;
     });
 
     it('should update min and max attributes when min and max property change', async () => {
@@ -403,6 +379,210 @@ describe('<lion-input-stepper>', () => {
     });
   });
 
+  describe('_destroyOutputContent method', () => {
+    beforeEach(() => {
+      // Ensure clean state for each test
+      sinon.restore();
+    });
+
+    it('should clear existing timer before setting a new one', async () => {
+      const el = await fixture(defaultInputStepper);
+      const clearTimeoutSpy = sinon.spy(window, 'clearTimeout');
+
+      // Set an initial timer
+      el.timer = setTimeout(() => {}, 1000);
+      const initialTimer = el.timer;
+
+      // Call _destroyOutputContent
+      el._destroyOutputContent();
+
+      expect(clearTimeoutSpy.calledWith(initialTimer)).to.be.true;
+      clearTimeoutSpy.restore();
+    });
+
+    it('should set __valueText to nothing and request update after timeout', async () => {
+      const el = await fixture(defaultInputStepper);
+      const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
+      const clock = sinon.useFakeTimers();
+
+      // Set initial value text
+      el.__valueText = 'test value';
+
+      // Call _destroyOutputContent
+      el._destroyOutputContent();
+
+      // Fast forward time by 2000ms (default timeout)
+      clock.tick(2000);
+
+      await expect(el.__valueText).to.equal(nothing);
+      expect(requestUpdateSpy.calledOnce).to.be.true;
+
+      clock.restore();
+      requestUpdateSpy.restore();
+    });
+
+    it('should use custom timeout from data-self-destruct attribute', async () => {
+      const el = await fixture(html`
+        <lion-input-stepper name="test" label="Test"> </lion-input-stepper>
+      `);
+
+      await el.updateComplete;
+
+      // Get the output element and set custom self-destruct value
+      const outputElement = /** @type {HTMLElement} */ (
+        el.shadowRoot?.querySelector('.input-stepper__value')
+      );
+      if (outputElement) {
+        outputElement.dataset.selfDestruct = '5000';
+      }
+
+      const clock = sinon.useFakeTimers();
+      const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
+
+      el.__valueText = 'test value';
+      el._destroyOutputContent();
+
+      // Should not trigger after default 2000ms
+      clock.tick(2000);
+      await expect(el.__valueText).to.equal('test value');
+      expect(requestUpdateSpy.called).to.be.false;
+
+      // Should trigger after custom 5000ms
+      clock.tick(3000); // Total 5000ms
+      await expect(el.__valueText).to.equal(nothing);
+      expect(requestUpdateSpy.calledOnce).to.be.true;
+
+      clock.restore();
+      requestUpdateSpy.restore();
+    });
+
+    it('should handle invalid data-self-destruct value by using default timeout', async () => {
+      const el = await fixture(html`
+        <lion-input-stepper name="test" label="Test"> </lion-input-stepper>
+      `);
+
+      await el.updateComplete;
+
+      // Get the output element and set invalid self-destruct value
+      const outputElement = /** @type {HTMLElement} */ (
+        el.shadowRoot?.querySelector('.input-stepper__value')
+      );
+      if (outputElement) {
+        outputElement.dataset.selfDestruct = 'invalid';
+      }
+
+      const clock = sinon.useFakeTimers();
+      const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
+
+      el.__valueText = 'test value';
+      el._destroyOutputContent();
+
+      // Should use default 2000ms when invalid value is provided
+      clock.tick(2000);
+      await expect(el.__valueText).to.equal(nothing);
+      expect(requestUpdateSpy.calledOnce).to.be.true;
+
+      clock.restore();
+      requestUpdateSpy.restore();
+    });
+
+    it('should not set timeout if output element does not exist', async () => {
+      const el = await fixture(defaultInputStepper);
+      const setTimeoutSpy = sinon.spy(window, 'setTimeout');
+
+      // Mock shadowRoot to return null for querySelector
+      const originalQuerySelector = el.shadowRoot?.querySelector;
+      if (el.shadowRoot) {
+        el.shadowRoot.querySelector = () => null;
+      }
+
+      el._destroyOutputContent();
+
+      expect(setTimeoutSpy.called).to.be.false;
+
+      // Restore original querySelector
+      if (el.shadowRoot && originalQuerySelector) {
+        el.shadowRoot.querySelector = originalQuerySelector;
+      }
+      setTimeoutSpy.restore();
+    });
+
+    it('should only execute timeout callback if output element still has parent', async () => {
+      const el = await fixture(defaultInputStepper);
+      const clock = sinon.useFakeTimers();
+      const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
+
+      el.__valueText = 'test value';
+      el._destroyOutputContent();
+
+      // Remove the output element from DOM before timeout
+      const outputElement = el.shadowRoot?.querySelector('.input-stepper__value');
+      if (outputElement && outputElement.parentNode) {
+        outputElement.parentNode.removeChild(outputElement);
+      }
+
+      // Fast forward time
+      clock.tick(2000);
+
+      // Should not have updated since element was removed
+      expect(requestUpdateSpy.called).to.be.false;
+      expect(el.__valueText).to.equal('test value');
+
+      clock.restore();
+      requestUpdateSpy.restore();
+    });
+
+    it('should be called when increment button is clicked', async () => {
+      const el = await fixture(defaultInputStepper);
+      const destroyOutputSpy = sinon.spy(el, '_destroyOutputContent');
+
+      const incrementButton = el.querySelector('[slot=suffix]');
+      incrementButton?.dispatchEvent(new Event('click'));
+
+      expect(destroyOutputSpy.calledOnce).to.be.true;
+      destroyOutputSpy.restore();
+    });
+
+    it('should be called when decrement button is clicked', async () => {
+      const el = await fixture(defaultInputStepper);
+      const destroyOutputSpy = sinon.spy(el, '_destroyOutputContent');
+
+      const decrementButton = el.querySelector('[slot=prefix]');
+      decrementButton?.dispatchEvent(new Event('click'));
+
+      expect(destroyOutputSpy.calledOnce).to.be.true;
+      destroyOutputSpy.restore();
+    });
+
+    it('should handle multiple rapid calls by clearing previous timers', async () => {
+      const el = await fixture(defaultInputStepper);
+      const clock = sinon.useFakeTimers();
+      const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
+
+      el.__valueText = 'test value';
+
+      // Call _destroyOutputContent multiple times rapidly
+      el._destroyOutputContent();
+      clock.tick(1000); // 1 second
+
+      el._destroyOutputContent(); // This should clear the previous timer
+      clock.tick(1000); // Total 2 seconds from first call, 1 second from second call
+
+      // Should not have triggered yet since second call reset the timer
+      expect(el.__valueText).to.equal('test value');
+      expect(requestUpdateSpy.called).to.be.false;
+
+      clock.tick(1000); // Total 2 seconds from second call
+
+      // Should trigger now
+      await expect(el.__valueText).to.equal(nothing);
+      expect(requestUpdateSpy.calledOnce).to.be.true;
+
+      clock.restore();
+      requestUpdateSpy.restore();
+    });
+  });
+
   describe('Accessibility', () => {
     it('is a11y AXE accessible', async () => {
       const el = await fixture(defaultInputStepper);
@@ -488,32 +668,6 @@ describe('<lion-input-stepper>', () => {
       await el.updateComplete;
       expect(el._inputNode.hasAttribute('aria-valuemax')).to.be.true;
       expect(el._inputNode.getAttribute('aria-valuemax')).to.equal('1000');
-    });
-
-    it('when decrease button gets focus, it sets aria-live to input-stepper__value', async () => {
-      const el = await fixture(inputStepperWithAttrs);
-      const stepperValue = el.shadowRoot?.querySelector('.input-stepper__value');
-      const decrementButton = el.querySelector('[slot=prefix]');
-
-      decrementButton?.dispatchEvent(new Event('focus'));
-      expect(stepperValue?.hasAttribute('aria-live')).to.be.true;
-      expect(stepperValue?.getAttribute('aria-live')).to.equal('assertive');
-
-      decrementButton?.dispatchEvent(new Event('blur'));
-      expect(stepperValue?.hasAttribute('aria-live')).to.be.false;
-    });
-
-    it('when increase button gets focus, it sets aria-live to input-stepper__value', async () => {
-      const el = await fixture(inputStepperWithAttrs);
-      const stepperValue = el.shadowRoot?.querySelector('.input-stepper__value');
-      const incrementButton = el.querySelector('[slot=suffix]');
-
-      incrementButton?.dispatchEvent(new Event('focus'));
-      expect(stepperValue?.hasAttribute('aria-live')).to.be.true;
-      expect(stepperValue?.getAttribute('aria-live')).to.equal('assertive');
-
-      incrementButton?.dispatchEvent(new Event('blur'));
-      expect(stepperValue?.hasAttribute('aria-live')).to.be.false;
     });
 
     it('decrease button should have aria-label with the component label', async () => {
