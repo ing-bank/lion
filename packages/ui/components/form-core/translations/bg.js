@@ -1,6 +1,6 @@
 export default {
-  validationError: 'Грешка',
-  validationWarning: 'Предупреждение',
-  validationSuccess: 'Успех',
-  validationInfo: 'Информация',
+  validationError: 'Грешка,',
+  validationWarning: 'Предупреждение,',
+  validationSuccess: 'Успех,',
+  validationInfo: 'Информация,',
 };

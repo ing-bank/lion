@@ -1,6 +1,6 @@
 export default {
-  validationError: 'Помилка',
-  validationWarning: 'Попередження',
-  validationSuccess: 'Успішно',
-  validationInfo: 'Інформація',
+  validationError: 'Помилка,',
+  validationWarning: 'Попередження,',
+  validationSuccess: 'Успішно,',
+  validationInfo: 'Інформація,',
 };

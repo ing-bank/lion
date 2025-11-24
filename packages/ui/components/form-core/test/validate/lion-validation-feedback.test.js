@@ -61,12 +61,12 @@ describe('lion-validation-feedback', () => {
     await el.updateComplete;
 
     const validationFeedbackType = el.shadowRoot?.querySelector('.validation-feedback__type');
-    expect(validationFeedbackType?.textContent?.trim()).to.equal('Error');
+    expect(validationFeedbackType?.textContent?.trim()).to.equal('Error,');
 
     el.feedbackData = [{ message: 'hello', type: 'info', validator: new AlwaysInvalid() }];
     await el.updateComplete;
 
-    expect(validationFeedbackType?.textContent?.trim()).to.equal('Info');
+    expect(validationFeedbackType?.textContent?.trim()).to.equal('Info,');
   });
 
   it('it does not share the type if there is no message', async () => {
