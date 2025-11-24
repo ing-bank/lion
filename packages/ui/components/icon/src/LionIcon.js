@@ -84,7 +84,7 @@ export class LionIcon extends LitElement {
           margin-right: 0;
         }
 
-        ::slotted(svg) {
+        ::slotted(*) {
           display: block;
           width: 100%;
           height: 100%;
