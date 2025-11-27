@@ -18,7 +18,7 @@ export default {
     MaxDate: 'Inserire un(a) {fieldName} prima di {params, date, YYYYMMDD}.',
     MinMaxDate:
       'Inserire un(a) {fieldName} tra {params.min, date, YYYYMMDD} e {params.max, date, YYYYMMDD}.',
-    IsDateDisabled: "ТQuesta data non è disponibile, sceglierne un'altra.",
+    IsDateDisabled: "Questa data non è disponibile, sceglierne un'altra.",
     IsEmail: 'Inserire un valore valido per {fieldName} nel formato "name@example.com".',
     MatchesOption:
       'Nessun risultato corrispondente. Provare con una parola chiave o una categoria diversa.',
@@ -41,7 +41,7 @@ export default {
     MaxDate: 'Inserire un(a) {fieldName} prima di {params, date, YYYYMMDD}.',
     MinMaxDate:
       'Inserire un(a) {fieldName} tra {params.min, date, YYYYMMDD} e {params.max, date, YYYYMMDD}.',
-    IsDateDisabled: "ТQuesta data non è disponibile, sceglierne un'altra.",
+    IsDateDisabled: "Questa data non è disponibile, sceglierne un'altra.",
     IsEmail: 'Inserire un valore valido per {fieldName} nel formato "name@example.com".',
     MatchesOption:
       'Nessun risultato corrispondente. Provare con una parola chiave o una categoria diversa.',
