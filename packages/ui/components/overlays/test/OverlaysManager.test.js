@@ -33,10 +33,10 @@ describe('OverlaysManager', () => {
   });
 
   it('provides .teardown() for cleanup', () => {
-    expect(document.head.querySelector('[data-overlays=""]')).not.be.undefined;
+    expect(document.head.querySelector('[data-overlays=""]')).not.to.be.undefined;
 
     mngr.teardown();
-    expect(document.head.querySelector('[data-overlays=""]')).be.null;
+    expect(document.head.querySelector('[data-overlays=""]')).to.be.null;
 
     // safety check via private access (do not use this)
     expect(OverlaysManager.__globalStyleNode).to.be.undefined;
@@ -158,6 +158,35 @@ describe('OverlaysManager', () => {
           'overlays-scroll-lock-ios-fix',
         );
         await dialog.hide();
+        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
+        expect(Array.from(document.documentElement.classList)).to.not.contain(
+          'overlays-scroll-lock-ios-fix',
+        );
+      });
+
+      it('works when multiple controllers are active', async () => {
+        mockIOS();
+        const dialog1 = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
+        await dialog1.show();
+        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
+        expect(Array.from(document.documentElement.classList)).to.contain(
+          'overlays-scroll-lock-ios-fix',
+        );
+
+        const dialog2 = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
+        await dialog2.show();
+        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
+        expect(Array.from(document.documentElement.classList)).to.contain(
+          'overlays-scroll-lock-ios-fix',
+        );
+
+        await dialog1.hide();
+        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
+        expect(Array.from(document.documentElement.classList)).to.contain(
+          'overlays-scroll-lock-ios-fix',
+        );
+
+        await dialog2.hide();
         expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
         expect(Array.from(document.documentElement.classList)).to.not.contain(
           'overlays-scroll-lock-ios-fix',
