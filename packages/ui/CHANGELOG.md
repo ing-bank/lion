@@ -1,5 +1,22 @@
 # @lion/ui
 
+## 0.15.3
+
+### Patch Changes
+
+- 4154801: [validation-message] remove the letter T from IsDateDisabled in Italian message
+- 579e42b: fix(LionInputStepper): improve handling of decimal step values and alignment closes #2615
+- 45af9dc: feat(LionInputStepper): implement self-destructing output content for value display
+  1. from <div class="input-stepper__value">${this.__valueText}</div> to <output class="input-stepper__value"  for="..">${this.\_\_valueText}</output>
+  2. remove the \_onEnterButton() and \_onLeaveButton() logic.
+
+- 9105f50: fix(ValidateMixin): no dispatch validators on readOnly form items
+- 37b24e5: [form-core] improve validation feedback message for screen readers to make it one sentence.
+- b64f520: [lion-input-stepper]: add component label to aria-label of increase and decrease buttons
+- ef0af0e: fix(pagination): remove unnecessary ellipsis when count equals visiblePages + 1
+
+  Fixed issue where LionPagination component incorrectly displayed ellipsis when the total page count was exactly one more than the visible pages setting (e.g., showing [1, 2, 3, 4, 5, '...', 6] instead of [1, 2, 3, 4, 5, 6] when visiblePages=5 and count=6).
+
 ## 0.15.2
 
 ### Patch Changes
