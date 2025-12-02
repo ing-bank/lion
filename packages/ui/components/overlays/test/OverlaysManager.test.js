@@ -180,14 +180,13 @@ describe('OverlaysManager', () => {
           'overlays-scroll-lock-ios-fix',
         );
 
-        await dialog1.hide();
-        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
-        expect(Array.from(document.documentElement.classList)).to.contain(
-          'overlays-scroll-lock-ios-fix',
-        );
+        await dialog2.teardown(); // This is behavior after element removal from DOM for example in some reason we have opened dialog and press browser back button
 
-        await dialog2.hide();
-        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
+        expect(
+          Array.from(document.body.classList).filter(cls =>
+            ['overlays-scroll-lock', 'overlays-scroll-lock-ios-fix'].includes(cls),
+          ),
+        ).to.be.empty;
         expect(Array.from(document.documentElement.classList)).to.not.contain(
           'overlays-scroll-lock-ios-fix',
         );
