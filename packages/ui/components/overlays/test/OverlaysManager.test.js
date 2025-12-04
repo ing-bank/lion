@@ -172,9 +172,18 @@ describe('OverlaysManager', () => {
         expect(Array.from(document.documentElement.classList)).to.contain(
           'overlays-scroll-lock-ios-fix',
         );
-
-        const dialog2 = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
+        const contentNode = /** @type {HTMLElement} */ (await fixture(html`<p>my content</p>`));
+        const dialog2 = new OverlayController(
+          { ...defaultOptions, contentNode, preventsScroll: true },
+          mngr,
+        );
         await dialog2.show();
+        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
+        expect(Array.from(document.documentElement.classList)).to.contain(
+          'overlays-scroll-lock-ios-fix',
+        );
+
+        await dialog1.teardown();
         expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
         expect(Array.from(document.documentElement.classList)).to.contain(
           'overlays-scroll-lock-ios-fix',
@@ -182,14 +191,8 @@ describe('OverlaysManager', () => {
 
         await dialog2.teardown();
 
-        await aTimeout(100);
-
-        expect(dialog1.isShown).to.be.true;
-        expect(Array.from(document.body.classList)).to.include.members([
-          'overlays-scroll-lock',
-          'overlays-scroll-lock-ios-fix',
-        ]);
-        expect(Array.from(document.documentElement.classList)).to.contain(
+        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
+        expect(Array.from(document.documentElement.classList)).to.not.contain(
           'overlays-scroll-lock-ios-fix',
         );
       });
