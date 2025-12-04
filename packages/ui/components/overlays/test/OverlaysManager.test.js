@@ -1,4 +1,4 @@
-import { aTimeout, expect, fixture } from '@open-wc/testing';
+import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import { browserDetection } from '@lion/ui/core.js';
@@ -203,8 +203,6 @@ describe('OverlaysManager', () => {
         await dialog.show();
 
         await dialog.teardown();
-
-        await aTimeout(100); // czekaj na event handler
 
         expect(
           Array.from(document.body.classList).filter(cls =>
