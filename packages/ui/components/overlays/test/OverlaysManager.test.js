@@ -1,4 +1,4 @@
-import { expect, fixture } from '@open-wc/testing';
+import { aTimeout, expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import { browserDetection } from '@lion/ui/core.js';
@@ -180,7 +180,28 @@ describe('OverlaysManager', () => {
           'overlays-scroll-lock-ios-fix',
         );
 
-        await dialog2.teardown(); // This is behavior after element removal from DOM for example in some reason we have opened dialog and press browser back button
+        await dialog2.teardown();
+
+        await aTimeout(100);
+
+        expect(dialog1.isShown).to.be.true;
+        expect(Array.from(document.body.classList)).to.include.members([
+          'overlays-scroll-lock',
+          'overlays-scroll-lock-ios-fix',
+        ]);
+        expect(Array.from(document.documentElement.classList)).to.contain(
+          'overlays-scroll-lock-ios-fix',
+        );
+      });
+
+      it('remove class "overlays-scroll-lock-ios-fix" after teardown', async () => {
+        mockIOS();
+        const dialog = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
+        await dialog.show();
+
+        await dialog.teardown();
+
+        await aTimeout(100); // czekaj na event handler
 
         expect(
           Array.from(document.body.classList).filter(cls =>
