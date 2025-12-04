@@ -1081,6 +1081,9 @@ export class OverlayController extends EventTarget {
       case 'hide':
         this.manager.requestToEnableScroll();
         break;
+      case 'teardown':
+        this.manager.requestToEnableScroll(this);
+        break;
       /* no default */
     }
   }
@@ -1443,6 +1446,10 @@ export class OverlayController extends EventTarget {
     if (this.#isRegisteredOnManager()) {
       this.manager.remove(this);
     }
+
+    // if (this.__wrappingDialogNode?.parentElement) {
+    //  this.__wrappingDialogNode.remove();
+    // }
   }
 
   /** @private */
