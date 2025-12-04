@@ -1,8 +1,8 @@
 import {
   expect,
+  defineCE,
   fixture as _fixture,
   nextFrame,
-  defineCE,
   unsafeStatic,
   html,
 } from '@open-wc/testing';
@@ -16,16 +16,8 @@ import { LionInputStepper } from '../src/LionInputStepper.js';
  */
 const fixture = /** @type {(arg: TemplateResult|string) => Promise<LionInputStepper>} */ (_fixture);
 
-/**
- * @param {{klass?: typeof LionInputStepper }?} customConfig .definePath is the path to the tag definition like in `@lion/ui/define`
- */
-export function runInputStepperSuite(customConfig = {}) {
-  const cfg = {
-    klass: LionInputStepper,
-    ...customConfig,
-  };
-
-  const tagString = defineCE(class extends cfg.klass {});
+export function runInputStepperSuite(klass = LionInputStepper) {
+  const tagString = defineCE(class extends klass {});
   const tag = unsafeStatic(tagString);
 
   const defaultInputStepper = html`
