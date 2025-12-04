@@ -184,8 +184,15 @@ export class OverlaysManager {
     }
   }
 
-  requestToEnableScroll() {
-    const hasOpenSiblingThatPreventsScroll = this.shownList.some(
+  /**
+   * @param {OverlayController} [currentController]
+   */
+  requestToEnableScroll(currentController) {
+    const openedSiblings = currentController
+      ? this.shownList.filter(ctrl => ctrl !== currentController)
+      : this.shownList;
+
+    const hasOpenSiblingThatPreventsScroll = openedSiblings.some(
       ctrl => ctrl.preventsScroll === true,
     );
     if (hasOpenSiblingThatPreventsScroll) {
