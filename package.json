@@ -2,12 +2,13 @@
   "private": true,
   "name": "@lion/root",
   "license": "MIT",
+  "author": "ing-bank",
   "scripts": {
-    "build": "npm run build:astro && npm run build:rocket && npm run build:astro:update-links && mv dist _site/next",
-    "build:astro": "astro telemetry disable && ASTRO_BASE_URL=/next astro build --force",
-    "build:astro:update-links": "node ./src/utils/rewrite-links.mjs",
+    "build": "npm run build:site && npm run build:rocket && npm run build:site:update-links && mv site/dist _site/next",
     "build:clean": "find src/pages -path \"*/_demos/*.js\" -type f -delete && rm -rf node_modules/_lion_docs && npm run build",
     "build:rocket": "rocket build",
+    "build:site": "npm run build -w site",
+    "build:site:update-links": "npm run build:update-links -w site",
     "bundlesize": "rollup -c bundlesize/rollup.config.js && bundlesize",
     "changeset": "changeset",
     "custom-elements-manifest": "npm run custom-elements-manifest --workspaces --if-present && node ./scripts/create-api-tables.mjs",
@@ -17,7 +18,7 @@
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d _site -r git@github.com:ing-bank/lion --nojekyll",
-    "dev": "astro dev --force",
+    "dev": "npm run dev -w site",
     "format": "npm run format:eslint && npm run format:prettier",
     "format:eslint": "eslint --ext .js,.html . --fix",
     "format:prettier": "prettier \"**/*.{js,md,astro}\" \"packages/*/package.json\" \"package.json\" --write",
@@ -33,8 +34,8 @@
     "repo:clean-slate": "git clean -dfX",
     "repo:diff-package-lock": "npx diff-package-lock",
     "start": "rocket start",
-    "start:astro": "astro dev",
     "start:prod": "npm run preview",
+    "start:site": "npm run start -w site",
     "temporary-disabled__lint:types": "npm run types",
     "test": "run-p test:browser test:node",
     "test:browser": "web-test-runner --coverage",
@@ -47,14 +48,16 @@
   },
   "workspaces": [
     "packages/*",
-    "packages-node/*"
+    "packages-node/*",
+    "site",
+    "docs/components",
+    "docs/fundamentals/systems",
+    "docs/fundamentals/tools"
   ],
   "dependencies": {
     "lit": "^3.2.1"
   },
   "devDependencies": {
-    "@astrojs/lit": "^4.3.0",
-    "@astrojs/mdx": "^4.0.8",
     "@babel/core": "^7.25.8",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
     "@changesets/cli": "^2.27.9",
@@ -88,9 +91,6 @@
     "@web/test-runner-playwright": "^0.11.0",
     "@webcomponents/scoped-custom-element-registry": "^0.0.10",
     "@webcomponents/template-shadowroot": "^0.2.1",
-    "astro": "^5.3.0",
-    "astro-pagefind": "^1.8.3",
-    "astro-seo": "^0.7.5",
     "bundlesize": "^1.0.0-beta.2",
     "cem-plugin-vs-code-custom-data-generator": "^1.4.2",
     "chai": "^4.5.0",
@@ -185,23 +185,6 @@
         "We make sure latest version is hoisted and resolved, until we move to astro (when we can regenerate the package-lock.json file w/o breaking Rocket)."
       ]
     }
-  },
-  "dependenciesAstroForTheFuture": {
-    "@astrojs/lit": "^4.3.0",
-    "@astrojs/mdx": "^4.0.8",
-    "@mdjs/core": "^0.21.1",
-    "@mdjs/mdjs-preview": "^0.6.0",
-    "@mdjs/mdjs-story": "^0.4.0",
-    "@open-wc/scoped-elements": "^3.0.5",
-    "@webcomponents/scoped-custom-element-registry": "^0.0.10",
-    "@webcomponents/template-shadowroot": "^0.2.1",
-    "astro": "^5.3.0",
-    "astro-pagefind": "^1.8.3",
-    "astro-seo": "^0.7.5",
-    "es-module-lexer": "^1.7.0",
-    "lit": "^3.2.1",
-    "rocket-preset-extend-lion-docs": "^0.4.0",
-    "unist-util-visit": "^5.0.0"
   },
   "overrides": {
     "sharp": "^0.29.x",

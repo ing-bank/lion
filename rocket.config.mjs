@@ -35,7 +35,7 @@ export default {
     eleventyConfig.addPassthroughCopy('CNAME');
   },
   checkLinks: {
-    ignoreLinkPatterns: ['**/astro'],
+    ignoreLinkPatterns: ['**/astro', '**/next'],
   },
   absoluteBaseUrl: absoluteBaseUrlNetlify('http://localhost:8080'),
   setupUnifiedPlugins: [
