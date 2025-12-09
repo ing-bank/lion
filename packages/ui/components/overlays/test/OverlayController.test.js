@@ -229,38 +229,46 @@ describe('OverlayController', () => {
         await ctrl.show();
         // @ts-expect-error find out why config would/could be undfined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
+        expect(ctrl.manager.shownList).to.have.lengthOf(1);
         ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
         await ctrl.show();
         // @ts-expect-error find out why config would/could be undfined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
+        expect(ctrl.manager.shownList).to.have.lengthOf(1);
 
         ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'global' }) });
         await ctrl.show();
         // @ts-expect-error find out why config would/could be undfined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
+        expect(ctrl.manager.shownList).to.have.lengthOf(1);
         ctrl.updateConfig({ contentNode: await createZNode('0', { mode: 'inline' }) });
         await ctrl.show();
         // @ts-expect-error find out why config would/could be undfined
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
+        expect(ctrl.manager.shownList).to.have.lengthOf(1);
       });
 
-      it.skip("doesn't set a z-index when contentNode already has >= 1", async () => {
+      it("doesn't set a z-index when contentNode already has >= 1", async () => {
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
           contentNode: await createZNode('1', { mode: 'global' }),
         });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('10000');
+        expect(ctrl.manager.shownList).to.have.lengthOf(1);
         ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('10000');
+        expect(ctrl.manager.shownList).to.have.lengthOf(1);
 
         ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'global' }) });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('10000');
+        expect(ctrl.manager.shownList).to.have.lengthOf(1);
         ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'inline' }) });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('10000');
+        expect(ctrl.manager.shownList).to.have.lengthOf(1);
       });
 
       it("doesn't touch the value of .contentNode", async () => {
@@ -268,7 +276,64 @@ describe('OverlayController', () => {
           ...withLocalTestConfig(),
           contentNode: await createZNode('auto', { mode: 'global' }),
         });
+        expect(ctrl.contentNode.style.zIndex).to.equal('1');
+      });
+
+      it('sets contentNode.style.zIndex to "1" when computed zIndex is "auto"', async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode: await createZNode('auto', { mode: 'global' }),
+        });
+        expect(ctrl.contentNode.style.zIndex).to.equal('1');
+      });
+
+      it('sets contentNode.style.zIndex to "1" when computed zIndex is "0"', async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode: await createZNode('0', { mode: 'global' }),
+        });
+        expect(ctrl.contentNode.style.zIndex).to.equal('1');
+      });
+
+      it('does not change contentNode.style.zIndex when computed zIndex >= 1', async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode: await createZNode('5', { mode: 'global' }),
+        });
         expect(ctrl.contentNode.style.zIndex).to.equal('');
+      });
+
+      it('sets contentNode.style.zIndex to "1" when computed zIndex is NaN (non-numeric value)', async () => {
+        contentNode = /** @type {HTMLElement} */ (
+          await fixture(html`
+            <div class="z-index--invalid">
+              <style>
+                .z-index--invalid {
+                  z-index: invalid;
+                }
+              </style>
+              I should be on top
+            </div>
+          `)
+        );
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode,
+        });
+        expect(ctrl.contentNode.style.zIndex).to.equal('1');
+      });
+
+      it('respects inline zIndex style set on contentNode', async () => {
+        contentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div>I should be on top</div> `)
+        );
+        contentNode.style.zIndex = '10';
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode,
+        });
+        // contentNode already has inline zIndex >= 1, so _handleZIndex should not change it
+        expect(ctrl.contentNode.style.zIndex).to.equal('10');
       });
     });
 
@@ -1755,7 +1820,7 @@ describe('OverlayController', () => {
     });
 
     // Currently not working, enable again when we fix updateConfig
-    it.skip('allows for updating viewport config placement only, while keeping the content shown', async () => {
+    it('allows for updating viewport config placement only, while keeping the content shown', async () => {
       const contentNode = /** @type {HTMLElement} */ (fixtureSync(html`<div>my content</div>`));
 
       const ctrl = new OverlayController({
