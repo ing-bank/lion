@@ -5,9 +5,10 @@ import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
 import { _adoptStyleUtils } from './utils/adopt-styles.js';
 
 /**
- * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
+ * @typedef {'init'|'teardown'|'before-show'|'show'|'hide'} OverlayPhase
  * @typedef {import('@lion/ui/types/overlays.js').ViewportConfig} ViewportConfig
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
+ * @typedef {import('@lion/overlays').OverlaysManager} OverlayManager
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
  * @typedef {import('@popperjs/core').createPopper} Popper
@@ -115,7 +116,7 @@ const childDialogsClosedInEventLoopWeakmap = new WeakMap();
 export class OverlayController extends EventTarget {
   /**
    * @constructor
-   * @param {OverlayConfig} config initial config. Will be remembered as shared config
+   * @param {OverlayConfig} [config={}] initial config. Will be remembered as shared config
    * when `.updateConfig()` is called.
    */
   constructor(config = {}, manager = overlays) {
@@ -682,7 +683,7 @@ export class OverlayController extends EventTarget {
       return;
     }
 
-    if (phase === 'setup') {
+    if (phase === 'init') {
       const zIndexNumber = Number(getComputedStyle(this.contentNode).zIndex);
       if (zIndexNumber < 1 || Number.isNaN(zIndexNumber)) {
         this.contentNode.style.zIndex = '1';
