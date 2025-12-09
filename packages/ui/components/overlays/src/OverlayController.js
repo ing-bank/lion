@@ -9,6 +9,7 @@ import { isEqualConfig } from './utils/is-equal-config.js';
  * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
  * @typedef {import('@lion/ui/types/overlays.js').ViewportConfig} ViewportConfig
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
+ * @typedef {import('@lion/overlays').OverlaysManager} OverlayManager
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
  * @typedef {typeof import('@popperjs/core').createPopper} Popper
@@ -201,7 +202,7 @@ export class OverlayController extends EventTarget {
 
   /**
    * @constructor
-   * @param {OverlayConfig} config initial config. Will be remembered as shared config
+   * @param {OverlayConfig} [config={}] initial config. Will be remembered as shared config
    * when `.updateConfig()` is called.
    */
   constructor(config = {}, manager = overlays) {
@@ -823,7 +824,7 @@ export class OverlayController extends EventTarget {
       return;
     }
 
-    if (phase === 'setup') {
+    if (phase === 'init') {
       const zIndexNumber = Number(getComputedStyle(this.contentNode).zIndex);
       if (zIndexNumber < 1 || Number.isNaN(zIndexNumber)) {
         this.contentNode.style.zIndex = '1';
