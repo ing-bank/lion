@@ -9,7 +9,7 @@ import { isEqualConfig } from './utils/is-equal-config.js';
  * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
  * @typedef {import('@lion/ui/types/overlays.js').ViewportConfig} ViewportConfig
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
- * @typedef {import('@lion/overlays').OverlaysManager} OverlayManager
+ * @typedef {import('@lion/overlays').OverlaysManager} OverlaysManager
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
  * @typedef {typeof import('@popperjs/core').createPopper} Popper
