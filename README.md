@@ -44,7 +44,7 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 - **High Performance:** Focused on great performance in all relevant browsers with a minimal number of dependencies.
 - **Accessibility:** Aimed at compliance with the WCAG 2.2 AA standard to create components that are accessible for everybody.
 - **Flexibility:** Provides solutions through Web Components and JavaScript classes which can be used, adopted and extended to fit all needs.
-- **Modern Code:** Lion is distributes as pure es modules.
+- **Modern Code:** Lion is distributed as pure es modules.
 - **Exposes functions/classes and Web Components:** Ships a functionality in it's most appropriate form.
 
 > Note: Our demos may look a little bland but that is on purpose. They only come with functional stylings.
@@ -91,7 +91,7 @@ They provide an unopinionated, white-label layer that can be extended to your ow
 
 ### Astro how to
 
-- To start in dev mode run `nmm run start`
+- To start in dev mode run `npm run start`
 - To start in production mode:
   - Run `npm run build`
   - Run `npm run preview`
