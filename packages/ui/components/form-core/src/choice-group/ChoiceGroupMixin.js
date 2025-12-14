@@ -1,6 +1,6 @@
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { FormRegistrarMixin } from '../registration/FormRegistrarMixin.js';
 import { InteractionStateMixin } from '../InteractionStateMixin.js';
+import { FormRegistrarMixin } from '../registration/FormRegistrarMixin.js';
 import { ValidateMixin } from '../validate/ValidateMixin.js';
 
 /**
@@ -260,7 +260,16 @@ const ChoiceGroupMixinImplementation = superclass =>
       ) {
         return this[property];
       }
-      return this.formElements.filter(el => _filterFn(el, property)).map(el => el.property);
+
+      const filteredFnElements = this.formElements.filter(el => _filterFn(el, property));
+
+      if (property === '_initialModelValue') {
+        return this.multipleChoice
+          ? filteredFnElements.filter(el => el[property].checked).map(el => el[property].value)
+          : filteredFnElements.find(el => el[property].checked)?.value;
+      }
+
+      return filteredFnElements.map(el => el[property]);
     }
 
     /**
