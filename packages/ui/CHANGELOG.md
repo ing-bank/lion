@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.15.4
+
+### Patch Changes
+
+- 44205ee: [input-amount] allow pasting value with currency correctly
+
 ## 0.15.3
 
 ### Patch Changes
