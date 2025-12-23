@@ -1,5 +1,6 @@
+import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
-import { defineCE, expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
+import { defineCE, expect, fixture, fixtureSync, html, unsafeStatic } from '../../../../test-helpers.js';
 import sinon from 'sinon';
 import { SyncUpdatableMixin } from '../../src/utils/SyncUpdatableMixin.js';
 

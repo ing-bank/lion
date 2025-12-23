@@ -1,4 +1,5 @@
-import { fixture as _fixture, expect } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { fixture as _fixture, expect } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 

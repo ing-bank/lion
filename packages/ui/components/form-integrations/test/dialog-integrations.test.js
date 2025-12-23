@@ -1,5 +1,6 @@
+import { describe, it } from 'vitest';
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture } from '../../../test-helpers.js';
 import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-dialog.js';
 import '@lion/ui/define/lion-option.js';

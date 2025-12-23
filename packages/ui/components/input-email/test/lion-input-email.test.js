@@ -1,5 +1,6 @@
-import { expect, fixture as _fixture } from '@open-wc/testing';
-import { getInputMembers } from '@lion/ui/input-test-helpers.js';
+import { describe, it } from 'vitest';
+import { expect, fixture as _fixture } from '../../../test-helpers.js';
+import { getInputMembers } from '../../../test-helpers.js';
 import '@lion/ui/define/lion-input-email.js';
 
 /**

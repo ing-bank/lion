@@ -1,5 +1,6 @@
-import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
-import { expect, fixture as _fixture } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { getFormControlMembers } from '../../../test-helpers.js';
+import { expect, fixture as _fixture } from '../../../test-helpers.js';
 import { Validator } from '@lion/ui/form-core.js';
 import { LionSwitch } from '@lion/ui/switch.js';
 import { html } from 'lit/static-html.js';

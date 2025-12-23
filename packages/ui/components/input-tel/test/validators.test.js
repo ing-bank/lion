@@ -1,7 +1,8 @@
+import { describe, it } from 'vitest';
 import sinon from 'sinon';
-import { expect, aTimeout } from '@open-wc/testing';
+import { expect, aTimeout } from '../../../test-helpers.js';
 import { PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.js';
-import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
+import { mockPhoneUtilManager, restorePhoneUtilManager } from '../../../test-helpers.js';
 
 /**
  * @typedef {* & import('awesome-phonenumber')} AwesomePhoneNumber

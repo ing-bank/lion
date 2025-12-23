@@ -1,9 +1,10 @@
+import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 import { LionInput } from '@lion/ui/input.js';
-import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { localizeTearDown } from '../../../../test-helpers.js';
+import { defineCE, expect, fixture, html, unsafeStatic } from '../../../../test-helpers.js';
 import { FormGroupMixin } from '@lion/ui/form-core.js';
 
 /**

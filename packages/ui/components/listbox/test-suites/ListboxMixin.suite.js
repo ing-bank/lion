@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { Required } from '@lion/ui/form-core.js';
@@ -12,10 +13,10 @@ import {
   html,
   nextFrame,
   unsafeStatic,
-} from '@open-wc/testing';
-import { sendKeys } from '@web/test-runner-commands';
+} from '../../../test-helpers.js';
+import { sendKeys } from '../../../test-helpers.js';
 import sinon from 'sinon';
-import { getListboxMembers } from '../../../exports/listbox-test-helpers.js';
+import { getListboxMembers } from '../../../test-helpers.js';
 import { browserDetection } from '../../core/src/browserDetection.js';
 
 /**

@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
 import {
   defineCE,
@@ -7,9 +8,9 @@ import {
   triggerBlurFor,
   triggerFocusFor,
   unsafeStatic,
-} from '@open-wc/testing';
+} from '../../../test-helpers.js';
 import sinon from 'sinon';
-import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
+import { getFormControlMembers } from '../../../test-helpers.js';
 import { InteractionStateMixin, ValidateMixin, MinLength } from '@lion/ui/form-core.js';
 
 /**

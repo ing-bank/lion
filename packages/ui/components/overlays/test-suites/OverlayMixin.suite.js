@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import {
   unsafeStatic,
   fixtureSync,
@@ -7,9 +8,9 @@ import {
   fixture,
   expect,
   html,
-} from '@open-wc/testing';
+} from '../../../test-helpers.js';
 import { overlays as overlaysManager, OverlayController } from '@lion/ui/overlays.js';
-import { sendKeys } from '@web/test-runner-commands';
+import { sendKeys } from '../../../test-helpers.js';
 import { browserDetection } from '@lion/ui/core.js';
 import { cache } from 'lit/directives/cache.js';
 import '@lion/ui/define/lion-dialog.js';

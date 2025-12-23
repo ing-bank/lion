@@ -1,4 +1,5 @@
-import { expect } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect } from '../../../../test-helpers.js';
 
 import { normalizeDateTime } from '@lion/ui/localize-no-side-effects.js';
 import { IsDate, MinDate, MaxDate, MinMaxDate, IsDateDisabled } from '@lion/ui/form-core.js';

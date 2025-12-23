@@ -1,9 +1,10 @@
+import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
 import { IsNumber, Required, LionField, Validator, FormGroupMixin } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 
-import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
+import { localizeTearDown } from '../../../../test-helpers.js';
 import {
   aTimeout,
   defineCE,
@@ -12,9 +13,9 @@ import {
   html,
   triggerFocusFor,
   unsafeStatic,
-} from '@open-wc/testing';
+} from '../../../../test-helpers.js';
 import sinon from 'sinon';
-import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
+import { getFormControlMembers } from '../../../../test-helpers.js';
 
 /**
  * @param {{ tagString?: string, childTagString?:string }} [cfg]

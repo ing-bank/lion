@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
 import sinon from 'sinon';
 import {
@@ -8,7 +9,7 @@ import {
   defineCE,
   expect,
   html,
-} from '@open-wc/testing';
+} from '../../../test-helpers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { mimicUserChangingDropdown } from '../test-helpers/mimicUserChangingDropdown.js';

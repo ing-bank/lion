@@ -256,9 +256,11 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const datesTable = /** @type {HTMLElement} */ (
       this.shadowRoot?.querySelector('#js-content-wrapper')
     );
-    const button = /** @type {HTMLElement} */ (datesTable.querySelector('[tabindex="0"]'));
-    button.focus();
-    this.__focusedDate = this.centralDate;
+    const button = /** @type {HTMLElement} */ (datesTable?.querySelector('[tabindex="0"]'));
+    if (button) {
+      button.focus();
+      this.__focusedDate = this.centralDate;
+    }
   }
 
   async focusSelectedDate() {
@@ -629,10 +631,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const earliestSelectableDate = getSelectableDate(newMinDate);
     const latestSelectableDate = getSelectableDate(newMaxDate);
 
-    return {
-      earliestSelectableDate,
-      latestSelectableDate,
-    };
+    return { earliestSelectableDate, latestSelectableDate };
   }
 
   /**
@@ -707,13 +706,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   __dateSelectedByUser(selectedDate) {
     this.selectedDate = selectedDate;
     this.__focusedDate = selectedDate;
-    this.dispatchEvent(
-      new CustomEvent('user-selected-date-changed', {
-        detail: {
-          selectedDate,
-        },
-      }),
-    );
+    this.dispatchEvent(new CustomEvent('user-selected-date-changed', { detail: { selectedDate } }));
   }
 
   /**

@@ -1,5 +1,6 @@
+import { describe, it } from 'vitest';
 import { html } from 'lit';
-import { expect, fixture as _fixture } from '@open-wc/testing';
+import { expect, fixture as _fixture } from '../../../test-helpers.js';
 
 import '@lion/ui/define/lion-progress-indicator.js';
 

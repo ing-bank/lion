@@ -1,10 +1,11 @@
+import { describe, it } from 'vitest';
 import {
   AlwaysInvalid,
   AlwaysValid,
   AsyncAlwaysInvalid,
   AsyncAlwaysValid,
   getFormControlMembers,
-} from '@lion/ui/form-core-test-helpers.js';
+} from '../../../test-helpers.js';
 import {
   EqualsLength,
   MaxLength,
@@ -15,7 +16,7 @@ import {
   ValidateMixin,
   Validator,
 } from '@lion/ui/form-core.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
 
@@ -30,10 +31,7 @@ import '@lion/ui/define/lion-validation-feedback.js';
  * @param {{tagString?: string | null, lightDom?: string}} [customConfig]
  */
 export function runValidateMixinSuite(customConfig) {
-  const cfg = {
-    tagString: null,
-    ...customConfig,
-  };
+  const cfg = { tagString: null, ...customConfig };
 
   const lightDom = cfg.lightDom || '';
 
@@ -372,9 +370,7 @@ export function runValidateMixinSuite(customConfig) {
         const validateSpy = sinon.spy(el, 'validate');
         el.modelValue = 'x';
         expect(clearSpy.callCount).to.equal(1);
-        expect(validateSpy.args[0][0]).to.eql({
-          clearCurrentResult: true,
-        });
+        expect(validateSpy.args[0][0]).to.eql({ clearCurrentResult: true });
       });
 
       /**
@@ -1350,18 +1346,10 @@ export function runValidateMixinSuite(customConfig) {
           >${lightDom}</${customTypeTag}>
         `)
         );
-        expect(el.validationStates).to.eql({
-          x: {},
-          error: {},
-          y: {},
-        });
+        expect(el.validationStates).to.eql({ x: {}, error: {}, y: {} });
 
         el.modelValue = '123'; // triggers y
-        expect(el.validationStates).to.eql({
-          x: {},
-          error: {},
-          y: { MinLength: true },
-        });
+        expect(el.validationStates).to.eql({ x: {}, error: {}, y: { MinLength: true } });
 
         el.modelValue = '12'; // triggers error and y
         expect(el.validationStates).to.eql({
@@ -1575,9 +1563,7 @@ export function runValidateMixinSuite(customConfig) {
 
               /** @type {any} */
               static get properties() {
-                return {
-                  modelValue: { type: String },
-                };
+                return { modelValue: { type: String } };
               }
 
               /**
@@ -1624,6 +1610,7 @@ export function runValidateMixinSuite(customConfig) {
 
       describe('Changing feedback messages globally', () => {
         // Please see tests of Validation Feedback
+        it.skip('see Validation Feedback tests', () => {});
       });
     });
   });

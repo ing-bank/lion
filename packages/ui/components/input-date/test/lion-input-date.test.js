@@ -1,9 +1,10 @@
+import { describe, it } from 'vitest';
 import { html } from 'lit';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
+import { localizeTearDown } from '../../../test-helpers.js';
 import { MinDate, MaxDate } from '@lion/ui/form-core.js';
-import { expect, fixture as _fixture } from '@open-wc/testing';
-import { getInputMembers } from '@lion/ui/input-test-helpers.js';
+import { expect, fixture as _fixture } from '../../../test-helpers.js';
+import { getInputMembers } from '../../../test-helpers.js';
 import '@lion/ui/define/lion-input-date.js';
 
 /**

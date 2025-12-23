@@ -1,5 +1,6 @@
+import { describe, it } from 'vitest';
 /* eslint-disable no-unused-vars, no-param-reassign */
-import { expect } from '@open-wc/testing';
+import { expect } from '../../../test-helpers.js';
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
 

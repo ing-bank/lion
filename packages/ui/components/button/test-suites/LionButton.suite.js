@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButton } from '@lion/ui/button.js';
 import { browserDetection } from '@lion/ui/core.js';
@@ -9,7 +10,7 @@ import {
   html,
   oneEvent,
   unsafeStatic,
-} from '@open-wc/testing';
+} from '../../../test-helpers.js';
 import sinon from 'sinon';
 
 export function LionButtonSuite({ klass = LionButton } = {}) {

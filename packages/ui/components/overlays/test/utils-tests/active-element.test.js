@@ -1,4 +1,5 @@
-import { expect, fixture, defineCE } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, fixture, defineCE } from '../../../../test-helpers.js';
 import { LitElement, html } from 'lit';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 

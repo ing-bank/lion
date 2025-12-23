@@ -1,4 +1,5 @@
-import { defineCE, expect, fixture, fixtureSync, unsafeStatic, html } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { defineCE, expect, fixture, fixtureSync, unsafeStatic, html } from '../../../test-helpers.js';
 import { SlotMixin } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';

@@ -1,4 +1,5 @@
-import { expect, fixture as _fixture, nextFrame, html } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, fixture as _fixture, nextFrame, html } from '../../../test-helpers.js';
 
 import '@lion/ui/define/lion-input-range.js';
 

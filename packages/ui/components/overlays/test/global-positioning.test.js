@@ -1,4 +1,5 @@
-import { expect, fixtureSync } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, fixtureSync } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import { OverlayController, overlays } from '@lion/ui/overlays.js';
 

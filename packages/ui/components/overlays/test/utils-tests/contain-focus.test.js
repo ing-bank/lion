@@ -1,5 +1,6 @@
+import { describe, it } from 'vitest';
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture, nextFrame } from '@open-wc/testing';
+import { expect, fixture, nextFrame } from '../../../../test-helpers.js';
 import { getFocusableElements } from '@lion/ui/overlays.js';
 import { renderLitAsNode } from '@lion/ui/helpers.js';
 import { html } from 'lit/static-html.js';

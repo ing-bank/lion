@@ -1,5 +1,6 @@
+import { describe, it } from 'vitest';
 import { LionButton } from '@lion/ui/button.js';
-import { defineCE, expect, fixture } from '@open-wc/testing';
+import { defineCE, expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import { LionSelectInvoker } from '@lion/ui/select-rich.js';
 
@@ -24,16 +25,9 @@ describe('lion-select-invoker', () => {
     );
     await el.updateComplete;
 
-    expect(el._contentWrapperNode).lightDom.to.equal(
-      `
-        Textnode
-        <h2>I am</h2>
-        <p>2 lines</p>
-      `,
-      {
-        ignoreAttributes: ['class'], // ShadyCss automatically adds classes
-      },
-    );
+    expect(el._contentWrapperNode).lightDom.to.equal(`Textnode<h2>I am</h2><p>2 lines</p>`, {
+      ignoreAttributes: ['class'], // ShadyCss automatically adds classes
+    });
   });
 
   it('renders invoker info based on selectedElement textContent', async () => {

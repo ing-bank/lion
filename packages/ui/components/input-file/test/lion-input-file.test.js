@@ -1,9 +1,10 @@
+import { describe, it } from 'vitest';
 import '@lion/ui/define/lion-input-file.js';
 import { Required } from '@lion/ui/form-core.js';
-import { getInputMembers } from '@lion/ui/input-test-helpers.js';
+import { getInputMembers } from '../../../test-helpers.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
-import { expect, fixture as _fixture, html, oneEvent, elementUpdated } from '@open-wc/testing';
+import { localizeTearDown } from '../../../test-helpers.js';
+import { expect, fixture as _fixture, html, oneEvent, elementUpdated } from '../../../test-helpers.js';
 import sinon from 'sinon';
 
 /**

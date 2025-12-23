@@ -1,4 +1,5 @@
-import { expect, triggerBlurFor, triggerFocusFor, fixture } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, triggerBlurFor, triggerFocusFor, fixture } from '../../../test-helpers.js';
 import { Required } from '@lion/ui/form-core.js';
 import { html } from 'lit/static-html.js';
 import { browserDetection } from '@lion/ui/core.js';
@@ -7,7 +8,7 @@ import '@lion/ui/define/lion-option.js';
 
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
-import { getSelectRichMembers } from '@lion/ui/select-rich-test-helpers.js';
+import { getSelectRichMembers } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionSelectRich.js').LionSelectRich} LionSelectRich

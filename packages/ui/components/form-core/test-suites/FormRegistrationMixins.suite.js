@@ -1,10 +1,11 @@
+import { describe, it } from 'vitest';
 import { uuid } from '@lion/ui/core.js';
 import {
   FormRegisteringMixin,
   FormRegistrarMixin,
   FormRegistrarPortalMixin,
 } from '@lion/ui/form-core.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
 

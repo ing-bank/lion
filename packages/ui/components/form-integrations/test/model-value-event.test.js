@@ -1,6 +1,7 @@
+import { describe, it } from 'vitest';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-input.js';
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import sinon from 'sinon';

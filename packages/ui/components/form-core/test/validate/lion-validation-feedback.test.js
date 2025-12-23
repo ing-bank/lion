@@ -1,9 +1,10 @@
+import { describe, it } from 'vitest';
 /* eslint-disable no-unused-vars, no-param-reassign */
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture } from '../../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-validation-feedback.js';
-import { AlwaysInvalid, AlwaysValid } from '@lion/ui/form-core-test-helpers.js';
+import { AlwaysInvalid, AlwaysValid } from '../../../../test-helpers.js';
 
 /**
  * @typedef {import('../../src/validate/LionValidationFeedback.js').LionValidationFeedback} LionValidationFeedback

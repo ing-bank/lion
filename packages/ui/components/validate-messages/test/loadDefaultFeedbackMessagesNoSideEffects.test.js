@@ -1,5 +1,6 @@
+import { describe, it } from 'vitest';
 /* eslint-disable no-unused-vars, no-param-reassign */
-import { expect } from '@open-wc/testing';
+import { expect } from '../../../test-helpers.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { MinDate, MinLength, Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessagesNoSideEffects } from '@lion/ui/validate-messages-no-side-effects.js';

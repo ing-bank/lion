@@ -1,4 +1,5 @@
-import { expect, fixture } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, fixture } from '../../../test-helpers.js';
 import { LitElement, html } from 'lit';
 import { ArrowMixin, OverlayMixin } from '@lion/ui/overlays.js';
 

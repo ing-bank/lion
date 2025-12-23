@@ -1,7 +1,8 @@
-import { defineCE, expect, fixture, html, triggerFocusFor, unsafeStatic } from '@open-wc/testing';
-import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
+import { describe, it } from 'vitest';
+import { defineCE, expect, fixture, html, triggerFocusFor, unsafeStatic } from '../../../test-helpers.js';
+import { getFormControlMembers } from '../../../test-helpers.js';
 import { NativeTextFieldMixin } from '@lion/ui/form-core.js';
-import { sendKeys } from '@web/test-runner-commands';
+import { sendKeys } from '../../../test-helpers.js';
 import { browserDetection } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
 import { spy } from 'sinon';

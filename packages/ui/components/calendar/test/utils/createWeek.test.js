@@ -1,4 +1,5 @@
-import { expect } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect } from '../../../../test-helpers.js';
 import { createWeek } from '../../src/utils/createWeek.js';
 import { createDay } from '../../src/utils/createDay.js';
 

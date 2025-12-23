@@ -1,8 +1,9 @@
+import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
-import { getFormControlMembers, AlwaysInvalid } from '@lion/ui/form-core-test-helpers.js';
+import { localizeTearDown } from '../../../test-helpers.js';
+import { defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
+import { getFormControlMembers, AlwaysInvalid } from '../../../test-helpers.js';
 import sinon from 'sinon';
 import {
   DefaultSuccess,

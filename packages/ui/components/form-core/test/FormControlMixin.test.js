@@ -1,6 +1,7 @@
+import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
-import { getFormControlMembers } from '@lion/ui/form-core-test-helpers.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { getFormControlMembers } from '../../../test-helpers.js';
+import { defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import sinon from 'sinon';
 import {
   FocusMixin,

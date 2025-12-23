@@ -1,7 +1,8 @@
+import { describe, it } from 'vitest';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
-import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture, fixtureSync, html, unsafeStatic } from '../../../../test-helpers.js';
 
 /**
  *

@@ -1,10 +1,11 @@
-import { aTimeout, expect, fixture } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { aTimeout, expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
-import { getInputMembers } from '@lion/ui/input-test-helpers.js';
+import { localizeTearDown } from '../../../test-helpers.js';
+import { getInputMembers } from '../../../test-helpers.js';
 import { LionInputAmount, formatAmount, parseAmount } from '@lion/ui/input-amount.js';
-import { mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
+import { mimicUserInput } from '../../../test-helpers.js';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-input-amount.js';
 

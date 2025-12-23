@@ -38,6 +38,7 @@
     "temporary-disabled__lint:types": "npm run types",
     "test": "run-p test:browser test:node",
     "test:browser": "web-test-runner --coverage",
+    "test:browser:ui": "npm run test --workspace=packages/ui",
     "test:browserstack": "web-test-runner --config ./web-test-runner-browserstack.config.js",
     "test:node": "npm run test:node --workspaces --if-present",
     "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",

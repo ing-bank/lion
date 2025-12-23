@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { LionField, Required } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 import { LionFieldset } from '@lion/ui/fieldset.js';
@@ -19,7 +20,7 @@ import {
   oneEvent,
   expect,
   html,
-} from '@open-wc/testing';
+} from '../../../test-helpers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 

@@ -1,4 +1,5 @@
-import { expect, fixture, oneEvent } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, fixture, oneEvent } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 
 import '@lion/ui/define/lion-step.js';

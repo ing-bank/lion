@@ -1,4 +1,5 @@
-import { expect, fixture as _fixture, fixtureSync, elementUpdated } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, fixture as _fixture, fixtureSync, elementUpdated } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-switch-button.js';

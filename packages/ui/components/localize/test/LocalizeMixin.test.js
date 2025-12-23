@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
 import { isDirectiveResult } from 'lit/directive-helpers.js';
 
@@ -10,7 +11,7 @@ import {
   html,
   nextFrame,
   unsafeStatic,
-} from '@open-wc/testing';
+} from '../../../test-helpers.js';
 import sinon from 'sinon';
 import { LocalizeMixin, getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import {
@@ -19,7 +20,7 @@ import {
   resetFakeImport,
   setupEmptyFakeImportsFor,
   setupFakeImport,
-} from '@lion/ui/localize-test-helpers.js';
+} from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../types/LocalizeMixinTypes.js').LocalizeMixin} LocalizeMixinHost

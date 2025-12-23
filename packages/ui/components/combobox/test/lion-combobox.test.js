@@ -1,6 +1,7 @@
-import { defineCE, expect, fixture, html, unsafeStatic, waitUntil } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { defineCE, expect, fixture, html, unsafeStatic, waitUntil } from '../../../test-helpers.js';
 import { Required, Unparseable } from '@lion/ui/form-core.js';
-import { sendKeys } from '@web/test-runner-commands';
+import { sendKeys } from '../../../test-helpers.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { browserDetection, SlotMixin } from '@lion/ui/core.js';
 import '@lion/ui/define/lion-combobox.js';
@@ -14,7 +15,7 @@ import {
   getComboboxMembers,
   mimicUserTyping,
   mimicKeyPress,
-} from '@lion/ui/combobox-test-helpers.js';
+} from '../../../test-helpers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
@@ -57,33 +58,15 @@ describe('lion-combobox', () => {
   describe('Rendering on API change', () => {
     it('renders when options changed', async () => {
       const entries = [
-        {
-          id: '1',
-          label: 'Apple',
-        },
-        {
-          id: '2',
-          label: 'Artichoke',
-        },
-        {
-          id: '3',
-          label: 'Asparagus',
-        },
-        {
-          id: '4',
-          label: 'Banana',
-        },
-        {
-          id: '5',
-          label: 'Pineapple',
-        },
+        { id: '1', label: 'Apple' },
+        { id: '2', label: 'Artichoke' },
+        { id: '3', label: 'Asparagus' },
+        { id: '4', label: 'Banana' },
+        { id: '5', label: 'Pineapple' },
       ];
 
       class Wrapper extends LitElement {
-        static properties = {
-          ...super.properties,
-          entries: { type: Array },
-        };
+        static properties = { ...super.properties, entries: { type: Array } };
 
         constructor() {
           super();
@@ -108,12 +91,7 @@ describe('lion-combobox', () => {
             .length === entries.length,
       );
 
-      wrapperElement.entries = [
-        {
-          id: '4',
-          label: 'Banana',
-        },
-      ];
+      wrapperElement.entries = [{ id: '4', label: 'Banana' }];
 
       await waitUntil(
         () =>
@@ -1081,9 +1059,7 @@ describe('lion-combobox', () => {
       const { _inputNode } = getComboboxMembers(combobox);
       await combobox.updateComplete;
       _inputNode.focus();
-      await sendKeys({
-        press: 'Enter',
-      });
+      await sendKeys({ press: 'Enter' });
       expect(submitSpy.callCount).to.equal(1);
     });
 
@@ -1107,9 +1083,7 @@ describe('lion-combobox', () => {
       combobox.opened = true;
       await combobox.updateComplete;
       _inputNode.focus();
-      await sendKeys({
-        press: 'Enter',
-      });
+      await sendKeys({ press: 'Enter' });
       expect(submitSpy.callCount).to.equal(0);
     });
   });
@@ -1172,9 +1146,7 @@ describe('lion-combobox', () => {
 
       const { _inputNode } = getComboboxMembers(el);
       _inputNode.focus();
-      await sendKeys({
-        type: 'art',
-      });
+      await sendKeys({ type: 'art' });
       expect(hasDropdownFlashed).to.be.false;
     });
 
@@ -2464,13 +2436,13 @@ describe('lion-combobox', () => {
 
       await el.updateComplete;
       expect(options[0]).lightDom.to.equal(
-        `<span aria-label=" Artichoke Cardoon "><div>Arti<b>ch</b>oke</div><small>Cardoon</small>`,
+        `<span aria-label=" Artichoke Cardoon "><div>Arti<b>ch</b>oke</div><small>Cardoon</small></span>`,
       );
       expect(options[1]).lightDom.to.equal(
-        `<span aria-label=" Chard Beet "><div><b>Ch</b>ard</div><small>Beet</small>`,
+        `<span aria-label=" Chard Beet "><div><b>Ch</b>ard</div><small>Beet</small></span>`,
       );
       expect(options[2]).lightDom.to.equal(
-        `<span aria-label=" Chicory Chicory "><div><b>Ch</b>icory</div><small><b>Ch</b>icory</small>`,
+        `<span aria-label=" Chicory Chicory "><div><b>Ch</b>icory</div><small><b>Ch</b>icory</small></span>`,
       );
       expect(options[3]).lightDom.to.equal(
         `<div>Victoria Plum</div><small>Prunus domestica</small>`,
@@ -2911,7 +2883,7 @@ describe('lion-combobox', () => {
           `<div data-key><span aria-label="Artichoke">Arti<b>ch</b>oke</span></div><small>Cardoon</small>`,
         );
         expect(options[1]).lightDom.to.equal(
-          `<div data-key><span aria-label="Chard"><b>Ch</b>ard</div></span><small>Beet</small>`,
+          `<div data-key><span aria-label="Chard"><b>Ch</b>ard</span></div><small>Beet</small>`,
         );
         expect(options[2]).lightDom.to.equal(
           `<div data-key><span aria-label="Chicory"><b>Ch</b>icory</span></div><small>Chicory</small>`,
@@ -2925,7 +2897,7 @@ describe('lion-combobox', () => {
         await el.updateComplete;
         expect(options[0]).lightDom.to.equal(`<div data-key>Artichoke</div><small>Cardoon</small>`);
         expect(options[1]).lightDom.to.equal(
-          `<div data-key><span aria-label="Chard">Char<b>d</b></div></span><small>Beet</small>`,
+          `<div data-key><span aria-label="Chard">Char<b>d</b></span></div><small>Beet</small>`,
         );
         expect(options[2]).lightDom.to.equal(`<div data-key>Chicory</div><small>Chicory</small>`);
         expect(options[3]).lightDom.to.equal(
@@ -3420,9 +3392,7 @@ describe('lion-combobox', () => {
       const { _inputNode } = getComboboxMembers(combobox);
       await combobox.updateComplete;
       _inputNode.focus();
-      await sendKeys({
-        press: 'Enter',
-      });
+      await sendKeys({ press: 'Enter' });
       expect(submitSpy.callCount).to.equal(1);
     });
 
@@ -3446,9 +3416,7 @@ describe('lion-combobox', () => {
       combobox.opened = true;
       await combobox.updateComplete;
       _inputNode.focus();
-      await sendKeys({
-        press: 'Enter',
-      });
+      await sendKeys({ press: 'Enter' });
       expect(submitSpy.callCount).to.equal(0);
     });
   });

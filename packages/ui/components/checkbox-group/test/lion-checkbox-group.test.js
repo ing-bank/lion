@@ -1,5 +1,6 @@
-import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
-import { expect, fixture as _fixture } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { localizeTearDown } from '../../../test-helpers.js';
+import { expect, fixture as _fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-checkbox-group.js';

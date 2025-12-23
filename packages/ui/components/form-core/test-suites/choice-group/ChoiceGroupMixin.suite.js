@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
@@ -9,7 +10,7 @@ import {
   ChoiceInputMixin,
 } from '@lion/ui/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
-import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
+import { expect, fixture, fixtureSync, html, unsafeStatic } from '../../../../test-helpers.js';
 import sinon from 'sinon';
 
 class ChoiceInputFoo extends ChoiceInputMixin(LionInput) {}

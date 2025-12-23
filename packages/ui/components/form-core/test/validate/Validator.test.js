@@ -1,6 +1,7 @@
+import { describe, it } from 'vitest';
 /* eslint-disable dot-notation */
 import { LitElement } from 'lit';
-import { defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { defineCE, expect, fixture, html, unsafeStatic } from '../../../../test-helpers.js';
 import sinon from 'sinon';
 import { ValidateMixin, Validator } from '@lion/ui/form-core.js';
 

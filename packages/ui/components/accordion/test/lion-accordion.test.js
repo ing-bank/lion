@@ -1,6 +1,7 @@
-import { expect, fixture } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
-import { sendKeys } from '@web/test-runner-commands';
+import { sendKeys } from '../../../test-helpers.js';
 import sinon from 'sinon';
 
 import '@lion/ui/define/lion-accordion.js';

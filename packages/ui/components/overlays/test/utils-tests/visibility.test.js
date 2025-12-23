@@ -1,4 +1,5 @@
-import { expect, fixture } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, fixture } from '../../../../test-helpers.js';
 
 import { isVisible } from '../../src/utils/is-visible.js';
 

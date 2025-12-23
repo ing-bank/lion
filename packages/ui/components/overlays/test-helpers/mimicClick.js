@@ -12,10 +12,10 @@ async function sleep(t = 0) {
  */
 export async function mimicClick(el, { isAsync = false, releaseElement } = {}) {
   const releaseEl = releaseElement || el;
-  el.dispatchEvent(new MouseEvent('mousedown'));
+  el.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
   if (isAsync) {
     await sleep();
   }
-  releaseEl.dispatchEvent(new MouseEvent('click'));
-  releaseEl.dispatchEvent(new MouseEvent('mouseup'));
+  releaseEl.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  releaseEl.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
 }

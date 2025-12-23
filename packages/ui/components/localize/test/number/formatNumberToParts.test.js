@@ -1,6 +1,7 @@
-import { expect } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect } from '../../../../test-helpers.js';
 import { getLocalizeManager, formatNumberToParts } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
+import { localizeTearDown } from '../../../../test-helpers.js';
 
 // TODO: This is broken only in Safari 13.1.2 Wait till ci is on 13.1.3 and remove
 const isSafari = (() => {

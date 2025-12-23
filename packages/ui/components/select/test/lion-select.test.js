@@ -1,5 +1,6 @@
+import { describe, it } from 'vitest';
 import '@lion/ui/define/lion-select.js';
-import { aTimeout, expect, fixture } from '@open-wc/testing';
+import { aTimeout, expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 
 /**

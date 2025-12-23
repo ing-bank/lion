@@ -1,4 +1,5 @@
-import { expect } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect } from '../../../../test-helpers.js';
 import { browserDetection } from '@lion/ui/core.js';
 import { css } from 'lit';
 import sinon from 'sinon';

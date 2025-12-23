@@ -1,5 +1,6 @@
+import { describe, it } from 'vitest';
 import '@lion/ui/define/lion-tooltip.js';
-import { aTimeout, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import { runOverlayMixinSuite } from '@lion/ui/overlays-test-suites.js';
 import sinon from 'sinon';
 

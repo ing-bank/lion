@@ -1,6 +1,7 @@
-import { expect, fixture as _fixture } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, fixture as _fixture } from '../../../test-helpers.js';
 import { html } from 'lit';
-import { getInputMembers } from '@lion/ui/input-test-helpers.js';
+import { getInputMembers } from '../../../test-helpers.js';
 import { IsCountryIBAN, formatIBAN, parseIBAN } from '@lion/ui/input-iban.js';
 import '@lion/ui/define/lion-input-iban.js';
 

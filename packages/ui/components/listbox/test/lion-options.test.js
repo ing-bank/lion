@@ -1,4 +1,5 @@
-import { expect, fixture } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 // eslint-disable-next-line no-unused-vars
 import { LionOptions } from '@lion/ui/listbox.js';

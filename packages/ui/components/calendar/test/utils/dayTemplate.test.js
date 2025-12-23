@@ -1,5 +1,6 @@
+import { describe, it } from 'vitest';
 /* eslint-disable no-unused-expressions */
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture } from '../../../../test-helpers.js';
 import { createDay } from '../../src/utils/createDay.js';
 import { dayTemplate } from '../../src/utils/dayTemplate.js';
 

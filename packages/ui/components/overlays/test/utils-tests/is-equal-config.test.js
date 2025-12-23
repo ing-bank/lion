@@ -1,4 +1,5 @@
-import { expect } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect } from '../../../../test-helpers.js';
 import { isEqualConfig } from '../../src/utils/is-equal-config.js';
 
 function TestConfig() {

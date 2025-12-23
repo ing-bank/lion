@@ -1,11 +1,12 @@
+import { describe, it } from 'vitest';
 import { html } from 'lit';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '@lion/ui/localize-test-helpers.js';
-import { expect, fixture as _fixture } from '@open-wc/testing';
+import { localizeTearDown } from '../../../test-helpers.js';
+import { expect, fixture as _fixture } from '../../../test-helpers.js';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-calendar.js';
 import { isSameDate } from '@lion/ui/calendar.js';
-import { CalendarObject, DayObject } from '@lion/ui/calendar-test-helpers.js';
+import { CalendarObject, DayObject } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionCalendar.js').LionCalendar} LionCalendar

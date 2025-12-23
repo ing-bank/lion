@@ -1,7 +1,8 @@
-import { mimicUserChangingDropdown } from '@lion/ui/input-amount-dropdown-test-helpers.js';
+import { describe, it } from 'vitest';
+import { mimicUserChangingDropdown } from '../../../test-helpers.js';
 import { runInputAmountDropdownSuite } from '@lion/ui/input-amount-dropdown-test-suites.js';
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
-import { aTimeout, expect, fixture } from '@open-wc/testing';
+import { aTimeout, expect, fixture } from '../../../test-helpers.js';
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { LionOption } from '@lion/ui/listbox.js';

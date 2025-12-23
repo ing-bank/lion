@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import {
   expect,
   fixture as _fixture,
@@ -6,13 +7,13 @@ import {
   defineCE,
   unsafeStatic,
   aTimeout,
-} from '@open-wc/testing';
+} from '../../../test-helpers.js';
 import sinon from 'sinon';
-import { mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
+import { mimicUserInput } from '../../../test-helpers.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { Unparseable } from '@lion/ui/form-core.js';
 import { LionInputTel, PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.js';
-import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
+import { mockPhoneUtilManager, restorePhoneUtilManager } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult

@@ -1,7 +1,8 @@
+import { describe, it } from 'vitest';
 /* eslint-disable no-unused-expressions */
-import { expect, fixture } from '@open-wc/testing';
+import { expect, fixture } from '../../../../test-helpers.js';
 
-import { weekdayNames } from '@lion/ui/calendar-test-helpers.js';
+import { weekdayNames } from '../../../../test-helpers.js';
 import { createMultipleMonth } from '../../src/utils/createMultipleMonth.js';
 import { dataTemplate } from '../../src/utils/dataTemplate.js';
 

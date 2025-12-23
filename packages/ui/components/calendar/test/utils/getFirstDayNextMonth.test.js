@@ -1,4 +1,5 @@
-import { expect } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect } from '../../../../test-helpers.js';
 import { isSameDate } from '@lion/ui/calendar.js';
 import { getFirstDayNextMonth } from '../../src/utils/getFirstDayNextMonth.js';
 

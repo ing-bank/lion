@@ -1,6 +1,7 @@
+import { describe, it } from 'vitest';
 import { nothing, html } from 'lit';
 import { until } from 'lit/directives/until.js';
-import { aTimeout, expect, fixture as _fixture, fixtureSync } from '@open-wc/testing';
+import { aTimeout, expect, fixture as _fixture, fixtureSync } from '../../../test-helpers.js';
 import '@lion/ui/define/lion-icon.js';
 import { icons } from '@lion/ui/icon.js';
 import hammerSvg from './hammer.svg.js';

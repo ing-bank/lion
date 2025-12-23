@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 /* eslint-disable lit-a11y/no-autofocus */
 import {
   expect,
@@ -7,7 +8,7 @@ import {
   aTimeout,
   defineCE,
   waitUntil,
-} from '@open-wc/testing';
+} from '../../../test-helpers.js';
 import { cache } from 'lit/directives/cache.js';
 import { LitElement, nothing } from 'lit';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';

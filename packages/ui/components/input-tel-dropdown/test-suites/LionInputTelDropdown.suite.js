@@ -1,5 +1,6 @@
-import { mockPhoneUtilManager, restorePhoneUtilManager } from '@lion/ui/input-tel-test-helpers.js';
-import { mimicUserChangingDropdown } from '@lion/ui/input-tel-dropdown-test-helpers.js';
+import { describe, it } from 'vitest';
+import { mockPhoneUtilManager, restorePhoneUtilManager } from '../../../test-helpers.js';
+import { mimicUserChangingDropdown } from '../../../test-helpers.js';
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
 import sinon from 'sinon';
@@ -11,7 +12,7 @@ import {
   defineCE,
   expect,
   html,
-} from '@open-wc/testing';
+} from '../../../test-helpers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 

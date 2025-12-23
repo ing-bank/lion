@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { runFormatMixinSuite } from '@lion/ui/form-core-test-suites.js';
 import '@lion/ui/define/lion-input-email.js';
 

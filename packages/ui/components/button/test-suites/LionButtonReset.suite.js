@@ -1,6 +1,7 @@
+import { describe, it } from 'vitest';
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButtonReset } from '@lion/ui/button.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import sinon from 'sinon';
 
 export function LionButtonResetSuite({ klass = LionButtonReset } = {}) {

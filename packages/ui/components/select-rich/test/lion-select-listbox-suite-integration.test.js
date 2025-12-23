@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { runListboxMixinSuite } from '@lion/ui/listbox-test-suites.js';
 
 import '@lion/ui/define/lion-select-rich.js';

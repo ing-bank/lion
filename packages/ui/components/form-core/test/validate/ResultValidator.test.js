@@ -1,4 +1,5 @@
-import { expect } from '@open-wc/testing';
+import { describe, it } from 'vitest';
+import { expect } from '../../../../test-helpers.js';
 import { MinLength, Required, DefaultSuccess, ResultValidator } from '@lion/ui/form-core.js';
 
 /**

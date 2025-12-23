@@ -1,5 +1,74 @@
 import { getListboxMembers } from '@lion/ui/listbox-test-helpers.js';
-import { sendKeys } from '@web/test-runner-commands';
+import { userEvent } from '@vitest/browser/context';
+
+/**
+ * Send keyboard keys using Vitest userEvent or fallback to DOM events
+ * @param {Object} options
+ * @param {string} [options.type] - String to type
+ * @param {string} [options.press] - Single key to press
+ */
+async function sendKeys(options) {
+  const activeElement = document.activeElement || document.body;
+
+  // Try to use Vitest's userEvent API
+  if (userEvent) {
+    try {
+      if (options.type) {
+        await userEvent.type(activeElement, options.type);
+      }
+      if (options.press) {
+        const keyMap = {
+          Enter: '{Enter}',
+          Escape: '{Escape}',
+          Tab: '{Tab}',
+          Backspace: '{Backspace}',
+          ArrowUp: '{ArrowUp}',
+          ArrowDown: '{ArrowDown}',
+          ArrowLeft: '{ArrowLeft}',
+          ArrowRight: '{ArrowRight}',
+          Home: '{Home}',
+          End: '{End}',
+          Space: ' ',
+          ' ': ' ',
+        };
+        const key = keyMap[options.press] || options.press;
+        await userEvent.keyboard(key);
+      }
+      return;
+    } catch (e) {
+      // Fallback to DOM events if userEvent fails
+    }
+  }
+
+  // Fallback to DOM events
+  if (options.type) {
+    for (const char of options.type) {
+      // For input elements, we need to actually update the value
+      if (
+        activeElement instanceof HTMLInputElement ||
+        activeElement instanceof HTMLTextAreaElement
+      ) {
+        const start = activeElement.selectionStart || activeElement.value.length;
+        const end = activeElement.selectionEnd || activeElement.value.length;
+        activeElement.value =
+          activeElement.value.slice(0, start) + char + activeElement.value.slice(end);
+        activeElement.selectionStart = activeElement.selectionEnd = start + 1;
+      }
+      activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: char, bubbles: true }));
+      activeElement.dispatchEvent(new KeyboardEvent('keypress', { key: char, bubbles: true }));
+      activeElement.dispatchEvent(
+        new InputEvent('input', { data: char, bubbles: true, inputType: 'insertText' }),
+      );
+      activeElement.dispatchEvent(new KeyboardEvent('keyup', { key: char, bubbles: true }));
+    }
+  }
+  if (options.press) {
+    activeElement.dispatchEvent(
+      new KeyboardEvent('keydown', { key: options.press, bubbles: true }),
+    );
+    activeElement.dispatchEvent(new KeyboardEvent('keyup', { key: options.press, bubbles: true }));
+  }
+}
 
 /**
  * @typedef {import('@lion/ui/combobox.js').LionCombobox} LionCombobox
@@ -41,9 +110,7 @@ export async function mimicUserTyping(el, keys) {
   const { _inputNode } = getComboboxMembers(el);
   _inputNode.value = '';
   _inputNode.focus();
-  await sendKeys({
-    type: keys,
-  });
+  await sendKeys({ type: keys });
 }
 
 /**

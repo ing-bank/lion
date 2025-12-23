@@ -1,6 +1,7 @@
+import { describe, it } from 'vitest';
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture as _fixture, html, waitUntil } from '@open-wc/testing';
-import { sendKeys } from '@web/test-runner-commands';
+import { expect, fixture as _fixture, html, waitUntil } from '../../../test-helpers.js';
+import { sendKeys } from '../../../test-helpers.js';
 
 import '@lion/ui/define/lion-button.js';
 import '@lion/ui/define/lion-combobox.js';
@@ -9,7 +10,7 @@ import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-dialog.js';
 import '@lion/ui/define/lion-tooltip.js';
 
-import { mimicUserTyping } from '@lion/ui/combobox-test-helpers.js';
+import { mimicUserTyping } from '../../../test-helpers.js';
 import sinon from 'sinon';
 
 /**

@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import {
   expect,
   defineCE,
@@ -5,7 +6,7 @@ import {
   nextFrame,
   unsafeStatic,
   html,
-} from '@open-wc/testing';
+} from '../../../test-helpers.js';
 import { nothing } from 'lit';
 import sinon from 'sinon';
 import { formatNumber } from '@lion/ui/localize-no-side-effects.js';

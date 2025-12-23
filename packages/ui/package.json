@@ -44,13 +44,14 @@
   "scripts": {
     "create-npm-publish-docs": "node ./scripts/create-docs-for-npm-publish.js",
     "custom-elements-manifest": "node ./scripts/cem.js",
-    "debug": "cd ../../ && npm run debug",
-    "debug:firefox": "cd ../../ && npm run debug:firefox",
-    "debug:webkit": "cd ../../ && npm run debug:webkit",
+    "debug": "vitest --ui --browser.enabled=true --browser.headless=false",
+    "debug:firefox": "vitest --ui --browser.enabled=true --browser.headless=false --browser.name=firefox",
+    "debug:webkit": "vitest --ui --browser.enabled=true --browser.headless=false --browser.name=webkit",
     "generate-lion-exports": "node ./scripts/generate-lion-exports.js",
     "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-lion-exports",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
-    "test": "cd ../../ && npm run test:browser",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "types": "wireit",
     "types-check-only": "tsc --project tsconfig-check-only.json",
     "types-correct-after-build": "node ./scripts/types-correct-after-build.js"
@@ -72,6 +73,18 @@
     "ibantools": "^4.3.9",
     "lit": "^3.1.2",
     "singleton-manager": "^1.8.0"
+  },
+  "devDependencies": {
+    "@open-wc/testing-helpers": "^3.0.1",
+    "@vitest/browser": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.9",
+    "@vitest/ui": "^2.1.8",
+    "@webcomponents/scoped-custom-element-registry": "^0.0.10",
+    "chai-dom": "^1.12.1",
+    "playwright": "^1.49.1",
+    "sinon": "^19.0.2",
+    "sinon-chai": "^4.0.1",
+    "vitest": "^2.1.8"
   },
   "keywords": [
     "design-system",
