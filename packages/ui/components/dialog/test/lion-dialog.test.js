@@ -8,6 +8,7 @@ import {
   defineCE,
   waitUntil,
 } from '@open-wc/testing';
+import { sendKeys } from '@web/test-runner-commands';
 import { cache } from 'lit/directives/cache.js';
 import { LitElement, nothing } from 'lit';
 import { runOverlayMixinSuite } from '../../overlays/test-suites/OverlayMixin.suite.js';
@@ -56,6 +57,33 @@ describe('lion-dialog', () => {
       // @ts-expect-error [allow-protected-in-tests]
       await el._overlayCtrl._showComplete;
       expect(el.opened).to.be.true;
+    });
+
+    // Fix for Safari
+    it.skip('should show content on invoker click', async () => {
+      class DialogContent extends LitElement {
+        render() {
+          return html`<slot name="content"></slot>`;
+        }
+      }
+      const tagString = defineCE(DialogContent);
+      const dialogContentTag = unsafeStatic(tagString);
+      const el = await fixture(html`
+        <lion-dialog>
+          ${html`<${dialogContentTag} slot="content" style="border: 1px solid;">
+            <div slot="content">
+              <p>Dialog content</p>
+              <button class="ok-button">ok</button>
+            </div>          
+          </${dialogContentTag}>`}
+          <button slot="invoker">Popup button</button>
+        </lion-dialog>
+      `);
+      const invoker = /** @type {HTMLElement} */ (el.querySelector('[slot="invoker"]'));
+      invoker.click();
+      await el.updateComplete;
+      await sendKeys({ press: 'Tab' });
+      expect(document.activeElement?.classList.contains('ok-button')).to.equal(true);
     });
 
     it('supports nested overlays', async () => {
