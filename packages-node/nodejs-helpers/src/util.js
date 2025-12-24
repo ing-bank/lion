@@ -71,6 +71,7 @@ export const getExportSpecifiersByFile = async absFilePath => {
   const exportFile = await readFile(absFilePath, 'utf-8');
   // eslint-disable-next-line
   const [_, exports] = parse(exportFile);
+  // es-module-lexer 1.x returns objects with {n: name, ...}, extract the name
   // @ts-ignore
-  return exports;
+  return exports.map(exp => (typeof exp === 'string' ? exp : exp.n));
 };

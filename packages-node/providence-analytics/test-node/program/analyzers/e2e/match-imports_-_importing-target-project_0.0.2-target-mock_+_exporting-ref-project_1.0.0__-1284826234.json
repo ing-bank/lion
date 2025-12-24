@@ -38,8 +38,8 @@
         {
           "project": "importing-target-project",
           "files": [
-            "./target-src/match-subclasses/internalProxy.js",
-            "./target-src/match-imports/root-level-imports.js"
+            "./target-src/match-imports/root-level-imports.js",
+            "./target-src/match-subclasses/internalProxy.js"
           ]
         }
       ]
@@ -56,8 +56,8 @@
           "project": "importing-target-project",
           "files": [
             "./target-src/find-customelements/multiple.js",
-            "./target-src/match-subclasses/ExtendedComp.js",
-            "./target-src/match-imports/root-level-imports.js"
+            "./target-src/match-imports/root-level-imports.js",
+            "./target-src/match-subclasses/ExtendedComp.js"
           ]
         }
       ]

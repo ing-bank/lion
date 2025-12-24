@@ -97,30 +97,6 @@
       ]
     },
     {
-      "file": "./target-src/match-subclasses/ExtendedComp.js",
-      "result": [
-        {
-          "importSpecifiers": [
-            "RefClass"
-          ],
-          "source": "exporting-ref-project",
-          "normalizedSource": "exporting-ref-project"
-        }
-      ]
-    },
-    {
-      "file": "./target-src/match-subclasses/internalProxy.js",
-      "result": [
-        {
-          "importSpecifiers": [
-            "[default]"
-          ],
-          "source": "exporting-ref-project",
-          "normalizedSource": "exporting-ref-project"
-        }
-      ]
-    },
-    {
       "file": "./target-src/match-imports/deep-imports.js",
       "result": [
         {
@@ -197,6 +173,30 @@
           ],
           "source": "unknown-project",
           "normalizedSource": "unknown-project"
+        }
+      ]
+    },
+    {
+      "file": "./target-src/match-subclasses/ExtendedComp.js",
+      "result": [
+        {
+          "importSpecifiers": [
+            "RefClass"
+          ],
+          "source": "exporting-ref-project",
+          "normalizedSource": "exporting-ref-project"
+        }
+      ]
+    },
+    {
+      "file": "./target-src/match-subclasses/internalProxy.js",
+      "result": [
+        {
+          "importSpecifiers": [
+            "[default]"
+          ],
+          "source": "exporting-ref-project",
+          "normalizedSource": "exporting-ref-project"
         }
       ]
     }

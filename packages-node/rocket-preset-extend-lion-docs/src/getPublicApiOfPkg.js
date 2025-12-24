@@ -46,7 +46,9 @@ export async function getPublicApiOfPkg(pkgJsonPath) {
 
           if (entryPointFile.endsWith('.js')) {
             const src = await readFile(entryPointFile, 'utf8');
-            const [, exports] = parse(src);
+            const [, rawExports] = parse(src);
+            // es-module-lexer 1.x returns objects with {n: name, ...}, extract the names
+            const exports = rawExports.map(exp => (typeof exp === 'string' ? exp : exp.n));
             publicApi.entryPoints.push({
               entry: pkgExportDefinition,
               name: pkgEntryPoint,
@@ -62,7 +64,9 @@ export async function getPublicApiOfPkg(pkgJsonPath) {
       const pkgEntryPoint = pkgEntryPointPath ? `${name}/${pkgEntryPointPath}` : name;
       if (entryPointFilePath.endsWith('.js')) {
         const src = await readFile(entryPointFilePath, 'utf8');
-        const [, exports] = parse(src);
+        const [, rawExports] = parse(src);
+        // es-module-lexer 1.x returns objects with {n: name, ...}, extract the names
+        const exports = rawExports.map(exp => (typeof exp === 'string' ? exp : exp.n));
         publicApi.entryPoints.push({
           entry: pkgExportDefinition,
           name: pkgEntryPoint,
