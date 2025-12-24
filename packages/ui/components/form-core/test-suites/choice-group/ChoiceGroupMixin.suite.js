@@ -3,6 +3,8 @@ import { LitElement } from 'lit';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
+import { fixture, fixtureSync, html } from '@open-wc/testing-helpers';
+import { unsafeStatic } from 'lit/static-html.js';
 import {
   FormGroupMixin,
   Required,
@@ -10,8 +12,8 @@ import {
   ChoiceInputMixin,
 } from '@lion/ui/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
-import { expect, fixture, fixtureSync, html, unsafeStatic } from '../../../../test-helpers.js';
 import sinon from 'sinon';
+import { expect } from '../../../../test-helpers.js';
 
 class ChoiceInputFoo extends ChoiceInputMixin(LionInput) {}
 customElements.define('choice-input-foo', ChoiceInputFoo);

@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { createWeek } from '../../src/utils/createWeek.js';
 import { createDay } from '../../src/utils/createDay.js';
+import { expect } from '../../../../test-helpers.js';
 
 /**
  * @param {import('../../types/day.js').Week} obj

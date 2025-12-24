@@ -1,7 +1,5 @@
 import { describe, it } from 'vitest';
-import { defineCE, expect, fixture, html, unsafeStatic, waitUntil } from '../../../test-helpers.js';
 import { Required, Unparseable } from '@lion/ui/form-core.js';
-import { sendKeys } from '../../../test-helpers.js';
 import { LionCombobox } from '@lion/ui/combobox.js';
 import { browserDetection, SlotMixin } from '@lion/ui/core.js';
 import '@lion/ui/define/lion-combobox.js';
@@ -9,13 +7,15 @@ import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
 import { LitElement, nothing } from 'lit';
 import sinon from 'sinon';
+import { defineCE, fixture, html, unsafeStatic, waitUntil } from '@open-wc/testing-helpers';
+import { expect, sendKeys } from '../../../test-helpers.js';
 import {
   getFilteredOptionValues,
   mimicUserTypingAdvanced,
   getComboboxMembers,
   mimicUserTyping,
   mimicKeyPress,
-} from '../../../test-helpers.js';
+} from '../test-helpers/combobox-helpers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 

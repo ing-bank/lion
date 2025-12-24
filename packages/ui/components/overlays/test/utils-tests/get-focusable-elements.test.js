@@ -1,8 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect, fixture, defineCE } from '../../../../test-helpers.js';
 import { LitElement, html } from 'lit';
-
+import { fixture, defineCE } from '@open-wc/testing-helpers';
 import { getFocusableElements } from '@lion/ui/overlays.js';
+import { expect } from '../../../../test-helpers.js';
 
 class ElementB extends LitElement {
   render() {

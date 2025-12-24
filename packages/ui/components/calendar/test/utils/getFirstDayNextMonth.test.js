@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { isSameDate } from '@lion/ui/calendar.js';
 import { getFirstDayNextMonth } from '../../src/utils/getFirstDayNextMonth.js';
+import { expect } from '../../../../test-helpers.js';
 
 describe('getFirstDayNextMonth', () => {
   it('returns the first day of the next month', () => {

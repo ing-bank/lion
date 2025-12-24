@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
 import '@lion/ui/define/lion-tooltip.js';
-import { aTimeout, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import { runOverlayMixinSuite } from '@lion/ui/overlays-test-suites.js';
 import sinon from 'sinon';
+import { aTimeout, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionTooltip.js').LionTooltip} LionTooltip

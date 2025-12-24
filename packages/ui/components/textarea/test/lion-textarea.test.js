@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
-import { aTimeout, expect, fixture as _fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
-import { getFormControlMembers } from '../../../test-helpers.js';
+import { aTimeout, fixture as _fixture } from '@open-wc/testing-helpers';
+import { getFormControlMembers } from '../../form-core/test-helpers/getFormControlMembers.js';
+import { expect } from '../../../test-helpers.js';
 
 import '@lion/ui/define/lion-textarea.js';
 

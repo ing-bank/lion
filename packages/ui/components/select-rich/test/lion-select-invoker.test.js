@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
 import { LionButton } from '@lion/ui/button.js';
-import { defineCE, expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import { LionSelectInvoker } from '@lion/ui/select-rich.js';
+import { defineCE, fixture } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 import '@lion/ui/define/lion-select-invoker.js';
 

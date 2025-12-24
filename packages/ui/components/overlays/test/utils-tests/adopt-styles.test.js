@@ -1,8 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { browserDetection } from '@lion/ui/core.js';
 import { css } from 'lit';
 import sinon from 'sinon';
+import { expect } from '../../../../test-helpers.js';
 import {
   adoptStyle,
   adoptStyles,

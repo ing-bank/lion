@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { createMultipleMonth } from '../../src/utils/createMultipleMonth.js';
 import { createMonth } from '../../src/utils/createMonth.js';
+import { expect } from '../../../../test-helpers.js';
 
 /**
  * @param {{ months: import('../../types/day.js').Month[]}} obj

@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
-import { expect, fixture as _fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio.js';
+import { fixture as _fixture } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionRadioGroup.js').LionRadioGroup} LionRadioGroup

@@ -1,8 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
-import { sendKeys } from '../../../test-helpers.js';
 import sinon from 'sinon';
+import { fixture } from '@open-wc/testing-helpers';
+import { expect, sendKeys } from '../../../test-helpers.js';
 
 import '@lion/ui/define/lion-accordion.js';
 

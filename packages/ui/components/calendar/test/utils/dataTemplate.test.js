@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
+import { fixture } from '@open-wc/testing-helpers';
+import { weekdayNames } from '../../test-helpers/weekdayNames.js';
+import { expect } from '../../../../test-helpers.js';
 /* eslint-disable no-unused-expressions */
-import { expect, fixture } from '../../../../test-helpers.js';
 
-import { weekdayNames } from '../../../../test-helpers.js';
 import { createMultipleMonth } from '../../src/utils/createMultipleMonth.js';
 import { dataTemplate } from '../../src/utils/dataTemplate.js';
 

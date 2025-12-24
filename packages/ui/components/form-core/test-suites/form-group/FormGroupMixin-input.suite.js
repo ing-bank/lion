@@ -3,9 +3,10 @@ import { LitElement } from 'lit';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
 import { LionInput } from '@lion/ui/input.js';
-import { localizeTearDown } from '../../../../test-helpers.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '../../../../test-helpers.js';
 import { FormGroupMixin } from '@lion/ui/form-core.js';
+import { defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
+import { localizeTearDown } from '../../../localize/test-helpers/localizeTearDown.js';
+import { expect } from '../../../../test-helpers.js';
 
 /**
  * @typedef {import('@lion/ui/form-core.js').LionField} LionField

@@ -1,9 +1,10 @@
 import { describe, it } from 'vitest';
+import { fixture, fixtureSync } from '@open-wc/testing-helpers';
 /* eslint-disable lit-a11y/click-events-have-key-events */
-import { expect, fixture, fixtureSync } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import { OverlayController } from '@lion/ui/overlays.js';
 import { browserDetection } from '@lion/ui/core.js';
+import { expect } from '../../../test-helpers.js';
 import { normalizeTransformStyle } from '../test-helpers/normalizeTransformStyle.js';
 
 /**

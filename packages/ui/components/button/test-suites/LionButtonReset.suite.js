@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
+import { aTimeout, defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButtonReset } from '@lion/ui/button.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import sinon from 'sinon';
+import { expect } from '../../../test-helpers.js';
 
 export function LionButtonResetSuite({ klass = LionButtonReset } = {}) {
   const tagStringButtonReset = defineCE(class extends klass {});

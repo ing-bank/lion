@@ -1,7 +1,8 @@
 import { describe, it } from 'vitest';
-import { fixture as _fixture, expect } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
+import { fixture as _fixture } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 import '@lion/ui/define/lion-pagination.js';
 

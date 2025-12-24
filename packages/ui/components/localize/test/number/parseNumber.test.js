@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { getLocalizeManager, parseNumber } from '@lion/ui/localize-no-side-effects.js';
+import { expect } from '../../../../test-helpers.js';
 
 describe('parseNumber()', () => {
   const localizeManager = getLocalizeManager();

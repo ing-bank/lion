@@ -1,8 +1,8 @@
 import { describe, it } from 'vitest';
 import { nothing, html } from 'lit';
-import { expect } from '../../../test-helpers.js';
 import { stub } from 'sinon';
 import { IconManager } from '@lion/ui/icon.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import("lit").TemplateResult} TemplateResult

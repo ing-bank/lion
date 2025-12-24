@@ -1,7 +1,6 @@
 import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
-import { getFormControlMembers } from '../../../test-helpers.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
+import { defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
 import sinon from 'sinon';
 import {
   FocusMixin,
@@ -9,6 +8,8 @@ import {
   FormControlMixin,
   FormRegistrarMixin,
 } from '@lion/ui/form-core.js';
+import { getFormControlMembers } from '../test-helpers/getFormControlMembers.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../types/FormControlMixinTypes.js').FormControlHost} FormControlHost

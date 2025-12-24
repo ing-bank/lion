@@ -1,7 +1,8 @@
 import { describe, it } from 'vitest';
 import '@lion/ui/define/lion-selected-file-list.js';
-import { expect, fixture as _fixture, html, oneEvent } from '../../../test-helpers.js';
 import sinon from 'sinon';
+import { fixture as _fixture, html, oneEvent } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionSelectedFileList.js').LionSelectedFileList} LionSelectedFileList

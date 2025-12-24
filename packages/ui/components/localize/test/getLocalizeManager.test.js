@@ -1,8 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../test-helpers.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-// @ts-ignore
 import { singletonManager } from 'singleton-manager';
+import { expect } from '../../../test-helpers.js';
+// @ts-ignore
 import { LocalizeManager } from '../src/LocalizeManager.js';
 
 /** @typedef {LocalizeManager & { __instance_for_testing?: LocalizeManager }} LocalizeManagerForTesting */

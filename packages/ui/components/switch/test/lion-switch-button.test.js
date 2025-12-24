@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
-import { expect, fixture as _fixture, fixtureSync, elementUpdated } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-switch-button.js';
+import { fixture as _fixture, fixtureSync, elementUpdated } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionSwitchButton.js').LionSwitchButton} LionSwitchButton

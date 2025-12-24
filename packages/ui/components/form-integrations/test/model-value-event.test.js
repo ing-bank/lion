@@ -1,10 +1,11 @@
 import { describe, it } from 'vitest';
 import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-input.js';
-import { expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
-// eslint-disable-next-line import/no-extraneous-dependencies
+import { fixture } from '@open-wc/testing-helpers';
 import sinon from 'sinon';
+import { expect } from '../../../test-helpers.js';
+// eslint-disable-next-line import/no-extraneous-dependencies
 
 /**
  * @typedef {import('../../input/src/LionInput.js').LionInput} LionInput

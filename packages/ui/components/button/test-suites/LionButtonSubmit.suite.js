@@ -1,9 +1,9 @@
 import { describe, it } from 'vitest';
+import { aTimeout, defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LionButtonSubmit } from '@lion/ui/button.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
-import { sendKeys } from '../../../test-helpers.js';
 import sinon from 'sinon';
+import { expect, sendKeys } from '../../../test-helpers.js';
 
 export function LionButtonSubmitSuite({ klass = LionButtonSubmit } = {}) {
   const tagStringButton = defineCE(class extends klass {});

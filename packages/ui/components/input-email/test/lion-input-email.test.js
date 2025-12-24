@@ -1,7 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect, fixture as _fixture } from '../../../test-helpers.js';
-import { getInputMembers } from '../../../test-helpers.js';
 import '@lion/ui/define/lion-input-email.js';
+import { fixture as _fixture } from '@open-wc/testing-helpers';
+import { getInputMembers } from '../../input/test-helpers/getInputMembers.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionInputEmail.js').LionInputEmail} LionInputEmail

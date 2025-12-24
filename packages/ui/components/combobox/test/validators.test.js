@@ -1,9 +1,10 @@
 import { describe, it } from 'vitest';
-import { mimicUserTyping } from '../../../test-helpers.js';
 import { MatchesOption } from '@lion/ui/combobox.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-option.js';
-import { expect, fixture, html } from '../../../test-helpers.js';
+import { fixture, html } from '@open-wc/testing-helpers';
+import { mimicUserTyping } from '../test-helpers/combobox-helpers.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('@lion/ui/combobox.js').LionCombobox} LionCombobox

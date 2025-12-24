@@ -1,9 +1,10 @@
 import { describe, it } from 'vitest';
+import { fixture, nextFrame } from '@open-wc/testing-helpers';
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture, nextFrame } from '../../../../test-helpers.js';
 import { getFocusableElements } from '@lion/ui/overlays.js';
 import { renderLitAsNode } from '@lion/ui/helpers.js';
 import { html } from 'lit/static-html.js';
+import { expect } from '../../../../test-helpers.js';
 
 import { isActiveElement } from '../../../core/test-helpers/isActiveElement.js';
 import { containFocus } from '../../src/utils/contain-focus.js';

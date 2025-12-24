@@ -1,7 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect, fixture, defineCE } from '../../../../test-helpers.js';
 import { LitElement, html } from 'lit';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
+import { fixture, defineCE } from '@open-wc/testing-helpers';
+import { expect } from '../../../../test-helpers.js';
 
 describe('getDeepActiveElement()', () => {
   it('handles document level active elements', async () => {

@@ -1,9 +1,10 @@
 import { describe, it } from 'vitest';
-import { localizeTearDown } from '../../../test-helpers.js';
-import { expect, fixture as _fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-checkbox-group.js';
+import { fixture as _fixture } from '@open-wc/testing-helpers';
+import { localizeTearDown } from '../../localize/test-helpers/localizeTearDown.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionCheckboxGroup.js').LionCheckboxGroup} LionCheckboxGroup

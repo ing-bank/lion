@@ -1,11 +1,5 @@
 import { describe, it } from 'vitest';
-import {
-  AlwaysInvalid,
-  AlwaysValid,
-  AsyncAlwaysInvalid,
-  AsyncAlwaysValid,
-  getFormControlMembers,
-} from '../../../test-helpers.js';
+import { aTimeout, defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
 import {
   EqualsLength,
   MaxLength,
@@ -16,9 +10,16 @@ import {
   ValidateMixin,
   Validator,
 } from '@lion/ui/form-core.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { expect } from '../../../test-helpers.js';
+import {
+  AlwaysInvalid,
+  AlwaysValid,
+  AsyncAlwaysInvalid,
+  AsyncAlwaysValid,
+} from '../test-helpers/ExampleValidators.js';
+import { getFormControlMembers } from '../test-helpers/getFormControlMembers.js';
 
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';

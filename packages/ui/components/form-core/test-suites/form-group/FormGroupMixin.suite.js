@@ -3,8 +3,10 @@ import { LitElement } from 'lit';
 import { IsNumber, Required, LionField, Validator, FormGroupMixin } from '@lion/ui/form-core.js';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
+import sinon from 'sinon';
+import { localizeTearDown } from '../../../localize/test-helpers/localizeTearDown.js';
+import { getFormControlMembers } from '../../test-helpers/getFormControlMembers.js';
 
-import { localizeTearDown } from '../../../../test-helpers.js';
 import {
   aTimeout,
   defineCE,
@@ -14,8 +16,6 @@ import {
   triggerFocusFor,
   unsafeStatic,
 } from '../../../../test-helpers.js';
-import sinon from 'sinon';
-import { getFormControlMembers } from '../../../../test-helpers.js';
 
 /**
  * @param {{ tagString?: string, childTagString?:string }} [cfg]

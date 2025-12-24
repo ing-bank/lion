@@ -1,11 +1,12 @@
 import { describe, it } from 'vitest';
 import { DefaultSuccess, Required, Validator } from '@lion/ui/form-core.js';
-import { getFormControlMembers } from '../../../test-helpers.js';
 import { LionInput } from '@lion/ui/input.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import sinon from 'sinon';
+import { defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
+import { getFormControlMembers } from '../../form-core/test-helpers/getFormControlMembers.js';
+import { expect } from '../../../test-helpers.js';
 
 describe('Form Validation Integrations', () => {
   const localizeManager = getLocalizeManager();

@@ -1,6 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { fixture, html } from '../../../test-helpers.js';
+/* eslint-disable import/no-extraneous-dependencies */
+import { describe, it } from 'vitest';
 import '@lion/ui/define/lion-button.js';
+import { fixture, html } from '@open-wc/testing-helpers';
+import { expect } from '../../test-helpers.js';
 
 /**
  * Example test file showing Vitest migration patterns

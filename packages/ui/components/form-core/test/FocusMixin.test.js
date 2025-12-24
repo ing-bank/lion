@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
-import { defineCE, expect, fixture, html, oneEvent, unsafeStatic } from '../../../test-helpers.js';
 import { FocusMixin } from '@lion/ui/form-core.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { defineCE, fixture, html, oneEvent, unsafeStatic } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 

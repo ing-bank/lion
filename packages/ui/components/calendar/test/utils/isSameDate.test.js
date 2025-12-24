@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { isSameDate } from '@lion/ui/calendar.js';
+import { expect } from '../../../../test-helpers.js';
 
 describe('isSameDate', () => {
   it('returns true if the same date is given', () => {

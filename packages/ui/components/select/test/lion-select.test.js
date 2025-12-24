@@ -1,7 +1,8 @@
 import { describe, it } from 'vitest';
 import '@lion/ui/define/lion-select.js';
-import { aTimeout, expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
+import { aTimeout, fixture } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionSelect.js').LionSelect} LionSelect

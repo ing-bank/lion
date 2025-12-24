@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../test-helpers.js';
 import { regionCodeToLocale } from '../src/regionCodeToLocale.js';
+import { expect } from '../../../test-helpers.js';
 
 describe('regionCodeToLocale', () => {
   it('returns the most likely locale basename for a region', () => {

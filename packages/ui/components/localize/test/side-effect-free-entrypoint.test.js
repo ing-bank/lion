@@ -1,8 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../test-helpers.js';
 import sinon from 'sinon';
-// @ts-ignore
 import { singletonManager } from 'singleton-manager';
+import { expect } from '../../../test-helpers.js';
+// @ts-ignore
 
 /**
  * @typedef {import('../types/LocalizeMixinTypes.js').LocalizeMixin} LocalizeMixinHost

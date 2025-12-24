@@ -1,10 +1,10 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import {
   getLocalizeManager,
   getDateFormatBasedOnLocale,
 } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '../../../../test-helpers.js';
+import { expect } from '../../../../test-helpers.js';
+import { localizeTearDown } from '../../test-helpers/localizeTearDown.js';
 
 describe('getDateFormatBasedOnLocale()', () => {
   const localizeManager = getLocalizeManager();

@@ -1,15 +1,16 @@
 import { describe, it } from 'vitest';
-import { mimicUserChangingDropdown } from '../../../test-helpers.js';
 import { runInputAmountDropdownSuite } from '@lion/ui/input-amount-dropdown-test-suites.js';
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
-import { aTimeout, expect, fixture } from '../../../test-helpers.js';
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { LionOption } from '@lion/ui/listbox.js';
 import { ref } from 'lit/directives/ref.js';
 import { html } from 'lit';
-
+import { aTimeout, fixture } from '@open-wc/testing-helpers';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { mimicUserChangingDropdown } from '../test-helpers/mimicUserChangingDropdown.js';
+import { expect } from '../../../test-helpers.js';
+
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import '@lion/ui/define/lion-input-amount-dropdown.js';

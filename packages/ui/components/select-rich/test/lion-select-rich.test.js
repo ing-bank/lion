@@ -1,7 +1,5 @@
 import { describe, it } from 'vitest';
 import { LionSelectInvoker, LionSelectRich } from '@lion/ui/select-rich.js';
-import { getSelectRichMembers } from '../../../test-helpers.js';
-import { mimicClick } from '../../../test-helpers.js';
 import { OverlayController } from '@lion/ui/overlays.js';
 import { LionOption } from '@lion/ui/listbox.js';
 import '@lion/ui/define/lion-select-rich.js';
@@ -16,11 +14,13 @@ import {
   nextFrame,
   aTimeout,
   defineCE,
-  expect,
   html,
   waitUntil,
-} from '../../../test-helpers.js';
+} from '@open-wc/testing-helpers';
 import { cache } from 'lit/directives/cache.js';
+import { getSelectRichMembers } from '../test-helpers/getSelectRichMembers.js';
+import { mimicClick } from '../../overlays/test-helpers/mimicClick.js';
+import { expect } from '../../../test-helpers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 

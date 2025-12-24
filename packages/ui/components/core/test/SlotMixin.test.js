@@ -1,9 +1,10 @@
 import { describe, it } from 'vitest';
-import { defineCE, expect, fixture, fixtureSync, unsafeStatic, html } from '../../../test-helpers.js';
 import { SlotMixin } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { defineCE, fixture, fixtureSync, unsafeStatic, html } from '@open-wc/testing-helpers';
 import { moveUserProvidedDefaultSlottablesToTarget } from '../src/SlotMixin.js';
+import { expect } from '../../../test-helpers.js';
 
 import { ScopedElementsMixin, supportsScopedRegistry } from '../src/ScopedElementsMixin.js';
 import { isActiveElement } from '../test-helpers/isActiveElement.js';

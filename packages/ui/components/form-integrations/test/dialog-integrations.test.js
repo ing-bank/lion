@@ -1,11 +1,12 @@
 import { describe, it } from 'vitest';
+import { html } from 'lit';
+import { fixture } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 /* eslint-disable lit-a11y/no-autofocus */
-import { expect, fixture } from '../../../test-helpers.js';
 import '@lion/ui/define/lion-checkbox.js';
 import '@lion/ui/define/lion-dialog.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-radio.js';
-import { html } from 'lit';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { getAllTagNames } from './helpers/helpers.js';

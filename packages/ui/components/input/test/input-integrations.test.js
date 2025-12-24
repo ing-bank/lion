@@ -1,5 +1,5 @@
-import { describe, it } from 'vitest';
-import { defineCE } from '../../../test-helpers.js';
+import { describe } from 'vitest';
+import { defineCE } from '@open-wc/testing-helpers';
 import {
   runInteractionStateMixinSuite,
   runFormatMixinSuite,

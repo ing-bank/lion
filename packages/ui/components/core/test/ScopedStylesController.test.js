@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
-import { expect, fixture } from '../../../test-helpers.js';
+import { fixture } from '@open-wc/testing-helpers';
 // import { html as _html } from 'lit/static-html.js';
 import { LitElement, css, html } from 'lit';
 import { ScopedStylesController } from '@lion/ui/core.js';
+import { expect } from '../../../test-helpers.js';
 
 describe('ScopedStylesMixin', () => {
   class Scoped extends LitElement {

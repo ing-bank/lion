@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { normalizeDateTime } from '@lion/ui/localize.js';
+import { expect } from '../../../../test-helpers.js';
 
 describe('normalizeDateTime', () => {
   it('returns a date with hours, minutes and seconds set to 0', () => {

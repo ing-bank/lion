@@ -1,9 +1,10 @@
 import { describe, it } from 'vitest';
+import { fixture } from '@open-wc/testing-helpers';
 /* eslint-disable lit-a11y/tabindex-no-positive */
-import { expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import { LitElement } from 'lit';
 import { DisabledWithTabIndexMixin } from '@lion/ui/core.js';
+import { expect } from '../../../test-helpers.js';
 
 describe('DisabledWithTabIndexMixin', () => {
   class WithTabIndex extends DisabledWithTabIndexMixin(LitElement) {}

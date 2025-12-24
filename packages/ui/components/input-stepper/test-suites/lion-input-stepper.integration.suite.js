@@ -1,4 +1,4 @@
-import { defineCE } from '../../../test-helpers.js';
+import { defineCE } from '@open-wc/testing-helpers';
 import {
   runInteractionStateMixinSuite,
   runFormatMixinSuite,

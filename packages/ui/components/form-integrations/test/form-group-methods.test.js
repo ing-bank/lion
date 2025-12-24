@@ -1,6 +1,7 @@
 import { describe, it } from 'vitest';
-import { elementUpdated, expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit';
+import { elementUpdated, fixture } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 import { getAllFieldsAndFormGroups } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
 /**

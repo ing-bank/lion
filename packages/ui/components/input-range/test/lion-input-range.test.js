@@ -1,5 +1,6 @@
 import { describe, it } from 'vitest';
-import { expect, fixture as _fixture, nextFrame, html } from '../../../test-helpers.js';
+import { fixture as _fixture, nextFrame, html } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 import '@lion/ui/define/lion-input-range.js';
 

@@ -1,9 +1,7 @@
 import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
+import { defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '../../../test-helpers.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
-import { getFormControlMembers, AlwaysInvalid } from '../../../test-helpers.js';
 import sinon from 'sinon';
 import {
   DefaultSuccess,
@@ -13,6 +11,10 @@ import {
   ValidateMixin,
   Validator,
 } from '@lion/ui/form-core.js';
+import { localizeTearDown } from '../../localize/test-helpers/localizeTearDown.js';
+import { getFormControlMembers } from '../test-helpers/getFormControlMembers.js';
+import { AlwaysInvalid } from '../test-helpers/ExampleValidators.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../types/validate/validate.js').FeedbackMessageData} FeedbackMessageData

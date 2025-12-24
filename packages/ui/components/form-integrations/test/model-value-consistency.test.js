@@ -1,8 +1,10 @@
 import { describe, it } from 'vitest';
-import { expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
+import { fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
+import sinon from 'sinon';
+import { getFormControlMembers } from '../../form-core/test-helpers/getFormControlMembers.js';
+import { expect } from '../../../test-helpers.js';
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import sinon from 'sinon';
 
 import '@lion/ui/define/lion-input.js';
 import '@lion/ui/define/lion-input-amount.js';
@@ -29,8 +31,6 @@ import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-form.js';
 import '@lion/ui/define/lion-field.js';
 import '@lion/ui/define/lion-validation-feedback.js';
-
-import { getFormControlMembers } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('lit').LitElement} LitElement

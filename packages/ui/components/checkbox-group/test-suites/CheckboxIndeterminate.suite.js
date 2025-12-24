@@ -1,6 +1,7 @@
 import { describe, it } from 'vitest';
-import { expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
-import { getFormControlMembers } from '../../../test-helpers.js';
+import { fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
+import { getFormControlMembers } from '../../form-core/test-helpers/getFormControlMembers.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionCheckbox.js').LionCheckbox} LionCheckbox

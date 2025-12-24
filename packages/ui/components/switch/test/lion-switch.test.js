@@ -1,11 +1,12 @@
 import { describe, it } from 'vitest';
-import { getFormControlMembers } from '../../../test-helpers.js';
-import { expect, fixture as _fixture } from '../../../test-helpers.js';
 import { Validator } from '@lion/ui/form-core.js';
 import { LionSwitch } from '@lion/ui/switch.js';
 import { html } from 'lit/static-html.js';
 import '@lion/ui/define/lion-switch.js';
 import sinon from 'sinon';
+import { fixture as _fixture } from '@open-wc/testing-helpers';
+import { getFormControlMembers } from '../../form-core/test-helpers/getFormControlMembers.js';
+import { expect } from '../../../test-helpers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 

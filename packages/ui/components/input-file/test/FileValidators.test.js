@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../test-helpers.js';
 import { IsAcceptedFile } from '../src/validators.js';
+import { expect } from '../../../test-helpers.js';
 
 describe('lion-input-file: IsAcceptedFile', () => {
   describe('valid file type', () => {

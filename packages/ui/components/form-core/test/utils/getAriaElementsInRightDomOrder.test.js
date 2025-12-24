@@ -1,7 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect, fixture } from '../../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
+import { fixture } from '@open-wc/testing-helpers';
 import { getAriaElementsInRightDomOrder } from '../../src/utils/getAriaElementsInRightDomOrder.js';
+import { expect } from '../../../../test-helpers.js';
 
 describe('getAriaElementsInRightDomOrder', () => {
   it('orders by putting preceding siblings and local parents first', async () => {

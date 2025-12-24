@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
 import sinon from 'sinon';
-import { expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
+import { fixture } from '@open-wc/testing-helpers';
 import { PhoneUtilManager } from '@lion/ui/input-tel.js';
+import { expect } from '../../../test-helpers.js';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
 

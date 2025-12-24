@@ -1,9 +1,10 @@
 import { describe, it } from 'vitest';
-import { expect, fixture } from '../../../test-helpers.js';
 import { DisabledMixin } from '@lion/ui/core.js';
 import { html } from 'lit/static-html.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { fixture } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 describe('DisabledMixin', () => {
   class CanBeDisabled extends DisabledMixin(LitElement) {}

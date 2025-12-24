@@ -1,7 +1,5 @@
 import { describe, it } from 'vitest';
-import { getFormControlMembers } from '../../../test-helpers.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '../../../test-helpers.js';
 import { Required, Validator } from '@lion/ui/form-core.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import '@lion/ui/define/lion-field.js';
@@ -11,9 +9,11 @@ import {
   triggerBlurFor,
   unsafeStatic,
   fixture,
-  expect,
   html,
-} from '../../../test-helpers.js';
+} from '@open-wc/testing-helpers';
+import { localizeTearDown } from '../../localize/test-helpers/localizeTearDown.js';
+import { expect } from '../../../test-helpers.js';
+import { getFormControlMembers } from '../test-helpers/getFormControlMembers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 

@@ -2,18 +2,12 @@ import { describe, it } from 'vitest';
 import { LionCalendar, isSameDate } from '@lion/ui/calendar.js';
 import { html, LitElement } from 'lit';
 import { IsDateDisabled, MaxDate, MinDate, MinMaxDate } from '@lion/ui/form-core.js';
-import {
-  aTimeout,
-  defineCE,
-  expect,
-  fixture as _fixture,
-  nextFrame,
-} from '../../../test-helpers.js';
-import { mimicClick } from '../../../test-helpers.js';
+import { aTimeout, defineCE, fixture as _fixture, nextFrame } from '@open-wc/testing-helpers';
 import sinon from 'sinon';
-import { setViewport } from '../../../test-helpers.js';
-import { DatepickerInputObject } from '../../../test-helpers.js';
 import { LionInputDatepicker } from '@lion/ui/input-datepicker.js';
+import { mimicClick } from '../../overlays/test-helpers/mimicClick.js';
+import { DatepickerInputObject } from '../test-helpers/DatepickerInputObject.js';
+import { setViewport, expect } from '../../../test-helpers.js';
 
 import '@lion/ui/define/lion-input-datepicker.js';
 

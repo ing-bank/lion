@@ -1,11 +1,11 @@
 import { describe, it } from 'vitest';
-import { expect, oneEvent, aTimeout } from '../../../test-helpers.js';
 import sinon from 'sinon';
-// @ts-ignore
+import { oneEvent, aTimeout } from '@open-wc/testing-helpers';
 import { fetchMock } from '@bundled-es-modules/fetch-mock';
-import { setupFakeImport, resetFakeImport, fakeImport } from '../../../test-helpers.js';
-
 import { LocalizeManager } from '@lion/ui/localize-no-side-effects.js';
+import { setupFakeImport, resetFakeImport, fakeImport } from '../test-helpers/fake-imports.js';
+import { expect } from '../../../test-helpers.js';
+// @ts-ignore
 
 /**
  * @param {LocalizeManager} localizeManagerEl

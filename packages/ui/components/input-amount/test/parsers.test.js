@@ -1,8 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../test-helpers.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '../../../test-helpers.js';
 import { parseAmount } from '@lion/ui/input-amount.js';
+import { localizeTearDown } from '../../localize/test-helpers/localizeTearDown.js';
+import { expect } from '../../../test-helpers.js';
 
 describe('parseAmount()', async () => {
   const localizeManager = getLocalizeManager();

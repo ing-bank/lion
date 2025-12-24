@@ -1,11 +1,11 @@
 import { describe, it } from 'vitest';
-import { defineCE, expect, fixture, html, triggerFocusFor, unsafeStatic } from '../../../test-helpers.js';
-import { getFormControlMembers } from '../../../test-helpers.js';
 import { NativeTextFieldMixin } from '@lion/ui/form-core.js';
-import { sendKeys } from '../../../test-helpers.js';
 import { browserDetection } from '@lion/ui/core.js';
 import { LitElement } from 'lit';
 import { spy } from 'sinon';
+import { defineCE, fixture, html, triggerFocusFor, unsafeStatic } from '@open-wc/testing-helpers';
+import { getFormControlMembers } from '../test-helpers/getFormControlMembers.js';
+import { expect, sendKeys } from '../../../test-helpers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 

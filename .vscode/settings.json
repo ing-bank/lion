@@ -9,5 +9,9 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
   },
-  "prettier.prettierPath": "node_modules/prettier"
+  "prettier.prettierPath": "node_modules/prettier",
+  "vitest.enable": true,
+  "vitest.configSearchPatternExclude": "{**/node_modules/**,**/.*/**}",
+  "vitest.vitestPackagePath": "packages/ui/node_modules/vitest/package.json",
+  "vitest.rootConfig": "./packages/ui/vitest.config.js"
 }

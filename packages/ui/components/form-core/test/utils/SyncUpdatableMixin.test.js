@@ -1,8 +1,9 @@
 import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
-import { defineCE, expect, fixture, fixtureSync, html, unsafeStatic } from '../../../../test-helpers.js';
 import sinon from 'sinon';
+import { defineCE, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing-helpers';
 import { SyncUpdatableMixin } from '../../src/utils/SyncUpdatableMixin.js';
+import { expect } from '../../../../test-helpers.js';
 
 describe('SyncUpdatableMixin', () => {
   describe('Until firstUpdated', () => {

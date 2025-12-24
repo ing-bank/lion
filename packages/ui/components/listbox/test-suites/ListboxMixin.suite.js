@@ -8,15 +8,14 @@ import '@lion/ui/define/lion-option.js';
 import {
   aTimeout,
   defineCE,
-  expect,
   fixture as _fixture,
   html,
   nextFrame,
   unsafeStatic,
-} from '../../../test-helpers.js';
-import { sendKeys } from '../../../test-helpers.js';
+} from '@open-wc/testing-helpers';
 import sinon from 'sinon';
-import { getListboxMembers } from '../../../test-helpers.js';
+import { sendKeys, expect } from '../../../test-helpers.js';
+import { getListboxMembers } from '../test-helpers/getListboxMembers.js';
 import { browserDetection } from '../../core/src/browserDetection.js';
 
 /**

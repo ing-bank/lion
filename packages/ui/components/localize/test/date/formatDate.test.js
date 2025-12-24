@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { getLocalizeManager, formatDate, parseDate } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '../../../../test-helpers.js';
+import { localizeTearDown } from '../../test-helpers/localizeTearDown.js';
+import { expect } from '../../../../test-helpers.js';
 
 const SUPPORTED_LOCALES = {
   'bg-BG': 'Bulgarian',

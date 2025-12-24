@@ -1,9 +1,10 @@
 import { describe, it } from 'vitest';
-import { expect, fixture as _fixture, oneEvent } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-step.js';
 import '@lion/ui/define/lion-steps.js';
+import { fixture as _fixture, oneEvent } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionSteps.js').LionSteps} LionSteps

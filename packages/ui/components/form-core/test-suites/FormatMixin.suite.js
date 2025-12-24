@@ -1,10 +1,12 @@
 import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
 import { parseDate } from '@lion/ui/localize-no-side-effects.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import sinon from 'sinon';
 import { Unparseable, Validator, FormatMixin } from '@lion/ui/form-core.js';
-import { getFormControlMembers, mimicUserInput } from '../../../test-helpers.js';
+import { aTimeout, defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
+import { getFormControlMembers } from '../test-helpers/getFormControlMembers.js';
+import { mimicUserInput } from '../test-helpers/mimicUserInput.js';
+import { expect } from '../../../test-helpers.js';
 
 const isLionInputStepper = (/** @type {FormatClass} */ el) => 'valueTextMapping' in el;
 

@@ -1,9 +1,10 @@
 import { describe, it } from 'vitest';
-import { expect, fixture as _fixture } from '../../../test-helpers.js';
 import { html } from 'lit';
-import { getInputMembers } from '../../../test-helpers.js';
 import { IsCountryIBAN, formatIBAN, parseIBAN } from '@lion/ui/input-iban.js';
 import '@lion/ui/define/lion-input-iban.js';
+import { fixture as _fixture } from '@open-wc/testing-helpers';
+import { getInputMembers } from '../../input/test-helpers/getInputMembers.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionInputIban.js').LionInputIban} LionInputIban

@@ -1,8 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect, fixture } from '../../../../test-helpers.js';
 import { html } from 'lit';
-
+import { fixture } from '@open-wc/testing-helpers';
 import { deepContains } from '@lion/ui/overlays.js';
+import { expect } from '../../../../test-helpers.js';
 
 describe('deepContains()', () => {
   it('returns true if element contains a target element with a shadow boundary in between', async () => {

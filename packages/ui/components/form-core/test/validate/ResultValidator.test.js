@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { MinLength, Required, DefaultSuccess, ResultValidator } from '@lion/ui/form-core.js';
+import { expect } from '../../../../test-helpers.js';
 
 /**
  * @typedef {import('../../src/validate/Validator.js').Validator} Validator

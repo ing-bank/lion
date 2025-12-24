@@ -1,13 +1,14 @@
 import { describe, it } from 'vitest';
-import { aTimeout, expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '../../../test-helpers.js';
-import { getInputMembers } from '../../../test-helpers.js';
 import { LionInputAmount, formatAmount, parseAmount } from '@lion/ui/input-amount.js';
-import { mimicUserInput } from '../../../test-helpers.js';
 import sinon from 'sinon';
 import '@lion/ui/define/lion-input-amount.js';
+import { aTimeout, fixture } from '@open-wc/testing-helpers';
+import { localizeTearDown } from '../../localize/test-helpers/localizeTearDown.js';
+import { getInputMembers } from '../../input/test-helpers/getInputMembers.js';
+import { mimicUserInput } from '../../form-core/test-helpers/mimicUserInput.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../../input/src/LionInput.js').LionInput} LionInput

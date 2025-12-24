@@ -1,10 +1,10 @@
 import { describe, it } from 'vitest';
 import { Required, ChoiceInputMixin } from '@lion/ui/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
-import { expect, fixture, html, unsafeStatic } from '../../../../test-helpers.js';
-
-import { getFormControlMembers } from '../../../../test-helpers.js';
+import { fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
 import sinon from 'sinon';
+import { getFormControlMembers } from '../../test-helpers/getFormControlMembers.js';
+import { expect } from '../../../../test-helpers.js';
 
 class ChoiceInput extends ChoiceInputMixin(LionInput) {
   constructor() {

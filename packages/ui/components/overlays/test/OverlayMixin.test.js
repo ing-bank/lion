@@ -1,7 +1,7 @@
-import { describe, it } from 'vitest';
-import { defineCE, unsafeStatic } from '../../../test-helpers.js';
+import { describe } from 'vitest';
 import { LitElement, html } from 'lit';
 import { OverlayMixin } from '@lion/ui/overlays.js';
+import { defineCE, unsafeStatic } from '@open-wc/testing-helpers';
 import { runOverlayMixinSuite } from '../test-suites/OverlayMixin.suite.js';
 
 const tagString = defineCE(

@@ -1,11 +1,12 @@
 import { describe, it } from 'vitest';
 import { nothing, html } from 'lit';
 import { until } from 'lit/directives/until.js';
-import { aTimeout, expect, fixture as _fixture, fixtureSync } from '../../../test-helpers.js';
 import '@lion/ui/define/lion-icon.js';
 import { icons } from '@lion/ui/icon.js';
+import { aTimeout, fixture as _fixture, fixtureSync } from '@open-wc/testing-helpers';
 import hammerSvg from './hammer.svg.js';
 import heartSvg from './heart.svg.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {(strings: TemplateStringsArray, ... expr: string[]) => string} TaggedTemplateLiteral

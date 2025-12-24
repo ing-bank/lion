@@ -1,9 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
-// eslint-disable-next-line no-unused-vars
-import { LionOption } from '@lion/ui/listbox.js';
+import { fixture } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 import '@lion/ui/define/lion-option.js';
 
 describe('lion-option', () => {

@@ -1,7 +1,8 @@
 import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
 import { OverlayMixin } from '@lion/ui/overlays.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
+import { defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-select-rich.js';

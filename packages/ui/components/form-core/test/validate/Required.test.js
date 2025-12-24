@@ -1,7 +1,8 @@
 import { describe, it } from 'vitest';
 import { LionField, Required } from '@lion/ui/form-core.js';
-import { getFormControlMembers } from '../../../../test-helpers.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '../../../../test-helpers.js';
+import { defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
+import { getFormControlMembers } from '../../test-helpers/getFormControlMembers.js';
+import { expect } from '../../../../test-helpers.js';
 
 /**
  * @typedef {import('../../types/FormControlMixinTypes.js').FormControlHost} FormControlHost

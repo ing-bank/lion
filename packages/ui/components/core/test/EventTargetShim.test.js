@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../test-helpers.js';
 import sinon from 'sinon';
 import { EventTargetShim } from '@lion/ui/core.js';
+import { expect } from '../../../test-helpers.js';
 
 describe('EventTargetShim', () => {
   class NonElementClass extends EventTargetShim {}

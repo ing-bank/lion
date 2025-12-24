@@ -2,16 +2,16 @@ import { describe, it } from 'vitest';
 import { LitElement } from 'lit';
 import {
   defineCE,
-  expect,
   fixture,
   html,
   triggerBlurFor,
   triggerFocusFor,
   unsafeStatic,
-} from '../../../test-helpers.js';
+} from '@open-wc/testing-helpers';
 import sinon from 'sinon';
-import { getFormControlMembers } from '../../../test-helpers.js';
 import { InteractionStateMixin, ValidateMixin, MinLength } from '@lion/ui/form-core.js';
+import { expect } from '../../../test-helpers.js';
+import { getFormControlMembers } from '../test-helpers/getFormControlMembers.js';
 
 /**
  * @param {{tagString?: string, allowedModelValueTypes?: Array.<ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor>}} [customConfig]

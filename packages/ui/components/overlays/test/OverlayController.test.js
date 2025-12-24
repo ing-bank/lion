@@ -1,18 +1,17 @@
 import { describe, it } from 'vitest';
-/* eslint-disable no-new */
-import { OverlayController, overlays } from '@lion/ui/overlays.js';
-import { mimicClick } from '../../../test-helpers.js';
-import { sendKeys } from '../../../test-helpers.js';
-import sinon from 'sinon';
 import {
   unsafeStatic,
   fixtureSync,
   defineCE,
   aTimeout,
   fixture,
-  expect,
   html,
-} from '../../../test-helpers.js';
+} from '@open-wc/testing-helpers';
+import { OverlayController, overlays } from '@lion/ui/overlays.js';
+import sinon from 'sinon';
+import { mimicClick } from '../test-helpers/mimicClick.js';
+import { sendKeys, expect } from '../../../test-helpers.js';
+/* eslint-disable no-new */
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { createShadowHost } from '../test-helpers/createShadowHost.js';
@@ -1583,9 +1582,13 @@ describe('OverlayController', () => {
       ctrl.hide();
 
       expect(getComputedStyle(ctrl.content).display).to.equal('block');
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise(resolve => {
+        setTimeout(resolve, 0);
+      });
       hideTransitionFinished();
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise(resolve => {
+        setTimeout(resolve, 0);
+      });
       expect(getComputedStyle(ctrl.content).display).to.equal('none');
     });
 
@@ -1607,9 +1610,13 @@ describe('OverlayController', () => {
       });
 
       expect(showIsDone).to.be.false;
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise(resolve => {
+        setTimeout(resolve, 0);
+      });
       showTransitionFinished();
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise(resolve => {
+        setTimeout(resolve, 0);
+      });
       expect(showIsDone).to.be.true;
     });
   });

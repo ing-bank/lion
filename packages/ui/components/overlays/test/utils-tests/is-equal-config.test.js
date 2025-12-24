@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { isEqualConfig } from '../../src/utils/is-equal-config.js';
+import { expect } from '../../../../test-helpers.js';
 
 function TestConfig() {
   return {

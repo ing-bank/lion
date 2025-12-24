@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../test-helpers.js';
 import { liveFormatPhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.js';
+import { expect } from '../../../test-helpers.js';
 
 describe('liveFormatPhoneNumber', () => {
   beforeEach(async () => {

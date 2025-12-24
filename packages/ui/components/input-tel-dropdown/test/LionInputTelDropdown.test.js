@@ -1,16 +1,20 @@
 import { describe, it } from 'vitest';
-import { mimicUserChangingDropdown } from '../../../test-helpers.js';
 import { runInputTelDropdownSuite } from '@lion/ui/input-tel-dropdown-test-suites.js';
 import { LionInputTelDropdown } from '@lion/ui/input-tel-dropdown.js';
 import { runInputTelSuite } from '@lion/ui/input-tel-test-suites.js';
-import { aTimeout, expect, fixture } from '../../../test-helpers.js';
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { LionOption } from '@lion/ui/listbox.js';
 import { ref } from 'lit/directives/ref.js';
 import { html } from 'lit';
+import { aTimeout, fixture } from '@open-wc/testing-helpers';
+import { mimicUserChangingDropdown } from '../../input-amount-dropdown/test-helpers/mimicUserChangingDropdown.js';
+import {
+  mockPhoneUtilManager,
+  restorePhoneUtilManager,
+} from '../../input-tel/test-helpers/mockPhoneUtilManager.js';
+import { expect } from '../../../test-helpers.js';
 
-import { mockPhoneUtilManager, restorePhoneUtilManager } from '../../../test-helpers.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import '@lion/ui/define/lion-input-tel-dropdown.js';

@@ -1,11 +1,12 @@
 import { describe, it } from 'vitest';
 import { html } from 'lit';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
-import { localizeTearDown } from '../../../test-helpers.js';
 import { MinDate, MaxDate } from '@lion/ui/form-core.js';
-import { expect, fixture as _fixture } from '../../../test-helpers.js';
-import { getInputMembers } from '../../../test-helpers.js';
 import '@lion/ui/define/lion-input-date.js';
+import { fixture as _fixture } from '@open-wc/testing-helpers';
+import { localizeTearDown } from '../../localize/test-helpers/localizeTearDown.js';
+import { getInputMembers } from '../../input/test-helpers/getInputMembers.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../src/LionInputDate.js').LionInputDate} LionInputDate

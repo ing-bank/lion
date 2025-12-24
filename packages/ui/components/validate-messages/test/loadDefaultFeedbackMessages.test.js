@@ -1,8 +1,8 @@
 import { describe, it } from 'vitest';
 /* eslint-disable no-unused-vars, no-param-reassign */
-import { expect } from '../../../test-helpers.js';
 import { Required } from '@lion/ui/form-core.js';
 import { loadDefaultFeedbackMessages } from '@lion/ui/validate-messages.js';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../../form-core/src/validate/Validator.js').Validator} Validator

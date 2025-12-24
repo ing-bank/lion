@@ -1,7 +1,8 @@
 import { describe, it } from 'vitest';
-import { expect, fixture } from '../../../test-helpers.js';
 import { html } from 'lit/static-html.js';
 import sinon from 'sinon';
+import { fixture } from '@open-wc/testing-helpers';
+import { expect } from '../../../test-helpers.js';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 

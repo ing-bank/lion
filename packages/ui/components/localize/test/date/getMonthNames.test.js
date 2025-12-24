@@ -1,6 +1,6 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../../test-helpers.js';
 import { getMonthNames } from '@lion/ui/localize.js';
+import { expect } from '../../../../test-helpers.js';
 
 /**
  * @param {TemplateStringsArray} strings

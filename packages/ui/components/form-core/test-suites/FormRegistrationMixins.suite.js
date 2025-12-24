@@ -1,13 +1,14 @@
 import { describe, it } from 'vitest';
+import { defineCE, fixture, html, unsafeStatic } from '@open-wc/testing-helpers';
 import { uuid } from '@lion/ui/core.js';
 import {
   FormRegisteringMixin,
   FormRegistrarMixin,
   FormRegistrarPortalMixin,
 } from '@lion/ui/form-core.js';
-import { defineCE, expect, fixture, html, unsafeStatic } from '../../../test-helpers.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { expect } from '../../../test-helpers.js';
 
 /**
  * @typedef {Object} customConfig

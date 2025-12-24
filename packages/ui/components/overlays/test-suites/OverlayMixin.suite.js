@@ -6,16 +6,15 @@ import {
   aTimeout,
   defineCE,
   fixture,
-  expect,
   html,
-} from '../../../test-helpers.js';
+} from '@open-wc/testing-helpers';
 import { overlays as overlaysManager, OverlayController } from '@lion/ui/overlays.js';
-import { sendKeys } from '../../../test-helpers.js';
 import { browserDetection } from '@lion/ui/core.js';
 import { cache } from 'lit/directives/cache.js';
 import '@lion/ui/define/lion-dialog.js';
 import { LitElement } from 'lit';
 import sinon from 'sinon';
+import { expect, sendKeys } from '../../../test-helpers.js';
 
 /**
  * @typedef {import('../types/OverlayMixinTypes.js').DefineOverlayConfig} DefineOverlayConfig

@@ -1,19 +1,22 @@
 import { describe, it } from 'vitest';
 import {
-  expect,
   fixture as _fixture,
   fixtureSync as _fixtureSync,
   html,
   defineCE,
   unsafeStatic,
   aTimeout,
-} from '../../../test-helpers.js';
+} from '@open-wc/testing-helpers';
 import sinon from 'sinon';
-import { mimicUserInput } from '../../../test-helpers.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
 import { Unparseable } from '@lion/ui/form-core.js';
 import { LionInputTel, PhoneNumber, PhoneUtilManager } from '@lion/ui/input-tel.js';
-import { mockPhoneUtilManager, restorePhoneUtilManager } from '../../../test-helpers.js';
+import { expect } from '../../../test-helpers.js';
+import { mimicUserInput } from '../../form-core/test-helpers/mimicUserInput.js';
+import {
+  mockPhoneUtilManager,
+  restorePhoneUtilManager,
+} from '../test-helpers/mockPhoneUtilManager.js';
 
 /**
  * @typedef {import('lit').TemplateResult} TemplateResult

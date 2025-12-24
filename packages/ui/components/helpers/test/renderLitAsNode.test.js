@@ -1,7 +1,7 @@
 import { describe, it } from 'vitest';
-import { expect } from '../../../test-helpers.js';
 import { html } from 'lit';
 import { renderLitAsNode } from '../src/renderLitAsNode.js';
+import { expect } from '../../../test-helpers.js';
 
 describe('renderLitAsNode', () => {
   it('should return a matching HTMLElement (Node)', () => {
