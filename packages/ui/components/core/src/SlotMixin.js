@@ -185,9 +185,10 @@ const SlotMixinImplementation = superclass =>
         const supportsScopedRegistry = !!ShadowRoot.prototype.createElement;
         const hasShadowRoot = Boolean(this.shadowRoot);
         if (!hasShadowRoot) {
-          // TODO: throw an error in a breaking release
-          // eslint-disable-next-line no-console
-          console.error(`[SlotMixin] No shadowRoot was found`);
+          throw new Error(
+            `[SlotMixin] SlotMixin requires a shadowRoot to render slots. ` +
+              `Make sure your component has a shadowRoot (do not override createRenderRoot() to return 'this').`,
+          );
         }
         const registryRoot = supportsScopedRegistry ? this.shadowRoot : document;
 
