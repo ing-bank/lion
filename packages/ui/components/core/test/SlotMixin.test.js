@@ -12,6 +12,36 @@ import { isActiveElement } from '../test-helpers/isActiveElement.js';
  */
 
 describe('SlotMixin', () => {
+  it('throws an error when used without a shadowRoot', async () => {
+    const tag = defineCE(
+      class extends SlotMixin(LitElement) {
+        createRenderRoot() {
+          return this;
+        }
+
+        get slots() {
+          return {
+            ...super.slots,
+            feedback: () => html`<div></div>`,
+          };
+        }
+      },
+    );
+
+    const el = document.createElement(tag);
+    let thrownError;
+    try {
+      // Manually trigger the slot mixin connection to test the error
+      el._connectSlotMixin();
+    } catch (e) {
+      thrownError = e;
+    }
+    expect(thrownError).to.be.an.instanceOf(Error);
+    expect(thrownError.message).to.include(
+      '[SlotMixin] SlotMixin requires a shadowRoot to render slots.',
+    );
+  });
+
   it('inserts provided element into light dom and sets slot', async () => {
     const tag = defineCE(
       class extends SlotMixin(LitElement) {
