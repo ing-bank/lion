@@ -797,10 +797,20 @@ describe('OverlayController', () => {
             )
           );
           const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
-          await mimicEscapePress(childOverlay.contentNode);
 
-          // without this line, the test is unstable on FF sometimes
-          await aTimeout(100);
+          // Set up promise to wait for parent's hide event before triggering escape
+          const parentHidePromise = new Promise(resolve => {
+            parentOverlay.addEventListener('hide', resolve, { once: true });
+          });
+
+          // Dispatch keyup event directly on child's contentNode to ensure correct
+          // event.composedPath() in Firefox headless (where focus may not work reliably)
+          childOverlay.contentNode.dispatchEvent(
+            new KeyboardEvent('keyup', { key: 'Escape', bubbles: true, composed: true }),
+          );
+
+          // Wait for parent's hide to complete
+          await parentHidePromise;
 
           expect(parentOverlay.isShown).to.be.false;
           expect(childOverlay.isShown).to.be.true;
