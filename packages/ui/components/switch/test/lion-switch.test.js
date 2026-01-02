@@ -235,4 +235,52 @@ describe('lion-switch', () => {
       await expect(el).to.be.accessible();
     });
   });
+  describe('modelValue synchronization', () => {
+    it('should have correct modelValue.checked in checked-changed event', async () => {
+      const el = await fixture(html`<lion-switch></lion-switch>`);
+      const { _inputNode } = getSwitchMembers(el);
+      const button = _inputNode;
+      let checkedValueInEvent;
+
+      el.addEventListener('checked-changed', ({ target }) => {
+        const { modelValue } = /** @type {LionSwitch} */ (target);
+        expect(target).to.equal(el);
+        checkedValueInEvent = modelValue?.checked;
+      });
+
+      // Simulate click to toggle on
+      button.click();
+      await el.updateComplete;
+
+      expect(el.checked).to.be.true;
+      expect(checkedValueInEvent).to.be.true;
+
+      // Simulate click to toggle off
+      button.click();
+      await el.updateComplete;
+
+      expect(el.checked).to.be.false;
+      expect(checkedValueInEvent).to.be.false;
+    });
+
+    it('should synchronize modelValue.checked immediately when checked changes', async () => {
+      const el = await fixture(html`<lion-switch></lion-switch>`);
+
+      // Initial state
+      expect(el.checked).to.be.false;
+      expect(el.modelValue.checked).to.be.false;
+
+      // Change checked programmatically
+      el.checked = true;
+
+      // modelValue should be synchronized immediately (synchronously)
+      expect(el.modelValue.checked).to.be.true;
+
+      await el.updateComplete;
+
+      // Still synchronized after update
+      expect(el.checked).to.be.true;
+      expect(el.modelValue.checked).to.be.true;
+    });
+  });
 });

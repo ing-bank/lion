@@ -77,34 +77,83 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   constructor() {
     super();
     this.checked = false;
+    this.__isInternalSync = false;
+    this.__isSyncingToButton = false;
+    this.__listenerAttached = false;
     /** @private */
     this.__handleButtonSwitchCheckedChanged = this.__handleButtonSwitchCheckedChanged.bind(this);
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('checked-changed', this.__handleButtonSwitchCheckedChanged);
-    if (this._labelNode) {
-      this._labelNode.addEventListener('click', this._toggleChecked);
-    }
-    this._syncButtonSwitch();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    if (this._inputNode) {
-      this.removeEventListener('checked-changed', this.__handleButtonSwitchCheckedChanged);
+    if (this.__listenerAttached) {
+      this.removeEventListener('checked-changed', this.__handleButtonSwitchCheckedChanged, true);
+      this.__listenerAttached = false;
     }
-    if (this._labelNode) {
-      this._labelNode.removeEventListener('click', this._toggleChecked);
+  }
+
+  /**
+   * @param {string} [name]
+   * @param {unknown} [oldValue]
+   * @param {import('lit').PropertyDeclaration} [options]
+   * @returns {void}
+   */
+  requestUpdate(name, oldValue, options) {
+    super.requestUpdate(name, oldValue, options);
+
+    if (
+      name === 'checked' &&
+      this.checked !== oldValue &&
+      this._inputNode &&
+      this._inputNode.checked !== this.checked
+    ) {
+      this.__isSyncingToButton = true;
+      this._inputNode.checked = this.checked;
+      this.__isSyncingToButton = false;
+
+      if (!this.__isInternalSync && this.isConnected) {
+        this.__dispatchCheckedChangedEvent(false);
+      }
+      return;
+    }
+
+    if (
+      name === 'disabled' &&
+      this.disabled !== oldValue &&
+      this._inputNode &&
+      this._inputNode.disabled !== this.disabled
+    ) {
+      this._inputNode.disabled = this.disabled;
+    }
+
+    if (
+      name === 'checked' &&
+      this.checked !== oldValue &&
+      !this.__isInternalSync &&
+      this.isConnected
+    ) {
+      this.__dispatchCheckedChangedEvent(false);
     }
   }
 
   /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
-    if (changedProperties.has('disabled')) {
-      this._syncButtonSwitch();
+
+    if (!this.__listenerAttached && this._inputNode) {
+      // Listen in capture phase to intercept event before user listeners
+      this.addEventListener('checked-changed', this.__handleButtonSwitchCheckedChanged, true);
+      this.__listenerAttached = true;
+
+      // Initial sync to button
+      this._inputNode.disabled = this.disabled;
+      this.__isSyncingToButton = true;
+      this._inputNode.checked = this.checked;
+      this.__isSyncingToButton = false;
     }
   }
 
@@ -114,7 +163,7 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
    * @protected
    */
   _toggleChecked(ev) {
-    ev.preventDefault();
+    // Just toggle - event will be handled by __handleButtonSwitchCheckedChanged
     super._toggleChecked(ev);
   }
 
@@ -128,29 +177,65 @@ export class LionSwitch extends ScopedElementsMixin(ChoiceInputMixin(LionField))
   }
 
   /**
+   * Dispatches a checked-changed event with redispatched flag
+   * @param {boolean} bubbles - Whether the event should bubble
    * @private
-   * @param {Event} ev
    */
-  __handleButtonSwitchCheckedChanged(ev) {
-    ev.stopPropagation();
-    this._isHandlingUserInput = true;
-    this.checked = this._inputNode.checked;
-    this._isHandlingUserInput = false;
+  __dispatchCheckedChangedEvent(bubbles) {
+    this.dispatchEvent(
+      new CustomEvent('checked-changed', {
+        detail: {
+          redispatched: true,
+        },
+        bubbles,
+      }),
+    );
   }
 
-  /** @protected */
-  _syncButtonSwitch() {
-    this._inputNode.disabled = this.disabled;
+  /**
+   * @private
+   * @param {Event | CustomEvent} ev
+   */
+  __handleButtonSwitchCheckedChanged(ev) {
+    // Ignore events we redispatched ourselves
+    // CustomEvent has detail, regular Event from button doesn't
+    if (ev instanceof CustomEvent && ev.detail?.redispatched) {
+      return;
+    }
+
+    if (this.__isSyncingToButton) {
+      ev.stopPropagation();
+      return;
+    }
+
+    ev.stopPropagation();
+
+    // Sync state from button to switch if needed
+    if (this.checked !== this._inputNode.checked) {
+      this.__isInternalSync = true;
+      this.checked = this._inputNode.checked;
+      // modelValue is synchronized by ChoiceInputMixin in requestUpdate
+      this.__isInternalSync = false;
+    }
+
+    // Re-dispatch event with bubbles: true for user interactions
+    this.__dispatchCheckedChangedEvent(true);
   }
 
   /**
    * @configure FormControlMixin
    * @protected
    */
-  _onLabelClick() {
+  _onLabelClick(ev) {
     if (this.disabled) {
       return;
     }
+    // Prevent default label behavior (automatic click redispatch to 'for' element)
+    // since we're manually toggling the custom element
+    ev.preventDefault();
+
     this._inputNode.focus();
+    // Toggle the switch when label is clicked
+    this._inputNode.click();
   }
 }
