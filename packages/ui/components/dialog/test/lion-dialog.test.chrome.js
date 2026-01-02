@@ -55,6 +55,10 @@ describe('lion-dialog', () => {
       invoker.focus();
       await sendKeys({ press: 'Enter' });
       expect(isActiveElement(okButton)).to.equal(true);
+      await sendKeys({ press: 'Tab' });
+      expect(isActiveElement(document.body)).to.equal(true);
+      await sendKeys({ press: 'Tab' });
+      expect(isActiveElement(okButton)).to.equal(true);
     });
   });
 });

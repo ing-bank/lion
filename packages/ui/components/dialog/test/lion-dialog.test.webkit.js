@@ -45,11 +45,18 @@ describe('lion-dialog', () => {
       const okButton = el.querySelector('.ok-button');
       invoker.focus();
       await sendKeys({ press: 'Enter' });
+      expect(isActiveElement(el)).to.equal(true);
 
       // Note we use `Alt+Tab` instead of just `Tab` to enable navigating inside
       // the dialog in Playwright for Safari (webkit).
       // See more here https://github.com/microsoft/playwright/issues/5609#issuecomment-832684772 .
       // It also works fine in Chrome/Firefox.
+      await sendKeys({ press: 'Alt+Tab' });
+      expect(isActiveElement(okButton)).to.equal(true);
+      await sendKeys({ press: 'Alt+Tab' });
+      expect(isActiveElement(document.body)).to.equal(true);
+      await sendKeys({ press: 'Alt+Tab' });
+      expect(isActiveElement(el)).to.equal(true);
       await sendKeys({ press: 'Alt+Tab' });
       expect(isActiveElement(okButton)).to.equal(true);
     });

@@ -45,7 +45,12 @@ describe('lion-dialog', () => {
       const okButton = el.querySelector('.ok-button');
       invoker.focus();
       await sendKeys({ press: 'Enter' });
+      expect(isActiveElement(el)).to.equal(true);
       await sendKeys({ press: 'Tab' });
+      expect(isActiveElement(okButton)).to.equal(true);
+      await sendKeys({ press: 'Tab' });
+      // for some reason with the headless firefox setup,
+      // once we focus on `okButton`, any further Tab presses keeps the focus on `okButton`
       expect(isActiveElement(okButton)).to.equal(true);
     });
   });
