@@ -44,6 +44,7 @@ export default {
     playwrightLauncher({ product: 'webkit' }),
   ],
   groups,
+  files: ['packages/ui/components/dialog/test/lion-dialog.test.js'],
   filterBrowserLogs(/** @type {{ type: 'error'|'warn'|'debug'; args: string[] }} */ log) {
     return log.type === 'error' || log.type === 'debug';
   },

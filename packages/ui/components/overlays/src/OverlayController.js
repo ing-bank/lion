@@ -1151,17 +1151,18 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _handleTrapsKeyboardFocus({ phase }) {
+    const isWrappingNodeANativeDialog = 'showModal' in this.__wrappingDialogNode;
     if (phase === 'show') {
       // @ts-ignore
-      if ('showModal' in this.__wrappingDialogNode) {
+      if (isWrappingNodeANativeDialog) {
         // @ts-ignore
         this.__wrappingDialogNode.close();
         // @ts-ignore
         this.__wrappingDialogNode.showModal();
       }
-      // else {
-      this.enableTrapsKeyboardFocus();
-      // }
+      if (!isWrappingNodeANativeDialog) {
+        this.enableTrapsKeyboardFocus();
+      }
     } else if (phase === 'hide' || phase === 'teardown') {
       this.disableTrapsKeyboardFocus();
     }
@@ -1174,7 +1175,6 @@ export class OverlayController extends EventTarget {
     if (this.manager) {
       this.manager.disableTrapsKeyboardFocusForAll();
     }
-
     const isContentShadowHost = Boolean(this.contentNode.shadowRoot);
     if (isContentShadowHost) {
       // eslint-disable-next-line no-console
@@ -1182,7 +1182,6 @@ export class OverlayController extends EventTarget {
         '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
       );
     }
-
     this._containFocusHandler = containFocus(this.contentNode);
     this.__hasActiveTrapsKeyboardFocus = true;
     if (this.manager) {

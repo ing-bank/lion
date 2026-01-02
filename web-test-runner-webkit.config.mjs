@@ -3,4 +3,8 @@ import defaultConfig from './web-test-runner.config.mjs';
 
 const config = { ...defaultConfig };
 config.browsers = [playwrightLauncher({ product: 'webkit' })];
+config.groups.push({
+  name: 'Chrome only',
+  files: 'packages/ui/components/**/*.test.webkit.js',
+});
 export default config;
