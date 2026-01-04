@@ -102,8 +102,8 @@ describe('lion-dialog', () => {
       const invokerNode = el._overlayInvokerNode;
       invokerNode.focus();
       invokerNode.click();
-      const contentNode = /** @type {Element} */ (el.querySelector('[slot="content"]'));
-      expect(isActiveElement(contentNode)).to.be.true;
+      const firstFocusableElement = /** @type {Element} */ (el.querySelector('#myInput'));
+      expect(isActiveElement(firstFocusableElement)).to.be.true;
     });
 
     it('sets focus on autofocused element', async () => {

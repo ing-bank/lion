@@ -74,7 +74,8 @@ export function rotateFocus(rootElement, e) {
 export function containFocus(rootElement) {
   const focusableElements = getFocusableElements(rootElement);
   // Initial focus goes to first element with autofocus, or the root element
-  const initialFocus = focusableElements.find(e => e.hasAttribute('autofocus')) || rootElement;
+  const initialFocus =
+    focusableElements.find(e => e.hasAttribute('autofocus')) || focusableElements[0] || rootElement;
   /** @type {HTMLElement} */
   let tabDetectionElement;
   /** @type {MutationObserver} */

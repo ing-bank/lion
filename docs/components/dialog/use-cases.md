@@ -22,6 +22,7 @@ import { demoStyle } from './src/demoStyle.js';
 import './src/styled-dialog-content.js';
 import './src/slots-dialog-content.js';
 import './src/external-dialog.js';
+import { LitElement } from 'lit';
 ```
 
 ```html
@@ -40,27 +41,30 @@ In some cases the dialog should act like an [alertdialog](https://www.w3.org/WAI
 
 ```js preview-story
 export const alertDialog = () => {
+  class DialogContent extends LitElement {
+    render() {
+      return html`<slot name="content"></slot>`;
+    }
+  }
+  customElements.define('dialog-content', DialogContent);
+
   return html`
     <style>
       ${demoStyle}
     </style>
     <lion-dialog is-alert-dialog class="dialog">
       <button type="button" slot="invoker">Reset</button>
-      <div slot="content" class="demo-box">
-        Are you sure you want to clear the input field?
-        <button
-          type="button"
-          @click="${ev => ev.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
-        >
-          Yes
-        </button>
-        <button
-          type="button"
-          @click="${ev => ev.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
-        >
-          No
-        </button>
-      </div>
+      <dialog-content
+        slot="content"
+        style="border: 1px solid;"
+        aria-labelledby="simple-dialog-header"
+      >
+        <div slot="content">
+          <h1 id="simple-dialog-header">Dialog Title 1</h1>
+          <p>Dialog content</p>
+          <button class="ok-button">ok</button>
+        </div>
+      </dialog-content>
     </lion-dialog>
   `;
 };
@@ -122,12 +126,7 @@ export const placementOverrides = () => {
         <button slot="invoker">Dialog ${placement}</button>
         <div slot="content" class="dialog demo-box">
           Hello! You can close this notification here:
-          <button
-            class="close-button"
-            @click="${e => e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
-          >
-            ⨯
-          </button>
+          
         </div>
       </lion-dialog>
     `;
@@ -137,8 +136,7 @@ export const placementOverrides = () => {
       ${demoStyle}
     </style>
     <div class="demo-box_placements">
-      ${dialog('center')} ${dialog('top-left')} ${dialog('top-right')} ${dialog('bottom-left')}
-      ${dialog('bottom-right')}
+      ${dialog('center')}
     </div>
   `;
 };
