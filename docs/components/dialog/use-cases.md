@@ -54,8 +54,13 @@ export const alertDialog = () => {
     </style>
     <lion-dialog is-alert-dialog class="dialog">
       <button type="button" slot="invoker">Reset</button>
-      <dialog-content slot="content" style="border: 1px solid;">
+      <dialog-content
+        slot="content"
+        style="border: 1px solid;"
+        aria-labelledby="simple-dialog-header"
+      >
         <div slot="content">
+          <h1 id="simple-dialog-header">Dialog Title 1</h1>
           <p>Dialog content</p>
           <button class="ok-button">ok</button>
         </div>
