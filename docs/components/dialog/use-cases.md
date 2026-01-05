@@ -43,11 +43,13 @@ In some cases the dialog should act like an [alertdialog](https://www.w3.org/WAI
 export const alertDialog = () => {
   class DialogContent extends LitElement {
     render() {
-      return html`<slot name="content"></slot>`;
+      return html`
+        <slot name="header"></slot>
+        <slot name="content"></slot>
+      `;
     }
   }
   customElements.define('dialog-content', DialogContent);
-
   return html`
     <style>
       ${demoStyle}
@@ -59,8 +61,8 @@ export const alertDialog = () => {
         style="border: 1px solid;"
         aria-labelledby="simple-dialog-header"
       >
+        <div slot="header" id="simple-dialog-header">Dialog Title 1</div>
         <div slot="content">
-          <h1 id="simple-dialog-header">Dialog Title 1</h1>
           <p>Dialog content</p>
           <button class="ok-button">ok</button>
         </div>
@@ -124,9 +126,9 @@ export const placementOverrides = () => {
     return html`
       <lion-dialog .config="${cfg}">
         <button slot="invoker">Dialog ${placement}</button>
-        <div slot="content" class="dialog demo-box">
-          Hello! You can close this notification here:
-          
+        <div slot="content" class="dialog demo-box" aria-labelledby="simple-dialog-header">
+          <h1 id="simple-dialog-header">Dialog Title 1</h1>
+          <p>Hello! You can close this notification here:</p>
         </div>
       </lion-dialog>
     `;
@@ -135,9 +137,7 @@ export const placementOverrides = () => {
     <style>
       ${demoStyle}
     </style>
-    <div class="demo-box_placements">
-      ${dialog('center')}
-    </div>
+    <div class="demo-box_placements">${dialog('center')}</div>
   `;
 };
 ```
