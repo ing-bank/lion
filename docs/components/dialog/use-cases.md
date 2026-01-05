@@ -44,8 +44,8 @@ export const alertDialog = () => {
   class DialogContent extends LitElement {
     render() {
       return html`
-        <slot name="header"></slot>
         <slot name="content"></slot>
+        <slot name="header"></slot>
       `;
     }
   }
