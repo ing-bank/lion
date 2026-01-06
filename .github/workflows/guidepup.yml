@@ -1,0 +1,44 @@
+name: SR automation
+
+on: push
+
+jobs:
+  voiceover:
+    name: auto VO
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Environment
+        uses: guidepup/setup-action@main
+
+      - name: Setup Node 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Install Dependencies
+        run: npm install --ci 
+
+      - name: Run test
+        run: node guidepup-poc-dialog/guidepup.test.voiceover.js
+
+  nvda:
+    name: auto NVDA
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Environment
+        uses: guidepup/setup-action@main
+
+      - name: Setup Node 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Install Dependencies
+        run: npm install --ci 
+
+      - name: Run test
+        run: node guidepup-poc-dialog/guidepup.test.nvda.js
