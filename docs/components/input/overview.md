@@ -19,8 +19,8 @@ import '@lion/ui/define/lion-input.js';
 
 A web component that enhances the functionality of the native `<input>` element.
 
-```js preview-story
-export const main = () => html`<lion-input label="First Name"></lion-input>`;
+```html preview-story
+<lion-input label="First Name"></lion-input>
 ```
 
 ## Features

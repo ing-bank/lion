@@ -8,6 +8,7 @@ export { FormRegistrarMixin } from '../components/form-core/src/registration/For
 export { FormRegistrarPortalMixin } from '../components/form-core/src/registration/FormRegistrarPortalMixin.js';
 export { NativeTextFieldMixin } from '../components/form-core/src/NativeTextFieldMixin.js';
 export { FormControlsCollection } from '../components/form-core/src/registration/FormControlsCollection.js';
+export { ClearButtonMixin } from '../components/form-core/src/ClearButtonMixin.js';
 
 // validate
 

@@ -24,6 +24,12 @@ describe('Date Validation', () => {
     const validator = new MinDate(new Date('2018/02/02'));
     expect(MinDate.validatorName).to.equal('MinDate');
 
+    isEnabled = validator.execute('foo');
+    expect(isEnabled).to.be.true;
+
+    isEnabled = validator.execute(0);
+    expect(isEnabled).to.be.true;
+
     isEnabled = validator.execute(new Date('2018-02-03'));
     expect(isEnabled).to.be.false;
 
@@ -44,6 +50,9 @@ describe('Date Validation', () => {
     let isEnabled;
     const validator = new MaxDate(new Date('2018/02/02'));
     expect(MaxDate.validatorName).to.equal('MaxDate');
+
+    isEnabled = validator.execute('foo');
+    expect(isEnabled).to.be.true;
 
     isEnabled = validator.execute(new Date('2018-02-01'));
     expect(isEnabled).to.be.false;
@@ -68,6 +77,9 @@ describe('Date Validation', () => {
       max: new Date('2018/02/04'),
     });
     expect(MinMaxDate.validatorName).to.equal('MinMaxDate');
+
+    isEnabled = validator.execute('foo');
+    expect(isEnabled).to.be.true;
 
     isEnabled = validator.execute(new Date('2018/02/03'));
     expect(isEnabled).to.be.false;

@@ -13,7 +13,7 @@ eleventyNavigation:
 # Textarea: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html as previewHtml } from '@mdjs/mdjs-preview';
 import '@lion/ui/define/lion-textarea.js';
 ```
 
@@ -34,8 +34,8 @@ export const prefilled = () => html`
 
 The textarea can be disabled with the `disabled` attribute.
 
-```js preview-story
-export const disabled = () => html` <lion-textarea label="Disabled" disabled></lion-textarea> `;
+```html preview-story
+<lion-textarea label="Disabled" disabled></lion-textarea>
 ```
 
 ## Readonly
@@ -70,10 +70,25 @@ export const stopGrowing = () => html`
 
 To have a fixed size provide `rows` and `max-rows` with the same value.
 
+```html preview-story
+<lion-textarea label="Non Growing" rows="3" max-rows="3"></lion-textarea>
+```
+
+## With clear button
+
+A button to clear the content can be added to the textarea by extending it with the `ClearButtonMixin`.
+
 ```js preview-story
-export const nonGrowing = () => html`
-  <lion-textarea label="Non Growing" rows="3" max-rows="3"></lion-textarea>
-`;
+import { html, LitElement } from 'lit';
+import { ClearButtonMixin } from '@lion/ui/form-core.js';
+import { LionTextarea } from '@lion/ui/textarea.js';
+
+class MyTextarea extends ClearButtonMixin(LionTextarea) {}
+
+customElements.define('my-textarea', MyTextarea);
+
+export const clearButton = () =>
+  previewHtml`<my-textarea label="Textarea with clear button" name="textarea"></my-textarea>`;
 ```
 
 ## Intersection Observer

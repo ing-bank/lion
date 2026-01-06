@@ -1,5 +1,5 @@
 import { browserDetection } from '@lion/ui/core.js';
-import { Unparseable } from '@lion/ui/form-core.js';
+import { Unparseable, ClearButtonMixin } from '@lion/ui/form-core.js';
 import { LionListbox } from '@lion/ui/listbox.js';
 import { LocalizeMixin } from '@lion/ui/localize-no-side-effects.js';
 import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
@@ -34,7 +34,9 @@ const matchA11ySpanReverseFns = new WeakMap();
  *
  * @customElement lion-combobox
  */
-export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMixin(LionListbox))) {
+export class LionCombobox extends ClearButtonMixin(
+  LocalizeMixin(OverlayMixin(CustomChoiceGroupMixin(LionListbox))),
+) {
   /** @type {any} */
   static get properties() {
     return {
