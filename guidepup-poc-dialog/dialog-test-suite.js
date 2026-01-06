@@ -12,6 +12,14 @@ import path from 'path';
 import { expect } from 'chai';
 import Mocha from 'mocha';
 import { startDevServer } from '@web/dev-server';
+import { html, LitElement } from 'lit';
+
+class DialogContent extends LitElement {
+  render() {
+    return html`<slot name="content"></slot>`;
+  }
+}
+customElements.define('dialog-content', DialogContent);
 
 export const TEST_HTML_LION = `
 <!DOCTYPE html>
@@ -93,6 +101,20 @@ export const TEST_HTML_LION = `
         </button>
       </div>
     </div>
+  </lion-dialog>
+
+  <lion-dialog id="content-component-dialog">
+    <button slot="invoker" id="open-dialog-btn-1">Open Dialog</button>
+    <dialog-content
+      slot="content"
+      aria-labelledby="dialog-header"
+    >
+      <div slot="content">
+        <h1 id="dialog-header">Dialog Title</h1>
+        <p>Dialog content</p>
+        <button class="ok-button">ok</button>
+      </div>
+    </dialog-content>
   </lion-dialog>
 </body>
 </html>
@@ -654,6 +676,35 @@ export async function runDialogTests({
     //     await closeDialogIfOpen('#autofocus-close-btn', '#autofocus-dialog');
     //   }),
     // );
+
+    // Test for Dialg with the component for context
+    const contentComponentDialogSuite = Mocha.Suite.create(
+      suite,
+      'Dialg with the component for context',
+    );
+
+    contentComponentDialogSuite.addTest(
+      new Mocha.Test('should announce dialog role when opened', async () => {
+        // @ts-ignore
+        await page.focus('#open-dialog-btn-1');
+        // @ts-ignore
+        await page.click('#open-dialog-btn-1');
+        // @ts-ignore
+        await page.waitForTimeout(500);
+
+        const spokenLog = await getSpokenLog();
+        expect(spokenLog.length).to.be.greaterThan(0);
+        console.log('spokenLog: ', spokenLog);
+
+        const dialogAnnounced = spokenLog.some(
+          // @ts-ignore
+          phrase =>
+            phrase.toLowerCase().includes('dialog') || phrase.toLowerCase().includes('web dialog'),
+        );
+
+        expect(dialogAnnounced, 'dialog role announcement').to.be.true;
+      }),
+    );
 
     // Run mocha
     // const failures =
