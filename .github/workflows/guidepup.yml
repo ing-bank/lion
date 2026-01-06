@@ -20,6 +20,9 @@ jobs:
       - name: Install Dependencies
         run: npm install --ci 
 
+      - name: Playwright
+        run: npx playwright install --with-deps
+
       - name: Run test
         run: node guidepup-poc-dialog/guidepup.test.voiceover.js
 
@@ -39,6 +42,9 @@ jobs:
 
       - name: Install Dependencies
         run: npm install --ci 
+
+      - name: Playwright
+        run: npx playwright install --with-deps        
 
       - name: Run test
         run: node guidepup-poc-dialog/guidepup.test.nvda.js
