@@ -1,4 +1,4 @@
-import { runDialogTests } from './dialog-test-suite.js';
+import { runDialogTests } from './lion-dialog.guidepup-wtr.test.mjs';
 
 /**
  * VoiceOver screen reader tests for lion-dialog component.

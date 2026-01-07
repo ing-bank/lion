@@ -1,4 +1,4 @@
-import { runDialogTests } from './dialog-test-suite.js';
+import { runDialogTests } from './lion-dialog.guidepup-wtr.test.mjs';
 
 /**
  * Headless browser accessibility tests for dialog patterns.

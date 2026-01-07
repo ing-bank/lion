@@ -128,7 +128,7 @@ export async function createTestServer(port = 8080, html = TEST_HTML_LION) {
     logStartMessage: false,
   });
 
-  console.log(`@web/dev-server started on http://localhost:${port}`);
+  // console.log(`@web/dev-server started on http://localhost:${port}`);
 
   return {
     server,
@@ -153,19 +153,19 @@ export async function waitForCustomElements(page) {
   // @ts-ignore
   page.on('console', msg => {
     if (msg.type() === 'error') {
-      console.error('Browser console error:', msg.text());
+      // console.error('Browser console error:', msg.text());
     }
   });
   // @ts-ignore
   page.on('pageerror', err => {
-    console.error('Browser page error:', err.message);
+    // console.error('Browser page error:', err.message);
   });
 
   await page.waitForFunction(() => customElements.get('lion-dialog') !== undefined, {
     timeout: 15000,
   });
   await page.waitForTimeout(500);
-  console.log('Custom elements loaded');
+  // console.log('Custom elements loaded');
 }
 
 /**
@@ -225,7 +225,7 @@ export async function runDialogTests({
     // Wait for custom elements to be defined
     await waitForCustomElements(page);
 
-    console.log('Page loaded, running tests...');
+    // console.log('Page loaded, running tests...');
 
     // Create mocha instance
     const mocha = new Mocha({ reporter: 'spec', timeout: 0 });
@@ -455,7 +455,7 @@ export async function runDialogTests({
           await readerInstance.stop();
         } catch (e) {
           // @ts-ignore
-          console.warn('Error stopping screen reader:', e?.message || e);
+          // console.warn('Error stopping screen reader:', e?.message || e);
         }
       }
     });
@@ -506,15 +506,15 @@ export async function runDialogTests({
         if (hasReader) {
           await nextItem();
           let itemText = await getItemText();
-          console.log('First navigation in dialog:', itemText);
+          // console.log('First navigation in dialog:', itemText);
 
           await nextItem();
           itemText = await getItemText();
-          console.log('Second navigation in dialog:', itemText);
+          // console.log('Second navigation in dialog:', itemText);
 
           await findNextButton();
           itemText = await getItemText();
-          console.log('Found button in dialog:', itemText);
+          // console.log('Found button in dialog:', itemText);
 
           const closeButtonAccessible =
             itemText.toLowerCase().includes('close') || itemText.toLowerCase().includes('button');
@@ -523,7 +523,7 @@ export async function runDialogTests({
           // @ts-ignore
           await page.focus('#dialog-close-btn');
           const itemText = await getItemText();
-          console.log('Close button in dialog:', itemText);
+          // console.log('Close button in dialog:', itemText);
 
           // @ts-ignore
           const closeButtonFocusable = await page.evaluate(
@@ -595,7 +595,7 @@ export async function runDialogTests({
 
         const alertSpokenLog = await getSpokenLog();
         if (alertSpokenLog.length > 0) {
-          console.log('Alert dialog announcements:', alertSpokenLog.slice(-3));
+          // console.log('Alert dialog announcements:', alertSpokenLog.slice(-3));
         }
 
         let alertRoleAnnounced = false;
@@ -668,7 +668,7 @@ export async function runDialogTests({
     //   console.log('\n✅ All tests passed!\n');
     // }
   } catch (error) {
-    console.error('Test failed:', error);
+    // console.error('Test failed:', error);
     process.exitCode = 1;
   } finally {
     // Cleanup browser and server

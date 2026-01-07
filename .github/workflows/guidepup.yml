@@ -24,7 +24,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run test
-        run: node guidepup-poc-dialog/guidepup.test.voiceover.js
+        run: node guidepup-poc-dialog/guidepup.test.voiceover.mjs
 
   nvda:
     name: auto NVDA
@@ -47,4 +47,4 @@ jobs:
         run: npx playwright install --with-deps        
 
       - name: Run test
-        run: node guidepup-poc-dialog/guidepup.test.nvda.js
+        run: node guidepup-poc-dialog/guidepup.test.nvda.mjs
