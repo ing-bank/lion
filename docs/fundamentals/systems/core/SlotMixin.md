@@ -90,7 +90,7 @@ class MyAccessibleControl extends SlotMixin(LitElement) {
        }
      },
      // undefined (conditional slot)
-     '' => () => {
+     '': () => {
         if (conditionApplies) {
           return html`<div>default slot</div>`;
         }
