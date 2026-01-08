@@ -93,3 +93,19 @@ _hideAnimation({ contentNode }) {
     await this._waitForTransition({ contentNode });
 }
 ```
+
+## Invoker below the content
+
+Invoker is displayed above the content by default. Use `invoker-position="bottom"` to display the invoker below the content.
+
+```js preview-story
+export const invokerPositionTemplate = () => html`
+  <lion-collapsible invoker-position="bottom" style="margin-top:16px;">
+    <lion-button slot="invoker">More about cars</lion-button>
+    <div slot="content">
+      Most definitions of cars say that they run primarily on roads, seat one to eight people, have
+      four tires, and mainly transport people rather than goods.
+    </div>
+  </lion-collapsible>
+`;
+```
