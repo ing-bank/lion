@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.15.4
+
+### Patch Changes
+
+- d835665: The currency for Bulgaria (BG) is now set to Euro(EUR) instead of Bulgarian Lev(BGN)
+- 44205ee: [input-amount] allow pasting value with currency correctly
+
 ## 0.15.3
 
 ### Patch Changes
