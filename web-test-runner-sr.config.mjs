@@ -1,11 +1,14 @@
 import { playwrightLauncher } from '@web/test-runner-playwright';
-import { screenreaderPlugin } from '@lion-labs/test-runner-screenreader/plugin.js';
+import { screenreaderPlugin } from '@lion-labs/test-runner-screenreader';
 
 function getScreenReaderArg() {
-  const srArgIndex = process.argv.findIndex(arg => arg === '--sr');
-  return srArgIndex !== -1 && process.argv[srArgIndex + 1]
-    ? process.argv[srArgIndex + 1]
-    : 'virtual';
+  if (process.argv.includes('--nvda')) {
+    return 'nvda';
+  }
+  if (process.argv.includes('--voiceover')) {
+    return 'voiceover';
+  }
+  return 'virtual';
 }
 
 /**

@@ -11,8 +11,7 @@ export default {
    * Initialize the screen reader
    * @param {{ screenReader?: 'virtual' | 'voiceover' | 'nvda' }} [options]
    */
-  initialize: ({ screenReader = 'virtual' } = {}) =>
-    executeServerCommand('sr-initialize', { screenReader }),
+  initialize: () => executeServerCommand('sr-initialize'),
 
   /** Stop the screen reader */
   stop: () => executeServerCommand('sr-stop'),

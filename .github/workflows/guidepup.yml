@@ -24,7 +24,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run test
-        run: npm run debug:sr -- --sr voiceover
+        run: npm run test:sr -- --voiceover
 
   nvda:
     name: auto NVDA
@@ -47,4 +47,4 @@ jobs:
         run: npx playwright install --with-deps        
 
       - name: Run test
-        run: npm run debug:sr -- --sr nvda
+        run: npm run test:sr -- --nvda

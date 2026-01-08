@@ -15,11 +15,7 @@
   "exports": {
     ".": {
       "types": "./dist-types/src/index.d.ts",
-      "default": "./src/index.js"
-    },
-    "./plugin.js": {
-      "types": "./dist-types/src/getScreenreaderPlugin.d.ts",
-      "default": "./src/getScreenreaderPlugin.js"
+      "default": "./src/screenreaderPlugin.js"
     },
     "./commands.js": {
       "types": "./dist-types/src/commands.d.ts",

@@ -26,6 +26,7 @@ function getSrInstance({ screenReader, getPage }) {
    */
   const initializeScreenReader = async () => {
     if (screenReader === 'voiceover') {
+      console.debug('Initializing VoiceOver screen reader');
       // @ts-ignore
       const { voiceOver } = await import('@guidepup/guidepup');
       _instance = voiceOver;
@@ -263,6 +264,8 @@ export function screenreaderPlugin({ screenReader } = {}) {
 
       const resolvedScreenReader =
         payload?.screenReader || screenReader || autoDetermineScreenReader(session.browser);
+
+      console.debug({ command, resolvedScreenReader });
 
       // Helper to get fresh page reference
       const getPage = () => session.browser.getPage(session.id);

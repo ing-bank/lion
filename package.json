@@ -15,6 +15,7 @@
     "debug:firefox": "web-test-runner --watch --config web-test-runner-firefox.config.mjs",
     "debug:no-scoped-registries-polyfill": "npm run debug -- --no-scoped-registries-polyfill",
     "debug:sr": "web-test-runner --watch --config web-test-runner-sr.config.mjs",
+    "test:sr": "web-test-runner --config web-test-runner-sr.config.mjs",
     "debug:webkit": "web-test-runner --watch --config web-test-runner-webkit.config.mjs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d _site -r git@github.com:ing-bank/lion --nojekyll",

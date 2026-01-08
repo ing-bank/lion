@@ -16,11 +16,11 @@ export interface ScreenreaderPluginOptions {
  * @example
  * ```js
  * // web-test-runner.config.mjs
- * import { getScreenreaderPlugin } from '@lion/test-runner-sr';
+ * import { screenreaderPlugin } from '@lion/test-runner-sr';
  *
  * export default {
- *   plugins: [getScreenreaderPlugin({ screenReader: 'virtual' })],
+ *   plugins: [screenreaderPlugin({ screenReader: 'virtual' })],
  * };
  * ```
  */
-export function getScreenreaderPlugin(options?: ScreenreaderPluginOptions): TestRunnerPlugin;
+export function screenreaderPlugin(options?: ScreenreaderPluginOptions): TestRunnerPlugin;
