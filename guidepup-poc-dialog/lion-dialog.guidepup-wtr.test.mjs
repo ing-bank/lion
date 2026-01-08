@@ -4,6 +4,9 @@
 
 import { expect, fixture } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
+
+import sr from '@lion-labs/test-runner-screenreader/commands.js';
+
 import '@lion/ui/define/lion-dialog.js';
 
 /**
@@ -11,138 +14,18 @@ import '@lion/ui/define/lion-dialog.js';
  */
 
 /**
- *
- * @param {'voiceover'|'nvda'|'virtual'|'auto'} screenReader
- * @returns {{srInstance: any, initializeScreenReader: (container: HTMLElement) => Promise<void>, stopScreenReader: () => Promise<void>}}
- */
-function getSrInstance(screenReader) {
-  const allowedReaders = ['voiceover', 'nvda', 'virtual', 'auto'];
-  if (!allowedReaders.includes(screenReader)) {
-    throw new Error(
-      `Unsupported screen reader: ${screenReader}. Allowed: ${allowedReaders.join(', ')}`,
-    );
-  }
-
-  // TODO: if 'auto', detect platform and choose accordingly
-  // ideally, we get it from wtr/vitest plugin config or smth
-
-  /** @type {any} */
-  let _srInstance = null;
-  let mustStopReader = false;
-
-  /**
-   * Initialize the screen reader instance
-   * @param {HTMLElement} container
-   */
-  const initializeScreenReader = async container => {
-    if (screenReader === 'voiceover') {
-      const { voiceOver } = await import('@guidepup/guidepup');
-      _srInstance = voiceOver;
-      await _srInstance.start();
-      mustStopReader = true;
-    } else if (screenReader === 'nvda') {
-      const { nvda } = await import('@guidepup/guidepup');
-      _srInstance = nvda;
-      await _srInstance.start();
-      mustStopReader = true;
-    } else if (screenReader === 'virtual') {
-      // Use the browser bundle to avoid aria-query ESM/CJS interop issues
-      const { Virtual } = await import('@guidepup/virtual-screen-reader/lib/esm/index.browser.js');
-      _srInstance = new Virtual();
-      await _srInstance.start({ container });
-      mustStopReader = true;
-    }
-  };
-
-  const stopScreenReader = async () => {
-    if (mustStopReader && srInstance?.stop) {
-      try {
-        await srInstance.stop();
-      } catch {
-        // ignore
-      }
-    }
-    srInstance = null;
-    mustStopReader = false;
-  };
-
-  return {
-    get srInstance() {
-      return _srInstance;
-    },
-    initializeScreenReader,
-    stopScreenReader,
-  };
-}
-
-/**
  * Run the dialog test suite with a given screen reader.
  * @param {{screenReader: 'voiceover'|'nvda'|'virtual'}} options
  */
 export function runDialogTests({ screenReader }) {
-  const { srInstance, initializeScreenReader, stopScreenReader } = getSrInstance(screenReader);
-
   describe(`Dialog Accessibility Tests (${screenReader})`, () => {
     before(async () => {
-      await initializeScreenReader(document.body);
+      await sr.initialize();
     });
 
     after(async () => {
-      await stopScreenReader();
+      await sr.stop();
     });
-
-    // // Helper to get spoken log
-    // const getSpokenLog = () => {
-    //   if (srInstance?.spokenPhraseLog) {
-    //     return srInstance.spokenPhraseLog();
-    //   }
-    //   return [];
-    // };
-
-    // // Helper to clear spoken log
-    // const clearSpokenLog = () => {
-    //   if (srInstance?.clearSpokenPhraseLog) {
-    //     srInstance.clearSpokenPhraseLog();
-    //   }
-    // };
-
-    // // Helper for screen reader navigation
-    // const nextItem = async () => {
-    //   if (srInstance?.next) {
-    //     await srInstance.next();
-    //   }
-    // };
-
-    // // Helper to get item text
-    // const getItemText = async () => {
-    //   if (srInstance?.itemText) {
-    //     return srInstance.itemText();
-    //   }
-    //   if (srInstance?.lastSpokenPhrase) {
-    //     return srInstance.lastSpokenPhrase();
-    //   }
-
-    //   throw new Error('getItemText: Unsupported screen reader instance');
-    //   //   // Fallback
-    //   //   const el = document.activeElement;
-    //   //   if (!el) return '';
-    //   //   const ariaLabel = el.getAttribute('aria-label');
-    //   //   if (ariaLabel) return ariaLabel;
-    //   //   if (el.tagName === 'BUTTON' || el.tagName === 'A') {
-    //   //     return el.textContent?.trim() || '';
-    //   //   }
-    //   //   return el.id || '';
-    // };
-
-    // Helper to find next button
-    const findNextButton = async () => {
-      if (srInstance?.keyboardCommands?.moveToNextButton && srInstance.perform) {
-        await srInstance.perform(srInstance.keyboardCommands.moveToNextButton);
-      } else {
-        // For virtual screen reader, just navigate
-        await srInstance.next();
-      }
-    };
 
     describe('Basic dialog', () => {
       it('announces dialog role when opened', async () => {
@@ -166,13 +49,11 @@ export function runDialogTests({ screenReader }) {
           </lion-dialog>
         `);
 
-        // await initializeScreenReader(document.body);
-
         const invokerBtn = el.querySelector('#open-dialog-btn');
         invokerBtn?.focus();
-        await srInstance.next();
+        await sr.next();
 
-        const itemText = await srInstance.itemText();
+        const itemText = await sr.itemText();
         expect(itemText).to.equal('Example dialog');
 
         // Open the dialog
@@ -180,7 +61,7 @@ export function runDialogTests({ screenReader }) {
         await el.updateComplete;
         await new Promise(r => setTimeout(r, 500));
 
-        const spokenLog = srInstance.spokenPhraseLog();
+        const spokenLog = await sr.spokenPhraseLog();
         expect(spokenLog.length).to.be.greaterThan(0);
 
         const dialogAnnounced = spokenLog.some(
@@ -221,17 +102,17 @@ export function runDialogTests({ screenReader }) {
         await el.updateComplete;
         await new Promise(r => setTimeout(r, 500));
 
-        const hasReader = !!srInstance?.next;
+        const hasReader = !!sr?.next;
 
         if (hasReader) {
-          await srInstance.next();
-          let itemText = await srInstance.itemText();
+          await sr.next();
+          let itemText = await sr.itemText();
 
-          await srInstance.next();
-          itemText = await srInstance.itemText();
+          await sr.next();
+          itemText = await sr.itemText();
 
-          await findNextButton();
-          itemText = await srInstance.itemText();
+          await sr.findNextButton();
+          itemText = await sr.itemText();
 
           const closeButtonAccessible =
             itemText.toLowerCase().includes('close') || itemText.toLowerCase().includes('button');
@@ -321,14 +202,14 @@ export function runDialogTests({ screenReader }) {
         `);
 
         // await initializeScreenReader(document.body);
-        srInstance.clearSpokenPhraseLog();
+        await sr.clearSpokenPhraseLog();
 
         // Open alert dialog
         el.opened = true;
         await el.updateComplete;
         await new Promise(r => setTimeout(r, 500));
 
-        const alertSpokenLog = srInstance.spokenPhraseLog();
+        const alertSpokenLog = await sr.spokenPhraseLog();
 
         let alertRoleAnnounced = false;
         if (alertSpokenLog.length > 0) {
@@ -347,3 +228,5 @@ export function runDialogTests({ screenReader }) {
     });
   });
 }
+
+runDialogTests({ screenReader: 'virtual' });
