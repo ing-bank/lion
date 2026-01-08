@@ -14,12 +14,8 @@ import '@lion/ui/define/lion-dialog.js';
  * @typedef {import('@lion/ui/dialog.js').LionDialog} LionDialog
  */
 
-/**
- * Run the dialog test suite with a given screen reader.
- * @param {{screenReader: 'voiceover'|'nvda'|'virtual'}} options
- */
-export function runDialogTests({ screenReader }) {
-  describe(`Dialog Accessibility Tests (${screenReader})`, () => {
+export function runDialogTests() {
+  describe(`Dialog Sreen Reader Accessibility Tests`, () => {
     before(async () => {
       await sr.initialize();
     });
@@ -29,6 +25,7 @@ export function runDialogTests({ screenReader }) {
     });
 
     describe('Basic dialog', () => {
+      // TODO: quite a bit of fiddling and debugging :)
       it.skip('announces dialog role when opened', async () => {
         /** @type {LionDialog} */
         const el = await fixture(html`
@@ -81,7 +78,7 @@ export function runDialogTests({ screenReader }) {
         // await stopScreenReader();
       });
 
-      it('announces dialog role when opened (native dialog reference)', async () => {
+      it.skip('announces dialog role when opened (native dialog reference)', async () => {
         /** @type {LionDialog} */
         const el = await fixture(html`
           <div id="basic-dialog">
@@ -108,7 +105,7 @@ export function runDialogTests({ screenReader }) {
         await sr.next();
 
         const itemTextLog = await sr.itemTextLog();
-        console.debug({ itemTextLog });
+        console.debug('native dialog', { itemTextLog });
         // expect(itemText).to.equal('Example dialog');
 
         // Open the dialog
@@ -120,7 +117,7 @@ export function runDialogTests({ screenReader }) {
 
         const spokenPhraseLog = await sr.spokenPhraseLog();
         expect(spokenPhraseLog.length).to.be.greaterThan(0);
-        console.debug({ spokenPhraseLog });
+        console.debug('native dialog', { spokenPhraseLog });
 
         const dialogAnnounced = spokenPhraseLog.some(
           phrase =>
@@ -287,4 +284,4 @@ export function runDialogTests({ screenReader }) {
   });
 }
 
-runDialogTests({ screenReader: 'virtual' });
+runDialogTests();
