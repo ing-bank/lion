@@ -26,7 +26,7 @@ jobs:
       - name: Run isolated test
         run: node guidepup-poc-dialog/guidepup.test.voiceover.js        
 
-      - name: Run test
+      - name: Run WTR test
         run: npm run test:sr -- --voiceover
 
   nvda:
