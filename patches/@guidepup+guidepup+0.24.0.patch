@@ -12,7 +12,7 @@ index 25d6a70..3ef6493 100644
      }
      /**
 diff --git a/node_modules/@guidepup/guidepup/lib/macOS/VoiceOver/supportsAppleScriptControl/supportsAppleScriptControl.js b/node_modules/@guidepup/guidepup/lib/macOS/VoiceOver/supportsAppleScriptControl/supportsAppleScriptControl.js
-index 10fc931..852cdc9 100644
+index 10fc931..f28d411 100644
 --- a/node_modules/@guidepup/guidepup/lib/macOS/VoiceOver/supportsAppleScriptControl/supportsAppleScriptControl.js
 +++ b/node_modules/@guidepup/guidepup/lib/macOS/VoiceOver/supportsAppleScriptControl/supportsAppleScriptControl.js
 @@ -4,6 +4,8 @@ exports.supportsAppleScriptControl = supportsAppleScriptControl;
@@ -20,7 +20,7 @@ index 10fc931..852cdc9 100644
  const enabledDefaults_1 = require("./enabledDefaults");
  async function supportsAppleScriptControl() {
 +    console.debug('enabledDefaults_1.enabledDefaults()', await enabledDefaults_1.enabledDefaults());
-+    console.debug('enabledDbFile_1.enabledDbFile)()', await enabledDbFile_1.enabledDbFile)());
++    console.debug('enabledDbFile_1.enabledDbFile()', await enabledDbFile_1.enabledDbFile());
      const results = await Promise.all([(0, enabledDefaults_1.enabledDefaults)(), (0, enabledDbFile_1.enabledDbFile)()]);
      return results.every((value) => value);
  }
