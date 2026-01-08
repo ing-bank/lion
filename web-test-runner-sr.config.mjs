@@ -16,6 +16,7 @@ function getScreenReaderArg() {
  */
 function getBrowsersConfig(screenReader) {
   if (screenReader === 'voiceover') {
+    console.debug('Using WebKit for VoiceOver tests');
     return [playwrightLauncher({ product: 'webkit' })];
   }
   if (screenReader === 'nvda') {

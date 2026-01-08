@@ -39,10 +39,12 @@ function getSrInstance({ screenReader, getPage }) {
       // TODO: see if this can be avoided n the future...
       const virtualPaths = [
         '/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.browser.js',
-        '/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.mjs',
-        '/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.legacy-esm.js',
         '/node_modules/@lion-labs/test-runner-screenreader/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.browser.js',
+
+        '/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.mjs',
         '/node_modules/@lion-labs/test-runner-screenreader/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.mjs',
+
+        '/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.legacy-esm.js',
         '/node_modules/@lion-labs/test-runner-screenreader/node_modules/@guidepup/virtual-screen-reader/lib/esm/index.legacy-esm.js',
       ];
 
