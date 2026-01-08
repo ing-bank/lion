@@ -13,8 +13,12 @@ import '@lion/ui/define/lion-dialog.js';
  * @typedef {import('@lion/ui/dialog.js').LionDialog} LionDialog
  */
 
-export function runDialogTests() {
-  describe(`Dialog Screen Reader Accessibility Tests`, () => {
+/**
+ * Run the dialog test suite with a given screen reader.
+ * @param {{screenReader: 'voiceover'|'nvda'|'virtual'}} options
+ */
+export function runDialogTests({ screenReader }) {
+  describe(`Dialog Accessibility Tests (${screenReader})`, () => {
     before(async () => {
       await sr.initialize();
     });
@@ -225,4 +229,4 @@ export function runDialogTests() {
   });
 }
 
-runDialogTests();
+runDialogTests({ screenReader: 'virtual' });
