@@ -52,6 +52,8 @@ export function runDialogTests({ screenReader }) {
 
         const invokerBtn = el.querySelector('#open-dialog-btn');
         invokerBtn?.focus();
+        await aTimeout(2000);
+
         await sr.next();
 
         const itemTextLog = await sr.itemTextLog();
@@ -59,8 +61,9 @@ export function runDialogTests({ screenReader }) {
         // expect(itemText).to.equal('Example dialog');
 
         // Open the dialog
-        el.opened = true;
+        invokerBtn?.click();
         await el.updateComplete;
+
         // Give a bit of time for screen reader to announce
         await aTimeout(2000);
 
