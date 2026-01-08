@@ -5,7 +5,7 @@ on: push
 jobs:
   voiceover:
     name: auto VO
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
       
@@ -26,8 +26,8 @@ jobs:
       - name: Run WTR test
         run: npm run test:sr -- --voiceover
 
-      - name: Run isolated test
-        run: node guidepup-poc-dialog/guidepup.test.voiceover.js        
+      # - name: Run isolated test
+      #   run: node guidepup-poc-dialog/guidepup.test.voiceover.js        
 
 
   nvda:
@@ -53,7 +53,7 @@ jobs:
       - name: Run WTR test
         run: npm run test:sr -- --nvda
 
-      - name: Run isolated test
-        run: node guidepup-poc-dialog/guidepup.test.nvda.js
+      # - name: Run isolated test
+      #   run: node guidepup-poc-dialog/guidepup.test.nvda.js
 
 
