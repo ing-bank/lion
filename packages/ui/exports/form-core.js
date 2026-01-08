@@ -51,3 +51,10 @@ export { ChoiceGroupMixin } from '../components/form-core/src/choice-group/Choic
 export { ChoiceInputMixin } from '../components/form-core/src/choice-group/ChoiceInputMixin.js';
 
 export { FormGroupMixin } from '../components/form-core/src/form-group/FormGroupMixin.js';
+
+/**
+ * Re-export types for JavaScript/JSDoc and TypeScript consumers.
+ * Allows importing types from the same path as runtime exports.
+ * @typedef {import('../components/form-core/types/FormControlMixinTypes.js').FormControlHost} FormControlHost
+ * @typedef {import('../components/form-core/types/validate/ValidateMixinTypes.js').ValidateHost} ValidateHost
+ */
