@@ -24,6 +24,44 @@ import { fsAdapter } from '../../../../src/program/utils/fs-adapter.js';
  * @typedef {import('../../../../types/index.js').QueryResult} QueryResult
  */
 
+/**
+ * Sorts the `queryOutput` array deeply
+ */
+function sortQueryOutput(arr) {
+  if (!Array.isArray(arr)) return arr;
+
+  const normalized = arr.map(item => {
+    const exportSpecifier = { ...item.exportSpecifier };
+
+    const matchesPerProject = Array.isArray(item.matchesPerProject)
+      ? item.matchesPerProject
+          .map(mp => ({
+            ...mp,
+            files: Array.isArray(mp.files) ? [...mp.files].sort() : mp.files,
+          }))
+          .sort((a, b) => {
+            if (a.project === b.project) return 0;
+            return a.project < b.project ? -1 : 1;
+          })
+      : item.matchesPerProject;
+
+    return {
+      ...item,
+      exportSpecifier,
+      matchesPerProject,
+    };
+  });
+
+  // Sort top-level elements deterministically (by exportSpecifier.id)
+  normalized.sort((a, b) => {
+    const ida = a?.exportSpecifier?.id ?? '';
+    const idb = b?.exportSpecifier?.id ?? '';
+    return ida.localeCompare(idb);
+  });
+
+  return normalized;
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 setupAnalyzerTest();
@@ -147,7 +185,9 @@ describe('Analyzers file-system integration', () => {
       );
       const { queryOutput } = JSON.parse(JSON.stringify(queryResults[0]));
       // expect(queryOutput).not.to.deep.equal([]);
-      expect(queryOutput).to.include.deep.members(expectedOutput.queryOutput);
+      expect(sortQueryOutput(queryOutput)).to.include.deep.members(
+        sortQueryOutput(expectedOutput.queryOutput),
+      );
     });
   }
 });
