@@ -46,7 +46,8 @@ export async function getPublicApiOfPkg(pkgJsonPath) {
 
           if (entryPointFile.endsWith('.js')) {
             const src = await readFile(entryPointFile, 'utf8');
-            const [, exports] = parse(src);
+            const [, exportsObj] = parse(src);
+            const exports = exportsObj.map(e => e.n ?? e.ln);
             publicApi.entryPoints.push({
               entry: pkgExportDefinition,
               name: pkgEntryPoint,
@@ -62,7 +63,8 @@ export async function getPublicApiOfPkg(pkgJsonPath) {
       const pkgEntryPoint = pkgEntryPointPath ? `${name}/${pkgEntryPointPath}` : name;
       if (entryPointFilePath.endsWith('.js')) {
         const src = await readFile(entryPointFilePath, 'utf8');
-        const [, exports] = parse(src);
+        const [, exportsObj] = parse(src);
+        const exports = exportsObj.map(e => e.n ?? e.ln);
         publicApi.entryPoints.push({
           entry: pkgExportDefinition,
           name: pkgEntryPoint,
