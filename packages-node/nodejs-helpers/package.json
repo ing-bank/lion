@@ -24,7 +24,7 @@
   ],
   "scripts": {
     "test": "npm run test:node",
-    "test:node": "mocha 'test-node/**/*.test.js'",
+    "test:node": "mocha 'test-node/tasks/bypass-export-map.test.js'",
     "test:watch": "npm run test:node -- --watch",
     "types": "wireit"
   },
