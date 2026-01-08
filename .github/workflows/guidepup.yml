@@ -22,12 +22,13 @@ jobs:
 
       - name: Playwright
         run: npx playwright install --with-deps
-      
-      - name: Run isolated test
-        run: node guidepup-poc-dialog/guidepup.test.voiceover.js        
 
       - name: Run WTR test
         run: npm run test:sr -- --voiceover
+
+      - name: Run isolated test
+        run: node guidepup-poc-dialog/guidepup.test.voiceover.js        
+
 
   nvda:
     name: auto NVDA
@@ -49,8 +50,10 @@ jobs:
       - name: Playwright
         run: npx playwright install --with-deps 
       
+      - name: Run WTR test
+        run: npm run test:sr -- --nvda
+
       - name: Run isolated test
         run: node guidepup-poc-dialog/guidepup.test.nvda.js
 
-      - name: Run WTR test
-        run: npm run test:sr -- --nvda
+
