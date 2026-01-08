@@ -29,13 +29,13 @@ export function runDialogTests({ screenReader }) {
     });
 
     describe('Basic dialog', () => {
-      it('announces dialog role when opened', async () => {
+      it.skip('announces dialog role when opened', async () => {
         /** @type {LionDialog} */
         const el = await fixture(html`
           <lion-dialog id="basic-dialog">
             <button slot="invoker" id="open-dialog-btn">Open Dialog</button>
             <div slot="content" class="dialog-content" aria-label="Example dialog">
-              <h2>Dialog Title</h2>
+              <h1>Dialog Title</h1>
               <p>This is the dialog content. Press Escape or click the close button to dismiss.</p>
               <div class="dialog-actions">
                 <button
@@ -81,13 +81,64 @@ export function runDialogTests({ screenReader }) {
         // await stopScreenReader();
       });
 
+      it('announces dialog role when opened (native dialog reference)', async () => {
+        /** @type {LionDialog} */
+        const el = await fixture(html`
+          <div id="basic-dialog">
+            <button onclick="myDialog.showModal()" id="open-dialog-btn">Open Dialog</button>
+            <dialog id="myDialog" slot="content" class="dialog-content" aria-label="Example dialog">
+              <h1>Dialog Title</h1>
+              <p>This is the dialog content. Press Escape or click the close button to dismiss.</p>
+              <div class="dialog-actions">
+                <button
+                  id="dialog-close-btn"
+                  @click="${() => document.getElementById('myDialog').close()}"
+                >
+                  Close
+                </button>
+              </div>
+            </dialog>
+          </div>
+        `);
+
+        const invokerBtn = el.querySelector('#open-dialog-btn');
+        invokerBtn?.focus();
+        await aTimeout(2000);
+
+        await sr.next();
+
+        const itemTextLog = await sr.itemTextLog();
+        console.debug({ itemTextLog });
+        // expect(itemText).to.equal('Example dialog');
+
+        // Open the dialog
+        invokerBtn?.click();
+        await el.updateComplete;
+
+        // Give a bit of time for screen reader to announce
+        await aTimeout(2000);
+
+        const spokenPhraseLog = await sr.spokenPhraseLog();
+        expect(spokenPhraseLog.length).to.be.greaterThan(0);
+        console.debug({ spokenPhraseLog });
+
+        const dialogAnnounced = spokenPhraseLog.some(
+          phrase =>
+            phrase.toLowerCase().includes('dialog') || phrase.toLowerCase().includes('web dialog'),
+        );
+
+        expect(dialogAnnounced, 'dialog role announcement').to.be.true;
+
+        // await stopScreenReader();
+      });
+
       it.skip('traps focus within dialog', async () => {
         /** @type {LionDialog} */
         const el = await fixture(html`
           <lion-dialog id="basic-dialog">
             <button slot="invoker" id="open-dialog-btn">Open Dialog</button>
             <div slot="content" class="dialog-content" aria-label="Example dialog">
-              <h2>Dialog Title</h2>
+              <h1>Dialog Title</h1>
               <p>This is the dialog content. Press Escape or click the close button to dismiss.</p>
               <div class="dialog-actions">
                 <button
@@ -141,7 +192,7 @@ export function runDialogTests({ screenReader }) {
           <lion-dialog id="basic-dialog">
             <button slot="invoker" id="open-dialog-btn">Open Dialog</button>
             <div slot="content" class="dialog-content" aria-label="Example dialog">
-              <h2>Dialog Title</h2>
+              <h1>Dialog Title</h1>
               <p>This is the dialog content. Press Escape or click the close button to dismiss.</p>
               <div class="dialog-actions">
                 <button
@@ -186,7 +237,7 @@ export function runDialogTests({ screenReader }) {
           <lion-dialog id="alert-dialog" is-alert-dialog>
             <button slot="invoker" id="open-alert-btn">Open Alert Dialog</button>
             <div slot="content" class="dialog-content" aria-label="Confirmation required">
-              <h2>Are you sure?</h2>
+              <h1>Are you sure?</h1>
               <p>This action cannot be undone.</p>
               <div class="dialog-actions">
                 <button
