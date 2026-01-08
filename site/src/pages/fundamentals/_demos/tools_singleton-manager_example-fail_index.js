@@ -1,0 +1,1 @@
+import '@lion/demo-tools/singleton-manager/example-fail/demo-app.js';
