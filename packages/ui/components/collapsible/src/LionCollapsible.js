@@ -30,10 +30,21 @@ export class LionCollapsible extends LitElement {
         type: Boolean,
         reflect: true,
       },
+      invokerPosition: {
+        type: String,
+        reflect: true,
+        attribute: 'invoker-position',
+      },
     };
   }
 
   render() {
+    if (this.invokerPosition === 'bottom') {
+      return html`
+        <slot name="content"></slot>
+        <slot name="invoker"></slot>
+      `;
+    }
     return html`
       <slot name="invoker"></slot>
       <slot name="content"></slot>
@@ -44,6 +55,7 @@ export class LionCollapsible extends LitElement {
     super();
     this.opened = false;
     this.toggle = this.toggle.bind(this);
+    this.invokerPosition = 'top';
   }
 
   connectedCallback() {
