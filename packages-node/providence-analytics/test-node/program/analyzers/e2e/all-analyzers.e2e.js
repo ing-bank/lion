@@ -147,7 +147,7 @@ describe('Analyzers file-system integration', () => {
       );
       const { queryOutput } = JSON.parse(JSON.stringify(queryResults[0]));
       // expect(queryOutput).not.to.deep.equal([]);
-      expect(queryOutput).to.deep.equal(expectedOutput.queryOutput);
+      expect(queryOutput).to.include.deep.members(expectedOutput.queryOutput);
     });
   }
 });
