@@ -2,4 +2,4 @@
 '@lion/ui': patch
 ---
 
-Make ListboxMixin works well with ScopedStylesContoller when cache is used
+Make ListboxMixin works well with ScopedStylesController when cache is used
