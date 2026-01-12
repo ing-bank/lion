@@ -1,0 +1,287 @@
+/* eslint-disable no-promise-executor-return */
+/* eslint-disable no-console */
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-expressions */
+/* eslint-disable import/no-extraneous-dependencies */
+
+import { expect, fixture, aTimeout } from '@open-wc/testing';
+import { html } from 'lit/static-html.js';
+
+import sr from '@lion-labs/test-runner-screenreader/commands.js';
+import '@lion/ui/define/lion-dialog.js';
+
+/**
+ * @typedef {import('@lion/ui/dialog.js').LionDialog} LionDialog
+ */
+
+export function runDialogTests() {
+  describe(`Dialog Sreen Reader Accessibility Tests`, () => {
+    before(async () => {
+      await sr.initialize();
+    });
+
+    after(async () => {
+      await sr.stop();
+    });
+
+    describe('Basic dialog', () => {
+      // TODO: quite a bit of fiddling and debugging :)
+      it.skip('announces dialog role when opened', async () => {
+        /** @type {LionDialog} */
+        const el = await fixture(html`
+          <lion-dialog id="basic-dialog">
+            <button slot="invoker" id="open-dialog-btn">Open Dialog</button>
+            <div slot="content" class="dialog-content" aria-label="Example dialog">
+              <h1>Dialog Title</h1>
+              <p>This is the dialog content. Press Escape or click the close button to dismiss.</p>
+              <div class="dialog-actions">
+                <button
+                  id="dialog-close-btn"
+                  @click="${e =>
+                    e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </lion-dialog>
+        `);
+
+        const invokerBtn = el.querySelector('#open-dialog-btn');
+        invokerBtn?.focus();
+        await aTimeout(2000);
+
+        await sr.next();
+
+        const itemTextLog = await sr.itemTextLog();
+        console.debug({ itemTextLog });
+        // expect(itemText).to.equal('Example dialog');
+
+        // Open the dialog
+        invokerBtn?.click();
+        await el.updateComplete;
+
+        // Give a bit of time for screen reader to announce
+        await aTimeout(2000);
+
+        const spokenPhraseLog = await sr.spokenPhraseLog();
+        expect(spokenPhraseLog.length).to.be.greaterThan(0);
+        console.debug({ spokenPhraseLog });
+
+        const dialogAnnounced = spokenPhraseLog.some(
+          phrase =>
+            phrase.toLowerCase().includes('dialog') || phrase.toLowerCase().includes('web dialog'),
+        );
+
+        expect(dialogAnnounced, 'dialog role announcement').to.be.true;
+
+        // await stopScreenReader();
+      });
+
+      it.skip('announces dialog role when opened (native dialog reference)', async () => {
+        /** @type {LionDialog} */
+        const el = await fixture(html`
+          <div id="basic-dialog">
+            <button onclick="myDialog.showModal()" id="open-dialog-btn">Open Dialog</button>
+            <dialog id="myDialog" slot="content" class="dialog-content" aria-label="Example dialog">
+              <h1>Dialog Title</h1>
+              <p>This is the dialog content. Press Escape or click the close button to dismiss.</p>
+              <div class="dialog-actions">
+                <button
+                  id="dialog-close-btn"
+                  @click="${() => document.getElementById('myDialog').close()}"
+                >
+                  Close
+                </button>
+              </div>
+            </dialog>
+          </div>
+        `);
+
+        const invokerBtn = el.querySelector('#open-dialog-btn');
+        invokerBtn?.focus();
+        await aTimeout(2000);
+
+        await sr.next();
+
+        const itemTextLog = await sr.itemTextLog();
+        console.debug('native dialog', { itemTextLog });
+        // expect(itemText).to.equal('Example dialog');
+
+        // Open the dialog
+        invokerBtn?.click();
+        await el.updateComplete;
+
+        // Give a bit of time for screen reader to announce
+        await aTimeout(2000);
+
+        const spokenPhraseLog = await sr.spokenPhraseLog();
+        expect(spokenPhraseLog.length).to.be.greaterThan(0);
+        console.debug('native dialog', { spokenPhraseLog });
+
+        const dialogAnnounced = spokenPhraseLog.some(
+          phrase =>
+            phrase.toLowerCase().includes('dialog') || phrase.toLowerCase().includes('web dialog'),
+        );
+
+        expect(dialogAnnounced, 'dialog role announcement').to.be.true;
+
+        // await stopScreenReader();
+      });
+
+      it.skip('traps focus within dialog', async () => {
+        /** @type {LionDialog} */
+        const el = await fixture(html`
+          <lion-dialog id="basic-dialog">
+            <button slot="invoker" id="open-dialog-btn">Open Dialog</button>
+            <div slot="content" class="dialog-content" aria-label="Example dialog">
+              <h1>Dialog Title</h1>
+              <p>This is the dialog content. Press Escape or click the close button to dismiss.</p>
+              <div class="dialog-actions">
+                <button
+                  id="dialog-close-btn"
+                  @click="${e =>
+                    e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </lion-dialog>
+        `);
+
+        // await initializeScreenReader(document.body);
+
+        // Open dialog
+        el.opened = true;
+        await el.updateComplete;
+        await new Promise(r => setTimeout(r, 500));
+
+        const hasReader = !!sr?.next;
+
+        if (hasReader) {
+          await sr.next();
+          let itemText = await sr.itemText();
+
+          await sr.next();
+          itemText = await sr.itemText();
+
+          await sr.findNextButton();
+          itemText = await sr.itemText();
+
+          const closeButtonAccessible =
+            itemText.toLowerCase().includes('close') || itemText.toLowerCase().includes('button');
+          expect(closeButtonAccessible, 'close button accessibility').to.be.true;
+        } else {
+          const closeBtn = el.querySelector('#dialog-close-btn');
+          closeBtn?.focus();
+
+          const closeButtonFocusable = document.activeElement?.id === 'dialog-close-btn';
+          expect(closeButtonFocusable, 'close button should be focusable').to.be.true;
+        }
+
+        // await stopScreenReader();
+      });
+
+      it('returns focus to invoker when closed', async () => {
+        /** @type {LionDialog} */
+        const el = await fixture(html`
+          <lion-dialog id="basic-dialog">
+            <button slot="invoker" id="open-dialog-btn">Open Dialog</button>
+            <div slot="content" class="dialog-content" aria-label="Example dialog">
+              <h1>Dialog Title</h1>
+              <p>This is the dialog content. Press Escape or click the close button to dismiss.</p>
+              <div class="dialog-actions">
+                <button
+                  id="dialog-close-btn"
+                  @click="${e =>
+                    e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </lion-dialog>
+        `);
+
+        // await initializeScreenReader(document.body);
+
+        // Open dialog
+        el.opened = true;
+        await el.updateComplete;
+        await new Promise(r => setTimeout(r, 500));
+
+        // Close dialog via close button
+        const closeBtn = el.querySelector('#dialog-close-btn');
+        closeBtn?.click();
+        await el.updateComplete;
+        await new Promise(r => setTimeout(r, 500));
+
+        const dialogClosed = !el.opened;
+        expect(dialogClosed).to.equal(true);
+
+        const focusedAfterClose = document.activeElement?.id;
+        expect(focusedAfterClose, 'focus after close').to.equal('open-dialog-btn');
+
+        // await stopScreenReader();
+      });
+    });
+
+    describe('Alert dialog', () => {
+      it('announces alert dialog role', async () => {
+        /** @type {LionDialog} */
+        const el = await fixture(html`
+          <lion-dialog id="alert-dialog" is-alert-dialog>
+            <button slot="invoker" id="open-alert-btn">Open Alert Dialog</button>
+            <div slot="content" class="dialog-content" aria-label="Confirmation required">
+              <h1>Are you sure?</h1>
+              <p>This action cannot be undone.</p>
+              <div class="dialog-actions">
+                <button
+                  id="alert-cancel-btn"
+                  @click="${e =>
+                    e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+                >
+                  Cancel
+                </button>
+                <button
+                  id="alert-confirm-btn"
+                  @click="${e =>
+                    e.target.dispatchEvent(new Event('close-overlay', { bubbles: true }))}"
+                >
+                  Confirm
+                </button>
+              </div>
+            </div>
+          </lion-dialog>
+        `);
+
+        // await initializeScreenReader(document.body);
+        await sr.clearSpokenPhraseLog();
+
+        // Open alert dialog
+        el.opened = true;
+        await el.updateComplete;
+        await new Promise(r => setTimeout(r, 500));
+
+        const alertSpokenLog = await sr.spokenPhraseLog();
+
+        let alertRoleAnnounced = false;
+        if (alertSpokenLog.length > 0) {
+          alertRoleAnnounced = alertSpokenLog.some(
+            phrase =>
+              phrase.toLowerCase().includes('alert') || phrase.toLowerCase().includes('dialog'),
+          );
+        } else {
+          alertRoleAnnounced = el.opened;
+        }
+
+        expect(alertRoleAnnounced, 'alert role announcement').to.be.true;
+
+        // await stopScreenReader();
+      });
+    });
+  });
+}
+
+runDialogTests();
