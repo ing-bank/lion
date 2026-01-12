@@ -589,6 +589,55 @@ export function runListboxMixinSuite(customConfig = {}) {
         el.reset();
         expect(el.activeIndex).to.equal(-1);
       });
+
+      it('clears modelValue on clear()', async () => {
+        const el = await fixture(html`
+          <${tag} has-no-default-selected>
+            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
+          </${tag}>
+        `);
+
+        el.setCheckedIndex(0);
+        await el.updateComplete;
+        expect(el.modelValue).to.deep.equal('10');
+
+        el.clear();
+        await el.updateComplete;
+        expect(el.modelValue).to.equal('');
+      });
+
+      it('clears modelValue on clear() when multiple-choice', async () => {
+        const el = await fixture(html`
+          <${tag} has-no-default-selected multiple-choice>
+            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
+          </${tag}>
+        `);
+        el.setCheckedIndex(0);
+        await el.updateComplete;
+        expect(el.modelValue).to.eql(['10']);
+
+        el.clear();
+        expect(el.modelValue).to.eql([]);
+      });
+
+      it('keeps interaction states on clear()', async () => {
+        const el = await fixture(html`
+          <${tag} has-no-default-selected>
+            <${optionTag} .choiceValue=${'10'}>Item 1</${optionTag}>
+            <${optionTag} .choiceValue=${'20'}>Item 2</${optionTag}>
+          </${tag}>
+        `);
+
+        el.setCheckedIndex(0);
+        await el.updateComplete;
+        expect(el.dirty).to.equal(true);
+
+        el.clear();
+        await el.updateComplete;
+        expect(el.dirty).to.equal(true);
+      });
     });
 
     describe('Interactions', () => {
