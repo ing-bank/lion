@@ -323,18 +323,8 @@ const ListboxMixinImplementation = superclass =>
       });
 
       // Every time new options are rendered from outside context, notify our parents
-      const observer = new MutationObserver(mutations => {
-        const isEveryMutationAboutStyleTag = mutations.every(mutation => {
-          const { addedNodes, removedNodes } = mutation;
-          // @ts-ignore we can use spread operator to NodeList
-          const isEveryChangeIsStyleTag = [...addedNodes, ...removedNodes].every(
-            node => node.nodeName === 'STYLE',
-          );
-          return isEveryChangeIsStyleTag;
-        });
-        if (!isEveryMutationAboutStyleTag) {
-          this._onListboxContentChanged();
-        }
+      const observer = new MutationObserver(() => {
+        this._onListboxContentChanged();
       });
       observer.observe(this._listboxNode, { childList: true });
     }
