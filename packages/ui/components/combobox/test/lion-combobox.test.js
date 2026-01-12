@@ -652,6 +652,26 @@ describe('lion-combobox', () => {
       expect(visibleOptions().length).to.equal(0, 'after clear');
     });
 
+    it('keeps interaction states on clear()', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox name="foo">
+            <lion-option .choiceValue="${'Artichoke'}">Artichoke</lion-option>
+            <lion-option .choiceValue="${'Chard'}">Chard</lion-option>
+            <lion-option .choiceValue="${'Chicory'}">Chicory</lion-option>
+            <lion-option .choiceValue="${'Victoria Plum'}">Victoria Plum</lion-option>
+          </lion-combobox>
+        `)
+      );
+      await mimicUserTyping(el, 'a');
+      await el.updateComplete;
+      expect(el.dirty).to.equal(true);
+
+      el.clear();
+      await el.updateComplete;
+      expect(el.dirty).to.equal(true);
+    });
+
     it('resets modelValue and textbox value on reset()', async () => {
       const el = /** @type {LionCombobox} */ (
         await fixture(html`
