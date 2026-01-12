@@ -6,6 +6,8 @@ import { unsafeCSS, css } from 'lit';
  * @implements {ReactiveController}
  */
 export class ScopedStylesController {
+  #hasConnected = false;
+
   /**
    * @param {import('lit').CSSResult} scope
    * @return {import('lit').CSSResultGroup}
@@ -26,12 +28,11 @@ export class ScopedStylesController {
   }
 
   hostConnected() {
-    this.host.classList.add(this.scopedClass);
-    this.__setupStyleTag();
-  }
-
-  hostDisconnected() {
-    this.__teardownStyleTag();
+    if (!this.#hasConnected) {
+      this.host.classList.add(this.scopedClass);
+      this.__setupStyleTag();
+      this.#hasConnected = true;
+    }
   }
 
   __setupStyleTag() {
@@ -45,9 +46,5 @@ export class ScopedStylesController {
       .scopedStyles(unsafeCSS(highSpecifictyScope))
       .toString();
     this.host.insertBefore(this.__styleTag, this.host.childNodes[0]);
-  }
-
-  __teardownStyleTag() {
-    this.host.removeChild(this.__styleTag);
   }
 }
