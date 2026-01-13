@@ -145,5 +145,32 @@ describe('<lion-collapsible>', () => {
         expect(content).to.have.attribute('aria-labelledby', invoker?.id);
       });
     });
+
+    describe('[invoker-position]', () => {
+      it('renders the invoker above the content by default', async () => {
+        const collapsibleElement = await fixture(defaultCollapsible);
+        const content = collapsibleElement.shadowRoot?.querySelector(
+          'slot[name="invoker"] + slot[name="content"]',
+        );
+        const invoker = collapsibleElement.shadowRoot?.querySelector(
+          'slot[name="content"] + slot[name="invoker"]',
+        );
+        expect(content).to.equal(null);
+        expect(invoker).to.have.attribute('name', 'invoker');
+      });
+      it('renders the invoker below the content when [invoker-position="bottom"]', async () => {
+        const collapsibleElement = await fixture(defaultCollapsible);
+        collapsibleElement.invokerPosition = 'bottom';
+        await collapsibleElement.updateComplete;
+        const content = collapsibleElement.shadowRoot?.querySelector(
+          'slot[name="invoker"] + slot[name="content"]',
+        );
+        const invoker = collapsibleElement.shadowRoot?.querySelector(
+          'slot[name="content"] + slot[name="invoker"]',
+        );
+        expect(invoker).to.equal(null);
+        expect(content).to.have.attribute('name', 'content');
+      });
+    });
   });
 });
