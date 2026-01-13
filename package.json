@@ -88,7 +88,7 @@
     "@web/test-runner-playwright": "^0.11.0",
     "@webcomponents/scoped-custom-element-registry": "^0.0.10",
     "@webcomponents/template-shadowroot": "^0.2.1",
-    "astro": "^5.3.0",
+    "astro": "^5.16.9",
     "astro-pagefind": "^1.8.3",
     "astro-seo": "^0.7.5",
     "bundlesize": "^1.0.0-beta.2",
