@@ -58,13 +58,10 @@ const getExportSpecifiersByDir = async dirPath => {
   const fileNames = await getSortedJsFileNamesInDir(path.join(dirPath, '*.js'));
 
   // @ts-ignore
-  const exportsValue = await asyncConcurrentForEach(fileNames, async fileName => {
+  const exports = await asyncConcurrentForEach(fileNames, async fileName => {
     const filePath = path.resolve(dirPath, fileName);
     return getExportSpecifiersByFile(filePath);
   });
-  console.debug('exportsValue:', exportsValue);
-  const [, exportsObj] = exportsValue;
-  const exports = exportsObj.map(e => e.n ?? e.ln);
   return exports.flat().sort(byStringAscendingSort);
 };
 

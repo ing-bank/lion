@@ -1,4 +1,6 @@
 import path from 'path';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { getExportSpecifiersByFile } from '@lion/nodejs-helpers';
 import { readFile } from 'fs/promises';
 import { init, parse } from 'es-module-lexer';
 import glob from 'glob';
@@ -45,9 +47,7 @@ export async function getPublicApiOfPkg(pkgJsonPath) {
           const pkgEntryPoint = `${name}/${pkgEntryPointPath}`;
 
           if (entryPointFile.endsWith('.js')) {
-            const src = await readFile(entryPointFile, 'utf8');
-            const [, exportsObj] = parse(src);
-            const exports = exportsObj.map(e => e.n ?? e.ln);
+            const exports = getExportSpecifiersByFile(entryPointFile);
             publicApi.entryPoints.push({
               entry: pkgExportDefinition,
               name: pkgEntryPoint,
