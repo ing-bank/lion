@@ -56,7 +56,6 @@ const rmRecursiveForce = async fsPaths => {
  */
 const getExportSpecifiersByDir = async dirPath => {
   const fileNames = await getSortedJsFileNamesInDir(path.join(dirPath, '*.js'));
-
   // @ts-ignore
   const exports = await asyncConcurrentForEach(fileNames, async fileName => {
     const filePath = path.resolve(dirPath, fileName);
