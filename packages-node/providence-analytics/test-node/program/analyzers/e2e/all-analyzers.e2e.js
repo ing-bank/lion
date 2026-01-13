@@ -25,9 +25,11 @@ import { fsAdapter } from '../../../../src/program/utils/fs-adapter.js';
  */
 
 /**
- * Sorts the `queryOutput` array deeply
+ * Sorts the array with objects deeply.
+ * 1) Sort all property names alphabetically for objects
+ * 2) Sort array string literal values by value alphabetically
  */
-function sortQueryOutput(arr) {
+function sortDeeply(arr) {
   if (!Array.isArray(arr)) return arr;
 
   const normalized = arr.map(item => {
@@ -52,7 +54,6 @@ function sortQueryOutput(arr) {
     };
   });
 
-  // Sort top-level elements deterministically (by exportSpecifier.id)
   normalized.sort((a, b) => {
     const ida = a?.exportSpecifier?.id ?? '';
     const idb = b?.exportSpecifier?.id ?? '';
@@ -185,8 +186,8 @@ describe('Analyzers file-system integration', () => {
       );
       const { queryOutput } = JSON.parse(JSON.stringify(queryResults[0]));
       // expect(queryOutput).not.to.deep.equal([]);
-      expect(sortQueryOutput(queryOutput)).to.include.deep.members(
-        sortQueryOutput(expectedOutput.queryOutput),
+      expect(sortDeeply(queryOutput)).to.include.deep.members(
+        sortDeeply(expectedOutput.queryOutput),
       );
     });
   }
