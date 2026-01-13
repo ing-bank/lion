@@ -70,7 +70,8 @@ export const getExportSpecifiersByFile = async absFilePath => {
   await init;
   const exportFile = await readFile(absFilePath, 'utf-8');
   // eslint-disable-next-line
-  const [_, exports] = parse(exportFile);
+  const [_, exportsObj] = parse(exportFile);
+  const exports = exportsObj.map(e => e.n ?? e.ln);
   // @ts-ignore
   return exports;
 };
