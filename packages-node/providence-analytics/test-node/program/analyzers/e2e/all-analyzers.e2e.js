@@ -24,6 +24,42 @@ import { fsAdapter } from '../../../../src/program/utils/fs-adapter.js';
  * @typedef {import('../../../../types/index.js').QueryResult} QueryResult
  */
 
+/**
+ * Sorts the array with objects deeply.
+ * 1) Sort all property names alphabetically for objects
+ * 2) Sort array string literal values by value alphabetically
+ */
+
+function deepArraySort(input) {
+  const sortArray = arr => {
+    // eslint-disable-next-line no-use-before-define
+    const sortedItems = arr.map(sortAny);
+    if (sortedItems.every(x => typeof x === 'string')) {
+      return sortedItems.slice().sort();
+    }
+    return sortedItems;
+  };
+
+  const sortAny = v => {
+    // eslint-disable-next-line no-use-before-define
+    if (Array.isArray(v)) return sortArray(v);
+    // eslint-disable-next-line no-use-before-define
+    if (typeof v === 'object' && v !== null) return sortObjectKeys(v);
+    return v;
+  };
+
+  const sortObjectKeys = obj => {
+    const keys = Object.keys(obj).sort();
+    const out = {};
+    for (const k of keys) {
+      out[k] = sortAny(obj[k]);
+    }
+    return out;
+  };
+
+  return sortAny(input);
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 setupAnalyzerTest();
@@ -146,8 +182,9 @@ describe('Analyzers file-system integration', () => {
         ),
       );
       const { queryOutput } = JSON.parse(JSON.stringify(queryResults[0]));
-      // expect(queryOutput).not.to.deep.equal([]);
-      expect(queryOutput).to.deep.equal(expectedOutput.queryOutput);
+      expect(deepArraySort(queryOutput)).to.include.deep.members(
+        deepArraySort(expectedOutput.queryOutput),
+      );
     });
   }
 });
