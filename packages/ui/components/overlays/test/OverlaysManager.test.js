@@ -163,6 +163,22 @@ describe('OverlaysManager', () => {
           'overlays-scroll-lock-ios-fix',
         );
       });
+      it('remove class "overlays-scroll-lock-ios-fix" after teardown', async () => {
+        mockIOS();
+        const dialog = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
+        await dialog.show();
+
+        await dialog.teardown();
+
+        expect(
+          Array.from(document.body.classList).filter(cls =>
+            ['overlays-scroll-lock', 'overlays-scroll-lock-ios-fix'].includes(cls),
+          ),
+        ).to.be.empty;
+        expect(Array.from(document.documentElement.classList)).to.not.contain(
+          'overlays-scroll-lock-ios-fix',
+        );
+      });
     });
   });
 });
