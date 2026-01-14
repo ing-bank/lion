@@ -1446,10 +1446,6 @@ export class OverlayController extends EventTarget {
     if (this.#isRegisteredOnManager()) {
       this.manager.remove(this);
     }
-
-    // if (this.__wrappingDialogNode?.parentElement) {
-    //  this.__wrappingDialogNode.remove();
-    // }
   }
 
   /** @private */
