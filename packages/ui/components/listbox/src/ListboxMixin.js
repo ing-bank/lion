@@ -427,7 +427,6 @@ const ListboxMixinImplementation = superclass =>
     clear() {
       super.clear();
       this.setCheckedIndex(-1);
-      this.resetInteractionState();
     }
 
     /**

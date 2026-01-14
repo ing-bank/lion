@@ -61,6 +61,12 @@ describe('parseAmount()', async () => {
     expect(parseAmount('EUR 1,50', { mode: 'pasted' })).to.equal(1.5);
   });
 
+  it('trim spaces when "pasted" mode used', async () => {
+    // Use case: there is a cell in Excel which is formatted as Accounting, Currency: Zl, Decimal 2
+    // and the whole cell is copied
+    expect(parseAmount(' 1,00 zł ', { mode: 'pasted' })).to.equal(1);
+  });
+
   it('parses based on locale when "user-edited" mode used combined with viewValueStates "formatted"', async () => {
     expect(parseAmount('123,456.78', { mode: 'auto' })).to.equal(123456.78);
     expect(

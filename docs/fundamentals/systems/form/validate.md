@@ -932,6 +932,8 @@ Assume we want to create password validation with a confirmation field.
 We don't want to show feedback on group level, but right beneath the fields.
 
 ```js preview-story
+import { LitElement } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 const isInterpretableValue = mv => mv && !(mv instanceof Unparseable);
 
 class PasswordMatch extends Validator {
@@ -946,32 +948,38 @@ class PasswordMatch extends Validator {
     return false;
   }
 }
-// TODO: use ref directive once on Lit-element 3
-const first = renderLitAsNode(html`
-  <lion-input
-    .feedbackCondition="${(type, meta) => meta.focused}"
-    type="password"
-    name="initialPassword"
-    label="New password"
-  ></lion-input>
-`);
-const second = renderLitAsNode(html`
-  <lion-input
-    .feedbackCondition="${(type, meta) => meta.focused}"
-    type="password"
-    name="confirmPassword"
-    label="Confirm password"
-  ></lion-input>
-`);
-first.validators = [
-  new PasswordMatch(
-    { first, second },
-    { getMessage: () => 'Please match with confirmation field' },
-  ),
-];
-second.validators = [
-  new PasswordMatch({ first, second }, { getMessage: () => 'Please match with initial field' }),
-];
 
-export const contextValidation = () => html` ${first}${second} `;
+class FieldWithContextValidation extends ScopedElementsMixin(LitElement) {
+  static get scopedElements() {
+    return {
+      'lion-input': LionInput,
+    };
+  }
+
+  firstUpdated() {
+    const first = this.renderRoot.querySelector('[name="initialPassword"]');
+    const second = this.renderRoot.querySelector('[name="confirmPassword"]');
+
+    first.validators = [
+      new PasswordMatch(
+        { first, second },
+        { getMessage: () => 'Please match with confirmation field' },
+      ),
+    ];
+    second.validators = [
+      new PasswordMatch({ first, second }, { getMessage: () => 'Please match with initial field' }),
+    ];
+  }
+
+  render() {
+    return html`
+      <lion-input type="password" name="initialPassword" label="New password"></lion-input>
+      <lion-input type="password" name="confirmPassword" label="Confirm password"></lion-input>
+    `;
+  }
+}
+
+customElements.define('field-with-context-validation', FieldWithContextValidation);
+export const multipleFieldValidation = () =>
+  html`<field-with-context-validation></field-with-context-validation>`;
 ```
