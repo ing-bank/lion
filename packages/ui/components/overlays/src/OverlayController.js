@@ -1081,6 +1081,9 @@ export class OverlayController extends EventTarget {
       case 'hide':
         this.manager.requestToEnableScroll();
         break;
+      case 'teardown':
+        this.manager.requestToEnableScroll(this);
+        break;
       /* no default */
     }
   }
