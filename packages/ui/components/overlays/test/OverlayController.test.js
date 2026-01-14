@@ -353,14 +353,17 @@ describe('OverlayController', () => {
             normalizeOverlayContentWapper(ctrl.contentWrapperNode);
 
             // The total dom structure created...
-            expect(el).shadowDom.to.equal(`
+            expect(el).shadowDom.to.equal(
+              `
               <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
                 <div data-id="content-wrapper">
                   <slot name="content">
                   </slot>
                 </div>
               </dialog>
-            `);
+            `,
+              { ignoreAttributes: ['closedby'] },
+            );
 
             expect(el).lightDom.to.equal(`<div slot="content">projected</div>`);
           });
@@ -380,13 +383,16 @@ describe('OverlayController', () => {
             normalizeOverlayContentWapper(ctrl.contentWrapperNode);
 
             // The total dom structure created...
-            expect(el).lightDom.to.equal(`
+            expect(el).lightDom.to.equal(
+              `
               <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
                 <div data-id="content-wrapper">
                   <div id="content">non projected</div>
                 </div>
               </dialog>
-          `);
+          `,
+              { ignoreAttributes: ['closedby'] },
+            );
           });
         });
 
@@ -421,13 +427,16 @@ describe('OverlayController', () => {
             normalizeOverlayContentWapper(ctrl.contentWrapperNode);
 
             // The total dom structure created...
-            expect(el).shadowDom.to.equal(`
+            expect(el).shadowDom.to.equal(
+              `
               <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
                 <div data-id="content-wrapper">
                   <slot name="content"></slot>
                 </div>
               </dialog>
-            `);
+            `,
+              { ignoreAttributes: ['closedby'] },
+            );
           });
 
           it("uses the .contentWrapperNode as container for Popper's arrow", async () => {
@@ -464,14 +473,17 @@ describe('OverlayController', () => {
             normalizeOverlayContentWapper(ctrl.contentWrapperNode);
 
             // The total dom structure created...
-            expect(el).shadowDom.to.equal(`
+            expect(el).shadowDom.to.equal(
+              `
               <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
                 <div data-id="content-wrapper">
                   <div id="arrow"></div>
                   <slot name="content"></slot>
                 </div>
               </dialog>
-            `);
+            `,
+              { ignoreAttributes: ['closedby'] },
+            );
           });
         });
       });
@@ -540,6 +552,7 @@ describe('OverlayController', () => {
             </div>
           </dialog>
         `,
+          { ignoreAttributes: ['closedby'] },
         );
       });
     });
