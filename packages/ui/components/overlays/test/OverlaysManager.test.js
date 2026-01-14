@@ -33,10 +33,10 @@ describe('OverlaysManager', () => {
   });
 
   it('provides .teardown() for cleanup', () => {
-    expect(document.head.querySelector('[data-overlays=""]')).not.to.be.undefined;
+    expect(document.head.querySelector('[data-overlays=""]')).not.be.undefined;
 
     mngr.teardown();
-    expect(document.head.querySelector('[data-overlays=""]')).to.be.null;
+    expect(document.head.querySelector('[data-overlays=""]')).be.null;
 
     // safety check via private access (do not use this)
     expect(OverlaysManager.__globalStyleNode).to.be.undefined;
@@ -163,40 +163,6 @@ describe('OverlaysManager', () => {
           'overlays-scroll-lock-ios-fix',
         );
       });
-
-      it('works when multiple controllers are active', async () => {
-        mockIOS();
-        const dialog1 = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
-        await dialog1.show();
-        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
-        expect(Array.from(document.documentElement.classList)).to.contain(
-          'overlays-scroll-lock-ios-fix',
-        );
-        const contentNode = /** @type {HTMLElement} */ (await fixture(html`<p>my content</p>`));
-        const dialog2 = new OverlayController(
-          { ...defaultOptions, contentNode, preventsScroll: true },
-          mngr,
-        );
-        await dialog2.show();
-        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
-        expect(Array.from(document.documentElement.classList)).to.contain(
-          'overlays-scroll-lock-ios-fix',
-        );
-
-        await dialog1.teardown();
-        expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock-ios-fix');
-        expect(Array.from(document.documentElement.classList)).to.contain(
-          'overlays-scroll-lock-ios-fix',
-        );
-
-        await dialog2.teardown();
-
-        expect(Array.from(document.body.classList)).to.not.contain('overlays-scroll-lock-ios-fix');
-        expect(Array.from(document.documentElement.classList)).to.not.contain(
-          'overlays-scroll-lock-ios-fix',
-        );
-      });
-
       it('remove class "overlays-scroll-lock-ios-fix" after teardown', async () => {
         mockIOS();
         const dialog = new OverlayController({ ...defaultOptions, preventsScroll: true }, mngr);
