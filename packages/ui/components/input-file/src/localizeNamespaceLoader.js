@@ -36,6 +36,10 @@ export const localizeNamespaceLoader = /** @param {string} locale */ locale => {
       return import('@lion/ui/input-file-translations/hu-HU.js');
     case 'hu':
       return import('@lion/ui/input-file-translations/hu.js');
+    case 'id-ID':
+      return import('@lion/ui/input-file-translations/id-ID.js');
+    case 'id':
+      return import('@lion/ui/input-file-translations/id.js');
     case 'it-IT':
       return import('@lion/ui/input-file-translations/it-IT.js');
     case 'it':
