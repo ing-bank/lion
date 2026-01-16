@@ -1,5 +1,11 @@
 # rocket-preset-extend-lion-docs
 
+## 0.4.2
+
+### Patch Changes
+
+- b93f8a2: fix code after the "qs" update from 6.13.0 to 6.14.1
+
 ## 0.4.1
 
 ### Patch Changes

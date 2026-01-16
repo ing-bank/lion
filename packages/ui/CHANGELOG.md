@@ -1,5 +1,16 @@
 # @lion/ui
 
+## 0.15.4
+
+### Patch Changes
+
+- 7172215: [input-file]: add missing translations and add support for Indonesian
+- 9afb769: Make ListboxMixin works well with ScopedStylesController when cache is used
+- 4018c28: remove overlay-scroll-lock properly after overlay teardown
+- d835665: The currency for Bulgaria (BG) is now set to Euro(EUR) instead of Bulgarian Lev(BGN)
+- 44205ee: [input-amount] allow pasting value with currency correctly
+- b473e4f: [listbox]: remove resetInteractionStates from clear function
+
 ## 0.15.3
 
 ### Patch Changes
