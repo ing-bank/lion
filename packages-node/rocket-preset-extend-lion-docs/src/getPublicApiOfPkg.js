@@ -1,9 +1,25 @@
 import path from 'path';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { getExportSpecifiersByFile } from '@lion/nodejs-helpers';
 import { readFile } from 'fs/promises';
-import { init } from 'es-module-lexer';
+// @ts-ignore
+import { init, parse } from 'es-module-lexer';
 import glob from 'glob';
+
+/**
+ * Get export specifiers, declared in a js file given with `filePath`
+ * @see {@link https://www.npmjs.com/package/es-module-lexer}
+ * @param {string} absFilePath
+ * @returns {Promise<string[]>}
+ */
+export const getExportSpecifiersByFile = async absFilePath => {
+  await init;
+  const exportFile = await readFile(absFilePath, 'utf-8');
+  // eslint-disable-next-line
+  const [_, exportsObj] = parse(exportFile);
+  const exports = exportsObj.map(e => e.n ?? e.ln);
+  // @ts-ignore
+  return exports;
+};
 
 await init;
 
