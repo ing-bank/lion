@@ -3,7 +3,15 @@ import { LitElement, nothing } from 'lit';
 import { cache } from 'lit/directives/cache.js';
 import { createRef } from 'lit/directives/ref.js';
 
-export async function getCachedFixture(render) {
+/**
+ * Helper to get a fixture with a cached render function and show/hide methods.
+ * @template T
+ * @param {(ref: import('lit/directives/ref.js').Ref<T>) => import('lit').TemplateResult} render - The render function
+ * @returns {Promise<{ wrapper: LitElement, el: T | undefined, show: () => Promise<void>, hide: () => Promise<void> }>}
+ */
+export async function getCachedFixture(
+  /** @type {(ref: import('lit/directives/ref.js').Ref<any>) => import('lit').TemplateResult} */ render,
+) {
   class CachingWrapper extends LitElement {
     static properties = {
       _show: { type: Boolean },
@@ -33,7 +41,10 @@ export async function getCachedFixture(render) {
   const customElementName = defineCE(CachingWrapper);
   const customTag = unsafeStatic(customElementName);
 
-  const wrapper = await fixture(html`<${customTag}></${customTag}>`);
+  const wrapper =
+    /** @type {LitElement & { ref: import('lit/directives/ref.js').Ref<any>, show(): Promise<void>, hide(): Promise<void> }} */ (
+      await fixture(html`<${customTag}></${customTag}>`)
+    );
 
   return {
     wrapper,
