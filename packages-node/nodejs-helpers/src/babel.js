@@ -21,16 +21,18 @@ const generate = _generate.default;
  *   - https://babeljs.io/docs/babel-parser#options
  * @returns {AST}
  */
-export const parseCode = (code, options = {}) => {
-  /** @type ParserOptions */
-  const parserOptions = {
-    sourceType: 'module',
-    plugins: ['importMeta', 'dynamicImport', 'classProperties'],
-    ...options,
+export const parseCode =
+  /** @type {(code: string, options?: ParserOptions) => AST} */
+  (code, options = {}) => {
+    /** @type { ParserOptions } */
+    const parserOptions = {
+      sourceType: 'module',
+      plugins: ['importMeta', 'dynamicImport', 'classProperties'],
+      ...options,
+    };
+    const ast = parse(code, parserOptions);
+    return ast;
   };
-  const ast = parse(code, parserOptions);
-  return ast;
-};
 
 /**
  * Transforms `code` by traversing the AST tree with the `visitor`
@@ -41,11 +43,16 @@ export const parseCode = (code, options = {}) => {
  *   - https://babeljs.io/docs/babel-parser#options
  * @returns {string}
  */
-export const transformCode = (code, visitor, parserOptions = {}) => {
-  const ast = parseCode(code, parserOptions);
-  // @ts-ignore
-  traverse(ast, visitor);
-  // @ts-ignore
-  const { code: transformedCode } = generate(ast);
-  return transformedCode;
-};
+export const transformCode =
+  /** @type {(code: string, visitor: object, parserOptions?: ParserOptions) => string} */ (
+    code,
+    visitor,
+    parserOptions = {},
+  ) => {
+    const ast = parseCode(code, parserOptions);
+    // @ts-ignore
+    traverse(ast, visitor);
+    // @ts-ignore
+    const { code: transformedCode } = generate(ast);
+    return transformedCode;
+  };
