@@ -1792,10 +1792,13 @@ export function runListboxMixinSuite(customConfig = {}) {
       });
 
       it('does not calls "_onListboxContentChanged" during connect and disconnected', async () => {
-        const renderEl = refObj => html`<${wrappingTag} ${ref(refObj)}></${wrappingTag}>`;
+        const renderEl = /** @param {import('lit/directives/ref.js').Ref<any>} refObj */ refObj =>
+          html`<${wrappingTag} ${ref(refObj)}></${wrappingTag}>`;
         const { el, show, hide } = await getCachedFixture(renderEl);
-        await el.listbox.registrationComplete;
-        const spy = sinon.spy(el.listbox, '_onListboxContentChanged');
+        const typedEl = /** @type {MyEl} */ (el);
+        await typedEl?.listbox.registrationComplete;
+        // @ts-ignore [allow-protected] in test
+        const spy = sinon.spy(typedEl.listbox, '_onListboxContentChanged');
         await hide();
         await show();
 
