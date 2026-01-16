@@ -965,7 +965,10 @@ export class LionCombobox extends LocalizeMixin(OverlayMixin(CustomChoiceGroupMi
           if (isInlineAutoFillCandidate) {
             const textboxValue = this._getTextboxValueFromOption(option);
             const stringValues =
-              textboxValue && typeof textboxValue === 'string' && typeof curValue === 'string';
+              typeof textboxValue === 'string' &&
+              textboxValue !== '' &&
+              typeof curValue === 'string' &&
+              curValue !== '';
             const beginsWith =
               stringValues && textboxValue.toLowerCase().indexOf(curValue.toLowerCase()) === 0;
             // We only can do proper inline autofilling when the beginning of the word matches
