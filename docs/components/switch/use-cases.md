@@ -13,7 +13,8 @@ eleventyNavigation:
 # Switch: Use Cases
 
 ```js script
-import { html } from '@mdjs/mdjs-preview';
+import { html, LitElement } from 'lit';
+import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 import { Validator } from '@lion/ui/form-core.js';
 import { LionSwitch } from '@lion/ui/switch.js';
 import '@lion/ui/define/lion-switch.js';
@@ -82,6 +83,57 @@ export const handler = ({ shadowRoot }) => {
       }}"
     >
     </lion-switch>
+    <sb-action-logger></sb-action-logger>
+  `;
+};
+```
+
+## Integration in custom component
+
+You can integrate the switch in a custom component and react to state changes using `modelValue.checked`.
+
+```js preview-story
+export const integration = ({ shadowRoot }) => {
+  class MyElement extends ScopedElementsMixin(LitElement) {
+    static get properties() {
+      return {
+        /**
+         * The current checked state of the switch.
+         */
+        checkedValue: { type: Boolean },
+      };
+    }
+
+    static get scopedElements() {
+      return {
+        'lion-switch': LionSwitch,
+      };
+    }
+    constructor() {
+      super();
+      this.checkedValue = false;
+      this._shadowRoot = shadowRoot;
+    }
+
+    render() {
+      return html`
+        <lion-switch
+          label="Toggle feature"
+          @checked-changed=${this._onVisibilityChanged}
+        ></lion-switch>
+        <p>Checked value is ${this.checkedValue}</p>
+      `;
+    }
+
+    _onVisibilityChanged(e) {
+      this.checkedValue = e.currentTarget.modelValue.checked;
+      this._shadowRoot.querySelector('sb-action-logger').log(`Checked: ${this.checkedValue}`);
+    }
+  }
+  customElements.define('my-switch', MyElement);
+
+  return html`
+    <my-switch></my-switch>
     <sb-action-logger></sb-action-logger>
   `;
 };
