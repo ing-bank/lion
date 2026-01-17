@@ -20,3 +20,12 @@ export {
 } from '../components/overlays/src/utils/inert-siblings.js';
 
 export { overlays } from '../components/overlays/src/singleton.js';
+
+/**
+ * Re-export types for JavaScript/JSDoc and TypeScript consumers.
+ * Allows importing types from the same path as runtime exports.
+ * @typedef {import('../components/overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ * @typedef {import('../components/overlays/types/OverlayMixinTypes.js').DefineOverlayConfig} DefineOverlayConfig
+ * @typedef {import('../components/overlays/types/OverlayMixinTypes.js').OverlayHost} OverlayHost
+ * @typedef {import('../components/overlays/types/ArrowMixinTypes.js').ArrowHost} ArrowHost
+ */

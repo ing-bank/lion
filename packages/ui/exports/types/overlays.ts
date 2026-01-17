@@ -1,6 +1,3 @@
-export { OverlayConfig } from '../../components/overlays/types/OverlayConfig.js';
-export { ViewportConfig } from '../../components/overlays/types/OverlayConfig.js';
-export { ViewportPlacement } from '../../components/overlays/types/OverlayConfig.js';
-export { DefineOverlayConfig } from '../../components/overlays/types/OverlayMixinTypes.js';
-export { OverlayHost } from '../../components/overlays/types/OverlayMixinTypes.js';
-export { ArrowHost } from '../../components/overlays/types/ArrowMixinTypes.js';
+export { OverlayConfig, ViewportConfig, ViewportPlacement } from '../../components/overlays/types/OverlayConfig.js';
+export { DefineOverlayConfig, OverlayHost, OverlayMixin } from '../../components/overlays/types/OverlayMixinTypes.js';
+export { ArrowHost, ArrowMixin } from '../../components/overlays/types/ArrowMixinTypes.js';
