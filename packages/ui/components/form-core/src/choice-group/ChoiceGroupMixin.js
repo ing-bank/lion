@@ -261,6 +261,7 @@ const ChoiceGroupMixinImplementation = superclass =>
         return this[property];
       }
 
+      // TODO: consider a shared approach for all value getters
       const filteredFnElements = this.formElements.filter(el => _filterFn(el, property));
 
       if (property === '_initialModelValue') {
