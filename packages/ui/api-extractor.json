@@ -158,7 +158,7 @@
      * SUPPORTED TOKENS: <packageName>, <unscopedPackageName>
      * DEFAULT VALUE: "<unscopedPackageName>"
      */
-    "reportFileName": "api.md",
+    // "reportFileName": "",
 
     /**
      * To support different approval requirements for different API levels, multiple "variants" of the API report can
