@@ -20,7 +20,7 @@ We've ensured that the entire Lion library is typed so that you can use it in Ty
 
 Lion uses [JSDoc](https://jsdoc.app/) for type annotations instead of native TypeScript files. This approach offers several advantages:
 
-**No Compilation Step**: JSDoc allows us to maintain a pure JavaScript codebase while still providing comprehensive type information. This eliminates the need for a TypeScript compilation step in our build process, keeping our development workflow simple and fast.
+**No Compilation Step**: JSDoc allows us to maintain a pure JavaScript codebase while still providing comprehensive type information. This eliminates the need for a TypeScript compilation step in our build process, keeping our development workflow simple, fast and robust.
 
 **Runtime JavaScript**: Since our source files remain `.js`, they can be executed directly by JavaScript engines without any transformation. This is particularly valuable for debugging, as you're working with the actual code that runs in production.
 
