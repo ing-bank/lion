@@ -42,6 +42,7 @@
     "!custom-elements-manifest.config.js"
   ],
   "scripts": {
+    "api:extract": "api-extractor run --local",
     "create-npm-publish-docs": "node ./scripts/create-docs-for-npm-publish.js",
     "custom-elements-manifest": "node ./scripts/cem.js",
     "debug": "cd ../../ && npm run debug",
