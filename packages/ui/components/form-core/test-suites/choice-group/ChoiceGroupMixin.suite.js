@@ -56,11 +56,13 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
         `)
         );
 
+        // @ts-ignore protected members allowed in test
         expect(el._initialModelValue).to.eql('female');
         expect(el.modelValue).to.eql('female');
 
         el.formElements[0].checked = true;
 
+        // @ts-ignore protected members allowed in test
         expect(el._initialModelValue).to.eql('female');
         expect(el.modelValue).to.eql('male');
       });
@@ -616,11 +618,13 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
         `)
         );
 
+        // @ts-ignore protected members allowed in test
         expect(el._initialModelValue).to.eql(['dog', 'cat']);
         expect(el.modelValue).to.eql(['dog', 'cat']);
 
         el.formElements[2].checked = true;
 
+        // @ts-ignore protected members allowed in test
         expect(el._initialModelValue).to.eql(['dog', 'cat']);
         expect(el.modelValue).to.eql(['dog', 'cat', 'lion']);
       });
