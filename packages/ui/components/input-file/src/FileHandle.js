@@ -45,7 +45,7 @@ export class FileHandle {
     }
   }
 
-  // TDOO: same util as in validators.js
+  // TODO: same util as in validators.js
   /**
    * @param {string} fileName
    * @return {string}

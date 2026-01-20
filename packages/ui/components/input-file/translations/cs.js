@@ -18,4 +18,7 @@ export default {
   selectTextDuplicateFileName: 'Soubor se stejným názvem byl již přítomen.',
   selectTextMultipleFile: 'Vybrat soubory',
   selectTextSingleFile: 'Vybrat soubor',
+  statusLoading: 'Nahrávání souborů, čekejte prosím.',
+  statusSuccess: 'Soubor {fileName} byl úspěšně přidán.',
+  statusRemoved: 'Soubor {fileName} byl úspěšně odebrán.',
 };
