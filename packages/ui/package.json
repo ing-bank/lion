@@ -54,7 +54,8 @@
     "test": "cd ../../ && npm run test:browser",
     "types": "wireit",
     "types-check-only": "tsc --project tsconfig-check-only.json",
-    "types-correct-after-build": "node ./scripts/types-correct-after-build.js"
+    "types-correct-after-build": "node ./scripts/types-correct-after-build.js",
+    "generate-index-d-ts": "node ./scripts/generate-index-dts.js"
   },
   "sideEffects": [
     "exports/define/**/*.js",
