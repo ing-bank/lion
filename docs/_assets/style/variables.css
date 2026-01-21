@@ -6,6 +6,22 @@ html {
   --primary-text-color: #2c3e50;
   --primary-lines-color: #ccc;
 
+
+  --gray-100: #e6e6e6;
+  --gray-300: #b3b3b3;
+  --gray-500: #808080;
+  --gray-700: #4d4d4d;
+  --gray-800: #282828;
+  --gray-900: #1a1a1a;
+
+  --primary-icon-color: var(--primary-color-darker);
+  --neutral-color: var(--gray-500); 
+  --neutral-color-lightest: var(--gray-100);
+  --neutral-color-lighter: var(--gray-300);
+  --neutral-color-darker: var(--gray-700);
+  --neutral-color-darkest: var(--gray-900);
+
+
   /* Contrast colors */
   --contrast-color-light: #fff;
   --contrast-color-dark: #1d3557;
@@ -13,7 +29,7 @@ html {
   /* background-colors */
   --page-background: white;
   --footer-background: rgba(0, 0, 0, 0.1);
-
+  --markdown-syntax-background-color: var(--neutral-color-darkest);
   --text-color: black;
 
   /* search colors*/

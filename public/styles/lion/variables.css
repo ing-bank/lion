@@ -70,6 +70,7 @@ html {
   --markdown-syntax-background-color: var(--neutral-color);
   --markdown-link-color: var(--primary-color);
   --markdown-blockquote-color: var(--secondary-color-darker);
+  --markdown-syntax-background-color: var(--neutral-color-darkest);
 }
 
 html.dark {
