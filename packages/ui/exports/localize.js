@@ -19,3 +19,19 @@ export { parseNumber } from '../components/localize/src/number/parseNumber.js';
 export { getLocale } from '../components/localize/src/utils/getLocale.js';
 
 export { localize } from '../components/localize/src/singleton.js';
+
+/**
+ * Re-export types for JavaScript/JSDoc and TypeScript consumers.
+ * These are type-only exports that don't exist at runtime.
+ * Allows importing types from the same path as runtime exports.
+ * @typedef {import('../components/localize/types/LocalizeMixinTypes.js').LocalizeMixinHost} LocalizeMixinHost
+ * @typedef {import('../components/localize/types/LocalizeMixinTypes.js').FormatNumberOptions} FormatNumberOptions
+ * @typedef {import('../components/localize/types/LocalizeMixinTypes.js').FormatDateOptions} FormatDateOptions
+ * @typedef {import('../components/localize/types/LocalizeMixinTypes.js').FormatNumberPart} FormatNumberPart
+ * @typedef {import('../components/localize/types/LocalizeMixinTypes.js').DatePostProcessor} DatePostProcessor
+ * @typedef {import('../components/localize/types/LocalizeMixinTypes.js').NumberPostProcessor} NumberPostProcessor
+ * @typedef {import('../components/localize/types/LocalizeMixinTypes.js').msgOptions} msgOptions
+ * @typedef {import('../components/localize/types/LocalizeMixinTypes.js').msgVariables} msgVariables
+ * @typedef {import('../components/localize/types/LocalizeMixinTypes.js').NamespaceObject} NamespaceObject
+ * @typedef {import('../components/localize/types/LocalizeMixinTypes.js').StringToFunctionMap} StringToFunctionMap
+ */
