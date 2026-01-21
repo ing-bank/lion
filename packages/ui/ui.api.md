@@ -6,97 +6,49 @@
 
 import { awesomePhonenumber } from 'awesome-phonenumber';
 import { Constructor } from '@open-wc/dedupe-mixin';
-import { CSSResult as CSSResult_2 } from 'lit';
-import { CSSResultArray as CSSResultArray_2 } from 'lit';
+import { CSSResult } from 'lit';
+import { CSSResultArray } from 'lit';
 import { CSSResultGroup } from 'lit';
-import { CSSResultOrNative as CSSResultOrNative_2 } from 'lit';
-import { DirectiveResult as DirectiveResult_2 } from 'lit/directive.js';
+import { CSSResultOrNative } from 'lit';
+import { DirectiveResult } from 'lit/directive.js';
+import { LitElement } from 'lit-element/lit-element.js';
 import { LitElement as LitElement_2 } from 'lit';
 import { LitElement as LitElement_3 } from 'lit-element';
-import { nothing as nothing_2 } from 'lit';
+import { nothing } from 'lit';
 import { nothing as nothing_3 } from 'lit-html';
 import { Options } from '@popperjs/core';
 import { Options as Options_2 } from '@popperjs/core/index.js';
 import { Options as Options_3 } from '@popperjs/core/lib/popper.js';
 import { PhoneNumberFormat as PhoneNumberFormat_2 } from 'awesome-phonenumber';
-import { PhoneNumberTypes as PhoneNumberTypes_2 } from 'awesome-phonenumber';
-import { Placement as Placement_2 } from '@popperjs/core/lib/enums.js';
 import { PropertyDeclaration } from 'lit';
 import { PropertyValues } from 'lit';
 import { ReactiveController as ReactiveController_2 } from 'lit';
 import { ReactiveControllerHost as ReactiveControllerHost_2 } from 'lit';
-import { Ref as Ref_2 } from 'lit/directives/ref.js';
-import { RenderOptions as RenderOptions_2 } from 'lit';
-import { ScopedElementsHost as ScopedElementsHost_3 } from '@open-wc/scoped-elements/lit-element.js';
-import { TemplateResult as TemplateResult_2 } from 'lit-html';
+import { ScopedElementsHost as ScopedElementsHost_2 } from '../../../../../node_modules/@open-wc/scoped-elements/types.js';
+import { TemplateResult } from 'lit-html';
 import { TemplateResult as TemplateResult_3 } from 'lit';
-import { translationsBgBgJs } from '../translations/bg-BG.js';
-import { translationsBgJs } from '../translations/bg.js';
 import { WarningKind } from 'lit';
 
 // @public
-export function addLeadingZero(dateString: string): string;
+export type AllCurrenciesSet = Set<CurrencyCode>;
 
 // @public (undocumented)
-export type AdoptableStyle = CSSResult_2 | CSSStyleSheet;
-
-// @public (undocumented)
-export function adoptStyle(renderRoot: DocumentOrShadowRoot, style: AdoptableStyle, opts?: {
-    teardown?: boolean;
-}): void;
-
-// @public (undocumented)
-export type AdoptStyleFn = (renderRoot: DocumentOrShadowRoot, style: AdoptableStyle, opts?: {
-    teardown?: boolean;
-}) => void;
-
-// @public (undocumented)
-export function adoptStyles(renderRoot: DocumentOrShadowRoot, styles: AdoptableStyle[], opts?: {
-    teardown?: boolean;
-}): void;
-
-// @public (undocumented)
-export type AdoptStylesFn = (renderRoot: DocumentOrShadowRoot, styles: AdoptableStyle[], opts?: {
-    teardown?: boolean;
-}) => void;
-
-// @public (undocumented)
-export namespace _adoptStyleUtils {
-        { adoptStyle };
-        { adoptStyles };
-}
-
-// Warning: (ae-forgotten-export) The symbol "CurrencyCode_2" needs to be exported by the entry point index.d.ts
-//
-// @public
-export type AllCurrenciesSet = Set<CurrencyCode_2>;
-
-// Warning: (ae-forgotten-export) The symbol "Validator_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export class AlwaysInvalid extends Validator_2 {
+export class AlwaysInvalid extends Validator {
     // (undocumented)
     execute(): boolean;
 }
 
 // @public (undocumented)
-export class AlwaysValid extends Validator_2 {
+export class AlwaysValid extends Validator {
     execute(): Promise<boolean> | boolean;
     // (undocumented)
     static get validatorName(): string;
 }
 
-// Warning: (ae-forgotten-export) The symbol "AmountDropdownModelValue_2" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export type AmountDropdownModelValue = AmountDropdownModelValue_2;
-
-// Warning: (ae-forgotten-export) The symbol "FormatOptions_3" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type AmountFormatOptions = FormatOptions_3 & {
-    locale?: string;
-    currency: string | undefined;
+export type AmountDropdownModelValue = {
+    currency?: CurrencyCode | string;
+    amount?: number | string;
 };
 
 // @public (undocumented)
@@ -107,10 +59,8 @@ export class ArrowHost {
     protected _arrowNodeTemplate(): TemplateResult_3;
     // (undocumented)
     protected _arrowTemplate(): TemplateResult_3;
-    // Warning: (ae-forgotten-export) The symbol "OverlayConfig_2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    protected _defineOverlayConfig(): OverlayConfig_2;
+    protected _defineOverlayConfig(): OverlayConfig;
     // (undocumented)
     protected _getPopperArrowConfig(popperConfigToExtendFrom: Partial<Options_3>): Partial<Options_3>;
     // (undocumented)
@@ -128,22 +78,18 @@ export class ArrowHost {
     // (undocumented)
     repositionComplete: Promise<void>;
     // (undocumented)
-    static styles: CSSResultArray_2;
+    static styles: CSSResultArray;
 }
-
-// @public (undocumented)
-export function ArrowImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<ArrowHost> & Pick<typeof ArrowHost, keyof typeof ArrowHost> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
 
 // Warning: (ae-forgotten-export) The symbol "ArrowMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type ArrowMixin = ArrowMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "ArrowImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const ArrowMixin: ArrowImplementation;
-
-// @public
-export const ArrowMixinImplementation: ArrowMixin;
 
 // @public (undocumented)
 export class AsyncAlwaysInvalid extends AlwaysValid {
@@ -158,21 +104,6 @@ export class AsyncAlwaysValid extends AlwaysValid {
     static get async(): boolean;
     execute(): Promise<boolean>;
 }
-
-// @public
-export class AsyncQueue {
-    __callComplete: Function | undefined;
-    __queue: Function[];
-    // (undocumented)
-    __running: boolean;
-    // (undocumented)
-    add(task: Function): void;
-    // (undocumented)
-    complete: Promise<any> | undefined;
-}
-
-// @public (undocumented)
-export type AwesomePhoneNumber = any & awesomePhonenumber;
 
 // @public (undocumented)
 export namespace browserDetection {
@@ -193,12 +124,6 @@ export namespace browserDetection {
     const // (undocumented)
     isMacSafari: boolean | "";
 }
-
-// @public
-export type CacheItem = {
-    element: HTMLElement;
-    deepContains: boolean;
-} | null;
 
 // @public
 export class CalendarObject {
@@ -257,14 +182,11 @@ export class CalendarObject {
 }
 
 // @public (undocumented)
-export const calendarStyle: CSSResult_2;
-
-// @public (undocumented)
 export class ChoiceGroupHost {
-    // Warning: (ae-forgotten-export) The symbol "FormControlHost_3" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "FormControlHost_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    addFormElement(child: FormControlHost_3, indexToInsertAt: number): void;
+    addFormElement(child: FormControlHost_2, indexToInsertAt: number): void;
     // (undocumented)
     protected _checkSingleChoiceElements(ev: Event): void;
     // (undocumented)
@@ -272,16 +194,12 @@ export class ChoiceGroupHost {
     // (undocumented)
     get formattedValue(): string;
     set formattedValue(value: string);
-    // Warning: (ae-forgotten-export) The symbol "ChoiceInputHost_2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    protected _getCheckedElements(): ChoiceInputHost_2[];
+    protected _getCheckedElements(): ChoiceInputHost[];
     // (undocumented)
-    protected _getFromAllFormElements(property: string, filterFn?: (el: FormControl_2, property?: string) => boolean): void;
-    // Warning: (ae-forgotten-export) The symbol "FormControl_2" needs to be exported by the entry point index.d.ts
-    //
+    protected _getFromAllFormElements(property: string, filterFn?: (el: FormControl, property?: string) => boolean): void;
     // (undocumented)
-    protected _getFromAllFormElementsFilter(el: FormControl_2, type: string): boolean;
+    protected _getFromAllFormElementsFilter(el: FormControl, type: string): boolean;
     // (undocumented)
     protected _isEmpty(): boolean;
     // (undocumented)
@@ -299,189 +217,137 @@ export class ChoiceGroupHost {
     // (undocumented)
     protected _setCheckedElements(value: any, check: boolean): void;
     // (undocumented)
-    protected _throwWhenInvalidChildModelValue(child: FormControlHost_3): void;
+    protected _throwWhenInvalidChildModelValue(child: FormControlHost_2): void;
     // (undocumented)
     protected _triggerInitialModelValueChangedEvent(): void;
 }
-
-// Warning: (ae-forgotten-export) The symbol "FormRegistrarHost_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export function ChoiceGroupImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<ChoiceGroupHost> & Pick<typeof ChoiceGroupHost, keyof typeof ChoiceGroupHost> & Constructor<FormRegistrarHost_2> & Pick<typeof FormRegistrarHost_2, keyof typeof FormRegistrarHost_2> & Constructor<InteractionStateHost> & Pick<typeof InteractionStateHost, keyof typeof InteractionStateHost> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
 
 // Warning: (ae-forgotten-export) The symbol "ChoiceGroupMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type ChoiceGroupMixin = ChoiceGroupMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "ChoiceGroupImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const ChoiceGroupMixin: ChoiceGroupImplementation;
 
 // @public (undocumented)
-export type ChoiceInputHost = ChoiceInputHost_2;
-
-// @public (undocumented)
-export function ChoiceInputImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<ChoiceInputHost_2> & Pick<typeof ChoiceInputHost_2, keyof typeof ChoiceInputHost_2> & Constructor<FormatHost> & Pick<typeof FormatHost, keyof typeof FormatHost> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
+export class ChoiceInputHost {
+    // (undocumented)
+    protected _afterTemplate(): TemplateResult_3;
+    // (undocumented)
+    checked: boolean;
+    // (undocumented)
+    protected _choiceGraphicTemplate(): TemplateResult_3;
+    get choiceValue(): any;
+    set choiceValue(value: any);
+    // (undocumented)
+    formatter(modelValue: ChoiceInputModelValue): string;
+    // (undocumented)
+    protected get _inputNode(): HTMLElement;
+    // (undocumented)
+    protected _isEmpty(): void;
+    // (undocumented)
+    protected _isHandlingUserInput: boolean;
+    // Warning: (ae-forgotten-export) The symbol "ChoiceInputModelValue" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    get modelValue(): ChoiceInputModelValue;
+    set modelValue(value: ChoiceInputModelValue);
+    // (undocumented)
+    protected _onModelValueChanged(newV: {
+        modelValue: ChoiceInputModelValue;
+    }, oldV: {
+        modelValue: ChoiceInputModelValue;
+    }): void;
+    // (undocumented)
+    parser(): any;
+    // (undocumented)
+    protected _preventDuplicateLabelClick(ev: Event): void;
+    // (undocumented)
+    protected _proxyInputEvent(): void;
+    // (undocumented)
+    protected requestUpdate(name: string, oldValue: any): void;
+    // Warning: (ae-forgotten-export) The symbol "ChoiceInputSerializedValue" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    serializedValue: ChoiceInputSerializedValue;
+    // (undocumented)
+    static get styles(): CSSResultArray;
+    // (undocumented)
+    protected _syncNameToParentFormGroup(): void;
+    // (undocumented)
+    protected _syncValueUpwards(): void;
+    // (undocumented)
+    protected _toggleChecked(ev: Event): void;
+    // (undocumented)
+    type: string;
+}
 
 // Warning: (ae-forgotten-export) The symbol "ChoiceInputMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type ChoiceInputMixin = ChoiceInputMixin_2;
 
-// @public (undocumented)
-export const ChoiceInputMixin: ChoiceInputImplementation;
-
-// Warning: (ae-forgotten-export) The symbol "ChoiceInputModelValue_2" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ChoiceInputImplementation" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export type ChoiceInputModelValue = ChoiceInputModelValue_2;
-
-// @public
-export interface ChoiceInputSerializedValue {
-    // (undocumented)
-    checked: boolean;
-    // (undocumented)
-    value: string;
-}
-
-// @public
-export function clean(dateAsString: string): string;
+export const ChoiceInputMixin: ChoiceInputImplementation;
 
 // @public
 export function containFocus(rootElement: HTMLElement): {
     disconnect: () => void;
 };
 
-// Warning: (ae-forgotten-export) The symbol "RegionCode_2" needs to be exported by the entry point index.d.ts
-//
 // @public
 export type countryToCurrencyList = Partial<{
-    [key in RegionCode_2]: CurrencyCode_2;
+    [key in RegionCode]: CurrencyCode;
 }>;
 
-// Warning: (ae-forgotten-export) The symbol "Day_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export function createDay(date?: Date, { weekOrder, central, startOfWeek, selected, previousMonth, currentMonth, nextMonth, past, today, future, disabled, disabledInfo, }?: {
-    weekOrder?: number | undefined;
-    central?: boolean | undefined;
-    startOfWeek?: boolean | undefined;
-    selected?: boolean | undefined;
-    previousMonth?: boolean | undefined;
-    currentMonth?: boolean | undefined;
-    nextMonth?: boolean | undefined;
-    past?: boolean | undefined;
-    today?: boolean | undefined;
-    future?: boolean | undefined;
-    disabled?: boolean | undefined;
-    disabledInfo?: string | undefined;
-}): Day_2;
-
-// Warning: (ae-forgotten-export) The symbol "Month_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export function createMonth(date: Date, { firstDayOfWeek }?: {
-    firstDayOfWeek?: number | undefined;
-}): Month_2;
-
-// @public (undocumented)
-export function createMultipleMonth(date: Date, { firstDayOfWeek, pastMonths, futureMonths }?: {
-    firstDayOfWeek?: number | undefined;
-    pastMonths?: number | undefined;
-    futureMonths?: number | undefined;
-}): {
-    months: Month_2[];
-};
-
 // @public
-export function createShadowHost(): {
-    shadowHost: HTMLDivElement;
-    cleanupShadowHost: () => void;
-};
+export type CurrencyCode = 'EUR' | 'AED' | 'AFN' | 'XCD' | 'ALL' | 'AMD' | 'AOA' | 'ARS' | 'USD' | 'AUD' | 'AWG' | 'AZN' | 'BAM' | 'BBD' | 'BDT' | 'XOF' | 'BGN' | 'BHD' | 'BIF' | 'BMD' | 'BND' | 'BOB' | 'BRL' | 'BSD' | 'BTN' | 'NOK' | 'BWP' | 'BYN' | 'BZD' | 'CAD' | 'CDF' | 'XAF' | 'CHF' | 'NZD' | 'CLP' | 'CNY' | 'COP' | 'CRC' | 'CUP' | 'CVE' | 'ANG' | 'CZK' | 'DJF' | 'DKK' | 'DOP' | 'DZD' | 'EGP' | 'MAD' | 'ERN' | 'ETB' | 'FJD' | 'FKP' | 'GBP' | 'GEL' | 'GHS' | 'GIP' | 'GMD' | 'GNF' | 'GTQ' | 'GYD' | 'HKD' | 'HNL' | 'HTG' | 'HUF' | 'IDR' | 'ILS' | 'INR' | 'IQD' | 'IRR' | 'ISK' | 'JMD' | 'JOD' | 'JPY' | 'KES' | 'KGS' | 'KHR' | 'KMF' | 'KPW' | 'KRW' | 'KWD' | 'KYD' | 'KZT' | 'LAK' | 'LBP' | 'LKR' | 'LRD' | 'LSL' | 'LYD' | 'MDL' | 'MGA' | 'MKD' | 'MMK' | 'MNT' | 'MOP' | 'MRU' | 'MUR' | 'MVR' | 'MWK' | 'MXN' | 'MYR' | 'MZN' | 'NAD' | 'XPF' | 'NGN' | 'NIO' | 'NPR' | 'OMR' | 'PAB' | 'PEN' | 'PGK' | 'PHP' | 'PKR' | 'PLN' | 'PYG' | 'QAR' | 'RON' | 'RSD' | 'RUB' | 'RWF' | 'SAR' | 'SBD' | 'SCR' | 'SDG' | 'SEK' | 'SGD' | 'SHP' | 'SLE' | 'SOS' | 'SRD' | 'SSP' | 'STN' | 'SVC' | 'SYP' | 'SZL' | 'THB' | 'TJS' | 'TMT' | 'TND' | 'TOP' | 'TRY' | 'TTD' | 'TWD' | 'TZS' | 'UAH' | 'UGX' | 'UYU' | 'UZS' | 'VED' | 'VES' | 'VND' | 'VUV' | 'WST' | 'XCG' | 'YER' | 'ZAR' | 'ZMW' | 'ZWG';
 
-// Warning: (ae-forgotten-export) The symbol "Week_2" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "DatePostProcessorImplementation" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function createWeek(date: Date, { firstDayOfWeek }?: {
-    firstDayOfWeek?: number | undefined;
-}): Week_2;
+export type DatePostProcessor = typeof DatePostProcessorImplementation;
 
 // @public (undocumented)
-export type CSSResult = CSSResult_2;
-
-// @public (undocumented)
-export type CSSResultArray = CSSResultArray_2;
-
-// @public (undocumented)
-export type CSSResultOrNative = CSSResultOrNative_2;
-
-// @public
-export class CurrencyAndAmount extends Validator_2 {
+export interface Day {
     // (undocumented)
-    execute(modelValue: AmountDropdownModelValue_2): boolean;
+    ariaCurrent?: string | undefined;
+    // (undocumented)
+    ariaPressed?: string;
+    // (undocumented)
+    central?: boolean;
+    // (undocumented)
+    currentMonth?: boolean;
+    // (undocumented)
+    date: Date;
+    // (undocumented)
+    disabled?: boolean;
+    // (undocumented)
+    disabledInfo?: string | undefined;
+    // (undocumented)
+    future?: boolean;
+    // (undocumented)
+    nextMonth?: boolean;
+    // (undocumented)
+    past?: boolean;
+    // (undocumented)
+    previousMonth?: boolean;
+    // (undocumented)
+    selected?: boolean;
+    // (undocumented)
+    startOfWeek?: boolean;
+    // (undocumented)
+    tabindex?: string;
+    // (undocumented)
+    today?: boolean;
+    // (undocumented)
+    weekOrder?: number;
 }
-
-// @public (undocumented)
-export type CurrencyCode = CurrencyCode_2;
-
-// @public (undocumented)
-export namespace currencyUtil {
-        { countryToCurrencyMap };
-        { allCurrencies };
-        { getCurrencySymbol };
-}
-
-// Warning: (ae-forgotten-export) The symbol "CustomChoiceGroup_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type CustomChoiceGroup = CustomChoiceGroup_2;
-
-// Warning: (ae-forgotten-export) The symbol "CustomChoiceGroupHost_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type CustomChoiceGroupHost = CustomChoiceGroupHost_2;
-
-// @public (undocumented)
-export function CustomChoiceGroupImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<CustomChoiceGroupHost_2> & Pick<typeof CustomChoiceGroupHost_2, keyof typeof CustomChoiceGroupHost_2> & Constructor<ChoiceGroupHost> & Pick<typeof ChoiceGroupHost, keyof typeof ChoiceGroupHost> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
-
-// Warning: (ae-forgotten-export) The symbol "CustomChoiceGroupMixin_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type CustomChoiceGroupMixin = CustomChoiceGroupMixin_2;
-
-// @public (undocumented)
-export const CustomChoiceGroupMixin: CustomChoiceGroupImplementation;
-
-// @public (undocumented)
-export type customConfig = {
-    baseElement?: typeof LitElement_2 | undefined;
-    suffix?: string | undefined;
-    parentTagString?: string | undefined;
-    childTagString?: string | undefined;
-    portalTagString?: string | undefined;
-};
-
-// @public (undocumented)
-export function dataTemplate(data: {
-    months: {
-        weeks: {
-            days: Day_2[];
-        }[];
-    }[];
-}, { weekdaysShort, weekdays, monthsLabels, dayTemplate }: {
-    weekdaysShort: string[];
-    weekdays: string[];
-    monthsLabels?: string[] | undefined;
-    dayTemplate?: ((day: Day_2, { weekdays, monthsLabels }?: any) => TemplateResult_3) | undefined;
-}): TemplateResult_2<1>;
-
-// Warning: (ae-forgotten-export) The symbol "DatePostProcessor_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type DatePostProcessor = DatePostProcessor_2;
-
-// @public (undocumented)
-export type Day = Day_2;
 
 // @public
 export class DayObject {
@@ -510,41 +376,30 @@ export class DayObject {
     get weekdayNameShort(): string;
 }
 
-// @public (undocumented)
-export function dayTemplate(day: Day_2, { weekdays, monthsLabels }: {
-    weekdays: string[];
-    monthsLabels?: string[];
-}): TemplateResult_2<1>;
-
 // @public
 export function deepContains(el: HTMLElement | ShadowRoot, targetEl: HTMLElement | ShadowRoot, cache?: {
     [key: string]: CacheItem[];
 }): boolean;
-
-// @public (undocumented)
-export const defaultMonthLabels: string[];
 
 // @public
 export class DefaultSuccess extends ResultValidator {
     constructor(...args: any[]);
     // (undocumented)
     executeOnResults({ regularValidationResult, prevShownValidationResult }: {
-        regularValidationResult: Validator_3[];
-        prevValidationResult: Validator_3[];
-        prevShownValidationResult: Validator_3[];
+        regularValidationResult: Validator_2[];
+        prevValidationResult: Validator_2[];
+        prevShownValidationResult: Validator_2[];
     }): boolean;
 }
 
-// Warning: (ae-forgotten-export) The symbol "DefineOverlayConfig_2" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export type DefineOverlayConfig = DefineOverlayConfig_2;
-
-// @public (undocumented)
-export function deserializer(serializedValue: string): AmountDropdownModelValue_2;
-
-// @public (undocumented)
-export type DirectiveResult = DirectiveResult_2;
+export interface DefineOverlayConfig {
+    backdropNode?: HTMLElement;
+    contentNode: HTMLElement;
+    contentWrapperNode?: HTMLElement;
+    invokerNode?: HTMLElement;
+    referenceNode?: HTMLElement;
+}
 
 // @public (undocumented)
 export class DisabledHost {
@@ -561,11 +416,10 @@ export class DisabledHost {
 // @public (undocumented)
 export type DisabledMixin = DisabledMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "DisabledMixinImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const DisabledMixin: DisabledMixinImplementation;
-
-// @public (undocumented)
-export function DisabledMixinImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<DisabledHost> & Pick<typeof DisabledHost, keyof typeof DisabledHost>;
 
 // @public (undocumented)
 export class DisabledWithTabIndexHost {
@@ -582,47 +436,31 @@ export class DisabledWithTabIndexHost {
 // @public (undocumented)
 export type DisabledWithTabIndexMixin = DisabledWithTabIndexMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "DisabledWithTabIndexMixinImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const DisabledWithTabIndexMixin: DisabledWithTabIndexMixinImplementation;
 
 // @public (undocumented)
-export function DisabledWithTabIndexMixinImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<DisabledWithTabIndexHost> & Pick<typeof DisabledWithTabIndexHost, keyof typeof DisabledWithTabIndexHost> & Constructor<DisabledHost> & Pick<typeof DisabledHost, keyof typeof DisabledHost> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
-
-// @public (undocumented)
-export const drawerStyle: CSSResult_2;
-
-// @public (undocumented)
-export type DropdownElement = HTMLSelectElement | (HTMLElement & {
-    modelValue: string;
-});
-
-// Warning: (ae-forgotten-export) The symbol "DropdownRef_4" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type DropdownRef = DropdownRef_4;
-
-// @public (undocumented)
-export class DuplicateFileNames extends Validator_2 {
-    // Warning: (ae-forgotten-export) The symbol "InputFile_5" needs to be exported by the entry point index.d.ts
+export class DuplicateFileNames extends Validator {
+    // Warning: (ae-forgotten-export) The symbol "InputFile_4" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "ValidatorParam_3" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "ValidatorOutcome_4" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "ValidatorOutcome_3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    execute(modelValue: InputFile_5[], params?: ValidatorParam_3): ValidatorOutcome_4 | Promise<ValidatorOutcome_4>;
+    execute(modelValue: InputFile_4[], params?: ValidatorParam_3): ValidatorOutcome_3 | Promise<ValidatorOutcome_3>;
     // (undocumented)
     static getMessage(): Promise<string | Element>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "ElementWithParentFormGroup_2" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export type ElementWithParentFormGroup = ElementWithParentFormGroup_2;
-
-// @public
-export function emptyStringWhenNumberNan(returnIfNaN: string | undefined): string;
+export class ElementWithParentFormGroup {
+    // (undocumented)
+    _parentFormGroup: FormRegistrarHost;
+}
 
 // @public (undocumented)
-export class EqualsLength extends Validator_2 {
+export class EqualsLength extends Validator {
     // (undocumented)
     execute(value: unknown, length?: any): boolean;
     // (undocumented)
@@ -642,61 +480,12 @@ export class EventTargetShim {
 // @public (undocumented)
 export function fakeImport(path: string, ms?: number | undefined): Promise<Object>;
 
-// Warning: (ae-forgotten-export) The symbol "FeedbackMessage_2" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export type FeedbackMessage = FeedbackMessage_2;
-
-// Warning: (ae-forgotten-export) The symbol "FeedbackMessageData_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type FeedbackMessageData = FeedbackMessageData_2;
-
-// @public (undocumented)
-export namespace FILE_FAILED_PROP {
-    const // (undocumented)
-    type: string;
-    const // (undocumented)
-    size: string;
-}
-
-// @public (undocumented)
-export type FileBasics = {
-    name: string;
-    size: number;
-    type: string;
-    status?: 'SUCCESS' | 'FAIL' | 'LOADING';
+export type FeedbackMessage = {
+    message: string | Node;
+    type: ValidationType | string;
+    validator?: Validator;
 };
-
-// @public (undocumented)
-export class FileHandle {
-    constructor(systemFile: SystemFile, _acceptCriteria: {
-        allowedFileTypes: Array<string>;
-        allowedFileExtensions: Array<string>;
-        maxFileSize: number;
-    });
-    // (undocumented)
-    _acceptCriteria: {
-        allowedFileTypes: Array<string>;
-        allowedFileExtensions: Array<string>;
-        maxFileSize: number;
-    };
-    // (undocumented)
-    createDownloadUrl(file: SystemFile): void;
-    // (undocumented)
-    downloadUrl: string | undefined;
-    failedProp: Array<string>;
-    // (undocumented)
-    protected _getFileNameExtension(fileName: string): string;
-    // (undocumented)
-    status: string | undefined;
-    // Warning: (ae-forgotten-export) The symbol "SystemFile_2" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    systemFile: SystemFile_2;
-    // (undocumented)
-    uploadFileStatus(): void;
-}
 
 // @public (undocumented)
 export class FocusHost {
@@ -707,83 +496,41 @@ export class FocusHost {
     focusedVisible: boolean;
 }
 
-// @public (undocumented)
-export function FocusImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<FocusHost> & Pick<typeof FocusHost, keyof typeof FocusHost> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
-
 // Warning: (ae-forgotten-export) The symbol "FocusMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type FocusMixin = FocusMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "FocusImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public
 export const FocusMixin: FocusImplementation;
 
-// Warning: (ae-forgotten-export) The symbol "FormatNumberPart_4" needs to be exported by the entry point index.d.ts
-//
 // @public
-export function forceAddGroupSeparators(formattedParts: FormatNumberPart_4[], groupSeparator: string): FormatNumberPart_4[];
+export function formatAmount(modelValue: number, givenOptions?: FormatNumberOptions | undefined): string;
+
+// @public
+export function formatDate(date: Date, options?: FormatDateOptions | undefined): string;
 
 // @public (undocumented)
-export function forceCurrencyNameForPHPEnGB(currencyName: string): string;
-
-// Warning: (ae-forgotten-export) The symbol "FormatNumberPart_5" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function forceCurrencyToEnd(formattedParts: FormatNumberPart_5[]): FormatNumberPart_5[];
-
-// @public (undocumented)
-export function forceDotsForNlnl(months: string[]): string[];
-
-// Warning: (ae-forgotten-export) The symbol "FormatNumberPart_10" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "FormatNumberOptions_2" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function forceFRBESymbols(formattedParts: FormatNumberPart_10[], { currency, currencyDisplay }: FormatNumberOptions_2 | undefined, currencyScope: string[]): FormatNumberPart_10[];
-
-// Warning: (ae-forgotten-export) The symbol "FormatNumberPart_7" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function forceNormalSpaces(formattedParts: FormatNumberPart_7[]): FormatNumberPart_7[];
-
-// Warning: (ae-forgotten-export) The symbol "FormatNumberPart_6" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function forceNoSpaceBetweenCurrencySymbolAndNumber(formattedParts: FormatNumberPart_6[], { currency, currencyDisplay }?: FormatNumberOptions_2): FormatNumberPart_6[];
-
-// @public (undocumented)
-export function forceShortMonthNamesForEnGb(months: string[]): string[];
-
-// Warning: (ae-forgotten-export) The symbol "FormatNumberPart_8" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function forceSpaceBetweenCurrencyCodeAndNumber(formattedParts: FormatNumberPart_8[], { currency, currencyDisplay }?: FormatNumberOptions_2): FormatNumberPart_8[];
-
-// Warning: (ae-forgotten-export) The symbol "FormatNumberPart_9" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function forceSpaceInsteadOfZeroForGroup(formattedParts: FormatNumberPart_9[]): FormatNumberPart_9[];
-
-// @public
-export function forceSymbols(formattedParts: FormatNumberPart_10[], { currency, currencyDisplay }: FormatNumberOptions_2 | undefined, currencyScope: string[]): FormatNumberPart_10[];
-
-// Warning: (ae-forgotten-export) The symbol "FormatNumberPart_11" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function forceTryCurrencyCode(formattedParts: FormatNumberPart_11[], { currency, currencyDisplay }?: FormatNumberOptions_2): FormatNumberPart_11[];
-
-// @public (undocumented)
-export function formatAmount(modelValue: AmountDropdownModelValue_2, givenOptions?: FormatNumberOptions_2 | undefined, context?: AmountDropdownModelValue | undefined): string;
-
-// @public (undocumented)
-export function formatCurrencyLabel(currency: string, locale: string): string;
-
-// Warning: (ae-forgotten-export) The symbol "FormatDateOptions_2" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function formatDate(date: Date, options?: FormatDateOptions_2 | undefined): string;
-
-// @public (undocumented)
-export type FormatDateOptions = FormatDateOptions_2;
+export interface FormatDateOptions extends Intl.DateTimeFormatOptions {
+    // (undocumented)
+    calendar?: string;
+    // (undocumented)
+    locale?: string;
+    // (undocumented)
+    mode?: 'pasted' | 'auto' | 'user-edited';
+    // (undocumented)
+    numberingSystem?: string;
+    // (undocumented)
+    postProcessors?: Map<string, DatePostProcessor>;
+    // (undocumented)
+    returnIfNaN?: string;
+    // (undocumented)
+    roundMode?: string;
+    // (undocumented)
+    timeZone?: string;
+}
 
 // @public (undocumented)
 export class FormatHost {
@@ -799,9 +546,9 @@ export class FormatHost {
     protected _dispatchModelValueChangedEvent(): void;
     // @deprecated
     formatOn: string;
-    formatOptions: FormatOptions_2;
+    formatOptions: FormatOptions;
     formattedValue: string | undefined;
-    formatter(v: unknown, opts?: FormatOptions_2): string;
+    formatter(v: unknown, opts?: FormatOptions): string;
     protected _isHandlingUserInput: boolean;
     protected _isPasting: boolean;
     // (undocumented)
@@ -810,9 +557,8 @@ export class FormatHost {
     }): void;
     // (undocumented)
     protected _onUserInputChanged(): void;
-    // Warning: (ae-forgotten-export) The symbol "FormatOptions_2" needs to be exported by the entry point index.d.ts
-    parser(v: string, opts: FormatOptions_2): unknown;
-    preprocessor(v: string, options: FormatOptions_2 & {
+    parser(v: string, opts: FormatOptions): unknown;
+    preprocessor(v: string, options: FormatOptions & {
         prevViewValue: string;
         currentCaretIndex: number;
     }): {
@@ -833,71 +579,86 @@ export class FormatHost {
 // @public
 export function formatIBAN(modelValue: string): string;
 
-// Warning: (ae-forgotten-export) The symbol "ValidateHost_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export function FormatImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<FormatHost> & Pick<typeof FormatHost, keyof typeof FormatHost> & Constructor<ValidateHost_2> & Pick<typeof ValidateHost_2, keyof typeof ValidateHost_2> & Constructor<FormControlHost_3> & Pick<typeof FormControlHost_3, keyof typeof FormControlHost_3> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
-
 // Warning: (ae-forgotten-export) The symbol "FormatMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type FormatMixin = FormatMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "FormatImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const FormatMixin: FormatImplementation;
 
 // @public
-export function formatNumber(number: number, options?: FormatNumberOptions_2 | undefined): string;
+export function formatNumber(number: number, options?: FormatNumberOptions | undefined): string;
 
 // @public (undocumented)
-export type FormatNumberOptions = FormatNumberOptions_2;
+export interface FormatNumberOptions extends Intl.NumberFormatOptions {
+    // (undocumented)
+    decimalSeparator?: ',' | '.';
+    // (undocumented)
+    groupSeparator?: ',' | '.' | ' ' | '_' | ' ' | "'";
+    // (undocumented)
+    locale?: string;
+    // (undocumented)
+    mode?: 'pasted' | 'auto' | 'user-edited';
+    // (undocumented)
+    numberingSystem?: string;
+    // (undocumented)
+    postProcessors?: Map<string, NumberPostProcessor>;
+    // (undocumented)
+    returnIfNaN?: string;
+    // (undocumented)
+    roundMode?: string;
+    // (undocumented)
+    viewValueStates?: 'formatted'[];
+}
+
+// @public (undocumented)
+export interface FormatNumberPart {
+    // (undocumented)
+    type: string;
+    // (undocumented)
+    value: string;
+}
 
 // Warning: (ae-forgotten-export) The symbol "FormatNumberPart_2" needs to be exported by the entry point index.d.ts
 //
 // @public
-export type FormatNumberPart = FormatNumberPart_2;
-
-// Warning: (ae-forgotten-export) The symbol "FormatNumberPart_3" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function formatNumberToParts(number: number, options?: FormatNumberOptions_2 | undefined): string | FormatNumberPart_3[];
+export function formatNumberToParts(number: number, options?: FormatNumberOptions | undefined): string | FormatNumberPart_2[];
 
 // @public (undocumented)
-export type FormatOptions = FormatOptions_2;
-
-// Warning: (ae-forgotten-export) The symbol "FormatOptions_4" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type FormatOptionsTel = FormatOptions_4 & {
-    regionCode: RegionCode_3;
-    formatStrategy: PhoneNumberFormat;
-    formatCountryCodeStyle: string;
+export type FormatOptions = {
+    mode: 'pasted' | 'auto' | 'user-edited';
+    viewValueStates?: 'formatted'[];
 };
 
 // @public (undocumented)
 export function formatPhoneNumber(modelValue: string, { regionCode, formatStrategy, formatCountryCodeStyle }: {
-    regionCode: RegionCode_5;
+    regionCode: RegionCode_4;
     formatStrategy?: PhoneNumberFormat_2 | undefined;
     formatCountryCodeStyle?: string | undefined;
 }): string;
 
 // @public (undocumented)
-export type FormControl = FormControl_2;
+export type FormControl = FormControlHost_2 & HTMLElement & {
+    _parentFormGroup?: HTMLElement;
+    checked?: boolean;
+    disabled: boolean;
+    hasFeedbackFor: string[];
+    makeRequestToBeDisabled: Function;
+};
 
 // @public (undocumented)
-export type FormControlHost = FormControlHost_3;
-
-// Warning: (ae-forgotten-export) The symbol "FormRegisteringHost_2" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "SlotHost_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export function FormControlImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<FormControlHost_3> & Pick<typeof FormControlHost_3, keyof typeof FormControlHost_3> & Constructor<FormRegisteringHost_2> & Pick<typeof FormRegisteringHost_2, keyof typeof FormRegisteringHost_2> & Constructor<DisabledHost> & Pick<typeof DisabledHost, keyof typeof DisabledHost> & Constructor<SlotHost_2> & Pick<typeof SlotHost_2, keyof typeof SlotHost_2> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
+export type FormControlHost = FormControlHost_2;
 
 // Warning: (ae-forgotten-export) The symbol "FormControlMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type FormControlMixin = FormControlMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "FormControlImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const FormControlMixin: FormControlImplementation;
 
@@ -910,136 +671,162 @@ export class FormControlsCollection extends Array<any> {
 }
 
 // @public (undocumented)
-export class FormElementsHaveNoError extends Validator_2 {
+export class FormGroupHost {
+    protected _anyFormElementHas(prop: string): boolean;
+    protected _anyFormElementHasFeedbackFor(prop: string): boolean;
     // (undocumented)
-    execute(value?: unknown, options?: string | undefined, config?: {
-        node: any;
-    } | undefined): any;
+    protected _checkForOutsideClick(): void;
+    clearGroup(): void;
+    dirty: boolean;
+    disabled: boolean;
+    protected _everyFormElementHas(prop: string): boolean;
+    formattedValue: string;
+    protected _getFromAllFormElements(property: string, filterFn?: (el: FormControl, property?: string) => boolean): {
+        [name: string]: any;
+    };
+    protected _getFromAllFormElementsFilter(el: FormControl, type: string): boolean;
+    protected _initialModelValue: {
+        [x: string]: any;
+    };
+    protected get _inputNode(): HTMLElement;
+    get modelValue(): {
+        [x: string]: any;
+    };
+    set modelValue(value: {
+        [x: string]: any;
+    });
     // (undocumented)
-    static getMessage(): Promise<string>;
+    protected _onFocusOut(): void;
+    prefilled: boolean;
+    resetGroup(): void;
+    resetInteractionState(): void;
+    serializedValue: {
+        [key: string]: any;
+    };
+    protected _setValueForAllFormElements(property: string, value: any): void;
+    protected _setValueMapForAllFormElements(property: string, values: {
+        [x: string]: any;
+    }): void;
+    submitGroup(): void;
+    submitted: boolean;
     // (undocumented)
-    static get validatorName(): string;
+    protected _syncDirty(): void;
+    // (undocumented)
+    protected _syncFocused(): void;
+    touched: boolean;
+    // (undocumented)
+    protected _triggerInitialModelValueChangedEvent(): void;
 }
-
-// Warning: (ae-forgotten-export) The symbol "FormGroupHost_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type FormGroupHost = FormGroupHost_2;
-
-// @public (undocumented)
-export function FormGroupImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<FormGroupHost_2> & Pick<typeof FormGroupHost_2, keyof typeof FormGroupHost_2> & Constructor<FormRegistrarHost_2> & Pick<typeof FormRegistrarHost_2, keyof typeof FormRegistrarHost_2> & Constructor<FormControlHost_3> & Pick<typeof FormControlHost_3, keyof typeof FormControlHost_3> & Constructor<ValidateHost_2> & Pick<typeof ValidateHost_2, keyof typeof ValidateHost_2> & Constructor<DisabledHost> & Pick<typeof DisabledHost, keyof typeof DisabledHost> & Constructor<SlotHost_2> & Pick<typeof SlotHost_2, keyof typeof SlotHost_2> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
 
 // Warning: (ae-forgotten-export) The symbol "FormGroupMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type FormGroupMixin = FormGroupMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "FormGroupImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const FormGroupMixin: FormGroupImplementation;
 
 // @public (undocumented)
-export type FormRegisteringHost = FormRegisteringHost_2;
-
-// @public (undocumented)
-export function FormRegisteringImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<FormRegisteringHost_2> & Pick<typeof FormRegisteringHost_2, keyof typeof FormRegisteringHost_2> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
+export class FormRegisteringHost {
+    allowCrossRootRegistration: boolean;
+    get name(): string;
+    set name(arg: any);
+    protected _parentFormGroup: FormRegistrarHost | undefined;
+    // (undocumented)
+    static get properties(): {
+        name: {
+            type: StringConstructor;
+            reflect: boolean;
+        };
+    };
+}
 
 // Warning: (ae-forgotten-export) The symbol "FormRegisteringMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type FormRegisteringMixin = FormRegisteringMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "FormRegisteringImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const FormRegisteringMixin: FormRegisteringImplementation;
 
 // @public (undocumented)
-export type FormRegistrarHost = FormRegistrarHost_2;
-
-// @public (undocumented)
-export function FormRegistrarImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<FormRegistrarHost_2> & Pick<typeof FormRegistrarHost_2, keyof typeof FormRegistrarHost_2> & Constructor<FormRegisteringHost_2> & Pick<typeof FormRegisteringHost_2, keyof typeof FormRegisteringHost_2> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
+export class FormRegistrarHost {
+    addFormElement(child: (FormControlHost_2 & ElementWithParentFormGroup) | (FormControlHost_2 & HTMLElement) | (HTMLElement & ElementWithParentFormGroup), indexToInsertAt?: number): void;
+    protected _completeRegistration(): void;
+    formElements: FormControlsCollection & {
+        [x: string]: any;
+    };
+    initComplete: Promise<boolean>;
+    protected _isFormOrFieldset: boolean;
+    isRegisteredFormElement(el: FormControlHost_2): boolean;
+    protected _onRequestToAddFormElement(e: CustomEvent): void;
+    // (undocumented)
+    protected _onRequestToChangeFormElementName(e: CustomEvent): void;
+    // (undocumented)
+    protected _onRequestToRemoveFormElement(e: CustomEvent): void;
+    registrationComplete: Promise<boolean>;
+    removeFormElement(child: FormRegisteringHost): void;
+}
 
 // Warning: (ae-forgotten-export) The symbol "FormRegistrarMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type FormRegistrarMixin = FormRegistrarMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "FormRegistrarImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const FormRegistrarMixin: FormRegistrarImplementation;
 
-// Warning: (ae-forgotten-export) The symbol "FormRegistrarPortalHost_2" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export type FormRegistrarPortalHost = FormRegistrarPortalHost_2;
-
-// @public (undocumented)
-export function FormRegistrarPortalImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<FormRegistrarPortalHost_2> & Pick<typeof FormRegistrarPortalHost_2, keyof typeof FormRegistrarPortalHost_2> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
+export class FormRegistrarPortalHost {
+    registrationTarget: HTMLElement;
+}
 
 // Warning: (ae-forgotten-export) The symbol "FormRegistrarPortalMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type FormRegistrarPortalMixin = FormRegistrarPortalMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "FormRegistrarPortalImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const FormRegistrarPortalMixin: FormRegistrarPortalImplementation;
 
-// Warning: (ae-forgotten-export) The symbol "LionForm_3" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export function getAllFieldsAndFormGroups(formGroupEl: LionForm_3): any[];
-
-// @public (undocumented)
-export function getAllFormElements(formGroupEl: LionForm_3): any[];
-
-// @public (undocumented)
-export function getAllTagNames(formGroupEl: LionForm_3): any[];
-
-// @public
-export function getAriaElementsInRightDomOrder(descriptionElements: Element[], { reverse }?: {
-    reverse?: boolean | undefined;
-}): Element[];
-
-// Warning: (ae-forgotten-export) The symbol "LionCombobox_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export function getComboboxMembers(el: LionCombobox_2): {
+export function getComboboxMembers(el: LionCombobox): {
     _invokerNode: any;
-    _overlayCtrl: OverlayController_2;
+    _overlayCtrl: OverlayController;
     _comboboxNode: HTMLElement;
     _inputNode: HTMLInputElement;
-    _listboxNode: LionOptions_2;
-    _selectionDisplayNode: SelectionDisplay_2 | null;
+    _listboxNode: LionOptions;
+    _selectionDisplayNode: SelectionDisplay | null;
     _activeDescendantOwnerNode: HTMLInputElement;
     _ariaVersion: "1.1" | "1.0";
     _helpTextNode: HTMLElement;
     _labelNode: HTMLElement;
-    _feedbackNode: LionValidationFeedback_2;
+    _feedbackNode: LionValidationFeedback;
     _allValidators: any;
 };
 
 // @public
-export function getCurrencyName(currencyIso: string, options?: FormatNumberOptions_2 | undefined): string;
+export function getCurrencyName(currencyIso: string, options?: FormatNumberOptions | undefined): string;
 
 // @public
 export function getDateFormatBasedOnLocale(locale?: string | undefined): string;
 
-// @public (undocumented)
-export function getDayMonthYear(day: Day_2, weekdays: string[], monthsLabels?: string[]): {
-    dayNumber: number;
-    monthName: string;
-    year: number;
-    weekdayName: string;
-};
-
 // @public
-export function getDecimalSeparator(locale?: string | undefined, options?: FormatNumberOptions_2 | undefined): string;
+export function getDecimalSeparator(locale?: string | undefined, options?: FormatNumberOptions | undefined): string;
 
 // @public
 export function getDeepActiveElement(): Element;
 
 // @public (undocumented)
-export function getFilteredOptionValues(el: LionCombobox_2): string[];
-
-// @public
-export function getFirstDayNextMonth(date: Date): Date;
+export function getFilteredOptionValues(el: LionCombobox): string[];
 
 // @public (undocumented)
 export function getFlagSymbol(regionCode: string): string;
@@ -1047,20 +834,12 @@ export function getFlagSymbol(regionCode: string): string;
 // @public (undocumented)
 export function getFocusableElements(element: Element): HTMLElement[];
 
-// @public (undocumented)
-export function getFormatCountryCodeStyle(value: string, { regionCode, formatCountryCodeStyle }: {
-    regionCode: RegionCode_5;
-    formatCountryCodeStyle: string;
-}): string;
-
-// Warning: (ae-forgotten-export) The symbol "FormControlHost_6" needs to be exported by the entry point index.d.ts
-//
 // @public
-export function getFormControlMembers(el: FormControlHost_6): {
+export function getFormControlMembers(el: FormControlHost): {
     _inputNode: any;
     _helpTextNode: HTMLElement;
     _labelNode: HTMLElement;
-    _feedbackNode: LionValidationFeedback_2;
+    _feedbackNode: LionValidationFeedback;
     _allValidators: any;
 };
 
@@ -1068,43 +847,34 @@ export function getFormControlMembers(el: FormControlHost_6): {
 export function getFractionDigits(currency?: string | undefined): number;
 
 // @public
-export function getGroupSeparator(locale?: string | undefined, options?: FormatNumberOptions_2 | undefined): string;
+export function getGroupSeparator(locale?: string | undefined, options?: FormatNumberOptions | undefined): string;
 
-// Warning: (ae-forgotten-export) The symbol "LionInput_3" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "LionInput_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function getInputMembers(el: LionInput_3): {
+export function getInputMembers(el: LionInput_2): {
     _inputNode: HTMLInputElement;
     _helpTextNode: HTMLElement;
     _labelNode: HTMLElement;
-    _feedbackNode: LionValidationFeedback_2;
+    _feedbackNode: LionValidationFeedback;
     _allValidators: any;
 };
 
-// @public
-export function getLastDayPreviousMonth(date: Date): Date;
-
-// Warning: (ae-forgotten-export) The symbol "ListboxHost_3" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ListboxHost_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function getListboxMembers(el: ListboxHost_3): {
-    _listboxNode: LionOptions_2;
+export function getListboxMembers(el: ListboxHost_2): {
+    _listboxNode: LionOptions;
     _activeDescendantOwnerNode: HTMLElement;
     _inputNode: any;
     _helpTextNode: HTMLElement;
     _labelNode: HTMLElement;
-    _feedbackNode: LionValidationFeedback_2;
+    _feedbackNode: LionValidationFeedback;
     _allValidators: any;
 };
 
 // @public
 export function getLocale(locale?: string | undefined): string;
-
-// @public (undocumented)
-export function getLocalizedMessage({ data, localize }: {
-    data: FeedbackMessageData_3;
-    localize: LocalizeManager_2;
-}): Promise<string | Element>;
 
 // @public (undocumented)
 export function getLocalizeManager(): LocalizeManager;
@@ -1115,23 +885,23 @@ export function getMonthNames({ locale, style }?: {
     style?: "short" | "long" | "narrow" | "numeric" | "2-digit" | undefined;
 }): string[];
 
-// Warning: (ae-forgotten-export) The symbol "LionSelectRich_4" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "LionSelectRich_3" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function getSelectRichMembers(el: LionSelectRich_4): {
-    _invokerNode: LionSelectInvoker_2;
-    _overlayCtrl: OverlayController_2;
-    _listboxNode: LionOptions_2;
+export function getSelectRichMembers(el: LionSelectRich_3): {
+    _invokerNode: LionSelectInvoker;
+    _overlayCtrl: OverlayController;
+    _listboxNode: LionOptions;
     _activeDescendantOwnerNode: HTMLElement;
     _inputNode: any;
     _helpTextNode: HTMLElement;
     _labelNode: HTMLElement;
-    _feedbackNode: LionValidationFeedback_2;
+    _feedbackNode: LionValidationFeedback;
     _allValidators: any;
 };
 
 // @public (undocumented)
-export function getSeparatorsFromNumber(parsedNumber: number, formattedNumber: string, options?: FormatNumberOptions_2 | undefined): {
+export function getSeparatorsFromNumber(parsedNumber: number, formattedNumber: string, options?: FormatNumberOptions | undefined): {
     groupSeparator: string | null;
     decimalSeparator: string | null;
 };
@@ -1144,33 +914,39 @@ export function getWeekdayNames({ locale, style, firstDayOfWeek }?: {
 }): string[];
 
 // @public (undocumented)
-export type HelperRegistration = {
-    lionButtons: Set<LionButtonSubmit>;
-    helper: HTMLButtonElement;
-    observer: MutationObserver;
-};
-
-// Warning: (ae-forgotten-export) The symbol "HTMLElementWithValue_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type HTMLElementWithValue = HTMLElementWithValue_2;
+export interface HTMLElementWithValue extends HTMLElement {
+    // (undocumented)
+    selectionEnd?: number;
+    // (undocumented)
+    selectionStart?: number;
+    // (undocumented)
+    value: string;
+}
 
 // @public
 export class IconManager {
-    // Warning: (ae-forgotten-export) The symbol "TemplateResult_8" needs to be exported by the entry point index.d.ts
-    addIconResolver(namespace: string, iconResolver: (iconset: string, icon: string) => TemplateResult_8 | Promise<TemplateResult_8> | nothing | Promise<nothing>): void;
+    // Warning: (ae-forgotten-export) The symbol "TemplateResult_6" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "nothing_2" needs to be exported by the entry point index.d.ts
+    addIconResolver(namespace: string, iconResolver: (iconset: string, icon: string) => TemplateResult_6 | Promise<TemplateResult_6> | nothing_2 | Promise<nothing_2>): void;
     removeIconResolver(namespace: string): void;
-    resolveIcon(namespace: string, iconset: string, icon: string): Promise<TemplateResult_8>;
-    resolveIconForId(iconId: string): Promise<TemplateResult_8>;
+    resolveIcon(namespace: string, iconset: string, icon: string): Promise<TemplateResult_6>;
+    resolveIconForId(iconId: string): Promise<TemplateResult_6>;
 }
 
 // @public (undocumented)
 export const icons: IconManager;
 
-// Warning: (ae-forgotten-export) The symbol "InputFile_2" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "FileBasics" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export type InputFile = InputFile_2;
+export type InputFile = {
+    downloadUrl?: string;
+    errorMessage?: FeedbackMessage["message"];
+    failedProp?: Array<string | number>;
+    response?: UploadResponse;
+    systemFile: Partial<SystemFile>;
+    validationFeedback?: Array<FeedbackMessage>;
+} & FileBasics & Partial<File>;
 
 // @public (undocumented)
 export class InteractionStateHost {
@@ -1189,24 +965,27 @@ export class InteractionStateHost {
     protected _valueChangedEvent: string;
 }
 
-// @public (undocumented)
-export function InteractionStateImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<InteractionStateHost> & Pick<typeof InteractionStateHost, keyof typeof InteractionStateHost> & Constructor<FormControlHost_3> & Pick<typeof FormControlHost_3, keyof typeof FormControlHost_3> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
-
 // Warning: (ae-forgotten-export) The symbol "InteractionStateMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type InteractionStateMixin = InteractionStateMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "InteractionStateImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const InteractionStateMixin: InteractionStateImplementation;
 
-// Warning: (ae-forgotten-export) The symbol "InteractionStates_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type InteractionStates = InteractionStates_2;
+// @public
+export type InteractionStates = {
+    submitted: boolean;
+    touched: boolean;
+    dirty: boolean;
+    filled: boolean;
+    prefilled: boolean;
+};
 
 // @public
-export class IsAcceptedFile extends Validator_2 {
+export class IsAcceptedFile extends Validator {
     // (undocumented)
     static checkFileSize(fileFileSize: number, maxFileSize: number): boolean;
     // (undocumented)
@@ -1224,20 +1003,12 @@ export class IsAcceptedFile extends Validator_2 {
     static isFileTypeAllowed(type: string, allowedFileTypes: string[]): string | undefined;
 }
 
-// @public
-export function isActiveElement(el: Element, { deep }?: {
-    deep?: boolean;
-}): boolean;
-
-// @public (undocumented)
-export function isCorrectYearFormat(year: string): boolean;
-
 // @public (undocumented)
 export class IsCountryIBAN extends IsIBAN {
 }
 
 // @public (undocumented)
-export class IsDate extends Validator_2 {
+export class IsDate extends Validator {
     // (undocumented)
     execute(value: unknown): boolean;
     // (undocumented)
@@ -1245,7 +1016,7 @@ export class IsDate extends Validator_2 {
 }
 
 // @public (undocumented)
-export class IsDateDisabled extends Validator_2 {
+export class IsDateDisabled extends Validator {
     // (undocumented)
     execute(value: unknown, isDisabledFn?: any): boolean;
     // (undocumented)
@@ -1253,20 +1024,15 @@ export class IsDateDisabled extends Validator_2 {
 }
 
 // @public (undocumented)
-export class IsEmail extends Validator_2 {
+export class IsEmail extends Validator {
     // (undocumented)
     execute(value: unknown): boolean;
     // (undocumented)
     static get validatorName(): string;
 }
 
-// Warning: (ae-forgotten-export) The symbol "OverlayConfig_6" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function isEqualConfig(a: Partial<OverlayConfig_6>, b: Partial<OverlayConfig_6>): boolean;
-
 // @public (undocumented)
-export class IsIBAN extends Validator_2 {
+export class IsIBAN extends Validator {
     // (undocumented)
     execute(value: string): boolean;
     // (undocumented)
@@ -1289,7 +1055,7 @@ export class IsNotCountryIBAN extends IsIBAN {
 }
 
 // @public (undocumented)
-export class IsNumber extends Validator_2 {
+export class IsNumber extends Validator {
     // (undocumented)
     execute(value: unknown): boolean;
     // (undocumented)
@@ -1300,30 +1066,15 @@ export class IsNumber extends Validator_2 {
 export function isSameDate(day1: Date, day2: Date): boolean;
 
 // @public (undocumented)
-export class IsString extends Validator_2 {
+export class IsString extends Validator {
     // (undocumented)
     execute(value: unknown): boolean;
     // (undocumented)
     static get validatorName(): string;
 }
 
-// @public (undocumented)
-export function isVisible(element: HTMLElement): boolean;
-
-// @public (undocumented)
-export namespace keyCodes {
-    const // (undocumented)
-    enter: number;
-    const // (undocumented)
-    space: number;
-    const // (undocumented)
-    escape: number;
-    const // (undocumented)
-    tab: number;
-}
-
 // @public
-export class LionAccordion extends LitElement_2 {
+export class LionAccordion extends LitElement {
     // (undocumented)
     __expanded: number[];
     // (undocumented)
@@ -1356,13 +1107,15 @@ export class LionAccordion extends LitElement_2 {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
+    // Warning: (ae-forgotten-export) The symbol "StoreEntry" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     protected _setupContent(entry: StoreEntry): void;
     // (undocumented)
     protected _setupInvoker(entry: StoreEntry): void;
     // (undocumented)
-    static get styles(): CSSResult_2[];
+    static get styles(): CSSResult[];
     // (undocumented)
     styles: {};
     // (undocumented)
@@ -1387,9 +1140,9 @@ export class LionButton extends LionButton_base {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
     // (undocumented)
-    static get styles(): CSSResult_2[];
+    static get styles(): CSSResult[];
     // (undocumented)
     type: string;
 }
@@ -1405,26 +1158,11 @@ export class LionButtonReset extends LionButton {
     protected _teardownSubmitAndResetHelperOnDisconnected(): void;
 }
 
-// @public (undocumented)
-export function LionButtonResetSuite({ klass }?: {
-    klass?: typeof LionButtonReset | undefined;
-}): void;
-
 // @public
 export class LionButtonSubmit extends LionButtonReset {
     __implicitSubmitHelperButton: HTMLButtonElement | null;
     protected get _nativeButtonNode(): HTMLButtonElement | null;
 }
-
-// @public (undocumented)
-export function LionButtonSubmitSuite({ klass }?: {
-    klass?: typeof LionButtonSubmit | undefined;
-}): void;
-
-// @public (undocumented)
-export function LionButtonSuite({ klass }?: {
-    klass?: typeof LionButton | undefined;
-}): void;
 
 // Warning: (ae-forgotten-export) The symbol "LionCalendar_base" needs to be exported by the entry point index.d.ts
 //
@@ -1434,14 +1172,16 @@ export class LionCalendar extends LionCalendar_base {
     __contentWrapperElement: HTMLButtonElement | undefined;
     __initialCentralDate: Date | undefined;
     // (undocumented)
-    protected __renderNextButton(type: string, nextMonth: string, nextYear: number): TemplateResult_2<1>;
+    protected __renderNextButton(type: string, nextMonth: string, nextYear: number): TemplateResult<1>;
     // (undocumented)
-    protected __renderPreviousButton(type: string, previousMonth: string, previousYear: number): TemplateResult_2<1>;
+    protected __renderPreviousButton(type: string, previousMonth: string, previousYear: number): TemplateResult<1>;
     centralDate: Date;
     // (undocumented)
     connectedCallback(): Promise<void>;
+    // Warning: (ae-forgotten-export) The symbol "Day_2" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    dayPreprocessor: (day: Day) => Day_2;
+    dayPreprocessor: (day: Day_2) => Day;
     // (undocumented)
     disableDates: (day: Date) => boolean;
     // (undocumented)
@@ -1479,9 +1219,9 @@ export class LionCalendar extends LionCalendar_base {
     // (undocumented)
     minDate: Date;
     // (undocumented)
-    _nextIconTemplate(): TemplateResult_2<1>;
+    _nextIconTemplate(): TemplateResult<1>;
     // (undocumented)
-    _previousIconTemplate(): TemplateResult_2<1>;
+    _previousIconTemplate(): TemplateResult<1>;
     // (undocumented)
     static get properties(): {
         minDate: {
@@ -1516,13 +1256,13 @@ export class LionCalendar extends LionCalendar_base {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
     // (undocumented)
     requestUpdate(name?: string | undefined, oldValue?: unknown, options?: PropertyDeclaration<any, any> | undefined): void;
     // (undocumented)
     selectedDate: Date | undefined;
     // (undocumented)
-    static get styles(): CSSResult_2[];
+    static get styles(): CSSResult[];
     // (undocumented)
     weekdayHeaderNotation: string;
 }
@@ -1551,7 +1291,7 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     __settingOwnSubs: boolean | undefined;
     __subCheckboxes: HTMLElement[];
     // (undocumented)
-    protected _afterTemplate(): TemplateResult_2<1>;
+    protected _afterTemplate(): TemplateResult<1>;
     // (undocumented)
     protected get _checkboxGroupNode(): LionCheckboxGroup;
     // (undocumented)
@@ -1576,13 +1316,13 @@ export class LionCheckboxIndeterminate extends LionCheckbox {
     // (undocumented)
     _storeIndeterminateState(): void;
     // (undocumented)
-    static get styles(): (CSSResultOrNative_2 | CSSResultArray_2)[];
+    static get styles(): (CSSResultOrNative | CSSResultArray)[];
     // (undocumented)
     protected get _subCheckboxes(): LionCheckbox[];
 }
 
 // @public
-export class LionCollapsible extends LitElement_2 {
+export class LionCollapsible extends LitElement {
     // (undocumented)
     protected get _contentHeight(): string;
     // (undocumented)
@@ -1601,97 +1341,18 @@ export class LionCollapsible extends LitElement_2 {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
     public show(): void;
     protected _showAnimation(opts: Object): Promise<void>;
     // (undocumented)
-    static get styles(): CSSResult_2[];
+    static get styles(): CSSResult[];
     public toggle(): void;
 }
 
-// Warning: (ae-forgotten-export) The symbol "LionCombobox_base" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "LionCombobox_2" needs to be exported by the entry point index.d.ts
 //
-// @public
-export class LionCombobox extends LionCombobox_base {
-    // (undocumented)
-    __hadSelectionLastAutofill: boolean | undefined;
-    // (undocumented)
-    __shouldAutocompleteNextUpdate: boolean | undefined;
-    protected __unsyncCheckedIndexOnInputChange(): void;
-    __value: string | undefined;
-    protected get _activeDescendantOwnerNode(): HTMLInputElement;
-    protected _ariaVersion: '1.1' | '1.0';
-    autocomplete: 'none' | 'list' | 'inline' | 'both';
-    protected _autoSelectCondition(): boolean;
-    // (undocumented)
-    clear(): void;
-    protected get _comboboxNode(): HTMLElement;
-    // (undocumented)
-    connectedCallback(): void;
-    _getTextboxValueFromOption(option: LionOption): string;
-    protected _groupTwoTemplate(): TemplateResult_2<1>;
-    protected _handleAutocompletion(): void;
-    // (undocumented)
-    protected _highlightMatchedOption(option: Element, matchingString: string): void;
-    protected _inputGroupInputTemplate(): TemplateResult_2<1>;
-    protected get _inputNode(): HTMLInputElement;
-    matchCondition(option: LionOption, textboxValue: string): boolean;
-    matchMode: 'begin' | 'all';
-    // (undocumented)
-    protected _onFilterMatch(option: LionOption & {
-        __originalInnerHTML?: string;
-    }, matchingString: string): void;
-    // (undocumented)
-    protected _onFilterUnmatch(option: LionOption & {
-        __originalInnerHTML?: string;
-    }, curValue?: string | undefined, prevValue?: string | undefined): void;
-    // (undocumented)
-    protected _onKeyUp(ev?: KeyboardEvent | undefined): void;
-    protected get _overlayContentNode(): LionOptions_2;
-    protected get _overlayInvokerNode(): HTMLInputElement;
-    // (undocumented)
-    protected _overlayListboxTemplate(): TemplateResult_2<1>;
-    protected get _overlayReferenceNode(): Element | null;
-    // @override
-    override parser(value: string | string[]): any;
-    static get properties(): any;
-    // (undocumented)
-    requestUpdate(name?: string | undefined, oldValue?: unknown, options?: PropertyDeclaration<any, any> | undefined): void;
-    set requireOptionMatch(arg: boolean);
-    // (undocumented)
-    get requireOptionMatch(): boolean;
-    // (undocumented)
-    protected _resetListboxOptions(): void;
-    rotateKeyboardNavigation: boolean;
-    protected get _selectionDisplayNode(): SelectionDisplay_2 | null;
-    selectionFollowsFocus: boolean;
-    // (undocumented)
-    protected _setTextboxValue(v: string): void;
-    showAllOnEmpty: boolean;
-    protected _showOverlayCondition({ lastKey }: {
-        currentValue?: string;
-        lastKey?: string;
-    }): boolean;
-    // (undocumented)
-    static get styles(): (CSSResultOrNative_2 | CSSResultArray_2)[];
-    // (undocumented)
-    protected _syncToTextboxCondition(modelValue: string | string[], oldModelValue: string | string[], { phase }?: {
-        phase?: string;
-    }): boolean;
-    protected _syncToTextboxMultiple(modelValue: string[], oldModelValue?: string[]): void;
-    // (undocumented)
-    protected _textboxOnClick(ev?: FocusEvent | undefined): void;
-    // (undocumented)
-    protected _textboxOnInput(ev: Event): void;
-    // (undocumented)
-    protected _textboxOnKeydown(ev: KeyboardEvent): void;
-    // (undocumented)
-    protected _unhighlightMatchedOption(option: Element): void;
-    // (undocumented)
-    updated(changedProperties: PropertyValues): void;
-    set value(arg: string);
-    get value(): string;
-}
+// @public (undocumented)
+export type LionCombobox = LionCombobox_2;
 
 // Warning: (ae-forgotten-export) The symbol "LionDialog_base" needs to be exported by the entry point index.d.ts
 //
@@ -1702,7 +1363,7 @@ export class LionDialog extends LionDialog_base {
         isAlertDialog: boolean;
         placementMode?: "global" | "local" | undefined;
         popperConfig?: Partial<Options_2> | undefined;
-        viewportConfig?: ViewportConfig_2 | undefined;
+        viewportConfig?: ViewportConfig | undefined;
         isBlocking?: boolean | undefined;
         inheritsReferenceWidth?: "none" | "max" | "full" | "min" | undefined;
         zIndex?: number | undefined;
@@ -1728,7 +1389,7 @@ export class LionDialog extends LionDialog_base {
     isAlertDialog: boolean;
     static get properties(): any;
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
 }
 
 // @public
@@ -1796,7 +1457,7 @@ export class LionField extends LionField_base {
     get _feedbackConditionMeta(): {
         focused: boolean;
     };
-    get _focusableNode(): HTMLInputElement | HTMLTextAreaElement | HTMLElementWithValue_2;
+    get _focusableNode(): HTMLInputElement | HTMLTextAreaElement | HTMLElementWithValue;
     _initialModelValue: any;
     protected _onChange(ev?: Event | undefined): void;
     reset(): void;
@@ -1808,13 +1469,28 @@ export class LionField extends LionField_base {
 export class LionFieldset extends LionFieldset_base {
 }
 
-// Warning: (ae-forgotten-export) The symbol "LionForm_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type LionForm = LionForm_2;
+// @public
+export class LionForm extends LionFieldset {
+    // (undocumented)
+    connectedCallback(): void;
+    // (undocumented)
+    get _formNode(): HTMLFormElement;
+    // (undocumented)
+    reset(): void;
+    // (undocumented)
+    protected _reset(ev: Event): void;
+    // Warning: (ae-forgotten-export) The symbol "FormRegistrarHost_2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    protected _setFocusOnFirstErroneousFormElement(element: FormRegistrarHost_2): void;
+    // (undocumented)
+    submit(): void;
+    // (undocumented)
+    protected _submit(ev: Event): void;
+}
 
 // @public
-export class LionIcon extends LitElement_2 {
+export class LionIcon extends LitElement {
     // (undocumented)
     ariaLabel: string;
     static enabledWarnings: WarningKind[];
@@ -1842,21 +1518,37 @@ export class LionIcon extends LitElement_2 {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
-    // Warning: (ae-forgotten-export) The symbol "TemplateResult_9" needs to be exported by the entry point index.d.ts
+    render(): TemplateResult<1>;
+    // Warning: (ae-forgotten-export) The symbol "TemplateResult_7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    protected _renderSvg(svgObject: TemplateResult_9 | typeof nothing_3): void;
+    protected _renderSvg(svgObject: TemplateResult_7 | typeof nothing_3): void;
     // (undocumented)
-    static get styles(): CSSResult_2[];
-    set svg(arg: typeof nothing_3 | TemplateResult_2<1 | 2 | 3> | TagFunction);
-    get svg(): typeof nothing_3 | TemplateResult_2<1 | 2 | 3> | TagFunction;
+    static get styles(): CSSResult[];
+    // Warning: (ae-forgotten-export) The symbol "TagFunction" needs to be exported by the entry point index.d.ts
+    set svg(arg: typeof nothing_3 | TemplateResult<1 | 2 | 3> | TagFunction);
+    get svg(): typeof nothing_3 | TemplateResult<1 | 2 | 3> | TagFunction;
 }
 
-// Warning: (ae-forgotten-export) The symbol "LionInput_2" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "LionInput_base" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
-export type LionInput = LionInput_2;
+// @public
+export class LionInput extends LionInput_base {
+    protected get _inputNode(): HTMLInputElement;
+    // (undocumented)
+    placeholder: string;
+    static get properties(): any;
+    // (undocumented)
+    requestUpdate(name?: string | undefined, oldValue?: unknown, options?: PropertyDeclaration<any, any> | undefined): void;
+    // (undocumented)
+    get slots(): {
+        input: () => HTMLInputElement;
+    };
+    // (undocumented)
+    type: string;
+    // (undocumented)
+    updated(changedProperties: PropertyValues): void;
+}
 
 // Warning: (ae-forgotten-export) The symbol "LionInputAmount_base" needs to be exported by the entry point index.d.ts
 //
@@ -1875,22 +1567,18 @@ export class LionInputAmount extends LionInputAmount_base {
     currency: string | undefined;
     // (undocumented)
     protected _currencyDisplayNodeSlot: string;
-    // Warning: (ae-forgotten-export) The symbol "formatAmount_2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    formatter: typeof formatAmount_2;
+    formatter: typeof formatAmount;
     locale: string | undefined;
     // (undocumented)
     protected _onCurrencyChanged({ currency }: {
         currency: string | null;
     }): void;
-    // Warning: (ae-forgotten-export) The symbol "parseAmount_2" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
-    parser: typeof parseAmount_2;
+    parser: typeof parseAmount;
     static get properties(): any;
     // (undocumented)
-    static get styles(): (CSSResultOrNative_2 | CSSResultArray_2)[];
+    static get styles(): (CSSResultOrNative | CSSResultArray)[];
 }
 
 // @public
@@ -1904,52 +1592,54 @@ export class LionInputAmountDropdown extends LionInputAmount {
     // (undocumented)
     __namesForLocale: Intl.DisplayNames | undefined;
     protected _allCurrenciesLabel: string;
-    allowedCurrencies: CurrencyCode[];
-    get _allowedOrAllCurrencies(): CurrencyCode_2[];
+    allowedCurrencies: CurrencyCode_2[];
+    get _allowedOrAllCurrencies(): CurrencyCode[];
     // (undocumented)
     _currencyUtil: {
         countryToCurrencyMap: RegionToCurrencyMap;
         allCurrencies: AllCurrenciesSet;
-        getCurrencySymbol: (currency: CurrencyCode_2, locale: string) => string;
+        getCurrencySymbol: (currency: CurrencyCode, locale: string) => string;
     };
+    // Warning: (ae-forgotten-export) The symbol "CurrencyAndAmount" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
     defaultValidators: CurrencyAndAmount[];
     // (undocumented)
-    deserializer: (serializedValue: string) => AmountDropdownModelValue_2;
+    deserializer: (serializedValue: string) => AmountDropdownModelValue;
     set _dropdownSlot(arg: string);
     // (undocumented)
     get _dropdownSlot(): string;
     // (undocumented)
-    formatter: (modelValue: AmountDropdownModelValue_2, givenOptions?: FormatNumberOptions_2 | undefined) => string;
+    formatter: (modelValue: AmountDropdownModelValue, givenOptions?: FormatNumberOptions | undefined) => string;
     // (undocumented)
     protected _initModelValueBasedOnDropdown(): void;
     protected _isEmpty(modelValue?: string): boolean;
-    protected _langIso: RegionCode_2 | undefined;
-    // Warning: (ae-forgotten-export) The symbol "NamespaceObject_2" needs to be exported by the entry point index.d.ts
+    protected _langIso: RegionCode | undefined;
+    // (undocumented)
+    static localizeNamespaces: NamespaceObject[];
+    // Warning: (ae-forgotten-export) The symbol "OnDropdownChangeEvent_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static localizeNamespaces: NamespaceObject_2[];
+    protected _onDropdownValueChange(event: OnDropdownChangeEvent_2): void;
     // (undocumented)
-    protected _onDropdownValueChange(event: OnDropdownChangeEvent): void;
-    // (undocumented)
-    parser: (value: string, givenOptions?: FormatNumberOptions_2 | undefined) => AmountDropdownModelValue_2;
-    preferredCurrencies: CurrencyCode[];
+    parser: (value: string, givenOptions?: FormatNumberOptions | undefined) => AmountDropdownModelValue;
+    // Warning: (ae-forgotten-export) The symbol "CurrencyCode_2" needs to be exported by the entry point index.d.ts
+    preferredCurrencies: CurrencyCode_2[];
     protected _preferredCurrenciesLabel: string;
     static properties: any;
     // (undocumented)
     refs: {
-        dropdown: DropdownRef;
+        dropdown: DropdownRef_2;
     };
     protected _repropagationCondition(): boolean;
     // (undocumented)
-    serializer: (modelValue: AmountDropdownModelValue_2) => string;
-    static styles: (CSSResult_2 | (CSSResultOrNative_2 | CSSResultArray_2)[])[];
-    // Warning: (ae-forgotten-export) The symbol "TemplateDataForDropdownInputAmount_2" needs to be exported by the entry point index.d.ts
-    get _templateDataDropdown(): TemplateDataForDropdownInputAmount_2;
+    serializer: (modelValue: AmountDropdownModelValue) => string;
+    static styles: (CSSResult | (CSSResultOrNative | CSSResultArray)[])[];
+    get _templateDataDropdown(): TemplateDataForDropdownInputAmount;
     // (undocumented)
     static templates: {
-        dropdown: (templateDataForDropdown: TemplateDataForDropdownInputAmount) => TemplateResult_2<1>;
-        dropdownOption: (templateDataForDropdown: TemplateDataForDropdownInputAmount, { currencyCode, nameForLocale, currencySymbol }: RegionMeta) => TemplateResult_2<1>;
+        dropdown: (templateDataForDropdown: TemplateDataForDropdownInputAmount_2) => TemplateResult<1>;
+        dropdownOption: (templateDataForDropdown: TemplateDataForDropdownInputAmount_2, { currencyCode, nameForLocale, currencySymbol }: RegionMeta_2) => TemplateResult<1>;
     };
 }
 
@@ -1983,8 +1673,8 @@ export class LionInputDatepicker extends LionInputDatepicker_base {
     static __getSyncDownValue(modelValue: unknown): Date | undefined;
     // (undocumented)
     __openCalendarOverlay(): Promise<void>;
-    // Warning: (ae-forgotten-export) The symbol "Validator_4" needs to be exported by the entry point index.d.ts
-    __syncDisabledDates(validators: Validator_4[]): void;
+    // Warning: (ae-forgotten-export) The symbol "Validator_3" needs to be exported by the entry point index.d.ts
+    __syncDisabledDates(validators: Validator_3[]): void;
     // (undocumented)
     _cachedOverlayContentNode: HTMLElement | undefined;
     // (undocumented)
@@ -1992,17 +1682,17 @@ export class LionInputDatepicker extends LionInputDatepicker_base {
     // (undocumented)
     protected _calendarInvokerSlot: string;
     protected get _calendarNode(): LionCalendar;
-    _calendarTemplate(): TemplateResult_2<1>;
+    _calendarTemplate(): TemplateResult<1>;
     // @override
     override _defineOverlayConfig(): Object;
     // (undocumented)
     protected _focusCentralDateOnCalendarOpen: boolean;
     // (undocumented)
     protected _hideOnUserSelect: boolean;
-    _invokerIconTemplate(): TemplateResult_2<1>;
+    _invokerIconTemplate(): TemplateResult<1>;
     // (undocumented)
     protected get _invokerNode(): HTMLElement;
-    _invokerTemplate(): TemplateResult_2<1>;
+    _invokerTemplate(): TemplateResult<1>;
     // (undocumented)
     protected _isHandlingCalendarUserInput: boolean;
     _onCalendarOverlayOpened(): void;
@@ -2012,20 +1702,20 @@ export class LionInputDatepicker extends LionInputDatepicker_base {
         };
     }): void;
     protected _onValidatorUpdated(e: Event | CustomEvent, metaData: {
-        validator: Validator_4;
+        validator: Validator_3;
     }): void;
     // (undocumented)
-    _overlayFrameTemplate(): TemplateResult_2<1>;
-    protected _overlayTemplate(): TemplateResult_2<1>;
+    _overlayFrameTemplate(): TemplateResult<1>;
+    protected _overlayTemplate(): TemplateResult<1>;
     static get properties(): any;
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
     // (undocumented)
     static get scopedElements(): {
         'lion-calendar': typeof LionCalendar;
     };
     // (undocumented)
-    static get styles(): (CSSResultOrNative_2 | CSSResultArray_2)[];
+    static get styles(): (CSSResultOrNative | CSSResultArray)[];
     // (undocumented)
     protected _syncOnUserSelect: boolean;
 }
@@ -2064,16 +1754,16 @@ export class LionInputFile extends LionInputFile_base {
     // (undocumented)
     disconnectedCallback(): void;
     // (undocumented)
-    protected _dispatchFileListChangeEvent(newFiles: InputFile_4[]): void;
-    // Warning: (ae-forgotten-export) The symbol "TemplateResult_11" needs to be exported by the entry point index.d.ts
-    protected _dropZoneTemplate(): TemplateResult_11;
+    protected _dispatchFileListChangeEvent(newFiles: InputFile_3[]): void;
+    // Warning: (ae-forgotten-export) The symbol "TemplateResult_10" needs to be exported by the entry point index.d.ts
+    protected _dropZoneTemplate(): TemplateResult_10;
     // (undocumented)
     enableDropZone: boolean;
     protected get _fileListNode(): LionSelectedFileList;
     protected get _focusableNode(): Element | null;
-    formatter(v: InputFile_4[]): string;
+    formatter(v: InputFile_3[]): string;
     // (undocumented)
-    protected _handleErroredFiles(fileObj: InputFile_4): void;
+    protected _handleErroredFiles(fileObj: InputFile_3): void;
     // (undocumented)
     protected _handleErrors(): void;
     // (undocumented)
@@ -2086,21 +1776,21 @@ export class LionInputFile extends LionInputFile_base {
     // @override
     override _isEmpty(): boolean;
     // (undocumented)
-    static localizeNamespaces: NamespaceObject_2[];
+    static localizeNamespaces: NamespaceObject[];
     // (undocumented)
     maxFileSize: number;
-    modelValue: InputFile_4[];
+    modelValue: InputFile_3[];
     // (undocumented)
     multiple: boolean;
     protected _onClick(ev: Event): void;
     // (undocumented)
     protected _onRemoveFile(ev: CustomEvent): void;
-    parser(): InputFile_4[];
+    parser(): InputFile_3[];
     // (undocumented)
     _prevHasErrors: boolean | undefined;
     // (undocumented)
     protected _processDroppedFiles(ev: DragEvent): void;
-    protected _processFiles(selectedFiles: InputFile_4[]): void;
+    protected _processFiles(selectedFiles: InputFile_3[]): void;
     // (undocumented)
     static get properties(): {
         accept: {
@@ -2141,26 +1831,26 @@ export class LionInputFile extends LionInputFile_base {
         };
     };
     // (undocumented)
-    protected _removeFile(removedFile: InputFile_4): void;
+    protected _removeFile(removedFile: InputFile_3): void;
     // (undocumented)
     static get scopedElements(): {
         'lion-selected-file-list': typeof LionSelectedFileList;
     };
-    // Warning: (ae-forgotten-export) The symbol "InputFile_4" needs to be exported by the entry point index.d.ts
-    protected _selectedFilesMetaData: InputFile_4[];
+    // Warning: (ae-forgotten-export) The symbol "InputFile_3" needs to be exported by the entry point index.d.ts
+    protected _selectedFilesMetaData: InputFile_3[];
     // @override
     protected override _showFeedbackConditionFor(type: string, meta: object): false;
     get slots(): {
-        input: () => TemplateResult_2<1>;
-        'file-select-button': () => TemplateResult_2<1>;
-        after: () => TemplateResult_2<1>;
+        input: () => TemplateResult<1>;
+        'file-select-button': () => TemplateResult<1>;
+        after: () => TemplateResult<1>;
         'selected-file-list': () => {
-            template: TemplateResult_2<1>;
+            template: TemplateResult<1>;
             renderAsDirectHostChild: boolean;
         };
     };
     // (undocumented)
-    static get styles(): (CSSResult_2 | CSSResultArray_2)[];
+    static get styles(): (CSSResult | CSSResultArray)[];
     // (undocumented)
     type: string;
     // (undocumented)
@@ -2168,7 +1858,8 @@ export class LionInputFile extends LionInputFile_base {
     protected _updateUploadButtonDescription(): void;
     // (undocumented)
     uploadOnSelect: boolean;
-    uploadResponse: UploadResponse[];
+    // Warning: (ae-forgotten-export) The symbol "UploadResponse_2" needs to be exported by the entry point index.d.ts
+    uploadResponse: UploadResponse_2[];
     // (undocumented)
     static get validationTypes(): string[];
 }
@@ -2188,11 +1879,11 @@ export class LionInputIban extends LionInputIban_base {
 // @public
 export class LionInputRange extends LionInputRange_base {
     // (undocumented)
-    protected _inputGroupInputTemplate(): TemplateResult_2<1>;
+    protected _inputGroupInputTemplate(): TemplateResult<1>;
     // (undocumented)
-    protected _inputGroupTemplate(): TemplateResult_2<1>;
+    protected _inputGroupTemplate(): TemplateResult<1>;
     // (undocumented)
-    static localizeNamespaces: NamespaceObject_2[];
+    static localizeNamespaces: NamespaceObject[];
     // (undocumented)
     max: number;
     // (undocumented)
@@ -2202,15 +1893,15 @@ export class LionInputRange extends LionInputRange_base {
     // (undocumented)
     parser: (modelValue: string) => number;
     static get properties(): any;
-    // Warning: (ae-forgotten-export) The symbol "CSSResult_3" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "CSSResult_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static scopedStyles(scope: CSSResult_3): CSSResult_2;
+    static scopedStyles(scope: CSSResult_2): CSSResult;
     scopedStylesController: ScopedStylesController;
     // (undocumented)
     step: number;
     // (undocumented)
-    static get styles(): (CSSResult_2 | CSSResultArray_2)[];
+    static get styles(): (CSSResult | CSSResultArray)[];
     // (undocumented)
     unit: string;
 }
@@ -2238,9 +1929,9 @@ export class LionInputStepper extends LionInputStepper_base {
     protected _incrementorSignTemplate(): string | TemplateResult_3;
     protected _incrementorTemplate(): TemplateResult_3;
     // (undocumented)
-    protected _inputGroupTemplate(): TemplateResult_2<1>;
+    protected _inputGroupTemplate(): TemplateResult<1>;
     // (undocumented)
-    static localizeNamespaces: NamespaceObject_2[];
+    static localizeNamespaces: NamespaceObject[];
     // (undocumented)
     max: number;
     // (undocumented)
@@ -2259,7 +1950,7 @@ export class LionInputStepper extends LionInputStepper_base {
     // (undocumented)
     step: number;
     // (undocumented)
-    static get styles(): (CSSResultOrNative_2 | CSSResultArray_2)[];
+    static get styles(): (CSSResultOrNative | CSSResultArray)[];
     // (undocumented)
     timer: NodeJS.Timeout | undefined;
     // (undocumented)
@@ -2280,28 +1971,30 @@ export class LionInputStepper extends LionInputStepper_base {
 // @public
 export class LionInputTel extends LionInputTel_base {
     // (undocumented)
-    __activeRegion: RegionCode_2 | undefined;
+    __activeRegion: RegionCode | undefined;
     // (undocumented)
     __isUpdatingRegionWhileFocused: boolean | undefined;
     readonly set activePhoneNumberType(arg: any);
     readonly get activePhoneNumberType(): any;
-    readonly set activeRegion(arg: RegionCode_2 | undefined);
-    readonly get activeRegion(): RegionCode_2 | undefined;
-    get _allowedOrAllRegions(): RegionCode_2[];
-    allowedRegions: RegionCode_3[];
+    readonly set activeRegion(arg: RegionCode | undefined);
+    readonly get activeRegion(): RegionCode | undefined;
+    get _allowedOrAllRegions(): RegionCode[];
+    allowedRegions: RegionCode_2[];
     get fieldName(): string;
     formatCountryCodeStyle: string;
+    // Warning: (ae-forgotten-export) The symbol "PhoneNumberFormat" needs to be exported by the entry point index.d.ts
     formatStrategy: PhoneNumberFormat;
     formatter(modelValue: string): string;
-    protected _langIso: RegionCode_2 | undefined;
+    protected _langIso: RegionCode | undefined;
     // (undocumented)
-    static localizeNamespaces: NamespaceObject_2[];
+    static localizeNamespaces: NamespaceObject[];
     // (undocumented)
     protected _onPhoneNumberUtilReady(): void;
     parser(viewValue: string): string;
+    // Warning: (ae-forgotten-export) The symbol "AwesomePhoneNumber" needs to be exported by the entry point index.d.ts
     protected _phoneUtil: AwesomePhoneNumber | null;
     protected get _phoneUtilLoadComplete(): Promise<PhoneNumber>;
-    preferredRegions: RegionCode_3[];
+    preferredRegions: RegionCode_2[];
     preprocessor(viewValue: string, { currentCaretIndex, prevViewValue }: {
         prevViewValue: string;
         currentCaretIndex: number;
@@ -2332,13 +2025,45 @@ export class LionInputTel extends LionInputTel_base {
             state: boolean;
         };
     };
-    protected _setActiveRegion(newValue: RegionCode_3 | undefined): void;
+    // Warning: (ae-forgotten-export) The symbol "RegionCode_2" needs to be exported by the entry point index.d.ts
+    protected _setActiveRegion(newValue: RegionCode_2 | undefined): void;
 }
 
-// Warning: (ae-forgotten-export) The symbol "LionInputTelDropdown_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type LionInputTelDropdown = LionInputTelDropdown_2;
+// @public
+export class LionInputTelDropdown extends LionInputTel {
+    // (undocumented)
+    __initializedRegionCode: string | undefined;
+    // (undocumented)
+    __namesForLocale: Intl.DisplayNames | undefined;
+    protected _allCountriesLabel: string;
+    // (undocumented)
+    protected _initModelValueBasedOnDropdown(): void;
+    protected _isEmpty(modelValue?: string): boolean;
+    // Warning: (ae-forgotten-export) The symbol "OnDropdownChangeEvent_4" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    protected _onDropdownValueChange(event: OnDropdownChangeEvent_4): void;
+    protected _preferredCountriesLabel: string;
+    // (undocumented)
+    refs: {
+        dropdown: DropdownRef_4;
+    };
+    protected _repropagationCondition(): boolean;
+    get slots(): {
+        prefix: () => {
+            template: TemplateResult<1>;
+            renderAsDirectHostChild: boolean;
+        };
+        input: () => HTMLInputElement;
+    };
+    static styles: (CSSResult | CSSResultArray)[];
+    get _templateDataDropdown(): TemplateDataForDropdownInputTel;
+    // (undocumented)
+    static templates: {
+        dropdown: (templateDataForDropdown: TemplateDataForDropdownInputTel_2) => TemplateResult<1>;
+        dropdownOption: (templateDataForDropdown: TemplateDataForDropdownInputTel_2, { regionCode, countryCode, flagSymbol }: RegionMeta_4) => TemplateResult<1>;
+    };
+}
 
 // Warning: (ae-forgotten-export) The symbol "LionListbox_base" needs to be exported by the entry point index.d.ts
 //
@@ -2347,21 +2072,52 @@ export class LionListbox extends LionListbox_base {
     get _feedbackConditionMeta(): {
         focused: boolean;
     };
-    get _focusableNode(): HTMLInputElement | HTMLTextAreaElement | HTMLElementWithValue_2;
+    get _focusableNode(): HTMLInputElement | HTMLTextAreaElement | HTMLElementWithValue;
 }
 
-// Warning: (ae-forgotten-export) The symbol "LionOption_2" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "LionOption_base" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
-export type LionOption = LionOption_2;
+// @public
+export class LionOption extends LionOption_base {
+    // (undocumented)
+    active: boolean;
+    // (undocumented)
+    connectedCallback(): void;
+    static get properties(): any;
+    // Warning: (ae-forgotten-export) The symbol "TemplateResult_4" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    render(): TemplateResult_4;
+    // (undocumented)
+    requestUpdate(name?: string | undefined, oldValue?: unknown, options?: PropertyDeclaration<any, any> | undefined): void;
+    // @override
+    override get slots(): {};
+    // (undocumented)
+    static get styles(): CSSResult[];
+}
 
-// Warning: (ae-forgotten-export) The symbol "LionOptionHost_2" needs to be exported by the entry point index.d.ts
+// @public (undocumented)
+export class LionOptionHost {
+    constructor(...args: any[]);
+    // (undocumented)
+    protected _parentFormGroup: ChoiceGroupHost;
+}
+
+// Warning: (ae-forgotten-export) The symbol "LionOptions_base" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
-export type LionOptionHost = LionOptionHost_2;
-
-// @public (undocumented)
-export type LionOptions = LionOptions_2;
+// @public
+export class LionOptions extends LionOptions_base {
+    // (undocumented)
+    createRenderRoot(): LionOptions;
+    // (undocumented)
+    static get properties(): {
+        tabIndex: {
+            type: NumberConstructor;
+            reflect: boolean;
+            attribute: string;
+        };
+    };
+}
 
 // Warning: (ae-forgotten-export) The symbol "LionPagination_base" needs to be exported by the entry point index.d.ts
 //
@@ -2374,15 +2130,15 @@ export class LionPagination extends LionPagination_base {
     set current(arg: number);
     // (undocumented)
     get current(): number;
-    protected _disabledButtonTemplate(label: string): TemplateResult_12;
+    protected _disabledButtonTemplate(label: string): TemplateResult_11;
     public first(): void;
     public goto(pageNumber: number): void;
     public last(): void;
     public next(): void;
     public previous(): void;
-    protected _prevNextButtonTemplate(label: string, pageNumber: number, namespace?: string): TemplateResult_12;
-    // Warning: (ae-forgotten-export) The symbol "TemplateResult_12" needs to be exported by the entry point index.d.ts
-    protected _prevNextIconTemplate(label: string): TemplateResult_12;
+    protected _prevNextButtonTemplate(label: string, pageNumber: number, namespace?: string): TemplateResult_11;
+    // Warning: (ae-forgotten-export) The symbol "TemplateResult_11" needs to be exported by the entry point index.d.ts
+    protected _prevNextIconTemplate(label: string): TemplateResult_11;
     // (undocumented)
     static get properties(): {
         current: {
@@ -2395,65 +2151,10 @@ export class LionPagination extends LionPagination_base {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
-    protected _renderNavList(): TemplateResult_12[];
+    render(): TemplateResult<1>;
+    protected _renderNavList(): TemplateResult_11[];
     // (undocumented)
-    static get styles(): CSSResult_2[];
-}
-
-// Warning: (ae-forgotten-export) The symbol "LionProgressIndicator_base" needs to be exported by the entry point index.d.ts
-//
-// @public
-export class LionProgressIndicator extends LionProgressIndicator_base {
-    // (undocumented)
-    __hasDefaultLabelSet: boolean;
-    // (undocumented)
-    _ariaLabel: string;
-    // (undocumented)
-    _ariaLabelledby: string;
-    // (undocumented)
-    connectedCallback(): void;
-    static enabledWarnings: WarningKind[];
-    // (undocumented)
-    protected _graphicTemplate(): symbol;
-    readonly get indeterminate(): boolean;
-    // (undocumented)
-    static get localizeNamespaces(): {
-        'lion-progress-indicator': (locale: string) => Promise<translationsBgJs>;
-    }[];
-    // (undocumented)
-    max: number;
-    // (undocumented)
-    min: number;
-    get _progressPercentage(): number | undefined;
-    // (undocumented)
-    static get properties(): {
-        value: {
-            type: NumberConstructor;
-        };
-        min: {
-            type: NumberConstructor;
-        };
-        max: {
-            type: NumberConstructor;
-        };
-        _ariaLabel: {
-            attribute: string;
-            type: StringConstructor;
-        };
-        _ariaLabelledby: {
-            attribute: string;
-            type: StringConstructor;
-        };
-    };
-    // (undocumented)
-    render(): symbol;
-    // (undocumented)
-    _resetAriaValueAttributes(): void;
-    // (undocumented)
-    _setDefaultLabel(): void;
-    // (undocumented)
-    value: number;
+    static get styles(): CSSResult[];
 }
 
 // Warning: (ae-forgotten-export) The symbol "LionRadio_base" needs to be exported by the entry point index.d.ts
@@ -2470,10 +2171,19 @@ export class LionRadioGroup extends LionRadioGroup_base {
     connectedCallback(): void;
 }
 
-// Warning: (ae-forgotten-export) The symbol "LionSelect_2" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "LionFieldWithSelect" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
-export type LionSelect = LionSelect_2;
+// @public
+export class LionSelect extends LionFieldWithSelect {
+    // (undocumented)
+    __selectObserver: MutationObserver | undefined;
+    // @override
+    override formatter(v: any): string;
+    // (undocumented)
+    protected _proxyChangeEvent(): void;
+    // (undocumented)
+    updated(changedProperties: PropertyValues): void;
+}
 
 // Warning: (ae-forgotten-export) The symbol "LionSelectedFileList_base" needs to be exported by the entry point index.d.ts
 //
@@ -2481,14 +2191,14 @@ export type LionSelect = LionSelect_2;
 export class LionSelectedFileList extends LionSelectedFileList_base {
     // (undocumented)
     _enhanceLightDomA11y(): void;
-    // Warning: (ae-forgotten-export) The symbol "InputFile_3" needs to be exported by the entry point index.d.ts
-    fileList: InputFile_3[];
+    // Warning: (ae-forgotten-export) The symbol "InputFile_2" needs to be exported by the entry point index.d.ts
+    fileList: InputFile_2[];
     // (undocumented)
-    protected _listItemAfterTemplate(file: InputFile_3, fileUuid: string): TemplateResult_10;
+    protected _listItemAfterTemplate(file: InputFile_2, fileUuid: string): TemplateResult_9;
     // (undocumented)
-    protected _listItemBeforeTemplate(file: InputFile_3): TemplateResult_10 | typeof nothing_3;
+    protected _listItemBeforeTemplate(file: InputFile_2): TemplateResult_9 | typeof nothing_3;
     // (undocumented)
-    static localizeNamespaces: NamespaceObject_2[];
+    static localizeNamespaces: NamespaceObject[];
     // (undocumented)
     multiple: boolean;
     // (undocumented)
@@ -2500,39 +2210,136 @@ export class LionSelectedFileList extends LionSelectedFileList_base {
             type: BooleanConstructor;
         };
     };
-    protected _removeButtonContentTemplate(): TemplateResult_10;
+    protected _removeButtonContentTemplate(): TemplateResult_9;
     // (undocumented)
-    protected _removeFile(removedFile: InputFile_3): void;
+    protected _removeFile(removedFile: InputFile_2): void;
     // (undocumented)
-    render(): TemplateResult_2<1> | typeof nothing_3;
+    render(): TemplateResult<1> | typeof nothing_3;
     // (undocumented)
     static get scopedElements(): any;
     // (undocumented)
-    protected _selectedListItemTemplate(file: InputFile_3): TemplateResult_10;
+    protected _selectedListItemTemplate(file: InputFile_2): TemplateResult_9;
     // (undocumented)
-    static get styles(): CSSResult_2[];
-    // Warning: (ae-forgotten-export) The symbol "TemplateResult_10" needs to be exported by the entry point index.d.ts
+    static get styles(): CSSResult[];
+    // Warning: (ae-forgotten-export) The symbol "TemplateResult_9" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    protected _validationFeedbackTemplate(validationFeedback: Array<FeedbackMessage_2>, fileUuid: string): TemplateResult_10;
+    protected _validationFeedbackTemplate(validationFeedback: Array<FeedbackMessage>, fileUuid: string): TemplateResult_9;
 }
 
-// @public (undocumented)
-export type LionSelectInvoker = LionSelectInvoker_2;
-
-// Warning: (ae-forgotten-export) The symbol "LionSelectRich_2" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "LionSelectInvoker_base" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
-export type LionSelectRich = LionSelectRich_2;
-
 // @public
-export class LionStep extends LitElement_2 {
+export class LionSelectInvoker extends LionSelectInvoker_base {
     // (undocumented)
-    condition: (data?: Object | undefined) => boolean;
-    // Warning: (ae-forgotten-export) The symbol "LionSteps_2" needs to be exported by the entry point index.d.ts
+    protected _afterTemplate(): TemplateResult<1>;
+    // (undocumented)
+    protected _beforeTemplate(): TemplateResult<1>;
+    // (undocumented)
+    connectedCallback(): void;
+    // Warning: (ae-forgotten-export) The symbol "TemplateResult_8" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    controller: LionSteps_2 | undefined;
+    protected _contentTemplate(): TemplateResult_8 | Node[] | string | null;
+    get _contentWrapperNode(): HTMLElement | null;
+    // Warning: (ae-forgotten-export) The symbol "LionSelectRich_2" needs to be exported by the entry point index.d.ts
+    hostElement: LionSelectRich_2 | null;
+    protected _noSelectionTemplate(): TemplateResult_8;
+    static get properties(): any;
+    readOnly: boolean;
+    // Warning: (ae-forgotten-export) The symbol "LionOption_3" needs to be exported by the entry point index.d.ts
+    selectedElement: LionOption_3 | null;
+    singleOption: boolean;
+    // (undocumented)
+    get slots(): {
+        after: () => HTMLSpanElement;
+    };
+    // (undocumented)
+    static get styles(): (CSSResult & (CSSResultOrNative | CSSResultArray))[];
+}
+
+// Warning: (ae-forgotten-export) The symbol "LionSelectRich_base" needs to be exported by the entry point index.d.ts
+//
+// @public
+export class LionSelectRich extends LionSelectRich_base {
+    // (undocumented)
+    __blockListShow: boolean | undefined;
+    // (undocumented)
+    __hasInitialSelectedFormElement: boolean | undefined;
+    // (undocumented)
+    protected __onKeyUp(ev: KeyboardEvent): void;
+    // Warning: (ae-forgotten-export) The symbol "LionOption_4" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "FormControlHost_6" needs to be exported by the entry point index.d.ts
+    addFormElement(child: LionOption_4 & FormControlHost_6, indexToInsertAt: number): void;
+    protected _alignInvokerWidth(): Promise<void>;
+    // (undocumented)
+    protected _arrowWidth: number;
+    // (undocumented)
+    connectedCallback(): void;
+    protected _defineOverlayConfig(): {
+        visibilityTriggerFunction: undefined;
+        placementMode?: "global" | "local" | undefined;
+        popperConfig?: Partial<Options_2> | undefined;
+        viewportConfig?: ViewportConfig | undefined;
+        isBlocking?: boolean | undefined;
+        inheritsReferenceWidth?: "none" | "max" | "full" | "min" | undefined;
+        zIndex?: number | undefined;
+        invokerNode?: HTMLElement | undefined;
+        referenceNode?: HTMLElement | undefined;
+        contentNode?: HTMLElement | undefined;
+        contentWrapperNode?: HTMLElement | undefined;
+        backdropNode?: HTMLElement | undefined;
+        elementToFocusAfterHide?: HTMLElement | undefined;
+        hasBackdrop?: boolean | undefined;
+        preventsScroll?: boolean | undefined;
+        trapsKeyboardFocus?: boolean | undefined;
+        hidesOnEsc?: boolean | undefined;
+        hidesOnOutsideClick?: boolean | undefined;
+        hidesOnOutsideEsc?: boolean | undefined;
+        handlesAccessibility?: boolean | undefined;
+        isTooltip?: boolean | undefined;
+        isAlertDialog?: boolean | undefined;
+        invokerRelation?: "label" | "description" | undefined;
+        _noDialogEl?: Boolean | undefined;
+    };
+    protected get _focusableNode(): LionSelectInvoker;
+    // @override
+    protected override _getCheckedElements(): LionOption[];
+    // (undocumented)
+    _initialInheritsReferenceWidth: "none" | "max" | "full" | "min" | undefined;
+    protected _inputGroupInputTemplate(): TemplateResult<1>;
+    interactionMode: 'windows/linux' | 'mac' | 'auto';
+    protected get _invokerNode(): LionSelectInvoker;
+    // (undocumented)
+    _isHandlingUserInput: boolean | undefined;
+    // (undocumented)
+    protected _listboxOnClick(): void;
+    navigateWithinInvoker: boolean;
+    protected _noDefaultSelectedInheritsWidth(): void;
+    // (undocumented)
+    protected _onFormElementsChanged(): void;
+    protected _onLabelClick(): void;
+    protected get _overlayContentNode(): LionOptions;
+    protected get _overlayInvokerNode(): LionSelectInvoker;
+    static get properties(): any;
+    // (undocumented)
+    requestUpdate(name?: string | undefined, oldValue?: unknown, options?: PropertyDeclaration<any, any> | undefined): void;
+    // (undocumented)
+    static get scopedElements(): {
+        'lion-select-invoker': typeof LionSelectInvoker;
+    };
+    // (undocumented)
+    singleOption: boolean;
+    // (undocumented)
+    updated(changedProperties: PropertyValues): void;
+}
+
+// @public
+export class LionStep extends LitElement {
+    // (undocumented)
+    condition: (data?: Object | undefined) => boolean;
+    // (undocumented)
+    controller: LionSteps | undefined;
     static enabledWarnings: WarningKind[];
     // (undocumented)
     enter(): void;
@@ -2572,30 +2379,77 @@ export class LionStep extends LitElement_2 {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
     // (undocumented)
     skip(): void;
     // (undocumented)
     status: string;
     // (undocumented)
-    static get styles(): CSSResult_2[];
+    static get styles(): CSSResult[];
 }
 
-// @public (undocumented)
-export type LionSteps = LionSteps_2;
+// @public
+export class LionSteps extends LitElement {
+    // (undocumented)
+    _changeStep(newCurrent: number, oldCurrent: number): void;
+    current: number;
+    data: {
+        [key: string]: any;
+    };
+    // (undocumented)
+    _dispatchTransitionEvent(fromStep: {
+        number: number;
+        element: LionStep_2;
+    }, toStep: {
+        number: number;
+        element: LionStep_2;
+    }): void;
+    static enabledWarnings: WarningKind[];
+    // (undocumented)
+    _goTo(newCurrent: number, oldCurrent: number): void;
+    // (undocumented)
+    _internalCurrentSync: boolean;
+    // (undocumented)
+    _max: number;
+    // (undocumented)
+    next(): void;
+    // (undocumented)
+    _onCurrentChanged(newValues: {
+        current: number;
+    }, oldValues: {
+        current: number;
+    }): void;
+    // (undocumented)
+    previous(): void;
+    // (undocumented)
+    static get properties(): {
+        data: {
+            type: ObjectConstructor;
+        };
+        current: {
+            type: NumberConstructor;
+        };
+    };
+    // (undocumented)
+    render(): TemplateResult<1>;
+    // (undocumented)
+    get steps(): LionStep[];
+    // (undocumented)
+    static get styles(): CSSResult[];
+}
 
 // Warning: (ae-forgotten-export) The symbol "LionSwitch_base" needs to be exported by the entry point index.d.ts
 //
 // @public
 export class LionSwitch extends LionSwitch_base {
     // (undocumented)
-    protected _groupOneTemplate(): TemplateResult_2<1>;
+    protected _groupOneTemplate(): TemplateResult<1>;
     // (undocumented)
-    protected _groupTwoTemplate(): TemplateResult_2<1>;
+    protected _groupTwoTemplate(): TemplateResult<1>;
     protected get _inputNode(): LionSwitchButton;
     protected _isEmpty(): boolean;
     protected _onLabelClick(): void;
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
     // (undocumented)
     static get scopedElements(): {
         'lion-switch-button': typeof LionSwitchButton;
@@ -2605,7 +2459,7 @@ export class LionSwitch extends LionSwitch_base {
         input: () => HTMLElement;
     };
     // (undocumented)
-    static get styles(): (CSSResultOrNative_2 | CSSResultArray_2)[];
+    static get styles(): (CSSResultOrNative | CSSResultArray)[];
     // (undocumented)
     protected _syncButtonSwitch(): void;
     // (undocumented)
@@ -2634,11 +2488,11 @@ export class LionSwitchButton extends LionSwitchButton_base {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
     // (undocumented)
     requestUpdate(name?: string | undefined, oldValue?: unknown, options?: PropertyDeclaration<any, any> | undefined): void;
     // (undocumented)
-    static get styles(): CSSResult_2[];
+    static get styles(): CSSResult[];
     // (undocumented)
     protected _toggleChecked(): void;
     // (undocumented)
@@ -2646,7 +2500,7 @@ export class LionSwitchButton extends LionSwitchButton_base {
 }
 
 // @public
-export class LionTabs extends LitElement_2 {
+export class LionTabs extends LitElement {
     __selectedIndex: number | undefined;
     // Warning: (ae-forgotten-export) The symbol "StoreEntry_2" needs to be exported by the entry point index.d.ts
     __store: StoreEntry_2[] | undefined;
@@ -2664,13 +2518,13 @@ export class LionTabs extends LitElement_2 {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
     set selectedIndex(arg: number);
     get selectedIndex(): number;
     // (undocumented)
     protected _setSelectedIndexWithFocus(value: number): void;
     // (undocumented)
-    static get styles(): CSSResult_2[];
+    static get styles(): CSSResult[];
     // (undocumented)
     get tabs(): HTMLButtonElement[];
 }
@@ -2698,7 +2552,7 @@ export class LionTextarea extends LionTextarea_base {
         input: () => HTMLTextAreaElement;
     };
     // (undocumented)
-    static get styles(): (CSSResultOrNative_2 | CSSResultArray_2)[];
+    static get styles(): (CSSResultOrNative | CSSResultArray)[];
     // (undocumented)
     get updateComplete(): Promise<boolean> | Promise<any>;
     // (undocumented)
@@ -2710,42 +2564,115 @@ export class LionTextarea extends LionTextarea_base {
 // @public
 export class LionTooltip extends LionTooltip_base {
     // (undocumented)
-    protected _defineOverlayConfig(): OverlayConfig_2;
+    protected _defineOverlayConfig(): OverlayConfig;
     static enabledWarnings: WarningKind[];
     invokerRelation: 'label' | 'description';
     static get properties(): any;
     // (undocumented)
-    static get styles(): (CSSResultOrNative_2 | CSSResultArray_2)[];
+    static get styles(): (CSSResultOrNative | CSSResultArray)[];
+}
+
+// Warning: (ae-forgotten-export) The symbol "LionValidationFeedback_base" needs to be exported by the entry point index.d.ts
+//
+// @public
+export class LionValidationFeedback extends LionValidationFeedback_base {
+    // (undocumented)
+    currentType: string | undefined;
+    // Warning: (ae-forgotten-export) The symbol "FeedbackMessage_2" needs to be exported by the entry point index.d.ts
+    feedbackData: FeedbackMessage_2[] | undefined;
+    // (undocumented)
+    static localizeNamespaces: NamespaceObject[];
+    // Warning: (ae-forgotten-export) The symbol "TemplateResult_2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    protected _messageTemplate({ message }: {
+        message: string | Node | TemplateResult_2;
+        type?: string | undefined;
+        validator?: Validator | undefined;
+    }): string | Node | TemplateResult_2;
+    // (undocumented)
+    static get properties(): {
+        feedbackData: {
+            attribute: boolean;
+        };
+    };
+    // (undocumented)
+    render(): TemplateResult<1>;
+    // (undocumented)
+    static get styles(): CSSResult[];
 }
 
 // @public (undocumented)
-export type LionValidationFeedback = LionValidationFeedback_2;
-
-// Warning: (ae-forgotten-export) The symbol "ListboxHost_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type ListboxHost = ListboxHost_2;
-
-// @public (undocumented)
-export function ListboxImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<ListboxHost_2> & Pick<typeof ListboxHost_2, keyof typeof ListboxHost_2> & Constructor<ChoiceGroupHost> & Pick<typeof ChoiceGroupHost, keyof typeof ChoiceGroupHost> & Constructor<SlotHost_2> & Pick<typeof SlotHost_2, keyof typeof SlotHost_2> & Constructor<FormRegistrarHost_2> & Pick<typeof FormRegistrarHost_2, keyof typeof FormRegistrarHost_2> & Constructor<FormControlHost_3> & Pick<typeof FormControlHost_3, keyof typeof FormControlHost_3> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
+export class ListboxHost {
+    // (undocumented)
+    protected get _activeDescendantOwnerNode(): HTMLElement;
+    // (undocumented)
+    activeIndex: number;
+    // (undocumented)
+    checkedIndex: number | number[];
+    // (undocumented)
+    formElements: LionOption[];
+    // (undocumented)
+    protected _getNextEnabledOption(currentIndex: number, offset?: number): number;
+    // (undocumented)
+    protected _getPreviousEnabledOption(currentIndex: number, offset?: number): number;
+    // (undocumented)
+    protected _handleTypeAhead(ev: KeyboardEvent, params: {
+        setAsChecked: boolean;
+    }): void;
+    // (undocumented)
+    hasNoDefaultSelected: boolean;
+    // (undocumented)
+    protected get _listboxNode(): LionOptions;
+    // (undocumented)
+    protected _listboxOnClick(ev: MouseEvent): void;
+    // (undocumented)
+    protected _listboxOnKeyDown(ev: KeyboardEvent): void;
+    // (undocumented)
+    protected _listboxOnKeyUp(ev: KeyboardEvent): void;
+    // (undocumented)
+    protected _listboxReceivesNoFocus: boolean;
+    // (undocumented)
+    protected _noTypeAhead: boolean;
+    // (undocumented)
+    protected _onChildActiveChanged(ev: Event): void;
+    // (undocumented)
+    protected _onListboxContentChanged(): void;
+    orientation: 'vertical' | 'horizontal';
+    reset(): void;
+    rotateKeyboardNavigation: Boolean;
+    // (undocumented)
+    protected _scrollIntoView(el: HTMLElement, scrollTargetEl: HTMLElement | undefined): void;
+    // (undocumented)
+    protected get _scrollTargetNode(): HTMLElement;
+    selectionFollowsFocus: Boolean;
+    // (undocumented)
+    setCheckedIndex(index: number | number[]): void;
+    // (undocumented)
+    protected _setupListboxInteractions(): void;
+    // (undocumented)
+    protected _setupListboxNode(): void;
+    // (undocumented)
+    static get styles(): CSSResultArray;
+    // (undocumented)
+    protected _teardownListboxNode(): void;
+    // (undocumented)
+    protected _uncheckChildren(): void;
+}
 
 // Warning: (ae-forgotten-export) The symbol "ListboxMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type ListboxMixin = ListboxMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "ListboxImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const ListboxMixin: ListboxImplementation;
 
 // @public (undocumented)
-export type LitElement = LitElement_2;
-
-// @public (undocumented)
-export type LitElementConstructor = Constructor<LitElement>;
-
-// @public (undocumented)
 export function liveFormatPhoneNumber(viewValue: string, { regionCode, formatStrategy, prevViewValue, currentCaretIndex, formatCountryCodeStyle }: {
-    regionCode: RegionCode_7;
+    regionCode: RegionCode_5;
     prevViewValue: string;
     currentCaretIndex: number;
     formatStrategy: PhoneNumberFormat_3;
@@ -2757,7 +2684,7 @@ export function liveFormatPhoneNumber(viewValue: string, { regionCode, formatStr
 
 // @public (undocumented)
 export function loadComboboxMessagesNoSideEffects({ localize }: {
-    localize: LocalizeManager_4;
+    localize: LocalizeManager_3;
 }): void;
 
 // @public
@@ -2765,23 +2692,18 @@ export function loadDefaultFeedbackMessages(): void;
 
 // @public (undocumented)
 export function loadDefaultFeedbackMessagesNoSideEffects({ localize }: {
-    localize: LocalizeManager_3;
+    localize: LocalizeManager_2;
 }): void;
 
 // @public (undocumented)
 export function loadFormCoreMessagesNoSideEffects({ localize }: {
-    localize: LocalizeManager_5;
+    localize: LocalizeManager_4;
 }): void;
 
 // @public (undocumented)
 export function loadInputTelMessagesNoSideEffects({ localize }: {
-    localize: LocalizeManager_6;
+    localize: LocalizeManager_5;
 }): void;
-
-// @public (undocumented)
-export function loadValidateNamespace({ localize }: {
-    localize: LocalizeManager_2;
-}): Promise<void | object>;
 
 // @public @deprecated
 export const localize: LocalizeManager;
@@ -2803,11 +2725,11 @@ export class LocalizeManager extends EventTarget {
     // (undocumented)
     protected _fallbackLocale: string;
     formatDateOptions: {
-        postProcessors: Map<string, DatePostProcessor>;
+        postProcessors: Map<string, DatePostProcessor_2>;
     };
     formatNumberOptions: {
         returnIfNaN: string;
-        postProcessors: Map<string, NumberPostProcessor>;
+        postProcessors: Map<string, NumberPostProcessor_2>;
     };
     // (undocumented)
     protected _getCachedNamespaceLoaderPromise(locale: string, namespace: string): Promise<void | Object> | null;
@@ -2818,7 +2740,7 @@ export class LocalizeManager extends EventTarget {
     // (undocumented)
     protected _getMessageForKeys(keys: string | string[], locale: string): string | undefined;
     // (undocumented)
-    protected _getNamespaceLoader(namespaceObj: NamespaceObject, isDynamicImport: boolean, namespace: string): Function;
+    protected _getNamespaceLoader(namespaceObj: NamespaceObject_2, isDynamicImport: boolean, namespace: string): Function;
     // (undocumented)
     protected _getNamespaceLoaderPromise(loader: Function, locale: string, namespace: string, fallbackLocale?: string | undefined): Promise<any>;
     // (undocumented)
@@ -2833,13 +2755,15 @@ export class LocalizeManager extends EventTarget {
     // (undocumented)
     readonly get loadingComplete(): Promise<void | Object>;
     // (undocumented)
-    loadNamespace(namespaceObj: NamespaceObject, { locale }?: {
+    loadNamespace(namespaceObj: NamespaceObject_2, { locale }?: {
         locale?: string | undefined;
     }): Promise<Object | void>;
     // (undocumented)
-    protected _loadNamespaceData(locale: string, namespaceObj: NamespaceObject, isDynamicImport: boolean, namespace: string): Promise<Object | void>;
+    protected _loadNamespaceData(locale: string, namespaceObj: NamespaceObject_2, isDynamicImport: boolean, namespace: string): Promise<Object | void>;
+    // Warning: (ae-forgotten-export) The symbol "NamespaceObject_2" needs to be exported by the entry point index.d.ts
+    //
     // (undocumented)
-    loadNamespaces(namespaces: NamespaceObject[], { locale }?: {
+    loadNamespaces(namespaces: NamespaceObject_2[], { locale }?: {
         locale?: string | undefined;
     }): Promise<Object>;
     set locale(arg: string);
@@ -2860,14 +2784,14 @@ export class LocalizeManager extends EventTarget {
     // (undocumented)
     setDatePostProcessorForLocale({ locale, postProcessor }: {
         locale: string;
-        postProcessor: DatePostProcessor;
+        postProcessor: DatePostProcessor_2;
     }): void;
     // (undocumented)
     protected _setHtmlLangAttribute(locale: string): void;
     // (undocumented)
     setNumberPostProcessorForLocale({ locale, postProcessor }: {
         locale: string;
-        postProcessor: NumberPostProcessor;
+        postProcessor: NumberPostProcessor_2;
     }): void;
     // (undocumented)
     protected _setupHtmlLangAttributeObserver(): void;
@@ -2885,26 +2809,37 @@ export class LocalizeManager extends EventTarget {
     protected _teardownHtmlLangAttributeObserver(): void;
 }
 
-// @public (undocumented)
-export type LocalizeManagerForTesting = LocalizeManager & {
-    __instance_for_testing?: LocalizeManager;
-};
-
 // Warning: (ae-forgotten-export) The symbol "LocalizeMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type LocalizeMixin = LocalizeMixin_2;
 
-// Warning: (ae-forgotten-export) The symbol "LocalizeMixinHost_2" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export const LocalizeMixin: <T extends Constructor<LitElement_2>>(superclass: T) => T & Constructor<LocalizeMixinHost_2> & Pick<LocalizeMixinHost_2, "prototype" | "localizeNamespaces" | "waitForLocalizeNamespaces"> & Pick<LitElement_2, typeof Symbol.metadata | "prototype" | "_$litElement$" | "enabledWarnings" | "enableWarning" | "disableWarning" | "addInitializer" | "_initializers" | "elementProperties" | "properties" | "elementStyles" | "styles" | "observedAttributes" | "createProperty" | "getPropertyOptions" | "shadowRootOptions">;
+export const LocalizeMixin: <T extends Constructor<LitElement_2>>(superclass: T) => T & Constructor<LocalizeMixinHost> & Pick<LocalizeMixinHost, "prototype" | "localizeNamespaces" | "waitForLocalizeNamespaces"> & Pick<LitElement_2, typeof Symbol.metadata | "prototype" | "_$litElement$" | "enabledWarnings" | "enableWarning" | "disableWarning" | "addInitializer" | "_initializers" | "elementProperties" | "properties" | "elementStyles" | "styles" | "observedAttributes" | "createProperty" | "getPropertyOptions" | "shadowRootOptions">;
 
 // @public (undocumented)
-export type LocalizeMixinHost = LocalizeMixin_2;
-
-// @public (undocumented)
-export function localizeNamespaceLoader(locale: string): Promise<translationsBgBgJs>;
+export class LocalizeMixinHost {
+    // (undocumented)
+    connectedCallback(): void;
+    // (undocumented)
+    disconnectedCallback(): void;
+    // (undocumented)
+    protected _localizeManager: LocalizeManager;
+    // (undocumented)
+    static get localizeNamespaces(): NamespaceObject[];
+    // (undocumented)
+    localizeNamespacesLoaded: Promise<Object> | undefined;
+    // (undocumented)
+    msgLit(keys: string | string[], variables?: msgVariables, options?: msgOptions): string | DirectiveResult;
+    // (undocumented)
+    onLocaleChanged(newLocale: string, oldLocale: string): void;
+    // (undocumented)
+    onLocaleReady(): void;
+    // (undocumented)
+    onLocaleUpdated(): void;
+    // (undocumented)
+    static get waitForLocalizeNamespaces(): boolean;
+}
 
 // @public (undocumented)
 export function localizeTearDown(): void;
@@ -2913,7 +2848,7 @@ export function localizeTearDown(): void;
 export function makeMatchingTextBold(root: Node, matchingString: string): void;
 
 // @public (undocumented)
-export class MatchesOption extends Validator_2 {
+export class MatchesOption extends Validator {
     // (undocumented)
     execute(value?: unknown, options?: string | undefined, config?: {
         node: any;
@@ -2922,11 +2857,8 @@ export class MatchesOption extends Validator_2 {
     static get validatorName(): string;
 }
 
-// @public
-export const MAX_FILE_SIZE: 524288000;
-
 // @public (undocumented)
-export class MaxDate extends Validator_2 {
+export class MaxDate extends Validator {
     // (undocumented)
     execute(value: unknown, max?: any): boolean;
     // (undocumented)
@@ -2934,7 +2866,7 @@ export class MaxDate extends Validator_2 {
 }
 
 // @public (undocumented)
-export class MaxLength extends Validator_2 {
+export class MaxLength extends Validator {
     // (undocumented)
     execute(value: unknown, max?: any): boolean;
     // (undocumented)
@@ -2942,7 +2874,7 @@ export class MaxLength extends Validator_2 {
 }
 
 // @public (undocumented)
-export class MaxNumber extends Validator_2 {
+export class MaxNumber extends Validator {
     // (undocumented)
     execute(value: unknown, max?: any): boolean;
     // (undocumented)
@@ -2958,6 +2890,8 @@ export function mimicClick(el: HTMLElement, { isAsync, releaseElement }?: {
 // @public (undocumented)
 export function mimicKeyPress(el: HTMLElement, key: string): void;
 
+// Warning: (ae-forgotten-export) The symbol "DropdownElement" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export function mimicUserChangingDropdown(dropdownEl: DropdownElement, value: string): void;
 
@@ -2967,13 +2901,13 @@ export function mimicUserInput(formControl: HTMLElement, newViewValue: unknown, 
 }): void;
 
 // @public (undocumented)
-export function mimicUserTyping(el: LionCombobox_2, keys: string): Promise<void>;
+export function mimicUserTyping(el: LionCombobox, keys: string): Promise<void>;
 
 // @public (undocumented)
-export function mimicUserTypingAdvanced(el: LionCombobox_2, values: string[]): Promise<void>;
+export function mimicUserTypingAdvanced(el: LionCombobox, values: string[]): Promise<void>;
 
 // @public (undocumented)
-export class MinDate extends Validator_2 {
+export class MinDate extends Validator {
     // (undocumented)
     execute(value: unknown, min?: any): boolean;
     // (undocumented)
@@ -2981,7 +2915,7 @@ export class MinDate extends Validator_2 {
 }
 
 // @public (undocumented)
-export class MinLength extends Validator_2 {
+export class MinLength extends Validator {
     // (undocumented)
     execute(value: unknown, min?: any): boolean;
     // (undocumented)
@@ -2989,7 +2923,7 @@ export class MinLength extends Validator_2 {
 }
 
 // @public (undocumented)
-export class MinMaxDate extends Validator_2 {
+export class MinMaxDate extends Validator {
     // (undocumented)
     execute(value: unknown, { min, max }?: any): boolean;
     // (undocumented)
@@ -2997,7 +2931,7 @@ export class MinMaxDate extends Validator_2 {
 }
 
 // @public (undocumented)
-export class MinMaxLength extends Validator_2 {
+export class MinMaxLength extends Validator {
     // (undocumented)
     execute(value: unknown, { min, max }?: any): boolean;
     // (undocumented)
@@ -3005,7 +2939,7 @@ export class MinMaxLength extends Validator_2 {
 }
 
 // @public (undocumented)
-export class MinMaxNumber extends Validator_2 {
+export class MinMaxNumber extends Validator {
     // (undocumented)
     execute(value: unknown, { min, max }?: any): boolean;
     // (undocumented)
@@ -3013,7 +2947,7 @@ export class MinMaxNumber extends Validator_2 {
 }
 
 // @public (undocumented)
-export class MinNumber extends Validator_2 {
+export class MinNumber extends Validator {
     // (undocumented)
     execute(value: unknown, min?: any): boolean;
     // (undocumented)
@@ -3025,19 +2959,11 @@ export function mockPhoneUtilManager(): {
     resolveLoaded: (value: any) => void;
 };
 
-// Warning: (ae-forgotten-export) The symbol "ModelValueEventDetails_2" needs to be exported by the entry point index.d.ts
-//
 // @public (undocumented)
-export type ModelValueEventDetails = ModelValueEventDetails_2;
-
-// @public (undocumented)
-export type modelValueType = ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email';
-
-// @public (undocumented)
-export type Month = Month_2;
-
-// @public
-export function moveUserProvidedDefaultSlottablesToTarget(source: HTMLElement, target: HTMLElement): void;
+export interface Month {
+    // (undocumented)
+    weeks: Week[];
+}
 
 // @public (undocumented)
 export interface msgOptions {
@@ -3052,7 +2978,7 @@ export interface msgVariables {
 }
 
 // @public (undocumented)
-export type NamespaceObject = NamespaceObject_2;
+export type NamespaceObject = StringToFunctionMap | string;
 
 // @public (undocumented)
 export class NativeTextFieldHost {
@@ -3064,14 +2990,13 @@ export class NativeTextFieldHost {
     protected _setValueAndPreserveCaret(value: string): void;
 }
 
-// @public (undocumented)
-export function NativeTextFieldImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<NativeTextFieldHost> & Pick<typeof NativeTextFieldHost, keyof typeof NativeTextFieldHost> & Constructor<FormatHost> & Pick<typeof FormatHost, keyof typeof FormatHost> & Constructor<FocusHost> & Pick<typeof FocusHost, keyof typeof FocusHost> & Constructor<FormControlHost_3> & Pick<typeof FormControlHost_3, keyof typeof FormControlHost_3>;
-
 // Warning: (ae-forgotten-export) The symbol "NativeTextFieldMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type NativeTextFieldMixin = NativeTextFieldMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "NativeTextFieldImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const NativeTextFieldMixin: NativeTextFieldImplementation;
 
@@ -3081,115 +3006,307 @@ export function normalizeCurrencyLabel(currency: string, locale: string): string
 // @public
 export function normalizeDateTime(date: Date): Date;
 
-// Warning: (ae-forgotten-export) The symbol "FormatNumberPart_12" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "NumberPostProcessorImplementation" needs to be exported by the entry point index.d.ts
 //
+// @public (undocumented)
+export type NumberPostProcessor = typeof NumberPostProcessorImplementation;
+
+// @public (undocumented)
+export interface OverlayConfig {
+    backdropNode?: HTMLElement;
+    contentNode?: HTMLElement;
+    contentWrapperNode?: HTMLElement;
+    elementToFocusAfterHide?: HTMLElement;
+    handlesAccessibility?: boolean;
+    hasBackdrop?: boolean;
+    hidesOnEsc?: boolean;
+    hidesOnOutsideClick?: boolean;
+    hidesOnOutsideEsc?: boolean;
+    inheritsReferenceWidth?: 'max' | 'full' | 'min' | 'none';
+    invokerNode?: HTMLElement;
+    invokerRelation?: 'label' | 'description';
+    isAlertDialog?: boolean;
+    isBlocking?: boolean;
+    isTooltip?: boolean;
+    _noDialogEl?: Boolean;
+    placementMode?: 'global' | 'local' | undefined;
+    popperConfig?: Partial<Options>;
+    preventsScroll?: boolean;
+    referenceNode?: HTMLElement | undefined;
+    trapsKeyboardFocus?: boolean;
+    viewportConfig?: ViewportConfig;
+    visibilityTriggerFunction?: Function;
+    zIndex?: number;
+}
+
 // @public
-export function normalizeIntl(formattedParts: FormatNumberPart_12[], options: FormatNumberOptions_2 | undefined, _locale: string): FormatNumberPart_12[];
-
-// @public
-export function normalizeIntlDate(str: string, locale?: string | undefined, { weekday, year, month, day }?: FormatDateOptions_2): string;
-
-// @public
-export function normalizeTransformStyle(cssValue: string): string;
+export class OverlayController extends EventTarget {
+    // (undocumented)
+    __backdropInitialized: boolean | undefined;
+    // (undocumented)
+    __backdropNode: HTMLDivElement | undefined;
+    // (undocumented)
+    __bodyClientHeight: number | undefined;
+    // (undocumented)
+    __bodyClientWidth: number | undefined;
+    // (undocumented)
+    __bodyMarginBottom: number | undefined;
+    // (undocumented)
+    __bodyMarginBottomInline: string | undefined;
+    // (undocumented)
+    __bodyMarginRight: number | undefined;
+    // (undocumented)
+    __bodyMarginRightInline: string | undefined;
+    // Warning: (ae-forgotten-export) The symbol "OverlayConfig_2" needs to be exported by the entry point index.d.ts
+    constructor(config?: OverlayConfig_2, manager?: OverlaysManager);
+    // (undocumented)
+    __contentHasBeenInitialized: boolean | undefined;
+    // (undocumented)
+    __contentWrapperNode: HTMLDivElement | undefined;
+    // (undocumented)
+    __escKeyHandler(event: KeyboardEvent): void;
+    __onDocumentMouseUp: EventListenerOrEventListenerObject | undefined;
+    __onInsideMouseDown: EventListenerOrEventListenerObject | undefined;
+    // (undocumented)
+    __onInsideMouseUp: (() => void) | undefined;
+    __onWindowBlur: EventListenerOrEventListenerObject | undefined;
+    // (undocumented)
+    __visibilityTriggerHandler: any;
+    // (undocumented)
+    __wrappingDialogNode: HTMLDialogElement | HTMLDivElement | undefined;
+    get backdropNode(): HTMLElement;
+    config: OverlayConfig_2;
+    // (undocumented)
+    _containFocusHandler: {
+        disconnect: () => void;
+    } | undefined;
+    get content(): HTMLDialogElement | HTMLDivElement;
+    // (undocumented)
+    protected _contentId: string;
+    get contentNode(): HTMLElement;
+    get contentWrapperNode(): HTMLElement;
+    protected _defaultConfig: OverlayConfig_2;
+    // (undocumented)
+    disableTrapsKeyboardFocus({ findNewTrap }?: {
+        findNewTrap?: boolean | undefined;
+    }): void;
+    get elementToFocusAfterHide(): HTMLElement;
+    set elevation(arg: number);
+    get elevation(): number;
+    // (undocumented)
+    enableTrapsKeyboardFocus(): void;
+    // (undocumented)
+    protected _handleAccessibility({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    protected _handleBackdrop({ phase }: {
+        animation?: boolean | undefined;
+        phase: OverlayPhase;
+    }): void;
+    // (undocumented)
+    protected _handleBlocking({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    protected _handleFeatures({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    // (undocumented)
+    protected _handleHidesOnEsc({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    // (undocumented)
+    protected _handleHidesOnOutsideClick({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    // (undocumented)
+    protected _handleHidesOnOutsideEsc({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    // (undocumented)
+    protected _handleInheritsReferenceWidth(): void;
+    // (undocumented)
+    protected _handlePosition({ phase }: {
+        phase: OverlayPhase;
+    }): Promise<void>;
+    // (undocumented)
+    protected _handlePreventsScroll({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    get handlesAccessibility(): boolean;
+    // (undocumented)
+    protected _handleTrapsKeyboardFocus({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    // (undocumented)
+    _handleVisibilityTriggers({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    protected _handleZIndex({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    // (undocumented)
+    get hasActiveBackdrop(): boolean;
+    // (undocumented)
+    get hasActiveTrapsKeyboardFocus(): boolean;
+    get hasBackdrop(): boolean;
+    // (undocumented)
+    _hasDisabledInvoker(): boolean;
+    hide(): Promise<void>;
+    // (undocumented)
+    _hideComplete: Promise<any> | undefined;
+    // (undocumented)
+    _hideResolve: ((value: any) => void) | undefined;
+    get hidesOnEsc(): boolean;
+    get hidesOnOutsideClick(): boolean;
+    get hidesOnOutsideEsc(): boolean;
+    get inheritsReferenceWidth(): "none" | "max" | "full" | "min" | undefined;
+    // (undocumented)
+    protected _init(): void;
+    get invoker(): HTMLElement | undefined;
+    get invokerNode(): HTMLElement | undefined;
+    get invokerRelation(): "label" | "description" | undefined;
+    get isAlertDialog(): boolean;
+    get isBlocking(): boolean;
+    // (undocumented)
+    get isShown(): boolean;
+    get isTooltip(): boolean;
+    // (undocumented)
+    protected _keepBodySize({ phase }: {
+        phase: OverlayPhase;
+    }): void;
+    // (undocumented)
+    manager: OverlaysManager;
+    get placementMode(): "global" | "local" | undefined;
+    // (undocumented)
+    _popper: any;
+    get popperConfig(): Options;
+    get preventsScroll(): boolean;
+    get referenceNode(): HTMLElement;
+    protected get _referenceNode(): HTMLElement | undefined;
+    // (undocumented)
+    protected _restoreFocus(): void;
+    show(elementToFocusAfterHide?: HTMLElement): Promise<void>;
+    // (undocumented)
+    _showComplete: Promise<any> | undefined;
+    // (undocumented)
+    _showResolve: ((value: any) => void) | undefined;
+    // (undocumented)
+    teardown(): void;
+    // (undocumented)
+    toggle(): Promise<void>;
+    transitionHide(hideConfig: {
+        backdropNode: HTMLElement;
+        contentNode: HTMLElement;
+    }): Promise<void>;
+    // (undocumented)
+    protected _transitionHide({ backdropNode, contentNode }: {
+        backdropNode: HTMLElement;
+        contentNode: HTMLElement;
+    }): Promise<void>;
+    transitionShow(showConfig: {
+        backdropNode: HTMLElement;
+        contentNode: HTMLElement;
+    }): Promise<void>;
+    // (undocumented)
+    _transitionShow(showConfig: {
+        backdropNode: HTMLElement;
+        contentNode: HTMLElement;
+    }): Promise<void>;
+    get trapsKeyboardFocus(): boolean;
+    updateConfig(cfgToAdd: OverlayConfig_2): void;
+    get viewportConfig(): ViewportConfig;
+    // (undocumented)
+    get visibilityTriggerFunction(): Function;
+}
 
 // @public (undocumented)
-export function normalSpaces(value: string): string;
+export namespace OverlayController {
+    const // Warning: (ae-forgotten-export) The symbol "PopperModule" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    popperModule: Promise<PopperModule> | undefined;
+}
 
 // @public (undocumented)
-export type nothing = nothing_3;
-
-// Warning: (ae-forgotten-export) The symbol "NumberPostProcessor_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type NumberPostProcessor = NumberPostProcessor_2;
-
-// Warning: (ae-forgotten-export) The symbol "OnDropdownChangeEvent_4" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type OnDropdownChangeEvent = OnDropdownChangeEvent_4;
-
-// Warning: (ae-forgotten-export) The symbol "OperationMode_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type OperationMode = OperationMode_2;
-
-// @public (undocumented)
-export type OptionWithFilterFn = LionOption & {
-    onFilterUnmatch?: Function;
-    onFilterMatch?: Function;
-};
-
-// @public (undocumented)
-export type OverlayConfig = OverlayConfig_2;
-
-// @public (undocumented)
-export type OverlayController = OverlayController_2;
-
-// @public (undocumented)
-export const overlayDocumentStyle: CSSResult_2;
-
-// @public (undocumented)
-export type OverlayEl = LitElement_2 & OverlayHost & {
-    _overlayCtrl: OverlayController_2;
-};
-
-// Warning: (ae-forgotten-export) The symbol "OverlayHost_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type OverlayHost = OverlayHost_2;
-
-// @public (undocumented)
-export function OverlayImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<OverlayHost_2> & Pick<typeof OverlayHost_2, keyof typeof OverlayHost_2> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
+export class OverlayHost {
+    // (undocumented)
+    close(): Promise<void>;
+    // (undocumented)
+    get config(): Partial<OverlayConfig>;
+    set config(value: Partial<OverlayConfig>);
+    protected _defineOverlay(config: DefineOverlayConfig): OverlayController;
+    // (undocumented)
+    protected _defineOverlayConfig(): OverlayConfig;
+    // (undocumented)
+    open(): Promise<void>;
+    // (undocumented)
+    opened: Boolean;
+    // (undocumented)
+    protected get _overlayBackdropNode(): HTMLElement;
+    // (undocumented)
+    protected get _overlayContentNode(): HTMLElement;
+    // (undocumented)
+    protected get _overlayContentWrapperNode(): HTMLElement;
+    // (undocumented)
+    protected _overlayCtrl: OverlayController;
+    // (undocumented)
+    protected get _overlayInvokerNode(): HTMLElement;
+    repositionOverlay(): void;
+    protected _setOpenedWithoutPropertyEffects(newOpened: Boolean): Promise<undefined>;
+    // (undocumented)
+    protected _setupOpenCloseListeners(): void;
+    // (undocumented)
+    protected _setupOverlayCtrl(): void;
+    // (undocumented)
+    protected _teardownOpenCloseListeners(): void;
+    // (undocumented)
+    protected _teardownOverlayCtrl(): void;
+    // (undocumented)
+    toggle(): Promise<void>;
+}
 
 // Warning: (ae-forgotten-export) The symbol "OverlayMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type OverlayMixin = OverlayMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "OverlayImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const OverlayMixin: OverlayImplementation;
 
-// @public
-export const OverlayMixinImplementation: OverlayMixin;
-
-// @public (undocumented)
-export type OverlayPhase = 'setup' | 'init' | 'teardown' | 'before-show' | 'show' | 'hide' | 'add' | 'remove';
-
 // @public (undocumented)
 export const overlays: OverlaysManager;
-
-// @public (undocumented)
-export const overlayShadowDomStyle: CSSResult_2;
 
 // @public
 export class OverlaysManager {
     // (undocumented)
     static __createGlobalStyleNode(): HTMLStyleElement;
-    // Warning: (ae-forgotten-export) The symbol "OverlayController_3" needs to be exported by the entry point index.d.ts
-    add(ctrlToAdd: OverlayController_3): OverlayController_3;
+    // Warning: (ae-forgotten-export) The symbol "OverlayController_2" needs to be exported by the entry point index.d.ts
+    add(ctrlToAdd: OverlayController_2): OverlayController_2;
     // (undocumented)
     disableTrapsKeyboardFocusForAll(): void;
     // (undocumented)
     hide(ctrlToHide: any): void;
     // (undocumented)
     informTrapsKeyboardFocusGotDisabled({ disabledCtrl, findNewTrap }?: {
-        disabledCtrl?: OverlayController_2 | undefined;
+        disabledCtrl?: OverlayController | undefined;
         findNewTrap?: boolean | undefined;
     }): void;
     // (undocumented)
     informTrapsKeyboardFocusGotEnabled(placementMode: 'local' | 'global' | undefined): void;
-    get list(): OverlayController_2[];
+    get list(): OverlayController[];
     // (undocumented)
-    remove(ctrlToRemove: OverlayController_3): void;
+    remove(ctrlToRemove: OverlayController_2): void;
     // (undocumented)
-    requestToEnableScroll(currentController?: OverlayController_2 | undefined): void;
+    requestToEnableScroll(currentController?: OverlayController | undefined): void;
     requestToPreventScroll(): void;
-    requestToShowOnly(blockingCtrl: OverlayController_3): void;
+    requestToShowOnly(blockingCtrl: OverlayController_2): void;
     // (undocumented)
-    retractRequestToShowOnly(blockingCtrl: OverlayController_3): void;
+    retractRequestToShowOnly(blockingCtrl: OverlayController_2): void;
     // (undocumented)
-    show(ctrlToShow: OverlayController_3): void;
-    get shownList(): OverlayController_2[];
+    show(ctrlToShow: OverlayController_2): void;
+    get shownList(): OverlayController[];
     get siblingsInert(): boolean;
     // (undocumented)
     teardown(): void;
@@ -3202,30 +3319,19 @@ export namespace OverlaysManager {
 }
 
 // @public
-export function pad(n: string): string;
-
-// @public (undocumented)
-export function parseAmount(value: string, givenOptions?: FormatNumberOptions_2 | undefined): AmountDropdownModelValue_2;
+export function parseAmount(value: string, givenOptions?: FormatNumberOptions | undefined): number | undefined;
 
 // @public
-export function parseDate(dateString: string, options?: FormatDateOptions_2 | undefined): Date | undefined;
+export function parseDate(dateString: string, options?: FormatDateOptions | undefined): Date | undefined;
 
 // @public
 export function parseIBAN(viewValue: string): string | undefined;
 
 // @public
-export function parseNumber(value: string, options?: FormatNumberOptions_2 | undefined): number | undefined;
+export function parseNumber(value: string, options?: FormatNumberOptions | undefined): number | undefined;
 
 // @public (undocumented)
-export function parsePhoneNumber(viewValue: string, { regionCode }: {
-    regionCode: RegionCode_6;
-}): string;
-
-// @public
-export function pascalCase(str: string): string;
-
-// @public (undocumented)
-export class Pattern extends Validator_2 {
+export class Pattern extends Validator {
     // (undocumented)
     execute(value: unknown, pattern?: any): boolean;
     // (undocumented)
@@ -3233,20 +3339,14 @@ export class Pattern extends Validator_2 {
 }
 
 // @public (undocumented)
-export class PhoneNumber extends Validator_2 {
+export class PhoneNumber extends Validator {
     // (undocumented)
     static get async(): boolean;
-    // Warning: (ae-forgotten-export) The symbol "RegionCode_4" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "RegionCode_3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    execute(modelValue: string, regionCode: RegionCode_4): false | Promise<any> | "unknown" | "invalid-country-code" | "too-long" | "too-short";
+    execute(modelValue: string, regionCode: RegionCode_3): false | Promise<any> | "unknown" | "invalid-country-code" | "too-long" | "too-short";
 }
-
-// @public (undocumented)
-export type PhoneNumberFormat = PhoneNumberFormat_2;
-
-// @public (undocumented)
-export type PhoneNumberTypes = PhoneNumberTypes_2;
 
 // @public
 export class PhoneUtilManager {
@@ -3263,66 +3363,27 @@ export namespace PhoneUtilManager {
     loadComplete: Promise<any>;
 }
 
-// @public (undocumented)
-export type Placement = Placement_2;
-
-// @public (undocumented)
-export type Popper = any;
-
-// @public (undocumented)
-export type PopperModule = {
-    createPopper: Popper;
-};
-
-// @public (undocumented)
-export type PopperOptions = Options_3;
-
 // @public
 export function preprocessAmount(value: string): string;
 
+// @public
+export type RegionCode = 'AC' | 'AD' | 'AE' | 'AF' | 'AG' | 'AI' | 'AL' | 'AM' | 'AO' | 'AR' | 'AS' | 'AT' | 'AU' | 'AW' | 'AX' | 'AZ' | 'BA' | 'BB' | 'BD' | 'BE' | 'BF' | 'BG' | 'BH' | 'BI' | 'BJ' | 'BL' | 'BM' | 'BN' | 'BO' | 'BQ' | 'BR' | 'BS' | 'BT' | 'BV' | 'BW' | 'BY' | 'BZ' | 'CA' | 'CC' | 'CD' | 'CF' | 'CG' | 'CH' | 'CI' | 'CK' | 'CL' | 'CM' | 'CN' | 'CO' | 'CR' | 'CU' | 'CV' | 'CW' | 'CX' | 'CY' | 'CZ' | 'DE' | 'DJ' | 'DK' | 'DM' | 'DO' | 'DZ' | 'EC' | 'EE' | 'EG' | 'EH' | 'ER' | 'ES' | 'ET' | 'FI' | 'FJ' | 'FK' | 'FM' | 'FO' | 'FR' | 'GA' | 'GB' | 'GD' | 'GE' | 'GF' | 'GG' | 'GH' | 'GI' | 'GL' | 'GM' | 'GN' | 'GP' | 'GQ' | 'GR' | 'GS' | 'GT' | 'GU' | 'GW' | 'GY' | 'HK' | 'HM' | 'HN' | 'HR' | 'HT' | 'HU' | 'ID' | 'IE' | 'IL' | 'IM' | 'IN' | 'IO' | 'IQ' | 'IR' | 'IS' | 'IT' | 'JE' | 'JM' | 'JO' | 'JP' | 'KE' | 'KG' | 'KH' | 'KI' | 'KM' | 'KN' | 'KP' | 'KR' | 'KW' | 'KY' | 'KZ' | 'LA' | 'LB' | 'LC' | 'LI' | 'LK' | 'LR' | 'LS' | 'LT' | 'LU' | 'LV' | 'LY' | 'MA' | 'MC' | 'MD' | 'ME' | 'MF' | 'MG' | 'MH' | 'MK' | 'ML' | 'MM' | 'MN' | 'MO' | 'MP' | 'MQ' | 'MR' | 'MS' | 'MT' | 'MU' | 'MV' | 'MW' | 'MX' | 'MY' | 'MZ' | 'NA' | 'NC' | 'NE' | 'NF' | 'NG' | 'NI' | 'NL' | 'NO' | 'NP' | 'NR' | 'NU' | 'NZ' | 'OM' | 'PA' | 'PE' | 'PF' | 'PG' | 'PH' | 'PK' | 'PL' | 'PM' | 'PN' | 'PR' | 'PS' | 'PT' | 'PW' | 'PY' | 'QA' | 'RE' | 'RO' | 'RS' | 'RU' | 'RW' | 'SA' | 'SB' | 'SC' | 'SD' | 'SE' | 'SG' | 'SH' | 'SI' | 'SJ' | 'SK' | 'SL' | 'SM' | 'SN' | 'SO' | 'SR' | 'SS' | 'ST' | 'SV' | 'SX' | 'SY' | 'SZ' | 'TA' | 'TC' | 'TD' | 'TF' | 'TG' | 'TH' | 'TJ' | 'TK' | 'TL' | 'TM' | 'TN' | 'TO' | 'TR' | 'TT' | 'TV' | 'TW' | 'TZ' | 'UA' | 'UG' | 'UM' | 'US' | 'UY' | 'UZ' | 'VA' | 'VC' | 'VE' | 'VG' | 'VI' | 'VN' | 'VU' | 'WF' | 'WS' | 'XK' | 'YE' | 'YT' | 'ZA' | 'ZM' | 'ZW';
+
 // @public (undocumented)
-export type property = {
-    type: string;
-    size: string;
+export type RegionMeta = {
+    currencyCode: CurrencyCode;
+    nameForLocale?: string;
+    currencySymbol?: string;
 };
 
-// @public (undocumented)
-export type ReactiveController = ReactiveController_2;
-
-// @public (undocumented)
-export type ReactiveControllerHost = ReactiveControllerHost_2;
-
-// @public (undocumented)
-export type Ref = Ref_2;
-
-// @public (undocumented)
-export type RegionCode = RegionCode_2;
-
 // @public
-export function regionCodeToLocale(regionCode: string): string;
-
-// Warning: (ae-forgotten-export) The symbol "RegionMeta_4" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type RegionMeta = RegionMeta_4;
-
-// @public
-export type RegionToCurrencyMap = Map<RegionCode_2, CurrencyCode_2>;
+export type RegionToCurrencyMap = Map<RegionCode, CurrencyCode>;
 
 // @public (undocumented)
 export function renderLitAsNode(litHtmlTemplate: TemplateResult_3): Element | null;
 
-// @public (undocumented)
-export type RenderMetaObj = {
-    renderBefore: Comment;
-    renderTargetThatRespectsShadowRootScoping: HTMLDivElement;
-};
-
-// @public (undocumented)
-export type RenderOptions = RenderOptions_2;
-
 // @public
-class Required_2 extends Validator_2 {
+class Required_2 extends Validator {
     static get _compatibleRoles(): string[];
     static get _compatibleTags(): string[];
     // Warning: (ae-forgotten-export) The symbol "FormControlHost_5" needs to be exported by the entry point index.d.ts
@@ -3343,21 +3404,18 @@ export function resetFakeImport(): void;
 export function restorePhoneUtilManager(): void;
 
 // @public
-export class ResultValidator extends Validator_2 {
+export class ResultValidator extends Validator {
     // (undocumented)
     executeOnResults({ regularValidationResult, prevValidationResult, prevShownValidationResult, validators, }: {
-        regularValidationResult: Validator_2[];
-        prevValidationResult: Validator_2[];
-        prevShownValidationResult: Validator_2[];
-        validators?: Validator_2[] | undefined;
+        regularValidationResult: Validator[];
+        prevValidationResult: Validator[];
+        prevShownValidationResult: Validator[];
+        validators?: Validator[] | undefined;
     }): boolean;
 }
 
 // @public
 export function rotateFocus(rootElement: HTMLElement, e: KeyboardEvent): void;
-
-// @public
-export function roundNumber(number: number, roundMode: string): number;
 
 // @public (undocumented)
 export function runCheckboxIndeterminateSuite(customConfig?: {
@@ -3377,13 +3435,6 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
 export function runChoiceInputMixinSuite({ tagString }?: {
     tagString?: string;
     tagType?: string;
-}): void;
-
-// @public (undocumented)
-export function runCustomChoiceGroupMixinSuite({ parentTagString, childTagString, choiceType, }?: {
-    parentTagString?: string;
-    childTagString?: string;
-    choiceType?: string;
 }): void;
 
 // @public (undocumented)
@@ -3410,17 +3461,11 @@ export function runInputAmountDropdownSuite({ klass }?: {
 }): void;
 
 // @public (undocumented)
-export function runInputStepperIntegrationSuite(klass?: typeof LionInputStepper): void;
-
-// @public (undocumented)
-export function runInputStepperSuite(klass?: typeof LionInputStepper): void;
-
-// @public (undocumented)
 export function runInputStepperSuites(klass?: typeof LionInputStepper): void;
 
 // @public (undocumented)
 export function runInputTelDropdownSuite({ klass }?: {
-    klass: LionInputTelDropdown_2;
+    klass: LionInputTelDropdown;
 }): void;
 
 // @public (undocumented)
@@ -3453,6 +3498,8 @@ export function runOverlayMixinSuite({ tagString, tag, suffix }: {
     suffix?: string;
 }): void;
 
+// Warning: (ae-forgotten-export) The symbol "customConfig" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export function runRegistrationSuite(customConfig: customConfig): void;
 
@@ -3466,10 +3513,7 @@ export function runValidateMixinSuite(customConfig?: {
 } | undefined): void;
 
 // @public
-export function sanitizedDateTimeFormat(date: Date, options?: FormatDateOptions_2 | undefined): string;
-
-// @public
-export class SbActionLogger extends LitElement_2 {
+export class SbActionLogger extends LitElement {
     // (undocumented)
     __animateCue(): void;
     // (undocumented)
@@ -3487,8 +3531,8 @@ export class SbActionLogger extends LitElement_2 {
     log(content: string): void;
     // (undocumented)
     get loggerEl(): HTMLElement;
-    // Warning: (ae-forgotten-export) The symbol "TemplateResult_7" needs to be exported by the entry point index.d.ts
-    _logTemplate(content: string): TemplateResult_7;
+    // Warning: (ae-forgotten-export) The symbol "TemplateResult_5" needs to be exported by the entry point index.d.ts
+    _logTemplate(content: string): TemplateResult_5;
     // (undocumented)
     static get properties(): {
         title: {
@@ -3504,15 +3548,15 @@ export class SbActionLogger extends LitElement_2 {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
     // (undocumented)
     simple: boolean;
     // (undocumented)
-    static get styles(): CSSResult_2[];
+    static get styles(): CSSResult[];
 }
 
 // @public (undocumented)
-export class SbLocaleSwitcher extends LitElement_2 {
+export class SbLocaleSwitcher extends LitElement {
     // (undocumented)
     callback(locale: string): void;
     // (undocumented)
@@ -3523,65 +3567,38 @@ export class SbLocaleSwitcher extends LitElement_2 {
         };
     };
     // (undocumented)
-    render(): TemplateResult_2<1>;
+    render(): TemplateResult<1>;
     // (undocumented)
     showLocales: string[];
 }
 
-// @public (undocumented)
-export type ScopedElementsHost = ScopedElementsHost_3;
-
-// @public (undocumented)
-export type ScopedElementsHostConstructor = Constructor<ScopedElementsHost>;
-
-// @public (undocumented)
-export class ScopedElementsHostV2 {
-    createScopedElement(tagName: string): HTMLElement;
-    defineScopedElement<T extends HTMLElement>(tagName: string, klass: Constructor<T>): void;
-}
-
-// Warning: (ae-forgotten-export) The symbol "ScopedElementsHostV2Constructor_2" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ReactiveController" needs to be exported by the entry point index.d.ts
 //
-// @public (undocumented)
-export type ScopedElementsHostV2Constructor = ScopedElementsHostV2Constructor_2;
-
-// Warning: (ae-forgotten-export) The symbol "ScopedElementsMap_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type ScopedElementsMap = ScopedElementsMap_2;
-
-// @public
-export function ScopedElementsMixin<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<ScopedElementsHost_3> & ScopedElementsHostV2Constructor_2;
-
 // @public
 export class ScopedStylesController implements ReactiveController {
+    // Warning: (ae-forgotten-export) The symbol "ReactiveControllerHost" needs to be exported by the entry point index.d.ts
     constructor(host: ReactiveControllerHost & LitElement_2);
     // (undocumented)
     __setupStyleTag(): void;
     // (undocumented)
     __styleTag: HTMLStyleElement;
     // (undocumented)
-    __teardownStyleTag(): void;
-    // (undocumented)
     host: ReactiveControllerHost_2 & LitElement_2;
     // (undocumented)
     hostConnected(): void;
     // (undocumented)
-    hostDisconnected(): void;
-    // (undocumented)
     scopedClass: string;
     // (undocumented)
-    static scopedStyles(scope: CSSResult_2): CSSResultGroup;
+    static scopedStyles(scope: CSSResult): CSSResultGroup;
 }
 
 // @public (undocumented)
-export type SelectionDisplay = SelectionDisplay_2;
-
-// @public (undocumented)
-export function serializeConstructableStylesheet(cssStyleSheet: CSSStyleSheet): string;
-
-// @public (undocumented)
-export function serializer(modelValue: AmountDropdownModelValue_2): string;
+export interface SelectionDisplay extends HTMLElement {
+    // (undocumented)
+    comboboxElement: LionCombobox_2;
+    // (undocumented)
+    onComboboxElementUpdated: Function;
+}
 
 // @public
 export function setSiblingsInert(element: HTMLElement): void;
@@ -3593,21 +3610,16 @@ export function setupEmptyFakeImportsFor(namespaces: string[], locales: string[]
 export function setupFakeImport(path: string, data: Object): void;
 
 // @public (undocumented)
-export type ShadowHTMLElement = HTMLElement & {
-    shadowRoot: HTMLElement;
-    assignedNodes: Function;
-};
+export type SlotFunctionResult = TemplateResult_3 | Element | SlotRerenderObject | undefined;
 
 // @public (undocumented)
-export function simulateTab(node?: HTMLElement): void;
-
-// Warning: (ae-forgotten-export) The symbol "SlotFunctionResult_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type SlotFunctionResult = SlotFunctionResult_2;
-
-// @public (undocumented)
-export type SlotHost = SlotHost_2;
+export class SlotHost {
+    // (undocumented)
+    connectedCallback(): void;
+    protected _connectSlotMixin(): void;
+    protected _isPrivateSlot(slotName: string): boolean;
+    get slots(): SlotsMap;
+}
 
 // Warning: (ae-forgotten-export) The symbol "SlotMixin_2" needs to be exported by the entry point index.d.ts
 //
@@ -3615,37 +3627,23 @@ export type SlotHost = SlotHost_2;
 export type SlotMixin = SlotMixin_2;
 
 // @public (undocumented)
-export const SlotMixin: <T extends Constructor<LitElement_2>>(superclass: T) => T & Constructor<SlotHost_2> & Pick<SlotHost_2, "prototype"> & Pick<LitElement_2, typeof Symbol.metadata | "prototype" | "_$litElement$" | "enabledWarnings" | "enableWarning" | "disableWarning" | "addInitializer" | "_initializers" | "elementProperties" | "properties" | "elementStyles" | "styles" | "observedAttributes" | "createProperty" | "getPropertyOptions" | "shadowRootOptions">;
+export const SlotMixin: <T extends Constructor<LitElement_2>>(superclass: T) => T & Constructor<SlotHost> & Pick<SlotHost, "prototype"> & Pick<LitElement_2, typeof Symbol.metadata | "prototype" | "_$litElement$" | "enabledWarnings" | "enableWarning" | "disableWarning" | "addInitializer" | "_initializers" | "elementProperties" | "properties" | "elementStyles" | "styles" | "observedAttributes" | "createProperty" | "getPropertyOptions" | "shadowRootOptions">;
 
-// Warning: (ae-forgotten-export) The symbol "SlotRerenderObject_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type SlotRerenderObject = SlotRerenderObject_2;
-
-// Warning: (ae-forgotten-export) The symbol "SlotsMap_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type SlotsMap = SlotsMap_2;
+// @public
+export type SlotRerenderObject = {
+    template: TemplateResult_3;
+    afterRender?: Function;
+    firstRenderOnConnected?: boolean;
+    renderAsDirectHostChild?: boolean;
+};
 
 // @public (undocumented)
-export function sortByTabIndex(elements: HTMLElement[]): HTMLElement[];
+export type SlotsMap = {
+    [key: string]: typeof slotFunction;
+};
 
 // @public
 export function sortEachDepth(orderPerDepth: Array<[]>): (a: Array<unknown>, b: Array<unknown>) => any;
-
-// @public
-export function splitDate(dateAsString: string): ArrayLike<string> | null;
-
-// @public (undocumented)
-export type StoreEntry = {
-    uid: string;
-    index: number;
-    invoker: HTMLElement;
-    content: HTMLElement;
-    clickHandler: (event: Event) => unknown;
-    keydownHandler: (event: Event) => unknown;
-    focusHandler: (event: Event) => unknown;
-};
 
 // @public (undocumented)
 export interface StringToFunctionMap {
@@ -3653,81 +3651,67 @@ export interface StringToFunctionMap {
     [key: string]: Function;
 }
 
-// @public
-export function supportsScopedRegistry(): boolean;
-
 // @public (undocumented)
 export class SyncUpdatableHost {
     protected updateSync(name: string, oldValue: any): void;
 }
 
 // @public (undocumented)
-export type SyncUpdatableHostType = typeof SyncUpdatableHost;
+export type SystemFile = {
+    downloadUrl?: string;
+    errorMessage?: FeedbackMessage["message"];
+    failedProp?: Array<string | number>;
+    response?: UploadResponse;
+} & FileBasics & Partial<File>;
 
 // @public (undocumented)
-export function SyncUpdatableImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<SyncUpdatableHost> & Pick<typeof SyncUpdatableHost, keyof typeof SyncUpdatableHost> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
-
-// Warning: (ae-forgotten-export) The symbol "SyncUpdatableMixin_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type SyncUpdatableMixin = SyncUpdatableMixin_2;
-
-// @public (undocumented)
-export const SyncUpdatableMixin: SyncUpdatableImplementation;
-
-// Warning: (ae-forgotten-export) The symbol "SyncUpdatableNamespace_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type SyncUpdatableNamespace = SyncUpdatableNamespace_2;
-
-// @public (undocumented)
-export type SystemFile = SystemFile_2;
-
-// @public (undocumented)
-export type TagFunction = (tag: (strings: TemplateStringsArray, ...expr: string[]) => string) => string;
-
-// @public (undocumented)
-export type TaggedTemplateLiteral = (strings: TemplateStringsArray, ...expr: string[]) => string;
-
-// @public (undocumented)
-export type TemplateDataForDropdownInputAmount = TemplateDataForDropdownInputAmount_2;
-
-// Warning: (ae-forgotten-export) The symbol "TemplateDataForDropdownInputTel_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type TemplateDataForDropdownInputTel = TemplateDataForDropdownInputTel_2;
-
-// @public (undocumented)
-export type TemplateDataForIntlInputAmount = TemplateDataForDropdownInputAmount & {
+export type TemplateDataForDropdownInputAmount = {
+    refs: {
+        dropdown: RefTemplateData & {
+            ref: DropdownRef;
+            props?: {
+                style?: string;
+            };
+            listeners: {
+                change: (event: OnDropdownChangeEvent) => void;
+                'model-value-changed': (event: OnDropdownChangeEvent) => void;
+            };
+            labels: {
+                selectCurrency: string;
+            };
+        };
+        input: HTMLInputElement;
+    };
     data: {
+        currency: CurrencyCode | string;
         regionMetaList: RegionMeta[];
+        regionMetaListPreferred: RegionMeta[];
     };
 };
 
 // @public (undocumented)
-export type TemplateDataForIntlInputTel = TemplateDataForDropdownInputTel & {
+export type TemplateDataForDropdownInputTel = {
+    refs: {
+        dropdown: RefTemplateData_2 & {
+            ref: DropdownRef_3;
+            props: {
+                style: string;
+            };
+            listeners: {
+                change: (event: OnDropdownChangeEvent_3) => void;
+                'model-value-changed': (event: OnDropdownChangeEvent_3) => void;
+            };
+            labels: {
+                selectCountry: string;
+            };
+        };
+        input: HTMLInputElement;
+    };
     data: {
+        activeRegion: string | undefined;
         regionMetaList: RegionMeta_3[];
+        regionMetaListPreferred: RegionMeta_3[];
     };
-};
-
-// @public (undocumented)
-export type TemplateResult = TemplateResult_3;
-
-// @public
-export function trim(dateAsString: string): string;
-
-// @public (undocumented)
-export type TypeofLitElement = LitElement_2;
-
-// Warning: (ae-forgotten-export) The symbol "UmbrellaForm_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type UmbrellaForm = UmbrellaForm_2;
-
-// @public (undocumented)
-export type UnknownData = {
-    [key: string]: any;
 };
 
 // @public (undocumented)
@@ -3745,95 +3729,72 @@ export class Unparseable {
 // @public
 export function unsetSiblingsInert(element: HTMLElement): void;
 
-// @public (undocumented)
-export namespace UPLOAD_FILE_STATUS {
-    const // (undocumented)
-    fail: string;
-    const // (undocumented)
-    pass: string;
-}
-
-// Warning: (ae-forgotten-export) The symbol "UploadResponse_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type UploadResponse = UploadResponse_2;
-
 // @public
 export function uuid(prefix?: string): string;
 
-// @public (undocumented)
-export type ValidateHost = ValidateHost_2;
-
-// @public (undocumented)
-export type ValidateHostConstructor = ValidateHost_2;
-
-// Warning: (ae-forgotten-export) The symbol "ScopedElementsHost_2" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ValidateHost_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
-export function ValidateImplementation<T extends Constructor<LitElement_2>>(superclass: T): T & Constructor<ValidateHost_2> & Pick<typeof ValidateHost_2, keyof typeof ValidateHost_2> & Constructor<FormControlHost_3> & Pick<typeof FormControlHost_3, keyof typeof FormControlHost_3> & Constructor<SyncUpdatableHost> & Pick<typeof SyncUpdatableHost, keyof typeof SyncUpdatableHost> & Constructor<DisabledHost> & Pick<typeof DisabledHost, keyof typeof DisabledHost> & Constructor<SlotHost_2> & Pick<typeof SlotHost_2, keyof typeof SlotHost_2> & Constructor<ScopedElementsHost_2> & Pick<typeof ScopedElementsHost_2, keyof typeof ScopedElementsHost_2> & Pick<typeof LitElement_2, keyof typeof LitElement_2>;
+export type ValidateHost = ValidateHost_2;
 
 // Warning: (ae-forgotten-export) The symbol "ValidateMixin_2" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
 export type ValidateMixin = ValidateMixin_2;
 
+// Warning: (ae-forgotten-export) The symbol "ValidateImplementation" needs to be exported by the entry point index.d.ts
+//
 // @public (undocumented)
 export const ValidateMixin: ValidateImplementation;
 
+// @public (undocumented)
+export type ValidationType = 'error' | 'warning' | 'info' | 'success' | string;
+
 // @public
-export const ValidateMixinImplementation: ValidateMixin;
+export class Validator extends EventTarget {
+    static _$isValidator$: boolean;
+    // Warning: (ae-forgotten-export) The symbol "ValidatorConfig_2" needs to be exported by the entry point index.d.ts
+    __config: ValidatorConfig_2;
+    // Warning: (ae-forgotten-export) The symbol "ValidatorParam_2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "ValidatorConfig" needs to be exported by the entry point index.d.ts
+    constructor(param?: ValidatorParam_2, config?: ValidatorConfig | undefined);
+    __param: ValidatorParam_2;
+    abortExecution(): void;
+    static async: boolean;
+    set config(arg: ValidatorConfig);
+    // (undocumented)
+    get config(): ValidatorConfig;
+    // Warning: (ae-forgotten-export) The symbol "ValidatorOutcome_2" needs to be exported by the entry point index.d.ts
+    execute(modelValue: any, param?: ValidatorParam_2, config?: ValidatorConfig | undefined): ValidatorOutcome_2 | Promise<ValidatorOutcome_2>;
+    // Warning: (ae-forgotten-export) The symbol "FeedbackMessageData" needs to be exported by the entry point index.d.ts
+    static getMessage(data?: Partial<FeedbackMessageData> | undefined): Promise<string | Element>;
+    protected _getMessage(data?: Partial<FeedbackMessageData> | undefined): Promise<string | Element>;
+    // Warning: (ae-forgotten-export) The symbol "FormControlHost_4" needs to be exported by the entry point index.d.ts
+    onFormControlConnect(formControl: FormControlHost_4): void;
+    onFormControlDisconnect(formControl: FormControlHost_4): void;
+    set param(arg: any);
+    // (undocumented)
+    get param(): any;
+    // Warning: (ae-forgotten-export) The symbol "ValidationType_2" needs to be exported by the entry point index.d.ts
+    type: ValidationType_2;
+    // Warning: (ae-forgotten-export) The symbol "ValidatorName" needs to be exported by the entry point index.d.ts
+    static validatorName: ValidatorName;
+}
 
 // @public (undocumented)
-export type ValidationResultEntry = {
-    validator: Validator_2;
-    outcome: boolean | string;
-};
+export interface ViewportConfig {
+    // (undocumented)
+    placement: ViewportPlacement;
+}
 
 // @public (undocumented)
-export type ValidationStates = {
-    [type: string]: {
-        [validatorName: string]: string | boolean;
-    };
-};
-
-// Warning: (ae-forgotten-export) The symbol "ValidationType_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type ValidationType = ValidationType_2;
+export type ViewportPlacement = 'center' | 'top-left' | 'top' | 'top-right' | 'right' | 'bottom-right' | 'bottom' | 'bottom-left' | 'left';
 
 // @public (undocumented)
-export type Validator = Validator_2;
-
-// Warning: (ae-forgotten-export) The symbol "ValidatorConfig_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type ValidatorConfig = ValidatorConfig_2;
-
-// Warning: (ae-forgotten-export) The symbol "ValidatorName_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type ValidatorName = ValidatorName_2;
-
-// Warning: (ae-forgotten-export) The symbol "ValidatorOutcome_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type ValidatorOutcome = ValidatorOutcome_2;
-
-// Warning: (ae-forgotten-export) The symbol "ValidatorParam_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type ValidatorParam = ValidatorParam_2;
-
-// @public (undocumented)
-export type ViewportConfig = ViewportConfig_2;
-
-// Warning: (ae-forgotten-export) The symbol "ViewportPlacement_2" needs to be exported by the entry point index.d.ts
-//
-// @public (undocumented)
-export type ViewportPlacement = ViewportPlacement_2;
-
-// @public (undocumented)
-export type Week = Week_2;
+export interface Week {
+    // (undocumented)
+    days: Day[];
+}
 
 // @public (undocumented)
 export const weekdayNames: {
@@ -3846,56 +3807,53 @@ export const weekdayNames: {
 };
 
 // @public (undocumented)
-export function withBottomSheetConfig(): OverlayConfig_2;
-
-// Warning: (ae-forgotten-export) The symbol "OverlayConfig_4" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function withClickInteraction(): Partial<OverlayConfig_4>;
+export function withBottomSheetConfig(): OverlayConfig;
 
 // @public (undocumented)
-export function withDropdownConfig(): OverlayConfig_2;
-
-// Warning: (ae-forgotten-export) The symbol "OverlayConfig_5" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function withHoverInteraction({ delayIn, delayOut }: {
-    delayIn?: number;
-    delayOut?: number;
-}): Partial<OverlayConfig_5>;
+export function withDropdownConfig(): OverlayConfig;
 
 // @public (undocumented)
-export function withModalDialogConfig(): OverlayConfig_2;
+export function withModalDialogConfig(): OverlayConfig;
 
 // @public (undocumented)
 export function withTooltipConfig({ invokerRelation, delayIn, delayOut, }?: {
     invokerRelation?: 'description' | 'label';
     delayIn?: number;
     delayOut?: number;
-}): OverlayConfig_2;
+}): OverlayConfig;
 
 // Warnings were encountered during analysis:
 //
-// components/combobox/test-helpers/combobox-helpers.js:9:25 - (ae-forgotten-export) The symbol "OverlayController_2" needs to be exported by the entry point index.d.ts
-// components/combobox/test-helpers/combobox-helpers.js:9:25 - (ae-forgotten-export) The symbol "LionOptions_2" needs to be exported by the entry point index.d.ts
-// components/combobox/test-helpers/combobox-helpers.js:9:25 - (ae-forgotten-export) The symbol "SelectionDisplay_2" needs to be exported by the entry point index.d.ts
-// components/combobox/test-helpers/combobox-helpers.js:9:25 - (ae-forgotten-export) The symbol "LionValidationFeedback_2" needs to be exported by the entry point index.d.ts
-// components/dialog/src/LionDialog.js:28:7 - (ae-forgotten-export) The symbol "ViewportConfig_2" needs to be exported by the entry point index.d.ts
-// components/form-core/src/validate/resultValidators/DefaultSuccess.js:19:35 - (ae-forgotten-export) The symbol "Validator_3" needs to be exported by the entry point index.d.ts
+// components/core/types/SlotMixinTypes.ts:36:3 - (ae-forgotten-export) The symbol "slotFunction" needs to be exported by the entry point index.d.ts
+// components/form-core/src/validate/resultValidators/DefaultSuccess.js:19:35 - (ae-forgotten-export) The symbol "Validator_2" needs to be exported by the entry point index.d.ts
+// components/form-core/test-suites/FormatMixin.suite.js:43:5 - (ae-forgotten-export) The symbol "modelValueType" needs to be exported by the entry point index.d.ts
 // components/form-core/test-suites/NativeTextFieldMixin.suite.js:21:5 - (ae-forgotten-export) The symbol "modelValueType_2" needs to be exported by the entry point index.d.ts
-// components/input-tel-dropdown/src/LionInputTelDropdown.js:33:56 - (ae-forgotten-export) The symbol "RegionMeta_3" needs to be exported by the entry point index.d.ts
-// components/input-tel/src/LionInputTel.js:18:31 - (ae-forgotten-export) The symbol "RegionCode_3" needs to be exported by the entry point index.d.ts
-// components/input-tel/src/formatters.js:30:32 - (ae-forgotten-export) The symbol "RegionCode_5" needs to be exported by the entry point index.d.ts
-// components/input-tel/src/parsers.js:9:13 - (ae-forgotten-export) The symbol "RegionCode_6" needs to be exported by the entry point index.d.ts
-// components/input-tel/src/preprocessors.js:12:32 - (ae-forgotten-export) The symbol "RegionCode_7" needs to be exported by the entry point index.d.ts
+// components/input-amount-dropdown/src/LionInputAmountDropdown.js:72:5 - (ae-forgotten-export) The symbol "DropdownRef_2" needs to be exported by the entry point index.d.ts
+// components/input-amount-dropdown/src/LionInputAmountDropdown.js:148:7 - (ae-forgotten-export) The symbol "TemplateDataForDropdownInputAmount_2" needs to be exported by the entry point index.d.ts
+// components/input-amount-dropdown/src/LionInputAmountDropdown.js:178:5 - (ae-forgotten-export) The symbol "RegionMeta_2" needs to be exported by the entry point index.d.ts
+// components/input-amount-dropdown/types/index.ts:27:5 - (ae-forgotten-export) The symbol "RefTemplateData" needs to be exported by the entry point index.d.ts
+// components/input-amount-dropdown/types/index.ts:28:7 - (ae-forgotten-export) The symbol "DropdownRef" needs to be exported by the entry point index.d.ts
+// components/input-amount-dropdown/types/index.ts:31:9 - (ae-forgotten-export) The symbol "OnDropdownChangeEvent" needs to be exported by the entry point index.d.ts
+// components/input-file/types/input-file.ts:15:3 - (ae-forgotten-export) The symbol "UploadResponse" needs to be exported by the entry point index.d.ts
+// components/input-tel-dropdown/src/LionInputTelDropdown.js:49:5 - (ae-forgotten-export) The symbol "DropdownRef_4" needs to be exported by the entry point index.d.ts
+// components/input-tel-dropdown/src/LionInputTelDropdown.js:112:7 - (ae-forgotten-export) The symbol "TemplateDataForDropdownInputTel_2" needs to be exported by the entry point index.d.ts
+// components/input-tel-dropdown/src/LionInputTelDropdown.js:142:5 - (ae-forgotten-export) The symbol "RegionMeta_4" needs to be exported by the entry point index.d.ts
+// components/input-tel-dropdown/types/index.ts:30:5 - (ae-forgotten-export) The symbol "RefTemplateData_2" needs to be exported by the entry point index.d.ts
+// components/input-tel-dropdown/types/index.ts:31:7 - (ae-forgotten-export) The symbol "DropdownRef_3" needs to be exported by the entry point index.d.ts
+// components/input-tel-dropdown/types/index.ts:34:9 - (ae-forgotten-export) The symbol "OnDropdownChangeEvent_3" needs to be exported by the entry point index.d.ts
+// components/input-tel-dropdown/types/index.ts:43:5 - (ae-forgotten-export) The symbol "RegionMeta_3" needs to be exported by the entry point index.d.ts
+// components/input-tel/src/formatters.js:30:32 - (ae-forgotten-export) The symbol "RegionCode_4" needs to be exported by the entry point index.d.ts
+// components/input-tel/src/preprocessors.js:12:32 - (ae-forgotten-export) The symbol "RegionCode_5" needs to be exported by the entry point index.d.ts
 // components/input-tel/src/preprocessors.js:15:39 - (ae-forgotten-export) The symbol "PhoneNumberFormat_3" needs to be exported by the entry point index.d.ts
-// components/select-rich/test-helpers/getSelectRichMembers.js:8:27 - (ae-forgotten-export) The symbol "LionSelectInvoker_2" needs to be exported by the entry point index.d.ts
-// components/validate-messages/src/getLocalizedMessage.js:111:13 - (ae-forgotten-export) The symbol "FeedbackMessageData_3" needs to be exported by the entry point index.d.ts
-// components/validate-messages/src/getLocalizedMessage.js:111:39 - (ae-forgotten-export) The symbol "LocalizeManager_2" needs to be exported by the entry point index.d.ts
-// components/validate-messages/src/loadDefaultFeedbackMessagesNoSideEffects.js:14:13 - (ae-forgotten-export) The symbol "LocalizeManager_3" needs to be exported by the entry point index.d.ts
-// components/validate-messages/src/per-entrypoint/loadComboboxMessagesNoSideEffects.js:13:13 - (ae-forgotten-export) The symbol "LocalizeManager_4" needs to be exported by the entry point index.d.ts
-// components/validate-messages/src/per-entrypoint/loadFormCoreMessagesNoSideEffects.js:31:13 - (ae-forgotten-export) The symbol "LocalizeManager_5" needs to be exported by the entry point index.d.ts
-// components/validate-messages/src/per-entrypoint/loadInputTelMessagesNoSideEffects.js:13:13 - (ae-forgotten-export) The symbol "LocalizeManager_6" needs to be exported by the entry point index.d.ts
+// components/localize/src/LocalizeManager.js:34:5 - (ae-forgotten-export) The symbol "NumberPostProcessor_2" needs to be exported by the entry point index.d.ts
+// components/localize/src/LocalizeManager.js:43:5 - (ae-forgotten-export) The symbol "DatePostProcessor_2" needs to be exported by the entry point index.d.ts
+// components/overlays/src/OverlayController.js:681:7 - (ae-forgotten-export) The symbol "OverlayPhase" needs to be exported by the entry point index.d.ts
+// components/overlays/src/utils/deep-contains.js:9:34 - (ae-forgotten-export) The symbol "CacheItem" needs to be exported by the entry point index.d.ts
+// components/steps/src/LionSteps.js:167:31 - (ae-forgotten-export) The symbol "LionStep_2" needs to be exported by the entry point index.d.ts
+// components/validate-messages/src/loadDefaultFeedbackMessagesNoSideEffects.js:14:13 - (ae-forgotten-export) The symbol "LocalizeManager_2" needs to be exported by the entry point index.d.ts
+// components/validate-messages/src/per-entrypoint/loadComboboxMessagesNoSideEffects.js:13:13 - (ae-forgotten-export) The symbol "LocalizeManager_3" needs to be exported by the entry point index.d.ts
+// components/validate-messages/src/per-entrypoint/loadFormCoreMessagesNoSideEffects.js:31:13 - (ae-forgotten-export) The symbol "LocalizeManager_4" needs to be exported by the entry point index.d.ts
+// components/validate-messages/src/per-entrypoint/loadInputTelMessagesNoSideEffects.js:13:13 - (ae-forgotten-export) The symbol "LocalizeManager_5" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

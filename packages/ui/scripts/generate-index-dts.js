@@ -5,7 +5,7 @@ import crypto from 'crypto';
 // ----------------------
 // CONFIG (edit as needed)
 // ----------------------
-const ROOT_DIR = path.resolve('dist-types'); // folder with your .d.ts files
+const ROOT_DIR = path.resolve('dist-types/exports'); // folder with your .d.ts files
 const OUTPUT_FILE = path.resolve('index.d.ts'); // generated index
 const SKIP_DIRS = /^(node_modules|dist|build|out|coverage|\.git)$/i;
 // ----------------------
