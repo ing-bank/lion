@@ -11,9 +11,8 @@ import { CSSResultArray } from 'lit';
 import { CSSResultGroup } from 'lit';
 import { CSSResultOrNative } from 'lit';
 import { DirectiveResult } from 'lit/directive.js';
-import { LitElement } from 'lit-element/lit-element.js';
-import { LitElement as LitElement_2 } from 'lit';
-import { LitElement as LitElement_3 } from 'lit-element';
+import { LitElement } from 'lit';
+import { LitElement as LitElement_2 } from 'lit-element';
 import { nothing } from 'lit';
 import { nothing as nothing_3 } from 'lit-html';
 import { Options } from '@popperjs/core';
@@ -24,7 +23,7 @@ import { PropertyDeclaration } from 'lit';
 import { PropertyValues } from 'lit';
 import { ReactiveController as ReactiveController_2 } from 'lit';
 import { ReactiveControllerHost as ReactiveControllerHost_2 } from 'lit';
-import { ScopedElementsHost as ScopedElementsHost_2 } from '../../../../../node_modules/@open-wc/scoped-elements/types.js';
+import { ScopedElementsHost as ScopedElementsHost_2 } from '@open-wc/scoped-elements/lit-element.js';
 import { TemplateResult } from 'lit-html';
 import { TemplateResult as TemplateResult_3 } from 'lit';
 import { WarningKind } from 'lit';
@@ -307,6 +306,31 @@ export type countryToCurrencyList = Partial<{
 
 // @public
 export type CurrencyCode = 'EUR' | 'AED' | 'AFN' | 'XCD' | 'ALL' | 'AMD' | 'AOA' | 'ARS' | 'USD' | 'AUD' | 'AWG' | 'AZN' | 'BAM' | 'BBD' | 'BDT' | 'XOF' | 'BGN' | 'BHD' | 'BIF' | 'BMD' | 'BND' | 'BOB' | 'BRL' | 'BSD' | 'BTN' | 'NOK' | 'BWP' | 'BYN' | 'BZD' | 'CAD' | 'CDF' | 'XAF' | 'CHF' | 'NZD' | 'CLP' | 'CNY' | 'COP' | 'CRC' | 'CUP' | 'CVE' | 'ANG' | 'CZK' | 'DJF' | 'DKK' | 'DOP' | 'DZD' | 'EGP' | 'MAD' | 'ERN' | 'ETB' | 'FJD' | 'FKP' | 'GBP' | 'GEL' | 'GHS' | 'GIP' | 'GMD' | 'GNF' | 'GTQ' | 'GYD' | 'HKD' | 'HNL' | 'HTG' | 'HUF' | 'IDR' | 'ILS' | 'INR' | 'IQD' | 'IRR' | 'ISK' | 'JMD' | 'JOD' | 'JPY' | 'KES' | 'KGS' | 'KHR' | 'KMF' | 'KPW' | 'KRW' | 'KWD' | 'KYD' | 'KZT' | 'LAK' | 'LBP' | 'LKR' | 'LRD' | 'LSL' | 'LYD' | 'MDL' | 'MGA' | 'MKD' | 'MMK' | 'MNT' | 'MOP' | 'MRU' | 'MUR' | 'MVR' | 'MWK' | 'MXN' | 'MYR' | 'MZN' | 'NAD' | 'XPF' | 'NGN' | 'NIO' | 'NPR' | 'OMR' | 'PAB' | 'PEN' | 'PGK' | 'PHP' | 'PKR' | 'PLN' | 'PYG' | 'QAR' | 'RON' | 'RSD' | 'RUB' | 'RWF' | 'SAR' | 'SBD' | 'SCR' | 'SDG' | 'SEK' | 'SGD' | 'SHP' | 'SLE' | 'SOS' | 'SRD' | 'SSP' | 'STN' | 'SVC' | 'SYP' | 'SZL' | 'THB' | 'TJS' | 'TMT' | 'TND' | 'TOP' | 'TRY' | 'TTD' | 'TWD' | 'TZS' | 'UAH' | 'UGX' | 'UYU' | 'UZS' | 'VED' | 'VES' | 'VND' | 'VUV' | 'WST' | 'XCG' | 'YER' | 'ZAR' | 'ZMW' | 'ZWG';
+
+// @public
+export class DatepickerInputObject {
+    constructor(el: LionInputDatepicker);
+    // (undocumented)
+    get calendarEl(): any;
+    get calendarObj(): any;
+    // (undocumented)
+    closeCalendar(): Promise<void>;
+    // (undocumented)
+    el: LionInputDatepicker;
+    get invokerEl(): HTMLElement;
+    openCalendar({ click }?: {
+        click?: boolean;
+    }): Promise<void | any[]>;
+    // (undocumented)
+    get overlayCloseButtonEl(): HTMLElement;
+    get overlayController(): OverlayController;
+    // (undocumented)
+    get overlayEl(): LitElement;
+    // (undocumented)
+    get overlayHeadingEl(): HTMLElement;
+    // (undocumented)
+    selectMonthDay(day: number): Promise<boolean>;
+}
 
 // Warning: (ae-forgotten-export) The symbol "DatePostProcessorImplementation" needs to be exported by the entry point index.d.ts
 //
@@ -2157,6 +2181,57 @@ export class LionPagination extends LionPagination_base {
     static get styles(): CSSResult[];
 }
 
+// Warning: (ae-forgotten-export) The symbol "LionProgressIndicator_base" needs to be exported by the entry point index.d.ts
+//
+// @public
+export class LionProgressIndicator extends LionProgressIndicator_base {
+    // (undocumented)
+    __hasDefaultLabelSet: boolean;
+    // (undocumented)
+    _ariaLabel: string;
+    // (undocumented)
+    _ariaLabelledby: string;
+    // (undocumented)
+    connectedCallback(): void;
+    static enabledWarnings: WarningKind[];
+    // (undocumented)
+    protected _graphicTemplate(): symbol;
+    readonly get indeterminate(): boolean;
+    // (undocumented)
+    max: number;
+    // (undocumented)
+    min: number;
+    get _progressPercentage(): number | undefined;
+    // (undocumented)
+    static get properties(): {
+        value: {
+            type: NumberConstructor;
+        };
+        min: {
+            type: NumberConstructor;
+        };
+        max: {
+            type: NumberConstructor;
+        };
+        _ariaLabel: {
+            attribute: string;
+            type: StringConstructor;
+        };
+        _ariaLabelledby: {
+            attribute: string;
+            type: StringConstructor;
+        };
+    };
+    // (undocumented)
+    render(): symbol;
+    // (undocumented)
+    _resetAriaValueAttributes(): void;
+    // (undocumented)
+    _setDefaultLabel(): void;
+    // (undocumented)
+    value: number;
+}
+
 // Warning: (ae-forgotten-export) The symbol "LionRadio_base" needs to be exported by the entry point index.d.ts
 //
 // @public
@@ -2815,7 +2890,7 @@ export class LocalizeManager extends EventTarget {
 export type LocalizeMixin = LocalizeMixin_2;
 
 // @public (undocumented)
-export const LocalizeMixin: <T extends Constructor<LitElement_2>>(superclass: T) => T & Constructor<LocalizeMixinHost> & Pick<LocalizeMixinHost, "prototype" | "localizeNamespaces" | "waitForLocalizeNamespaces"> & Pick<LitElement_2, typeof Symbol.metadata | "prototype" | "_$litElement$" | "enabledWarnings" | "enableWarning" | "disableWarning" | "addInitializer" | "_initializers" | "elementProperties" | "properties" | "elementStyles" | "styles" | "observedAttributes" | "createProperty" | "getPropertyOptions" | "shadowRootOptions">;
+export const LocalizeMixin: <T extends Constructor<LitElement>>(superclass: T) => T & Constructor<LocalizeMixinHost> & Pick<LocalizeMixinHost, "prototype" | "localizeNamespaces" | "waitForLocalizeNamespaces"> & Pick<LitElement, typeof Symbol.metadata | "prototype" | "_$litElement$" | "enabledWarnings" | "enableWarning" | "disableWarning" | "addInitializer" | "_initializers" | "elementProperties" | "properties" | "elementStyles" | "styles" | "observedAttributes" | "createProperty" | "getPropertyOptions" | "shadowRootOptions">;
 
 // @public (undocumented)
 export class LocalizeMixinHost {
@@ -3577,13 +3652,13 @@ export class SbLocaleSwitcher extends LitElement {
 // @public
 export class ScopedStylesController implements ReactiveController {
     // Warning: (ae-forgotten-export) The symbol "ReactiveControllerHost" needs to be exported by the entry point index.d.ts
-    constructor(host: ReactiveControllerHost & LitElement_2);
+    constructor(host: ReactiveControllerHost & LitElement);
     // (undocumented)
     __setupStyleTag(): void;
     // (undocumented)
     __styleTag: HTMLStyleElement;
     // (undocumented)
-    host: ReactiveControllerHost_2 & LitElement_2;
+    host: ReactiveControllerHost_2 & LitElement;
     // (undocumented)
     hostConnected(): void;
     // (undocumented)
@@ -3627,7 +3702,7 @@ export class SlotHost {
 export type SlotMixin = SlotMixin_2;
 
 // @public (undocumented)
-export const SlotMixin: <T extends Constructor<LitElement_2>>(superclass: T) => T & Constructor<SlotHost> & Pick<SlotHost, "prototype"> & Pick<LitElement_2, typeof Symbol.metadata | "prototype" | "_$litElement$" | "enabledWarnings" | "enableWarning" | "disableWarning" | "addInitializer" | "_initializers" | "elementProperties" | "properties" | "elementStyles" | "styles" | "observedAttributes" | "createProperty" | "getPropertyOptions" | "shadowRootOptions">;
+export const SlotMixin: <T extends Constructor<LitElement>>(superclass: T) => T & Constructor<SlotHost> & Pick<SlotHost, "prototype"> & Pick<LitElement, typeof Symbol.metadata | "prototype" | "_$litElement$" | "enabledWarnings" | "enableWarning" | "disableWarning" | "addInitializer" | "_initializers" | "elementProperties" | "properties" | "elementStyles" | "styles" | "observedAttributes" | "createProperty" | "getPropertyOptions" | "shadowRootOptions">;
 
 // @public
 export type SlotRerenderObject = {

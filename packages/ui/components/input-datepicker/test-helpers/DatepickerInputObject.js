@@ -1,5 +1,9 @@
 import { CalendarObject } from '@lion/ui/calendar-test-helpers.js';
 
+/**
+ * @typedef {import('lit').LitElement} LitElement
+ */
+
 export class DatepickerInputObject {
   /** @param {import('../src/LionInputDatepicker.js').LionInputDatepicker} el */
   constructor(el) {

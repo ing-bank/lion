@@ -74,7 +74,7 @@ export * from './dist-types/exports/input-amount-dropdown-test-suites.d.ts'; //
 export * from './dist-types/exports/input-amount-dropdown.d.ts';
 export * from './dist-types/exports/input-amount.d.ts';
 export * from './dist-types/exports/input-date.d.ts';
-// export * from './dist-types/exports/input-datepicker-test-helpers.d.ts'; //ERROR: Internal Error: Unable to follow symbol for "LitElement"
+export * from './dist-types/exports/input-datepicker-test-helpers.d.ts';
 export * from './dist-types/exports/input-datepicker.d.ts';
 export * from './dist-types/exports/input-email.d.ts';
 export * from './dist-types/exports/input-file.d.ts';
@@ -101,10 +101,7 @@ export * from './dist-types/exports/overlays-test-helpers.d.ts';
 export * from './dist-types/exports/overlays-test-suites.d.ts';
 export * from './dist-types/exports/overlays.d.ts';
 export * from './dist-types/exports/pagination.d.ts';
-
-//ERROR: Internal Error: The ""/Users/ai09al/Developer/lion/packages/ui/dist-types/components/progress-indicator/translations/bg"" symbol has a ts.SyntaxKind.SourceFile declaration which is not (yet?) supported by API Extractor
-//export * from './dist-types/exports/progress-indicator.d.ts';
-
+export * from './dist-types/exports/progress-indicator.d.ts';
 export * from './dist-types/exports/radio-group.d.ts';
 export * from './dist-types/exports/select-rich-test-helpers.d.ts';
 export * from './dist-types/exports/select-rich.d.ts';
