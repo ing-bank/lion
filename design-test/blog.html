@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="view-transition" content="same-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lion Blog - Engineering Journal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="blog.css">
+    <link rel="stylesheet" href="transitions.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Georgia&display=swap" rel="stylesheet">
+</head>
+<body class="blog-page">
+    
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="logo.svg" alt="Lion Logo" width="32" height="32">
+                <img src="lionui-text.svg" alt="lion ui" height="16" class="logo-text-svg">
+            </a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="https://lion.js.org/next/docs/guides/overview/">Guides</a></li>
+                    <li><a href="components.html">Components</a></li>
+                    <li><a href="blog.html" class="active" style="color: var(--blog-accent);">Blog</a></li>
+                    <li><a href="https://github.com/ing-bank/lion" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="blog-hero">
+            <div class="container">
+                <h1>Engineering Journal</h1>
+                <p>Deep dives into web components, accessibility, and design systems.</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="blog-grid">
+                <!-- Featured Post -->
+                <article class="post-card featured">
+                    <div class="post-image-wrapper">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Code on screen" class="post-image">
+                    </div>
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="post-date">Jan 3, 2026</span>
+                            <span class="post-tag">Release</span>
+                        </div>
+                        <h2 class="post-title"><a href="#">Announcing Lion v1.0: The Foundation for Your Design System</a></h2>
+                        <p class="post-excerpt">After years of development and production use at ING, we are proud to announce the first major release of Lion. Discover what's new and how it can help you build accessible web applications.</p>
+                        <a href="#" class="read-more">Read Article →</a>
+                    </div>
+                </article>
+
+                <!-- Post 1 -->
+                <article class="post-card">
+                    <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Architecture" class="post-image">
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="post-date">Dec 15, 2025</span>
+                            <span class="post-tag">Architecture</span>
+                        </div>
+                        <h3 class="post-title"><a href="#">Why We Chose Lit for Lion</a></h3>
+                        <p class="post-excerpt">A look into the technical decision-making process behind choosing LitElement as the base for our web components.</p>
+                        <a href="#" class="read-more">Read Article →</a>
+                    </div>
+                </article>
+
+                <!-- Post 2 -->
+                <article class="post-card">
+                    <img src="https://images.unsplash.com/photo-1586717791821-3f44a5638d48?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Accessibility" class="post-image">
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="post-date">Nov 28, 2025</span>
+                            <span class="post-tag">A11y</span>
+                        </div>
+                        <h3 class="post-title"><a href="#">Accessible Forms: Harder Than You Think</a></h3>
+                        <p class="post-excerpt">Forms are the primary way users interact with web apps. Here's how Lion handles validation and ARIA states automatically.</p>
+                        <a href="#" class="read-more">Read Article →</a>
+                    </div>
+                </article>
+
+                <!-- Post 3 -->
+                <article class="post-card">
+                    <img src="https://images.unsplash.com/photo-1550439062-609e1531270e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Design System" class="post-image">
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="post-date">Nov 10, 2025</span>
+                            <span class="post-tag">Design Systems</span>
+                        </div>
+                        <h3 class="post-title"><a href="#">Extending Lion: A Guide for Designers</a></h3>
+                        <p class="post-excerpt">How to take the white-label components of Lion and apply your own brand identity using CSS variables and slots.</p>
+                        <a href="#" class="read-more">Read Article →</a>
+                    </div>
+                </article>
+                
+                <!-- Post 4 -->
+                <article class="post-card">
+                    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Coding" class="post-image">
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="post-date">Oct 05, 2025</span>
+                            <span class="post-tag">Tutorial</span>
+                        </div>
+                        <h3 class="post-title"><a href="#">Building a Custom Datepicker</a></h3>
+                        <p class="post-excerpt">Step-by-step tutorial on extending the lion-calendar to create a fully functional datepicker component.</p>
+                        <a href="#" class="read-more">Read Article →</a>
+                    </div>
+                </article>
+
+                <!-- Post 5 -->
+                <article class="post-card">
+                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Performance" class="post-image">
+                    <div class="post-content">
+                        <div class="post-meta">
+                            <span class="post-date">Sep 22, 2025</span>
+                            <span class="post-tag">Performance</span>
+                        </div>
+                        <h3 class="post-title"><a href="#">Optimizing Bundle Size</a></h3>
+                        <p class="post-excerpt">Techniques for tree-shaking and lazy loading Lion components to ensure your application loads fast.</p>
+                        <a href="#" class="read-more">Read Article →</a>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-row">
+                <div class="footer-brand">
+                    <img src="lionui-text.svg" alt="lion ui" height="16" class="logo-text-svg">
+                    <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="https://lion.js.org/next/blog">Blog</a>
+                    <a href="https://github.com/ing-bank/lion/issues">Help</a>
+                    <a href="https://github.com/ing-bank/lion">GitHub</a>
+                    <a href="https://lion.js.org/next/about/slack/">Slack</a>
+                    <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

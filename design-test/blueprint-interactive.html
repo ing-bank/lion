@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Blueprint Hero</title>
+    <style>
+        :root {
+            --bg-color: #000000;
+            --line-color: rgba(255, 255, 255, 0.2);
+            --highlight-color: #FFC107;
+            --text-color: rgba(255, 255, 255, 0.5);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200vh; /* Allow scrolling */
+            font-family: 'Courier New', monospace;
+        }
+
+        .blueprint-container {
+            width: 100%;
+            max-width: 1000px;
+            position: fixed; /* Keep it fixed while scrolling */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            perspective: 1000px; /* Enable 3D space */
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+            overflow: visible;
+            transform-style: preserve-3d; /* Allow children to be in 3D */
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Layer classes for 3D effect */
+        .layer-back { transform: translateZ(-50px); opacity: 0.5; }
+        .layer-mid { transform: translateZ(0px); }
+        .layer-front { transform: translateZ(50px); }
+
+        /* Base Styles */
+        .grid-line { stroke: var(--line-color); stroke-width: 0.5; }
+        .construction-line { stroke: var(--line-color); stroke-width: 1; stroke-dasharray: 4 4; }
+        .dimension-line { stroke: var(--text-color); stroke-width: 1; marker-end: url(#arrow); marker-start: url(#arrow); }
+        .dimension-text { fill: var(--text-color); font-size: 12px; text-anchor: middle; }
+        
+        .logo-part { 
+            stroke: white; 
+            stroke-width: 2; 
+            fill: transparent; 
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .logo-fill {
+            fill: white;
+            fill-opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Interactivity */
+        .group-left:hover .logo-part,
+        .group-right:hover .logo-part,
+        .group-center:hover .logo-part {
+            stroke: var(--highlight-color);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.3));
+        }
+
+        .group-left:hover .dimension-line,
+        .group-right:hover .dimension-line,
+        .group-center:hover .dimension-line {
+            stroke: var(--highlight-color);
+        }
+
+        .group-left:hover .dimension-text,
+        .group-right:hover .dimension-text,
+        .group-center:hover .dimension-text {
+            fill: var(--highlight-color);
+        }
+
+        /* Animation */
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .draw-in {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 2s ease-out forwards;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="blueprint-container">
+        <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
+                    markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.5)" />
+                </marker>
+                <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+                </pattern>
+                <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+                    <rect width="100" height="100" fill="url(#smallGrid)"/>
+                    <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                </pattern>
+            </defs>
+
+            <!-- Background Grid -->
+            <g class="layer-back">
+                <rect width="800" height="600" fill="url(#grid)" />
+                <!-- Center Guides -->
+                <line x1="400" y1="0" x2="400" y2="600" class="construction-line" />
+                <line x1="0" y1="300" x2="800" y2="300" class="construction-line" />
+            </g>
+
+            <!-- Left Bracket Group -->
+            <g class="group-left layer-mid">
+                <!-- Construction Circles -->
+                <circle cx="340" cy="200" r="4" fill="none" stroke="rgba(255,255,255,0.1)" />
+                <circle cx="260" cy="300" r="4" fill="none" stroke="rgba(255,255,255,0.1)" />
+                <circle cx="340" cy="400" r="4" fill="none" stroke="rgba(255,255,255,0.1)" />
+                
+                <!-- The Shape: Sharp Bracket (Logo Style) -->
+                <path d="M340 200 L260 300 L340 400" class="logo-part draw-in" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                
+                <!-- Dimensions -->
+                <line x1="240" y1="200" x2="240" y2="400" class="dimension-line" opacity="0" style="transition: opacity 0.3s"/>
+                <text x="230" y="300" class="dimension-text" transform="rotate(-90 230 300)" opacity="0" style="transition: opacity 0.3s">200px</text>
+                
+                <!-- Projection Lines -->
+                <line x1="340" y1="200" x2="240" y2="200" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+                <line x1="340" y1="400" x2="240" y2="400" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+            </g>
+
+            <!-- Right Bracket Group -->
+            <g class="group-right layer-mid">
+                <!-- The Shape: Sharp Bracket (Logo Style) -->
+                <path d="M460 200 L540 300 L460 400" class="logo-part draw-in" stroke-linecap="round" stroke-linejoin="round" style="animation-delay: 0.2s" fill="none"/>
+                
+                <!-- Dimensions -->
+                <line x1="560" y1="200" x2="560" y2="400" class="dimension-line" opacity="0" style="transition: opacity 0.3s"/>
+                <text x="575" y="300" class="dimension-text" transform="rotate(90 575 300)" opacity="0" style="transition: opacity 0.3s">200px</text>
+
+                <!-- Projection Lines -->
+                <line x1="460" y1="200" x2="560" y2="200" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+                <line x1="460" y1="400" x2="560" y2="400" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+            </g>
+
+            <!-- Center Dot Group -->
+            <g class="group-center layer-front">
+                <!-- The Shape: Dot (Logo Style) -->
+                <circle cx="400" cy="300" r="20" class="logo-part draw-in" style="animation-delay: 0.4s"/>
+                
+                <circle cx="400" cy="300" r="40" stroke="white" stroke-opacity="0.1" stroke-dasharray="4 4" fill="none"/>
+                <circle cx="400" cy="300" r="40" stroke="white" stroke-opacity="0.1" stroke-dasharray="4 4" fill="none"/>
+                
+                <!-- Radius Dimension -->
+                <line x1="400" y1="300" x2="435" y2="320" class="dimension-line" opacity="0" style="transition: opacity 0.3s"/>
+                <text x="445" y="330" class="dimension-text" opacity="0" style="transition: opacity 0.3s">r20</text>
+            </g>
+
+            <!-- Angle Indicators (Visible on Hover) -->
+            <path d="M340 250 A 50 50 0 0 0 310 300" stroke="var(--highlight-color)" stroke-width="1" fill="none" opacity="0" class="angle-indicator"/>
+            
+        </svg>
+    </div>
+
+    <script>
+        // Simple script to handle hover states for dimensions if CSS isn't enough or for more complex interactions
+        const groups = document.querySelectorAll('g');
+        
+        groups.forEach(group => {
+            group.addEventListener('mouseenter', () => {
+                const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
+                dimensions.forEach(el => el.style.opacity = '1');
+            });
+            
+            group.addEventListener('mouseleave', () => {
+                const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
+                dimensions.forEach(el => el.style.opacity = '0');
+            });
+        });
+
+        // Parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            
+            const svg = document.querySelector('svg');
+            // Combine with scroll rotation if needed, but for now just translate
+            // We will handle rotation in the scroll listener
+            svg.style.setProperty('--mouse-x', x + 'px');
+            svg.style.setProperty('--mouse-y', y + 'px');
+        });
+
+        // Scroll 3D effect
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const maxScroll = document.body.scrollHeight - window.innerHeight;
+            const progress = Math.min(scrollY / maxScroll, 1);
+
+            const svg = document.querySelector('svg');
+            
+            // Rotate based on scroll
+            const rotateX = progress * 60; // Tilt back up to 60 degrees
+            const rotateY = progress * 20; // Slight twist
+            const scale = 1 - (progress * 0.2); // Zoom out slightly
+
+            // Apply transform. Note: We need to maintain the mouse parallax if we want both.
+            // For simplicity, let's override or combine.
+            // Let's use CSS variables for cleaner combination if we were doing it properly, 
+            // but here we can just set the transform directly.
+            
+            svg.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
+            
+            // Adjust layers depth dynamically for "explosion" effect
+            const backLayer = document.querySelector('.layer-back');
+            const midLayers = document.querySelectorAll('.layer-mid');
+            const frontLayer = document.querySelector('.layer-front');
+
+            if(backLayer) backLayer.style.transform = `translateZ(${-50 - (progress * 100)}px)`;
+            midLayers.forEach(l => l.style.transform = `translateZ(${0 + (progress * 50)}px)`);
+            if(frontLayer) frontLayer.style.transform = `translateZ(${50 + (progress * 200)}px)`;
+        });
+    </script>
+</body>
+</html>

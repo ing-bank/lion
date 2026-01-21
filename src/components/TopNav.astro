@@ -1,0 +1,60 @@
+---
+interface NavItem {
+  label: string;
+  href: string;
+  external?: boolean;
+}
+
+interface Props {
+  activeNavItem?: string;
+  navigationItems?: NavItem[];
+}
+
+// Default navigation structure
+const defaultNavigationItems: NavItem[] = [
+  {
+    label: "Guides",
+    href: `${import.meta.env.BASE_URL}/guides`
+  },
+  {
+    label: "Components", 
+    href: `${import.meta.env.BASE_URL}/components`
+  },
+  {
+    label: "Blog",
+    href: `${import.meta.env.BASE_URL}/blog`
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/ing-bank/lion",
+    external: true
+  }
+];
+
+const { activeNavItem, navigationItems = defaultNavigationItems } = Astro.props;
+---
+
+<header class="site-header">
+    <div class="container">
+        <a href=`${import.meta.env.BASE_URL}` class="logo">
+            <img src=`${import.meta.env.BASE_URL}/logo.svg` alt="Lion Logo" width="32" height="32">
+            <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+        </a>
+        <nav class="main-nav">
+            <ul>
+                {navigationItems.map((item) => (
+                    <li>
+                        <a 
+                            href={item.href} 
+                            class={activeNavItem === item.label.toLowerCase() ? "active" : ""}
+                            target={item.external ? "_blank" : undefined}
+                            rel={item.external ? "noopener noreferrer" : undefined}
+                        >
+                            {item.label}
+                        </a>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+    </div>
+</header>

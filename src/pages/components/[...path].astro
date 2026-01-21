@@ -1,6 +1,6 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
-import InPageNavLayout from "../../layouts/InPageNavLayout.astro";
+import ComponentDetailLayout from "../../layouts/ComponentDetailLayout.astro";
 
 export async function getStaticPaths() {
     const components = await getCollection("lionComponents");
@@ -17,17 +17,52 @@ if (!entry) {
     // Handle Error, for example:
     throw new Error(`Could not find entry by URL ${path}`);
 }
+
 const { remarkPluginFrontmatter } = await render(entry);
+const { Content } = await render(entry);
 
 const loadDemoAttributes = {};
 if (remarkPluginFrontmatter.mdjsStoriesPath) {
   loadDemoAttributes['data-import-path'] = remarkPluginFrontmatter.mdjsStoriesPath;
 }
 
+// Extract component name from path for sidebar highlighting
+const componentName = path?.split('/').pop() || path;
+
+// Create icon mapping for component headers
+const getComponentIcon = (name: string) => {
+  const iconMap: { [key: string]: string } = {
+    'button': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="8" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/></svg>',
+    'input': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="8" y1="12" x2="8" y2="12"/></svg>',
+    'select': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M16 10l-4 4-4-4"/></svg>',
+    'dialog': '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>',
+  };
+  return iconMap[name.toLowerCase()] || '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>';
+};
+
+const displayName = entry.data?.title || componentName?.charAt(0).toUpperCase() + componentName?.slice(1) || 'Component';
 ---
 
-<InPageNavLayout entry={entry}>
-  <load-demo {...loadDemoAttributes}></load-demo>
+<ComponentDetailLayout 
+  title={`${displayName} - Lion UI`}
+  componentName={componentName}
+  description={entry.data?.description || `${displayName} component with accessible design and flexible styling.`}
+>
+  <header class="component-header">
+    <div class="card-icon">
+      <Fragment set:html={getComponentIcon(componentName || '')} />
+    </div>
+    <h1>{displayName}</h1>
+    <p class="lead">{entry.data?.description || `${displayName} component with accessible design and flexible styling.`}</p>
+  </header>
+
+  <div class="component-content">
+    <Content />
+    
+    {remarkPluginFrontmatter.mdjsStoriesPath && (
+      <load-demo {...loadDemoAttributes}></load-demo>
+    )}
+  </div>
 
   <script>
     class LoadDemo extends HTMLElement {
@@ -42,15 +77,86 @@ if (remarkPluginFrontmatter.mdjsStoriesPath) {
           import(`./_demos/${this.dataset.importPath}.js`);
 
           const currentScript = [...document.scripts].find(script => script.src === import.meta.url);
-          currentScript.setAttribute('mdjs-setup', 'true');
+          currentScript?.setAttribute('mdjs-setup', 'true');
           // another rocket - astro compatibility magic
           // we mast pass ".js" because it is stripped by rocket
           // so we get story file variable in simulator without it (as we want)
-          currentScript.setAttribute('src', `/components/${this.dataset.importPath}.js`);
+          currentScript?.setAttribute('src', `/components/${this.dataset.importPath}.js`);
         }
       }
     }
 
     customElements.define('load-demo', LoadDemo);
   </script>
-</InPageNavLayout>
+
+  <style>
+    .component-header {
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .component-header .card-icon {
+      width: 48px;
+      height: 48px;
+      background: #3b82f6;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .component-header h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 0 0 1rem;
+    }
+
+    .component-header .lead {
+      font-size: 1.25rem;
+      color: #64748b;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .component-content {
+      max-width: none;
+    }
+
+    /* Style for demo sections */
+    .component-content :global(.demo-section) {
+      margin-bottom: 3rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .component-content :global(.preview-box) {
+      padding: 2rem;
+      background: #f8fafc;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .component-content :global(.code-block) {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+
+    .component-content :global(.code-block pre) {
+      margin: 0;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.875rem;
+    }
+
+    @media (max-width: 768px) {
+      .component-header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</ComponentDetailLayout>

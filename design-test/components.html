@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="view-transition" content="same-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Components - Lion UI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="transitions.css">
+    <link rel="stylesheet" href="scroll-animations.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="scroll-progress"></div>
+    <div class="grid-background"></div>
+    
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="logo.svg" alt="Lion Logo" width="32" height="32">
+                <img src="lionui-text.svg" alt="lion ui" height="16" class="logo-text-svg">
+            </a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="https://lion.js.org/next/docs/guides/overview/">Guides</a></li>
+                    <li><a href="components.html" class="active">Components</a></li>
+                    <li><a href="https://lion.js.org/next/blog/">Blog</a></li>
+                    <li><a href="https://github.com/ing-bank/lion" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Components</h1>
+                <p class="page-subtitle">Explore our library of accessible, white-label web components.</p>
+            </div>
+        </section>
+
+        <section class="components-list">
+            <div class="container">
+                <div class="features-grid">
+                    <a href="button.html" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="8" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/></svg>
+                        </div>
+                        <h3>Button</h3>
+                        <p>Accessible button component with various states and styles.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="8" y1="12" x2="8" y2="12"/></svg>
+                        </div>
+                        <h3>Input</h3>
+                        <p>Text input field with validation and accessibility features.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M16 10l-4 4-4-4"/></svg>
+                        </div>
+                        <h3>Select</h3>
+                        <p>Native-like select component with custom styling capabilities.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4" fill="currentColor"/></svg>
+                        </div>
+                        <h3>Radio Group</h3>
+                        <p>Accessible radio button group for single selection.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
+                        </div>
+                        <h3>Checkbox Group</h3>
+                        <p>Group of checkboxes for multiple selection.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8h20"/><path d="M6 8v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"/><path d="M6 8V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"/></svg>
+                        </div>
+                        <h3>Tabs</h3>
+                        <p>Tab interface for switching between different views.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 4v16"/><path d="M16 4v16"/><path d="M4 12h16"/></svg>
+                        </div>
+                        <h3>Dialog</h3>
+                        <p>Modal dialog component for overlays and alerts.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a6 6 0 0 1 6 6c0 2.5-2 4.5-4 6v2h-4v-2c-2-1.5-4-3.5-4-6a6 6 0 0 1 6-6z"/><path d="M12 22v-2"/></svg>
+                        </div>
+                        <h3>Tooltip</h3>
+                        <p>Contextual information displayed on hover or focus.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/><path d="M8 9l4 4 4-4"/></svg>
+                        </div>
+                        <h3>Accordion</h3>
+                        <p>Collapsible content sections for managing large amounts of content.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        </div>
+                        <h3>Form System</h3>
+                        <p>Comprehensive form validation and state management.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="4"/></svg>
+                        </div>
+                        <h3>Switch</h3>
+                        <p>Toggle switch for binary states.</p>
+                    </a>
+                    <a href="#" class="component-card">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+                        </div>
+                        <h3>Steps</h3>
+                        <p>Progress indicator for multi-step processes.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-row">
+                <div class="footer-brand">
+                    <img src="lionui-text.svg" alt="lion ui" height="16" class="logo-text-svg">
+                    <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="https://lion.js.org/next/blog">Blog</a>
+                    <a href="https://github.com/ing-bank/lion/issues">Help</a>
+                    <a href="https://github.com/ing-bank/lion">GitHub</a>
+                    <a href="https://lion.js.org/next/about/slack/">Slack</a>
+                    <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

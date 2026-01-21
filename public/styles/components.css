@@ -1,0 +1,220 @@
+/* Page Header */
+.page-header {
+    padding: 120px 0 60px;
+    text-align: center;
+}
+
+.page-header h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Component Cards */
+.component-card {
+    background-color: var(--bg-color);
+    padding: 32px;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: block;
+    border: 1px solid transparent;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.component-card:hover {
+    background-color: var(--card-bg);
+    border-color: rgba(255, 193, 7, 0.1);
+    transform: translateY(-2px);
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    color: var(--highlight-color);
+    transition: all 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.component-card:hover .card-icon {
+    background: rgba(255, 193, 7, 0.1);
+    border-color: rgba(255, 193, 7, 0.2);
+    color: var(--highlight-color);
+}
+
+.card-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.5;
+}
+
+.component-card h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    transition: color 0.2s;
+}
+
+.component-card:hover h3 {
+    color: var(--highlight-color);
+}
+
+.component-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.main-nav a.active {
+    color: var(--highlight-color);
+}
+
+/* Documentation Layout */
+.docs-layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 60px;
+    padding: 60px 0;
+    align-items: start;
+}
+
+.docs-sidebar {
+    position: sticky;
+    top: 40px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 32px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--highlight-color);
+}
+
+.component-nav h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+}
+
+.component-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.component-nav li {
+    margin-bottom: 8px;
+}
+
+.component-nav a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    display: block;
+    padding: 8px 0;
+    transition: color 0.2s;
+}
+
+.component-nav a:hover,
+.component-nav a.active {
+    color: var(--highlight-color);
+}
+
+/* Docs Content */
+.docs-content {
+    padding-top: 54px;
+}
+
+.component-header {
+    margin-bottom: 60px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 40px;
+}
+
+.component-header h1 {
+    font-size: 3rem;
+    margin-bottom: 16px;
+}
+
+.lead {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.demo-section {
+    margin-bottom: 60px;
+}
+
+.demo-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+}
+
+.demo-section p {
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+.preview-box {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    padding: 40px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: radial-gradient(#333 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.code-block {
+    background: #111;
+    padding: 20px;
+    border-radius: 0 0 8px 8px;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    overflow-x: auto;
+}
+
+.code-block pre {
+    margin: 0;
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #e6e6e6;
+}
+
+@media (max-width: 768px) {
+    .docs-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .docs-sidebar {
+        display: none;
+    }
+}

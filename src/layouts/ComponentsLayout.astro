@@ -1,7 +1,232 @@
 ---
-import MainLayout from './MainLayout.astro';
+import { SEO } from "astro-seo";
+import TopNav from "../components/TopNav.astro";
+
+interface Props {
+  title?: string;
+  components?: Array<{
+    name: string;
+    description: string;
+    href: string;
+    icon: string;
+  }>;
+}
+
+const site = Astro.site || Astro.url.origin;
+const canonicalURL = new URL(Astro.url.pathname, site).toString();
+const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
+const { title = "Components - Lion UI", components = [] } = Astro.props;
+
+console.log(components.length, 'devok');
 ---
-<MainLayout>
-  <slot />
-</MainLayout>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="view-transition" content="same-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
+    <meta name="generator" content={Astro.generator} />
+    
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/styles.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/components.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/transitions.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/scroll-animations.css`>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <SEO
+      title={title}
+      description="Explore our library of accessible, white-label web components."
+      canonical={canonicalURL}
+      openGraph={{
+        basic: {
+          url: canonicalURL,
+          type: "website",
+          title: title,
+          image: resolvedImageWithDomain,
+        },
+        image: {
+          alt: "Lion Components page",
+        },
+      }}
+    />
+</head>
+<body>
+    <div class="scroll-progress"></div>
+    <div class="grid-background"></div>
+    
+    <TopNav activeNavItem="components" />
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Components</h1>
+                <p class="page-subtitle">Explore our library of accessible, white-label web components.</p>
+            </div>
+        </section>
+
+        <section class="components-list">
+            <div class="container">
+                <div class="features-grid">
+                    <!-- {components.map((component) => (
+                        <a href={component.href} class="component-card">
+                            <div class="card-icon">
+                                <Fragment set:html={component.icon} />
+                            </div>
+                            <h3>{component.name}</h3>
+                            <p>{component.description}</p>
+                        </a>
+                    ))} -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-row">
+                <div class="footer-brand">
+                    <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+                    <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
+                </div>
+                <div class="footer-links">
+                    <a href=`${import.meta.env.BASE_URL}/blog/`>Blog</a>
+                    <a href="https://github.com/ing-bank/lion/issues">Help</a>
+                    <a href="https://github.com/ing-bank/lion">GitHub</a>
+                    <a href=`${import.meta.env.BASE_URL}/about/slack/`>Slack</a>
+                    <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        :root {
+            --bg-color: #000000;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --highlight-color: #FFC107; /* Warm Yellow */
+            --border-color: #222222;
+            --card-bg: #0a0a0a;
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 120px 0 60px;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .components-list {
+            padding: 4rem 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background-color: var(--border-color); /* Creates the grid lines */
+            border: 1px solid var(--border-color);
+        }
+
+        /* Component Cards */
+        .component-card {
+            background-color: var(--bg-color);
+            padding: 32px;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: block;
+            border: 1px solid transparent;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .component-card:hover {
+            background-color: var(--card-bg);
+            border-color: rgba(255, 193, 7, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            color: var(--highlight-color);
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .component-card:hover .card-icon {
+            background: rgba(255, 193, 7, 0.1);
+            border-color: rgba(255, 193, 7, 0.2);
+            color: var(--highlight-color);
+        }
+
+        .card-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 1.5;
+        }
+
+        .component-card h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            transition: color 0.2s;
+        }
+
+        .component-card:hover h3 {
+            color: var(--highlight-color);
+        }
+
+        .component-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        @media (max-width: 768px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</body>
+</html>
 

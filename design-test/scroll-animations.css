@@ -1,0 +1,524 @@
+/* ===========================================
+   CSS Scroll-Driven Animations
+   Uses the modern Scroll Timeline API
+   =========================================== */
+
+/* Base animation keyframes */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(60px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-in-left {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slide-in-right {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes blur-in {
+    from {
+        opacity: 0;
+        filter: blur(10px);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
+    }
+}
+
+@keyframes reveal-up {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+        clip-path: inset(100% 0 0 0);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+/* ===========================================
+   Scroll-triggered animations using 
+   animation-timeline: view()
+   =========================================== */
+
+/* Generic scroll-animate class */
+.scroll-animate {
+    animation: slide-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+}
+
+.scroll-animate-fade {
+    animation: fade-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 25%;
+}
+
+.scroll-animate-scale {
+    animation: scale-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+}
+
+.scroll-animate-blur {
+    animation: blur-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+}
+
+/* ===========================================
+   Hero Section Animations (on load + scroll)
+   =========================================== */
+
+/* Initial entrance animations */
+.hero .pill {
+    animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.title-line-1 {
+    animation: blur-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+.title-line-2 {
+    animation: blur-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+.hero h1 {
+    animation: blur-in 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.hero-subtitle {
+    animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+}
+
+.cta-group {
+    animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+
+.hero-stats {
+    animation: fade-in 1s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+}
+
+.hero-stats .stat {
+    animation: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-stats .stat:nth-child(1) { animation-delay: 0.65s; }
+.hero-stats .stat:nth-child(2) { animation-delay: 0.75s; }
+.hero-stats .stat:nth-child(3) { animation-delay: 0.85s; }
+
+/* Floating shapes entrance */
+.shape {
+    animation: scale-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.shape-1 { animation-delay: 0.3s; }
+.shape-2 { animation-delay: 0.4s; }
+.shape-3 { animation-delay: 0.5s; }
+.shape-4 { animation-delay: 0.6s; }
+.shape-5 { animation-delay: 0.7s; }
+
+/* ===========================================
+   Hero Scroll-Driven Effects
+   =========================================== */
+
+@keyframes hero-parallax-up {
+    from { transform: translateY(0); }
+    to { transform: translateY(-100px); }
+}
+
+@keyframes hero-parallax-down {
+    from { transform: translateY(0); }
+    to { transform: translateY(50px); }
+}
+
+@keyframes hero-fade-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes hero-scale-down {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.9); opacity: 0; }
+}
+
+@keyframes hero-blur-out {
+    from { filter: blur(0); opacity: 1; }
+    to { filter: blur(10px); opacity: 0; }
+}
+
+@keyframes glow-pulse {
+    from { transform: translateX(-50%) scale(1); opacity: 0.15; }
+    to { transform: translateX(-50%) scale(1.3); opacity: 0.05; }
+}
+
+@keyframes shape-float {
+    from { transform: rotate(45deg) translateY(0); }
+    to { transform: rotate(45deg) translateY(-30px); }
+}
+
+@keyframes shape-float-circle {
+    from { transform: translateY(0); }
+    to { transform: translateY(-40px); }
+}
+
+/* Apply scroll-driven animations */
+@supports (animation-timeline: scroll()) {
+    .hero-content {
+        animation: hero-scale-down linear both;
+        animation-timeline: scroll();
+        animation-range: 0px 500px;
+    }
+    
+    .hero-glow-1 {
+        animation: glow-pulse linear both;
+        animation-timeline: scroll();
+        animation-range: 0px 600px;
+    }
+    
+    .hero-glow-2 {
+        animation: hero-parallax-up linear both;
+        animation-timeline: scroll();
+        animation-range: 0px 400px;
+    }
+    
+    .shape-1 {
+        animation: shape-float linear both;
+        animation-timeline: scroll();
+        animation-range: 0px 500px;
+    }
+    
+    .shape-2 {
+        animation: shape-float-circle linear both;
+        animation-timeline: scroll();
+        animation-range: 0px 400px;
+    }
+    
+    .shape-3 {
+        animation: shape-float-circle linear both;
+        animation-timeline: scroll();
+        animation-range: 0px 600px;
+    }
+    
+    .shape-4 {
+        animation: shape-float linear both;
+        animation-timeline: scroll();
+        animation-range: 0px 350px;
+    }
+    
+    .shape-5 {
+        animation: hero-parallax-up linear both;
+        animation-timeline: scroll();
+        animation-range: 0px 450px;
+    }
+    
+    .grid-line-h {
+        animation: hero-fade-out linear both;
+        animation-timeline: scroll();
+        animation-range: 100px 400px;
+    }
+    
+    .grid-line-v {
+        animation: hero-fade-out linear both;
+        animation-timeline: scroll();
+        animation-range: 150px 450px;
+    }
+    
+    .scroll-indicator {
+        animation: hero-fade-out linear both;
+        animation-timeline: scroll();
+        animation-range: 0px 150px;
+    }
+}
+
+.cta-group {
+    animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+}
+
+/* ===========================================
+   Feature Cards - Scroll Animations
+   =========================================== */
+
+.features .section-header {
+    animation: slide-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+}
+
+.feature-card {
+    animation: slide-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+}
+
+/* Staggered delays for feature cards */
+.feature-card:nth-child(1) { animation-delay: 0ms; }
+.feature-card:nth-child(2) { animation-delay: 50ms; }
+.feature-card:nth-child(3) { animation-delay: 100ms; }
+.feature-card:nth-child(4) { animation-delay: 150ms; }
+.feature-card:nth-child(5) { animation-delay: 200ms; }
+.feature-card:nth-child(6) { animation-delay: 250ms; }
+
+/* ===========================================
+   Component Cards - Scroll Animations
+   =========================================== */
+
+.component-card {
+    animation: scale-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+}
+
+/* Staggered delays for component cards */
+.component-card:nth-child(1) { animation-delay: 0ms; }
+.component-card:nth-child(2) { animation-delay: 30ms; }
+.component-card:nth-child(3) { animation-delay: 60ms; }
+.component-card:nth-child(4) { animation-delay: 90ms; }
+.component-card:nth-child(5) { animation-delay: 120ms; }
+.component-card:nth-child(6) { animation-delay: 150ms; }
+.component-card:nth-child(7) { animation-delay: 0ms; }
+.component-card:nth-child(8) { animation-delay: 30ms; }
+.component-card:nth-child(9) { animation-delay: 60ms; }
+.component-card:nth-child(10) { animation-delay: 90ms; }
+.component-card:nth-child(11) { animation-delay: 120ms; }
+.component-card:nth-child(12) { animation-delay: 150ms; }
+
+/* ===========================================
+   Page Headers - Entrance Animations
+   =========================================== */
+
+.page-header h1 {
+    animation: blur-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.page-subtitle {
+    animation: slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+/* ===========================================
+   Documentation Page Animations
+   =========================================== */
+
+.docs-sidebar {
+    animation: slide-in-left 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+.docs-content {
+    animation: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+.docs-content section {
+    animation: slide-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 25%;
+}
+
+.component-preview {
+    animation: scale-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+}
+
+/* Code blocks scroll animation */
+.code-block {
+    animation: slide-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 25%;
+}
+
+/* ===========================================
+   Footer Animation
+   =========================================== */
+
+.site-footer {
+    animation: fade-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+}
+
+/* ===========================================
+   Header Scroll Effects
+   =========================================== */
+
+@keyframes header-shrink {
+    from {
+        padding-top: 24px;
+        padding-bottom: 24px;
+        background: rgba(0, 0, 0, 0.5);
+    }
+    to {
+        padding-top: 16px;
+        padding-bottom: 16px;
+        background: rgba(0, 0, 0, 0.9);
+    }
+}
+
+/* Using scroll() for header - tied to document scroll */
+@supports (animation-timeline: scroll()) {
+    .site-header {
+        animation: header-shrink linear both;
+        animation-timeline: scroll();
+        animation-range: 0px 200px;
+    }
+}
+
+/* ===========================================
+   Parallax-like scroll effects
+   =========================================== */
+
+@keyframes parallax-slow {
+    from {
+        transform: translateY(-20px);
+    }
+    to {
+        transform: translateY(20px);
+    }
+}
+
+.grid-background {
+    animation: parallax-slow linear both;
+    animation-timeline: scroll();
+    animation-range: 0% 100%;
+}
+
+/* ===========================================
+   Progress indicator on scroll
+   =========================================== */
+
+@keyframes grow-progress {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}
+
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--highlight-color);
+    transform-origin: left;
+    z-index: 1000;
+    animation: grow-progress linear both;
+    animation-timeline: scroll();
+}
+
+/* ===========================================
+   Reveal on scroll - text elements
+   =========================================== */
+
+.reveal-text {
+    animation: reveal-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 30%;
+}
+
+/* ===========================================
+   Smooth entrance for images/icons
+   =========================================== */
+
+.card-icon {
+    animation: scale-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 25%;
+}
+
+/* ===========================================
+   Fallback for browsers without support
+   =========================================== */
+
+@supports not (animation-timeline: view()) {
+    .scroll-animate,
+    .scroll-animate-fade,
+    .scroll-animate-scale,
+    .scroll-animate-blur,
+    .feature-card,
+    .component-card,
+    .docs-content section,
+    .component-preview,
+    .code-block,
+    .site-footer,
+    .card-icon,
+    .reveal-text {
+        animation: none;
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+    
+    .grid-background {
+        animation: none;
+        transform: none;
+    }
+    
+    .site-header {
+        animation: none;
+    }
+}
+
+/* ===========================================
+   Reduced motion preference
+   =========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .scroll-progress {
+        display: none;
+    }
+}

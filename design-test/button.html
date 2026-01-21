@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="view-transition" content="same-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button - Lion UI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="components.css">
+    <link rel="stylesheet" href="transitions.css">
+    <link rel="stylesheet" href="scroll-animations.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="scroll-progress"></div>
+    <div class="grid-background"></div>
+    
+    <header class="site-header">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="logo.svg" alt="Lion Logo" width="32" height="32">
+                <img src="lionui-text.svg" alt="lion ui" height="16" class="logo-text-svg">
+            </a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="https://lion.js.org/next/docs/guides/overview/">Guides</a></li>
+                    <li><a href="components.html" class="active">Components</a></li>
+                    <li><a href="https://lion.js.org/next/blog/">Blog</a></li>
+                    <li><a href="https://github.com/ing-bank/lion" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="docs-layout">
+                <aside class="docs-sidebar">
+                    <a href="components.html" class="back-link">← Back to Overview</a>
+                    <nav class="component-nav">
+                        <h3>Components</h3>
+                        <ul>
+                            <li><a href="button.html" class="active">Button</a></li>
+                            <li><a href="#">Input</a></li>
+                            <li><a href="#">Select</a></li>
+                            <li><a href="#">Radio Group</a></li>
+                            <li><a href="#">Checkbox Group</a></li>
+                            <li><a href="#">Tabs</a></li>
+                            <li><a href="#">Dialog</a></li>
+                            <li><a href="#">Tooltip</a></li>
+                            <li><a href="#">Accordion</a></li>
+                            <li><a href="#">Form System</a></li>
+                            <li><a href="#">Switch</a></li>
+                            <li><a href="#">Steps</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+                <div class="docs-content">
+                    <header class="component-header">
+                        <div class="card-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="8" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/></svg>
+                        </div>
+                        <h1>Button</h1>
+                        <p class="lead">Buttons allow users to take actions, and make choices, with a single tap.</p>
+                    </header>
+
+                    <section class="demo-section">
+                        <h2>Primary Button</h2>
+                        <p>Used for the main action on a screen.</p>
+                        <div class="preview-box">
+                            <button class="btn btn-primary">Primary Action</button>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>&lt;button class="btn btn-primary"&gt;Primary Action&lt;/button&gt;</code></pre>
+                        </div>
+                    </section>
+
+                    <section class="demo-section">
+                        <h2>Secondary Button</h2>
+                        <p>Used for secondary actions or less important choices.</p>
+                        <div class="preview-box">
+                            <button class="btn btn-secondary">Secondary Action</button>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>&lt;button class="btn btn-secondary"&gt;Secondary Action&lt;/button&gt;</code></pre>
+                        </div>
+                    </section>
+
+                    <section class="demo-section">
+                        <h2>With Icon</h2>
+                        <p>Buttons can include icons to add context to the action.</p>
+                        <div class="preview-box">
+                            <button class="btn btn-primary">
+                                Get Started <span class="arrow">→</span>
+                            </button>
+                        </div>
+                        <div class="code-block">
+                            <pre><code>&lt;button class="btn btn-primary"&gt;
+    Get Started &lt;span class="arrow"&gt;→&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-row">
+                <div class="footer-brand">
+                    <img src="lionui-text.svg" alt="lion ui" height="16" class="logo-text-svg">
+                    <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="https://lion.js.org/next/blog">Blog</a>
+                    <a href="https://github.com/ing-bank/lion/issues">Help</a>
+                    <a href="https://github.com/ing-bank/lion">GitHub</a>
+                    <a href="https://lion.js.org/next/about/slack/">Slack</a>
+                    <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

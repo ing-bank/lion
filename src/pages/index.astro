@@ -1,5 +1,5 @@
 ---
-import MainLayout from "../layouts/MainLayout.astro";
+import HomeLayout from "../layouts/HomeLayout.astro";
 import { getEntry } from "astro:content";
 
 const entry = await getEntry('lionIndex', 'index');
@@ -13,29 +13,111 @@ const {
 } = entry.data;
 ---
 
-<MainLayout layout="layout-home">
-  <section class="banner">
-    <div class="page-title--container">
-      <h1 class="page-title">{title}</h1>
-      <p class="page-slogan">{slogan}</p>
-      <div class="call-to-action-list" role="list">
-        {callToActionItems.map((callToAction) => (
-          <a class="call-to-action" href={callToAction.href} role="listitem">{callToAction.text}</a>
-        ))}
+<HomeLayout title={title}>
+  <section class="hero">
+      <div class="blueprint-bg">
+          <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                  <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5"
+                      markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(255,255,255,0.5)" />
+                  </marker>
+                  <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/>
+                  </pattern>
+                  <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+                      <rect width="100" height="100" fill="url(#smallGrid)"/>
+                      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                  </pattern>
+              </defs>
+
+              <!-- Background Grid -->
+              <g class="layer-back">
+                  <rect width="800" height="600" fill="url(#grid)" />
+                  <!-- Center Guides -->
+                  <line x1="400" y1="0" x2="400" y2="600" class="construction-line" />
+                  <line x1="0" y1="300" x2="800" y2="300" class="construction-line" />
+              </g>
+
+              <!-- Left Bracket Group -->
+              <g class="group-left layer-mid">
+                  <!-- Construction Circles -->
+                  <circle cx="340" cy="200" r="4" fill="none" stroke="rgba(255,255,255,0.1)" />
+                  <circle cx="260" cy="300" r="4" fill="none" stroke="rgba(255,255,255,0.1)" />
+                  <circle cx="340" cy="400" r="4" fill="none" stroke="rgba(255,255,255,0.1)" />
+                  
+                  <!-- The Shape: Sharp Bracket (Logo Style) -->
+                  <path d="M340 200 L260 300 L340 400" class="logo-part draw-in" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                  
+                  <!-- Dimensions -->
+                  <line x1="240" y1="200" x2="240" y2="400" class="dimension-line" opacity="0" style="transition: opacity 0.3s"/>
+                  <text x="230" y="300" class="dimension-text" transform="rotate(-90 230 300)" opacity="0" style="transition: opacity 0.3s">200px</text>
+                  
+                  <!-- Projection Lines -->
+                  <line x1="340" y1="200" x2="240" y2="200" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+                  <line x1="340" y1="400" x2="240" y2="400" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+              </g>
+
+              <!-- Right Bracket Group -->
+              <g class="group-right layer-mid">
+                  <!-- The Shape: Sharp Bracket (Logo Style) -->
+                  <path d="M460 200 L540 300 L460 400" class="logo-part draw-in" stroke-linecap="round" stroke-linejoin="round" style="animation-delay: 0.2s" fill="none"/>
+                  
+                  <!-- Dimensions -->
+                  <line x1="560" y1="200" x2="560" y2="400" class="dimension-line" opacity="0" style="transition: opacity 0.3s"/>
+                  <text x="575" y="300" class="dimension-text" transform="rotate(90 575 300)" opacity="0" style="transition: opacity 0.3s">200px</text>
+
+                  <!-- Projection Lines -->
+                  <line x1="460" y1="200" x2="560" y2="200" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+                  <line x1="460" y1="400" x2="560" y2="400" stroke="white" stroke-opacity="0.1" stroke-dasharray="2 2" opacity="0" style="transition: opacity 0.3s"/>
+              </g>
+
+              <!-- Center Dot Group -->
+              <g class="group-center layer-front">
+                  <!-- The Shape: Dot (Logo Style) -->
+                  <circle cx="400" cy="300" r="20" class="logo-part draw-in" style="animation-delay: 0.4s"/>
+                  
+                  <circle cx="400" cy="300" r="40" stroke="white" stroke-opacity="0.1" stroke-dasharray="4 4" fill="none"/>
+                  <circle cx="400" cy="300" r="40" stroke="white" stroke-opacity="0.1" stroke-dasharray="4 4" fill="none"/>
+                  
+                  <!-- Radius Dimension -->
+                  <line x1="400" y1="300" x2="435" y2="320" class="dimension-line" opacity="0" style="transition: opacity 0.3s"/>
+                  <text x="445" y="330" class="dimension-text" opacity="0" style="transition: opacity 0.3s">r20</text>
+              </g>
+
+              <!-- Angle Indicators (Visible on Hover) -->
+              <path d="M340 250 A 50 50 0 0 0 310 300" stroke="var(--highlight-color)" stroke-width="1" fill="none" opacity="0" class="angle-indicator"/>
+          </svg>
       </div>
-    </div>
-    <img class="page-logo" src=`${import.meta.env.BASE_URL}/logo.svg`" alt="{title} Logo"/>
+      <div class="container">
+          <div class="hero-content">
+              <div class="pill">v1.0 Available Soon</div>
+              <h1>Fundamental white label <br>web components.</h1>
+              <p class="hero-subtitle">{slogan}</p>
+              <div class="cta-group">
+                  {callToActionItems.map((callToAction, index) => (
+                      <a href={callToAction.href} class={index === 0 ? "btn btn-primary" : "btn btn-secondary"}>
+                          {callToAction.text} {index === 0 && <span class="arrow">→</span>}
+                      </a>
+                  ))}
+              </div>
+          </div>
+      </div>
   </section>
 
-  <section>
-    <h2 class="reason-header">{reasonHeader}</h2>
-    <div class="reasons">
-    {reasons.map((reason) => (
-      <article>
-        <h3>{reason.header}</h3>
-        {reason.text}
-      </article>
-    ))}
-    </div>
+  <section class="features">
+      <div class="container">
+          <div class="section-header">
+              <h2>{reasonHeader}</h2>
+          </div>
+          <div class="features-grid">
+              {reasons.map((reason) => (
+                  <div class="feature-card">
+                      <h3>{reason.header}</h3>
+                      <p>{reason.text}</p>
+                  </div>
+              ))}
+          </div>
+      </div>
   </section>
-</MainLayout>
+</HomeLayout>

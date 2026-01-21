@@ -1,0 +1,186 @@
+---
+import { SEO } from "astro-seo";
+import TopNav from "../components/TopNav.astro";
+
+const site = Astro.site || Astro.url.origin;
+const canonicalURL = new URL(Astro.url.pathname, site).toString();
+const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
+const { title, componentName, description = "Accessible component with various states and styles." } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="view-transition" content="same-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
+    <meta name="generator" content={Astro.generator} />
+    
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/styles.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/components.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/transitions.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/scroll-animations.css`>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <SEO
+      title={title}
+      description={description}
+      canonical={canonicalURL}
+      openGraph={{
+        basic: {
+          url: canonicalURL,
+          type: "website",
+          title: title,
+          image: resolvedImageWithDomain,
+        },
+        image: {
+          alt: `${componentName} component documentation`,
+        },
+      }}
+    />
+</head>
+<body>
+    <div class="scroll-progress"></div>
+    <div class="grid-background"></div>
+    
+    <TopNav activeNavItem="components" />
+
+    <main>
+        <div class="container">
+            <div class="docs-layout">
+                <aside class="docs-sidebar">
+                    <a href=`${import.meta.env.BASE_URL}/components/` class="back-link">← Back to Overview</a>
+                    <nav class="component-nav">
+                        <h3>Components</h3>
+                        <ul>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/buttons/button/` class={componentName === 'button' ? 'active' : ''}>Button</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/inputs/input/` class={componentName === 'input' ? 'active' : ''}>Input</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/inputs/select/` class={componentName === 'select' ? 'active' : ''}>Select</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/inputs/radio-group/` class={componentName === 'radio-group' ? 'active' : ''}>Radio Group</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/inputs/checkbox-group/` class={componentName === 'checkbox-group' ? 'active' : ''}>Checkbox Group</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/navigation/tabs/` class={componentName === 'tabs' ? 'active' : ''}>Tabs</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/overlays/dialog/` class={componentName === 'dialog' ? 'active' : ''}>Dialog</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/overlays/tooltip/` class={componentName === 'tooltip' ? 'active' : ''}>Tooltip</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/navigation/accordion/` class={componentName === 'accordion' ? 'active' : ''}>Accordion</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/fundamentals/systems/form/` class={componentName === 'form' ? 'active' : ''}>Form System</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/inputs/switch/` class={componentName === 'switch' ? 'active' : ''}>Switch</a></li>
+                            <li><a href=`${import.meta.env.BASE_URL}/components/navigation/steps/` class={componentName === 'steps' ? 'active' : ''}>Steps</a></li>
+                        </ul>
+                    </nav>
+                </aside>
+
+                <div class="docs-content">
+                    <slot />
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-row">
+                <div class="footer-brand">
+                    <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+                    <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
+                </div>
+                <div class="footer-links">
+                    <a href=`${import.meta.env.BASE_URL}/blog/`>Blog</a>
+                    <a href="https://github.com/ing-bank/lion/issues">Help</a>
+                    <a href="https://github.com/ing-bank/lion">GitHub</a>
+                    <a href=`${import.meta.env.BASE_URL}/about/slack/`>Slack</a>
+                    <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .docs-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2rem;
+            padding: 2rem 0;
+            min-height: calc(100vh - 200px);
+        }
+
+        .docs-sidebar {
+            position: sticky;
+            top: 2rem;
+            height: fit-content;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #64748b;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #3b82f6;
+        }
+
+        .component-nav h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .component-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .component-nav li {
+            margin-bottom: 0.25rem;
+        }
+
+        .component-nav a {
+            display: block;
+            color: #64748b;
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .component-nav a:hover {
+            background-color: #f1f5f9;
+            color: #3b82f6;
+        }
+
+        .component-nav a.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .docs-content {
+            max-width: none;
+        }
+
+        @media (max-width: 1024px) {
+            .docs-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .docs-sidebar {
+                position: static;
+                order: 2;
+            }
+        }
+    </style>
+</body>
+</html>
