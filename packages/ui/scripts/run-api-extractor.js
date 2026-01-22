@@ -18,12 +18,14 @@ const PROJECT_ROOT = path.resolve(__dirname, '..'); // -> packages/ui
 // Set this to your actual build output folder
 const DTS_ROOT = path.join(PROJECT_ROOT, 'dist-types/exports'); // <-- change if needed
 
+const DIRECTORIES_TO_IGNORE_IN_DTS_ROOT = ['define', 'define-helpers'];
+
 // API report destination is controlled by base config via <projectFolder>/etc
 const BASE_CONFIG_PATH = path.join(PROJECT_ROOT, 'api-extractor.base.json');
 
 // Include only .d.ts files; customize if you need to ignore internals
-const FILTER = (absPath, relPath) => {
-  return relPath.endsWith('.d.ts');
+const FILTER = (absPath, relPath, dir) => {
+  return !DIRECTORIES_TO_IGNORE_IN_DTS_ROOT.includes(dir) && relPath.endsWith('.d.ts');
 };
 // ---------------------------------------------------
 
@@ -36,7 +38,7 @@ function collectDtsFiles(root) {
         walk(abs);
       } else if (entry.isFile()) {
         const rel = path.relative(root, abs);
-        if (FILTER(abs, rel)) results.push({ abs, rel });
+        if (FILTER(abs, rel, dir)) results.push({ abs, rel });
       }
     }
   }
