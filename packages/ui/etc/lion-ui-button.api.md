@@ -30,7 +30,7 @@ export class LionButton extends LionButton_base {
     // (undocumented)
     static get styles(): CSSResult[];
     // (undocumented)
-    test(): void;
+    test1(): void;
     // (undocumented)
     type: string;
 }

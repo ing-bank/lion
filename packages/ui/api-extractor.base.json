@@ -4,7 +4,7 @@
   "apiReport": {
     "enabled": true,
     "reportFolder": "etc",
-    "reportTempFolder": "etc"
+    "reportTempFolder": "temp"
   },
   "mainEntryPointFilePath": "<projectFolder>",
   "docModel": {

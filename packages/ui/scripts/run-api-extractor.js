@@ -122,7 +122,7 @@ async function main() {
     const result = Extractor.invoke(preparedConfig, {
       // Tip: you can switch localBuild based on CI if you want stricter behavior:
       // localBuild: process.env.CI ? false : true,
-      localBuild: true,
+      localBuild: false,
       showVerboseMessages: false,
     });
 
