@@ -1,0 +1,22 @@
+
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
+  "apiReport": {
+    "enabled": true,
+    "reportFolder": "etc",
+    "reportTempFolder": "etc"
+  },
+  "mainEntryPointFilePath": "<projectFolder>",
+  "docModel": {
+    "enabled": false
+  },
+  "dtsRollup": {
+    "enabled": false
+  },
+  "tsdocMetadata": {
+    "enabled": false
+  },
+  "compiler": {
+    "tsconfigFilePath": "tsconfig-check-only.json"
+  }
+}
