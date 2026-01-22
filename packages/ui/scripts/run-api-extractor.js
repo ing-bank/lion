@@ -25,7 +25,12 @@ const BASE_CONFIG_PATH = path.join(PROJECT_ROOT, 'api-extractor.base.json');
 
 // Include only .d.ts files; customize if you need to ignore internals
 const FILTER = (absPath, relPath, dir) => {
-  return !DIRECTORIES_TO_IGNORE_IN_DTS_ROOT.includes(dir) && relPath.endsWith('.d.ts');
+  console.log('dir: ', dir);
+  return (
+    !DIRECTORIES_TO_IGNORE_IN_DTS_ROOT.some(
+      ignoreDirectory => path.join(DTS_ROOT, ignoreDirectory).toLowerCase() === dir.toLowerCase(),
+    ) && relPath.endsWith('.d.ts')
+  );
 };
 // ---------------------------------------------------
 
