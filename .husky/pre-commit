@@ -1,1 +1,6 @@
 npx --no-install lint-staged
+
+CHANGED_FILES=$(git diff --cached --name-only)
+if echo "$CHANGED_FILES" | grep -q "^packages/ui"; then
+  npm run types
+fi

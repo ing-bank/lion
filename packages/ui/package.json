@@ -48,14 +48,14 @@
     "debug": "cd ../../ && npm run debug",
     "debug:firefox": "cd ../../ && npm run debug:firefox",
     "debug:webkit": "cd ../../ && npm run debug:webkit",
+    "generate-index-d-ts": "node ./scripts/generate-index-dts.js",
     "generate-lion-exports": "node ./scripts/generate-lion-exports.js",
     "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-lion-exports",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
     "test": "cd ../../ && npm run test:browser",
     "types": "wireit",
     "types-check-only": "tsc --project tsconfig-check-only.json",
-    "types-correct-after-build": "node ./scripts/types-correct-after-build.js",
-    "generate-index-d-ts": "node ./scripts/generate-index-dts.js"
+    "types-correct-after-build": "node ./scripts/types-correct-after-build.js"
   },
   "sideEffects": [
     "exports/define/**/*.js",
@@ -86,7 +86,7 @@
   "customElements": "custom-elements.json",
   "wireit": {
     "types": {
-      "command": "tsc --build --pretty && npm run types-correct-after-build",
+      "command": "tsc --build --pretty && npm run types-correct-after-build && npm run generate-index-d-ts && npm run api:extract",
       "dependencies": [
         "../singleton-manager:types"
       ],
