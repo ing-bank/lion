@@ -1,10 +1,11 @@
 // Node 18+
 // Usage: node packages/ui/scripts/api-extractor/run-api-extractor.js
 
-import fs from 'node:fs';
-import fsp from 'node:fs/promises';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import fs from 'fs';
+import fsp from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { Extractor, ExtractorConfig } from '@microsoft/api-extractor';
 
 // ---------- Constants (adjust as needed) ----------
@@ -24,13 +25,10 @@ const DIRECTORIES_TO_IGNORE_IN_DTS_ROOT = ['define', 'define-helpers'];
 const BASE_CONFIG_PATH = path.join(PROJECT_ROOT, 'api-extractor.base.json');
 
 // Include only .d.ts files; customize if you need to ignore internals
-const FILTER = (absPath, relPath, dir) => {
-  return (
-    !DIRECTORIES_TO_IGNORE_IN_DTS_ROOT.some(
-      ignoreDirectory => path.join(DTS_ROOT, ignoreDirectory).toLowerCase() === dir.toLowerCase(),
-    ) && relPath.endsWith('.d.ts')
-  );
-};
+const FILTER = (absPath, relPath, dir) =>
+  !DIRECTORIES_TO_IGNORE_IN_DTS_ROOT.some(
+    ignoreDirectory => path.join(DTS_ROOT, ignoreDirectory).toLowerCase() === dir.toLowerCase(),
+  ) && relPath.endsWith('.d.ts');
 // ---------------------------------------------------
 
 function collectDtsFiles(root) {
@@ -84,6 +82,7 @@ async function main() {
   const pkg = await readJson(pkgJsonPath);
   const packageName = String(pkg.name || 'pkg')
     .replace(/^@/, '')
+    // eslint-disable-next-line no-useless-escape
     .replace(/[\/]/g, '-');
 
   // ❗ Load the base JSON as a plain object (do NOT validate yet)
@@ -122,7 +121,7 @@ async function main() {
     const result = Extractor.invoke(preparedConfig, {
       // Tip: you can switch localBuild based on CI if you want stricter behavior:
       // localBuild: process.env.CI ? false : true,
-      localBuild: false,
+      localBuild: true,
       showVerboseMessages: false,
     });
 

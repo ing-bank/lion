@@ -41,14 +41,13 @@
     "exports",
     "!custom-elements-manifest.config.js"
   ],
-  "scripts": {    
+  "scripts": {
     "api:extract": "node scripts/run-api-extractor.js",
     "create-npm-publish-docs": "node ./scripts/create-docs-for-npm-publish.js",
     "custom-elements-manifest": "node ./scripts/cem.js",
     "debug": "cd ../../ && npm run debug",
     "debug:firefox": "cd ../../ && npm run debug:firefox",
     "debug:webkit": "cd ../../ && npm run debug:webkit",
-    "generate-index-d-ts": "node ./scripts/generate-index-dts.js",
     "generate-lion-exports": "node ./scripts/generate-lion-exports.js",
     "prepublishOnly": "npm run types && npm run create-npm-publish-docs && npm run publish-docs && npm run custom-elements-manifest && npm run generate-lion-exports",
     "publish-docs": "node ../../packages-node/publish-docs/src/cli.js --github-url https://github.com/ing-bank/lion/ --git-root-dir ../../",
@@ -74,6 +73,9 @@
     "ibantools": "^4.3.9",
     "lit": "^3.1.2",
     "singleton-manager": "^1.8.0"
+  },
+  "devDependencies": {
+    "@microsoft/api-extractor": "^7.55.2"
   },
   "keywords": [
     "design-system",

@@ -38,10 +38,6 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
     };
   }
 
-  test1() {
-    console.log(10);
-  }
-
   render() {
     return html` <div class="button-content"><slot></slot></div> `;
   }
