@@ -6,6 +6,9 @@ import {
 } from './interceptors/index.js';
 import { AjaxFetchError } from './AjaxFetchError.js';
 
+const b = 10;
+console.log(b);
+
 /**
  * @typedef {import('../types/types.js').RequestInterceptor} RequestInterceptor
  * @typedef {import('../types/types.js').CachedRequestInterceptor} CachedRequestInterceptor
