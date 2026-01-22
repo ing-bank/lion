@@ -18,5 +18,5 @@
   },
   "compiler": {
     "tsconfigFilePath": "tsconfig-check-only.json"
-  }
+  }  
 }
