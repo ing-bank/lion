@@ -5,7 +5,7 @@ const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' |
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
 
 // TODO: simplify html structure, as we got rid of the wrapper element for IE11
-const a = 10;
+const a = 11;
 console.log(a);
 
 /**
