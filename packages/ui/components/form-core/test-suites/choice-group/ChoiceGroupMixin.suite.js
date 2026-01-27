@@ -1,15 +1,15 @@
-import { LitElement } from 'lit';
-import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
 import '@lion/ui/define/lion-checkbox.js';
+import '@lion/ui/define/lion-fieldset.js';
 import {
-  FormGroupMixin,
-  Required,
   ChoiceGroupMixin,
   ChoiceInputMixin,
+  FormGroupMixin,
+  Required,
 } from '@lion/ui/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
 import { expect, fixture, fixtureSync, html, unsafeStatic } from '@open-wc/testing';
+import { LitElement } from 'lit';
 import sinon from 'sinon';
 
 class ChoiceInputFoo extends ChoiceInputMixin(LionInput) {}
@@ -45,6 +45,28 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
 
   describe(`ChoiceGroupMixin: ${cfg.parentTagString}`, () => {
     if (cfg.choiceType === 'single') {
+      it('has a single modelValue representing initial checked values', async () => {
+        const el = /** @type {ChoiceInputGroup} */ (
+          await fixture(html`
+          <${parentTag} name="gender[]">
+            <${childTag} .choiceValue=${'male'}></${childTag}>
+            <${childTag} .choiceValue=${'female'} checked></${childTag}>
+            <${childTag} .choiceValue=${'other'}></${childTag}>
+          </${parentTag}>
+        `)
+        );
+
+        // @ts-ignore protected members allowed in test
+        expect(el._initialModelValue).to.eql('female');
+        expect(el.modelValue).to.eql('female');
+
+        el.formElements[0].checked = true;
+
+        // @ts-ignore protected members allowed in test
+        expect(el._initialModelValue).to.eql('female');
+        expect(el.modelValue).to.eql('male');
+      });
+
       it('has a single modelValue representing the currently checked radio value', async () => {
         const el = /** @type {ChoiceInputGroup} */ (
           await fixture(html`
@@ -585,6 +607,28 @@ export function runChoiceGroupMixinSuite({ parentTagString, childTagString, choi
     });
 
     describe('multipleChoice', () => {
+      it('has multiple _initialModelValue representing initial checked values', async () => {
+        const el = /** @type {ChoiceInputGroup} */ (
+          await fixture(html`
+          <${parentTag} multiple-choice name="animals[]">
+            <${childTag} .choiceValue=${'dog'} checked></${childTag}>
+            <${childTag} .choiceValue=${'cat'} checked></${childTag}>
+            <${childTag} .choiceValue=${'lion'}></${childTag}>
+          </${parentTag}>
+        `)
+        );
+
+        // @ts-ignore protected members allowed in test
+        expect(el._initialModelValue).to.eql(['dog', 'cat']);
+        expect(el.modelValue).to.eql(['dog', 'cat']);
+
+        el.formElements[2].checked = true;
+
+        // @ts-ignore protected members allowed in test
+        expect(el._initialModelValue).to.eql(['dog', 'cat']);
+        expect(el.modelValue).to.eql(['dog', 'cat', 'lion']);
+      });
+
       it('has a single modelValue representing all currently checked values', async () => {
         const el = /** @type {ChoiceInputGroup} */ (
           await fixture(html`
