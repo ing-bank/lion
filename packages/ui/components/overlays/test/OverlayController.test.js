@@ -814,7 +814,8 @@ describe('OverlayController', () => {
 
           // without this line, the test is unstable on FF sometimes
           await aTimeout(100);
-
+          console.log('Parent isShown:', parentOverlay.isShown);
+          console.log('Child isShown:', childOverlay.isShown);
           expect(parentOverlay.isShown).to.be.false;
           expect(childOverlay.isShown).to.be.true;
 
