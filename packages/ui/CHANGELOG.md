@@ -1,5 +1,13 @@
 # @lion/ui
 
+## 0.15.5
+
+### Patch Changes
+
+- 557045b: [collapsible] remove unneeded aria-labelledby on the contentNode
+- 799b690: fix(ChoiceGroupMixin): initialModelValue is not managed properly
+- 173b2b9: fix(InputTelephone): spanish allCountries label is not right
+
 ## 0.15.4
 
 ### Patch Changes
