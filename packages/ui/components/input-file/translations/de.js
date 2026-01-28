@@ -17,4 +17,7 @@ export default {
   selectTextDuplicateFileName: 'Eine Datei mit demselben Dateinamen war bereits vorhanden.',
   selectTextMultipleFile: 'Dateien auswählen',
   selectTextSingleFile: 'Datei auswählen',
+  statusLoading: 'Dateien werden hochgeladen. Bitte warten.',
+  statusSuccess: 'Die Datei {fileName} wurde erfolgreich hinzugefügt.',
+  statusRemoved: 'Die Datei {fileName} wurde erfolgreich entfernt.',
 };
