@@ -77,13 +77,8 @@ export const handler = ({ shadowRoot }) => {
   return html`
     <lion-switch
       label="Label"
-      @checked-changed="${ev => {
-        shadowRoot.querySelector('sb-action-logger').log(`Current value: ${ev.target.checked}`);
-      }}"
       @model-value-changed="${ev => {
-        shadowRoot
-          .querySelector('sb-action-logger')
-          .log(`Model value changed Current value: ${ev.target.checked}`);
+        shadowRoot.querySelector('sb-action-logger').log(`Current value: ${ev.target.checked}`);
       }}"
     >
     </lion-switch>
