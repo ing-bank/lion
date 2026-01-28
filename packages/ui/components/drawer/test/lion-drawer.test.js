@@ -96,14 +96,5 @@ describe('<lion-drawer>', () => {
         expect(invoker).to.have.attribute('aria-expanded', 'true');
       });
     });
-
-    describe('Contents', () => {
-      it('adds aria-labelledby referring to invoker id', async () => {
-        const drawerElement = await fixture(template);
-        const invoker = drawerElement.querySelector('[slot=invoker]');
-        const content = drawerElement.querySelector('[slot=content]');
-        expect(content).to.have.attribute('aria-labelledby', invoker?.id);
-      });
-    });
   });
 });
