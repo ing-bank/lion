@@ -136,14 +136,5 @@ describe('<lion-collapsible>', () => {
         expect(invoker).to.have.attribute('aria-expanded', 'true');
       });
     });
-
-    describe('Contents', () => {
-      it('adds aria-labelledby referring to invoker id', async () => {
-        const collapsibleElement = await fixture(defaultCollapsible);
-        const invoker = collapsibleElement.querySelector('[slot=invoker]');
-        const content = collapsibleElement.querySelector('[slot=content]');
-        expect(content).to.have.attribute('aria-labelledby', invoker?.id);
-      });
-    });
   });
 });

@@ -54,12 +54,10 @@ export class LionCollapsible extends LitElement {
     if (this._invokerNode) {
       this._invokerNode.addEventListener('click', this.toggle);
       this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
-      this._invokerNode.setAttribute('id', `collapsible-invoker-${uid}`);
       this._invokerNode.setAttribute('aria-controls', `collapsible-content-${uid}`);
     }
 
     if (this._contentNode) {
-      this._contentNode.setAttribute('aria-labelledby', `collapsible-invoker-${uid}`);
       this._contentNode.setAttribute('id', `collapsible-content-${uid}`);
     }
 
