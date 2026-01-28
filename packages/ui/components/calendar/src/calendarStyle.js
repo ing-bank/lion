@@ -28,7 +28,7 @@ export const calendarStyle = css`
 
   .calendar__previous-button,
   .calendar__next-button {
-    background-color: #fff;
+    background-color: transparent;
     border: 0;
     padding: 0;
     min-width: 40px;
@@ -48,7 +48,7 @@ export const calendarStyle = css`
   }
 
   .calendar__day-button {
-    background-color: #fff;
+    background-color: transparent;
     border: 0;
     color: black;
     padding: 0;
@@ -88,7 +88,7 @@ export const calendarStyle = css`
   }
 
   .calendar__day-button[aria-disabled='true'] {
-    background-color: #fff;
+    background-color: transparent;
     color: #eee;
     outline: none;
   }
