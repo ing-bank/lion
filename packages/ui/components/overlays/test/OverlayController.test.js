@@ -11,6 +11,7 @@ import {
   fixture,
   expect,
   html,
+  waitUntil,
 } from '@open-wc/testing';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
@@ -815,8 +816,8 @@ describe('OverlayController', () => {
           // without this line, the test is unstable on FF sometimes
           await aTimeout(100);
 
-          expect(parentOverlay.isShown).to.be.false;
-          expect(childOverlay.isShown).to.be.true;
+          await waitUntil(() => !parentOverlay.isShown);
+          await waitUntil(() => childOverlay.isShown);
 
           await childOverlay.teardown();
           await parentOverlay.teardown();
