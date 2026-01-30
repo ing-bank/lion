@@ -68,16 +68,16 @@ export const validation = () => html`
 `;
 ```
 
-## With checked-changed handler
+## With model-value-changed handler
 
-You can listen for a `checked-changed` event that is fired when the switch is clicked.
+You can listen for a `model-value-changed` event that is fired when the switch is toggled.
 
 ```js preview-story
 export const handler = ({ shadowRoot }) => {
   return html`
     <lion-switch
       label="Label"
-      @checked-changed="${ev => {
+      @model-value-changed="${ev => {
         shadowRoot.querySelector('sb-action-logger').log(`Current value: ${ev.target.checked}`);
       }}"
     >
