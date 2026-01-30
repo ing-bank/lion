@@ -1,9 +1,11 @@
 export {
   RegionMeta,
+  OnDropdownChangeEvent,
+  DropdownRef,
   TemplateDataForDropdownInputAmount,
   AmountDropdownModelValue,
   CurrencyCode,
   countryToCurrencyList,
   RegionToCurrencyMap,
-  AllCurrenciesSet
+  AllCurrenciesSet,
 } from '../../components/input-amount-dropdown/types/index.js';
