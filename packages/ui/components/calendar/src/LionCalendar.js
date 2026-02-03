@@ -23,6 +23,19 @@ import { getDayMonthYear } from './utils/getDayMonthYear.js';
  * @typedef {import('../types/day.js').Month} Month
  */
 
+const CalendarDateTarget = {
+  CENTRAL: 'centralDate',
+  FOCUSED: '__focusedDate',
+};
+Object.freeze(CalendarDateTarget);
+
+const DateType = {
+  FULL_YEAR: 'FullYear',
+  MONTH: 'Month',
+  DATE: 'Date',
+};
+Object.freeze(DateType);
+
 const isDayButton = /** @param {HTMLElement} el */ el =>
   el.classList.contains('calendar__day-button');
 
@@ -228,19 +241,19 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   }
 
   goToNextMonth() {
-    this.__modifyDate(1, { dateType: 'centralDate', type: 'Month' });
+    this.__modifyDate(1, { dateType: CalendarDateTarget.CENTRAL, type: DateType.MONTH });
   }
 
   goToPreviousMonth() {
-    this.__modifyDate(-1, { dateType: 'centralDate', type: 'Month' });
+    this.__modifyDate(-1, { dateType: CalendarDateTarget.CENTRAL, type: DateType.MONTH });
   }
 
   goToNextYear() {
-    this.__modifyDate(1, { dateType: 'centralDate', type: 'FullYear' });
+    this.__modifyDate(1, { dateType: CalendarDateTarget.CENTRAL, type: DateType.FULL_YEAR });
   }
 
   goToPreviousYear() {
-    this.__modifyDate(-1, { dateType: 'centralDate', type: 'FullYear' });
+    this.__modifyDate(-1, { dateType: CalendarDateTarget.CENTRAL, type: DateType.FULL_YEAR });
   }
 
   /**
@@ -330,7 +343,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   /** @param {import('lit').PropertyValues } changedProperties */
   updated(changedProperties) {
     super.updated(changedProperties);
-    if (changedProperties.has('__focusedDate') && this.__focusedDate) {
+    if (changedProperties.has(CalendarDateTarget.FOCUSED) && this.__focusedDate) {
       this.focusCentralDate();
     }
   }
@@ -348,7 +361,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       return;
     }
 
-    if (name === '__focusedDate') {
+    if (name === CalendarDateTarget.FOCUSED) {
       this.__focusedDateChanged();
     }
 
@@ -414,9 +427,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const previousYear = this.centralDate.getMonth() === 0 ? year - 1 : year;
     return html`
       <div class="calendar__navigation__month">
-        ${this.__renderPreviousButton('Month', previousMonth, previousYear)}
+        ${this.__renderPreviousButton(DateType.MONTH, previousMonth, previousYear)}
         <h2 class="calendar__navigation-heading" id="month" aria-atomic="true">${month}</h2>
-        ${this.__renderNextButton('Month', nextMonth, nextYear)}
+        ${this.__renderNextButton(DateType.MONTH, nextMonth, nextYear)}
       </div>
     `;
   }
@@ -432,9 +445,9 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
 
     return html`
       <div class="calendar__navigation__year">
-        ${this.__renderPreviousButton('FullYear', month, previousYear)}
+        ${this.__renderPreviousButton(DateType.FULL_YEAR, month, previousYear)}
         <h2 class="calendar__navigation-heading" id="year" aria-atomic="true">${year}</h2>
-        ${this.__renderNextButton('FullYear', month, nextYear)}
+        ${this.__renderNextButton(DateType.FULL_YEAR, month, nextYear)}
       </div>
     `;
   }
@@ -481,12 +494,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   __getPreviousDisabled(type, previousMonth, previousYear) {
     let disabled;
     let month = previousMonth;
-    if (this.minDate && type === 'Month') {
+    if (this.minDate && type === DateType.MONTH) {
       disabled = getLastDayPreviousMonth(this.centralDate) < this.minDate;
     } else if (this.minDate) {
       disabled = previousYear < this.minDate.getFullYear();
     }
-    if (!disabled && this.minDate && type === 'FullYear') {
+    if (!disabled && this.minDate && type === DateType.FULL_YEAR) {
       // change the month to the first available month
       if (previousYear === this.minDate.getFullYear()) {
         if (this.centralDate.getMonth() < this.minDate.getMonth()) {
@@ -506,12 +519,12 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
   __getNextDisabled(type, nextMonth, nextYear) {
     let disabled;
     let month = nextMonth;
-    if (this.maxDate && type === 'Month') {
+    if (this.maxDate && type === DateType.MONTH) {
       disabled = getFirstDayNextMonth(this.centralDate) > this.maxDate;
     } else if (this.maxDate) {
       disabled = nextYear > this.maxDate.getFullYear();
     }
-    if (!disabled && this.maxDate && type === 'FullYear') {
+    if (!disabled && this.maxDate && type === DateType.FULL_YEAR) {
       // change the month to the first available month
       if (nextYear === this.maxDate.getFullYear()) {
         if (this.centralDate.getMonth() >= this.maxDate.getMonth()) {
@@ -533,7 +546,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const { disabled, month } = this.__getPreviousDisabled(type, previousMonth, previousYear);
     const previousButtonTitle = this.__getNavigationLabel('previous', type, month, previousYear);
     const clickDateDelegation = () => {
-      if (type === 'FullYear') {
+      if (type === DateType.FULL_YEAR) {
         this.goToPreviousYear();
       } else {
         this.goToPreviousMonth();
@@ -569,7 +582,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const { disabled, month } = this.__getNextDisabled(type, nextMonth, nextYear);
     const nextButtonTitle = this.__getNavigationLabel('next', type, month, nextYear);
     const clickDateDelegation = () => {
-      if (type === 'FullYear') {
+      if (type === DateType.FULL_YEAR) {
         this.goToNextYear();
       } else {
         this.goToNextMonth();
@@ -881,29 +894,29 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
         );
         break;
       case 'ArrowUp':
-        this.__modifyDate(-7, { dateType: '__focusedDate', type: 'Date' });
+        this.__modifyDate(-7, { dateType: CalendarDateTarget.FOCUSED, type: DateType.DATE });
         break;
       case 'ArrowDown':
-        this.__modifyDate(7, { dateType: '__focusedDate', type: 'Date' });
+        this.__modifyDate(7, { dateType: CalendarDateTarget.FOCUSED, type: DateType.DATE });
         break;
       case 'ArrowLeft':
-        this.__modifyDate(-1, { dateType: '__focusedDate', type: 'Date' });
+        this.__modifyDate(-1, { dateType: CalendarDateTarget.FOCUSED, type: DateType.DATE });
         break;
       case 'ArrowRight':
-        this.__modifyDate(1, { dateType: '__focusedDate', type: 'Date' });
+        this.__modifyDate(1, { dateType: CalendarDateTarget.FOCUSED, type: DateType.DATE });
         break;
       case 'PageDown':
         if (ev.altKey === true) {
-          this.__modifyDate(1, { dateType: '__focusedDate', type: 'FullYear' });
+          this.__modifyDate(1, { dateType: CalendarDateTarget.FOCUSED, type: DateType.FULL_YEAR });
         } else {
-          this.__modifyDate(1, { dateType: '__focusedDate', type: 'Month' });
+          this.__modifyDate(1, { dateType: CalendarDateTarget.FOCUSED, type: DateType.MONTH });
         }
         break;
       case 'PageUp':
         if (ev.altKey === true) {
-          this.__modifyDate(-1, { dateType: '__focusedDate', type: 'FullYear' });
+          this.__modifyDate(-1, { dateType: CalendarDateTarget.FOCUSED, type: DateType.FULL_YEAR });
         } else {
-          this.__modifyDate(-1, { dateType: '__focusedDate', type: 'Month' });
+          this.__modifyDate(-1, { dateType: CalendarDateTarget.FOCUSED, type: DateType.MONTH });
         }
         break;
       case 'Tab':
@@ -925,17 +938,19 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
     const tmpDate = new Date(this.centralDate);
     // if we're not working with days, reset
     // day count to first day of the month
-    if (type !== 'Date') {
+    if (type !== DateType.DATE) {
       tmpDate.setDate(1);
     }
-    tmpDate[`set${type}`](tmpDate[`get${type}`]() + modify);
+    /** @type {any} */ (tmpDate)[`set${type}`](
+      /** @type {any} */ (tmpDate)[`get${type}`]() + modify,
+    );
     // if we've reset the day count,
     // restore day count as best we can
-    if (type !== 'Date') {
+    if (type !== DateType.DATE) {
       const maxDays = new Date(tmpDate.getFullYear(), tmpDate.getMonth() + 1, 0).getDate();
       tmpDate.setDate(Math.min(this.centralDate.getDate(), maxDays));
     }
-    this[dateType] = tmpDate;
+    /** @type {any} */ (this)[dateType] = tmpDate;
   }
 
   /**

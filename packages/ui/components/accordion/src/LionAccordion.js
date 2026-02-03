@@ -100,7 +100,6 @@ export class LionAccordion extends LitElement {
 
   constructor() {
     super();
-    this.styles = {};
 
     /**
      * @type {boolean}

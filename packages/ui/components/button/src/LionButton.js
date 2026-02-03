@@ -1,5 +1,6 @@
-import { html, LitElement, css } from 'lit';
+import { html, LitElement } from 'lit';
 import { DisabledWithTabIndexMixin } from '@lion/ui/core.js';
+import { buttonStyle } from './buttonStyle.js';
 
 const isKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ' || e.key === 'Enter';
 const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === ' ';
@@ -31,104 +32,17 @@ const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === 
  * @customElement lion-button
  */
 export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
-  static get properties() {
-    return {
-      active: { type: Boolean, reflect: true },
-      type: { type: String, reflect: true },
-    };
-  }
+  static properties = {
+    active: { type: Boolean, reflect: true },
+    type: { type: String, reflect: true },
+  };
 
-  render() {
-    return html` <div class="button-content"><slot></slot></div> `;
-  }
-
-  static get styles() {
-    return [
-      css`
-        :host {
-          position: relative;
-          display: inline-flex;
-          box-sizing: border-box;
-          vertical-align: middle;
-          line-height: 24px;
-          background-color: #eee; /* minimal styling to make it recognizable as btn */
-          padding: 8px; /* padding to fix with min-height */
-          outline: none; /* focus style handled below */
-          cursor: default; /* we should always see the default arrow, never a caret */
-          /* TODO: remove, native button also allows selection. Could be usability concern... */
-          user-select: none;
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-        }
-
-        :host::before {
-          content: '';
-
-          /* center vertically and horizontally */
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-
-          /* Minimum click area to meet [WCAG Success Criterion 2.5.5 Target Size (Enhanced)](https://www.w3.org/TR/WCAG22/#target-size-enhanced) */
-          min-height: 44px;
-          min-width: 44px;
-          width: 100%;
-          height: 100%;
-        }
-
-        .button-content {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        /* Show focus styles on keyboard focus. */
-        :host(:focus:not([disabled])),
-        :host(:focus-visible) {
-          /* if you extend, please overwrite */
-          outline: 2px solid #bde4ff;
-        }
-
-        /* Hide focus styles if they're not needed, for example,
-        when an element receives focus via the mouse. */
-        :host(:focus:not(:focus-visible)) {
-          outline: 0;
-        }
-
-        :host(:hover) {
-          /* if you extend, please overwrite */
-          background: #f4f6f7;
-        }
-
-        :host(:active), /* keep native :active to render quickly where possible */
-        :host([active]) /* use custom [active] to fix IE11 */ {
-          /* if you extend, please overwrite */
-          background: gray;
-        }
-
-        :host([hidden]) {
-          display: none;
-        }
-
-        :host([disabled]) {
-          pointer-events: none;
-          /* if you extend, please overwrite */
-          background: lightgray;
-          color: #adadad;
-          fill: #adadad;
-        }
-      `,
-    ];
-  }
+  static styles = [buttonStyle];
 
   constructor() {
     super();
     this.type = 'button';
     this.active = false;
-
-    this.__setupEvents();
   }
 
   connectedCallback() {
@@ -136,6 +50,12 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
     if (!this.hasAttribute('role')) {
       this.setAttribute('role', 'button');
     }
+    this.#setupEvents();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.#cleanupEvents();
   }
 
   /**
@@ -153,19 +73,19 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
     }
   }
 
-  /**
-   * @private
-   */
-  __setupEvents() {
-    this.addEventListener('mousedown', this.__mousedownHandler);
-    this.addEventListener('keydown', this.__keydownHandler);
-    this.addEventListener('keyup', this.__keyupHandler);
-  }
+  #setupEvents = () => {
+    this.addEventListener('mousedown', this.#mousedownHandler);
+    this.addEventListener('keydown', this.#keydownHandler);
+    this.addEventListener('keyup', this.#keyupHandler);
+  };
 
-  /**
-   * @private
-   */
-  __mousedownHandler() {
+  #cleanupEvents = () => {
+    this.removeEventListener('mousedown', this.#mousedownHandler);
+    this.removeEventListener('keydown', this.#keydownHandler);
+    this.removeEventListener('keyup', this.#keyupHandler);
+  };
+
+  #mousedownHandler = () => {
     this.active = true;
     const mouseupHandler = () => {
       this.active = false;
@@ -174,13 +94,12 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
     };
     document.addEventListener('mouseup', mouseupHandler);
     this.addEventListener('mouseup', mouseupHandler);
-  }
+  };
 
   /**
    * @param {KeyboardEvent} event
-   * @private
    */
-  __keydownHandler(event) {
+  #keydownHandler = event => {
     if (this.active || !isKeyboardClickEvent(event)) {
       if (isSpaceKeyboardClickEvent(event)) {
         event.preventDefault();
@@ -203,20 +122,24 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
       }
     };
     document.addEventListener('keyup', keyupHandler, true);
-  }
+  };
 
   /**
    * @param {KeyboardEvent} event
-   * @private
    */
-  __keyupHandler(event) {
-    if (isKeyboardClickEvent(event)) {
-      // Fixes IE11 double submit/click. Enter keypress somehow triggers the __keyUpHandler on the native <button>
-      if (event.target && event.target !== this) {
-        return;
-      }
-      // dispatch click
-      this.click();
+  #keyupHandler = event => {
+    if (!isKeyboardClickEvent(event)) {
+      return;
     }
+    // Fixes IE11 double submit/click. Enter keypress somehow triggers the #keyUpHandler on the native <button>
+    if (event.target && event.target !== this) {
+      return;
+    }
+    // dispatch click
+    this.click();
+  };
+
+  render() {
+    return html` <div class="button-content"><slot></slot></div> `;
   }
 }
