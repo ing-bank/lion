@@ -1,5 +1,13 @@
 # @lion/ui
 
+## 0.15.5
+
+### Patch Changes
+
+- 6ab5d69: [lion-button]: code refactoring & small improvements
+           [lion-calendar]: code refactoring -> use constant as enum (CalendarDateTarget and DateType)
+           [lion-accordion]: remove useless style initialization
+
 ## 0.15.4
 
 ### Patch Changes
