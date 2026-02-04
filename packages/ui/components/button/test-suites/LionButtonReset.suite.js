@@ -3,7 +3,7 @@ import { LionButtonReset } from '@lion/ui/button.js';
 import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
 import sinon from 'sinon';
 
-export function LionButtonResetSuite({ klass = LionButtonReset } = {}) {
+export function LionButtonResetSuite({ klass = LionButtonReset, visualDiffEnabled } = {}) {
   const tagStringButtonReset = defineCE(class extends klass {});
   const tagButtonReset = unsafeStatic(tagStringButtonReset);
 
@@ -14,6 +14,9 @@ export function LionButtonResetSuite({ klass = LionButtonReset } = {}) {
       );
       expect(el.type).to.equal('reset');
       expect(el.getAttribute('type')).to.be.equal('reset');
+      if (visualDiffEnabled) {
+        await visualDiffEnabled(el, 'has-type-reset-by-default');
+      }
     });
 
     /**
