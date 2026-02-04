@@ -18,6 +18,29 @@
     margin: 0 auto;
 }
 
+/* Component List */
+.components-list {
+    padding: 4rem 0;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background-color: var(--border-color); /* Creates the grid lines */
+    border: 1px solid var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .page-header h1 {
+        font-size: 2rem;
+    }
+}
+
 /* Component Cards */
 .component-card {
     background-color: var(--bg-color);
@@ -89,36 +112,39 @@
 /* Documentation Layout */
 .docs-layout {
     display: grid;
-    grid-template-columns: 250px 1fr;
-    gap: 60px;
-    padding: 60px 0;
-    align-items: start;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    padding: 2rem 0;
+    min-height: calc(100vh - 200px);
 }
 
 .docs-sidebar {
     position: sticky;
-    top: 40px;
+    top: 2rem;
+    height: fit-content;
 }
 
 .back-link {
-    display: inline-block;
-    margin-bottom: 32px;
-    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    color: #64748b;
     text-decoration: none;
-    font-size: 0.9rem;
-    transition: color 0.2s;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
 .back-link:hover {
-    color: var(--highlight-color);
+    color: #3b82f6;
 }
 
 .component-nav h3 {
-    font-size: 0.8rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--text-secondary);
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
 }
 
 .component-nav ul {
@@ -128,26 +154,32 @@
 }
 
 .component-nav li {
-    margin-bottom: 8px;
+    margin-bottom: 0.25rem;
 }
 
 .component-nav a {
-    color: var(--text-primary);
-    text-decoration: none;
-    font-size: 0.95rem;
     display: block;
-    padding: 8px 0;
-    transition: color 0.2s;
+    color: #64748b;
+    text-decoration: none;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-.component-nav a:hover,
+.component-nav a:hover {
+    background-color: #f1f5f9;
+    color: #3b82f6;
+}
+
 .component-nav a.active {
-    color: var(--highlight-color);
+    background-color: #3b82f6;
+    color: white;
 }
 
 /* Docs Content */
 .docs-content {
-    padding-top: 54px;
+    max-width: none;
 }
 
 .component-header {
@@ -209,12 +241,101 @@
     color: #e6e6e6;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .docs-layout {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
     
     .docs-sidebar {
-        display: none;
+        position: static;
+        order: 2;
+    }
+}
+
+/* In-page Navigation Layout */
+.container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.content {
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+ui-portal-inpage-nav {
+    width: 180px;
+    flex: 0 0 180px;
+}
+
+/* Component Detail Header */
+.component-header {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+}
+
+.component-header .card-icon {
+    width: 48px;
+    height: 48px;
+    background: #3b82f6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.component-header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 1rem;
+}
+
+.component-header .lead {
+    font-size: 1.25rem;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.component-content {
+    max-width: none;
+}
+
+/* Demo sections */
+.component-content .demo-section {
+    margin-bottom: 3rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.component-content .preview-box {
+    padding: 2rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.component-content .code-block {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+.component-content .code-block pre {
+    margin: 0;
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .component-header h1 {
+        font-size: 2rem;
     }
 }

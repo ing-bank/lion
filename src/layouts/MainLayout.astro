@@ -5,8 +5,6 @@ import { SEO } from "astro-seo";
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
 import { UIPortalMainNav } from "../components/ui-portal-main-nav.js";
 
-import '../styles/components.css';
-
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
 const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
