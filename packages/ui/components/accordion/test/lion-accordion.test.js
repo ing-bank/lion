@@ -1,4 +1,5 @@
 import { expect, fixture } from '@open-wc/testing';
+import { visualDiffEnabled } from '@lion/ui/test-helpers/visual-diff-if-enabled/index.js';
 import { html } from 'lit/static-html.js';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
@@ -52,6 +53,7 @@ describe('<lion-accordion>', () => {
     it('sets expanded to [] by default', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       expect(el.expanded).to.deep.equal([]);
+      await visualDiffEnabled(el, 'sets-expanded-to-by-default');
     });
 
     it('can programmatically set expanded', async () => {
@@ -79,6 +81,8 @@ describe('<lion-accordion>', () => {
           child => child.className === 'invoker' && child.hasAttribute('expanded'),
         )?.textContent,
       ).to.equal('invoker 1');
+
+      await visualDiffEnabled(el, 'accordion-updated-expanded');
     });
 
     it('updates expanded with a new array when an invoker is clicked', async () => {
@@ -87,6 +91,7 @@ describe('<lion-accordion>', () => {
       const oldExpanded = el.expanded;
       invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
       expect(el.expanded).to.not.equal(oldExpanded);
+      await visualDiffEnabled(el, 'updates-expanded-with-a-new-array-when-an-invoker-is-clicked');
     });
 
     it('has [expanded] on current expanded invoker which serves as styling hook', async () => {
@@ -99,6 +104,10 @@ describe('<lion-accordion>', () => {
       el.expanded = [1];
       expect(invokers[0]).to.not.have.attribute('expanded');
       expect(invokers[1]).to.have.attribute('expanded');
+      await visualDiffEnabled(
+        el,
+        'has-expanded-on-current-expanded-invoker-which-serves-as-styling-hook',
+      );
     });
 
     it('has [expanded] on current expanded invoker first child which serves as styling hook', async () => {
@@ -111,6 +120,10 @@ describe('<lion-accordion>', () => {
       el.expanded = [1];
       expect(invokers[0].firstElementChild).to.not.have.attribute('expanded');
       expect(invokers[1].firstElementChild).to.have.attribute('expanded');
+      await visualDiffEnabled(
+        el,
+        'has-expanded-on-current-expanded-invoker-first-child-which-serves-as-styling-hook',
+      );
     });
 
     it('supports [exclusive] attribute, allowing one collapsible to be open at a time', async () => {
@@ -156,6 +169,10 @@ describe('<lion-accordion>', () => {
       expect(invokerButtons[0]).to.have.attribute('expanded');
       expect(invokerButtons[1]).to.not.have.attribute('expanded');
       expect(invokerButtons[2]).to.have.attribute('expanded');
+      await visualDiffEnabled(
+        el,
+        'supports-exclusive-attribute-allowing-one-collapsible-to-be-open-at-a-time',
+      );
     });
 
     it('sends event "expanded-changed" for every expanded state change', async () => {
@@ -210,6 +227,10 @@ describe('<lion-accordion>', () => {
       expect(invokers.length).to.equal(contents.length);
 
       stub.restore();
+      await visualDiffEnabled(
+        el,
+        'does-not-select-any-elements-with-slot-invoker-and-slot-content-inside-slotted-elements',
+      );
     });
   });
 
@@ -217,6 +238,7 @@ describe('<lion-accordion>', () => {
     it('sets focusedIndex to null by default', async () => {
       const el = /** @type {LionAccordion} */ (await fixture(basicAccordion));
       expect(el.focusedIndex).to.equal(-1);
+      await visualDiffEnabled(el, 'sets-focusedIndex-to-null-by-default');
     });
 
     it('can programmatically set focusedIndex', async () => {
@@ -242,6 +264,7 @@ describe('<lion-accordion>', () => {
         Array.from(getInvokers(el)).find(child => child.firstElementChild?.hasAttribute('focused'))
           ?.textContent,
       ).to.equal('invoker 1');
+      await visualDiffEnabled(el, 'can-programmatically-set-focusedIndex');
     });
 
     it('has [focused] on current focused invoker first child which serves as styling hook', async () => {
@@ -258,6 +281,10 @@ describe('<lion-accordion>', () => {
       expect(invokers[1]).to.not.have.attribute('focused');
       expect(invokers[0].firstElementChild).to.not.have.attribute('focused');
       expect(invokers[1].firstElementChild).to.have.attribute('focused');
+      await visualDiffEnabled(
+        el,
+        'has-focused-on-current-focused-invoker-first-child-which-serves-as-styling-hook',
+      );
     });
 
     it('sends event "focused-changed" for every focused state change', async () => {
@@ -277,6 +304,7 @@ describe('<lion-accordion>', () => {
       expect(el.focusedIndex).to.equal(2);
       invokers[1].firstElementChild?.dispatchEvent(new Event('focusin'));
       expect(el.focusedIndex).to.equal(1);
+      await visualDiffEnabled(el, 'tabbing-sets-the-focusedIndex-correctly');
     });
   });
 
@@ -287,15 +315,18 @@ describe('<lion-accordion>', () => {
 
       const contents = getContents(el);
 
-      setTimeout(() => {
-        expect(contents[0]).to.be.visible;
-        expect(contents[1]).to.be.not.visible;
+      return new Promise(resolve => {
+        setTimeout(() => {
+          expect(contents[0]).to.be.visible;
+          expect(contents[1]).to.be.not.visible;
 
-        el.expanded = [1];
+          el.expanded = [1];
 
-        expect(contents[0]).to.be.not.visible;
-        expect(contents[1]).to.be.visible;
-      }, 250);
+          expect(contents[0]).to.be.not.visible;
+          expect(contents[1]).to.be.visible;
+          resolve(undefined);
+        }, 250);
+      });
     });
 
     it.skip('have a DOM structure that allows them to be animated ', async () => {});
@@ -315,9 +346,11 @@ describe('<lion-accordion>', () => {
       const invokers = getInvokers(el);
       invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
       expect(el.expanded).to.deep.equal([1]);
+      await visualDiffEnabled(el, 'opens-closes-an-invoker-on-click-1');
 
       invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
       expect(el.expanded).to.deep.equal([]);
+      await visualDiffEnabled(el, 'opens-closes-an-invoker-on-click-2');
     });
 
     it('selects a invoker on click', async () => {
@@ -325,6 +358,7 @@ describe('<lion-accordion>', () => {
       const invokers = getInvokers(el);
       invokers[1].firstElementChild?.dispatchEvent(new Event('click'));
       expect(el.focusedIndex).to.equal(1);
+      await visualDiffEnabled(el, 'selects-a-invoker-on-click');
     });
 
     it('opens/closes invoker on [enter] and [space]', async () => {
@@ -333,8 +367,10 @@ describe('<lion-accordion>', () => {
       invokers[0].getElementsByTagName('button')[0].focus();
       await sendKeys({ press: 'Enter' });
       expect(el.expanded).to.deep.equal([0]);
+      await visualDiffEnabled(el, 'opens-closes-invoker-on-enter-and-space-1');
       await sendKeys({ press: 'Space' });
       expect(el.expanded).to.deep.equal([]);
+      await visualDiffEnabled(el, 'opens-closes-invoker-on-enter-and-space-2');
     });
 
     it('selects next invoker on [arrow-right] and [arrow-down]', async () => {
@@ -345,6 +381,7 @@ describe('<lion-accordion>', () => {
         new KeyboardEvent('keydown', { key: 'ArrowRight' }),
       );
       expect(el.focusedIndex).to.equal(1);
+      await visualDiffEnabled(el, 'selects-next-invoker-on-arrow-right-and-arrow-down');
       invokers[0].firstElementChild?.dispatchEvent(
         new KeyboardEvent('keydown', { key: 'ArrowDown' }),
       );
@@ -374,6 +411,7 @@ describe('<lion-accordion>', () => {
         new KeyboardEvent('keydown', { key: 'ArrowUp' }),
       );
       expect(el.focusedIndex).to.equal(0);
+      await visualDiffEnabled(el, 'selects-previous-invoker-on-arrow-left-and-arrow-up');
     });
 
     it('selects first invoker on [home]', async () => {
@@ -390,6 +428,7 @@ describe('<lion-accordion>', () => {
       const invokers = getInvokers(el);
       invokers[1].firstElementChild?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home' }));
       expect(el.focusedIndex).to.equal(0);
+      await visualDiffEnabled(el, 'selects-first-invoker-on-home');
     });
 
     it('selects last invoker on [end]', async () => {
@@ -397,6 +436,7 @@ describe('<lion-accordion>', () => {
       const invokers = getInvokers(el);
       invokers[0].firstElementChild?.dispatchEvent(new KeyboardEvent('keydown', { key: 'End' }));
       expect(el.focusedIndex).to.equal(2);
+      await visualDiffEnabled(el, 'selects-last-invoker-on-end');
     });
 
     it('stays on last invoker on [arrow-right]', async () => {
@@ -417,6 +457,7 @@ describe('<lion-accordion>', () => {
         new KeyboardEvent('keydown', { key: 'ArrowRight' }),
       );
       expect(el.focusedIndex).to.equal(2);
+      await visualDiffEnabled(el, 'stays-on-last-invoker-on-arrow-right');
     });
 
     it('stays on first invoker on [arrow-left]', async () => {
@@ -437,6 +478,7 @@ describe('<lion-accordion>', () => {
         new KeyboardEvent('keydown', { key: 'ArrowLeft' }),
       );
       expect(el.focusedIndex).to.equal(-1);
+      await visualDiffEnabled(el, 'stays-on-first-invoker-on-arrow-left');
     });
   });
 
@@ -464,6 +506,7 @@ describe('<lion-accordion>', () => {
       expect(
         Array.from(getContents(el)).find(child => child.hasAttribute('expanded'))?.textContent,
       ).to.equal('content 5');
+      await visualDiffEnabled(el, 'should-work-with-append-children');
     });
 
     it('should add order style property to each invoker and content', async () => {
@@ -492,6 +535,7 @@ describe('<lion-accordion>', () => {
         expect(invoker.style.getPropertyValue('order')).to.equal(`${index + 1}`);
         expect(content.style.getPropertyValue('order')).to.equal(`${index + 1}`);
       });
+      await visualDiffEnabled(el, 'should-add-order-style-property-to-each-invoker-and-content');
     });
   });
 
@@ -513,6 +557,7 @@ describe('<lion-accordion>', () => {
       expect(
         Array.from(getAccordionChildren(el)).find(child => child.classList.contains('content')),
       ).to.not.have.attribute('tabindex');
+      await visualDiffEnabled(el, 'does-not-make-contents-focusable');
     });
 
     describe('Invokers', () => {
@@ -535,6 +580,10 @@ describe('<lion-accordion>', () => {
         expect(invokers[1].firstElementChild?.getAttribute('aria-controls')).to.equal(
           contents[1].id,
         );
+        await visualDiffEnabled(
+          el,
+          'links-ids-of-content-items-to-invoker-first-child-via-aria-controls',
+        );
       });
 
       it('adds aria-expanded="false" to invoker when its content is not expanded', async () => {
@@ -549,6 +598,10 @@ describe('<lion-accordion>', () => {
         expect(Array.from(getInvokers(el))[0]?.firstElementChild).to.have.attribute(
           'aria-expanded',
           'false',
+        );
+        await visualDiffEnabled(
+          el,
+          'adds-aria-expanded-false-to-invoker-when-its-content-is-not-expanded',
         );
       });
 
@@ -565,6 +618,10 @@ describe('<lion-accordion>', () => {
         expect(Array.from(getInvokers(el))[0]?.firstElementChild).to.have.attribute(
           'aria-expanded',
           'true',
+        );
+        await visualDiffEnabled(
+          el,
+          'adds-aria-expanded-true-to-invoker-when-its-content-is-expanded',
         );
       });
     });
@@ -585,6 +642,7 @@ describe('<lion-accordion>', () => {
         const invokers = getInvokers(el);
         expect(contents[0]).to.have.attribute('aria-labelledby', invokers[0].firstElementChild?.id);
         expect(contents[1]).to.have.attribute('aria-labelledby', invokers[1].firstElementChild?.id);
+        await visualDiffEnabled(el, 'adds-aria-labelledby-referring-to-invoker-ids');
       });
     });
   });
