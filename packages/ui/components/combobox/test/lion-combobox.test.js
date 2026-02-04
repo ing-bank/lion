@@ -2,6 +2,7 @@ import { defineCE, expect, fixture, html, unsafeStatic, waitUntil } from '@open-
 import { Required, Unparseable } from '@lion/ui/form-core.js';
 import { sendKeys } from '@web/test-runner-commands';
 import { LionCombobox } from '@lion/ui/combobox.js';
+import { visualDiffEnabled } from '@lion/ui/test-helpers/visual-diff-if-enabled/index.js';
 import { browserDetection, SlotMixin } from '@lion/ui/core.js';
 import '@lion/ui/define/lion-combobox.js';
 import '@lion/ui/define/lion-listbox.js';
@@ -125,6 +126,7 @@ describe('lion-combobox', () => {
       expect(optionElements?.length).to.equal(wrapperElement.entries.length);
       const optionElement = optionElements?.item(0);
       expect(optionElement?.textContent).to.equal('Banana');
+      await visualDiffEnabled(wrapperElement, 'renders-when-options-changed');
     });
   });
 
@@ -162,6 +164,7 @@ describe('lion-combobox', () => {
       await performChecks();
       el.autocomplete = 'both';
       await performChecks();
+      await visualDiffEnabled(el, 'hides-options-when-input-cleared');
     });
 
     it('hides all options on reset()', async () => {
@@ -296,6 +299,7 @@ describe('lion-combobox', () => {
         _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
         await el.updateComplete;
         expect(el.opened).to.be.true;
+        await visualDiffEnabled(el, 'shows-overlay-on-click');
       });
 
       it('hides overlay on [Escape] after being opened', async () => {
@@ -1835,6 +1839,7 @@ describe('lion-combobox', () => {
       expect(_inputNode.value).to.equal('Chard');
       expect(_inputNode.selectionStart).to.equal(2);
       expect(_inputNode.selectionEnd).to.equal(_inputNode.value.length);
+      await visualDiffEnabled(el, 'completes-textbox-when-autocomplete-both');
 
       // We don't autocomplete when characters are removed
       await mimicUserTyping(el, 'c'); // The user pressed backspace (number of chars decreased)
@@ -1859,6 +1864,7 @@ describe('lion-combobox', () => {
       await el.updateComplete;
       expect(getFilteredOptionValues(el)).to.eql(['Artichoke', 'Chard', 'Chicory']);
       expect(_inputNode.value).to.equal('ch');
+      await visualDiffEnabled(el, 'filters-options-when-autocomplete-list');
     });
 
     it('does not filter options when autocomplete is "none"', async () => {
@@ -3536,6 +3542,7 @@ describe('lion-combobox', () => {
       _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
       await el.updateComplete;
       expect(el.opened).to.be.false;
+      await visualDiffEnabled(el, 'does-not-open-overlay-when-disabled');
     });
 
     it('does open overlay or allow input when disabled state is removed after it was previously disabled', async () => {
@@ -3566,6 +3573,7 @@ describe('lion-combobox', () => {
 
       await open();
       expect(el.opened).to.be.true;
+      await visualDiffEnabled(el, 'opens-overlay-when-disabled-state-removed');
     });
 
     it('sets aria-disabled and disables focus when combobox is disabled', async () => {
@@ -3581,7 +3589,7 @@ describe('lion-combobox', () => {
 
       // aria-disabled should be set
       expect(_inputNode.getAttribute('aria-disabled')).to.equal('true');
-
+      await visualDiffEnabled(el, 'sets-aria-disabled-when-combobox-disabled');
       await expect(el).to.be.accessible();
     });
 
@@ -3597,7 +3605,7 @@ describe('lion-combobox', () => {
 
       // aria-disabled should be set
       expect(_inputNode.getAttribute('aria-readonly')).to.equal('true');
-
+      await visualDiffEnabled(el, 'ensure-focus-when-combobox-readonly');
       await expect(el).to.be.accessible();
     });
   });
@@ -3616,6 +3624,7 @@ describe('lion-combobox', () => {
       _inputNode.dispatchEvent(new Event('click', { bubbles: true, composed: true }));
       await el.updateComplete;
       expect(el.opened).to.be.false;
+      await visualDiffEnabled(el, 'does-not-open-overlay-when-readonly');
     });
 
     it('does open overlay or allow input when readonly state is removed after it was previously set', async () => {
@@ -3646,6 +3655,7 @@ describe('lion-combobox', () => {
 
       await open();
       expect(el.opened).to.be.true;
+      await visualDiffEnabled(el, 'opens-overlay-when-readonly-state-removed');
     });
   });
 });
