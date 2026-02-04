@@ -16,6 +16,7 @@
       "types": "./dist-types/exports/*",
       "default": "./exports/*"
     },
+    "./test-helpers/*": "./test-helpers/*",
     "./calendar-translations/*": "./components/calendar/translations/*",
     "./combobox-translations/*": "./components/combobox/translations/*",
     "./form-core-translations/*": "./components/form-core/translations/*",
