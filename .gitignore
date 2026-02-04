@@ -51,6 +51,7 @@ dist-types
 /storybook-static/
 /screenshots/.current/
 /screenshots/.diff/
+/screenshots/.failed/
 
 ## temp files
 local.log
