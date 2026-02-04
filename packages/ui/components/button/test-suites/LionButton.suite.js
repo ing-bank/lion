@@ -21,9 +21,7 @@ export function LionButtonSuite({ klass = LionButton, visualDiffEnabled } = {}) 
       const el = /** @type {LionButton} */ (await fixture(html`<${tagButton}>foo</${tagButton}>`));
       expect(el.type).to.equal('button');
       expect(el.getAttribute('type')).to.be.equal('button');
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'has-type-button-by-default');
-      }
+      await visualDiffEnabled(el, 'has-type-button-by-default');
     });
 
     it('is hidden when attribute hidden is true', async () => {
@@ -45,18 +43,14 @@ export function LionButtonSuite({ klass = LionButton, visualDiffEnabled } = {}) 
       expect(el.getAttribute('tabindex')).to.equal('0');
       expect(el.getAttribute('aria-disabled')).to.not.exist;
       expect(el.hasAttribute('disabled')).to.equal(false);
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'can-be-disabled-imperatively-enabled');
-      }
+      await visualDiffEnabled(el, 'can-be-disabled-imperatively-enabled');
 
       el.disabled = true;
       await el.updateComplete;
       expect(el.getAttribute('tabindex')).to.equal('-1');
       expect(el.getAttribute('aria-disabled')).to.equal('true');
       expect(el.hasAttribute('disabled')).to.equal(true);
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'can-be-disabled-imperatively-disabled');
-      }
+      await visualDiffEnabled(el, 'can-be-disabled-imperatively-disabled');
     });
 
     describe('Active', () => {
@@ -69,17 +63,13 @@ export function LionButtonSuite({ klass = LionButton, visualDiffEnabled } = {}) 
         expect(el.active).to.be.true;
         await el.updateComplete;
         expect(el.hasAttribute('active')).to.be.true;
-        if (visualDiffEnabled) {
-          await visualDiffEnabled(el, 'updates-active-attribute-on-mousedown');
-        }
+        await visualDiffEnabled(el, 'updates-active-attribute-on-mousedown');
 
         el.dispatchEvent(new Event('mouseup'));
         expect(el.active).to.be.false;
         await el.updateComplete;
         expect(el.hasAttribute('active')).to.be.false;
-        if (visualDiffEnabled) {
-          await visualDiffEnabled(el, 'updates-active-attribute-on-mouseup');
-        }
+        await visualDiffEnabled(el, 'updates-active-attribute-on-mouseup');
       });
 
       it('updates "active" attribute on host when mousedown on button and mouseup anywhere else', async () => {
@@ -107,17 +97,13 @@ export function LionButtonSuite({ klass = LionButton, visualDiffEnabled } = {}) 
         expect(el.active).to.be.true;
         await el.updateComplete;
         expect(el.hasAttribute('active')).to.be.true;
-        if (visualDiffEnabled) {
-          await visualDiffEnabled(el, 'updates-active-attribute-on-space-keydown');
-        }
+        await visualDiffEnabled(el, 'updates-active-attribute-on-space-keydown');
 
         el.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
         expect(el.active).to.be.false;
         await el.updateComplete;
         expect(el.hasAttribute('active')).to.be.false;
-        if (visualDiffEnabled) {
-          await visualDiffEnabled(el, 'updates-active-attribute-on-space-keyup');
-        }
+        await visualDiffEnabled(el, 'updates-active-attribute-on-space-keyup');
       });
 
       it('updates "active" attribute on host when space keydown on button and space keyup anywhere else', async () => {
@@ -145,17 +131,13 @@ export function LionButtonSuite({ klass = LionButton, visualDiffEnabled } = {}) 
         expect(el.active).to.be.true;
         await el.updateComplete;
         expect(el.hasAttribute('active')).to.be.true;
-        if (visualDiffEnabled) {
-          await visualDiffEnabled(el, 'updates-active-attribute-on-enter-keydown');
-        }
+        await visualDiffEnabled(el, 'updates-active-attribute-on-enter-keydown');
 
         el.dispatchEvent(new KeyboardEvent('keyup', { key: 'Enter' }));
         expect(el.active).to.be.false;
         await el.updateComplete;
         expect(el.hasAttribute('active')).to.be.false;
-        if (visualDiffEnabled) {
-          await visualDiffEnabled(el, 'updates-active-attribute-on-enter-keyup');
-        }
+        await visualDiffEnabled(el, 'updates-active-attribute-on-enter-keyup');
       });
 
       it('updates "active" attribute on host when enter keydown on button and space keyup anywhere else', async () => {

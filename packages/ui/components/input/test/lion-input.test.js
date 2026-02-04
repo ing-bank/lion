@@ -1,4 +1,5 @@
 import { Validator } from '@lion/ui/form-core.js';
+import { visualDiffEnabled } from '@lion/ui/test-helpers/visual-diff-if-enabled/index.js';
 import '@lion/ui/define/lion-input.js';
 import { aTimeout, expect, fixture, html, triggerFocusFor, unsafeStatic } from '@open-wc/testing';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
@@ -33,6 +34,7 @@ describe('<lion-input>', () => {
 
     expect(el.disabled).to.equal(true);
     expect(_inputNode.disabled).to.equal(true);
+    await visualDiffEnabled(el, 'can-be-disabled-via-attribute');
   });
 
   it('can be disabled via property', async () => {
@@ -42,6 +44,7 @@ describe('<lion-input>', () => {
     el.disabled = true;
     await el.updateComplete;
     expect(_inputNode.disabled).to.equal(true);
+    await visualDiffEnabled(el, 'can-be-disabled-via-property');
   });
 
   // TODO: Add test that css pointerEvents is none if disabled.
@@ -58,6 +61,7 @@ describe('<lion-input>', () => {
     const disabledEl = /** @type {LionInput} */ (await fixture(html`<${tag} disabled></${tag}>`));
     const { _inputNode: _inputNodeDisabled } = getInputMembers(disabledEl);
     expect(_inputNodeDisabled.hasAttribute('disabled')).to.equal(true);
+    await visualDiffEnabled(el, 'is-disabled-when-disabled-property-passed');
   });
 
   it('reads initial value from attribute value', async () => {
@@ -148,6 +152,7 @@ describe('<lion-input>', () => {
     await el.updateComplete;
     expect(el.getAttribute('placeholder')).to.equal('foo');
     expect(_inputNode.getAttribute('placeholder')).to.equal('foo');
+    await visualDiffEnabled(el, 'has-placeholder-attribute');
   });
 
   it('should remove validation when disabled state toggles', async () => {
@@ -179,6 +184,7 @@ describe('<lion-input>', () => {
     await el.updateComplete;
     expect(el.hasFeedbackFor).to.deep.equal([]);
     expect(el.validationStates.error).to.deep.equal({});
+    await visualDiffEnabled(el, 'should-remove-validation-when-disabled');
   });
 
   describe('Delegation', () => {
@@ -213,16 +219,19 @@ describe('<lion-input>', () => {
     it('is accessible', async () => {
       const el = await fixture(html`<${tag} label="Label"></${tag}>`);
       await expect(el).to.be.accessible();
+      await visualDiffEnabled(el, 'is-accessible');
     });
 
     it('is accessible when readonly', async () => {
       const el = await fixture(html`<${tag} readonly label="Label"></${tag}>`);
       await expect(el).to.be.accessible();
+      await visualDiffEnabled(el, 'is-accessible-when-readonly');
     });
 
     it('is accessible when disabled', async () => {
       const el = await fixture(html`<${tag} disabled label="Label"></${tag}>`);
       await expect(el).to.be.accessible();
+      await visualDiffEnabled(el, 'is-accessible-when-disabled');
     });
   });
 });

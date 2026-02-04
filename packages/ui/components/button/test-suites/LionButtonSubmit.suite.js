@@ -15,9 +15,7 @@ export function LionButtonSubmitSuite({ klass = LionButtonSubmit, visualDiffEnab
       );
       expect(el.type).to.equal('submit');
       expect(el.getAttribute('type')).to.be.equal('submit');
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'has-type-submit-by-default');
-      }
+      await visualDiffEnabled(el, 'has-type-submit-by-default');
     });
 
     describe('Implicit form submission', () => {

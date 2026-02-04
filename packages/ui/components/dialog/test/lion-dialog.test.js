@@ -57,9 +57,7 @@ describe('lion-dialog', () => {
       // @ts-expect-error [allow-protected-in-tests]
       await el._overlayCtrl._showComplete;
       expect(el.opened).to.be.true;
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'should-show-content-on-invoker-click');
-      }
+      await visualDiffEnabled(el, 'should-show-content-on-invoker-click');
     });
 
     it('supports nested overlays', async () => {
@@ -81,9 +79,7 @@ describe('lion-dialog', () => {
       // @ts-expect-error [allow-protected-in-tests]
       await el._overlayCtrl._showComplete;
       expect(el.opened).to.be.true;
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'supports-nested-overlays');
-      }
+      await visualDiffEnabled(el, 'supports-nested-overlays');
 
       const nestedDialogEl = /** @type {LionDialog} */ (el.querySelector('lion-dialog'));
       // @ts-expect-error you're not allowed to call protected _overlayInvokerNode in public context, but for testing it's okay
@@ -113,9 +109,7 @@ describe('lion-dialog', () => {
       await el._overlayCtrl._showComplete;
       const contentNode = /** @type {Element} */ (el.querySelector('[slot="content"]'));
       expect(isActiveElement(contentNode)).to.be.true;
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'sets-focus-on-content-slot-by-default');
-      }
+      await visualDiffEnabled(el, 'sets-focus-on-content-slot-by-default');
     });
 
     it('sets focus on autofocused element', async () => {
@@ -136,9 +130,7 @@ describe('lion-dialog', () => {
       await el._overlayCtrl._showComplete;
       const input = /** @type {Element} */ (el.querySelector('input'));
       expect(isActiveElement(input)).to.be.true;
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'sets-focus-on-autofocused-element');
-      }
+      await visualDiffEnabled(el, 'sets-focus-on-autofocused-element');
     });
 
     it('with trapsKeyboardFocus set to false the focus stays on the invoker', async () => {
@@ -158,9 +150,7 @@ describe('lion-dialog', () => {
       // @ts-expect-error [allow-protected-in-tests]
       await el._overlayCtrl._showComplete;
       expect(isActiveElement(invokerNode)).to.be.true;
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'traps-keyboard-focus-false-stays-on-invoker');
-      }
+      await visualDiffEnabled(el, 'traps-keyboard-focus-false-stays-on-invoker');
     });
 
     it('opened-changed event should send detail object with opened state', async () => {
@@ -222,9 +212,7 @@ describe('lion-dialog', () => {
       `);
       // error expected since we put role="none" on the dialog itself, which is valid but not recognized by Axe
       await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'passes-a11y-audit-when-opened');
-      }
+      await visualDiffEnabled(el, 'passes-a11y-audit-when-opened');
     });
 
     it('does not add [aria-expanded] to invoker button', async () => {
@@ -255,9 +243,7 @@ describe('lion-dialog', () => {
       const contentNode = /** @type {HTMLElement} */ (el.querySelector('[slot="content"]'));
 
       expect(contentNode.getAttribute('role')).to.equal('dialog');
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'has-role-dialog-by-default');
-      }
+      await visualDiffEnabled(el, 'has-role-dialog-by-default');
     });
 
     it('has role="alertdialog" by when "is-alert-dialog" is set', async () => {
@@ -270,9 +256,7 @@ describe('lion-dialog', () => {
       const contentNode = /** @type {HTMLElement} */ (el.querySelector('[slot="content"]'));
 
       expect(contentNode.getAttribute('role')).to.equal('alertdialog');
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'has-role-alertdialog-when-is-alert-dialog-set');
-      }
+      await visualDiffEnabled(el, 'has-role-alertdialog-when-is-alert-dialog-set');
     });
 
     it('passes a11y audit when opened and role="alertdialog"', async () => {
@@ -284,9 +268,7 @@ describe('lion-dialog', () => {
       `);
       // error expected since we put role="none" on the dialog itself, which is valid but not recognized by Axe
       await expect(el).to.be.accessible({ ignoredRules: ['aria-allowed-role'] });
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'passes-a11y-audit-when-opened-and-alertdialog');
-      }
+      await visualDiffEnabled(el, 'passes-a11y-audit-when-opened-and-alertdialog');
     });
   });
 

@@ -14,9 +14,7 @@ export function LionButtonResetSuite({ klass = LionButtonReset, visualDiffEnable
       );
       expect(el.type).to.equal('reset');
       expect(el.getAttribute('type')).to.be.equal('reset');
-      if (visualDiffEnabled) {
-        await visualDiffEnabled(el, 'has-type-reset-by-default');
-      }
+      await visualDiffEnabled(el, 'has-type-reset-by-default');
     });
 
     /**
