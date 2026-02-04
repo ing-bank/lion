@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.19.2
+
+### Patch Changes
+
+- c6a4da9: make peerDependencies optionalDependencies
+
 ## 0.19.1
 
 ### Patch Changes
