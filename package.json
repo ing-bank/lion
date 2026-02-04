@@ -43,8 +43,8 @@
     "test:node": "npm run test:node --workspaces --if-present",
     "test:screenshots": "npx rimraf screenshots/.diff/ && npx rimraf screenshots/.current/ && mocha --require scripts/screenshots/bootstrap.js --exit --timeout 10000 \"packages/**/test/*.screenshots-test.js\"",
     "test:screenshots:update": "cross-env UPDATE_SCREENSHOTS=true npm run test:screenshots",
-    "test:visual-diff": "web-test-runner --config web-test-runner-chrome.config.mjs --visual-diff",
-    "test:visual-diff:update-baseline": "web-test-runner --config web-test-runner-chrome.config.mjs --visual-diff --update-visual-baseline",
+    "test:visual-diff": "web-test-runner --config web-test-runner-chrome.config.mjs --visual-diff && npx rimraf screenshots/.diff/ screenshots/.failed/ screenshots/baseline/Chromium/failed/",
+    "test:visual-diff:update-baseline": "web-test-runner --config web-test-runner-chrome.config.mjs --visual-diff --update-visual-baseline && npx rimraf screenshots/.diff/ screenshots/.failed/ screenshots/baseline/Chromium/failed/",
     "types": "npm run types --workspaces --if-present",
     "types-check-only": "npm run types-check-only --workspaces --if-present"
   },
