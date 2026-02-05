@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
   extends: ['@open-wc/eslint-config', 'eslint-config-prettier'].map(require.resolve),
+  plugins: ['depend'],
   overrides: [
     {
       files: ['**/*.js', '**/*.mjs'],
@@ -43,7 +44,21 @@ module.exports = {
         'import/no-extraneous-dependencies': 'off',
       },
     },
+    {
+      files: ['package.json', 'packages/*/package.json', 'packages-node/*/package.json'],
+      parser: 'jsonc-eslint-parser',
+      plugins: ['depend'],
+      rules: {
+        'depend/ban-dependencies': 'error'
+      }
+    },
   ],
+  rules: {
+    'depend/ban-dependencies': ['error', {
+      presets: ['native', 'microutilities', 'preferred'],
+      allowed: []
+    }]
+  },
   settings: {
     'import/resolver': {
       [path.resolve('./scripts/eslint-resolver.cjs')]: {},
