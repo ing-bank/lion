@@ -597,6 +597,37 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         expect(isCtrlRegisteredAtOverlaysManager).to.equal(true);
       });
 
+      it('does not throw when element is removed from DOM while overlay is open', async () => {
+        const el = /** @type {OverlayEl} */ (
+          await fixture(html`
+          <${tag}>
+            <div slot="content">content of the overlay</div>
+            <button slot="invoker">invoker button</button>
+          </${tag}>
+        `)
+        );
+
+        // 1. Open the overlay
+        el.opened = true;
+        await el.updateComplete;
+        await el._overlayCtrl._showComplete;
+        expect(el._overlayCtrl.isShown).to.be.true;
+
+        // 2. Store reference to the controller before removal
+        const ctrl = el._overlayCtrl;
+
+        // 3. Remove element from DOM without closing the overlay
+        /** @type {HTMLElement} */ (el.parentNode).removeChild(el);
+
+        // 4. Wait for _isPermanentlyDisconnected to resolve and teardown to complete
+        await aTimeout(0);
+
+        // 5. Teardown removed the controller from the manager.
+        //    hide() should handle this gracefully without throwing.
+        await ctrl.hide();
+        expect(ctrl.isShown).to.be.false;
+      });
+
       it('correctly removes event listeners when disconnected from dom', async () => {
         const el = /** @type {OverlayEl} */ (
           await fixture(html`
