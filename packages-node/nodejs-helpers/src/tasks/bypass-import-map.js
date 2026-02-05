@@ -1,5 +1,6 @@
 import path from 'path';
-import { globby } from 'globby';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { glob } from 'tinyglobby';
 // @ts-ignore
 import { createRequire } from 'module';
 // @ts-ignore
@@ -141,7 +142,7 @@ export const bypassImportMap = async (packageDir, options = {}) => {
   }
   const ignoredPatterns = ignoredDirs.map(dir => `!${path.join(packageDir, dir)}`);
   const searchPatterns = [path.join(packageDir, '**', '*.js'), ...ignoredPatterns];
-  const filePaths = await globby(searchPatterns);
+  const filePaths = await glob(searchPatterns);
   const importMap = normalizeImportMap(imports);
   // @ts-ignore
   return asyncConcurrentForEach(filePaths, filePath =>

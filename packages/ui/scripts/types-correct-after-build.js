@@ -12,13 +12,13 @@
 
 import fs from 'fs';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { globby } from 'globby';
+import { glob } from 'tinyglobby';
 import { fileURLToPath } from 'url';
 
 const packageRoot = fileURLToPath(new URL('../', import.meta.url));
 
 async function alignLitImportsAndFixLocalPaths() {
-  const fileNames = await globby('dist-types/**', { cwd: packageRoot });
+  const fileNames = await glob('dist-types/**', { cwd: packageRoot });
 
   for (const fileName of fileNames) {
     // eslint-disable-next-line no-await-in-loop

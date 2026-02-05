@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises';
-import { globby } from 'globby';
+import { glob } from 'tinyglobby';
 
 // Get all HTML files from the output directory
-const files = await globby(`./dist/**/*.html`);
+const files = await glob(`./dist/**/*.html`);
 
 let DEBUG = false;
 await Promise.all(

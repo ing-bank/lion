@@ -1,10 +1,10 @@
 import { writeFile } from 'node:fs/promises';
-import { globby } from 'globby';
+import { glob } from 'tinyglobby';
 import matter from 'gray-matter';
 import { processContentWithTitle } from '@rocket/core/title';
 
 // since it's a one-time script, the path is just hardcoded
-const paths = await globby('docs/components/**/*.md');
+const paths = await glob('docs/components/**/*.md');
 
 const getParts = parts => {
   if (parts.length !== 1) {

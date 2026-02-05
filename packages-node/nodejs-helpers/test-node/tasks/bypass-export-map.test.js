@@ -2,7 +2,7 @@ import path from 'path';
 import { createRequire } from 'module';
 import { readFile, rm } from 'fs/promises';
 import { existsSync } from 'fs';
-import { globby } from 'globby';
+import { glob } from 'tinyglobby';
 import chai from 'chai';
 // eslint-disable-next-line import/no-unresolved
 import chaiAsPromised from 'chai-as-promised';
@@ -34,7 +34,7 @@ const { expect } = chai;
  * @returns {Promise<string[]>}
  */
 const getSortedJsFileNamesInDir = async searchPattern => {
-  const files = await globby(searchPattern);
+  const files = await glob(searchPattern);
   return files.map(file => path.basename(file)).sort(byStringAscendingSort);
 };
 

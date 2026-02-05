@@ -103,7 +103,6 @@
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-wc": "^2.2.0",
     "gh-pages": "^6.3.0",
-    "globby": "^16.1.0",
     "gray-matter": "^4.0.3",
     "husky": "^9.1.6",
     "jsonc-eslint-parser": "^2.4.2",
@@ -120,6 +119,7 @@
     "rocket-preset-extend-lion-docs": "^0.4.0",
     "semver": "^7.6.3",
     "sinon": "^19.0.2",
+    "tinyglobby": "^0.2.15",
     "typescript": "^4.9.5",
     "unist-util-visit": "^5.0.0",
     "wireit": "^0.14.12"

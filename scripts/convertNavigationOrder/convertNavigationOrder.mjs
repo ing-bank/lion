@@ -1,5 +1,5 @@
 import { writeFile } from 'node:fs/promises';
-import { globby } from 'globby';
+import { glob } from 'tinyglobby';
 import matter from 'gray-matter';
 import { processContentWithTitle } from '@rocket/core/title';
 
@@ -18,7 +18,7 @@ const getTitleLineNumber = content => {
 };
 
 // since it's a one-time script, the path is just hardcoded
-const paths = await globby('docs/components/**/*.md');
+const paths = await glob('docs/components/**/*.md');
 
 for (const path of paths) {
   const grayMatterFile = await matter.read(path);

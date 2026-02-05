@@ -1,5 +1,6 @@
 import child_process from 'child_process'; // eslint-disable-line camelcase
-import { globby } from 'globby';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { glob } from 'tinyglobby';
 import path from 'path';
 
 import { getFilePathRelativeFromRoot } from '../utils/get-file-path-relative-from-root.js';
@@ -83,7 +84,7 @@ const getPathsFromGlobList = memoize(
     const results = [];
     for (const pathOrGlob of list) {
       if (pathOrGlob.includes('*')) {
-        const globResults = await globby(pathOrGlob, {
+        const globResults = await glob(pathOrGlob, {
           cwd: rootPath,
           absolute: false,
           onlyFiles: false,
@@ -531,7 +532,7 @@ export class InputDataService {
     }
 
     const combinedGlobs = Array.from(new Set([...cfg.allowlist, ...npmGlobs, ...negativeGitGlobs]));
-    const hasProvidedPositiveGlob = cfg.allowlist.some(glob => !glob.startsWith('!'));
+    const hasProvidedPositiveGlob = cfg.allowlist.some(globPattern => !globPattern.startsWith('!'));
 
     // We need to expand
     const shouldLookForAllFilesInProject =
@@ -547,13 +548,13 @@ export class InputDataService {
       absolute: true,
       cwd: startPath,
     };
-    let filteredGlobRes = await globby(combinedGlobs, globbyCfg);
+    let filteredGlobRes = await glob(combinedGlobs, globbyCfg);
 
-    // Unfortunatly, globby does not correctly remove the negated globs,
+    // Unfortunatly, glob does not correctly remove the negated globs,
     // so we have to do it manually
     const negatedGlobs = combinedGlobs.filter(p => p.startsWith('!'));
     if (negatedGlobs.length) {
-      const subtract = await globby(
+      const subtract = await glob(
         negatedGlobs.map(p => p.slice(1)),
         globbyCfg,
       );
@@ -563,14 +564,14 @@ export class InputDataService {
 
     // Make sure we don't delete to much by giving customConfig.allowlist priority
     if (customConfig.allowlist?.length) {
-      const customResults = await globby(customConfig.allowlist, globbyCfg);
+      const customResults = await glob(customConfig.allowlist, globbyCfg);
       filteredGlobRes = Array.from(new Set([...filteredGlobRes, ...customResults]));
     }
 
     // Filter by extension (in the future: use globs exclusively for this?)
     if (cfg.extensions.length) {
-      filteredGlobRes = filteredGlobRes.filter(glob =>
-        cfg.extensions.some(ext => glob.endsWith(ext)),
+      filteredGlobRes = filteredGlobRes.filter(globPath =>
+        cfg.extensions.some(ext => globPath.endsWith(ext)),
       );
     }
 
@@ -649,7 +650,7 @@ export class InputDataService {
       const valueToUseForGlob = stripDotSlashFromLocalPath(resolvedVal).replace('*', '**/*');
 
       // Generate all possible entries via glob, first strip './'
-      const internalExportMapPathsForKeyRaw = await globby(valueToUseForGlob, {
+      const internalExportMapPathsForKeyRaw = await glob(valueToUseForGlob, {
         cwd: packageRootPath,
         onlyFiles: true,
       });

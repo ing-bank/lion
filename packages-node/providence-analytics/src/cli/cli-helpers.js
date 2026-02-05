@@ -1,7 +1,8 @@
 /* eslint-disable no-shadow */
 import child_process from 'child_process'; // eslint-disable-line camelcase
 import path from 'path';
-import { globby } from 'globby';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { glob } from 'tinyglobby';
 import { toPosixPath } from '../program/utils/to-posix-path.js';
 import { LogService } from '../program/core/LogService.js';
 import { fsAdapter } from '../program/utils/fs-adapter.js';
@@ -58,7 +59,7 @@ export async function pathsArrayFromCs(targets, cwd = process.cwd()) {
       continue; // eslint-disable-line no-continue
     }
     if (t.includes('*')) {
-      const x = (await globby(t, { cwd, absolute: true, onlyFiles: false })).map(toPosixPath);
+      const x = (await glob(t, { cwd, absolute: true, onlyFiles: false })).map(toPosixPath);
       resultPaths.push(...x);
       continue; // eslint-disable-line no-continue
     }
@@ -136,7 +137,7 @@ export function targetDefault(cwd) {
  */
 async function readPackageTree(targetPath, matcher, mode) {
   const folderName = mode === 'npm' ? 'node_modules' : 'bower_components';
-  const potentialPaths = await globby(`${folderName}/**/*`, {
+  const potentialPaths = await glob(`${folderName}/**/*`, {
     onlyDirectories: true,
     fs: fsAdapter.fs,
     cwd: targetPath,

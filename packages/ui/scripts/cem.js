@@ -1,6 +1,6 @@
 import fs from 'fs';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { globby } from 'globby';
+import { glob } from 'tinyglobby';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { createModuleGraph } from '@thepassle/module-graph';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -13,7 +13,7 @@ import { generateCustomData } from 'cem-plugin-vs-code-custom-data-generator';
 /**
  * Find all entrypoints for lion to create the CEM from
  */
-const globs = await globby('./exports/**/*.js');
+const globs = await glob('./exports/**/*.js');
 
 /**
  * Based on the entrypoints, create a module graph including @lion/ui dependency
