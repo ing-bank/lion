@@ -10,6 +10,11 @@ const config = {
 };
 
 const groups = await getTestGroups();
+// Exit early with success if no browser test groups are found
+if (!groups.length) {
+  console.log('No browser test groups found. Skipping browser tests.');
+  process.exit(0);
+}
 
 /**
  * @type {import('@web/test-runner').TestRunnerConfig['testRunnerHtml']}
