@@ -1,29 +1,13 @@
 import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 // @ts-expect-error
 import { playwrightLauncher } from '@web/test-runner-playwright';
-import { glob } from 'node:fs/promises';
+
+import { getTestGroups } from './web-test-runner.utils.mjs';
 
 const config = {
   shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),
   shouldRunDevMode: process.argv.includes('--dev-mode'),
 };
-
-async function getTestGroups() {
-  const allDirs = await Promise.all([
-    glob('packages/*/test'),
-    glob('packages/ui/components/**/test'),
-  ]).then(async iters => {
-    const all = [];
-    for (const iter of iters) for await (const d of iter) all.push(d);
-    return all;
-  });
-
-  return allDirs.map(dir => ({
-    // @ts-expect-error
-    name: dir.split('/').at(-2),
-    files: `${dir}/**/*.test.js`,
-  }));
-}
 
 const groups = await getTestGroups();
 
@@ -40,7 +24,10 @@ const testRunnerHtmlWithPolyfill = testRunnerImport =>
 </html>
 `;
 
-export default {
+/**
+ * @type {import('@web/test-runner').TestRunnerConfig}
+ */
+const testRunnerConfig = {
   nodeResolve: config.shouldRunDevMode ? { exportConditions: ['development'] } : true,
   coverageConfig: {
     report: true,
@@ -57,8 +44,16 @@ export default {
     playwrightLauncher({ product: 'webkit' }),
   ],
   groups,
-  filterBrowserLogs(/** @type {{ type: 'error'|'warn'|'debug'; args: string[] }} */ log) {
+  /**
+   * Filters browser logs for the test runner.
+   * @param {{ type: string; args: any[] }} log
+   * @returns {boolean}
+   */
+  filterBrowserLogs(log) {
     return log.type === 'error' || log.type === 'debug';
   },
+  /** @type {import('@web/test-runner').TestRunnerPlugin[]} */
   plugins: [litSsrPlugin()],
 };
+
+export default testRunnerConfig;
