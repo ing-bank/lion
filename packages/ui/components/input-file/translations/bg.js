@@ -17,4 +17,7 @@ export default {
   selectTextDuplicateFileName: 'Файл със същото име на файл вече е налице.',
   selectTextMultipleFile: 'Избор на файлове',
   selectTextSingleFile: 'Избор на файл',
+  statusLoading: 'Качване на файлове, моля, изчакайте.',
+  statusSuccess: 'Файлът {fileName} беше добавен успешно.',
+  statusRemoved: 'Файлът {fileName} беше добавен успешно.',
 };

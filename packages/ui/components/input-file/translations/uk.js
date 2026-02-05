@@ -17,4 +17,7 @@ export default {
   selectTextDuplicateFileName: 'Файл із такою назвою вже існував.',
   selectTextMultipleFile: 'Виберіть файли',
   selectTextSingleFile: 'Виберіть файл',
+  statusLoading: 'Завантаження файлів, зачекайте.',
+  statusSuccess: 'Файл {fileName} успішно додано.',
+  statusRemoved: 'Файл {fileName} успішно видалено.',
 };

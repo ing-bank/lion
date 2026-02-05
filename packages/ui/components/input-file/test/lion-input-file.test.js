@@ -1,4 +1,5 @@
 import '@lion/ui/define/lion-input-file.js';
+import { nothing } from 'lit';
 import { Required } from '@lion/ui/form-core.js';
 import { getInputMembers } from '@lion/ui/input-test-helpers.js';
 import { getLocalizeManager } from '@lion/ui/localize-no-side-effects.js';
@@ -63,6 +64,10 @@ const file4 = /** @type {InputFile} */ (
 describe('lion-input-file', () => {
   const localizeManager = getLocalizeManager();
 
+  beforeEach(() => {
+    // Ensure clean state for each test
+    sinon.restore();
+  });
   afterEach(localizeTearDown);
 
   it('has a type of "file"', async () => {
@@ -1352,6 +1357,93 @@ describe('lion-input-file', () => {
         expect(el.querySelector('[slot="after"]')?.textContent?.trim()).to.equal(
           'Selected files: 2 files. "something went wrong", for file2.txt.',
         );
+      });
+    });
+
+    describe('announces status', async () => {
+      it('announces loading', async () => {
+        const uploadResponse = [
+          {
+            name: 'file1.txt',
+            status: 'LOADING',
+            errorMessage: '',
+            downloadUrl: '/downloadFile',
+          },
+        ];
+        const el = await fixture(html`
+          <lion-input-file label="Select" help-text="foo"></lion-input-file>
+        `);
+
+        // @ts-expect-error [allow-protected-in-test]
+        el.uploadResponse = uploadResponse;
+        await el.updateComplete;
+
+        expect(el._statusMessage).to.equal('Uploading files, please wait.');
+      });
+
+      it('announces a successful upload', async () => {
+        const uploadResponse = [
+          {
+            name: 'file1.txt',
+            status: 'SUCCESS',
+            errorMessage: '',
+            downloadUrl: '/downloadFile',
+          },
+        ];
+        const el = await fixture(html`
+          <lion-input-file label="Select" help-text="foo"></lion-input-file>
+        `);
+
+        // @ts-expect-error [allow-protected-in-test]
+        el.uploadResponse = uploadResponse;
+        await el.updateComplete;
+
+        expect(el._statusMessage).to.equal('The file file1.txt was added successfully.');
+      });
+
+      it('announces the removal of a file', async () => {
+        const removedFile = {
+          name: 'file1.txt',
+          status: 'SUCCESS',
+          systemFile: { name: 'file1.txt' },
+          response: { name: 'file1.txt', status: 'SUCCESS' },
+        };
+
+        const el = await fixture(html`
+          <lion-input-file label="Select" help-text="foo"></lion-input-file>
+        `);
+
+        // @ts-expect-error [allow-protected-in-test]
+        el._fileListNode.dispatchEvent(
+          new CustomEvent('file-remove-requested', {
+            detail: {
+              removedFile,
+              status: removedFile.status,
+              uploadResponse: removedFile.response,
+            },
+          }),
+        );
+        expect(el._statusMessage).to.equal('The file file1.txt was removed successfully.');
+      });
+
+      it('should reset _statusMessage to nothing and request update after timeout', async () => {
+        const el = await fixture(html`
+          <lion-input-file label="Select" help-text="foo"></lion-input-file>
+        `);
+        const requestUpdateSpy = sinon.spy(el, 'requestUpdate');
+        const clock = sinon.useFakeTimers();
+
+        el._statusMessage = 'test message';
+        el._destroyOutputContent();
+
+        // Fast forward time by 5000ms (default timeout)
+        clock.tick(5000);
+
+        await expect(el._statusMessage).to.equal(nothing);
+        expect(requestUpdateSpy.calledOnce).to.be.true;
+
+        clock.restore();
+        requestUpdateSpy.restore();
       });
     });
   });

@@ -17,4 +17,7 @@ export default {
   selectTextDuplicateFileName: 'Már volt ilyen nevű fájl.',
   selectTextMultipleFile: 'Fájl(ok) kiválasztása',
   selectTextSingleFile: 'Fájl kiválasztása',
+  statusLoading: 'A fájlok feltöltése folyamatban van. Kérjük, várjon.',
+  statusSuccess: 'A(z) {fileName} fájl sikeresen hozzáadva.',
+  statusRemoved: 'A(z) {fileName} fájl sikeresen eltávolítva.',
 };
