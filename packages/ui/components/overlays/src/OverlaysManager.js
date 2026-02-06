@@ -106,7 +106,7 @@ export class OverlaysManager {
    */
   hide(ctrlToHide) {
     if (!this.list.find(ctrl => ctrlToHide === ctrl)) {
-      throw new Error('could not find controller to hide');
+      return;
     }
     this.__shownList = this.shownList.filter(ctrl => ctrl !== ctrlToHide);
   }
