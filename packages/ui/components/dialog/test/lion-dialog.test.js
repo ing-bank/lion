@@ -106,24 +106,6 @@ describe('lion-dialog', () => {
       expect(isActiveElement(contentNode)).to.be.true;
     });
 
-    it('sets focus on autofocused element', async () => {
-      const el = await fixture(html`
-        <lion-dialog>
-          <button slot="invoker">invoker button</button>
-          <div slot="content">
-            <label for="myInput">Label</label>
-            <input id="myInput" autofocus />
-          </div>
-        </lion-dialog>
-      `);
-      // @ts-expect-error [allow-protected-in-tests]
-      const invokerNode = el._overlayInvokerNode;
-      invokerNode.focus();
-      invokerNode.click();
-      const input = /** @type {Element} */ (el.querySelector('input'));
-      expect(isActiveElement(input)).to.be.true;
-    });
-
     it('with trapsKeyboardFocus set to false the focus stays on the invoker', async () => {
       const el = /** @type {LionDialog} */ await fixture(html`
         <lion-dialog .config=${{ trapsKeyboardFocus: false }}>

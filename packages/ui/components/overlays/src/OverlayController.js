@@ -1159,11 +1159,14 @@ export class OverlayController extends EventTarget {
       if ('showModal' in this.__wrappingDialogNode) {
         // @ts-ignore
         this.__wrappingDialogNode.close();
+        this.contentNode.tabIndex = 0;
+        this.contentNode.autofocus = true;
+        this.contentNode.style.outline = 'none';
         // @ts-ignore
         this.__wrappingDialogNode.showModal();
       }
       // else {
-      this.enableTrapsKeyboardFocus();
+      // this.enableTrapsKeyboardFocus();
       // }
     } else if (phase === 'hide' || phase === 'teardown') {
       this.disableTrapsKeyboardFocus();
@@ -1231,12 +1234,7 @@ export class OverlayController extends EventTarget {
       return;
     }
 
-    const hasPressedInside =
-      event.composedPath().includes(this.contentNode) ||
-      (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
-      deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
-
-    if (hasPressedInside) {
+    if (this.#hasPressedInside(event)) {
       this.__escKeyHandlerCalled = true;
       this.hide();
       // We could do event.stopPropagation() here, but we don't want to hide info for
@@ -1248,15 +1246,21 @@ export class OverlayController extends EventTarget {
 
   /**
    * @param {KeyboardEvent} event
+   * @returns {boolean}
+   */
+  #hasPressedInside = event =>
+    event.composedPath().includes(this.__wrappingDialogNode) ||
+    (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
+    deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
+
+  /**
+   * @param {KeyboardEvent} event
    * @returns {void}
    */
   #outsideEscKeyHandler = event => {
     if (event.key !== 'Escape') return;
 
-    const hasPressedInside =
-      event.composedPath().includes(this.contentNode) ||
-      deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
-    if (hasPressedInside) return;
+    if (this.#hasPressedInside(event)) return;
     this.hide();
   };
 

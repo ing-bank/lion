@@ -18,7 +18,6 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { createShadowHost } from '../test-helpers/createShadowHost.js';
 import { _adoptStyleUtils } from '../src/utils/adopt-styles.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
-import { keyCodes } from '../src/utils/key-codes.js';
 
 /**
  * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
@@ -585,17 +584,6 @@ describe('OverlayController', () => {
 
   describe('Feature Configuration', () => {
     describe('trapsKeyboardFocus', () => {
-      it('offers an hasActiveTrapsKeyboardFocus flag', async () => {
-        const ctrl = new OverlayController({
-          ...withGlobalTestConfig(),
-          trapsKeyboardFocus: true,
-        });
-        expect(ctrl.hasActiveTrapsKeyboardFocus).to.be.false;
-
-        await ctrl.show();
-        expect(ctrl.hasActiveTrapsKeyboardFocus).to.be.true;
-      });
-
       it('focuses the overlay on show', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
@@ -617,20 +605,19 @@ describe('OverlayController', () => {
         });
         await ctrl.show();
 
-        const elOutside = /** @type {HTMLElement} */ (
-          await fixture(html`<button>click me</button>`)
-        );
+        await fixture(html`<button>click me</button>`);
         const input1 = ctrl.contentNode.querySelectorAll('input')[0];
         const input2 = ctrl.contentNode.querySelectorAll('input')[1];
 
         input2.focus();
-        // this mimics a tab within the contain-focus system used
-        const event = new CustomEvent('keydown', { detail: 0, bubbles: true });
-        // @ts-ignore override private key
-        event.keyCode = keyCodes.tab;
-        window.dispatchEvent(event);
-
-        expect(isActiveElement(elOutside)).to.be.false;
+        await sendKeys({ press: 'Tab' });
+        expect(isActiveElement(document.body)).to.be.true;
+        // console.debug(document.activeElement, '\n\n');
+        await sendKeys({ press: 'Tab' });
+        // console.debug(document.activeElement);
+        expect(isActiveElement(ctrl.contentNode)).to.be.true;
+        await sendKeys({ press: 'Tab' });
+        // console.debug(document.activeElement);
         expect(isActiveElement(input1)).to.be.true;
       });
 
@@ -668,36 +655,11 @@ describe('OverlayController', () => {
 
         await ctrl0.show();
         await ctrl1.show();
-        expect(ctrl0.hasActiveTrapsKeyboardFocus).to.be.false;
-        expect(ctrl1.hasActiveTrapsKeyboardFocus).to.be.true;
+        // console.debug(document.activeElement);
+        expect(isActiveElement(ctrl1.contentNode)).to.be.true;
 
         await ctrl1.hide();
-        expect(ctrl0.hasActiveTrapsKeyboardFocus).to.be.true;
-        expect(ctrl1.hasActiveTrapsKeyboardFocus).to.be.false;
-      });
-
-      it('warns when contentNode is a host for a shadowRoot', async () => {
-        const warnSpy = sinon.spy(console, 'warn');
-
-        const contentNode = /** @type {HTMLDivElement} */ (await fixture(html` <div></div> `));
-        contentNode.attachShadow({ mode: 'open' });
-        const shadowRootContentNode = /** @type {HTMLElement} */ (
-          await fixture(html` <div><input id="input1" /><input id="input2" /></div> `)
-        );
-        contentNode.shadowRoot?.appendChild(shadowRootContentNode);
-
-        const ctrl = new OverlayController({
-          ...withGlobalTestConfig(),
-          trapsKeyboardFocus: true,
-          contentNode,
-        });
-        await ctrl.show();
-
-        // @ts-expect-error
-        expect(console.warn.args[0][0]).to.equal(
-          '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
-        );
-        warnSpy.restore();
+        expect(isActiveElement(ctrl0.contentNode)).to.be.true;
       });
     });
 

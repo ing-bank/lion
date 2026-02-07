@@ -1,7 +1,7 @@
 import { litSsrPlugin } from '@lit-labs/testing/web-test-runner-ssr-plugin.js';
 // @ts-expect-error
 import { playwrightLauncher } from '@web/test-runner-playwright';
-import { glob } from 'node:fs/promises';
+import { glob } from 'fs/promises';
 
 const config = {
   shouldLoadPolyfill: !process.argv.includes('--no-scoped-registries-polyfill'),

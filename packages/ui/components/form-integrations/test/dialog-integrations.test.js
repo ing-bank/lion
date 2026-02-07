@@ -5,8 +5,6 @@ import '@lion/ui/define/lion-dialog.js';
 import '@lion/ui/define/lion-option.js';
 import '@lion/ui/define/lion-radio.js';
 import { html } from 'lit';
-
-import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { getAllTagNames } from './helpers/helpers.js';
 import './helpers/umbrella-form.js';
 
@@ -77,23 +75,5 @@ describe('Form inside dialog Integrations', () => {
       'lion-input-stepper',
       'lion-textarea',
     ]);
-  });
-
-  it('sets focus on first focusable element with autofocus', async () => {
-    const el = /** @type {LionDialog} */ await fixture(html`
-      <lion-dialog>
-        <button slot="invoker">invoker button</button>
-        <div slot="content">
-          <lion-input label="label" name="input" autofocus></lion-input>
-          <lion-textarea label="label" name="textarea" autofocus></lion-textarea>
-        </div>
-      </lion-dialog>
-    `);
-
-    // @ts-expect-error [allow-protected-in-tests]
-    el._overlayInvokerNode.click();
-    const lionInput = el.querySelector('[name="input"]');
-    // @ts-expect-error [allow-protected-in-tests]
-    expect(isActiveElement(lionInput._focusableNode)).to.be.true;
   });
 });
