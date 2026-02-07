@@ -1159,7 +1159,7 @@ export class OverlayController extends EventTarget {
       if ('showModal' in this.__wrappingDialogNode) {
         // @ts-ignore
         this.__wrappingDialogNode.close();
-        this.contentNode.tabIndex = 0;
+        this.contentNode.tabIndex = -1;
         this.contentNode.autofocus = true;
         this.contentNode.style.outline = 'none';
         // @ts-ignore

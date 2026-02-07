@@ -41,8 +41,6 @@ describe('OverlayController', () => {
     await sendKeys({ press: 'Tab' });
     expect(isActiveElement(document.body)).to.be.true;
     await sendKeys({ press: 'Tab' });
-    expect(isActiveElement(ctrl.contentNode)).to.be.true;
-    await sendKeys({ press: 'Tab' });
     expect(isActiveElement(input1)).to.be.true;
   });
 });
