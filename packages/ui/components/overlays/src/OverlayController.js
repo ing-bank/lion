@@ -1,5 +1,4 @@
 import { overlays } from './singleton.js';
-import { containFocus } from './utils/contain-focus.js';
 import { deepContains } from './utils/deep-contains.js';
 import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
 import { _adoptStyleUtils } from './utils/adopt-styles.js';
@@ -200,8 +199,6 @@ export class OverlayController extends EventTarget {
     /** @private */
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
     this.updateConfig(config);
-    /** @private */
-    this.__hasActiveTrapsKeyboardFocus = false;
     /** @private */
     this.__hasActiveBackdrop = true;
     /** @private */
@@ -591,9 +588,7 @@ export class OverlayController extends EventTarget {
    * @private
    */
   __initContentDomStructure() {
-    const wrappingDialogElement = document.createElement(
-      this.config?._noDialogEl ? 'div' : 'dialog',
-    );
+    const wrappingDialogElement = document.createElement('dialog');
     // We use a dialog for its visual capabilities: it renders to the top layer.
     // A11y will depend on the type of overlay and is arranged on contentNode level.
     // Also see: https://www.scottohara.me/blog/2019/03/05/open-dialog.html
@@ -625,7 +620,6 @@ export class OverlayController extends EventTarget {
       contentWrapperNodeL2: this.contentWrapperNode,
       contentNodeL3: this.contentNode,
     });
-    // @ts-expect-error
     wrappingDialogElement.open = true;
 
     if (this.isTooltip) {
@@ -1145,68 +1139,17 @@ export class OverlayController extends EventTarget {
     }
   }
 
-  get hasActiveTrapsKeyboardFocus() {
-    return this.__hasActiveTrapsKeyboardFocus;
-  }
-
   /**
    * @param {{ phase: OverlayPhase }} config
    * @protected
    */
   _handleTrapsKeyboardFocus({ phase }) {
     if (phase === 'show') {
-      // @ts-ignore
-      if ('showModal' in this.__wrappingDialogNode) {
-        // @ts-ignore
-        this.__wrappingDialogNode.close();
-        this.contentNode.tabIndex = -1;
-        this.contentNode.autofocus = true;
-        this.contentNode.style.outline = 'none';
-        // @ts-ignore
-        this.__wrappingDialogNode.showModal();
-      }
-      // else {
-      // this.enableTrapsKeyboardFocus();
-      // }
-    } else if (phase === 'hide' || phase === 'teardown') {
-      this.disableTrapsKeyboardFocus();
-    }
-  }
-
-  enableTrapsKeyboardFocus() {
-    if (this.__hasActiveTrapsKeyboardFocus) {
-      return;
-    }
-    if (this.manager) {
-      this.manager.disableTrapsKeyboardFocusForAll();
-    }
-
-    const isContentShadowHost = Boolean(this.contentNode.shadowRoot);
-    if (isContentShadowHost) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
-      );
-    }
-
-    this._containFocusHandler = containFocus(this.contentNode);
-    this.__hasActiveTrapsKeyboardFocus = true;
-    if (this.manager) {
-      this.manager.informTrapsKeyboardFocusGotEnabled(this.placementMode);
-    }
-  }
-
-  disableTrapsKeyboardFocus({ findNewTrap = true } = {}) {
-    if (!this.__hasActiveTrapsKeyboardFocus) {
-      return;
-    }
-    if (this._containFocusHandler) {
-      this._containFocusHandler.disconnect();
-      this._containFocusHandler = undefined;
-    }
-    this.__hasActiveTrapsKeyboardFocus = false;
-    if (this.manager) {
-      this.manager.informTrapsKeyboardFocusGotDisabled({ disabledCtrl: this, findNewTrap });
+      this.__wrappingDialogNode?.close();
+      this.contentNode.tabIndex = -1;
+      this.contentNode.autofocus = true;
+      this.contentNode.style.outline = 'none';
+      this.__wrappingDialogNode?.showModal();
     }
   }
 
@@ -1249,7 +1192,7 @@ export class OverlayController extends EventTarget {
    * @returns {boolean}
    */
   #hasPressedInside = event =>
-    event.composedPath().includes(this.__wrappingDialogNode) ||
+    event.composedPath().includes(/** @type {EventTarget} */ (this.__wrappingDialogNode)) ||
     (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
     deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 

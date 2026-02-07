@@ -134,39 +134,6 @@ export class OverlaysManager {
     return this.__siblingsInert;
   }
 
-  disableTrapsKeyboardFocusForAll() {
-    this.shownList.forEach(ctrl => {
-      if (ctrl.trapsKeyboardFocus === true && ctrl.disableTrapsKeyboardFocus) {
-        ctrl.disableTrapsKeyboardFocus({ findNewTrap: false });
-      }
-    });
-  }
-
-  /**
-   * @param {'local' | 'global' | undefined} placementMode
-   */
-  informTrapsKeyboardFocusGotEnabled(placementMode) {
-    if (this.siblingsInert === false && placementMode === 'global') {
-      this.__siblingsInert = true;
-    }
-  }
-
-  /**
-   * @param {{ disabledCtrl?:OverlayController, findNewTrap?:boolean }} options
-   */
-  informTrapsKeyboardFocusGotDisabled({ disabledCtrl, findNewTrap = true } = {}) {
-    const next = this.shownList.find(
-      ctrl => ctrl !== disabledCtrl && ctrl.trapsKeyboardFocus === true,
-    );
-    if (next) {
-      if (findNewTrap) {
-        next.enableTrapsKeyboardFocus();
-      }
-    } else if (this.siblingsInert === true) {
-      this.__siblingsInert = false;
-    }
-  }
-
   /** PreventsScroll */
 
   // eslint-disable-next-line class-methods-use-this
