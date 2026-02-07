@@ -1,6 +1,11 @@
-import { playwrightLauncher } from '@web/test-runner-playwright';
+/*
+ * Run tests on Webkit browser only
+ */
+
 import defaultConfig from './web-test-runner.config.mjs';
+import webkitTestsOnlyConfig from './web-test-runner-webkit-only-tests.config.mjs';
 
 const config = { ...defaultConfig };
-config.browsers = [playwrightLauncher({ product: 'webkit' })];
+config.browsers = webkitTestsOnlyConfig.browsers;
+config.groups.push(...webkitTestsOnlyConfig.groups);
 export default config;

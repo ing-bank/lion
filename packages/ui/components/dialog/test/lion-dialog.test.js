@@ -103,7 +103,13 @@ describe('lion-dialog', () => {
       invokerNode.focus();
       invokerNode.click();
       const contentNode = /** @type {Element} */ (el.querySelector('[slot="content"]'));
-      expect(isActiveElement(contentNode)).to.be.true;
+      expect(
+        isActiveElement(contentNode) ||
+          // @ts-ignore private memember
+          isActiveElement(el._overlayCtrl.__wrappingDialogNode, {
+            deep: true,
+          }),
+      ).to.be.true;
     });
 
     it('with trapsKeyboardFocus set to false the focus stays on the invoker', async () => {

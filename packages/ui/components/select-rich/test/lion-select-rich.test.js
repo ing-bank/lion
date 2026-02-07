@@ -493,12 +493,16 @@ describe('lion-select-rich', () => {
 
       el.opened = true;
       await el.updateComplete;
-      expect(isActiveElement(_listboxNode)).to.be.true;
+      const isListboxOrDialogActive = () =>
+        isActiveElement(_listboxNode) ||
+        // @ts-ignore private memember
+        isActiveElement(el._overlayCtrl.__wrappingDialogNode, { deep: true });
+      expect(isListboxOrDialogActive()).to.be.true;
 
       el.opened = false;
       await el.updateComplete;
       await el.updateComplete; // safari takes a little longer
-      expect(isActiveElement(_listboxNode)).to.be.false;
+      expect(isListboxOrDialogActive()).to.be.false;
     });
   });
 

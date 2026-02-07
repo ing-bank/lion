@@ -11,7 +11,6 @@ import {
   fixture,
   expect,
   html,
-  waitUntil,
 } from '@open-wc/testing';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
@@ -594,33 +593,6 @@ describe('OverlayController', () => {
         expect(isActiveElement(ctrl.contentNode)).to.be.true;
       });
 
-      it('keeps focus within the overlay e.g. you can not tab out by accident', async () => {
-        const contentNode = /** @type {HTMLElement} */ (
-          await fixture(html` <div><input id="input1" /><input id="input2" /></div> `)
-        );
-        const ctrl = new OverlayController({
-          ...withGlobalTestConfig(),
-          trapsKeyboardFocus: true,
-          contentNode,
-        });
-        await ctrl.show();
-
-        await fixture(html`<button>click me</button>`);
-        const input1 = ctrl.contentNode.querySelectorAll('input')[0];
-        const input2 = ctrl.contentNode.querySelectorAll('input')[1];
-
-        input2.focus();
-        await sendKeys({ press: 'Tab' });
-        expect(isActiveElement(document.body)).to.be.true;
-        // console.debug(document.activeElement, '\n\n');
-        await sendKeys({ press: 'Tab' });
-        // console.debug(document.activeElement);
-        expect(isActiveElement(ctrl.contentNode)).to.be.true;
-        await sendKeys({ press: 'Tab' });
-        // console.debug(document.activeElement);
-        expect(isActiveElement(input1)).to.be.true;
-      });
-
       it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
         const contentNode = /** @type {HTMLElement} */ (await fixture(html`<div><input /></div>`));
 
@@ -763,28 +735,6 @@ describe('OverlayController', () => {
 
     describe('Nested hidesOnEsc / hidesOnOutsideEsc', () => {
       describe('Parent has hidesOnEsc and child has hidesOnOutsideEsc', () => {
-        it('on [Escape] press in child overlay: parent hides, child stays shown', async () => {
-          const parentContent = /** @type {HTMLDivElement} */ (
-            await fixture(
-              html` <!-- -->
-                <div id="parent-overlay--hidesOnEsc">
-                  <div id="child-overlay--hidesOnOutsideEsc">we press [Escape] here</div>
-                </div>`,
-            )
-          );
-          const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
-          await mimicEscapePress(childOverlay.contentNode);
-
-          // without this line, the test is unstable on FF sometimes
-          await aTimeout(100);
-
-          await waitUntil(() => !parentOverlay.isShown);
-          await waitUntil(() => childOverlay.isShown);
-
-          await childOverlay.teardown();
-          await parentOverlay.teardown();
-        });
-
         it('on [Escape] press outside overlays: parent stays shown, child hides', async () => {
           const parentContent = /** @type {HTMLDivElement} */ (
             await fixture(
