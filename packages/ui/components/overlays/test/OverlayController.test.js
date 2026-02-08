@@ -589,7 +589,6 @@ describe('OverlayController', () => {
           trapsKeyboardFocus: true,
         });
         await ctrl.show();
-
         expect(isActiveElement(ctrl.contentNode)).to.be.true;
       });
 

@@ -2,6 +2,7 @@ import { overlays } from './singleton.js';
 import { deepContains } from './utils/deep-contains.js';
 import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
 import { _adoptStyleUtils } from './utils/adopt-styles.js';
+import { getFocusableElements } from './utils/get-focusable-elements.js';
 
 /**
  * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
@@ -112,6 +113,11 @@ const childDialogsClosedInEventLoopWeakmap = new WeakMap();
  *
  */
 export class OverlayController extends EventTarget {
+  /**
+   * 'True' when Shift key is pressed, 'false' otherwise
+   */
+  #isShiftPressed = false;
+
   /**
    * @constructor
    * @param {OverlayConfig} config initial config. Will be remembered as shared config
@@ -1138,16 +1144,75 @@ export class OverlayController extends EventTarget {
   }
 
   /**
+   * @param {KeyboardEvent} event
+   */
+  #isShiftPressedOnKeyDownHandler = event => {
+    if (event.key === 'Shift') {
+      this.#isShiftPressed = true;
+    }
+  };
+
+  /**
+   * @param {KeyboardEvent} event
+   */
+  #isShiftPressedOnKeyUpHandler = event => {
+    if (event.key === 'Shift') {
+      this.#isShiftPressed = false;
+    }
+  };
+
+  #handleShiftKeyPress = () => {
+    window.addEventListener('keydown', this.#isShiftPressedOnKeyDownHandler);
+    window.addEventListener('keyup', this.#isShiftPressedOnKeyUpHandler);
+  };
+
+  #stopHandlingShiftKeyPress = () => {
+    window.removeEventListener('keydown', this.#isShiftPressedOnKeyDownHandler);
+    window.removeEventListener('keyup', this.#isShiftPressedOnKeyUpHandler);
+  };
+
+  #getInitialElementToFocus = () => {
+    const focusableElements = getFocusableElements(this.contentNode);
+    // Initial focus goes to first element with autofocus, or `contentNode`
+    return focusableElements.find(e => e.hasAttribute('autofocus')) || this.contentNode;
+  };
+
+  /**
+   * When a `dialog` element gets focused, we focus programmatically something
+   * else inside dialog for better a11y. A dialog element gets focused natively in these cases:
+   * 1) When called by `showModal()` first time
+   * 2) When focus is rotating. That is when a user navigates using Tab key through
+   * all the dialog's focusable elements, then the focus goes to the browser's URL,
+   * all its tabs and then the focus goes back to the dialog element
+   * 3) Same as in the point #2, but when a user navigates backward by hitting `Shift + Tab`.
+   * In this case we do not intersept and let the focus pass through. Otherwise the focus
+   * will never leaves the dialog
+   */
+  #focusInsideDialog = () => {
+    this.__wrappingDialogNode?.addEventListener('focus', () => {
+      if (!this.#isShiftPressed) {
+        this.#getInitialElementToFocus().focus();
+      }
+    });
+  };
+
+  /**
    * @param {{ phase: OverlayPhase }} config
    * @protected
    */
   _handleTrapsKeyboardFocus({ phase }) {
-    if (phase === 'show') {
-      this.__wrappingDialogNode?.close();
-      this.contentNode.tabIndex = -1;
-      this.contentNode.autofocus = true;
+    if (phase === 'init') {
       this.contentNode.style.outline = 'none';
+      this.contentNode.tabIndex = -1;
+    }
+    if (phase === 'show') {
+      this.#handleShiftKeyPress();
+      this.#focusInsideDialog();
+      this.__wrappingDialogNode?.close();
       this.__wrappingDialogNode?.showModal();
+    }
+    if (phase === 'hide') {
+      this.#stopHandlingShiftKeyPress();
     }
   }
 
