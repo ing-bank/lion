@@ -626,11 +626,34 @@ describe('OverlayController', () => {
 
         await ctrl0.show();
         await ctrl1.show();
-        // console.debug(document.activeElement);
         expect(isActiveElement(ctrl1.contentNode)).to.be.true;
 
         await ctrl1.hide();
         expect(isActiveElement(ctrl0.contentNode)).to.be.true;
+      });
+
+      it('warns when contentNode is a host for a shadowRoot', async () => {
+        const warnSpy = sinon.spy(console, 'warn');
+
+        const contentNode = /** @type {HTMLDivElement} */ (await fixture(html` <div></div> `));
+        contentNode.attachShadow({ mode: 'open' });
+        const shadowRootContentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div><input id="input1" /><input id="input2" /></div> `)
+        );
+        contentNode.shadowRoot?.appendChild(shadowRootContentNode);
+
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+          contentNode,
+        });
+        await ctrl.show();
+
+        // @ts-expect-error
+        expect(console.warn.args[0][0]).to.equal(
+          '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
+        );
+        warnSpy.restore();
       });
     });
 

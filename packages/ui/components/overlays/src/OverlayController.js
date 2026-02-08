@@ -1204,6 +1204,14 @@ export class OverlayController extends EventTarget {
     if (phase === 'init') {
       this.contentNode.style.outline = 'none';
       this.contentNode.tabIndex = -1;
+
+      const isContentShadowHost = Boolean(this.contentNode.shadowRoot);
+      if (isContentShadowHost) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
+        );
+      }
     }
     if (phase === 'show') {
       this.#handleShiftKeyPress();
