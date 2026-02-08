@@ -1185,10 +1185,10 @@ export class OverlayController extends EventTarget {
    * all the dialog's focusable elements, then the focus goes to the browser's URL,
    * all its tabs and then the focus goes back to the dialog element
    * 3) Same as in the point #2, but when a user navigates backward by hitting `Shift + Tab`.
-   * In this case we do not intersept and let the focus pass through. Otherwise the focus
+   * In this case we do not intercept and let the focus pass through. Otherwise the focus
    * will never leaves the dialog
    */
-  #focusInsideDialog = () => {
+  #handleFocusInsideDialog = () => {
     this.__wrappingDialogNode?.addEventListener('focus', () => {
       if (!this.#isShiftPressed) {
         this.#getInitialElementToFocus().focus();
@@ -1207,7 +1207,7 @@ export class OverlayController extends EventTarget {
     }
     if (phase === 'show') {
       this.#handleShiftKeyPress();
-      this.#focusInsideDialog();
+      this.#handleFocusInsideDialog();
       this.__wrappingDialogNode?.close();
       this.__wrappingDialogNode?.showModal();
     }
