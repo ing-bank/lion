@@ -1374,6 +1374,61 @@ describe('OverlayController', () => {
         // Margin should be restored after teardown
         expect(document.body.style.marginRight).to.equal(originalMarginRight);
       });
+
+      it('does not break body margin when teardown() is called on a hidden overlay', async () => {
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
+
+        const originalMarginRight = document.body.style.marginRight;
+
+        // Show first overlay
+        await ctrl0.show();
+        const marginAfterFirst = document.body.style.marginRight;
+        expect(marginAfterFirst).to.not.equal(originalMarginRight);
+
+        // Teardown second overlay that was never shown
+        ctrl1.teardown();
+        // Margin should still be set by first overlay
+        expect(document.body.style.marginRight).to.equal(marginAfterFirst);
+
+        // Hide first overlay
+        await ctrl0.hide();
+        // Now margin should be restored
+        expect(document.body.style.marginRight).to.equal(originalMarginRight);
+      });
+
+      it('does not break body margin when updateConfig() is called on a hidden overlay', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
+
+        const originalMarginRight = document.body.style.marginRight;
+
+        // updateConfig calls teardown internally
+        ctrl.updateConfig({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
+
+        // Margin should not be affected
+        expect(document.body.style.marginRight).to.equal(originalMarginRight);
+
+        // Show after updateConfig
+        await ctrl.show();
+        const marginAfterShow = document.body.style.marginRight;
+        expect(marginAfterShow).to.not.equal(originalMarginRight);
+
+        // Hide should restore
+        await ctrl.hide();
+        expect(document.body.style.marginRight).to.equal(originalMarginRight);
+      });
     });
 
     describe('hasBackdrop', () => {

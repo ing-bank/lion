@@ -1403,7 +1403,9 @@ export class OverlayController extends EventTarget {
 
   teardown() {
     this.__handleOverlayStyles({ phase: 'teardown' });
-    this._keepBodySize({ phase: 'teardown' });
+    if (this.isShown) {
+      this._keepBodySize({ phase: 'teardown' });
+    }
     this._handleFeatures({ phase: 'teardown' });
     if (this.#isRegisteredOnManager()) {
       this.manager.remove(this);

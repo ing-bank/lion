@@ -236,10 +236,12 @@ export class OverlaysManager {
       }
       case 'hide':
       case 'teardown':
-        this.__preventScrollCount -= 1;
-        if (this.__preventScrollCount === 0) {
-          document.body.style.marginRight = this.__bodyMarginRightInline || '';
-          document.body.style.marginBottom = this.__bodyMarginBottomInline || '';
+        if (this.__preventScrollCount > 0) {
+          this.__preventScrollCount -= 1;
+          if (this.__preventScrollCount === 0) {
+            document.body.style.marginRight = this.__bodyMarginRightInline || '';
+            document.body.style.marginBottom = this.__bodyMarginBottomInline || '';
+          }
         }
         break;
       /* no default */
