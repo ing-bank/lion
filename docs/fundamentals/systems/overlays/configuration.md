@@ -139,6 +139,9 @@ Boolean property. When true, the focus will rotate through the **focusable eleme
 
 For Modal Dialogs this is an important feature, since these are considered "their own page",
 so especially from an accessibility point of view, trapping the focus inside the dialog is crucial.
+Note, the implementation relies on the platform's `HTMLDialogElement` `showModal()` feature, which makes focus trapped
+inside the dialog within the page but also allows the browser to switch the focus from the page to the
+browser's panels like address bar and others.
 
 You use the feature on any type of overlay.
 
