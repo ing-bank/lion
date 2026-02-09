@@ -11,6 +11,16 @@ export type ViewportPlacement =
   | 'bottom-left'
   | 'left';
 
+export type OverlayPhase =
+  | 'setup'
+  | 'init'
+  | 'teardown'
+  | 'before-show'
+  | 'show'
+  | 'hide'
+  | 'add'
+  | 'remove';
+
 
 export interface ViewportConfig {
   placement: ViewportPlacement;
