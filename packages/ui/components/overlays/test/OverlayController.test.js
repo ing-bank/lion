@@ -17,6 +17,7 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { createShadowHost } from '../test-helpers/createShadowHost.js';
 import { _adoptStyleUtils } from '../src/utils/adopt-styles.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
+import { browserDetection } from '../../core/src/browserDetection.js';
 
 /**
  * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
@@ -590,6 +591,45 @@ describe('OverlayController', () => {
         });
         await ctrl.show();
         expect(isActiveElement(ctrl.contentNode)).to.be.true;
+      });
+
+      it('keeps focus within the overlay e.g. you can not tab out by accident', async () => {
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div><input id="input1" /><input id="input2" /></div> `)
+        );
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+          contentNode,
+        });
+        await ctrl.show();
+
+        await fixture(html`<button>click me</button>`);
+        const input1 = ctrl.contentNode.querySelectorAll('input')[0];
+        const input2 = ctrl.contentNode.querySelectorAll('input')[1];
+        input2.focus();
+        await sendKeys({ press: 'Tab' });
+
+        if (browserDetection.isChrome) {
+          expect(isActiveElement(document.body)).to.be.true;
+          await sendKeys({ press: 'Tab' });
+          expect(isActiveElement(input1)).to.be.true;
+        }
+        if (browserDetection.isFirefox) {
+          // For some reason with the headless firefox setup,
+          // once we focus on the latest focusable element, `input2` in this case,
+          // any further Tab presses keeps the focus on `input2` element
+          expect(isActiveElement(input2)).to.be.true;
+          await sendKeys({ press: 'Tab' });
+          expect(isActiveElement(input2)).to.be.true;
+        }
+        if (browserDetection.isMacSafari) {
+          expect(isActiveElement(document.body)).to.be.true;
+          await sendKeys({ press: 'Tab' });
+          expect(isActiveElement(ctrl.contentNode)).to.be.true;
+          await sendKeys({ press: 'Tab' });
+          expect(isActiveElement(input1)).to.be.true;
+        }
       });
 
       it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
