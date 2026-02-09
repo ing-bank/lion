@@ -39,7 +39,7 @@
     "start:astro": "astro dev",
     "start:prod": "npm run preview",
     "temporary-disabled__lint:types": "npm run types",
-    "test": "run-p test:browser test:node",
+    "test": "run-p test:web test:node",
     "test:browserstack": "web-test-runner --config ./web-test-runner-browserstack.config.js",
     "test:chrome-only-tests": "web-test-runner --config ./web-test-runner-chrome-only-tests.config.mjs",
     "test:firefox-only-tests": "web-test-runner --config ./web-test-runner-firefox-only-tests.config.mjs",

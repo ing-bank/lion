@@ -876,7 +876,9 @@ export class OverlayController extends EventTarget {
         const newMarginBottom = this.__bodyMarginBottom + scrollbarHeight;
         // @ts-expect-error [external]: CSS not yet typed
         if (window.CSS?.number && document.body.attributeStyleMap?.set) {
+          // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
           document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
+          // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
           document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
         } else {
           document.body.style.marginRight = `${newMarginRight}px`;
@@ -1187,6 +1189,11 @@ export class OverlayController extends EventTarget {
    * 3) Same as in the point #2, but when a user navigates backward by hitting `Shift + Tab`.
    * In this case we do not intercept and let the focus pass through. Otherwise the focus
    * will never leaves the dialog
+   *
+   * Note, Chrome does not focus `Dialog` element when Tabbing. When dialog is opened first time,
+   * it focuses the contentNode if that has `tabindex` set. But the second time when we
+   * move to the dialog from URL bar, nor the dialog element, nor the `contentNode` are focused.
+   * Instead the first focusable element is focused right away
    */
   #handleFocusInsideDialog = () => {
     this.__wrappingDialogNode?.addEventListener('focus', () => {
