@@ -1356,6 +1356,24 @@ describe('OverlayController', () => {
         // After hiding all, original margin is restored
         expect(document.body.style.marginRight).to.equal(originalMarginRight);
       });
+
+      it('restores body margin when overlay with preventsScroll is torn down while shown', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
+
+        const originalMarginRight = document.body.style.marginRight;
+
+        await ctrl.show();
+        const marginAfterShow = document.body.style.marginRight;
+        // Margin should be set after show
+        expect(marginAfterShow).to.not.equal(originalMarginRight);
+
+        ctrl.teardown();
+        // Margin should be restored after teardown
+        expect(document.body.style.marginRight).to.equal(originalMarginRight);
+      });
     });
 
     describe('hasBackdrop', () => {
@@ -2152,15 +2170,17 @@ describe('OverlayController', () => {
     it('should not run with scroll prevention', async () => {
       await overlayControllerNoPrevent.show();
 
-      expect(overlayControllerNoPrevent.__bodyMarginRightInline).to.equal(undefined);
-      expect(overlayControllerNoPrevent.__bodyMarginRight).to.equal(undefined);
+      expect(overlayControllerNoPrevent.manager.__bodyMarginRightInline).to.equal(undefined);
+      expect(overlayControllerNoPrevent.manager.__bodyMarginRight).to.equal(undefined);
     });
 
     it('should run with scroll prevention', async () => {
       await overlayControllerPreventsScroll.show();
 
-      expect(overlayControllerPreventsScroll.__bodyMarginRightInline).to.not.equal(undefined);
-      expect(overlayControllerPreventsScroll.__bodyMarginRight).to.not.equal(undefined);
+      expect(overlayControllerPreventsScroll.manager.__bodyMarginRightInline).to.not.equal(
+        undefined,
+      );
+      expect(overlayControllerPreventsScroll.manager.__bodyMarginRight).to.not.equal(undefined);
     });
   });
 });

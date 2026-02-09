@@ -53,6 +53,20 @@ export class OverlaysManager {
      * @private
      */
     this.__blockingMap = new WeakMap();
+    /** @private */
+    this.__preventScrollCount = 0;
+    /** @private */
+    this.__bodyClientWidth = undefined;
+    /** @private */
+    this.__bodyClientHeight = undefined;
+    /** @private */
+    this.__bodyMarginRightInline = undefined;
+    /** @private */
+    this.__bodyMarginBottomInline = undefined;
+    /** @private */
+    this.__bodyMarginRight = undefined;
+    /** @private */
+    this.__bodyMarginBottom = undefined;
 
     if (!OverlaysManager.__globalStyleNode) {
       OverlaysManager.__globalStyleNode = OverlaysManager.__createGlobalStyleNode();
@@ -119,6 +133,13 @@ export class OverlaysManager {
     this.__list = [];
     this.__shownList = [];
     this.__siblingsInert = false;
+    this.__preventScrollCount = 0;
+    this.__bodyClientWidth = undefined;
+    this.__bodyClientHeight = undefined;
+    this.__bodyMarginRightInline = undefined;
+    this.__bodyMarginBottomInline = undefined;
+    this.__bodyMarginRight = undefined;
+    this.__bodyMarginBottom = undefined;
 
     if (OverlaysManager.__globalStyleNode) {
       document.head.removeChild(
@@ -168,6 +189,61 @@ export class OverlaysManager {
   }
 
   /** PreventsScroll */
+
+  /**
+   * @param {{ phase: 'before-show' | 'show' | 'hide' | 'teardown' }} config
+   */
+  requestToKeepBodySize({ phase }) {
+    switch (phase) {
+      case 'before-show':
+        if (this.__preventScrollCount === 0) {
+          this.__bodyClientWidth = document.body.clientWidth;
+          this.__bodyClientHeight = document.body.clientHeight;
+          this.__bodyMarginRightInline = document.body.style.marginRight;
+          this.__bodyMarginBottomInline = document.body.style.marginBottom;
+        }
+        this.__preventScrollCount += 1;
+        break;
+      case 'show': {
+        if (this.__preventScrollCount === 1) {
+          if (window.getComputedStyle) {
+            const bodyStyle = window.getComputedStyle(document.body);
+            this.__bodyMarginRight = parseInt(bodyStyle.getPropertyValue('margin-right'), 10);
+            this.__bodyMarginBottom = parseInt(bodyStyle.getPropertyValue('margin-bottom'), 10);
+          } else {
+            this.__bodyMarginRight = 0;
+            this.__bodyMarginBottom = 0;
+          }
+          const scrollbarWidth =
+            document.body.clientWidth - /** @type {number} */ (this.__bodyClientWidth);
+          const scrollbarHeight =
+            document.body.clientHeight - /** @type {number} */ (this.__bodyClientHeight);
+          const newMarginRight = this.__bodyMarginRight + scrollbarWidth;
+          const newMarginBottom = this.__bodyMarginBottom + scrollbarHeight;
+          // @ts-expect-error [external]: CSS not yet typed
+          if (window.CSS?.number && document.body.attributeStyleMap?.set) {
+            // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
+            document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
+            // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
+            document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
+          } else {
+            document.body.style.marginRight = `${newMarginRight}px`;
+            document.body.style.marginBottom = `${newMarginBottom}px`;
+          }
+        }
+        break;
+      }
+      case 'hide':
+      case 'teardown':
+        this.__preventScrollCount -= 1;
+        if (this.__preventScrollCount === 0) {
+          document.body.style.marginRight = this.__bodyMarginRightInline || '';
+          document.body.style.marginBottom = this.__bodyMarginBottomInline || '';
+        }
+        break;
+      /* no default */
+    }
+  }
 
   // eslint-disable-next-line class-methods-use-this
   requestToPreventScroll() {
