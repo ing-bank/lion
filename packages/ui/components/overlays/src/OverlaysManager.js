@@ -3,6 +3,7 @@ import { browserDetection } from '@lion/ui/core.js';
 /**
  * @typedef {import('lit').CSSResult} CSSResult
  * @typedef {import('./OverlayController.js').OverlayController} OverlayController
+ * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
  */
 
 import { overlayDocumentStyle } from './overlayDocumentStyle.js';
@@ -159,7 +160,7 @@ export class OverlaysManager {
   /** PreventsScroll */
 
   /**
-   * @param {{ phase: 'before-show' | 'show' | 'hide' | 'teardown' }} config
+   * @param {{ phase: OverlayPhase }} config
    */
   requestToKeepBodySize({ phase }) {
     switch (phase) {
