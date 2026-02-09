@@ -1326,6 +1326,36 @@ describe('OverlayController', () => {
         await ctrl1.hide();
         expect(Array.from(document.body.classList)).to.contain('overlays-scroll-lock');
       });
+
+      it('does not accumulate body margins when nested overlays have preventsScroll', async () => {
+        const ctrl0 = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
+        const ctrl1 = new OverlayController({
+          ...withGlobalTestConfig(),
+          preventsScroll: true,
+        });
+
+        const originalMarginRight = document.body.style.marginRight;
+
+        await ctrl0.show();
+        const marginAfterFirst = document.body.style.marginRight;
+
+        await ctrl1.show();
+        const marginAfterSecond = document.body.style.marginRight;
+
+        // The margin should NOT increase further when second overlay opens
+        expect(marginAfterSecond).to.equal(marginAfterFirst);
+
+        await ctrl1.hide();
+        // After hiding second, first still prevents scroll — margin stays
+        expect(document.body.style.marginRight).to.equal(marginAfterFirst);
+
+        await ctrl0.hide();
+        // After hiding all, original margin is restored
+        expect(document.body.style.marginRight).to.equal(originalMarginRight);
+      });
     });
 
     describe('hasBackdrop', () => {
