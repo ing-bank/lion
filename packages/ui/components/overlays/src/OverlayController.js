@@ -911,7 +911,7 @@ export class OverlayController extends EventTarget {
       this.contentNode.getRootNode()
     ).activeElement;
 
-    if (this.manager) {
+    if (this.manager && this.#isRegisteredOnManager()) {
       this.manager.hide(this);
     }
 
