@@ -1,4 +1,5 @@
 /* eslint-disable no-new */
+/* eslint-disable lit-a11y/no-autofocus */
 import { OverlayController, overlays } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { sendKeys } from '@web/test-runner-commands';
@@ -630,6 +631,34 @@ describe('OverlayController', () => {
           await sendKeys({ press: 'Tab' });
           expect(isActiveElement(input1)).to.be.true;
         }
+      });
+
+      it('focuses the element with [autofocus] when dialog gets opened', async () => {
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div><input id="input1" /><input id="input2" autofocus /></div> `)
+        );
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+          contentNode,
+        });
+        await ctrl.show();
+
+        const input2 = ctrl.contentNode.querySelectorAll('input')[1];
+        expect(isActiveElement(input2)).to.be.true;
+      });
+
+      it('focuses the contentNode when dialog gets opened and there is no [autofocus]', async () => {
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div><input id="input1" /><input id="input2" /></div> `)
+        );
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+          contentNode,
+        });
+        await ctrl.show();
+        expect(isActiveElement(contentNode)).to.be.true;
       });
 
       it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {

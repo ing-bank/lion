@@ -1225,6 +1225,14 @@ export class OverlayController extends EventTarget {
       this.#handleFocusInsideDialog();
       this.__wrappingDialogNode?.close();
       this.__wrappingDialogNode?.showModal();
+      /**
+       * At this moment `#handleFocusInsideDialog` should handle the focus.
+       * But for some reason Firefox on the testing setup does not
+       * focus the native `dialog` on showModal() and focuses the first
+       * focusable element inside the dialog instead. Hence here we focus
+       * contentNode explicitly
+       */
+      this.#getInitialElementToFocus().focus();
     }
     if (phase === 'hide') {
       this.#stopHandlingShiftKeyPress();
