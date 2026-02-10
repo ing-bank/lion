@@ -8,7 +8,7 @@ import { _adoptStyleUtils } from './utils/adopt-styles.js';
  * @typedef {'init'|'teardown'|'before-show'|'show'|'hide'} OverlayPhase
  * @typedef {import('@lion/ui/types/overlays.js').ViewportConfig} ViewportConfig
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
- * @typedef {import('@lion/overlays').OverlaysManager} OverlayManager
+ * @typedef {import('@lion/overlays').OverlaysManager} OverlaysManager
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
  * @typedef {import('@popperjs/core').createPopper} Popper
