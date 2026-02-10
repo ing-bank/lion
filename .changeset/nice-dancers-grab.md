@@ -1,5 +1,5 @@
 ---
-'@lion/ui': patch
+'@lion/ui': minor
 ---
 
 [overlays] update trapskeyboardfocus feature to use native dialog
