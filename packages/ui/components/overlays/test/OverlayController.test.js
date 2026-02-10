@@ -844,6 +844,7 @@ describe('OverlayController', () => {
           await childOverlay.teardown();
           await parentOverlay.teardown();
         });
+
         it('on [Escape] press outside overlays: parent stays shown, child hides', async () => {
           const parentContent = /** @type {HTMLDivElement} */ (
             await fixture(
