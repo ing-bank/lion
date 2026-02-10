@@ -529,6 +529,7 @@ export class OverlayController extends EventTarget {
    * @param {number} value
    */
   set elevation(value) {
+    this.__elevation = value;
     // @ts-expect-error find out why config would/could be undfined
     this.__wrappingDialogNode.style.zIndex = `${this.config.zIndex + value}`;
   }
@@ -537,7 +538,7 @@ export class OverlayController extends EventTarget {
    * @type {number}
    */
   get elevation() {
-    return Number(this.contentWrapperNode?.style.zIndex);
+    return this.__elevation || 0;
   }
 
   /**
@@ -757,7 +758,6 @@ export class OverlayController extends EventTarget {
         // needed to prevent tooltip getting focus in Safari and Firefox
         wrappingDialogElement.setAttribute('tabindex', '-1');
       }
-      this.contentWrapperNode.style.zIndex = '1';
       if (getComputedStyle(this.contentNode).position === 'absolute') {
         // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
         // computed height of 0...
