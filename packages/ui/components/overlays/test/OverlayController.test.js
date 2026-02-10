@@ -12,6 +12,7 @@ import {
   fixture,
   expect,
   html,
+  waitUntil,
 } from '@open-wc/testing';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
@@ -826,6 +827,23 @@ describe('OverlayController', () => {
 
     describe('Nested hidesOnEsc / hidesOnOutsideEsc', () => {
       describe('Parent has hidesOnEsc and child has hidesOnOutsideEsc', () => {
+        it('on [Escape] press in child overlay: parent hides, child stays shown', async () => {
+          const parentContent = /** @type {HTMLDivElement} */ (
+            await fixture(
+              html` <!-- -->
+                <div id="parent-overlay--hidesOnEsc">
+                  <div id="child-overlay--hidesOnOutsideEsc">we press [Escape] here</div>
+                </div>`,
+            )
+          );
+          const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+          await mimicEscapePress(childOverlay.contentNode);
+          await waitUntil(() => !parentOverlay.isShown);
+          await waitUntil(() => childOverlay.isShown);
+
+          await childOverlay.teardown();
+          await parentOverlay.teardown();
+        });
         it('on [Escape] press outside overlays: parent stays shown, child hides', async () => {
           const parentContent = /** @type {HTMLDivElement} */ (
             await fixture(
