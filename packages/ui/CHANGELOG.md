@@ -1,6 +1,6 @@
 # @lion/ui
 
-## 0.16.0
+# 0.16.0-alpha.0
 
 ### Minor Changes
 
@@ -14,10 +14,6 @@
 
   The change in the behaviour from UX point of view:
   The main difference is that the navite modal dialog does not trap the focus inside the dialog entirely. It allows to switch from the dialog to the browser's panels. It's done by design to improve a11y expirience and let users switch browser's tab as example if they want so.
-
-# 0.16.0-alpha.0
-
-dialog trapskeyboardfocus update
 
 ## 0.15.5
 
