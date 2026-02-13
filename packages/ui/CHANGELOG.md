@@ -1,5 +1,9 @@
 # @lion/ui
 
+# 0.16.0-alpha.0
+
+dialog trapskeyboardfocus update
+
 ## 0.15.5
 
 ### Patch Changes

@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - feature/native-dialog-trap-focus
 
 jobs:
   release:
