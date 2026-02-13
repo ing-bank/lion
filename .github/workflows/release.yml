@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - master
+      - feature/release-alpha
 
 jobs:
   release:

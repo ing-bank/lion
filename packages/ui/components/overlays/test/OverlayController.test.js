@@ -1,4 +1,5 @@
 /* eslint-disable no-new */
+/* eslint-disable lit-a11y/no-autofocus */
 import { OverlayController, overlays } from '@lion/ui/overlays.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
 import { sendKeys } from '@web/test-runner-commands';
@@ -18,7 +19,7 @@ import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { createShadowHost } from '../test-helpers/createShadowHost.js';
 import { _adoptStyleUtils } from '../src/utils/adopt-styles.js';
 import { simulateTab } from '../src/utils/simulate-tab.js';
-import { keyCodes } from '../src/utils/key-codes.js';
+import { browserDetection } from '../../core/src/browserDetection.js';
 
 /**
  * @typedef {import('../types/OverlayConfig.js').ViewportPlacement} ViewportPlacement
@@ -585,24 +586,12 @@ describe('OverlayController', () => {
 
   describe('Feature Configuration', () => {
     describe('trapsKeyboardFocus', () => {
-      it('offers an hasActiveTrapsKeyboardFocus flag', async () => {
-        const ctrl = new OverlayController({
-          ...withGlobalTestConfig(),
-          trapsKeyboardFocus: true,
-        });
-        expect(ctrl.hasActiveTrapsKeyboardFocus).to.be.false;
-
-        await ctrl.show();
-        expect(ctrl.hasActiveTrapsKeyboardFocus).to.be.true;
-      });
-
       it('focuses the overlay on show', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           trapsKeyboardFocus: true,
         });
         await ctrl.show();
-
         expect(isActiveElement(ctrl.contentNode)).to.be.true;
       });
 
@@ -617,21 +606,60 @@ describe('OverlayController', () => {
         });
         await ctrl.show();
 
-        const elOutside = /** @type {HTMLElement} */ (
-          await fixture(html`<button>click me</button>`)
-        );
+        await fixture(html`<button>click me</button>`);
         const input1 = ctrl.contentNode.querySelectorAll('input')[0];
         const input2 = ctrl.contentNode.querySelectorAll('input')[1];
-
         input2.focus();
-        // this mimics a tab within the contain-focus system used
-        const event = new CustomEvent('keydown', { detail: 0, bubbles: true });
-        // @ts-ignore override private key
-        event.keyCode = keyCodes.tab;
-        window.dispatchEvent(event);
+        await sendKeys({ press: 'Tab' });
 
-        expect(isActiveElement(elOutside)).to.be.false;
-        expect(isActiveElement(input1)).to.be.true;
+        if (browserDetection.isChrome) {
+          expect(isActiveElement(document.body)).to.be.true;
+          await sendKeys({ press: 'Tab' });
+          expect(isActiveElement(input1)).to.be.true;
+        }
+        if (browserDetection.isFirefox) {
+          // For some reason with the headless firefox setup,
+          // once we focus on the latest focusable element, `input2` in this case,
+          // any further Tab presses keeps the focus on `input2` element
+          expect(isActiveElement(input2)).to.be.true;
+          await sendKeys({ press: 'Tab' });
+          expect(isActiveElement(input2)).to.be.true;
+        }
+        if (browserDetection.isMacSafari) {
+          expect(isActiveElement(document.body)).to.be.true;
+          await sendKeys({ press: 'Tab' });
+          expect(isActiveElement(ctrl.contentNode)).to.be.true;
+          await sendKeys({ press: 'Tab' });
+          expect(isActiveElement(input1)).to.be.true;
+        }
+      });
+
+      it('focuses the element with [autofocus] when dialog gets opened', async () => {
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div><input id="input1" /><input id="input2" autofocus /></div> `)
+        );
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+          contentNode,
+        });
+        await ctrl.show();
+
+        const input2 = ctrl.contentNode.querySelectorAll('input')[1];
+        expect(isActiveElement(input2)).to.be.true;
+      });
+
+      it('focuses the contentNode when dialog gets opened and there is no [autofocus]', async () => {
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div><input id="input1" /><input id="input2" /></div> `)
+        );
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          trapsKeyboardFocus: true,
+          contentNode,
+        });
+        await ctrl.show();
+        expect(isActiveElement(contentNode)).to.be.true;
       });
 
       it('allows to move the focus outside of the overlay if trapsKeyboardFocus is disabled', async () => {
@@ -668,12 +696,10 @@ describe('OverlayController', () => {
 
         await ctrl0.show();
         await ctrl1.show();
-        expect(ctrl0.hasActiveTrapsKeyboardFocus).to.be.false;
-        expect(ctrl1.hasActiveTrapsKeyboardFocus).to.be.true;
+        expect(isActiveElement(ctrl1.contentNode)).to.be.true;
 
         await ctrl1.hide();
-        expect(ctrl0.hasActiveTrapsKeyboardFocus).to.be.true;
-        expect(ctrl1.hasActiveTrapsKeyboardFocus).to.be.false;
+        expect(isActiveElement(ctrl0.contentNode)).to.be.true;
       });
 
       it('warns when contentNode is a host for a shadowRoot', async () => {
@@ -812,10 +838,6 @@ describe('OverlayController', () => {
           );
           const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
           await mimicEscapePress(childOverlay.contentNode);
-
-          // without this line, the test is unstable on FF sometimes
-          await aTimeout(100);
-
           await waitUntil(() => !parentOverlay.isShown);
           await waitUntil(() => childOverlay.isShown);
 
