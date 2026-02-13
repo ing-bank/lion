@@ -1,14 +1,14 @@
+import { formatNumber } from '@lion/ui/localize-no-side-effects.js';
 import {
-  expect,
-  defineCE,
   fixture as _fixture,
+  defineCE,
+  expect,
+  html,
   nextFrame,
   unsafeStatic,
-  html,
 } from '@open-wc/testing';
 import { nothing } from 'lit';
 import sinon from 'sinon';
-import { formatNumber } from '@lion/ui/localize-no-side-effects.js';
 import { LionInputStepper } from '../src/LionInputStepper.js';
 
 /**
@@ -28,6 +28,14 @@ export function runInputStepperSuite(klass = LionInputStepper) {
     min="100"
     max="200"
     label="Label"
+  ></${tag}>`;
+  const inputStepperReadOnly = html`<${tag}
+    step="10"
+    min="100"
+    max="200"
+    label="Label"
+    value="1"
+    readonly
   ></${tag}>`;
 
   describe('InputStepper', async () => {
@@ -104,6 +112,22 @@ export function runInputStepperSuite(klass = LionInputStepper) {
     });
 
     describe('User interaction', () => {
+      it('should NOT increment the value to 1 on [ArrowUp] when is readonly', async () => {
+        const el = await fixture(inputStepperReadOnly);
+        expect(el.value).to.equal('1');
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowUp' }));
+        await el.updateComplete;
+        expect(el.value).to.equal('1');
+      });
+
+      it('should NOT decrement the value to -1 on [ArrowDown] when is readonly', async () => {
+        const el = await fixture(inputStepperReadOnly);
+        expect(el.value).to.equal('1');
+        el.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+        await el.updateComplete;
+        expect(el.value).to.equal('1');
+      });
+
       it('should increment the value to 1 on [ArrowUp]', async () => {
         const el = await fixture(defaultInputStepper);
         expect(el.value).to.equal('');
