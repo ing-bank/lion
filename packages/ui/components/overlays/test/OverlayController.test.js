@@ -309,6 +309,42 @@ describe('OverlayController', () => {
 
       expect(isRegisteredOnManager(ctrl)).to.be.false;
     });
+
+    it('handles removal from DOM gracefully when overlay is open', async () => {
+      const contentNode = /** @type {HTMLElement} */ (fixtureSync(html`<div>my content</div>`));
+      const ctrl = new OverlayController({
+        placementMode: 'global',
+        contentNode,
+      });
+      await ctrl.show();
+      expect(ctrl.isShown).to.be.true;
+      expect(isRegisteredOnManager(ctrl)).to.be.true;
+
+      // Remove contentNode from DOM (simulates element being removed while open)
+      contentNode.parentElement?.removeChild(contentNode);
+
+      // Manually trigger teardown (normally happens via disconnectedCallback in OverlayMixin)
+      ctrl.teardown();
+
+      // Teardown should complete without errors
+      expect(isRegisteredOnManager(ctrl)).to.be.false;
+    });
+
+    it('does not throw when hide() is called after teardown() on a shown controller', async () => {
+      const ctrl = new OverlayController({
+        ...withGlobalTestConfig(),
+      });
+      await ctrl.show();
+      expect(ctrl.isShown).to.be.true;
+
+      // teardown removes the controller from the manager
+      ctrl.teardown();
+      expect(isRegisteredOnManager(ctrl)).to.be.false;
+
+      // hide() should handle gracefully that the controller is no longer on the manager
+      await ctrl.hide();
+      expect(ctrl.isShown).to.be.false;
+    });
   });
 
   describe('Node Configuration', () => {
