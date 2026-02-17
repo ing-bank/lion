@@ -1,6 +1,6 @@
 import { LionField } from '@lion/ui/form-core.js';
 import { LocalizeMixin } from '@lion/ui/localize.js';
-import { css, html } from 'lit';
+import { css, html, nothing } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { FileHandle, MAX_FILE_SIZE } from './FileHandle.js';
@@ -449,6 +449,16 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         } else {
           this.uploadResponse.forEach(response => {
             if (response.name === file.systemFile.name) {
+              if (response.status === 'LOADING') {
+                this._statusMessage = this.msgLit('lion-input-file:statusLoading', {
+                  fileName: response.name,
+                });
+              } else if (response.status === 'SUCCESS') {
+                this._statusMessage = this.msgLit('lion-input-file:statusSuccess', {
+                  fileName: response.name,
+                });
+              }
+              this._destroyOutputContent();
               // eslint-disable-next-line no-param-reassign
               file.response = response;
               // eslint-disable-next-line no-param-reassign
@@ -651,9 +661,6 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
   _dispatchFileListChangeEvent(newFiles) {
     this.dispatchEvent(
       new CustomEvent('file-list-changed', {
-        // TODO: check if composed and bubbles are needed
-        // composed: true,
-        // bubbles: true,
         detail: {
           newFiles,
         },
@@ -858,11 +865,12 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    * @protected
    */
   _removeFile(removedFile) {
+    this._statusMessage = this.msgLit('lion-input-file:statusRemoved', {
+      fileName: removedFile.systemFile.name,
+    });
+    this._destroyOutputContent();
     this.dispatchEvent(
-      // TODO: check if composed and bubbles are needed
       new CustomEvent('file-removed', {
-        // bubbles: true,
-        // composed: true,
         detail: {
           removedFile,
           status: removedFile.status,
@@ -870,6 +878,23 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
         },
       }),
     );
+  }
+
+  _destroyOutputContent() {
+    const outputElement = /** @type {HTMLElement} */ (this.shadowRoot?.querySelector('output'));
+
+    const timeoutValue = outputElement?.dataset?.selfDestruct
+      ? Number(outputElement.dataset.selfDestruct)
+      : 5000;
+    clearTimeout(this.timer);
+    if (outputElement) {
+      this.timer = setTimeout(() => {
+        if (outputElement.parentNode) {
+          this._statusMessage = nothing;
+          this.requestUpdate();
+        }
+      }, timeoutValue);
+    }
   }
 
   /**
@@ -915,7 +940,12 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
    */
   // eslint-disable-next-line class-methods-use-this
   _inputGroupAfterTemplate() {
-    return html` <slot name="selected-file-list"></slot> `;
+    return html`
+      <slot name="selected-file-list"></slot>
+      <output for="${this._inputId}" class="sr-only" data-self-destruct="5000"
+        >${this._statusMessage}</output
+      >
+    `;
   }
 
   /**
@@ -972,6 +1002,7 @@ export class LionInputFile extends ScopedElementsMixin(LocalizeMixin(LionField))
           padding: 24px 0;
         }
 
+        .sr-only,
         .input-group__container ::slotted([slot='after']) {
           position: absolute;
           width: 1px;
