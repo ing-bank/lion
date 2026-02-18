@@ -5,9 +5,10 @@ import { _adoptStyleUtils } from './utils/adopt-styles.js';
 import { getFocusableElements } from './utils/get-focusable-elements.js';
 
 /**
- * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
+ * @typedef {'init'|'teardown'|'before-show'|'show'|'hide'} OverlayPhase
  * @typedef {import('@lion/ui/types/overlays.js').ViewportConfig} ViewportConfig
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
+ * @typedef {import('@lion/overlays').OverlaysManager} OverlaysManager
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
  * @typedef {import('@popperjs/core').createPopper} Popper
@@ -120,7 +121,7 @@ export class OverlayController extends EventTarget {
 
   /**
    * @constructor
-   * @param {OverlayConfig} config initial config. Will be remembered as shared config
+   * @param {OverlayConfig} [config={}] initial config. Will be remembered as shared config
    * when `.updateConfig()` is called.
    */
   constructor(config = {}, manager = overlays) {
@@ -444,6 +445,7 @@ export class OverlayController extends EventTarget {
    * @param {number} value
    */
   set elevation(value) {
+    this.__elevation = value;
     // @ts-expect-error find out why config would/could be undfined
     this.__wrappingDialogNode.style.zIndex = `${this.config.zIndex + value}`;
   }
@@ -452,7 +454,7 @@ export class OverlayController extends EventTarget {
    * @type {number}
    */
   get elevation() {
-    return Number(this.contentWrapperNode?.style.zIndex);
+    return this.__elevation || 0;
   }
 
   /**
@@ -634,7 +636,6 @@ export class OverlayController extends EventTarget {
     }
 
     this.__wrappingDialogNode.style.display = 'none';
-    this.contentWrapperNode.style.zIndex = '1';
 
     if (getComputedStyle(this.contentNode).position === 'absolute') {
       // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
@@ -682,7 +683,7 @@ export class OverlayController extends EventTarget {
       return;
     }
 
-    if (phase === 'setup') {
+    if (phase === 'init') {
       const zIndexNumber = Number(getComputedStyle(this.contentNode).zIndex);
       if (zIndexNumber < 1 || Number.isNaN(zIndexNumber)) {
         this.contentNode.style.zIndex = '1';
