@@ -9,7 +9,6 @@ export { withModalDialogConfig } from '../components/overlays/src/configurations
 export { withDropdownConfig } from '../components/overlays/src/configurations/withDropdownConfig.js';
 export { withTooltipConfig } from '../components/overlays/src/configurations/withTooltipConfig.js';
 
-export { containFocus, rotateFocus } from '../components/overlays/src/utils/contain-focus.js';
 export { deepContains } from '../components/overlays/src/utils/deep-contains.js';
 // re-export via this entrypoint for backwards compatibility
 export { getDeepActiveElement } from '../components/core/src/getDeepActiveElement.js';

@@ -1,8 +1,8 @@
 import { overlays } from './singleton.js';
-import { containFocus } from './utils/contain-focus.js';
 import { deepContains } from './utils/deep-contains.js';
 import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
 import { _adoptStyleUtils } from './utils/adopt-styles.js';
+import { getFocusableElements } from './utils/get-focusable-elements.js';
 
 /**
  * @typedef {'setup'|'init'|'teardown'|'before-show'|'show'|'hide'|'add'|'remove'} OverlayPhase
@@ -114,6 +114,11 @@ const childDialogsClosedInEventLoopWeakmap = new WeakMap();
  */
 export class OverlayController extends EventTarget {
   /**
+   * 'True' when Shift key is pressed, 'false' otherwise
+   */
+  #isShiftPressed = false;
+
+  /**
    * @constructor
    * @param {OverlayConfig} config initial config. Will be remembered as shared config
    * when `.updateConfig()` is called.
@@ -200,8 +205,6 @@ export class OverlayController extends EventTarget {
     /** @private */
     this.__escKeyHandler = this.__escKeyHandler.bind(this);
     this.updateConfig(config);
-    /** @private */
-    this.__hasActiveTrapsKeyboardFocus = false;
     /** @private */
     this.__hasActiveBackdrop = true;
     /** @private */
@@ -591,9 +594,7 @@ export class OverlayController extends EventTarget {
    * @private
    */
   __initContentDomStructure() {
-    const wrappingDialogElement = document.createElement(
-      this.config?._noDialogEl ? 'div' : 'dialog',
-    );
+    const wrappingDialogElement = document.createElement('dialog');
     // We use a dialog for its visual capabilities: it renders to the top layer.
     // A11y will depend on the type of overlay and is arranged on contentNode level.
     // Also see: https://www.scottohara.me/blog/2019/03/05/open-dialog.html
@@ -625,7 +626,6 @@ export class OverlayController extends EventTarget {
       contentWrapperNodeL2: this.contentWrapperNode,
       contentNodeL3: this.contentNode,
     });
-    // @ts-expect-error
     wrappingDialogElement.open = true;
 
     if (this.isTooltip) {
@@ -1145,65 +1145,97 @@ export class OverlayController extends EventTarget {
     }
   }
 
-  get hasActiveTrapsKeyboardFocus() {
-    return this.__hasActiveTrapsKeyboardFocus;
-  }
+  /**
+   * @param {KeyboardEvent} event
+   */
+  #isShiftPressedOnKeyDownHandler = event => {
+    if (event.key === 'Shift') {
+      this.#isShiftPressed = true;
+    }
+  };
+
+  /**
+   * @param {KeyboardEvent} event
+   */
+  #isShiftPressedOnKeyUpHandler = event => {
+    if (event.key === 'Shift') {
+      this.#isShiftPressed = false;
+    }
+  };
+
+  #handleShiftKeyPress = () => {
+    window.addEventListener('keydown', this.#isShiftPressedOnKeyDownHandler);
+    window.addEventListener('keyup', this.#isShiftPressedOnKeyUpHandler);
+  };
+
+  #stopHandlingShiftKeyPress = () => {
+    window.removeEventListener('keydown', this.#isShiftPressedOnKeyDownHandler);
+    window.removeEventListener('keyup', this.#isShiftPressedOnKeyUpHandler);
+  };
+
+  #getInitialElementToFocus = () => {
+    const focusableElements = getFocusableElements(this.contentNode);
+    // Initial focus goes to first element with autofocus, or `contentNode`
+    return focusableElements.find(e => e.hasAttribute('autofocus')) || this.contentNode;
+  };
+
+  /**
+   * When a `dialog` element gets focused, we focus programmatically something
+   * else inside dialog for better a11y. A dialog element gets focused natively in these cases:
+   * 1) When called by `showModal()` first time
+   * 2) When focus is rotating. That is when a user navigates using Tab key through
+   * all the dialog's focusable elements, then the focus goes to the browser's URL,
+   * all its tabs and then the focus goes back to the dialog element
+   * 3) Same as in the point #2, but when a user navigates backward by hitting `Shift + Tab`.
+   * In this case we do not intercept and let the focus pass through. Otherwise the focus
+   * will never leaves the dialog
+   *
+   * Note, Chrome does not focus `Dialog` element when Tabbing. When dialog is opened first time,
+   * it focuses the contentNode if that has `tabindex` set. But the second time when we
+   * move to the dialog from URL bar, nor the dialog element, nor the `contentNode` are focused.
+   * Instead the first focusable element is focused right away
+   */
+  #handleFocusInsideDialog = () => {
+    this.__wrappingDialogNode?.addEventListener('focus', () => {
+      if (!this.#isShiftPressed) {
+        this.#getInitialElementToFocus().focus();
+      }
+    });
+  };
 
   /**
    * @param {{ phase: OverlayPhase }} config
    * @protected
    */
   _handleTrapsKeyboardFocus({ phase }) {
-    if (phase === 'show') {
-      // @ts-ignore
-      if ('showModal' in this.__wrappingDialogNode) {
-        // @ts-ignore
-        this.__wrappingDialogNode.close();
-        // @ts-ignore
-        this.__wrappingDialogNode.showModal();
+    if (phase === 'init') {
+      this.contentNode.style.outline = 'none';
+      this.contentNode.tabIndex = -1;
+
+      const isContentShadowHost = Boolean(this.contentNode.shadowRoot);
+      if (isContentShadowHost) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
+        );
       }
-      // else {
-      this.enableTrapsKeyboardFocus();
-      // }
-    } else if (phase === 'hide' || phase === 'teardown') {
-      this.disableTrapsKeyboardFocus();
     }
-  }
-
-  enableTrapsKeyboardFocus() {
-    if (this.__hasActiveTrapsKeyboardFocus) {
-      return;
+    if (phase === 'show') {
+      this.#handleShiftKeyPress();
+      this.#handleFocusInsideDialog();
+      this.__wrappingDialogNode?.close();
+      this.__wrappingDialogNode?.showModal();
+      /**
+       * At this moment `#handleFocusInsideDialog` should handle the focus.
+       * But for some reason Firefox on the testing setup does not
+       * focus the native `dialog` on showModal() and focuses the first
+       * focusable element inside the dialog instead. Hence here we focus
+       * contentNode explicitly
+       */
+      this.#getInitialElementToFocus().focus();
     }
-    if (this.manager) {
-      this.manager.disableTrapsKeyboardFocusForAll();
-    }
-
-    const isContentShadowHost = Boolean(this.contentNode.shadowRoot);
-    if (isContentShadowHost) {
-      // eslint-disable-next-line no-console
-      console.warn(
-        '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
-      );
-    }
-
-    this._containFocusHandler = containFocus(this.contentNode);
-    this.__hasActiveTrapsKeyboardFocus = true;
-    if (this.manager) {
-      this.manager.informTrapsKeyboardFocusGotEnabled(this.placementMode);
-    }
-  }
-
-  disableTrapsKeyboardFocus({ findNewTrap = true } = {}) {
-    if (!this.__hasActiveTrapsKeyboardFocus) {
-      return;
-    }
-    if (this._containFocusHandler) {
-      this._containFocusHandler.disconnect();
-      this._containFocusHandler = undefined;
-    }
-    this.__hasActiveTrapsKeyboardFocus = false;
-    if (this.manager) {
-      this.manager.informTrapsKeyboardFocusGotDisabled({ disabledCtrl: this, findNewTrap });
+    if (phase === 'hide') {
+      this.#stopHandlingShiftKeyPress();
     }
   }
 
@@ -1231,12 +1263,7 @@ export class OverlayController extends EventTarget {
       return;
     }
 
-    const hasPressedInside =
-      event.composedPath().includes(this.contentNode) ||
-      (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
-      deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
-
-    if (hasPressedInside) {
+    if (this.#hasPressedInside(event)) {
       this.__escKeyHandlerCalled = true;
       this.hide();
       // We could do event.stopPropagation() here, but we don't want to hide info for
@@ -1248,15 +1275,21 @@ export class OverlayController extends EventTarget {
 
   /**
    * @param {KeyboardEvent} event
+   * @returns {boolean}
+   */
+  #hasPressedInside = event =>
+    event.composedPath().includes(/** @type {EventTarget} */ (this.__wrappingDialogNode)) ||
+    (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
+    deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
+
+  /**
+   * @param {KeyboardEvent} event
    * @returns {void}
    */
   #outsideEscKeyHandler = event => {
     if (event.key !== 'Escape') return;
 
-    const hasPressedInside =
-      event.composedPath().includes(this.contentNode) ||
-      deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
-    if (hasPressedInside) return;
+    if (this.#hasPressedInside(event)) return;
     this.hide();
   };
 
