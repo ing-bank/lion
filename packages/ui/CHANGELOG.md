@@ -17,7 +17,7 @@
 
 ### Patch Changes
 
-- d39c6b7: improve hide behavior after teardown and registration check
+- d39c6b7: [overlays] improve hide behavior after teardown and registration check
 
 ## 0.15.5
 
