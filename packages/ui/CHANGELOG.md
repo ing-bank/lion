@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.16.1
+
+### Patch Changes
+
+- 33d253c: [overlays] make OverlaysManager#\_siblingsInert protected
+
 ## 0.16.0
 
 ### Minor Changes
