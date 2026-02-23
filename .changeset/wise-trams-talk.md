@@ -2,4 +2,4 @@
 '@lion/ui': patch
 ---
 
-[overlays] make OverlaysManager#\_siblingsInert protected
+[overlays] make OverlaysManager#_siblingsInert protected
