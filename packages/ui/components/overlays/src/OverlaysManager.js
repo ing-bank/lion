@@ -46,8 +46,8 @@ export class OverlaysManager {
      * @private
      */
     this.__shownList = [];
-    /** @private */
-    this.__siblingsInert = false;
+    /** @protected */
+    this._siblingsInert = false;
     /**
      * @type {WeakMap<OverlayController, OverlayController[]>}
      * @private
@@ -118,7 +118,7 @@ export class OverlaysManager {
 
     this.__list = [];
     this.__shownList = [];
-    this.__siblingsInert = false;
+    this._siblingsInert = false;
 
     if (OverlaysManager.__globalStyleNode) {
       document.head.removeChild(
@@ -131,7 +131,7 @@ export class OverlaysManager {
   /** Features right now only for Global Overlay Manager */
 
   get siblingsInert() {
-    return this.__siblingsInert;
+    return this._siblingsInert;
   }
 
   /** PreventsScroll */
