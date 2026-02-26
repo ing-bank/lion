@@ -844,51 +844,41 @@ export class OverlayController extends EventTarget {
   }
 
   /**
+   * Prevents unwanted layout shifts when scrollbars are disabled.
+   * Keeps the body (content) size consistent on show by applying margin-right/bottom
+   * to compensate for the missing scrollbar.
    * @param {{ phase: OverlayPhase }} config
    * @protected
    */
   _keepBodySize({ phase }) {
-    if (!this.preventsScroll) {
-      return;
-    }
+    if (!this.preventsScroll) return;
 
     switch (phase) {
       case 'before-show':
         this.__bodyClientWidth = document.body.clientWidth;
         this.__bodyClientHeight = document.body.clientHeight;
-        this.__bodyMarginRightInline = document.body.style.marginRight;
-        this.__bodyMarginBottomInline = document.body.style.marginBottom;
+        this.__bodyPaddingRightInline = document.body.style.paddingRight;
+        this.__bodyPaddingBottomInline = document.body.style.paddingBottom;
         break;
       case 'show': {
-        if (window.getComputedStyle) {
-          const bodyStyle = window.getComputedStyle(document.body);
-          this.__bodyMarginRight = parseInt(bodyStyle.getPropertyValue('margin-right'), 10);
-          this.__bodyMarginBottom = parseInt(bodyStyle.getPropertyValue('margin-bottom'), 10);
-        } else {
-          this.__bodyMarginRight = 0;
-          this.__bodyMarginBottom = 0;
-        }
+        const bodyStyle = window.getComputedStyle(document.body);
+        const bodyPaddingRight = parseInt(bodyStyle.getPropertyValue('padding-right'), 10);
+        const bodyPaddingBottom = parseInt(bodyStyle.getPropertyValue('padding-bottom'), 10);
+
         const scrollbarWidth =
           document.body.clientWidth - /** @type {number} */ (this.__bodyClientWidth);
         const scrollbarHeight =
           document.body.clientHeight - /** @type {number} */ (this.__bodyClientHeight);
-        const newMarginRight = this.__bodyMarginRight + scrollbarWidth;
-        const newMarginBottom = this.__bodyMarginBottom + scrollbarHeight;
-        // @ts-expect-error [external]: CSS not yet typed
-        if (window.CSS?.number && document.body.attributeStyleMap?.set) {
-          // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
-          document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
-          // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
-          document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
-        } else {
-          document.body.style.marginRight = `${newMarginRight}px`;
-          document.body.style.marginBottom = `${newMarginBottom}px`;
-        }
+        const newPaddingRight = bodyPaddingRight + scrollbarWidth;
+        const newPaddingBottom = bodyPaddingBottom + scrollbarHeight;
+
+        document.body.style.paddingRight = `${newPaddingRight}px`;
+        document.body.style.paddingBottom = `${newPaddingBottom}px`;
         break;
       }
       case 'hide':
-        document.body.style.marginRight = this.__bodyMarginRightInline || '';
-        document.body.style.marginBottom = this.__bodyMarginBottomInline || '';
+        document.body.style.paddingRight = this.__bodyPaddingRightInline || '';
+        document.body.style.paddingBottom = this.__bodyPaddingBottomInline || '';
         break;
       /* no default */
     }
