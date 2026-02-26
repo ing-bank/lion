@@ -17,4 +17,7 @@ export default {
   selectTextDuplicateFileName: '已存在具有相同文件名的文件。',
   selectTextMultipleFile: '选择多个文件',
   selectTextSingleFile: '选择文件',
+  statusLoading: '正在上传文件，请稍候。',
+  statusSuccess: '文件 {fileName} 添加成功。',
+  statusRemoved: '文件 {fileName} 移除成功。',
 };
