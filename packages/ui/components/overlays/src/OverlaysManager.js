@@ -11,6 +11,8 @@ import { overlayDocumentStyle } from './overlayDocumentStyle.js';
  * `OverlaysManager` which manages overlays which are rendered into the body
  */
 export class OverlaysManager {
+  scrollPosition = 0;
+
   static __createGlobalStyleNode() {
     const styleTag = document.createElement('style');
     styleTag.setAttribute('data-overlays', '');
@@ -142,9 +144,11 @@ export class OverlaysManager {
     // no check as classList will dedupe it anyways
     document.body.classList.add('overlays-scroll-lock');
     if (isIOS || isMacSafari) {
+      this.scrollPosition = window.pageYOffset;
       // iOS and safar for mac have issues with overlays with input fields. This is fixed by applying
       // position: fixed to the body. As a side effect, this will scroll the body to the top.
       document.body.classList.add('overlays-scroll-lock-ios-fix');
+      document.body.style.top = `-${this.scrollPosition}px`;
     }
     if (isIOS) {
       document.documentElement.classList.add('overlays-scroll-lock-ios-fix');
@@ -169,7 +173,12 @@ export class OverlaysManager {
     const { isIOS, isMacSafari } = browserDetection;
     document.body.classList.remove('overlays-scroll-lock');
     if (isIOS || isMacSafari) {
+      const originalScrollBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
       document.body.classList.remove('overlays-scroll-lock-ios-fix');
+      document.body.style.position = '';
+      window.scrollTo(0, this.scrollPosition);
+      document.documentElement.style.scrollBehavior = originalScrollBehavior;
     }
     if (isIOS) {
       document.documentElement.classList.remove('overlays-scroll-lock-ios-fix');
