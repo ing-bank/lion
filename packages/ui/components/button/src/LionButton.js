@@ -32,10 +32,7 @@ const isSpaceKeyboardClickEvent = (/** @type {KeyboardEvent} */ e) => e.key === 
  */
 export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
   static get properties() {
-    return {
-      active: { type: Boolean, reflect: true },
-      type: { type: String, reflect: true },
-    };
+    return { active: { type: Boolean, reflect: true }, type: { type: String, reflect: true } };
   }
 
   render() {
@@ -210,13 +207,13 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
    * @private
    */
   __keyupHandler(event) {
-    if (isKeyboardClickEvent(event)) {
-      // Fixes IE11 double submit/click. Enter keypress somehow triggers the __keyUpHandler on the native <button>
-      if (event.target && event.target !== this) {
-        return;
-      }
-      // dispatch click
-      this.click();
+    if (!isKeyboardClickEvent(event) || this.disabled) return;
+
+    // Fixes IE11 double submit/click. Enter keypress somehow triggers the __keyUpHandler on the native <button>
+    if (event.target && event.target !== this) {
+      return;
     }
+    // dispatch click
+    this.click();
   }
 }
