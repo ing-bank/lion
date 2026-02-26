@@ -76,28 +76,28 @@ Below configuration gives an example of all of them, after which we explain when
 
 ```js
 class MyAccessibleControl extends SlotMixin(LitElement) {
- get slots() {
-   return {
-     ...super.slots,
-     // Element
-     'public-element-slot': () => document.createElement('input'),
-     // TemplateResult
-     '_private-template-slot': () => html`<wc-rendered-to-light-dom></wc-rendered-to-light-dom>`,
-     // SlotRerenderObject
-     'rerenderable-slot': () => {
-       return {
-         template: html`<w-c>${this.litProperty}</w-c>`,
-       }
-     },
-     // undefined (conditional slot)
-     '': () => {
+  get slots() {
+    return {
+      ...super.slots,
+      // Element
+      'public-element-slot': () => document.createElement('input'),
+      // TemplateResult
+      '_private-template-slot': () => html`<wc-rendered-to-light-dom></wc-rendered-to-light-dom>`,
+      // SlotRerenderObject
+      'rerenderable-slot': () => {
+        return {
+          template: html`<w-c>${this.litProperty}</w-c>`,
+        };
+      },
+      // undefined (conditional slot)
+      '': () => {
         if (conditionApplies) {
           return html`<div>default slot</div>`;
         }
         return undefined;
       },
-   };
- }
+    };
+  }
 }
 ```
 

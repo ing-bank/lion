@@ -350,11 +350,13 @@ const ChoiceGroupMixinImplementation = superclass =>
       }
       for (let i = 0; i < this.formElements.length; i += 1) {
         if (this.multipleChoice) {
-          let valueIsIncluded = value.includes(this.formElements[i].modelValue.value);
+          const values = Array.isArray(value) ? value : [/** @type {any} */ (value)];
+
+          let valueIsIncluded = values.includes(this.formElements[i].modelValue.value);
 
           // For complex values, do a JSON Stringified includes check, because [{ v: 'foo'}].includes({ v: 'foo' }) => false
           if (typeof this.formElements[i].modelValue.value === 'object') {
-            valueIsIncluded = /** @type {any[]} */ (value)
+            valueIsIncluded = values
               .map(/** @param {Object} v */ v => JSON.stringify(v))
               .includes(JSON.stringify(this.formElements[i].modelValue.value));
           }
