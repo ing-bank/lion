@@ -89,6 +89,65 @@ describe('getSourceCodeFragmentOfDeclaration', () => {
       expect(sourceFragment).to.equal("'#aaa'");
     });
 
+    it('finds source code for (rereferenced) identifiers with expressions', async () => {
+      const fakeFs = {
+        '/my/proj/exports/file-1.js': `
+        const x = 88 + 2;
+        const y = x;
+        `,
+      };
+      mockProject(fakeFs);
+
+      const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
+        filePath: '/my/proj/exports/file-1.js',
+        exportedIdentifier: 'x',
+        projectRootPath: '/my/proj',
+      });
+
+      expect(sourceFragment).to.equal('88 + 2');
+
+      const { sourceFragment: sourceFragment2 } = await getSourceCodeFragmentOfDeclaration({
+        filePath: '/my/proj/exports/file-1.js',
+        exportedIdentifier: 'y',
+        projectRootPath: '/my/proj',
+      });
+
+      expect(sourceFragment2).to.equal('x');
+    });
+
+    it('finds source code for (rereferenced) identifiers not in root scope', async () => {
+      const fakeFs = {
+        '/my/proj/exports/file-1.js': `
+        function getColor() {
+          const color = '#aaa';
+          function innerScopeFn() {
+            const gray = '#ccc';
+            const black59 = color + 'eee';
+            return black59;
+          }
+          return innerScopeFn();
+        }
+        `,
+      };
+      mockProject(fakeFs);
+
+      const { sourceFragment } = await getSourceCodeFragmentOfDeclaration({
+        filePath: '/my/proj/exports/file-1.js',
+        exportedIdentifier: 'gray',
+        projectRootPath: '/my/proj',
+      });
+
+      expect(sourceFragment).to.equal("'#ccc'");
+
+      const { sourceFragment: sourceFragment2 } = await getSourceCodeFragmentOfDeclaration({
+        filePath: '/my/proj/exports/file-1.js',
+        exportedIdentifier: 'black59',
+        projectRootPath: '/my/proj',
+      });
+
+      expect(sourceFragment2).to.equal("color + 'eee'");
+    });
+
     describe('Different types of declarations', () => {
       it('handles class declarations', async () => {
         const fakeFs = {
