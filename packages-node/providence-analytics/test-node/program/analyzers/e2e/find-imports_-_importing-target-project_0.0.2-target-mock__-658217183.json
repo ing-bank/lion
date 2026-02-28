@@ -33,6 +33,70 @@
       ]
     },
     {
+      "file": "./target-src/find-imports/all-notations.js",
+      "result": [
+        {
+          "importSpecifiers": [
+            "[file]"
+          ],
+          "source": "imported/source",
+          "normalizedSource": "imported/source"
+        },
+        {
+          "importSpecifiers": [
+            "[default]"
+          ],
+          "source": "imported/source-a",
+          "normalizedSource": "imported/source-a"
+        },
+        {
+          "importSpecifiers": [
+            "b"
+          ],
+          "source": "imported/source-b",
+          "normalizedSource": "imported/source-b"
+        },
+        {
+          "importSpecifiers": [
+            "c",
+            "d"
+          ],
+          "source": "imported/source-c",
+          "normalizedSource": "imported/source-c"
+        },
+        {
+          "importSpecifiers": [
+            "[default]",
+            "f",
+            "g"
+          ],
+          "source": "imported/source-d",
+          "normalizedSource": "imported/source-d"
+        },
+        {
+          "importSpecifiers": [
+            "[default]"
+          ],
+          "source": "my/source-e",
+          "normalizedSource": "my/source-e"
+        },
+        {
+          "importSpecifiers": [
+            "[default]"
+          ],
+          "source": "[variable]",
+          "normalizedSource": "[variable]"
+        },
+        {
+          "importSpecifiers": [
+            "[*]"
+          ],
+          "source": "imported/source-g",
+          "normalizedSource": "imported/source-g"
+        }
+      ]
+    },
+    {
       "file": "./target-src/match-imports/deep-imports.js",
       "result": [
         {
@@ -109,70 +173,6 @@
           ],
           "source": "unknown-project",
           "normalizedSource": "unknown-project"
-        }
-      ]
-    },
-    {
-      "file": "./target-src/find-imports/all-notations.js",
-      "result": [
-        {
-          "importSpecifiers": [
-            "[file]"
-          ],
-          "source": "imported/source",
-          "normalizedSource": "imported/source"
-        },
-        {
-          "importSpecifiers": [
-            "[default]"
-          ],
-          "source": "imported/source-a",
-          "normalizedSource": "imported/source-a"
-        },
-        {
-          "importSpecifiers": [
-            "b"
-          ],
-          "source": "imported/source-b",
-          "normalizedSource": "imported/source-b"
-        },
-        {
-          "importSpecifiers": [
-            "c",
-            "d"
-          ],
-          "source": "imported/source-c",
-          "normalizedSource": "imported/source-c"
-        },
-        {
-          "importSpecifiers": [
-            "[default]",
-            "f",
-            "g"
-          ],
-          "source": "imported/source-d",
-          "normalizedSource": "imported/source-d"
-        },
-        {
-          "importSpecifiers": [
-            "[default]"
-          ],
-          "source": "my/source-e",
-          "normalizedSource": "my/source-e"
-        },
-        {
-          "importSpecifiers": [
-            "[default]"
-          ],
-          "source": "[variable]",
-          "normalizedSource": "[variable]"
-        },
-        {
-          "importSpecifiers": [
-            "[*]"
-          ],
-          "source": "imported/source-g",
-          "normalizedSource": "imported/source-g"
         }
       ]
     },
