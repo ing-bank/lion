@@ -7,7 +7,7 @@
  * @typedef {import('../../../types/index.js').SwcPath} SwcPath
  * @typedef {import("oxc-parser").ParseResult} OxcParseResult
  * @typedef {import('@swc/core').Identifier} SwcIdentifierNode
- * @typedef {import('oxc-parser').ParseResult} OxcNode
+ * @typedef {import('@swc/core').Node} OxcNode
  * @typedef {import('@swc/core').Module} SwcAstModule
  * @typedef {import('@swc/core').Node} SwcNode
  */
@@ -56,12 +56,10 @@ export function isProperty(node) {
     case 'ClassProperty':
     case 'ClassAccessorProperty':
     case 'ClassPrivateProperty':
-      break;
+      return true;
     default:
       return false;
   }
-
-  return false;
 }
 
 /**
@@ -87,13 +85,19 @@ function getNewScope(swcPath, currentScope, traversalContext) {
       path: swcPath,
       bindings: {},
       getBinding(identifierName) {
-        let parentScope = currentScope;
-        let foundBinding;
+        let { parentScope } = this;
+        let foundBinding = this.bindings[identifierName];
         while (!foundBinding && parentScope) {
           foundBinding = parentScope.bindings[identifierName];
           parentScope = parentScope.parentScope;
         }
         return foundBinding;
+      },
+      dispose() {
+        this.path = null;
+        this.parentScope = null;
+        this.bindings = {};
+        this._pendingRefsWithoutBinding = [];
       },
       _pendingRefsWithoutBinding: [],
       _isIsolatedBlockStatement: isIsolatedBlockStatement,
@@ -127,19 +131,22 @@ function createSwcPath(node, parent, stop, scope) {
     scope,
     parentPath: parent ? getPathFromNode(parent) : null,
     get(/** @type {string} */ id) {
-      const swcPathForNode = getPathFromNode(node[id]);
-      if (node[id] && !swcPathForNode) {
+      const childNode = /** @type {any} */ (node)[id];
+      if (!childNode) return undefined;
+      const swcPathForNode = getPathFromNode(childNode);
+      if (!swcPathForNode) {
         // throw new Error(
-        //   `[oxcTraverse]: Use {needsAdvancedPaths: true} to find path for node: ${node[name]}`,
+        //   `[oxcTraverse]: Use {needsAdvancedPaths: true} to find path for node: ${childNode.type}`,
         // );
         // TODO: "pre-traverse" the missing path parts instead
+        return undefined;
       }
       return swcPathForNode;
     },
     get type() {
       return node.type;
     },
-    traverse(visitor) {
+    traverse(/** @type {SwcVisitor} */ visitor) {
       // eslint-disable-next-line no-use-before-define
       return oxcTraverse(node, visitor);
     },
@@ -191,7 +198,7 @@ function isBindingRefNode(parent) {
 function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
   const { node, parent, scope, parentPath } = swcPathForIdentifier;
 
-  if (node.type !== 'Identifier') return;
+  if (!scope || node.type !== 'Identifier') return;
 
   // const parentPath = getPathFromNode(parent);
   if (isBindingNode(parent, nameOf(node))) {
@@ -200,19 +207,26 @@ function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
       identifier: parent?.id || parent?.identifier,
       // kind: 'var',
       refs: [],
-      path: swcPathForIdentifier.parentPath,
+      path: /** @type {SwcPath} */ (swcPathForIdentifier.parentPath || swcPathForIdentifier),
     };
     let scopeBindingBelongsTo = scope;
     const isVarInIsolatedBlock =
       scope._isIsolatedBlockStatement &&
-      swcPathForIdentifier.parentPath.parentPath.node.kind === 'var';
+      swcPathForIdentifier.parentPath?.parentPath?.node?.kind === 'var';
     const hasNonBlockParent = nonBlockParentTypes.includes(parent.type);
 
     if (isVarInIsolatedBlock || hasNonBlockParent) {
       scopeBindingBelongsTo = scope.parentScope || scope;
     }
-    if (scopeBindingBelongsTo._pendingRefsWithoutBinding.includes(parentPath)) {
-      binding.refs.push(parentPath);
+    if (!scopeBindingBelongsTo._pendingRefsWithoutBinding) {
+      scopeBindingBelongsTo._pendingRefsWithoutBinding = [];
+    }
+    if (parentPath && scopeBindingBelongsTo._pendingRefsWithoutBinding.includes(parentPath)) {
+      if (binding.refs) {
+        binding.refs.push(parentPath);
+      } else {
+        binding.refs = [parentPath];
+      }
       scopeBindingBelongsTo._pendingRefsWithoutBinding.splice(
         scopeBindingBelongsTo._pendingRefsWithoutBinding.indexOf(parentPath),
         1,
@@ -230,14 +244,23 @@ function addPotentialBindingOrRefToScope(swcPathForIdentifier) {
   }
   // In other cases, we are dealing with a reference that must be bound to a binding
   else if (isBindingRefNode(parent)) {
-    // eslint-disable-next-line no-prototype-builtins
-    const binding = scope.bindings.hasOwnProperty(nameOf(node)) && scope.bindings[nameOf(node)];
-    if (binding) {
-      binding.refs.push(parentPath);
-    } else {
-      // we are referencing a variable that is not declared in this scope or any parent scope
-      // It might be hoisted, so we might find it later. For now, store it as a pending reference
-      scope._pendingRefsWithoutBinding.push(parentPath);
+    const nodeName = nameOf(node);
+    if (nodeName) {
+      const binding = scope.getBinding(nodeName);
+      if (binding && parentPath) {
+        if (binding.refs) {
+          binding.refs.push(parentPath);
+        } else {
+          binding.refs = [parentPath];
+        }
+      } else if (parentPath) {
+        // we are referencing a variable that is not declared in this scope or any parent scope
+        // It might be hoisted, so we might find it later. For now, store it as a pending reference
+        if (!scope._pendingRefsWithoutBinding) {
+          scope._pendingRefsWithoutBinding = [];
+        }
+        scope._pendingRefsWithoutBinding.push(parentPath);
+      }
     }
   }
 }
@@ -265,9 +288,11 @@ const loopChildren = ({ node }, callback) => {
 
     if (Array.isArray(childVal)) {
       for (const childValElem of childVal) {
-        callback({ child: childValElem });
+        if (childValElem && typeof childValElem === 'object' && childValElem.type) {
+          callback({ child: childValElem });
+        }
       }
-    } else if (typeof childVal === 'object') {
+    } else if (childVal && typeof childVal === 'object' && childVal.type) {
       callback({ child: childVal });
     }
   }
@@ -335,7 +360,10 @@ export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}
    */
   const handlePathAndScope = (node, parent, scope, hasPreparedTree, traversalContext) => {
     if (hasPreparedTree) {
-      const swcPath = /** @type {SwcPath} */ (swcPathCache.get(node));
+      const swcPath = swcPathCache.get(node);
+      if (!swcPath) {
+        throw new Error(`[oxcTraverse]: Path not found for node type: ${node.type}`);
+      }
       return {
         swcPath,
         newOrCurScope: getNewScope(swcPath, scope, traversalContext) || scope,
@@ -385,6 +413,7 @@ export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}
     const { swcPath } = handlePathAndScope(node, parent, scope, hasPreparedTree, traversalContext);
     visit(swcPath, visitor, traversalContext);
     loopChildren({ node }, ({ child }) => {
+      // @ts-expect-error - scope is guaranteed to be set after handlePathAndScope
       visitTree(child, node, swcPath.scope, config, traversalContext);
     });
   };
@@ -397,7 +426,18 @@ export function oxcTraverse(oxcAst, visitor, { needsAdvancedPaths = false } = {}
     bindings: {},
     path: null,
     getBinding(/** @type {string} */ identifierName) {
-      return initialScope.bindings[identifierName];
+      let currentScope = this;
+      let foundBinding = currentScope.bindings[identifierName];
+      while (!foundBinding && currentScope.parentScope) {
+        currentScope = currentScope.parentScope;
+        foundBinding = currentScope.bindings[identifierName];
+      }
+      return foundBinding;
+    },
+    dispose() {
+      this.path = null;
+      this.bindings = {};
+      this._pendingRefsWithoutBinding = [];
     },
     _pendingRefsWithoutBinding: [],
     _isIsolatedBlockStatement: false,
