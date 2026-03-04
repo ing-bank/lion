@@ -102,7 +102,7 @@ export function getReferencedDeclaration({ referencedIdentifierName, globalScope
  * ```
  *
  * @param {{ code?: string; ast?: ParsedAst; filePath: PathFromSystemRoot; exportedIdentifier: string; projectRootPath: PathFromSystemRoot; parser?: AnalyzerAst }} opts
- * @returns {Promise<{ sourceNodePath: SwcPath; sourceFragment: string|null; externalImportSource: string|null; }>}
+ * @returns {Promise<{ sourceNodeType: string; sourceFragment: string|null; externalImportSource: string|null; }>}
  */
 export async function getSourceCodeFragmentOfDeclaration({
   exportedIdentifier,
@@ -311,8 +311,7 @@ export async function getSourceCodeFragmentOfDeclaration({
     if (!filePathOrSrc.startsWith('/')) {
       // So we have external project; smth like '@lion/input/x.js'
       return {
-        // @ts-expect-error
-        sourceNodePath: finalNodePath,
+        sourceNodeType: 'ImportSpecifier', // External import, return the import type
         sourceFragment: null,
         externalImportSource: filePathOrSrc,
       };
@@ -326,21 +325,28 @@ export async function getSourceCodeFragmentOfDeclaration({
     });
   }
 
+  // Guard against finalNodePath not being found
+  // @ts-expect-error - finalNodePath is assigned within oxcTraverse callback
+  if (!finalNodePath) {
+    return {
+      sourceNodeType: 'Unknown',
+      sourceFragment: null,
+      externalImportSource: null,
+    };
+  }
+
   const startOf = (/** @type {{ start: number; span: { start: number; }; }} */ node) =>
     node.start || node.span.start;
   const endOf = (/** @type {{ end: number; span: { end: number; }; }} */ node) =>
     node.end || node.span.end;
 
   const sourceFragment = code.slice(
-    // @ts-expect-error
     startOf(finalNodePath.node) - 1 - offset,
-    // @ts-expect-error
     endOf(finalNodePath.node) - 1 - offset,
   );
 
   return {
-    // @ts-expect-error
-    sourceNodePath: finalNodePath,
+    sourceNodeType: finalNodePath.node.type,
     sourceFragment,
     // sourceFragment: finalNodePath.node?.raw || finalNodePath.node?.value,
     externalImportSource: null,
