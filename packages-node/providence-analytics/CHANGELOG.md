@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.19.3
+
+### Patch Changes
+
+- 75707eb: Fixed memory leaks in AST traversal that prevented garbage collection when processing large codebases. The traversal graph will now be properly released after each file analysis, preventing unbounded memory growth during batch operations.
+- df019f8: Fixed AST fragment extraction to support identifiers in nested scopes. The analyzer now properly traverses the full AST to find variable declarations not located in the root scope, improving type safety with proper `ParsedAst` type definitions and adding validation for AST generation failures.
+
 ## 0.19.2
 
 ### Patch Changes
