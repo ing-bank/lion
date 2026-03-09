@@ -50,7 +50,7 @@ const components: ComponentCard[] = lionComponents
     return {
       name: displayName,
       description: component.data?.description || `${displayName} component with accessible design and flexible styling.`,
-      href: `${import.meta.env.BASE_URL}components/${component.id}/overview`,
+      href: `${import.meta.env.BASE_URL}/components/${component.id}`,
       icon: getComponentIcon(componentName)
     };
   })

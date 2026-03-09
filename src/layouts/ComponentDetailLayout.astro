@@ -5,8 +5,143 @@ import TopNav from "../components/TopNav.astro";
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
 const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
-const { title, componentName, description = "Accessible component with various states and styles." } = Astro.props;
+const { title, componentName, description = "Accessible component with various states and styles.", components = [], headings = [] } = Astro.props;
 ---
+
+<style>
+  .docs-sidebar {
+    width: 240px;
+    padding-right: 1rem;
+    border-right: 1px solid #e5e5e5;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .component-nav h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #666;
+    margin: 1rem 0 0.75rem 0;
+    padding: 0 1rem;
+  }
+
+  .component-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .category-item {
+    display: block;
+  }
+
+  .category-toggle {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: left;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .category-toggle:before {
+    content: '▼';
+    position: absolute;
+    left: 0.5rem;
+    font-size: 0.6rem;
+    transition: transform 0.2s ease;
+  }
+
+  .category-toggle[aria-expanded="false"]:before {
+    transform: rotate(-90deg);
+  }
+
+  .category-toggle:hover {
+    color: #333;
+  }
+
+  .category-submenu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    max-height: 1000px;
+    opacity: 1;
+    overflow: hidden;
+  }
+
+  .category-submenu.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  .component-item {
+    display: block;
+  }
+
+  .component-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #333;
+    text-decoration: none;
+    font-size: 0.875rem;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+
+  .component-link:hover {
+    background-color: #f5f5f5;
+    color: #000;
+  }
+
+  .component-link.active {
+    color: #0066cc;
+    background-color: #f0f7ff;
+    border-left-color: #0066cc;
+    font-weight: 500;
+  }
+
+  .docs-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr 280px;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .docs-content {
+    grid-column: 2;
+  }
+
+  .docs-toc {
+    grid-column: 3;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+
+  @media (max-width: 1200px) {
+    .docs-layout {
+      grid-template-columns: 240px 1fr;
+    }
+    .docs-toc {
+      display: none;
+    }
+  }
+</style>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -42,6 +177,7 @@ const { title, componentName, description = "Accessible component with various s
         },
       }}
     />
+    <script src="../components/ui-portal-inpage-nav.js"></script>
 </head>
 <body>
     <div class="scroll-progress"></div>
@@ -57,18 +193,20 @@ const { title, componentName, description = "Accessible component with various s
                     <nav class="component-nav">
                         <h3>Components</h3>
                         <ul>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/buttons/button/` class={componentName === 'button' ? 'active' : ''}>Button</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/inputs/input/` class={componentName === 'input' ? 'active' : ''}>Input</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/inputs/select/` class={componentName === 'select' ? 'active' : ''}>Select</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/inputs/radio-group/` class={componentName === 'radio-group' ? 'active' : ''}>Radio Group</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/inputs/checkbox-group/` class={componentName === 'checkbox-group' ? 'active' : ''}>Checkbox Group</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/navigation/tabs/` class={componentName === 'tabs' ? 'active' : ''}>Tabs</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/overlays/dialog/` class={componentName === 'dialog' ? 'active' : ''}>Dialog</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/overlays/tooltip/` class={componentName === 'tooltip' ? 'active' : ''}>Tooltip</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/navigation/accordion/` class={componentName === 'accordion' ? 'active' : ''}>Accordion</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/fundamentals/systems/form/` class={componentName === 'form' ? 'active' : ''}>Form System</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/inputs/switch/` class={componentName === 'switch' ? 'active' : ''}>Switch</a></li>
-                            <li><a href=`${import.meta.env.BASE_URL}/components/navigation/steps/` class={componentName === 'steps' ? 'active' : ''}>Steps</a></li>
+                            {components.map((component) => {
+                                // Extract category from href (e.g., /components/buttons/button/ → buttons)
+                                const parts = component.href.split('/').filter(p => p && p !== 'components');
+                                const category = parts[0];
+                                const isActive = componentName === component.name;
+                                
+                                return (
+                                    <li class={`component-item ${isActive ? 'active' : ''}`}>
+                                        <a href={`${import.meta.env.BASE_URL}${component.href.replace(/\/$/, '')}`} class={`component-link ${isActive ? 'active' : ''}`} data-category={category}>
+                                            {component.label}
+                                        </a>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </nav>
                 </aside>
@@ -76,6 +214,10 @@ const { title, componentName, description = "Accessible component with various s
                 <div class="docs-content">
                     <slot />
                 </div>
+
+                <aside class="docs-toc">
+                    <ui-portal-inpage-nav nav-data={JSON.stringify(headings)}></ui-portal-inpage-nav>
+                </aside>
             </div>
         </div>
     </main>
@@ -98,4 +240,70 @@ const { title, componentName, description = "Accessible component with various s
         </div>
     </footer>
 </body>
-</html>
+
+<script>
+  // Group components by category and make them collapsible
+  const nav = document.querySelector('.component-nav ul');
+  if (nav) {
+    const items = Array.from(nav.querySelectorAll('.component-item'));
+    const categories = new Map();
+
+    // Group items by category
+    items.forEach(item => {
+      const link = item.querySelector('.component-link');
+      const category = link?.dataset.category || 'other';
+      
+      if (!categories.has(category)) {
+        categories.set(category, []);
+      }
+      categories.get(category).push(item);
+    });
+
+    // Clear and rebuild with categories
+    nav.innerHTML = '';
+    
+    categories.forEach((items, category) => {
+      // Create category toggle
+      const categoryItem = document.createElement('li');
+      categoryItem.className = 'category-item';
+      
+      const categoryToggle = document.createElement('button');
+      categoryToggle.className = 'category-toggle';
+      categoryToggle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+      categoryToggle.setAttribute('data-category', category);
+      categoryToggle.setAttribute('aria-expanded', 'true');
+      
+      categoryItem.appendChild(categoryToggle);
+      nav.appendChild(categoryItem);
+      
+      // Create submenu for items
+      const submenu = document.createElement('ul');
+      submenu.className = 'category-submenu';
+      submenu.setAttribute('data-category', category);
+      
+      items.forEach(item => {
+        submenu.appendChild(item);
+      });
+      
+      nav.appendChild(submenu);
+      
+      // Toggle handler
+      categoryToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isExpanded = categoryToggle.getAttribute('aria-expanded') === 'true';
+        categoryToggle.setAttribute('aria-expanded', !isExpanded);
+        submenu.classList.toggle('collapsed');
+        
+        // Persist state
+        localStorage.setItem(`category-${category}`, !isExpanded ? 'expanded' : 'collapsed');
+      });
+      
+      // Restore previous state
+      const savedState = localStorage.getItem(`category-${category}`);
+      if (savedState === 'collapsed') {
+        categoryToggle.setAttribute('aria-expanded', 'false');
+        submenu.classList.add('collapsed');
+      }
+    });
+  }
+</script>
