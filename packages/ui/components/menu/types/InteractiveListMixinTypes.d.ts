@@ -4,13 +4,12 @@ import { SlotHost } from '@lion/core/types/SlotMixinTypes';
 import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
 
 export type InteractiveListItemRole =
+  | 'listitem'
   | 'menuitem'
   | 'menuitemcheckbox'
   | 'menuitemradio'
   | 'option'
-  | 'treeitem'
-  | 'radio'
-  | 'checkbox';
+  | 'treeitem';
 
 export declare class InteractiveListHost {
   /**

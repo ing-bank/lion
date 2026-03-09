@@ -1,5 +1,6 @@
 import { LitElement } from 'lit';
-import { MultiLevelListMixin } from './MultiLevelListMixin.js';
+import {MultiLevelListMixin } from '@lion/ui/menu.js';
+
 
 export class LionTree extends MultiLevelListMixin(LitElement) {
   constructor() {
@@ -13,6 +14,9 @@ export class LionTree extends MultiLevelListMixin(LitElement) {
     this.invokerInteraction = 'click';
   }
 
+  /**
+   * @param {import('lit-element').PropertyValues } changedProperties
+   */
   updated(changedProperties) {
     super.updated(changedProperties);
 
@@ -40,3 +44,4 @@ export class LionTree extends MultiLevelListMixin(LitElement) {
     });
   }
 }
+customElements.define('lion-tree', LionTree);

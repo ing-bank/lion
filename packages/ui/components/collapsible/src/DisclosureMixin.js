@@ -1,8 +1,8 @@
 import { dedupeMixin } from '@lion/core';
 
 /**
- * @typedef {import('../types/DisclosureMixinTypes').DisclosureHost} DisclosureHost
- * @typedef {import('../types/DisclosureMixinTypes').DisclosureMixin} DisclosureMixin
+ * @typedef {import('../types/DisclosureMixinTypes.js').DisclosureHost} DisclosureHost
+ * @typedef {import('../types/DisclosureMixinTypes.js').DisclosureMixin} DisclosureMixin
  */
 
 /**
@@ -19,6 +19,7 @@ const DisclosureMixinImplementation = superclass =>
       };
     }
 
+    /** @type {HTMLElement | undefined} */
     get _invokerNode() {
       if (!this.__invokerNode) {
         const slottedNode = Array.from(this.children).find(child => child.slot === 'invoker');
@@ -30,16 +31,17 @@ const DisclosureMixinImplementation = superclass =>
             this.previousElementSibling;
         }
       }
-      return this.__invokerNode;
+      return /** @type {HTMLElement | undefined} */ (this.__invokerNode);
     }
 
+    /** @type {HTMLElement | undefined} */
     get _contentNode() {
       if (!this._cachedOverlayContentNode) {
         this._cachedOverlayContentNode = Array.from(this.children).find(
           child => child.slot === 'content',
         );
       }
-      return this._cachedOverlayContentNode;
+      return /** @type {HTMLElement | undefined} */ (this._cachedOverlayContentNode);
     }
 
     constructor() {
@@ -60,7 +62,7 @@ const DisclosureMixinImplementation = superclass =>
       this.open = this.open.bind(this);
       this.close = this.close.bind(this);
 
-      this.__handeAnimateComplete = this.__handeAnimateComplete.bind(this);
+      this.__handleAnimateComplete = this.__handleAnimateComplete.bind(this);
 
       this.__onInvokerMouseenter = this.__onInvokerMouseenter.bind(this);
       this.__onContentMouseenter = this.__onContentMouseenter.bind(this);
@@ -110,16 +112,16 @@ const DisclosureMixinImplementation = superclass =>
         return;
       }
 
-      const interactions = this.invokerInteraction.split(' ');
+      const interactions = this.invokerInteraction?.split(' ');
       console.log('interactions', interactions);
 
-      if (interactions.includes('hover')) {
+      if (interactions?.includes('hover')) {
         this._invokerNode.addEventListener('mouseenter', this.__onInvokerMouseenter);
-        this._contentNode.addEventListener('mouseenter', this.__onContentMouseenter);
+        this._contentNode?.addEventListener('mouseenter', this.__onContentMouseenter);
         this._invokerNode.addEventListener('mouseleave', this.__onInvokerMouseleave);
-        this._contentNode.addEventListener('mouseleave', this.__onContentMouseleave);
+        this._contentNode?.addEventListener('mouseleave', this.__onContentMouseleave);
       }
-      if (interactions.includes('click')) {
+      if (interactions?.includes('click')) {
         console.log(this, 'addtCLick');
         this._invokerNode.addEventListener('click', this.toggle);
       }
@@ -164,8 +166,8 @@ const DisclosureMixinImplementation = superclass =>
 
       this._invokerNode.removeEventListener('mouseenter', this.open);
       this._invokerNode.removeEventListener('mouseleave', this.close);
-      this._contentNode.removeEventListener('mouseenter', this.open);
-      this._contentNode.removeEventListener('mouseleave', this.close);
+      this._contentNode?.removeEventListener('mouseenter', this.open);
+      this._contentNode?.removeEventListener('mouseleave', this.close);
 
       console.log(this, 'removetCLick');
 
@@ -174,7 +176,6 @@ const DisclosureMixinImplementation = superclass =>
 
     // TODO: fire event on updated?
     /**
-     * @override
      * @param {string} name
      * @param {any} oldValue
      */
@@ -203,8 +204,8 @@ const DisclosureMixinImplementation = superclass =>
       super.firstUpdated(changedProperties);
       this._onOpenedChanged();
 
-      if (this.handleFocus && !this._contentNode.hasAttribute('tabindex')) {
-        this._contentNode.setAttribute('tabindex', '-1');
+      if (this.handleFocus && !this._contentNode?.hasAttribute('tabindex')) {
+        this._contentNode?.setAttribute('tabindex', '-1');
       }
     }
 
@@ -212,16 +213,16 @@ const DisclosureMixinImplementation = superclass =>
      * @overridable
      */
     async _onOpenedChanged() {
-      this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
+      this._invokerNode?.setAttribute('aria-expanded', `${this.opened}`);
 
       if (this.opened) {
-        this._contentNode.style.setProperty('display', '');
+        this._contentNode?.style.setProperty('display', '');
         await this._showAnimation({ contentNode: this._contentNode });
         this._onDisclosureShow();
       } else {
         this._onDisclosureHide();
         await this._hideAnimation({ contentNode: this._contentNode });
-        this._contentNode.style.setProperty('display', 'none');
+        this._contentNode?.style.setProperty('display', 'none');
       }
     }
 
@@ -231,13 +232,13 @@ const DisclosureMixinImplementation = superclass =>
       // }
 
       if (this.handleFocus) {
-        this._contentNode.focus();
+        this._contentNode?.focus();
       }
     }
 
     _onDisclosureHide() {
       if (this.handleFocus) {
-        this._invokerNode.focus();
+        this._invokerNode?.focus();
       }
     }
 
@@ -268,16 +269,16 @@ const DisclosureMixinImplementation = superclass =>
     }
 
     __setupAnimation() {
-      this._contentNode.addEventListener('transitionend', this.__handeAnimateComplete);
-      this._contentNode.addEventListener('animationend', this.__handeAnimateComplete);
+      this._contentNode?.addEventListener('transitionend', this.__handleAnimateComplete);
+      this._contentNode?.addEventListener('animationend', this.__handleAnimateComplete);
     }
 
     __teardownAnimation() {
-      this._contentNode.removeEventListener('transitionend', this.__handeAnimateComplete);
-      this._contentNode.removeEventListener('animationend', this.__handeAnimateComplete);
+      this._contentNode?.removeEventListener('transitionend', this.__handleAnimateComplete);
+      this._contentNode?.removeEventListener('animationend', this.__handleAnimateComplete);
     }
 
-    __handeAnimateComplete() {
+    __handleAnimateComplete() {
       if (typeof this._resolveAnimateComplete === 'function') {
         this._resolveAnimateComplete();
       }

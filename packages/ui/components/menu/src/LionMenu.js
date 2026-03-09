@@ -4,14 +4,21 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { MultiLevelListMixin } from './MultiLevelListMixin.js';
 import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
 
+/**
+ * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
+ */
 
+/**
+ * @param {HTMLElement} node 
+ * @returns 
+ */
 function getContentHeight(node) {
   return `${node.getBoundingClientRect().height}px`;
 }
 
 /**
  * Calculate total content height after collapsible opens
- * @param {Object} contentNode content node
+ * @param {HTMLElement} contentNode content node
  * @private
  */
 async function calculateHeight(contentNode) {
@@ -20,12 +27,14 @@ async function calculateHeight(contentNode) {
   return getContentHeight(contentNode); // Expected height i.e. actual size once collapsed after animation
 }
 
-
+/**
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
+ */
 const AnimateMixinImplementation = superclass =>
   class AnimateMixin extends superclass {
     constructor() {
       super();
-      this.__handeAnimateComplete = this.__handeAnimateComplete.bind(this);
+      this.__handleAnimateComplete = this.__handleAnimateComplete.bind(this);
     }
 
     connectedCallback() {
@@ -35,7 +44,7 @@ const AnimateMixinImplementation = superclass =>
 
     /**
      * Trigger show animation and wait for transition to be finished.
-     * @param {Object} options - element node and its options
+     * @param {{ contentNode: HTMLElement; }} cfg - element node and its options
      * @override
      */
     async _showAnimation(cfg) {
@@ -56,7 +65,7 @@ const AnimateMixinImplementation = superclass =>
 
     /**
      * Trigger hide animation and wait for transition to be finished.
-     * @param {Object} options - element node and its options
+     * @param {{ contentNode: HTMLElement; }} cfg - element node and its options
      * @override
      */
     async _hideAnimation(cfg) {
@@ -145,7 +154,41 @@ export class LionMenu extends AnimateMixin(MultiLevelListMixin(LitElement)) {
     };
   }
 
+  constructor() {
+    super();
+
+    this.bar = false;
+    /** @configure MultiLevelListMixin */
+    this.behaveAsAccordion = true;
+    /** @configure InteractiveListMixin */
+    this._listRole = 'menu';
+    /** @configure InteractiveListMixin */
+    this._activateOnTypedChars = true;
+    /** @configure DisclosureMixin */
+    this.invokerInteraction = 'click';
+  }
+
   /**
+   * @param {import('lit-element').PropertyValues } changedProperties
+   */
+  firstUpdated(changedProperties) {
+    super.firstUpdated(changedProperties);
+
+    if (this.bar) {
+      this.orientation = 'horizontal';
+      if (this._listRole === 'menu') {
+        this._listRole = 'menubar';
+      }
+    }
+
+    if (this._activeMode === 'disclosure') {
+      this._listRole = 'list';
+    }
+
+    this._listNode.setAttribute('role', this._listRole);
+  }
+
+    /**
    * Allows groups within one level. In case we deal with menuitemcheckbox,
    * we treat it as multiple choice group
    * @override InteractiveListMixin
@@ -180,7 +223,7 @@ export class LionMenu extends AnimateMixin(MultiLevelListMixin(LitElement)) {
 
       if (!multiple) {
         // Uncheck all
-        listItemsWithinGroup.forEach(item => {
+        /** @type {HTMLElement[]} */ (listItemsWithinGroup).forEach(item => {
           setChecked(item, true);
         });
         setChecked(this.listItems[index]);
@@ -188,39 +231,5 @@ export class LionMenu extends AnimateMixin(MultiLevelListMixin(LitElement)) {
         toggleChecked(this.listItems[index]);
       }
     }
-  }
-
-  constructor() {
-    super();
-
-    this.bar = false;
-    /** @configure MultiLevelListMixin */
-    this.behaveAsAccordion = true;
-    /** @configure InteractiveListMixin */
-    this._listRole = 'menu';
-    /** @configure InteractiveListMixin */
-    this._activateOnTypedChars = true;
-    /** @configure DisclosureMixin */
-    this.invokerInteraction = 'click';
-  }
-
-  /**
-   * @param {import('lit-element').PropertyValues } changedProperties
-   */
-  firstUpdated(changedProperties) {
-    super.firstUpdated(changedProperties);
-
-    if (this.bar) {
-      this.orientation = 'horizontal';
-      if (this._listRole === 'menu') {
-        this._listRole = 'menubar';
-      }
-    }
-
-    if (this._activeMode === 'disclosure') {
-      this._listRole = 'list';
-    }
-
-    this._listNode.setAttribute('role', this._listRole);
   }
 }

@@ -1,17 +1,22 @@
 /**
  * Set of universal interactive list item state methods that are both compatible with
- * 'smart' (LionOption) and 'regular' items
+ * 'smart' (LionItem) and 'regular' items
  */
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @typedef {import('../LionItem.js').LionItem} LionItem
+ * @typedef {import('@lion/ui/listbox.js').LionOption} LionOption
+ */
+
+/**
+ * @param {HTMLElement|LionItem} item
  */
 export function isDisabled(item) {
   return item.hasAttribute('disabled') || item.getAttribute('aria-disabled') === 'true';
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement|LionItem} item
  */
 export function setDisabled(item, unset = false) {
   if (unset) {
@@ -24,21 +29,21 @@ export function setDisabled(item, unset = false) {
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement|LionItem} item
  */
 export function toggleDisabled(item) {
   setDisabled(item, isDisabled(item));
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement|LionItem} item
  */
 export function isChecked(item) {
   return item.hasAttribute('checked') || item.getAttribute('aria-selected') === 'true';
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement|LionItem} item
  */
 export function setChecked(item, unset = false) {
   const ariaAttr = item.getAttribute('role') === 'option' ? 'selected' : 'checked';
@@ -52,21 +57,21 @@ export function setChecked(item, unset = false) {
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement|LionItem} item
  */
 export function toggleChecked(item) {
   setChecked(item, isChecked(item));
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement|LionItem} item
  */
 export function isActive(item) {
   return item.hasAttribute('active');
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement|LionItem} item
  */
 export function setActive(item, unset = false) {
   if (unset) {
@@ -76,6 +81,9 @@ export function setActive(item, unset = false) {
   }
 }
 
+/**
+ * @param {HTMLElement|LionItem} item
+ */ 
 function getDirectTextContent(item) {
   return Array.from(item.childNodes)
     .filter(n => n.nodeName === '#text')
@@ -85,7 +93,7 @@ function getDirectTextContent(item) {
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {LionOption} item
  */
 export function getValue(item) {
   return (

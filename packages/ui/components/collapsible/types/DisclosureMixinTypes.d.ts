@@ -34,7 +34,7 @@ export declare class DisclosureHost {
 
   private __teardownAnimation(): void;
 
-  private __handeAnimateComplete(): void;
+  private __handleAnimateComplete(): void;
 }
 
 export declare function DisclosureImplementation<T extends Constructor<LitElement>>(

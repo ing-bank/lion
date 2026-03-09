@@ -1,8 +1,8 @@
 /* eslint-disable max-classes-per-file */
-import { html, css, LitElement } from 'lit';
+import { html, css } from 'lit';
 import { SlotMixin, DisabledMixin } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { uuid } from './utils/uuid.js';
+import { uuid } from '@lion/ui/core.js';
 import { isInView } from './utils/isInView.js';
 import {
   isDisabled,
@@ -15,77 +15,10 @@ import {
 } from './utils/listItemInteractions.js';
 
 /**
- * @typedef {import('../types/InteractiveListMixinTypes').InteractiveListItemRole} InteractiveListItemRole
+ * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
+ * @typedef {import('./LionItem.js').LionItem} LionItem
+ * @typedef {import('@lion/ui/listbox.js').LionOption} LionOption
  */
-
-/**
- * Lightweight component supporting InteractiveListItemRole as a type.
- *
- * Supports:
- * - 1. menu item
- * <lion-item> Item label </lion-item>
- * - 2. sub menu
- * <lion-item>
- *   <button slot="invoker"> Item label </button>
- *   <lion-menu slot="subitems"> ... </lion-menu>
- * </lion-item>
- *
- * Sets the role property on the right element. For case 1, this would be the item itself,
- * for case 2 it would be the [slot=invoker].
- */
-class LionItem extends LitElement {
-  static get properties() {
-    return {
-      type: String,
-    };
-  }
-
-  get _invokerNode() {
-    return Array.from(this.children).find(child => child.slot === 'invoker');
-  }
-
-  constructor() {
-    super();
-    /** @type {InteractiveListItemRole} */
-    this.type = '';
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-
-    if (!this._computedType) {
-      this._computedType = this.type || 'listitem';
-    }
-    if (this._invokerNode) {
-      this._invokerNode.setAttribute('role', this._computedType);
-    } else {
-      this.setAttribute('role', this._computedType);
-    }
-  }
-
-  static get styles() {
-    return css`
-      :host {
-        display: block;
-      }
-    `;
-  }
-
-  render() {
-    return html`
-      <slot name="invoker"></slot>
-      <slot></slot>
-    `;
-  }
-}
-
-class LionMenuitem extends LionItem {
-  connectedCallback() {
-    this._computedType = `menuitem${this.type}`;
-    super.connectedCallback();
-  }
-}
-customElements.define('lion-menuitem', LionMenuitem);
 
 /**
  * Handles keyboard interaction plus bookkeeping for active and selected states.
@@ -98,7 +31,7 @@ customElements.define('lion-menuitem', LionMenuitem);
  * An interactive list accepts two types of items:
  * - 'smart' items: responsible for registering themselves and reflecting accessibility properties,
  * for example LionOption
- * - 'regular' items with a [role="menuitem|menuitemcheckbox|menuitemradio|option|radio|checkbox|treeitem|listitem]
+ * - 'regular' items with a [role="menuitem|menuitemcheckbox|menuitemradio|option|treeitem|listitem]
  *
  * Features:
  * - keyboard navigation according to [aria specs](https://www.w3.org/TR/wai-aria-practices-1.1) for role
@@ -128,13 +61,6 @@ const InteractiveListMixinImplementation = superclass =>
           }
         `,
       ];
-    }
-
-    render() {
-      return html`
-        <slot name="list"></slot>
-        <slot></slot>
-      `;
     }
 
     static get properties() {
@@ -179,7 +105,7 @@ const InteractiveListMixinImplementation = superclass =>
       /** @type {ShadowRoot} */
       const { shadowRoot } = this;
       const slots = Array.from(shadowRoot.querySelectorAll('slot'));
-      return /** @type {HTMLSlotElement} */ (slots.find(s => !s.name));
+      return /** @type {HTMLSlotElement} */ (slots.find(s => s.name === 'content'));
     }
 
     /**
@@ -267,7 +193,7 @@ const InteractiveListMixinImplementation = superclass =>
     setCheckedIndex(index) {
       const item = this.listItems[index];
       if (item) {
-        if (!this.multiple) {
+        if (!this.multipleChoice) {
           // Uncheck all
           this.listItems.forEach(item => {
             setChecked(item, true);
@@ -368,6 +294,13 @@ const InteractiveListMixinImplementation = superclass =>
       this._setupList();
     }
 
+    render() {
+      return html`
+        <slot name="list"></slot>
+        <slot></slot>
+      `;
+    }
+
     _setupList() {
       /**
        * @param {HTMLElement} node
@@ -379,7 +312,7 @@ const InteractiveListMixinImplementation = superclass =>
 
       this._listItemsSlot.addEventListener('slotchange', () => {
         const nodes = /** @type {HTMLElement[]} */ (this._listItemsSlot.assignedNodes());
-        const newItems = [];
+        const newItems =  /** @type {HTMLElement[]} */ ([]);
 
         // Move items to _listNode and add interactive node references (with [role]) to listItems
         nodes.forEach(node => {
@@ -539,7 +472,7 @@ const InteractiveListMixinImplementation = superclass =>
 
     /**
      * @overridable
-     * @param {{chars: string[], item: HTMLElement}} config
+     * @param {{chars: string[], item: LionOption}} config
      */
     // eslint-disable-next-line class-methods-use-this
     _matchCharsAgainstItem({ chars, item }) {

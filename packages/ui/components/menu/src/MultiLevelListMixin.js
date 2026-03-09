@@ -6,6 +6,7 @@ import { InteractiveListMixin } from './InteractiveListMixin.js';
 /**
  * All logic that is needed for interactive lists that are allowed to have multiple nested, collapsible levels
  * Applies to [role=menu] and [role=tree]
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
  */
 const MultiLevelListMixinImplementation = superclass =>
   class extends DisclosureMixin(InteractiveListMixin(superclass)) {
@@ -47,7 +48,7 @@ const MultiLevelListMixinImplementation = superclass =>
       /**
        * When an invokerNode is supplied (usually by a parent level menu), it will take precedence
        * over [slot=invoker] and previousElementSibling with [data-invoker] attribute
-       * @type {HTMLElement}
+       * @type {HTMLElement | undefined}
        */
       this.invokerNode = undefined;
       /**
@@ -56,7 +57,7 @@ const MultiLevelListMixinImplementation = superclass =>
       this.handleFocus = true;
       /**
        * The parent list if level > 1
-       * @type {InteractiveList}
+       * @type {InteractiveList | undefined}
        */
       this.parentList = undefined;
       /**

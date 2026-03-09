@@ -1,5 +1,4 @@
-import { LionMenu } from './LionMenu.js';
-import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
+import { LionMenu, setChecked, toggleChecked } from '@lion/ui/menu.js';
 
 export class LionToolbar extends LionMenu {
   constructor() {
@@ -82,3 +81,5 @@ export class LionToolbar extends LionMenu {
     });
   }
 }
+customElements.define('lion-toolbar', LionToolbar);
+

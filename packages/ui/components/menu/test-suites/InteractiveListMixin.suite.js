@@ -1,5 +1,4 @@
 import { LitElement } from '@lion/core';
-import { Required } from '@lion/form-core';
 import { expect, html, fixture, unsafeStatic, defineCE } from '@open-wc/testing';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import '@lion/core/src/differentKeyEventNamesShimIE.js';
@@ -7,7 +6,7 @@ import '@lion/core/src/differentKeyEventNamesShimIE.js';
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
 /**
- * @typedef {import('../types/InteractiveListMixinTypes').InteractiveListItemRole} InteractiveListItemRole
+ * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
  */
 
 /** @type {InteractiveListItemRole[]} */
@@ -17,6 +16,7 @@ const supportedRoles = [
   'menuitemradio',
   'option',
   'treeitem',
+  'listitem',
   'radio',
   'checkbox',
 ];
