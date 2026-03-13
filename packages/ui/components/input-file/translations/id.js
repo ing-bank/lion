@@ -16,4 +16,7 @@ export default {
   selectTextDuplicateFileName: 'File dengan nama file yang sama sudah ada.',
   selectTextMultipleFile: 'Pilih beberapa file',
   selectTextSingleFile: 'Pilih berkas',
+  statusLoading: 'Mengunggah file, harap tunggu.',
+  statusSuccess: 'File {fileName} berhasil ditambahkan.',
+  statusRemoved: 'File {fileName} berhasil dihapus.',
 };

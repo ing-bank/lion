@@ -17,4 +17,7 @@ export default {
   selectTextDuplicateFileName: 'Un file con lo stesso nome file era già presente.',
   selectTextMultipleFile: 'Seleziona file',
   selectTextSingleFile: 'Seleziona file',
+  statusLoading: 'Caricamento file in corso. Attendere.',
+  statusSuccess: 'File {fileName} aggiunto correttamente.',
+  statusRemoved: 'File {fileName} rimosso correttamente.',
 };

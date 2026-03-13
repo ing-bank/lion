@@ -17,4 +17,7 @@ export default {
   selectTextDuplicateFileName: 'Er bestaat al een bestand met dezelfde bestandsnaam.',
   selectTextMultipleFile: 'Selecteer bestanden',
   selectTextSingleFile: 'Selecteer bestand',
+  statusLoading: 'Bestanden aan het uploaden, een moment geduld.',
+  statusSuccess: 'Het bestand {fileName} is met succes toegevoegd.',
+  statusRemoved: 'Het bestand {fileName} is met succes verwijderd.',
 };

@@ -369,7 +369,7 @@ export const uploadWithoutFormSubmit = () => {
             ev.target.uploadResponse.findIndex(file => file.name === ev.detail.newFiles[0].name)
           ].status = 'SUCCESS';
           ev.target.uploadResponse = [...ev.target.uploadResponse]; // update uploadResponse after API calls are completed
-        }, 3000);
+        }, 8000);
 
         setTimeout(() => {
           if (ev.detail.newFiles[1]) {
