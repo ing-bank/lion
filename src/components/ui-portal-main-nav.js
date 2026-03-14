@@ -30,8 +30,8 @@ export class UIPortalMainNav extends UIBaseElement {
     this.navData = [];
     this.getLink = item =>
       html`<a href="${item.redirect || item.url}" aria-current=${item.active ? 'page' : ''}
-        >${item.name}</a
-      >`;
+        >${item.name}
+      </a>`;
   }
 
   connectedCallback() {
@@ -151,7 +151,7 @@ const baseUINavMarkup = {
         <ul data-part="list" data-level="${level}">
           ${children.map(
             item =>
-              html`<li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
+              html` <li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
                 ${templates.navItem(context, { item, level })}
               </li>`,
           )}

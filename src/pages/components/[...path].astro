@@ -27,7 +27,7 @@ if (remarkPluginFrontmatter.mdjsStoriesPath) {
 }
 
 // Extract component name from path for sidebar highlighting
-const componentName = path?.split('/').pop() || path;
+const componentName = path?.split('/')[0] || path;
 
 // Create icon mapping for component headers
 const getComponentIcon = (name: string) => {
@@ -51,13 +51,33 @@ const components = allComponents
 
     return {
       name,
+      id: component.id,
       label,
       href: `/components/${component.id}/`,
     };
   })
   // Filter out the current component (don't show it in the sidebar)
-  .filter(component => !component.href.includes(`/components/${path}/`))
-  .sort((a, b) => a.label.localeCompare(b.label));
+  .filter(component => !component.href.includes(`/components/index`) && component.name.toLowerCase() !== component.id.toLowerCase())
+  .sort((a, b) => {
+    // First, sort by component ID (first part of the id)
+    const idA = a.id.split('/')[0];
+    const idB = b.id.split('/')[0];
+    const idCompare = idA.localeCompare(idB);
+    
+    if (idCompare !== 0) {
+      return idCompare;
+    }
+    
+    // Then sort by label priority within the same component
+    const priorityOrder = { 'Overview': 0, 'Use Cases': 1, 'Examples': 2, 'Extensions': 3, 'Reference': 5, 'API Table': 6 };
+    const priorityA = priorityOrder[a.label] ?? 4;
+    const priorityB = priorityOrder[b.label] ?? 4;
+    
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB;
+    }
+    return a.label.localeCompare(b.label);
+  });
 ---
 
 <ComponentDetailLayout 
@@ -68,10 +88,12 @@ const components = allComponents
   headings={headings.map(h => ({ name: h.text, url: h.slug }))}
 >
   <header class="component-header">
-    <div class="card-icon">
-      <Fragment set:html={getComponentIcon(componentName || '')} />
+    <div style="display: flex;">
+      <div class="card-icon">
+        <Fragment set:html={getComponentIcon(componentName || '')} />
+      </div>
+      <h1>{displayName}</h1>
     </div>
-    <h1>{displayName}</h1>
     <p class="lead">{entry.data?.description || `${displayName} component with accessible design and flexible styling.`}</p>
   </header>
 

@@ -209,6 +209,8 @@
     color: #e6e6e6;
 }
 
+
+
 @media (max-width: 768px) {
     .docs-layout {
         grid-template-columns: 1fr;

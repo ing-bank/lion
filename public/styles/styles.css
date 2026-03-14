@@ -8,6 +8,29 @@
     --border-color: #222222;
     --card-bg: #0a0a0a;
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    
+    /* Spacing */
+    --spacing-sm: 4px;
+    --spacing-md: 8px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+    --spacing-2xl: 32px;
+    --spacing-3xl: 40px;
+    
+    /* Border */
+    --border-radius-default: 6px;
+    --border-radius-circle: 50%;
+    --border-width-lg: 2px;
+    --border-width-default: 1px;
+    
+    /* Focus states */
+    --focus-border-color-inner: #ffffff;
+    --focus-border-color-outer: #FFC107;
+    
+    /* Additional backgrounds */
+    --bg-subtle: #111111;
+    --bg-surface: #000000;
+    --bg-default: #ffffff;
 }
 
 * {
@@ -15,6 +38,10 @@
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 button, input, select, textarea {

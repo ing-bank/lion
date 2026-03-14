@@ -6,13 +6,26 @@ const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
 const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
 const { title, componentName, description = "Accessible component with various states and styles.", components = [], headings = [] } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+// Group components by category
+const componentsByCategory = new Map();
+components.forEach(component => {
+  const [compName] = component.href.split('/').filter(p => p && p !== 'components');
+  const category = compName || 'other';
+  
+  if (!componentsByCategory.has(category)) {
+    componentsByCategory.set(category, []);
+  }
+  componentsByCategory.get(category).push(component);
+});
 ---
 
 <style>
   .docs-sidebar {
     width: 240px;
     padding-right: 1rem;
-    border-right: 1px solid #e5e5e5;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
     position: sticky;
     top: 0;
     height: 100vh;
@@ -23,7 +36,7 @@ const { title, componentName, description = "Accessible component with various s
     font-size: 0.875rem;
     font-weight: 600;
     text-transform: uppercase;
-    color: #666;
+    color: var(--text-secondary);
     margin: 1rem 0 0.75rem 0;
     padding: 0 1rem;
   }
@@ -93,7 +106,7 @@ const { title, componentName, description = "Accessible component with various s
   .component-link {
     display: block;
     padding: 0.5rem 1rem;
-    color: #333;
+    color: var(--text-primary);
     text-decoration: none;
     font-size: 0.875rem;
     border-left: 3px solid transparent;
@@ -102,14 +115,14 @@ const { title, componentName, description = "Accessible component with various s
   }
 
   .component-link:hover {
-    background-color: #f5f5f5;
-    color: #000;
+    background-color: rgba(255, 193, 7, 0.05);
+    color: var(--highlight-color);
   }
 
   .component-link.active {
-    color: #0066cc;
-    background-color: #f0f7ff;
-    border-left-color: #0066cc;
+    color: var(--highlight-color);
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left-color: var(--highlight-color);
     font-weight: 500;
   }
 
@@ -161,6 +174,9 @@ const { title, componentName, description = "Accessible component with various s
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+    <script src="@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
+
+
     <SEO
       title={title}
       description={description}
@@ -178,6 +194,7 @@ const { title, componentName, description = "Accessible component with various s
       }}
     />
     <script src="../components/ui-portal-inpage-nav.js"></script>
+    <script src="../components/demo-viewer/oj-viewer.js"></script>
 </head>
 <body>
     <div class="scroll-progress"></div>
@@ -193,18 +210,30 @@ const { title, componentName, description = "Accessible component with various s
                     <nav class="component-nav">
                         <h3>Components</h3>
                         <ul>
-                            {components.map((component) => {
-                                // Extract category from href (e.g., /components/buttons/button/ → buttons)
-                                const parts = component.href.split('/').filter(p => p && p !== 'components');
-                                const category = parts[0];
-                                const isActive = componentName === component.name;
-                                
+                            {Array.from(componentsByCategory.entries()).map(([category, items]) => {
+                                const hasActiveItem = items.some(component => 
+                                  category === componentName && currentPath.replace(/\/$/, '').toLowerCase().endsWith(component.href.replace(/\/$/, '').toLowerCase())
+                                );
                                 return (
-                                    <li class={`component-item ${isActive ? 'active' : ''}`}>
-                                        <a href={`${import.meta.env.BASE_URL}${component.href.replace(/\/$/, '')}`} class={`component-link ${isActive ? 'active' : ''}`} data-category={category}>
-                                            {component.label}
-                                        </a>
+                                <>
+                                    <li class="category-item">
+                                        <button class="category-toggle" data-category={category} aria-expanded={hasActiveItem ? "true" : "false"}>
+                                            {category.charAt(0).toUpperCase() + category.slice(1)}
+                                        </button>
                                     </li>
+                                    <ul class="category-submenu" data-category={category}>
+                                        {items.map((component) => {
+                                            const isActive = category === componentName && currentPath.replace(/\/$/, '').toLowerCase().endsWith(component.href.replace(/\/$/, '').toLowerCase());
+                                            return (
+                                                <li class="component-item">
+                                                    <a href={`${import.meta.env.BASE_URL}${component.href.replace(/\/$/, '')}`} class={`component-link ${isActive ? 'active' : ''}`} data-category={category} aria-current={isActive ? "page" : undefined}>
+                                                        {component.label}
+                                                    </a>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </>
                                 );
                             })}
                         </ul>
@@ -242,68 +271,35 @@ const { title, componentName, description = "Accessible component with various s
 </body>
 
 <script>
-  // Group components by category and make them collapsible
-  const nav = document.querySelector('.component-nav ul');
-  if (nav) {
-    const items = Array.from(nav.querySelectorAll('.component-item'));
-    const categories = new Map();
-
-    // Group items by category
-    items.forEach(item => {
-      const link = item.querySelector('.component-link');
-      const category = link?.dataset.category || 'other';
-      
-      if (!categories.has(category)) {
-        categories.set(category, []);
-      }
-      categories.get(category).push(item);
-    });
-
-    // Clear and rebuild with categories
-    nav.innerHTML = '';
+  // Handle category toggle interactions and persistence
+  document.querySelectorAll('.category-toggle').forEach(toggle => {
+    const category = toggle.getAttribute('data-category');
+    const submenu = document.querySelector(`.category-submenu[data-category="${category}"]`);
     
-    categories.forEach((items, category) => {
-      // Create category toggle
-      const categoryItem = document.createElement('li');
-      categoryItem.className = 'category-item';
-      
-      const categoryToggle = document.createElement('button');
-      categoryToggle.className = 'category-toggle';
-      categoryToggle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-      categoryToggle.setAttribute('data-category', category);
-      categoryToggle.setAttribute('aria-expanded', 'true');
-      
-      categoryItem.appendChild(categoryToggle);
-      nav.appendChild(categoryItem);
-      
-      // Create submenu for items
-      const submenu = document.createElement('ul');
-      submenu.className = 'category-submenu';
-      submenu.setAttribute('data-category', category);
-      
-      items.forEach(item => {
-        submenu.appendChild(item);
-      });
-      
-      nav.appendChild(submenu);
-      
-      // Toggle handler
-      categoryToggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        const isExpanded = categoryToggle.getAttribute('aria-expanded') === 'true';
-        categoryToggle.setAttribute('aria-expanded', !isExpanded);
-        submenu.classList.toggle('collapsed');
-        
-        // Persist state
-        localStorage.setItem(`category-${category}`, !isExpanded ? 'expanded' : 'collapsed');
-      });
-      
-      // Restore previous state
-      const savedState = localStorage.getItem(`category-${category}`);
-      if (savedState === 'collapsed') {
-        categoryToggle.setAttribute('aria-expanded', 'false');
-        submenu.classList.add('collapsed');
+    // Restore previous state from localStorage, or use current aria-expanded state
+    const savedState = localStorage.getItem(`category-${category}`);
+    if (savedState === 'collapsed') {
+      toggle.setAttribute('aria-expanded', 'false');
+      submenu?.classList.add('collapsed');
+    } else if (savedState === 'expanded') {
+      toggle.setAttribute('aria-expanded', 'true');
+      submenu?.classList.remove('collapsed');
+    } else {
+      // Use the aria-expanded value set in the template (based on active items)
+      if (toggle.getAttribute('aria-expanded') === 'false') {
+        submenu?.classList.add('collapsed');
       }
+    }
+    
+    // Toggle handler
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', !isExpanded);
+      submenu?.classList.toggle('collapsed');
+      
+      // Persist state
+      localStorage.setItem(`category-${category}`, !isExpanded ? 'expanded' : 'collapsed');
     });
-  }
+  });
 </script>
