@@ -18,8 +18,7 @@ if (!entry) {
     throw new Error(`Could not find entry by URL ${path}`);
 }
 
-const { remarkPluginFrontmatter } = await render(entry);
-const { Content, headings } = await render(entry);
+const { remarkPluginFrontmatter, Content, headings } = await render(entry);
 
 const loadDemoAttributes = {};
 if (remarkPluginFrontmatter.mdjsStoriesPath) {

@@ -178,138 +178,7 @@
     color: white;
 }
 
-/* Docs Content */
-.docs-content {
-    max-width: none;
-    min-width: 320px;
-}
-
-/* Markdown content styles */
-.docs-content h1 {
-    font-size: 2.5rem;
-    line-height: 1.2;
-    margin-top: 48px;
-    margin-bottom: 24px;
-    color: var(--text-primary);
-}
-
-.docs-content h1:first-child {
-    margin-top: 0;
-}
-
-.docs-content h2 {
-    font-size: 1.75rem;
-    line-height: 1.3;
-    margin-top: 40px;
-    margin-bottom: 16px;
-    color: var(--text-secondary);
-}
-
-.docs-content h3 {
-    font-size: 1.35rem;
-    line-height: 1.4;
-    margin-top: 32px;
-    margin-bottom: 12px;
-    color: var(--text-primary);
-}
-
-.docs-content h4,
-.docs-content h5,
-.docs-content h6 {
-    margin-top: 28px;
-    margin-bottom: 12px;
-    color: var(--text-primary);
-}
-
-.docs-content p {
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 16px;
-    color: var(--text-primary);
-}
-
-.docs-content a {
-    color: var(--highlight-color);
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.docs-content a:hover {
-    color: var(--highlight-color);
-    text-decoration: underline;
-}
-
-.docs-content ul,
-.docs-content ol {
-    margin-bottom: 16px;
-    padding-left: 32px;
-}
-
-.docs-content li {
-    margin-bottom: 8px;
-    line-height: 1.6;
-    color: var(--text-primary);
-}
-
-.docs-content code {
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-    padding: 2px 6px;
-    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
-    font-size: 0.9em;
-    color: var(--text-secondary);
-}
-
-.docs-content pre {
-    background: #111;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 16px;
-    overflow-x: auto;
-    margin-bottom: 16px;
-}
-
-.docs-content pre code {
-    background: none;
-    border: none;
-    padding: 0;
-    color: #e6e6e6;
-}
-
-.docs-content blockquote {
-    border-left: 4px solid var(--highlight-color);
-    padding-left: 16px;
-    margin-left: 0;
-    margin-bottom: 16px;
-    color: var(--text-secondary);
-}
-
-.docs-content img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 16px;
-    border-radius: 8px;
-}
-
-.docs-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 16px;
-}
-
-.docs-content table th {
-    background-color: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border-color);
-    padding: 12px;
-    text-align: left;
-    font-weight: 600;
-}
-
-.docs-content table td {
-    border: 1px solid var(--border-color);
-    padding: 12px;
-}
+/* Docs Content moved to styles.css */
 
 .component-header {
     margin-bottom: 60px;
@@ -478,6 +347,6 @@ ui-portal-inpage-nav {
     }
 }
 
-pre.astro-code {
+mdjs-preview pre.astro-code {
     visibility: hidden;
 }

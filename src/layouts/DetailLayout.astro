@@ -1,0 +1,335 @@
+---
+import { SEO } from "astro-seo";
+import TopNav from "../components/TopNav.astro";
+import { UIPortalInpageNav } from "../components/ui-portal-inpage-nav.js";
+
+const site = Astro.site || Astro.url.origin;
+const canonicalURL = new URL(Astro.url.pathname, site).toString();
+const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
+
+interface SidebarItem {
+  href: string;
+  label: string;
+}
+
+interface Heading {
+  name: string;
+  url: string;
+}
+
+interface Props {
+  title: string;
+  activeNavItem: string; // e.g., "components", "guides"
+  sectionName: string; // e.g., "Components", "Guides"
+  itemName?: string; // e.g., "button", "getting-started" for sidebar highlighting
+  description?: string;
+  backLink?: string;
+  backLinkLabel?: string;
+  items?: SidebarItem[];
+  itemsByCategory?: Map<string, SidebarItem[]>;
+  headings?: Heading[];
+}
+
+const {
+  title,
+  activeNavItem,
+  sectionName,
+  itemName,
+  description = "Accessible component with various states and styles.",
+  backLink = `${import.meta.env.BASE_URL}/${activeNavItem}/`,
+  backLinkLabel = `← Back to ${sectionName}`,
+  items = [],
+  itemsByCategory = new Map(),
+  headings = [],
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+
+// If items are provided but not categorized, put them all in the first category
+let componentsByCategory = itemsByCategory;
+if (items.length > 0 && componentsByCategory.size === 0) {
+  componentsByCategory = new Map();
+  componentsByCategory.set(sectionName.toLowerCase(), items);
+}
+---
+
+<style>
+  .docs-sidebar {
+    width: 240px;
+    padding-right: 1rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .component-nav h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin: 1rem 0 0.75rem 0;
+    padding: 0 1rem;
+  }
+
+  .component-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .category-item {
+    display: block;
+  }
+
+  .category-toggle {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: left;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .category-toggle:before {
+    content: '▼';
+    position: absolute;
+    left: 0.5rem;
+    font-size: 0.6rem;
+    transition: transform 0.2s ease;
+  }
+
+  .category-toggle[aria-expanded="false"]:before {
+    transform: rotate(-90deg);
+  }
+
+  .category-toggle:hover {
+    color: #333;
+  }
+
+  .category-submenu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    max-height: 1000px;
+    opacity: 1;
+    overflow: hidden;
+  }
+
+  .category-submenu.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  .component-item {
+    display: block;
+  }
+
+  .component-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
+    margin-left: 0.5rem;
+  }
+
+  .component-link:hover {
+    background-color: rgba(255, 193, 7, 0.05);
+    color: var(--highlight-color);
+  }
+
+  .component-link.active {
+    color: var(--highlight-color);
+    background-color: rgba(255, 193, 7, 0.1);
+    border-left-color: var(--highlight-color);
+    font-weight: 500;
+  }
+
+  .docs-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr 280px;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .docs-content {
+    grid-column: 2;
+  }
+
+  .docs-toc {
+    grid-column: 3;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+
+  @media (max-width: 1200px) {
+    .docs-layout {
+      grid-template-columns: 240px 1fr;
+    }
+    .docs-toc {
+      display: none;
+    }
+  }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="view-transition" content="same-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
+    <meta name="generator" content={Astro.generator} />
+    
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/styles.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/components.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/transitions.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/scroll-animations.css`>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script src="@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
+
+    <SEO
+      title={title}
+      description={description}
+      canonical={canonicalURL}
+      openGraph={{
+        basic: {
+          url: canonicalURL,
+          type: "website",
+          title: title,
+          image: resolvedImageWithDomain,
+        },
+        image: {
+          alt: `${title}`,
+        },
+      }}
+    />
+    <script src="../components/demo-viewer/oj-viewer.js"></script>
+</head>
+<body>
+    <div class="scroll-progress"></div>
+    <div class="grid-background"></div>
+    
+    <TopNav activeNavItem={activeNavItem} />
+
+    <main>
+        <div class="container">
+            <div class="docs-layout">
+                <aside class="docs-sidebar">
+                    <a href={backLink} class="back-link">{backLinkLabel}</a>
+                    <nav class="component-nav">
+                        <h3>{sectionName}</h3>
+                        <ul>
+                            {Array.from(componentsByCategory.entries()).map(([category, categoryItems]) => {
+                                const hasActiveItem = categoryItems.some(item => 
+                                  currentPath.replace(/\/$/, '').toLowerCase().endsWith(item.href.replace(/\/$/, '').toLowerCase())
+                                );
+                                return (
+                                <>
+                                    <li class="category-item">
+                                        <button class="category-toggle" data-category={category} aria-expanded={hasActiveItem ? "true" : "false"}>
+                                            {category.charAt(0).toUpperCase() + category.slice(1)}
+                                        </button>
+                                    </li>
+                                    <ul class="category-submenu" data-category={category}>
+                                        {categoryItems.map((item) => {
+                                            const isActive = currentPath.replace(/\/$/, '').toLowerCase().endsWith(item.href.replace(/\/$/, '').toLowerCase());
+                                            return (
+                                                <li class="component-item">
+                                                    <a href={`${import.meta.env.BASE_URL}${item.href.replace(/\/$/, '')}`} class={`component-link ${isActive ? 'active' : ''}`} data-category={category} aria-current={isActive ? "page" : undefined}>
+                                                        {item.label}
+                                                    </a>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </>
+                                );
+                            })}
+                        </ul>
+                    </nav>
+                </aside>
+
+                <div class="docs-content">
+                    <slot />
+                </div>
+
+                <aside class="docs-toc">
+                    <UIPortalInpageNav navData={headings} client:load />
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-row">
+                <div class="footer-brand">
+                    <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+                    <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
+                </div>
+                <div class="footer-links">
+                    <a href=`${import.meta.env.BASE_URL}/blog/`>Blog</a>
+                    <a href="https://github.com/ing-bank/lion/issues">Help</a>
+                    <a href="https://github.com/ing-bank/lion">GitHub</a>
+                    <a href=`${import.meta.env.BASE_URL}/about/slack/`>Slack</a>
+                    <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+<script>
+  // Handle category toggle interactions and persistence
+  document.querySelectorAll('.category-toggle').forEach(toggle => {
+    const category = toggle.getAttribute('data-category');
+    const submenu = document.querySelector(`.category-submenu[data-category="${category}"]`);
+    
+    // Restore previous state from localStorage, or use current aria-expanded state
+    const savedState = localStorage.getItem(`category-${category}`);
+    if (savedState === 'collapsed') {
+      toggle.setAttribute('aria-expanded', 'false');
+      submenu?.classList.add('collapsed');
+    } else if (savedState === 'expanded') {
+      toggle.setAttribute('aria-expanded', 'true');
+      submenu?.classList.remove('collapsed');
+    } else {
+      // Use the aria-expanded value set in the template (based on active items)
+      if (toggle.getAttribute('aria-expanded') === 'false') {
+        submenu?.classList.add('collapsed');
+      }
+    }
+    
+    // Toggle handler
+    toggle.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!isExpanded));
+      submenu?.classList.toggle('collapsed');
+      
+      // Persist state
+      localStorage.setItem(`category-${category}`, !isExpanded ? 'expanded' : 'collapsed');
+    });
+  });
+</script>
