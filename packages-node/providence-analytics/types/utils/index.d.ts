@@ -6,6 +6,7 @@ export type SwcScope = {
   bindings: { [key: string]: SwcBinding };
   path: SwcPath | null;
   getBinding: (IdentifierName: string) => SwcBinding;
+  dispose: () => void;
   _pendingRefsWithoutBinding: SwcNode[];
   _isIsolatedBlockStatement: boolean;
 };
@@ -22,10 +23,11 @@ export type SwcPath = {
   node: SwcNode;
   parent: SwcNode;
   stop: function;
-  scope: SwcScope;
+  scope?: SwcScope;
   parentPath: SwcPath | null | undefined;
   get: (id: string) => SwcPath | undefined;
   type: string;
+  traverse: (visitor: SwcVisitor) => void;
 };
 
 type SwcVisitorFn = (swcPath: SwcPath) => void;

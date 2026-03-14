@@ -1,12 +1,60 @@
 ---
-import { getEntry, render } from "astro:content";
-import MainLayout from "../../layouts/MainLayout.astro";
+import { getEntry, render, getCollection } from "astro:content";
+import DetailLayout from "../../layouts/DetailLayout.astro";
 
 const entry = await getEntry('lionGuides','index');
 
 const { Content, headings } = await render(entry);
+
+// Build guides list for sidebar navigation
+const allGuides = await getCollection("lionGuides");
+const guidesByCategory = new Map();
+
+allGuides
+  .filter(guide => guide.id !== 'index') // Exclude the index page from sidebar
+  .forEach(guide => {
+    const [category] = guide.id.split('/');
+    const guidePath = guide.id;
+    const name = guide.id.split('/').pop() || guide.id;
+    const label = guide.data?.title || name?.charAt(0).toUpperCase() + name?.slice(1) || 'Guide';
+
+    if (!guidesByCategory.has(category)) {
+      guidesByCategory.set(category, []);
+    }
+    
+    guidesByCategory.get(category).push({
+      href: `/guides/${guidePath}/`,
+      label,
+    });
+  });
+
+// Sort categories and their items
+const sortedCategories = new Map(
+  Array.from(guidesByCategory.entries())
+    .sort(([catA], [catB]) => catA.localeCompare(catB))
+    .map(([category, items]) => [
+      category,
+      items.sort((a, b) => a.label.localeCompare(b.label))
+    ])
+);
 ---
 
-<MainLayout>
+<DetailLayout
+  title="Guides - Lion UI"
+  activeNavItem="guides"
+  sectionName="Guides"
+  description="Guides for building with Lion UI components"
+  backLink={`${import.meta.env.BASE_URL}/`}
+  backLinkLabel="← Back to Home"
+  itemsByCategory={sortedCategories}
+  headings={headings.map(h => ({ name: h.text, url: h.slug }))}
+>
+  <header class="guide-header">
+    <h1>{entry.data?.title || 'Guides'}</h1>
+    {entry.data?.description && <p class="lead">{entry.data.description}</p>}
+  </header>
+
+  <div class="guide-content">
     <Content />
-</MainLayout>
+  </div>
+</DetailLayout>

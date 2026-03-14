@@ -46,8 +46,8 @@ export class OverlaysManager {
      * @private
      */
     this.__shownList = [];
-    /** @private */
-    this.__siblingsInert = false;
+    /** @protected */
+    this._siblingsInert = false;
     /**
      * @type {WeakMap<OverlayController, OverlayController[]>}
      * @private
@@ -118,7 +118,7 @@ export class OverlaysManager {
 
     this.__list = [];
     this.__shownList = [];
-    this.__siblingsInert = false;
+    this._siblingsInert = false;
 
     if (OverlaysManager.__globalStyleNode) {
       document.head.removeChild(
@@ -131,40 +131,7 @@ export class OverlaysManager {
   /** Features right now only for Global Overlay Manager */
 
   get siblingsInert() {
-    return this.__siblingsInert;
-  }
-
-  disableTrapsKeyboardFocusForAll() {
-    this.shownList.forEach(ctrl => {
-      if (ctrl.trapsKeyboardFocus === true && ctrl.disableTrapsKeyboardFocus) {
-        ctrl.disableTrapsKeyboardFocus({ findNewTrap: false });
-      }
-    });
-  }
-
-  /**
-   * @param {'local' | 'global' | undefined} placementMode
-   */
-  informTrapsKeyboardFocusGotEnabled(placementMode) {
-    if (this.siblingsInert === false && placementMode === 'global') {
-      this.__siblingsInert = true;
-    }
-  }
-
-  /**
-   * @param {{ disabledCtrl?:OverlayController, findNewTrap?:boolean }} options
-   */
-  informTrapsKeyboardFocusGotDisabled({ disabledCtrl, findNewTrap = true } = {}) {
-    const next = this.shownList.find(
-      ctrl => ctrl !== disabledCtrl && ctrl.trapsKeyboardFocus === true,
-    );
-    if (next) {
-      if (findNewTrap) {
-        next.enableTrapsKeyboardFocus();
-      }
-    } else if (this.siblingsInert === true) {
-      this.__siblingsInert = false;
-    }
+    return this._siblingsInert;
   }
 
   /** PreventsScroll */

@@ -64,7 +64,7 @@
 .card-icon {
     width: 48px;
     height: 48px;
-    margin-bottom: 20px;
+    margin-bottom: 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,6 +73,7 @@
     color: var(--highlight-color);
     transition: all 0.2s;
     border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-right: 1rem;
 }
 
 .component-card:hover .card-icon {
@@ -135,7 +136,7 @@
 }
 
 .back-link:hover {
-    color: #3b82f6;
+    color: var(--highlight-color);
 }
 
 .component-nav h3 {
@@ -169,18 +170,15 @@
 
 .component-nav a:hover {
     background-color: #f1f5f9;
-    color: #3b82f6;
+    color: var(--highlight-color);
 }
 
 .component-nav a.active {
-    background-color: #3b82f6;
+    background-color: var(--highlight-color);
     color: white;
 }
 
-/* Docs Content */
-.docs-content {
-    max-width: none;
-}
+/* Docs Content moved to styles.css */
 
 .component-header {
     margin-bottom: 60px;
@@ -197,6 +195,10 @@
     font-size: 1.25rem;
     color: var(--text-secondary);
     line-height: 1.6;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .demo-section {
@@ -272,15 +274,16 @@ ui-portal-inpage-nav {
 
 /* Component Detail Header */
 .component-header {
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 2rem;
     margin-bottom: 2rem;
+    margin-top: 5rem;
 }
 
 .component-header .card-icon {
     width: 48px;
     height: 48px;
-    background: #3b82f6;
+    background: var(--highlight-color);
     border-radius: 8px;
     display: flex;
     align-items: center;
@@ -292,19 +295,23 @@ ui-portal-inpage-nav {
 .component-header h1 {
     font-size: 2.5rem;
     font-weight: 600;
-    color: #1e293b;
+    /* color: #1e293b; */
     margin: 0 0 1rem;
 }
 
 .component-header .lead {
     font-size: 1.25rem;
-    color: #64748b;
+    color: var(--text-secondary);
     margin: 0;
     line-height: 1.6;
 }
 
 .component-content {
     max-width: none;
+}
+
+.component-content h1 {
+    display: none;
 }
 
 /* Demo sections */
@@ -338,4 +345,8 @@ ui-portal-inpage-nav {
     .component-header h1 {
         font-size: 2rem;
     }
+}
+
+mdjs-preview pre.astro-code {
+    visibility: hidden;
 }

@@ -16,8 +16,6 @@ const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
 const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
 const { title = "Components - Lion UI", components = [] } = Astro.props;
-
-console.log(components.length, 'dedddvok');
 ---
 
 <!DOCTYPE html>

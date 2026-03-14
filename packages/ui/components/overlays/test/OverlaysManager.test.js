@@ -46,7 +46,7 @@ describe('OverlaysManager', () => {
     // @ts-ignore [allow-private-in-test]
     expect(mngr.__shownList).to.be.empty;
     // @ts-ignore [allow-private-in-test]
-    expect(mngr.__siblingsInert).to.be.false;
+    expect(mngr._siblingsInert).to.be.false;
   });
 
   it('can add/remove controllers', () => {

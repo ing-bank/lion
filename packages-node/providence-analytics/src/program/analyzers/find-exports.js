@@ -270,9 +270,12 @@ export default class FindExportsAnalyzer extends Analyzer {
 
     let transformedFile = findExportsPerAstFile(ast, analyzerCfg);
 
-    transformedFile = await normalizeSourcePaths(transformedFile, relativePath, projectPath);
-    transformedFile = await trackdownRoot(transformedFile, relativePath, projectPath);
-    transformedFile = cleanup(transformedFile);
+    try {
+      transformedFile = await normalizeSourcePaths(transformedFile, relativePath, projectPath);
+      transformedFile = await trackdownRoot(transformedFile, relativePath, projectPath);
+    } finally {
+      transformedFile = cleanup(transformedFile);
+    }
 
     return { result: transformedFile };
   }
