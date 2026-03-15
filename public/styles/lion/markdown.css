@@ -478,7 +478,7 @@
 /*****************  + */
 
 .astro-code {
-  color: var(--markdown-syntax-color, #393a34);
+  color: #d1d1d1;
   font-family:
     SFMono-Regular,
     Consolas,
@@ -497,8 +497,39 @@
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
-  background-color: var(--markdown-syntax-background-color, #f6f8fa);
+  background-color: #1a1a1a;
   border-radius: 3px;
+}
+
+.astro-code span {
+  color: #d1d1d1;
+}
+
+/* Warm yellow highlights for keywords and important tokens */
+.astro-code .token.keyword,
+.astro-code .token.function,
+.astro-code .token.class-name {
+  color: #ffd100;
+}
+
+/* Light grey for strings */
+.astro-code .token.string,
+.astro-code .token.attr-value {
+  color: #b3b3b3;
+}
+
+/* Grey for comments */
+.astro-code .token.comment,
+.astro-code .token.prolog,
+.astro-code .token.doctype,
+.astro-code .token.cdata {
+  color: #808080;
+}
+
+/* Light grey for operators */
+.astro-code .token.operator,
+.astro-code .token.punctuation {
+  color: #b3b3b3;
 }
 
 .language-autohotkey .token.selector {

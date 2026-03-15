@@ -4,7 +4,7 @@ published: false
 description: A static website with docs and demos for lion
 date: 2021-03-10
 tags: [javascript, rocket, documentation]
-cover_image: /blog/images/introducing-lions-website-cover-image.jpg
+cover_image: /next/blog/images/introducing-lions-website-cover-image.jpg
 eleventyNavigation:
   key: Extending lions website
   title: Extending lions website

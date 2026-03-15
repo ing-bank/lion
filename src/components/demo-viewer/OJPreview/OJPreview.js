@@ -1,318 +1,73 @@
+/* eslint-disable class-methods-use-this */
 import { html, css, nothing, render } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 import { LionSelect } from '@lion/ui/select.js';
+import { LionButton } from '@lion/ui/button.js';
+import { LionSwitch } from '@lion/ui/switch.js';
 // eslint-disable-next-line import/no-extraneous-dependencies, import/no-relative-packages
-import { ScopedElementsMixin } from '../../../packages/ui/components/core/src/ScopedElementsMixin.js';
+import { ScopedElementsMixin } from '../../../../packages/ui/components/core/src/ScopedElementsMixin.js';
 
 import {
   cssClassModifierInterfaceRegistry,
   ingCssClasses,
-  globalStateMap,
-} from './test-and-demo-helpers/modifier-interfaces/index.js';
-// import { appendAllIngWebStylesToRoot } from './test-and-demo-helpers/index.js';
-import { LegacyOJPreview } from './LegacyOJPreview.js';
-// import aliasAndBaseTokensForDarkMode from './style/tokens-demo-viewer.css.js';
+} from '../test-and-demo-helpers/modifier-interfaces/index.js';
+import OJViewerStyle from '../style/OJViewer.css.js';
 import {
   codeIcon,
   copyIcon,
-  resetIcon,
   closeIcon,
   settingsIcon,
   shrinkViewIcon,
   expandViewIcon,
   externalDemoIcon,
-  modifierCombineIcon,
   copiedCorrectlyFeedbackIcon,
-} from './icons.js';
-// @ts-expect-error
-import * as csstree from 'css-tree/dist/csstree.esm';
+} from '../icons.js';
 
-const supportsAdoptingStyleSheets =
-  window.ShadowRoot &&
-  // @ts-ignore
-  (window.ShadyCSS === undefined || window.ShadyCSS.nativeShadow) &&
-  'adoptedStyleSheets' in Document.prototype &&
-  'replace' in CSSStyleSheet.prototype;
-
-/**
- * @typedef {import('lit').CSSResult} CSSResult
- */
-
-// const themes = ['legacy', 'retail', 'youth', 'business', 'private', 'wholesale', 'wireframe'];
-// const themesBasic = ['legacy', 'oj2', 'wireframe'];
-const surfaces = [
-  'default',
-  'primary',
-  'secondary',
-  'secondary-subtle',
-  'secondary-moderate',
-  'secondary-bold',
-  'tertiary',
-  'tertiary-subtle',
-  'tertiary-moderate',
-  'tertiary-bold',
-  'quaternary',
-  'quaternary-subtle',
-  'quaternary-moderate',
-  'quaternary-bold',
-  'neutral',
-  'neutral-subtle',
-  'neutral-moderate',
-  'neutral-bold',
-  'inverse',
-];
-const devices = ['mobile', 'desktop'];
-const modes = ['light', 'dark'];
+import { HybridLitMdjsPreview } from './HybridLitMdjsPreview.js';
+import { surfaces, modes } from './constants.js';
+import {
+  getModelSyncedWithDemoDom,
+  getValFromRadioNodeList,
+  updateModifiersInDemo,
+} from './utils/modifier-sync.js';
+import { multiplyMatrix } from './utils/matrix.js';
+import { getSheetsForEl, replaceInSheets } from './utils/sheet-management.js';
 
 /**
- * @param {*} options
+ * OJPreview component for demo viewing and testing
+ * @typedef {object} OJPreviewProperties
+ * @property {string} themePref
+ * @property {string} surfacePref
+ * @property {string} devicePref
+ * @property {string} darkModePref
+ * @property {boolean} mdjsStoryName
+ * @property {number} deviceHeight
+ * @property {string} iframeUrl
+ * @property {string} simulatorUrl
+ * @property {Array<any>} themes
+ * @property {Array<any>} platforms
+ * @property {Array<any>} sizes
+ * @property {string} platform
+ * @property {string} previewTheme
+ * @property {string} size
+ * @property {object} sizeData
+ * @property {boolean} edgeDistance
+ * @property {boolean} autoHeight
+ * @property {boolean} sameSettings
+ * @property {boolean} rememberSettings
+ * @property {boolean} deviceMode
+ * @property {boolean} __supportsClipboard
+ * @property {string} __copyButtonText
  */
-function getModelSyncedWithDemoDom({ model, modifiers, modifierMappers, demoEl }) {
-  const updatedModel = { ...model };
 
-  // Now that we have the model, update our component that we rendered.
-  for (const variant of modifiers.variants || []) {
-    // @ts-expect-error
-    const variantFound = updatedModel.variants.find(v => v.name === variant.name);
-    if (variantFound) {
-      // @ts-expect-error
-      const mapperFound = modifierMappers.find(m => m.name === variant.name);
-      variantFound.value = mapperFound?.getter(demoEl, variant.name, {
-        variantValues: variant.values,
-      });
-    }
-  }
-  for (const state of modifiers.states || []) {
-    // @ts-expect-error
-    const mapperFound = modifierMappers.find(m => m.name === state);
-    const shouldBeActive = mapperFound?.getter(demoEl, state, {});
-    // @ts-expect-error
-    const stateIdx = updatedModel.states.findIndex(s => s === state);
-    if (stateIdx === -1 && shouldBeActive) {
-      updatedModel.states.push(state);
-    }
-  }
+// @ts-expect-error - HybridLitMdjsPreview extends MdJsPreview which is a LitElement
+export class OJPreview extends ScopedElementsMixin(HybridLitMdjsPreview) {
+  static __shadowRootOptions = { mode: 'open' };
 
-  return updatedModel;
-}
-
-/**
- * @param {RadioNodeList} radioNodeList
- */
-function getValFromRadioNodeList(radioNodeList) {
-  if (radioNodeList[0].type === 'radio') {
-    return radioNodeList.value;
-  }
-  return Array.from(radioNodeList)
-    .filter(r => r.checked)
-    .map(r => r.value);
-}
-
-/**
- * @param {*} options
- */
-function updateModifiersInDemo({ model, modifiers, demoEl, modifierMappers }) {
-  // Now that we have the model, update our component that we rendered.
-  for (const variant of modifiers.variants || []) {
-    // @ts-expect-error
-    const variantFound = model.variants.find(v => v.name === variant.name);
-    if (variantFound) {
-      // @ts-expect-error
-      const mapperFound = modifierMappers.find(m => m.name === variant.name);
-      mapperFound?.setter(demoEl, variant.name, variantFound.value, {
-        variantValues: variant.values,
-      });
-    }
-  }
-  for (const state of modifiers.states || []) {
-    // @ts-expect-error
-    const mapperFound = modifierMappers.find(m => m.name === state);
-    mapperFound?.setter(demoEl, state, model.states.includes(state), {});
-  }
-}
-
-/**
- * Say we have 3 statesL ['hover', 'focus', 'pressed']
- * We want all possible combinations of these states:
- * - ['', '', ''] (none)
- * - ['hover', '', ''] (one state pos1)
- * - ['', 'focus', ''] (one state pos2)
- * - ['', '', 'pressed'] (one state pos3)
- * - ['hover', 'focus', ''] (two states pos1)
- * - ['', 'focus', 'pressed'] (two states pos2)
- * - ['hover', '', 'pressed'] (two states pos3)
- * - ['hover', 'focus', 'pressed'] (all)
- *
- * Create a matrix of 0s and 1s that can be mapped to the state boolean values
- * Adds 0 and 1 to each entry in the matrix on every iteration
- * - [[]]
- * - [[0], [1]]
- * - [[0,0], [0,1], [1,0], [1,1]]
- * - etc.
- * The 0s and 1s can be mapped to the state boolean values above
- * @param {number} iterationsLeft
- * @param {Array<Array<number>>} arr
- * @returns {Array<Array<number>>}
- */
-function multiplyMatrix(iterationsLeft, arr = [[]]) {
-  if (iterationsLeft === 0) return arr;
-
-  /** @type {Array<Array<number>>} */
-  const newArr = [];
-  for (const entry of arr) {
-    newArr.push([0, ...entry]);
-    newArr.push([1, ...entry]);
-  }
-  return multiplyMatrix(iterationsLeft - 1, newArr);
-}
-
-/**
- * When a csstree Prelude contains unknown css syntax, it will be parsed as type 'Raw' instead of 'SelectorList'.
- * In that case, replace via string replace.
- * @param {string} selectorListRaw
- * @param {{ name:string; pseudoClass:string; lionGlobalAttr:string }[]} statesToReplace
- * @returns {string}
- */
-function replaceInRawSelectorList(selectorListRaw, statesToReplace) {
-  const selectorList = selectorListRaw.split(',').map(s => s.trim());
-  const selectorsToBePrepended = [];
-  for (const selector of selectorList) {
-    let newSelector = selector;
-    for (const { name, pseudoClass, lionGlobalAttr } of statesToReplace) {
-      if (selector.includes(pseudoClass)) {
-        newSelector = newSelector.replace(pseudoClass, `._m-${name}`);
-      }
-      // TODO: we probably need to enhance this with regex for attrs like [atrr~=val]
-      if (selector.includes(`[${lionGlobalAttr}]`)) {
-        newSelector = newSelector.replace(`[${lionGlobalAttr}]`, `._m-${name}`);
-      }
-    }
-    if (newSelector !== selector) {
-      selectorsToBePrepended.push(newSelector);
-    }
-  }
-  if (selectorsToBePrepended.length) {
-    return [...selectorsToBePrepended, ...selectorList].join(', ');
-  }
-  return selectorListRaw;
-}
-
-/**
- * @param {string} cssTxt
- * @param {string[]} states - a set of css pseudo classes that should be replaced in demo
- */
-function replaceTxtWithModifierDemoClasses(cssTxt, states) {
-  const statesThatHavePseudoClassOrGlobalAttr = states.filter(s => {
-    const found = globalStateMap.find(g => g.name === s);
-    return found?.pseudoClass || found?.lionGlobalAttr;
-  });
-  const statesToReplace = /** @type {{ name:string; pseudoClass:string }[]} */ (
-    statesThatHavePseudoClassOrGlobalAttr.map(s => ({
-      name: s,
-      pseudoClass: globalStateMap.find(g => g.name === s)?.pseudoClass,
-      lionGlobalAttr: globalStateMap.find(g => g.name === s)?.lionGlobalAttr,
-    }))
-  );
-
-  const ast = csstree.parse(cssTxt);
-  csstree.walk(
-    ast,
-    (
-      /** @type {{ type: string; prelude: { type: string; value: string; children: any; }; }} */ node,
-    ) => {
-      if (node.type === 'Rule') {
-        if (node.prelude.type === 'Raw') {
-          // @ts-expect-error
-          node.prelude.value = replaceInRawSelectorList(node.prelude.value, statesToReplace);
-        } else {
-          // Since css-tree does not understand 'modern' css syntax like ":host(<children>)",
-          // we just convert prelude.type === 'SelectorList' to 'Raw' and replace the pseudo classes like above.
-          const rawValue = csstree.generate(node.prelude);
-          node.prelude.type = 'Raw';
-          delete node.prelude.children;
-          // @ts-expect-error
-          node.prelude.value = replaceInRawSelectorList(rawValue, statesToReplace);
-        }
-      }
-    },
-  );
-
-  // generate CSS from AST
-  const replacedResult = csstree.generate(ast);
-  return replacedResult;
-}
-
-/**
- * @param {HTMLElement & {shadowRoot: ShadowRoot}} el
- * @param {{ strategy?: 'web-component' | 'css-component' }} opts
- */
-function getSheetsForEl(el, { strategy = 'web-component' } = {}) {
-  // @ts-expect-error
-  const searchRoot = el.parentElement || el.getRootNode()?.host;
-  const elsFound = [el];
-  if (strategy === 'css-component') {
-    elsFound.push(searchRoot);
-  } else {
-    const scopedElNames = Object.keys({
-      ...searchRoot.constructor?.scopedElements,
-      // @ts-expect-error
-      ...el.constructor?.scopedElements,
-    });
-    const childrenToConsider = scopedElNames.filter(
-      scopedEl => scopedEl.startsWith('lion-') || scopedEl.startsWith('ing-'),
-    );
-    for (const child of childrenToConsider) {
-      let childEl = el.shadowRoot.querySelector(child);
-      if (!childEl) {
-        childEl = el.querySelector(child);
-      }
-      if (childEl) {
-        // @ts-expect-error
-        elsFound.push(childEl);
-      }
-    }
-  }
-
-  const sheetsOrStyles = [];
-  for (const el of elsFound) {
-    if (supportsAdoptingStyleSheets) {
-      sheetsOrStyles.push(...el.shadowRoot.adoptedStyleSheets);
-    } else {
-      sheetsOrStyles.push(...Array.from(el.shadowRoot?.querySelectorAll('style') || []));
-    }
-  }
-
-  return sheetsOrStyles;
-}
-
-/**
- *
- * @param {(CSSStyleSheet|HTMLStyleElement)[]} sheetsOrStyles
- * @param {string[]} states
- */
-function replaceInSheets(sheetsOrStyles, states) {
-  for (const sheetOrStyle of sheetsOrStyles) {
-    if (sheetOrStyle instanceof CSSStyleSheet) {
-      const sheet = sheetOrStyle;
-
-      const cssTxt = Array.from(sheet.cssRules)
-        .map(rule => rule.cssText)
-        .join('\n');
-      sheet.replaceSync(replaceTxtWithModifierDemoClasses(cssTxt, states));
-    } else {
-      const style = sheetOrStyle;
-
-      const cssTxt = style.innerHTML;
-      style.innerHTML = replaceTxtWithModifierDemoClasses(cssTxt, states);
-    }
-  }
-}
-
-export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
   static get scopedElements() {
     return {
-      // @ts-ignore
-      ...super.scopedElements,
+      'lion-button': LionButton,
+      'lion-switch': LionSwitch,
       'lion-select': LionSelect,
     };
   }
@@ -336,7 +91,7 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
 
   static get styles() {
     return [
-      ...super.styles,
+      OJViewerStyle,
       // aliasAndBaseTokensForDarkMode,
       css`
         .modifier-combinator fieldset {
@@ -545,10 +300,6 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
           font-size: auto;
           line-height: auto;
         }
-
-        ::slotted(pre.astro-code) {
-          visibility: visible;
-        }
       `,
     ];
   }
@@ -567,6 +318,7 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
   constructor() {
     super();
 
+    this.language = 'en-GB';
     this.modifiers = {};
 
     /** @type {'dark'|'light'|'auto'} */
@@ -651,10 +403,11 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
   }
 
   updateSurfaceNode() {
+    // @ts-expect-error
     if (this.mdjsStoryName?.toLowerCase().includes('cardexpressive')) {
       this._demoElNode?.setAttribute('surface', this.surfacePref);
     } else {
-      let surfaceNode = /** @type {HTMLElement} */ (
+      const surfaceNode = /** @type {HTMLElement} */ (
         this._demoCanvasNode?.querySelector('.demo-viewer__surface')
       );
       surfaces.forEach(surface => {
@@ -675,48 +428,34 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
       curThemeVal = '';
     }
     let curThemeValArr = curThemeVal.split(/\s/g);
-    let newVal;
     dataThemeTypes.forEach(theme => {
       curThemeValArr = curThemeValArr.filter(v => v !== theme);
     });
 
     curThemeValArr.push(selectedTheme);
-    newVal = Array.from(new Set(curThemeValArr)).join(' ');
-    this._demoCanvasNode?.setAttribute('data-theme', newVal);
+    const newVal = Array.from(new Set(curThemeValArr)).join(' ');
+    this._demoCanvasNode?.setAttribute('data-theme', newVal || '');
   }
 
   checkIfExpressive() {
+    // @ts-expect-error
     if (this.mdjsStoryName?.toLowerCase().includes('noexpressive')) {
       this.isExpressive = false;
       return;
     }
 
+    // @ts-expect-error
     if (this.mdjsStoryName?.toLowerCase().includes('expressive')) {
       this.isExpressive = true;
-      return;
     }
-
-    const componentUrl = document.URL.split('components/')[1];
-    const componentName = componentUrl?.split('/')[0];
-
-    // // Dynamically import components only if it exists
-    // try {
-    //   import('../componentsOverview.js').then(({ components }) => {
-    //     if (components) {
-    //       components.map(component => {
-    //         if (component.folder === componentName) {
-    //           this.isExpressive = component.expressive || false;
-    //         }
-    //       });
-    //     }
-    //   });
-    // } catch {
-    //   // components module not available, skip
-    // }
   }
 
   /**
-   * @param {{choices:string[]; name:string; modelV:string}} cfg
+   * @param {Object} cfg - Configuration object
+   * @param {string[]} cfg.choices - Array of choice values
+   * @param {string} cfg.name - Field name
+   * @param {string} cfg.modelV - Current model value
+   * @returns {any}
    */
   renderSingleChoice({ choices, name, modelV }) {
     return html`<fieldset>
@@ -736,7 +475,11 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
   }
 
   /**
-   * @param {{choices:string[]; name:string; modelV: string[]}} cfg
+   * @param {Object} cfg - Configuration object
+   * @param {string[]} cfg.choices - Array of choice values
+   * @param {string} cfg.name - Field name
+   * @param {string[]} cfg.modelV - Current model values
+   * @returns {any}
    */
   renderMultiChoice({ choices, name, modelV }) {
     return html`<fieldset>
@@ -756,9 +499,12 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
   }
 
   /**
-   * @param {{choices:string[]; name:string; modelV: string[]}} cfg
+   * @param {Object} cfg - Configuration object
+   * @param {string[]} cfg.choices - Array of choice values
+   * @param {string} cfg.name - Field name
+   * @returns {any}
    */
-  renderSelect({ choices, name, modelV }) {
+  renderSelect({ choices, name }) {
     return html`
       <fieldset>
         <lion-select name="${name}">
@@ -980,13 +726,11 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
     function syncBackToModel(event) {
       const { form } = event.target;
       const nameOfChangedModifier = event.target.name;
-      // const mo
       // @ts-expect-error
       const variantFound = model.variants.find(v => v.name === nameOfChangedModifier);
       if (variantFound) {
         // @ts-expect-error
         variantFound.value = getValFromRadioNodeList(form.elements[nameOfChangedModifier]);
-        event.target.value;
       } else {
         model[nameOfChangedModifier] = getValFromRadioNodeList(
           // @ts-expect-error
@@ -998,49 +742,30 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
     }
 
     return html`<div role="toolbar" class="modifier-combinator">
-      <!-- <div class="icon-toolbar" role="toolbar">
-        <button
-          class="tools-btn"
-          title="Reset to initial state"
-          @click="${this._resetModifierCombineModel}"
-        >
-          ${resetIcon}
-        </button>
-
-        <button
-          class="tools-btn"
-          .title="${`Show all modifierCombinations (${this.__amountOfModifierCombinations})`}"
-          aria-pressed="${this._shouldShowModifierCombinationsMatrix ? 'true' : 'false'}"
-          @click="${() => {
-        this._shouldShowModifierCombinationsMatrix = !this._shouldShowModifierCombinationsMatrix;
-        this.updateComplete.then(() => {
-          // @ts-expect-error
-          this._matrixDialogRef.value?.showModal();
-        });
-      }}"
-        >
-          ${modifierCombineIcon}
-        </button>
-      </div> -->
+      <!-- 
+        Commented out: icon toolbar with reset and modifier combinations buttons
+        <div class="icon-toolbar" role="toolbar">
+          <button class="tools-btn" title="Reset to initial state">
+            Reset Icon
+          </button>
+          <button class="tools-btn">
+            Modifier Combine Icon
+          </button>
+        </div> 
+      -->
 
       ${this._shouldShowModifierCombinationsMatrix
         ? html`<div>${this.renderModifierCombinationsDialog({ modifiers })}</div>`
         : nothing}
 
-      <!-- <div @input="\${this._switchTheme}">
-        \${this.renderSingleChoice({
-          choices: this.isExpressive ? themes : themesBasic,
-          name: 'Theme',
-          modelV: this.themePref,
-        })}
-      </div> -->
+      <!-- TODO: Add theme selector when ready -->
+
       ${this.isExpressive
         ? html`
             <div @model-value-changed="${this._switchSurface}">
               ${this.renderSelect({
                 choices: surfaces,
                 name: 'Expressive surface',
-                modelV: this.surfacePref,
               })}
             </div>
           `
@@ -1053,24 +778,17 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
         })}
       </div>
       <!-- TODO: enable when device tokens are in use -->
-      <!-- <div @input="${this._switchDevice}">
-        ${this.renderSingleChoice({
-        choices: devices,
-        name: 'Device',
-        modelV: this.devicePref,
-      })}
-      </div> -->
 
       <form @input="${syncBackToModel}">
         ${variants?.length
           ? html` <fieldset>
               <legend>variants</legend>
               ${variants.map(
-                ({
-                  // @ts-expect-error
-                  values,
-                  name,
-                }) =>
+                /**
+                 * @param {any} param
+                 * @returns {any}
+                 */
+                ({ values, name }) =>
                   this.renderSingleChoice({
                     choices: values,
                     name,
@@ -1093,7 +811,9 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
     return html`
       ${!disableSizeForNow && this.simulatorUrl
         ? html`
-            <div class="platform-size-controls">${this.renderPlatform()} ${this.renderSize()}</div>
+            <div class="platform-size-controls">
+              ${this.renderPlatforms()} ${this.renderSizes()}
+            </div>
           `
         : ``}
 
@@ -1102,8 +822,9 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
           class="tools-btn"
           .title="${`${this._shouldShowModifierCombinator ? 'close' : 'open'}  modifier settings`}"
           aria-pressed="${this._shouldShowModifierCombinator ? 'true' : 'false'}"
-          @click="${() =>
-            (this._shouldShowModifierCombinator = !this._shouldShowModifierCombinator)}"
+          @click="${() => {
+            this._shouldShowModifierCombinator = !this._shouldShowModifierCombinator;
+          }}"
         >
           ${settingsIcon}
         </button>
@@ -1112,23 +833,31 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
           class="tools-btn"
           .title="${`${this._shouldShowCodePreview ? 'close' : 'open'} code preview`}"
           aria-pressed="${this._shouldShowCodePreview ? 'true' : 'false'}"
-          @click="${() => (this._shouldShowCodePreview = !this._shouldShowCodePreview)}"
+          @click="${() => {
+            this._shouldShowCodePreview = !this._shouldShowCodePreview;
+          }}"
         >
           ${codeIcon}
         </button>
 
-        ${this.simulatorUrl
-          ? html`
-              <a
-                class="tools-btn"
-                href=${this.iframeUrl}
-                target="_blank"
-                rel="noopener"
-                title="Open simulation in new window"
-                >${externalDemoIcon}</a
-              >
-            `
-          : nothing}
+        ${
+          // @ts-expect-error
+          this.simulatorUrl
+            ? html`
+                <a
+                  class="tools-btn"
+                  href=${
+                    // @ts-expect-error
+                    this.iframeUrl
+                  }
+                  target="_blank"
+                  rel="noopener"
+                  title="Open simulation in new window"
+                  >${externalDemoIcon}</a
+                >
+              `
+            : nothing
+        }
       </div>
     `;
   }
@@ -1158,6 +887,195 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
           ${!this.__isCopying ? copyIcon : copiedCorrectlyFeedbackIcon}
         </button>
       </div>`;
+  }
+
+  renderThemes() {
+    // @ts-expect-error
+    if (this.themes.length) {
+      return html`
+        <fieldset>
+          <legend>Theme</legend>
+          ${this.themes.map(
+            /**
+             * @param {any} previewTheme
+             * @returns {any}
+             */
+            previewTheme => html`
+              <label>
+                <input
+                  type="radio"
+                  name="theme"
+                  ?checked=${this.previewTheme === previewTheme.key}
+                  .value=${previewTheme.key}
+                  @change=${
+                    /** @param {Event} ev */ ev => {
+                      if (ev.target) {
+                        // @ts-expect-error
+                        this.previewTheme = /** @type {HTMLInputElement} */ (ev.target).value;
+                      }
+                    }
+                  }
+                />
+                ${previewTheme.name}
+              </label>
+            `,
+          )}
+        </fieldset>
+      `;
+    }
+    return nothing;
+  }
+
+  renderEdgeDistance() {
+    return html`
+      <lion-switch
+        label="Apply distance to edge"
+        ?checked=${this.edgeDistance}
+        @change=${
+          /** @param {Event} ev */ ev => {
+            if (ev.target) {
+              this.edgeDistance = /** @type {HTMLInputElement} */ (ev.target).checked;
+            }
+          }
+        }
+      ></lion-switch>
+    `;
+  }
+
+  renderPlatforms() {
+    // @ts-expect-error
+    if (this.platforms.length) {
+      return html`
+        <fieldset>
+          <legend>Platform</legend>
+          ${this.platforms.map(
+            /**
+             * @param {any} platform
+             * @returns {any}
+             */
+            platform => html`
+              <label>
+                <input
+                  type="radio"
+                  name="platform"
+                  ?checked=${this.platform === platform.key}
+                  .value=${platform.key}
+                  @change=${
+                    /** @param {Event} ev */ ev => {
+                      if (ev.target) {
+                        // @ts-expect-error
+                        this.changePlatform(/** @type {HTMLInputElement} */ (ev.target).value);
+                      }
+                    }
+                  }
+                />
+                ${platform.name}
+              </label>
+            `,
+          )}
+        </fieldset>
+      `;
+    }
+    return nothing;
+  }
+
+  renderSizes() {
+    // @ts-expect-error
+    if (this.sizes.length) {
+      return html`
+        <fieldset>
+          <legend>Viewer Size</legend>
+          ${
+            // @ts-expect-error
+            this.getSizesFor(this.platform).map(
+              /**
+               * @param {any} size
+               * @returns {any}
+               */
+              size => html`
+                <label>
+                  <input
+                    type="radio"
+                    name="size"
+                    ?checked=${this.size === size.key}
+                    .value=${size.key}
+                    @change=${
+                      /** @param {Event} ev */ ev => {
+                        if (ev.target) {
+                          this.size = /** @type {HTMLInputElement} */ (ev.target).value;
+                        }
+                      }
+                    }
+                  />
+                  ${size.name}
+                </label>
+              `,
+            )
+          }
+        </fieldset>
+      `;
+    }
+    return nothing;
+  }
+
+  renderAutoHeight() {
+    return html`
+      <lion-switch
+        label="Fit height to content"
+        ?checked=${this.autoHeight}
+        @change=${
+          /** @param {Event} ev */ ev => {
+            if (ev.target) {
+              this.autoHeight = /** @type {HTMLInputElement} */ (ev.target).checked;
+            }
+          }
+        }
+      ></lion-switch>
+    `;
+  }
+
+  renderSameSettings() {
+    return html`
+      <lion-switch
+        label="Same settings for all simulations"
+        ?checked=${this.sameSettings}
+        @change=${
+          /** @param {Event} ev */ ev => {
+            if (ev.target) {
+              this.sameSettings = /** @type {HTMLInputElement} */ (ev.target).checked;
+            }
+          }
+        }
+      ></lion-switch>
+    `;
+  }
+
+  renderRememberSettings() {
+    if (!this.sameSettings) {
+      return html``;
+    }
+    return html`
+      <lion-switch
+        label="Remember settings"
+        ?checked=${this.rememberSettings}
+        @change=${
+          /** @param {Event} ev */ ev => {
+            if (ev.target) {
+              this.rememberSettings = /** @type {HTMLInputElement} */ (ev.target).checked;
+            }
+          }
+        }
+      ></lion-switch>
+    `;
+  }
+
+  renderLocalization() {
+    // @ts-expect-error
+    return html` <div>${this.renderLanguages()}</div> `;
+  }
+
+  renderSyncSettings() {
+    return html` <div>${this.renderSameSettings()} ${this.renderRememberSettings()}</div> `;
   }
 
   render() {
@@ -1249,14 +1167,13 @@ export class OJPreview extends ScopedElementsMixin(LegacyOJPreview) {
     for (const c of Array.from(lvlEl.children)) {
       if (fn(c)) {
         return /** @type {HTMLElement} */ (c);
-      } else {
-        if (c.shadowRoot) {
-          const result = this._recurseFindDemoNode(/** @type {ShadowRoot} */ (c.shadowRoot), fn);
-          if (result) return result;
-        }
-        const result = this._recurseFindDemoNode(c, fn);
+      }
+      if (c.shadowRoot) {
+        const result = this._recurseFindDemoNode(/** @type {ShadowRoot} */ (c.shadowRoot), fn);
         if (result) return result;
       }
+      const result = this._recurseFindDemoNode(c, fn);
+      if (result) return result;
     }
   }
 

@@ -56,6 +56,14 @@ body {
     overflow-x: hidden;
 }
 
+*:focus-visible,
+.pagefind-ui--reset *:focus-visible{
+    outline-color: var(--highlight-color);
+    outline-style: dotted;
+    outline-width: var(--border-width-lg);
+    outline-offset: 2px;
+}
+
 /* Subtle Grid Background */
 .grid-background {
     position: fixed;
@@ -126,6 +134,7 @@ body {
     display: flex;
     list-style: none;
     gap: 24px;
+    align-items: center;
 }
 
 .main-nav a {
@@ -133,10 +142,27 @@ body {
     text-decoration: none;
     font-size: 0.9rem;
     transition: color 0.2s;
+    padding: 0.5rem;
 }
 
 .main-nav a:hover {
     color: var(--highlight-color);
+}
+
+.search-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: var(--text-secondary);
+    transition: color 0.2s ease, background-color 0.2s ease;
+    border-radius: var(--border-radius-default);
+}
+
+.search-link:hover {
+    color: var(--highlight-color);
+    background-color: rgba(255, 193, 7, 0.1);
 }
 
 /* Hero */
@@ -680,4 +706,8 @@ body {
 .docs-content table td {
     border: 1px solid var(--border-color);
     padding: 12px;
+}
+
+.flex {
+    display: flex;
 }

@@ -123,8 +123,7 @@ body.blog-page {
 }
 
 .post-card:hover .post-image {
-    filter: grayscale(0%);
-}
+filter: invert(75%) sepia(60%) saturate(691%) hue-rotate(345deg) brightness(99%) contrast(113%);}
 
 .post-content {
     padding: 24px;
