@@ -45,16 +45,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--card-bg);
     border-radius: 12px;
     color: var(--highlight-color);
     transition: all 0.2s;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--highlight-color);
 }
 
 .component-card:hover .card-icon {
-    background: rgba(255, 193, 7, 0.1);
-    border-color: rgba(255, 193, 7, 0.2);
+    background: var(--card-bg);
+    border-color: var(--highlight-color);
     color: var(--highlight-color);
 }
 
@@ -62,6 +62,7 @@
     width: 24px;
     height: 24px;
     stroke-width: 1.5;
+    stroke: var(--highlight-color);
 }
 
 .component-card h3 {

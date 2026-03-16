@@ -1,10 +1,13 @@
 /* eslint-disable class-methods-use-this */
-import { html, css, nothing, render } from 'lit';
+import { html, css, nothing, render, LitElement } from 'lit';
 import { ref, createRef } from 'lit/directives/ref.js';
 import { LionSelect } from '@lion/ui/select.js';
 import { LionButton } from '@lion/ui/button.js';
 import { LionSwitch } from '@lion/ui/switch.js';
+// @ts-expect-error
 // eslint-disable-next-line import/no-extraneous-dependencies, import/no-relative-packages
+import { MdJsPreview } from '@mdjs/mdjs-preview';
+// eslint-disable-next-line import/no-relative-packages
 import { ScopedElementsMixin } from '../../../../packages/ui/components/core/src/ScopedElementsMixin.js';
 
 import {
@@ -23,7 +26,6 @@ import {
   copiedCorrectlyFeedbackIcon,
 } from '../icons.js';
 
-import { HybridLitMdjsPreview } from './HybridLitMdjsPreview.js';
 import { surfaces, modes } from './constants.js';
 import {
   getModelSyncedWithDemoDom,
@@ -60,8 +62,7 @@ import { getSheetsForEl, replaceInSheets } from './utils/sheet-management.js';
  * @property {string} __copyButtonText
  */
 
-// @ts-expect-error - HybridLitMdjsPreview extends MdJsPreview which is a LitElement
-export class OJPreview extends ScopedElementsMixin(HybridLitMdjsPreview) {
+export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
   static __shadowRootOptions = { mode: 'open' };
 
   static get scopedElements() {
@@ -87,6 +88,37 @@ export class OJPreview extends ScopedElementsMixin(HybridLitMdjsPreview) {
       __isCopying: Boolean,
       mdjsStoryName: { attribute: 'mdjs-story-name', type: String },
     };
+  }
+
+  /**
+   * Override to render story to shadow DOM instead of light DOM
+   */
+  update(changeProps) {
+    // Skip MdJsPreview's update to avoid light DOM rendering
+    // Call LitElement's update directly instead
+    // @ts-expect-error
+    LitElement.prototype.update.call(this, changeProps);
+
+    // Render story to shadow DOM
+    if (changeProps && changeProps.has('story') && this.story) {
+      const storyContainer = this.shadowRoot?.querySelector('#story-container');
+      if (storyContainer) {
+        this.renderStory(
+          // @ts-expect-error
+          this.story({ shadowRoot: this }),
+          storyContainer,
+        );
+      }
+    }
+  }
+
+  /**
+   * @param {any} htmlTag
+   * @param {any} container
+   */
+  // eslint-disable-next-line class-methods-use-this
+  renderStory(htmlTag, container) {
+    render(htmlTag, container);
   }
 
   static get styles() {
@@ -1087,8 +1119,8 @@ export class OJPreview extends ScopedElementsMixin(HybridLitMdjsPreview) {
         </div>
         <div class="demo-viewer__section demo-viewer__section--demo">
           <div class="demo-viewer__inner-section" data-darkmode-demo>
-            <div class="demo-viewer__surface surface">
-              <slot name="story"></slot>
+            <div class="demo-viewer__surface surface" id="story-container">
+              <!-- Story will be rendered here by HybridLitMdjsPreview -->
             </div>
           </div>
         </div>
@@ -1221,8 +1253,9 @@ export class OJPreview extends ScopedElementsMixin(HybridLitMdjsPreview) {
    */
   _initModifierCombinations() {
     const ctor = /** @type {typeof OJPreview} */ this.constructor;
+    // Find demo node in shadow DOM
     // @ts-expect-error
-    const { el, name } = ctor._findDemoNode(this.lightDomRenderTarget);
+    const { el, name } = ctor._findDemoNode(this.shadowRoot);
     this.__demoElNode = el;
     this._modifierInterface =
       this.__demoElNode.constructor.getModifierInterface?.() ||
@@ -1261,9 +1294,8 @@ export class OJPreview extends ScopedElementsMixin(HybridLitMdjsPreview) {
     this.__initialModifierCombineModel = updatedModel;
     this._modifierCombineModel = updatedModel;
 
-    // @ts-expect-error
-    const demoRoot = this.lightDomRenderTarget.getRootNode().host;
-    this._createSyncListeners(el, demoRoot);
+    // Use the component itself as the root for event listeners
+    this._createSyncListeners(el, this);
     this.updateSurfaceNode();
   }
 

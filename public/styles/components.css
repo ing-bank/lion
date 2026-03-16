@@ -8,6 +8,10 @@
     font-size: 3rem;
     font-weight: 600;
     margin-bottom: 16px;
+    background: linear-gradient(180deg, #ffffff 0%, #888888 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     color: var(--text-primary);
 }
 
@@ -38,6 +42,10 @@
     
     .page-header h1 {
         font-size: 2rem;
+        background: linear-gradient(180deg, #ffffff 0%, #888888 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 }
 
@@ -68,17 +76,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.03);
     border-radius: 12px;
-    color: var(--highlight-color);
+    background-color: var(--card-bg);
     transition: all 0.2s;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--highlight-color);
     margin-right: 1rem;
 }
 
 .component-card:hover .card-icon {
-    background: rgba(255, 193, 7, 0.1);
-    border-color: rgba(255, 193, 7, 0.2);
+    background: var(--card-bg);
+    border-color: var(--highlight-color);
     color: var(--highlight-color);
 }
 
@@ -86,7 +93,7 @@
     width: 24px;
     height: 24px;
     stroke-width: 1.5;
-    stroke: var(--border-color);
+    stroke: var(--highlight-color);
 }
 
 .component-card h3 {
@@ -300,19 +307,19 @@ ui-portal-inpage-nav {
     margin: 0 0 1rem;
 }
 
-.docs-content__header .lead {
+.docs-content__content p:first-of-type,
+.docs-content__content .lead {
     font-size: 1.25rem;
     color: var(--text-secondary);
     margin: 0;
     line-height: 1.6;
+    margin-bottom: 3rem;
+    border-top: 1px solid var(--text-secondary);
+    padding-top: 2rem;
 }
 
 .docs-content__content {
     max-width: none;
-}
-
-.docs-content__content h1 {
-    display: none;
 }
 
 /* Demo sections */

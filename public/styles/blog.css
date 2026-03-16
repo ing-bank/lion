@@ -42,7 +42,7 @@ body.blog-page {
 }
 
 .blog-page .main-nav a {
-    color: var(--blog-text-secondary);
+    color: var(--blog-line);
 }
 
 .blog-page .main-nav a:hover {
