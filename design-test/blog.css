@@ -123,7 +123,16 @@ body.blog-page {
 }
 
 .post-card:hover .post-image {
-filter: invert(75%) sepia(60%) saturate(691%) hue-rotate(345deg) brightness(99%) contrast(113%);}
+    filter: invert(75%) sepia(60%) saturate(691%) hue-rotate(345deg) brightness(99%) contrast(113%);
+}
+
+.post-card [role="img"] {
+    position: relative;
+}
+
+.post-card:hover [role="img"] {
+    filter: invert(75%) sepia(60%) saturate(691%) hue-rotate(345deg) brightness(99%) contrast(113%);
+}
 
 .post-content {
     padding: 24px;
@@ -213,4 +222,32 @@ filter: invert(75%) sepia(60%) saturate(691%) hue-rotate(345deg) brightness(99%)
     .blog-hero h1 {
         font-size: 2.5rem;
     }
+}
+
+/* View Transitions for Blog Posts */
+/* Assign view-transition-name to the card on the blog overview page */
+.post-card .post-image {
+    view-transition-name: blog-image;
+}
+
+.post-card .post-title {
+    view-transition-name: blog-title;
+    width: fit-content;
+}
+
+/* Assign matching view-transition-name to elements on the blog detail page */
+.blog-cover-image {
+    view-transition-name: blog-image;
+}
+
+.blog-article-header h1 {
+    view-transition-name: blog-title;
+    width: fit-content;
+}
+
+/* Custom animation */
+::view-transition-group(blog-image),
+::view-transition-group(blog-title) {
+    animation-duration: 0.4s;
+    animation-timing-function: cubic-bezier(0.2, 0, 0.2, 1);
 }
