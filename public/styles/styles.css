@@ -81,9 +81,9 @@ body {
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 3rem;
 }
 
 /* Header */
@@ -287,6 +287,19 @@ body {
     }
     100% {
         transform: translateY(-50%) perspective(1000px) rotateY(-12deg) rotateX(2deg) translateY(-20px);
+    }
+}
+
+@keyframes link-slide-in {
+    0% {
+        background-color: rgba(255, 193, 7, 0.4);
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+    100% {
+        background-color: rgba(255, 193, 7, 0.4);
+        transform: scaleX(1);
+        transform-origin: left;
     }
 }
 
@@ -577,7 +590,7 @@ body {
 
 /* Docs Content */
 .docs-content {
-    max-width: none;
+    max-width: 800px;
     min-width: 320px;
     padding-top: 5rem;
 }
@@ -586,9 +599,9 @@ body {
 .docs-content h1 {
     font-size: 2.5rem;
     line-height: 1.2;
-    margin-top: 48px;
-    margin-bottom: 24px;
-    background: linear-gradient(180deg, #ffffff 0%, #888888 100%);
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(180deg, #ffffff 0%, #d4d4d4 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -602,8 +615,8 @@ body {
 .docs-content h2 {
     font-size: 1.75rem;
     line-height: 1.3;
-    margin-top: 40px;
-    margin-bottom: 16px;
+    margin-top: 4rem;
+    margin-bottom: 1rem;
     color: var(--text-secondary);
 }
 
@@ -625,20 +638,28 @@ body {
 
 .docs-content p {
     font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 16px;
+    line-height: 2;
+    margin-bottom: 2rem;
     color: var(--text-primary);
 }
 
 .docs-content a {
-    color: var(--highlight-color);
-    text-decoration: none;
-    transition: color 0.2s;
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--highlight-color);
+    text-underline-offset: 8px;
+    text-decoration-thickness: 1px;
+    transition: background-color 0.2s, color 0.2s;
 }
 
 .docs-content a:hover {
-    color: var(--highlight-color);
-    text-decoration: underline;
+    text-decoration: none;
+    background-color: var(--highlight-color);
+    color: #000;
+    padding: 2px 4px;
+    margin: -2px -4px;
+    border-radius: 2px;
+    animation: link-slide-in 0.1s ease-out;
 }
 
 .docs-content ul,

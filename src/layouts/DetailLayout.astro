@@ -89,7 +89,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
     padding: 0.5rem 1rem;
     background: none;
     border: none;
-    color: #666;
+    color: #888;
     font-size: 0.75rem;
     font-weight: 600;
     text-align: left;
@@ -161,7 +161,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
   .docs-layout {
     display: grid;
     grid-template-columns: 240px 1fr 280px;
-    gap: 2rem;
+    gap: 4rem;
     align-items: start;
   }
 
@@ -176,6 +176,10 @@ if (items.length > 0 && componentsByCategory.size === 0) {
     height: fit-content;
     max-height: calc(100vh - 40px);
     overflow-y: auto;
+  }
+
+  .logo-text-svg {
+    filter: grayscale(100%) contrast(12) brightness(0.25);
   }
 
   @media (max-width: 1200px) {

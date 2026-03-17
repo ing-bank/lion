@@ -2,8 +2,9 @@ import lit from '@astrojs/lit';
 import { defineConfig } from 'astro/config';
 import { mdjsParse, mdjsStoryParse, mdjsSetupCode } from '@mdjs/core';
 import pagefind from 'astro-pagefind';
-import { remarkProcessDemos } from './src/utils/remark-plugings/remark-process-demos.mjs';
-import { remarkModifiedTime } from './src/utils/remark-plugings/remark-modified-time.mjs';
+import { remarkProcessDemos } from './src/utils/remark-plugins/remark-process-demos.mjs';
+import { remarkModifiedTime } from './src/utils/remark-plugins/remark-modified-time.mjs';
+import { remarkRewriteMdLinks } from './src/utils/remark-plugins/remark-rewrite-md-links.mjs';
 
 const mdjsSetupConfig = {
   simulationSettings: {
@@ -30,6 +31,7 @@ export default defineConfig({
       [mdjsSetupCode, mdjsSetupConfig],
       remarkProcessDemos,
       remarkModifiedTime,
+      remarkRewriteMdLinks,
     ],
     shikiConfig: {
       themes: {

@@ -76,10 +76,10 @@ const sortedCategories = new Map(
   itemsByCategory={sortedCategories}
   headings={headings.map(h => ({ name: h.text, url: h.slug }))}
 >
-  <header class="docs-content__header guide-header">
+  <!-- <header class="docs-content__header guide-header">
     <h1>{displayName}</h1>
     {entry.data?.description && <p class="lead">{entry.data.description}</p>}
-  </header>
+  </header> -->
 
   <div class="docs-content__content guide-content">
     <load-demo {...loadDemoAttributes}><Content /></load-demo>

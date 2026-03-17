@@ -102,6 +102,7 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
     // Render story to shadow DOM
     if (changeProps && changeProps.has('story') && this.story) {
       const storyContainer = this.shadowRoot?.querySelector('#story-container');
+      // const storyContainer = this.querySelector('.demo-viewer__inner-section');
       if (storyContainer) {
         this.renderStory(
           // @ts-expect-error
@@ -182,15 +183,18 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
           cursor: pointer;
           fill: var(--text-primary);
           border-radius: var(--border-radius-circle);
+          transition:
+            background-color 200ms ease-in-out,
+            fill 200ms ease-in-out,
+            opacity 200ms ease-in-out;
         }
 
         .demo-viewer {
           background-color: var(--border-color);
         }
 
-        .demo-viewer__section--modifier-combinator .tools-btn:hover {
-          background:
-            linear-gradient(0deg, var(--highlight-color), var(--highlight-color)), var(--bg-subtle);
+        .tools-btn:hover {
+          background-color: rgba(var(--highlight-color-rgb, 0, 0, 0), 0.08);
         }
 
         .tools-btn:focus {
@@ -208,6 +212,11 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
 
         .tools-btn[aria-pressed='true'] {
           fill: var(--highlight-color);
+          opacity: 1;
+        }
+
+        .tools-btn[aria-pressed='true']:hover {
+          background-color: rgba(var(--highlight-color-rgb, 0, 0, 0), 0.12);
         }
 
         .demo-viewer__section.demo-viewer__section--demo {
@@ -226,8 +235,6 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
         }
 
         .demo-viewer {
-          backdrop-filter: blur(20px) saturate(180%);
-          -webkit-backdrop-filter: blur(20px) saturate(180%);
           border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 

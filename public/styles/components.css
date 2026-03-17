@@ -307,13 +307,14 @@ ui-portal-inpage-nav {
     margin: 0 0 1rem;
 }
 
-.docs-content__content p:first-of-type,
+.docs-content__content > p:first-of-type,
+.docs-content__content > load-demo > p:first-of-type,
 .docs-content__content .lead {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     color: var(--text-secondary);
     margin: 0;
     line-height: 1.6;
-    margin-bottom: 3rem;
+    margin-bottom: 5rem;
     border-top: 1px solid var(--text-secondary);
     padding-top: 2rem;
 }
