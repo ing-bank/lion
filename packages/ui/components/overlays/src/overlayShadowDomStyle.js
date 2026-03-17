@@ -126,6 +126,9 @@ export const overlayShadowDomStyle = css`
     background-image: none;
     border-style: none;
     padding: 0px;
+    transform: translateZ(
+      0px
+    ); /* 'hack' that makes sure popperjs (that is applied one level lower) works correctly in deeply nested shadow roots */
   }
 
   /** 
