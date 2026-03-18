@@ -649,6 +649,7 @@ body {
     text-decoration-color: var(--highlight-color);
     text-underline-offset: 8px;
     text-decoration-thickness: 1px;
+    text-decoration-style: dashed;
     transition: background-color 0.2s, color 0.2s;
 }
 
