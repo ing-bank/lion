@@ -4,7 +4,7 @@ published: true
 description: Lion has been a long user of the scoped registry - always requiring a polyfill - but no more. Load the polyfill only if you need it.
 date: 2022-04-05
 tags: [javascript, polyfills]
-cover_image: /next/blog/images/introducing-lions-website-cover-image.jpg
+cover_image: /blog/images/introducing-lions-website-cover-image.jpg
 eleventyNavigation:
   key: Lion without polyfills
   title: Lion without polyfills

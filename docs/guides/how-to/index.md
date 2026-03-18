@@ -22,4 +22,4 @@ Whether you're just getting started with Lion, building your first form, extendi
 - Build custom form fields tailored to your needs
 - Follow proven patterns and best practices used by the Lion community
 
-If you can't find what you're looking for, check out our [Fundamentals](../fundamentals/) section for deeper conceptual knowledge, or visit our [Components](../../components/) documentation for detailed API references.
+If you can't find what you're looking for, check out our [Fundamentals](../../fundamentals/) section for deeper conceptual knowledge, or visit our [Components](../../components/) documentation for detailed API references.
