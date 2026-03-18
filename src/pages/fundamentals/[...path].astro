@@ -1,6 +1,6 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
-import InPageNavLayout from "../../layouts/InPageNavLayout.astro";
+import DetailLayout from "../../layouts/DetailLayout.astro";
 
 export async function getStaticPaths() {
     const entries = await getCollection("lionFundamentals");
@@ -16,19 +16,69 @@ const entry = await getEntry("lionFundamentals", path);
 
 if (!entry) {
     // Handle Error, for example:
-    throw new Error(`Could not find component by URL ${path}`);
+    throw new Error(`Could not find fundamental by URL ${path}`);
 }
-const { remarkPluginFrontmatter } = await render(entry);
+
+const { remarkPluginFrontmatter, Content, headings } = await render(entry);
 
 const loadDemoAttributes = {};
 if (remarkPluginFrontmatter.mdjsStoriesPath) {
   loadDemoAttributes['data-import-path'] = remarkPluginFrontmatter.mdjsStoriesPath;
 }
 
+// Extract fundamental name from path for sidebar highlighting
+const fundamentalName = path?.split('/')[0] || path;
+
+// Get display name from entry data or fallback to path
+const displayName = entry.data?.title || fundamentalName?.charAt(0).toUpperCase() + fundamentalName?.slice(1) || 'Fundamental';
+
+// Build fundamentals list for sidebar navigation
+const allFundamentals = await getCollection("lionFundamentals");
+const fundamentalsByCategory = new Map();
+
+allFundamentals
+  .filter(fundamental => fundamental.id !== 'index') // Exclude the index page from sidebar
+  .forEach(fundamental => {
+    const [category] = fundamental.id.split('/');
+    const fundamentalPath = fundamental.id;
+    const name = fundamental.id.split('/').pop() || fundamental.id;
+    const label = fundamental.data?.title || name?.charAt(0).toUpperCase() + name?.slice(1) || 'Fundamental';
+
+    if (!fundamentalsByCategory.has(category)) {
+      fundamentalsByCategory.set(category, []);
+    }
+    
+    fundamentalsByCategory.get(category).push({
+      href: `/fundamentals/${fundamentalPath}/`,
+      label,
+    });
+  });
+
+// Sort categories and their items
+const sortedCategories = new Map(
+  Array.from(fundamentalsByCategory.entries())
+    .sort(([catA], [catB]) => catA.localeCompare(catB))
+    .map(([category, items]) => [
+      category,
+      items.sort((a, b) => a.label.localeCompare(b.label))
+    ])
+);
 ---
 
-<InPageNavLayout entry={entry}>
-  <load-demo {...loadDemoAttributes}></load-demo>
+<DetailLayout
+  title={`${displayName} - Lion UI`}
+  activeNavItem="fundamentals"
+  sectionName="Fundamentals"
+  itemName={fundamentalName}
+  description={entry.data?.description || `${displayName} fundamental.`}
+  backLink={`${import.meta.env.BASE_URL}/fundamentals/`}
+  backLinkLabel="← Back to Fundamentals"
+  itemsByCategory={sortedCategories}
+  headings={headings.map(h => ({ name: h.text, url: h.slug }))}
+>
+  <div class="docs-content__content fundamentals-content">
+    <load-demo {...loadDemoAttributes}><Content /></load-demo>
+  </div>
 
   <script>
     class LoadDemo extends HTMLElement {
@@ -54,4 +104,4 @@ if (remarkPluginFrontmatter.mdjsStoriesPath) {
 
     customElements.define('load-demo', LoadDemo);
   </script>
-</InPageNavLayout>
+</DetailLayout>

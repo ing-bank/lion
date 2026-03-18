@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 // @ts-expect-error
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as csstree from 'css-tree/dist/csstree.esm';

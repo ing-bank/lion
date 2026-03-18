@@ -1,5 +1,5 @@
 ---
-title: Components
+title: Components - Lion UI
 parts:
   - Components
 eleventyNavigation:

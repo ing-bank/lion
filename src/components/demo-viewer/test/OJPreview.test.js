@@ -1,4 +1,4 @@
-import { expect, fixture as _fixture, html, aTimeout } from '@open-wc/testing';
+import { expect } from '@open-wc/testing';
 import { OJPreview } from '../OJPreview/OJPreview.js';
 
 /**
@@ -8,10 +8,9 @@ import { OJPreview } from '../OJPreview/OJPreview.js';
 
 // Register OJPreview as a custom element for testing
 if (!customElements.get('oj-preview')) {
+  // @ts-ignore
   customElements.define('oj-preview', OJPreview);
 }
-
-const fixture = /** @type {(arg: TemplateResult) => Promise<OJPreviewType>} */ (_fixture);
 
 describe('OJPreview', () => {
   describe('class instantiation', () => {
@@ -174,7 +173,16 @@ describe('OJPreview', () => {
   describe('property validation', () => {
     it('supports all expected theme values', () => {
       const el = new OJPreview();
-      const themes = ['auto', 'legacy', 'retail', 'youth', 'business', 'private', 'wholesale', 'wireframe'];
+      const themes = [
+        'auto',
+        'legacy',
+        'retail',
+        'youth',
+        'business',
+        'private',
+        'wholesale',
+        'wireframe',
+      ];
 
       for (const theme of themes) {
         el.themePref = theme;

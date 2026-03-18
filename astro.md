@@ -76,16 +76,16 @@ Feel free to check [our documentation](https://docs.astro.build) or jump into ou
 ### rocket-preset-extend-lion-docs
 
 * It is not possible to use `rocket-preset-extend-lion-docs` out of the box. The reason is that its code relies on some Rocket specific global JS variable names (f.e. `plugins` variable in node_modules/plugins-manager/src/addPlugin.js). Also it specifies the order among existing plugins to inject the its internal plugins (see more for details [rocket-preset-extend-lion-docs source](https://github.com/ing-bank/lion/blob/master/packages-node/rocket-preset-extend-lion-docs/preset/extendLionDocs.js#L66)). We can't reuse that order. Same applies to the dependent `remarkUrlToLocal` plugin. To integrate `rocket-preset-extend-lion-docs` the following steps were done:
-  * `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/assets` contains the patched files taken from the original plugins. Then during the installation those files are copied to `node_modules`. The script for copying is defined in `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/copy.sh` and it is currently triggered by `postinstall` command in `package.json`
-  * `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js` contains a copy of `P00019-ing-web/rocket.config.mjs`. That is configuration setup where we specify the replacement rules. F.e here we specify that `<lion-` should be changed to `<ing-button`.
+  * `src/utils/remark-plugins/wrapper-for-rocket-preset-extend-lion-docs/assets` contains the patched files taken from the original plugins. Then during the installation those files are copied to `node_modules`. The script for copying is defined in `src/utils/remark-plugins/wrapper-for-rocket-preset-extend-lion-docs/copy.sh` and it is currently triggered by `postinstall` command in `package.json`
+  * `src/utils/remark-plugins/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js` contains a copy of `P00019-ing-web/rocket.config.mjs`. That is configuration setup where we specify the replacement rules. F.e here we specify that `<lion-` should be changed to `<ing-button`.
 
 ### remark-extend
 
-`remark-extend` is setup by `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js`
+`remark-extend` is setup by `src/utils/remark-plugins/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js`
 
 ### babel-plugin-extend-docs
 
-`babel-plugin-extend-docs` is setup by `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js`
+`babel-plugin-extend-docs` is setup by `src/utils/remark-plugins/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js`
 
 ## How to migrate components documentation
 
@@ -152,6 +152,6 @@ In this section there are steps for migrating a component directly from [lion/do
   * As a consiquence update the way in-page navigation (right side menu) works. It shdould be updated as follows:
     * Build the menu dynamically based on `H2` tags found on the page
     * Write a `remark` plugin or reuse existing one to add anchor tags with IDs for every `##` hearder
-* `src/utils/remark-plugings/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js` contains some replacement pattern based on the URLs used in Rocket. We need to review those replacements according to our new endpoints
+* `src/utils/remark-plugins/wrapper-for-rocket-preset-extend-lion-docs/wrapper.js` contains some replacement pattern based on the URLs used in Rocket. We need to review those replacements according to our new endpoints
 * What is `docs/components/button/status.mjs` and how we reuse it?
 * `rocket-preset-extend-lion-docs` should be cleaned up from everything related to Rocket. The name `Rocket` should gone

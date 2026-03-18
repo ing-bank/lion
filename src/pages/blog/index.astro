@@ -1,39 +1,46 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
-import MainLayout from "../../layouts/MainLayout.astro";
+import BlogOverviewLayout from "../../layouts/BlogOverviewLayout.astro";
 
 const entries = await getCollection("lionBlog", entry => entry.data?.published);
 const entry = await getEntry('lionBlog', 'index');
 
 const getUrl = (post) => {
+  const baseUrl = import.meta.env.BASE_URL;
   if (post.data?.url) {
-    return post.data.url;
+    return `${baseUrl}/${post.data.url}`;
   }
   if (post.url) {
-    return post.url;
+    return `${baseUrl}/${post.url}`;
   }
-  return `/blog/${post.id}`;
+  return `${baseUrl}/blog/${post.id}`;
 };
 
 const { Content } = await render(entry);
 ---
 
-<MainLayout>
-    <Content />
+<BlogOverviewLayout title="Lion Blog" description="Discover articles from the core team and contributors about Lion, tips and tricks included!">
+  {entries.map((post) => (
+    <article class="post-card" data-url={getUrl(post)}>
+      {post.data.cover_image && <div class="post-image"><div class="post-image__img" style={{
+        backgroundImage: `url('${post.data.cover_image}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }} aria-label={post.data.title} role="img"/></div>}
 
-  <div class="articles">
-    {entries.map((post) => (
-      <article>
-        {post.data.cover_image && <a href={getUrl(post)} class="thumbnail" style={`background-image: url(${post.data.cover_image});`}></a>}
-
-        <div class="content">
-          <h2>
-            <a href={getUrl(post)}>{post.data.title}</a>
-          </h2>
-          <p>{post.data.description}</p>
-          <a class="read" href={getUrl(post)}>...read more</a>
+      <div class="post-content">
+        <div class="post-meta">
+          <span class="post-date">{new Date(post.data.date || new Date()).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+          {post.data.tags && post.data.tags.length > 0 && (
+            <span class="post-tag">{Array.isArray(post.data.tags) ? post.data.tags[0] : post.data.tags.split(',')[0].trim()}</span>
+          )}
         </div>
-      </article>
-    ))}
-  </div>
-</MainLayout>
+        <h3 class="post-title">
+          <a href={getUrl(post)}>{post.data.title}</a>
+        </h3>
+        <p class="post-excerpt">{post.data.description}</p>
+        <a class="read-more" href={getUrl(post)}>Read more →</a>
+      </div>
+    </article>
+  ))}
+</BlogOverviewLayout>

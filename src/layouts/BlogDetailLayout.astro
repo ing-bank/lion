@@ -1,0 +1,252 @@
+---
+import { SEO } from "astro-seo";
+import TopNav from "../components/TopNav.astro";
+import { UIPortalInpageNav } from "../components/ui-portal-inpage-nav.js";
+
+const site = Astro.site || Astro.url.origin;
+const canonicalURL = new URL(Astro.url.pathname, site).toString();
+const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
+
+interface Props {
+  title: string;
+  description?: string;
+  headings?: Array<{ text?: string; slug?: string; name?: string; url?: string }>;
+}
+
+const {
+  title,
+  description = "Lion Blog",
+  headings = [],
+} = Astro.props;
+
+// Transform headings to proper format for UIPortalInpageNav
+const transformedHeadings = headings.map(h => ({
+  name: h.name || h.text || '',
+  url: h.url || h.slug || '',
+})).filter(h => h.name && h.url);
+---
+
+<style>
+  .blog-detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 800px) 280px;
+    gap: 3rem;
+    align-items: start;
+    padding: 3rem 0;
+    margin: 0 auto;
+  }
+
+  .blog-detail-content {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .blog-detail-toc {
+    grid-column: 2;
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    border-left: 2px solid var(--blog-accent);
+    padding-left: 1.5rem;
+  }
+
+  @media (max-width: 1200px) {
+    .blog-detail-layout {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .blog-detail-toc {
+      display: none;
+    }
+  }
+
+  .blog-detail-header {
+    margin-bottom: 80px;
+    padding-bottom: 50px;
+    border-bottom: none;
+    position: relative;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.05) 0%, transparent 100%);
+    padding: 50px 40px 50px 0;
+    margin-left: -40px;
+    margin-right: -40px;
+    padding-left: 40px;
+  }
+
+  .blog-detail-header::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, var(--blog-accent), transparent);
+  }
+
+  .blog-detail-header::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 193, 7, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(20px);
+  }
+
+  .blog-detail-header h1 {
+    font-size: 3.8rem;
+    margin-bottom: 28px;
+    color: var(--blog-text);
+    line-height: 1.15;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    position: relative;
+    z-index: 1;
+  }
+
+  .blog-detail-meta {
+    font-size: 0.95rem;
+    color: var(--blog-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .blog-detail-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    background: rgba(255, 193, 7, 0.08);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+  }
+
+  .blog-detail-meta-item::before {
+    content: '';
+    display: none;
+  }
+
+  .blog-detail-meta-item:first-child::before {
+    display: none;
+  }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="view-transition" content="same-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
+    <meta name="generator" content={Astro.generator} />
+    
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/styles.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/components.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/blog.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/transitions.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/scroll-animations.css`>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script src="@webcomponents/scoped-custom-element-registry/scoped-custom-element-registry.min.js"></script>
+
+    <SEO
+      title={title}
+      description={description}
+      canonical={canonicalURL}
+      openGraph={{
+        basic: {
+          url: canonicalURL,
+          type: "website",
+          title: title,
+          image: resolvedImageWithDomain,
+        },
+        image: {
+          alt: title,
+        },
+      }}
+    />
+</head>
+<body class="blog-page">
+    <div class="scroll-progress"></div>
+    
+    <TopNav activeNavItem="blog" />
+
+    <main>
+        <div class="container flex">
+            <div class="blog-detail-layout">
+                <div class="blog-detail-content" data-pagefind-body>
+                    <article class="blog-detail-header">
+                        <slot name="header" />
+                    </article>
+                    <article class="blog-article">
+                        <slot />
+                    </article>
+                </div>
+
+                <aside class="blog-detail-toc">
+                    <UIPortalInpageNav navData={transformedHeadings} client:load />
+                </aside>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-row">
+                <div class="footer-brand">
+                    <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+                    <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
+                </div>
+                <div class="footer-links">
+                    <a href=`${import.meta.env.BASE_URL}/blog/`>Blog</a>
+                    <a href="https://github.com/ing-bank/lion/issues">Help</a>
+                    <a href="https://github.com/ing-bank/lion">GitHub</a>
+                    <a href=`${import.meta.env.BASE_URL}/about/slack/`>Slack</a>
+                    <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Interactive Blueprint Script
+        const groups = document.querySelectorAll('.blueprint-bg g');
+        
+        groups.forEach(group => {
+            group.addEventListener('mouseenter', () => {
+                const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
+                dimensions.forEach(el => el.style.opacity = '1');
+            });
+            
+            group.addEventListener('mouseleave', () => {
+                const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
+                dimensions.forEach(el => el.style.opacity = '0');
+            });
+        });
+
+        // Parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            
+            const svg = document.querySelector('.blueprint-bg svg');
+            if(svg) {
+                svg.style.setProperty('--mouse-x', x + 'px');
+                svg.style.setProperty('--mouse-y', y + 'px');
+            }
+        });
+    </script>
+</body>
+</html>

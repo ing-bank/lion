@@ -65,7 +65,7 @@ export const webComponent = () => {
   class MessageExample extends LocalizeMixin(LitElement) {
     static get localizeNamespaces() {
       return [
-        { 'lit-html-example': locale => import(`./assets/translations/${locale}.js`) },
+        { 'lit-html-example': locale => import(`./assets/${locale}.js`) },
         ...super.localizeNamespaces,
       ];
     }

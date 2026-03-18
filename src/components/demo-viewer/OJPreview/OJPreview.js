@@ -20,8 +20,6 @@ import {
   copyIcon,
   closeIcon,
   settingsIcon,
-  shrinkViewIcon,
-  expandViewIcon,
   externalDemoIcon,
   copiedCorrectlyFeedbackIcon,
 } from '../icons.js';
@@ -904,13 +902,6 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
   renderCodeblock() {
     return html`<slot id="code-slot"></slot>
       <div class="icon-toolbar" role="toolbar">
-        <!-- <button
-          class="tools-btn"
-          @click="${() => (this.__isDemoExpanded = !this.__isDemoExpanded)}"
-          .title="${this.__isDemoExpanded ? 'relevant code' : 'all code'}"
-        >
-          ${this.__isDemoExpanded ? shrinkViewIcon : expandViewIcon}
-        </button> -->
         <button
           class="tools-btn"
           @click="${this.onCopy}"
@@ -1214,6 +1205,7 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
       const result = this._recurseFindDemoNode(c, fn);
       if (result) return result;
     }
+    return undefined;
   }
 
   __syncDemoDomBackToModel() {

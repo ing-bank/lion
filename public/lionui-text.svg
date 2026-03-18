@@ -1,0 +1,8 @@
+<svg width="86" height="36" viewBox="0 0 86 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@600&amp;display=swap');
+        .logo-text { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-weight: 600; font-size: 32px; letter-spacing: -0.03em; }
+    </style>
+    <text x="0" y="28" class="logo-text" fill="white">lıon</text>
+    <text x="54" y="28" class="logo-text" fill="#FFC107">uı</text>
+</svg>

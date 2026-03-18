@@ -1,6 +1,6 @@
 ---
 import { getCollection, getEntry, render } from "astro:content";
-import InPageNavLayout from "../../layouts/InPageNavLayout.astro";
+import DetailLayout from "../../layouts/DetailLayout.astro";
 
 export async function getStaticPaths() {
     const entries = await getCollection("lionGuides");
@@ -16,18 +16,74 @@ const entry = await getEntry("lionGuides", path);
 
 if (!entry) {
     // Handle Error, for example:
-    throw new Error(`Could not find component by URL ${path}`);
+    throw new Error(`Could not find guide by URL ${path}`);
 }
-const { remarkPluginFrontmatter } = await render(entry);
+
+const { remarkPluginFrontmatter, Content, headings } = await render(entry);
 
 const loadDemoAttributes = {};
 if (remarkPluginFrontmatter.mdjsStoriesPath) {
   loadDemoAttributes['data-import-path'] = remarkPluginFrontmatter.mdjsStoriesPath;
 }
+
+// Extract guide name from path for sidebar highlighting
+const guideName = path?.split('/')[0] || path;
+
+// Get display name from entry data or fallback to path
+const displayName = entry.data?.title || guideName?.charAt(0).toUpperCase() + guideName?.slice(1) || 'Guide';
+
+// Build guides list for sidebar navigation
+const allGuides = await getCollection("lionGuides");
+const guidesByCategory = new Map();
+
+allGuides
+  .filter(guide => guide.id !== 'index') // Exclude the index page from sidebar
+  .forEach(guide => {
+    const [category] = guide.id.split('/');
+    const guidePath = guide.id;
+    const name = guide.id.split('/').pop() || guide.id;
+    const label = guide.data?.title || name?.charAt(0).toUpperCase() + name?.slice(1) || 'Guide';
+
+    if (!guidesByCategory.has(category)) {
+      guidesByCategory.set(category, []);
+    }
+    
+    guidesByCategory.get(category).push({
+      href: `/guides/${guidePath}/`,
+      label,
+    });
+  });
+
+// Sort categories and their items
+const sortedCategories = new Map(
+  Array.from(guidesByCategory.entries())
+    .sort(([catA], [catB]) => catA.localeCompare(catB))
+    .map(([category, items]) => [
+      category,
+      items.sort((a, b) => a.label.localeCompare(b.label))
+    ])
+);
 ---
 
-<InPageNavLayout entry={entry}>
-  <load-demo {...loadDemoAttributes}></load-demo>
+<DetailLayout
+  title={`${displayName} - Lion UI`}
+  activeNavItem="guides"
+  sectionName="Guides"
+  itemName={guideName}
+  description={entry.data?.description || `${displayName} guide.`}
+  backLink={`${import.meta.env.BASE_URL}/guides/`}
+  backLinkLabel="← Back to Guides"
+  itemsByCategory={sortedCategories}
+  headings={headings.map(h => ({ name: h.text, url: h.slug }))}
+>
+  <!-- <header class="docs-content__header guide-header">
+    <h1>{displayName}</h1>
+    {entry.data?.description && <p class="lead">{entry.data.description}</p>}
+  </header> -->
+
+  <div class="docs-content__content guide-content">
+    <load-demo {...loadDemoAttributes}><Content /></load-demo>
+  </div>
 
   <script>
     class LoadDemo extends HTMLElement {
@@ -53,4 +109,4 @@ if (remarkPluginFrontmatter.mdjsStoriesPath) {
 
     customElements.define('load-demo', LoadDemo);
   </script>
-</InPageNavLayout>
+</DetailLayout>
