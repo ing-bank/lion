@@ -1,0 +1,178 @@
+---
+import Search from "astro-pagefind/components/Search";
+
+interface Props {
+  uiOptions?: Record<string, any>;
+}
+
+const { uiOptions = { showImages: false } } = Astro.props as Props;
+---
+
+<style>
+  .search-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 100px;
+    overflow-y: auto;
+  }
+
+  .search-modal.open {
+    display: flex;
+  }
+
+  .search-modal-content {
+    background-color: #0a0a0a;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 700px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    position: relative;
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .search-modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 28px;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .search-modal-close:hover {
+    color: #FFC107;
+  }
+
+  .search-header {
+    margin-bottom: 30px;
+  }
+
+  .search-header h2 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    font-weight: 800;
+  }
+
+  .search-header p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+  }
+
+  :global(.search-modal .pagefind-ui) {
+    --pagefind-ui-primary: #FFC107;
+    --pagefind-ui-text: #ffffff;
+    --pagefind-ui-background: #0a0a0a;
+    --pagefind-ui-border: #222222;
+    --pagefind-ui-border-width: 1px;
+  }
+
+  @media (max-width: 600px) {
+    .search-modal-content {
+      width: 95%;
+      padding: 20px;
+      padding-top: 50px;
+    }
+
+    .search-header h2 {
+      font-size: 1.3rem;
+    }
+  }
+</style>
+
+<div class="search-modal" id="searchModal">
+  <div class="search-modal-content">
+    <button class="search-modal-close" id="closeSearchModal" aria-label="Close search">
+      ×
+    </button>
+    <div class="search-header">
+      <h2>Search</h2>
+      <p>Find components, guides, and documentation</p>
+    </div>
+    <Search id="search" className="pagefind-ui" uiOptions={uiOptions} client:load />
+  </div>
+</div>
+
+<script>
+  // Ensure DOM is ready before initializing
+  const initializeSearchModal = () => {
+    const searchModal = document.getElementById("searchModal");
+    const closeSearchModal = document.getElementById("closeSearchModal");
+    const searchIcon = document.querySelector(".search-link");
+
+    if (!searchModal) {
+      console.warn("SearchModal: #searchModal element not found");
+      return;
+    }
+
+    // Open modal when search icon is clicked
+    if (searchIcon) {
+      searchIcon.addEventListener("click", (e) => {
+        e.preventDefault();
+        searchModal.classList.add("open");
+        // Focus the search input
+        setTimeout(() => {
+          const input = document.querySelector(".search-modal .pagefind-ui input");
+          if (input) input.focus();
+        }, 100);
+      });
+    }
+
+    // Close modal when close button is clicked
+    if (closeSearchModal) {
+      closeSearchModal.addEventListener("click", () => {
+        searchModal.classList.remove("open");
+      });
+    }
+
+    // Close modal when clicking outside the content
+    searchModal.addEventListener("click", (e) => {
+      if (e.target === searchModal) {
+        searchModal.classList.remove("open");
+      }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && searchModal.classList.contains("open")) {
+        searchModal.classList.remove("open");
+      }
+    });
+  };
+
+  // Initialize when DOM is ready or immediately if DOM is already loaded
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeSearchModal);
+  } else {
+    initializeSearchModal();
+  }
+</script>

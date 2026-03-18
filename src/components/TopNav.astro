@@ -1,4 +1,6 @@
 ---
+import SearchModal from './SearchModal.astro';
+
 interface NavItem {
   label: string;
   href: string;
@@ -33,6 +35,17 @@ const defaultNavigationItems: NavItem[] = [
 const { activeNavItem, navigationItems = defaultNavigationItems } = Astro.props;
 ---
 
+<style>
+  .search-link {
+    cursor: pointer !important;
+    text-decoration: none !important;
+  }
+
+  .search-link:hover {
+    color: var(--text-primary);
+  }
+</style>
+
 <header class="site-header">
     <div class="container">
         <a href=`${import.meta.env.BASE_URL}` class="logo">
@@ -42,7 +55,7 @@ const { activeNavItem, navigationItems = defaultNavigationItems } = Astro.props;
         <nav class="main-nav">
             <ul>
                 <li>
-                    <a href={`${import.meta.env.BASE_URL}/search`} class="search-link" title="Search">
+                    <a href="#" class="search-link" title="Search">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="m21 21-4.35-4.35"></path>
@@ -73,3 +86,5 @@ const { activeNavItem, navigationItems = defaultNavigationItems } = Astro.props;
         </nav>
     </div>
 </header>
+
+<SearchModal />
