@@ -1,14 +1,14 @@
 export default {
   error: {
     Required: '{fieldName} muss ausgefüllt werden.',
-    _RequiredUpload: 'Bitte laden Sie ein/e/n {fieldName} hoch.',
+    _RequiredUpload: '{fieldName} muss hochgeladen werden.',
     _RequiredSelect: 'Wählen Sie auch einen Wert für {fieldName} aus.',
     EqualsLength: 'Geben Sie einen korrekten Wert für {fieldName} mit exakt {params} Zeichen ein.',
     MinLength: 'Du musst mindestens {params} Zeichen eingeben.',
     MaxLength: 'Du kannst maximal {params} Zeichen eingeben.',
     MinMaxLength: 'Du musst zwischen {params.min} und {params.max} Zeichen eingeben.',
-    Pattern: 'Geben Sie ein gültige {fieldName} ein.',
-    IsNumber: 'Geben Sie ein gültige {fieldName} ein.',
+    Pattern: 'Geben Sie einen gültigen Wert für {fieldName} ein.',
+    IsNumber: 'Geben Sie einen gültigen Wert für {fieldName} ein.',
     MinNumber: 'Geben Sie für {fieldName} einen Wert über {params} ein.',
     MaxNumber: 'Geben Sie für {fieldName} einen Wert unter {params} ein.',
     MinMaxNumber:
@@ -19,19 +19,19 @@ export default {
     MinMaxDate:
       'Geben Sie für {fieldName} einen Wert zwischen {params.min, date, YYYYMMDD} und {params.max, date, YYYYMMDD} ein.',
     IsDateDisabled: 'Dieses Datum ist nicht verfügbar, bitte wählen Sie ein anderes Datum.',
-    IsEmail: 'Geben Sie einen gültige {fieldName} im Format „name@example.com“ ein.',
+    IsEmail: 'Geben Sie für {fieldName} einen gültigen Wert im Format „name@example.com" ein.',
     MatchesOption:
       'Keine übereinstimmenden Ergebnisse. Bitte versuchen Sie es mit einem anderen Schlüsselbegriff oder einer anderen Kategorie.',
   },
   warning: {
     Required: '{fieldName} sollte ausgefüllt werden.',
-    _RequiredUpload: 'Bitte laden Sie ein/e/n {fieldName} hoch.',
+    _RequiredUpload: '{fieldName} sollte hochgeladen werden.',
     _RequiredSelect: 'Wählen Sie auch einen Wert für {fieldName} aus.',
     EqualsLength: 'Geben Sie einen korrekten Wert für {fieldName} mit exakt {params} Zeichen ein.',
     MinLength: 'Du solltest mindestens {params} Zeichen eingeben.',
     MaxLength: 'Du kannst maximal {params} Zeichen eingeben.',
     MinMaxLength: 'Du solltest zwischen {params.min} und {params.max} Zeichen eingeben.',
-    IsNumber: 'Geben Sie ein gültige {fieldName} ein.',
+    IsNumber: 'Geben Sie einen gültigen Wert für {fieldName} ein.',
     MinNumber: 'Geben Sie für {fieldName} einen Wert über {params} ein.',
     MaxNumber: 'Geben Sie für {fieldName} einen Wert unter {params} ein.',
     MinMaxNumber:
@@ -42,7 +42,7 @@ export default {
     MinMaxDate:
       'Geben Sie für {fieldName} einen Wert zwischen {params.min, date, YYYYMMDD} und {params.max, date, YYYYMMDD} ein.',
     IsDateDisabled: 'Dieses Datum ist nicht verfügbar, bitte wählen Sie ein anderes Datum.',
-    IsEmail: 'Geben Sie einen gültige {fieldName} im Format „name@example.com“ ein.',
+    IsEmail: 'Geben Sie für {fieldName} einen gültigen Wert im Format „name@example.com" ein.',
     MatchesOption:
       'Keine übereinstimmenden Ergebnisse. Bitte versuchen Sie es mit einem anderen Schlüsselbegriff oder einer anderen Kategorie.',
   },
