@@ -3,6 +3,18 @@ import { OverlayController } from './OverlayController.js';
 import { isEqualConfig } from './utils/is-equal-config.js';
 
 /**
+ * @typedef {<T>(ingOverlayHost:T) => void} PostProcessor
+ */
+
+/** @type {PostProcessor[]} */
+const overlayMixinPostProcessors = [];
+
+/** @param {PostProcessor} postProcessor */
+export function _addOverlayMixinPostProcessor(postProcessor) {
+  overlayMixinPostProcessors.push(postProcessor);
+}
+
+/**
  * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig
  * @typedef {import('../types/OverlayMixinTypes.js').DefineOverlayConfig} DefineOverlayConfig
  * @typedef {import('../types/OverlayMixinTypes.js').OverlayMixin} OverlayMixin
@@ -16,7 +28,7 @@ import { isEqualConfig } from './utils/is-equal-config.js';
  * @type {OverlayMixin}
  * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
-export const OverlayMixinImplementation = superclass =>
+export const OverlayMixinImplementation = superclass => {
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   class OverlayMixin extends superclass {
     static get properties() {
@@ -418,5 +430,10 @@ export const OverlayMixinImplementation = superclass =>
       await this.updateComplete;
       return !this.isConnected;
     }
-  };
+  }
+  for (const postProcessor of overlayMixinPostProcessors) {
+    postProcessor(OverlayMixin);
+  }
+  return OverlayMixin;
+};
 export const OverlayMixin = dedupeMixin(OverlayMixinImplementation);

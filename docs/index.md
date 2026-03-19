@@ -1,9 +1,9 @@
 ---
 title: Lion
 layout: layout-home
-slogan: Fundamental white label web components for building your design system.
+slogan: Performant, accessible, and flexible foundation for your web applications. Build your design system without the bloat.
 callToActionItems:
-  [{ text: 'Follow Guides', href: '/guides/' }, { text: 'See Components', href: '/components/' }]
+  [{ text: 'Get Started', href: '/guides/' }, { text: 'Documentation', href: '/components/' }]
 reasonHeader: Why Lion?
 reasons:
   [

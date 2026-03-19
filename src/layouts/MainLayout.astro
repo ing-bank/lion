@@ -5,8 +5,6 @@ import { SEO } from "astro-seo";
 import { UIPortalFooter } from "../components/ui-portal-footer.js";
 import { UIPortalMainNav } from "../components/ui-portal-main-nav.js";
 
-import '../styles/components.css';
-
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
 const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
@@ -280,9 +278,17 @@ const footerData = [
   </head>
   <body class="ui-portal-grid" data-layout={layout}>
     <div class="ui-portal-grid__nav">
+      <div class="site-header">
+        <div class="header-content">
+          <a href="/next/" class="logo">
+            <img src="/next/logo.svg" alt="Lion Logo" width="32" height="32">
+            <img src="/next/lionui-text.svg" alt="lion ui" height="16" class="logo-text-svg">
+          </a>
+        </div>
+      </div>
       <UIPortalMainNav client:load nav-data={JSON.stringify(navData)} />
     </div>
-    <main class={`ui-portal-grid__main ${bodyCssClass}`}>
+    <main class={`ui-portal-grid__main ${bodyCssClass}`} data-pagefind-body>
       <slot />
     </main>
     <div class="ui-portal-grid__footer">
@@ -293,6 +299,34 @@ const footerData = [
       /* https://css-tricks.com/almanac/properties/c/content-visibility/ */
       img {
         content-visibility: auto;
+      }
+
+      .site-header {
+        background: white;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem;
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .logo:hover {
+        text-decoration: none;
+      }
+
+      .logo-text-svg {
+        margin-left: 0.25rem;
       }
 
       .ui-portal-grid {

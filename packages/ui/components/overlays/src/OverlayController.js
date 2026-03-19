@@ -620,6 +620,8 @@ export class OverlayController extends EventTarget {
       this.__contentWrapperNode = document.createElement('div');
     }
     this.contentWrapperNode.setAttribute('data-id', 'content-wrapper');
+    // 'hack' that makes sure popperjs (that is applied one level lower) works correctly in deeply nested shadow roots
+    this.contentWrapperNode.style.transform = 'translateZ(0px)';
 
     rearrangeNodes({
       wrappingDialogNodeL1: wrappingDialogElement,

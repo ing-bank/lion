@@ -1,0 +1,192 @@
+---
+import { SEO } from "astro-seo";
+import TopNav from "../components/TopNav.astro";
+
+const site = Astro.site || Astro.url.origin;
+const canonicalURL = new URL(Astro.url.pathname, site).toString();
+const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "Articles from the core team and contributors about Lion, tips and tricks included!",
+} = Astro.props;
+---
+
+<style>
+  .blog-overview {
+    padding: 120px 0 60px;
+    text-align: center;
+    background-image: radial-gradient(var(--blog-line) 1px, transparent 1px);
+    background-size: 20px 20px;
+    border-bottom: 1px solid var(--blog-line);
+    text-align: right;
+    margin-right: 3rem;
+  }
+
+  .blog-overview h1 {
+    font-family: var(--blog-font-serif);
+    font-size: 4rem;
+    margin-bottom: 16px;
+    letter-spacing: -0.03em;
+    color: var(--blog-text);
+  }
+
+  .blog-overview p {
+    color: var(--blog-text-secondary);
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .blog-grid-container {
+    padding: 60px 0;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 40px;
+    width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    .blog-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .blog-overview h1 {
+      font-size: 2.5rem;
+    }
+
+    .blog-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+  }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="view-transition" content="same-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
+    <meta name="generator" content={Astro.generator} />
+    
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/styles.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/components.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/blog.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/transitions.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/scroll-animations.css`>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <SEO
+      title={title}
+      description={description}
+      canonical={canonicalURL}
+      openGraph={{
+        basic: {
+          url: canonicalURL,
+          type: "website",
+          title: title,
+          image: resolvedImageWithDomain,
+        },
+        image: {
+          alt: "Lion Blog",
+        },
+      }}
+    />
+</head>
+<body class="blog-page">
+    <div class="scroll-progress"></div>
+    
+    <TopNav activeNavItem="blog" />
+
+    <main>
+        <div class="container flex">
+            <section class="blog-overview">
+                <h1>{title}</h1>
+                <p>{description}</p>
+            </section>
+
+            <div class="blog-grid-container">
+                <div class="blog-grid" data-pagefind-body>
+                    <slot />
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-row">
+                <div class="footer-brand">
+                    <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+                    <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
+                </div>
+                <div class="footer-links">
+                    <a href=`${import.meta.env.BASE_URL}/blog/`>Blog</a>
+                    <a href="https://github.com/ing-bank/lion/issues">Help</a>
+                    <a href="https://github.com/ing-bank/lion">GitHub</a>
+                    <a href=`${import.meta.env.BASE_URL}/about/slack/`>Slack</a>
+                    <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Make blog cards clickable
+        const postCards = document.querySelectorAll('.post-card');
+        postCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Only navigate if clicking on the card itself, not on links within it
+                if (e.target.tagName !== 'A') {
+                    const url = card.getAttribute('data-url');
+                    if (url) {
+                        window.location.href = url;
+                    }
+                }
+            });
+        });
+
+        // Interactive Blueprint Script
+        const groups = document.querySelectorAll('.blueprint-bg g');
+        
+        groups.forEach(group => {
+            group.addEventListener('mouseenter', () => {
+                const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
+                dimensions.forEach(el => el.style.opacity = '1');
+            });
+            
+            group.addEventListener('mouseleave', () => {
+                const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
+                dimensions.forEach(el => el.style.opacity = '0');
+            });
+        });
+
+        // Parallax effect
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 50;
+            const y = (window.innerHeight / 2 - e.pageY) / 50;
+            
+            const svg = document.querySelector('.blueprint-bg svg');
+            if(svg) {
+                svg.style.setProperty('--mouse-x', x + 'px');
+                svg.style.setProperty('--mouse-y', y + 'px');
+            }
+        });
+    </script>
+</body>
+</html>
