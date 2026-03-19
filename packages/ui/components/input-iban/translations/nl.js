@@ -1,8 +1,8 @@
 export default {
   error: {
-    IsIBAN: 'Vul een geldig(e) {fieldName} in.',
+    IsIBAN: 'Vul een geldige waarde in voor het veld {fieldName}.',
     IsCountryIBAN:
-      'Vul een geldig(e) {params, select,\n' +
+      'Vul een geldige {params, select,\n' +
       'AT {Oostenrijkse}\n' +
       'BE {Belgische}\n' +
       'CZ {Tsjechische}\n' +
@@ -15,9 +15,9 @@ export default {
       'PL {Poolse}\n' +
       'RO {Roemeense}\n' +
       'other {{params}}\n' +
-      '} {fieldName} in.',
+      '} waarde in voor het veld {fieldName}.',
     IsNotCountryIBAN:
-      '{userSuppliedCountryCode, select,\n' +
+      'Een {userSuppliedCountryCode, select,\n' +
       'AT {Oostenrijkse}\n' +
       'BE {Belgische}\n' +
       'CZ {Tsjechische}\n' +
@@ -30,6 +30,6 @@ export default {
       'PL {Poolse}\n' +
       'RO {Roemeense}\n' +
       'other {{userSuppliedCountryCode}}\n' +
-      '} {fieldName} is niet toegestaan.',
+      '} waarde is niet toegestaan voor het veld {fieldName}.',
   },
 };
