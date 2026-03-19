@@ -47,12 +47,14 @@ const components = allComponents
   .map(component => {
     const name = component.id.split('/').pop() || component.id;
     const label = component.data?.eleventyNavigation?.title || component.data?.title || name?.charAt(0).toUpperCase() + name?.slice(1) || 'Component';
+    const priority = component.data?.eleventyNavigation?.order || 0;
 
     return {
       name,
       id: component.id,
       label,
       href: `/components/${component.id}/`,
+      priority,
     };
   })
   // Filter out the current component (don't show it in the sidebar)
@@ -62,16 +64,15 @@ const components = allComponents
     const idA = a.id.split('/')[0];
     const idB = b.id.split('/')[0];
     const idCompare = idA.localeCompare(idB);
-    
+
     if (idCompare !== 0) {
       return idCompare;
     }
-    
+
     // Then sort by label priority within the same component
-    const priorityOrder = { 'Overview': 0, 'Use Cases': 1, 'Examples': 2, 'Extensions': 3, 'Reference': 5, 'API Table': 6 };
-    const priorityA = priorityOrder[a.label] ?? 4;
-    const priorityB = priorityOrder[b.label] ?? 4;
-    
+    const priorityA = a.priority;
+    const priorityB = b.priority;
+
     if (priorityA !== priorityB) {
       return priorityA - priorityB;
     }
@@ -79,7 +80,7 @@ const components = allComponents
   });
 ---
 
-<ComponentDetailLayout 
+<ComponentDetailLayout
   title={`${displayName} - Lion UI`}
   componentName={componentName}
   description={entry.data?.description || `${displayName} component with accessible design and flexible styling.`}
@@ -98,7 +99,7 @@ const components = allComponents
 
   <div class="docs-content__content component-content">
     <Content />
-    
+
     {remarkPluginFrontmatter.mdjsStoriesPath && (
       <load-demo {...loadDemoAttributes}></load-demo>
     )}
