@@ -52,6 +52,7 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
           vertical-align: middle;
           line-height: 24px;
           background-color: #eee; /* minimal styling to make it recognizable as btn */
+          color: black; /* if we set background, we should set color as well, like a native button */
           padding: 8px; /* padding to fix with min-height */
           outline: none; /* focus style handled below */
           cursor: default; /* we should always see the default arrow, never a caret */

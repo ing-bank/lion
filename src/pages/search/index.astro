@@ -1,11 +1,107 @@
 ---
+import { SEO } from "astro-seo";
+import TopNav from "../../components/TopNav.astro";
 import Search from "astro-pagefind/components/Search";
 
-import MainLayout from "../../layouts/MainLayout.astro";
+const site = Astro.site || Astro.url.origin;
+const canonicalURL = new URL(Astro.url.pathname, site).toString();
+const resolvedImageWithDomain = new URL("/opengraph.jpg", site).toString();
 ---
 
-<MainLayout layout="layout-one-column">
-  <h1>Search</h1>
+<style>
+  .search-header {
+    padding: 120px 0 60px;
+    text-align: center;
+  }
 
-  <Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} />
-</MainLayout>
+  .search-header h1 {
+    font-size: 3.5rem;
+    margin-bottom: 16px;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+    font-weight: 800;
+  }
+
+  .search-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .search-container {
+    padding: 60px 0;
+  }
+
+  :global(.pagefind-ui) {
+    --pagefind-ui-primary: #FFC107;
+    --pagefind-ui-text: #ffffff;
+    --pagefind-ui-background: #0a0a0a;
+    --pagefind-ui-border: #222222;
+    --pagefind-ui-border-width: 1px;
+  }
+
+  @media (max-width: 600px) {
+    .search-header h1 {
+      font-size: 2.2rem;
+    }
+
+    .search-header p {
+      font-size: 0.95rem;
+    }
+  }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="view-transition" content="same-origin" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - Lion UI</title>
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}/favicon.svg`} />
+    <meta name="generator" content={Astro.generator} />
+    
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/styles.css`}>
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/components.css`}>
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/transitions.css`}>
+    <link rel="stylesheet" href={`${import.meta.env.BASE_URL}/styles/scroll-animations.css`}>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <SEO
+      title="Search"
+      description="Search the Lion documentation and components"
+      canonical={canonicalURL}
+      openGraph={{
+        basic: {
+          url: canonicalURL,
+          type: "website",
+          title: "Search - Lion UI",
+          image: resolvedImageWithDomain,
+        },
+        image: {
+          alt: "Search Lion",
+        },
+      }}
+    />
+</head>
+<body>
+    <div class="scroll-progress"></div>
+    <div class="grid-background"></div>
+    
+    <TopNav activeNavItem="search" />
+
+    <main class="container">
+      <div class="search-header">
+        <h1>Search</h1>
+        <p>Find components, guides, and documentation</p>
+      </div>
+
+      <div class="search-container">
+        <Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} />
+      </div>
+    </main>
+</body>
+</html>

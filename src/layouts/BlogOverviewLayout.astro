@@ -24,6 +24,8 @@ const {
     background-image: radial-gradient(var(--blog-line) 1px, transparent 1px);
     background-size: 20px 20px;
     border-bottom: 1px solid var(--blog-line);
+    text-align: right;
+    margin-right: 3rem;
   }
 
   .blog-overview h1 {
@@ -112,14 +114,14 @@ const {
     <TopNav activeNavItem="blog" />
 
     <main>
-        <div class="container">
+        <div class="container flex">
             <section class="blog-overview">
                 <h1>{title}</h1>
                 <p>{description}</p>
             </section>
 
             <div class="blog-grid-container">
-                <div class="blog-grid">
+                <div class="blog-grid" data-pagefind-body>
                     <slot />
                 </div>
             </div>

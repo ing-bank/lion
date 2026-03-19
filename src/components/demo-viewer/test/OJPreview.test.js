@@ -1,8 +1,8 @@
 import { expect, fixture as _fixture, html, aTimeout } from '@open-wc/testing';
-import { OJPreview } from '../OJPreview.js';
+import { OJPreview } from '../OJPreview/OJPreview.js';
 
 /**
- * @typedef {import('../OJPreview.js').OJPreview} OJPreviewType
+ * @typedef {import('../OJPreview/OJPreview.js').OJPreview} OJPreviewType
  * @typedef {import('lit').TemplateResult} TemplateResult
  */
 

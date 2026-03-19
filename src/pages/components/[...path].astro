@@ -86,17 +86,17 @@ const components = allComponents
   components={components}
   headings={headings.map(h => ({ name: h.text, url: h.slug }))}
 >
-  <header class="component-header">
-    <div style="display: flex;">
+  <!-- <header class="docs-content__header component-header"> -->
+    <!-- <div style="display: flex;"> -->
       <div class="card-icon">
         <Fragment set:html={getComponentIcon(componentName || '')} />
       </div>
-      <h1>{displayName}</h1>
-    </div>
-    <p class="lead">{entry.data?.description || `${displayName} component with accessible design and flexible styling.`}</p>
-  </header>
+      <!-- <h1>{displayName}</h1> -->
+    <!-- </div> -->
+    <!-- <p class="lead">{entry.data?.description || `${displayName} component with accessible design and flexible styling.`}</p> -->
+  <!-- </header> -->
 
-  <div class="component-content">
+  <div class="docs-content__content component-content">
     <Content />
     
     {remarkPluginFrontmatter.mdjsStoriesPath && (

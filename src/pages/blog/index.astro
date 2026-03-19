@@ -22,7 +22,11 @@ const { Content } = await render(entry);
 <BlogOverviewLayout title="Lion Blog" description="Discover articles from the core team and contributors about Lion, tips and tricks included!">
   {entries.map((post) => (
     <article class="post-card" data-url={getUrl(post)}>
-      {post.data.cover_image && <img src={post.data.cover_image} alt={post.data.title} class="post-image" />}
+      {post.data.cover_image && <div class="post-image"><div class="post-image__img" style={{
+        backgroundImage: `url('${post.data.cover_image}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }} aria-label={post.data.title} role="img"/></div>}
 
       <div class="post-content">
         <div class="post-meta">
