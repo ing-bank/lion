@@ -1,0 +1,1 @@
+import{L as s}from"./4cc99b59.js";import{L as t}from"./9d4fbb3c.js";import{I as o}from"./48ac1cb5.js";class e extends(s(t)){constructor(){super(),this.defaultValidators.push(new o)}}customElements.define("lion-input-email",e);

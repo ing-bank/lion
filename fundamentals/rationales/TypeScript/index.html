@@ -366,7 +366,20 @@
 </li>
 <li class="menu-item current">
 <a href="/fundamentals/rationales/TypeScript/">TypeScript</a>
-
+<ul>
+  <li class="menu-item anchor">
+    <a href="#why-jsdoc" class="anchor">Why JSDoc?</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#mixins" class="anchor">Mixins</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#export-maps-and-type-resolution" class="anchor">Export Maps and Type Resolution</a>
+  </li>
+  <li class="menu-item anchor">
+    <a href="#type-correction-for-jsdoc" class="anchor">Type Correction for JSDoc</a>
+  </li>
+</ul>
 
 </li></ul>
 </li></ul>
@@ -391,6 +404,14 @@
     <h1 id="rationales-typescript"><a class="anchor" href="#rationales-typescript"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Rationales: TypeScript</h1>
 <p><a href="https://www.typescriptlang.org">TypeScript</a> is superset of JavaScript and a popular tool for getting strongly typed syntax and better autocompletion in JavaScript.</p>
 <p>We've ensured that the entire Lion library is typed so that you can use it in TypeScript, but there are some caveats.</p>
+<h2 id="why-jsdoc"><a class="anchor" href="#why-jsdoc"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Why JSDoc?</h2>
+<p>Lion uses <a href="https://jsdoc.app/">JSDoc</a> for type annotations instead of native TypeScript files. This approach offers several advantages:</p>
+<p><strong>No Compilation Step</strong>: JSDoc allows us to maintain a pure JavaScript codebase while still providing comprehensive type information. This eliminates the need for a TypeScript compilation step in our build process, keeping our development workflow simple, fast and robust.</p>
+<p><strong>Runtime JavaScript</strong>: Since our source files remain <code>.js</code>, they can be executed directly by JavaScript engines without any transformation. This is particularly valuable for debugging, as you're working with the actual code that runs in production.</p>
+<p><strong>Universal Compatibility</strong>: JSDoc annotations are just comments, so they don't affect runtime behavior and are compatible with any JavaScript environment. Libraries and tools that don't understand TypeScript can still consume Lion packages without issues.</p>
+<p><strong>Gradual Adoption</strong>: Teams can benefit from Lion's type information regardless of whether they use TypeScript, plain JavaScript with JSDoc, or other type checking tools. The types are there when you need them, invisible when you don't.</p>
+<p><strong>TypeScript Integration</strong>: Despite using JSDoc, we still get full TypeScript integration. The TypeScript compiler can read JSDoc annotations and generate proper <code>.d.ts</code> files, giving consumers the same autocomplete and type checking experience as native TypeScript packages.</p>
+<h2 id="mixins"><a class="anchor" href="#mixins"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Mixins</h2>
 <p>In Lion, we rely heavily on <a href="https://lit.dev/docs/composition/mixins/#mixin-basics">Mixins</a> as a pattern for abstracting certain behaviors and properties into implementable interfaces.
 Since JavaScript has a one-dimensional inheritance chain, inheriting from multiple ancestors has always been tricky, the Mixin pattern is used to get around that.</p>
 <p>Here's the thing, Mixins have been notoriously difficult to type properly in TypeScript and in addition, we did not feel happy about adding an adhoc compilation step in our developer workflow. Therefore, we opted for typing our code with <a href="https://jsdoc.app/">JSDoc</a> and using TypeScript to lint our types and generate type definition files.</p>
@@ -399,6 +420,26 @@ Since JavaScript has a one-dimensional inheritance chain, inheriting from multip
 This suggestion was declined and in <a href="https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051">this comment</a>, Ryan Cavanaugh explained that using <code>@ts-ignore</code> is the right way to get around the limitation here.
 As a user of Lion this means that because we've got <code>@ts-ignore</code>s in our source code, you may get type errors that originate from Lion, and there's nothing we can do about that, TypeScript's stance is that sometimes rules are too conservative, and ignoring them is the correct answer.</p>
 <p>In order to ignore type issues coming from Lion, please use the <a href="https://www.typescriptlang.org/tsconfig#skipLibCheck">skipLibCheck</a> option in your <code>ts.config.json</code>, this will ignore issues that aren't coming from your code.</p>
+<h2 id="export-maps-and-type-resolution"><a class="anchor" href="#export-maps-and-type-resolution"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Export Maps and Type Resolution</h2>
+<p>Lion uses <a href="https://nodejs.org/api/packages.html#exports">package.json export maps</a> to provide proper module resolution and type definitions. The export map ensures that when you import from Lion packages, TypeScript can correctly resolve both the JavaScript modules and their corresponding type definitions.</p>
+<p>The export map works by defining explicit entry points for each package, mapping import paths to their actual file locations. For types, this means that when you import <code>@lion/ui/button.js</code>, TypeScript knows to look for the corresponding type definitions in the <code>dist-types</code> directory.</p>
+<h2 id="type-correction-for-jsdoc"><a class="anchor" href="#type-correction-for-jsdoc"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Type Correction for JSDoc</h2>
+<p>Since we use JSDoc for typing instead of native TypeScript files, we encounter some challenges during the type definition generation process. The TypeScript compiler sometimes produces inconsistent import statements when processing JSDoc annotations, particularly for Lit imports.</p>
+<p>We have a post-build script (<code>types-correct-after-build.js</code>) that addresses these issues:</p>
+<h3 id="import-normalization"><a class="anchor" href="#import-normalization"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Import Normalization</h3>
+<p>The script ensures consistency in Lit imports by converting:</p>
+<ul>
+<li>JSDoc-generated imports: <code>import { LitElement } from "lit-element/lit-element.js"</code></li>
+<li>To standardized imports: <code>import { LitElement } from "lit"</code></li>
+</ul>
+<p>This prevents type incompatibility issues where the same class imported through different paths isn't recognized as the same type by TypeScript (see <a href="https://github.com/microsoft/TypeScript/issues/51622">TypeScript issue #51622</a>).</p>
+<h3 id="external-dependency-path-correction"><a class="anchor" href="#external-dependency-path-correction"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>External Dependency Path Correction</h3>
+<p>The script also "unresolves" paths that reference external node_modules, particularly for scoped elements:</p>
+<ul>
+<li>From: <code>"../../../node_modules/@open-wc/scoped-elements/types.js"</code></li>
+<li>To: <code>"@open-wc/scoped-elements/lit-element.js"</code></li>
+</ul>
+<p>These corrections ensure that generated type definitions work correctly in consuming projects, where the resolved local paths would break since they reference locations outside the bundled package.</p>
 
   
     <div class="content-footer">

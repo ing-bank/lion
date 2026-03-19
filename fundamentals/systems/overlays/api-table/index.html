@@ -269,6 +269,9 @@
     <a href="#class-overlaycontroller" class="anchor">class: </a>
   </li>
   <li class="menu-item anchor">
+    <a href="#class-overlaymixin" class="anchor">class: </a>
+  </li>
+  <li class="menu-item anchor">
     <a href="#class-overlaysmanager" class="anchor">class: </a>
   </li>
 </ul>
@@ -667,14 +670,6 @@
 
 
 
-
-
-
-
-
-
-
-
 <table><thead><tr><th>Name</th><th>Privacy</th><th>Type</th><th>Default</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>backdropNode</code></td><td>public</td><td><code>HTMLElement</code></td><td></td><td>The element that is placed behind the contentNode. When not provided and `hasBackdrop` is true,
 a backdropNode will be automatically created</td><td></td></tr><tr><td><code>config</code></td><td>public</td><td><code>OverlayConfig</code></td><td><code>{}</code></td><td></td><td></td></tr><tr><td><code>content</code></td><td>public</td><td><code>HTMLDialogElement | HTMLDivElement</code></td><td></td><td>The contentWrapperNode</td><td></td></tr><tr><td><code>contentNode</code></td><td>public</td><td><code>HTMLElement</code></td><td></td><td>The most important element: the overlay itself</td><td></td></tr><tr><td><code>contentWrapperNode</code></td><td>public</td><td><code>HTMLElement</code></td><td></td><td>The wrapper element of contentNode, used to supply inline positioning styles. When a Popper
 arrow is needed, it acts as parent of the arrow node. Will be automatically created for global
@@ -686,7 +681,7 @@ supplied. Essential for allowing webcomponents to style their projected contentN
 - sets focus to overlay content(?)
 
 For `isTooltip`:
-- sets role="tooltip" and aria-labelledby/aria-describedby on the content</td><td></td></tr><tr><td><code>hasActiveBackdrop</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>hasActiveTrapsKeyboardFocus</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>hasBackdrop</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Whether it should have a backdrop (currently exclusive to globalOverlayController)</td><td></td></tr><tr><td><code>hidesOnEsc</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides the overlay when pressing [ esc ]</td><td></td></tr><tr><td><code>hidesOnOutsideClick</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides the overlay when clicking next to it, exluding invoker</td><td></td></tr><tr><td><code>hidesOnOutsideEsc</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides the overlay when pressing esc, even when contentNode has no focus</td><td></td></tr><tr><td><code>inheritsReferenceWidth</code></td><td>public</td><td><code>'max' | 'full' | 'min' | 'none' | undefined</code></td><td></td><td>Will align contentNode with referenceNode (invokerNode by default) for local overlays.
+- sets role="tooltip" and aria-labelledby/aria-describedby on the content</td><td></td></tr><tr><td><code>hasActiveBackdrop</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>hasBackdrop</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Whether it should have a backdrop (currently exclusive to globalOverlayController)</td><td></td></tr><tr><td><code>hidesOnEsc</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides the overlay when pressing [ esc ]</td><td></td></tr><tr><td><code>hidesOnOutsideClick</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides the overlay when clicking next to it, exluding invoker</td><td></td></tr><tr><td><code>hidesOnOutsideEsc</code></td><td>public</td><td><code>boolean</code></td><td></td><td>Hides the overlay when pressing esc, even when contentNode has no focus</td><td></td></tr><tr><td><code>inheritsReferenceWidth</code></td><td>public</td><td><code>'max' | 'full' | 'min' | 'none' | undefined</code></td><td></td><td>Will align contentNode with referenceNode (invokerNode by default) for local overlays.
 Usually needed for dropdowns. 'max' will prevent contentNode from exceeding width of
 referenceNode, 'min' guarantees that contentNode will be at least as wide as referenceNode.
 'full' will make sure that the invoker width always is the same.</td><td></td></tr><tr><td><code>invoker</code></td><td>public</td><td><code>HTMLElement | undefined</code></td><td></td><td>The invokerNode</td><td></td></tr><tr><td><code>invokerNode</code></td><td>public</td><td><code>HTMLElement | undefined</code></td><td></td><td>The interactive element (usually a button) invoking the dialog or tooltip</td><td></td></tr><tr><td><code>invokerRelation</code></td><td>public</td><td><code>'label' | 'description'| undefined</code></td><td></td><td>By default, the tooltip content is a 'description' for the invoker (uses aria-describedby).
@@ -941,23 +936,7 @@ be positioned against.</td><td></td></tr><tr><td><code>trapsKeyboardFocus</code>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<table><thead><tr><th>Name</th><th>Privacy</th><th>Description</th><th>Parameters</th><th>Return</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>addEventListener</code></td><td>public</td><td></td><td><code>type, callback, options</code></td><td></td><td>EventTarget</td></tr><tr><td><code>disableTrapsKeyboardFocus</code></td><td>public</td><td></td><td><code>{ findNewTrap = true }</code></td><td></td><td></td></tr><tr><td><code>dispatchEvent</code></td><td>public</td><td></td><td><code>event</code></td><td></td><td>EventTarget</td></tr><tr><td><code>enableTrapsKeyboardFocus</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>hide</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>removeEventListener</code></td><td>public</td><td></td><td><code>type, callback, options</code></td><td></td><td>EventTarget</td></tr><tr><td><code>show</code></td><td>public</td><td></td><td><code>elementToFocusAfterHide: HTMLElement</code></td><td></td><td></td></tr><tr><td><code>teardown</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>toggle</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>transitionHide</code></td><td>public</td><td>Method to be overriden by subclassers</td><td><code>hideConfig: {backdropNode:HTMLElement, contentNode:HTMLElement}</code></td><td></td><td></td></tr><tr><td><code>transitionShow</code></td><td>public</td><td>To be overridden by subclassers</td><td><code>showConfig: {backdropNode:HTMLElement; contentNode:HTMLElement}</code></td><td></td><td></td></tr><tr><td><code>updateConfig</code></td><td>public</td><td>Allows to dynamically change the overlay configuration. Needed in case the
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Description</th><th>Parameters</th><th>Return</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>addEventListener</code></td><td>public</td><td></td><td><code>type, callback, options</code></td><td></td><td>EventTarget</td></tr><tr><td><code>dispatchEvent</code></td><td>public</td><td></td><td><code>event</code></td><td></td><td>EventTarget</td></tr><tr><td><code>hide</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>removeEventListener</code></td><td>public</td><td></td><td><code>type, callback, options</code></td><td></td><td>EventTarget</td></tr><tr><td><code>show</code></td><td>public</td><td></td><td><code>elementToFocusAfterHide: HTMLElement</code></td><td></td><td></td></tr><tr><td><code>teardown</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>toggle</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>transitionHide</code></td><td>public</td><td>Method to be overriden by subclassers</td><td><code>hideConfig: {backdropNode:HTMLElement, contentNode:HTMLElement}</code></td><td></td><td></td></tr><tr><td><code>transitionShow</code></td><td>public</td><td>To be overridden by subclassers</td><td><code>showConfig: {backdropNode:HTMLElement; contentNode:HTMLElement}</code></td><td></td><td></td></tr><tr><td><code>updateConfig</code></td><td>public</td><td>Allows to dynamically change the overlay configuration. Needed in case the
 presentation of the overlay changes depending on screen size.
 Note that this method is the only allowed way to update a configuration of an
 OverlayController instance.</td><td><code>cfgToAdd: OverlayConfig</code></td><td></td><td></td></tr><tr><td><code>_handleAccessibility</code></td><td>protected</td><td></td><td><code>{ phase }, config: { phase: OverlayPhase }</code></td><td></td><td></td></tr><tr><td><code>_handleBackdrop</code></td><td>protected</td><td>Sets up backdrop on the given overlay. If there was a backdrop on another element
@@ -989,7 +968,7 @@ animation is played.</td><td><code>{ phase }, config: { animation?: boolean, pha
 
 <table><thead><tr><th>Name</th><th>Type</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>show</code></td><td><code>Event</code></td><td></td><td></td></tr><tr><td><code>hide</code></td><td><code>Event</code></td><td></td><td></td></tr></tbody></table>
 <hr>
-<h2 id="class-overlaysmanager"><a class="anchor" href="#class-overlaysmanager"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>class: <code>OverlaysManager</code></h2>
+<h2 id="class-overlaymixin"><a class="anchor" href="#class-overlaymixin"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>class: <code>OverlayMixin</code></h2>
 <h3 id="fields-1"><a class="anchor" href="#fields-1"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Fields</h3>
 
 
@@ -1028,9 +1007,40 @@ animation is played.</td><td><code>{ phase }, config: { animation?: boolean, pha
 
 
 
-<table><thead><tr><th>Name</th><th>Privacy</th><th>Type</th><th>Default</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>list</code></td><td>public</td><td></td><td></td><td>no setter as .list is intended to be read-only
-You can use .add or .remove to modify it</td><td></td></tr><tr><td><code>shownList</code></td><td>public</td><td></td><td></td><td>no setter as .shownList is intended to be read-only
-You can use .show or .hide on individual controllers to modify</td><td></td></tr><tr><td><code>siblingsInert</code></td><td>public</td><td></td><td></td><td>Features right now only for Global Overlay Manager</td><td></td></tr></tbody></table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Type</th><th>Default</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>config</code></td><td>public</td><td><code>Partial&lt;OverlayConfig&gt;</code></td><td><code>{}</code></td><td>Configure the many options of the `OverlayController`</td><td></td></tr><tr><td><code>opened</code></td><td>public</td><td><code>boolean</code></td><td><code>false</code></td><td>If you add the opened attribute a dialog will be opened on page load. The invoker can be left out
+in case the user does not need to be able to reopen the dialog.</td><td></td></tr><tr><td><code>_overlayBackdropNode</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_overlayContentNode</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_overlayContentWrapperNode</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_overlayInvokerNode</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_overlayReferenceNode</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr></tbody></table>
 <h3 id="methods-1"><a class="anchor" href="#methods-1"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Methods</h3>
 
 
@@ -1141,7 +1151,187 @@ You can use .show or .hide on individual controllers to modify</td><td></td></tr
 
 
 
-<table><thead><tr><th>Name</th><th>Privacy</th><th>Description</th><th>Parameters</th><th>Return</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>add</code></td><td>public</td><td>Registers an overlay controller.</td><td><code>ctrlToAdd: OverlayController</code></td><td><code>OverlayController</code></td><td></td></tr><tr><td><code>disableTrapsKeyboardFocusForAll</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>hide</code></td><td>public</td><td></td><td><code>ctrlToHide: any</code></td><td></td><td></td></tr><tr><td><code>informTrapsKeyboardFocusGotDisabled</code></td><td>public</td><td></td><td><code>{ disabledCtrl, findNewTrap = true }, options: { disabledCtrl?:OverlayController, findNewTrap?:boolean }</code></td><td></td><td></td></tr><tr><td><code>informTrapsKeyboardFocusGotEnabled</code></td><td>public</td><td></td><td><code>placementMode: 'local' | 'global' | undefined</code></td><td></td><td></td></tr><tr><td><code>remove</code></td><td>public</td><td></td><td><code>ctrlToRemove: OverlayController</code></td><td></td><td></td></tr><tr><td><code>requestToEnableScroll</code></td><td>public</td><td></td><td></td><td></td><td></td></tr><tr><td><code>requestToPreventScroll</code></td><td>public</td><td>PreventsScroll</td><td></td><td></td><td></td></tr><tr><td><code>requestToShowOnly</code></td><td>public</td><td>Blocking</td><td><code>blockingCtrl: OverlayController</code></td><td></td><td></td></tr><tr><td><code>retractRequestToShowOnly</code></td><td>public</td><td></td><td><code>blockingCtrl: OverlayController</code></td><td></td><td></td></tr><tr><td><code>show</code></td><td>public</td><td></td><td><code>ctrlToShow: OverlayController</code></td><td></td><td></td></tr><tr><td><code>teardown</code></td><td>public</td><td></td><td></td><td></td><td></td></tr></tbody></table>
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Description</th><th>Parameters</th><th>Return</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>close</code></td><td>public</td><td>Hides the overlay</td><td></td><td></td><td></td></tr><tr><td><code>open</code></td><td>public</td><td>Shows the overlay</td><td></td><td></td><td></td></tr><tr><td><code>repositionOverlay</code></td><td>public</td><td>Sometimes it's needed to recompute Popper position of an overlay, for instance when we have
+an opened combobox and the surrounding context changes (the space consumed by the textbox
+increases vertically)</td><td></td><td></td><td></td></tr><tr><td><code>toggle</code></td><td>public</td><td>Toggles the overlay</td><td></td><td></td><td></td></tr><tr><td><code>_defineOverlay</code></td><td>protected</td><td></td><td><code>{ contentNode, invokerNode, referenceNode, backdropNode, contentWrapperNode }, config: DefineOverlayConfig</code></td><td><code>OverlayController</code></td><td></td></tr><tr><td><code>_defineOverlayConfig</code></td><td>protected</td><td></td><td></td><td><code>OverlayConfig</code></td><td></td></tr><tr><td><code>_isPermanentlyDisconnected</code></td><td>protected</td><td>When we're moving around in dom, disconnectedCallback gets called.
+Before we decide to teardown, let's wait to see if we were not just moving nodes around.</td><td></td><td><code>Promise&lt;boolean&gt;</code></td><td></td></tr><tr><td><code>_setOpenedWithoutPropertyEffects</code></td><td>protected</td><td>When the opened state is changed by an Application Developer,cthe OverlayController is
+requested to show/hide. It might happen that this request is not honoured
+(intercepted in before-hide for instance), so that we need to sync the controller state
+to this webcomponent again, preventing eternal loops.</td><td><code>newOpened: boolean</code></td><td></td><td></td></tr><tr><td><code>_setupOpenCloseListeners</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_setupOverlayCtrl</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_teardownOpenCloseListeners</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr><tr><td><code>_teardownOverlayCtrl</code></td><td>protected</td><td></td><td></td><td></td><td></td></tr></tbody></table>
+<h3 id="events-1"><a class="anchor" href="#events-1"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Events</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Type</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>opened-changed</code></td><td><code>CustomEvent</code></td><td></td><td></td></tr></tbody></table>
+<h3 id="attributes"><a class="anchor" href="#attributes"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Attributes</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Field</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>opened</code></td><td>opened</td><td></td></tr></tbody></table>
+<hr>
+<h2 id="class-overlaysmanager"><a class="anchor" href="#class-overlaysmanager"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>class: <code>OverlaysManager</code></h2>
+<h3 id="fields-2"><a class="anchor" href="#fields-2"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Fields</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Type</th><th>Default</th><th>Description</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>list</code></td><td>public</td><td></td><td></td><td>no setter as .list is intended to be read-only
+You can use .add or .remove to modify it</td><td></td></tr><tr><td><code>shownList</code></td><td>public</td><td></td><td></td><td>no setter as .shownList is intended to be read-only
+You can use .show or .hide on individual controllers to modify</td><td></td></tr><tr><td><code>siblingsInert</code></td><td>public</td><td></td><td></td><td>Features right now only for Global Overlay Manager</td><td></td></tr><tr><td><code>_siblingsInert</code></td><td>protected</td><td><code>boolean</code></td><td><code>false</code></td><td></td><td></td></tr></tbody></table>
+<h3 id="methods-2"><a class="anchor" href="#methods-2"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>Methods</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Name</th><th>Privacy</th><th>Description</th><th>Parameters</th><th>Return</th><th>Inherited From</th></tr></thead><tbody><tr><td><code>add</code></td><td>public</td><td>Registers an overlay controller.</td><td><code>ctrlToAdd: OverlayController</code></td><td><code>OverlayController</code></td><td></td></tr><tr><td><code>hide</code></td><td>public</td><td></td><td><code>ctrlToHide: any</code></td><td></td><td></td></tr><tr><td><code>remove</code></td><td>public</td><td></td><td><code>ctrlToRemove: OverlayController</code></td><td></td><td></td></tr><tr><td><code>requestToEnableScroll</code></td><td>public</td><td></td><td><code>currentController: OverlayController</code></td><td></td><td></td></tr><tr><td><code>requestToPreventScroll</code></td><td>public</td><td>PreventsScroll</td><td></td><td></td><td></td></tr><tr><td><code>requestToShowOnly</code></td><td>public</td><td>Blocking</td><td><code>blockingCtrl: OverlayController</code></td><td></td><td></td></tr><tr><td><code>retractRequestToShowOnly</code></td><td>public</td><td></td><td><code>blockingCtrl: OverlayController</code></td><td></td><td></td></tr><tr><td><code>show</code></td><td>public</td><td></td><td><code>ctrlToShow: OverlayController</code></td><td></td><td></td></tr><tr><td><code>teardown</code></td><td>public</td><td></td><td></td><td></td><td></td></tr></tbody></table>
 <hr>
 
   

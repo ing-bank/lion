@@ -62,14 +62,14 @@
 <link rel="preload" href="../../../e3e8d065.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../962426a7.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../a055aa7d.js" as="script" crossorigin="anonymous" />
-<link rel="preload" href="../../../3de188a5.js" as="script" crossorigin="anonymous" />
-<link rel="preload" href="../../../24f95583.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../3d2078f8.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../08927fef.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../b4be29f1.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../05905ff1.js" as="script" crossorigin="anonymous" />
-<link rel="preload" href="../../../c35e1f22.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../0e580a6b.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../dfb90d18.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../4dc0ac82.js" as="script" crossorigin="anonymous" />
-<link rel="preload" href="../../../7902d8e0.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../5034b8b0.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../dc2f5f5a.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../d45984a3.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../4afec9a2.js" as="script" crossorigin="anonymous" />
@@ -78,9 +78,10 @@
 <link rel="preload" href="../../../19d2607c.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../afb8834e.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../143fde17.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../6722e641.js" as="script" crossorigin="anonymous" />
 <link rel="preload" href="../../../5516584c.js" as="script" crossorigin="anonymous" />
-<link rel="preload" href="../../../130d2801.js" as="script" crossorigin="anonymous" />
-<link rel="preload" href="../../../298b3bc0.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../06f5b106.js" as="script" crossorigin="anonymous" />
+<link rel="preload" href="../../../ee65bf86.js" as="script" crossorigin="anonymous" />
 </head>
 
   
@@ -663,7 +664,7 @@
     <a href="#validation" class="anchor">Validation</a>
   </li>
   <li class="menu-item anchor">
-    <a href="#with-checked-changed-handler" class="anchor">With checked-changed handler</a>
+    <a href="#with-model-value-changed-handler" class="anchor">With model-value-changed handler</a>
   </li>
 </ul>
 
@@ -805,8 +806,8 @@
 
 
 </mdjs-preview>
-<h2 id="with-checked-changed-handler"><a class="anchor" href="#with-checked-changed-handler"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>With checked-changed handler</h2>
-<p>You can listen for a <code>checked-changed</code> event that is fired when the switch is clicked.</p>
+<h2 id="with-model-value-changed-handler"><a class="anchor" href="#with-model-value-changed-handler"><svg class="octicon octicon-link" viewBox="0 0 16 16" aria-hidden="true" width="16" height="16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg></a>With model-value-changed handler</h2>
+<p>You can listen for a <code>model-value-changed</code> event that is fired when the switch is toggled.</p>
 <mdjs-preview mdjs-story-name="handler">
 
 
@@ -815,7 +816,7 @@
 </span><span class="code-line">  <span class="token keyword control-flow">return</span> html<span class="token template-string"><span class="token template-punctuation string">`</span><span class="token html language-html">
 </span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html">    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>lion-switch</span>
 </span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Label<span class="token punctuation">"</span></span>
-</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">@checked-changed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token parameter">ev</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
+</span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">      <span class="token attr-name">@model-value-changed</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token parameter">ev</span> <span class="token arrow operator">=&gt;</span> <span class="token punctuation">{</span>
 </span></span></span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag"><span class="token attr-value"><span class="token interpolation">        shadowRoot<span class="token punctuation">.</span><span class="token method function property-access">querySelector</span><span class="token punctuation">(</span><span class="token string">'sb-action-logger'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token method function property-access">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Current value: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>ev<span class="token punctuation">.</span><span class="token property-access">target</span><span class="token punctuation">.</span><span class="token property-access">checked</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 </span></span></span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag"><span class="token attr-value"><span class="token interpolation">      <span class="token punctuation">}</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token punctuation">"</span></span>
 </span></span></span></span><span class="code-line"><span class="token template-string"><span class="token html language-html"><span class="token tag">    <span class="token punctuation">&gt;</span></span>
@@ -938,6 +939,6 @@
 
 <script type="module" src="../../../e3e8d065.js"></script>
 <script type="module" src="../../../a055aa7d.js" inject-service-worker=""></script>
-<script type="module" src="../../../3de188a5.js" mdjs-setup=""></script>
+<script type="module" src="../../../3d2078f8.js" mdjs-setup=""></script>
 
 </body></html>
