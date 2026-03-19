@@ -1,8 +1,8 @@
 export default {
   error: {
-    Required: 'Please enter your {fieldName}.',
-    _RequiredUpload: 'Please upload your {fieldName}.',
-    _RequiredSelect: 'Please select your {fieldName}.',
+    Required: 'Please enter a value for {fieldName}.',
+    _RequiredUpload: 'Please upload a file for {fieldName}.',
+    _RequiredSelect: 'Please select an option for {fieldName}.',
     EqualsLength: 'Please enter a correct {fieldName} of exactly {params} characters.',
     MinLength: 'Please enter a correct {fieldName} (at least {params} characters).',
     MaxLength: 'Please enter a correct {fieldName} (up to {params} characters).',
@@ -23,9 +23,9 @@ export default {
     MatchesOption: 'No matching results. Please try a different keyword or category.',
   },
   warning: {
-    Required: 'Please enter your {fieldName}.',
-    _RequiredUpload: 'Please upload your {fieldName}.',
-    _RequiredSelect: 'Please select your {fieldName}.',
+    Required: 'Please enter a value for {fieldName}.',
+    _RequiredUpload: 'Please upload a file for {fieldName}.',
+    _RequiredSelect: 'Please select an option for {fieldName}.',
     EqualsLength: 'Please enter a correct {fieldName} of exactly {params} characters.',
     MinLength: 'Please enter a correct {fieldName} (at least {params} characters).',
     MaxLength: 'Please enter a correct {fieldName} (up to {params} characters).',

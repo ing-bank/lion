@@ -1,7 +1,7 @@
 export default {
   error: {
     Required: 'Veuillez également renseigner le champ {fieldName}.',
-    _RequiredUpload: 'Veuillez télécharger le champ {fieldName}.',
+    _RequiredUpload: 'Veuillez télécharger un fichier pour le champ {fieldName}.',
     _RequiredSelect: 'Veuillez également sélectionner le champ {fieldName}.',
     EqualsLength:
       'Veuillez saisir une valeur correcte pour le champ {fieldName} comptant précisément {params} caractères.',
@@ -30,7 +30,7 @@ export default {
   },
   warning: {
     Required: 'Veuillez également renseigner le champ {fieldName}.',
-    _RequiredUpload: 'Veuillez télécharger le champ {fieldName}.',
+    _RequiredUpload: 'Veuillez télécharger un fichier pour le champ {fieldName}.',
     _RequiredSelect: 'Veuillez également sélectionner le champ {fieldName}.',
     EqualsLength:
       'Veuillez saisir une valeur correcte pour le champ {fieldName} comptant précisément {params} caractères.',
