@@ -1,7 +1,7 @@
-import { html, css, render, nothing } from 'lit';
-import { formatNumber, LocalizeMixin, parseNumber } from '@lion/ui/localize-no-side-effects.js';
+import { IsNumber, MaxNumber, MinNumber } from '@lion/ui/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
-import { IsNumber, MinNumber, MaxNumber } from '@lion/ui/form-core.js';
+import { formatNumber, LocalizeMixin, parseNumber } from '@lion/ui/localize-no-side-effects.js';
+import { css, html, nothing, render } from 'lit';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
@@ -283,6 +283,9 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    * @protected
    */
   _increment() {
+    if (this.readOnly) {
+      return;
+    }
     const { step, min, max } = this.values;
     const stepMin = min !== Infinity ? min : 0;
     const epsilon = 1e-10; // Tolerance for floating-point comparison
@@ -312,6 +315,9 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
    * @protected
    */
   _decrement() {
+    if (this.readOnly) {
+      return;
+    }
     const { step, max, min } = this.values;
     const stepMin = min !== Infinity ? min : 0;
     const epsilon = 1e-10; // Tolerance for floating-point comparison
