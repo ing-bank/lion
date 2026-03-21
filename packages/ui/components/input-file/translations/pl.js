@@ -17,4 +17,7 @@ export default {
   selectTextDuplicateFileName: 'Plik o tej samej nazwie już istnieje.',
   selectTextMultipleFile: 'Wybierz pliki',
   selectTextSingleFile: 'Wybierz plik',
+  statusLoading: 'Przesyłam pliki, proszę czekać.',
+  statusSuccess: 'Plik {fileName} został dodany.',
+  statusRemoved: 'Plik {fileName} został usunięty.',
 };
