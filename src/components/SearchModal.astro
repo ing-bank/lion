@@ -127,25 +127,21 @@ const { uiOptions = { showImages: false } } = Astro.props as Props;
   const initializeSearchModal = () => {
     const searchModal = document.getElementById("searchModal");
     const closeSearchModal = document.getElementById("closeSearchModal");
-    const searchIcon = document.querySelector(".search-link");
 
     if (!searchModal) {
       console.warn("SearchModal: #searchModal element not found");
       return;
     }
 
-    // Open modal when search icon is clicked
-    if (searchIcon) {
-      searchIcon.addEventListener("click", (e) => {
-        e.preventDefault();
-        searchModal.classList.add("open");
-        // Focus the search input
-        setTimeout(() => {
-          const input = document.querySelector(".search-modal .pagefind-ui input");
-          if (input) input.focus();
-        }, 100);
-      });
-    }
+    // Open modal when search event is dispatched
+    document.addEventListener('search-requested', () => {
+      searchModal.classList.add("open");
+      // Focus the search input
+      setTimeout(() => {
+        const input = document.querySelector(".search-modal .pagefind-ui input");
+        if (input) input.focus();
+      }, 100);
+    });
 
     // Close modal when close button is clicked
     if (closeSearchModal) {

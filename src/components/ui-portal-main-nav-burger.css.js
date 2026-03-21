@@ -30,13 +30,11 @@ export default css`
   :host([data-layout='floating-toggle']) #l1-wrapper {
     display: none;
     z-index: 100;
-    background: #fff;
   }
 
   :host([data-layout='floating-toggle']) [data-part='level'][data-level='1'],
   :host([data-layout='floating-toggle']) [data-part='level'][data-level='2'] {
     z-index: 100;
-    background: #fff;
   }
 
   :host([data-layout='floating-toggle']) #burger-toggle:checked ~ #l1-wrapper {
