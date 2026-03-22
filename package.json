@@ -54,7 +54,7 @@
   },
   "devDependencies": {
     "@astrojs/lit": "^4.3.0",
-    "@astrojs/mdx": "^4.0.8",
+    "@astrojs/mdx": "^5.0.0",
     "@babel/core": "^7.25.8",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
     "@changesets/cli": "^2.29.8",
@@ -88,7 +88,7 @@
     "@web/test-runner-playwright": "^0.11.0",
     "@webcomponents/scoped-custom-element-registry": "^0.0.10",
     "@webcomponents/template-shadowroot": "^0.2.1",
-    "astro": "^5.18.1",
+    "astro": "^6.0.8",
     "astro-pagefind": "^1.8.5",
     "astro-seo": "^0.7.5",
     "bundlesize": "^1.0.0-beta.2",
@@ -212,7 +212,8 @@
       ".": "^0.6.0",
       "@lion/ui": "^0.15.0"
     },
-    "pug-code-gen": "3.0.3"
+    "pug-code-gen": "3.0.3",
+    "astro": "^6.0.8"
   },
   "prettier": {
     "printWidth": 100,
