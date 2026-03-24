@@ -9,44 +9,34 @@ const { uiOptions = { showImages: false } } = Astro.props as Props;
 ---
 
 <style>
-  .search-modal {
-    display: none;
+  dialog#searchModal {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 100px;
-    overflow-y: auto;
-  }
-
-  .search-modal.open {
-    display: flex;
-  }
-
-  .search-modal-content {
-    background-color: #0a0a0a;
-    border-radius: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 90%;
     max-width: 700px;
     padding: 40px;
+    background-color: #0a0a0a;
+    border: none;
+    border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    position: relative;
+    z-index: 1000;
     animation: slideIn 0.3s ease-out;
+  }
+
+  dialog#searchModal::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
   }
 
   @keyframes slideIn {
     from {
       opacity: 0;
-      transform: translateY(-20px);
+      transform: translate(-50%, -55%);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate(-50%, -50%);
     }
   }
 
@@ -88,7 +78,7 @@ const { uiOptions = { showImages: false } } = Astro.props as Props;
     font-size: 0.95rem;
   }
 
-  :global(.search-modal .pagefind-ui) {
+  :global(dialog#searchModal .pagefind-ui) {
     --pagefind-ui-primary: #FFC107;
     --pagefind-ui-text: #ffffff;
     --pagefind-ui-background: #0a0a0a;
@@ -97,7 +87,7 @@ const { uiOptions = { showImages: false } } = Astro.props as Props;
   }
 
   @media (max-width: 600px) {
-    .search-modal-content {
+    dialog#searchModal {
       width: 95%;
       padding: 20px;
       padding-top: 50px;
@@ -109,23 +99,21 @@ const { uiOptions = { showImages: false } } = Astro.props as Props;
   }
 </style>
 
-<div class="search-modal" id="searchModal">
-  <div class="search-modal-content">
-    <button class="search-modal-close" id="closeSearchModal" aria-label="Close search">
-      ×
-    </button>
-    <div class="search-header">
-      <h2>Search</h2>
-      <p>Find components, guides, and documentation</p>
-    </div>
-    <Search id="search" className="pagefind-ui" uiOptions={uiOptions} client:load />
+<dialog id="searchModal">
+  <button class="search-modal-close" id="closeSearchModal" aria-label="Close search">
+    ×
+  </button>
+  <div class="search-header">
+    <h2>Search</h2>
+    <p>Find components, guides, and documentation</p>
   </div>
-</div>
+  <Search id="search" className="pagefind-ui" uiOptions={uiOptions} client:load />
+</dialog>
 
 <script>
   // Ensure DOM is ready before initializing
   const initializeSearchModal = () => {
-    const searchModal = document.getElementById("searchModal");
+    const searchModal = document.getElementById("searchModal") as HTMLDialogElement;
     const closeSearchModal = document.getElementById("closeSearchModal");
 
     if (!searchModal) {
@@ -135,32 +123,25 @@ const { uiOptions = { showImages: false } } = Astro.props as Props;
 
     // Open modal when search event is dispatched
     document.addEventListener('search-requested', () => {
-      searchModal.classList.add("open");
+      searchModal.showModal();
       // Focus the search input
       setTimeout(() => {
-        const input = document.querySelector(".search-modal .pagefind-ui input");
-        if (input) input.focus();
+        const input = document.querySelector("dialog#searchModal .pagefind-ui input");
+        if (input) (input as HTMLInputElement).focus();
       }, 100);
     });
 
     // Close modal when close button is clicked
     if (closeSearchModal) {
       closeSearchModal.addEventListener("click", () => {
-        searchModal.classList.remove("open");
+        searchModal.close();
       });
     }
 
-    // Close modal when clicking outside the content
+    // Close modal when clicking outside the content (on the backdrop)
     searchModal.addEventListener("click", (e) => {
       if (e.target === searchModal) {
-        searchModal.classList.remove("open");
-      }
-    });
-
-    // Close modal on Escape key
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && searchModal.classList.contains("open")) {
-        searchModal.classList.remove("open");
+        searchModal.close();
       }
     });
   };

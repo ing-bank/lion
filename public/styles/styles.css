@@ -89,7 +89,7 @@ body {
 /* Header */
 .site-header {
     padding: 24px 0;
-    position: fixed;
+    position: sticky;
     top: 0;
     width: 100%;
     z-index: 100;
@@ -97,6 +97,7 @@ body {
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    min-height: 85px;
 }
 
 .site-header .container {
@@ -592,12 +593,11 @@ body {
 .docs-content {
     max-width: 800px;
     min-width: 320px;
-    padding-top: 5rem;
 }
 
 /* Markdown content styles */
 .docs-content h1 {
-    font-size: 2.5rem;
+    font-size: 6rem;
     line-height: 1.2;
     margin-top: 3rem;
     margin-bottom: 1.5rem;
@@ -738,4 +738,42 @@ body {
 
 .flex {
     display: flex;
+}
+
+.astro-code {
+    background-color: var(--bg-color) !important;
+    --shiki-dark-bg: var(--bg-color) !important;
+    color: var(--text-primary) !important;
+    --shiki-dark: var(--text-secondary) !important;
+    overflow-x: auto !important;
+    filter: grayscale(100%);
+}
+
+.astro-code:hover {
+    filter: grayscale(0%);
+}
+
+.astro-code [style="color:#24292E;--shiki-dark:#E1E4E8"] {
+    color: var(--text-primary) !important;
+}
+
+.astro-code [style="color:#032F62;--shiki-dark:#9ECBFF"] {
+    color: var(--highlight-color) !important;
+}
+
+.astro-code [style="color:#6F42C1;--shiki-dark:#B392F0"] {
+    color: #999 !important;
+}
+
+.astro-code [style="color:#D73A49;--shiki-dark:#F97583"] {
+    color: #777 !important;
+}
+.astro-code [style="color:#22863A;--shiki-dark:#85E89D"] {
+    color: var(--highlight-color) !important;
+}
+.astro-code [style="color:#22863A;--shiki-dark:#85E89D"] {
+    color: var(--highlight-color) !important;
+}
+.astro-code [style="color:#005CC5;--shiki-dark:#79B8FF"] {
+    color: #777 !important;
 }

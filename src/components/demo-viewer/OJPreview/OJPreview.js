@@ -228,6 +228,7 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
           background: white;
           color: black;
           padding: var(--spacing-3xl);
+          border-radius: 1rem;
         }
 
         :host(:not([device-mode])) #wrapper {

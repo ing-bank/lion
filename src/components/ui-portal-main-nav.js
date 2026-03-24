@@ -1,7 +1,5 @@
-/* eslint-disable lit-a11y/anchor-is-valid */
-import { css, html, nothing } from 'lit';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
+/* eslint-disable lit-a11y/anchor-is-valid, import/no-extraneous-dependencies */
+import { css } from 'lit';
 // import '@lion/ui/define/lion-icon.js';
 import { UIBaseElement } from './shared/UIBaseElement.js';
 import { addIconResolverForPortal } from './iconset-portal/addIconResolverForPortal.js';
@@ -206,51 +204,51 @@ export class UIPortalMainNav extends UIBaseElement {
     };
   }
 
-  static templates = {
-    main(context) {
-      const { data, templates } = context;
+  // static templates = {
+  //   main(context) {
+  //     const { data, templates } = context;
 
-      return html` <nav>${templates.navLevel(context, { children: data.items })}</nav> `;
-    },
-    navLevel(context, { children }) {
-      const { templates } = context;
+  //     return html` <nav>${templates.navLevel(context, { children: data.items })}</nav> `;
+  //   },
+  //   navLevel(context, { children }) {
+  //     const { templates } = context;
 
-      return html`<ul>
-        ${children.map(
-          item =>
-            html`<li>
-              ${templates.navItem(context, { item })}
-              ${item.children?.length
-                ? html`<ul>
-                    <li>
-                      ${item.children.map(
-                        child1 => html`
-                          ${templates.navItem(context, { item: child1 })}
-                          ${child1.children?.length
-                            ? html` collapsible
-                                <ul>
-                                  ${item.children.map(
-                                    child2 => html`
-                                      <li>${templates.navItem(context, { item: child2 })}</li>
-                                    `,
-                                  )}
-                                </ul>`
-                            : nothing}
-                        `,
-                      )}
-                    </li>
-                  </ul>`
-                : nothing}
-            </li>`,
-        )}
-      </ul>`;
-    },
-    navItem(context, { item }) {
-      return html`<a href="${item.redirect || item.url}" aria-current=${item.active ? 'page' : ''}
-        >${item.name}
-      </a>`;
-    },
-  };
+  //     return html`<ul>
+  //       ${children.map(
+  //         item =>
+  //           html`<li>
+  //             ${templates.navItem(context, { item })}
+  //             ${item.children?.length
+  //               ? html`<ul>
+  //                   <li>
+  //                     ${item.children.map(
+  //                       child1 => html`
+  //                         ${templates.navItem(context, { item: child1 })}
+  //                         ${child1.children?.length
+  //                           ? html` collapsible
+  //                               <ul>
+  //                                 ${item.children.map(
+  //                                   child2 => html`
+  //                                     <li>${templates.navItem(context, { item: child2 })}</li>
+  //                                   `,
+  //                                 )}
+  //                               </ul>`
+  //                           : nothing}
+  //                       `,
+  //                     )}
+  //                   </li>
+  //                 </ul>`
+  //               : nothing}
+  //           </li>`,
+  //       )}
+  //     </ul>`;
+  //   },
+  //   navItem(context, { item }) {
+  //     return html`<a href="${item.redirect || item.url}" aria-current=${item.active ? 'page' : ''}
+  //       >${item.name}
+  //     </a>`;
+  //   },
+  // };
 }
 export const tagName = 'ui-portal-main-nav';
 
@@ -260,125 +258,228 @@ const sharedGlobalStyles = css`
   }
 `;
 
-/**
- * Base UI Nav templates contains an accessible base html that can be used for all kinds of navigations,
- * regardless of presentation: horizontally stacked, vertically stacked or a combination of both.
- * With or without collapsible levels, with or without overlays.
- * with any amount of nested levels.
- * @returns
- */
-const baseUINavMarkup = {
-  templates: () => ({
-    main(context) {
-      const { data, templates } = context;
+// /**
+//  * Base UI Nav templates contains an accessible base html that can be used for all kinds of navigations,
+//  * regardless of presentation: horizontally stacked, vertically stacked or a combination of both.
+//  * With or without collapsible levels, with or without overlays.
+//  * with any amount of nested levels.
+//  * @returns
+//  */
+// const baseUINavMarkup = {
+//   templates: () => ({
+//     main(context) {
+//       const { data, templates } = context;
 
-      return html`
-        <nav data-part="nav">
-          <input type="checkbox" id="burger-toggle" hidden />
-          <label for="burger-toggle" class="burger">
-            <span></span>
-            <span></span>
-            <span></span>
-          </label>
+//       return html`
+//         <nav data-part="nav">
+//           <input type="checkbox" id="burger-toggle" hidden />
+//           <label for="burger-toggle" class="burger">
+//             <span></span>
+//             <span></span>
+//             <span></span>
+//           </label>
 
-          <div id="l1-wrapper" data-part="l1-wrapper">
-            ${templates.navRootLevel(context, { children: data.items, level: 1 })}
-            ${templates.navNestedLevel(context, {
-              children: data.items.find(item => item.active)?.children,
-              level: 2,
-            })}
-          </div>
-        </nav>
-      `;
-    },
-    navRootLevel(context, { children, level, hasActiveChild = false }) {
-      const { templates } = context;
-      const navItems = children.filter(item => !item.svg);
-      const actionItems = children.filter(item => item.svg);
+//           <div id="l1-wrapper" data-part="l1-wrapper">
+//             ${templates.navRootLevel(context, { children: data.items, level: 1 })}
+//             ${templates.navNestedLevel(context, {
+//               children: data.items.find(item => item.active)?.children,
+//               level: 2,
+//             })}
+//           </div>
+//         </nav>
+//       `;
+//     },
+//     navRootLevel(context, { children, level, hasActiveChild = false }) {
+//       const { templates } = context;
+//       const navItems = children.filter(item => !item.svg);
+//       const actionItems = children.filter(item => item.svg);
 
-      return html`<div
-        data-part="level"
-        data-level="${level}"
-        data-has-active-child="${hasActiveChild}"
-      >
-        <ul data-part="list" data-level="${level}">
-          ${navItems.map(
-            item =>
-              html` <li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
-                ${templates.navItem(context, { item, level })}
-              </li>`,
-          )}
-        </ul>
-        <div class="nav-item-last">
-          ${actionItems.map(
-            item =>
-              html`<a
-                href="${item.url}"
-                data-part="anchor"
-                data-level="${level}"
-                title="${item.name}"
-                ?target="${item.target}"
-                ?rel="${item.rel}"
-              >
-                ${unsafeHTML(item.svg)}
-                <span>${item.name}</span>
-              </a>`,
-          )}
-        </div>
-      </div>`;
-    },
-    navNestedLevel(context, { children, level, hasActiveChild = false }) {
-      const { templates } = context;
+//       return html`<div
+//         data-part="level"
+//         data-level="${level}"
+//         data-has-active-child="${hasActiveChild}"
+//       >
+//         <ul data-part="list" data-level="${level}">
+//           ${navItems.map(
+//             item =>
+//               html` <li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
+//                 ${templates.navItem(context, { item, level })}
+//               </li>`,
+//           )}
+//         </ul>
+//         <div class="nav-item-last">
+//           ${actionItems.map(
+//             item =>
+//               html`<a
+//                 href="${item.url}"
+//                 data-part="anchor"
+//                 data-level="${level}"
+//                 title="${item.name}"
+//                 ?target="${item.target}"
+//                 ?rel="${item.rel}"
+//               >
+//                 ${unsafeHTML(item.svg)}
+//                 <span>${item.name}</span>
+//               </a>`,
+//           )}
+//         </div>
+//       </div>`;
+//     },
+//     navNestedLevel(context, { children, level, hasActiveChild = false }) {
+//       const { templates } = context;
 
-      if (!children?.length) {
-        return nothing;
-      }
+//       if (!children?.length) {
+//         return nothing;
+//       }
 
-      return html`<div
-        data-part="level"
-        data-level="${level}"
-        data-has-active-child="${hasActiveChild}"
-      >
-        <ul data-part="list" data-level="${level}">
-          ${children.map(
-            item =>
-              html`<li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
-                ${templates.navItem(context, { item, level })}
-                ${item.children?.length
-                  ? templates.navNestedLevel(context, {
-                      level: level + 1,
-                      children: item.children,
-                      hasActiveChild: item.hasActiveChild,
-                    })
-                  : nothing}
-              </li>`,
-          )}
-        </ul>
-      </div>`;
-    },
-    navItem(context, { item, level }) {
-      return html`<a
-        data-part="anchor"
-        data-level="${level}"
-        href="${item.redirect || item.url}"
-        aria-current=${item.active ? 'page' : ''}
-        >${level === 1
-          ? html`<lion-icon
-              data-part="icon"
-              data-level="${level}"
-              icon-id="${item.iconId}${item.active ? 'Filled' : ''}"
-            ></lion-icon>`
-          : nothing}<span>${item.name}</span></a
-      >`;
-    },
-  }),
-  // this is not working
-  // you need to use global elements definitions
-  scopedElements: () => ({}),
-};
+//       return html`<div
+//         data-part="level"
+//         data-level="${level}"
+//         data-has-active-child="${hasActiveChild}"
+//       >
+//         <ul data-part="list" data-level="${level}">
+//           ${children.map(
+//             item =>
+//               html`<li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
+//                 ${templates.navItem(context, { item, level })}
+//                 ${item.children?.length
+//                   ? templates.navNestedLevel(context, {
+//                       level: level + 1,
+//                       children: item.children,
+//                       hasActiveChild: item.hasActiveChild,
+//                     })
+//                   : nothing}
+//               </li>`,
+//           )}
+//         </ul>
+//       </div>`;
+//     },
+//     navItem(context, { item, level }) {
+//       return html`<a
+//         data-part="anchor"
+//         data-level="${level}"
+//         href="${item.redirect || item.url}"
+//         aria-current=${item.active ? 'page' : ''}
+//         >${level === 1
+//           ? html` <lion-icon
+//               data-part="icon"
+//               data-level="${level}"
+//               icon-id="${item.iconId}${item.active ? 'Filled' : ''}"
+//             ></lion-icon>`
+//           : nothing}<span>${item.name}</span>
+//       </a>`;
+//     },
+//   }),
+//   // this is not working
+//   // you need to use global elements definitions
+//   scopedElements: () => ({}),
+// };
 
-UIPortalMainNav.provideStylesAndMarkup({
-  markup: baseUINavMarkup,
+UIPortalMainNav.provideDesign({
+  // templates: () => ({
+  //   main(context) {
+  //     const { data, templates } = context;
+
+  //     return html`
+  //       <nav data-part="nav">
+  //         <input type="checkbox" id="burger-toggle" hidden />
+  //         <label for="burger-toggle" class="burger">
+  //           <span></span>
+  //           <span></span>
+  //           <span></span>
+  //         </label>
+
+  //         <div id="l1-wrapper" data-part="l1-wrapper">
+  //           ${templates.navRootLevel(context, { children: data.items, level: 1 })}
+  //           ${templates.navNestedLevel(context, {
+  //             children: data.items.find(item => item.active)?.children,
+  //             level: 2,
+  //           })}
+  //         </div>
+  //       </nav>
+  //     `;
+  //   },
+  //   navRootLevel(context, { children, level, hasActiveChild = false }) {
+  //     const { templates } = context;
+  //     const navItems = children.filter(item => !item.svg);
+  //     const actionItems = children.filter(item => item.svg);
+
+  //     return html`<div
+  //       data-part="level"
+  //       data-level="${level}"
+  //       data-has-active-child="${hasActiveChild}"
+  //     >
+  //       <ul data-part="list" data-level="${level}">
+  //         ${navItems.map(
+  //           item =>
+  //             html` <li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
+  //               ${templates.navItem(context, { item, level })}
+  //             </li>`,
+  //         )}
+  //       </ul>
+  //       <div class="nav-item-last">
+  //         ${actionItems.map(
+  //           item =>
+  //             html`<a
+  //               href="${item.url}"
+  //               data-part="anchor"
+  //               data-level="${level}"
+  //               title="${item.name}"
+  //               ?target="${item.target}"
+  //               ?rel="${item.rel}"
+  //             >
+  //               ${unsafeHTML(item.svg)}
+  //               <span>${item.name}</span>
+  //             </a>`,
+  //         )}
+  //       </div>
+  //     </div>`;
+  //   },
+  //   navNestedLevel(context, { children, level, hasActiveChild = false }) {
+  //     const { templates } = context;
+
+  //     if (!children?.length) {
+  //       return nothing;
+  //     }
+
+  //     return html`<div
+  //       data-part="level"
+  //       data-level="${level}"
+  //       data-has-active-child="${hasActiveChild}"
+  //     >
+  //       <ul data-part="list" data-level="${level}">
+  //         ${children.map(
+  //           item =>
+  //             html`<li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
+  //               ${templates.navItem(context, { item, level })}
+  //               ${item.children?.length
+  //                 ? templates.navNestedLevel(context, {
+  //                     level: level + 1,
+  //                     children: item.children,
+  //                     hasActiveChild: item.hasActiveChild,
+  //                   })
+  //                 : nothing}
+  //             </li>`,
+  //         )}
+  //       </ul>
+  //     </div>`;
+  //   },
+  //   navItem(context, { item, level }) {
+  //     return html`<a
+  //       data-part="anchor"
+  //       data-level="${level}"
+  //       href="${item.redirect || item.url}"
+  //       aria-current=${item.active ? 'page' : ''}
+  //       >${level === 1
+  //         ? html` <lion-icon
+  //             data-part="icon"
+  //             data-level="${level}"
+  //             icon-id="${item.iconId}${item.active ? 'Filled' : ''}"
+  //           ></lion-icon>`
+  //         : nothing}<span>${item.name}</span>
+  //     </a>`;
+  //   },
+  // }),
   /** Horizontal layout */
   styles: () => [
     sharedGlobalStyles,

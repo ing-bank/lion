@@ -25,9 +25,8 @@ describe('Entrypoints localize', () => {
   });
 
   it('"@lion/ui/localize.js" has side effects (c.q. registers itself on singletonManager)', async () => {
-    const /** @type {{ localize: LocalizeManagerForTesting }} */ { localize } = await import(
-        '@lion/ui/localize.js'
-      );
+    const /** @type {{ localize: LocalizeManagerForTesting }} */ { localize } =
+        await import('@lion/ui/localize.js');
     localize.aCallToRegisterLazilyLoadedInstance?.();
 
     expect(singletonManagerSetSpy).to.have.been.calledOnce;

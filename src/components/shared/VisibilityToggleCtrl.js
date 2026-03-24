@@ -57,7 +57,6 @@ export class VisibilityToggleCtrl {
 
   constructor(host, options) {
     (this.host = host).addController(this);
-    // console.log('VisibilityToggleCtrl ctor', this.host.__controllers);
     const {
       invoker,
       target,
@@ -122,7 +121,6 @@ export class VisibilityToggleCtrl {
       if (!isServer) {
         this._rTarget.addEventListener?.('beforetoggle', event => {
           if (this.__wasInternalPopoverSync) return;
-          // console.log('beforetoggle');
           if (event.target !== this.target) return;
 
           if (event.newState === 'open') {
@@ -131,7 +129,6 @@ export class VisibilityToggleCtrl {
         });
         this._rTarget.addEventListener?.('toggle', event => {
           if (this.__wasInternalPopoverSync) return;
-          // console.log('toggle', 'event.target', event.target, 'this.target', this.target);
 
           if (event.target !== this.target) return;
 
@@ -164,7 +161,6 @@ export class VisibilityToggleCtrl {
         if (this.__wasInternalPopoverSync || !this.visuallyHidden || this.open) {
           return;
         }
-        // console.log('set focusin', event.relatedTarget);
         this._set({ open: true });
       });
       this._rTarget.addEventListener?.('focusout', async focusoutEvent => {
@@ -193,7 +189,6 @@ export class VisibilityToggleCtrl {
     const { usesPopover, visuallyHidden } = this;
 
     this.open = Boolean(open === 'toggle' ? !this.open : open);
-    // console.trace(this.open, this.target);
 
     this._rTarget.toggleAttribute?.('data-open', this.open);
     if (!usesPopover) {
@@ -217,7 +212,6 @@ export class VisibilityToggleCtrl {
 
     // Note we don't want smth to animate when we start
     if (!isInitialRender && !isServer) {
-      // console.trace(this.target.getAnimations()[0]?.playState, this.target, this.open);
       try {
         await Promise.all(this.target.getAnimations().map(animation => animation.finished));
       } catch (e) {

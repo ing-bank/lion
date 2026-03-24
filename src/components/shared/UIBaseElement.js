@@ -1,4 +1,4 @@
-/* eslint-disable max-classes-per-file, import/no-extraneous-dependencies */
+/* eslint-disable max-classes-per-file */
 import { LitElement, ReactiveElement, css, unsafeCSS, isServer } from 'lit';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
@@ -33,7 +33,6 @@ export const supportsAdoptingStyleSheets =
  */
 export function adoptStyles(renderRoot, styles) {
   if (supportsAdoptingStyleSheets && renderRoot.adoptedStyleSheets) {
-    // eslint-disable-next-line no-param-reassign
     renderRoot.adoptedStyleSheets = styles.map(s =>
       s instanceof CSSStyleSheet ? s : s.styleSheet,
     );
@@ -41,7 +40,7 @@ export function adoptStyles(renderRoot, styles) {
     // TODO: fix SSR
     for (const s of styles) {
       const style = document.createElement('style');
-      const nonce = globalThis.litNonce;
+      const nonce = globalThis['litNonce'];
       if (nonce !== undefined) {
         style.setAttribute('nonce', nonce);
       }
@@ -142,13 +141,9 @@ function cssToNum(cssString) {
  */
 export class DynamicLayoutCtrl {
   host;
-
   container;
-
   resizeObserver;
-
   dynamicLayouts;
-
   currentLayout;
 
   onLayoutChange;
@@ -208,8 +203,6 @@ export class DynamicLayoutCtrl {
     const newLayout = layoutArrayOrdered.find(
       layout => newWidth >= cssToNum(layout[1].breakpoint),
     )?.[0];
-
-    console.debug('newWidth', newWidth, 'newLayout', newLayout);
 
     if (newLayout !== this.currentLayout) {
       this.host.setAttribute('data-layout', newLayout);
@@ -317,8 +310,6 @@ const UIBaseElementMixinImplementation = superclass =>
         },
       });
 
-      console.debug('this.dynamicLayoutCtrl', this.dynamicLayoutCtrl);
-
       this.scopedRegistryCtrl = new ScopedRegistryCtrl({
         host: this,
         scopedElements: this.scopedElements,
@@ -363,8 +354,8 @@ const UIBaseElementMixinImplementation = superclass =>
         dynamicLayouts = provider.dynamicLayouts(this.dynamicLayouts);
         const entries = Object.entries(dynamicLayouts);
         for (let i = 0; i < entries.length; i += 1) {
-          const [, { styles, breakpoint, container }] = entries[i];
-          const [, next] = entries[i + 1] || [];
+          const [name, { styles, breakpoint, container, templateContextProcessor }] = entries[i];
+          const [nextName, next] = entries[i + 1] || [];
           const queryType = container === globalThis ? 'media' : 'container';
 
           for (const style of styles || []) {
@@ -556,7 +547,6 @@ const UIBaseElementMixinImplementation = superclass =>
      * }
      * ```
      */
-    // eslint-disable-next-line class-methods-use-this
     onSetup() {}
 
     /**
@@ -586,7 +576,6 @@ const UIBaseElementMixinImplementation = superclass =>
      * }
      * ```
      */
-    // eslint-disable-next-line class-methods-use-this
     onTeardown() {}
 
     connectedCallback() {

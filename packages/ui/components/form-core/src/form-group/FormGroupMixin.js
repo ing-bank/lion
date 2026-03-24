@@ -424,7 +424,7 @@ const FormGroupMixinImplementation = superclass =>
         }
         return Boolean(
           this.formElements[name].hasFeedbackFor &&
-            this.formElements[name].hasFeedbackFor.includes(state),
+          this.formElements[name].hasFeedbackFor.includes(state),
         );
       });
     }
