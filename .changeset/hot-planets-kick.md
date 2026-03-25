@@ -1,5 +1,5 @@
 ---
-'@lion/button': patch
+'@lion/ui': patch
 ---
 
-Fixed button default styling to align with platform requirements.
+[button] fix button default styling to align with platform requirements.

@@ -1,5 +1,5 @@
 ---
-'@lion/overlays': patch
+'@lion/ui': patch
 ---
 
-Fixed popper.js bug in nested shadow roots and improved compatibility with demo viewer.
+[overlays] fix popper.js bug in nested shadow roots and improved compatibility with demo viewer.
