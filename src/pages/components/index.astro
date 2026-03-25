@@ -1,6 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from "astro:content";
-import ComponentsLayout from "../../layouts/ComponentsLayout.astro";
+import ComponentsOverviewLayout from "../../layouts/ComponentsOverviewLayout.astro";
 
 // Define component interface
 interface ComponentCard {
@@ -57,4 +57,4 @@ const components: ComponentCard[] = lionComponents
   .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
 ---
 
-<ComponentsLayout components={components} />
+<ComponentsOverviewLayout components={components} />

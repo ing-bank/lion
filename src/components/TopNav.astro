@@ -1,49 +1,262 @@
 ---
+import { getCollection } from "astro:content";
+// import { UIPortalMainNav } from './ui-portal-main-nav.js';
+import { UIMainNav as UIPortalMainNav } from './UIMainNav/ui-main-nav.js';
+
 import SearchModal from './SearchModal.astro';
 
-interface NavItem {
-  label: string;
-  href: string;
-  external?: boolean;
-}
-
 interface Props {
-  activeNavItem?: string;
-  navigationItems?: NavItem[];
+  variant?: string;
 }
 
-// Default navigation structure
-const defaultNavigationItems: NavItem[] = [
-  {
-    label: "Fundamentals",
-    href: `${import.meta.env.BASE_URL}/fundamentals`
-  },  
-  {
-    label: "Guides",
-    href: `${import.meta.env.BASE_URL}/guides`
-  },
-  {
-    label: "Components", 
-    href: `${import.meta.env.BASE_URL}/components`
-  },
-  {
-    label: "Blog",
-    href: `${import.meta.env.BASE_URL}/blog`
+async function buildCollectionTree(collectionName, filter) {
+  const entries = await getCollection(collectionName, filter);
+  const entriesSortedByLevel = entries
+    .map((entry) => {
+      const level = entry.id.split('/').length;
+      return { ...entry, level };
+    })
+    .sort((a, b) => a.level - b.level);
+  const navigationMap = { children: [] };
+
+  for (const entry of entriesSortedByLevel) {
+    if (entry.id === 'index' || entry.id.endsWith('/index')) {
+      // Skip index pages, as they are represented as folders
+      continue;
+    }
+
+    navigationMap[entry.id] = { entry, children: [] };
+    const parentUrl = entry.id.split('/').slice(0, -1).join('/');
+    if (navigationMap[parentUrl]) {
+      navigationMap[parentUrl].children.push(navigationMap[entry.id]);
+    } else {
+      navigationMap.children.push(navigationMap[entry.id]);
+    }
+
   }
+
+  return navigationMap.children;
+}
+
+function convertCollectionTreeToNavigation(collectionTree, baseUrl = '/', isSortedAlphabetically = true) {
+  const navigation = [];
+  collectionTree.forEach((collectionNode) => {
+    const { entry, children } = collectionNode;
+    const navigationNode = {
+      name: entry.data?.eleventyNavigation?.title || entry.id,
+      url: [baseUrl, entry.id].join('/'),
+      priority: entry.data?.eleventyNavigation?.order || 0,
+    };
+
+    if (children.length > 0) {
+      navigationNode.children = convertCollectionTreeToNavigation(children, baseUrl, false);
+    }
+
+    navigation.push(navigationNode);
+  });
+
+  if (isSortedAlphabetically) {
+    navigation.sort((a, b) => a.name.localeCompare(b.name));
+  } else {
+    // Sort child items by priority
+    navigation.sort((a, b) => a.priority - b.priority);
+  }
+
+  // if page has a child, we sent to the first child
+  // this preserves the logic of the previous implementation
+  // see @rocket/navigation@0.2.1 /src/RocketNavigation.js
+  navigation.forEach((navigationNode) => {
+    if (navigationNode.children?.length > 0) {
+      navigationNode.redirect = navigationNode.children[0].redirect || navigationNode.children[0].url; // Set the URL to the first child's URL
+    }
+  });
+
+  // we need to prune the children that are not active
+  navigation.forEach((navigationNode) => {
+    if (
+        navigationNode.children?.length > 0
+        && !Astro.url.pathname.startsWith(navigationNode.url)
+    ) {
+      delete navigationNode.children;
+    }
+  });
+
+  return navigation;
+}
+
+async function getNavigation(collectionName, baseUrl = '/', isSortedAlphabetically = true, filter = () => true) {
+  const collectionTree = await buildCollectionTree(collectionName, filter);
+
+  return convertCollectionTreeToNavigation(collectionTree, baseUrl, isSortedAlphabetically);
+}
+
+const components = await getNavigation(
+  "lionComponents",
+  `${import.meta.env.BASE_URL}/components`
+);
+const fundamentals = await getNavigation(
+  "lionFundamentals",
+  `${import.meta.env.BASE_URL}/fundamentals`,
+  false
+);
+const guides = await getNavigation(
+  "lionGuides",
+  `${import.meta.env.BASE_URL}/guides`,
+  false
+);
+const blogEntries = await getNavigation(
+  "lionBlog",
+  `${import.meta.env.BASE_URL}/blog`,
+  false,
+  entry => entry.data?.published
+);
+
+/**
+ * @typedef {{name: string; url: string; active?:boolean; hasActiveChild?: boolean; iconId?: string; children?: NavItemData[]}} NavItem
+ */
+
+ /** @type {NavItem[]} */
+const navData = [
+  // {
+  //   name: "home",
+  //   url: import.meta.env.BASE_URL,
+  //   iconId: 'lion-portal:portal:home'
+  // },
+  {
+    name: "fundamentals",
+    url: `${import.meta.env.BASE_URL}/fundamentals`,
+    iconId: 'lion-portal:portal:sdk',
+    children: fundamentals,
+  },
+  {
+    name: "guides",
+    url: `${import.meta.env.BASE_URL}/guides`,
+    iconId: 'lion-portal:portal:extension',
+    children: guides,
+  },
+  {
+    name: "components",
+    url: `${import.meta.env.BASE_URL}/components`,
+    iconId: 'lion-portal:portal:deployedCode',
+    children: components,
+  },
+  {
+    name: "blog",
+    url: `${import.meta.env.BASE_URL}/blog`,
+    iconId: 'lion-portal:portal:deployedCode',
+    children: blogEntries,
+  },
 ];
 
-const { activeNavItem, navigationItems = defaultNavigationItems } = Astro.props;
+// Add search and github to navData
+navData.push(
+  {
+    name: 'Search',
+    // url: '/search',
+    iconId: 'lion:portal:search',
+    command: 'open-search',
+  },
+  {
+    name: 'GitHub',
+    url: 'https://github.com/ing-bank/lion',
+    iconId: 'lion:portal:github',
+    target: '_blank',
+    rel: 'noopener noreferrer',
+  }
+);
+
+/** @type WeakMap<{NavItem},{NavItem}> */
+const itemParents = new WeakMap();
+
+function _setParentsActive(navItem) {
+  const parentItem = itemParents.get(navItem);
+  if (parentItem) {
+    parentItem.hasActiveChild = true;
+    _setParentsActive(parentItem);
+  }
+}
+
+function setParents(navData, parentItem = null) {
+  for (const navItem of navData) {
+    if (parentItem) {
+      itemParents.set(navItem, parentItem);
+    }
+    if (navItem.children?.length) {
+      setParents(navItem.children, navItem);
+    }
+  }
+}
+
+let activeItem;
+function setActive(navData, currentUrl) {
+  // for home page we need to check with the exact match
+  const isActive = (navItem) => {
+    if (navItem.url === import.meta.env.BASE_URL) {
+      // homepage
+      return `${navItem.url}/` === currentUrl;
+    }
+
+    // /components/form
+    // /components/form-input problem
+    return `${currentUrl}/`.startsWith(`${navItem.url}/`);
+  }
+
+  for (const navItem of navData) {
+    if (isActive(navItem)) {
+      navItem.active = true;
+      activeItem = navItem;
+    }
+    if (navItem.children?.length) {
+      setActive(navItem.children, currentUrl);
+    }
+  }
+}
+
+setParents(navData);
+setActive(navData, Astro.url.pathname);
+_setParentsActive(activeItem);
+
+const { variant } = Astro.props;
 ---
 
 <style>
-  .search-link {
-    cursor: pointer !important;
-    text-decoration: none !important;
+  .site-header {
+    background: var(--background-primary);
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
   }
 
-  .search-link:hover {
-    color: var(--text-primary);
+  .container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    flex-shrink: 0;
+    flex-grow: 0;
+  }
+
+  .logo:hover {
+    text-decoration: none;
+  }
+
+  .logo-text-svg {
+    /* Removed grayscale filter to keep logo intact */
+  }
+
+  :global(.site-header ui-portal-main-nav) {
+    flex: 1;
+    height: auto;
+  }
+
 </style>
 
 <header class="site-header">
@@ -52,39 +265,38 @@ const { activeNavItem, navigationItems = defaultNavigationItems } = Astro.props;
             <img src=`${import.meta.env.BASE_URL}/logo.svg` alt="Lion Logo" width="32" height="32">
             <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
         </a>
-        <nav class="main-nav">
-            <ul>
-                <li>
-                    <a href="#" class="search-link" title="Search">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <path d="m21 21-4.35-4.35"></path>
-                        </svg>
-                    </a>
-                </li>
-                {navigationItems.map((item) => (
-                    <li>
-                        <a 
-                            href={item.href} 
-                            class={activeNavItem === item.label.toLowerCase() ? "active" : ""}
-                            target={item.external ? "_blank" : undefined}
-                            rel={item.external ? "noopener noreferrer" : undefined}
-                        >
-                            {item.label}
-                        </a>
-                    </li>
-                ))}
-                <li>
-                    <a href="https://github.com/ing-bank/lion" class="github-link" title="GitHub" target="_blank" rel="noopener noreferrer">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 16" fill="none" width="20" height="20">
-                            <title>GitHub</title>
-                            <path fill="currentColor" fill-rule="evenodd" d="M8.18391.249268C3.82241.249268.253906 3.81777.253906 8.17927c0 3.46933 2.279874 6.44313 5.451874 7.53353.3965.0991.49563-.1983.49563-.3965v-1.3878c-2.18075.4956-2.67638-.9912-2.67638-.9912-.3965-.8922-.89212-1.1895-.89212-1.1895-.69388-.4957.09912-.4957.09912-.4957.793.0992 1.1895.793 1.1895.793.69388 1.2887 1.88338.8922 2.27988.6939.09912-.4956.29737-.8921.49562-1.0904-1.78425-.1982-3.5685-.8921-3.5685-3.96496 0-.89212.29738-1.586.793-2.08162-.09912-.19825-.3965-.99125.09913-2.08163 0 0 .69387-.19825 2.18075.793.59475-.19825 1.28862-.29737 1.9825-.29737.69387 0 1.38775.09912 1.98249.29737 1.4869-.99125 2.1808-.793 2.1808-.793.3965 1.09038.1982 1.88338.0991 2.08163.4956.59475.793 1.28862.793 2.08162 0 3.07286-1.8834 3.66766-3.66764 3.86586.29737.3965.59474.8921.59474 1.586v2.1808c0 .1982.0991.4956.5948.3965 3.172-1.0904 5.4518-4.0642 5.4518-7.53353-.0991-4.3615-3.6676-7.930002-8.02909-7.930002z" clip-rule="evenodd"></path>
-                        </svg>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+        
+        <div>
+          <UIPortalMainNav 
+            client:load 
+            nav-data={JSON.stringify({ items: navData })} 
+            variant={variant || ''}
+          />
+        </div>
     </div>
 </header>
+
+<script>
+  // Listen for 'open-search' command from UIPortalMainNav
+  const setupSearchListener = () => {
+    const navElement = document.querySelector('ui-main-nav');
+
+    if (navElement) {
+      navElement.addEventListener('open-search', () => {
+        // Dispatch custom event that SearchModal listens for
+        document.dispatchEvent(new CustomEvent('search-requested'));
+      });
+    } else {
+      // Retry if nav element not found yet
+      setTimeout(setupSearchListener, 100);
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupSearchListener);
+  } else {
+    setupSearchListener();
+  }
+</script>
 
 <SearchModal />

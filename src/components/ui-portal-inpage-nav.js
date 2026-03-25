@@ -1,4 +1,5 @@
 import { LitElement, html, nothing, css } from 'lit';
+import { sharedGlobalStyle } from './shared/styles.js';
 
 const tagName = 'ui-portal-inpage-nav';
 
@@ -8,6 +9,7 @@ export class UIPortalInpageNav extends LitElement {
   };
 
   static styles = [
+    sharedGlobalStyle,
     css`
       @media (max-width: 899px) {
         :host {
@@ -19,7 +21,8 @@ export class UIPortalInpageNav extends LitElement {
         position: sticky;
         top: 20px;
         margin-left: 20px;
-        margin-top: 100px;
+        margin-top: 6rem;
+        display: block;
       }
 
       [data-part='list'] {
@@ -59,7 +62,7 @@ export class UIPortalInpageNav extends LitElement {
         // remove the second navigation
         // its rendered twice due to lack of lit/ssr
         // https://github.com/lit/lit/issues/4472
-        const $navs = this.renderRoot.querySelectorAll('[data-part="nav"]');
+        const $navs = (this.renderRoot || this.shadowRoot).querySelectorAll('[data-part="nav"]');
         if ($navs.length > 1) {
           $navs[1].remove();
         }

@@ -59,9 +59,10 @@ if (items.length > 0 && componentsByCategory.size === 0) {
     padding-right: 1rem;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
     position: sticky;
-    top: 0;
+    top: 6rem;
     height: 100vh;
     overflow-y: auto;
+
   }
 
   .component-nav h3 {
@@ -184,7 +185,12 @@ if (items.length > 0 && componentsByCategory.size === 0) {
 
   @media (max-width: 1200px) {
     .docs-layout {
-      grid-template-columns: 240px 1fr;
+      grid-template-columns: 0 1fr;
+      gap: 0;
+    }
+
+    .docs-sidebar {
+      display: none;
     }
     .docs-toc {
       display: none;

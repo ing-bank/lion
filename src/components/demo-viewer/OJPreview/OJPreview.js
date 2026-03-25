@@ -224,8 +224,11 @@ export class OJPreview extends ScopedElementsMixin(MdJsPreview) {
         }
 
         .demo-viewer__section--demo .demo-viewer__surface {
-          background-color: var(--bg-surface);
+          /* background-color: var(--bg-surface); */
+          background: white;
+          color: black;
           padding: var(--spacing-3xl);
+          border-radius: 1rem;
         }
 
         :host(:not([device-mode])) #wrapper {
