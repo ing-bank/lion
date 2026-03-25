@@ -1,0 +1,6 @@
+import"./f1151d68.js";import{x as e}from"./b8bc2eda.js";import{c as t}from"./98c113e6.js";import"./6638bb86.js";import"./6d8ded19.js";import"./79abed13.js";import{r as o}from"./0e2fc7dd.js";import"./be5f2fd3.js";import"./4c616179.js";import"./4afec9a2.js";import"./11b71ee2.js";import"./dc2f5f5a.js";import"./acda6ea6.js";import"./0ed5d59c.js";import"./4abf0ca8.js";import"./7c882590.js";import"./c48d90f3.js";import"./dcadf410.js";import"./143fde17.js";import"./6722e641.js";import"./fd5951b6.js";import"./5516584c.js";import"./ac7779e1.js";import"./2cefa045.js";import"./af1609b4.js";import"./18551691.js";const s=()=>e`
+  <intl-select-rich label="Choose a region" name="regions">
+    ${t(o,e=>e.regionCode,t=>e` <intl-option .choiceValue="${t.regionCode}" .regionMeta="${t}">
+        </intl-option>`)}
+  </intl-select-rich>
+`,r=document,i=[{key:"IntlSelectRich",story:s}];let m=!1;for(const e of i){const t=r.querySelector(`[mdjs-story-name="${e.key}"]`);t&&(t.story=e.story,t.key=e.key,m=!0,Object.assign(t,{simulatorUrl:"/simulator/",languages:[{key:"de-DE",name:"German"},{key:"en-GB",name:"English (United Kingdom)"},{key:"en-US",name:"English (United States)"},{key:"nl-NL",name:"Dutch"}]}))}m&&(customElements.get("mdjs-preview")||import("./e90784d0.js"),customElements.get("mdjs-story")||import("./0defd61d.js"));export{s as IntlSelectRich};

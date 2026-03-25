@@ -1,0 +1,1 @@
+const r=new WeakMap;function i(t,n){let e=n;for(;e;){if(r.get(e)===t)return!0;e=Object.getPrototypeOf(e)}return!1}function o(t){return n=>{if(i(t,n))return n;const e=t(n);return r.set(e,t),e}}export{o as d};

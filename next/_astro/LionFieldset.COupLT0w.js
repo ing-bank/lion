@@ -1,0 +1,1 @@
+import{i as r}from"./lit-element.jD9bOQKo.js";import"./lit-html.DtZEZPQ5.js";import{F as o}from"./FormGroupMixin.Difl-d8W.js";class p extends o(r){constructor(){super(),this._isFormOrFieldset=!0,this._repropagationRole="fieldset"}}export{p as L};

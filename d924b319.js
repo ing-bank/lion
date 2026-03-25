@@ -1,0 +1,1 @@
+import{V as e}from"./4dc0ac82.js";import{U as a}from"./4abf0ca8.js";class t extends e{static get validatorName(){return"MatchesOption"}execute(e,t,s){return s?.node.modelValue instanceof a}}export{t as M};
