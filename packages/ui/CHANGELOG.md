@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.16.2
+
+### Patch Changes
+
+- 38f6c56: [button] fix button default styling to align with platform requirements.
+- da1b636: [overlays] fix popper.js bug in nested shadow roots and improved compatibility with demo viewer.
+
 ## 0.16.1
 
 ### Patch Changes
