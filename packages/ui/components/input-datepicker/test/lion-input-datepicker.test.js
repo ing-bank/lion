@@ -538,8 +538,8 @@ describe('<lion-input-datepicker>', () => {
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
 
-      expect(elObj.invokerEl.getAttribute('title')).to.equal('Open date picker');
-      expect(elObj.invokerEl.getAttribute('aria-label')).to.equal('Open date picker');
+      expect(elObj.invokerEl.getAttribute('title')).to.equal('Open "date" picker');
+      expect(elObj.invokerEl.getAttribute('aria-label')).to.equal('Open "date" picker');
     });
 
     it('adds [aria-expanded] to invoker button', async () => {
