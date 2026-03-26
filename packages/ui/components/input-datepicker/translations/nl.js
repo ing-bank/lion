@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: 'Open kalender',
+  openDatepickerLabel: 'Open "{fieldName}" kiezer',
 };

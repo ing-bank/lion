@@ -590,6 +590,19 @@ describe('<lion-input-datepicker>', () => {
       await expect(elObj.calendarEl).to.be.accessible();
       elObj.overlayCloseButtonEl.click();
     });
+
+    it('have different aria-label when multiple invoker', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker label="Start date" name="startDate"></lion-input-datepicker>
+        <lion-input-datepicker label="End date" name="endDate"></lion-input-datepicker>
+      `);
+
+      const elements = el.parentElement.children;
+      const startLabel = elements.startDate.querySelector('button').ariaLabel;
+      const endLabel = elements.endDate.querySelector('button').ariaLabel;
+
+      expect(startLabel).to.not.equal(endLabel);
+    });
   });
 
   describe.skip('Subclassers', () => {

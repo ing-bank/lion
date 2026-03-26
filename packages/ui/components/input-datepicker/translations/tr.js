@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: 'Tarih seçimini aç',
+  openDatepickerLabel: '"{fieldName}" seçiciyi açın',
 };

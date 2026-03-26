@@ -96,7 +96,46 @@ Faulty prefilled input will be cleared
 
 ```js preview-story
 export const faultyPrefilled = () => html`
-  <lion-input-datepicker label="Faulty prefiiled" .modelValue="${new Date('30/01/2022')}">
+  <lion-input-datepicker label="Faulty prefilled" .modelValue="${new Date('30/01/2022')}">
   </lion-input-datepicker>
 `;
 ```
+
+## Accessibility
+
+For improved accessibility, it is highly advisable to provide a `name`, `label`, or `fieldName` attribute to your input so the aria-label is set correctly.
+
+By default, the aria-label will be set to "Open {fieldName} picker". The `fieldName` (or `label`, then `name`) is used to create a descriptive label. The priority order is: `fieldName` > `label` > `name` > `"date"`.
+
+### Default (no field identifier)
+
+```js preview-story
+export const ariaLabelDefault = () => html` <lion-input-datepicker> </lion-input-datepicker> `;
+```
+
+### Using name attribute
+
+```js preview-story
+export const ariaLabelName = () => html`
+  <lion-input-datepicker name="StartDate"> </lion-input-datepicker>
+`;
+```
+
+### Using label attribute
+
+```js preview-story
+export const ariaLabelLabel = () => html`
+  <lion-input-datepicker name="StartDate" label="Field label"> </lion-input-datepicker>
+`;
+```
+
+### Using fieldName property (highest priority)
+
+```js preview-story
+export const ariaLabelFieldName = () => html`
+  <lion-input-datepicker name="StartDate" label="Field label" .fieldName="${'Field name'}">
+  </lion-input-datepicker>
+`;
+```
+
+> **Important:** When using multiple datepickers on the same page, ensure each has a unique `fieldName`, `label`, or `name` so the generated aria-labels are distinct and meaningful to users.

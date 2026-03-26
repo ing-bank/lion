@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: 'Dátumválasztó megnyitása',
+  openDatepickerLabel: 'Megnyitás "{fieldName}" választóhoz',
 };

@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: '打开日期选择器',
+  openDatepickerLabel: '打开"{fieldName}"选择器',
 };
