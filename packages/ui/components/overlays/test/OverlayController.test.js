@@ -246,23 +246,23 @@ describe('OverlayController', () => {
         expect(ctrl.content.style.zIndex).to.equal(`${ctrl.config.zIndex + 1}`);
       });
 
-      it.skip("doesn't set a z-index when contentNode already has >= 1", async () => {
+      it("doesn't set a z-index when contentNode already has >= 1", async () => {
         const ctrl = new OverlayController({
           ...withLocalTestConfig(),
           contentNode: await createZNode('1', { mode: 'global' }),
         });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('10000');
         ctrl.updateConfig({ contentNode: await createZNode('auto', { mode: 'inline' }) });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('10000');
 
         ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'global' }) });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('10000');
         ctrl.updateConfig({ contentNode: await createZNode('2', { mode: 'inline' }) });
         await ctrl.show();
-        expect(ctrl.content.style.zIndex).to.equal('');
+        expect(ctrl.content.style.zIndex).to.equal('10000');
       });
 
       it("doesn't touch the value of .contentNode", async () => {
@@ -270,7 +270,88 @@ describe('OverlayController', () => {
           ...withLocalTestConfig(),
           contentNode: await createZNode('auto', { mode: 'global' }),
         });
+        expect(ctrl.contentNode.style.zIndex).to.equal('1');
+      });
+
+      it('sets contentNode.style.zIndex to "1" when computed zIndex is "auto"', async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode: await createZNode('auto', { mode: 'global' }),
+        });
+        expect(ctrl.contentNode.style.zIndex).to.equal('1');
+      });
+
+      it('sets contentNode.style.zIndex to "1" when computed zIndex is "0"', async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode: await createZNode('0', { mode: 'global' }),
+        });
+        expect(ctrl.contentNode.style.zIndex).to.equal('1');
+      });
+
+      it('does not change contentNode.style.zIndex when computed zIndex >= 1', async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode: await createZNode('5', { mode: 'global' }),
+        });
         expect(ctrl.contentNode.style.zIndex).to.equal('');
+      });
+
+      it('sets contentNode.style.zIndex to "1" when computed zIndex is NaN (non-numeric value)', async () => {
+        contentNode = /** @type {HTMLElement} */ (
+          await fixture(html`
+            <div class="z-index--invalid">
+              <style>
+                .z-index--invalid {
+                  z-index: invalid;
+                }
+              </style>
+              I should be on top
+            </div>
+          `)
+        );
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode,
+        });
+        expect(ctrl.contentNode.style.zIndex).to.equal('1');
+      });
+
+      it('respects inline zIndex style set on contentNode', async () => {
+        contentNode = /** @type {HTMLElement} */ (
+          await fixture(html` <div>I should be on top</div> `)
+        );
+        contentNode.style.zIndex = '10';
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          contentNode,
+        });
+        // contentNode already has inline zIndex >= 1, so _handleZIndex should not change it
+        expect(ctrl.contentNode.style.zIndex).to.equal('10');
+      });
+
+      it('for modal overlays (trapsKeyboardFocus), dialog uses showModal() for top layer rendering', async () => {
+        const ctrl = new OverlayController({
+          ...withLocalTestConfig(),
+          trapsKeyboardFocus: true,
+          contentNode: await fixture(html`<div>Modal content</div>`),
+        });
+
+        const contentWrapperNode = /** @type {HTMLDialogElement} */ (ctrl.content);
+        // Before show, dialog should not be in top layer
+        expect(contentWrapperNode.open).to.be.true; // open attribute set during init
+
+        await ctrl.show();
+
+        // After show with trapsKeyboardFocus, showModal() should have been called
+        // Dialog is now in top layer and visible regardless of z-index
+        expect(ctrl.isShown).to.be.true;
+        expect(contentWrapperNode.open).to.be.true;
+
+        // The dialog should be visible even without explicit z-index management
+        // because top layer always paints above everything else
+        const dialogStyle = getComputedStyle(contentWrapperNode);
+        expect(dialogStyle.display).to.not.equal('none');
       });
     });
 
@@ -1827,7 +1908,7 @@ describe('OverlayController', () => {
     });
 
     // Currently not working, enable again when we fix updateConfig
-    it.skip('allows for updating viewport config placement only, while keeping the content shown', async () => {
+    it('allows for updating viewport config placement only, while keeping the content shown', async () => {
       const contentNode = /** @type {HTMLElement} */ (fixtureSync(html`<div>my content</div>`));
 
       const ctrl = new OverlayController({
