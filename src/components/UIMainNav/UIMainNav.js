@@ -1006,12 +1006,6 @@ UIMainNav.provideDesign({
             margin: 0;
           }
 
-          :host([variant='l1-blog']) [data-part='command-invoker'],
-          :host([variant='l1-blog']) [data-part='level-invoker'],
-          :host([variant='l1-blog']) [data-part='anchor'] {
-            color: white;
-          }
-
           [data-part='anchor'][aria-current='page'] {
             color: var(--highlight-color);
           }
