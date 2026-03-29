@@ -83,13 +83,13 @@ body {
 .container {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 0 3rem;
+    padding: 0 1.5rem;
 }
 
 /* Header */
 .site-header {
     padding: 24px 0;
-    position: sticky;
+    position: fixed;
     top: 0;
     width: 100%;
     z-index: 100;
@@ -98,6 +98,10 @@ body {
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     min-height: 85px;
+}
+
+main {
+    padding-top: 85px; /* To account for fixed header */
 }
 
 .site-header .container {

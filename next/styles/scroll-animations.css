@@ -399,13 +399,13 @@
 }
 
 /* Using scroll() for header - tied to document scroll */
-@supports (animation-timeline: scroll()) {
+/* @supports (animation-timeline: scroll()) {
     .site-header {
         animation: header-shrink linear both;
         animation-timeline: scroll();
         animation-range: 0px 200px;
     }
-}
+} */
 
 /* ===========================================
    Parallax-like scroll effects
