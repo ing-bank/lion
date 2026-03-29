@@ -602,8 +602,9 @@ const UIBaseElementMixinImplementation = superclass =>
         if (!hasHydrated) return;
 
         const firstStyle = this.shadowRoot?.querySelector('style');
-        const allChildren = Array.from(firstStyle?.parentElement?.children || []);
+        const allChildren = Array.from(this.shadowRoot?.childNodes || []);
         const firstStyleIndex = allChildren.indexOf(firstStyle);
+
         const ssrContentToBeCleanedUp =
           firstStyleIndex !== -1 ? allChildren.slice(firstStyleIndex + 1) : [];
         ssrContentToBeCleanedUp.forEach(el => el.remove());
