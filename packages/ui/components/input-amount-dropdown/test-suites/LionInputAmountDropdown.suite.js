@@ -317,5 +317,29 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
       // @ts-ignore
       expect(el._isEmpty(), 'empty').to.be.true;
     });
+
+    it('only checks modelValue.amount', async () => {
+      const el = await fixture(html` <${tag}></${tag}> `);
+
+      el.modelValue = { currency: 'GBP', amount: 1 };
+      await el.updateComplete;
+      // @ts-ignore
+      expect(el._isEmpty(), 'filled amount').to.be.false;
+
+      el.modelValue = { currency: 'EUR', amount: '' };
+      await el.updateComplete;
+      // @ts-ignore
+      expect(el._isEmpty(), 'empty amount').to.be.true;
+
+      el.modelValue = { currency: 'EUR' };
+      await el.updateComplete;
+      // @ts-ignore
+      expect(el._isEmpty(), 'missing amount property').to.be.true;
+
+      el.modelValue = null;
+      await el.updateComplete;
+      // @ts-ignore
+      expect(el._isEmpty(), 'null modelValue').to.be.true;
+    });
   });
 }
