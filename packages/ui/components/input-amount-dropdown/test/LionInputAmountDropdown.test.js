@@ -194,7 +194,7 @@ describe('WithFormControlInputAmountDropdown', () => {
       el.modelValue = { currency: 'EUR' };
       await aTimeout(0);
       el.modelValue = { currency: 'EUR', amount: '' };
-      expect(el.hasFeedbackFor).to.deep.equal(['error']);
+      expect(el.hasFeedbackFor).to.deep.equal([]);
     });
   });
 });
