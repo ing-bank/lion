@@ -1,6 +1,6 @@
 export default {
   error: {
-    IsIBAN: 'Indiquez une valeur valide pour le champ {fieldName}.',
+    IsIBAN: 'Indiquez une valeur valide pour {fieldName}.',
     IsCountryIBAN:
       'Veuillez saisir une valeur {params, select,\n' +
       'AT {autrichienne}\n' +
@@ -15,7 +15,7 @@ export default {
       'PL {polonaise}\n' +
       'RO {roumaine}\n' +
       'other {{params}}\n' +
-      '} valide pour le champ {fieldName}.',
+      '} valide pour {fieldName}.',
     IsNotCountryIBAN:
       '{fieldName} {userSuppliedCountryCode, select,\n' +
       'AT {autrichien}\n' +
