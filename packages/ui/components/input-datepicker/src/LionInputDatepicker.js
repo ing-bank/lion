@@ -274,8 +274,12 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         type="button"
         @click="${this.__openCalendarOverlay}"
         id="${this.__invokerId}"
-        aria-label="${this.msgLit('lion-input-datepicker:openDatepickerLabel')}"
-        title="${this.msgLit('lion-input-datepicker:openDatepickerLabel')}"
+        aria-label="${this.msgLit('lion-input-datepicker:openDatepickerLabel', {
+          fieldName: this.fieldName || 'date',
+        })}"
+        title="${this.msgLit('lion-input-datepicker:openDatepickerLabel', {
+          fieldName: this.fieldName || 'date',
+        })}"
       >
         ${this._invokerIconTemplate()}
       </button>

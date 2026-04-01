@@ -538,8 +538,8 @@ describe('<lion-input-datepicker>', () => {
       const elObj = new DatepickerInputObject(el);
       await elObj.openCalendar();
 
-      expect(elObj.invokerEl.getAttribute('title')).to.equal('Open date picker');
-      expect(elObj.invokerEl.getAttribute('aria-label')).to.equal('Open date picker');
+      expect(elObj.invokerEl.getAttribute('title')).to.equal('Open "date" picker');
+      expect(elObj.invokerEl.getAttribute('aria-label')).to.equal('Open "date" picker');
     });
 
     it('adds [aria-expanded] to invoker button', async () => {
@@ -589,6 +589,19 @@ describe('<lion-input-datepicker>', () => {
 
       await expect(elObj.calendarEl).to.be.accessible();
       elObj.overlayCloseButtonEl.click();
+    });
+
+    it('have different aria-label when multiple invoker', async () => {
+      const el = await fixture(html`
+        <lion-input-datepicker label="Start date" name="startDate"></lion-input-datepicker>
+        <lion-input-datepicker label="End date" name="endDate"></lion-input-datepicker>
+      `);
+
+      const elements = el.parentElement.children;
+      const startLabel = elements.startDate.querySelector('button').ariaLabel;
+      const endLabel = elements.endDate.querySelector('button').ariaLabel;
+
+      expect(startLabel).to.not.equal(endLabel);
     });
   });
 

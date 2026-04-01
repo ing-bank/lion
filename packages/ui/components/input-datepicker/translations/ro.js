@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: 'Deschidere selector dată',
+  openDatepickerLabel: 'Deschideți selectorul "{fieldName}"',
 };
