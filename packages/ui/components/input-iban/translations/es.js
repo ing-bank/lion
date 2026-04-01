@@ -1,35 +1,35 @@
 export default {
   error: {
-    IsIBAN: 'Introduzca un/a {fieldName} válido/a.',
+    IsIBAN: 'Introduzca un valor válido para {fieldName}.',
     IsCountryIBAN:
-      'Introduzca un/a {fieldName} válido/a de {params, select,\n' +
-      'AT {Austriaco}\n' +
-      'BE {Belga}\n' +
-      'CZ {Checo}\n' +
-      'DE {Alemán}\n' +
-      'ES {Español}\n' +
-      'FR {Francés}\n' +
-      'HU {Húngaro}\n' +
-      'IT {Italiano}\n' +
-      'NL {Neerlandés}\n' +
-      'PL {Polaco}\n' +
-      'RO {Rumano}\n' +
+      'Introduzca un valor válido de {params, select,\n' +
+      'AT {Austria}\n' +
+      'BE {Bélgica}\n' +
+      'CZ {Chequia}\n' +
+      'DE {Alemania}\n' +
+      'ES {España}\n' +
+      'FR {Francia}\n' +
+      'HU {Hungría}\n' +
+      'IT {Italia}\n' +
+      'NL {Países Bajos}\n' +
+      'PL {Polonia}\n' +
+      'RO {Rumanía}\n' +
       'other {{params}}\n' +
-      '}.',
+      '} para {fieldName}.',
     IsNotCountryIBAN:
-      '{fieldName} {userSuppliedCountryCode, select,\n' +
-      'AT {Austriaco}\n' +
-      'BE {Belga}\n' +
-      'CZ {Checo}\n' +
-      'DE {Alemán}\n' +
-      'ES {Español}\n' +
-      'FR {Francés}\n' +
-      'HU {Húngaro}\n' +
-      'IT {Italiano}\n' +
-      'NL {Neerlandés}\n' +
-      'PL {Polaco}\n' +
-      'RO {Rumano}\n' +
+      'Un valor de {userSuppliedCountryCode, select,\n' +
+      'AT {Austria}\n' +
+      'BE {Bélgica}\n' +
+      'CZ {Chequia}\n' +
+      'DE {Alemania}\n' +
+      'ES {España}\n' +
+      'FR {Francia}\n' +
+      'HU {Hungría}\n' +
+      'IT {Italia}\n' +
+      'NL {Países Bajos}\n' +
+      'PL {Polonia}\n' +
+      'RO {Rumanía}\n' +
       'other {{userSuppliedCountryCode}}\n' +
-      '} no se permite.',
+      '} no está permitido para {fieldName}.',
   },
 };
