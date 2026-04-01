@@ -404,8 +404,10 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * @protected
    */
   _isEmpty(modelValue = this.modelValue) {
-    const amount = modelValue?.amount;
-    return amount == null || amount === '' || Number.isNaN(amount);
+    const isNumberValue =
+      typeof modelValue?.amount === 'number' &&
+      (modelValue?.amount === 0 || Number.isNaN(modelValue?.amount));
+    return !modelValue?.amount && !isNumberValue;
   }
 
   /**

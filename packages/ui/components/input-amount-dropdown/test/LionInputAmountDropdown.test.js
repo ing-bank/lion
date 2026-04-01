@@ -1,6 +1,7 @@
 import { mimicUserChangingDropdown } from '@lion/ui/input-amount-dropdown-test-helpers.js';
 import { runInputAmountDropdownSuite } from '@lion/ui/input-amount-dropdown-test-suites.js';
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
+import { Required } from '@lion/ui/form-core.js';
 import { aTimeout, expect, fixture } from '@open-wc/testing';
 import { LionSelectRich } from '@lion/ui/select-rich.js';
 import { repeat } from 'lit/directives/repeat.js';
@@ -196,5 +197,23 @@ describe('WithFormControlInputAmountDropdown', () => {
       el.modelValue = { currency: 'EUR', amount: '' };
       expect(el.hasFeedbackFor).to.deep.equal([]);
     });
+  });
+
+  it('includes error in showsFeedbackFor when required, empty, and touched & dirty', async () => {
+    const el = /** @type {LionInputAmountDropdown} */ (
+      await fixture(html`
+        <lion-input-amount-dropdown
+          .allowedCurrencies="${['GBP', 'EUR']}"
+          .validators="${[new Required()]}"
+        ></lion-input-amount-dropdown>
+      `)
+    );
+    await el.updateComplete;
+    el.touched = true;
+    el.dirty = true;
+    await el.updateComplete;
+    await el.feedbackComplete;
+    expect(el.hasFeedbackFor).to.include('error', 'hasFeedbackFor');
+    expect(el.showsFeedbackFor).to.include('error', 'showsFeedbackFor');
   });
 });
