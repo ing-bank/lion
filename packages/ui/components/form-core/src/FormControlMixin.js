@@ -99,7 +99,7 @@ const FormControlMixinImplementation = superclass =>
      * @type {string}
      */
     get fieldName() {
-      return this.__fieldName || this.label || this.name || '';
+      return this.__fieldName || (this.label ? `"${this.label}"` : '') || this.name || '';
     }
 
     /**
