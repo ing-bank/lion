@@ -585,6 +585,29 @@ const UIBaseElementMixinImplementation = superclass =>
         if (this.#hasSetup) return;
         this.onSetup();
         this.#hasSetup = true;
+        this.#tempLitSsrHydrationFix();
+      });
+    }
+
+    /**
+     * Temp solution for hydration bug lit-ssr...
+     * Lit-ssr sometimes keeps the old dom around: https://github.com/lit/lit/issues/4472
+     * @returns {void}
+     */
+    #tempLitSsrHydrationFix() {
+      if (isServer) return;
+
+      window.setTimeout(() => {
+        const hasHydrated = this.shadowRoot?.adoptedStyleSheets?.length;
+        if (!hasHydrated) return;
+
+        const firstStyle = this.shadowRoot?.querySelector('style');
+        const allChildren = Array.from(this.shadowRoot?.childNodes || []);
+        const firstStyleIndex = allChildren.indexOf(firstStyle);
+
+        const ssrContentToBeCleanedUp =
+          firstStyleIndex !== -1 ? allChildren.slice(firstStyleIndex + 1) : [];
+        ssrContentToBeCleanedUp.forEach(el => el.remove());
       });
     }
 

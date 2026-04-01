@@ -1,7 +1,6 @@
 /* eslint-disable no-new */
 /* eslint-disable max-classes-per-file */
 import { html, nothing, css, isServer } from 'lit';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { UIBaseElement } from '../shared/UIBaseElement.js';
 import { updateNavData } from './updateNavData.js';
 import { VisibilityToggleCtrl } from '../shared/VisibilityToggleCtrl.js';
@@ -623,243 +622,7 @@ export class UIMainNav extends UIBaseElement {
 //   }
 // `;
 
-const mobileStyle = css`
-  /**
-   * Hide until hydration on mobile (to prevent flash of unstyled content of desktop render)
-   */
-  :host(:not([data-layout])) {
-    display: none;
-  }
-
-  :host(:not([data-prevent-animations])) [popover]:popover-open {
-    @starting-style {
-      translate: var(--_width) 0;
-    }
-  }
-
-  :host(:not([data-prevent-animations])) [popover]:popover-open {
-    translate: 0 0;
-  }
-
-  :host(:not([data-prevent-animations])) [popover] {
-    transition:
-      translate calc(var(--_anim-factor) * var(--_anim-speed)) ease-out,
-      overlay calc(var(--_anim-factor) * var(--_anim-speed)) ease-out allow-discrete,
-      display calc(var(--_anim-factor) * var(--_anim-speed)) ease-out allow-discrete;
-    translate: calc(-1 * var(--_width)) 0;
-  }
-
-  [data-level='1'][popover]::backdrop {
-    background: rgba(0, 0, 0, 0.3);
-  }
-
-  /* ----------------------------
-   * part: root
-   */
-
-  @media (prefers-reduced-motion) {
-    :host {
-      --_anim-factor: 0;
-    }
-  }
-
-  :host {
-    --_width: 400px;
-    --_bg-color: white;
-    --_anim-factor: 1;
-    --_anim-speed: 0.25s;
-  }
-
-  /* ----------------------------
-   * part: nav
-   */
-
-  [data-part='nav'] {
-    height: 100%;
-  }
-
-  /* ----------------------------
-   * part: l1-wrapper
-   */
-
-  [data-part='level'][data-level='0'] {
-    position: fixed;
-    background: var(--_bg-color);
-  }
-
-  [data-part='l1-invoker'] {
-    padding: var(--size-2);
-  }
-
-  [data-part='level'][data-level='1'] {
-    height: 100%;
-    width: var(--_width);
-    position: fixed;
-  }
-
-  [data-part='level']:not([data-level='0']) {
-    left: 0;
-    top: 0;
-    background-color: var(--_bg-color);
-    width: var(--_width);
-    height: 100%;
-  }
-
-  [data-part='list'] {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  [data-part='listitem'] {
-    display: block;
-    padding: var(--size-6);
-  }
-
-  [data-part='anchor'],
-  [data-part='invoker-for-level'],
-  [data-part='level-back-btn'] {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    color: inherit;
-    text-decoration: inherit;
-    font-size: 0.875rem;
-    fill: #666666;
-    gap: var(--size-2);
-  }
-
-  [data-part='anchor']:hover,
-  [data-part='invoker-for-level']:hover,
-  [data-part='level-back-btn']:hover {
-    text-decoration: underline;
-    text-underline-offset: 0.3em;
-  }
-
-  [data-part='level-back-btn'] {
-    display: flex;
-    padding: var(--size-6);
-    font-size: 0.875rem;
-    width: 100%;
-  }
-
-  [data-part='icon'] {
-    display: block;
-    width: var(--size-5);
-    height: var(--size-5);
-  }
-
-  [data-part='logo'] {
-    display: none;
-  }
-`;
-
 UIMainNav.provideDesign({
-  // templates: () => ({
-  //   main(context) {
-  //     const { data, templates } = context;
-
-  //     return html`
-  //       <nav data-part="nav">
-  //         <input type="checkbox" id="burger-toggle" hidden />
-  //         <label for="burger-toggle" class="burger">
-  //           <span></span>
-  //           <span></span>
-  //           <span></span>
-  //         </label>
-
-  //         <div id="l1-wrapper" data-part="l1-wrapper">
-  //           ${templates.navRootLevel(context, { children: data.items, level: 1 })}
-  //           ${templates.navNestedLevel(context, {
-  //             children: data.items.find(item => item.active)?.children,
-  //             level: 2,
-  //           })}
-  //         </div>
-  //       </nav>
-  //     `;
-  //   },
-  //   navRootLevel(context, { children, level, hasActiveChild = false }) {
-  //     const { templates } = context;
-  //     const navItems = children.filter(item => !item.svg);
-  //     const actionItems = children.filter(item => item.svg);
-
-  //     return html`<div
-  //       data-part="level"
-  //       data-level="${level}"
-  //       data-has-active-child="${hasActiveChild}"
-  //     >
-  //       <ul data-part="list" data-level="${level}">
-  //         ${navItems.map(
-  //           item =>
-  //             html` <li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
-  //               ${templates.navItem(context, { item, level })}
-  //             </li>`,
-  //         )}
-  //       </ul>
-  //       <div class="nav-item-last">
-  //         ${actionItems.map(
-  //           item =>
-  //             html`<a
-  //               href="${item.url}"
-  //               data-part="anchor"
-  //               data-level="${level}"
-  //               title="${item.name}"
-  //               ?target="${item.target}"
-  //               ?rel="${item.rel}"
-  //             >
-  //               ${unsafeHTML(item.svg)}
-  //               <span>${item.name}</span>
-  //             </a>`,
-  //         )}
-  //       </div>
-  //     </div>`;
-  //   },
-  //   navNestedLevel(context, { children, level, hasActiveChild = false }) {
-  //     const { templates } = context;
-
-  //     if (!children?.length) {
-  //       return nothing;
-  //     }
-
-  //     return html`<div
-  //       data-part="level"
-  //       data-level="${level}"
-  //       data-has-active-child="${hasActiveChild}"
-  //     >
-  //       <ul data-part="list" data-level="${level}">
-  //         ${children.map(
-  //           item =>
-  //             html`<li data-part="listitem" data-level="${level}" ?data-:active="${item.active}">
-  //               ${templates.navItem(context, { item, level })}
-  //               ${item.children?.length
-  //                 ? templates.navNestedLevel(context, {
-  //                     level: level + 1,
-  //                     children: item.children,
-  //                     hasActiveChild: item.hasActiveChild,
-  //                   })
-  //                 : nothing}
-  //             </li>`,
-  //         )}
-  //       </ul>
-  //     </div>`;
-  //   },
-  //   navItem(context, { item, level }) {
-  //     return html`<a
-  //       data-part="anchor"
-  //       data-level="${level}"
-  //       href="${item.redirect || item.url}"
-  //       aria-current=${item.active ? 'page' : ''}
-  //       >${level === 1
-  //         ? html` <lion-icon
-  //             data-part="icon"
-  //             data-level="${level}"
-  //             icon-id="${item.iconId}${item.active ? 'Filled' : ''}"
-  //           ></lion-icon>`
-  //         : nothing}<span>${item.name}</span>
-  //     </a>`;
-  //   },
-  // }),
-  /** Horizontal layout */
   styles: () => [
     sharedGlobalStyle,
     resetPopoverStyle,
@@ -954,12 +717,69 @@ UIMainNav.provideDesign({
   ],
   /**
    * For mobile and desktop, we use the same templates, but different styles.
-   * The configuration for rendering our templates differs.
+   * The configuration for rendering our templates differs as well.
    */
   dynamicLayouts: () => ({
     mobile: {
       styles: [
         css`
+          /* :host {
+            --_width: 400px;
+            --_bg-color: transparent;
+            --_anim-factor: 1;
+            --_anim-speed: 0.25s;
+            --_anim-delay: 0.05s;
+          }
+
+          [data-level='1'][popover]::backdrop {
+            background: rgba(0, 0, 0, 0.5);
+          }
+
+          @media (prefers-reduced-motion) {
+            :host {
+              --_anim-factor: 0;
+            }
+          }
+
+          :host(:not([data-prevent-animations])) [popover]:popover-open {
+            @starting-style {
+              translate: var(--_width) 0;
+              opacity: 0;
+            }
+          }
+
+          :host(:not([data-prevent-animations])) [popover]:popover-open {
+            translate: 0 0;
+            opacity: 1;
+          }
+
+          :host(:not([data-prevent-animations])) [popover]:popover-open::backdrop {
+            opacity: 1;
+          }
+
+          :host(:not([data-prevent-animations])) [popover] {
+            transition:
+              translate calc(var(--_anim-factor) * var(--_anim-speed)) ease-out,
+              opacity calc(var(--_anim-factor) * var(--_anim-speed)) ease-out,
+              overlay calc(var(--_anim-factor) * var(--_anim-speed)) ease-out allow-discrete,
+              display calc(var(--_anim-factor) * var(--_anim-speed)) ease-out allow-discrete;
+            transition-delay: calc(var(--_anim-factor) * var(--_anim-delay));
+            translate: calc(-1 * var(--_width)) 0;
+            opacity: 0;
+          }
+
+          :host(:not([data-prevent-animations])) [popover]::backdrop {
+            @starting-style {
+              opacity: 0;
+            }
+
+            transition: opacity calc(var(--_anim-factor) * var(--_anim-speed)) ease-out
+              allow-discrete;
+            transition-delay: calc(var(--_anim-factor) * var(--_anim-delay));
+            opacity: 0;
+          }
+          */
+
           [data-part='list'] {
             flex-direction: column;
           }
@@ -1004,12 +824,6 @@ UIMainNav.provideDesign({
             display: flex;
             gap: 2rem;
             margin: 0;
-          }
-
-          :host([variant='l1-blog']) [data-part='command-invoker'],
-          :host([variant='l1-blog']) [data-part='level-invoker'],
-          :host([variant='l1-blog']) [data-part='anchor'] {
-            color: white;
           }
 
           [data-part='anchor'][aria-current='page'] {
