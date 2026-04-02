@@ -13,8 +13,8 @@ export default {
   filesSelected: 'Kiválasztott fájlok: {numberOfFiles} fájl.',
   filesUploaded: 'Feltöltött fájlok: {numberOfFiles} fájl.',
   numberOfFiles: '{numberOfFiles} fájl.',
-  removeButtonLabel: 'A(z) {fileName} fájl eltávolítása',
+  removeButtonLabel: '{fileName} fájl eltávolítása',
   selectTextDuplicateFileName: 'Már volt ilyen nevű fájl.',
-  selectTextMultipleFile: 'Fájl(ok) kiválasztása',
+  selectTextMultipleFile: 'Fájlok kiválasztása',
   selectTextSingleFile: 'Fájl kiválasztása',
 };
