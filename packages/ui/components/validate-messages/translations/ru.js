@@ -27,7 +27,7 @@ export default {
     Required: 'Введите значение поля {fieldName}.',
     _RequiredUpload: 'Загрузите {fieldName}.',
     _RequiredSelect: 'Также выберите значение поля {fieldName}.',
-    EqualsLength: 'Введите корректное значение поля {fieldName} — ровно {paramsn} симв.',
+    EqualsLength: 'Введите корректное значение поля {fieldName} — ровно {params} симв.',
     MinLength: 'Введите корректное значение поля {fieldName} (не менее {params}).',
     MaxLength: 'Введите корректное значение поля {fieldName} (до {params} симв.).',
     MinMaxLength:
