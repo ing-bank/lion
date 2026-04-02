@@ -6,11 +6,11 @@ export default {
     EqualsLength:
       'Введіть правильне значення {fieldName}, кількість символів має бути точно {params}.',
     MinLength: 'Уведіть правильне значення {fieldName} (щонайменше {params}).',
-    MaxLength: 'Уведіть правильне значення {fieldName} (до {params} символів (-а)).',
+    MaxLength: 'Уведіть правильне значення {fieldName} (до {params} символів).',
     MinMaxLength:
-      'Уведіть правильне значення {fieldName} (від {params.min} до {params.max} символів).',
-    Pattern: 'Введіть правильні дані {fieldName}.',
-    IsNumber: 'Введіть правильні дані {fieldName}.',
+      'Уведіть правильне значення {fieldName} (від {params.min} до {params.max} символів).',
+    Pattern: 'Введіть правильне значення {fieldName}.',
+    IsNumber: 'Введіть правильне значення {fieldName}.',
     MinNumber: 'Уведіть значення {fieldName}, що перевищує {params}.',
     MaxNumber: 'Уведіть значення {fieldName} менше від {params}.',
     MinMaxNumber: 'Уведіть значення {fieldName} від {params.min} до {params.max}.',
@@ -31,10 +31,10 @@ export default {
     EqualsLength:
       'Введіть правильне значення {fieldName}, кількість символів має бути точно {params}.',
     MinLength: 'Уведіть правильне значення {fieldName} (щонайменше {params}).',
-    MaxLength: 'Уведіть правильне значення {fieldName} (до {params} символів (-а)).',
+    MaxLength: 'Уведіть правильне значення {fieldName} (до {params} символів).',
     MinMaxLength:
-      'Уведіть правильне значення {fieldName} (від {params.min} до {params.max} символів).',
-    IsNumber: 'Введіть правильні дані {fieldName}.',
+      'Уведіть правильне значення {fieldName} (від {params.min} до {params.max} символів).',
+    IsNumber: 'Введіть правильне значення {fieldName}.',
     MinNumber: 'Уведіть значення {fieldName}, що перевищує {params}.',
     MaxNumber: 'Уведіть значення {fieldName} менше від {params}.',
     MinMaxNumber: 'Уведіть значення {fieldName} від {params.min} до {params.max}.',
