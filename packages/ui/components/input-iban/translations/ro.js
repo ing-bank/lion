@@ -1,35 +1,35 @@
 export default {
   error: {
-    IsIBAN: 'Vă rugăm să introduceți un/o {fieldName} valid(ă).',
+    IsIBAN: 'Vă rugăm să introduceți o valoare validă pentru {fieldName}.',
     IsCountryIBAN:
-      'Vă rugăm să introduceți un/o {fieldName} {params, select,\n' +
-      'AT {austriac}\n' +
-      'BE {belgian}\n' +
-      'CZ {ceh}\n' +
-      'DE {german}\n' +
-      'ES {spaniol}\n' +
-      'FR {francez}\n' +
-      'HU {maghiar}\n' +
-      'IT {italian}\n' +
-      'NL {olandez}\n' +
-      'PL {polonez}\n' +
-      'RO {românesc}\n' +
+      'Vă rugăm să introduceți o valoare validă pentru {fieldName} din {params, select,\n' +
+      'AT {Austria}\n' +
+      'BE {Belgia}\n' +
+      'CZ {Cehia}\n' +
+      'DE {Germania}\n' +
+      'ES {Spania}\n' +
+      'FR {Franța}\n' +
+      'HU {Ungaria}\n' +
+      'IT {Italia}\n' +
+      'NL {Țările de Jos}\n' +
+      'PL {Polonia}\n' +
+      'RO {România}\n' +
       'other {{params}}\n' +
-      '} valid(ă).',
+      '}.',
     IsNotCountryIBAN:
-      '{fieldName} {userSuppliedCountryCode, select,\n' +
-      'AT {austriac}\n' +
-      'BE {belgian}\n' +
-      'CZ {ceh}\n' +
-      'DE {german}\n' +
-      'ES {spaniol}\n' +
-      'FR {francez}\n' +
-      'HU {maghiar}\n' +
-      'IT {italian}\n' +
-      'NL {olandez}\n' +
-      'PL {polonez}\n' +
-      'RO {românesc}\n' +
+      'Valoarea pentru {fieldName} din {userSuppliedCountryCode, select,\n' +
+      'AT {Austria}\n' +
+      'BE {Belgia}\n' +
+      'CZ {Cehia}\n' +
+      'DE {Germania}\n' +
+      'ES {Spania}\n' +
+      'FR {Franța}\n' +
+      'HU {Ungaria}\n' +
+      'IT {Italia}\n' +
+      'NL {Țările de Jos}\n' +
+      'PL {Polonia}\n' +
+      'RO {România}\n' +
       'other {{userSuppliedCountryCode}}\n' +
-      '} nu este permis.',
+      '} nu este permisă.',
   },
 };
