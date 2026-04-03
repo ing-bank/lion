@@ -17,4 +17,7 @@ export default {
   selectTextDuplicateFileName: 'Există deja un fişier cu acelaşi nume de fişier.',
   selectTextMultipleFile: 'Selectare fișiere',
   selectTextSingleFile: 'Selectare fișier',
+  statusLoading: 'Se încarcă fișiere, așteptați.',
+  statusSuccess: 'Fișierul {fileName} a fost adăugat cu succes.',
+  statusRemoved: 'Fișierul {fileName} a fost îndepărtat cu succes.',
 };
