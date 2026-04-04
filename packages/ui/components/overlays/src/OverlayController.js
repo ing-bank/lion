@@ -773,6 +773,10 @@ export class OverlayController extends EventTarget {
    * @param {HTMLElement} elementToFocusAfterHide
    */
   async show(elementToFocusAfterHide = this.elementToFocusAfterHide) {
+    this.contentNode.tabIndex = -1;
+    this.#handleShiftKeyPress();
+    this.#handleFocusInsideDialog();
+
     // Subsequent shows could happen, make sure we await it first.
     // Otherwise it gets replaced before getting resolved, and places awaiting it will time out.
     if (this._showComplete) {
@@ -800,6 +804,7 @@ export class OverlayController extends EventTarget {
       }
       // @ts-ignore
       this.__wrappingDialogNode.style.display = '';
+      this.#getInitialElementToFocus().focus();
       this._keepBodySize({ phase: 'before-show' });
       await this._handleFeatures({ phase: 'show' });
       this._keepBodySize({ phase: 'show' });
@@ -901,6 +906,8 @@ export class OverlayController extends EventTarget {
    * @event hide right after the overlay is hidden
    */
   async hide() {
+    this.#stopHandlingShiftKeyPress();
+
     this._hideComplete = new Promise(resolve => {
       this._hideResolve = resolve;
     });
@@ -1226,7 +1233,8 @@ export class OverlayController extends EventTarget {
       this.#handleShiftKeyPress();
       this.#handleFocusInsideDialog();
       this.__wrappingDialogNode?.close();
-      this.__wrappingDialogNode?.showModal();
+      this.#getInitialElementToFocus().focus();
+
       /**
        * At this moment `#handleFocusInsideDialog` should handle the focus.
        * But for some reason Firefox on the testing setup does not
