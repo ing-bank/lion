@@ -54,20 +54,31 @@ export class OverlaysManager {
      * @private
      */
     this.__blockingMap = new WeakMap();
-    /** @private */
-    this.__preventScrollCount = 0;
-    /** @private */
-    this.__bodyClientWidth = undefined;
-    /** @private */
-    this.__bodyClientHeight = undefined;
-    /** @private */
-    this.__bodyMarginRightInline = undefined;
-    /** @private */
-    this.__bodyMarginBottomInline = undefined;
-    /** @private */
-    this.__bodyMarginRight = undefined;
-    /** @private */
-    this.__bodyMarginBottom = undefined;
+    /**
+     * @private
+     * @type {{
+     *   preventScrollCount: number;
+     *   clientWidth: number | undefined;
+     *   clientHeight: number | undefined;
+     *   marginRightInline: string | undefined;
+     *   marginBottomInline: string | undefined;
+     *   marginRight: number | undefined;
+     *   marginBottom: number | undefined;
+     * }}
+     */
+    this.__bodySizeVars = {
+      preventScrollCount: 0,
+      clientWidth: undefined,
+      clientHeight: undefined,
+      marginRightInline: undefined,
+      marginBottomInline: undefined,
+      marginRight: undefined,
+      marginBottom: undefined,
+    };
+
+    this.__forTesting = {
+      bodySizeVars: this.__bodySizeVars,
+    };
 
     if (!OverlaysManager.__globalStyleNode) {
       OverlaysManager.__globalStyleNode = OverlaysManager.__createGlobalStyleNode();
@@ -134,14 +145,13 @@ export class OverlaysManager {
     this.__list = [];
     this.__shownList = [];
     this._siblingsInert = false;
-    this.__siblingsInert = false;
-    this.__preventScrollCount = 0;
-    this.__bodyClientWidth = undefined;
-    this.__bodyClientHeight = undefined;
-    this.__bodyMarginRightInline = undefined;
-    this.__bodyMarginBottomInline = undefined;
-    this.__bodyMarginRight = undefined;
-    this.__bodyMarginBottom = undefined;
+    this.__bodySizeVars.preventScrollCount = 0;
+    this.__bodySizeVars.clientWidth = undefined;
+    this.__bodySizeVars.clientHeight = undefined;
+    this.__bodySizeVars.marginRightInline = undefined;
+    this.__bodySizeVars.marginBottomInline = undefined;
+    this.__bodySizeVars.marginRight = undefined;
+    this.__bodySizeVars.marginBottom = undefined;
 
     if (OverlaysManager.__globalStyleNode) {
       document.head.removeChild(
@@ -165,35 +175,41 @@ export class OverlaysManager {
   requestToKeepBodySize({ phase }) {
     switch (phase) {
       case 'before-show':
-        if (this.__preventScrollCount === 0) {
-          this.__bodyClientWidth = document.body.clientWidth;
-          this.__bodyClientHeight = document.body.clientHeight;
-          this.__bodyMarginRightInline = document.body.style.marginRight;
-          this.__bodyMarginBottomInline = document.body.style.marginBottom;
+        // Tracks the amount of active preventsScroll overlays.
+        // Only the first overlay captures body metrics and only the last one restores them.
+        if (this.__bodySizeVars.preventScrollCount === 0) {
+          this.__bodySizeVars.clientWidth = document.body.clientWidth;
+          this.__bodySizeVars.clientHeight = document.body.clientHeight;
+          this.__bodySizeVars.marginRightInline = document.body.style.marginRight;
+          this.__bodySizeVars.marginBottomInline = document.body.style.marginBottom;
         }
-        this.__preventScrollCount += 1;
+        this.__bodySizeVars.preventScrollCount += 1;
         break;
       case 'show': {
-        if (this.__preventScrollCount === 1) {
+        if (this.__bodySizeVars.preventScrollCount === 1) {
           if (window.getComputedStyle) {
             const bodyStyle = window.getComputedStyle(document.body);
-            this.__bodyMarginRight = parseInt(bodyStyle.getPropertyValue('margin-right'), 10);
-            this.__bodyMarginBottom = parseInt(bodyStyle.getPropertyValue('margin-bottom'), 10);
+            this.__bodySizeVars.marginRight = parseInt(
+              bodyStyle.getPropertyValue('margin-right'),
+              10,
+            );
+            this.__bodySizeVars.marginBottom = parseInt(
+              bodyStyle.getPropertyValue('margin-bottom'),
+              10,
+            );
           } else {
-            this.__bodyMarginRight = 0;
-            this.__bodyMarginBottom = 0;
+            this.__bodySizeVars.marginRight = 0;
+            this.__bodySizeVars.marginBottom = 0;
           }
           const scrollbarWidth =
-            document.body.clientWidth - /** @type {number} */ (this.__bodyClientWidth);
+            document.body.clientWidth - /** @type {number} */ (this.__bodySizeVars.clientWidth);
           const scrollbarHeight =
-            document.body.clientHeight - /** @type {number} */ (this.__bodyClientHeight);
-          const newMarginRight = this.__bodyMarginRight + scrollbarWidth;
-          const newMarginBottom = this.__bodyMarginBottom + scrollbarHeight;
+            document.body.clientHeight - /** @type {number} */ (this.__bodySizeVars.clientHeight);
+          const newMarginRight = this.__bodySizeVars.marginRight + scrollbarWidth;
+          const newMarginBottom = this.__bodySizeVars.marginBottom + scrollbarHeight;
           // @ts-expect-error [external]: CSS not yet typed
           if (window.CSS?.number && document.body.attributeStyleMap?.set) {
-            // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
             document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
-            // @ts-expect-error [external]: types attributeStyleMap + CSS.px not available yet
             document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
           } else {
             document.body.style.marginRight = `${newMarginRight}px`;
@@ -204,11 +220,11 @@ export class OverlaysManager {
       }
       case 'hide':
       case 'teardown':
-        if (this.__preventScrollCount > 0) {
-          this.__preventScrollCount -= 1;
-          if (this.__preventScrollCount === 0) {
-            document.body.style.marginRight = this.__bodyMarginRightInline || '';
-            document.body.style.marginBottom = this.__bodyMarginBottomInline || '';
+        if (this.__bodySizeVars.preventScrollCount > 0) {
+          this.__bodySizeVars.preventScrollCount -= 1;
+          if (this.__bodySizeVars.preventScrollCount === 0) {
+            document.body.style.marginRight = this.__bodySizeVars.marginRightInline || '';
+            document.body.style.marginBottom = this.__bodySizeVars.marginBottomInline || '';
           }
         }
         break;
