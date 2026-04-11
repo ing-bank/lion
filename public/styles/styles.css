@@ -4,7 +4,8 @@
     --bg-color: #000000;
     --text-primary: #ffffff;
     --text-secondary: #888888;
-    --highlight-color: #FFC107; /* Warm Yellow */
+    /* --highlight-color: #FFC107;  */
+    --highlight-color: #CCCCCC; 
     --border-color: #222222;
     --card-bg: #0a0a0a;
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -125,9 +126,16 @@ main {
     display: block;
 }
 
+/* N.B. fix in design later and align edges properly */
+.logo img:first-child {
+    transform: rotate(-45deg);
+    margin-right: -4px;
+}
+
 .logo-text-svg {
     height: 36px;
     width: auto;
+    filter: grayscale(1); /* TODO: use inline svg with highlight-color */
 }
 
 .highlight-text {
@@ -605,7 +613,8 @@ main {
     line-height: 1.2;
     margin-top: 3rem;
     margin-bottom: 1.5rem;
-    background: linear-gradient(180deg, #ffffff 0%, #d4d4d4 100%);
+    /* background: linear-gradient(180deg, #ffffff 0%, #d4d4d4 100%); */
+    background: linear-gradient(180deg, #ffffff 0%, #777 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -780,4 +789,10 @@ main {
 }
 .astro-code [style="color:#005CC5;--shiki-dark:#79B8FF"] {
     color: #777 !important;
+}
+
+@media (prefers-color-scheme: light) {
+    html {
+        filter: invert(1);
+    }
 }
