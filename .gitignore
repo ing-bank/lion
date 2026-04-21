@@ -48,7 +48,7 @@ packages-node/awesome-phonenumber/build/
 !packages-node/**/types.d.ts
 
 ## temp folders
-/.tmp/
+**/.tmp/
 /coverage/
 /storybook-static/
 
