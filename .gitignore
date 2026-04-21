@@ -47,7 +47,7 @@ dist-types
 !packages-node/**/types.d.ts
 
 ## temp folders
-/.tmp/
+**/.tmp/
 /coverage/
 /storybook-static/
 /screenshots/.current/
