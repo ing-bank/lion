@@ -46,8 +46,8 @@ function parseFrontmatter(frontmatterText: string): Record<string, string | stri
           const itemsStr = arrayMatch[1];
           currentValue = itemsStr
             .split(',')
-            .map((item) => item.trim().replace(/^['"]|['"]$/g, ''))
-            .filter((item) => item.length > 0);
+            .map(item => item.trim().replace(/^['"]|['"]$/g, ''))
+            .filter(item => item.length > 0);
         }
       } else {
         // Single value
@@ -102,7 +102,7 @@ export function parseMarkdownFile(fileContent: string): MarkdownFile {
 
 // // Example usage:
 // const markdownContent = `---
-// description: Implement ing-web features
+// description: Implement @lion/ui features
 // tools: ['execute/getTerminalOutput', 'execute/runInTerminal', 'read/readFile', 'read/terminalSelection', 'read/terminalLastCommand', 'edit/editFiles', 'search', 'web/fetch',]
 // ---
 
