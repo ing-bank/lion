@@ -8,7 +8,6 @@ import fsGlob from './fsGlob.ts';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -22,7 +21,7 @@ function shouldFilterMessage(message: string): boolean {
 const originalStderrWrite = process.stderr.write;
 const originalStdoutWrite = process.stdout.write;
 
-process.stderr.write = function(chunk: any, ...args: any[]) {
+process.stderr.write = function (chunk: any, ...args: any[]) {
   const message = chunk?.toString() || '';
   if (!shouldFilterMessage(message)) {
     return originalStderrWrite.call(process.stderr, chunk, ...args);
@@ -30,7 +29,7 @@ process.stderr.write = function(chunk: any, ...args: any[]) {
   return true;
 };
 
-process.stdout.write = function(chunk: any, ...args: any[]) {
+process.stdout.write = function (chunk: any, ...args: any[]) {
   const message = chunk?.toString() || '';
   if (!shouldFilterMessage(message)) {
     return originalStdoutWrite.call(process.stdout, chunk, ...args);
@@ -42,7 +41,7 @@ type SkillConfig = {
   /* This is the skill or agent that we want to test */
   skillOrAgent: {
     name: string;
-    location: string; // e.g., "ing-web" or "./skills/my-skill"
+    location: string; // e.g., "@lion/ui" or "./skills/my-skill"
     type: 'agent' | 'skill';
     extraFiles?: ProjectMock; // Optional extra files to add to the sandbox, on top of the ones defined in the project
   };
@@ -105,7 +104,7 @@ async function skillTester({
 
   let mainSkillDir;
   let agentFile;
-  if (skillOrAgent.type === 'agent') { 
+  if (skillOrAgent.type === 'agent') {
     const fileContent = await fs.promises.readFile(skillOrAgent.location, 'utf-8');
     // Extract prompt content (everything after the frontmatter)
     agentFile = parseMarkdownFile(fileContent);
@@ -115,27 +114,33 @@ async function skillTester({
 
   for (const project of projects) {
     for (const model of models) {
-
       const resultsForSample = [];
-      
+
       for (let i = 0; i < sampleSize; i++) {
-        console.log(`Testing ${skillOrAgent.type} "${skillOrAgent.name}" with prompt "${prompt}" and model "${model}" (sample ${i + 1} of ${sampleSize})`);
+        console.log(
+          `Testing ${skillOrAgent.type} "${
+            skillOrAgent.name
+          }" with prompt "${prompt}" and model "${model}" (sample ${i + 1} of ${sampleSize})`,
+        );
 
         // Create a sandbox for the project files
-        const sandboxRoot = await createProjectSandbox({ ...project.files , ...skillOrAgent.extraFiles || {} });
+        const sandboxRoot = await createProjectSandbox({
+          ...project.files,
+          ...(skillOrAgent.extraFiles || {}),
+        });
 
         // Create and start client
         const client = new CopilotClient({ cwd: sandboxRoot });
         await client.start();
-        
+
         // Create a session (onPermissionRequest is required)
         const session = await client.createSession({
           model,
           onPermissionRequest: approveAll,
           customAgents: [
             {
-              name: 'ing-web',
-              displayName: 'ing-web',
+              name: '@lion/ui',
+              displayName: '@lion/ui',
               prompt: agentFile.body,
               tools: agentFile.frontmatter.tools as string[],
             },
@@ -152,12 +157,12 @@ async function skillTester({
             // },
           },
           agent: skillOrAgent.name,
-          // TODO: skills 
+          // TODO: skills
         });
 
         // Wait for response using typed event handlers
-        const done = new Promise<void>((resolve) => {
-          session.on('assistant.message', (event) => {
+        const done = new Promise<void>(resolve => {
+          session.on('assistant.message', event => {
             console.log(event.data.content);
           });
           session.on('session.idle', () => {
@@ -172,11 +177,16 @@ async function skillTester({
         });
         await done;
 
-        const amountOfFiles = new Set([...Object.keys(project.files), ...Object.keys(project.expectedTransformedFiles)]).size;
+        const amountOfFiles = new Set([
+          ...Object.keys(project.files),
+          ...Object.keys(project.expectedTransformedFiles),
+        ]).size;
         let amountOfSuccessfulTransformations = 0;
 
         // TODO: take deleted files into account as well
-        for (const [filePath, expectedContent] of Object.entries(project.expectedTransformedFiles)) {
+        for (const [filePath, expectedContent] of Object.entries(
+          project.expectedTransformedFiles,
+        )) {
           const fullPath = join(sandboxRoot, filePath);
           const actualContent = await fs.promises.readFile(fullPath, 'utf-8');
           if (actualContent.trim() === expectedContent.trim()) {
@@ -188,11 +198,11 @@ async function skillTester({
         }
 
         resultsForSample.push({
-          successRate: amountOfSuccessfulTransformations/amountOfFiles,
+          successRate: amountOfSuccessfulTransformations / amountOfFiles,
           project: project.name,
           sample: i + 1,
           model,
-        });     
+        });
 
         // Clean up
         await session.disconnect();
@@ -202,7 +212,8 @@ async function skillTester({
       results.push({
         model,
         project: project.name,
-        averageSuccessRate: resultsForSample.reduce((acc, r) => acc + r.successRate, 0) / resultsForSample.length,
+        averageSuccessRate:
+          resultsForSample.reduce((acc, r) => acc + r.successRate, 0) / resultsForSample.length,
       });
     }
   }
@@ -213,12 +224,25 @@ async function skillTester({
   process.exit(0);
 }
 
-
 // N.B. we keep the examples clean and small.
 // Later we add extra options to generate 'noise', larger repos etc.
 
-async function createAgentConfig({ name, projectRoot, relativePathToAgentFile, globsToExtraFiles }: { name: string; projectRoot: string; relativePathToAgentFile: string; globsToExtraFiles: string[] }) {
-  const files = await fsGlob(globsToExtraFiles, { cwd: projectRoot, absolute: true, onlyFiles: true });
+async function createAgentConfig({
+  name,
+  projectRoot,
+  relativePathToAgentFile,
+  globsToExtraFiles,
+}: {
+  name: string;
+  projectRoot: string;
+  relativePathToAgentFile: string;
+  globsToExtraFiles: string[];
+}) {
+  const files = await fsGlob(globsToExtraFiles, {
+    cwd: projectRoot,
+    absolute: true,
+    onlyFiles: true,
+  });
   // console.debug(`Found ${files.length} extra files for agent config:`, files);
 
   const extraFiles: ProjectMock = {};
@@ -230,28 +254,27 @@ async function createAgentConfig({ name, projectRoot, relativePathToAgentFile, g
   return {
     name,
     location: join(projectRoot, relativePathToAgentFile),
-    type: 'agent' as 'agent'|'skill',
+    type: 'agent' as 'agent' | 'skill',
     extraFiles,
   };
 }
-
 
 const testProjectsIncludingExpectedTransforms: TestProject[] = [
   {
     name: 'example-project-with-a-button',
     files: {
       'src/MyButtonApp.js': `
-      import { IngButton } from 'ing-web/button.js';
-      import { LitElement, ScopedElementsMixin } from 'ing-web/core.js';
+      import { LionButton } from '@lion/ui/button.js';
+      import { LitElement, ScopedElementsMixin } from '@lion/ui/core.js';
 
       export class MyButtonApp extends ScopedElementsMixin(LitElement) {
         scopedElements = {
-          'ing-button': IngButton,
+          'lion-button': LionButton,
         };
 
         render() {
           return html\`
-            <ing-button variation="primary-medium">Click me</ing-button>
+            <lion-button variation="primary-medium">Click me</lion-button>
           \`;
         }
           
@@ -263,17 +286,17 @@ const testProjectsIncludingExpectedTransforms: TestProject[] = [
     },
     expectedTransformedFiles: {
       'src/MyButtonApp.js': `
-      import { IngBlob } from 'ing-web/blob.js';
-      import { LitElement, ScopedElementsMixin } from 'ing-web/core.js';
+      import { LionBlob } from '@lion/ui/blob.js';
+      import { LitElement, ScopedElementsMixin } from '@lion/ui/core.js';
 
       export class MyButtonApp extends ScopedElementsMixin(LitElement) {
         scopedElements = {
-          'ing-blob': IngBlob,
+          'lion-blob': LionBlob,
         };
 
         render() {
           return html\`
-            <ing-blob><button>Click me</button></ing-blob>
+            <lion-blob><button>Click me</button></lion-blob>
           \`;
         }
           
@@ -282,16 +305,16 @@ const testProjectsIncludingExpectedTransforms: TestProject[] = [
         }
       }
       `,
-    }
+    },
   },
 ];
 
 skillTester({
   skillOrAgent: await createAgentConfig({
-    name: 'ing-web',
-    projectRoot: join(__dirname, '../ing-run'), 
-    relativePathToAgentFile: '.github/agents/ing-web.agent.md', 
-    globsToExtraFiles: ['.github/agents/docs/**/*'] 
+    name: '@lion/ui',
+    projectRoot: join(__dirname, '../mock-repo'),
+    relativePathToAgentFile: '.github/agents/lion.agent.md',
+    globsToExtraFiles: ['.github/agents/docs/**/*'],
   }),
   prompt: 'Convert button component to blob component',
   models: [
