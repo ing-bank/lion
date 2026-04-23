@@ -200,6 +200,8 @@ export class OverlayController extends EventTarget {
 
     /** @protected */
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
+    console.debug('constructing overlay', this._contentId);
+
     /** @private */
     this.__originalAttrs = new Map();
     /** @private */
@@ -773,6 +775,7 @@ export class OverlayController extends EventTarget {
    * @param {HTMLElement} elementToFocusAfterHide
    */
   async show(elementToFocusAfterHide = this.elementToFocusAfterHide) {
+    console.debug('showing overlay');
     // Subsequent shows could happen, make sure we await it first.
     // Otherwise it gets replaced before getting resolved, and places awaiting it will time out.
     if (this._showComplete) {
@@ -972,6 +975,7 @@ export class OverlayController extends EventTarget {
   }
 
   async toggle() {
+    console.debug('toggling overlay');
     return this.isShown ? this.hide() : this.show();
   }
 
@@ -1002,7 +1006,8 @@ export class OverlayController extends EventTarget {
       this._handleHidesOnOutsideEsc({ phase });
     }
     if (this.hidesOnOutsideClick) {
-      this._handleHidesOnOutsideClick({ phase });
+      // disable for debugging
+      // this._handleHidesOnOutsideClick({ phase });
     }
     if (this.handlesAccessibility) {
       this._handleAccessibility({ phase });
@@ -1011,6 +1016,7 @@ export class OverlayController extends EventTarget {
       this._handleInheritsReferenceWidth();
     }
     if (this.visibilityTriggerFunction) {
+      console.debug('handling visibility triggers', phase);
       this._handleVisibilityTriggers({ phase });
     }
   }
