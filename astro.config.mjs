@@ -8,7 +8,7 @@ import { remarkRewriteMdLinks } from './src/utils/remark-plugins/remark-rewrite-
 
 const mdjsSetupConfig = {
   simulationSettings: {
-    simulatorUrl: '/next/simulator',
+    simulatorUrl: '/simulator',
     languages: [
       { key: 'de-DE', name: 'German' },
       { key: 'en-GB', name: 'English (United Kingdom)' },
@@ -20,8 +20,9 @@ const mdjsSetupConfig = {
 
 // https://astro.build/config
 export default defineConfig({
-  base: '/next',
+  base: '/',
   trailingSlash: 'never',
+  outDir: '_site',
   integrations: [lit(), pagefind()],
   markdown: {
     // ing-web
