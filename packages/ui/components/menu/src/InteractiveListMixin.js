@@ -210,32 +210,36 @@ const InteractiveListMixinImplementation = superclass =>
     }
 
     set activeIndex(index) {
-      if (this.listItems[index]) {
-        const prevActiveEl = this.activeItem;
-        const el = this.listItems[index];
-        // Unset siblings
-        this.listItems.forEach(item => {
-          setActive(item, true);
-        });
-        setActive(el);
+      const activeItem = this.listItems[index];
 
-        // Update 'active mode'
-        if (this._activeMode === 'activedescendant') {
-          this._listNode.setAttribute('aria-activedescendant', el.id);
-        } else if (this._activeMode === 'roving-tabindex') {
-          el.focus();
-        }
+      console.debug({ activeItem, index }, this.listItems, this._activeMode);
+      if (!activeItem) return;
 
-        if (!isInView(this._scrollTargetNode, el)) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
+      const prevActiveEl = this.activeItem;
+      const el = this.listItems[index];
+      // Unset siblings
+      this.listItems.forEach(item => {
+        setActive(item, true);
+      });
+      setActive(el);
 
-        if (this._activeMode === 'roving-tabindex') {
-          if (prevActiveEl) {
-            prevActiveEl.setAttribute('tabindex', '-1');
-          }
-          el.setAttribute('tabindex', '0');
+      // Update 'active mode'
+      if (this._activeMode === 'activedescendant') {
+        this._listNode.setAttribute('aria-activedescendant', el.id);
+        // TODO: check if _activeMode 'disclosure' should be a thing (most likely we should set role=list based on other criterium)
+      } else if (this._activeMode === 'roving-tabindex') {
+        el.focus();
+      }
+
+      if (!isInView(this._scrollTargetNode, el)) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      if (this._activeMode === 'roving-tabindex') {
+        if (prevActiveEl) {
+          prevActiveEl.setAttribute('tabindex', '-1');
         }
+        el.setAttribute('tabindex', '0');
       }
     }
 
