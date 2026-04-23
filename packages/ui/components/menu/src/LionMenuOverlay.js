@@ -2,7 +2,7 @@
 import { html } from 'lit';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-import { OverlayMixin, withDropdownConfig } from '@lion/overlays';
+import { OverlayMixin, withDropdownConfig } from '@lion/ui/overlays.js';
 import { LionMenu } from './LionMenu.js';
 import { InteractiveListMixin } from './InteractiveListMixin.js';
 
@@ -13,7 +13,7 @@ import { InteractiveListMixin } from './InteractiveListMixin.js';
  * - LionCombobox
  * - LionSelectRich
  *
- * @param {import('@open-wc/dedupe-mixin').Constructor<import('@lion/core').LitElement>} superclass
+ * @param {import('@open-wc/dedupe-mixin').Constructor<import('lit').LitElement>} superclass
  */
 const OverlayWithListInvokerMixinImplementation = superclass =>
   class OverlayWithListInvokerMixin extends OverlayMixin(InteractiveListMixin(superclass)) {
@@ -67,6 +67,13 @@ const OverlayWithListInvokerMixinImplementation = superclass =>
     get _overlayContentNode() {
       return this._contentNode;
     }
+
+    /**
+     * make sure OverlayMixin gets the invokerNode defined by DisclosureMixin
+     */
+    get _overlayInvokerNode() {
+      return this._invokerNode;
+    }
   };
 export const OverlayWithListInvokerMixin = dedupeMixin(OverlayWithListInvokerMixinImplementation);
 
@@ -82,11 +89,13 @@ export class LionMenuOverlay extends OverlayWithListInvokerMixin(LionMenu) {
   }
 
   _defineOverlayConfig() {
-    const { parentMenu: parentList } = this;
+    const { parentList } = this;
     let placement = 'bottom-start';
     if (parentList && parentList.orientation !== 'horizontal') {
       placement = 'right-start';
     }
+
+    console.debug({ placement, parentList });
 
     const menuConfig = {};
     // if (this._activeMode === 'activedescendant') {

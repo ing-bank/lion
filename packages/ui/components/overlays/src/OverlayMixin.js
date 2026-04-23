@@ -218,7 +218,6 @@ export const OverlayMixinImplementation = superclass => {
     static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
     get _overlayInvokerNode() {
-      console.debug('hallo???');
       return /** @type {HTMLElement | undefined} */ (
         Array.from(this.children).find(child => child.slot === 'invoker')
       );
@@ -259,6 +258,9 @@ export const OverlayMixinImplementation = superclass => {
     /** @protected */
     _setupOverlayCtrl() {
       if (this.#hasSetup) return;
+
+      console.debug(this._overlayInvokerNode, 'invoker node');
+
       const config = {
         contentNode: this._overlayContentNode,
         contentWrapperNode: this._overlayContentWrapperNode,
