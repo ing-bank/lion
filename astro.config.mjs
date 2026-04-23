@@ -6,14 +6,18 @@ import { remarkProcessDemos } from './src/utils/remark-plugins/remark-process-de
 import { remarkModifiedTime } from './src/utils/remark-plugins/remark-modified-time.mjs';
 import { remarkRewriteMdLinks } from './src/utils/remark-plugins/remark-rewrite-md-links.mjs';
 
-// The portal is published under a prefix: '/next' for the production site, another prefix
-// for a branch preview (see scripts/deploy-portal-preview.mjs). Everything inside the portal
-// resolves its urls against import.meta.env.BASE_URL, so the prefix is a build time concern.
-const base = process.env.ASTRO_BASE_URL || '/next';
+// The portal is published under a prefix: '/' for the production site (astro owns the site root,
+// the legacy rocket site moved to '/prev'), and another prefix for a branch preview (see
+// scripts/deploy-portal-preview.mjs). Everything inside the portal resolves its urls against
+// import.meta.env.BASE_URL, so the prefix is a build time concern.
+// Astro keeps BASE_URL as given, which is '/' at the root and '/next-preview/<branch>' (no
+// trailing slash) for a preview, so every join below is written as `${base.replace(/\/$/, '')}/x`
+// to be correct for both.
+const base = process.env.ASTRO_BASE_URL || '/';
 
 const mdjsSetupConfig = {
   simulationSettings: {
-    simulatorUrl: `${base}/simulator`,
+    simulatorUrl: `${base.replace(/\/$/, '')}/simulator`,
     languages: [
       { key: 'de-DE', name: 'German' },
       { key: 'en-GB', name: 'English (United Kingdom)' },
@@ -27,6 +31,7 @@ const mdjsSetupConfig = {
 export default defineConfig({
   base,
   trailingSlash: 'never',
+  outDir: '_site',
   integrations: [lit(), pagefind()],
   markdown: {
     // ing-web

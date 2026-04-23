@@ -6,6 +6,7 @@ import { UIPortalFooter } from "../components/ui-portal-footer.js";
 import ThemeInit from '../components/ThemeInit.astro';
 import { UIPortalMainNav } from "../components/ui-portal-main-nav.js";
 import LionWordmark from '../components/LionWordmark.astro';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const site = Astro.site || Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, site).toString();
@@ -95,21 +96,21 @@ async function getNavigation(collectionName, baseUrl = '/', isSortedAlphabetical
 
 const components = await getNavigation(
   "lionComponents",
-  `${import.meta.env.BASE_URL}/components`
+  `${base}/components`
 );
 const fundamentals = await getNavigation(
   "lionFundamentals",
-  `${import.meta.env.BASE_URL}/fundamentals`,
+  `${base}/fundamentals`,
   false
 );
 const guides = await getNavigation(
   "lionGuides",
-  `${import.meta.env.BASE_URL}/guides`,
+  `${base}/guides`,
   false
 );
 const blogEntries = await getNavigation(
   "lionBlog",
-  `${import.meta.env.BASE_URL}/blog`,
+  `${base}/blog`,
   false,
   entry => entry.data?.published
 );
@@ -123,30 +124,30 @@ const blogEntries = await getNavigation(
 const navData = [
   {
     name: "home",
-    url: import.meta.env.BASE_URL,
+    url: base || "/",
     iconId: 'lion-portal:portal:home'
   },
   {
     name: "fundamentals",
-    url: `${import.meta.env.BASE_URL}/fundamentals`,
+    url: `${base}/fundamentals`,
     iconId: 'lion-portal:portal:sdk',
     children: fundamentals,
   },
   {
     name: "guides",
-    url: `${import.meta.env.BASE_URL}/guides`,
+    url: `${base}/guides`,
     iconId: 'lion-portal:portal:extension',
     children: guides,
   },
   {
     name: "components",
-    url: `${import.meta.env.BASE_URL}/components`,
+    url: `${base}/components`,
     iconId: 'lion-portal:portal:deployedCode',
     children: components,
   },
   {
     name: "blog",
-    url: `${import.meta.env.BASE_URL}/blog`,
+    url: `${base}/blog`,
     iconId: 'lion-portal:portal:deployedCode',
     children: blogEntries,
   },
@@ -179,7 +180,7 @@ let activeItem;
 function setActive(navData, currentUrl) {
   // for home page we need to check with the exact match
   const isActive = (navItem) => {
-    if (navItem.url === import.meta.env.BASE_URL) {
+    if (navItem.url === base) {
       // homepage
       return `${navItem.url}/` === currentUrl;
     }
@@ -250,15 +251,15 @@ const footerData = [
     <meta name="viewport" content="width=device-width" />
     <meta name="color-scheme" content="light dark" />
     <ThemeInit />
-    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
+    <link rel="icon" type="image/svg+xml" href=`${base}/favicon.svg` />
     <meta name="generator" content={Astro.generator} />
 
-    <link href=`${import.meta.env.BASE_URL}/styles/open-props@1.6.11.min.css` rel="stylesheet" type="text/css">
-    <link href=`${import.meta.env.BASE_URL}/styles/global.css` rel="stylesheet" type="text/css">
-    <link href=`${import.meta.env.BASE_URL}/styles/lion/variables.css` rel="stylesheet" type="text/css">
-    <link href=`${import.meta.env.BASE_URL}/styles/lion/markdown.css` rel="stylesheet" type="text/css">
-    <link href=`${import.meta.env.BASE_URL}/styles/lion/layout.css` rel="stylesheet" type="text/css">
-    <link href=`${import.meta.env.BASE_URL}/styles/lion/style.css` rel="stylesheet" type="text/css">
+    <link href=`${base}/styles/open-props@1.6.11.min.css` rel="stylesheet" type="text/css">
+    <link href=`${base}/styles/global.css` rel="stylesheet" type="text/css">
+    <link href=`${base}/styles/lion/variables.css` rel="stylesheet" type="text/css">
+    <link href=`${base}/styles/lion/markdown.css` rel="stylesheet" type="text/css">
+    <link href=`${base}/styles/lion/layout.css` rel="stylesheet" type="text/css">
+    <link href=`${base}/styles/lion/style.css` rel="stylesheet" type="text/css">
 
     <script src="@webcomponents/scoped-custom-element-registry" />
 
@@ -284,8 +285,8 @@ const footerData = [
     <div class="ui-portal-grid__nav">
       <div class="site-header">
         <div class="header-content">
-          <a href={`${import.meta.env.BASE_URL}/`} class="logo">
-            <img src={`${import.meta.env.BASE_URL}/logo.svg`} alt="Lion Logo" width="32" height="32">
+          <a href={`${base}/`} class="logo">
+            <img src={`${base}/logo.svg`} alt="Lion Logo" width="32" height="32">
             <LionWordmark />
           </a>
         </div>

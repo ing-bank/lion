@@ -4,7 +4,7 @@
  *
  *   npm run portal:preview                       # build HEAD, publish to gh-pages, print the url
  *   npm run portal:preview -- --no-push          # build and stage, but do not push
- *   npm run portal:preview -- --no-build         # reuse the dist/ that is already there
+ *   npm run portal:preview -- --no-build         # reuse the _site/ that is already there
  *   npm run portal:preview -- --branch=feat/x    # preview a branch other than HEAD
  *   npm run portal:preview -- --target=local     # stage in ~/portal-previews, no push
  *   npm run portal:preview -- --target=local --serve
@@ -27,6 +27,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const SITE = '_site'; // astro's outDir (astro.config.mjs) and the published site root
 const PREVIEW_DIR = 'next-preview'; // folder on the published site that groups all previews
 const PAGES_HOST = 'https://lion.js.org';
 const AUTHOR = { name: 'Thijs Louisse', email: 'Thijs.Louisse@ing.com' };
@@ -67,11 +68,14 @@ async function main() {
 
   if (!flag('no-build')) {
     // astro build only: the branch preview is the portal, not the legacy rocket site.
+    // _site is astro's outDir ('outDir' in astro.config.mjs) and the deployed site root, so drop
+    // it first: a previous full build may have left the rocket output ('_site/prev') in there.
+    await fsp.rm(SITE, { recursive: true, force: true });
     run('npx', ['astro', 'build', '--force'], { ASTRO_BASE_URL: base });
     run('node', ['src/utils/rewrite-links.mjs'], { ASTRO_BASE_URL: base });
   }
 
-  const dist = path.join(ROOT, 'dist');
+  const dist = path.join(ROOT, SITE);
   if (!fs.existsSync(dist)) throw new Error(`${dist} does not exist - run without --no-build`);
 
   const meta = { branch, commit, base, builtAt: new Date().toISOString() };
