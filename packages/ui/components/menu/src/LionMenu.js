@@ -219,9 +219,7 @@ export class LionMenu extends AnimateMixin(MultiLevelListMixin(LitElement)) {
       if (this._listRole === 'menu') {
         this._listRole = 'menubar';
       }
-    }
-
-    if (this._activeMode === 'disclosure') {
+    } else {
       this._listRole = 'list';
     }
 
