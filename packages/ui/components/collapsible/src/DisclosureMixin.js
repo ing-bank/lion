@@ -92,11 +92,6 @@ const DisclosureMixinImplementation = superclass =>
      * @overridable
      */
     _setupDisclosure() {
-      // console.debug(
-      //   'DisclosureMixin setup after updateComplete',
-      //   this.__disclosureNeedsSetup,
-      //   this._setupOpenCloseListeners,
-      // );
       this._setupOpenCloseListeners();
     }
 
