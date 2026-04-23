@@ -21,15 +21,9 @@ export function withClickInteraction() {
 
       return {
         init: () => {
-          console.debug(
-            'setting up click interaction for overlay',
-            controller._contentId,
-            controller.invokerNode,
-          );
           controller.invokerNode?.addEventListener('click', handleOpenClosed);
         },
         teardown: () => {
-          console.debug('tearing down click interaction for overlay', controller._contentId);
           controller.invokerNode?.removeEventListener('click', handleOpenClosed);
         },
       };
