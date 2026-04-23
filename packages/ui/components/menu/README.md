@@ -152,7 +152,7 @@ See https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-
 ```js preview-story
 export const disclosureMenu = () => html`
  <nav aria-label="Mythical University">
-   <lion-menu bar ._activeMode="${'disclosure'}">
+   <lion-menu bar>
     <div role="listitem">
       <button data-invoker>About</button>
       <lion-menu>
