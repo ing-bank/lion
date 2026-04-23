@@ -92,6 +92,11 @@ const DisclosureMixinImplementation = superclass =>
      * @overridable
      */
     _setupDisclosure() {
+      // console.debug(
+      //   'DisclosureMixin setup after updateComplete',
+      //   this.__disclosureNeedsSetup,
+      //   this._setupOpenCloseListeners,
+      // );
       this._setupOpenCloseListeners();
     }
 
@@ -106,13 +111,11 @@ const DisclosureMixinImplementation = superclass =>
      * @overridable
      */
     _setupOpenCloseListeners() {
-      // console.log('this', this);
       if (!this._invokerNode) {
         return;
       }
 
       const interactions = this.invokerInteraction.split(' ');
-      // console.log('interactions', interactions);
 
       if (interactions.includes('hover')) {
         this._invokerNode.addEventListener('mouseenter', this.__onInvokerMouseenter);
@@ -121,7 +124,6 @@ const DisclosureMixinImplementation = superclass =>
         this._contentNode?.addEventListener('mouseleave', this.__onContentMouseleave);
       }
       if (interactions.includes('click')) {
-        // console.log(this, 'addtCLick');
         this._invokerNode.addEventListener('click', this.toggle);
       }
     }
