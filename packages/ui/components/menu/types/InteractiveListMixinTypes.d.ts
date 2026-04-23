@@ -1,7 +1,7 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from 'lit';
-import { SlotHost } from '@lion/core/types/SlotMixinTypes';
-import { DisabledHost } from '@lion/core/types/DisabledMixinTypes';
+import { SlotHost } from '../../core/types/SlotMixinTypes.js';
+import { DisabledHost } from '../../core/types/DisabledMixinTypes.js';
 
 export type InteractiveListItemRole =
   | 'menuitem'
