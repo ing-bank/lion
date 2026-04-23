@@ -280,7 +280,7 @@ the branch name. Nothing links to it, so it can be shared before a branch is mer
 ```bash
 npm run portal:preview                     # HEAD -> https://lion.js.org/next-preview/<branch-slug>/
 npm run portal:preview -- --no-push        # build and stage locally, do not publish
-npm run portal:preview -- --no-build       # reuse the dist/ that is already there
+npm run portal:preview -- --no-build       # reuse the _site/ that is already there
 npm run portal:preview -- --branch=feat/x  # preview another branch
 ```
 
