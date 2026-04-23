@@ -19,7 +19,7 @@ import {
 // TODO: consider renaming to FocusGroupMixin
 
 /**
- * @typedef {import('../types/InteractiveListMixinTypes').InteractiveListItemRole} InteractiveListItemRole
+ * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
  */
 
 /**
