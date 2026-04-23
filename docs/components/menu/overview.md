@@ -154,10 +154,10 @@ See https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-
 ```js preview-story
 export const disclosureMenu = () => html`
  <nav aria-label="Mythical University">
-   <lion-menu bar ._activeMode="${'disclosure'}">
+   <lion-menu bar>
     <div role="listitem">
       <button data-invoker>About</button>
-      <lion-menu>
+      <lion-menu-overlay>
         <div role="listitem">
           <a href="#mythical-page-content">Overview</a>
         </div>
@@ -170,13 +170,13 @@ export const disclosureMenu = () => html`
         <div role="listitem">
           <a href="#mythical-page-content">Campus Tours</a>
         </div>
-      </ul>
+      </lion-menu-overlay>
     </div>
     <div role="listitem">
       <button data-invoker>
         Admissions
       </button>
-      <lion-menu id="id_admissions_menu">
+      <lion-menu-overlay id="id_admissions_menu">
         <div role="listitem">
           <a href="#mythical-page-content">Apply</a>
         </div>
@@ -195,11 +195,11 @@ export const disclosureMenu = () => html`
         <div role="listitem">
           <a href="#mythical-page-content">Connect</a>
         </div>
-      </ul>
+      </lion-menu-overlay>
     </div>
     <div role="listitem">
       <button data-invoker>Academics</button>
-      <lion-menu>
+      <lion-menu-overlay>
         <div role="listitem">
           <a href="#mythical-page-content">Colleges & Schools</a>
         </div>
@@ -224,7 +224,7 @@ export const disclosureMenu = () => html`
         <div role="listitem">
           <a href="#mythical-page-content">Transcripts</a>
         </div>
-      </ul>
+      </lion-menu-overlay>
     </div>
   </ul>
 </nav>
