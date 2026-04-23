@@ -260,8 +260,6 @@ export const OverlayMixinImplementation = superclass => {
     _setupOverlayCtrl() {
       if (this.#hasSetup) return;
 
-      console.debug(this._overlayInvokerNode, 'invoker node');
-
       const config = {
         contentNode: this._overlayContentNode,
         contentWrapperNode: this._overlayContentWrapperNode,
