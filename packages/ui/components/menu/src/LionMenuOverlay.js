@@ -95,8 +95,6 @@ export class LionMenuOverlay extends OverlayWithListInvokerMixin(LionMenu) {
       placement = 'right-start';
     }
 
-    console.debug({ placement, parentList });
-
     const menuConfig = {};
     // if (this._activeMode === 'activedescendant') {
     //   menuConfig.elementToFocusAfterHide = this._listNode;
@@ -111,6 +109,16 @@ export class LionMenuOverlay extends OverlayWithListInvokerMixin(LionMenu) {
       popperConfig: {
         ...dropdownCfg.popperConfig,
         placement,
+        strategy: 'absolute',
+        modifiers: [
+          {
+            name: 'offset',
+            enabled: true,
+            options: {
+              offset: [0, 0],
+            },
+          },
+        ],
       },
     };
   }
