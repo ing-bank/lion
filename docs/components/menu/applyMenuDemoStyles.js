@@ -35,7 +35,7 @@ export function applyMenuDemoStyles() {
       font-size: 12px;
     }
 
-    [level='0'] > [role='menu'] {
+    [level] > [role='menu'] {
       border: 1px solid black;
     }
 
