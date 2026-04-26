@@ -19,8 +19,16 @@ import {
 // TODO: consider renaming to FocusGroupMixin
 
 /**
- * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
+ * @param {Element} potentialFocusable
+ * @returns {Element|null}
  */
+function isFocusableElement(potentialFocusable) {
+  return (
+    potentialFocusable &&
+    (potentialFocusable.hasAttribute('tabindex') ||
+      ['BUTTON', 'A'].includes(potentialFocusable.tagName))
+  );
+}
 
 /**
  * Lightweight component supporting InteractiveListItemRole as a type.
@@ -142,10 +150,15 @@ const InteractiveListMixinImplementation = superclass =>
 
     static get properties() {
       return {
+        // TODO: align with name of open-ui
         orientation: { type: String, reflect: true },
+        // TODO: align with name of platform? (multiple)
         multipleChoice: { type: Boolean, attribute: 'multiple-choice' },
+        // TODO: align with name of open-ui
         selectionFollowsFocus: { type: Boolean, attribute: 'selection-follows-focus' },
+        // TODO: align with name of open-ui
         rotateKeyboardNavigation: { type: Boolean, attribute: 'rotate-keyboard-navigation' },
+        // TODO: align with name of open-ui
         noPreselect: { type: Boolean, attribute: 'no-preselect' },
 
         _activateOnTypedChars: Boolean,
@@ -202,7 +215,11 @@ const InteractiveListMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this
     get _childrenRoles() {
-      return ['menuitem', 'menuitemcheckbox', 'menuitemradio', 'option', 'treeitem', 'listitem'];
+      return [...this._interactiveChildrenRoles, 'listitem', 'group'];
+    }
+
+    get _interactiveChildrenRoles() {
+      return ['menuitem', 'menuitemcheckbox', 'menuitemradio', 'option', 'treeitem'];
     }
 
     get activeIndex() {
@@ -212,38 +229,47 @@ const InteractiveListMixinImplementation = superclass =>
     set activeIndex(index) {
       const activeItem = this.listItems[index];
 
-      console.debug({ activeItem, index }, this.listItems, this._activeMode);
+      console.debug('activeIndex', index, activeItem, this.listItems);
+
       if (!activeItem) return;
 
       const prevActiveEl = this.activeItem;
+      // This can be a focusable element or a wrapper thereof
       const el = this.listItems[index];
+
       // Unset siblings
       this.listItems.forEach(item => {
         setActive(item, true);
       });
       setActive(el);
 
+      // are we a focusable element or a wrapper thereof?
+      const focusableEl = isFocusableElement(el) ? el : el.firstElementChild;
+      const prevFocusableEl =
+        prevActiveEl &&
+        (isFocusableElement(prevActiveEl) ? prevActiveEl : prevActiveEl.firstElementChild);
+
       // Update 'active mode'
       if (this._activeMode === 'activedescendant') {
-        this._listNode.setAttribute('aria-activedescendant', el.id);
-        // TODO: check if _activeMode 'disclosure' should be a thing (most likely we should set role=list based on other criterium)
-      } else if (this._activeMode === 'roving-tabindex') {
-        el.focus();
+        this._listNode.setAttribute('aria-activedescendant', focusableEl.id);
+      } else if (this._activeMode === 'roving-tabindex' || this._activeMode === 'disclosure') {
+        focusableEl.focus();
       }
 
-      if (!isInView(this._scrollTargetNode, el)) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (!isInView(this._scrollTargetNode, focusableEl)) {
+        focusableEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 
       if (this._activeMode === 'roving-tabindex') {
-        if (prevActiveEl) {
-          prevActiveEl.setAttribute('tabindex', '-1');
+        if (prevFocusableEl) {
+          prevFocusableEl.setAttribute('tabindex', '-1');
         }
-        el.setAttribute('tabindex', '0');
+        focusableEl.setAttribute('tabindex', '0');
       }
     }
 
     get activeItem() {
+      // console.debug('activeIndex', this.activeIndex, this.listItems);
       return this.listItems[this.activeIndex];
     }
 
@@ -273,16 +299,16 @@ const InteractiveListMixinImplementation = superclass =>
      */
     setCheckedIndex(index) {
       const item = this.listItems[index];
-      if (item) {
-        if (!this.multiple) {
-          // Uncheck all
-          this.listItems.forEach(item => {
-            setChecked(item, true);
-          });
-          setChecked(this.listItems[index]);
-        } else {
-          toggleChecked(this.listItems[index]);
-        }
+      if (!item) return;
+
+      if (!this.multipleChoice) {
+        // Uncheck all
+        this.listItems.forEach(item => {
+          setChecked(item, true);
+        });
+        setChecked(this.listItems[index]);
+      } else {
+        toggleChecked(this.listItems[index]);
       }
     }
 
@@ -319,8 +345,8 @@ const InteractiveListMixinImplementation = superclass =>
        * - [role="menubar"](https://www.w3.org/TR/wai-aria-practices-1.1/examples/menubar/menubar-1/menubar-1.html)
        * - [role="tree"](https://www.w3.org/TR/wai-aria-practices-1.1/examples/treeview/treeview-1/treeview-1b.html)
        * For disclosure menus, we need keyboard navigation, but treat every list item
-       * (more precisely its anchor child) as a tab stop
-       * @type {'activedescendant'|'roving-tabindex'|'none'}
+       * (more precisely its anchor child) as a tab stop. Also we apply aria-current
+       * @type {'activedescendant'|'roving-tabindex'|'disclosure'|'none'}
        */
       this._activeMode = 'activedescendant';
 
@@ -365,6 +391,7 @@ const InteractiveListMixinImplementation = superclass =>
       this._onListClick = this._onListClick.bind(this);
       this._onListKeyUp = this._onListKeyUp.bind(this);
       this._onListKeyDown = this._onListKeyDown.bind(this);
+      this._onListFocusIn = this._onListFocusIn.bind(this);
     }
 
     /**
@@ -380,11 +407,46 @@ const InteractiveListMixinImplementation = superclass =>
        * @param {HTMLElement} node
        */
       const shouldAddItem = node => {
-        // if (!(node instanceof Element)) {
-        //   return true;
-        // }
         const role = /** @type {InteractiveListItemRole|'group'} */ (node.getAttribute('role'));
-        return (role && this._childrenRoles.includes(role)) || node.hasAttribute('data-item');
+        return (
+          (role && this._interactiveChildrenRoles.includes(role)) || node.hasAttribute('data-item')
+        );
+      };
+
+      const handleInteractiveListAdditionLevel = (node, { newItems, level = 1 }) => {
+        // Move list item to element with aria-activedescendant ([role="listbox|menu|menubar"])
+        if (level === 1) {
+          this._listNode.appendChild(node);
+          if (this._hasSmartChildren || !(node instanceof Element)) {
+            return;
+          }
+        }
+        /**
+         * When [role=group], we can have a grouped set within a level, like multiple
+         * menuitemradios or -checkboxes.
+         * When no role at all, we might deal with a wrapped node (for instance triggering a
+         * submenu)
+         * Alternatively, when _activeMode is ['disclosure'](https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-navigation.html),
+         * we search for a[href]
+         */
+        if (node.getAttribute('role') === 'group') {
+          // console.debug('checking children of', node, node.children);
+          for (const child of node.children) {
+            handleInteractiveListAdditionLevel(child, { newItems, level: level + 1 });
+          }
+          return;
+        }
+        // Also support scenarios like these: https://adrianroselli.com/2019/06/link-disclosure-widget-navigation.html
+        // TODO: For now, we only allow direct children. Should we consider deeper nesting?
+        const focusableChildren = Array.from(node.children).filter(c => isFocusableElement(c));
+        if (focusableChildren.length) {
+          for (const focusableChild of focusableChildren) {
+            newItems.push(focusableChild);
+          }
+        } else {
+          // Then we must be focusable (either via activedescendant, tabindex)
+          newItems.push(node);
+        }
       };
 
       this._listItemsSlot.addEventListener('slotchange', () => {
@@ -394,31 +456,10 @@ const InteractiveListMixinImplementation = superclass =>
 
         // Move items to _listNode and add interactive node references (with [role]) to listItems
         nodes.forEach(node => {
-          // Move list item to element with aria-activedescendant ([role="listbox|menu|menubar"])
-          this._listNode.appendChild(node);
-          if (this._hasSmartChildren || !(node instanceof Element)) {
-            return;
-          }
-          const shouldAdd = shouldAddItem(node);
-          /**
-           * When [role=group], we can have a grouped set within a level, like multiple
-           * menuitemradios or -checkboxes.
-           * When no role at all, we might deal with a wrapped node (for instance triggering a
-           * submenu)
-           * Alternatively, when _activeMode is ['disclosure'](https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-navigation.html),
-           * we search for a[href]
-           */
-          if (!shouldAdd) {
-            // for now allow one nested group as direct child of [role="menu|menubar"]
-            Array.from(node.children).forEach(child => {
-              if (shouldAddItem(child)) {
-                newItems.push(child);
-              }
-            });
-          } else {
-            newItems.push(node);
-          }
+          handleInteractiveListAdditionLevel(node, { newItems });
         });
+
+        console.debug('newItems', newItems);
 
         newItems.forEach(item => {
           if (!this.__listItems.includes(item)) {
@@ -430,10 +471,11 @@ const InteractiveListMixinImplementation = superclass =>
       });
 
       this._listNode.setAttribute('role', this._listRole);
-      this._listNode.setAttribute('tabindex', '0');
+      this._listNode.setAttribute('tabindex', this._activeMode === 'disclosure' ? '-1' : '0');
       this._listNode.addEventListener('click', this._onListClick);
       this._listNode.addEventListener('keyup', this._onListKeyUp);
       this._listNode.addEventListener('keydown', this._onListKeyDown);
+      this._listNode.addEventListener('focusin', this._onListFocusIn);
     }
 
     /**
@@ -481,23 +523,23 @@ const InteractiveListMixinImplementation = superclass =>
           break;
         case 'ArrowUp':
           ev.preventDefault();
-          if (this.orientation === 'vertical') {
+          if (this.orientation === 'vertical' || this._activeMode === 'disclosure') {
             this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
           }
           break;
         case 'ArrowLeft':
-          if (this.orientation === 'horizontal') {
+          if (this.orientation === 'horizontal' || this._activeMode === 'disclosure') {
             this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
           }
           break;
         case 'ArrowDown':
           ev.preventDefault();
-          if (this.orientation === 'vertical') {
+          if (this.orientation === 'vertical' || this._activeMode === 'disclosure') {
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
           }
           break;
         case 'ArrowRight':
-          if (this.orientation === 'horizontal') {
+          if (this.orientation === 'horizontal' || this._activeMode === 'disclosure') {
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
           }
           break;
@@ -573,6 +615,27 @@ const InteractiveListMixinImplementation = superclass =>
         case 'End':
           ev.preventDefault();
         /* no default */
+      }
+    }
+
+    /**
+     * @overridable
+     * @param {FocusEvent} ev
+     */
+    _onListFocusIn(ev) {
+      const { target } = ev;
+      // const item = /** @type {HTMLElement} */ (target.closest('[role]'));
+      const foundIndex = this.listItems.indexOf(target);
+      // console.debug('focusin', target, foundIndex, this.listItems);
+      const previousActiveIndex = this.activeIndex;
+      if (foundIndex > -1 && foundIndex !== this.activeIndex) {
+        this.activeIndex = foundIndex;
+        if (this._activeMode === 'disclosure') {
+          const previousActiveItem = this.listItems[previousActiveIndex];
+          previousActiveItem?.removeAttribute('aria-current');
+          const activeItem = this.listItems[this.activeIndex];
+          activeItem.setAttribute('aria-current', 'page');
+        }
       }
     }
 
