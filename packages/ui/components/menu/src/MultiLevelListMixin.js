@@ -4,6 +4,11 @@ import { DisclosureMixin } from '@lion/ui/collapsible.js';
 import { InteractiveListMixin } from './InteractiveListMixin.js';
 
 /**
+ * @typedef {import('./InteractiveListMixin.js').LionItem} LionItem
+ * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListHost} InteractiveList
+ */
+
+/**
  * All logic that is needed for interactive lists that are allowed to have multiple nested, collapsible levels
  * Applies to [role=menu] and [role=tree]
  */
@@ -29,7 +34,7 @@ const MultiLevelListMixinImplementation = superclass =>
      * @configure DisclosureMixin
      */
     get _invokerNode() {
-      return this.invokerNode || super._invokerNode;
+      return this.constructor._getFocusableInvokerEl(this.invokerNode) || super._invokerNode;
     }
 
     /**
@@ -110,7 +115,7 @@ const MultiLevelListMixinImplementation = superclass =>
        *   <lion-menu> ... </lion-menu>
        * </lion-menuitem>
        */
-      const siblingOfInvoker = item.nextElementSibling && item.nextElementSibling.isInteractiveList;
+      const siblingOfInvoker = item.nextElementSibling?.isInteractiveList;
       if (siblingOfInvoker) {
         return item.nextElementSibling;
       }
@@ -177,14 +182,24 @@ const MultiLevelListMixinImplementation = superclass =>
       const parentListOfActiveItem = this.parentList;
       const { key } = ev;
 
+      if (key === 'Escape' && parentListOfActiveItem) {
+        // We need to stop here, or else we affect parent menu (handled by OverlayController)
+        ev.stopPropagation();
+      }
+
       switch (key) {
         case 'Enter':
         case ' ':
+          // console.debug('activeIndex', this.activeIndex);
           // make it work like a button
-          this.activeItem.click();
+          this.activeItem?.click();
           break;
         case 'ArrowDown':
-          if (this.orientation === 'horizontal' && subListOfActiveItem) {
+          if (
+            this.orientation === 'horizontal' &&
+            subListOfActiveItem &&
+            this._activeMode !== 'disclosure'
+          ) {
             this.activeItem.click();
           }
           break;
@@ -213,27 +228,27 @@ const MultiLevelListMixinImplementation = superclass =>
      * @enhance DisclosureMixin
      */
     _setupDisclosure() {
-      if (this._invokerNode) {
-        super._setupDisclosure();
-      }
+      if (!this._invokerNode) return;
+
+      super._setupDisclosure();
     }
 
     /**
      * @enhance DisclosureMixin
      */
     _teardownDisclosure() {
-      if (this._invokerNode) {
-        super._teardownDisclosure();
-      }
+      if (!this._invokerNode) return;
+
+      super._teardownDisclosure();
     }
 
     /**
      * @enhance DisclosureMixin
      */
     async _onOpenedChanged() {
-      if (this._invokerNode) {
-        await super._onOpenedChanged();
-      }
+      if (!this._invokerNode) return;
+
+      await super._onOpenedChanged();
     }
   };
 export const MultiLevelListMixin = dedupeMixin(MultiLevelListMixinImplementation);
