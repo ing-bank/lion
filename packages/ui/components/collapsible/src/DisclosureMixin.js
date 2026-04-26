@@ -20,15 +20,30 @@ const DisclosureMixinImplementation = superclass =>
       };
     }
 
+    /**
+     * @param {Element} focusableElOrWrapper
+     * @returns {Element|null}
+     */
+    static _getFocusableInvokerEl(focusableElOrWrapper) {
+      // return focusableElOrWrapper;
+      return (
+        focusableElOrWrapper &&
+        (focusableElOrWrapper.hasAttribute('tabindex') || focusableElOrWrapper.tagName === 'BUTTON'
+          ? focusableElOrWrapper
+          : focusableElOrWrapper.querySelector('[role=button], button'))
+      );
+    }
+
     get _invokerNode() {
+      const ctor = this.constructor;
       if (!this.__invokerNode) {
         const slottedNode = Array.from(this.children).find(child => child.slot === 'invoker');
         if (slottedNode) {
-          this.__invokerNode = slottedNode;
+          this.__invokerNode = ctor._getFocusableInvokerEl(slottedNode);
         } else {
           this.__invokerNode =
             this.previousElementSibling?.hasAttribute('data-invoker') &&
-            this.previousElementSibling;
+            ctor._getFocusableInvokerEl(this.previousElementSibling);
         }
       }
       return this.__invokerNode;
