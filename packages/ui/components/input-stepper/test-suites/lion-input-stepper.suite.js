@@ -9,6 +9,7 @@ import {
 import { nothing } from 'lit';
 import sinon from 'sinon';
 import { formatNumber } from '@lion/ui/localize-no-side-effects.js';
+import { mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
 import { LionInputStepper } from '../src/LionInputStepper.js';
 
 /**
@@ -85,7 +86,7 @@ export function runInputStepperSuite(klass = LionInputStepper) {
           html`<${tag}
             .formatOptions="${{ locale: 'nl-NL', decimalSeparator: '.' }}"
             .modelValue="${12.34}"
-            
+
           ></${tag}>`,
         );
         expect(el.formattedValue).to.equal('12.34');
@@ -96,10 +97,90 @@ export function runInputStepperSuite(klass = LionInputStepper) {
           html`<${tag}
             .formatOptions="${{ locale: 'nl-NL', groupSeparator: ',', decimalSeparator: '.' }}"
             .modelValue="${1234.56}"
-            
+
           ></${tag}>`,
         );
         expect(el.formattedValue).to.equal('1,234.56');
+      });
+    });
+
+    describe('Preprocessor', () => {
+      it('allows numeric digits', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '12345');
+        expect(el.value).to.equal('12345');
+      });
+
+      it('filters out alphabetic characters', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '12abc34');
+        expect(el.value).to.equal('1234');
+      });
+
+      it('filters out special characters except decimal separators and minus', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '12@#$%34');
+        expect(el.value).to.equal('1234');
+      });
+
+      it('allows decimal separator (dot)', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '12.34');
+        expect(el.value).to.equal('12.34');
+      });
+
+      it('allows decimal separator (comma)', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '12,34');
+        expect(el.value).to.equal('12,34');
+      });
+
+      it('allows only one decimal separator', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '12.34.56');
+        expect(el.value).to.equal('12.3456');
+      });
+
+      it('allows only one decimal separator (mixed)', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '12.34,56');
+        expect(el.value).to.equal('12.3456');
+      });
+
+      it('allows minus sign at the start', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '-123');
+        expect(el.value).to.equal('-123');
+      });
+
+      it('filters out minus sign in the middle', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '12-34');
+        expect(el.value).to.equal('1234');
+      });
+
+      it('allows only one minus sign at the start', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '--123');
+        expect(el.value).to.equal('-123');
+      });
+
+      it('filters out all invalid characters in a complex input', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '-12abc.34def,56!@#');
+        expect(el.value).to.equal('-12.3456');
+      });
+
+      it('returns empty string when input contains only invalid characters', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, 'abcdef!@#');
+        expect(el.value).to.equal('');
+      });
+
+      it('allows negative decimal numbers', async () => {
+        const el = await fixture(defaultInputStepper);
+        mimicUserInput(el, '-12.34');
+        expect(el.value).to.equal('-12.34');
       });
     });
 
@@ -162,7 +243,7 @@ export function runInputStepperSuite(klass = LionInputStepper) {
               counter += 1;
             }}"
           >
-            
+
           ></${tag}>
         `);
         const incrementButton = el.querySelector('[slot=suffix]');
@@ -180,7 +261,7 @@ export function runInputStepperSuite(klass = LionInputStepper) {
               counter += 1;
             }}"
           >
-            
+
           ></${tag}>
         `);
         const decrementButton = el.querySelector('[slot=prefix]');

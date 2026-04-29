@@ -6,7 +6,17 @@ import {
 import { LionInputStepper } from '../src/LionInputStepper.js';
 
 export const runInputStepperIntegrationSuite = (klass = LionInputStepper) => {
-  const tagString = defineCE(class extends klass {});
+  // Create a subclass that disables the numeric preprocessor for integration tests
+  // since the FormatMixin suite uses non-numeric string values like 'test', 'foo', etc.
+  const tagString = defineCE(
+    class extends klass {
+      constructor() {
+        super();
+        // Disable the numeric preprocessor for generic integration tests
+        this.preprocessor = () => undefined;
+      }
+    },
+  );
   runInteractionStateMixinSuite({
     tagString,
     allowedModelValueTypes: [Number],

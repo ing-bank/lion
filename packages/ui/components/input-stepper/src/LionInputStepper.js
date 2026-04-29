@@ -96,6 +96,54 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
     this._increment = this._increment.bind(this);
     this._decrement = this._decrement.bind(this);
+    this.preprocessor = LionInputStepper.numericPreprocessor;
+  }
+
+  /**
+   * Static preprocessor that only allows numeric and decimal characters.
+   * Allows digits (0-9), decimal separators (. and ,), and minus sign (-) at the start.
+   * Supports both ASCII hyphen-minus (-) and Unicode minus sign (−).
+   *
+   * Usage: Set `this.preprocessor = LionInputStepper.numericPreprocessor` in your subclass
+   * or instance to enable numeric-only input filtering.
+   *
+   * @param {string} viewValue
+   * @returns {string|undefined}
+   */
+  static numericPreprocessor(viewValue) {
+    if (typeof viewValue !== 'string') {
+      return viewValue;
+    }
+    // Allow digits, decimal separators (. and ,), and minus signs
+    // Unicode minus sign (U+2212) is used by formatNumber for negative numbers
+    const UNICODE_MINUS = '\u2212'; // −
+    const ASCII_MINUS = '-';
+
+    let result = '';
+    let hasDecimalSeparator = false;
+    let hasMinusSign = false;
+
+    for (let i = 0; i < viewValue.length; i += 1) {
+      const char = viewValue[i];
+
+      // Allow minus sign only at the start (both ASCII and Unicode minus)
+      if ((char === ASCII_MINUS || char === UNICODE_MINUS) && i === 0 && !hasMinusSign) {
+        result += char;
+        hasMinusSign = true;
+      }
+      // Allow digits
+      else if (char >= '0' && char <= '9') {
+        result += char;
+      }
+      // Allow only one decimal separator (. or ,)
+      else if ((char === '.' || char === ',') && !hasDecimalSeparator) {
+        result += char;
+        hasDecimalSeparator = true;
+      }
+    }
+
+    // Return undefined if no change to avoid unnecessary updates
+    return result === viewValue ? undefined : result;
   }
 
   connectedCallback() {
