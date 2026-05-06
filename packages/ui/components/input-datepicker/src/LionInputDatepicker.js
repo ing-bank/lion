@@ -320,6 +320,15 @@ export class LionInputDatepicker extends ScopedElementsMixin(
         popperConfig: {
           ...super._defineOverlayConfig().popperConfig,
           placement: 'bottom',
+          modifiers: [
+            ...(super._defineOverlayConfig().popperConfig?.modifiers || []),
+            {
+              name: 'flip',
+              options: {
+                fallbackPlacements: ['top', 'right'],
+              },
+            },
+          ],
         },
       };
     }
