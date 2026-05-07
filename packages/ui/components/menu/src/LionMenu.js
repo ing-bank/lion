@@ -185,7 +185,7 @@ export class LionMenu extends AnimateMixin(MultiLevelListMixin(LitElement)) {
       if (!multiple) {
         // Uncheck all
         listItemsWithinGroup.forEach(item => {
-          setChecked(item, true);
+          setChecked(item, false);
         });
         setChecked(this.listItems[index]);
       } else {
