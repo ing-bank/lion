@@ -9,7 +9,9 @@ export function makeMatchingTextBold(root, matchingString) {
     if (childNode.nodeName === '#text') {
       // check for match based on nodeValue
 
-      const re = new RegExp(`^(.*?)(${matchingString})(.*)$`, 'i');
+      // Escape special regex characters in matchingString
+      const escapedString = matchingString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const re = new RegExp(`^(.*?)(${escapedString})(.*)$`, 'i');
       // @ts-ignore
       const match = childNode.nodeValue.match(re);
 
