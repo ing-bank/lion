@@ -39,15 +39,16 @@ export function isChecked(item) {
 
 /**
  * @param {HTMLElement|LionOption} item
+ * @param {boolean} [shouldSet=false]
  */
-export function setChecked(item, unset = false) {
+export function setChecked(item, shouldSet = true) {
   const ariaAttr = item.getAttribute('role') === 'option' ? 'selected' : 'checked';
-  if (unset) {
-    item.removeAttribute('checked');
-    item.setAttribute(`aria-${ariaAttr}`, 'false');
-  } else {
+  if (shouldSet) {
     item.setAttribute('checked', '');
     item.setAttribute(`aria-${ariaAttr}`, 'true');
+  } else {
+    item.removeAttribute('checked');
+    item.setAttribute(`aria-${ariaAttr}`, 'false');
   }
 }
 
@@ -55,7 +56,7 @@ export function setChecked(item, unset = false) {
  * @param {HTMLElement|LionOption} item
  */
 export function toggleChecked(item) {
-  setChecked(item, isChecked(item));
+  setChecked(item, !isChecked(item));
 }
 
 /**
