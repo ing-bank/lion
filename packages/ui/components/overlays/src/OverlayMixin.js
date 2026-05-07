@@ -283,6 +283,8 @@ export const OverlayMixinImplementation = superclass => {
 
     /** @protected */
     _teardownOverlayCtrl() {
+      // Make sure that dynamic behavior (e.g. responsive) is possible by allowing multiple setups and teardowns of the overlay controller.
+      this.#hasSetup = false;
       if (!this._overlayCtrl) return;
 
       this._teardownOpenCloseListeners();

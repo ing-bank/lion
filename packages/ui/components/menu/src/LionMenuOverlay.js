@@ -22,22 +22,18 @@ const OverlayWithListInvokerMixinImplementation = superclass =>
 
       /** @configure DisclosureMixin */
       this.handleFocus = true;
-
-      this._onOverlayBeforeShow = this._onOverlayBeforeShow.bind(this);
-      this._onOverlayShow = this._onOverlayShow.bind(this);
-      this._onOverlayHide = this._onOverlayHide.bind(this);
     }
 
-    _onOverlayBeforeShow() {}
+    _onOverlayBeforeShow = () => {}
 
-    _onOverlayShow() {
+    _onOverlayShow = () => {
       if (this.checkedIndex != null) {
         this.activeIndex = this.checkedIndex;
       }
       this._listNode.focus();
     }
 
-    _onOverlayHide() {
+    _onOverlayHide = () => {
       this._overlayInvokerNode.focus();
     }
 
@@ -78,6 +74,7 @@ const OverlayWithListInvokerMixinImplementation = superclass =>
 export const OverlayWithListInvokerMixin = dedupeMixin(OverlayWithListInvokerMixinImplementation);
 
 export class LionMenuOverlay extends OverlayWithListInvokerMixin(LionMenu) {
+  // TODO: this was created 5 years ago, do we still need id="overlay-content-node-wrapper" after the "dialog refactor"?
   render() {
     return html`
       <slot name="invoker"></slot>
@@ -91,7 +88,7 @@ export class LionMenuOverlay extends OverlayWithListInvokerMixin(LionMenu) {
   _defineOverlayConfig() {
     const { parentList } = this;
     let placement = 'bottom-start';
-    if (parentList && parentList.orientation !== 'horizontal') {
+    if (parentList?.orientation !== 'horizontal') {
       placement = 'right-start';
     }
 
