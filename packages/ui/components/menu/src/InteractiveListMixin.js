@@ -243,11 +243,24 @@ const InteractiveListMixinImplementation = superclass =>
       });
       setActive(el);
 
-      // are we a focusable element or a wrapper thereof?
-      const focusableEl = isFocusableElement(el) ? el : el.firstElementChild;
-      const prevFocusableEl =
-        prevActiveEl &&
-        (isFocusableElement(prevActiveEl) ? prevActiveEl : prevActiveEl.firstElementChild);
+      // Determine focusableEl and prevFocusableEl
+
+      let focusableEl;
+      let prevFocusableEl;
+
+      if (this._activeMode === 'activedescendant' ) {
+        focusableEl = el;
+        prevFocusableEl = prevActiveEl;
+      }
+      // activeMode is 'roving-tabindex' or 'disclosure' 
+      else 
+        {
+        // are we a focusable element or a wrapper thereof?
+        focusableEl = isFocusableElement(el) ? el : el.firstElementChild;
+        prevFocusableEl =
+          prevActiveEl &&
+          (isFocusableElement(prevActiveEl) ? prevActiveEl : prevActiveEl.firstElementChild);
+      }
 
       // Update 'active mode'
       if (this._activeMode === 'activedescendant') {
@@ -304,7 +317,7 @@ const InteractiveListMixinImplementation = superclass =>
       if (!this.multipleChoice) {
         // Uncheck all
         this.listItems.forEach(item => {
-          setChecked(item, true);
+          setChecked(item, false);
         });
         setChecked(this.listItems[index]);
       } else {
