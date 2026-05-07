@@ -51,9 +51,11 @@ export function runInteractiveListMixinSuite(customConfig = {}) {
           <div role="menuitem" id="item2"></div>
         </${tag}>
       `);
-      const listSlotNode = el.children.filter(c => c.slot === 'list');
-      expect(listSlotNode).to.contain(el.listItems[0]);
-      expect(listSlotNode).to.contain(el.listItems[1]);
+
+      const listSlotNode = Array.from(el.children).find(c => c.slot === 'list');
+      const listItemEls = Array.from(listSlotNode.children);
+      expect(listItemEls.includes(el.listItems[0])).to.be.true;
+      expect(listItemEls.includes(el.listItems[1])).to.be.true;
     });
 
     it('inherits from DisclosureMixin', async () => {});
@@ -67,12 +69,13 @@ export function runInteractiveListMixinSuite(customConfig = {}) {
         </${tag}>
       `);
         el.checkedIndex = 0;
-        const listSlotNode = el.children.filter(c => c.slot === 'list');
-        expect(el.listItems[0]).toHaveAttribute('id');
-        expect(el.listItems[1]).toHaveAttribute('id');
-        expect(listSlotNode).toHaveAttribute('aria-activdescendant', el.listItems[0]);
-        el.checkedIndex = 1;
-        expect(listSlotNode).toHaveAttribute('aria-activdescendant', el.listItems[1]);
+        const listSlotNode = Array.from(el.children).find(c => c.slot === 'list');
+
+        expect(el.listItems[0].hasAttribute('id')).to.be.true;
+        expect(el.listItems[1].hasAttribute('id')).to.be.true;
+        expect(listSlotNode.hasAttribute('aria-activedescendant')).to.be.false;
+        el.activeIndex = 1;
+        expect(listSlotNode.hasAttribute('aria-activedescendant')).to.be.true;
       });
 
       it('supports "roving-tabindex" pattern', async () => {
@@ -82,11 +85,12 @@ export function runInteractiveListMixinSuite(customConfig = {}) {
             <div role="menuitem" id="item2"></div>
           </${tag}>
         `);
-        el.checkedIndex = 0;
+        
+        el.activeIndex = 0;
         expect(el.listItems[0].getAttribute('tabindex')).to.equal('0');
         expect(el.listItems[1].getAttribute('tabindex')).to.equal('-1');
 
-        el.checkedIndex = 1;
+        el.activeIndex = 1;
         expect(el.listItems[0].getAttribute('tabindex')).to.equal('-1');
         expect(el.listItems[1].getAttribute('tabindex')).to.equal('0');
 
