@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { DisclosureMixin } from '@lion/ui/collapsible.js';
+// import { DisclosureMixin } from '@lion/ui/collapsible.js';
 import { InteractiveListMixin } from './InteractiveListMixin.js';
 
 /**
@@ -13,7 +13,7 @@ import { InteractiveListMixin } from './InteractiveListMixin.js';
  * Applies to [role=menu] and [role=tree]
  */
 const MultiLevelListMixinImplementation = superclass =>
-  class extends DisclosureMixin(InteractiveListMixin(superclass)) {
+  class extends InteractiveListMixin(superclass) {
     render() {
       return html`
         <slot name="invoker"></slot>
@@ -71,7 +71,7 @@ const MultiLevelListMixinImplementation = superclass =>
       /**
        * The level of nested menus. Will be reflected as attribute for styling purposes
        */
-      this.level = 0;
+      this.level = 1;
       /**
        * @configure InteractiveListMixin
        */
@@ -93,8 +93,8 @@ const MultiLevelListMixinImplementation = superclass =>
       super.updated(changedProperties);
 
       if (changedProperties.has('invokerNode')) {
-        this._setupDisclosure();
-        this._onOpenedChanged();
+        this._setupOpenCloseListeners();
+        // this._onOpenedChanged();
       }
     }
 
@@ -224,31 +224,31 @@ const MultiLevelListMixinImplementation = superclass =>
       }
     }
 
-    /**
-     * @enhance DisclosureMixin
-     */
-    _setupDisclosure() {
-      if (!this._invokerNode) return;
+    // /**
+    //  * @enhance DisclosureMixin
+    //  */
+    // _setupDisclosure() {
+    //   if (!this._invokerNode) return;
 
-      super._setupDisclosure();
-    }
+    //   super._setupDisclosure();
+    // }
 
-    /**
-     * @enhance DisclosureMixin
-     */
-    _teardownDisclosure() {
-      if (!this._invokerNode) return;
+    // /**
+    //  * @enhance DisclosureMixin
+    //  */
+    // _teardownDisclosure() {
+    //   if (!this._invokerNode) return;
 
-      super._teardownDisclosure();
-    }
+    //   super._teardownDisclosure();
+    // }
 
-    /**
-     * @enhance DisclosureMixin
-     */
-    async _onOpenedChanged() {
-      if (!this._invokerNode) return;
+    // /**
+    //  * @enhance DisclosureMixin
+    //  */
+    // async _onOpenedChanged() {
+    //   if (!this._invokerNode) return;
 
-      await super._onOpenedChanged();
-    }
+    //   await super._onOpenedChanged();
+    // }
   };
 export const MultiLevelListMixin = dedupeMixin(MultiLevelListMixinImplementation);

@@ -5,308 +5,311 @@ import { dedupeMixin } from '@open-wc/dedupe-mixin';
  * @typedef {import('../types/DisclosureMixinTypes.js').DisclosureMixin} DisclosureMixin
  */
 
-/**
- * @type {DisclosureMixin}
- */
-const DisclosureMixinImplementation = superclass =>
-  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
-  class DisclosureMixin extends superclass {
-    /** @type {any} */
-    static get properties() {
-      return {
-        opened: { type: Boolean, reflect: true },
-        handleFocus: { type: Boolean, attribute: 'handle-focus' },
-        invokerInteraction: { type: String, attribute: 'invoker-interaction' },
-      };
-    }
+// /**
+//  * @type {DisclosureMixin}
+//  */
+// const DisclosureMixinImplementation = superclass =>
+//   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
+//   class DisclosureMixin extends superclass {
+//     /** @type {any} */
+//     static get properties() {
+//       return {
+//         opened: { type: Boolean, reflect: true },
+//         handleFocus: { type: Boolean, attribute: 'handle-focus' },
+//         invokerInteraction: { type: String, attribute: 'invoker-interaction' },
+//       };
+//     }
 
-    /**
-     * @param {Element} focusableElOrWrapper
-     * @returns {Element|null}
-     */
-    static _getFocusableInvokerEl(focusableElOrWrapper) {
-      // return focusableElOrWrapper;
-      return (
-        focusableElOrWrapper &&
-        (focusableElOrWrapper.hasAttribute('tabindex') || focusableElOrWrapper.tagName === 'BUTTON'
-          ? focusableElOrWrapper
-          : focusableElOrWrapper.querySelector('[role=button], button'))
-      );
-    }
+//     /**
+//      * @param {Element} focusableElOrWrapper
+//      * @returns {Element|null}
+//      */
+//     static _getFocusableInvokerEl(focusableElOrWrapper) {
+//       // return focusableElOrWrapper;
+//       return (
+//         focusableElOrWrapper &&
+//         (focusableElOrWrapper.hasAttribute('tabindex') || focusableElOrWrapper.tagName === 'BUTTON'
+//           ? focusableElOrWrapper
+//           : focusableElOrWrapper.querySelector('[role=button], button'))
+//       );
+//     }
 
-    get _invokerNode() {
-      const ctor = this.constructor;
-      if (!this.__invokerNode) {
-        const slottedNode = Array.from(this.children).find(child => child.slot === 'invoker');
-        if (slottedNode) {
-          this.__invokerNode = ctor._getFocusableInvokerEl(slottedNode);
-        } else {
-          this.__invokerNode =
-            this.previousElementSibling?.hasAttribute('data-invoker') &&
-            ctor._getFocusableInvokerEl(this.previousElementSibling);
-        }
-      }
-      return this.__invokerNode;
-    }
+//     get _invokerNode() {
+//       const ctor = this.constructor;
+//       if (!this.__invokerNode) {
+//         const slottedNode = Array.from(this.children).find(child => child.slot === 'invoker');
+//         if (slottedNode) {
+//           this.__invokerNode = ctor._getFocusableInvokerEl(slottedNode);
+//         } else {
+//           this.__invokerNode =
+//             this.previousElementSibling?.hasAttribute('data-invoker') &&
+//             ctor._getFocusableInvokerEl(this.previousElementSibling);
+//         }
+//       }
+//       return this.__invokerNode;
+//     }
 
-    get _contentNode() {
-      if (!this._cachedOverlayContentNode) {
-        this._cachedOverlayContentNode = Array.from(this.children).find(
-          child => child.slot === 'content',
-        );
-      }
-      return this._cachedOverlayContentNode;
-    }
+//     get _contentNode() {
+//       if (!this._cachedOverlayContentNode) {
+//         this._cachedOverlayContentNode = Array.from(this.children).find(
+//           child => child.slot === 'content',
+//         );
+//       }
+//       return this._cachedOverlayContentNode;
+//     }
 
-    constructor() {
-      super();
-      this.opened = false;
-      /**
-       * @type {'click'|'hover'}
-       */
-      this.invokerInteraction = 'click';
-      /**
-       * Puts focus on `_contentNode` on open and on `_invokerNode` on close.
-       * @type {Boolean}
-       */
-      this.handleFocus = false;
-      this.__disclosureNeedsSetup = true;
+//     constructor() {
+//       super();
+//       this.opened = false;
+//       /**
+//        * @type {'click'|'hover'}
+//        */
+//       this.invokerInteraction = 'click';
+//       /**
+//        * Puts focus on `_contentNode` on open and on `_invokerNode` on close.
+//        * @type {Boolean}
+//        */
+//       this.handleFocus = false;
+//       this.__disclosureNeedsSetup = true;
 
-      this.toggle = this.toggle.bind(this);
-      this.open = this.open.bind(this);
-      this.close = this.close.bind(this);
+//       this.toggle = this.toggle.bind(this);
+//       this.open = this.open.bind(this);
+//       this.close = this.close.bind(this);
 
-      this.__handleAnimateComplete = this.__handleAnimateComplete.bind(this);
+//       this.__handleAnimateComplete = this.__handleAnimateComplete.bind(this);
 
-      this.__onInvokerMouseenter = this.__onInvokerMouseenter.bind(this);
-      this.__onContentMouseenter = this.__onContentMouseenter.bind(this);
-      this.__onInvokerMouseleave = this.__onInvokerMouseleave.bind(this);
-      this.__onContentMouseleave = this.__onContentMouseleave.bind(this);
-    }
+//       this.__onInvokerMouseenter = this.__onInvokerMouseenter.bind(this);
+//       this.__onContentMouseenter = this.__onContentMouseenter.bind(this);
+//       this.__onInvokerMouseleave = this.__onInvokerMouseleave.bind(this);
+//       this.__onContentMouseleave = this.__onContentMouseleave.bind(this);
+//     }
 
-    connectedCallback() {
-      super.connectedCallback();
-      // we do a setup after every connectedCallback as firstUpdated will only be called once
-      this.__disclosureNeedsSetup = true;
-      this.updateComplete.then(() => {
-        if (this.__disclosureNeedsSetup) {
-          this._setupDisclosure();
-        }
-        this.__disclosureNeedsSetup = false;
-      });
-      this.__setupAnimation();
-    }
+//     connectedCallback() {
+//       super.connectedCallback();
+//       // we do a setup after every connectedCallback as firstUpdated will only be called once
+//       this.__disclosureNeedsSetup = true;
+//       this.updateComplete.then(() => {
+//         if (this.__disclosureNeedsSetup) {
+//           this._setupDisclosure();
+//         }
+//         this.__disclosureNeedsSetup = false;
+//       });
+//       this.__setupAnimation();
+//     }
 
-    disconnectedCallback() {
-      super.disconnectedCallback();
-      this._teardownDisclosure();
-      this.__teardownAnimation();
-    }
+//     disconnectedCallback() {
+//       super.disconnectedCallback();
+//       this._teardownDisclosure();
+//       this.__teardownAnimation();
+//     }
 
-    /**
-     * @overridable
-     */
-    _setupDisclosure() {
-      this._setupOpenCloseListeners();
-    }
+//     /**
+//      * @overridable
+//      */
+//     _setupDisclosure() {
+//       console.log('_setupDisclosure', this.level);
 
-    /**
-     * @overridable
-     */
-    _teardownDisclosure() {
-      this._teardownOpenCloseListeners();
-    }
+//       this._setupOpenCloseListeners();
+//     }
 
-    /**
-     * @overridable
-     */
-    _setupOpenCloseListeners() {
-      if (!this._invokerNode) {
-        return;
-      }
+//     /**
+//      * @overridable
+//      */
+//     _teardownDisclosure() {
+//       this._teardownOpenCloseListeners();
+//     }
 
-      const interactions = this.invokerInteraction.split(' ');
+//     /**
+//      * @overridable
+//      */
+//     _setupOpenCloseListeners() {
+//       console.log('setup listeners', this.level);
+//       if (!this._invokerNode) {
+//         return;
+//       }
 
-      if (interactions.includes('hover')) {
-        this._invokerNode.addEventListener('mouseenter', this.__onInvokerMouseenter);
-        this._contentNode?.addEventListener('mouseenter', this.__onContentMouseenter);
-        this._invokerNode.addEventListener('mouseleave', this.__onInvokerMouseleave);
-        this._contentNode?.addEventListener('mouseleave', this.__onContentMouseleave);
-      }
-      if (interactions.includes('click')) {
-        this._invokerNode.addEventListener('click', this.toggle);
-      }
-    }
+//       const interactions = this.invokerInteraction.split(' ');
 
-    __onInvokerMouseenter() {
-      this.__invokerHover = true;
-      this.open();
-    }
+//       if (interactions.includes('hover')) {
+//         this._invokerNode.addEventListener('mouseenter', this.__onInvokerMouseenter);
+//         this._contentNode?.addEventListener('mouseenter', this.__onContentMouseenter);
+//         this._invokerNode.addEventListener('mouseleave', this.__onInvokerMouseleave);
+//         this._contentNode?.addEventListener('mouseleave', this.__onContentMouseleave);
+//       }
+//       if (interactions.includes('click')) {
+//         this._invokerNode.addEventListener('click', this.toggle);
+//       }
+//     }
 
-    __onContentMouseenter() {
-      this.__contentHover = true;
-      console.log('this.__contentHover', this.__contentHover);
-      this.open();
-    }
+//     __onInvokerMouseenter() {
+//       this.__invokerHover = true;
+//       this.open();
+//     }
 
-    __onInvokerMouseleave() {
-      setTimeout(() => {
-        if (!this.__contentHover) {
-          this.close();
-        }
-      });
-      this.__invokerHover = false;
-    }
+//     __onContentMouseenter() {
+//       this.__contentHover = true;
+//       console.log('this.__contentHover', this.__contentHover);
+//       this.open();
+//     }
 
-    __onContentMouseleave() {
-      setTimeout(() => {
-        if (!this.__invokerHover) {
-          this.close();
-        }
-      });
-      this.__contentHover = false;
-    }
+//     __onInvokerMouseleave() {
+//       setTimeout(() => {
+//         if (!this.__contentHover) {
+//           this.close();
+//         }
+//       });
+//       this.__invokerHover = false;
+//     }
 
-    /**
-     * @overridable
-     */
-    _teardownOpenCloseListeners() {
-      if (!this._invokerNode) {
-        return;
-      }
+//     __onContentMouseleave() {
+//       setTimeout(() => {
+//         if (!this.__invokerHover) {
+//           this.close();
+//         }
+//       });
+//       this.__contentHover = false;
+//     }
 
-      this._invokerNode.removeEventListener('mouseenter', this.open);
-      this._invokerNode.removeEventListener('mouseleave', this.close);
-      this._contentNode?.removeEventListener('mouseenter', this.open);
-      this._contentNode?.removeEventListener('mouseleave', this.close);
+//     /**
+//      * @overridable
+//      */
+//     _teardownOpenCloseListeners() {
+//       if (!this._invokerNode) {
+//         return;
+//       }
 
-      // console.log(this, 'removetCLick');
+//       this._invokerNode.removeEventListener('mouseenter', this.open);
+//       this._invokerNode.removeEventListener('mouseleave', this.close);
+//       this._contentNode?.removeEventListener('mouseenter', this.open);
+//       this._contentNode?.removeEventListener('mouseleave', this.close);
 
-      this._invokerNode.removeEventListener('click', this.toggle);
-    }
+//       // console.log(this, 'removetCLick');
 
-    // TODO: fire event on updated?
-    /**
-     * @override
-     * @param {string} name
-     * @param {any} oldValue
-     */
-    requestUpdate(name, oldValue) {
-      super.requestUpdate(name, oldValue);
-      if (name === 'opened') {
-        this.dispatchEvent(new Event('opened-changed'));
-      }
-    }
+//       this._invokerNode.removeEventListener('click', this.toggle);
+//     }
 
-    /**
-     * @param {import('lit-element').PropertyValues } changedProperties
-     */
-    updated(changedProperties) {
-      super.updated(changedProperties);
+//     // TODO: fire event on updated?
+//     /**
+//      * @override
+//      * @param {string} name
+//      * @param {any} oldValue
+//      */
+//     requestUpdate(name, oldValue) {
+//       super.requestUpdate(name, oldValue);
+//       if (name === 'opened') {
+//         this.dispatchEvent(new Event('opened-changed'));
+//       }
+//     }
 
-      if (changedProperties.has('opened')) {
-        this._onOpenedChanged();
-      }
-    }
+//     /**
+//      * @param {import('lit-element').PropertyValues } changedProperties
+//      */
+//     updated(changedProperties) {
+//       super.updated(changedProperties);
 
-    /**
-     * @param {import('lit-element').PropertyValues } changedProperties
-     */
-    firstUpdated(changedProperties) {
-      super.firstUpdated(changedProperties);
-      this._onOpenedChanged();
+//       if (changedProperties.has('opened')) {
+//         this._onOpenedChanged();
+//       }
+//     }
 
-      if (this.handleFocus && !this._contentNode?.hasAttribute('tabindex')) {
-        this._contentNode?.setAttribute('tabindex', '-1');
-      }
-    }
+//     /**
+//      * @param {import('lit-element').PropertyValues } changedProperties
+//      */
+//     firstUpdated(changedProperties) {
+//       super.firstUpdated(changedProperties);
+//       this._onOpenedChanged();
 
-    /**
-     * @overridable
-     */
-    async _onOpenedChanged() {
-      this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
+//       if (this.handleFocus && !this._contentNode?.hasAttribute('tabindex')) {
+//         this._contentNode?.setAttribute('tabindex', '-1');
+//       }
+//     }
 
-      if (this.opened) {
-        this._contentNode.style.setProperty('display', '');
-        await this._showAnimation({ contentNode: this._contentNode });
-        this._onDisclosureShow();
-      } else {
-        this._onDisclosureHide();
-        await this._hideAnimation({ contentNode: this._contentNode });
-        this._contentNode.style.setProperty('display', 'none');
-      }
-    }
+//     /**
+//      * @overridable
+//      */
+//     async _onOpenedChanged() {
+//       this._invokerNode.setAttribute('aria-expanded', `${this.opened}`);
 
-    _onDisclosureShow() {
-      // if (this.checkedIndex != null) {
-      //   this.activeIndex = this.checkedIndex;
-      // }
+//       if (this.opened) {
+//         this._contentNode.style.setProperty('display', '');
+//         await this._showAnimation({ contentNode: this._contentNode });
+//         this._onDisclosureShow();
+//       } else {
+//         this._onDisclosureHide();
+//         await this._hideAnimation({ contentNode: this._contentNode });
+//         this._contentNode.style.setProperty('display', 'none');
+//       }
+//     }
 
-      if (this.handleFocus) {
-        this._contentNode.focus();
-      }
-    }
+//     _onDisclosureShow() {
+//       // if (this.checkedIndex != null) {
+//       //   this.activeIndex = this.checkedIndex;
+//       // }
 
-    _onDisclosureHide() {
-      if (this.handleFocus) {
-        this._invokerNode.focus();
-      }
-    }
+//       if (this.handleFocus) {
+//         this._contentNode.focus();
+//       }
+//     }
 
-    /**
-     * Show animation implementation in sub-classer.
-     * @param {{ contentNode: HTMLElement; }} cfg
-     */
-    // eslint-disable-next-line class-methods-use-this, no-empty-function
-    async _showAnimation(cfg) {
-      this._refreshAnimateCompletePromise();
-    }
+//     _onDisclosureHide() {
+//       if (this.handleFocus) {
+//         this._invokerNode.focus();
+//       }
+//     }
 
-    /**
-     * Hide animation implementation in sub-classer.
-     * @param {{ contentNode: HTMLElement; }} cfg
-     */
-    // eslint-disable-next-line class-methods-use-this, no-empty-function
-    async _hideAnimation(cfg) {
-      this._refreshAnimateCompletePromise();
-    }
+//     /**
+//      * Show animation implementation in sub-classer.
+//      * @param {{ contentNode: HTMLElement; }} cfg
+//      */
+//     // eslint-disable-next-line class-methods-use-this, no-empty-function
+//     async _showAnimation(cfg) {
+//       this._refreshAnimateCompletePromise();
+//     }
 
-    _refreshAnimateCompletePromise() {
-      this._animateComplete = new Promise(resolve => {
-        // Note that when a lib like GSAP is used, neither 'transitionend' or 'animationend' will be called.
-        // In such a case, a subclasser needs to resolve this pending promise by calling this method
-        this._resolveAnimateComplete = resolve;
-      });
-    }
+//     /**
+//      * Hide animation implementation in sub-classer.
+//      * @param {{ contentNode: HTMLElement; }} cfg
+//      */
+//     // eslint-disable-next-line class-methods-use-this, no-empty-function
+//     async _hideAnimation(cfg) {
+//       this._refreshAnimateCompletePromise();
+//     }
 
-    __setupAnimation() {
-      this._contentNode.addEventListener('transitionend', this.__handleAnimateComplete);
-      this._contentNode.addEventListener('animationend', this.__handleAnimateComplete);
-    }
+//     _refreshAnimateCompletePromise() {
+//       this._animateComplete = new Promise(resolve => {
+//         // Note that when a lib like GSAP is used, neither 'transitionend' or 'animationend' will be called.
+//         // In such a case, a subclasser needs to resolve this pending promise by calling this method
+//         this._resolveAnimateComplete = resolve;
+//       });
+//     }
 
-    __teardownAnimation() {
-      this._contentNode.removeEventListener('transitionend', this.__handleAnimateComplete);
-      this._contentNode.removeEventListener('animationend', this.__handleAnimateComplete);
-    }
+//     __setupAnimation() {
+//       this._contentNode.addEventListener('transitionend', this.__handleAnimateComplete);
+//       this._contentNode.addEventListener('animationend', this.__handleAnimateComplete);
+//     }
 
-    __handleAnimateComplete() {
-      if (typeof this._resolveAnimateComplete === 'function') {
-        this._resolveAnimateComplete();
-      }
-    }
+//     __teardownAnimation() {
+//       this._contentNode.removeEventListener('transitionend', this.__handleAnimateComplete);
+//       this._contentNode.removeEventListener('animationend', this.__handleAnimateComplete);
+//     }
 
-    toggle() {
-      // console.log('toggul', this);
-      this.opened = !this.opened;
-    }
+//     __handleAnimateComplete() {
+//       if (typeof this._resolveAnimateComplete === 'function') {
+//         this._resolveAnimateComplete();
+//       }
+//     }
 
-    open() {
-      this.opened = true;
-    }
+//     toggle() {
+//       // console.log('toggul', this);
+//       this.opened = !this.opened;
+//     }
 
-    close() {
-      this.opened = false;
-    }
-  };
-export const DisclosureMixin = dedupeMixin(DisclosureMixinImplementation);
+//     open() {
+//       this.opened = true;
+//     }
+
+//     close() {
+//       this.opened = false;
+//     }
+//   };
+// export const DisclosureMixin = dedupeMixin(DisclosureMixinImplementation);

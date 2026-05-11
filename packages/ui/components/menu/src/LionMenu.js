@@ -1,86 +1,86 @@
 /* eslint-disable max-classes-per-file */
 import { LitElement } from 'lit';
-import { dedupeMixin } from '@open-wc/dedupe-mixin';
+// import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { MultiLevelListMixin } from './MultiLevelListMixin.js';
 import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
 
-/**
- * @param {Element} element
- */
-function getContentHeight(element) {
-  return `${element.getBoundingClientRect().height}px`;
-}
+// /**
+//  * @param {Element} element
+//  */
+// function getContentHeight(element) {
+//   return `${element.getBoundingClientRect().height}px`;
+// }
 
-/**
- * Calculate total content height after collapsible opens
- * @param {HTMLElement} contentNode content node
- * @private
- */
-async function calculateHeight(contentNode) {
-  contentNode.style.setProperty('max-height', '');
-  await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
-  return getContentHeight(contentNode); // Expected height i.e. actual size once collapsed after animation
-}
+// /**
+//  * Calculate total content height after collapsible opens
+//  * @param {HTMLElement} contentNode content node
+//  * @private
+//  */
+// async function calculateHeight(contentNode) {
+//   contentNode.style.setProperty('max-height', '');
+//   await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
+//   return getContentHeight(contentNode); // Expected height i.e. actual size once collapsed after animation
+// }
 
-/**
- * @type {AnimateMixin}
- */
-const AnimateMixinImplementation = superclass =>
-  class AnimateMixin extends superclass {
-    constructor() {
-      super();
-      this.__handleAnimateComplete = this.__handleAnimateComplete.bind(this);
-    }
+// /**
+//  * @type {AnimateMixin}
+//  */
+// const AnimateMixinImplementation = superclass =>
+//   class AnimateMixin extends superclass {
+//     constructor() {
+//       super();
+//       this.__handleAnimateComplete = this.__handleAnimateComplete.bind(this);
+//     }
 
-    connectedCallback() {
-      super.connectedCallback();
-      this._contentNode.style.setProperty('transition', 'max-height 0.35s, opacity 0.35s');
-    }
+//     connectedCallback() {
+//       super.connectedCallback();
+//       this._contentNode.style.setProperty('transition', 'max-height 0.35s, opacity 0.35s');
+//     }
 
-    /**
-     * Trigger show animation and wait for transition to be finished.
-     * @param {Object} options - element node and its options
-     * @override
-     */
-    async _showAnimation(cfg) {
-      super._showAnimation(cfg);
+//     /**
+//      * Trigger show animation and wait for transition to be finished.
+//      * @param {Object} options - element node and its options
+//      * @override
+//      */
+//     async _showAnimation(cfg) {
+//       super._showAnimation(cfg);
 
-      const { contentNode } = cfg;
-      const expectedHeight = await calculateHeight(contentNode);
-      contentNode.style.setProperty('overflow', 'hidden');
-      contentNode.style.setProperty('opacity', '1');
-      contentNode.style.setProperty('max-height', '0');
-      await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
-      contentNode.style.setProperty('max-height', expectedHeight);
-      await this._animateComplete;
-      ['opacity', 'padding', 'max-height', 'overflow'].map(prop =>
-        contentNode.style.removeProperty(prop),
-      );
-    }
+//       const { contentNode } = cfg;
+//       const expectedHeight = await calculateHeight(contentNode);
+//       contentNode.style.setProperty('overflow', 'hidden');
+//       contentNode.style.setProperty('opacity', '1');
+//       contentNode.style.setProperty('max-height', '0');
+//       await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
+//       contentNode.style.setProperty('max-height', expectedHeight);
+//       await this._animateComplete;
+//       ['opacity', 'padding', 'max-height', 'overflow'].map(prop =>
+//         contentNode.style.removeProperty(prop),
+//       );
+//     }
 
-    /**
-     * Trigger hide animation and wait for transition to be finished.
-     * @param {Object} options - element node and its options
-     * @override
-     */
-    async _hideAnimation(cfg) {
-      super._hideAnimation(cfg);
+//     /**
+//      * Trigger hide animation and wait for transition to be finished.
+//      * @param {Object} options - element node and its options
+//      * @override
+//      */
+//     async _hideAnimation(cfg) {
+//       super._hideAnimation(cfg);
 
-      const { contentNode } = cfg;
-      if (getContentHeight(contentNode) === '0px') {
-        return;
-      }
-      const expectedHeight = await calculateHeight(contentNode);
+//       const { contentNode } = cfg;
+//       if (getContentHeight(contentNode) === '0px') {
+//         return;
+//       }
+//       const expectedHeight = await calculateHeight(contentNode);
 
-      contentNode.style.setProperty('overflow', 'hidden');
-      contentNode.style.setProperty('max-height', expectedHeight);
-      await new Promise(resolve => requestAnimationFrame(() => resolve()));
-      ['opacity', 'padding', 'max-height'].map(prop => contentNode.style.setProperty(prop, 0));
+//       contentNode.style.setProperty('overflow', 'hidden');
+//       contentNode.style.setProperty('max-height', expectedHeight);
+//       await new Promise(resolve => requestAnimationFrame(() => resolve()));
+//       ['opacity', 'padding', 'max-height'].map(prop => contentNode.style.setProperty(prop, 0));
 
-      await this._animateComplete;
-    }
-  };
-export const AnimateMixin = dedupeMixin(AnimateMixinImplementation);
+//       await this._animateComplete;
+//     }
+//   };
+// export const AnimateMixin = dedupeMixin(AnimateMixinImplementation);
 
 /**
  *
@@ -139,7 +139,7 @@ export const AnimateMixin = dedupeMixin(AnimateMixinImplementation);
  *   <div role="menuitem">Find all References</div>
  * </lion-menu>
  */
-export class LionMenu extends AnimateMixin(MultiLevelListMixin(LitElement)) {
+export class LionMenu extends MultiLevelListMixin(LitElement) {
   static get properties() {
     return {
       /**
@@ -157,40 +157,40 @@ export class LionMenu extends AnimateMixin(MultiLevelListMixin(LitElement)) {
    */
   setCheckedIndex(index) {
     const item = this.listItems[index];
-    if (item) {
-      const role = /** @type {InteractiveListItemRole} */ (item.getAttribute('role'));
-      let listItemsWithinGroup = this.listItems;
-      let multiple = this.multipleChoice;
-      if (role === 'menuitemradio' || role === 'menuitemcheckbox') {
-        /**
-         * If index = 3 (menuitemradio 'Red'), closest group will be div[role=group]
-         * @example
-         * <interactive-list role="menu">
-         *   <div role="menuitemcheckbox" aria-checked="true">Bold</div>
-         *   <div role="menuitemcheckbox" aria-checked="true">Italic</div>
-         *   <div role="separator"></div>
-         *   <div role="group" aria-label="Text Color">
-         *     <div role="menuitemradio" aria-checked="false">Blue</div>
-         *     <div role="menuitemradio" aria-checked="true">Red</div>
-         *     <div role="menuitemradio" aria-checked="false">Green</div>
-         *   </div>
-         * </interactive-list>
-         */
-        const closestGroup = item.closest('[role="group"]');
-        const group = closestGroup && this.contains(closestGroup) ? closestGroup : this;
-        listItemsWithinGroup = this.listItems.filter(item => group.contains(item));
-        multiple = role === 'menuitemcheckbox';
-      }
+    if (!item) return;
 
-      if (!multiple) {
-        // Uncheck all
-        listItemsWithinGroup.forEach(item => {
-          setChecked(item, false);
-        });
-        setChecked(this.listItems[index]);
-      } else {
-        toggleChecked(this.listItems[index]);
-      }
+    const role = /** @type {InteractiveListItemRole} */ (item.getAttribute('role'));
+    let listItemsWithinGroup = this.listItems;
+    let multiple = this.multipleChoice;
+    if (role === 'menuitemradio' || role === 'menuitemcheckbox') {
+      /**
+       * If index = 3 (menuitemradio 'Red'), closest group will be div[role=group]
+       * @example
+       * <interactive-list role="menu">
+       *   <div role="menuitemcheckbox" aria-checked="true">Bold</div>
+       *   <div role="menuitemcheckbox" aria-checked="true">Italic</div>
+       *   <div role="separator"></div>
+       *   <div role="group" aria-label="Text Color">
+       *     <div role="menuitemradio" aria-checked="false">Blue</div>
+       *     <div role="menuitemradio" aria-checked="true">Red</div>
+       *     <div role="menuitemradio" aria-checked="false">Green</div>
+       *   </div>
+       * </interactive-list>
+       */
+      const closestGroup = item.closest('[role="group"]');
+      const group = closestGroup && this.contains(closestGroup) ? closestGroup : this;
+      listItemsWithinGroup = this.listItems.filter(item => group.contains(item));
+      multiple = role === 'menuitemcheckbox';
+    }
+
+    if (!multiple) {
+      // Uncheck all
+      listItemsWithinGroup.forEach(item => {
+        setChecked(item, false);
+      });
+      setChecked(this.listItems[index]);
+    } else {
+      toggleChecked(this.listItems[index]);
     }
   }
 
@@ -214,17 +214,34 @@ export class LionMenu extends AnimateMixin(MultiLevelListMixin(LitElement)) {
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
 
-    if (this.bar) {
-      this.orientation = 'horizontal';
-      if (this._listRole === 'menu') {
-        this._listRole = 'menubar';
-      }
-    }
-
-    if (this._activeMode === 'disclosure') {
+    if (this._activeMode === 'tabbable-disclosure') {
       this._listRole = 'list';
     }
 
     this._listNode.setAttribute('role', this._listRole);
+
+    // Allow generic attr for functional styling
+    this.dataset.menu = '';
+  }
+
+  /**
+   * @param {import('lit-element').PropertyValues } changedProperties
+   */
+  updated(changedProperties) {
+    super.updated(changedProperties);
+
+    if (changedProperties.has('bar')) {
+      if (this.bar) {
+        this.orientation = 'horizontal';
+        if (this._listRole === 'menu') {
+          this._listRole = 'menubar';
+        }
+      } else {
+        this.orientation = 'vertical';
+        if (this._listRole === 'menubar') {
+          this._listRole = 'menu';
+        }
+      }
+    }
   }
 }
