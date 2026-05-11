@@ -302,7 +302,7 @@ export const OverlayMixinImplementation = superclass => {
 
       const config = {
         contentNode: this._overlayContentNode,
-        // contentWrapperNode: this._overlayContentWrapperNode,
+        contentWrapperNode: this._overlayContentWrapperNode,
         invokerNode: this._overlayInvokerNode,
         referenceNode: this._overlayReferenceNode,
         backdropNode: this._overlayBackdropNode,
