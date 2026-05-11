@@ -403,7 +403,7 @@ describe('OverlayController', () => {
               { ignoreAttributes: ['closedby'] },
             );
 
-            expect(el).lightDom.to.equal(`<div slot="content">projected</div>`);
+            expect(el).lightDom.to.equal(`<div data-content="" slot="content">projected</div>`);
           });
         });
 
@@ -425,7 +425,7 @@ describe('OverlayController', () => {
               `
               <dialog data-overlay-outer-wrapper="" open="" role="none" style="${wrappingDialogNodeStyle}">
                 <div data-id="content-wrapper">
-                  <div id="content">non projected</div>
+                  <div data-content="" id="content">non projected</div>
                 </div>
               </dialog>
           `,
