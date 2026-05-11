@@ -248,13 +248,12 @@ const InteractiveListMixinImplementation = superclass =>
       let focusableEl;
       let prevFocusableEl;
 
-      if (this._activeMode === 'activedescendant' ) {
+      if (this._activeMode === 'activedescendant') {
         focusableEl = el;
         prevFocusableEl = prevActiveEl;
       }
-      // activeMode is 'roving-tabindex' or 'disclosure' 
-      else 
-        {
+      // activeMode is 'roving-tabindex' or 'tabbable-disclosure'
+      else {
         // are we a focusable element or a wrapper thereof?
         focusableEl = isFocusableElement(el) ? el : el.firstElementChild;
         prevFocusableEl =
@@ -265,7 +264,10 @@ const InteractiveListMixinImplementation = superclass =>
       // Update 'active mode'
       if (this._activeMode === 'activedescendant') {
         this._listNode.setAttribute('aria-activedescendant', focusableEl.id);
-      } else if (this._activeMode === 'roving-tabindex' || this._activeMode === 'disclosure') {
+      } else if (
+        this._activeMode === 'roving-tabindex' ||
+        this._activeMode === 'tabbable-disclosure'
+      ) {
         focusableEl.focus();
       }
 
@@ -359,7 +361,7 @@ const InteractiveListMixinImplementation = superclass =>
        * - [role="tree"](https://www.w3.org/TR/wai-aria-practices-1.1/examples/treeview/treeview-1/treeview-1b.html)
        * For disclosure menus, we need keyboard navigation, but treat every list item
        * (more precisely its anchor child) as a tab stop. Also we apply aria-current
-       * @type {'activedescendant'|'roving-tabindex'|'disclosure'|'none'}
+       * @type {'activedescendant'|'roving-tabindex'|'tabbable-disclosure'|'none'}
        */
       this._activeMode = 'activedescendant';
 
@@ -415,17 +417,16 @@ const InteractiveListMixinImplementation = superclass =>
       this._setupList();
     }
 
-    _setupList() {
+    /**
+     * @param {Node[]} nodes
+     */
+    #identifyNewItemsAndInitListItems(nodes) {
       /**
+       *
        * @param {HTMLElement} node
+       * @param {{ newItems: HTMLElement[], level?: number }} opts
+       * @returns
        */
-      const shouldAddItem = node => {
-        const role = /** @type {InteractiveListItemRole|'group'} */ (node.getAttribute('role'));
-        return (
-          (role && this._interactiveChildrenRoles.includes(role)) || node.hasAttribute('data-item')
-        );
-      };
-
       const handleInteractiveListAdditionLevel = (node, { newItems, level = 1 }) => {
         // Move list item to element with aria-activedescendant ([role="listbox|menu|menubar"])
         if (level === 1) {
@@ -462,29 +463,55 @@ const InteractiveListMixinImplementation = superclass =>
         }
       };
 
-      this._listItemsSlot.addEventListener('slotchange', () => {
-        const nodes = this._listItemsSlot.assignedNodes(); // Array.from(this._listItemsSlot.childNodes);
-        /** @type {HTMLElement[]} */
-        const newItems = [];
+      /** @type {HTMLElement[]} */
+      const newItems = [];
 
-        // Move items to _listNode and add interactive node references (with [role]) to listItems
-        nodes.forEach(node => {
-          handleInteractiveListAdditionLevel(node, { newItems });
-        });
-
-        console.debug('newItems', newItems);
-
-        newItems.forEach(item => {
-          if (!this.__listItems.includes(item)) {
-            this.__listItems.push(item);
-          }
-        });
-
-        this._initListItems(newItems);
+      // Move items to _listNode and add interactive node references (with [role]) to listItems
+      nodes.forEach(node => {
+        handleInteractiveListAdditionLevel(node, { newItems });
       });
 
+      // console.debug('newItems', newItems);
+
+      newItems.forEach(item => {
+        if (!this.__listItems.includes(item)) {
+          this.__listItems.push(item);
+        }
+      });
+
+      this._initListItems(newItems);
+    }
+
+    _setupList() {
+      // /**
+      //  * @param {HTMLElement} node
+      //  */
+      // const shouldAddItem = node => {
+      //   const role = /** @type {InteractiveListItemRole|'group'} */ (node.getAttribute('role'));
+      //   return (
+      //     (role && this._interactiveChildrenRoles.includes(role)) || node.hasAttribute('data-item')
+      //   );
+      // };
+
+      this._listItemsSlot.addEventListener('slotchange', () => {
+        // const nodes = this._listItemsSlot.assignedNodes();
+        const nodes = Array.from(
+          (this._listItemsSlot.assignedSlot || this).childNodes || [],
+        ).filter(n => !n.slot);
+        // console.debug('slotchange', nodes, nodes2, this._listItemsSlot.assignedSlot);
+        this.#identifyNewItemsAndInitListItems(nodes);
+      });
+
+      // if (this._listNode.childNodes.length) {
+      //   const nodes = Array.from(this._listNode.childNodes);
+      //   this.#identifyNewItemsAndInitListItems(nodes);
+      // }
+
       this._listNode.setAttribute('role', this._listRole);
-      this._listNode.setAttribute('tabindex', this._activeMode === 'disclosure' ? '-1' : '0');
+      this._listNode.setAttribute(
+        'tabindex',
+        this._activeMode === 'tabbable-disclosure' ? '-1' : '0',
+      );
       this._listNode.addEventListener('click', this._onListClick);
       this._listNode.addEventListener('keyup', this._onListKeyUp);
       this._listNode.addEventListener('keydown', this._onListKeyDown);
@@ -504,7 +531,7 @@ const InteractiveListMixinImplementation = superclass =>
           // eslint-disable-next-line no-param-reassign
           item.id = item.id || `${this.localName}-item-${uuid()}`;
         });
-      }
+      } // for 'tabbable-disclosure', we assume items are already focusable and part of tab sequence
 
       if (!this.noPreselect && this.checkedIndex === -1) {
         this.checkedIndex = 0;
@@ -536,23 +563,23 @@ const InteractiveListMixinImplementation = superclass =>
           break;
         case 'ArrowUp':
           ev.preventDefault();
-          if (this.orientation === 'vertical' || this._activeMode === 'disclosure') {
+          if (this.orientation === 'vertical' || this._activeMode === 'tabbable-disclosure') {
             this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
           }
           break;
         case 'ArrowLeft':
-          if (this.orientation === 'horizontal' || this._activeMode === 'disclosure') {
+          if (this.orientation === 'horizontal' || this._activeMode === 'tabbable-disclosure') {
             this.activeIndex = this._getPreviousEnabledOption(this.activeIndex);
           }
           break;
         case 'ArrowDown':
           ev.preventDefault();
-          if (this.orientation === 'vertical' || this._activeMode === 'disclosure') {
+          if (this.orientation === 'vertical' || this._activeMode === 'tabbable-disclosure') {
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
           }
           break;
         case 'ArrowRight':
-          if (this.orientation === 'horizontal' || this._activeMode === 'disclosure') {
+          if (this.orientation === 'horizontal' || this._activeMode === 'tabbable-disclosure') {
             this.activeIndex = this._getNextEnabledOption(this.activeIndex);
           }
           break;
@@ -643,7 +670,7 @@ const InteractiveListMixinImplementation = superclass =>
       const previousActiveIndex = this.activeIndex;
       if (foundIndex > -1 && foundIndex !== this.activeIndex) {
         this.activeIndex = foundIndex;
-        if (this._activeMode === 'disclosure') {
+        if (this._activeMode === 'tabbable-disclosure') {
           const previousActiveItem = this.listItems[previousActiveIndex];
           previousActiveItem?.removeAttribute('aria-current');
           const activeItem = this.listItems[this.activeIndex];

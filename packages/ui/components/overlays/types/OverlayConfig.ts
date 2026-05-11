@@ -21,7 +21,6 @@ export type OverlayPhase =
   | 'add'
   | 'remove';
 
-
 export interface ViewportConfig {
   placement: ViewportPlacement;
 }
@@ -97,14 +96,20 @@ export interface OverlayConfig {
   /** By default, the tooltip content is a 'description' for the invoker (uses aria-describedby) Setting this property to 'label' makes the content function as a label (via aria-labelledby) */
   invokerRelation?: 'label' | 'description';
 
-  /** render a div instead of dialog */
-  _noDialogEl?: Boolean;
-
   /**
    * Determines the conditions hiding/showing should be based on. It gets the OverlayController as input and returns an object with
    * functions with Overlay phases as keys
    */
   visibilityTriggerFunction?: Function;
+
+  /**
+   * Whether the overlay content should receive focus when shown.
+   */
+  focusContentOnOpen?: boolean;
+
+  /*
+   * By default, we function either as overlay or disclosure. In some cases, this should be dynamically set (think of responsive changes).
+   * or it depends on the context (a top level menu is not openable (unless it's a context menu), its children menus are).
+   */
+  isOpenable?: boolean;
 }
-
-
