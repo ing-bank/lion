@@ -16,7 +16,7 @@ export class LionMenuHybrid extends LionMenuOverlay {
     super();
 
     // By default, we go for disclosure behavior
-    //a TODO: in the future, bring disclosure behavior to a controller (and therefore directive).
+    // a TODO: in the future, bring disclosure behavior to a controller (and therefore directive).
     // Take inspiration from VisibilityToggleCtrl of portal elements
     /**
      * Terminology aligned with https://open-ui.org/components/openable.explainer/
