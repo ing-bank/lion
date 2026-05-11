@@ -229,8 +229,6 @@ const InteractiveListMixinImplementation = superclass =>
     set activeIndex(index) {
       const activeItem = this.listItems[index];
 
-      console.debug('activeIndex', index, activeItem, this.listItems);
-
       if (!activeItem) return;
 
       const prevActiveEl = this.activeItem;
@@ -284,7 +282,6 @@ const InteractiveListMixinImplementation = superclass =>
     }
 
     get activeItem() {
-      // console.debug('activeIndex', this.activeIndex, this.listItems);
       return this.listItems[this.activeIndex];
     }
 
@@ -471,8 +468,6 @@ const InteractiveListMixinImplementation = superclass =>
         handleInteractiveListAdditionLevel(node, { newItems });
       });
 
-      // console.debug('newItems', newItems);
-
       newItems.forEach(item => {
         if (!this.__listItems.includes(item)) {
           this.__listItems.push(item);
@@ -512,6 +507,15 @@ const InteractiveListMixinImplementation = superclass =>
       this._listNode.addEventListener('keyup', this._onListKeyUp);
       this._listNode.addEventListener('keydown', this._onListKeyDown);
       this._listNode.addEventListener('focusin', this._onListFocusIn);
+
+      // TODO: add "more menu" functionality here...
+      // 1. we can measure the width (if orientation is horizontal) of this._listNode
+      // and see how its children fit. moving them to an overlayController
+      // having hideVisually as hide mechanism (opening on focus, closing on blur).
+      // 2. N.B. hideVisually needs to be implementd in OverlayController.
+      // 3. when the more menu opens a next level, MultiLevelListMixin will be applied to the host as well.
+      // That means it knows when a child menu is open. If _subListMap of one of the items is open, we should hide more menu like this:
+      // https://jsfiddle.net/a4ocktfp/19/
     }
 
     /**
