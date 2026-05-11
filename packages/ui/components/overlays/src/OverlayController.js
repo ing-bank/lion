@@ -108,7 +108,7 @@ const childDialogsClosedInEventLoopWeakmap = new WeakMap();
 
 function deepClosest(el, selector) {
   return (
-    (el && el != document && el != window && el.closest(selector)) ||
+    (el && el !== document && el !== window && el.closest(selector)) ||
     deepClosest(el.getRootNode().host, selector)
   );
 }
@@ -550,9 +550,7 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _init() {
-    if (this.config.isOpenable === false) {
-      return;
-    }
+    if (!this.config.isOpenable) return;
 
     if (!this.__contentHasBeenInitialized) {
       this.__initContentDomStructure();
@@ -919,7 +917,7 @@ export class OverlayController extends EventTarget {
    */
   async hide() {
     // Function like a no-op for dynamic edge cases...
-    if (this.config.isOpenable === false) return;
+    if (!this.config.isOpenable) return;
 
     this._hideComplete = new Promise(resolve => {
       this._hideResolve = resolve;
