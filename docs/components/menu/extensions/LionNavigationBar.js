@@ -222,23 +222,21 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     this.addEventListener('click', ({ target }) => {
       if (!target || !(target instanceof HTMLElement)) return;
 
-      // @ts-expect-error
-      const isButton = target.tagName === 'BUTTON' || target.constructor._$isLionButton$;
+      // const isButton = target.tagName === 'BUTTON' || target.constructor._$isLionButton$;
       const isAnchor = target.tagName === 'A';
-      if (!isButton && !isAnchor) return;
-
-      if (!target.id) return;
+      if (!isAnchor || !target.id) return;
 
       // TODO: do in extension layer
       this.dispatchEvent(
-        new CustomEvent('nav-item-click', {
-          // N.B. we can also retrive the item
+        new CustomEvent('menu-item-selected', {
+          // N.B. we can also retrieve the item from config
           detail: {
             item: {
               id: target.id,
               label: target.textContent.trim(),
               href: isAnchor ? target.getAttribute('href') : undefined,
             },
+            target,
           },
           // bubbles: true,
           // composed: true,
