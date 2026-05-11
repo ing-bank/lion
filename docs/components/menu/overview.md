@@ -21,7 +21,7 @@ A common convention for indicating that a menu item launches a dialog box is to 
 > From [menu wai-aria best practices](https://www.w3.org/TR/wai-aria-practices/#menu)
 
 ```js script
-import { html } from 'lit-html';
+import { html } from 'lit';
 import '@lion/ui/define/lion-item.js';
 import '@lion/ui/define/lion-menu.js';
 import '@lion/ui/define/lion-menu-overlay.js';
@@ -154,7 +154,7 @@ See https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-
 ```js preview-story
 export const disclosureMenu = () => html`
  <nav aria-label="Mythical University">
-   <lion-menu bar ._activeMode="${'disclosure'}">
+   <lion-menu bar ._activeMode="${'tabbable-disclosure'}">
     <div role="listitem">
       <button data-invoker>About</button>
       <lion-menu-overlay>
@@ -226,7 +226,7 @@ export const disclosureMenu = () => html`
         </div>
       </lion-menu-overlay>
     </div>
-  </ul>
+  </lion-menu>
 </nav>
 `;
 ```
@@ -239,7 +239,7 @@ See https://codepen.io/aardrian/pen/abyXxGw
 ```js preview-story
 export const disclosureMenuWithAnchorsOnL1 = () => html`
  <nav aria-label="Mythical University">
-   <lion-menu bar ._activeMode="${'disclosure'}">
+   <lion-menu bar ._activeMode="${'tabbable-disclosure'}">
     <div role="listitem">
       <a href="#mythical-page-content">About</a>
       <button data-invoker aria-label="More About Pages">▼</button>

@@ -220,4 +220,8 @@ export class LionButton extends DisabledWithTabIndexMixin(LitElement) {
       this.click();
     }
   }
+
+  // we want to be able to identify LionButtons w/o instanceof (for perf (loose dep) and dual version support),
+  // so we use a static property for that that doesn't get renamed by minifiers
+  static ['_$isLionButton$'] = true;
 }
