@@ -106,6 +106,13 @@ async function preloadPopper() {
 
 const childDialogsClosedInEventLoopWeakmap = new WeakMap();
 
+function deepClosest(el, selector) {
+  return (
+    (el && el != document && el != window && el.closest(selector)) ||
+    deepClosest(el.getRootNode().host, selector)
+  );
+}
+
 /**
  * OverlayController is the fundament for every single type of overlay. With the right
  * configuration, it can be used to build (modal) dialogs, tooltips, dropdowns, popovers,
@@ -196,6 +203,13 @@ export class OverlayController extends EventTarget {
         placement: 'center',
       },
       zIndex: 9999,
+      isOpenable: true,
+      focusContentOnOpen: false,
+      // This means that content will have visually-hidden / sr-only styles. This is handy for:
+      // - hidden menus that should be "indexable" by screen readers (like the Links list in VO: https://support.apple.com/en-gb/guide/voiceover/mchlp2719/mac)
+      // - "more" menus that put content in a dropdown that do not fit in the current row
+      // - menus that should generally open on tab.
+      hideVisually: false,
     };
 
     /** @protected */
@@ -221,6 +235,8 @@ export class OverlayController extends EventTarget {
     this.__escKeyHandlerCalled = false;
   }
 
+  #hasSetup = false;
+
   /**
    * The invokerNode
    * @type {HTMLElement | undefined}
@@ -239,7 +255,7 @@ export class OverlayController extends EventTarget {
 
   /**
    * Determines the connection point in DOM (body vs next to invoker).
-   * @type {'global' | 'local' | undefined}
+   * @type {'global' | 'local' | 'custom' | undefined}
    */
   get placementMode() {
     return this.config?.placementMode;
@@ -494,8 +510,6 @@ export class OverlayController extends EventTarget {
     this.__validateConfiguration(this.config);
     /** @protected */
     this._init();
-    /** @private */
-    this.__elementToFocusAfterHide = undefined;
 
     if (!this.#isRegisteredOnManager()) {
       this.manager.add(this);
@@ -517,7 +531,7 @@ export class OverlayController extends EventTarget {
         '[OverlayController] You need to provide a .placementMode ("global"|"local")',
       );
     }
-    if (!['global', 'local'].includes(newConfig.placementMode)) {
+    if (!['global', 'local', 'custom'].includes(newConfig.placementMode)) {
       throw new Error(
         `[OverlayController] "${newConfig.placementMode}" is not a valid .placementMode, use ("global"|"local")`,
       );
@@ -536,6 +550,10 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _init() {
+    if (this.config.isOpenable === false) {
+      return;
+    }
+
     if (!this.__contentHasBeenInitialized) {
       this.__initContentDomStructure();
       this.__contentHasBeenInitialized = true;
@@ -553,7 +571,26 @@ export class OverlayController extends EventTarget {
     }
     this.__handleOverlayStyles({ phase: 'init' });
     this._handleFeatures({ phase: 'init' });
+
+    /** @private */
+    this.__elementToFocusAfterHide = undefined;
+
+    this.contentNode.dataset.content = '';
+
+    // Use event delegation to listen for clicks on close buttons...
+    this.contentNode.addEventListener('click', this.#hideOnCloseButtonClick);
+
+    this.#hasSetup = true;
   }
+
+  #hideOnCloseButtonClick = (/** @type {{ target: any; }} */ ev) => {
+    const isOurCloseButton =
+      ev.target.hasAttribute('data-close') &&
+      deepClosest(ev.target, '[data-content]') === this.contentNode;
+    if (!isOurCloseButton) return;
+
+    this.hide();
+  };
 
   /**
    * @param {{ phase: OverlayPhase }} config
@@ -595,84 +632,95 @@ export class OverlayController extends EventTarget {
    * @private
    */
   __initContentDomStructure() {
-    const wrappingDialogElement = document.createElement('dialog');
-    // We use a dialog for its visual capabilities: it renders to the top layer.
-    // A11y will depend on the type of overlay and is arranged on contentNode level.
-    // Also see: https://www.scottohara.me/blog/2019/03/05/open-dialog.html
-    //
-    // The role="dialog" is set on the contentNode (or another role), so role="none"
-    // is valid here, although AXE complains about this setup.
-    // For now we need to add `ignoredRules: ['aria-allowed-role']` in your AXE tests.
-    // see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
-    wrappingDialogElement.setAttribute('role', 'none');
-    wrappingDialogElement.setAttribute('data-overlay-outer-wrapper', '');
-    // N.B. position: fixed is needed to escape out of 'overflow: hidden'
-    // We give a high z-index for non-modal dialogs, so that we at least win from all siblings of our
-    // parent stacking context
-    // padding reset so we don't get a weird dialog visual square showing up
-    wrappingDialogElement.style.cssText = `display:none; z-index: ${this.config.zIndex}; padding: 0;`;
-    this.__wrappingDialogNode = wrappingDialogElement;
+    if (this.placementMode !== 'custom') {
+      const wrappingDialogElement = document.createElement('dialog');
+      // We use a dialog for its visual capabilities: it renders to the top layer.
+      // A11y will depend on the type of overlay and is arranged on contentNode level.
+      // Also see: https://www.scottohara.me/blog/2019/03/05/open-dialog.html
+      //
+      // The role="dialog" is set on the contentNode (or another role), so role="none"
+      // is valid here, although AXE complains about this setup.
+      // For now we need to add `ignoredRules: ['aria-allowed-role']` in your AXE tests.
+      // see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
+      wrappingDialogElement.setAttribute('role', 'none');
+      wrappingDialogElement.setAttribute('data-overlay-outer-wrapper', '');
+      // N.B. position: fixed is needed to escape out of 'overflow: hidden'
+      // We give a high z-index for non-modal dialogs, so that we at least win from all siblings of our
+      // parent stacking context
+      // padding reset so we don't get a weird dialog visual square showing up
+      wrappingDialogElement.style.cssText = `display:none; z-index: ${this.config.zIndex}; padding: 0;`;
+      if (this.config.placementMode === 'custom') {
+        // The user should have full freedom to control the content node, so its wrapper nodes should remain neutral.
+        wrappingDialogElement.style.cssText += `position: static;`;
+      }
+      this.__wrappingDialogNode = wrappingDialogElement;
 
-    /**
-     * Based on the configuration of the developer, multiple scenarios are accounted for
-     * A. We already have a contentWrapperNode ()
-     */
-    if (!this.config?.contentWrapperNode) {
-      this.__contentWrapperNode = document.createElement('div');
-    }
-    this.contentWrapperNode.setAttribute('data-id', 'content-wrapper');
-    // 'hack' that makes sure popperjs (that is applied one level lower) works correctly in deeply nested shadow roots
-    this.contentWrapperNode.style.transform = 'translateZ(0px)';
+      /**
+       * Based on the configuration of the developer, multiple scenarios are accounted for
+       * A. We already have a contentWrapperNode ()
+       */
+      if (!this.config?.contentWrapperNode) {
+        this.__contentWrapperNode = document.createElement('div');
+      }
+      this.contentWrapperNode.setAttribute('data-id', 'content-wrapper');
+      // 'hack' that makes sure popperjs (that is applied one level lower) works correctly in deeply nested shadow roots
+      this.contentWrapperNode.style.transform = 'translateZ(0px)';
 
-    rearrangeNodes({
-      wrappingDialogNodeL1: wrappingDialogElement,
-      contentWrapperNodeL2: this.contentWrapperNode,
-      contentNodeL3: this.contentNode,
-    });
-    wrappingDialogElement.open = true;
+      rearrangeNodes({
+        wrappingDialogNodeL1: wrappingDialogElement,
+        contentWrapperNodeL2: this.contentWrapperNode,
+        contentNodeL3: this.contentNode,
+      });
+      wrappingDialogElement.open = true;
 
-    if (this.isTooltip) {
-      // needed to prevent tooltip getting focus in Safari and Firefox
-      wrappingDialogElement.setAttribute('tabindex', '-1');
+      if (this.isTooltip) {
+        // needed to prevent tooltip getting focus in Safari and Firefox
+        wrappingDialogElement.setAttribute('tabindex', '-1');
+      }
+      this.contentWrapperNode.style.zIndex = '1';
+      if (getComputedStyle(this.contentNode).position === 'absolute') {
+        // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
+        // computed height of 0...
+        this.contentNode.style.position = 'static';
+      }
+
+      // Here we prevent any interference of the native <dialog> element with the keyboard behavior
+      // as defined by the OverlayController. This is needed until we can configure `closedby="none"`
+      // on the native dialog for all browsers: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
+      const hasClosedBySupport = HTMLDialogElement && 'closedBy' in HTMLDialogElement.prototype;
+      if (hasClosedBySupport) {
+        wrappingDialogElement.closedBy = 'none';
+      } else {
+        wrappingDialogElement.addEventListener(
+          'keydown',
+          (/** @type {* & KeyboardEvent} */ event) => {
+            if (event.key === 'Escape') {
+              event.preventDefault();
+            }
+          },
+        );
+        wrappingDialogElement.addEventListener(
+          'keyup',
+          (/** @type {* & KeyboardEvent} */ event) => {
+            if (event.key === 'Escape') {
+              event.preventDefault();
+            }
+          },
+        );
+        wrappingDialogElement.addEventListener('cancel', event => {
+          event.stopPropagation();
+        });
+        wrappingDialogElement.addEventListener('close', event => {
+          event.stopPropagation();
+        });
+      }
+    } else {
+      // quick hack to make none-overlay flows work...
+      this.__contentWrapperNode = this.contentNode;
+      this.__wrappingDialogNode = this.contentNode;
     }
 
     this.__wrappingDialogNode.style.display = 'none';
-    this.contentWrapperNode.style.zIndex = '1';
-
-    if (getComputedStyle(this.contentNode).position === 'absolute') {
-      // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
-      // computed height of 0...
-      this.contentNode.style.position = 'static';
-    }
-
-    // Here we prevent any interference of the native <dialog> element with the keyboard behavior
-    // as defined by the OverlayController. This is needed until we can configure `closedby="none"`
-    // on the native dialog for all browsers: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
-    const hasClosedBySupport = HTMLDialogElement && 'closedBy' in HTMLDialogElement.prototype;
-    if (hasClosedBySupport) {
-      // @ts-expect-error
-      wrappingDialogElement.closedBy = 'none';
-    } else {
-      wrappingDialogElement.addEventListener(
-        'keydown',
-        (/** @type {* & KeyboardEvent} */ event) => {
-          if (event.key === 'Escape') {
-            event.preventDefault();
-          }
-        },
-      );
-      wrappingDialogElement.addEventListener('keyup', (/** @type {* & KeyboardEvent} */ event) => {
-        if (event.key === 'Escape') {
-          event.preventDefault();
-        }
-      });
-      wrappingDialogElement.addEventListener('cancel', event => {
-        event.stopPropagation();
-      });
-      wrappingDialogElement.addEventListener('close', event => {
-        event.stopPropagation();
-      });
-    }
   }
 
   /**
@@ -812,6 +860,12 @@ export class OverlayController extends EventTarget {
         contentNode: this.contentNode,
       });
     }
+
+    if (this.config.focusContentOnOpen) {
+      console.debug('contentNode add focus');
+      this.contentNode.focus();
+    }
+
     /** @type {function} */
     (this._showResolve)();
   }
@@ -844,6 +898,7 @@ export class OverlayController extends EventTarget {
       await this.__createPopperInstance();
       this._popper.forceUpdate();
     }
+    // N.B. leave it up to the user if placementMode === 'custom'
   }
 
   /**
@@ -863,6 +918,9 @@ export class OverlayController extends EventTarget {
    * @event hide right after the overlay is hidden
    */
   async hide() {
+    // Function like a no-op for dynamic edge cases...
+    if (this.config.isOpenable === false) return;
+
     this._hideComplete = new Promise(resolve => {
       this._hideResolve = resolve;
     });
@@ -1013,6 +1071,17 @@ export class OverlayController extends EventTarget {
     }
     if (this.visibilityTriggerFunction) {
       this._handleVisibilityTriggers({ phase });
+    }
+
+    if (phase === 'init' && this.config.focusContentOnOpen) {
+      console.debug('focusContentOnOpen add tabindex');
+      this.contentNode?.setAttribute('tabindex', '-1');
+    }
+
+    if (phase === 'teardown' && this.config.focusContentOnOpen) {
+      console.debug('focusContentOnOpen remove');
+      // TODO: capture initial attr, use Resettable mechanism of VisibilityToggleCtrl in whole Controller
+      this.contentNode?.removeAttribute('tabindex');
     }
   }
 
@@ -1438,6 +1507,7 @@ export class OverlayController extends EventTarget {
   }
 
   teardown() {
+    if (!this.#hasSetup) return;
     this.__handleOverlayStyles({ phase: 'teardown' });
     if (this.isShown) {
       this._keepBodySize({ phase: 'teardown' });
@@ -1446,6 +1516,10 @@ export class OverlayController extends EventTarget {
     if (this.#isRegisteredOnManager()) {
       this.manager.remove(this);
     }
+
+    this.contentNode?.removeEventListener('click', this.#hideOnCloseButtonClick);
+
+    this.#hasSetup = false;
   }
 
   /** @private */

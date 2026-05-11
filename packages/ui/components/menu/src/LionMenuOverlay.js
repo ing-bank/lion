@@ -17,34 +17,38 @@ import { InteractiveListMixin } from './InteractiveListMixin.js';
  */
 const OverlayWithListInvokerMixinImplementation = superclass =>
   class OverlayWithListInvokerMixin extends OverlayMixin(InteractiveListMixin(superclass)) {
-    constructor() {
-      super();
+    // constructor() {
+    //   super();
 
-      /** @configure DisclosureMixin */
-      this.handleFocus = true;
-    }
+    //   /** @configure DisclosureMixin */
+    //   this.handleFocus = true;
+    // }
 
-    _onOverlayBeforeShow = () => {}
+    // _onOverlayBeforeShow = () => {};
 
     _onOverlayShow = () => {
       if (this.checkedIndex != null) {
         this.activeIndex = this.checkedIndex;
       }
-      this._listNode.focus();
-    }
+      // this._listNode.focus();
+    };
 
-    _onOverlayHide = () => {
-      this._overlayInvokerNode.focus();
-    }
+    // _onOverlayHide = () => {
+    //   console.log('hide', this._overlayInvokerNode);
+    //   this._overlayInvokerNode.focus();
+    // };
 
     /**
      * @enhance OverlayMixin
      */
     _setupOverlayCtrl() {
       super._setupOverlayCtrl();
-      this._overlayCtrl.addEventListener('before-show', this._onOverlayBeforeShow);
+
+      if (!this._overlayCtrl) return;
+
+      // this._overlayCtrl.addEventListener('before-show', this._onOverlayBeforeShow);
       this._overlayCtrl.addEventListener('show', this._onOverlayShow);
-      this._overlayCtrl.addEventListener('hide', this._onOverlayHide);
+      // this._overlayCtrl.addEventListener('hide', this._onOverlayHide);
     }
 
     /**
@@ -52,9 +56,12 @@ const OverlayWithListInvokerMixinImplementation = superclass =>
      */
     _teardownOverlayCtrl() {
       super._teardownOverlayCtrl();
-      this._overlayCtrl.removeEventListener('before-show', this._onOverlayBeforeShow);
+
+      if (!this._overlayCtrl) return;
+
+      // this._overlayCtrl.removeEventListener('before-show', this._onOverlayBeforeShow);
       this._overlayCtrl.removeEventListener('show', this._onOverlayShow);
-      this._overlayCtrl.removeEventListener('hide', this._onOverlayHide);
+      // this._overlayCtrl.removeEventListener('hide', this._onOverlayHide);
     }
 
     /**
@@ -91,6 +98,8 @@ export class LionMenuOverlay extends OverlayWithListInvokerMixin(LionMenu) {
     if (parentList?.orientation !== 'horizontal') {
       placement = 'right-start';
     }
+
+    console.log('placement', placement);
 
     const menuConfig = {};
     // if (this._activeMode === 'activedescendant') {
