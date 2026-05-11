@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
-import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 import { LionMenuHybrid } from '@lion/ui/menu.js';
+import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 
 /**
  * @typedef {import('./types.js').NavBarResponsiveMode} NavBarResponsiveMode
@@ -163,13 +163,13 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     const mql = window.matchMedia(`(width <= ${this.breakpointMin}px)`);
     /** @type {NavBarResponsiveMode} */
     this.responsiveMode = mql.matches ? 'mobile' : 'desktop';
-    this._levelCfg = this.#getLevelCfg(this.responsiveMode);
-    this._levelSecondaryCfg = this.#getSecondaryLevelCfg(this.responsiveMode);
+    this._levelCfg = LionNavigationBar.#getLevelCfg(this.responsiveMode);
+    this._levelSecondaryCfg = this.#getSecondaryLevelCfg();
 
     mql.addEventListener('change', () => {
       this.responsiveMode = mql.matches ? 'mobile' : 'desktop';
-      this._levelCfg = this.#getLevelCfg(this.responsiveMode);
-      this._levelSecondaryCfg = this.#getSecondaryLevelCfg(this.responsiveMode);
+      this._levelCfg = LionNavigationBar.#getLevelCfg(this.responsiveMode);
+      this._levelSecondaryCfg = this.#getSecondaryLevelCfg();
     });
 
     this.#storeLatestFocusedElementId();
@@ -250,7 +250,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
   /**
    * @param {NavBarResponsiveMode} responsiveMode
    */
-  #getLevelCfg(responsiveMode) {
+  static #getLevelCfg(responsiveMode) {
     // N.B. we're fighting some of the overlay configs provided by LionMenuOverlay here,
     // the idea is to take over all of that when depending on LionMenu, after removing LonMenuOverlay and LionMenuHybrid components altogether.
 
@@ -326,7 +326,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    */
   updated(changedProperties) {
     if (changedProperties.has('responsiveMode')) {
-      this._levelCfg = this.#getLevelCfg(this.responsiveMode);
+      this._levelCfg = LionNavigationBar.#getLevelCfg(this.responsiveMode);
       this.#syncLatestFocusedElementForNewResponsiveMode();
     }
   }
@@ -343,18 +343,18 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
               ? html`<button data-close data-level="1">✖️</button>`
               : ''}
           </div>
-          ${this._searchTemplate(this.suggestions, this.prefilledSuggestion)}
+          ${LionNavigationBar._searchTemplate(this.suggestions, this.prefilledSuggestion)}
         </div>
         <div class="nav-body">
           ${this._menulevelTemplate(this.menuSupportItems, 1, this._levelSecondaryCfg.l1, '')}
           ${this.responsiveMode === 'desktop'
-            ? this._ctaTemplate(this.ctaPrimary, this.ctaSecondary)
+            ? LionNavigationBar._ctaTemplate(this.ctaPrimary, this.ctaSecondary)
             : ''}
           ${this._menulevelTemplate(this.menuItems, 1, this._levelCfg.l1, '')}
         </div>
         ${this.responsiveMode === 'mobile'
           ? html`<div class="nav-footer">
-              ${this._ctaTemplate(this.ctaPrimary, this.ctaSecondary)}
+              ${LionNavigationBar._ctaTemplate(this.ctaPrimary, this.ctaSecondary)}
             </div>`
           : ''}
       </nav>
@@ -365,7 +365,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @param {string[]} suggestions
    * @returns {import('lit').TemplateResult}
    */
-  _searchTemplate(suggestions, prefilledSuggestion = '') {
+  static _searchTemplate(suggestions, prefilledSuggestion = '') {
     return html` <form role="search">
       <input
         type="search"
@@ -385,7 +385,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @param {CtaLink} ctaSecondary
    * @returns {import('lit').TemplateResult}
    */
-  _ctaTemplate(ctaPrimary, ctaSecondary) {
+  static _ctaTemplate(ctaPrimary, ctaSecondary) {
     return html`<div class="cta-items">
       ${ctaSecondary?.href
         ? html`<div class="cta-secondary">
@@ -421,7 +421,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     >
       ${level > 1 && this.responsiveMode === 'mobile'
         ? html` <div role="listitem">
-            <button data-close data-level="${level}">< ${prevText}</button>
+            <button data-close data-level="${level}">&lt; ${prevText}</button>
           </div>`
         : ''}
       ${menuItemsForLevel.map(
