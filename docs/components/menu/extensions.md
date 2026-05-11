@@ -14,7 +14,7 @@ eleventyNavigation:
 
 ```js script
 import { html } from 'lit';
-import './extensions/LionNavigationBar.js';
+import '@lion/ui/define/lion-navigation-bar.js';
 
 // N.B. data structure designed to be compatible with existing extension layer
 // TODO: maybe refactor api and bridge
