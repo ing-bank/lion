@@ -18,6 +18,8 @@ import {
 
 // TODO: consider renaming to FocusGroupMixin
 
+// TODO: make all available in controller/directve (same logic with an elegent prop-to-host-mapping)
+
 /**
  * @param {Element} potentialFocusable
  * @returns {Element|null}
@@ -160,6 +162,13 @@ const InteractiveListMixinImplementation = superclass =>
         rotateKeyboardNavigation: { type: Boolean, attribute: 'rotate-keyboard-navigation' },
         // TODO: align with name of open-ui
         noPreselect: { type: Boolean, attribute: 'no-preselect' },
+
+        // TODO: implement, for now we start with only more-menu. See instructions in code about more menu.
+        // Values:
+        // - 'more-menu'
+        // - 'scroll-buttons' (think of those material design tab bars)
+        // - 'scroll-bar' (puts overflow: scroll on it) (think of tab bars, tables etc.)
+        itemWrap: { type: Boolean, attribute: 'item-wrap' },
 
         _activateOnTypedChars: Boolean,
         _hasSmartListItems: Boolean,
@@ -508,10 +517,12 @@ const InteractiveListMixinImplementation = superclass =>
       this._listNode.addEventListener('keydown', this._onListKeyDown);
       this._listNode.addEventListener('focusin', this._onListFocusIn);
 
-      // TODO: add "more menu" functionality here...
+      // TODO: add "more menu" functionality here... when itemWrap is set. We only support "more-menu" (for now):
       // 1. we can measure the width (if orientation is horizontal) of this._listNode
-      // and see how its children fit. moving them to an overlayController
+      // and see how its children fit, moving them to an overlayController
       // having hideVisually as hide mechanism (opening on focus, closing on blur).
+      // N.B. this._listNode has `display:flex`. This means we need to add `text-wrap: nowrap;`
+      // to avoid elems going over two lines, or give them a max-height based on measuring the height of one item.
       // 2. N.B. hideVisually needs to be implementd in OverlayController.
       // 3. when the more menu opens a next level, MultiLevelListMixin will be applied to the host as well.
       // That means it knows when a child menu is open. If _subListMap of one of the items is open, we should hide more menu like this:
