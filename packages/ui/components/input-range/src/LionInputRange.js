@@ -38,6 +38,14 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
         type: Boolean,
         attribute: 'no-min-max-labels',
       },
+      minLabel: {
+        type: String,
+        attribute: 'min-label',
+      },
+      maxLabel: {
+        type: String,
+        attribute: 'max-label',
+      },
     };
   }
 
@@ -84,6 +92,25 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
     return /** @type {HTMLInputElement} */ (super._inputNode);
   }
 
+  /**
+   * Get the display info for the current value
+   * @protected
+   * @returns {{ text: string, showUnit: boolean }}
+   */
+  get _valueDisplay() {
+    const currentValue = parseFloat(/** @type {string} */ (this.formattedValue));
+
+    if (this.minLabel && currentValue === this.min) {
+      return { text: this.minLabel, showUnit: false };
+    }
+
+    if (this.maxLabel && currentValue === this.max) {
+      return { text: this.maxLabel, showUnit: false };
+    }
+
+    return { text: formatNumber(currentValue), showUnit: true };
+  }
+
   constructor() {
     super();
     /** @type {ScopedStylesController} */
@@ -94,6 +121,8 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
     this.unit = '';
     this.type = 'range';
     this.noMinMaxLabels = false;
+    this.minLabel = '';
+    this.maxLabel = '';
     /**
      * @param {string} modelValue
      */
@@ -130,12 +159,12 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
 
   /** @protected */
   _inputGroupTemplate() {
+    const display = this._valueDisplay;
+
     return html`
       <div>
-        <span class="input-range__value"
-          >${formatNumber(parseFloat(/** @type {string} */ (this.formattedValue)))}</span
-        >
-        <span class="input-range__unit">${this.unit}</span>
+        <span class="input-range__value">${display.text}</span>
+        ${display.showUnit ? html`<span class="input-range__unit">${this.unit}</span>` : ''}
       </div>
       <div class="input-group">
         ${this._inputGroupBeforeTemplate()}
@@ -157,12 +186,12 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
           ? html`
               <div class="input-range__limits">
                 <div>
-                  <span class="sr-only">${this.msgLit('lion-input-range:minimum')} </span
-                  >${formatNumber(this.min)}
+                  <span class="sr-only">${this.msgLit('lion-input-range:minimum')} </span>
+                  ${this.minLabel ? this.minLabel : formatNumber(this.min)}
                 </div>
                 <div>
-                  <span class="sr-only">${this.msgLit('lion-input-range:maximum')} </span
-                  >${formatNumber(this.max)}
+                  <span class="sr-only">${this.msgLit('lion-input-range:maximum')} </span>
+                  ${this.maxLabel ? this.maxLabel : formatNumber(this.max)}
                 </div>
               </div>
             `
