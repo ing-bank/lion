@@ -86,17 +86,16 @@ const MultiLevelListMixinImplementation = superclass =>
       this._subListMap = new Map();
     }
 
-    /**
-     * @param {import('lit-element').PropertyValues } changedProperties
-     */
-    updated(changedProperties) {
-      super.updated(changedProperties);
+    // /**
+    //  * @param {import('lit-element').PropertyValues } changedProperties
+    //  */
+    // updated(changedProperties) {
+    //   super.updated(changedProperties);
 
-      if (changedProperties.has('invokerNode')) {
-        this._setupOpenCloseListeners();
-        // this._onOpenedChanged();
-      }
-    }
+    //   if (changedProperties.has('invokerNode')) {
+    //     // TODO: update openableCtrl invokerNode once we make this a ctrl as well
+    //   }
+    // }
 
     /**
      * Gets the child InteractiveList, based on item

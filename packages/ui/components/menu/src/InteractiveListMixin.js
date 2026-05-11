@@ -494,18 +494,14 @@ const InteractiveListMixinImplementation = superclass =>
       // };
 
       this._listItemsSlot.addEventListener('slotchange', () => {
-        // const nodes = this._listItemsSlot.assignedNodes();
+        // N.B. we do not use `this._listItemsSlot.assignedNodes()`, as it omits comment nodes.
+        // Comment nodes are really important for lit-html)
         const nodes = Array.from(
           (this._listItemsSlot.assignedSlot || this).childNodes || [],
+          // @ts-expect-error
         ).filter(n => !n.slot);
-        // console.debug('slotchange', nodes, nodes2, this._listItemsSlot.assignedSlot);
         this.#identifyNewItemsAndInitListItems(nodes);
       });
-
-      // if (this._listNode.childNodes.length) {
-      //   const nodes = Array.from(this._listNode.childNodes);
-      //   this.#identifyNewItemsAndInitListItems(nodes);
-      // }
 
       this._listNode.setAttribute('role', this._listRole);
       this._listNode.setAttribute(
