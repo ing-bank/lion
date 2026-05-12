@@ -106,9 +106,17 @@ async function preloadPopper() {
 
 const childDialogsClosedInEventLoopWeakmap = new WeakMap();
 
+/**
+ * @param {HTMLElement | null} el
+ * @param {string} selector
+ * @returns {HTMLElement | null}
+ */
 function deepClosest(el, selector) {
+  // @ts-ignore - comparing HTMLElement to document/window for safety
   return (
+    // @ts-ignore - type comparison check
     (el && el !== document && el !== window && el.closest(selector)) ||
+    // @ts-ignore - host property on ShadowRoot
     deepClosest(el.getRootNode().host, selector)
   );
 }
@@ -209,6 +217,7 @@ export class OverlayController extends EventTarget {
       // - hidden menus that should be "indexable" by screen readers (like the Links list in VO: https://support.apple.com/en-gb/guide/voiceover/mchlp2719/mac)
       // - "more" menus that put content in a dropdown that do not fit in the current row
       // - menus that should generally open on tab.
+      // @ts-ignore - hideVisually is an extension property
       hideVisually: false,
     };
 
@@ -647,6 +656,7 @@ export class OverlayController extends EventTarget {
       // parent stacking context
       // padding reset so we don't get a weird dialog visual square showing up
       wrappingDialogElement.style.cssText = `display:none; z-index: ${this.config.zIndex}; padding: 0;`;
+      // @ts-ignore - 'custom' is a valid extension of placementMode
       if (this.config.placementMode === 'custom') {
         // The user should have full freedom to control the content node, so its wrapper nodes should remain neutral.
         wrappingDialogElement.style.cssText += `position: static;`;
@@ -687,6 +697,7 @@ export class OverlayController extends EventTarget {
       // on the native dialog for all browsers: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
       const hasClosedBySupport = HTMLDialogElement && 'closedBy' in HTMLDialogElement.prototype;
       if (hasClosedBySupport) {
+        // @ts-ignore - closedBy is a newer property not in all TypeScript versions
         wrappingDialogElement.closedBy = 'none';
       } else {
         wrappingDialogElement.addEventListener(
@@ -789,6 +800,7 @@ export class OverlayController extends EventTarget {
    * @private
    */
   __storeOriginalAttrs(node, attrs) {
+    /** @type {Record<string, string | null>} */
     const attrMap = {};
     attrs.forEach(attrName => {
       attrMap[attrName] = node.getAttribute(attrName);
@@ -1251,7 +1263,9 @@ export class OverlayController extends EventTarget {
     if (phase === 'show') {
       this.#handleShiftKeyPress();
       this.#handleFocusInsideDialog();
+      // @ts-ignore - HTMLDialogElement methods
       this.__wrappingDialogNode?.close();
+      // @ts-ignore - HTMLDialogElement methods
       this.__wrappingDialogNode?.showModal();
       /**
        * At this moment `#handleFocusInsideDialog` should handle the focus.

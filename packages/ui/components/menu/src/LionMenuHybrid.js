@@ -5,6 +5,7 @@ import { LionMenuOverlay } from './LionMenuOverlay.js';
  */
 
 // TODO: remove
+// @ts-ignore - class extension properties mismatch
 export class LionMenuHybrid extends LionMenuOverlay {
   static get properties() {
     return {

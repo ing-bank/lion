@@ -13,11 +13,11 @@ export class LionSpinbutton extends LitElement {
   }
 
   get _decreaseNode() {
-    return this.shadowRoot.querySelector('[data-ref=decrease]');
+    return this.shadowRoot?.querySelector('[data-ref=decrease]');
   }
 
   get _increaseNode() {
-    return this.shadowRoot.querySelector('[data-ref=increase]');
+    return this.shadowRoot?.querySelector('[data-ref=increase]');
   }
 
   static get styles() {
@@ -34,6 +34,9 @@ export class LionSpinbutton extends LitElement {
     return this._mainTemplate({ ariaText: this._getAriaText() });
   }
 
+  /**
+   * @param {{ ariaText: string }} props
+   */
   _mainTemplate({ ariaText }) {
     return html`${ariaText}${this._decreaseBtnTemplate()}${this._increaseBtnTemplate()}`;
   }
@@ -69,11 +72,16 @@ export class LionSpinbutton extends LitElement {
     this.__isSetup = true;
   }
 
+  /**
+   * @param {import('lit').PropertyValues} changedProperties
+   */
   firstUpdated(changedProperties) {
     super.firstUpdated(changedProperties);
 
-    this._decreaseNode.addEventListener('mousedown', this.__decrease);
-    this._increaseNode.addEventListener('mousedown', this.__increase);
+    // @ts-ignore - event listener type compatibility
+    this._decreaseNode?.addEventListener('mousedown', this.__decrease);
+    // @ts-ignore - event listener type compatibility
+    this._increaseNode?.addEventListener('mousedown', this.__increase);
     this.addEventListener('keydown', this._onKeydown);
 
     this.addEventListener('mousedown', () => {
@@ -84,6 +92,9 @@ export class LionSpinbutton extends LitElement {
     });
   }
 
+  /**
+   * @param {import('lit').PropertyValues} changedProperties
+   */
   updated(changedProperties) {
     super.updated(changedProperties);
 
@@ -96,10 +107,12 @@ export class LionSpinbutton extends LitElement {
     }
 
     if (changedProperties.has('min')) {
+      // @ts-ignore - min property from properties
       this.setAttribute('aria-valuemin', `${this.min}`);
     }
 
     if (changedProperties.has('max')) {
+      // @ts-ignore - max property from properties
       this.setAttribute('aria-valuemax', `${this.max}`);
     }
   }
@@ -111,10 +124,17 @@ export class LionSpinbutton extends LitElement {
     return `${this.now}${this.unit ? this.unit : ''}`;
   }
 
+  /**
+   * @param {MouseEvent | null} ev
+   * @param {number} step
+   * @param {number} timeout
+   */
   __decrease(ev, step = this.step, timeout = 100) {
+    // @ts-ignore - min property from properties
     if (this.min !== undefined && this.now - 1 >= this.min) {
       this.now -= 1; // TODO: support step/increment?
     }
+    // @ts-ignore - ev can be null
     if (ev.type === 'mousedown') {
       setTimeout(() => {
         if (this.__isMousedown) {
@@ -124,10 +144,17 @@ export class LionSpinbutton extends LitElement {
     }
   }
 
+  /**
+   * @param {MouseEvent | null} ev
+   * @param {number} step
+   * @param {number} timeout
+   */
   __increase(ev, step = this.step, timeout = 100) {
+    // @ts-ignore - max property from properties
     if (this.max !== undefined && this.now + 1 <= this.max) {
       this.now += 1; // TODO: support step/increment?
     }
+    // @ts-ignore - ev can be null
     if (ev.type === 'mousedown') {
       setTimeout(() => {
         if (this.__isMousedown) {
@@ -137,6 +164,9 @@ export class LionSpinbutton extends LitElement {
     }
   }
 
+  /**
+   * @param {KeyboardEvent} ev
+   */
   _onKeydown(ev) {
     const { key } = ev;
 
@@ -145,24 +175,30 @@ export class LionSpinbutton extends LitElement {
       case 'ArrowDown':
         ev.stopPropagation(); // In case we are inside a menu
         ev.preventDefault(); // Prevent scroll
+        // @ts-ignore - passing null for ev parameter
         this.__decrease();
         break;
       case 'ArrowUp':
         ev.stopPropagation(); // In case we are inside a menu
         ev.preventDefault(); // Prevent scroll
+        // @ts-ignore - passing null for ev parameter
         this.__increase();
         break;
       case 'Home':
         ev.stopPropagation(); // In case we are inside a menu
         ev.preventDefault(); // Prevent scroll
+        // @ts-ignore - min property from properties
         if (this.min !== undefined) {
+          // @ts-ignore
           this.now = this.min;
         }
         break;
       case 'End':
         ev.stopPropagation(); // In case we are inside a menu
         ev.preventDefault(); // Prevent scroll
+        // @ts-ignore - max property from properties
         if (this.max !== undefined) {
+          // @ts-ignore
           this.now = this.max;
         }
         break;

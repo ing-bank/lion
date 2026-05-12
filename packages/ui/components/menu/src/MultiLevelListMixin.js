@@ -13,7 +13,9 @@ import { InteractiveListMixin } from './InteractiveListMixin.js';
  * All logic that is needed for interactive lists that are allowed to have multiple nested, collapsible levels
  * Applies to [role=menu] and [role=tree]
  */
+// @ts-ignore - mixin implementation
 const MultiLevelListMixinImplementation = superclass =>
+  // @ts-ignore - mixin class extension
   class extends InteractiveListMixin(superclass) {
     render() {
       return html`
@@ -35,6 +37,7 @@ const MultiLevelListMixinImplementation = superclass =>
      * @configure DisclosureMixin
      */
     get _invokerNode() {
+      // @ts-ignore - accessing static method and super property
       return this.constructor._getFocusableInvokerEl(this.invokerNode) || super._invokerNode;
     }
 
@@ -55,6 +58,7 @@ const MultiLevelListMixinImplementation = superclass =>
        * over [slot=invoker] and previousElementSibling with [data-invoker] attribute
        * @type {HTMLElement}
        */
+      // @ts-ignore - can be undefined initially
       this.invokerNode = undefined;
       /**
        * @configure DisclosureMixin
@@ -64,6 +68,7 @@ const MultiLevelListMixinImplementation = superclass =>
        * The parent list if level > 1
        * @type {InteractiveList}
        */
+      // @ts-ignore - can be undefined initially
       this.parentList = undefined;
       /**
        * When true, will have a maximum of one submenu open at a time
@@ -115,6 +120,7 @@ const MultiLevelListMixinImplementation = superclass =>
        *   <lion-menu> ... </lion-menu>
        * </lion-menuitem>
        */
+      // @ts-ignore - isInteractiveList property check
       const siblingOfInvoker = item.nextElementSibling?.isInteractiveList;
       if (siblingOfInvoker) {
         return item.nextElementSibling;
@@ -130,22 +136,29 @@ const MultiLevelListMixinImplementation = superclass =>
       const childOfInvoker =
         item.getAttribute?.('role') === 'listitem' || item.hasAttribute?.('data-item');
       if (childOfInvoker) {
+        // @ts-ignore - isInteractiveList check
         return Array.from(item.children).find(child => child.isInteractiveList);
       }
       return undefined;
     }
 
+    /**
+     * @param {*} newItems
+     */
     _initListItems(newItems) {
       super._initListItems(newItems);
 
       const ctor = this.constructor;
+      // @ts-ignore - forEach parameter types
       newItems.forEach(item => {
+        // @ts-ignore - static method access
         const subList = ctor._getSubInteractiveList(item);
         if (subList) {
           this._subListMap.set(item, subList);
           subList.level = this.level + 1;
           subList.parentList = this;
           subList.invokerNode = item;
+          // @ts-ignore - invokerInteraction property
           subList.invokerInteraction = this.invokerInteraction;
           subList._activeMode = this._activeMode;
         }
@@ -157,18 +170,22 @@ const MultiLevelListMixinImplementation = superclass =>
      * @param {Event} [ev]
      */
     toggle(ev) {
+      // @ts-ignore - target property
       if (ev && this._listNode.contains(ev.target)) {
         // prevent nested menus (inside invokers) from triggering invoker
         return;
       }
+      // @ts-ignore - super.toggle method
       super.toggle();
     }
 
     /**
      * @enhance InteractiveListMixin
+     * @param {*} ev
      */
     _onListKeyDown(ev) {
       const targetFromsubList = Array.from(this._subListMap).find(
+        // @ts-ignore - contains method on InteractiveListHost
         ([, s]) => s === ev.target || s.contains(ev.target),
       );
 
@@ -210,13 +227,17 @@ const MultiLevelListMixinImplementation = superclass =>
           break;
         case 'ArrowUp':
           if (this.orientation === 'horizontal' && parentListOfActiveItem) {
+            // @ts-ignore - close method
             this.close();
+            // @ts-ignore - _onOverlayShow method
             parentListOfActiveItem._onOverlayShow();
           }
           break;
         case 'ArrowLeft':
           if (this.orientation === 'vertical' && parentListOfActiveItem) {
+            // @ts-ignore - close method
             this.close();
+            // @ts-ignore - _onOverlayShow method
             parentListOfActiveItem._onOverlayShow();
           }
           break;
