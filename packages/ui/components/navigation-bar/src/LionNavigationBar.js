@@ -446,4 +446,3 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     </lion-menu-hybrid>`;
   }
 }
-customElements.define('lion-navigation-bar', LionNavigationBar);
