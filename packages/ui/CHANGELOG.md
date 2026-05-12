@@ -1,5 +1,21 @@
 # @lion/ui
 
+## 0.17.0-menu-system.0
+
+### Minor Changes
+
+- ba4b660: fixed overlay accumulate margins
+
+### Patch Changes
+
+- ba4b660: [overlays] fixed preventsScroll body margin handling for nested overlays by centralizing body-size state in OverlaysManager and avoiding margin accumulation/restoration mismatches.
+- bd0fc46: Update aria-label for input-datepicker invoker button for a11y reason in case of multiple datepicker in same screen
+- 38f6c56: [button] fix button default styling to align with platform requirements.
+- 2c1e325: fix(overlayShadowDomStyle): when reduced animatiopn is not applying animation duration properly
+- fcbf5b7: [makeMatchingTextBold] escape regex characters on matchString to prevent invalid regex error
+- da1b636: [overlays] fix popper.js bug in nested shadow roots and improved compatibility with demo viewer.
+- c50d02c: fix(LionInputStepper): prevent click on increase/decrease buttons when is readonly
+
 ## 0.16.1
 
 ### Patch Changes

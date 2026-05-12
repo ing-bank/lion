@@ -1,0 +1,25 @@
+{
+  "mode": "pre",
+  "tag": "menu-system",
+  "initialVersions": {
+    "babel-plugin-extend-docs": "0.5.3",
+    "@lion/nodejs-helpers": "0.1.0",
+    "providence-analytics": "0.19.3",
+    "publish-docs": "0.2.1",
+    "remark-extend": "0.5.3",
+    "rocket-preset-extend-lion-docs": "0.4.2",
+    "@lion/ajax": "2.1.0",
+    "singleton-manager": "1.8.0",
+    "@lion/ui": "0.16.1"
+  },
+  "changesets": [
+    "bright-lions-fold",
+    "fluffy-apes-juggle",
+    "hot-planets-kick",
+    "smooth-pants-occur",
+    "tender-paws-trade",
+    "true-rules-hide",
+    "warm-monkeys-play",
+    "yellow-rocks-drum"
+  ]
+}
