@@ -1554,11 +1554,13 @@ export function runValidateMixinSuite(customConfig) {
           // eslint-disable-next-line no-restricted-syntax
           for (const state of ['dirty', 'touched', 'prefilled', 'submitted']) {
             counter += 1;
+            // @ts-ignore - test property access
             el[state] = false;
             // eslint-disable-next-line no-await-in-loop
             await el.updateComplete;
             expect(spy.callCount).to.equal(counter);
             counter += 1;
+            // @ts-ignore - test property access
             el[state] = true;
             // eslint-disable-next-line no-await-in-loop
             await el.updateComplete;

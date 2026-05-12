@@ -56,7 +56,8 @@ function adoptStyleWhenAdoptedStylesheetsNotSupported(
     const styleEl = document.createElement('style');
     // keep notation, so it's not renamed in minification/build
     // eslint-disable-next-line dot-notation
-    const nonce = window['litNonce'];
+    // @ts-ignore - litNonce is a custom property
+    const nonce = window.litNonce;
     if (nonce !== undefined) {
       styleEl.setAttribute('nonce', nonce);
     }

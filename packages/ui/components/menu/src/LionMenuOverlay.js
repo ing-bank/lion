@@ -29,6 +29,7 @@ const OverlayWithListInvokerMixinImplementation = superclass =>
 
     _onOverlayShow = () => {
       if (this.checkedIndex != null) {
+        // @ts-ignore - activeIndex can be number or array
         this.activeIndex = this.checkedIndex;
       }
       // this._listNode.focus();
@@ -69,6 +70,7 @@ const OverlayWithListInvokerMixinImplementation = superclass =>
      * make sure OverlayMixin gets the contentNode defined by DisclosureMixin
      */
     get _overlayContentNode() {
+      // @ts-ignore - _contentNode property
       return this._contentNode;
     }
 
@@ -76,6 +78,7 @@ const OverlayWithListInvokerMixinImplementation = superclass =>
      * make sure OverlayMixin gets the invokerNode defined by DisclosureMixin
      */
     get _overlayInvokerNode() {
+      // @ts-ignore - _invokerNode property
       return this._invokerNode;
     }
   };
@@ -93,7 +96,9 @@ export class LionMenuOverlay extends OverlayWithListInvokerMixin(LionMenu) {
     `;
   }
 
+  // @ts-ignore - overlay config return type
   _defineOverlayConfig() {
+    // @ts-ignore - parentList property
     const { parentList } = this;
     let placement = 'bottom-start';
     if (parentList?.orientation !== 'horizontal') {
@@ -130,6 +135,9 @@ export class LionMenuOverlay extends OverlayWithListInvokerMixin(LionMenu) {
 
   /**
    * @enhance InteractiveListMixin
+   */
+  /**
+   * @param {*} ev
    */
   _onListKeyUp(ev) {
     super._onListKeyUp(ev);

@@ -7,6 +7,7 @@ import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
  * @typedef {import('./types.js').MenuItem} MenuItem
  * @typedef {import('./types.js').CtaLink} CtaLink
  * @typedef {import('./types.js').Logo} Logo
+ * @typedef {import('./types.js').LevelConfig} LevelConfig
  */
 
 export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
@@ -236,7 +237,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           detail: {
             item: {
               id: target.id,
-              label: target.textContent.trim(),
+              label: target.textContent?.trim() || '',
               href: isAnchor ? target.getAttribute('href') : undefined,
             },
           },
@@ -403,7 +404,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
   /**
    * @param {MenuItem[]} menuItemsForLevel
    * @param {number} level
-   * @param {object} cfgForLevel
+   * @param {LevelConfig} cfgForLevel
    * @returns {import('lit').TemplateResult}
    */
   _menulevelTemplate(menuItemsForLevel, level, cfgForLevel, prevText = '') {
