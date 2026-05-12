@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { LionMenuHybrid } from '@lion/ui/menu.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
+import { IngMenuBarMoreButtonMixin } from './IngMenuBarMoreButtonMixin.js';
 
 /**
  * @typedef {import('./types.js').NavBarResponsiveMode} NavBarResponsiveMode
@@ -9,7 +10,7 @@ import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
  * @typedef {import('./types.js').Logo} Logo
  */
 
-export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
+export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsMixin(LitElement)) {
   static get properties() {
     return {
       responsiveMode: { type: String, reflect: true, attribute: 'responsive-mode' },
@@ -120,6 +121,34 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
         :host([responsive-mode='mobile']) .logo-and-close {
           padding: 1em;
         }
+
+        /**
+        * TODO listitem rigth margin/gap is not taken at the account ATM
+        */
+
+        /** TODO get rid of it, come up with a robust solution
+         * Use it here only for max-width for now
+         */
+        .navigation-bar__container {
+          max-width: 1280px;
+          border: 1px solid;
+        }
+
+        /**
+         * More button relies on the fact that the menu items do not break the line
+         * TODO is it optimal?
+         */
+        [role='list'] > [role='listitem'] > button,
+        [role='list'] > [role='listitem'] > a {
+          white-space: nowrap;
+        }
+
+        /**
+        * TODO remove it. Use it now for testing More button feature
+        */
+        [role='listitem'] {
+          margin-right: 200px;
+        }
       `,
     ];
   }
@@ -147,10 +176,10 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     // @ts-ignore
     this.ctaSecondary = {};
     /** @type {MenuItem[]} */
-    this.menuItems = [];
+    this._menuItems = [];
     // /** @type {Boolean} */
     // this.searchDisabled = false;
-    this.breakpointMin = 1400; // force desktop
+    this.breakpointMin = 1200; // force desktop
     /** @type {string[]} */
     this.suggestions = [];
 
@@ -174,6 +203,18 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
 
     this.#storeLatestFocusedElementId();
     this.#delegateAnalyticsEvents();
+  }
+
+  get menuItems() {
+    return this._menuItems;
+  }
+
+  set menuItems(value) {
+    this._menuItems = value;
+    /**
+     * @override IngMenuBarMoreButtonMixin
+     */
+    this.menu = this._menuItems;
   }
 
   #getSecondaryLevelCfg() {
@@ -345,7 +386,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           </div>
           ${LionNavigationBar._searchTemplate(this.suggestions, this.prefilledSuggestion)}
         </div>
-        <div class="nav-body">
+        <div class="nav-body navigation-bar__container">
           ${this._menulevelTemplate(this.menuSupportItems, 1, this._levelSecondaryCfg.l1, '')}
           ${this.responsiveMode === 'desktop'
             ? LionNavigationBar._ctaTemplate(this.ctaPrimary, this.ctaSecondary)
@@ -400,6 +441,32 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     </div>`;
   }
 
+  _listItemsTemplate(items, level) {
+    // @ts-ignore
+    const cfgForNextLevel = this._levelCfg[`l${level + 1}`];
+
+    const getId = (/** @type {import("./types.js").MenuItem} */ menuItem) =>
+      menuItem.id || `l${level}-${menuItem.title}`;
+
+    return items.map(
+      menuItem => html`
+        <div role="listitem">
+          ${menuItem.sub
+            ? html` <button id="${getId(menuItem)}" data-invoker>${menuItem.title}</button>
+                ${menuItem.sub
+                  ? this._menulevelTemplate(
+                      menuItem.sub,
+                      level + 1,
+                      cfgForNextLevel,
+                      menuItem.title,
+                    )
+                  : ''}`
+            : html` <a id="${getId(menuItem)}" href="${menuItem.link || ''}">${menuItem.title}</a>`}
+        </div>
+      `,
+    );
+  }
+
   /**
    * @param {MenuItem[]} menuItemsForLevel
    * @param {number} level
@@ -407,11 +474,14 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @returns {import('lit').TemplateResult}
    */
   _menulevelTemplate(menuItemsForLevel, level, cfgForLevel, prevText = '') {
-    // @ts-ignore
-    const cfgForNextLevel = this._levelCfg[`l${level + 1}`];
-
-    const getId = (/** @type {import("./types.js").MenuItem} */ menuItem) =>
-      menuItem.id || `l${level}-${menuItem.title}`;
+    // Determine which items to render (visible or all)
+    let itemsToRender;
+    if (level === 1 && cfgForLevel.hasFullWidthFlyout) {
+      itemsToRender = this.showMoreButton ? this.visibleFirstLevelItems : menuItemsForLevel;
+      // itemsToRender = menuItemsForLevel;
+    } else {
+      itemsToRender = menuItemsForLevel;
+    }
 
     return html`<lion-menu-hybrid
       .config="${cfgForLevel.openableConfig || {}}"
@@ -424,25 +494,10 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
             <button data-close data-level="${level}">&lt; ${prevText}</button>
           </div>`
         : ''}
-      ${menuItemsForLevel.map(
-        menuItem => html`
-          <div role="listitem">
-            ${menuItem.sub
-              ? html` <button id="${getId(menuItem)}" data-invoker>${menuItem.title}</button>
-                  ${menuItem.sub
-                    ? this._menulevelTemplate(
-                        menuItem.sub,
-                        level + 1,
-                        cfgForNextLevel,
-                        menuItem.title,
-                      )
-                    : ''}`
-              : html` <a id="${getId(menuItem)}" href="${menuItem.link || ''}"
-                  >${menuItem.title}</a
-                >`}
-          </div>
-        `,
-      )}
+      ${this._listItemsTemplate(itemsToRender, level)}
+      ${level === 1 && cfgForLevel.hasFullWidthFlyout && this.showMoreButton
+        ? this._renderMoreButtonWrapper(this._listItemsTemplate(this.hiddenFirstLevelItems, level))
+        : ''}
     </lion-menu-hybrid>`;
   }
 }
