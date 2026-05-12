@@ -280,7 +280,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
   /**
    * Increment the value based on given step or default step value is 1
-   * @param {Event} ev - Click event
+   * @param {Event} [ev] - Click event
    * @protected
    */
   _increment(ev) {
@@ -314,7 +314,7 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
   /**
    * Decrement the value based on given step or default step value is 1
-   * @param {Event} ev - Click event
+   * @param {Event} [ev] - Click event
    * @protected
    */
   _decrement(ev) {
