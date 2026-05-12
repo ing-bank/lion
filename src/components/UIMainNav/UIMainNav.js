@@ -131,22 +131,22 @@ export class UIMainNavPartDirective extends UIPartDirective {
 
   setupFunctions = {
     /**
-     * @param {ElementPart} litPart 
+     * @param {ElementPart} litPart
      */
     nav: ({ element }) => {
       assertNav(element);
     },
     /**
-     * @param {ElementPart} litPart 
-     * @param {{ context: TemplateContext, localContext: any }} param1 
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
      */
     'l1-invoker': ({ element, options }, { context, localContext }) => {
       assertButton(element);
       element.setAttribute('aria-label', context.translations.l1Invoker);
     },
     /**
-     * @param {ElementPart} litPart 
-     * @param {{ context: TemplateContext, localContext: any }} param1 
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
      */
     level: ({ element, options }, { context, localContext }) => {
       const { level, isToggleTarget, levelConfig } = localContext;
@@ -186,8 +186,8 @@ export class UIMainNavPartDirective extends UIPartDirective {
       });
     },
     /**
-     * @param {ElementPart} litPart 
-     * @param {{ context: TemplateContext, localContext: any }} param1 
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
      */
     'level-back-btn': ({ element }, { context, localContext }) => {
       assertButton(element);
@@ -201,8 +201,8 @@ export class UIMainNavPartDirective extends UIPartDirective {
       context.registerRef(`level-back-btn-l${localContext.level}`, element);
     },
     /**
-     * @param {ElementPart} litPart 
-     * @param {{ context: TemplateContext, localContext: any }} param1 
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
      */
     list: ({ element }, { context, localContext }) => {
       element.setAttribute('role', 'list');
@@ -214,8 +214,8 @@ export class UIMainNavPartDirective extends UIPartDirective {
       context.registerRef(`list-${localContext.level}`, element);
     },
     /**
-     * @param {ElementPart} litPart 
-     * @param {{ context: TemplateContext, localContext: any }} param1 
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
      */
     listitem: ({ element }, { context, localContext }) => {
       assertListItem(element);
@@ -224,8 +224,8 @@ export class UIMainNavPartDirective extends UIPartDirective {
       context.registerRef(`listitem-l${localContext.level}`, element, { isPartOfCollection: true });
     },
     /**
-     * @param {ElementPart} litPart 
-     * @param {{ context: TemplateContext, localContext: any }} param1 
+     * @param {ElementPart} litPart
+     * @param {{ context: TemplateContext, localContext: any }} param1
      */
     anchor: ({ element }, { context, localContext }) => {
       UIMainNavPartDirective.setLevel(element, localContext.level);
@@ -376,7 +376,6 @@ export class UIMainNavPartDirective extends UIPartDirective {
   }
 }
 
-
 /**
  * @typedef {{name: string; url: string; active?:boolean; iconId?: string; items?: NavItemData[]}} NavItem
  */
@@ -469,7 +468,7 @@ export class UIMainNav extends UIBaseElement {
    */
   static templates = {
     /**
-     * @param {TemplateContext} context 
+     * @param {TemplateContext} context
      * @returns {TemplateResult}
      */
     root(context) {
@@ -489,7 +488,7 @@ export class UIMainNav extends UIBaseElement {
       `;
     },
     /**
-     * @param {TemplateContext} context 
+     * @param {TemplateContext} context
      * @param {{ levelConfig: NavLevel, level: number, isToggleTarget: boolean, hasActiveChild: boolean }} param1
      * @returns {TemplateResult}
      */
@@ -497,36 +496,36 @@ export class UIMainNav extends UIBaseElement {
       const { templates, part, translations } = context;
       const hasBackButton = isToggleTarget && level > 1;
 
-      return html`<!-- --> 
-      <div ${part('level', { levelConfig, level, isToggleTarget, hasActiveChild })}>
-        ${hasBackButton
-          ? html`<!-- -->
-              <button ${part('level-back-btn', { level })}>
-                ${templates.icon(context, {
-                  item: { iconId: 'lion:portal:chevronLeft' },
-                  level: 0,
-                })}
-                ${translations.levelBackBtn}
-              </button>`
-          : nothing}
-        <ul ${part('list', { level })}>
-          ${levelConfig.items.map(
-            item =>
-              html`<!-- -->
-                <li ${part('listitem', { item, level })}>
-                  ${templates.navItem(context, { item, level })}
-                  ${item.nextLevel
-                    ? templates.navLevel(context, {
-                        hasActiveChild: item.hasActiveChild,
-                        levelConfig: item.nextLevel,
-                        isToggleTarget: !item.url,
-                        level: level + 1,
-                      })
-                    : nothing}
-                </li>`,
-          )}
-        </ul>
-      </div>`;
+      return html`<!-- -->
+        <div ${part('level', { levelConfig, level, isToggleTarget, hasActiveChild })}>
+          ${hasBackButton
+            ? html`<!-- -->
+                <button ${part('level-back-btn', { level })}>
+                  ${templates.icon(context, {
+                    item: { iconId: 'lion:portal:chevronLeft' },
+                    level: 0,
+                  })}
+                  ${translations.levelBackBtn}
+                </button>`
+            : nothing}
+          <ul ${part('list', { level })}>
+            ${levelConfig.items.map(
+              item =>
+                html`<!-- -->
+                  <li ${part('listitem', { item, level })}>
+                    ${templates.navItem(context, { item, level })}
+                    ${item.nextLevel
+                      ? templates.navLevel(context, {
+                          hasActiveChild: item.hasActiveChild,
+                          levelConfig: item.nextLevel,
+                          isToggleTarget: !item.url,
+                          level: level + 1,
+                        })
+                      : nothing}
+                  </li>`,
+            )}
+          </ul>
+        </div>`;
     },
     navItem(context, { item, level }) {
       const { part, templates } = context;
@@ -534,7 +533,7 @@ export class UIMainNav extends UIBaseElement {
       if (item.url) {
         // N.B. taken care of by directive
         // eslint-disable-next-line lit-a11y/anchor-is-valid
-        return html`<!-- --> 
+        return html`<!-- -->
           <a ${part('anchor', { item, level })}>
             ${templates.icon(context, { item, level })}<span>${item.name}</span>
           </a>`;
