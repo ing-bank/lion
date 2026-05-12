@@ -70,6 +70,52 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
           height: 100%;
         }
 
+        :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > button,
+        :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > a,
+        :host([responsive-mode='desktop'])
+          [level='1']
+          > [slot='list']
+          > .more-button-wrapper
+          > [role='listitem']
+          > button,
+        :host([responsive-mode='desktop'])
+          [level='1']
+          > [slot='list']
+          > .more-button-wrapper
+          > [role='listitem']
+          > a {
+          white-space: nowrap;
+        }
+
+        /**
+        * TODO listitem rigth margin/gap is not taken at the account ATM
+        */
+
+        /** TODO get rid of it, come up with a robust solution
+         * Use it here only for max-width for now
+         */
+        .navigation-bar__container {
+          max-width: 1400px;
+          border: 1px solid;
+        }
+
+        /**
+         * More button relies on the fact that the menu items do not break the line
+         * TODO is it optimal?
+         */
+        :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > button,
+        :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > a {
+          white-space: nowrap;
+        }
+
+        /**
+        * TODO remove it. Use it now for testing More button feature
+        */
+        :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'],
+        :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > .more-button-wrapper {
+          margin-right: 180px;
+        }
+
         :host([responsive-mode='mobile']) nav {
           border: 1px solid black;
           display: block;
@@ -121,34 +167,6 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
         :host([responsive-mode='mobile']) .logo-and-close {
           padding: 1em;
         }
-
-        /**
-        * TODO listitem rigth margin/gap is not taken at the account ATM
-        */
-
-        /** TODO get rid of it, come up with a robust solution
-         * Use it here only for max-width for now
-         */
-        .navigation-bar__container {
-          max-width: 1280px;
-          border: 1px solid;
-        }
-
-        /**
-         * More button relies on the fact that the menu items do not break the line
-         * TODO is it optimal?
-         */
-        [role='list'] > [role='listitem'] > button,
-        [role='list'] > [role='listitem'] > a {
-          white-space: nowrap;
-        }
-
-        /**
-        * TODO remove it. Use it now for testing More button feature
-        */
-        [role='listitem'] {
-          margin-right: 200px;
-        }
       `,
     ];
   }
@@ -179,7 +197,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
     this._menuItems = [];
     // /** @type {Boolean} */
     // this.searchDisabled = false;
-    this.breakpointMin = 1200; // force desktop
+    this.breakpointMin = 1068; // force desktop
     /** @type {string[]} */
     this.suggestions = [];
 
@@ -480,14 +498,10 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
    * @returns {import('lit').TemplateResult}
    */
   _menulevelTemplate(menuItemsForLevel, level, cfgForLevel, prevText = '') {
-    // Determine which items to render (visible or all)
-    let itemsToRender;
-    if (level === 1 && cfgForLevel.hasFullWidthFlyout) {
-      itemsToRender = this.showMoreButton ? this.visibleFirstLevelItems : menuItemsForLevel;
-      // itemsToRender = menuItemsForLevel;
-    } else {
-      itemsToRender = menuItemsForLevel;
-    }
+    const menuItemsToRender =
+      level === 1 && this.responsiveMode === 'desktop' && this.showMoreButton
+        ? this.visibleFirstLevelItems
+        : menuItemsForLevel;
 
     return html`<lion-menu-hybrid
       .config="${cfgForLevel.openableConfig || {}}"
@@ -500,7 +514,8 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
             <button data-close data-level="${level}">&lt; ${prevText}</button>
           </div>`
         : ''}
-      ${this._listItemsTemplate(itemsToRender, level)} ${this._renderMoreButton(level, cfgForLevel)}
+      ${this._listItemsTemplate(menuItemsToRender, level)}
+      ${this._renderMoreButton(level, cfgForLevel)}
     </lion-menu-hybrid>`;
   }
 }
