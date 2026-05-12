@@ -890,7 +890,6 @@ export class OverlayController extends EventTarget {
     }
 
     if (this.config.focusContentOnOpen) {
-      console.debug('contentNode add focus');
       this.contentNode.focus();
     }
 
@@ -1102,12 +1101,10 @@ export class OverlayController extends EventTarget {
     }
 
     if (phase === 'init' && this.config.focusContentOnOpen) {
-      console.debug('focusContentOnOpen add tabindex');
       this.contentNode?.setAttribute('tabindex', '-1');
     }
 
     if (phase === 'teardown' && this.config.focusContentOnOpen) {
-      console.debug('focusContentOnOpen remove');
       // TODO: capture initial attr, use Resettable mechanism of VisibilityToggleCtrl in whole Controller
       this.contentNode?.removeAttribute('tabindex');
     }

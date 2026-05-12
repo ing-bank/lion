@@ -47,8 +47,8 @@ export function runInteractiveListMixinSuite(customConfig = {}) {
     it('moves elements to a private [slot=list] for optimal DX and a11y', async () => {
       const el = await fixture(html`
         <${tag} name="foo">
-          <div role="menuitem" id="item1"></div>
-          <div role="menuitem" id="item2"></div>
+          <div role="menuitem" id="item1">Item 1</div>
+          <div role="menuitem" id="item2">Item 2</div>
         </${tag}>
       `);
 
@@ -64,8 +64,8 @@ export function runInteractiveListMixinSuite(customConfig = {}) {
       it('supports "activedescendant" pattern', async () => {
         const el = await fixture(html`
         <${tag} name="foo" ._activeMode="${'activedescendant'}">
-          <div role="menuitem" id="item1"></div>
-          <div role="menuitem" id="item2"></div>
+          <div role="menuitem" id="item1">Item 1</div>
+          <div role="menuitem" id="item2">Item 2</div>
         </${tag}>
       `);
         el.checkedIndex = 0;
@@ -81,11 +81,11 @@ export function runInteractiveListMixinSuite(customConfig = {}) {
       it('supports "roving-tabindex" pattern', async () => {
         const el = await fixture(html`
           <${tag} name="foo" ._activeMode="${'roving-tabindex'}">
-            <div role="menuitem" id="item1"></div>
-            <div role="menuitem" id="item2"></div>
+            <div role="menuitem" id="item1">Item 1</div>
+            <div role="menuitem" id="item2">Item 2</div>
           </${tag}>
         `);
-        
+
         el.activeIndex = 0;
         expect(el.listItems[0].getAttribute('tabindex')).to.equal('0');
         expect(el.listItems[1].getAttribute('tabindex')).to.equal('-1');

@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+/* eslint-disable import/no-extraneous-dependencies */
 import { LitElement } from 'lit';
 // import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { MultiLevelListMixin } from './MultiLevelListMixin.js';
@@ -179,14 +180,14 @@ export class LionMenu extends MultiLevelListMixin(LitElement) {
        */
       const closestGroup = item.closest('[role="group"]');
       const group = closestGroup && this.contains(closestGroup) ? closestGroup : this;
-      listItemsWithinGroup = this.listItems.filter(item => group.contains(item));
+      listItemsWithinGroup = this.listItems.filter(listItem => group.contains(listItem));
       multiple = role === 'menuitemcheckbox';
     }
 
     if (!multiple) {
       // Uncheck all
-      listItemsWithinGroup.forEach(item => {
-        setChecked(item, false);
+      listItemsWithinGroup.forEach(listItem => {
+        setChecked(listItem, false);
       });
       setChecked(this.listItems[index]);
     } else {

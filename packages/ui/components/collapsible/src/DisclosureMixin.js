@@ -1,5 +1,3 @@
-import { dedupeMixin } from '@open-wc/dedupe-mixin';
-
 /**
  * @typedef {import('../types/DisclosureMixinTypes.js').DisclosureHost} DisclosureHost
  * @typedef {import('../types/DisclosureMixinTypes.js').DisclosureMixin} DisclosureMixin

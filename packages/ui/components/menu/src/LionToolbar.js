@@ -47,14 +47,14 @@ export class LionToolbar extends LionMenu {
         }
 
         const group = closestGroup && this.contains(closestGroup) ? closestGroup : this;
-        listItemsWithinGroup = this.listItems.filter(item => group.contains(item));
+        listItemsWithinGroup = this.listItems.filter(listItem => group.contains(listItem));
         multiple = role === 'checkbox';
       }
 
       if (!multiple) {
         // Uncheck all
-        listItemsWithinGroup.forEach(item => {
-          setChecked(item, false);
+        listItemsWithinGroup.forEach(listItem => {
+          setChecked(listItem, false);
         });
         setChecked(this.listItems[index]);
       } else {

@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+/* eslint-disable import/no-extraneous-dependencies */
 import { html, css, LitElement } from 'lit';
 import { SlotMixin, DisabledMixin } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
@@ -6,8 +7,6 @@ import { uuid } from './utils/uuid.js';
 import { isInView } from './utils/isInView.js';
 import {
   isDisabled,
-  setDisabled,
-  toggleDisabled,
   isChecked,
   setChecked,
   toggleChecked,
@@ -227,6 +226,7 @@ const InteractiveListMixinImplementation = superclass =>
       return [...this._interactiveChildrenRoles, 'listitem', 'group'];
     }
 
+    // eslint-disable-next-line class-methods-use-this
     get _interactiveChildrenRoles() {
       return ['menuitem', 'menuitemcheckbox', 'menuitemradio', 'option', 'treeitem'];
     }
@@ -324,8 +324,8 @@ const InteractiveListMixinImplementation = superclass =>
 
       if (!this.multipleChoice) {
         // Uncheck all
-        this.listItems.forEach(item => {
-          setChecked(item, false);
+        this.listItems.forEach(listItem => {
+          setChecked(listItem, false);
         });
         setChecked(this.listItems[index]);
       } else {

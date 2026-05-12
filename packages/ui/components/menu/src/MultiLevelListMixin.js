@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { html } from 'lit';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // import { DisclosureMixin } from '@lion/ui/collapsible.js';
