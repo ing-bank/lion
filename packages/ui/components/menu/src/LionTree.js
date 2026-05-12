@@ -2,6 +2,7 @@
 import { LitElement } from 'lit';
 import { MultiLevelListMixin } from './MultiLevelListMixin.js';
 
+// @ts-ignore - class extension with mixin
 export class LionTree extends MultiLevelListMixin(LitElement) {
   constructor() {
     super();
@@ -14,6 +15,9 @@ export class LionTree extends MultiLevelListMixin(LitElement) {
     this.invokerInteraction = 'click';
   }
 
+  /**
+   * @param {*} changedProperties
+   */
   updated(changedProperties) {
     super.updated(changedProperties);
 
@@ -25,10 +29,15 @@ export class LionTree extends MultiLevelListMixin(LitElement) {
     }
   }
 
+  /**
+   * @param {*} newItems
+   */
   _initListItems(newItems) {
+    // @ts-ignore - parameter types
     super._initListItems(newItems);
 
     this.__setAriaLevelForListItems();
+    // @ts-ignore - forEach parameters
     newItems.forEach((item, index) => {
       item.setAttribute('aria-posinset', `${index + 1}`);
       item.setAttribute('aria-setsize', `${this.listItems.length}`);

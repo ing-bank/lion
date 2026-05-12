@@ -15,6 +15,10 @@ import {
   getValue,
 } from './utils/listItemInteractions.js';
 
+/**
+ * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
+ */
+
 // TODO: consider renaming to FocusGroupMixin
 
 // TODO: make all available in controller/directve (same logic with an elegent prop-to-host-mapping)
@@ -24,6 +28,7 @@ import {
  * @returns {Element|null}
  */
 function isFocusableElement(potentialFocusable) {
+  // @ts-ignore - returns Element or falsy value
   return (
     potentialFocusable &&
     (potentialFocusable.hasAttribute('tabindex') ||
@@ -223,6 +228,7 @@ const InteractiveListMixinImplementation = superclass =>
      */
     // eslint-disable-next-line class-methods-use-this
     get _childrenRoles() {
+      // @ts-ignore - string type in array of InteractiveListItemRole
       return [...this._interactiveChildrenRoles, 'listitem', 'group'];
     }
 
@@ -268,6 +274,8 @@ const InteractiveListMixinImplementation = superclass =>
           (isFocusableElement(prevActiveEl) ? prevActiveEl : prevActiveEl.firstElementChild);
       }
 
+      if (!focusableEl) return;
+
       // Update 'active mode'
       if (this._activeMode === 'activedescendant') {
         this._listNode.setAttribute('aria-activedescendant', focusableEl.id);
@@ -275,9 +283,11 @@ const InteractiveListMixinImplementation = superclass =>
         this._activeMode === 'roving-tabindex' ||
         this._activeMode === 'tabbable-disclosure'
       ) {
+        // @ts-ignore - Element extends HTMLElement for focus
         focusableEl.focus();
       }
 
+      // @ts-ignore - focusableEl is safely used as HTMLElement here
       if (!isInView(this._scrollTargetNode, focusableEl)) {
         focusableEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
@@ -451,6 +461,7 @@ const InteractiveListMixinImplementation = superclass =>
          */
         if (node.getAttribute('role') === 'group') {
           // console.debug('checking children of', node, node.children);
+          // @ts-ignore - HTMLCollection is iterable
           for (const child of node.children) {
             handleInteractiveListAdditionLevel(child, { newItems, level: level + 1 });
           }
@@ -461,6 +472,7 @@ const InteractiveListMixinImplementation = superclass =>
         const focusableChildren = Array.from(node.children).filter(c => isFocusableElement(c));
         if (focusableChildren.length) {
           for (const focusableChild of focusableChildren) {
+            // @ts-ignore - focusableChild is HTMLElement
             newItems.push(focusableChild);
           }
         } else {
@@ -474,6 +486,7 @@ const InteractiveListMixinImplementation = superclass =>
 
       // Move items to _listNode and add interactive node references (with [role]) to listItems
       nodes.forEach(node => {
+        // @ts-ignore - node type compatibility
         handleInteractiveListAdditionLevel(node, { newItems });
       });
 
@@ -626,10 +639,15 @@ const InteractiveListMixinImplementation = superclass =>
         this.__typedChars.push(key);
         // TODO: schedule in updated loop for perf
         const chars = this.__typedChars.join('');
-        const matchItem = this.listItems.find(item => this._matchCharsAgainstItem({ chars, item }));
+        const matchItem = this.listItems.find(item =>
+          this._matchCharsAgainstItem({ chars: [chars], item }),
+        );
+        // @ts-ignore - matchItem might be undefined
         this.activeIndex = this.listItems.indexOf(matchItem);
 
+        // @ts-ignore - __clearCharTimeout can be a function
         if (typeof this.__clearCharTimeout === 'function') {
+          // @ts-ignore
           this.__clearCharTimeout();
         }
         this.__clearCharTimeout = setTimeout(() => {
@@ -674,8 +692,11 @@ const InteractiveListMixinImplementation = superclass =>
      * @param {FocusEvent} ev
      */
     _onListFocusIn(ev) {
+      /** @type {HTMLElement} */
+      // @ts-ignore - target is EventTarget
       const { target } = ev;
       // const item = /** @type {HTMLElement} */ (target.closest('[role]'));
+      // @ts-ignore - target is HTMLElement
       const foundIndex = this.listItems.indexOf(target);
       // console.debug('focusin', target, foundIndex, this.listItems);
       const previousActiveIndex = this.activeIndex;
@@ -697,6 +718,7 @@ const InteractiveListMixinImplementation = superclass =>
     // eslint-disable-next-line class-methods-use-this, no-unused-vars
     _onListClick(ev) {
       /** @type {HTMLElement} */
+      // @ts-ignore - target is EventTarget
       const { target } = ev;
       const item = /** @type {HTMLElement} */ (target.closest('[role]')); // TODO: we might need a more specific contract
       const foundIndex = this.listItems.indexOf(item);

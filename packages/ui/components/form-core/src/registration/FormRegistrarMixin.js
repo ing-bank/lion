@@ -162,15 +162,21 @@ const FormRegistrarMixinImplementation = superclass =>
         }
 
         if (name.substr(-2) === '[]') {
+          // @ts-ignore - dynamic named access to form elements
           if (!Array.isArray(this.formElements[name])) {
+            // @ts-ignore
             this.formElements[name] = new FormControlsCollection();
           }
           if (indexToInsertAt > 0) {
+            // @ts-ignore
             this.formElements[name].splice(indexToInsertAt, 0, child);
           } else {
+            // @ts-ignore
             this.formElements[name].push(child);
           }
+          // @ts-ignore
         } else if (!this.formElements[name]) {
+          // @ts-ignore
           this.formElements[name] = child;
         } else {
           console.info('Error Node:', child); // eslint-disable-line no-console
@@ -194,12 +200,17 @@ const FormRegistrarMixinImplementation = superclass =>
       // 2. Handle name based object keys
       if (this._isFormOrFieldset) {
         const { name } = child; // FIXME: <-- ElementWithParentFormGroup should become LionFieldWithParentFormGroup so that "name" exists
+        // @ts-ignore - dynamic named access to form elements
         if (name.substr(-2) === '[]' && this.formElements[name]) {
+          // @ts-ignore
           const idx = this.formElements[name].indexOf(child);
           if (idx > -1) {
+            // @ts-ignore
             this.formElements[name].splice(idx, 1);
           }
+          // @ts-ignore
         } else if (this.formElements[name]) {
+          // @ts-ignore
           delete this.formElements[name];
         }
       }

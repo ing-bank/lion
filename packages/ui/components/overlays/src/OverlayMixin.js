@@ -300,10 +300,12 @@ export const OverlayMixinImplementation = superclass => {
     _setupOverlayCtrl() {
       if (this.#hasSetup) return;
 
+      const invokerNode = this._overlayInvokerNode;
+
       const config = {
         contentNode: this._overlayContentNode,
         contentWrapperNode: this._overlayContentWrapperNode,
-        invokerNode: this._overlayInvokerNode,
+        invokerNode: invokerNode && invokerNode instanceof HTMLElement ? invokerNode : undefined,
         referenceNode: this._overlayReferenceNode,
         backdropNode: this._overlayBackdropNode,
       };
