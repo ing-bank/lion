@@ -1,4 +1,5 @@
 /* eslint-disable max-classes-per-file */
+/* eslint-disable import/no-extraneous-dependencies */
 import { html } from 'lit';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
@@ -98,8 +99,6 @@ export class LionMenuOverlay extends OverlayWithListInvokerMixin(LionMenu) {
     if (parentList?.orientation !== 'horizontal') {
       placement = 'right-start';
     }
-
-    console.log('placement', placement);
 
     const menuConfig = {};
     // if (this._activeMode === 'activedescendant') {

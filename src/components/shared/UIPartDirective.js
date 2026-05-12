@@ -3,7 +3,7 @@ import { AsyncDirective } from 'lit/async-directive.js';
 /**
  * @typedef {import('./UIBaseElementTypes.js').TemplateContext} TemplateContext
  * @typedef {import('lit').ElementPart} ElementPart
- * 
+ *
  * @typedef {Object} PartDefinition
  * @property {boolean} [optional]
  * @property {string} role
@@ -31,9 +31,9 @@ export class UIPartDirective extends AsyncDirective {
   updateFunctions = {};
 
   /**
-   * 
-   * @param {ElementPart} part 
-   * @param {[TemplateContext, keyof UIPartDirective['parts'], any]} params 
+   *
+   * @param {ElementPart} part
+   * @param {[TemplateContext, keyof UIPartDirective['parts'], any]} params
    */
   update(part, [context, name, localContext]) {
     if (!Object.keys(this.parts).includes(name)) {
@@ -59,10 +59,10 @@ export class UIPartDirective extends AsyncDirective {
 
 /**
  * @template {typeof UIPartDirective} T
- * 
+ *
  * Creates a part directive function with values typed based on the part name and its valuesType definition.
  * Different parts can expect different value structures via their valuesType property.
- * 
+ *
  * @example
  * // Define a custom directive with typed parts:
  * class MyDirective extends UIPartDirective {
@@ -72,13 +72,13 @@ export class UIPartDirective extends AsyncDirective {
  *     menu: { required: false, role: 'menu', valuesType: { items: Array, onSelect: Function } }
  *   }
  * }
- * 
+ *
  * const part = createPartDirective(MyDirective, context);
  * // part('root') expects no values
  * // part('nav', { localData: 'yes' }) expects localData
  * // part('menu', { items: [...], onSelect: () => {} }) expects items and onSelect
  * html`<div ${part('root')}><nav ${part('nav', { localData: 'yes'})}></nav></div>`
- * 
+ *
  * @param {T} ctor - The directive constructor class
  * @param {TemplateContext} context - The template context
  * @returns {(name: keyof InstanceType<T>['parts'], localContext: any) => {_$litDirective$: T, values: [TemplateContext, keyof InstanceType<T>['parts'], any]}}
@@ -89,4 +89,4 @@ export function createPartDirective(ctor, context) {
     _$litDirective$: ctor,
     values: [context, name, localContext],
   });
-};
+}
