@@ -6,6 +6,7 @@ async function combineLocalizeImports(importPromises) {
   const combinedResult = localizeObjects[0];
   for (const localizeObject of localizeObjects.slice(1)) {
     Object.entries(localizeObject.default).forEach(([key, val]) => {
+      // @ts-ignore - dynamic property access
       combinedResult.default[key] = val;
     });
   }

@@ -8,6 +8,7 @@ import { isVisible } from './is-visible.js';
 import { sortByTabIndex } from './sort-by-tabindex.js';
 
 // IE11 supports matches as 'msMatchesSelector'
+/** @type {'matches' | 'msMatchesSelector'} */
 const matchesFunc = 'matches' in Element.prototype ? 'matches' : 'msMatchesSelector';
 
 /**

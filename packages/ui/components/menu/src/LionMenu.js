@@ -140,6 +140,7 @@ import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
  *   <div role="menuitem">Find all References</div>
  * </lion-menu>
  */
+// @ts-ignore - _listRole property type compatibility
 export class LionMenu extends MultiLevelListMixin(LitElement) {
   static get properties() {
     return {
@@ -160,6 +161,7 @@ export class LionMenu extends MultiLevelListMixin(LitElement) {
     const item = this.listItems[index];
     if (!item) return;
 
+    // @ts-ignore - InteractiveListItemRole type
     const role = /** @type {InteractiveListItemRole} */ (item.getAttribute('role'));
     let listItemsWithinGroup = this.listItems;
     let multiple = this.multipleChoice;

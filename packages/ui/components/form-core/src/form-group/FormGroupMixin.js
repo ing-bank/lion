@@ -355,11 +355,14 @@ const FormGroupMixinImplementation = /** @type {FormGroupMixin} */ (superclass =
       this.formElements._keys().forEach(name => {
         const elem = this.formElements[name];
         if (elem instanceof FormControlsCollection) {
+          // @ts-ignore - dynamic property access
           result[name] = elem.filter(el => _filterFn(el, property)).map(el => el[property]);
         } else if (_filterFn(elem, property)) {
           if (typeof elem._getFromAllFormElements === 'function') {
+            // @ts-ignore - dynamic property access
             result[name] = elem._getFromAllFormElements(property);
           } else {
+            // @ts-ignore - dynamic property access
             result[name] = elem[property];
           }
         }

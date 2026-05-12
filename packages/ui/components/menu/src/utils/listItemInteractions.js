@@ -4,14 +4,14 @@
  */
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement} item
  */
 export function isDisabled(item) {
   return item.hasAttribute('disabled') || item.getAttribute('aria-disabled') === 'true';
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement} item
  */
 export function setDisabled(item, unset = false) {
   if (unset) {
@@ -24,21 +24,21 @@ export function setDisabled(item, unset = false) {
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement} item
  */
 export function toggleDisabled(item) {
   setDisabled(item, isDisabled(item));
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement} item
  */
 export function isChecked(item) {
   return item.hasAttribute('checked') || item.getAttribute('aria-selected') === 'true';
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement} item
  * @param {boolean} [shouldSet=false]
  */
 export function setChecked(item, shouldSet = true) {
@@ -53,21 +53,21 @@ export function setChecked(item, shouldSet = true) {
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement} item
  */
 export function toggleChecked(item) {
   setChecked(item, !isChecked(item));
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement} item
  */
 export function isActive(item) {
   return item.hasAttribute('active');
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement} item
  */
 export function setActive(item, unset = false) {
   if (unset) {
@@ -77,6 +77,9 @@ export function setActive(item, unset = false) {
   }
 }
 
+/**
+ * @param {HTMLElement} item
+ */
 function getDirectTextContent(item) {
   return Array.from(item.childNodes)
     .filter(n => n.nodeName === '#text')
@@ -86,11 +89,13 @@ function getDirectTextContent(item) {
 }
 
 /**
- * @param {HTMLElement|LionOption} item
+ * @param {HTMLElement} item
  */
 export function getValue(item) {
   return (
+    // @ts-ignore - choiceValue is a custom property
     item.choiceValue ||
+    // @ts-ignore - value might not exist on all HTMLElements
     item.value ||
     item.getAttribute('value') ||
     item.getAttribute('data-value') ||
