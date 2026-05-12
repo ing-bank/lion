@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { LitElement, html, css } from 'lit';
 
 export class LionSpinbutton extends LitElement {

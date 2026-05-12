@@ -97,4 +97,3 @@ export function getValue(item) {
     getDirectTextContent(item)
   );
 }
-
