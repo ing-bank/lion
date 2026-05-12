@@ -149,92 +149,89 @@ export const tree = () => html`
 
 ## Disclosure menu
 
-See https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-navigation.html
+See <https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-navigation.html>
 
 ```js preview-story
 export const disclosureMenu = () => html`
- <nav aria-label="Mythical University">
-   <lion-menu bar ._activeMode="${'tabbable-disclosure'}">
-    <div role="listitem">
-      <button data-invoker>About</button>
-      <lion-menu-overlay>
-        <div role="listitem">
-          <a href="#mythical-page-content">Overview</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Administration</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Facts</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Campus Tours</a>
-        </div>
-      </lion-menu-overlay>
-    </div>
-    <div role="listitem">
-      <button data-invoker>
-        Admissions
-      </button>
-      <lion-menu-overlay id="id_admissions_menu">
-        <div role="listitem">
-          <a href="#mythical-page-content">Apply</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Tuition</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Sign Up</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Visit</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Photo Tour</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Connect</a>
-        </div>
-      </lion-menu-overlay>
-    </div>
-    <div role="listitem">
-      <button data-invoker>Academics</button>
-      <lion-menu-overlay>
-        <div role="listitem">
-          <a href="#mythical-page-content">Colleges & Schools</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Programs of Study</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Honors Programs</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Online Courses</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Course Explorer</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Register for Class</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Academic Calendar</a>
-        </div>
-        <div role="listitem">
-          <a href="#mythical-page-content">Transcripts</a>
-        </div>
-      </lion-menu-overlay>
-    </div>
-  </lion-menu>
-</nav>
+  <nav aria-label="Mythical University">
+    <lion-menu bar ._activeMode="${'tabbable-disclosure'}">
+      <div role="listitem">
+        <button data-invoker>About</button>
+        <lion-menu-overlay>
+          <div role="listitem">
+            <a href="#mythical-page-content">Overview</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Administration</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Facts</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Campus Tours</a>
+          </div>
+        </lion-menu-overlay>
+      </div>
+      <div role="listitem">
+        <button data-invoker>Admissions</button>
+        <lion-menu-overlay id="id_admissions_menu">
+          <div role="listitem">
+            <a href="#mythical-page-content">Apply</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Tuition</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Sign Up</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Visit</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Photo Tour</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Connect</a>
+          </div>
+        </lion-menu-overlay>
+      </div>
+      <div role="listitem">
+        <button data-invoker>Academics</button>
+        <lion-menu-overlay>
+          <div role="listitem">
+            <a href="#mythical-page-content">Colleges & Schools</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Programs of Study</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Honors Programs</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Online Courses</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Course Explorer</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Register for Class</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Academic Calendar</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Transcripts</a>
+          </div>
+        </lion-menu-overlay>
+      </div>
+    </lion-menu>
+  </nav>
 `;
 ```
 
-
 ## Disclosure menu with anchors on L1
 
-See https://codepen.io/aardrian/pen/abyXxGw
+See <https://codepen.io/aardrian/pen/abyXxGw>
 
 ```js preview-story
 export const disclosureMenuWithAnchorsOnL1 = () => html`
@@ -318,7 +315,6 @@ export const disclosureMenuWithAnchorsOnL1 = () => html`
 </nav>
 `;
 ```
-
 
 ## Toolbar
 

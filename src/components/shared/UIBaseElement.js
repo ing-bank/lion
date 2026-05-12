@@ -271,9 +271,6 @@ const UIBaseElementMixinImplementation = superclass =>
       // Note: we don't expose host here, to keep the contract minimal and predictable.
       // All data exposed to the template should be explicitly provided via templateContext.
 
-
-
-
       return /** @type {TemplateContext} */ ({
         templates: this.templates,
         data: {},
@@ -442,11 +439,11 @@ const UIBaseElementMixinImplementation = superclass =>
       }
     }
 
-  /**
-   * @type {typeof UIPartDirective}
-   */
-  // @ts-ignore
-  _partDirective;
+    /**
+     * @type {typeof UIPartDirective}
+     */
+    // @ts-ignore
+    _partDirective;
 
     provideDesign(provider) {
       const ctor = this.constructor;
