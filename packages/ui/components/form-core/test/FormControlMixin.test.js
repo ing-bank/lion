@@ -153,6 +153,7 @@ describe('FormControlMixin', () => {
         el.shadowRoot?.querySelector('.form-field__label'),
       );
       Object.entries(expectedValues).forEach(([key, val]) => {
+        // @ts-ignore - dynamic style property access
         expect(labelStyle[key]).to.equal(val);
       });
     });

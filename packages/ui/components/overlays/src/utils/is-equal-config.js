@@ -19,6 +19,9 @@ export function isEqualConfig(a, b) {
   if (aProps.length !== bProps.length) {
     return false;
   }
-  const isEqual = /** @param {string} prop */ prop => isEqualConfig(a[prop], b[prop]);
+  const isEqual =
+    /** @param {string} prop */
+    // @ts-ignore - dynamic property access
+    prop => isEqualConfig(a[prop], b[prop]);
   return aProps.every(isEqual);
 }
