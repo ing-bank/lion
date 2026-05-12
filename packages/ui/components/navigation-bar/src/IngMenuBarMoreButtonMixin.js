@@ -15,6 +15,7 @@ import { html } from 'lit';
  * '.navigation-bar__container' - max width
  * '.more-button-wrapper' - defined in now in LionNavigationBar. TODO move it here as a function
  * . desktop vs mobile. Do not run any from this file on 'mobile'
+ * . this.breakpointMin = 1200; // force desktop -> changed in LionNavigationBar
  */
 
 /**

@@ -467,6 +467,12 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
     );
   }
 
+  _renderMoreButton(level, cfgForLevel) {
+    return level === 1 && cfgForLevel.hasFullWidthFlyout && this.showMoreButton
+      ? this._renderMoreButtonWrapper(this._listItemsTemplate(this.hiddenFirstLevelItems, level))
+      : '';
+  }
+
   /**
    * @param {MenuItem[]} menuItemsForLevel
    * @param {number} level
@@ -494,10 +500,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
             <button data-close data-level="${level}">&lt; ${prevText}</button>
           </div>`
         : ''}
-      ${this._listItemsTemplate(itemsToRender, level)}
-      ${level === 1 && cfgForLevel.hasFullWidthFlyout && this.showMoreButton
-        ? this._renderMoreButtonWrapper(this._listItemsTemplate(this.hiddenFirstLevelItems, level))
-        : ''}
+      ${this._listItemsTemplate(itemsToRender, level)} ${this._renderMoreButton(level, cfgForLevel)}
     </lion-menu-hybrid>`;
   }
 }
