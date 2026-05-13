@@ -35,6 +35,7 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
      * ===================== */
     static get properties() {
       return {
+        allFirstLevelItems: { type: Array, state: true },
         visibleFirstLevelItems: { type: Array },
         hiddenFirstLevelItems: { type: Array },
         showMoreButton: { type: Boolean },
@@ -43,6 +44,10 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
 
     constructor() {
       super();
+      /**
+       * All first level items
+       */
+      this.allFirstLevelItems = [];
       /**
        * The first level items before More button
        */
@@ -84,8 +89,8 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
     }
 
     updated(changedProperties) {
-      // Check if menu property changed
-      if (changedProperties.has('menu')) {
+      // Check if allFirstLevelItems property changed
+      if (changedProperties.has('allFirstLevelItems')) {
         this.calculateVisibleItems();
       }
     }
@@ -115,13 +120,13 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
      * 5. Remove items from the end one by one (excluding More button) until remaining items + More button fit
      */
     calculateVisibleItems() {
-      if (!this.menu || this.menu.length === 0) {
+      if (!this.allFirstLevelItems || this.allFirstLevelItems.length === 0) {
         return;
       }
 
       // Phase 1: Render all items without More button to measure them
       this.showMoreButton = false;
-      this.visibleFirstLevelItems = this.menu || [];
+      this.visibleFirstLevelItems = this.allFirstLevelItems || [];
 
       // Wait for the render to complete
       this.updateComplete.then(() => {
@@ -154,7 +159,7 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
 
       if (lastItemRect.right <= containerRight) {
         // All items fit - render only the original items without More button
-        this.visibleFirstLevelItems = this.menu || [];
+        this.visibleFirstLevelItems = this.allFirstLevelItems || [];
         this.hiddenFirstLevelItems = [];
         this.showMoreButton = false;
         return;
@@ -192,18 +197,18 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
       // Check if current items + More button fit
       if (simulatedMoreRight <= containerRight) {
         // Items + More button now fit!
-        const visibleCount = this.menu.length - removedCount;
-        this.visibleFirstLevelItems = this.menu.slice(0, visibleCount);
-        this.hiddenFirstLevelItems = this.menu.slice(visibleCount);
+        const visibleCount = this.allFirstLevelItems.length - removedCount;
+        this.visibleFirstLevelItems = this.allFirstLevelItems.slice(0, visibleCount);
+        this.hiddenFirstLevelItems = this.allFirstLevelItems.slice(visibleCount);
         this.showMoreButton = true;
         return;
       }
 
       // Need to remove another item
-      if (removedCount < this.menu.length - 1) {
-        const visibleCount = this.menu.length - removedCount - 1;
-        this.visibleFirstLevelItems = this.menu.slice(0, visibleCount);
-        this.hiddenFirstLevelItems = this.menu.slice(visibleCount);
+      if (removedCount < this.allFirstLevelItems.length - 1) {
+        const visibleCount = this.allFirstLevelItems.length - removedCount - 1;
+        this.visibleFirstLevelItems = this.allFirstLevelItems.slice(0, visibleCount);
+        this.hiddenFirstLevelItems = this.allFirstLevelItems.slice(visibleCount);
         this.showMoreButton = true;
 
         this.updateComplete.then(() => {
@@ -212,7 +217,7 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
       } else {
         // Only More button with all items hidden
         this.visibleFirstLevelItems = [];
-        this.hiddenFirstLevelItems = this.menu;
+        this.hiddenFirstLevelItems = this.allFirstLevelItems;
         this.showMoreButton = true;
       }
     }

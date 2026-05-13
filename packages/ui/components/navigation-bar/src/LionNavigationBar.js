@@ -373,7 +373,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
       /**
        * @override IngMenuBarMoreButtonMixin
        */
-      this.menu = this.menuItems;
+      this.allFirstLevelItems = this.menuItems;
     }
     if (changedProperties.has('responsiveMode')) {
       this._levelCfg = LionNavigationBar.#getLevelCfg(this.responsiveMode);
