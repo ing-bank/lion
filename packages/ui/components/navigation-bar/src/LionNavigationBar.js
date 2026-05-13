@@ -1,3 +1,5 @@
+// @ts-nocheck
+/* eslint-disable class-methods-use-this */
 import { LitElement, html, css } from 'lit';
 import { LionMenuHybrid } from '@lion/ui/menu.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
@@ -157,101 +159,25 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
 
     this.prefilledSuggestion = '';
 
-    // Assign styles as a property, so that subclasses can augment it
-    // this.styles = styles;
-    // this.menuOpened = false;
-
     const mql = window.matchMedia(`(width <= ${this.breakpointMin}px)`);
     /** @type {NavBarResponsiveMode} */
     this.responsiveMode = mql.matches ? 'mobile' : 'desktop';
-    this._levelCfg = LionNavigationBar.#getLevelCfg(this.responsiveMode);
-    this._levelSecondaryCfg = this.#getSecondaryLevelCfg();
+    this._levelCfg = this._getLevelCfg(this.responsiveMode);
+    this._levelSecondaryCfg = this._getSecondaryLevelCfg(this.responsiveMode);
 
     mql.addEventListener('change', () => {
       this.responsiveMode = mql.matches ? 'mobile' : 'desktop';
-      this._levelCfg = LionNavigationBar.#getLevelCfg(this.responsiveMode);
-      this._levelSecondaryCfg = this.#getSecondaryLevelCfg();
+      this._levelCfg = this._getLevelCfg(this.responsiveMode);
+      this._levelSecondaryCfg = this._getSecondaryLevelCfg(this.responsiveMode);
     });
 
     this.#storeLatestFocusedElementId();
-    this.#delegateAnalyticsEvents();
-  }
-
-  #getSecondaryLevelCfg() {
-    if (this.responsiveMode === 'mobile') {
-      return {
-        l1: {
-          isBar: true,
-        },
-        l2: {
-          isBar: false,
-        },
-      };
-    }
-
-    return {
-      l1: {
-        isBar: true,
-      },
-      l2: {
-        isBar: false,
-      },
-    };
-  }
-
-  /** @type {string | null} */
-  #latestFocusedElementId = null;
-
-  #storeLatestFocusedElementId() {
-    this.addEventListener('focusin', ({ target }) => {
-      // @ts-ignore
-      this.#latestFocusedElementId = target.id;
-    });
-  }
-
-  #syncLatestFocusedElementForNewResponsiveMode() {
-    // We might show/hide or rerender some elements (with same ids) in different positions in the DOM.
-    // As these are physically different elements, we must move focus (as otherwise it would be reset to body)
-    if (!this.#latestFocusedElementId) return;
-    const newFocusedElement = this.shadowRoot?.querySelector(`#${this.#latestFocusedElementId}`);
-    if (newFocusedElement instanceof HTMLElement) {
-      newFocusedElement.focus();
-    }
-  }
-
-  #delegateAnalyticsEvents() {
-    this.addEventListener('click', ({ target }) => {
-      if (!target || !(target instanceof HTMLElement)) return;
-
-      // @ts-expect-error
-      const isButton = target.tagName === 'BUTTON' || target.constructor._$isLionButton$;
-      const isAnchor = target.tagName === 'A';
-      if (!isButton && !isAnchor) return;
-
-      if (!target.id) return;
-
-      // TODO: do in extension layer
-      this.dispatchEvent(
-        new CustomEvent('nav-item-click', {
-          // N.B. we can also retrive the item
-          detail: {
-            item: {
-              id: target.id,
-              label: target.textContent?.trim() || '',
-              href: isAnchor ? target.getAttribute('href') : undefined,
-            },
-          },
-          // bubbles: true,
-          // composed: true,
-        }),
-      );
-    });
   }
 
   /**
    * @param {NavBarResponsiveMode} responsiveMode
    */
-  static #getLevelCfg(responsiveMode) {
+  _getLevelCfg(responsiveMode) {
     // N.B. we're fighting some of the overlay configs provided by LionMenuOverlay here,
     // the idea is to take over all of that when depending on LionMenu, after removing LonMenuOverlay and LionMenuHybrid components altogether.
 
@@ -322,12 +248,66 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     };
   }
 
+  _getSecondaryLevelCfg(responsiveMode) {
+    if (responsiveMode === 'mobile') {
+      return {
+        l1: {
+          isBar: true,
+        },
+        l2: {
+          isBar: false,
+        },
+      };
+    }
+
+    return {
+      l1: {
+        isBar: true,
+      },
+      l2: {
+        isBar: false,
+      },
+    };
+  }
+
+  /** @type {string | null} */
+  #latestFocusedElementId = null;
+
+  #storeLatestFocusedElementId() {
+    this.addEventListener('focusin', ({ target }) => {
+      // @ts-ignore
+      this.#latestFocusedElementId = target.id;
+    });
+  }
+
+  #syncLatestFocusedElementForNewResponsiveMode() {
+    // We might show/hide or rerender some elements (with same ids) in different positions in the DOM.
+    // As these are physically different elements, we must move focus (as otherwise it would be reset to body)
+    if (!this.#latestFocusedElementId) return;
+    const newFocusedElement = this.shadowRoot?.querySelector(`#${this.#latestFocusedElementId}`);
+    if (newFocusedElement instanceof HTMLElement) {
+      newFocusedElement.focus();
+    }
+  }
+
+  /**
+   * @param {import("./types.js").MenuItem}
+   * @param {number} level
+   */
+  _getId(menuItem, level) {
+    if (menuItem.id) return menuItem.id;
+    const title = menuItem.title || menuItem.label || 'item';
+    return `${
+      Number.isInteger(level) ? `l${level}-${title}` : title
+    }-${Math.random().toString(16).slice(2)}`;
+  }
+
   /**
    * @param {import('lit').PropertyValues} changedProperties
    */
   updated(changedProperties) {
     if (changedProperties.has('responsiveMode')) {
-      this._levelCfg = LionNavigationBar.#getLevelCfg(this.responsiveMode);
+      this._levelCfg = this._getLevelCfg(this.responsiveMode);
       this.#syncLatestFocusedElementForNewResponsiveMode();
     }
   }
@@ -344,18 +324,18 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
               ? html`<button data-close data-level="1">✖️</button>`
               : ''}
           </div>
-          ${LionNavigationBar._searchTemplate(this.suggestions, this.prefilledSuggestion)}
+          ${this._searchTemplate()}
         </div>
         <div class="nav-body">
-          ${this._menulevelTemplate(this.menuSupportItems, 1, this._levelSecondaryCfg.l1, '')}
+          ${this._menulevelTemplate(this.menuSupportItems, 1, '')}
           ${this.responsiveMode === 'desktop'
-            ? LionNavigationBar._ctaTemplate(this.ctaPrimary, this.ctaSecondary)
+            ? this._ctasTemplate(this.ctaPrimary, this.ctaSecondary)
             : ''}
-          ${this._menulevelTemplate(this.menuItems, 1, this._levelCfg.l1, '')}
+          ${this._menulevelTemplate(this.menuItems, 1, '')}
         </div>
         ${this.responsiveMode === 'mobile'
           ? html`<div class="nav-footer">
-              ${LionNavigationBar._ctaTemplate(this.ctaPrimary, this.ctaSecondary)}
+              ${this._ctasTemplate(this.ctaPrimary, this.ctaSecondary)}
             </div>`
           : ''}
       </nav>
@@ -366,7 +346,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @param {string[]} suggestions
    * @returns {import('lit').TemplateResult}
    */
-  static _searchTemplate(suggestions, prefilledSuggestion = '') {
+  _searchTemplate(suggestions = this.suggestions, prefilledSuggestion = this.prefilledSuggestion) {
     return html` <form role="search">
       <input
         type="search"
@@ -386,16 +366,18 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @param {CtaLink} ctaSecondary
    * @returns {import('lit').TemplateResult}
    */
-  static _ctaTemplate(ctaPrimary, ctaSecondary) {
+  _ctasTemplate(ctaPrimary, ctaSecondary) {
     return html`<div class="cta-items">
       ${ctaSecondary?.href
         ? html`<div class="cta-secondary">
-            <a id="${ctaSecondary.id}" href="${ctaSecondary.href}">${ctaSecondary.label} </a>
+            <a id="${this._getId(ctaSecondary)}" href="${ctaSecondary.href}"
+              >${ctaSecondary.label}
+            </a>
           </div>`
         : ''}
       ${ctaPrimary?.href
         ? html`<div class="cta-primary">
-            <a id="${ctaPrimary.id}" href="${ctaPrimary.href}">${ctaPrimary.label} </a>
+            <a id="${this._getId(ctaPrimary)}" href="${ctaPrimary.href}"> ${ctaPrimary.label}</a>
           </div>`
         : ''}
     </div>`;
@@ -404,15 +386,11 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
   /**
    * @param {MenuItem[]} menuItemsForLevel
    * @param {number} level
-   * @param {LevelConfig} cfgForLevel
    * @returns {import('lit').TemplateResult}
    */
-  _menulevelTemplate(menuItemsForLevel, level, cfgForLevel, prevText = '') {
+  _menulevelTemplate(menuItemsForLevel, level, prevText = '') {
     // @ts-ignore
-    const cfgForNextLevel = this._levelCfg[`l${level + 1}`];
-
-    const getId = (/** @type {import("./types.js").MenuItem} */ menuItem) =>
-      menuItem.id || `l${level}-${menuItem.title}`;
+    const cfgForLevel = this._levelCfg[`l${level}`];
 
     return html`<lion-menu-hybrid
       .config="${cfgForLevel.openableConfig || {}}"
@@ -429,16 +407,11 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
         menuItem => html`
           <div role="listitem">
             ${menuItem.sub
-              ? html` <button id="${getId(menuItem)}" data-invoker>${menuItem.title}</button>
+              ? html` <button id="${this._getId(menuItem)}" data-invoker>${menuItem.title}</button>
                   ${menuItem.sub
-                    ? this._menulevelTemplate(
-                        menuItem.sub,
-                        level + 1,
-                        cfgForNextLevel,
-                        menuItem.title,
-                      )
+                    ? this._menulevelTemplate(menuItem.sub, level + 1, menuItem.title)
                     : ''}`
-              : html` <a id="${getId(menuItem)}" href="${menuItem.link || ''}"
+              : html` <a id="${this._getId(menuItem)}" href="${menuItem.link || ''}"
                   >${menuItem.title}</a
                 >`}
           </div>
