@@ -1,10 +1,6 @@
 {
   "name": "@lion/ui",
-<<<<<<< HEAD
   "version": "0.17.1",
-=======
-  "version": "0.17.0-menu-system.0",
->>>>>>> 603c3313e (feat: prepare menus prerelease)
   "description": "A package of extendable web components",
   "license": "MIT",
   "author": "ing-bank",
