@@ -2298,6 +2298,7 @@ describe('OverlayController', () => {
     });
 
     it('should run with scroll prevention', async () => {
+      await overlayControllerPreventsScroll.hide();
       await overlayControllerPreventsScroll.show();
 
       expect(

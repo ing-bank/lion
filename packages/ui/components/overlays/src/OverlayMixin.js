@@ -78,6 +78,7 @@ export const OverlayMixinImplementation = superclass => {
 
     /** @param {OverlayConfig} value */
     set config(value) {
+      // TODO: built-in in overlayCtrl now... delete here
       const shouldUpdate = !isEqualConfig(this.config, value);
 
       if (this._overlayCtrl && shouldUpdate) {
