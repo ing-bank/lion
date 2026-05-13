@@ -112,4 +112,10 @@ export interface OverlayConfig {
    * or it depends on the context (a top level menu is not openable (unless it's a context menu), its children menus are).
    */
   isOpenable?: boolean;
+
+  /**
+   * By default, an error is thrown when contentNode is not connected to the DOM.
+   * This allows to prepare nodes and later connect them to dom.
+   */
+  requireConnectedNodes?: boolean;
 }
