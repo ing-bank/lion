@@ -193,10 +193,6 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
      */
     // @ts-ignore
     this.ctaSecondary = {};
-    /** @type {MenuItem[]} */
-    this._menuItems = [];
-    // /** @type {Boolean} */
-    // this.searchDisabled = false;
     this.breakpointMin = 1068; // force desktop
     /** @type {string[]} */
     this.suggestions = [];
@@ -221,18 +217,6 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
 
     this.#storeLatestFocusedElementId();
     this.#delegateAnalyticsEvents();
-  }
-
-  get menuItems() {
-    return this._menuItems;
-  }
-
-  set menuItems(value) {
-    this._menuItems = value;
-    /**
-     * @override IngMenuBarMoreButtonMixin
-     */
-    this.menu = this._menuItems;
   }
 
   #getSecondaryLevelCfg() {
@@ -384,6 +368,13 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
    * @param {import('lit').PropertyValues} changedProperties
    */
   updated(changedProperties) {
+    super.updated(changedProperties);
+    if (changedProperties.has('menuItems')) {
+      /**
+       * @override IngMenuBarMoreButtonMixin
+       */
+      this.menu = this.menuItems;
+    }
     if (changedProperties.has('responsiveMode')) {
       this._levelCfg = LionNavigationBar.#getLevelCfg(this.responsiveMode);
       this.#syncLatestFocusedElementForNewResponsiveMode();
