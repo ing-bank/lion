@@ -163,6 +163,7 @@ const normalizeExportMap = (exports, ignoredExportMapKeys = []) => {
   return Object.entries(exports || {})
     .filter(([exportKey]) => !ignoredExportMapKeys.includes(exportKey))
     .reduce((accumulator, [key, value]) => {
+      // @ts-ignore
       accumulator[removeFirstStar(key)] = removeFirstStar(stringifyExportValue(value));
       return accumulator;
     }, {});
