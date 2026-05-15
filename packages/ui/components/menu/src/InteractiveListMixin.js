@@ -156,13 +156,13 @@ const InteractiveListMixinImplementation = superclass =>
 
     static get properties() {
       return {
-        // TODO: align with name of open-ui
+        // TODO: align with name of open-ui => "inline|block" in focusgroup
         orientation: { type: String, reflect: true },
-        // TODO: align with name of platform? (multiple)
+        // TODO: align with name of platform => ("multiple" in select, selection not part of focusgroup)
         multipleChoice: { type: Boolean, attribute: 'multiple-choice' },
         // TODO: align with name of open-ui
         selectionFollowsFocus: { type: Boolean, attribute: 'selection-follows-focus' },
-        // TODO: align with name of open-ui
+        // TODO: align with name of open-ui => "wrap" in focsugroup
         rotateKeyboardNavigation: { type: Boolean, attribute: 'rotate-keyboard-navigation' },
         // TODO: align with name of open-ui
         noPreselect: { type: Boolean, attribute: 'no-preselect' },
