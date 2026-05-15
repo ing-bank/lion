@@ -88,24 +88,37 @@ describe('oxcTraverse', () => {
          * @param {any} path
          */
         ImportDeclaration: {
+<<<<<<< HEAD
           /**
            * @param {any} path
            */
+=======
+          // @ts-expect-error
+>>>>>>> 0ebbbd38a (fix(providence-analytics): make compatible with newer oxc-parser)
           enter(path) {
+            // @ts-expect-error
             visitedPaths.push({ path, phase: 'enter' });
           },
+<<<<<<< HEAD
           /**
            * @param {any} path
            */
+=======
+          // @ts-expect-error
+>>>>>>> 0ebbbd38a (fix(providence-analytics): make compatible with newer oxc-parser)
           exit(path) {
+            // @ts-expect-error
             visitedPaths.push({ path, phase: 'exit' });
           },
         },
       };
       oxcTraverse(oxcAst, visitor);
 
+      // @ts-expect-error
       expect(visitedPaths[0].path).to.equal(visitedPaths[1].path);
+      // @ts-expect-error
       expect(visitedPaths[0].phase).to.equal('enter');
+      // @ts-expect-error
       expect(visitedPaths[1].phase).to.equal('exit');
     });
 
@@ -126,6 +139,7 @@ describe('oxcTraverse', () => {
       oxcTraverse(oxcAst, visitor);
 
       // TODO: also add case for Script
+      // @ts-expect-error
       expect(rootPath.node.type).to.equal('Program');
     });
 
@@ -176,6 +190,7 @@ describe('oxcTraverse', () => {
         };
         oxcTraverse(oxcAst, visitor, { needsAdvancedPaths: true });
 
+<<<<<<< HEAD
         expect(declaratorPaths[0].scope?.id).to.equal(0);
         expect(declaratorPaths[1].scope?.id).to.equal(1);
         expect(declaratorPaths[2].scope?.id).to.equal(2);
@@ -215,6 +230,37 @@ describe('oxcTraverse', () => {
             `Expected scope bindings to be defined in ${declaratorPaths[2].node.id.name}`,
           );
         }
+=======
+        // @ts-expect-error
+        expect(declaratorPaths[0].scope.id).to.equal(0);
+        // @ts-expect-error
+        expect(declaratorPaths[1].scope.id).to.equal(1);
+        // @ts-expect-error
+        expect(declaratorPaths[2].scope.id).to.equal(2);
+
+        expect(nameOf(declaratorPaths[0].node.id)).to.equal('globalScope');
+        // @ts-expect-error
+        expect(Object.keys(declaratorPaths[0].scope.bindings)).to.deep.equal([
+          'globalScope',
+          'alsoGlobalScope',
+        ]);
+        // 0 and 3 are the same scope
+        expect(declaratorPaths[0].scope).to.equal(declaratorPaths[3].scope);
+        // Scope bindings refer to Declarator nodes
+        // @ts-expect-error
+        expect(declaratorPaths[0].scope.bindings.globalScope.path.node).to.equal(
+          declaratorPaths[0].node,
+        );
+        // @ts-expect-error
+        expect(declaratorPaths[0].scope.bindings.alsoGlobalScope.path.node).to.equal(
+          declaratorPaths[3].node,
+        );
+
+        // @ts-expect-error
+        expect(Object.keys(declaratorPaths[1].scope.bindings)).to.deep.equal(['middleScope']);
+        // @ts-expect-error
+        expect(Object.keys(declaratorPaths[2].scope.bindings)).to.deep.equal(['deepestScope']);
+>>>>>>> 0ebbbd38a (fix(providence-analytics): make compatible with newer oxc-parser)
       });
 
       it('creates scopes for nested FunctionDeclaration', async () => {
@@ -267,7 +313,13 @@ describe('oxcTraverse', () => {
           },
         };
         oxcTraverse(oxcAst, visitor, { needsAdvancedPaths: true });
+<<<<<<< HEAD
         expect(declaratorPaths[0].scope?.id).to.equal(2);
+=======
+
+        // @ts-expect-error
+        expect(declaratorPaths[0].scope.id).to.equal(2);
+>>>>>>> 0ebbbd38a (fix(providence-analytics): make compatible with newer oxc-parser)
       });
 
       it('creates scopes SwitchStatement', async () => {
@@ -292,8 +344,15 @@ describe('oxcTraverse', () => {
 
         expect(nameOf(declaratorPaths[0].node.id)).to.equal('myCases');
         expect(nameOf(declaratorPaths[1].node.id)).to.equal('x');
+<<<<<<< HEAD
         expect(declaratorPaths[0].scope?.id).to.equal(0);
         expect(declaratorPaths[1].scope?.id).to.equal(1);
+=======
+        // @ts-expect-error
+        expect(declaratorPaths[0].scope.id).to.equal(0);
+        // @ts-expect-error
+        expect(declaratorPaths[1].scope.id).to.equal(1);
+>>>>>>> 0ebbbd38a (fix(providence-analytics): make compatible with newer oxc-parser)
       });
 
       it('creates scopes for ObjectExpression', async () => {
@@ -370,6 +429,7 @@ describe('oxcTraverse', () => {
         };
         oxcTraverse(oxcAst, visitor, { needsAdvancedPaths: true });
 
+<<<<<<< HEAD
         if (declaratorPaths[0].scope?.bindings) {
           expect(Object.keys(declaratorPaths[0].scope?.bindings)).to.deep.equal([
             'globalScope',
@@ -387,6 +447,20 @@ describe('oxcTraverse', () => {
             `Expected scope bindings to be defined in ${declaratorPaths[0].node.id.name}`,
           );
         }
+=======
+        // @ts-expect-error
+        expect(Object.keys(declaratorPaths[0].scope?.bindings)).to.deep.equal([
+          'globalScope',
+          'alsoGlobalScope',
+        ]);
+        // Scope bindings refer to Declarator nodes
+        expect(declaratorPaths[0].scope?.bindings.globalScope.path.node).to.equal(
+          declaratorPaths[0].node,
+        );
+        expect(declaratorPaths[0].scope?.bindings.alsoGlobalScope.path.node).to.equal(
+          declaratorPaths[3].node,
+        );
+>>>>>>> 0ebbbd38a (fix(providence-analytics): make compatible with newer oxc-parser)
       });
 
       it('binds vars to function scope', async () => {
@@ -410,6 +484,7 @@ describe('oxcTraverse', () => {
         };
         oxcTraverse(oxcAst, visitor, { needsAdvancedPaths: true });
 
+<<<<<<< HEAD
         if (declaratorPaths[0].scope?.bindings) {
           expect(Object.keys(declaratorPaths[0].scope?.bindings)).to.deep.equal([
             'globalScope',
@@ -434,6 +509,17 @@ describe('oxcTraverse', () => {
             `Expected scope bindings to be defined in ${declaratorPaths[2].node.id.name}`,
           );
         }
+=======
+        // @ts-expect-error
+        expect(Object.keys(declaratorPaths[0].scope?.bindings)).to.deep.equal([
+          'globalScope',
+          'stillGlobalScope',
+        ]);
+        // @ts-expect-error
+        expect(Object.keys(declaratorPaths[1].scope?.bindings)).to.deep.equal(['middleScope']);
+        // @ts-expect-error
+        expect(Object.keys(declaratorPaths[2].scope?.bindings)).to.deep.equal(['insideFnScope']);
+>>>>>>> 0ebbbd38a (fix(providence-analytics): make compatible with newer oxc-parser)
       });
     });
 
@@ -467,7 +553,13 @@ describe('oxcTraverse', () => {
       const swcScopes = [];
       oxcTraverse(oxcAst, {
         enter({ scope }) {
+<<<<<<< HEAD
           if (scope && !swcScopes.includes(scope)) {
+=======
+          // @ts-expect-error
+          if (!swcScopes.includes(scope)) {
+            // @ts-expect-error
+>>>>>>> 0ebbbd38a (fix(providence-analytics): make compatible with newer oxc-parser)
             swcScopes.push(scope);
           }
         },
