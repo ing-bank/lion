@@ -51,7 +51,7 @@ function findCustomElementsPerAstFile(oxcAst) {
       // but also 'window.customElements.define()'
       astPath.traverse({
         // MemberExpression in babel
-        StaticMemberExpression(memberPath) {
+        MemberExpression(memberPath) {
           if (memberPath.node !== astPath.node.callee) {
             return;
           }
