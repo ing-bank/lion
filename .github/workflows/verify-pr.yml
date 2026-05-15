@@ -13,10 +13,10 @@ jobs:
       - name: Sanity check
         run: node ./scripts/lock-scan.mjs
 
-      - name: Setup Node 18.x
-        uses: actions/setup-node@v4
+      - name: Setup Node 24.x
+        uses: actions/setup-node@v6
         with:
-          node-version: 18.x
+          node-version: 24.x
           cache: npm
 
       - name: Install Dependencies
@@ -33,10 +33,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: google/wireit@setup-github-actions-caching/v2
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node 24.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24.x
           cache: npm
@@ -55,14 +55,14 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [22.x]
+        node-version: [24.x]
         os: [ubuntu-latest, windows-latest]
     steps:
       - uses: google/wireit@setup-github-actions-caching/v2
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
