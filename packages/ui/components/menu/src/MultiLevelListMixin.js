@@ -207,7 +207,6 @@ const MultiLevelListMixinImplementation = superclass =>
       switch (key) {
         case 'Enter':
         case ' ':
-          // console.debug('activeIndex', this.activeIndex);
           // make it work like a button
           this.activeItem?.click();
           break;
