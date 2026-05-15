@@ -53,6 +53,7 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
     );
   }
 
+  /** @type {Node} */
   let parentElement;
   const tempMarker = document.createComment('overlay-insertion-marker');
 
