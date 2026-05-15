@@ -82,7 +82,7 @@ export class AstService {
   static async _getOxcAst(code, { filePath = '', parserOptions = {} } = {}) {
     if (!oxcParser) {
       // eslint-disable-next-line import/no-extraneous-dependencies
-      oxcParser = (await import('oxc-parser')).default;
+      oxcParser = await import('oxc-parser');
     }
 
     // we can only send stringified data with napi
