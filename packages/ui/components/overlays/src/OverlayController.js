@@ -33,34 +33,36 @@ import { isEqualConfig } from './utils/is-equal-config.js';
  * `<slot name="my-content">` belonging to `<div slot="content"/>` will be wrapped with wrappingDialogNodeL1 and contentWrapperNodeL2
  * inside shadow dom. With the help of temp markers, `<slot name="my-content">`'s original position will be respected.
  *
- * @param {{ wrappingDialogNodeL1:HTMLDialogElement|HTMLDivElement; contentWrapperNodeL2:Element; contentNodeL3: Element; requireConnectedNodes: boolean; }} opts
+ * @param {{
+ *  wrappingDialogNodeL1: HTMLDialogElement|HTMLDivElement;
+ *  contentWrapperNodeL2:Element;
+ *  contentNodeL3: Element;
+ * }} opts
  */
-function rearrangeNodes({
-  wrappingDialogNodeL1,
-  contentWrapperNodeL2,
-  contentNodeL3,
-  requireConnectedNodes,
-}) {
-  if (requireConnectedNodes) {
-    if (!(contentWrapperNodeL2.isConnected || contentNodeL3.isConnected)) {
-      throw new Error(
-        '[OverlayController] Could not find a render target, since the provided contentNode is not connected to the DOM. Make sure that it is connected, e.g. by doing "document.body.appendChild(contentNode)", before passing it on.',
-      );
-    }
+function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNodeL3 }) {
+  // if contentWrapperNode is provided by the user,
+  // we assume it lives in shadow dom around a slot.
+  const hasLegacyMethodOfProvidingWrapperNode = Boolean(contentWrapperNodeL2.isConnected);
+  // We could be initialized via a directive (in offline dom). It's important that we know about the parents,
+  // as we cannot deal with single content nodes
+  const hasContentNodeAttachmentPoints = Boolean(contentNodeL3.parentNode);
+
+  if (!hasLegacyMethodOfProvidingWrapperNode && !hasContentNodeAttachmentPoints) {
+    throw new Error(
+      '[OverlayController] Could not find a render target, makes sure contentNode has a parent element (or contentWrapperNode is connected)',
+    );
   }
 
   let parentElement;
-  const tempMarker = document.createComment('tempMarker');
+  const tempMarker = document.createComment('overlay-insertion-marker');
 
-  if (contentWrapperNodeL2.isConnected) {
+  if (hasLegacyMethodOfProvidingWrapperNode) {
     // This is the case when contentWrapperNode (living in shadow dom, wrapping <slot name="my-content-outlet">) is already provided via controller.
     parentElement = contentWrapperNodeL2.parentElement || contentWrapperNodeL2.getRootNode();
     parentElement.insertBefore(tempMarker, contentWrapperNodeL2);
     // Wrap...
     wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
-  }
-  // if contentNodeL3.isConnected
-  else {
+  } else {
     const contentIsProjected = contentNodeL3.assignedSlot;
     if (contentIsProjected) {
       parentElement =
@@ -101,7 +103,22 @@ function rearrangeNodes({
    * ```
    */
   parentElement.insertBefore(wrappingDialogNodeL1, tempMarker);
-  parentElement?.removeChild(tempMarker);
+
+  return function cleanup() {
+    if (hasLegacyMethodOfProvidingWrapperNode) {
+      parentElement?.insertBefore(contentWrapperNodeL2, tempMarker);
+    } else {
+      parentElement?.insertBefore(contentNodeL3, tempMarker);
+      if (parentElement.contains(contentWrapperNodeL2)) {
+        contentWrapperNodeL2.remove();
+      }
+    }
+    parentElement?.removeChild(tempMarker);
+
+    if (parentElement.contains(wrappingDialogNodeL1)) {
+      parentElement?.removeChild(wrappingDialogNodeL1);
+    }
+  };
 }
 
 /**
@@ -525,6 +542,7 @@ export class OverlayController extends EventTarget {
     const shouldUpdate = !this.#hasSetup || !isEqualConfig(prevConfig, newConfig);
     if (!shouldUpdate) return;
     // Teardown all previous configs
+
     this.teardown();
 
     this.config = newConfig;
@@ -579,10 +597,10 @@ export class OverlayController extends EventTarget {
     // TODO 2: When we move away from dialog (use popover to paint to top layer)
     // and popper.js, (use popover and anchor positioning and popperjs as fallback, but we can put styles on contentNode),
     // we dont need to create complex wrappers
-    if (!this.__contentHasBeenInitialized) {
-      this.__initContentDomStructure();
-      this.__contentHasBeenInitialized = true;
-    }
+    // if (!this.__contentHasBeenInitialized) {
+    this.__initContentDomStructure();
+    // this.__contentHasBeenInitialized = true;
+    // }
     this.__initVisibility();
 
     // Reset all positioning styles (local, c.q. Popper) and classes (global)
@@ -695,11 +713,11 @@ export class OverlayController extends EventTarget {
       // 'hack' that makes sure popperjs (that is applied one level lower) works correctly in deeply nested shadow roots
       this.contentWrapperNode.style.transform = 'translateZ(0px)';
 
-      rearrangeNodes({
+      this.__rearrangeNodesCleanup = rearrangeNodes({
         wrappingDialogNodeL1: wrappingDialogElement,
         contentWrapperNodeL2: this.contentWrapperNode,
         contentNodeL3: this.contentNode,
-        requireConnectedNodes: Boolean(this.config.requireConnectedNodes),
+        // requireConnectedNodes: Boolean(this.config.requireConnectedNodes),
       });
       wrappingDialogElement.open = true;
 
@@ -1555,6 +1573,7 @@ export class OverlayController extends EventTarget {
 
     this.contentNode?.removeEventListener('click', this.#hideOnCloseButtonClick);
 
+    this.__rearrangeNodesCleanup?.();
     this.__teardownVisibility();
 
     this.#hasSetup = false;
