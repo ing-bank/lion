@@ -158,9 +158,9 @@ describe('oxcTraverse', () => {
           const middleScope = 1;
           {
             const deepestScope = 2;
-          }  
+          }
         }
-        const alsoGlobalScope = 3;    
+        const alsoGlobalScope = 3;
       `;
         const oxcAst = await AstService._getOxcAst(code);
 
@@ -352,9 +352,9 @@ describe('oxcTraverse', () => {
           let middleScope = 1;
           {
             const deepestScope = 2;
-          }  
+          }
         }
-        let alsoGlobalScope = 3;    
+        let alsoGlobalScope = 3;
       `;
         const oxcAst = await AstService._getOxcAst(code);
 
@@ -396,7 +396,7 @@ describe('oxcTraverse', () => {
           var stillGlobalScope = 1;
           function middleScope() {
             var insideFnScope = 2;
-          }  
+          }
         }
       `;
         const oxcAst = await AstService._getOxcAst(code);
