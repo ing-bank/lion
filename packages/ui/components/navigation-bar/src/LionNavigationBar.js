@@ -48,6 +48,15 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
         :host([responsive-mode='desktop'])
           [data-has-full-width-flyout]
           > [slot='list']
+          [role='listitem'] {
+          /** make some space between L1's for testing More button feature */
+          margin-right: 150px;
+          white-space: nowrap;
+        }
+
+        :host([responsive-mode='desktop'])
+          [data-has-full-width-flyout]
+          > [slot='list']
           [level='2']
           > [slot='list'] {
           position: absolute;
@@ -70,6 +79,10 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           background-color: white;
           box-sizing: border-box;
           height: 100%;
+        }
+
+        :host([responsive-mode='desktop']) nav {
+          border: 1px solid black;
         }
 
         :host([responsive-mode='mobile']) nav {
@@ -153,7 +166,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     this.menuItems = [];
     // /** @type {Boolean} */
     // this.searchDisabled = false;
-    this.breakpointMin = 1400; // force desktop
+    this.breakpointMin = 1200; // force desktop
     /** @type {string[]} */
     this.suggestions = [];
 
