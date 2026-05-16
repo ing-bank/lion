@@ -203,10 +203,9 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     const flyoutElements = this.shadowRoot?.querySelectorAll('[data-has-full-width-flyout]');
     const mainMenuFlyout = flyoutElements?.[1];
     if (!mainMenuFlyout) return [];
-    const itemsFit = Array.from(
+    return Array.from(
       mainMenuFlyout.querySelectorAll(':scope > [role="list"] > [role="listitem"]') || [],
     );
-    return itemsFit;
   }
 
   /**
