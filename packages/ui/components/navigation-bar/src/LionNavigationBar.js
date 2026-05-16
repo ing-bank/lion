@@ -443,6 +443,8 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     if (changedProperties.has('responsiveMode')) {
       this._levelCfg = this._getLevelCfg(this.responsiveMode);
       this.#syncLatestFocusedElementForNewResponsiveMode();
+
+      /** check whether L1 items fit only after they rendered */
       this.updateComplete.then(() => {
         this.#checkFlyoutOverflow();
       });
