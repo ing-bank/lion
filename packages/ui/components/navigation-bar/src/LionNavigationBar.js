@@ -25,6 +25,8 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       showOnMobile: { type: Array, attribute: 'show-on-mobile', reflect: true },
 
       _levelCfg: { state: true },
+      hiddenL1items: { state: true },
+      visibleL1items: { state: true },
     };
   }
 
@@ -155,6 +157,10 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     this.logo = { type: 'ing', alt: 'ING homepage', href: '/' };
     /** @type {MenuItem[]} */
     this.menuSupportItems = [];
+    /** @type {Element[]} */
+    this.hiddenL1items = [];
+    /** @type {Element[]} */
+    this.visibleL1items = [];
     // /**
     //  * @type {string[]}
     //  * @description Choose which items to show on mobile when in default mode, maximum of two. Possible values: 'search', 'ctaPrimary', 'ctaSecondary', 'avatarMenu'
@@ -362,6 +368,11 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     const itemsFit = flyoutElement.scrollWidth === flyoutElement.clientWidth;
     if (!itemsFit) {
       this.#calculateFitCount();
+    } else {
+      // When everything fits, clear hidden items
+      const itemElements = this.#getMainMenuItemsElements();
+      this.visibleL1items = Array.from(itemElements);
+      this.hiddenL1items = [];
     }
   }
 
@@ -382,6 +393,10 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       itemElements[i].style.display = 'none';
       this._fitCount = i;
     }
+
+    // Set visible and hidden L1 items
+    this.visibleL1items = Array.from(itemElements.slice(0, this._fitCount));
+    this.hiddenL1items = Array.from(itemElements.slice(this._fitCount));
   }
 
   #setupResizeObserver() {
