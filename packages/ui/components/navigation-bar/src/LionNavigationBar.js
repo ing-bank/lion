@@ -312,7 +312,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
   #resizeObserver = null;
 
   /** @type {number} */
-  _fitCount = 0;
+  _fitCount;
 
   #getMainMenuFlyoutElement() {
     const flyoutElements = this.shadowRoot?.querySelectorAll('[data-has-full-width-flyout]');
@@ -452,6 +452,10 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       // Re-setup observer when responsive mode changes to ensure flyout element is properly observed
       this.#setupResizeObserver();
     }
+
+    if (changedProperties.has('menuItems')) {
+      this._fitCount = this.menuItems.length;
+    }
   }
 
   render() {
@@ -530,7 +534,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @param {number} level
    * @returns {import('lit').TemplateResult}
    */
-  _menulevelTemplate(menuItemsForLevel, level, prevText = '', renderMoreButton = false) {
+  _menulevelTemplate(menuItemsForLevel, level, prevText = '', shouldRenderMoreButton = false) {
     // @ts-ignore
     const cfgForLevel = this._levelCfg[`l${level}`];
 
@@ -559,7 +563,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           </div>
         `,
       )}
-      ${renderMoreButton && this.responsiveMode === 'desktop'
+      ${shouldRenderMoreButton && this.responsiveMode === 'desktop'
         ? html`<div data-more-button-wrapper>
             <button id="more-button">More</button>
           </div>`
