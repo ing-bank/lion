@@ -199,6 +199,16 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     return this.shadowRoot?.querySelector('[data-more-button-wrapper]');
   }
 
+  getMainMenuL1Items() {
+    const flyoutElements = this.shadowRoot?.querySelectorAll('[data-has-full-width-flyout]');
+    const mainMenuFlyout = flyoutElements?.[1];
+    if (!mainMenuFlyout) return [];
+    const itemsFit = Array.from(
+      mainMenuFlyout.querySelectorAll(':scope > [role="list"] > [role="listitem"]') || [],
+    );
+    return itemsFit;
+  }
+
   /**
    * @param {NavBarResponsiveMode} responsiveMode
    */
