@@ -41,6 +41,10 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       css`
         /** specific styles */
 
+        :host([responsive-mode='desktop']) [data-has-full-width-flyout] {
+          overflow: hidden;
+        }
+
         :host([responsive-mode='desktop']) [data-has-full-width-flyout] > [slot='list'] {
           /** make sure that we give the right styles */
           position: relative;
@@ -191,6 +195,10 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     this.#storeLatestFocusedElementId();
   }
 
+  _getMoreButtonWrapper() {
+    return this.shadowRoot?.querySelector('[data-more-button-wrapper]');
+  }
+
   /**
    * @param {NavBarResponsiveMode} responsiveMode
    */
@@ -294,12 +302,18 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
   #resizeObserver = null;
 
   #checkFlyoutOverflow() {
+    this._getMoreButtonWrapper()?.style.setProperty('display', 'none');
     const flyoutElements = this.shadowRoot?.querySelectorAll('[data-has-full-width-flyout]');
     const flyoutElement = flyoutElements?.[1];
     if (!flyoutElement) return;
 
     const isOverflowing = flyoutElement.scrollWidth > flyoutElement.clientWidth;
     this.isMoreButtonShown = isOverflowing;
+    if (this.isMoreButtonShown) {
+      this._getMoreButtonWrapper()?.style.setProperty('display', 'block');
+    } else {
+      this._getMoreButtonWrapper()?.style.setProperty('display', 'none');
+    }
   }
 
   #setupResizeObserver() {
@@ -386,7 +400,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           ${this.responsiveMode === 'desktop'
             ? this._ctasTemplate(this.ctaPrimary, this.ctaSecondary)
             : ''}
-          ${this._menulevelTemplate(this.menuItems, 1, '')}
+          ${this._menulevelTemplate(this.menuItems, 1, '', true)}
         </div>
         ${this.responsiveMode === 'mobile'
           ? html`<div class="nav-footer">
@@ -443,7 +457,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @param {number} level
    * @returns {import('lit').TemplateResult}
    */
-  _menulevelTemplate(menuItemsForLevel, level, prevText = '') {
+  _menulevelTemplate(menuItemsForLevel, level, prevText = '', renderMoreButton = false) {
     // @ts-ignore
     const cfgForLevel = this._levelCfg[`l${level}`];
 
@@ -472,6 +486,11 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           </div>
         `,
       )}
+      ${renderMoreButton && this.responsiveMode === 'desktop'
+        ? html`<div data-more-button-wrapper>
+            <button id="more-button">More</button>
+          </div>`
+        : ''}
     </lion-menu-hybrid>`;
   }
 }
