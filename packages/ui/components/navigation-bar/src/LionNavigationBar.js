@@ -43,6 +43,14 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
           position: relative;
         }
 
+        .more-button-menu {
+          display: none;
+        }
+
+        .more-button-wrapper {
+          display: none;
+        }
+
         :host([responsive-mode='desktop'])
           [data-has-full-width-flyout]
           > [slot='list']
@@ -95,7 +103,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
          * Use it here only for max-width for now
          */
         .navigation-bar__container {
-          max-width: 1400px;
+          
           border: 1px solid;
         }
 
@@ -477,7 +485,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
   }
 
   _renderMoreButton(level, cfgForLevel) {
-    return level === 1 && cfgForLevel.hasFullWidthFlyout && this.showMoreButton
+    return level === 1 && cfgForLevel.hasFullWidthFlyout
       ? this._renderMoreButtonWrapper(this._listItemsTemplate(this.hiddenFirstLevelItems, level))
       : '';
   }
