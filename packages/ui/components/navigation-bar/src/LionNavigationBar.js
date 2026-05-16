@@ -25,7 +25,6 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       showOnMobile: { type: Array, attribute: 'show-on-mobile', reflect: true },
 
       _levelCfg: { state: true },
-      isMoreButtonShown: { state: true },
     };
   }
 
@@ -41,8 +40,12 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       css`
         /** specific styles */
 
+        [data-more-button-wrapper] {
+          display: none;
+        }
+
         :host([responsive-mode='desktop']) [data-has-full-width-flyout] {
-          overflow: hidden;
+          /** overflow: hidden; */
         }
 
         :host([responsive-mode='desktop']) [data-has-full-width-flyout] > [slot='list'] {
@@ -176,8 +179,6 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     this.suggestions = [];
 
     this.prefilledSuggestion = '';
-    /** @type {boolean} */
-    this.isMoreButtonShown = false;
 
     const mql = window.matchMedia(`(width <= ${this.breakpointMin}px)`);
     /** @type {NavBarResponsiveMode} */
@@ -310,18 +311,76 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
   /** @type {ResizeObserver | null} */
   #resizeObserver = null;
 
-  #checkFlyoutOverflow() {
-    this._getMoreButtonWrapper()?.style.setProperty('display', 'none');
+  /** @type {number} */
+  _fitCount = 0;
+
+  #getMainMenuFlyoutElement() {
     const flyoutElements = this.shadowRoot?.querySelectorAll('[data-has-full-width-flyout]');
-    const flyoutElement = flyoutElements?.[1];
+    return flyoutElements?.[1];
+  }
+
+  #getMainMenuItemsElements() {
+    const flyoutElement = this.#getMainMenuFlyoutElement();
+    if (!flyoutElement) return [];
+    return Array.from(
+      flyoutElement.querySelectorAll(':scope > [role="list"] > [role="listitem"]') || [],
+    );
+  }
+
+  #getMoreButtonElement() {
+    return this._getMoreButtonWrapper();
+  }
+
+  #showAllMenuItems() {
+    const itemElements = this.#getMainMenuItemsElements();
+    for (let i = 0; i < itemElements.length; i += 1) {
+      itemElements[i].style.display = 'block';
+    }
+  }
+
+  #showMoreButton() {
+    const moreButton = this.#getMoreButtonElement();
+    if (moreButton) {
+      moreButton.style.display = 'block';
+    }
+  }
+
+  #hideMoreButton() {
+    const moreButton = this.#getMoreButtonElement();
+    if (moreButton) {
+      moreButton.style.display = 'none';
+    }
+  }
+
+  #checkFlyoutOverflow() {
+    const flyoutElement = this.#getMainMenuFlyoutElement();
     if (!flyoutElement) return;
 
-    const isOverflowing = flyoutElement.scrollWidth > flyoutElement.clientWidth;
-    this.isMoreButtonShown = isOverflowing;
-    if (this.isMoreButtonShown) {
-      this._getMoreButtonWrapper()?.style.setProperty('display', 'block');
-    } else {
-      this._getMoreButtonWrapper()?.style.setProperty('display', 'none');
+    this.#showAllMenuItems();
+    this.#hideMoreButton();
+
+    const itemsFit = flyoutElement.scrollWidth === flyoutElement.clientWidth;
+    if (!itemsFit) {
+      this.#calculateFitCount();
+    }
+  }
+
+  #calculateFitCount() {
+    const flyoutElement = this.#getMainMenuFlyoutElement();
+    const itemElements = this.#getMainMenuItemsElements();
+    if (!flyoutElement || itemElements.length === 0) return;
+
+    this.#showAllMenuItems();
+    this.#showMoreButton();
+
+    // Hide items from the end until everything fits
+    this._fitCount = itemElements.length;
+    for (let i = itemElements.length - 1; i >= 0; i -= 1) {
+      if (flyoutElement.scrollWidth <= flyoutElement.clientWidth) {
+        break;
+      }
+      itemElements[i].style.display = 'none';
+      this._fitCount = i;
     }
   }
 
@@ -384,7 +443,10 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     if (changedProperties.has('responsiveMode')) {
       this._levelCfg = this._getLevelCfg(this.responsiveMode);
       this.#syncLatestFocusedElementForNewResponsiveMode();
-      this.#checkFlyoutOverflow();
+      this.updateComplete.then(() => {
+        this.#checkFlyoutOverflow();
+      });
+
       // Re-setup observer when responsive mode changes to ensure flyout element is properly observed
       this.#setupResizeObserver();
     }
