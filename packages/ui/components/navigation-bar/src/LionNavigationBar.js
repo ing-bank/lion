@@ -25,6 +25,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       showOnMobile: { type: Array, attribute: 'show-on-mobile', reflect: true },
 
       _levelCfg: { state: true },
+      isMoreButtonShown: { state: true },
     };
   }
 
@@ -171,6 +172,8 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     this.suggestions = [];
 
     this.prefilledSuggestion = '';
+    /** @type {boolean} */
+    this.isMoreButtonShown = false;
 
     const mql = window.matchMedia(`(width <= ${this.breakpointMin}px)`);
     /** @type {NavBarResponsiveMode} */
@@ -184,6 +187,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       this._levelSecondaryCfg = this._getSecondaryLevelCfg(this.responsiveMode);
     });
 
+    this.#setupResizeObserver();
     this.#storeLatestFocusedElementId();
   }
 
@@ -286,6 +290,41 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
   /** @type {string | null} */
   #latestFocusedElementId = null;
 
+  /** @type {ResizeObserver | null} */
+  #resizeObserver = null;
+
+  #checkFlyoutOverflow() {
+    const flyoutElements = this.shadowRoot?.querySelectorAll('[data-has-full-width-flyout]');
+    const flyoutElement = flyoutElements?.[1];
+    if (!flyoutElement) return;
+
+    const isOverflowing = flyoutElement.scrollWidth > flyoutElement.clientWidth;
+    this.isMoreButtonShown = isOverflowing;
+  }
+
+  #setupResizeObserver() {
+    if (this.#resizeObserver) {
+      this.#resizeObserver.disconnect();
+    }
+
+    this.#resizeObserver = new ResizeObserver(() => this.#checkFlyoutOverflow());
+
+    // Observe both the host and the flyout element to catch all resize events
+    // (window resize, font changes, content changes, etc.)
+    this.#resizeObserver.observe(this);
+
+    const flyoutElements = this.shadowRoot?.querySelectorAll('[data-has-full-width-flyout]');
+    const flyoutElement = flyoutElements?.[1];
+    if (flyoutElement) {
+      this.#resizeObserver.observe(flyoutElement);
+    }
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.#resizeObserver?.disconnect();
+  }
+
   #storeLatestFocusedElementId() {
     this.addEventListener('focusin', ({ target }) => {
       // @ts-ignore
@@ -322,6 +361,9 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     if (changedProperties.has('responsiveMode')) {
       this._levelCfg = this._getLevelCfg(this.responsiveMode);
       this.#syncLatestFocusedElementForNewResponsiveMode();
+      this.#checkFlyoutOverflow();
+      // Re-setup observer when responsive mode changes to ensure flyout element is properly observed
+      this.#setupResizeObserver();
     }
   }
 
