@@ -89,47 +89,13 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
       if (changedProperties.has('allFirstLevelItems')) {
         this.calculateVisibleItems();
       }
-      if (changedProperties.has('hiddenFirstLevelItems') && this.hiddenFirstLevelItems.length !== changedProperties.get('hiddenFirstLevelItems')?.length) {
-        function isFocusableElement(potentialFocusable) {
-          // @ts-ignore - returns Element or falsy value
-          return (
-            potentialFocusable &&
-            (potentialFocusable.hasAttribute('tabindex') ||
-              ['BUTTON', 'A'].includes(potentialFocusable.tagName))
-          );
-        }
-
-        const getFocusableChildren = (parent) => {
-          const listItems = parent.querySelectorAll(':scope > [role="listitem"]');
-          const focusableChildren = [];
-          listItems.forEach(listItem => {
-            [...listItem.children].filter(c => isFocusableElement(c))
-              .forEach(focusableChild => focusableChildren.push(focusableChild)); 
-          });
-          return focusableChildren;
-        };
-
+      if (changedProperties.has('hiddenFirstLevelItems') 
+        && this.hiddenFirstLevelItems && changedProperties.get('hiddenFirstLevelItems') && 
+        this.hiddenFirstLevelItems.length !== changedProperties.get('hiddenFirstLevelItems')?.length) {
+          
         const mainMenu = this.shadowRoot.querySelectorAll('lion-menu-hybrid')[1];
-        const listItems = mainMenu._listNode.querySelectorAll(':scope > [role="listitem"]');
-        
-        const mainMenuFocusableChildren = getFocusableChildren(mainMenu._listNode);
-        
-
-        const moreButtonMenu = this.getMoreButtonMenu();
-        const moreButtonFocusableChildren = getFocusableChildren(moreButtonMenu);
-        const focusableChildren = [...mainMenuFocusableChildren, ...moreButtonFocusableChildren];
-        
-        if (focusableChildren.length > 0) {
-          focusableChildren.forEach(item => {
-            if (!mainMenu.__listItems.includes(item)) {
-              mainMenu.__listItems.push(item);
-            }
-          });
-
-          mainMenu._initListItems(focusableChildren);
-        }
-        
-      }
+        mainMenu._identifyNewItemsAndInitListItemsInsideListNode();
+      }      
     }
 
     getFirstLevelItems() {
@@ -209,7 +175,6 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
     checkAndAdjustItems() {
       // Phase 2: Check if all items fit without More button using scrollWidth vs clientWidth
       if (this.doItemsFit()) {
-        console.log('fit');
         // All items fit - render only the original items without More button
         this.visibleFirstLevelItems = this.allFirstLevelItems || [];
         this.hiddenFirstLevelItems = [];
@@ -220,7 +185,6 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
       // Phase 3: Items don't fit - set showMoreButton to true and start removal loop
       this.showMoreButton = true;
       this.getMoreButtonWrapper().style.display = 'block';
-      console.log('does not fit');
 
       // Phase 4: Start the removal loop after rendering with More button
       this.hideItemsUntilFit();

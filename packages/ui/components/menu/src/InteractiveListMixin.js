@@ -433,28 +433,45 @@ const InteractiveListMixinImplementation = superclass =>
       this._setupList();
     }
 
+    _identifyNewItemsAndInitListItemsInsideListNode() {
+      const nodes = this._getListNodes();
+      this.#identifyNewItemsAndInitListItems(nodes, false);        
+    }
+
     /**
      * @param {Node[]} nodes
      */
-    #identifyNewItemsAndInitListItems(nodes) {
+    #identifyNewItemsAndInitListItems(nodes, appendListNodes = true) {
       /**
        *
        * @param {HTMLElement} node
        * @param {{ newItems: HTMLElement[], level?: number }} opts
        * @returns
        */
-      const handleInteractiveListAdditionLevel = (node, { newItems, level = 1 }) => {
-        if (node?.classList?.contains('more-button-wrapper')) {
-          console.log('has more-button-wrapper');
-        }
+      const handleInteractiveListAdditionLevel = (node, { newItems, level = 1, appendListNodes = true }) => {        
         // Move list item to element with aria-activedescendant ([role="listbox|menu|menubar"])
         if (level === 1) {
-          this._listNode.appendChild(node);
+          if (appendListNodes) {
+            this._listNode.appendChild(node);
+          }          
           if (this._hasSmartChildren || !(node instanceof Element)) {
             return;
           }
         }
+
         if (node?.classList?.contains('more-button-wrapper')) {
+          const moreButtonMenu = node.querySelector('.more-button-menu');
+          const nodes = this._getNodesByElement(moreButtonMenu);
+          /**
+           * Refresh references inside _listNode between the invoker button and submenu items.
+           * It is required only when More button feature is used, because submenu items are recreated
+           * every time the items hide under the More button and we need to reestablish the connection 
+           * between the invoker and submenu items.
+           * */ 
+          nodes.forEach(node => {
+            // @ts-ignore - node type compatibility
+            handleInteractiveListAdditionLevel(node, { newItems, level: 1, appendListNodes: false });
+          });          
           return;
         }
 
@@ -505,6 +522,14 @@ const InteractiveListMixinImplementation = superclass =>
       });
 
       this._initListItems(newItems);
+    }
+
+    _getNodesByElement(element) {
+      return [...element?.childNodes || []].filter(n => !n.slot);
+    }
+
+    _getListNodes() {
+      return this._getNodesByElement(this._listNode);
     }
 
     _setupList() {
