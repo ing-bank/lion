@@ -2,34 +2,34 @@ export default {
   error: {
     IsIBAN: 'Inserire un valore valido per {fieldName}.',
     IsCountryIBAN:
-      'Inserire un valore valido per {fieldName} {params, select,\n' +
-      'AT {Austriaco}\n' +
-      'BE {Belga}\n' +
-      'CZ {Ceco}\n' +
-      'DE {Tedesco}\n' +
-      'ES {Spagnolo}\n' +
-      'FR {Francese}\n' +
-      'HU {Ungherese}\n' +
-      'IT {Italiano}\n' +
-      'NL {Olandese}\n' +
-      'PL {Polacco}\n' +
-      'RO {Rumeno}\n' +
+      'Inserire un valore valido {params, select,\n' +
+      "AT {dall'Austria}\n" +
+      'BE {dal Belgio}\n' +
+      'CZ {dalla Cechia}\n' +
+      'DE {dalla Germania}\n' +
+      'ES {dalla Spagna}\n' +
+      'FR {dalla Francia}\n' +
+      "HU {dall'Ungheria}\n" +
+      "IT {dall'Italia}\n" +
+      'NL {dai Paesi Bassi}\n' +
+      'PL {dalla Polonia}\n' +
+      'RO {dalla Romania}\n' +
       'other {{params}}\n' +
-      '}.',
+      '} per {fieldName}.',
     IsNotCountryIBAN:
-      '{fieldName} {userSuppliedCountryCode, select,\n' +
-      'AT {Austriaco}\n' +
-      'BE {Belga}\n' +
-      'CZ {Ceco}\n' +
-      'DE {Tedesco}\n' +
-      'ES {Spagnolo}\n' +
-      'FR {Francese}\n' +
-      'HU {Ungherese}\n' +
-      'IT {Italiano}\n' +
-      'NL {Olandese}\n' +
-      'PL {Polacco}\n' +
-      'RO {Rumeno}\n' +
+      'Un valore {userSuppliedCountryCode, select,\n' +
+      "AT {dall'Austria}\n" +
+      'BE {dal Belgio}\n' +
+      'CZ {dalla Cechia}\n' +
+      'DE {dalla Germania}\n' +
+      'ES {dalla Spagna}\n' +
+      'FR {dalla Francia}\n' +
+      "HU {dall'Ungheria}\n" +
+      "IT {dall'Italia}\n" +
+      'NL {dai Paesi Bassi}\n' +
+      'PL {dalla Polonia}\n' +
+      'RO {dalla Romania}\n' +
       'other {{userSuppliedCountryCode}}\n' +
-      '} non è permesso.',
+      '} non è permesso per {fieldName}.',
   },
 };

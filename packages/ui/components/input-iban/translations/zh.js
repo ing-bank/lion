@@ -1,35 +1,35 @@
 export default {
   error: {
-    IsIBAN: '請輸入有效的{fieldName}。',
+    IsIBAN: '请输入有效的{fieldName}。',
     IsCountryIBAN:
-      '請輸入有效的{params, select,\n' +
-      'AT {奥}\n' +
-      'BE {比利时的}\n' +
+      '请输入有效的{fieldName}，来自{params, select,\n' +
+      'AT {奥地利}\n' +
+      'BE {比利时}\n' +
       'CZ {捷克}\n' +
-      'DE {德语}\n' +
-      'ES {西班牙语}\n' +
+      'DE {德国}\n' +
+      'ES {西班牙}\n' +
       'FR {法国}\n' +
       'HU {匈牙利}\n' +
       'IT {意大利}\n' +
-      'NL {荷兰人}\n' +
-      'PL {抛光}\n' +
+      'NL {荷兰}\n' +
+      'PL {波兰}\n' +
       'RO {罗马尼亚}\n' +
-      '另一个 {{params}}\n' +
-      '} {fieldName}。',
+      'other {{params}}\n' +
+      '}。',
     IsNotCountryIBAN:
-      '{userSuppliedCountryCode, select,\n' +
-      'AT {奥}\n' +
-      'BE {比利时的}\n' +
+      '来自{userSuppliedCountryCode, select,\n' +
+      'AT {奥地利}\n' +
+      'BE {比利时}\n' +
       'CZ {捷克}\n' +
-      'DE {德语}\n' +
-      'ES {西班牙语}\n' +
+      'DE {德国}\n' +
+      'ES {西班牙}\n' +
       'FR {法国}\n' +
       'HU {匈牙利}\n' +
       'IT {意大利}\n' +
-      'NL {荷兰人}\n' +
-      'PL {抛光}\n' +
+      'NL {荷兰}\n' +
+      'PL {波兰}\n' +
       'RO {罗马尼亚}\n' +
-      '另一个 {{userSuppliedCountryCode}}\n' +
-      '} {fieldName} 不允許。',
+      'other {{userSuppliedCountryCode}}\n' +
+      '}的{fieldName}不允许。',
   },
 };

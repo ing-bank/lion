@@ -1,35 +1,35 @@
 export default {
   error: {
-    IsIBAN: 'Wprowadź prawidłową wartość w polu {fieldName}.',
+    IsIBAN: 'Wprowadź prawidłową wartość dla {fieldName}.',
     IsCountryIBAN:
-      'Wprowadź prawidłową wartość w polu {params, select,\n' +
-      'AT {Austriacki}\n' +
-      'BE {Belgijski}\n' +
-      'CZ {Czeski}\n' +
-      'DE {Niemiecki}\n' +
-      'ES {Hiszpański}\n' +
-      'FR {Francuski}\n' +
-      'HU {Węgierski}\n' +
-      'IT {Włoski}\n' +
-      'NL {Holenderski}\n' +
+      'Wprowadź prawidłową wartość z {params, select,\n' +
+      'AT {Austrii}\n' +
+      'BE {Belgii}\n' +
+      'CZ {Czech}\n' +
+      'DE {Niemiec}\n' +
+      'ES {Hiszpanii}\n' +
+      'FR {Francji}\n' +
+      'HU {Węgier}\n' +
+      'IT {Włoch}\n' +
+      'NL {Holandii}\n' +
       'PL {Polski}\n' +
-      'RO {Rumuński}\n' +
+      'RO {Rumunii}\n' +
       'other {{params}}\n' +
-      '} {fieldName}.',
+      '} dla {fieldName}.',
     IsNotCountryIBAN:
-      '{userSuppliedCountryCode, select,\n' +
-      'AT {Austriacki}\n' +
-      'BE {Belgijski}\n' +
-      'CZ {Czeski}\n' +
-      'DE {Niemiecki}\n' +
-      'ES {Hiszpański}\n' +
-      'FR {Francuski}\n' +
-      'HU {Węgierski}\n' +
-      'IT {Włoski}\n' +
-      'NL {Holenderski}\n' +
+      'Wartość z {userSuppliedCountryCode, select,\n' +
+      'AT {Austrii}\n' +
+      'BE {Belgii}\n' +
+      'CZ {Czech}\n' +
+      'DE {Niemiec}\n' +
+      'ES {Hiszpanii}\n' +
+      'FR {Francji}\n' +
+      'HU {Węgier}\n' +
+      'IT {Włoch}\n' +
+      'NL {Holandii}\n' +
       'PL {Polski}\n' +
-      'RO {Rumuński}\n' +
+      'RO {Rumunii}\n' +
       'other {{userSuppliedCountryCode}}\n' +
-      '} {fieldName} nie jest dozwolone.',
+      '} nie jest dozwolona dla {fieldName}.',
   },
 };

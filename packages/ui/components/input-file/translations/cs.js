@@ -13,7 +13,7 @@ export default {
   fileUploaded: 'Nahraný soubor: ',
   filesSelected: 'Zvolené soubory: {numberOfFiles} souborů.',
   filesUploaded: 'Nahrané soubory: {numberOfFiles} souborů.',
-  numberOfFiles: '{numberOfFiles} soubory/souborů.',
+  numberOfFiles: '{numberOfFiles} souborů.',
   removeButtonLabel: 'Odebrat soubor {fileName}',
   selectTextDuplicateFileName: 'Soubor se stejným názvem byl již přítomen.',
   selectTextMultipleFile: 'Vybrat soubory',

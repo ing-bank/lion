@@ -1,35 +1,35 @@
 export default {
   error: {
-    IsIBAN: 'Zadajte platnú hodnotu do poľa {fieldName}.',
+    IsIBAN: 'Zadajte platnú hodnotu {fieldName}.',
     IsCountryIBAN:
-      'Zadajte platný {params, select,\n' +
-      'AT {rakúsky}\n' +
-      'BE {belgický}\n' +
-      'CZ {český}\n' +
-      'DE {nemecký}\n' +
-      'ES {španielsky}\n' +
-      'FR {francúzsky}\n' +
-      'HU {maďarský}\n' +
-      'IT {taliansky}\n' +
-      'NL {holandský}\n' +
-      'PL {poľský}\n' +
-      'RO {rumunský}\n' +
+      'Zadajte platnú hodnotu {fieldName} z {params, select,\n' +
+      'AT {Rakúska}\n' +
+      'BE {Belgicka}\n' +
+      'CZ {Česka}\n' +
+      'DE {Nemecka}\n' +
+      'ES {Španielska}\n' +
+      'FR {Francúzska}\n' +
+      'HU {Maďarska}\n' +
+      'IT {Talianska}\n' +
+      'NL {Holandska}\n' +
+      'PL {Poľska}\n' +
+      'RO {Rumunska}\n' +
       'other {{params}}\n' +
-      '} kód {fieldName}.',
+      '}.',
     IsNotCountryIBAN:
-      '{userSuppliedCountryCode, select,\n' +
-      'AT {Rakúsky}\n' +
-      'BE {Belgický}\n' +
-      'CZ {Český}\n' +
-      'DE {Nemecký}\n' +
-      'ES {Španielsky}\n' +
-      'FR {Francúzsky}\n' +
-      'HU {Maďarský}\n' +
-      'IT {Taliansky}\n' +
-      'NL {Holandský}\n' +
-      'PL {Poľský}\n' +
-      'RO {Rumunský}\n' +
+      'Hodnota {fieldName} z {userSuppliedCountryCode, select,\n' +
+      'AT {Rakúska}\n' +
+      'BE {Belgicka}\n' +
+      'CZ {Česka}\n' +
+      'DE {Nemecka}\n' +
+      'ES {Španielska}\n' +
+      'FR {Francúzska}\n' +
+      'HU {Maďarska}\n' +
+      'IT {Talianska}\n' +
+      'NL {Holandska}\n' +
+      'PL {Poľska}\n' +
+      'RO {Rumunska}\n' +
       'other {{userSuppliedCountryCode}}\n' +
-      '} {fieldName} nie je povolené.',
+      '} nie je povolená.',
   },
 };
