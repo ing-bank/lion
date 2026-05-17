@@ -120,6 +120,12 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
         const focusableChildren = [...mainMenuFocusableChildren, ...moreButtonFocusableChildren];
         
         if (focusableChildren.length > 0) {
+          focusableChildren.forEach(item => {
+            if (!mainMenu.__listItems.includes(item)) {
+              mainMenu.__listItems.push(item);
+            }
+          });
+
           mainMenu._initListItems(focusableChildren);
         }
         

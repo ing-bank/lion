@@ -51,7 +51,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
           display: none;
         }
 
-        .more-button-menu:has([role="listitem"] [data-listitem-focusable]:focus):not(:has([role="listitem"] [data-listitem-focusable][active])) {
+        .more-button-menu:has([role="listitem"] [data-listitem-focusable]:focus):not(:has([role="listitem"] [data-listitem-focusable][aria-expanded="true"])) {
           overflow: visible;
           width: auto;
           height: auto;
@@ -459,7 +459,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
   }
 
   onFirstLevelMenuItemButtonDesktopFocused(ev) {
-    const isFirstLevelItemAChildOfMoreButtonMenu = ev.relatedTarget.closest('.more-button-menu');
+    const isFirstLevelItemAChildOfMoreButtonMenu = ev.relatedTarget.closest('[level="2"]') && ev.relatedTarget.closest('.more-button-menu');
     if (isFirstLevelItemAChildOfMoreButtonMenu) {
       // this.closeMenu();
       // console.log('focused in more button menu');
