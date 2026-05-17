@@ -203,6 +203,10 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
      */
     // @ts-ignore
     this.ctaSecondary = {};
+        /** @type {MenuItem[]} */
+    this.menuItems = [];
+    // /** @type {Boolean} */
+    // this.searchDisabled = false;
     this.breakpointMin = 1068; // force desktop
     /** @type {string[]} */
     this.suggestions = [];
