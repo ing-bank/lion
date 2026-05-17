@@ -434,6 +434,9 @@ const InteractiveListMixinImplementation = superclass =>
        * @returns
        */
       const handleInteractiveListAdditionLevel = (node, { newItems, level = 1 }) => {
+        if (node?.classList?.contains('more-button-wrapper')) {
+          console.log('has more-button-wrapper');
+        }
         // Move list item to element with aria-activedescendant ([role="listbox|menu|menubar"])
         if (level === 1) {
           this._listNode.appendChild(node);
@@ -441,6 +444,10 @@ const InteractiveListMixinImplementation = superclass =>
             return;
           }
         }
+        if (node?.classList?.contains('more-button-wrapper')) {
+          return;
+        }
+
         /**
          * When [role=group], we can have a grouped set within a level, like multiple
          * menuitemradios or -checkboxes.
@@ -459,6 +466,7 @@ const InteractiveListMixinImplementation = superclass =>
         // Also support scenarios like these: https://adrianroselli.com/2019/06/link-disclosure-widget-navigation.html
         // TODO: For now, we only allow direct children. Should we consider deeper nesting?
         const focusableChildren = Array.from(node.children).filter(c => isFocusableElement(c));
+
         if (focusableChildren.length) {
           for (const focusableChild of focusableChildren) {
             newItems.push(focusableChild);

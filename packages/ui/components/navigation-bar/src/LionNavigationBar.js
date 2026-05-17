@@ -103,7 +103,6 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
          * Use it here only for max-width for now
          */
         .navigation-bar__container {
-          
           border: 1px solid;
         }
 
@@ -486,7 +485,11 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
 
   _renderMoreButton(level, cfgForLevel) {
     return level === 1 && cfgForLevel.hasFullWidthFlyout
-      ? this._renderMoreButtonWrapper(this._listItemsTemplate(this.hiddenFirstLevelItems, level))
+      ? this._renderMoreButtonWrapper(
+          this.hiddenFirstLevelItems?.length > 0
+            ? this._listItemsTemplate(this.hiddenFirstLevelItems, level)
+            : '',
+        )
       : '';
   }
 
