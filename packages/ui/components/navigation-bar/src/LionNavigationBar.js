@@ -485,8 +485,10 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
     // @ts-ignore
     const cfgForLevel = this._levelCfg[`l${level}`];
 
-    const getId = (/** @type {import("./types.js").MenuItem} */ menuItem) =>
-      menuItem.id || `l${level}-${menuItem.title}`;
+    const menuItemsToRender =
+      level === 1 && this.responsiveMode === 'desktop' && this.showMoreButton
+        ? this.visibleFirstLevelItems
+        : menuItemsForLevel;
 
     return html`<lion-menu-hybrid
       .config="${cfgForLevel.openableConfig || {}}"
