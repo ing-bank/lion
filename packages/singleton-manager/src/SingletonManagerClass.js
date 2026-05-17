@@ -4,6 +4,7 @@ const sym = Symbol.for('lion::SingletonManagerClassStorage');
  * Allow compatibility with node-js (for ssr).
  * In the future, we can just use globalThis directly
  * (for now, we're backwards compatible with browsers that still only use window, since we don't know all contexts singleton-manager is used in).
+ * @type {* & Window}
  */
 const globalThisOrWindow = globalThis || window;
 export class SingletonManagerClass {

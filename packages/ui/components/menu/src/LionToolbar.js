@@ -1,5 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { LionMenu } from './LionMenu.js';
 import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
+
+/**
+ * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
+ */
 
 export class LionToolbar extends LionMenu {
   constructor() {
@@ -18,6 +23,7 @@ export class LionToolbar extends LionMenu {
   setCheckedIndex(index) {
     const item = this.listItems[index];
     if (item) {
+      // @ts-ignore - InteractiveListItemRole type
       const role = /** @type {InteractiveListItemRole} */ (item.getAttribute('role'));
       let listItemsWithinGroup = this.listItems;
       let multiple = this.multipleChoice;
@@ -63,9 +69,13 @@ export class LionToolbar extends LionMenu {
     }
   }
 
+  /**
+   * @param {*} newItems
+   */
   _initListItems(newItems) {
     super._initListItems(newItems);
 
+    // @ts-ignore - forEach parameter
     newItems.forEach(item => {
       if (
         item.getAttribute('role') === 'button' ||

@@ -537,13 +537,13 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       it('works with cache directive when reconnected', async () => {
         class CachingContext extends LitElement {
           static properties = {
-            switched: { type: Boolean },
+            showOverlay: { type: Boolean },
           };
 
           constructor() {
             super();
 
-            this.switched = false;
+            this.showOverlay = true;
           }
 
           get overlayEl() {
@@ -552,12 +552,12 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
 
           render() {
             return html`${cache(
-              this.switched
-                ? html`something else`
-                : html`<${tag} id="myOverlay">
+              this.showOverlay
+                ? html`<${tag} id="myOverlay">
               <div slot="content">content b</div>
               <button slot="invoker">invoker button b</button>
-            </${tag}>`,
+            </${tag}>`
+                : html`something else`,
             )}`;
           }
         }
@@ -578,7 +578,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         // @ts-expect-error [allow-protected] in tests
         const setupSpy = sinon.spy(el.overlayEl, '_setupOverlayCtrl');
 
-        el.switched = true;
+        el.showOverlay = false;
         // render the new content
         await el.updateComplete;
         // wait for the teardown to complete
@@ -588,7 +588,7 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
         expect(teardownSpy.callCount).to.equal(1);
         expect(setupSpy.callCount).to.equal(0);
 
-        el.switched = false;
+        el.showOverlay = true;
         await el.updateComplete;
         expect(setupSpy.callCount).to.equal(1);
 

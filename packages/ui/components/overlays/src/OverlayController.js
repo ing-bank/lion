@@ -3,6 +3,7 @@ import { deepContains } from './utils/deep-contains.js';
 import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
 import { _adoptStyleUtils } from './utils/adopt-styles.js';
 import { getFocusableElements } from './utils/get-focusable-elements.js';
+import { isEqualConfig } from './utils/is-equal-config.js';
 
 /**
  * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
@@ -32,27 +33,37 @@ import { getFocusableElements } from './utils/get-focusable-elements.js';
  * `<slot name="my-content">` belonging to `<div slot="content"/>` will be wrapped with wrappingDialogNodeL1 and contentWrapperNodeL2
  * inside shadow dom. With the help of temp markers, `<slot name="my-content">`'s original position will be respected.
  *
- * @param {{ wrappingDialogNodeL1:HTMLDialogElement|HTMLDivElement; contentWrapperNodeL2:Element; contentNodeL3: Element }} opts
+ * @param {{
+ *  wrappingDialogNodeL1: HTMLDialogElement|HTMLDivElement;
+ *  contentWrapperNodeL2:Element;
+ *  contentNodeL3: Element;
+ * }} opts
  */
 function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNodeL3 }) {
-  if (!(contentWrapperNodeL2.isConnected || contentNodeL3.isConnected)) {
+  // if contentWrapperNode is provided by the user,
+  // we assume it lives in shadow dom around a slot.
+  const hasLegacyMethodOfProvidingWrapperNode = Boolean(contentWrapperNodeL2.isConnected);
+  // We could be initialized via a directive (in offline dom). It's important that we know about the parents,
+  // as we cannot deal with single content nodes
+  const hasContentNodeAttachmentPoints = Boolean(contentNodeL3.parentNode);
+
+  if (!hasLegacyMethodOfProvidingWrapperNode && !hasContentNodeAttachmentPoints) {
     throw new Error(
-      '[OverlayController] Could not find a render target, since the provided contentNode is not connected to the DOM. Make sure that it is connected, e.g. by doing "document.body.appendChild(contentNode)", before passing it on.',
+      '[OverlayController] Could not find a render target, makes sure contentNode has a parent element (or contentWrapperNode is connected)',
     );
   }
 
+  /** @type {Node} */
   let parentElement;
-  const tempMarker = document.createComment('tempMarker');
+  const tempMarker = document.createComment('overlay-insertion-marker');
 
-  if (contentWrapperNodeL2.isConnected) {
+  if (hasLegacyMethodOfProvidingWrapperNode) {
     // This is the case when contentWrapperNode (living in shadow dom, wrapping <slot name="my-content-outlet">) is already provided via controller.
     parentElement = contentWrapperNodeL2.parentElement || contentWrapperNodeL2.getRootNode();
     parentElement.insertBefore(tempMarker, contentWrapperNodeL2);
     // Wrap...
     wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
-  }
-  // if contentNodeL3.isConnected
-  else {
+  } else {
     const contentIsProjected = contentNodeL3.assignedSlot;
     if (contentIsProjected) {
       parentElement =
@@ -93,7 +104,22 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
    * ```
    */
   parentElement.insertBefore(wrappingDialogNodeL1, tempMarker);
-  parentElement?.removeChild(tempMarker);
+
+  return function cleanup() {
+    if (hasLegacyMethodOfProvidingWrapperNode) {
+      parentElement?.insertBefore(contentWrapperNodeL2, tempMarker);
+    } else {
+      parentElement?.insertBefore(contentNodeL3, tempMarker);
+      if (parentElement.contains(contentWrapperNodeL2)) {
+        contentWrapperNodeL2.remove();
+      }
+    }
+    parentElement?.removeChild(tempMarker);
+
+    if (parentElement.contains(wrappingDialogNodeL1)) {
+      parentElement?.removeChild(wrappingDialogNodeL1);
+    }
+  };
 }
 
 /**
@@ -106,9 +132,17 @@ async function preloadPopper() {
 
 const childDialogsClosedInEventLoopWeakmap = new WeakMap();
 
+/**
+ * @param {HTMLElement | null} el
+ * @param {string} selector
+ * @returns {HTMLElement | null}
+ */
 function deepClosest(el, selector) {
+  // @ts-ignore - comparing HTMLElement to document/window for safety
   return (
+    // @ts-ignore - type comparison check
     (el && el !== document && el !== window && el.closest(selector)) ||
+    // @ts-ignore - host property on ShadowRoot
     deepClosest(el.getRootNode().host, selector)
   );
 }
@@ -203,13 +237,16 @@ export class OverlayController extends EventTarget {
         placement: 'center',
       },
       zIndex: 9999,
+      // TODO: rename to isActivated
       isOpenable: true,
       focusContentOnOpen: false,
       // This means that content will have visually-hidden / sr-only styles. This is handy for:
       // - hidden menus that should be "indexable" by screen readers (like the Links list in VO: https://support.apple.com/en-gb/guide/voiceover/mchlp2719/mac)
       // - "more" menus that put content in a dropdown that do not fit in the current row
       // - menus that should generally open on tab.
+      // @ts-ignore - hideVisually is an extension property
       hideVisually: false,
+      requireConnectedNodes: true,
     };
 
     /** @protected */
@@ -480,17 +517,14 @@ export class OverlayController extends EventTarget {
    * @param { OverlayConfig } cfgToAdd
    */
   updateConfig(cfgToAdd) {
-    // Teardown all previous configs
-    this.teardown();
-
     /**
      * @type {OverlayConfig}
      * @private
      */
-    this.__prevConfig = this.config;
+    const prevConfig = this.config;
 
     /** @type {OverlayConfig} */
-    this.config = {
+    const newConfig = {
       ...this._defaultConfig, // our basic ingredients
       ...this.__sharedConfig, // the initial configured overlayController
       ...cfgToAdd, // the added config
@@ -505,6 +539,14 @@ export class OverlayController extends EventTarget {
         ],
       },
     };
+
+    const shouldUpdate = !this.#hasSetup || !isEqualConfig(prevConfig, newConfig);
+    if (!shouldUpdate) return;
+    // Teardown all previous configs
+
+    this.teardown();
+
+    this.config = newConfig;
 
     /** @private */
     this.__validateConfiguration(this.config);
@@ -552,14 +594,21 @@ export class OverlayController extends EventTarget {
   _init() {
     if (!this.config.isOpenable) return;
 
-    if (!this.__contentHasBeenInitialized) {
-      this.__initContentDomStructure();
-      this.__contentHasBeenInitialized = true;
-    }
+    // TODO: should not be behind a flag when we are fully tearing down...
+    // TODO 2: When we move away from dialog (use popover to paint to top layer)
+    // and popper.js, (use popover and anchor positioning and popperjs as fallback, but we can put styles on contentNode),
+    // we dont need to create complex wrappers
+    // if (!this.__contentHasBeenInitialized) {
+    this.__initContentDomStructure();
+    // this.__contentHasBeenInitialized = true;
+    // }
+    this.__initVisibility();
 
     // Reset all positioning styles (local, c.q. Popper) and classes (global)
-    this.contentWrapperNode.removeAttribute('style');
-    this.contentWrapperNode.removeAttribute('class');
+    if (this.contentWrapperNode !== this.contentNode) {
+      this.contentWrapperNode.removeAttribute('style');
+      this.contentWrapperNode.removeAttribute('class');
+    }
 
     if (this.placementMode === 'local') {
       // Lazily load Popper as soon as the first local overlay is used...
@@ -647,6 +696,7 @@ export class OverlayController extends EventTarget {
       // parent stacking context
       // padding reset so we don't get a weird dialog visual square showing up
       wrappingDialogElement.style.cssText = `display:none; z-index: ${this.config.zIndex}; padding: 0;`;
+      // @ts-ignore - 'custom' is a valid extension of placementMode
       if (this.config.placementMode === 'custom') {
         // The user should have full freedom to control the content node, so its wrapper nodes should remain neutral.
         wrappingDialogElement.style.cssText += `position: static;`;
@@ -664,10 +714,11 @@ export class OverlayController extends EventTarget {
       // 'hack' that makes sure popperjs (that is applied one level lower) works correctly in deeply nested shadow roots
       this.contentWrapperNode.style.transform = 'translateZ(0px)';
 
-      rearrangeNodes({
+      this.__rearrangeNodesCleanup = rearrangeNodes({
         wrappingDialogNodeL1: wrappingDialogElement,
         contentWrapperNodeL2: this.contentWrapperNode,
         contentNodeL3: this.contentNode,
+        // requireConnectedNodes: Boolean(this.config.requireConnectedNodes),
       });
       wrappingDialogElement.open = true;
 
@@ -687,6 +738,7 @@ export class OverlayController extends EventTarget {
       // on the native dialog for all browsers: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
       const hasClosedBySupport = HTMLDialogElement && 'closedBy' in HTMLDialogElement.prototype;
       if (hasClosedBySupport) {
+        // @ts-ignore - closedBy is a newer property not in all TypeScript versions
         wrappingDialogElement.closedBy = 'none';
       } else {
         wrappingDialogElement.addEventListener(
@@ -713,12 +765,22 @@ export class OverlayController extends EventTarget {
         });
       }
     } else {
-      // quick hack to make none-overlay flows work...
+      // quick hack to make none-popper/global flows work...
       this.__contentWrapperNode = this.contentNode;
       this.__wrappingDialogNode = this.contentNode;
     }
+  }
 
-    this.__wrappingDialogNode.style.display = 'none';
+  __initVisibility() {
+    // TODO: allow defaultOpen?
+    /** @type {HTMLDialogElement} */ (this.__wrappingDialogNode).style.display = 'none';
+  }
+
+  // Clean up the DOM structure, leaving it as we found it.
+  // TODO: __teardownContentDomStructure method... use Resettable (rename ro Restorable) found in VisibilitToggleCtrl
+  __teardownVisibility() {
+    // TODO: full structure. For now we just reset display prop...
+    /** @type {HTMLDialogElement} */ (this.__wrappingDialogNode).style.display = '';
   }
 
   /**
@@ -789,6 +851,7 @@ export class OverlayController extends EventTarget {
    * @private
    */
   __storeOriginalAttrs(node, attrs) {
+    /** @type {Record<string, string | null>} */
     const attrMap = {};
     attrs.forEach(attrName => {
       attrMap[attrName] = node.getAttribute(attrName);
@@ -845,6 +908,7 @@ export class OverlayController extends EventTarget {
       if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
         this.__wrappingDialogNode.open = true;
       }
+
       // @ts-ignore
       this.__wrappingDialogNode.style.display = '';
       this._keepBodySize({ phase: 'before-show' });
@@ -858,6 +922,9 @@ export class OverlayController extends EventTarget {
         contentNode: this.contentNode,
       });
     }
+
+    // a styling/debug hook for open state
+    this.contentNode.setAttribute('data-open', '');
 
     if (this.config.focusContentOnOpen) {
       this.contentNode.focus();
@@ -903,9 +970,7 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _keepBodySize({ phase }) {
-    if (!this.preventsScroll) {
-      return;
-    }
+    if (!this.preventsScroll) return;
 
     this.manager.requestToKeepBodySize({ phase });
   }
@@ -950,7 +1015,6 @@ export class OverlayController extends EventTarget {
       if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
         this.__wrappingDialogNode.close();
       }
-
       // @ts-ignore
       this.__wrappingDialogNode.style.display = 'none';
       this._handleFeatures({ phase: 'hide' });
@@ -959,6 +1023,8 @@ export class OverlayController extends EventTarget {
       this._restoreFocus();
     }
     /** @type {function} */ (this._hideResolve)();
+
+    this.contentNode.removeAttribute('data-open');
   }
 
   /**
@@ -1084,17 +1150,9 @@ export class OverlayController extends EventTarget {
    * @param {{ phase: OverlayPhase }} config
    */
   _handleVisibilityTriggers({ phase }) {
-    if (typeof this.visibilityTriggerFunction === 'function') {
-      if (phase === 'init') {
-        this.__visibilityTriggerHandler = this.visibilityTriggerFunction({
-          phase,
-          controller: this,
-        });
-      }
-      if (this.__visibilityTriggerHandler[phase]) {
-        this.__visibilityTriggerHandler[phase]();
-      }
-    }
+    if (typeof this.visibilityTriggerFunction !== 'function') return;
+
+    this.visibilityTriggerFunction({ controller: this })?.[phase]?.();
   }
 
   /**
@@ -1251,7 +1309,9 @@ export class OverlayController extends EventTarget {
     if (phase === 'show') {
       this.#handleShiftKeyPress();
       this.#handleFocusInsideDialog();
+      // @ts-ignore - HTMLDialogElement methods
       this.__wrappingDialogNode?.close();
+      // @ts-ignore - HTMLDialogElement methods
       this.__wrappingDialogNode?.showModal();
       /**
        * At this moment `#handleFocusInsideDialog` should handle the focus.
@@ -1513,6 +1573,9 @@ export class OverlayController extends EventTarget {
     }
 
     this.contentNode?.removeEventListener('click', this.#hideOnCloseButtonClick);
+
+    this.__rearrangeNodesCleanup?.();
+    this.__teardownVisibility();
 
     this.#hasSetup = false;
   }

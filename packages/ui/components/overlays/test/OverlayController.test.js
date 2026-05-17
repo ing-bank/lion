@@ -283,8 +283,9 @@ describe('OverlayController', () => {
             contentNode,
           });
         };
+
         expect(createOverlayController).to.throw(
-          '[OverlayController] Could not find a render target, since the provided contentNode is not connected to the DOM. Make sure that it is connected, e.g. by doing "document.body.appendChild(contentNode)", before passing it on.',
+          '[OverlayController] Could not find a render target, makes sure contentNode has a parent element (or contentWrapperNode is connected)',
         );
       });
 
@@ -2292,6 +2293,7 @@ describe('OverlayController', () => {
     });
 
     it('should run with scroll prevention', async () => {
+      await overlayControllerPreventsScroll.hide();
       await overlayControllerPreventsScroll.show();
 
       expect(

@@ -78,6 +78,7 @@ export const OverlayMixinImplementation = superclass => {
 
     /** @param {OverlayConfig} value */
     set config(value) {
+      // TODO: built-in in overlayCtrl now... delete here
       const shouldUpdate = !isEqualConfig(this.config, value);
 
       if (this._overlayCtrl && shouldUpdate) {
@@ -300,10 +301,12 @@ export const OverlayMixinImplementation = superclass => {
     _setupOverlayCtrl() {
       if (this.#hasSetup) return;
 
+      const invokerNode = this._overlayInvokerNode;
+
       const config = {
         contentNode: this._overlayContentNode,
         contentWrapperNode: this._overlayContentWrapperNode,
-        invokerNode: this._overlayInvokerNode,
+        invokerNode: invokerNode && invokerNode instanceof HTMLElement ? invokerNode : undefined,
         referenceNode: this._overlayReferenceNode,
         backdropNode: this._overlayBackdropNode,
       };
@@ -477,6 +480,7 @@ export const OverlayMixinImplementation = superclass => {
   for (const postProcessor of overlayMixinPostProcessors) {
     postProcessor(OverlayMixin);
   }
+  // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   return OverlayMixin;
 };
 export const OverlayMixin = dedupeMixin(OverlayMixinImplementation);

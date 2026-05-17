@@ -21,3 +21,7 @@ export {
 } from '../components/overlays/src/utils/inert-siblings.js';
 
 export { overlays } from '../components/overlays/src/singleton.js';
+
+/**
+ * @typedef {import('../components/overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig
+ */
