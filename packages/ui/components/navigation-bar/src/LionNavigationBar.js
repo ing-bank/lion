@@ -51,6 +51,22 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
           display: none;
         }
 
+        .more-button-menu:has([role="listitem"] [data-listitem-focusable]:focus):not(:has([role="listitem"] [data-listitem-focusable][active])) {
+          overflow: visible;
+          width: auto;
+          height: auto;
+          position: absolute;
+          top: 100%;
+          background-color: var(--oj2_bg_default);
+        }
+
+        .more-button-menu,
+        .more-button-menu:has([role="listitem"] [data-listitem-focusable][aria-expanded="true"]) {
+          overflow: hidden;
+          width: 1px;
+          height: 1px;
+        }
+
         :host([responsive-mode='desktop'])
           [data-has-full-width-flyout]
           > [slot='list']
@@ -292,6 +308,14 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
     };
   }
 
+  getDeepActiveElement() {
+    let host = document.activeElement || document.body;
+    while (host && host.shadowRoot && host.shadowRoot.activeElement) {
+      host = host.shadowRoot.activeElement;
+    }
+    return host;
+  }
+
   _getSecondaryLevelCfg(responsiveMode) {
     if (responsiveMode === 'mobile') {
       return {
@@ -434,6 +458,38 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
     </div>`;
   }
 
+  onFirstLevelMenuItemButtonDesktopFocused(ev) {
+    const isFirstLevelItemAChildOfMoreButtonMenu = ev.relatedTarget.closest('.more-button-menu');
+    if (isFirstLevelItemAChildOfMoreButtonMenu) {
+      // this.closeMenu();
+      // console.log('focused in more button menu');
+      
+      console.log('close the L2 menu by clicking on L1');
+      ev.target.click();
+    }
+  }
+
+  hasMoreButtonMenuAnyFocusedFirstLevelItems = false;
+
+  onMoreButtonMouseDown = () => {
+    this.hasMoreButtonMenuAnyFocusedFirstLevelItems = false;    
+    const focusableFirstLevelItems = this.getMoreButtonWrapper().querySelectorAll('[data-listitem-focusable][data-invoker]');
+
+    [...focusableFirstLevelItems]?.forEach(focusableFirstLevelItem => {
+      console.log('focusableFirstLevelItem: ', focusableFirstLevelItem);
+      if (this.getMoreButtonWrapper().getRootNode().activeElement === focusableFirstLevelItem) {
+        this.hasMoreButtonMenuAnyFocusedFirstLevelItems = true;
+      }
+    });
+  };
+
+  onMoreButtonToggle = ev => {
+    if (!this.hasMoreButtonMenuAnyFocusedFirstLevelItems) {
+      // focus first element in the More button menu after menu is opened by click or Enter key press
+      this.getMoreButtonWrapper().querySelector('[data-listitem-focusable]').focus();
+    }
+  };
+
   _listItemsTemplate(items, level) {
     // @ts-ignore
     const cfgForNextLevel = this._levelCfg[`l${level + 1}`];
@@ -445,7 +501,11 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
       menuItem => html`
         <div role="listitem">
           ${menuItem.sub
-            ? html` <button id="${getId(menuItem)}" data-invoker>${menuItem.title}</button>
+            ? html` <button id="${getId(menuItem)}" 
+                data-listitem-focusable data-invoker
+                @focus="${this.onFirstLevelMenuItemButtonDesktopFocused}"
+              >${menuItem.title}                
+              </button>
                 ${menuItem.sub
                   ? this._menulevelTemplate(
                       menuItem.sub,
@@ -454,7 +514,11 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
                       menuItem.title,
                     )
                   : ''}`
-            : html` <a id="${getId(menuItem)}" href="${menuItem.link || ''}">${menuItem.title}</a>`}
+            : html` <a id="${getId(menuItem)}" 
+                data-listitem-focusable href="${menuItem.link || ''}"
+                @focus="${this.onFirstLevelMenuItemButtonDesktopFocused}"
+                >${menuItem.title}
+              </a>`}
         </div>
       `,
     );
@@ -495,7 +559,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
     >
       ${level > 1 && this.responsiveMode === 'mobile'
         ? html` <div role="listitem">
-            <button data-close data-level="${level}">&lt; ${prevText}</button>
+            <button data-close data-listitem-focusable data-level="${level}">&lt; ${prevText}</button>
           </div>`
         : ''}
       ${this._listItemsTemplate(menuItemsToRender, level)}

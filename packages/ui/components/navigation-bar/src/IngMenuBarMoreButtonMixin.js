@@ -135,7 +135,8 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
 
     getMoreButtonWrapper() {
       return this.shadowRoot
-        .querySelector(`lion-menu-hybrid ${this.moreButtonWrapperSelector}`);
+        .querySelectorAll('lion-menu-hybrid')[1]
+        .querySelector(this.moreButtonWrapperSelector);
     }
 
     getMoreButtonMenu() {
@@ -246,7 +247,9 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
 
     _renderMoreButtonWrapper(l1Items) {
       return html`<div class="more-button-wrapper">
-        <button>More</button>
+        <button tabindex="-1" @mousedown="${this.onMoreButtonMouseDown}" @click="${this.onMoreButtonToggle}">
+          More
+        </button>
         <div class="more-button-menu">
           ${l1Items}
         </div>        
