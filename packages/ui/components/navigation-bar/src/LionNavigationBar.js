@@ -46,10 +46,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
           position: relative;
         }
 
-        .more-button-menu {
-          display: none;
-        }
-
+        /** More button is hidden by default */
         .more-button-wrapper {
           display: none;
         }
@@ -101,13 +98,6 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
         /**
         * TODO listitem rigth margin/gap is not taken at the account ATM
         */
-
-        /** TODO get rid of it, come up with a robust solution
-         * Use it here only for max-width for now
-         */
-        .navigation-bar__container {
-          border: 1px solid;
-        }
 
         /**
          * More button relies on the fact that the menu items do not break the line

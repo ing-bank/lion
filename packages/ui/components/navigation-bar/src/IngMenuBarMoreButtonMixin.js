@@ -12,7 +12,6 @@ import { html } from 'lit';
  * Dependencies
  * . getFirstLevelItems
  * . menuItems -> menu in LionNavigationBar
- * '.navigation-bar__container' - max width
  * '.more-button-wrapper' - defined in now in LionNavigationBar. TODO move it here as a function
  * . desktop vs mobile. Do not run any from this file on 'mobile'
  * . this.breakpointMin = 1200; // force desktop -> changed in LionNavigationBar
@@ -66,13 +65,10 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
        * ======================== */
 
       /**
-       * The parent container which we don't want to overflow
-       */
-      this.navigationBarContainerSelector = '.navigation-bar__container';
-      /**
        * The first level `li` item with the More button
        */
       this.moreButtonWrapperSelector = '.more-button-wrapper';
+      this.moreButtonMenuSelector = '.more-button-menu';
     }
 
     // Add lifecycle methods here
@@ -139,12 +135,12 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
 
     getMoreButtonWrapper() {
       return this.shadowRoot
-        .querySelector('lion-menu-hybrid .more-button-wrapper');
+        .querySelector(`lion-menu-hybrid ${this.moreButtonWrapperSelector}`);
     }
 
     getMoreButtonMenu() {
       return this.shadowRoot
-        .querySelector('lion-menu-hybrid .more-button-menu');
+        .querySelector(`lion-menu-hybrid ${this.moreButtonMenuSelector}`);
     }
 
     /**
