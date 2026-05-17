@@ -203,7 +203,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
      */
     // @ts-ignore
     this.ctaSecondary = {};
-        /** @type {MenuItem[]} */
+    /** @type {MenuItem[]} */
     this.menuItems = [];
     // /** @type {Boolean} */
     // this.searchDisabled = false;
@@ -392,7 +392,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
           ${this.responsiveMode === 'desktop'
             ? this._ctasTemplate(this.ctaPrimary, this.ctaSecondary)
             : ''}
-          ${this._menulevelTemplate(this.menuItems, 1, '')}
+          ${this._menulevelTemplate(this.menuItems, 1, '', true)}
         </div>
         ${this.responsiveMode === 'mobile'
           ? html`<div class="nav-footer">
@@ -485,12 +485,15 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
    * @param {number} level
    * @returns {import('lit').TemplateResult}
    */
-  _menulevelTemplate(menuItemsForLevel, level, prevText = '') {
+  _menulevelTemplate(menuItemsForLevel, level, prevText = '', supportMoreButton = false) {
     // @ts-ignore
     const cfgForLevel = this._levelCfg[`l${level}`];
 
     const menuItemsToRender =
-      level === 1 && this.responsiveMode === 'desktop' && this.showMoreButton
+      level === 1 &&
+      this.responsiveMode === 'desktop' &&
+      supportMoreButton &&
+      this.hiddenFirstLevelItems?.length > 0
         ? this.visibleFirstLevelItems
         : menuItemsForLevel;
 
@@ -506,7 +509,7 @@ export class LionNavigationBar extends IngMenuBarMoreButtonMixin(ScopedElementsM
           </div>`
         : ''}
       ${this._listItemsTemplate(menuItemsToRender, level)}
-      ${this._renderMoreButton(level, cfgForLevel)}
+      ${supportMoreButton ? this._renderMoreButton(level, cfgForLevel) : ''}
     </lion-menu-hybrid>`;
   }
 }
