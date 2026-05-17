@@ -93,6 +93,41 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
       if (changedProperties.has('allFirstLevelItems')) {
         this.calculateVisibleItems();
       }
+      if (changedProperties.has('hiddenFirstLevelItems') && this.hiddenFirstLevelItems.length !== changedProperties.get('hiddenFirstLevelItems')?.length) {
+        function isFocusableElement(potentialFocusable) {
+          // @ts-ignore - returns Element or falsy value
+          return (
+            potentialFocusable &&
+            (potentialFocusable.hasAttribute('tabindex') ||
+              ['BUTTON', 'A'].includes(potentialFocusable.tagName))
+          );
+        }
+
+        const getFocusableChildren = (parent) => {
+          const listItems = parent.querySelectorAll(':scope > [role="listitem"]');
+          const focusableChildren = [];
+          listItems.forEach(listItem => {
+            [...listItem.children].filter(c => isFocusableElement(c))
+              .forEach(focusableChild => focusableChildren.push(focusableChild)); 
+          });
+          return focusableChildren;
+        };
+
+        const mainMenu = this.shadowRoot.querySelectorAll('lion-menu-hybrid')[1];
+        const listItems = mainMenu._listNode.querySelectorAll(':scope > [role="listitem"]');
+        
+        const mainMenuFocusableChildren = getFocusableChildren(mainMenu._listNode);
+        
+
+        const moreButtonMenu = this.getMoreButtonMenu();
+        const moreButtonFocusableChildren = getFocusableChildren(moreButtonMenu);
+        const focusableChildren = [...mainMenuFocusableChildren, ...moreButtonFocusableChildren];
+        
+        if (focusableChildren.length > 0) {
+          mainMenu._initListItems(focusableChildren);
+        }
+        
+      }
     }
 
     getFirstLevelItems() {
@@ -105,6 +140,11 @@ export const IngMenuBarMoreButtonMixinImplementation = superclass => {
     getMoreButtonWrapper() {
       return this.shadowRoot
         .querySelector('lion-menu-hybrid .more-button-wrapper');
+    }
+
+    getMoreButtonMenu() {
+      return this.shadowRoot
+        .querySelector('lion-menu-hybrid .more-button-menu');
     }
 
     /**
