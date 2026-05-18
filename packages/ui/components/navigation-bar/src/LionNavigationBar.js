@@ -214,7 +214,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     this.menuItems = [];
     // /** @type {Boolean} */
     // this.searchDisabled = false;
-    this.breakpointMin = 1400; // force desktop
+    this.breakpointMin = 1068; // force desktop
     /** @type {string[]} */
     this.suggestions = [];
 
@@ -479,6 +479,9 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           </div>
         `,
       )}
+      <div slot="more-button">
+        <button>More</button>
+      </div>
     </lion-menu-hybrid>`;
   }
 }
