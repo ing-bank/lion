@@ -434,10 +434,6 @@ const InteractiveListMixinImplementation = superclass =>
       this._setupList();
     }
 
-    getMoreButtonMenuElement() {
-      return this.querySelector('[data-more-button-menu]');
-    }
-
     getMoreButtonSlotProjection() {
       return this.querySelector('[slot="more-button"]');
     }

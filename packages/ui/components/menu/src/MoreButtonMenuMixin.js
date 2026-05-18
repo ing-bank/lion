@@ -33,6 +33,10 @@ export const MoreButtonMenuMixin = superclass =>
       return this.querySelector('[data-more-button-menu]');
     }
 
+    getMoreButtonMenu() {
+      return this.querySelector('[data-more-button-menu]');
+    }
+
     getMoreButtonMenuWrapper() {
       return this.querySelector('[data-more-button-wrapper]');
     }
@@ -56,7 +60,7 @@ export const MoreButtonMenuMixin = superclass =>
       while (i >= 0) {
         const listItem = listItems[i];
         listItem.style.display = 'none';
-        this.moveItemsToMoreButtonMenu(listItem);
+        this.moveItemToMoreButtonMenu(listItem);
 
         if (this.doItemsFit()) {
           return;
@@ -66,8 +70,8 @@ export const MoreButtonMenuMixin = superclass =>
       }
     }
 
-    moveItemsToMoreButtonMenu(listItem) {
-      const moreButtonMenuElement = this.getMoreButtonMenuElement();
+    moveItemToMoreButtonMenu(listItem) {
+      const moreButtonMenuElement = this.getMoreButtonMenu();
       moreButtonMenuElement.appendChild(listItem.previousSibling.previousSibling);
       moreButtonMenuElement.appendChild(listItem.previousSibling);
       const { nextSibling } = listItem.nextSibling;
@@ -78,6 +82,21 @@ export const MoreButtonMenuMixin = superclass =>
 
       // Show the item again after moving
       listItem.style.display = '';
+    }
+
+    moveFirstItemFromMoreMenuToListMenu() {
+      const moreButtonMenu = this.getMoreButtonMenu();
+      const listItem = moreButtonMenu.querySelector(':scope > [role="listitem"]');
+
+      const beforeNode = listItem.previousSibling;
+      const beforeBeforeNode = beforeNode?.previousSibling;
+      const afterNode = listItem.nextSibling;
+      const afterAfterNode = afterNode?.nextSibling;
+      const nodesToMove = [beforeBeforeNode, beforeNode, listItem, afterNode, afterAfterNode];
+
+      nodesToMove.forEach(node => {
+        moreButtonMenu.appendChild(node);
+      });
     }
 
     handleResize = () => {
