@@ -40,6 +40,67 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       css`
         /** specific styles */
 
+        /** More button is hidden by default */
+        [data-more-button-wrapper] {
+          display: none;
+        }
+        [data-more-button-menu]:has([role='listitem'] [data-listitem-focusable]:focus):not(
+            :has([role='listitem'] [data-listitem-focusable][aria-expanded='true'])
+          ) {
+          overflow: visible;
+          width: auto;
+          height: auto;
+          position: absolute;
+          top: 100%;
+          background-color: var(--oj2_bg_default);
+        }
+        [data-more-button-menu],
+        [data-more-button-menu]:has(
+          [role='listitem'] [data-listitem-focusable][aria-expanded='true']
+        ) {
+          overflow: hidden;
+          width: 1px;
+          height: 1px;
+        }
+
+        :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > button,
+        :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > a,
+        :host([responsive-mode='desktop'])
+          [level='1']
+          > [slot='list']
+          > [data-more-button-wrapper]
+          > [role='listitem']
+          > button,
+        :host([responsive-mode='desktop'])
+          [level='1']
+          > [slot='list']
+          > [data-more-button-wrapper]
+          > [role='listitem']
+          > a {
+          white-space: nowrap;
+        }
+        /**
+        * TODO listitem rigth margin/gap is not taken at the account ATM
+        */
+        /**
+         * More button relies on the fact that the menu items do not break the line
+         * TODO is it optimal?
+         */
+        :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > button,
+        :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > a {
+          white-space: nowrap;
+        }
+        /**
+        * TODO remove it. Use it now for testing More button feature
+        */
+        :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'],
+        :host([responsive-mode='desktop'])
+          [level='1']
+          > [slot='list']
+          > [data-more-button-wrapper] {
+          margin-right: 180px;
+        }
+
         :host([responsive-mode='desktop']) [data-has-full-width-flyout] > [slot='list'] {
           /** make sure that we give the right styles */
           position: relative;
@@ -331,7 +392,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           ${this.responsiveMode === 'desktop'
             ? this._ctasTemplate(this.ctaPrimary, this.ctaSecondary)
             : ''}
-          ${this._menulevelTemplate(this.menuItems, 1, '')}
+          ${this._menulevelTemplate(this.menuItems, 1, '', true)}
         </div>
         ${this.responsiveMode === 'mobile'
           ? html`<div class="nav-footer">
@@ -388,11 +449,12 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @param {number} level
    * @returns {import('lit').TemplateResult}
    */
-  _menulevelTemplate(menuItemsForLevel, level, prevText = '') {
+  _menulevelTemplate(menuItemsForLevel, level, prevText = '', itemWrap = false) {
     // @ts-ignore
     const cfgForLevel = this._levelCfg[`l${level}`];
 
     return html`<lion-menu-hybrid
+      ?item-wrap=${itemWrap}
       .config="${cfgForLevel.openableConfig || {}}"
       .bar="${cfgForLevel.isBar}"
       ?data-has-full-width-flyout="${cfgForLevel.hasFullWidthFlyout}"

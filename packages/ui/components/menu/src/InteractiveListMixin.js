@@ -481,6 +481,20 @@ const InteractiveListMixinImplementation = superclass =>
         }
       };
 
+      const createMoreButtonWrapper = () => {
+        if (this.itemWrap && nodes.length) {
+          const moreButtonWrapper = document.createElement('div');
+          moreButtonWrapper.setAttribute('data-more-button-wrapper', '');
+          const moreButton = document.createElement('button');
+          moreButton.appendChild(document.createTextNode('More'));
+          moreButtonWrapper.appendChild(moreButton);
+          const moreButtonMenu = document.createElement('div');
+          moreButtonMenu.setAttribute('data-more-button-menu', '');
+          moreButtonWrapper.appendChild(moreButtonMenu);
+          this._listNode.appendChild(moreButtonWrapper);
+        }
+      };
+
       /** @type {HTMLElement[]} */
       const newItems = [];
 
@@ -489,6 +503,8 @@ const InteractiveListMixinImplementation = superclass =>
         // @ts-ignore - node type compatibility
         handleInteractiveListAdditionLevel(node, { newItems });
       });
+
+      createMoreButtonWrapper();
 
       newItems.forEach(item => {
         if (!this.__listItems.includes(item)) {
