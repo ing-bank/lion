@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: 'Открыть модуль выбора даты',
+  openDatepickerLabel: 'Открыть выбор "{fieldName}"',
 };

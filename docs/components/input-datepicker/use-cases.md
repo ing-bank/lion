@@ -96,7 +96,22 @@ Faulty prefilled input will be cleared
 
 ```js preview-story
 export const faultyPrefilled = () => html`
-  <lion-input-datepicker label="Faulty prefiiled" .modelValue="${new Date('30/01/2022')}">
+  <lion-input-datepicker label="Faulty prefilled" .modelValue="${new Date('30/01/2022')}">
+  </lion-input-datepicker>
+`;
+```
+
+## Accessibility
+
+To ensure an accessible experience for all users, including those using screen readers, provide a descriptive label for your datepicker. An aria-label will be build based on it: "Open {label} picker". In case your label doesn't fit, you can replace it with the `fieldName` property.
+
+### Using fieldName property
+
+If your label is too long for the aria-label text "Open {label} picker", provide a shorter `fieldName` to keep the picker button's aria-label concise:
+
+```js preview-story
+export const ariaLabelFieldName = () => html`
+  <lion-input-datepicker label="Event start date and time" .fieldName="${'StartDate'}">
   </lion-input-datepicker>
 `;
 ```

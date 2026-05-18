@@ -3,6 +3,7 @@ import { browserDetection } from '@lion/ui/core.js';
 /**
  * @typedef {import('lit').CSSResult} CSSResult
  * @typedef {import('./OverlayController.js').OverlayController} OverlayController
+ * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
  */
 
 import { overlayDocumentStyle } from './overlayDocumentStyle.js';
@@ -53,6 +54,31 @@ export class OverlaysManager {
      * @private
      */
     this.__blockingMap = new WeakMap();
+    /**
+     * @private
+     * @type {{
+     *   preventScrollCount: number;
+     *   clientWidth: number | undefined;
+     *   clientHeight: number | undefined;
+     *   marginRightInline: string | undefined;
+     *   marginBottomInline: string | undefined;
+     *   marginRight: number | undefined;
+     *   marginBottom: number | undefined;
+     * }}
+     */
+    this.__bodySizeVars = {
+      preventScrollCount: 0,
+      clientWidth: undefined,
+      clientHeight: undefined,
+      marginRightInline: undefined,
+      marginBottomInline: undefined,
+      marginRight: undefined,
+      marginBottom: undefined,
+    };
+
+    this.__forTesting = {
+      bodySizeVars: this.__bodySizeVars,
+    };
 
     if (!OverlaysManager.__globalStyleNode) {
       OverlaysManager.__globalStyleNode = OverlaysManager.__createGlobalStyleNode();
@@ -119,6 +145,13 @@ export class OverlaysManager {
     this.__list = [];
     this.__shownList = [];
     this._siblingsInert = false;
+    this.__bodySizeVars.preventScrollCount = 0;
+    this.__bodySizeVars.clientWidth = undefined;
+    this.__bodySizeVars.clientHeight = undefined;
+    this.__bodySizeVars.marginRightInline = undefined;
+    this.__bodySizeVars.marginBottomInline = undefined;
+    this.__bodySizeVars.marginRight = undefined;
+    this.__bodySizeVars.marginBottom = undefined;
 
     if (OverlaysManager.__globalStyleNode) {
       document.head.removeChild(
@@ -135,6 +168,69 @@ export class OverlaysManager {
   }
 
   /** PreventsScroll */
+
+  /**
+   * @param {{ phase: OverlayPhase }} config
+   */
+  requestToKeepBodySize({ phase }) {
+    switch (phase) {
+      case 'before-show':
+        // Tracks the amount of active preventsScroll overlays.
+        // Only the first overlay captures body metrics and only the last one restores them.
+        if (this.__bodySizeVars.preventScrollCount === 0) {
+          this.__bodySizeVars.clientWidth = document.body.clientWidth;
+          this.__bodySizeVars.clientHeight = document.body.clientHeight;
+          this.__bodySizeVars.marginRightInline = document.body.style.marginRight;
+          this.__bodySizeVars.marginBottomInline = document.body.style.marginBottom;
+        }
+        this.__bodySizeVars.preventScrollCount += 1;
+        break;
+      case 'show': {
+        if (this.__bodySizeVars.preventScrollCount === 1) {
+          if (window.getComputedStyle) {
+            const bodyStyle = window.getComputedStyle(document.body);
+            this.__bodySizeVars.marginRight = parseInt(
+              bodyStyle.getPropertyValue('margin-right'),
+              10,
+            );
+            this.__bodySizeVars.marginBottom = parseInt(
+              bodyStyle.getPropertyValue('margin-bottom'),
+              10,
+            );
+          } else {
+            this.__bodySizeVars.marginRight = 0;
+            this.__bodySizeVars.marginBottom = 0;
+          }
+          const scrollbarWidth =
+            document.body.clientWidth - /** @type {number} */ (this.__bodySizeVars.clientWidth);
+          const scrollbarHeight =
+            document.body.clientHeight - /** @type {number} */ (this.__bodySizeVars.clientHeight);
+          const newMarginRight = this.__bodySizeVars.marginRight + scrollbarWidth;
+          const newMarginBottom = this.__bodySizeVars.marginBottom + scrollbarHeight;
+          // @ts-expect-error [external]: CSS not yet typed
+          if (window.CSS?.number && document.body.attributeStyleMap?.set) {
+            document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
+            document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
+          } else {
+            document.body.style.marginRight = `${newMarginRight}px`;
+            document.body.style.marginBottom = `${newMarginBottom}px`;
+          }
+        }
+        break;
+      }
+      case 'hide':
+      case 'teardown':
+        if (this.__bodySizeVars.preventScrollCount > 0) {
+          this.__bodySizeVars.preventScrollCount -= 1;
+          if (this.__bodySizeVars.preventScrollCount === 0) {
+            document.body.style.marginRight = this.__bodySizeVars.marginRightInline || '';
+            document.body.style.marginBottom = this.__bodySizeVars.marginBottomInline || '';
+          }
+        }
+        break;
+      /* no default */
+    }
+  }
 
   // eslint-disable-next-line class-methods-use-this
   requestToPreventScroll() {

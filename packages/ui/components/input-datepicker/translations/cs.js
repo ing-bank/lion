@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: 'Otevřete pro výběr data',
+  openDatepickerLabel: 'Otevřít výběr "{fieldName}"',
 };

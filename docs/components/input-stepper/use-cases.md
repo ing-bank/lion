@@ -127,3 +127,29 @@ The value is always aligned with the defined step size when using the increase o
   value="55"
 ></lion-input-stepper>
 ```
+
+### Disabled
+
+`disabled` attribute will be delegated to the native `<input>` to make it disabled.
+
+This field **will not be included** in the parent fieldset or form's `serializedValue`.
+
+```html preview-story
+<lion-input-stepper name="year" disabled value="10">
+  <label slot="label">How old is the existence?</label>
+  <div slot="after" data-description>In Billion Years</div>
+</lion-input-stepper>
+```
+
+### ReadOnly
+
+`readonly` attribute will be delegated to the native `<input>` to make it read-only, and will prevent buttons to increase or decrease value.
+
+This field **will still be included** in the parent fieldset or form's `serializedValue`.
+
+```html preview-story
+<lion-input-stepper name="year" readonly value="10">
+  <label slot="label">How old is the existence?</label>
+  <div slot="after" data-description>In Billion Years</div>
+</lion-input-stepper>
+```

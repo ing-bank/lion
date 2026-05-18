@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: 'Избор на отворена дата',
+  openDatepickerLabel: 'Отворете "{fieldName}" избор',
 };

@@ -113,11 +113,11 @@ export const overlayShadowDomStyle = css`
   }
 
   @media screen and (prefers-reduced-motion: reduce) {
-    .overlays .overlays__backdrop--animation-in {
+    .overlays__backdrop--animation-in {
       animation: overlays-backdrop-fade-in 1ms;
     }
 
-    .overlays .overlays__backdrop--animation-out {
+    .overlays__backdrop--animation-out {
       animation: overlays-backdrop-fade-out 1ms;
     }
   }

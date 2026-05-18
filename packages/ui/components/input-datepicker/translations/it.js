@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: 'Raccoglitore di data aperta',
+  openDatepickerLabel: 'Apri il selettore "{fieldName}"',
 };

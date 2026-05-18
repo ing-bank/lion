@@ -1,7 +1,7 @@
-import { html, css, render, nothing } from 'lit';
-import { formatNumber, LocalizeMixin, parseNumber } from '@lion/ui/localize-no-side-effects.js';
+import { IsNumber, MaxNumber, MinNumber } from '@lion/ui/form-core.js';
 import { LionInput } from '@lion/ui/input.js';
-import { IsNumber, MinNumber, MaxNumber } from '@lion/ui/form-core.js';
+import { formatNumber, LocalizeMixin, parseNumber } from '@lion/ui/localize-no-side-effects.js';
+import { css, html, nothing, render } from 'lit';
 import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
 
 /**
@@ -280,9 +280,14 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
   /**
    * Increment the value based on given step or default step value is 1
+   * @param {Event} ev - Click event
    * @protected
    */
-  _increment() {
+  _increment(ev) {
+    if (this.disabled || this.readOnly) {
+      ev?.preventDefault();
+      return;
+    }
     const { step, min, max } = this.values;
     const stepMin = min !== Infinity ? min : 0;
     const epsilon = 1e-10; // Tolerance for floating-point comparison
@@ -309,9 +314,14 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
 
   /**
    * Decrement the value based on given step or default step value is 1
+   * @param {Event} ev - Click event
    * @protected
    */
-  _decrement() {
+  _decrement(ev) {
+    if (this.disabled || this.readOnly) {
+      ev?.preventDefault();
+      return;
+    }
     const { step, max, min } = this.values;
     const stepMin = min !== Infinity ? min : 0;
     const epsilon = 1e-10; // Tolerance for floating-point comparison
@@ -410,7 +420,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
   _decrementorTemplate() {
     return html`
       <button
-        ?disabled=${this.disabled || this.readOnly}
         @click=${this._decrement}
         type="button"
         aria-label="${this.msgLit('lion-input-stepper:decrease')} ${this.fieldName}"
@@ -428,7 +437,6 @@ export class LionInputStepper extends LocalizeMixin(LionInput) {
   _incrementorTemplate() {
     return html`
       <button
-        ?disabled=${this.disabled || this.readOnly}
         @click=${this._increment}
         type="button"
         aria-label="${this.msgLit('lion-input-stepper:increase')} ${this.fieldName}"

@@ -3648,4 +3648,108 @@ describe('lion-combobox', () => {
       expect(el.opened).to.be.true;
     });
   });
+
+  describe('Special Characters in Search', () => {
+    it('correctly escapes all regex special characters in search queries', async () => {
+      const el = /** @type {LionCombobox} */ (
+        await fixture(html`
+          <lion-combobox label="Search" name="foo">
+            <lion-option .choiceValue="${'test.com'}">test.com</lion-option>
+            <lion-option .choiceValue="${'func(arg)'}">func(arg)</lion-option>
+            <lion-option .choiceValue="${'array[0]'}">array[0]</lion-option>
+            <lion-option .choiceValue="${'C++'}">C++</lion-option>
+            <lion-option .choiceValue="${'a * b'}">a * b</lion-option>
+            <lion-option .choiceValue="${'What?'}">What?</lion-option>
+            <lion-option .choiceValue="${'$100'}">$100</lion-option>
+            <lion-option .choiceValue="${'x^2'}">x^2</lion-option>
+            <lion-option .choiceValue="${'a | b'}">a | b</lion-option>
+            <lion-option .choiceValue="${'path\\file'}">path\\file</lion-option>
+            <lion-option .choiceValue="${'{name}'}">{name}</lion-option>
+            <lion-option .choiceValue="${'user+tag@example.com'}">user+tag@example.com</lion-option>
+            <lion-option .choiceValue="${'(a+b)*c^2$'}">>(a+b)*c^2$</lion-option>
+            <lion-option .choiceValue="${'test|value?[x]'}">test|value?[x]</lion-option>
+            <lion-option .choiceValue="${'file.{txt|md}\\n'}">file.{txt|md}\\n</lion-option>
+            <lion-option .choiceValue="${'testXcom'}">testXcom</lion-option>
+            <lion-option .choiceValue="${'funcXargX'}">funcXargX</lion-option>
+            <lion-option .choiceValue="${'arrayX0X'}">arrayX0X</lion-option>
+          </lion-combobox>
+        `)
+      );
+
+      // Test dot - should not act as wildcard
+      await mimicUserTyping(el, 'test.com');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['test.com']);
+
+      // Test parentheses
+      await mimicUserTyping(el, '(arg)');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['func(arg)']);
+
+      // Test square brackets
+      await mimicUserTyping(el, '[0]');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['array[0]']);
+
+      // Test plus sign
+      await mimicUserTyping(el, '+');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['C++', 'user+tag@example.com', '(a+b)*c^2$']);
+
+      // Test asterisk
+      await mimicUserTyping(el, '*');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['a * b', '(a+b)*c^2$']);
+
+      // Test question mark
+      await mimicUserTyping(el, '?');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['What?', 'test|value?[x]']);
+
+      // Test dollar sign
+      await mimicUserTyping(el, '$');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['$100', '(a+b)*c^2$']);
+
+      // Test caret
+      await mimicUserTyping(el, '^2');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['x^2', '(a+b)*c^2$']);
+
+      // Test pipe
+      await mimicUserTyping(el, '|');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['a | b', 'test|value?[x]', 'file.{txt|md}\\n']);
+
+      // Test backslash
+      await mimicUserTyping(el, '\\');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['path\\file', 'file.{txt|md}\\n']);
+
+      // Test curly braces
+      await mimicUserTyping(el, '{name}');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['{name}']);
+
+      // Test complex combination with multiple special characters
+      await mimicUserTyping(el, '(a+b)*c');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['(a+b)*c^2$']);
+
+      // Test email with plus and dot
+      await mimicUserTyping(el, 'user+tag@example.com');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['user+tag@example.com']);
+
+      // Test combination with brackets, pipe and question mark
+      await mimicUserTyping(el, 'value?[x]');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['test|value?[x]']);
+
+      // Test combination with dot, curly braces, pipe and backslash
+      await mimicUserTyping(el, '.{txt|md}');
+      await el.updateComplete;
+      expect(getFilteredOptionValues(el)).to.eql(['file.{txt|md}\\n']);
+    });
+  });
 });

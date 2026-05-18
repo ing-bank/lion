@@ -1,4 +1,5 @@
 export { OverlayConfig } from '../../components/overlays/types/OverlayConfig.js';
+export { OverlayPhase } from '../../components/overlays/types/OverlayConfig.js';
 export { ViewportConfig } from '../../components/overlays/types/OverlayConfig.js';
 export { ViewportPlacement } from '../../components/overlays/types/OverlayConfig.js';
 export { DefineOverlayConfig } from '../../components/overlays/types/OverlayMixinTypes.js';

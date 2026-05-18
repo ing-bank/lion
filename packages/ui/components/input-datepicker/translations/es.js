@@ -1,3 +1,3 @@
 export default {
-  openDatepickerLabel: 'Abrir selector de fecha',
+  openDatepickerLabel: 'Abrir selector "{fieldName}"',
 };
