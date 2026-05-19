@@ -27,18 +27,28 @@ export const MoreButtonMenuMixin = superclass =>
 
     connectedCallback() {
       super.connectedCallback();
-      if (this.itemWrap) {
-        // @ts-ignore - host is a custom element instance
-        this.__resizeObserver?.observe(/** @type {Element} */ (this));
-      }
+      this.addResizeObserver();
     }
 
     disconnectedCallback() {
-      this.__resizeObserver?.disconnect();
+      this.removeResizeObserver();
       if (this.__resizeTimeout) {
         clearTimeout(this.__resizeTimeout);
       }
       super.disconnectedCallback();
+    }
+
+    addResizeObserver() {
+      if (!this.itemWrap) {
+        return;
+      }
+
+      // @ts-ignore - host is a custom element instance
+      this.__resizeObserver?.observe(/** @type {Element} */ (this));
+    }
+
+    removeResizeObserver() {
+      this.__resizeObserver?.disconnect();
     }
 
     getMoreButton() {
@@ -71,11 +81,6 @@ export const MoreButtonMenuMixin = superclass =>
       );
     }
 
-    updateOverflowDelta() {
-      this.previousOverflowDelta = this.currentOverflowDelta;
-      this.currentOverflowDelta = this._listNode.scrollWidth - this._listNode.clientWidth;
-    }
-
     doItemsFit() {
       return this.currentOverflowDelta === 0;
     }
@@ -84,25 +89,6 @@ export const MoreButtonMenuMixin = superclass =>
       const listNode = this._listNode;
       return Array.from(listNode.querySelectorAll(':scope > [role="listitem"]'));
     }
-
-    // hideItemsUntilFit(listItems) {
-    //   // First, make the more button wrapper visible
-    //   this.displayMoreButton();
-
-    //   // Then check if items fit (including the more button)
-    //   let i = listItems.length - 1;
-    //   while (i >= 0) {
-    //     const listItem = listItems[i];
-    //     listItem.style.display = 'none';
-    //     this.moveItemToMoreButtonMenu(listItem);
-
-    //     if (this.doItemsFit()) {
-    //       return;
-    //     }
-
-    //     i -= 1;
-    //   }
-    // }
 
     moveItemToMoreButtonMenuFromMainMenu() {
       const moreButtonMenuElement = this.getMoreButtonMenu();
@@ -113,6 +99,7 @@ export const MoreButtonMenuMixin = superclass =>
       moreButtonMenuElement.appendChild(listItem.previousSibling);
       const { nextSibling } = listItem.nextSibling;
       const { nextSibling: nextAfterNextSibling } = listItem.nextSibling.nextSibling;
+      console.log('nextAfterNextSibling:', nextAfterNextSibling);
       moreButtonMenuElement.appendChild(listItem);
       moreButtonMenuElement.appendChild(nextSibling);
       moreButtonMenuElement.appendChild(nextAfterNextSibling);
@@ -152,8 +139,11 @@ export const MoreButtonMenuMixin = superclass =>
       }
 
       this.__resizeTimeout = setTimeout(() => {
-        this.moveAllItemsToMainMenuFromMoreButtonMenu();
+        this.removeResizeObserver();
         this.hideMoreButton();
-      }, 20);
+        this.moveAllItemsToMainMenuFromMoreButtonMenu();
+
+        this.moveAllItemsToMainMenuFromMoreButtonMenu();
+      }, 50);
     };
   };
