@@ -8,17 +8,21 @@ export const MoreButtonMenuMixin = superclass =>
     static get properties() {
       return {
         ...super.properties,
-        itemsFit: { type: Boolean, state: true },
       };
     }
 
     constructor() {
       super();
-      this.itemsFit = true;
       this.__resizeTimeout = null;
       this.__resizeObserver = new ResizeObserver(() => {
         this.handleResize();
       });
+      /** @type {boolean|null} */
+      this.isMoreButtonShown = null;
+      /** @type {number|null} */
+      this.previousOverflowDelta = null;
+      /** @type {number|null} */
+      this.currentOverflowDelta = null;
     }
 
     connectedCallback() {
@@ -49,37 +53,62 @@ export const MoreButtonMenuMixin = superclass =>
       return this.querySelector('[data-more-button-wrapper]');
     }
 
-    doItemsFit() {
-      const listElement = this._listNode;
-      return listElement.scrollWidth === listElement.clientWidth;
+    displayMoreButton() {
+      this.getMoreButtonMenuWrapper().style.display = 'block';
+      this.isMoreButtonShown = true;
     }
 
-    getFirstLevelListItems() {
+    hideMoreButton() {
+      this.getMoreButtonMenuWrapper().style.display = 'none';
+      this.isMoreButtonShown = false;
+    }
+
+    isMenuGettingWider() {
+      return (
+        this.previousOverflowDelta !== null &&
+        this.currentOverflowDelta !== null &&
+        this.currentOverflowDelta < this.previousOverflowDelta
+      );
+    }
+
+    updateOverflowDelta() {
+      this.previousOverflowDelta = this.currentOverflowDelta;
+      this.currentOverflowDelta = this._listNode.scrollWidth - this._listNode.clientWidth;
+    }
+
+    doItemsFit() {
+      return this.currentOverflowDelta === 0;
+    }
+
+    getListItems() {
       const listNode = this._listNode;
       return Array.from(listNode.querySelectorAll(':scope > [role="listitem"]'));
     }
 
-    hideItemsUntilFit(listItems) {
-      // First, make the more button wrapper visible
-      this.getMoreButtonMenuWrapper().style.display = 'block';
+    // hideItemsUntilFit(listItems) {
+    //   // First, make the more button wrapper visible
+    //   this.displayMoreButton();
 
-      // Then check if items fit (including the more button)
-      let i = listItems.length - 1;
-      while (i >= 0) {
-        const listItem = listItems[i];
-        listItem.style.display = 'none';
-        this.moveItemToMoreButtonMenu(listItem);
+    //   // Then check if items fit (including the more button)
+    //   let i = listItems.length - 1;
+    //   while (i >= 0) {
+    //     const listItem = listItems[i];
+    //     listItem.style.display = 'none';
+    //     this.moveItemToMoreButtonMenu(listItem);
 
-        if (this.doItemsFit()) {
-          return;
-        }
+    //     if (this.doItemsFit()) {
+    //       return;
+    //     }
 
-        i -= 1;
-      }
-    }
+    //     i -= 1;
+    //   }
+    // }
 
-    moveItemToMoreButtonMenu(listItem) {
+    moveItemToMoreButtonMenuFromMainMenu() {
       const moreButtonMenuElement = this.getMoreButtonMenu();
+      const listItems = this._listNode.querySelectorAll(':scope > [role="listitem"]');
+      const listItem = listItems[listItems.length - 1];
+
       moreButtonMenuElement.appendChild(listItem.previousSibling.previousSibling);
       moreButtonMenuElement.appendChild(listItem.previousSibling);
       const { nextSibling } = listItem.nextSibling;
@@ -87,14 +116,16 @@ export const MoreButtonMenuMixin = superclass =>
       moreButtonMenuElement.appendChild(listItem);
       moreButtonMenuElement.appendChild(nextSibling);
       moreButtonMenuElement.appendChild(nextAfterNextSibling);
-
-      // Show the item again after moving
-      listItem.style.display = '';
+      this.displayMoreButton();
     }
 
-    moveFirstItemFromMoreMenuToListMenu() {
+    moveItemToMainMenuFromMoreButtonMenu() {
       const moreButtonMenu = this.getMoreButtonMenu();
       const listItem = moreButtonMenu.querySelector(':scope > [role="listitem"]');
+
+      if (!listItem) {
+        return false;
+      }
 
       const beforeNode = listItem.previousSibling;
       const beforeBeforeNode = beforeNode?.previousSibling;
@@ -103,8 +134,16 @@ export const MoreButtonMenuMixin = superclass =>
       const nodesToMove = [beforeBeforeNode, beforeNode, listItem, afterNode, afterAfterNode];
 
       nodesToMove.forEach(node => {
-        moreButtonMenu.appendChild(node);
+        this._listNode.appendChild(node);
       });
+
+      return true;
+    }
+
+    moveAllItemsToMainMenuFromMoreButtonMenu() {
+      while (this.moveItemToMainMenuFromMoreButtonMenu()) {
+        // Keep moving items back until the more-button menu is empty.
+      }
     }
 
     handleResize = () => {
@@ -113,21 +152,8 @@ export const MoreButtonMenuMixin = superclass =>
       }
 
       this.__resizeTimeout = setTimeout(() => {
-        const listItems = this.getFirstLevelListItems();
-
-        for (let i = 0; i < listItems.length; i += 1) {
-          const listItem = listItems[i];
-          listItem.style.display = '';
-        }
-        this.getMoreButtonMenuWrapper().style.display = 'none';
-
-        if (this.doItemsFit()) {
-          this.getMoreButtonMenuWrapper().style.display = 'block';
-        } else {
-          this.hideItemsUntilFit(listItems);
-        }
-
-        this.itemsFit = this.doItemsFit();
-      }, 10);
+        this.moveAllItemsToMainMenuFromMoreButtonMenu();
+        this.hideMoreButton();
+      }, 20);
     };
   };
