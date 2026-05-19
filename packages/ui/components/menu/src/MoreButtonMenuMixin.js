@@ -19,10 +19,6 @@ export const MoreButtonMenuMixin = superclass =>
       });
       /** @type {boolean|null} */
       this.isMoreButtonShown = null;
-      /** @type {number|null} */
-      this.previousOverflowDelta = null;
-      /** @type {number|null} */
-      this.currentOverflowDelta = null;
     }
 
     connectedCallback() {
@@ -73,16 +69,8 @@ export const MoreButtonMenuMixin = superclass =>
       this.isMoreButtonShown = false;
     }
 
-    isMenuGettingWider() {
-      return (
-        this.previousOverflowDelta !== null &&
-        this.currentOverflowDelta !== null &&
-        this.currentOverflowDelta < this.previousOverflowDelta
-      );
-    }
-
     doItemsFit() {
-      return this.currentOverflowDelta === 0;
+      return this._listNode.scrollWidth - this._listNode.clientWidth === 0;
     }
 
     getListItems() {
@@ -99,10 +87,10 @@ export const MoreButtonMenuMixin = superclass =>
       moreButtonMenuElement.appendChild(listItem.previousSibling);
       const { nextSibling } = listItem.nextSibling;
       const { nextSibling: nextAfterNextSibling } = listItem.nextSibling.nextSibling;
-      console.log('nextAfterNextSibling:', nextAfterNextSibling);
       moreButtonMenuElement.appendChild(listItem);
       moreButtonMenuElement.appendChild(nextSibling);
       moreButtonMenuElement.appendChild(nextAfterNextSibling);
+      listItem.style.display = '';
       this.displayMoreButton();
     }
 
@@ -143,7 +131,35 @@ export const MoreButtonMenuMixin = superclass =>
         this.hideMoreButton();
         this.moveAllItemsToMainMenuFromMoreButtonMenu();
 
-        this.moveAllItemsToMainMenuFromMoreButtonMenu();
+        // Make all items visible on main menu
+        const mainMenuItems = this.getListItems();
+        for (const mainMenuItem of mainMenuItems) {
+          mainMenuItem.style.display = '';
+        }
+
+        // 1) Check if items fit
+        // If items fit, don't do nothing (return)
+        if (this.doItemsFit()) {
+          return;
+        }
+
+        // 2) Items don't fit, show more button
+        this.displayMoreButton();
+
+        // 3) Hide items 1 by 1 from end until they fit
+        let hiddenItemsCount = 0;
+        for (let i = mainMenuItems.length - 1; i >= 0 && !this.doItemsFit(); i -= 1) {
+          mainMenuItems[i].style.display = 'none';
+          hiddenItemsCount += 1;
+        }
+
+        // 4) Move hidden items to more menu
+        for (let i = 0; i < hiddenItemsCount; i += 1) {
+          this.moveItemToMoreButtonMenuFromMainMenu();
+        }
+
+        // 5) after all changes start listening to resize again
+        this.addResizeObserver();
       }, 50);
     };
   };
