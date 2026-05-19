@@ -5,8 +5,16 @@
 // @ts-ignore - JS mixin typing
 export const MoreButtonMenuMixin = superclass =>
   class MoreButtonMenuMixinClass extends superclass {
+    static get properties() {
+      return {
+        ...super.properties,
+        itemsFit: { type: Boolean, state: true },
+      };
+    }
+
     constructor() {
       super();
+      this.itemsFit = true;
       this.__resizeTimeout = null;
       this.__resizeObserver = new ResizeObserver(() => {
         this.handleResize();
@@ -118,6 +126,8 @@ export const MoreButtonMenuMixin = superclass =>
         } else {
           this.hideItemsUntilFit(listItems);
         }
+
+        this.itemsFit = this.doItemsFit();
       }, 10);
     };
   };
