@@ -39,6 +39,9 @@ export const MoreButtonMenuMixin = superclass =>
         return;
       }
 
+      this.isInitialResizeRun = true;
+      this.__resizeTimeout = null;
+
       // @ts-ignore - host is a custom element instance
       this.__resizeObserver?.observe(/** @type {Element} */ (this));
     }
@@ -78,18 +81,53 @@ export const MoreButtonMenuMixin = superclass =>
       return Array.from(listNode.querySelectorAll(':scope > [role="listitem"]'));
     }
 
+    /**
+     * @param {Node} listItem
+     */
+    getAdjacentNodes = listItem => {
+      const markerNodeType = this.nodeType && Node.COMMENT_NODE;
+      /** @param {Node | null | undefined} node */
+      const isMarkerComment = node => node?.nodeType === markerNodeType && node?.nodeValue === '';
+
+      const previousNodes = [];
+      let { previousSibling } = listItem;
+      while (previousSibling) {
+        previousNodes.unshift(previousSibling);
+        if (isMarkerComment(previousSibling)) {
+          break;
+        }
+        ({ previousSibling } = previousSibling);
+      }
+
+      const nextNodes = [];
+      let { nextSibling } = listItem;
+      let includeOneMoreAfterComment = false;
+      while (nextSibling) {
+        nextNodes.push(nextSibling);
+
+        if (includeOneMoreAfterComment) {
+          break;
+        }
+
+        if (isMarkerComment(nextSibling)) {
+          includeOneMoreAfterComment = true;
+        }
+
+        ({ nextSibling } = nextSibling);
+      }
+
+      return [...previousNodes, listItem, ...nextNodes];
+    };
+
     moveItemToMoreButtonMenuFromMainMenu() {
       const moreButtonMenuElement = this.getMoreButtonMenu();
       const listItems = this._listNode.querySelectorAll(':scope > [role="listitem"]');
       const listItem = listItems[listItems.length - 1];
 
-      moreButtonMenuElement.appendChild(listItem.previousSibling.previousSibling);
-      moreButtonMenuElement.appendChild(listItem.previousSibling);
-      const { nextSibling } = listItem.nextSibling;
-      const { nextSibling: nextAfterNextSibling } = listItem.nextSibling.nextSibling;
-      moreButtonMenuElement.appendChild(listItem);
-      moreButtonMenuElement.appendChild(nextSibling);
-      moreButtonMenuElement.appendChild(nextAfterNextSibling);
+      const nodesToMove = this.getAdjacentNodes(listItem);
+      nodesToMove.forEach(node => {
+        moreButtonMenuElement.appendChild(node);
+      });
       listItem.style.display = '';
       this.displayMoreButton();
     }
@@ -102,11 +140,7 @@ export const MoreButtonMenuMixin = superclass =>
         return false;
       }
 
-      const beforeNode = listItem.previousSibling;
-      const beforeBeforeNode = beforeNode?.previousSibling;
-      const afterNode = listItem.nextSibling;
-      const afterAfterNode = afterNode?.nextSibling;
-      const nodesToMove = [beforeBeforeNode, beforeNode, listItem, afterNode, afterAfterNode];
+      const nodesToMove = this.getAdjacentNodes(listItem);
 
       nodesToMove.forEach(node => {
         this._listNode.appendChild(node);
@@ -116,30 +150,39 @@ export const MoreButtonMenuMixin = superclass =>
     }
 
     moveAllItemsToMainMenuFromMoreButtonMenu() {
-      while (this.moveItemToMainMenuFromMoreButtonMenu()) {
-        // Keep moving items back until the more-button menu is empty.
+      const moreButtonMenu = this.getMoreButtonMenu();
+      const moreButtonMenuWrapper = this.getMoreButtonMenuWrapper();
+      if (moreButtonMenu.childNodes.length === 0) {
+        return;
       }
+      console.log('before moreButtonMenu.childNodes.length: ', moreButtonMenu.childNodes.length);
+      [...moreButtonMenu.childNodes].forEach(node => {
+        moreButtonMenuWrapper.before(node);
+      });
+      console.log('moreButtonMenu.childNodes.length: ', moreButtonMenu.childNodes.length);
     }
 
     handleResize = () => {
+      if (this.isInitialResizeRun) {
+        this.isInitialResizeRun = false; // Skip the first automatic trigger
+        return;
+      }
+
       if (this.__resizeTimeout) {
-        clearTimeout(this.__resizeTimeout);
+        return;
       }
 
       this.__resizeTimeout = setTimeout(() => {
+        console.log('inside this.__resizeTimeout');
         this.removeResizeObserver();
         this.hideMoreButton();
         this.moveAllItemsToMainMenuFromMoreButtonMenu();
 
-        // Make all items visible on main menu
-        const mainMenuItems = this.getListItems();
-        for (const mainMenuItem of mainMenuItems) {
-          mainMenuItem.style.display = '';
-        }
-
         // 1) Check if items fit
         // If items fit, don't do nothing (return)
         if (this.doItemsFit()) {
+          this.addResizeObserver();
+          this.__resizeTimeout = null;
           return;
         }
 
@@ -148,6 +191,7 @@ export const MoreButtonMenuMixin = superclass =>
 
         // 3) Hide items 1 by 1 from end until they fit
         let hiddenItemsCount = 0;
+        const mainMenuItems = this.getListItems();
         for (let i = mainMenuItems.length - 1; i >= 0 && !this.doItemsFit(); i -= 1) {
           mainMenuItems[i].style.display = 'none';
           hiddenItemsCount += 1;
