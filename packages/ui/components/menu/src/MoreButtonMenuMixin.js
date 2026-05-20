@@ -76,7 +76,7 @@ export const MoreButtonMenuMixin = superclass =>
     /**
      * @param {Node} listItem
      */
-    getListItemsWithAdjacentNodesFragment = listItem => {
+    getListItemWithAdjacentNodes = listItem => {
       const markerNodeType = this.nodeType && Node.COMMENT_NODE;
       /** @param {Node | null | undefined} node */
       const isMarkerComment = node => node?.nodeType === markerNodeType && node?.nodeValue === '';
@@ -119,7 +119,7 @@ export const MoreButtonMenuMixin = superclass =>
       const listItems = this._listNode.querySelectorAll(':scope > [role="listitem"]');
       const listItem = listItems[listItems.length - 1];
 
-      const fragment = this.getListItemsWithAdjacentNodesFragment(listItem);
+      const fragment = this.getListItemWithAdjacentNodes(listItem);
       moreButtonMenuElement.prepend(fragment);
       listItem.style.display = '';
       this.displayMoreButton();
