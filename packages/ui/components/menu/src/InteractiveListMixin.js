@@ -431,6 +431,7 @@ const InteractiveListMixinImplementation = superclass =>
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
+      this._initMoreButtonMenu();
       this._setupList();
     }
 

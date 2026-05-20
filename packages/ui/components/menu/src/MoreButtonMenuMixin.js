@@ -8,7 +8,6 @@ export const MoreButtonMenuMixin = superclass =>
     constructor() {
       super();
       this.__resizeTimeout = null;
-      this.init = false;
       this.hasResizeObserver = false;
       this.__resizeObserver = new ResizeObserver(() => {
         this.handleResize();
@@ -17,17 +16,17 @@ export const MoreButtonMenuMixin = superclass =>
       this.isMoreButtonShown = null;
     }
 
-    connectedCallback() {
-      super.connectedCallback();
-      this.addResizeObserver();
-    }
-
     disconnectedCallback() {
       this.removeResizeObserver();
       if (this.__resizeTimeout) {
         clearTimeout(this.__resizeTimeout);
       }
       super.disconnectedCallback();
+    }
+
+    _initMoreButtonMenu() {
+      this.init = false;
+      this.addResizeObserver();
     }
 
     _createMoreButtonWrapper() {
