@@ -30,6 +30,18 @@ export const MoreButtonMenuMixin = superclass =>
       super.disconnectedCallback();
     }
 
+    _createMoreButtonWrapper() {
+      const moreButtonWrapper = document.createElement('div');
+      moreButtonWrapper.setAttribute('data-more-button-wrapper', '');
+      [...this.getMoreButtonSlotProjection().childNodes].forEach(node =>
+        moreButtonWrapper.appendChild(node),
+      );
+      const moreButtonMenu = document.createElement('div');
+      moreButtonMenu.setAttribute('data-more-button-menu', '');
+      moreButtonWrapper.appendChild(moreButtonMenu);
+      this._listNode.appendChild(moreButtonWrapper);
+    }
+
     addResizeObserver() {
       if (!this.itemWrap) {
         return;
@@ -40,6 +52,10 @@ export const MoreButtonMenuMixin = superclass =>
 
       // @ts-ignore - host is a custom element instance
       this.__resizeObserver?.observe(/** @type {Element} */ (this));
+    }
+
+    getMoreButtonSlotProjection() {
+      return this.querySelector('[slot="more-button"]');
     }
 
     removeResizeObserver() {

@@ -434,10 +434,6 @@ const InteractiveListMixinImplementation = superclass =>
       this._setupList();
     }
 
-    getMoreButtonSlotProjection() {
-      return this.querySelector('[slot="more-button"]');
-    }
-
     /**
      * @param {Node[]} nodes
      */
@@ -486,20 +482,6 @@ const InteractiveListMixinImplementation = superclass =>
         }
       };
 
-      const createMoreButtonWrapper = () => {
-        if (this.itemWrap && nodes.length) {
-          const moreButtonWrapper = document.createElement('div');
-          moreButtonWrapper.setAttribute('data-more-button-wrapper', '');
-          [...this.getMoreButtonSlotProjection().childNodes].forEach(node =>
-            moreButtonWrapper.appendChild(node),
-          );
-          const moreButtonMenu = document.createElement('div');
-          moreButtonMenu.setAttribute('data-more-button-menu', '');
-          moreButtonWrapper.appendChild(moreButtonMenu);
-          this._listNode.appendChild(moreButtonWrapper);
-        }
-      };
-
       /** @type {HTMLElement[]} */
       const newItems = [];
 
@@ -509,7 +491,9 @@ const InteractiveListMixinImplementation = superclass =>
         handleInteractiveListAdditionLevel(node, { newItems });
       });
 
-      createMoreButtonWrapper();
+      if (this.itemWrap) {
+        this._createMoreButtonWrapper();
+      }
 
       newItems.forEach(item => {
         if (!this.__listItems.includes(item)) {
