@@ -5,15 +5,11 @@
 // @ts-ignore - JS mixin typing
 export const MoreButtonMenuMixin = superclass =>
   class MoreButtonMenuMixinClass extends superclass {
-    static get properties() {
-      return {
-        ...super.properties,
-      };
-    }
-
     constructor() {
       super();
       this.__resizeTimeout = null;
+      this.init = false;
+      this.hasResizeObserver = false;
       this.__resizeObserver = new ResizeObserver(() => {
         this.handleResize();
       });
@@ -39,7 +35,7 @@ export const MoreButtonMenuMixin = superclass =>
         return;
       }
 
-      this.isInitialResizeRun = true;
+      this.hasResizeObserver = false;
       this.__resizeTimeout = null;
 
       // @ts-ignore - host is a custom element instance
@@ -145,8 +141,8 @@ export const MoreButtonMenuMixin = superclass =>
     }
 
     handleResize = () => {
-      if (this.isInitialResizeRun) {
-        this.isInitialResizeRun = false; // Skip the first automatic trigger
+      if (!this.hasResizeObserver && this.init) {
+        this.hasResizeObserver = true; // Skip the first automatic trigger
         return;
       }
 
