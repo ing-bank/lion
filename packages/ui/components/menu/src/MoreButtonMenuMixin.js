@@ -2,6 +2,9 @@
  * @param {any} superclass
  */
 /** @type {any} */
+
+import { OverlayController, withDropdownConfig } from '../../../exports/overlays.js';
+
 // @ts-ignore - JS mixin typing
 export const MoreButtonMenuMixin = superclass =>
   class MoreButtonMenuMixinClass extends superclass {
@@ -27,6 +30,14 @@ export const MoreButtonMenuMixin = superclass =>
     _initMoreButtonMenu() {
       this.init = false;
       this.addResizeObserver();
+
+      // setTimeout(() => {
+      //   const ctrl = new OverlayController({
+      //     ...withDropdownConfig(),
+      //     invokerNode: this.getMoreButton(),
+      //     contentNode: this.getMoreButtonMenu(),
+      //   });
+      // });
     }
 
     _createMoreButtonWrapper() {
@@ -35,6 +46,7 @@ export const MoreButtonMenuMixin = superclass =>
       [...this.getMoreButtonSlotProjection().childNodes].forEach(node =>
         moreButtonWrapper.appendChild(node),
       );
+      moreButtonWrapper.querySelector('button')?.setAttribute('data-more-button', '');
       const moreButtonMenu = document.createElement('div');
       moreButtonMenu.setAttribute('data-more-button-menu', '');
       moreButtonWrapper.appendChild(moreButtonMenu);
@@ -55,6 +67,10 @@ export const MoreButtonMenuMixin = superclass =>
 
     getMoreButtonSlotProjection() {
       return this.querySelector('[slot="more-button"]');
+    }
+
+    getMoreButton() {
+      return this.querySelector('[data-more-button]');
     }
 
     removeResizeObserver() {

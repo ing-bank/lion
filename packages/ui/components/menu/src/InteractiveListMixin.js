@@ -431,7 +431,9 @@ const InteractiveListMixinImplementation = superclass =>
      */
     firstUpdated(changedProperties) {
       super.firstUpdated(changedProperties);
-      this._initMoreButtonMenu();
+      if (this.itemWrap) {
+        this._initMoreButtonMenu();
+      }
       this._setupList();
     }
 
@@ -492,7 +494,7 @@ const InteractiveListMixinImplementation = superclass =>
         handleInteractiveListAdditionLevel(node, { newItems });
       });
 
-      if (this.itemWrap) {
+      if (this.itemWrap && nodes.length) {
         this._createMoreButtonWrapper();
       }
 
