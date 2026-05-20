@@ -142,6 +142,8 @@ export const MoreButtonMenuMixin = superclass =>
         return;
       }
 
+      this.init = true;
+
       if (this.__resizeTimeout) {
         return;
       }
