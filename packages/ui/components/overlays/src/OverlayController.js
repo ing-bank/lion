@@ -680,7 +680,9 @@ export class OverlayController extends EventTarget {
    */
   __initContentDomStructure() {
     if (this.placementMode !== 'custom') {
-      const wrappingDialogElement = document.createElement('dialog');
+      const wrappingDialogElement = document.createElement(
+        this.config?._noDialogEl ? 'div' : 'dialog',
+      );
       // We use a dialog for its visual capabilities: it renders to the top layer.
       // A11y will depend on the type of overlay and is arranged on contentNode level.
       // Also see: https://www.scottohara.me/blog/2019/03/05/open-dialog.html
@@ -1307,20 +1309,22 @@ export class OverlayController extends EventTarget {
       }
     }
     if (phase === 'show') {
-      this.#handleShiftKeyPress();
-      this.#handleFocusInsideDialog();
-      // @ts-ignore - HTMLDialogElement methods
-      this.__wrappingDialogNode?.close();
-      // @ts-ignore - HTMLDialogElement methods
-      this.__wrappingDialogNode?.showModal();
-      /**
-       * At this moment `#handleFocusInsideDialog` should handle the focus.
-       * But for some reason Firefox on the testing setup does not
-       * focus the native `dialog` on showModal() and focuses the first
-       * focusable element inside the dialog instead. Hence here we focus
-       * contentNode explicitly
-       */
-      this.#getInitialElementToFocus().focus();
+      if ('showModal' in this.__wrappingDialogNode) {
+        this.#handleShiftKeyPress();
+        this.#handleFocusInsideDialog();
+        // @ts-ignore - HTMLDialogElement methods
+        this.__wrappingDialogNode?.close();
+        // @ts-ignore - HTMLDialogElement methods
+        this.__wrappingDialogNode?.showModal();
+        /**
+         * At this moment `#handleFocusInsideDialog` should handle the focus.
+         * But for some reason Firefox on the testing setup does not
+         * focus the native `dialog` on showModal() and focuses the first
+         * focusable element inside the dialog instead. Hence here we focus
+         * contentNode explicitly
+         */
+        this.#getInitialElementToFocus().focus();
+      }
     }
     if (phase === 'hide') {
       this.#stopHandlingShiftKeyPress();

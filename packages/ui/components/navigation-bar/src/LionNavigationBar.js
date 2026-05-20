@@ -40,13 +40,20 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       css`
         /** specific styles */
 
+        [data-more-button-menu] > [role='listitem'] > button {
+          white-space: nowrap;
+        }
+        [data-more-button-menu] > [role='listitem'] > a {
+          white-space: nowrap;
+        }
+
         /** More button is hidden by default */
         [data-more-button-wrapper] {
           display: none;
         }
-        /*
-        [data-more-button-menu]:has([role='listitem'] [data-listitem-focusable]:focus):not(
-            :has([role='listitem'] [data-listitem-focusable][aria-expanded='true'])
+
+        [data-more-button-menu]:has([role='listitem'] [active]:focus):not(
+            :has([role='listitem'] [active][aria-expanded='true'])
           ) {
           overflow: visible;
           width: auto;
@@ -55,15 +62,13 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           top: 100%;
           background-color: var(--oj2_bg_default);
         }
+
         [data-more-button-menu],
-        [data-more-button-menu]:has(
-          [role='listitem'] [data-listitem-focusable][aria-expanded='true']
-        ) {
+        [data-more-button-menu]:has([role='listitem'] [active][aria-expanded='true']) {
           overflow: hidden;
           width: 1px;
           height: 1px;
         }
-          */
 
         :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > button,
         :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > a,

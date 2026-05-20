@@ -31,13 +31,61 @@ export const MoreButtonMenuMixin = superclass =>
       this.init = false;
       this.addResizeObserver();
 
-      // setTimeout(() => {
-      //   const ctrl = new OverlayController({
-      //     ...withDropdownConfig(),
-      //     invokerNode: this.getMoreButton(),
-      //     contentNode: this.getMoreButtonMenu(),
-      //   });
-      // });
+      setTimeout(() => {
+        this._setupMoreButtonMenuOverlay();
+      }, 100);
+    }
+
+    _setupMoreButtonMenuOverlay() {
+      const ctrl = new OverlayController({
+        placementMode: 'local',
+        inheritsReferenceWidth: 'min',
+        popperConfig: {
+          placement: 'bottom-start',
+          strategy: 'absolute',
+          modifiers: [
+            {
+              name: 'offset',
+              enabled: false,
+            },
+          ],
+        },
+        handlesAccessibility: true,
+        invokerNode: this.getMoreButton(),
+        contentNode: this.getMoreButtonMenu(),
+        _noDialogEl: true,
+      });
+      ctrl.show();
+
+      this.contextWrapper = this.getMoreButtonMenu().parentElement;
+      const styles = window.getComputedStyle(this.contextWrapper);
+      this.contextWrapperStyle = {};
+      ({
+        minWidth: this.contextWrapperStyle.minWidth,
+        width: this.contextWrapperStyle.width,
+        position: this.contextWrapperStyle.position,
+        inset: this.contextWrapperStyle.inset,
+        margin: this.contextWrapperStyle.margin,
+        transform: this.contextWrapperStyle.transform,
+      } = styles);
+
+      this.moreButtonMenuCtrl = ctrl;
+      this.isMoreButtonMenuPopperActive = true;
+    }
+
+    reApplyContextWrapperStyles() {
+      if (!this.contextWrapper) {
+        return;
+      }
+      const styles = this.contextWrapperStyle;
+      Object.assign(this.contextWrapper.style, {
+        minWidth: styles.minWidth,
+        width: styles.width,
+        position: styles.position,
+        inset: styles.inset,
+        margin: styles.margin,
+        transform: styles.transform,
+      });
     }
 
     _createMoreButtonWrapper() {
@@ -47,8 +95,25 @@ export const MoreButtonMenuMixin = superclass =>
         moreButtonWrapper.appendChild(node),
       );
       moreButtonWrapper.querySelector('button')?.setAttribute('data-more-button', '');
+      moreButtonWrapper.querySelector('button')?.setAttribute('tabindex', '-1');
       const moreButtonMenu = document.createElement('div');
       moreButtonMenu.setAttribute('data-more-button-menu', '');
+      moreButtonMenu.setAttribute('role', 'none');
+      moreButtonMenu.addEventListener('click', event => {
+        console.log('click', event);
+        console.log('this.moreButtonMenuCtrl', this.moreButtonMenuCtrl);
+        this.moreButtonMenuCtrl._popper.destroy();
+        this.reApplyContextWrapperStyles();
+        this.isMoreButtonMenuPopperActive = false;
+      });
+
+      // moreButtonMenu.addEventListener('focusin', event => {
+      //   if (!this.isMoreButtonMenuPopperActive) {
+      //     //this._setupMoreButtonMenuOverlay();
+      //   }
+      //   console.log('focusin', event.target);
+      // });
+
       moreButtonWrapper.appendChild(moreButtonMenu);
       this._listNode.appendChild(moreButtonWrapper);
     }
@@ -188,6 +253,7 @@ export const MoreButtonMenuMixin = superclass =>
     }
 
     handleResize = () => {
+      console.log('handleResize');
       if (!this.hasResizeObserver && this.init) {
         this.hasResizeObserver = true; // Skip the first automatic trigger
         return;
