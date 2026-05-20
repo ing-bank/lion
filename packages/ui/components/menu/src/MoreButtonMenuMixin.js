@@ -46,10 +46,6 @@ export const MoreButtonMenuMixin = superclass =>
       this.__resizeObserver?.disconnect();
     }
 
-    getMoreButton() {
-      return this.querySelector('[data-more-button-menu]');
-    }
-
     getMoreButtonMenu() {
       return this.querySelector('[data-more-button-menu]');
     }
@@ -151,7 +147,6 @@ export const MoreButtonMenuMixin = superclass =>
       }
 
       this.__resizeTimeout = setTimeout(() => {
-        console.log('inside this.__resizeTimeout');
         this.removeResizeObserver();
         this.hideMoreButton();
         this.moveAllItemsToMainMenuFromMoreButtonMenu();
