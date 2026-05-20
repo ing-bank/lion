@@ -136,6 +136,26 @@ export const MoreButtonMenuMixin = superclass =>
       });
     }
 
+    renderAllItemsInMainMenu() {
+      this.moveAllItemsToMainMenuFromMoreButtonMenu();
+    }
+
+    hideItemsOneByOneInMainMenuUntilTheyFit() {
+      let hiddenItemsCount = 0;
+      const mainMenuItems = this.getListItems();
+      for (let i = mainMenuItems.length - 1; i >= 0 && !this.doItemsFit(); i -= 1) {
+        mainMenuItems[i].style.display = 'none';
+        hiddenItemsCount += 1;
+      }
+      return hiddenItemsCount;
+    }
+
+    moveHiddenItemsFromMainMenuToMoreButtonMenu(hiddenItemsCount) {
+      for (let i = 0; i < hiddenItemsCount; i += 1) {
+        this.moveItemToMoreButtonMenuFromMainMenu();
+      }
+    }
+
     handleResize = () => {
       if (!this.hasResizeObserver && this.init) {
         this.hasResizeObserver = true; // Skip the first automatic trigger
@@ -149,35 +169,22 @@ export const MoreButtonMenuMixin = superclass =>
       }
 
       this.__resizeTimeout = setTimeout(() => {
+        // stop listening to resize while we make changes to avoid multiple triggers
         this.removeResizeObserver();
-        this.hideMoreButton();
-        this.moveAllItemsToMainMenuFromMoreButtonMenu();
 
-        // 1) Check if items fit
-        // If items fit, don't do nothing (return)
+        this.renderAllItemsInMainMenu();
+        this.hideMoreButton();
+
         if (this.doItemsFit()) {
           this.addResizeObserver();
-          this.__resizeTimeout = null;
           return;
         }
 
-        // 2) Items don't fit, show more button
         this.displayMoreButton();
+        const hiddenItemsCount = this.hideItemsOneByOneInMainMenuUntilTheyFit();
+        this.moveHiddenItemsFromMainMenuToMoreButtonMenu(hiddenItemsCount);
 
-        // 3) Hide items 1 by 1 from end until they fit
-        let hiddenItemsCount = 0;
-        const mainMenuItems = this.getListItems();
-        for (let i = mainMenuItems.length - 1; i >= 0 && !this.doItemsFit(); i -= 1) {
-          mainMenuItems[i].style.display = 'none';
-          hiddenItemsCount += 1;
-        }
-
-        // 4) Move hidden items to more menu
-        for (let i = 0; i < hiddenItemsCount; i += 1) {
-          this.moveItemToMoreButtonMenuFromMainMenu();
-        }
-
-        // 5) after all changes start listening to resize again
+        // after all changes start listening to resize event again
         this.addResizeObserver();
       }, 50);
     };
