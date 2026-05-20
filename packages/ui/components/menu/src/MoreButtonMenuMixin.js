@@ -84,7 +84,7 @@ export const MoreButtonMenuMixin = superclass =>
     /**
      * @param {Node} listItem
      */
-    getAdjacentNodes = listItem => {
+    getListItemsWithAdjacentNodesFragment = listItem => {
       const markerNodeType = this.nodeType && Node.COMMENT_NODE;
       /** @param {Node | null | undefined} node */
       const isMarkerComment = node => node?.nodeType === markerNodeType && node?.nodeValue === '';
@@ -116,7 +116,10 @@ export const MoreButtonMenuMixin = superclass =>
         ({ nextSibling } = nextSibling);
       }
 
-      return [...previousNodes, listItem, ...nextNodes];
+      const fragment = document.createDocumentFragment();
+      const nodes = [...previousNodes, listItem, ...nextNodes];
+      nodes.forEach(node => fragment.appendChild(node));
+      return fragment;
     };
 
     moveItemToMoreButtonMenuFromMainMenu() {
@@ -124,29 +127,10 @@ export const MoreButtonMenuMixin = superclass =>
       const listItems = this._listNode.querySelectorAll(':scope > [role="listitem"]');
       const listItem = listItems[listItems.length - 1];
 
-      const nodesToMove = this.getAdjacentNodes(listItem);
-      nodesToMove.forEach(node => {
-        moreButtonMenuElement.appendChild(node);
-      });
+      const fragment = this.getListItemsWithAdjacentNodesFragment(listItem);
+      moreButtonMenuElement.prepend(fragment);
       listItem.style.display = '';
       this.displayMoreButton();
-    }
-
-    moveItemToMainMenuFromMoreButtonMenu() {
-      const moreButtonMenu = this.getMoreButtonMenu();
-      const listItem = moreButtonMenu.querySelector(':scope > [role="listitem"]');
-
-      if (!listItem) {
-        return false;
-      }
-
-      const nodesToMove = this.getAdjacentNodes(listItem);
-
-      nodesToMove.forEach(node => {
-        this._listNode.appendChild(node);
-      });
-
-      return true;
     }
 
     moveAllItemsToMainMenuFromMoreButtonMenu() {
@@ -155,11 +139,9 @@ export const MoreButtonMenuMixin = superclass =>
       if (moreButtonMenu.childNodes.length === 0) {
         return;
       }
-      console.log('before moreButtonMenu.childNodes.length: ', moreButtonMenu.childNodes.length);
       [...moreButtonMenu.childNodes].forEach(node => {
         moreButtonMenuWrapper.before(node);
       });
-      console.log('moreButtonMenu.childNodes.length: ', moreButtonMenu.childNodes.length);
     }
 
     handleResize = () => {
