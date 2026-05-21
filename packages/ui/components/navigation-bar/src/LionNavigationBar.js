@@ -104,6 +104,17 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           padding-bottom: 200%;
         }
 
+        /**
+        * TODO remove it. Use it now for testing More button feature
+        */
+        :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'],
+        :host([responsive-mode='desktop'])
+          [level='1']
+          > [slot='list']
+          > [data-more-button-wrapper] {
+          margin-right: 180px;
+        }
+
         :host([responsive-mode='mobile']) nav {
           display: flex;
           flex-direction: column;

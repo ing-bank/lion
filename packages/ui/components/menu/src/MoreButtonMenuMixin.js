@@ -53,17 +53,7 @@ const styles = `
     :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > button,
     :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > a {
       white-space: nowrap;
-    }
-    /**
-    * TODO remove it. Use it now for testing More button feature
-    */
-    :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'],
-    :host([responsive-mode='desktop'])
-      [level='1']
-      > [slot='list']
-      > [data-more-button-wrapper] {
-      margin-right: 180px;
-    }
+    }    
   </style>
   `;
 
