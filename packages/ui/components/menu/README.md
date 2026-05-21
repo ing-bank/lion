@@ -147,7 +147,7 @@ export const tree = () => html`
 
 ## Disclosure menu
 
-See https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-navigation.html
+See [disclosure navigation](https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-navigation.html)
 
 ```js preview-story
 export const disclosureMenu = () => html`
