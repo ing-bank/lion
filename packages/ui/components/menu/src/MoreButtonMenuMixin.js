@@ -9,20 +9,23 @@ export const MoreButtonMenuMixin = superclass =>
     constructor() {
       super();
       this.__resizeTimeout = null;
-      this.hasResizeObserver = false;
-      this.__resizeObserver = new ResizeObserver(() => {
-        this.handleResize();
-      });
-      /** @type {boolean|null} */
       this.isMoreButtonShown = null;
+      this.handleResize = this.handleResize.bind(this);
+    }
+
+    connectedCallback() {
+      super.connectedCallback?.();
+      if (this.itemWrap) {
+        window.addEventListener('resize', this.handleResize);
+      }
     }
 
     disconnectedCallback() {
-      this.removeResizeObserver();
+      window.removeEventListener('resize', this.handleResize);
       if (this.__resizeTimeout) {
         clearTimeout(this.__resizeTimeout);
       }
-      super.disconnectedCallback();
+      super.disconnectedCallback?.();
     }
 
     _initMoreButtonMenu() {
@@ -52,12 +55,13 @@ export const MoreButtonMenuMixin = superclass =>
       //   this.isMoreButtonMenuPopperActive = false;
       // });
 
-      // moreButtonMenu.addEventListener('focusin', event => {
-      //   if (!this.isMoreButtonMenuPopperActive) {
-      //     //this._setupMoreButtonMenuOverlay();
-      //   }
-      //   console.log('focusin', event.target);
-      // });
+      moreButtonMenu.addEventListener('focusin', event => {
+        if (event.relatedTarget?.closest('[level="2"]')) {
+          event.target.click();
+        }
+      });
+
+      this.handleResize();
     }
 
     addResizeObserver() {
@@ -194,36 +198,24 @@ export const MoreButtonMenuMixin = superclass =>
       }
     }
 
-    handleResize = () => {
-      if (!this.hasResizeObserver && this.init) {
-        this.hasResizeObserver = true; // Skip the first automatic trigger
-        return;
-      }
-
-      this.init = true;
-
+    handleResize() {
       if (this.__resizeTimeout) {
         return;
       }
 
       this.__resizeTimeout = setTimeout(() => {
-        // stop listening to resize while we make changes to avoid multiple triggers
-        this.removeResizeObserver();
+        this.__resizeTimeout = null;
 
         this.renderAllItemsInMainMenu();
         this.hideMoreButton();
 
         if (this.doItemsFit()) {
-          this.addResizeObserver();
           return;
         }
 
         this.displayMoreButton();
         const hiddenItemsCount = this.hideItemsOneByOneInMainMenuUntilTheyFit();
         this.moveHiddenItemsFromMainMenuToMoreButtonMenu(hiddenItemsCount);
-
-        // after all changes start listening to resize event again
-        this.addResizeObserver();
       }, 50);
-    };
+    }
   };
