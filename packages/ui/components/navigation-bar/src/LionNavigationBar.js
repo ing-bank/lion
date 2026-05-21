@@ -45,8 +45,8 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           display: none;
         }
 
-        [data-more-button-menu]:has([role='listitem'] [data-listitem-focusable]:focus):not(
-            :has([role='listitem'] [data-listitem-focusable][aria-expanded='true'])
+        [data-more-button-menu]:has([role='listitem'] [active]:focus):not(
+            :has([role='listitem'] [active][aria-expanded='true'])
           ) {
           overflow: visible;
           width: auto;
@@ -56,9 +56,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           background-color: var(--oj2_bg_default);
         }
         [data-more-button-menu],
-        [data-more-button-menu]:has(
-          [role='listitem'] [data-listitem-focusable][aria-expanded='true']
-        ) {
+        [data-more-button-menu]:has([role='listitem'] [active][aria-expanded='true']) {
           overflow: hidden;
           width: 1px;
           height: 1px;

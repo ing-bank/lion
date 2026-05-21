@@ -37,10 +37,27 @@ export const MoreButtonMenuMixin = superclass =>
         moreButtonWrapper.appendChild(node),
       );
       moreButtonWrapper.querySelector('button')?.setAttribute('data-more-button', '');
+      moreButtonWrapper.querySelector('button')?.setAttribute('tabindex', '-1');
       const moreButtonMenu = document.createElement('div');
       moreButtonMenu.setAttribute('data-more-button-menu', '');
       moreButtonWrapper.appendChild(moreButtonMenu);
+      moreButtonMenu.setAttribute('role', 'none');
       this._listNode.appendChild(moreButtonWrapper);
+
+      // moreButtonMenu.addEventListener('click', event => {
+      //   console.log('click', event);
+      //   console.log('this.moreButtonMenuCtrl', this.moreButtonMenuCtrl);
+      //   this.moreButtonMenuCtrl._popper.destroy();
+      //   this.reApplyContextWrapperStyles();
+      //   this.isMoreButtonMenuPopperActive = false;
+      // });
+
+      // moreButtonMenu.addEventListener('focusin', event => {
+      //   if (!this.isMoreButtonMenuPopperActive) {
+      //     //this._setupMoreButtonMenuOverlay();
+      //   }
+      //   console.log('focusin', event.target);
+      // });
     }
 
     addResizeObserver() {
