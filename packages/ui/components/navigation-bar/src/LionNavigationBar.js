@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable class-methods-use-this */
-import { LitElement, html, css } from 'lit';
+import { LitElement, html, css, nothing } from 'lit';
 import { LionMenuHybrid } from '@lion/ui/menu.js';
 import { ScopedElementsMixin } from '../../core/src/ScopedElementsMixin.js';
 
@@ -429,9 +429,11 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           </div>
         `,
       )}
-      <div slot="more-button">
-        <button>More</button>
-      </div>
-    </lion-menu-hybrid>`;
+      ${itemWrap
+        ? html`<div slot="more-button">
+            <button>More</button>
+          </div>`
+        : nothing}
+    </lion-menu-hybrid> `;
   }
 }
