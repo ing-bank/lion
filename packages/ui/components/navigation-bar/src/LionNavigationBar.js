@@ -104,6 +104,17 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           padding-bottom: 200%;
         }
 
+        /**
+        * TODO remove it. Use it now for testing More button feature
+        */
+        :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'],
+        :host([responsive-mode='desktop'])
+          [level='1']
+          > [slot='list']
+          > [data-more-button-wrapper] {
+          margin-right: 180px;
+        }
+
         :host([responsive-mode='mobile']) nav {
           display: flex;
           flex-direction: column;
@@ -331,7 +342,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           ${this.responsiveMode === 'desktop'
             ? this._ctasTemplate(this.ctaPrimary, this.ctaSecondary)
             : ''}
-          ${this._menulevelTemplate(this.menuItems, 1, '')}
+          ${this._menulevelTemplate(this.menuItems, 1, '', true)}
         </div>
         ${this.responsiveMode === 'mobile'
           ? html`<div class="nav-footer">
@@ -388,11 +399,12 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @param {number} level
    * @returns {import('lit').TemplateResult}
    */
-  _menulevelTemplate(menuItemsForLevel, level, prevText = '') {
+  _menulevelTemplate(menuItemsForLevel, level, prevText = '', itemWrap = false) {
     // @ts-ignore
     const cfgForLevel = this._levelCfg[`l${level}`];
 
     return html`<lion-menu-hybrid
+      ?item-wrap=${itemWrap}
       .config="${cfgForLevel.openableConfig || {}}"
       .bar="${cfgForLevel.isBar}"
       ?data-has-full-width-flyout="${cfgForLevel.hasFullWidthFlyout}"
@@ -417,6 +429,9 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           </div>
         `,
       )}
+      <div slot="more-button">
+        <button>More</button>
+      </div>
     </lion-menu-hybrid>`;
   }
 }
