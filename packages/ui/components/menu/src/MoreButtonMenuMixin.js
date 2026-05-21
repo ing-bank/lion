@@ -3,6 +3,70 @@
  */
 /** @type {any} */
 
+const styles = `
+  <style>
+    /** More button is hidden by default */
+    [data-more-button-wrapper] {
+      display: none;
+    }
+
+    [data-more-button-menu]:has([role='listitem'] [active]:focus):not(
+        :has([role='listitem'] [active][aria-expanded='true'])
+      ) {
+      overflow: visible;
+      width: auto;
+      height: auto;
+      position: absolute;
+      top: 100%;
+      background-color: var(--oj2_bg_default);
+    }
+    [data-more-button-menu],
+    [data-more-button-menu]:has([role='listitem'] [active][aria-expanded='true']) {
+      overflow: hidden;
+      width: 1px;
+      height: 1px;
+    }
+
+    :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > button,
+    :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > a,
+    :host([responsive-mode='desktop'])
+      [level='1']
+      > [slot='list']
+      > [data-more-button-wrapper]
+      > [role='listitem']
+      > button,
+    :host([responsive-mode='desktop'])
+      [level='1']
+      > [slot='list']
+      > [data-more-button-wrapper]
+      > [role='listitem']
+      > a {
+      white-space: nowrap;
+    }
+    /**
+    * TODO listitem rigth margin/gap is not taken at the account ATM
+    */
+    /**
+     * More button relies on the fact that the menu items do not break the line
+     * TODO is it optimal?
+     */
+    :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > button,
+    :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > a {
+      white-space: nowrap;
+    }
+    /**
+    * TODO remove it. Use it now for testing More button feature
+    */
+    :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'],
+    :host([responsive-mode='desktop'])
+      [level='1']
+      > [slot='list']
+      > [data-more-button-wrapper] {
+      margin-right: 180px;
+    }
+  </style>
+  `;
+
 // @ts-ignore - JS mixin typing
 export const MoreButtonMenuMixin = superclass =>
   class MoreButtonMenuMixinClass extends superclass {
@@ -43,6 +107,9 @@ export const MoreButtonMenuMixin = superclass =>
 
     _createMoreButtonWrapper() {
       const moreButtonWrapper = document.createElement('div');
+      const style = document.createElement('style');
+      style.textContent = styles;
+      moreButtonWrapper.appendChild(style);
       moreButtonWrapper.setAttribute('data-more-button-wrapper', '');
       [...this.getMoreButtonSlotProjection().childNodes].forEach(node =>
         moreButtonWrapper.appendChild(node),
