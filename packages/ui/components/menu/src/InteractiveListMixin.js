@@ -3,6 +3,7 @@
 import { html, css, LitElement } from 'lit';
 import { SlotMixin, DisabledMixin } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
+import { MoreButtonMenuMixin } from './MoreButtonMenuMixin.js';
 import { uuid } from './utils/uuid.js';
 import { isInView } from './utils/isInView.js';
 import {
@@ -125,7 +126,7 @@ customElements.define('lion-menuitem', LionMenuitem);
  */
 const InteractiveListMixinImplementation = superclass =>
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
-  class InteractiveListMixin extends DisabledMixin(SlotMixin(superclass)) {
+  class InteractiveListMixin extends DisabledMixin(SlotMixin(MoreButtonMenuMixin(superclass))) {
     /** @type {any} */
     static styles = [
       css`
@@ -489,6 +490,10 @@ const InteractiveListMixinImplementation = superclass =>
         // @ts-ignore - node type compatibility
         handleInteractiveListAdditionLevel(node, { newItems });
       });
+
+      if (this.itemWrap && nodes.length) {
+        this._initMoreButtonMenu();
+      }
 
       newItems.forEach(item => {
         if (!this.__listItems.includes(item)) {
