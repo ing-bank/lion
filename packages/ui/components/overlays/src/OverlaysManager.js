@@ -209,7 +209,9 @@ export class OverlaysManager {
           const newMarginBottom = this.__bodySizeVars.marginBottom + scrollbarHeight;
           // @ts-expect-error [external]: CSS not yet typed
           if (window.CSS?.number && document.body.attributeStyleMap?.set) {
+            // @ts-ignore
             document.body.attributeStyleMap.set('margin-right', CSS.px(newMarginRight));
+            // @ts-ignore
             document.body.attributeStyleMap.set('margin-bottom', CSS.px(newMarginBottom));
           } else {
             document.body.style.marginRight = `${newMarginRight}px`;

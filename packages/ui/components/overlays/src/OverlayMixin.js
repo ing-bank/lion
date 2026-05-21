@@ -434,6 +434,6 @@ export const OverlayMixinImplementation = superclass => {
   for (const postProcessor of overlayMixinPostProcessors) {
     postProcessor(OverlayMixin);
   }
-  return OverlayMixin;
+  return /** @type {* & OverlayMixin} */ (OverlayMixin);
 };
 export const OverlayMixin = dedupeMixin(OverlayMixinImplementation);
