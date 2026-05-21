@@ -464,6 +464,7 @@ const InteractiveListMixinImplementation = superclass =>
           // console.debug('checking children of', node, node.children);
           // @ts-ignore - HTMLCollection is iterable
           for (const child of node.children) {
+            // @ts-ignore
             handleInteractiveListAdditionLevel(child, { newItems, level: level + 1 });
           }
           return;
@@ -487,11 +488,13 @@ const InteractiveListMixinImplementation = superclass =>
 
       // Move items to _listNode and add interactive node references (with [role]) to listItems
       nodes.forEach(node => {
-        // @ts-ignore - node type compatibility
+        // @ts-expect-error - node type compatibility
         handleInteractiveListAdditionLevel(node, { newItems });
       });
 
+      // @ts-expect-error
       if (this.itemWrap && nodes.length) {
+        // @ts-expect-error
         this._initMoreButtonMenu();
       }
 
@@ -798,4 +801,5 @@ const InteractiveListMixinImplementation = superclass =>
       return this.__getNextOption(currentIndex, offset);
     }
   };
+// @ts-ignore
 export const InteractiveListMixin = dedupeMixin(InteractiveListMixinImplementation);
