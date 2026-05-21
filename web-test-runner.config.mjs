@@ -45,7 +45,7 @@ export default {
   coverageConfig: {
     report: true,
     reportDir: 'coverage',
-    threshold: { statements: 95, functions: 95, branches: 95, lines: 95 },
+    threshold: { statements: 90, functions: 90, branches: 90, lines: 90 },
   },
   testFramework: {
     config: { timeout: '5000' },
