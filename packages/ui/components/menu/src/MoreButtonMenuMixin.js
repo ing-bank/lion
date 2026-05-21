@@ -3,8 +3,6 @@
  */
 /** @type {any} */
 
-import { OverlayController, withDropdownConfig } from '../../../exports/overlays.js';
-
 // @ts-ignore - JS mixin typing
 export const MoreButtonMenuMixin = superclass =>
   class MoreButtonMenuMixinClass extends superclass {
@@ -30,14 +28,6 @@ export const MoreButtonMenuMixin = superclass =>
     _initMoreButtonMenu() {
       this.init = false;
       this.addResizeObserver();
-
-      // setTimeout(() => {
-      //   const ctrl = new OverlayController({
-      //     ...withDropdownConfig(),
-      //     invokerNode: this.getMoreButton(),
-      //     contentNode: this.getMoreButtonMenu(),
-      //   });
-      // });
     }
 
     _createMoreButtonWrapper() {

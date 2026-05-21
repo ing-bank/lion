@@ -44,7 +44,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
         [data-more-button-wrapper] {
           display: none;
         }
-        /*
+
         [data-more-button-menu]:has([role='listitem'] [data-listitem-focusable]:focus):not(
             :has([role='listitem'] [data-listitem-focusable][aria-expanded='true'])
           ) {
@@ -63,7 +63,6 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           width: 1px;
           height: 1px;
         }
-          */
 
         :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > button,
         :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > a,
