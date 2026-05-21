@@ -58,17 +58,17 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           overflow: visible;
           width: auto;
           height: auto;
-          position: absolute;
+          /* position: absolute; */
           top: 100%;
           background-color: var(--oj2_bg_default);
         }
 
-        [data-more-button-menu],
+        /* [data-more-button-menu],
         [data-more-button-menu]:has([role='listitem'] [active][aria-expanded='true']) {
           overflow: hidden;
           width: 1px;
           height: 1px;
-        }
+        } */
 
         :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > button,
         :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > a,

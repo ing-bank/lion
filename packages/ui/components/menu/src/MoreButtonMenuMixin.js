@@ -11,10 +11,7 @@ export const MoreButtonMenuMixin = superclass =>
     constructor() {
       super();
       this.__resizeTimeout = null;
-      this.hasResizeObserver = false;
-      this.__resizeObserver = new ResizeObserver(() => {
-        this.handleResize();
-      });
+      this.__hasWindowResizeListener = false;
       /** @type {boolean|null} */
       this.isMoreButtonShown = null;
     }
@@ -38,6 +35,7 @@ export const MoreButtonMenuMixin = superclass =>
 
     _setupMoreButtonMenuOverlay() {
       const ctrl = new OverlayController({
+        ...withDropdownConfig,
         placementMode: 'local',
         inheritsReferenceWidth: 'min',
         popperConfig: {
@@ -102,20 +100,34 @@ export const MoreButtonMenuMixin = superclass =>
       moreButtonMenu.addEventListener('click', event => {
         console.log('click', event);
         console.log('this.moreButtonMenuCtrl', this.moreButtonMenuCtrl);
-        this.moreButtonMenuCtrl._popper.destroy();
-        this.reApplyContextWrapperStyles();
-        this.isMoreButtonMenuPopperActive = false;
+        // this.moreButtonMenuCtrl._popper.destroy();
+        // this.reApplyContextWrapperStyles();
+        // this.isMoreButtonMenuPopperActive = false;
       });
 
-      // moreButtonMenu.addEventListener('focusin', event => {
-      //   if (!this.isMoreButtonMenuPopperActive) {
-      //     //this._setupMoreButtonMenuOverlay();
-      //   }
-      //   console.log('focusin', event.target);
-      // });
+      moreButtonMenu.addEventListener('focusin', event => {
+        if (!this.isMoreButtonMenuPopperActive) {
+          this._setupMoreButtonMenuOverlay();
+        }
+        console.log('focusin', event.target);
+        console.log('2', event.relatedTarget?.getRootNode()?.host?.closest('[level="2"]'));
+        if (event.relatedTarget?.closest('[level="2"]')) {
+          event.target.click();
+        }
+        console.log('focusin', event.target);
+      });
 
       moreButtonWrapper.appendChild(moreButtonMenu);
       this._listNode.appendChild(moreButtonWrapper);
+
+      this.handleResize();
+
+      this._setupMoreButtonMenuOverlay();
+      setTimeout(() => {
+        this.moreButtonMenuCtrl._popper.destroy();
+        this.reApplyContextWrapperStyles();
+        this.isMoreButtonMenuPopperActive = false;
+      }, 100);
     }
 
     addResizeObserver() {
@@ -123,11 +135,11 @@ export const MoreButtonMenuMixin = superclass =>
         return;
       }
 
-      this.hasResizeObserver = false;
       this.__resizeTimeout = null;
-
-      // @ts-ignore - host is a custom element instance
-      this.__resizeObserver?.observe(/** @type {Element} */ (this));
+      if (!this.__hasWindowResizeListener) {
+        window.addEventListener('resize', this.handleResize);
+        this.__hasWindowResizeListener = true;
+      }
     }
 
     getMoreButtonSlotProjection() {
@@ -139,7 +151,10 @@ export const MoreButtonMenuMixin = superclass =>
     }
 
     removeResizeObserver() {
-      this.__resizeObserver?.disconnect();
+      if (this.__hasWindowResizeListener) {
+        window.removeEventListener('resize', this.handleResize);
+        this.__hasWindowResizeListener = false;
+      }
     }
 
     getMoreButtonMenu() {
@@ -253,12 +268,6 @@ export const MoreButtonMenuMixin = superclass =>
     }
 
     handleResize = () => {
-      console.log('handleResize');
-      if (!this.hasResizeObserver && this.init) {
-        this.hasResizeObserver = true; // Skip the first automatic trigger
-        return;
-      }
-
       this.init = true;
 
       if (this.__resizeTimeout) {
