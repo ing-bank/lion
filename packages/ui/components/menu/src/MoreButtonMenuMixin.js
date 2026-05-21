@@ -67,13 +67,6 @@ export const MoreButtonMenuMixin = superclass =>
       this.handleResize = this.handleResize.bind(this);
     }
 
-    connectedCallback() {
-      super.connectedCallback?.();
-      if (this.itemWrap) {
-        window.addEventListener('resize', this.handleResize);
-      }
-    }
-
     disconnectedCallback() {
       window.removeEventListener('resize', this.handleResize);
       if (this.__resizeTimeout) {
@@ -84,6 +77,7 @@ export const MoreButtonMenuMixin = superclass =>
 
     _initMoreButtonMenu() {
       this._createMoreButtonWrapper();
+      window.addEventListener('resize', this.handleResize);
       this.handleResize();
     }
 
@@ -114,24 +108,28 @@ export const MoreButtonMenuMixin = superclass =>
       moreButtonMenu.setAttribute('role', 'none');
       this._listNode.appendChild(moreButtonWrapper);
 
+      const isElementDirectFocusableItemUnderMoreButtonMenu = element => {
+        const targetTagName = element?.tagName;
+        return (
+          element?.parentElement?.parentElement === moreButtonMenu &&
+          (targetTagName === 'BUTTON' || targetTagName === 'A')
+        );
+      };
+
       moreButtonMenu.addEventListener('focusin', event => {
-        if (
-          event.target.parentElement?.parentElement === moreButtonMenu &&
-          (event.target.tagName === 'BUTTON' || event.target.tagName === 'A')
-        ) {
-          if (event.target.getAttribute('aria-expanded') === 'true') {
-            event.target.click();
+        const target = event?.target;
+        if (isElementDirectFocusableItemUnderMoreButtonMenu(target)) {
+          if (target?.getAttribute('aria-expanded') === 'true') {
+            target?.click();
           }
-          moreButton.setAttribute('aria-expanded', 'true');
+          moreButton?.setAttribute('aria-expanded', 'true');
         }
       });
 
       moreButtonMenu.addEventListener('focusout', event => {
-        if (
-          event.target.parentElement?.parentElement === moreButtonMenu &&
-          (event.target.tagName === 'BUTTON' || event.target.tagName === 'A')
-        ) {
-          moreButton.setAttribute('aria-expanded', 'false');
+        const target = event?.target;
+        if (isElementDirectFocusableItemUnderMoreButtonMenu(target)) {
+          moreButton?.setAttribute('aria-expanded', 'false');
         }
       });
 
@@ -161,10 +159,6 @@ export const MoreButtonMenuMixin = superclass =>
 
     getMoreButtonSlotProjection() {
       return this.querySelector('[slot="more-button"]');
-    }
-
-    getMoreButton() {
-      return this.querySelector('[data-more-button]');
     }
 
     getMoreButtonMenu() {

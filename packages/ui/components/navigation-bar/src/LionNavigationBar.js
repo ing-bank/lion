@@ -164,7 +164,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     this.menuItems = [];
     // /** @type {Boolean} */
     // this.searchDisabled = false;
-    this.breakpointMin = 1068; // force desktop
+    this.breakpointMin = 1400; // force desktop
     /** @type {string[]} */
     this.suggestions = [];
 
