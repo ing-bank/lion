@@ -33,31 +33,59 @@ export const MoreButtonMenuMixin = superclass =>
       this.addResizeObserver();
     }
 
+    _getDeepActiveElement() {
+      let host = document.activeElement || document.body;
+      while (host && host.shadowRoot && host.shadowRoot.activeElement) {
+        host = host.shadowRoot.activeElement;
+      }
+      return host;
+    }
+
     _createMoreButtonWrapper() {
       const moreButtonWrapper = document.createElement('div');
       moreButtonWrapper.setAttribute('data-more-button-wrapper', '');
       [...this.getMoreButtonSlotProjection().childNodes].forEach(node =>
         moreButtonWrapper.appendChild(node),
       );
-      moreButtonWrapper.querySelector('button')?.setAttribute('data-more-button', '');
-      moreButtonWrapper.querySelector('button')?.setAttribute('tabindex', '-1');
+      const moreButton = moreButtonWrapper.querySelector('button');
+      moreButton?.setAttribute('data-more-button', '');
+      moreButton?.setAttribute('tabindex', '-1');
       const moreButtonMenu = document.createElement('div');
       moreButtonMenu.setAttribute('data-more-button-menu', '');
       moreButtonWrapper.appendChild(moreButtonMenu);
       moreButtonMenu.setAttribute('role', 'none');
       this._listNode.appendChild(moreButtonWrapper);
 
-      // moreButtonMenu.addEventListener('click', event => {
-      //   console.log('click', event);
-      //   console.log('this.moreButtonMenuCtrl', this.moreButtonMenuCtrl);
-      //   this.moreButtonMenuCtrl._popper.destroy();
-      //   this.reApplyContextWrapperStyles();
-      //   this.isMoreButtonMenuPopperActive = false;
-      // });
-
       moreButtonMenu.addEventListener('focusin', event => {
-        if (event.relatedTarget?.closest('[level="2"]')) {
+        if (
+          event.target.parentElement?.parentElement === moreButtonMenu &&
+          (event.target.tagName === 'BUTTON' || event.target.tagName === 'A') &&
+          event.target.getAttribute('aria-expanded') === 'true'
+        ) {
           event.target.click();
+        }
+      });
+
+      this.hasMoreButtonMenuAnyFocusedFirstLevelItems = false;
+
+      moreButton?.addEventListener('mousedown', () => {
+        this.hasMoreButtonMenuAnyFocusedFirstLevelItems = false;
+        const focusableFirstLevelItems = moreButtonMenu.querySelectorAll(
+          ':scope > [role="listitem"] > a, :scope > [role="listitem"] > button',
+        );
+
+        [...focusableFirstLevelItems]?.forEach(focusableFirstLevelItem => {
+          if (this._getDeepActiveElement() === focusableFirstLevelItem) {
+            this.hasMoreButtonMenuAnyFocusedFirstLevelItems = true;
+          }
+        });
+      });
+
+      moreButton?.addEventListener('click', ev => {
+        if (!this.hasMoreButtonMenuAnyFocusedFirstLevelItems) {
+          moreButtonMenu
+            .querySelector(':scope > [role="listitem"] > a, :scope > [role="listitem"] > button')
+            ?.focus();
         }
       });
 
