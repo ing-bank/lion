@@ -83,8 +83,8 @@ export const MoreButtonMenuMixin = superclass =>
     }
 
     _initMoreButtonMenu() {
-      this.init = false;
-      this.addResizeObserver();
+      this._createMoreButtonWrapper();
+      this.handleResize();
     }
 
     _getDeepActiveElement() {
@@ -107,6 +107,7 @@ export const MoreButtonMenuMixin = superclass =>
       const moreButton = moreButtonWrapper.querySelector('button');
       moreButton?.setAttribute('data-more-button', '');
       moreButton?.setAttribute('tabindex', '-1');
+      moreButton?.setAttribute('aria-expanded', 'false');
       const moreButtonMenu = document.createElement('div');
       moreButtonMenu.setAttribute('data-more-button-menu', '');
       moreButtonWrapper.appendChild(moreButtonMenu);
@@ -116,10 +117,21 @@ export const MoreButtonMenuMixin = superclass =>
       moreButtonMenu.addEventListener('focusin', event => {
         if (
           event.target.parentElement?.parentElement === moreButtonMenu &&
-          (event.target.tagName === 'BUTTON' || event.target.tagName === 'A') &&
-          event.target.getAttribute('aria-expanded') === 'true'
+          (event.target.tagName === 'BUTTON' || event.target.tagName === 'A')
         ) {
-          event.target.click();
+          if (event.target.getAttribute('aria-expanded') === 'true') {
+            event.target.click();
+          }
+          moreButton.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      moreButtonMenu.addEventListener('focusout', event => {
+        if (
+          event.target.parentElement?.parentElement === moreButtonMenu &&
+          (event.target.tagName === 'BUTTON' || event.target.tagName === 'A')
+        ) {
+          moreButton.setAttribute('aria-expanded', 'false');
         }
       });
 
@@ -145,20 +157,6 @@ export const MoreButtonMenuMixin = superclass =>
             ?.focus();
         }
       });
-
-      this.handleResize();
-    }
-
-    addResizeObserver() {
-      if (!this.itemWrap) {
-        return;
-      }
-
-      this.hasResizeObserver = false;
-      this.__resizeTimeout = null;
-
-      // @ts-ignore - host is a custom element instance
-      this.__resizeObserver?.observe(/** @type {Element} */ (this));
     }
 
     getMoreButtonSlotProjection() {
@@ -167,10 +165,6 @@ export const MoreButtonMenuMixin = superclass =>
 
     getMoreButton() {
       return this.querySelector('[data-more-button]');
-    }
-
-    removeResizeObserver() {
-      this.__resizeObserver?.disconnect();
     }
 
     getMoreButtonMenu() {
