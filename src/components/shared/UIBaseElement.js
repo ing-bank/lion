@@ -2,11 +2,12 @@
 import { LitElement, ReactiveElement, css, unsafeCSS, isServer } from 'lit';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-import { createPartDirective } from './UIPartDirective.js';
+import { createPartDirective, UIPartDirective } from './UIPartDirective.js';
 // import { ScopedElementsMixin } from '@open-wc/scoped-elements/lit-element.js';
 
 /**
  * @typedef {import('./UIBaseElementTypes.js').RefCollection} RefCollection
+ * @typedef {import('./UIBaseElementTypes.js').TemplateContext} TemplateContext
  * @typedef {import('lit').CSSResultOrNative} CSSResultOrNative
  */
 
@@ -269,7 +270,8 @@ const UIBaseElementMixinImplementation = superclass =>
     get templateContext() {
       // Note: we don't expose host here, to keep the contract minimal and predictable.
       // All data exposed to the template should be explicitly provided via templateContext.
-      return {
+
+      return /** @type {TemplateContext} */ ({
         templates: this.templates,
         data: {},
         set: (key, val) => {
@@ -296,7 +298,7 @@ const UIBaseElementMixinImplementation = superclass =>
           }
         },
         refs: this.refs,
-      };
+      });
     }
 
     constructor() {
@@ -437,6 +439,12 @@ const UIBaseElementMixinImplementation = superclass =>
       }
     }
 
+    /**
+     * @type {typeof UIPartDirective}
+     */
+    // @ts-ignore
+    _partDirective;
+
     provideDesign(provider) {
       const ctor = this.constructor;
       const {
@@ -480,7 +488,7 @@ const UIBaseElementMixinImplementation = superclass =>
 
       // Add an instance of the part directive that has access to the latest
       // updated version of templateContext
-      const partDirective = this.constructor._partDirective;
+      const partDirective = this._partDirective || this.constructor._partDirective;
       if (partDirective) {
         templateContext.part = createPartDirective(partDirective, templateContext);
       }

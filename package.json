@@ -123,6 +123,9 @@
     "unist-util-visit": "^5.0.0",
     "wireit": "^0.14.12"
   },
+  "imports": {
+    "#components/*": "packages/ui/components/*"
+  },
   "bundlesize": [
     {
       "path": "./bundlesize/dist/*/*.js",

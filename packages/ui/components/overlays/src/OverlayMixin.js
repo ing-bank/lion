@@ -33,10 +33,7 @@ export const OverlayMixinImplementation = superclass => {
   class OverlayMixin extends superclass {
     static get properties() {
       return {
-        opened: {
-          type: Boolean,
-          reflect: true,
-        },
+        opened: { type: Boolean, reflect: true },
       };
     }
 
@@ -62,6 +59,17 @@ export const OverlayMixinImplementation = superclass => {
       this.open = this.open.bind(this);
       /** @type {EventListener} */
       this.close = this.close.bind(this);
+
+      // // By default, we go for disclosure behavior
+      // // TODO: in the future, bring disclosure behavior to a controller (and therefore directive).
+      // // Take inspiration from VisibilityToggleCtrl of portal elements
+      // /**
+      //  * Terminology aligned with https://open-ui.org/components/openable.explainer/
+      //  * @type {'disclosure'|'overlay'}
+      //  */
+      // this.openableMode = 'disclosure';
+
+      // allow hybrid disclosure/overlay components
     }
 
     get config() {
@@ -161,6 +169,8 @@ export const OverlayMixinImplementation = superclass => {
      */
     // eslint-disable-next-line class-methods-use-this
     _setupOpenCloseListeners() {
+      // Keeps the close-overlay event private for the controller.
+      // (we already have )
       /**
        * @param {{ stopPropagation: () => void; }} ev
        */
@@ -218,11 +228,11 @@ export const OverlayMixinImplementation = superclass => {
     // @ts-expect-error
     static enabledWarnings = super.enabledWarnings?.filter(w => w !== 'change-in-update') || [];
 
-    get _overlayInvokerNode() {
-      return /** @type {HTMLElement | undefined} */ (
-        Array.from(this.children).find(child => child.slot === 'invoker')
-      );
-    }
+    // get _overlayInvokerNode() {
+    //   return /** @type {HTMLElement | undefined} */ (
+    //     Array.from(this.children).find(child => child.slot === 'invoker')
+    //   );
+    // }
 
     /**
      * @overridable
@@ -256,9 +266,40 @@ export const OverlayMixinImplementation = superclass => {
       );
     }
 
+    /**
+     * @param {Element} focusableElOrWrapper
+     * @returns {Element|null}
+     */
+    static _getFocusableInvokerEl(focusableElOrWrapper) {
+      // return focusableElOrWrapper;
+      return (
+        focusableElOrWrapper &&
+        (focusableElOrWrapper.hasAttribute('tabindex') || focusableElOrWrapper.tagName === 'BUTTON'
+          ? focusableElOrWrapper
+          : focusableElOrWrapper.querySelector('[role=button], button'))
+      );
+    }
+
+    get _overlayInvokerNode() {
+      const ctor = /** @type {typeof OverlayMixin} */ (this.constructor);
+      if (!this.__invokerNode) {
+        const slottedNode = Array.from(this.children).find(child => child.slot === 'invoker');
+        if (slottedNode) {
+          this.__invokerNode = ctor._getFocusableInvokerEl(slottedNode);
+        } else {
+          // Look for preceeding sibling with [data-invoker] attribute, and try to find a focusable element in it (either itself or a child)
+          this.__invokerNode =
+            this.previousElementSibling?.hasAttribute('data-invoker') &&
+            ctor._getFocusableInvokerEl(this.previousElementSibling);
+        }
+      }
+      return this.__invokerNode;
+    }
+
     /** @protected */
     _setupOverlayCtrl() {
       if (this.#hasSetup) return;
+
       const config = {
         contentNode: this._overlayContentNode,
         contentWrapperNode: this._overlayContentWrapperNode,
@@ -282,6 +323,8 @@ export const OverlayMixinImplementation = superclass => {
 
     /** @protected */
     _teardownOverlayCtrl() {
+      // Make sure that dynamic behavior (e.g. responsive) is possible by allowing multiple setups and teardowns of the overlay controller.
+      this.#hasSetup = false;
       if (!this._overlayCtrl) return;
 
       this._teardownOpenCloseListeners();
