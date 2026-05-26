@@ -216,16 +216,11 @@ export const MoreButtonMenuMixin = superclass =>
 
       const nextNodes = [];
       let { nextSibling } = listItem;
-      let includeOneMoreAfterComment = false;
       while (nextSibling) {
         nextNodes.push(nextSibling);
 
-        if (includeOneMoreAfterComment) {
-          break;
-        }
-
         if (isMarkerComment(nextSibling)) {
-          includeOneMoreAfterComment = true;
+          break;
         }
 
         ({ nextSibling } = nextSibling);
