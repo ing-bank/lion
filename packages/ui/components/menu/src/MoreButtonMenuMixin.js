@@ -185,11 +185,10 @@ export const MoreButtonMenuMixin = superclass =>
       this.style.display = 'none';
       const parentWidth = this.parentElement.clientWidth;
       this.style.display = '';
-      const result = !!(
+      return (
         this._listNode.scrollWidth === this._listNode.clientWidth &&
         this._listNode.scrollWidth <= parentWidth
       );
-      return result;
     }
 
     getListItems() {
