@@ -287,6 +287,8 @@ export class OverlayController extends EventTarget {
       // @ts-ignore - hideVisually is an extension property
       hideVisually: false,
       requireConnectedNodes: true,
+      // In next major, we remove this prop. Now we disable it for backwards compatibility and enable it in the places we need it internally
+      _shouldTeardownDomStructure: false,
     };
 
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
@@ -1612,8 +1614,10 @@ export class OverlayController extends EventTarget {
 
     this.contentNode?.removeEventListener('click', this.#hideOnCloseButtonClick);
 
-    this.__rearrangeNodesCleanup?.();
-    this.__teardownVisibility();
+    if (this.config._shouldTeardownDomStructure) {
+      this.__rearrangeNodesCleanup?.();
+      this.__teardownVisibility();
+    }
 
     this.#hasSetup = false;
   }
