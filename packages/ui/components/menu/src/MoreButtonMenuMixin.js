@@ -286,12 +286,15 @@ export const MoreButtonMenuMixin = superclass =>
         this.hideMoreButton();
 
         if (this.doItemsFit()) {
+          this.style.visibility = '';
           return;
         }
 
+        this.style.visibility = 'hidden';
         this.displayMoreButton();
         const hiddenItemsCount = this.hideItemsOneByOneInMainMenuUntilTheyFit();
         this.moveHiddenItemsFromMainMenuToMoreButtonMenu(hiddenItemsCount);
+        this.style.visibility = '';
       }, 50);
     }
   };
