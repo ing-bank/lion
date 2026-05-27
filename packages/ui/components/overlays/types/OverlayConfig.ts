@@ -118,4 +118,6 @@ export interface OverlayConfig {
    * This allows to prepare nodes and later connect them to dom.
    */
   requireConnectedNodes?: boolean;
+
+  _shouldTeardownDomStructure?: boolean;
 }
