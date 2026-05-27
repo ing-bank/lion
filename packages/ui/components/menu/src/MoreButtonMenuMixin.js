@@ -182,7 +182,13 @@ export const MoreButtonMenuMixin = superclass =>
     }
 
     doItemsFit() {
-      return this._listNode.scrollWidth - this._listNode.clientWidth === 0;
+      this.style.display = 'none';
+      const parentWidth = this.parentElement.clientWidth;
+      this.style.display = '';
+      return (
+        this._listNode.scrollWidth === this._listNode.clientWidth &&
+        this._listNode.scrollWidth <= parentWidth
+      );
     }
 
     getListItems() {
@@ -210,16 +216,11 @@ export const MoreButtonMenuMixin = superclass =>
 
       const nextNodes = [];
       let { nextSibling } = listItem;
-      let includeOneMoreAfterComment = false;
       while (nextSibling) {
         nextNodes.push(nextSibling);
 
-        if (includeOneMoreAfterComment) {
-          break;
-        }
-
         if (isMarkerComment(nextSibling)) {
-          includeOneMoreAfterComment = true;
+          break;
         }
 
         ({ nextSibling } = nextSibling);
