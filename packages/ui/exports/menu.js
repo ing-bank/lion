@@ -1,3 +1,4 @@
+/* eslint-disable import/no-relative-packages */
 export { LionMenu } from '../components/menu/src/LionMenu.js';
 export { LionMenuOverlay } from '../components/menu/src/LionMenuOverlay.js';
 export { LionTree } from '../components/menu/src/LionTree.js';
