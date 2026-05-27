@@ -248,9 +248,9 @@ export class OverlayController extends EventTarget {
       requireConnectedNodes: true,
 
       // hides children overlays when parent is closed...
-      syncChildrenCloseState: true,
-      // In next major, we remove this prop. Now we disable it for backwards compatibility and enable it in the places we need it internally
-      _shouldTeardownDomStructure: false,
+      syncChildrenCloseState: false,
+      // // In next major, we remove this prop. Now we disable it for backwards compatibility and enable it in the places we need it internally
+      // _shouldTeardownDomStructure: false,
     };
 
     /** @protected */
@@ -276,7 +276,7 @@ export class OverlayController extends EventTarget {
     this.__escKeyHandlerCalled = false;
   }
 
-  #hasSetup = false;
+  __hasSetup = false;
 
   /**
    * The invokerNode
@@ -544,7 +544,7 @@ export class OverlayController extends EventTarget {
       },
     };
 
-    const shouldUpdate = !this.#hasSetup || !isEqualConfig(prevConfig, newConfig);
+    const shouldUpdate = !this.__hasSetup || !isEqualConfig(prevConfig, newConfig);
     if (!shouldUpdate) return;
     // Teardown all previous configs
 
@@ -631,7 +631,7 @@ export class OverlayController extends EventTarget {
     // Use event delegation to listen for clicks on close buttons...
     this.contentNode.addEventListener('click', this.#hideOnCloseButtonClick);
 
-    this.#hasSetup = true;
+    this.__hasSetup = true;
   }
 
   #hideOnCloseButtonClick = (/** @type {{ target: any; }} */ ev) => {
@@ -1167,9 +1167,10 @@ export class OverlayController extends EventTarget {
   _handleSyncChildrenCloseState({ phase }) {
     if (phase !== 'hide') return;
 
-    this.manager.shownList
-      .filter(ctrl => ctrl !== this && deepContains(this.contentNode, ctrl.contentNode))
-      .forEach(ctrl => ctrl.hide());
+    const visibleChildren = this.manager.shownList.filter(
+      ctrl => ctrl !== this && deepContains(this.contentNode, ctrl.contentNode),
+    );
+    visibleChildren.forEach(ctrl => ctrl.hide());
   }
 
   /**
@@ -1594,7 +1595,7 @@ export class OverlayController extends EventTarget {
   }
 
   teardown() {
-    if (!this.#hasSetup) return;
+    if (!this.__hasSetup) return;
     this.__handleOverlayStyles({ phase: 'teardown' });
     if (this.isShown) {
       this._keepBodySize({ phase: 'teardown' });
@@ -1606,12 +1607,12 @@ export class OverlayController extends EventTarget {
 
     this.contentNode?.removeEventListener('click', this.#hideOnCloseButtonClick);
 
-    if (this.config._shouldTeardownDomStructure) {
-      this.__rearrangeNodesCleanup?.();
-      this.__teardownVisibility();
-    }
+    // if (this.config._shouldTeardownDomStructure) {
+    this.__rearrangeNodesCleanup?.();
+    // }
+    this.__teardownVisibility();
 
-    this.#hasSetup = false;
+    this.__hasSetup = false;
   }
 
   /** @private */
