@@ -1152,7 +1152,13 @@ export class OverlayController extends EventTarget {
   _handleVisibilityTriggers({ phase }) {
     if (typeof this.visibilityTriggerFunction !== 'function') return;
 
-    this.visibilityTriggerFunction({ controller: this })?.[phase]?.();
+    // Here we initialize the __visibilityTriggerHandler of our invokerNode. It's important that we ONLY do this on init,
+    // otherwise we risk not being able to properly clean up listeners...
+    if (phase === 'init') {
+      this.__visibilityTriggerHandler = this.visibilityTriggerFunction({ controller: this });
+    }
+    // Here we run the appropriate lifecycle, if defined in our handler
+    this.__visibilityTriggerHandler[phase]?.();
   }
 
   /**
