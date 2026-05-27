@@ -237,8 +237,7 @@ export class OverlayController extends EventTarget {
         placement: 'center',
       },
       zIndex: 9999,
-      // TODO: rename to isActivated
-      isOpenable: true,
+      isActivated: true,
       focusContentOnOpen: false,
       // This means that content will have visually-hidden / sr-only styles. This is handy for:
       // - hidden menus that should be "indexable" by screen readers (like the Links list in VO: https://support.apple.com/en-gb/guide/voiceover/mchlp2719/mac)
@@ -597,7 +596,7 @@ export class OverlayController extends EventTarget {
    * @protected
    */
   _init() {
-    if (!this.config.isOpenable) return;
+    if (!this.config.isActivated) return;
 
     // TODO: should not be behind a flag when we are fully tearing down...
     // TODO 2: When we move away from dialog (use popover to paint to top layer)
@@ -986,7 +985,7 @@ export class OverlayController extends EventTarget {
    */
   async hide() {
     // Function like a no-op for dynamic edge cases...
-    if (!this.config.isOpenable) return;
+    if (!this.config.isActivated) return;
 
     this._hideComplete = new Promise(resolve => {
       this._hideResolve = resolve;
