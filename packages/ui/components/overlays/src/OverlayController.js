@@ -247,6 +247,9 @@ export class OverlayController extends EventTarget {
       // @ts-ignore - hideVisually is an extension property
       hideVisually: false,
       requireConnectedNodes: true,
+
+      // hides children overlays when parent is closed...
+      syncChildrenCloseState: true,
       // In next major, we remove this prop. Now we disable it for backwards compatibility and enable it in the places we need it internally
       _shouldTeardownDomStructure: false,
     };
@@ -1137,15 +1140,37 @@ export class OverlayController extends EventTarget {
     if (this.visibilityTriggerFunction) {
       this._handleVisibilityTriggers({ phase });
     }
-
-    if (phase === 'init' && this.config.focusContentOnOpen) {
-      this.contentNode?.setAttribute('tabindex', '-1');
+    if (this.config.syncChildrenCloseState) {
+      this._handleSyncChildrenCloseState({ phase });
     }
+    if (this.config.focusContentOnOpen) {
+      this._handleFocusContentOnOpen({ phase });
+    }
+  }
 
-    if (phase === 'teardown' && this.config.focusContentOnOpen) {
+  /**
+   * @param {{phase: OverlayPhase}} opts
+   * @returns {void}
+   */
+  _handleFocusContentOnOpen({ phase }) {
+    if (phase === 'init') {
+      this.contentNode?.setAttribute('tabindex', '-1');
+    } else if (phase === 'teardown') {
       // TODO: capture initial attr, use Resettable mechanism of VisibilityToggleCtrl in whole Controller
       this.contentNode?.removeAttribute('tabindex');
     }
+  }
+
+  /**
+   * @param {{phase: OverlayPhase}} opts
+   * @returns {void}
+   */
+  _handleSyncChildrenCloseState({ phase }) {
+    if (phase !== 'hide') return;
+
+    this.manager.shownList
+      .filter(ctrl => ctrl !== this && deepContains(this.contentNode, ctrl.contentNode))
+      .forEach(ctrl => ctrl.hide());
   }
 
   /**
