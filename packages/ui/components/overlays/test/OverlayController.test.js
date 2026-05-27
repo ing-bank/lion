@@ -115,26 +115,35 @@ const withLocalTestConfig = () =>
  */
 async function createNestedEscControllers(parentContent) {
   const childContent = /** @type {HTMLDivElement} */ (parentContent.querySelector('div[id]'));
-  // Assert valid fixure
-  const isValidFixture =
-    (parentContent.id.startsWith('parent-overlay--hidesOnEsc') ||
-      parentContent.id.startsWith('parent-overlay--hidesOnOutsideEsc')) &&
-    (childContent.id.startsWith('child-overlay--hidesOnEsc') ||
-      childContent.id.startsWith('child-overlay--hidesOnOutsideEsc'));
-  if (!isValidFixture) {
-    throw new Error('Provide a valid fixture');
-  }
 
   if (parentContent.hasAttribute('data-convert-to-shadow-root')) {
     const shadowRootParent = parentContent.attachShadow({ mode: 'open' });
     shadowRootParent.appendChild(childContent);
   }
 
+  const parentConfig = {};
+  const childConfig = {};
+
   const parentHasOutsideOnEsc = parentContent.id.startsWith('parent-overlay--hidesOnOutsideEsc');
   const childHasOutsideOnEsc = childContent.id.startsWith('child-overlay--hidesOnOutsideEsc');
 
-  const parentConfig = parentHasOutsideOnEsc ? { hidesOnOutsideEsc: true } : { hidesOnEsc: true };
-  const childConfig = childHasOutsideOnEsc ? { hidesOnOutsideEsc: true } : { hidesOnEsc: true };
+  if (parentHasOutsideOnEsc) {
+    parentConfig.hidesOnOutsideEsc = true;
+  } else {
+    parentConfig.hidesOnEsc = true;
+  }
+  if (childHasOutsideOnEsc) {
+    childConfig.hidesOnOutsideEsc = true;
+  } else {
+    childConfig.hidesOnEsc = true;
+  }
+
+  const parentHasSyncChildrenCloseState =
+    parentContent.dataset.syncChildrenCloseState !== undefined;
+
+  if (parentHasSyncChildrenCloseState) {
+    parentConfig.syncChildrenCloseState = true;
+  }
 
   const parentOverlay = new OverlayController({
     ...withGlobalTestConfig(),
@@ -347,6 +356,21 @@ describe('OverlayController', () => {
       await ctrl.hide();
       expect(ctrl.isShown).to.be.false;
     });
+
+    // it('cleans up the dom structure it created', async () => {
+    //   const contentNode = /** @type {HTMLElement} */ (fixtureSync(html`<div>my content</div>`));
+    //   const ctrl = new OverlayController({
+    //     placementMode: 'global',
+    //     contentNode,
+    //   });
+    //   await ctrl.show();
+    //   expect(ctrl.contentWrapperNode).to.exist;
+    //   expect(ctrl.__wrappingDialogNode).to.exist;
+
+    //   await ctrl.teardown();
+    //   expect(ctrl.contentWrapperNode).to.not.exist;
+    //   expect(ctrl.__wrappingDialogNode).to.not.exist;
+    // });
   });
 
   describe('Node Configuration', () => {
@@ -621,6 +645,7 @@ describe('OverlayController', () => {
     });
   });
 
+  // TODO: make features modular (so they can be treeshaken) and test their lifecycle within this desrcibe
   describe('Feature Configuration', () => {
     describe('trapsKeyboardFocus', () => {
       it('focuses the overlay on show', async () => {
@@ -983,6 +1008,7 @@ describe('OverlayController', () => {
         });
       });
     });
+
     describe('hidesOnOutsideClick', () => {
       it('hides on outside click', async () => {
         const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
@@ -1701,6 +1727,91 @@ describe('OverlayController', () => {
         await ctrl1.show();
         expect(ctrl0.hasActiveBackdrop).to.be.true;
         expect(ctrl1.hasActiveBackdrop).to.be.true;
+      });
+    });
+
+    describe('focusContentOnOpen', () => {
+      it('adds tabindex="-1" to the content node when focusContentOnOpen is true', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+          focusContentOnOpen: true,
+        });
+        const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
+        ctrl.updateConfig({ contentNode });
+        await ctrl.show();
+        expect(contentNode.getAttribute('tabindex')).to.equal('-1');
+      });
+
+      it('makes contentNode the root of "next tab flow"', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          isBlocking: false,
+          focusContentOnOpen: true,
+        });
+        const contentNode = /** @type {HTMLElement} */ (
+          await fixture('<div><button>Button</button></div>')
+        );
+        ctrl.updateConfig({ contentNode });
+        await ctrl.show();
+        const button = /** @type {HTMLButtonElement} */ (contentNode.querySelector('button'));
+        button.focus();
+        expect(isActiveElement(button)).to.be.true;
+      });
+    });
+
+    describe('syncChildrenCloseState', () => {
+      it('does not close all children of nested controllers when syncChildrenCloseState is false', async () => {
+        const parentContent = /** @type {HTMLDivElement} */ (
+          await fixture(
+            html` <!-- -->
+              <div data-sync-children-close-state id="parent-overlay">
+                <div id="child-overlay">we open our child and it will close when parent does</div>
+              </div>`,
+          )
+        );
+        const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+        expect(parentOverlay.isShown).to.be.true;
+        expect(childOverlay.isShown).to.be.true;
+
+        await parentOverlay.hide();
+        await childOverlay._hideComplete;
+        expect(parentOverlay.isShown).to.be.false;
+        expect(childOverlay.isShown).to.be.false;
+      });
+
+      it('does not close all children of nested controllers when syncChildrenCloseState is false', async () => {
+        const parentContent = /** @type {HTMLDivElement} */ (
+          await fixture(
+            html` <!-- -->
+              <div id="parent-overlay">
+                <div id="child-overlay">
+                  we open our child and it will not close when parent does
+                </div>
+              </div>`,
+          )
+        );
+        const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
+        expect(parentOverlay.isShown).to.be.true;
+        expect(childOverlay.isShown).to.be.true;
+
+        await parentOverlay.hide();
+        expect(parentOverlay.isShown).to.be.false;
+        expect(childOverlay.isShown).to.be.true;
+      });
+    });
+
+    describe('isActivated', () => {
+      it('allows to conditionally disable overlay/openable functionality (for responsive context like nav menus, accordions/collapsibles vs plain headings/content etc.)', async () => {
+        const ctrl = new OverlayController({
+          ...withGlobalTestConfig(),
+          isActivated: false,
+        });
+        expect(ctrl.__hasSetup).to.be.false;
+        ctrl.updateConfig({
+          isActivated: true,
+        });
+        expect(ctrl.__hasSetup).to.be.true;
       });
     });
   });
