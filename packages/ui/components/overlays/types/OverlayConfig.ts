@@ -119,5 +119,7 @@ export interface OverlayConfig {
    */
   requireConnectedNodes?: boolean;
 
+  syncChildrenCloseState?: boolean;
+
   _shouldTeardownDomStructure?: boolean;
 }
