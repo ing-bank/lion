@@ -111,7 +111,7 @@ export interface OverlayConfig {
    * By default, we function either as overlay or disclosure. In some cases, this should be dynamically set (think of responsive changes).
    * or it depends on the context (a top level menu is not openable (unless it's a context menu), its children menus are).
    */
-  isOpenable?: boolean;
+  isActivated?: boolean;
 
   /**
    * By default, an error is thrown when contentNode is not connected to the DOM.
