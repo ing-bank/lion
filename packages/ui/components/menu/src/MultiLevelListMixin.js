@@ -214,7 +214,7 @@ const MultiLevelListMixinImplementation = superclass =>
           if (
             this.orientation === 'horizontal' &&
             subListOfActiveItem &&
-            this._activeMode !== 'disclosure'
+            this._activeMode !== 'tabbable-disclosure'
           ) {
             this.activeItem.click();
           }

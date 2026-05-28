@@ -65,9 +65,9 @@ export const OverlayMixinImplementation = superclass => {
       // // Take inspiration from VisibilityToggleCtrl of portal elements
       // /**
       //  * Terminology aligned with https://open-ui.org/components/openable.explainer/
-      //  * @type {'disclosure'|'overlay'}
+      //  * @type {'tabbable-disclosure'|'overlay'}
       //  */
-      // this.openableMode = 'disclosure';
+      // this.openableMode = 'tabbable-disclosure';
 
       // allow hybrid disclosure/overlay components
     }
