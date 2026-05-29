@@ -28,6 +28,11 @@ export class LionMenuHybrid extends LionMenuOverlay {
     this._shouldSetupOverlay = false;
   }
 
+  _teardownOverlayCtrl() {
+    super._teardownOverlayCtrl();
+    this._overlayCtrl?.stripWrappers();
+  }
+
   /**
    * @param {import('lit').PropertyValues} changedProperties
    */

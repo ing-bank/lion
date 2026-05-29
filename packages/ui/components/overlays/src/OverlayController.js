@@ -105,7 +105,7 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
    */
   parentElement.insertBefore(wrappingDialogNodeL1, tempMarker);
 
-  return function cleanup() {
+  return function stripWrappers() {
     if (hasLegacyMethodOfProvidingWrapperNode) {
       parentElement?.insertBefore(contentWrapperNodeL2, tempMarker);
     } else {
@@ -274,6 +274,10 @@ export class OverlayController extends EventTarget {
      * @private
      */
     this.__escKeyHandlerCalled = false;
+
+    this.stripWrappers = () => {
+      throw new Error('Content DOM structure has not been initiated');
+    };
   }
 
   __hasSetup = false;
@@ -718,7 +722,7 @@ export class OverlayController extends EventTarget {
       // 'hack' that makes sure popperjs (that is applied one level lower) works correctly in deeply nested shadow roots
       this.contentWrapperNode.style.transform = 'translateZ(0px)';
 
-      this.__rearrangeNodesCleanup = rearrangeNodes({
+      this.stripWrappers = rearrangeNodes({
         wrappingDialogNodeL1: wrappingDialogElement,
         contentWrapperNodeL2: this.contentWrapperNode,
         contentNodeL3: this.contentNode,
@@ -1607,9 +1611,6 @@ export class OverlayController extends EventTarget {
 
     this.contentNode?.removeEventListener('click', this.#hideOnCloseButtonClick);
 
-    // if (this.config._shouldTeardownDomStructure) {
-    this.__rearrangeNodesCleanup?.();
-    // }
     this.__teardownVisibility();
 
     this.__hasSetup = false;
