@@ -193,6 +193,14 @@ const menuData = [
       },
     ],
   },
+  {
+    title: 'Loyalty shop 2',
+    link: '#points',
+  },
+  {
+    title: 'Make an appointment 2',
+    link: '#appointment',
+  },
 ];
 
 const secondaryMenu = [
