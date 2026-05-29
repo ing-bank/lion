@@ -134,10 +134,7 @@ export const MoreButtonMenuMixin = superclass =>
         const target = event?.target;
         if (isElementDirectFocusableItemUnderMoreButtonMenu(target)) {
           moreButton?.setAttribute('aria-expanded', 'false');
-          // note even 80 ms is not enough!
-          setTimeout(() => {
-            target.setAttribute('data-focused', 'false');
-          }, 90);
+          target.setAttribute('data-focused', 'false');
         }
       });
 
@@ -248,19 +245,19 @@ export const MoreButtonMenuMixin = superclass =>
       const listItem = listItems[listItems.length - 1];
 
       const l2InvokerButton = listItem.querySelector(':scope > button');
-      // if (!l2InvokerButton.getAttribute('data-dropdown-listener-set')) {
-      //   l2InvokerButton?.addEventListener('mousedown', event => {
-      //     event.preventDefault();
-      //     event.stopPropagation();
-      //     event.target.nextElementSibling._overlayCtrl.toggle();
-      //   });
-      //   // make sure we set the listener only once
-      //   l2InvokerButton.setAttribute('data-dropdown-listener-set', 'true');
-      // }
+      if (l2InvokerButton && !l2InvokerButton.getAttribute('data-dropdown-listener-set')) {
+        l2InvokerButton?.addEventListener('mousedown', event => {
+          event.preventDefault();
+          event.stopPropagation();
+          event.target.nextElementSibling._overlayCtrl.hide();
+        });
+        // make sure we set the listener only once
+        l2InvokerButton.setAttribute('data-dropdown-listener-set', 'true');
+      }
 
       l2InvokerButton?.addEventListener('focus', () => {
         setTimeout(() => {
-          l2InvokerButton.setAttribute('data-focused', 'true');
+          l2InvokerButton?.setAttribute('data-focused', 'true');
         });
       });
 
