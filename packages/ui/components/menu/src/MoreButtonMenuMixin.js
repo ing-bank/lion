@@ -237,6 +237,17 @@ export const MoreButtonMenuMixin = superclass =>
       const listItems = this._listNode.querySelectorAll(':scope > [role="listitem"]');
       const listItem = listItems[listItems.length - 1];
 
+      const l2InvokerButton = listItem.querySelector(':scope > button');
+      if (!l2InvokerButton.getAttribute('data-dropdown-listener-set')) {
+        l2InvokerButton?.addEventListener('mousedown', event => {
+          event.preventDefault();
+          event.stopPropagation();
+          event.target.nextElementSibling._overlayCtrl.toggle();
+        });
+        // make sure we set the listener only once
+        l2InvokerButton.setAttribute('data-dropdown-listener-set', 'true');
+      }
+
       const fragment = this.getListItemWithAdjacentNodes(listItem);
       moreButtonMenuElement.prepend(fragment);
       listItem.style.display = '';
