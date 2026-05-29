@@ -258,7 +258,7 @@ export const MoreButtonMenuMixin = superclass =>
       //   l2InvokerButton.setAttribute('data-dropdown-listener-set', 'true');
       // }
 
-      l2InvokerButton.addEventListener('focus', () => {
+      l2InvokerButton?.addEventListener('focus', () => {
         setTimeout(() => {
           l2InvokerButton.setAttribute('data-focused', 'true');
         });
