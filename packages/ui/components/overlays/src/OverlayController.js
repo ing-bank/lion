@@ -887,6 +887,8 @@ export class OverlayController extends EventTarget {
    * @param {HTMLElement} elementToFocusAfterHide
    */
   async show(elementToFocusAfterHide = this.elementToFocusAfterHide) {
+    console.trace('OverlayController show called');
+
     // Subsequent shows could happen, make sure we await it first.
     // Otherwise it gets replaced before getting resolved, and places awaiting it will time out.
     if (this._showComplete) {
@@ -984,6 +986,7 @@ export class OverlayController extends EventTarget {
    * @event hide right after the overlay is hidden
    */
   async hide() {
+    console.trace('OverlayController hide called');
     // Function like a no-op for dynamic edge cases...
     if (!this.config.isActivated) return;
 
@@ -1534,7 +1537,7 @@ export class OverlayController extends EventTarget {
       this.__onWindowBlur = () => {
         // When the current window loses the focus (clicking outside iframe) the overlay gets hidden
         setTimeout(() => {
-          this.hide();
+          // this.hide();
         });
       };
     }

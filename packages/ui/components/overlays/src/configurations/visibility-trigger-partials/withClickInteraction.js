@@ -13,6 +13,7 @@ export function withClickInteraction() {
       /** @type {{ controller: OverlayController }} */ { controller },
     ) => {
       function handleOpenClosed() {
+        console.debug('dfff');
         if (controller._hasDisabledInvoker()) {
           return;
         }

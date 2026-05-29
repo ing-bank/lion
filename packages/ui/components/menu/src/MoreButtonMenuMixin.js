@@ -1,3 +1,5 @@
+import { debounce } from './utils/debounce.js';
+
 // @ts-nocheck
 /**
  * @param {any} superclass
@@ -11,21 +13,19 @@ const styles = `
       display: none;
     }
 
-    [data-more-button-menu]:has([role='listitem'] [active]:focus):not(
-        :has([role='listitem'] [active][aria-expanded='true'])
-      ) {
+    [data-more-button-menu] {
+      overflow: hidden;
+      width: 1px;
+      height: 1px;
+    }
+
+    [data-more-button][aria-expanded='true'] > [data-more-button-menu],
+    [data-more-button-menu]:has([role='listitem'] > [aria-expanded='false']:focus) {
       overflow: visible;
       width: auto;
       height: auto;
       position: absolute;
       top: 100%;
-      background-color: var(--oj2_bg_default);
-    }
-    [data-more-button-menu],
-    [data-more-button-menu]:has([role='listitem'] [active][aria-expanded='true']) {
-      overflow: hidden;
-      width: 1px;
-      height: 1px;
     }
 
     :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > button,
@@ -55,6 +55,17 @@ const styles = `
     :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > a {
       white-space: nowrap;
     }    
+
+    [data-visually-hidden] {
+    	border: 0 !important;
+      clip-path: inset(50%) !important;
+      height: 1px !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+      width: 1px !important;
+      white-space: nowrap !important;
+    }
   </style>
   `;
 
@@ -65,7 +76,7 @@ export const MoreButtonMenuMixin = superclass =>
       super();
       this.__resizeTimeout = null;
       this.isMoreButtonShown = null;
-      this.handleResize = this.handleResize.bind(this);
+      this.__handleResizeDebounced = debounce(this.__handleResize.bind(this), { delay: 50 });
     }
 
     disconnectedCallback() {
@@ -85,7 +96,7 @@ export const MoreButtonMenuMixin = superclass =>
     // eslint-disable-next-line class-methods-use-this
     _getDeepActiveElement() {
       let host = document.activeElement || document.body;
-      while (host && host.shadowRoot && host.shadowRoot.activeElement) {
+      while (host?.shadowRoot?.activeElement) {
         host = host.shadowRoot.activeElement;
       }
       return host;
@@ -122,6 +133,7 @@ export const MoreButtonMenuMixin = superclass =>
         const target = event?.target;
         if (isElementDirectFocusableItemUnderMoreButtonMenu(target)) {
           if (target?.getAttribute('aria-expanded') === 'true') {
+            // TODO: do we keep focus here?
             target?.click();
           }
           moreButton?.setAttribute('aria-expanded', 'true');
@@ -139,6 +151,7 @@ export const MoreButtonMenuMixin = superclass =>
 
       moreButton?.addEventListener('mousedown', () => {
         this.hasMoreButtonMenuAnyFocusedFirstLevelItems = false;
+        // TODO: update selector, so it will be compatible with all types of menus
         const focusableFirstLevelItems = moreButtonMenu.querySelectorAll(
           ':scope > [role="listitem"] > a, :scope > [role="listitem"] > button',
         );
@@ -152,6 +165,9 @@ export const MoreButtonMenuMixin = superclass =>
 
       moreButton?.addEventListener('click', () => {
         if (!this.hasMoreButtonMenuAnyFocusedFirstLevelItems) {
+          moreButton?.setAttribute('aria-expanded', 'true');
+          // N.B. we focus first more item on click
+          // TODO: consider focusing wrapper with tabindex-1 like we do in L+1 menus?
           moreButtonMenu
             .querySelector(':scope > [role="listitem"] > a, :scope > [role="listitem"] > button')
             ?.focus();
@@ -172,6 +188,7 @@ export const MoreButtonMenuMixin = superclass =>
     }
 
     displayMoreButton() {
+      // TODO: leave to consumer, could be flex etc. as well
       this.getMoreButtonMenuWrapper().style.display = 'block';
       this.isMoreButtonShown = true;
     }
@@ -296,5 +313,29 @@ export const MoreButtonMenuMixin = superclass =>
         this.moveHiddenItemsFromMainMenuToMoreButtonMenu(hiddenItemsCount);
         this.style.visibility = '';
       }, 50);
+    }
+
+    __handleResize() {
+      // if (this.__resizeTimeout) {
+      //   return;
+      // }
+
+      // this.__resizeTimeout = setTimeout(() => {
+      //   this.__resizeTimeout = null;
+
+      this.renderAllItemsInMainMenu();
+      this.hideMoreButton();
+
+      if (this.doItemsFit()) {
+        this.style.visibility = '';
+        return;
+      }
+
+      this.style.visibility = 'hidden';
+      this.displayMoreButton();
+      const hiddenItemsCount = this.hideItemsOneByOneInMainMenuUntilTheyFit();
+      this.moveHiddenItemsFromMainMenuToMoreButtonMenu(hiddenItemsCount);
+      this.style.visibility = '';
+      // }, 50);
     }
   };

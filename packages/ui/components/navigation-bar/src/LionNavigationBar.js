@@ -199,7 +199,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           openableConfig: {
             // We want to do the absolute positioning ourselves, popper is not suited for this...
             placementMode: 'custom',
-            isOpenable: false,
+            isActivated: false,
             hidesOnOutsideClick: false,
             inheritsReferenceWidth: 'none',
           },
@@ -231,7 +231,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           // We want disclosure behavior
           placementMode: 'custom',
           // N.B. we don't have an invoker...
-          isOpenable: false,
+          isActivated: false,
           inheritsReferenceWidth: 'none',
           focusContentOnOpen: true,
         },
@@ -378,20 +378,25 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
    * @returns {import('lit').TemplateResult}
    */
   _ctasTemplate(ctaPrimary, ctaSecondary) {
-    return html`<div class="cta-items">
-      ${ctaSecondary?.href
-        ? html`<div class="cta-secondary">
-            <a id="${this._getId(ctaSecondary)}" href="${ctaSecondary.href}"
-              >${ctaSecondary.label}
-            </a>
-          </div>`
-        : ''}
-      ${ctaPrimary?.href
-        ? html`<div class="cta-primary">
-            <a id="${this._getId(ctaPrimary)}" href="${ctaPrimary.href}"> ${ctaPrimary.label}</a>
-          </div>`
-        : ''}
-    </div>`;
+    return html`<!-- -->
+      <div class="cta-items">
+        ${ctaSecondary?.href
+          ? html`<!-- -->
+              <div class="cta-secondary">
+                <a id="${this._getId(ctaSecondary)}" href="${ctaSecondary.href}">
+                  ${ctaSecondary.label}
+                </a>
+              </div>`
+          : ''}
+        ${ctaPrimary?.href
+          ? html`<!-- -->
+              <div class="cta-primary">
+                <a id="${this._getId(ctaPrimary)}" href="${ctaPrimary.href}">
+                  ${ctaPrimary.label}</a
+                >
+              </div>`
+          : ''}
+      </div>`;
   }
 
   /**
@@ -403,37 +408,42 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
     // @ts-ignore
     const cfgForLevel = this._levelCfg[`l${level}`];
 
-    return html`<lion-menu-hybrid
-      ?item-wrap=${itemWrap}
-      .config="${cfgForLevel.openableConfig || {}}"
-      .bar="${cfgForLevel.isBar}"
-      ?data-has-full-width-flyout="${cfgForLevel.hasFullWidthFlyout}"
-      ._activeMode="${'tabbable-disclosure'}"
-    >
-      ${level > 1 && this.responsiveMode === 'mobile'
-        ? html` <div role="listitem">
-            <button data-close data-level="${level}">&lt; ${prevText}</button>
-          </div>`
-        : ''}
-      ${menuItemsForLevel.map(
-        menuItem => html`
-          <div role="listitem">
-            ${menuItem.sub
-              ? html` <button id="${this._getId(menuItem)}" data-invoker>${menuItem.title}</button>
-                  ${menuItem.sub
-                    ? this._menulevelTemplate(menuItem.sub, level + 1, menuItem.title)
-                    : ''}`
-              : html` <a id="${this._getId(menuItem)}" href="${menuItem.link || ''}"
-                  >${menuItem.title}</a
-                >`}
-          </div>
-        `,
-      )}
-      ${itemWrap
-        ? html`<div slot="more-button">
-            <button>More</button>
-          </div>`
-        : nothing}
-    </lion-menu-hybrid> `;
+    return html`<!-- -->
+      <lion-menu-hybrid
+        ?item-wrap=${itemWrap}
+        .config="${cfgForLevel.openableConfig || {}}"
+        .bar="${cfgForLevel.isBar}"
+        ?data-has-full-width-flyout="${cfgForLevel.hasFullWidthFlyout}"
+        ._activeMode="${'tabbable-disclosure'}"
+      >
+        ${level > 1 && this.responsiveMode === 'mobile'
+          ? html`<!-- -->
+              <div role="listitem">
+                <button data-close data-level="${level}">&lt; ${prevText}</button>
+              </div>`
+          : ''}
+        ${menuItemsForLevel.map(
+          menuItem => html`
+            <div role="listitem">
+              ${menuItem.sub
+                ? html`<!-- -->
+                    <button id="${this._getId(menuItem)}" data-invoker>${menuItem.title}</button>
+                    ${menuItem.sub
+                      ? this._menulevelTemplate(menuItem.sub, level + 1, menuItem.title)
+                      : ''}`
+                : html`<!-- -->
+                    <a id="${this._getId(menuItem)}" href="${menuItem.link || ''}">
+                      ${menuItem.title}
+                    </a>`}
+            </div>
+          `,
+        )}
+        ${itemWrap
+          ? html`<!-- -->
+              <div slot="more-button">
+                <button>More</button>
+              </div>`
+          : nothing}
+      </lion-menu-hybrid> `;
   }
 }

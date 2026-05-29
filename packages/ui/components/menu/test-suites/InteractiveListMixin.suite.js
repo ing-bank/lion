@@ -67,9 +67,8 @@ export function runInteractiveListMixinSuite(customConfig) {
       expect(listItemEls.includes(el.listItems[1])).to.be.true;
     });
 
-    it('inherits from DisclosureMixin', async () => {});
-
     describe('Active mode', async () => {
+      // TODO: make public prop?
       it('supports "activedescendant" pattern', async () => {
         const el = await fixture(html`
         <${tag} name="foo" ._activeMode="${'activedescendant'}">
@@ -82,7 +81,6 @@ export function runInteractiveListMixinSuite(customConfig) {
         // @ts-ignore - test element with InteractiveListMixin properties
         const listSlotNode = Array.from(el.children).find(c => c.slot === 'list');
 
-        // @ts-ignore - test element with InteractiveListMixin properties
         // @ts-ignore - test element with InteractiveListMixin properties
         expect(el.listItems[0].hasAttribute('id')).to.be.true;
         // @ts-ignore - test element with InteractiveListMixin properties
@@ -120,6 +118,15 @@ export function runInteractiveListMixinSuite(customConfig) {
         // @ts-ignore - test element with InteractiveListMixin properties
         expect(document.activeElement).to.equal(el.listItems[1]);
       });
+
+      it('supports "tabbable-disclosure" pattern', async () => {
+        const el = await fixture(html`
+        <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}">
+          <div role="menuitem" id="item1">Item 1</div>
+          <div role="menuitem" id="item2">Item 2</div>
+        </${tag}>
+      `);
+      });
     });
 
     // Copy tests from ListboxMixin. Later, make this mixin a fundament of the ListboxMixin
@@ -137,6 +144,50 @@ export function runInteractiveListMixinSuite(customConfig) {
       it('can be extended to [role=menubar]', async () => {});
       it('can be extended to [role=toolbar]', async () => {});
       it('can be extended to [role=tree]', async () => {});
+      // TODO: add tablist as well, what about grid and treegrid?
+    });
+
+    describe('Overflow handling', () => {
+      function getItems(el) {
+        const moreButtonList = el.getMoreButtonMenu();
+        // TODO: rename _listItems to _interactiveItems
+        // N.B. In a generic list, we do not always have role="listitem", so we cannot rely on that.
+        // Find a generic marker
+        const itemsAfterMore = moreButtonList.querySelectorAll(':scope > [role="listitem"]');
+        const itemsBeforeMore = el._listNode.querySelectorAll(':scope > [role="listitem"]');
+      }
+
+      function getItemsBeforeMoreButton(el) {
+        const moreButtonList = el.getMoreButtonMenu();
+        const moreButtonRect = moreButton.getBoundingClientRect();
+      }
+
+      // TODO: rename itemWrap to overflowMode ('scroll','more-button','scroll-buttons')?
+      it('supports overflow handling via the "overflow-mode" property', async () => {
+        const el = await fixture(html`
+        <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" style="width: 100px;">
+          <div role="listitem" id="item1"><a style="width: 10px;">Item 1</a></div>
+          <div role="listitem" id="item2"><a style="width: 10px;">Item 2</a></div>
+          <div role="listitem" id="item3"><a style="width: 10px;">Item 3</a></div>
+          <div role="listitem" id="item4"><a style="width: 10px;">Item 4</a></div>
+          <div role="listitem" id="item1"><a style="width: 10px;">Item 5</a></div>
+          <div role="listitem" id="item2"><a style="width: 10px;">Item 6</a></div>
+          <div role="listitem" id="item3"><a style="width: 10px;">Item 7</a></div>
+          <div role="listitem" id="item4"><a style="width: 10px;">Item 8</a></div>
+          <button style="width: 5px;" slot="more-button">More</button>
+        </${tag}>
+      `);
+        // Initially, our parent is 100px wide, so we have room for all items.
+        // expect
+        // Now we shrink to 50px, leaving room for 4 items and the more button.
+        el.style.width = '50px';
+      });
+
+      it('creates a wrapping structure around more button', async () => {});
+
+      describe('Rerendering items', () => {
+        it('rerenders items when the "overflow-mode" property changes', async () => {});
+      });
     });
   });
 }
