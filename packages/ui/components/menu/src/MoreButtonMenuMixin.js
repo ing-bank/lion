@@ -11,7 +11,7 @@ const styles = `
       display: none;
     }
 
-    [data-more-button-menu]:has([role='listitem'] [active]:focus):not(
+    [data-more-button-menu]:has([role='listitem'] [active][data-focused='true']):not(
         :has([role='listitem'] [active][aria-expanded='true'])
       ) {
       overflow: visible;
@@ -121,7 +121,9 @@ export const MoreButtonMenuMixin = superclass =>
       moreButtonMenu.addEventListener('focusin', event => {
         const target = event?.target;
         if (isElementDirectFocusableItemUnderMoreButtonMenu(target)) {
+          // A user did `Shift + Tab` from L2 menu to More menu
           if (target?.getAttribute('aria-expanded') === 'true') {
+            // close L2 menu
             target?.click();
           }
           moreButton?.setAttribute('aria-expanded', 'true');
@@ -132,6 +134,10 @@ export const MoreButtonMenuMixin = superclass =>
         const target = event?.target;
         if (isElementDirectFocusableItemUnderMoreButtonMenu(target)) {
           moreButton?.setAttribute('aria-expanded', 'false');
+          // note even 80 ms is not enough!
+          setTimeout(() => {
+            target.setAttribute('data-focused', 'false');
+          }, 90);
         }
       });
 
@@ -155,6 +161,10 @@ export const MoreButtonMenuMixin = superclass =>
           moreButtonMenu
             .querySelector(':scope > [role="listitem"] > a, :scope > [role="listitem"] > button')
             ?.focus();
+
+          moreButtonMenu
+            .querySelector(':scope > [role="listitem"] > a, :scope > [role="listitem"] > button')
+            ?.setAttribute('data-focused', 'true');
         }
       });
     }
@@ -238,15 +248,21 @@ export const MoreButtonMenuMixin = superclass =>
       const listItem = listItems[listItems.length - 1];
 
       const l2InvokerButton = listItem.querySelector(':scope > button');
-      if (!l2InvokerButton.getAttribute('data-dropdown-listener-set')) {
-        l2InvokerButton?.addEventListener('mousedown', event => {
-          event.preventDefault();
-          event.stopPropagation();
-          event.target.nextElementSibling._overlayCtrl.toggle();
+      // if (!l2InvokerButton.getAttribute('data-dropdown-listener-set')) {
+      //   l2InvokerButton?.addEventListener('mousedown', event => {
+      //     event.preventDefault();
+      //     event.stopPropagation();
+      //     event.target.nextElementSibling._overlayCtrl.toggle();
+      //   });
+      //   // make sure we set the listener only once
+      //   l2InvokerButton.setAttribute('data-dropdown-listener-set', 'true');
+      // }
+
+      l2InvokerButton.addEventListener('focus', () => {
+        setTimeout(() => {
+          l2InvokerButton.setAttribute('data-focused', 'true');
         });
-        // make sure we set the listener only once
-        l2InvokerButton.setAttribute('data-dropdown-listener-set', 'true');
-      }
+      });
 
       const fragment = this.getListItemWithAdjacentNodes(listItem);
       moreButtonMenuElement.prepend(fragment);
