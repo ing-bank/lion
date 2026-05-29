@@ -199,7 +199,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           openableConfig: {
             // We want to do the absolute positioning ourselves, popper is not suited for this...
             placementMode: 'custom',
-            isOpenable: false,
+            isActivated: false,
             hidesOnOutsideClick: false,
             inheritsReferenceWidth: 'none',
           },
@@ -231,7 +231,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           // We want disclosure behavior
           placementMode: 'custom',
           // N.B. we don't have an invoker...
-          isOpenable: false,
+          isActivated: false,
           inheritsReferenceWidth: 'none',
           focusContentOnOpen: true,
         },
