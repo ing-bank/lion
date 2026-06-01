@@ -1,5 +1,5 @@
 import { LitElement } from 'lit';
-import { expect, html, fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
@@ -20,9 +20,14 @@ const supportedRoles = [
 ];
 
 /**
- * @typedef {Object} TestConfig
+ * @typedef {import('../src/LionMenu.js').LionMenu} LionMenu
+ * @typedef {import('lit').TemplateResult} TemplateResult
+ *
+ * * @typedef {Object} TestConfig
  * @property {string} tagString
  */
+
+const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
 
 /**
  * @param {TestConfig} [customConfig]
@@ -119,6 +124,163 @@ export function runInteractiveListMixinSuite(customConfig) {
         el.activeIndex = 1;
         // @ts-ignore - test element with InteractiveListMixin properties
         expect(document.activeElement).to.equal(el.listItems[1]);
+      });
+    });
+
+    describe('Programmatic interaction', () => {
+      // If we have the item line directly in the fixture the linting rule lit-a11y/role-has-required-aria-attrs
+      // will fail. Inside our code we set the required aria attributes, but the linter doesn't know that.
+      const item = /** @param {number} i, @param {string} role */ (i, role) => html`
+        <div role="${role}" id="item${i}">Item ${i}</div>
+      `;
+
+      it('set checked state sets aria-current attribute with role="listitem"', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            ${item(1, 'listitem')}
+            ${item(2, 'listitem')}
+          </${tag}>
+        `);
+        el.setCheckedIndex(1);
+        const item1 = el.listItems[1];
+        expect(item1.getAttribute('aria-current')).to.equal('true');
+        el.setCheckedIndex(0);
+        expect(item1.getAttribute('aria-current')).to.equal('false');
+      });
+
+      it('set checked state sets aria-selected attribute with role="option"', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            ${item(1, 'option')}
+            ${item(2, 'option')}
+          </${tag}>
+        `);
+        console.debug('listItems', el.listItems);
+        const item1 = el.listItems[1];
+        expect(item1.getAttribute('aria-selected')).to.equal('false');
+
+        el.setCheckedIndex(1);
+        expect(item1.getAttribute('aria-selected')).to.equal('true');
+
+        el.setCheckedIndex(0);
+        expect(item1.getAttribute('aria-selected')).to.equal('false');
+      });
+
+      it('set checked state sets aria-selected attribute with role="treeitem"', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            ${item(1, 'treeitem')}
+            ${item(2, 'treeitem')}
+          </${tag}>
+        `);
+        el.setCheckedIndex(1);
+        // @ts-ignore - test element with InteractiveListMixin properties
+        const item1 = el.listItems[1];
+        expect(item1.getAttribute('aria-selected')).to.equal('true');
+        el.setCheckedIndex(0);
+        expect(item1.getAttribute('aria-selected')).to.equal('false');
+      });
+
+      it('set checked state sets aria-current attribute with role="menuitem"', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            ${item(1, 'menuitem')}
+            ${item(2, 'menuitem')}
+          </${tag}>
+        `);
+        el.setCheckedIndex(1);
+        const item1 = el.listItems[1];
+        expect(item1.getAttribute('aria-current')).to.equal('true');
+        el.setCheckedIndex(0);
+        expect(item1.getAttribute('aria-current')).to.equal('false');
+      });
+
+      it('set checked state sets aria-checked attribute with role="menuitemradio"', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            ${item(1, 'menuitemradio')}
+            ${item(2, 'menuitemradio')}
+          </${tag}>
+        `);
+        el.setCheckedIndex(1);
+        const item1 = el.listItems[1];
+        expect(item1.getAttribute('aria-checked')).to.equal('true');
+        el.setCheckedIndex(0);
+        expect(item1.getAttribute('aria-checked')).to.equal('false');
+      });
+
+      it('set checked state sets aria-checked attribute with role="menuitemcheckbox"', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            ${item(1, 'menuitemcheckbox')}
+            ${item(2, 'menuitemcheckbox')}
+          </${tag}>
+        `);
+        el.setCheckedIndex(1);
+        const item1 = el.listItems[1];
+        expect(item1.getAttribute('aria-checked')).to.equal('true');
+        el.setCheckedIndex(0);
+        // As this is multiple choice it doesn't unset the checked state
+        expect(item1.getAttribute('aria-checked')).to.equal('true');
+      });
+
+      it('can set checked state to "page" for role="listitem"', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            <a role="listitem" id="item1" href="#">Item 1</a>
+            <a role="listitem" id="item2" href="#">Item 2</a>
+          </${tag}>
+        `);
+        el.setCheckedIndex(1);
+        const item1 = el.listItems[1];
+        expect(item1.getAttribute('aria-current')).to.equal('page');
+        el.setCheckedIndex(0);
+        expect(item1.getAttribute('aria-current')).to.equal('false');
+      });
+
+      it('can set checked state to "mixed" for role="menuitemcheckbox"', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            ${item(1, 'menuitemcheckbox')}
+            ${item(2, 'menuitemcheckbox')}
+          </${tag}>
+        `);
+        const item1 = el.listItems[1];
+        // @ts-ignore - not yet supported property
+        item1.mixedState = true;
+        el.setCheckedIndex(1);
+        expect(item1.getAttribute('aria-checked')).to.equal('mixed');
+        el.setCheckedIndex(0);
+        expect(item1.getAttribute('aria-checked')).to.equal('mixed');
+      });
+
+      it('does not allow to set checkedIndex or activeIndex to be out of bound', async () => {
+        const el = await fixture(html`
+          <${tag} has-no-default-selected autocomplete="list">
+            <div role="menuitem" id="item1">Item 1</div>
+          </${tag}>
+        `);
+        expect(() => {
+          el.checkedIndex = -1;
+          el.checkedIndex = 1;
+        }).to.not.throw();
+        expect(el.checkedIndex).to.equal(-1);
+      });
+
+      it('unsets checked on other options when option becomes checked', async () => {
+        const el = await fixture(html`
+          <${tag}>
+            <div role="menuitem" id="item1">Item 1</div>
+            <div role="menuitem" id="item2">Item 2</div>
+          </${tag}>
+        `);
+        const { listItems } = el;
+        el.setCheckedIndex(0);
+        expect(listItems[0].hasAttribute('checked')).to.be.true;
+        expect(listItems[1].hasAttribute('checked')).to.be.false;
+        el.setCheckedIndex(1);
+        expect(listItems[0].hasAttribute('checked')).to.be.false;
+        expect(listItems[1].hasAttribute('checked')).to.be.true;
       });
     });
 
