@@ -457,7 +457,7 @@ const InteractiveListMixinImplementation = superclass =>
          * menuitemradios or -checkboxes.
          * When no role at all, we might deal with a wrapped node (for instance triggering a
          * submenu)
-         * Alternatively, when _activeMode is ['disclosure'](https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-navigation.html),
+         * Alternatively, when _activeMode is ['tabbable-disclosure'](https://www.w3.org/TR/wai-aria-practices-1.1/examples/disclosure/disclosure-navigation.html),
          * we search for a[href]
          */
         if (node.getAttribute('role') === 'group') {
