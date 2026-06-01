@@ -78,7 +78,7 @@ export const MoreButtonMenuMixin = superclass =>
       this._listNode.appendChild(moreButtonWrapper);
 
       const isElementDirectFocusableItemUnderMoreButtonMenu = (/** @type {Element} */ element) =>
-        moreButtonMenu.contains(element);
+        this.listItems.includes(element) && moreButtonMenu.contains(element);
 
       moreButtonMenu.addEventListener(
         'focusin',
