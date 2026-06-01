@@ -193,6 +193,25 @@ const menuData = [
       },
     ],
   },
+
+  {
+    title: 'Products 3',
+    sub: [
+      {
+        title: 'Payments',
+        link: 'payments-collections',
+        sub: [
+          { title: 'Payments & Collections', link: '#' },
+          { title: 'Merchant Commerce Solutions', link: 'merchant-commerce-solutions' },
+          { title: 'Instant Payments', link: 'instant-payments' },
+          { title: 'SEPA Direct Debit', link: 'SEPA-direct-debit' },
+          { title: 'SEPA Credit Transfer', link: 'SEPA-credit-transfer' },
+          { title: 'International Credit Transfer', link: 'international-credit-transfer' },
+          { title: 'Account Reporting', link: 'account-deporting' },
+        ],
+      },
+    ],
+  },
   {
     title: 'Loyalty shop 2',
     link: '#points',
