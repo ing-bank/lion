@@ -1,62 +1,30 @@
-// @ts-nocheck
-/**
- * @param {any} superclass
- */
-/** @type {any} */
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { css } from 'lit';
 
-const styles = `
-  <style>
-    /** More button is hidden by default */
-    [data-more-button-wrapper] {
-      display: none;
-    }
+const styles = css`
+  /** More button is hidden by default */
+  [data-more-button-wrapper] {
+    display: none;
+  }
 
-    [data-more-button-menu]:has([role='listitem'] [active][data-focused='true']):not(
-        :has([role='listitem'] [active][aria-expanded='true'])
-      ) {
-      overflow: visible;
-      width: auto;
-      height: auto;
-      position: absolute;
-      top: 100%;
-      background-color: var(--oj2_bg_default);
-    }
-    [data-more-button-menu],
-    [data-more-button-menu]:has([role='listitem'] [active][aria-expanded='true']) {
-      overflow: hidden;
-      width: 1px;
-      height: 1px;
-    }
+  [data-more-button-menu][data-open]:not(:has([role='listitem'] [aria-expanded='true'])) {
+    position: absolute;
+    overflow: visible;
+    height: auto;
+    width: auto;
+    top: 100%;
+  }
 
-    :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > button,
-    :host([responsive-mode='desktop']) [level='1'] > [slot='list'] > [role='listitem'] > a,
-    :host([responsive-mode='desktop'])
-      [level='1']
-      > [slot='list']
-      > [data-more-button-wrapper]
-      > [role='listitem']
-      > button,
-    :host([responsive-mode='desktop'])
-      [level='1']
-      > [slot='list']
-      > [data-more-button-wrapper]
-      > [role='listitem']
-      > a {
-      white-space: nowrap;
-    }
-    /**
-    * TODO listitem rigth margin/gap is not taken at the account ATM
-    */
-    /**
-     * More button relies on the fact that the menu items do not break the line
-     * TODO is it optimal?
-     */
-    :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > button,
-    :host([responsive-mode='desktop']) > [role='list'] > [role='listitem'] > a {
-      white-space: nowrap;
-    }    
-  </style>
-  `;
+  [data-more-button-menu] {
+    overflow: hidden;
+    height: 1px;
+    width: 1px;
+  }
+
+  [role='list']:has(> [data-more-button-wrapper]) > [role='listitem'] > :is(button, a) {
+    white-space: nowrap;
+  }
+`;
 
 // @ts-ignore - JS mixin typing
 export const MoreButtonMenuMixin = superclass =>
@@ -85,7 +53,7 @@ export const MoreButtonMenuMixin = superclass =>
     // eslint-disable-next-line class-methods-use-this
     _getDeepActiveElement() {
       let host = document.activeElement || document.body;
-      while (host && host.shadowRoot && host.shadowRoot.activeElement) {
+      while (host?.shadowRoot?.activeElement) {
         host = host.shadowRoot.activeElement;
       }
       return host;
@@ -94,7 +62,7 @@ export const MoreButtonMenuMixin = superclass =>
     _createMoreButtonWrapper() {
       const moreButtonWrapper = document.createElement('div');
       const style = document.createElement('style');
-      style.textContent = styles;
+      style.textContent = styles.cssText;
       moreButtonWrapper.appendChild(style);
       moreButtonWrapper.setAttribute('data-more-button-wrapper', '');
       [...this.getMoreButtonSlotProjection().childNodes].forEach(node =>
@@ -107,38 +75,38 @@ export const MoreButtonMenuMixin = superclass =>
       const moreButtonMenu = document.createElement('div');
       moreButtonMenu.setAttribute('data-more-button-menu', '');
       moreButtonWrapper.appendChild(moreButtonMenu);
-      moreButtonMenu.setAttribute('role', 'none');
       this._listNode.appendChild(moreButtonWrapper);
 
-      const isElementDirectFocusableItemUnderMoreButtonMenu = element => {
-        const targetTagName = element?.tagName;
-        return (
-          element?.parentElement?.parentElement === moreButtonMenu &&
-          (targetTagName === 'BUTTON' || targetTagName === 'A')
-        );
-      };
+      const isElementDirectFocusableItemUnderMoreButtonMenu = (/** @type {Element} */ element) =>
+        moreButtonMenu.contains(element);
 
-      moreButtonMenu.addEventListener('focusin', event => {
-        const target = event?.target;
-        if (isElementDirectFocusableItemUnderMoreButtonMenu(target)) {
+      moreButtonMenu.addEventListener(
+        'focusin',
+        /** @type {FocusEvent} */ event => {
+          const target = /** @type {HTMLElement} */ (event?.target);
+          if (!isElementDirectFocusableItemUnderMoreButtonMenu(target)) return;
+
           // A user did `Shift + Tab` from L2 menu to More menu
           if (target?.getAttribute('aria-expanded') === 'true') {
             // close L2 menu
             target?.click();
           }
           moreButton?.setAttribute('aria-expanded', 'true');
-        }
-      });
+          moreButtonMenu.setAttribute('data-open', '');
+        },
+      );
 
-      moreButtonMenu.addEventListener('focusout', event => {
-        const target = event?.target;
-        if (isElementDirectFocusableItemUnderMoreButtonMenu(target)) {
+      moreButtonMenu.addEventListener('focusout', () => {
+        // We need this timeout for Safari/WebKit.
+        // Unfortunately, an in progress click gets canceled when overflow:hidden is applied.
+        // Although mousedown would work instead, the consuming developer should have the freedom to apply all possible interaction pattterns.
+        // Especially, we should be compatible with 'withClickInteraction'
+        setTimeout(() => {
+          if (isElementDirectFocusableItemUnderMoreButtonMenu(this._getDeepActiveElement())) return;
           moreButton?.setAttribute('aria-expanded', 'false');
-          // note even 80 ms is not enough!
-          setTimeout(() => {
-            target.setAttribute('data-focused', 'false');
-          }, 90);
-        }
+
+          moreButtonMenu.removeAttribute('data-open');
+        }, 100);
       });
 
       this.hasMoreButtonMenuAnyFocusedFirstLevelItems = false;
@@ -146,7 +114,7 @@ export const MoreButtonMenuMixin = superclass =>
       moreButton?.addEventListener('mousedown', () => {
         this.hasMoreButtonMenuAnyFocusedFirstLevelItems = false;
         const focusableFirstLevelItems = moreButtonMenu.querySelectorAll(
-          ':scope > [role="listitem"] > a, :scope > [role="listitem"] > button',
+          ':scope > [role="listitem"] > :is(a, button)',
         );
 
         [...focusableFirstLevelItems]?.forEach(focusableFirstLevelItem => {
@@ -158,13 +126,8 @@ export const MoreButtonMenuMixin = superclass =>
 
       moreButton?.addEventListener('click', () => {
         if (!this.hasMoreButtonMenuAnyFocusedFirstLevelItems) {
-          moreButtonMenu
-            .querySelector(':scope > [role="listitem"] > a, :scope > [role="listitem"] > button')
-            ?.focus();
-
-          moreButtonMenu
-            .querySelector(':scope > [role="listitem"] > a, :scope > [role="listitem"] > button')
-            ?.setAttribute('data-focused', 'true');
+          moreButtonMenu.querySelector(':scope > [role="listitem"] > :is(a, button)')?.focus();
+          moreButtonMenu.setAttribute('data-open', '');
         }
       });
     }
@@ -242,30 +205,13 @@ export const MoreButtonMenuMixin = superclass =>
       return fragment;
     };
 
-    moveItemToMoreButtonMenuFromMainMenu() {
-      const moreButtonMenuElement = this.getMoreButtonMenu();
-      const listItems = this._listNode.querySelectorAll(':scope > [role="listitem"]');
-      const listItem = listItems[listItems.length - 1];
-
-      const l2InvokerButton = listItem.querySelector(':scope > button');
-      // if (!l2InvokerButton.getAttribute('data-dropdown-listener-set')) {
-      //   l2InvokerButton?.addEventListener('mousedown', event => {
-      //     event.preventDefault();
-      //     event.stopPropagation();
-      //     event.target.nextElementSibling._overlayCtrl.toggle();
-      //   });
-      //   // make sure we set the listener only once
-      //   l2InvokerButton.setAttribute('data-dropdown-listener-set', 'true');
-      // }
-
-      l2InvokerButton?.addEventListener('focus', () => {
-        setTimeout(() => {
-          l2InvokerButton.setAttribute('data-focused', 'true');
-        });
-      });
-
+    /**
+     * @param {{ moreButtonMenuElement: HTMLButtonElement, listItem: HTMLElement }} opts
+     */
+    moveItemToMoreButtonMenuFromMainMenu({ moreButtonMenuElement, listItem }) {
       const fragment = this.getListItemWithAdjacentNodes(listItem);
       moreButtonMenuElement.prepend(fragment);
+      // eslint-disable-next-line no-param-reassign
       listItem.style.display = '';
       this.displayMoreButton();
     }
@@ -295,9 +241,15 @@ export const MoreButtonMenuMixin = superclass =>
       return hiddenItemsCount;
     }
 
+    /**
+     * @param {number} hiddenItemsCount
+     */
     moveHiddenItemsFromMainMenuToMoreButtonMenu(hiddenItemsCount) {
+      const moreButtonMenuElement = this.getMoreButtonMenu();
+      const listItems = this._listNode.querySelectorAll(':scope > [role="listitem"]');
       for (let i = 0; i < hiddenItemsCount; i += 1) {
-        this.moveItemToMoreButtonMenuFromMainMenu();
+        const listItem = listItems[listItems.length - 1 - i];
+        this.moveItemToMoreButtonMenuFromMainMenu({ moreButtonMenuElement, listItem });
       }
     }
 
@@ -305,6 +257,8 @@ export const MoreButtonMenuMixin = superclass =>
       if (this.__resizeTimeout) {
         return;
       }
+
+      this.style.visibility = 'hidden';
 
       this.__resizeTimeout = setTimeout(() => {
         this.__resizeTimeout = null;
