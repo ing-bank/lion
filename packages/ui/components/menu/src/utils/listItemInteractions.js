@@ -4,6 +4,10 @@
  */
 
 /**
+ * @typedef {import('@lion/ui/checkbox-group.js').LionCheckboxIndeterminate} LionCheckboxIndeterminate
+ */
+
+/**
  * @param {HTMLElement} item
  */
 export function isDisabled(item) {
@@ -34,21 +38,40 @@ export function toggleDisabled(item) {
  * @param {HTMLElement} item
  */
 export function isChecked(item) {
-  return item.hasAttribute('checked') || item.getAttribute('aria-selected') === 'true';
+  return item.hasAttribute('checked');
 }
 
 /**
  * @param {HTMLElement} item
- * @param {boolean} [shouldSet=false]
+ * @param {Object} [options]
+ * @param {boolean} [options.unset=false]
+ * @param {'page'|'mixed'} [options.text] - optional text to set for aria-checked/aria-selected/aria-current (e.g. "mixed")
  */
-export function setChecked(item, shouldSet = true) {
-  const ariaAttr = item.getAttribute('role') === 'option' ? 'selected' : 'checked';
-  if (shouldSet) {
+export function setChecked(item, unset = false) {
+  const role = item.getAttribute('role');
+  let ariaAttr = 'current';
+  if (role?.endsWith('checkbox') || role?.endsWith('radio')) {
+    ariaAttr = 'checked';
+  } else if (role === 'option' || role === 'treeitem') {
+    ariaAttr = 'selected';
+  }
+  let text;
+  if (item instanceof HTMLAnchorElement) {
+    text = 'page';
+  }
+  if (/** @type {LionCheckboxIndeterminate} */ (item).mixedState) {
+    text = 'mixed';
+  }
+  if (!unset) {
     item.setAttribute('checked', '');
-    item.setAttribute(`aria-${ariaAttr}`, 'true');
+    item.setAttribute(`aria-${ariaAttr}`, text || 'true');
   } else {
     item.removeAttribute('checked');
+    // if (ariaAttr === 'checked') {
     item.setAttribute(`aria-${ariaAttr}`, 'false');
+    // } else {
+    //   item.removeAttribute(`aria-${ariaAttr}`);
+    // }
   }
 }
 
@@ -56,7 +79,7 @@ export function setChecked(item, shouldSet = true) {
  * @param {HTMLElement} item
  */
 export function toggleChecked(item) {
-  setChecked(item, !isChecked(item));
+  setChecked(item, isChecked(item));
 }
 
 /**
