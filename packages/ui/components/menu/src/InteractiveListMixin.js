@@ -22,7 +22,7 @@ import {
 
 // TODO: consider renaming to FocusGroupMixin
 
-// TODO: make all available in controller/directve (same logic with an elegent prop-to-host-mapping)
+// TODO: make all available in controller/directive (same logic with an elegant prop-to-host-mapping)
 
 /**
  * @param {Element} potentialFocusable
@@ -55,12 +55,24 @@ function isFocusableElement(potentialFocusable) {
 export class LionItem extends LitElement {
   /** @type {any} */
   static get properties() {
-    return { type: String };
+    return {
+      type: { type: String },
+    };
   }
 
   get _invokerNode() {
-    return Array.from(this.children).find(child => child.slot === 'invoker');
+    return /** @type {HTMLElement[]} */ (Array.from(this.children)).find(
+      child => child.slot === 'invoker',
+    );
   }
+
+  static styles = [
+    css`
+      :host {
+        display: block;
+      }
+    `,
+  ];
 
   constructor() {
     super();
@@ -80,14 +92,6 @@ export class LionItem extends LitElement {
       this.setAttribute('role', this._computedType);
     }
   }
-
-  static styles = [
-    css`
-      :host {
-        display: block;
-      }
-    `,
-  ];
 
   render() {
     return html`
@@ -332,11 +336,10 @@ const InteractiveListMixinImplementation = superclass =>
     setCheckedIndex(index) {
       const item = this.listItems[index];
       if (!item) return;
-
       if (!this.multipleChoice) {
         // Uncheck all
         this.listItems.forEach(listItem => {
-          setChecked(listItem, false);
+          setChecked(listItem, true);
         });
         setChecked(this.listItems[index]);
       } else {
@@ -377,7 +380,7 @@ const InteractiveListMixinImplementation = superclass =>
        * - [role="menubar"](https://www.w3.org/TR/wai-aria-practices-1.1/examples/menubar/menubar-1/menubar-1.html)
        * - [role="tree"](https://www.w3.org/TR/wai-aria-practices-1.1/examples/treeview/treeview-1/treeview-1b.html)
        * For disclosure menus, we need keyboard navigation, but treat every list item
-       * (more precisely its anchor child) as a tab stop. Also we apply aria-current
+       * (more precisely its anchor child) as a tab stop.
        * @type {'activedescendant'|'roving-tabindex'|'tabbable-disclosure'|'none'}
        */
       this._activeMode = 'activedescendant';
@@ -461,7 +464,6 @@ const InteractiveListMixinImplementation = superclass =>
          * we search for a[href]
          */
         if (node.getAttribute('role') === 'group') {
-          // console.debug('checking children of', node, node.children);
           // @ts-ignore - HTMLCollection is iterable
           for (const child of node.children) {
             // @ts-ignore
@@ -568,6 +570,13 @@ const InteractiveListMixinImplementation = superclass =>
       if (!this.noPreselect && this.checkedIndex === -1) {
         this.checkedIndex = 0;
       }
+      newItems.forEach(item => {
+        if (!item.hasAttribute('checked')) {
+          setChecked(item, true);
+        } else {
+          setChecked(item);
+        }
+      });
     }
 
     /**
@@ -706,16 +715,8 @@ const InteractiveListMixinImplementation = superclass =>
       // const item = /** @type {HTMLElement} */ (target.closest('[role]'));
       // @ts-ignore - target is HTMLElement
       const foundIndex = this.listItems.indexOf(target);
-      // console.debug('focusin', target, foundIndex, this.listItems);
-      const previousActiveIndex = this.activeIndex;
       if (foundIndex > -1 && foundIndex !== this.activeIndex) {
         this.activeIndex = foundIndex;
-        if (this._activeMode === 'tabbable-disclosure') {
-          const previousActiveItem = this.listItems[previousActiveIndex];
-          previousActiveItem?.removeAttribute('aria-current');
-          const activeItem = this.listItems[this.activeIndex];
-          activeItem.setAttribute('aria-current', 'page');
-        }
       }
     }
 
