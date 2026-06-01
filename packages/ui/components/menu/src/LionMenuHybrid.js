@@ -21,9 +21,9 @@ export class LionMenuHybrid extends LionMenuOverlay {
     // Take inspiration from VisibilityToggleCtrl of portal elements
     /**
      * Terminology aligned with https://open-ui.org/components/openable.explainer/
-     * @type {'tabbable-disclosure'|'overlay'}
+     * @type {'disclosure'|'overlay'}
      */
-    this.openableMode = 'tabbable-disclosure';
+    this.openableMode = 'disclosure';
 
     this._shouldSetupOverlay = false;
   }
