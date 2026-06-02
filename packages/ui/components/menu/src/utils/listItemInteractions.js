@@ -67,11 +67,7 @@ export function setChecked(item, unset = false) {
     item.setAttribute(`aria-${ariaAttr}`, text || 'true');
   } else {
     item.removeAttribute('checked');
-    // if (ariaAttr === 'checked') {
     item.setAttribute(`aria-${ariaAttr}`, 'false');
-    // } else {
-    //   item.removeAttribute(`aria-${ariaAttr}`);
-    // }
   }
 }
 
@@ -79,7 +75,7 @@ export function setChecked(item, unset = false) {
  * @param {HTMLElement} item
  */
 export function toggleChecked(item) {
-  setChecked(item, isChecked(item));
+  setChecked(item, !isChecked(item));
 }
 
 /**
