@@ -118,18 +118,23 @@ export const MoreButtonMenuMixin = superclass =>
           ':scope > [role="listitem"] > :is(a, button)',
         );
 
-        [...focusableFirstLevelItems]?.forEach(focusableFirstLevelItem => {
+        // @ts-ignore Type 'NodeListOf<Element>' must have a '[Symbol.iterator]()' method that returns an iterator.
+        for (const focusableFirstLevelItem of focusableFirstLevelItems) {
           if (this._getDeepActiveElement() === focusableFirstLevelItem) {
             this.hasMoreButtonMenuAnyFocusedFirstLevelItems = true;
           }
-        });
+        }
       });
 
       moreButton?.addEventListener('click', () => {
-        if (!this.hasMoreButtonMenuAnyFocusedFirstLevelItems) {
-          moreButtonMenu.querySelector(':scope > [role="listitem"] > :is(a, button)')?.focus();
-          moreButtonMenu.setAttribute('data-open', '');
-        }
+        if (this.hasMoreButtonMenuAnyFocusedFirstLevelItems) return;
+        /** @type {HTMLElement | null} */
+        const firstInteractiveItem = moreButtonMenu.querySelector(
+          ':scope > [role="listitem"] > :is(a, button)',
+        );
+
+        firstInteractiveItem?.focus();
+        moreButtonMenu.setAttribute('data-open', '');
       });
     }
 
