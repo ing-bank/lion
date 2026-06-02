@@ -5,6 +5,10 @@ import { LitElement } from 'lit';
 import { MultiLevelListMixin } from './MultiLevelListMixin.js';
 import { setChecked, toggleChecked } from './utils/listItemInteractions.js';
 
+/**
+ * @typedef {import('./InteractiveListMixin.js').LionItem} LionItem
+ */
+
 // /**
 //  * @param {Element} element
 //  */
@@ -209,6 +213,18 @@ export class LionMenu extends MultiLevelListMixin(LitElement) {
     this._activateOnTypedChars = true;
     /** @configure DisclosureMixin */
     this.invokerInteraction = 'click';
+    /** @protected */
+    this._onPopState = this._onPopState.bind(this);
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('popstate', this._onPopState);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('popstate', this._onPopState);
   }
 
   /**
@@ -246,5 +262,32 @@ export class LionMenu extends MultiLevelListMixin(LitElement) {
         }
       }
     }
+  }
+
+  /** @protected */
+  _onPopState() {
+    this._setLocationAsCheckedIndex(document.location);
+  }
+
+  /**
+   * @overwrite InteractiveListMixin
+   * When _listItemsSlot receives new items, they are initialized via this method
+   * @param {LionItem[]|HTMLElement[]} newItems the newly added items needing initialization
+   */
+  _initListItems(newItems) {
+    super._initListItems(newItems);
+
+    this._setLocationAsCheckedIndex(window.location);
+  }
+
+  /**
+   * @param {Location} location
+   */
+  _setLocationAsCheckedIndex(location) {
+    this.listItems.forEach(item => {
+      if (location.href.includes(item.href)) {
+        setChecked(item);
+      }
+    });
   }
 }
