@@ -15,6 +15,7 @@ const styles = css`
     top: 100%;
   }
 
+  /** N.B. this is a simplified version of sr-only. when we move to overlayctrl, we should build this into overlayctrl */
   [data-more-button-menu] {
     overflow: hidden;
     height: 1px;
