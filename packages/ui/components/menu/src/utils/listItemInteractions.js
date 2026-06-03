@@ -56,7 +56,7 @@ export function setChecked(item, unset = false) {
     ariaAttr = 'selected';
   }
   let text;
-  if (item instanceof HTMLAnchorElement) {
+  if (/** @type {HTMLAnchorElement} */ (item).href) {
     text = 'page';
   }
   if (/** @type {LionCheckboxIndeterminate} */ (item).mixedState) {
