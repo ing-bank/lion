@@ -429,6 +429,16 @@ const InteractiveListMixinImplementation = superclass =>
       this._onListFocusIn = this._onListFocusIn.bind(this);
     }
 
+    connectedCallback() {
+      super.connectedCallback();
+      window.addEventListener('popstate', this._onPopState);
+    }
+
+    disconnectedCallback() {
+      super.disconnectedCallback();
+      window.removeEventListener('popstate', this._onPopState);
+    }
+
     /**
      * @param {import('lit').PropertyValues } changedProperties
      */
@@ -577,6 +587,8 @@ const InteractiveListMixinImplementation = superclass =>
           setChecked(item);
         }
       });
+
+      this.__syncCurrentPageWithLocationHref(window.location);
     }
 
     /**
@@ -801,6 +813,26 @@ const InteractiveListMixinImplementation = superclass =>
     _getPreviousEnabledOption(currentIndex, offset = -1) {
       return this.__getNextOption(currentIndex, offset);
     }
+
+    /**
+     * @param {Location} location
+     */
+    __syncCurrentPageWithLocationHref(location) {
+      this.listItems.forEach(item => {
+        if (/** @type {HTMLAnchorElement} */ (item).href) {
+          if (location.href.includes(/** @type {HTMLAnchorElement} */ (item).href)) {
+            setChecked(item);
+          } else {
+            setChecked(item, true);
+          }
+        }
+      });
+    }
+
+    /** @protected */
+    _onPopState = () => {
+      this.__syncCurrentPageWithLocationHref(document.location);
+    };
   };
 // @ts-ignore
 export const InteractiveListMixin = dedupeMixin(InteractiveListMixinImplementation);
