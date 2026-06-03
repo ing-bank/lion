@@ -1,5 +1,6 @@
 import { LitElement } from 'lit';
-import { expect, html, fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import { expect, html, fixture, unsafeStatic, defineCE, aTimeout } from '@open-wc/testing';
+import { useFakeTimers } from 'sinon';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
@@ -137,6 +138,77 @@ export function runInteractiveListMixinSuite(customConfig) {
       it('can be extended to [role=menubar]', async () => {});
       it('can be extended to [role=toolbar]', async () => {});
       it('can be extended to [role=tree]', async () => {});
+    });
+
+    describe('Overflow handling', () => {
+      const isMoreButtonShown = el =>
+        el.querySelector('[data-more-button-wrapper]')?.style.display !== 'none';
+
+      let clock = null;
+
+      beforeEach(() => {
+        clock = useFakeTimers({
+          shouldAdvanceTime: true,
+        });
+      });
+      afterEach(() => {
+        clock.restore();
+      });
+
+      it('should show no More button when all items fit', async () => {
+        const el = await fixture(html`
+          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
+            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
+            <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 1</a>
+            </div>
+            <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 2</a>
+            </div>
+            <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 3</a>
+            </div>
+            <div slot="more-button" style="min-width: 50px; max-width: 50px;">
+              <button>More</button>
+            </div>
+          </${tag}>
+        `);
+        await el.updateComplete;
+        clock.tick(100);
+        await aTimeout(100);
+        // 3 items is 150px. They fit into 170px parent
+        expect(isMoreButtonShown(el)).to.equal(false);
+      });
+
+      it.only('should show  More button when not all items fit', async () => {
+        const el = await fixture(html`
+          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
+            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
+            <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 1</a>
+            </div>
+            <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 2</a>
+            </div>
+            <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 3</a>
+            </div>
+            <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 4</a>
+            </div>
+            <div slot="more-button" style="min-width: 50px; max-width: 50px;">
+              <button>More</button>
+            </div>
+          </${tag}>
+        `);
+
+        await el.updateComplete;
+        clock.tick(100);
+        await aTimeout(100);
+
+        // 4 items is 200px. They don't fit into 170px parent. So More button should be shown
+        expect(isMoreButtonShown(el)).to.equal(true);
+      });
     });
   });
 }

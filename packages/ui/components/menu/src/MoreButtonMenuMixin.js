@@ -186,6 +186,9 @@ export const MoreButtonMenuMixin = superclass =>
       const previousNodes = [];
       let { previousSibling } = listItem;
       while (previousSibling) {
+        if (previousSibling.nodeType === Node.ELEMENT_NODE) {
+          break;
+        }
         previousNodes.unshift(previousSibling);
         if (isMarkerComment(previousSibling)) {
           break;
@@ -196,6 +199,9 @@ export const MoreButtonMenuMixin = superclass =>
       const nextNodes = [];
       let { nextSibling } = listItem;
       while (nextSibling) {
+        if (nextSibling.nodeType === Node.ELEMENT_NODE) {
+          break;
+        }
         nextNodes.push(nextSibling);
 
         if (isMarkerComment(nextSibling)) {
