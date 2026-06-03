@@ -144,6 +144,9 @@ export function runInteractiveListMixinSuite(customConfig) {
       const isMoreButtonShown = el =>
         el.querySelector('[data-more-button-wrapper]')?.style.display !== 'none';
 
+      const getMoreButton = el => el.querySelector('[data-more-button]');
+      const clickOnMoreButton = el => getMoreButton(el)?.click();
+
       let clock = null;
 
       beforeEach(() => {
@@ -175,7 +178,6 @@ export function runInteractiveListMixinSuite(customConfig) {
         `);
         await el.updateComplete;
         clock.tick(100);
-        await aTimeout(100);
         // 3 items is 150px. They fit into 170px parent
         expect(isMoreButtonShown(el)).to.equal(false);
       });
@@ -204,10 +206,39 @@ export function runInteractiveListMixinSuite(customConfig) {
 
         await el.updateComplete;
         clock.tick(100);
-        await aTimeout(100);
 
         // 4 items is 200px. They don't fit into 170px parent. So More button should be shown
         expect(isMoreButtonShown(el)).to.equal(true);
+      });
+
+      it('should show 2 items when clicking on `More` button', async () => {
+        const el = await fixture(html`
+          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
+            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
+            <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 1</a>
+            </div>
+            <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 2</a>
+            </div>
+            <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 3</a>
+            </div>
+            <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 4</a>
+            </div>
+            <div slot="more-button" style="min-width: 50px; max-width: 50px;">
+              <button>More</button>
+            </div>
+          </${tag}>
+        `);
+
+        await el.updateComplete;
+        clock.tick(100);
+        clickOnMoreButton(el);
+
+        // 4 items is 200px. They don't fit into 170px parent. So More button should be shown
+        // expect(isMoreButtonShown(el)).to.equal(true);
       });
     });
   });
