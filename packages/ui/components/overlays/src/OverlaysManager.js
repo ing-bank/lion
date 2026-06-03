@@ -86,6 +86,20 @@ export class OverlaysManager {
   }
 
   /**
+   * Bring removed earlier functions back to mitigate the errors like
+   * `disableTrapsKeyboardFocusForAll is not a function` in some older bundled versions of lion.
+   */
+
+  // eslint-disable-next-line class-methods-use-this
+  disableTrapsKeyboardFocusForAll() {}
+
+  // eslint-disable-next-line class-methods-use-this
+  informTrapsKeyboardFocusGotEnabled() {}
+
+  // eslint-disable-next-line class-methods-use-this
+  informTrapsKeyboardFocusGotDisabled() {}
+
+  /**
    * Registers an overlay controller.
    * @param {OverlayController} ctrlToAdd controller of the newly added overlay
    * @returns {OverlayController} same controller after adding to the manager
