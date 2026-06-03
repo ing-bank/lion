@@ -5,35 +5,99 @@ on:
     branches:
       - feat/menu-system
 
+# jobs:
+#   release:
+#     # Prevents changesets action from creating a PR on forks
+#     if: github.repository == 'ing-bank/lion'
+#     name: Release
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: google/wireit@setup-github-actions-caching/v2
+#       - name: Checkout Repo
+#         uses: actions/checkout@v3
+#         with:
+#           # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+#           fetch-depth: 0
+
+#       - name: Setup Node.js 24.x
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: 24.x
+#           registry-url: 'https://registry.npmjs.org'
+
+#       - name: Install Dependencies
+#         run: npm install --ci
+
+#       - name: Create Release Pull Request or Publish to npm
+#         id: changesets
+#         uses: changesets/action@v1
+#         with:
+#           # This expects you to have a script called release which does a build for your packages and calls changeset publish
+#           publish: npm run release
+#         env:
+#           GITHUB_TOKEN: $\{{ secrets.GITHUB_TOKEN }}
+#           NODE_AUTH_TOKEN: $\{{ secrets.NEW_NPM_TOKEN_TEST }}
+
+
+# see: https://github.com/changesets/changesets/issues/2025
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+  queue: max
+
+permissions: {} # each job should define its own permission explicitly
+
 jobs:
-  release:
-    # Prevents changesets action from creating a PR on forks
-    if: github.repository == 'ing-bank/lion'
-    name: Release
+  version:
+    name: Version
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
+    permissions:
+      contents: write # to create release (changesets/action)
+      issues: write # to post issue comments (changesets/action)
+      pull-requests: write # to create pull request (changesets/action)
     steps:
-      - uses: google/wireit@setup-github-actions-caching/v2
-      - name: Checkout Repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
-          fetch-depth: 0
+          persist-credentials: false
 
-      - name: Setup Node.js 24.x
-        uses: actions/setup-node@v3
+      - uses: ./.github/actions/ci-setup
         with:
-          node-version: 24.x
-          registry-url: 'https://registry.npmjs.org'
+          skip-cache: true # avoid cache poisoning attacks
 
-      - name: Install Dependencies
-        run: npm install --ci
-
-      - name: Create Release Pull Request or Publish to npm
+      - name: Create or update release pull request
         id: changesets
-        uses: changesets/action@v1
+        # https://github.com/changesets/action
+        uses: changesets/action@63a615b9cd06ba9a3e6d13796c7fbcb080a60a0b # v1.8.0
         with:
-          # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: npm run release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NEW_NPM_TOKEN_TEST }}
+          version: npm run changeset version
+
+  release:
+    name: Release
+    if: github.repository == 'ing-bank/lion' # && needs.version.outputs.hasChangesets == 'false'
+    needs: version
+    runs-on: ubuntu-latest
+    environment: npm
+    timeout-minutes: 20
+    permissions:
+      contents: write # to create release (changesets/action)
+      id-token: write # to use OpenID Connect token for trusted publishing (changesets/action)
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/ci-setup
+        with:
+          node-version: 24
+          skip-cache: true # avoid cache poisoning attacks
+
+      - name: Publish to npm
+        # https://github.com/changesets/action
+        uses: changesets/action@63a615b9cd06ba9a3e6d13796c7fbcb080a60a0b # v1.8.0
+        with:
+          # this expects you to have a script called release which does a build for your packages and calls changeset publish
+          publish: npm run changeset publish
