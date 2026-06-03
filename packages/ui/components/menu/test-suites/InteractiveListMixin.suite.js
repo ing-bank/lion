@@ -8,15 +8,17 @@ class InteractiveListClass extends InteractiveListMixin(LitElement) {}
  * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
  */
 
+// TODO, consider tab as well? See https://open-ui.org/components/scoped-focusgroup.explainer/#supported-behaviors
+
 /** @type {InteractiveListItemRole[]} */
 const supportedRoles = [
-  'menuitem',
   'menuitemcheckbox',
   'menuitemradio',
-  'option',
+  'menuitem',
   'treeitem',
-  'radio',
   'checkbox',
+  'option',
+  'radio',
 ];
 
 /**
