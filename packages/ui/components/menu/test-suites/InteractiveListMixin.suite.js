@@ -173,7 +173,11 @@ export function runInteractiveListMixinSuite(customConfig) {
         ...el.querySelectorAll('[data-more-button-menu] > [role="listitem"]'),
       ];
 
-      const waitMoreButtonInitialization = async el => {
+      const getDirectListItemsUnderMainMenu = el => [
+        ...el.querySelectorAll('[slot="list"] > [role="listitem"]'),
+      ];
+
+      const waitResizeEventDebounce = async el => {
         await el.updateComplete;
         // wait for resize event debouncer
         clock.tick(55);
@@ -207,7 +211,7 @@ export function runInteractiveListMixinSuite(customConfig) {
             </div>
           </${tag}>
         `);
-        await waitMoreButtonInitialization(el);
+        await waitResizeEventDebounce(el);
         // 3 items is 150px. They fit into 170px parent
         expect(isMoreButtonShown(el)).to.equal(false);
       });
@@ -234,7 +238,7 @@ export function runInteractiveListMixinSuite(customConfig) {
           </${tag}>
         `);
 
-        await waitMoreButtonInitialization(el);
+        await waitResizeEventDebounce(el);
         // 4 items is 200px. They don't fit into 170px parent. So More button should be shown
         expect(isMoreButtonShown(el)).to.equal(true);
       });
@@ -261,7 +265,7 @@ export function runInteractiveListMixinSuite(customConfig) {
           </${tag}>
         `);
 
-        await waitMoreButtonInitialization(el);
+        await waitResizeEventDebounce(el);
         await clickOnMoreButton(el);
 
         expect(isMoreButtonMenuShown(el)).to.equal(true);
@@ -293,12 +297,48 @@ export function runInteractiveListMixinSuite(customConfig) {
           </${tag}>
         `);
 
-        await waitMoreButtonInitialization(el);
+        await waitResizeEventDebounce(el);
         expect(isMoreButtonMenuShown(el)).to.equal(false);
         await clickOnMoreButton(el);
         expect(isMoreButtonMenuShown(el)).to.equal(true);
         await clickOnMoreButton(el);
         expect(isMoreButtonMenuShown(el)).to.equal(false);
+      });
+
+      it('should remove `More` button when making font smaller', async () => {
+        const el = await fixture(html`
+          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
+            data-has-full-width-flyout orientation="horizontal" style="min-width: 110px; max-width: 110px; position:relative">
+            <div role="listitem" id="item1">
+              <a href="#">Item 1</a>
+            </div>
+            <div role="listitem" id="item2">
+              <a href="#">Item 2</a>
+            </div>
+            <div role="listitem" id="item3">
+              <a href="#">Item 3</a>
+            </div>
+            <div role="listitem" id="item4">
+              <a href="#">Item 4</a>
+            </div>
+            <div slot="more-button" style="min-width: 50px; max-width: 50px;">
+              <button>More</button>
+            </div>
+          </${tag}>
+        `);
+        await waitResizeEventDebounce(el);
+
+        /**
+         * Make font smaller for first level items to force
+         * the menu render all 4 items and no `More` button
+         */
+        getDirectListItemsUnderMainMenu(el).forEach(item => {
+          // eslint-disable-next-line no-param-reassign
+          item.style.fontSize = '5px';
+        });
+        el?.dispatchEvent(new CustomEvent('resize', { composed: true, bubbles: true }));
+        await waitResizeEventDebounce(el);
+        expect(isMoreButtonShown(el)).to.equal(false);
       });
     });
   });
