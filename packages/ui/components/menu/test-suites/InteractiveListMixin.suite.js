@@ -308,18 +308,15 @@ export function runInteractiveListMixinSuite(customConfig) {
       it('should remove `More` button when making font smaller', async () => {
         const el = await fixture(html`
           <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
-            data-has-full-width-flyout orientation="horizontal" style="min-width: 110px; max-width: 110px; position:relative">
-            <div role="listitem" id="item1">
+            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
+            <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
-            <div role="listitem" id="item2">
+            <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 2</a>
             </div>
-            <div role="listitem" id="item3">
+            <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 3</a>
-            </div>
-            <div role="listitem" id="item4">
-              <a href="#">Item 4</a>
             </div>
             <div slot="more-button" style="min-width: 50px; max-width: 50px;">
               <button>More</button>
@@ -334,11 +331,46 @@ export function runInteractiveListMixinSuite(customConfig) {
          */
         getDirectListItemsUnderMainMenu(el).forEach(item => {
           // eslint-disable-next-line no-param-reassign
-          item.style.fontSize = '5px';
+          item.style.fontSize = '12px';
         });
         el?.dispatchEvent(new CustomEvent('resize', { composed: true, bubbles: true }));
         await waitResizeEventDebounce(el);
         expect(isMoreButtonShown(el)).to.equal(false);
+      });
+
+      it('should add `More` button when making font larger', async () => {
+        const el = await fixture(html`
+          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
+            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
+            <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 1</a>
+            </div>
+            <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 2</a>
+            </div>
+            <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 3</a>
+            </div>
+            <div slot="more-button" style="min-width: 50px; max-width: 50px;">
+              <button>More</button>
+            </div>
+          </${tag}>
+        `);
+        await waitResizeEventDebounce(el);
+
+        expect(getDirectListItemsUnderMainMenu(el).length).to.equal(3);
+        /**
+         * Make font larger for first level items to force
+         * the More button to appear
+         */
+        getDirectListItemsUnderMainMenu(el).forEach(item => {
+          // eslint-disable-next-line no-param-reassign
+          item.style.fontSize = '40px';
+        });
+        el?.dispatchEvent(new CustomEvent('resize', { composed: true, bubbles: true }));
+        await waitResizeEventDebounce(el);
+        expect(isMoreButtonShown(el)).to.equal(true);
+        expect(getDirectListItemsUnderMainMenu(el).length).to.equal(2);
       });
     });
   });
