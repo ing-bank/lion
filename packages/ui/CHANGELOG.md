@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.17.1
+
+### Patch Changes
+
+- 9956e6f: Correctly position bottom sheet for small screens
+
 ## 0.17.0
 
 ### Minor Changes
