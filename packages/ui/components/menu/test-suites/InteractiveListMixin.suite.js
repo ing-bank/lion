@@ -1,5 +1,6 @@
 import { LitElement } from 'lit';
-import { expect, html, fixture, unsafeStatic, defineCE, aTimeout } from '@open-wc/testing';
+import { expect, html, fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import { sendMouse, resetMouse } from '@web/test-runner-commands';
 import { useFakeTimers } from 'sinon';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 
@@ -141,21 +142,51 @@ export function runInteractiveListMixinSuite(customConfig) {
     });
 
     describe('Overflow handling', () => {
+      let clock = null;
+
       const isMoreButtonShown = el =>
         el.querySelector('[data-more-button-wrapper]')?.style.display !== 'none';
 
-      const getMoreButton = el => el.querySelector('[data-more-button]');
-      const clickOnMoreButton = el => getMoreButton(el)?.click();
+      const isMoreButtonMenuShown = el =>
+        getComputedStyle(el.querySelector('[data-more-button-menu]')).width !== '1px';
 
-      let clock = null;
+      const getMoreButton = el => el.querySelector('[data-more-button]');
+
+      /**
+       * @param {HTMLElement} element
+       */
+      function getCoordinates(element) {
+        const { x, y, height } = element.getBoundingClientRect();
+
+        return {
+          x: Math.floor(x + window.pageXOffset),
+          y: Math.floor(y + window.pageYOffset + height / 2),
+        };
+      }
+      const clickOnMoreButton = async el => {
+        const { x, y } = getCoordinates(getMoreButton(el));
+        await sendMouse({ type: 'click', position: [x, y] });
+        clock.tick(100);
+      };
+
+      const getDirectListItemsUnderMoreButtonMenu = el => [
+        ...el.querySelectorAll('[data-more-button-menu] > [role="listitem"]'),
+      ];
+
+      const waitMoreButtonInitialization = async el => {
+        await el.updateComplete;
+        // wait for resize event debouncer
+        clock.tick(55);
+      };
 
       beforeEach(() => {
         clock = useFakeTimers({
           shouldAdvanceTime: true,
         });
       });
-      afterEach(() => {
+      afterEach(async () => {
         clock.restore();
+        await resetMouse();
       });
 
       it('should show no More button when all items fit', async () => {
@@ -176,13 +207,12 @@ export function runInteractiveListMixinSuite(customConfig) {
             </div>
           </${tag}>
         `);
-        await el.updateComplete;
-        clock.tick(100);
+        await waitMoreButtonInitialization(el);
         // 3 items is 150px. They fit into 170px parent
         expect(isMoreButtonShown(el)).to.equal(false);
       });
 
-      it.only('should show  More button when not all items fit', async () => {
+      it('should show  More button when not all items fit', async () => {
         const el = await fixture(html`
           <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
             data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
@@ -204,9 +234,7 @@ export function runInteractiveListMixinSuite(customConfig) {
           </${tag}>
         `);
 
-        await el.updateComplete;
-        clock.tick(100);
-
+        await waitMoreButtonInitialization(el);
         // 4 items is 200px. They don't fit into 170px parent. So More button should be shown
         expect(isMoreButtonShown(el)).to.equal(true);
       });
@@ -214,7 +242,7 @@ export function runInteractiveListMixinSuite(customConfig) {
       it('should show 2 items when clicking on `More` button', async () => {
         const el = await fixture(html`
           <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
-            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
+            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px; position:relative">
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
@@ -233,12 +261,44 @@ export function runInteractiveListMixinSuite(customConfig) {
           </${tag}>
         `);
 
-        await el.updateComplete;
-        clock.tick(100);
-        clickOnMoreButton(el);
+        await waitMoreButtonInitialization(el);
+        await clickOnMoreButton(el);
 
-        // 4 items is 200px. They don't fit into 170px parent. So More button should be shown
-        // expect(isMoreButtonShown(el)).to.equal(true);
+        expect(isMoreButtonMenuShown(el)).to.equal(true);
+        const labels = getDirectListItemsUnderMoreButtonMenu(el).map(item =>
+          item.textContent.trim(),
+        );
+        expect(labels).to.deep.equal(['Item 3', 'Item 4']);
+      });
+
+      it('should open and then close More button menu when clicking 2 times on the More button', async () => {
+        const el = await fixture(html`
+          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
+            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px; position:relative">
+            <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 1</a>
+            </div>
+            <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 2</a>
+            </div>
+            <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 3</a>
+            </div>
+            <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 4</a>
+            </div>
+            <div slot="more-button" style="min-width: 50px; max-width: 50px;">
+              <button>More</button>
+            </div>
+          </${tag}>
+        `);
+
+        await waitMoreButtonInitialization(el);
+        expect(isMoreButtonMenuShown(el)).to.equal(false);
+        await clickOnMoreButton(el);
+        expect(isMoreButtonMenuShown(el)).to.equal(true);
+        await clickOnMoreButton(el);
+        expect(isMoreButtonMenuShown(el)).to.equal(false);
       });
     });
   });
