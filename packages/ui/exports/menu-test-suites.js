@@ -1,1 +1,2 @@
-export { runInteractiveListMixinSuite } from '@lion/menu/test-suites/InteractiveListMixin.suite.js';
+/* eslint-disable import/no-relative-packages */
+export { runInteractiveListMixinSuite } from '../components/menu/test-suites/InteractiveListMixin.suite.js';
