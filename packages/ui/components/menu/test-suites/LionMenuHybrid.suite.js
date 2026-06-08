@@ -289,7 +289,6 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
           More button menu is shown
         '
       },
-
     ]`, async () => {
       const el = await getFixture();
       expect(isAnyL2MenuShown(el)).to.be.false;
@@ -313,6 +312,51 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       });
 
       expect(isMoreButtonMenuShown(el)).to.equal(true);
+      expect(isAnyL2MenuShown(el)).to.be.false;
+    });
+
+    it(`[
+      {
+        action: 'Focus last visible L1 item in the main menu',
+      },
+      {
+        action: 'Hit Tab',
+        expectation: '
+          more button menu is shown,
+          the first L1 item in the more button menu is focused,
+        '
+      },
+      {
+        action: 'Click on More button',
+        expectation: '
+          more button menu is hidden
+        '
+      }
+    ]`, async () => {
+      const el = await getFixture();
+      expect(isAnyL2MenuShown(el)).to.be.false;
+      // click on the first L1 item that has L2 children
+      el.querySelector('#item1 > button')?.click();
+
+      // focus #item1.1
+      await sendKeys({
+        press: 'Tab',
+      });
+
+      // focus #item2
+      await sendKeys({
+        press: 'Tab',
+      });
+
+      // focus first L1 item inside More button menu
+      await sendKeys({
+        press: 'Tab',
+      });
+
+      expect(isMoreButtonMenuShown(el)).to.be.true;
+      expect(isAnyL2MenuShown(el)).to.be.false;
+      await clickOnMoreButton(el);
+      expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.false;
     });
   });
