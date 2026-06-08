@@ -1,8 +1,9 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { defineCE, expect, fixture, html, unsafeStatic, aTimeout } from '@open-wc/testing';
-import { sendMouse, resetMouse } from '@web/test-runner-commands';
+import { sendMouse, resetMouse, sendKeys } from '@web/test-runner-commands';
 import { useFakeTimers } from 'sinon';
 import { css } from 'lit';
+import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { LionMenuHybrid } from '../src/LionMenuHybrid.js';
 
 const l2Style = css`
@@ -108,6 +109,57 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       await aTimeout(120);
     };
 
+    const getDirectListItemsUnderMoreButtonMenu = el => [
+      ...el.querySelectorAll('[data-more-button-menu] > [role="listitem"]'),
+    ];
+
+    const getFixture = async () => {
+      const el = await fixture(html`          
+        <${tag} 
+          .itemWrap="${true}"
+          ?data-has-full-width-flyout="${config.l1.hasFullWidthFlyout}"
+          .config="${config.l1.openableConfig}"
+          .bar="${config.l1.isBar}"
+          ._activeMode="${'tabbable-disclosure'}" 
+          style="min-width: 170px; max-width: 170px; position:relative"            
+        >
+          <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
+            <a href="#">Item 1</a>
+          </div>
+          <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
+            <a href="#">Item 2</a>
+          </div>
+          <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
+            <a href="#">Item 3</a>
+          </div>
+          <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">
+            <style>
+              ${l2Style}
+            </style>
+            <button data-invoker>
+              Item 4
+            </button>
+            <${tag} 
+              .config="${config.l2.openableConfig}"
+              .bar="${config.l2.isBar}"
+              ._activeMode="${'tabbable-disclosure'}" 
+              id="l2"
+            >
+              <div role="listitem" id="item1.1">
+                <a href="#">Item 1.1</a>
+              </div>
+            </${tag}>
+          </div>
+          <div slot="more-button" style="min-width: 50px; max-width: 50px;">
+            <button>More</button>
+          </div>
+        </${tag}>
+      `);
+
+      await waitResizeEventDebounce(el);
+      return el;
+    };
+
     beforeEach(() => {
       clock = useFakeTimers({
         shouldAdvanceTime: true,
@@ -132,49 +184,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
             expectation: 'more button menu is shown, l2 menu is hidden'
           },
       ]`, async () => {
-      const el = await fixture(html`          
-          <${tag} 
-            .itemWrap="${true}"
-            ?data-has-full-width-flyout="${config.l1.hasFullWidthFlyout}"
-            .config="${config.l1.openableConfig}"
-            .bar="${config.l1.isBar}"
-            ._activeMode="${'tabbable-disclosure'}" 
-            style="min-width: 170px; max-width: 170px; position:relative"            
-          >
-            <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
-              <a href="#">Item 1</a>
-            </div>
-            <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
-              <a href="#">Item 2</a>
-            </div>
-            <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
-              <a href="#">Item 3</a>
-            </div>
-            <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">
-              <style>
-                ${l2Style}
-              </style>
-              <button data-invoker>
-                Item 4
-              </button>
-              <${tag} 
-                .config="${config.l2.openableConfig}"
-                .bar="${config.l2.isBar}"
-                ._activeMode="${'tabbable-disclosure'}" 
-                id="l2"
-              >
-                <div role="listitem" id="item1.1">
-                  <a href="#">Item 1.1</a>
-                </div>
-              </${tag}>
-            </div>
-            <div slot="more-button" style="min-width: 50px; max-width: 50px;">
-              <button>More</button>
-            </div>
-          </${tag}>
-        `);
-
-      await waitResizeEventDebounce(el);
+      const el = await getFixture();
       expect(isL2MenuShown(el)).to.be.false;
       await clickOnMoreButton(el);
       el.querySelector('#item4 > button')?.click();
@@ -184,6 +194,35 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       await clickOnMoreButton(el);
       expect(isL2MenuShown(el)).to.be.false;
       expect(isMoreButtonMenuShown(el)).to.equal(true);
+    });
+
+    it(`[
+      {
+        action: 'Focus last visible L1 item in the main menu',
+      },
+      {
+        action: 'Hit Tab',
+        expectation: '
+          more button menu is shown,
+          the first L1 item in the more button menu is focused,
+        '
+      },
+    ]`, async () => {
+      const el = await getFixture();
+
+      // focus last visible L1 item in the main menu
+      getMoreButton(el).parentNode.previousElementSibling.querySelector('a').focus();
+
+      // Hitting Tab should open the More button menu and focus the first L1 item in it
+      await sendKeys({
+        press: 'Tab',
+      });
+
+      expect(isMoreButtonMenuShown(el)).to.equal(true);
+
+      // make sure the first L1 inside More button menu is focused
+      const firstItemInMoreMenu = getDirectListItemsUnderMoreButtonMenu(el)[0];
+      expect(firstItemInMoreMenu.contains(getDeepActiveElement())).to.equal(true);
     });
   });
 }
