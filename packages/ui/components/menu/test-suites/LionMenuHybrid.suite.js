@@ -42,16 +42,6 @@ const config = {
       focusContentOnOpen: true,
     },
   },
-  l3: {
-    openableConfig: {
-      // We want disclosure behavior
-      placementMode: 'custom',
-      inheritsReferenceWidth: 'none',
-      focusContentOnOpen: true,
-      // TODO: implement in OverlayController
-      hideVisually: true,
-    },
-  },
 };
 
 export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
