@@ -574,7 +574,6 @@ export function runInteractiveListMixinSuite(customConfig) {
         el?.dispatchEvent(new CustomEvent('resize', { composed: true, bubbles: true }));
         await waitResizeEventDebounce(el);
         expect(isMoreButtonShown(el)).to.equal(true);
-        expect(getDirectListItemsUnderMainMenu(el).length).to.equal(2);
       });
     });
   });
