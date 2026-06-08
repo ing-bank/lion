@@ -78,10 +78,18 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
         y: Math.floor(y + window.pageYOffset + height / 2),
       };
     }
+
+    /**
+     *
+     * We use native click in many of the tests here because
+     * the source code uses the `mousedown`, `focusin`, `focusout`, `click`
+     * events and otherwise we need to emit those events programmatically
+     */
     const clickOnMoreButton = async el => {
       const { x, y } = getCoordinates(getMoreButton(el));
       await sendMouse({ type: 'click', position: [x, y] });
       clock.tick(100);
+      await aTimeout(0);
     };
 
     const waitResizeEventDebounce = async el => {
@@ -91,8 +99,9 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
     };
 
     /**
-     * We need actual timeout here to pass Safari check,
-     * see more info in the description of _createMoreButtonWrapper method in MoreButtonMenuMixin
+     * We need actual 100 ms timeout when More button menu is getting hidden,
+     * `useFakeTimers` is not an option. Othewise Safari fails.
+     * See more info in the description of `_createMoreButtonWrapper` method in `MoreButtonMenuMixin`
      * @param {HTMLElement} el
      */
     const waitAfterMoreButtonMenuHides = async () => {
@@ -117,7 +126,11 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
           {
             action: 'Inside more button menu, click on L1 item that has L2',
             expectation: 'more button menu is hidden, l2 menu is shown'
-          }
+          },
+          {
+            action: 'Click on More button',
+            expectation: 'more button menu is shown, l2 menu is hidden'
+          },
       ]`, async () => {
       const el = await fixture(html`          
           <${tag} 
@@ -168,6 +181,9 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       await waitAfterMoreButtonMenuHides();
       expect(isMoreButtonMenuShown(el)).to.equal(false);
       expect(isL2MenuShown(el)).to.be.true;
+      await clickOnMoreButton(el);
+      expect(isL2MenuShown(el)).to.be.false;
+      expect(isMoreButtonMenuShown(el)).to.equal(true);
     });
   });
 }
