@@ -35,17 +35,17 @@ jobs:
       - uses: google/wireit@setup-github-actions-caching/v2
       - uses: actions/checkout@v4
 
-      - name: Setup Node 24.x
+      - name: Setup Node 22.x
         uses: actions/setup-node@v4
         with:
-          node-version: 24.x
+          node-version: 22.x
           cache: npm
 
       - name: Install Dependencies
         run: npm install --ci
 
       - name: Playwright
-        run: npx playwright install
+        run: npx playwright install --with-deps
 
       - name: Test
         run: npm run test:browser
