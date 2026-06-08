@@ -66,7 +66,8 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
 
     const getMoreButton = el => el.querySelector('[data-more-button]');
 
-    const isL2MenuShown = el => el.querySelector('#l2')?.hasAttribute('opened');
+    const isAnyL2MenuShown = el =>
+      [...el.querySelectorAll('[level="2"]')].some(menu => menu.hasAttribute('opened'));
 
     /**
      * @param {HTMLElement} element
@@ -114,7 +115,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
     ];
 
     const getFixture = async () => {
-      const el = await fixture(html`          
+      const el = await fixture(html`        
         <${tag} 
           .itemWrap="${true}"
           ?data-has-full-width-flyout="${config.l1.hasFullWidthFlyout}"
@@ -124,7 +125,18 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
           style="min-width: 170px; max-width: 170px; position:relative"            
         >
           <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
-            <a href="#">Item 1</a>
+             <button data-invoker>
+              Item 1
+            </button>
+            <${tag} 
+              .config="${config.l2.openableConfig}"
+              .bar="${config.l2.isBar}"
+              ._activeMode="${'tabbable-disclosure'}"               
+            >
+              <div role="listitem" id="item1.1">
+                <a href="#">Item 1.1</a>
+              </div>
+            </${tag}>
           </div>
           <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
             <a href="#">Item 2</a>
@@ -132,10 +144,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
           <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
             <a href="#">Item 3</a>
           </div>
-          <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">
-            <style>
-              ${l2Style}
-            </style>
+          <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">            
             <button data-invoker>
               Item 4
             </button>
@@ -143,10 +152,9 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
               .config="${config.l2.openableConfig}"
               .bar="${config.l2.isBar}"
               ._activeMode="${'tabbable-disclosure'}" 
-              id="l2"
             >
-              <div role="listitem" id="item1.1">
-                <a href="#">Item 1.1</a>
+              <div role="listitem" id="item4.1">
+                <a href="#">Item 4.1</a>
               </div>
             </${tag}>
           </div>
@@ -154,6 +162,9 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
             <button>More</button>
           </div>
         </${tag}>
+        <style>
+          ${l2Style}
+        </style>    
       `);
 
       await waitResizeEventDebounce(el);
@@ -185,14 +196,14 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
           },
       ]`, async () => {
       const el = await getFixture();
-      expect(isL2MenuShown(el)).to.be.false;
+      expect(isAnyL2MenuShown(el)).to.be.false;
       await clickOnMoreButton(el);
       el.querySelector('#item4 > button')?.click();
       await waitAfterMoreButtonMenuHides();
       expect(isMoreButtonMenuShown(el)).to.equal(false);
-      expect(isL2MenuShown(el)).to.be.true;
+      expect(isAnyL2MenuShown(el)).to.be.true;
       await clickOnMoreButton(el);
-      expect(isL2MenuShown(el)).to.be.false;
+      expect(isAnyL2MenuShown(el)).to.be.false;
       expect(isMoreButtonMenuShown(el)).to.equal(true);
     });
 
@@ -223,6 +234,86 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       // make sure the first L1 inside More button menu is focused
       const firstItemInMoreMenu = getDirectListItemsUnderMoreButtonMenu(el)[0];
       expect(firstItemInMoreMenu.contains(getDeepActiveElement())).to.equal(true);
+    });
+
+    it(`[
+      {
+        action: 'Click on the L1 item that has children in the *main* menu',
+        expectation: '
+          L2 menu is shown,
+        '
+      },
+      {
+        action: 'Click on More button',        
+        expectation: '
+          L2 menu gets closed,
+          More button menu is shown,
+        '
+      }
+    ]`, async () => {
+      const el = await getFixture();
+      expect(isAnyL2MenuShown(el)).to.be.false;
+
+      // click on the first L1 item that has L2 children
+      el.querySelector('#item1 > button')?.click();
+      await aTimeout(0);
+
+      expect(isMoreButtonMenuShown(el)).to.be.false;
+      expect(isAnyL2MenuShown(el)).to.be.true;
+
+      await clickOnMoreButton(el);
+      expect(isMoreButtonMenuShown(el)).to.be.true;
+      expect(isAnyL2MenuShown(el)).to.be.false;
+    });
+
+    it(`[
+      {
+        action: 'Click on the L1 item that has children in the *main* menu',
+        expectation: '
+          L2 menu is shown,
+        '
+      },
+      {
+        action: 'Hit Tab many times so that the focus goes through all L2 items,
+        then focus moves to the next L1 item in the *main* menu and finally reaches 
+        the last visible L1 item in the main menu just before the More button',
+        expectation: '
+          L2 menu stays open,
+        '
+      },
+      {
+        action: 'When the Tab stays on the last L1 item before More button
+          and then we hit Tab again to get into More button menu',
+        expectation: '
+          L2 menu from L1 that we clicked at the very first step is closed,
+          More button menu is shown
+        '
+      },
+
+    ]`, async () => {
+      const el = await getFixture();
+      expect(isAnyL2MenuShown(el)).to.be.false;
+      // click on the first L1 item that has L2 children
+      el.querySelector('#item1 > button')?.click();
+
+      // focus #item1.1
+      await sendKeys({
+        press: 'Tab',
+      });
+
+      // focus #item2
+      await sendKeys({
+        press: 'Tab',
+      });
+      expect(isAnyL2MenuShown(el)).to.be.true;
+
+      // focus first L1 item inside More button menu
+      await sendKeys({
+        press: 'Tab',
+      });
+
+      expect(isMoreButtonMenuShown(el)).to.equal(true);
+      expect(isAnyL2MenuShown(el)).to.be.false;
     });
   });
 }

@@ -87,6 +87,9 @@ export const MoreButtonMenuMixin = superclass =>
           const target = /** @type {HTMLElement} */ (event?.target);
           if (!isElementDirectFocusableItemUnderMoreButtonMenu(target)) return;
 
+          // If applicable hide any other L2 menus
+          this.querySelector('[level="2"]:has([data-open])')?._overlayCtrl?.hide();
+
           // A user did `Shift + Tab` from L2 menu to More menu
           if (target?.getAttribute('aria-expanded') === 'true') {
             // close L2 menu
