@@ -293,7 +293,7 @@ export function runInteractiveListMixinSuite(customConfig) {
     // noPreselect
     // _scrollTargetNode
 
-    describe('Widget extensions', () => {
+    describe('Widget extensions 1', () => {
       it('can be extended to [role=listbox]', async () => {});
       it('can be extended to [role=menu]', async () => {});
       it('can be extended to [role=menubar]', async () => {});
