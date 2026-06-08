@@ -219,11 +219,11 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       await clickOnMoreButton(el);
       el.querySelector('#item4 > button')?.click();
       await waitAfterMoreButtonMenuHides();
-      expect(isMoreButtonMenuShown(el)).to.equal(false);
+      expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.true;
       await clickOnMoreButton(el);
       expect(isAnyL2MenuShown(el)).to.be.false;
-      expect(isMoreButtonMenuShown(el)).to.equal(true);
+      expect(isMoreButtonMenuShown(el)).to.be.true;
     });
 
     it(`[
@@ -246,11 +246,11 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
         press: 'Tab',
       });
 
-      expect(isMoreButtonMenuShown(el)).to.equal(true);
+      expect(isMoreButtonMenuShown(el)).to.be.true;
 
       // make sure the first L1 inside More button menu is focused
       const firstItemInMoreMenu = getDirectListItemsUnderMoreButtonMenu(el)[0];
-      expect(firstItemInMoreMenu.contains(getDeepActiveElement())).to.equal(true);
+      expect(firstItemInMoreMenu.contains(getDeepActiveElement())).to.be.true;
     });
 
     it(`[
@@ -328,7 +328,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
         press: 'Tab',
       });
 
-      expect(isMoreButtonMenuShown(el)).to.equal(true);
+      expect(isMoreButtonMenuShown(el)).to.be.true;
       expect(isAnyL2MenuShown(el)).to.be.false;
     });
 
@@ -529,6 +529,43 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
 
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.false;
+    });
+
+    it(`[
+      {
+        action: 'Click on More button',
+        expectation: 'more button menu is shown, l2 menu is hidden'
+      },
+      {
+        action: 'Inside more button menu, click on L1 item that has L2',
+        expectation: 'more button menu is hidden, l2 menu is shown'
+      },
+      {
+        action: 'Hit Shift + Tab',
+        expectation: '
+          more button menu is show,
+          l2 menu is hidden,
+          the parent L1 item under the More button is focused
+        '
+      }
+    ]`, async () => {
+      const el = await getFixture();
+      await clickOnMoreButton(el);
+      // Inside more button menu, click on L1 item that has L2
+      el.querySelector('#item4 > button')?.click();
+      await waitAfterMoreButtonMenuHides();
+      expect(isMoreButtonMenuShown(el)).to.be.false;
+      expect(isAnyL2MenuShown(el)).to.be.true;
+      // Focus #item4. It is the second item in the More button menu
+      await hitShiftTab();
+      expect(isMoreButtonMenuShown(el)).to.be.true;
+      expect(isAnyL2MenuShown(el)).to.be.false;
+      const focusedElement = getDeepActiveElement();
+      // the PARENT L1 item under the More button is focused, not the first one
+      expect(
+        el?.querySelector('#item4')?.contains(focusedElement) &&
+          el.listItems.includes(focusedElement),
+      ).to.be.true;
     });
   });
 }
