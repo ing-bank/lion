@@ -31,6 +31,19 @@ const supportedRoles = [
 
 const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixture);
 
+const l1Config = {
+  isBar: true,
+  hasFullWidthFlyout: true,
+  openableConfig: {
+    // We want disclosure behavior
+    placementMode: 'custom',
+    // N.B. we don't have an invoker...
+    isActivated: false,
+    inheritsReferenceWidth: 'none',
+    focusContentOnOpen: true,
+  },
+};
+
 /**
  * @param {TestConfig} [customConfig]
  */
@@ -380,8 +393,14 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should show  More button when not all items fit', async () => {
         const el = await fixture(html`
-          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
-            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
+          <${tag} 
+            .itemWrap="${true}"
+            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
+            .config="${l1Config.openableConfig}"
+            .bar="${l1Config.isBar}"
+            ._activeMode="${'tabbable-disclosure'}" 
+            style="min-width: 170px; max-width: 170px;"            
+          >
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
@@ -398,6 +417,11 @@ export function runInteractiveListMixinSuite(customConfig) {
               <button>More</button>
             </div>
           </${tag}>
+          <style>
+            [orientation='horizontal'] ::slotted([slot='list']) {
+              display: flex;
+            }
+          </style>
         `);
 
         await waitResizeEventDebounce(el);
@@ -407,8 +431,14 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should show 2 items when clicking on `More` button', async () => {
         const el = await fixture(html`
-          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
-            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px; position:relative">
+          <${tag} 
+            .itemWrap="${true}"
+            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
+            .config="${l1Config.openableConfig}"
+            .bar="${l1Config.isBar}"
+            ._activeMode="${'tabbable-disclosure'}" 
+            style="min-width: 170px; max-width: 170px;"            
+          >          
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
@@ -439,8 +469,14 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should open and then close More button menu when clicking 2 times on the More button', async () => {
         const el = await fixture(html`
-          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
-            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px; position:relative">
+          <${tag} 
+            .itemWrap="${true}"
+            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
+            .config="${l1Config.openableConfig}"
+            .bar="${l1Config.isBar}"
+            ._activeMode="${'tabbable-disclosure'}" 
+            style="min-width: 170px; max-width: 170px;"            
+          > 
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
@@ -502,8 +538,14 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should add `More` button when making font larger', async () => {
         const el = await fixture(html`
-          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
-            data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
+          <${tag} 
+            .itemWrap="${true}"
+            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
+            .config="${l1Config.openableConfig}"
+            .bar="${l1Config.isBar}"
+            ._activeMode="${'tabbable-disclosure'}" 
+            style="min-width: 170px; max-width: 170px;"            
+          > 
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
