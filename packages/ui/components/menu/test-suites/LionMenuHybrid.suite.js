@@ -69,6 +69,25 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
     const isAnyL2MenuShown = el =>
       [...el.querySelectorAll('[level="2"]')].some(menu => menu.hasAttribute('opened'));
 
+    const focusLastVisibleItemInMainMenu = async el => {
+      el.querySelector('[data-more-button]')
+        .parentNode.previousElementSibling.querySelector('a')
+        .focus();
+      await aTimeout(0);
+    };
+
+    const hitShiftTab = async () => {
+      await sendKeys({
+        down: 'Shift',
+      });
+      await sendKeys({
+        press: 'Tab',
+      });
+      await sendKeys({
+        up: 'Shift',
+      });
+    };
+
     /**
      * @param {HTMLElement} element
      */
@@ -220,9 +239,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       },
     ]`, async () => {
       const el = await getFixture();
-
-      // focus last visible L1 item in the main menu
-      getMoreButton(el).parentNode.previousElementSibling.querySelector('a').focus();
+      await focusLastVisibleItemInMainMenu(el);
 
       // Hitting Tab should open the More button menu and focus the first L1 item in it
       await sendKeys({
@@ -334,19 +351,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       }
     ]`, async () => {
       const el = await getFixture();
-      expect(isAnyL2MenuShown(el)).to.be.false;
-      // click on the first L1 item that has L2 children
-      el.querySelector('#item1 > button')?.click();
-
-      // focus #item1.1
-      await sendKeys({
-        press: 'Tab',
-      });
-
-      // focus #item2
-      await sendKeys({
-        press: 'Tab',
-      });
+      await focusLastVisibleItemInMainMenu(el);
 
       // focus first L1 item inside More button menu
       await sendKeys({
@@ -356,6 +361,44 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       expect(isMoreButtonMenuShown(el)).to.be.true;
       expect(isAnyL2MenuShown(el)).to.be.false;
       await clickOnMoreButton(el);
+      expect(isMoreButtonMenuShown(el)).to.be.false;
+      expect(isAnyL2MenuShown(el)).to.be.false;
+    });
+
+    it(`[
+      {
+        action: 'Focus last visible L1 item in the main menu',
+      },
+      {
+        action: 'Hit Tab',
+        expectation: '
+          more button menu is shown,
+          the first L1 item in the more button menu is focused,
+        '
+      },
+      {
+        action: 'Hit Shift + Tab',
+        expectation: '
+          more button menu is hidden,
+          the last visible L1 item in the main menu is focused,
+        '
+      },
+    ]`, async () => {
+      const el = await getFixture();
+      await focusLastVisibleItemInMainMenu(el);
+
+      // focus first L1 item inside More button menu
+      await sendKeys({
+        press: 'Tab',
+      });
+
+      expect(isMoreButtonMenuShown(el)).to.be.true;
+      expect(isAnyL2MenuShown(el)).to.be.false;
+
+      // hit Shift + Tab
+      await hitShiftTab();
+      await waitAfterMoreButtonMenuHides();
+
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.false;
     });
