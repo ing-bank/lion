@@ -60,7 +60,7 @@ export class LionToolbar extends LionMenu {
       if (!multiple) {
         // Uncheck all
         listItemsWithinGroup.forEach(listItem => {
-          setChecked(listItem, false);
+          setChecked(listItem, true);
         });
         setChecked(this.listItems[index]);
       } else {
