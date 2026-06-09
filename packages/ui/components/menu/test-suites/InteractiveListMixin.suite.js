@@ -195,6 +195,7 @@ export function runInteractiveListMixinSuite(customConfig) {
         expect(item1.getAttribute('aria-current')).to.equal('false');
       });
 
+      // Fix me
       it('set checked state sets aria-checked attribute with role="menuitemradio"', async () => {
         const el = await fixture(html`
           <${tag}>
@@ -238,6 +239,7 @@ export function runInteractiveListMixinSuite(customConfig) {
         expect(item1.getAttribute('aria-current')).to.equal('false');
       });
 
+      // Fix me
       it('can set checked state to "mixed" for role="menuitemcheckbox"', async () => {
         const el = await fixture(html`
           <${tag}>
