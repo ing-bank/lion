@@ -75,7 +75,8 @@ export function setChecked(item, unset = false) {
  * @param {HTMLElement} item
  */
 export function toggleChecked(item) {
-  setChecked(item, !isChecked(item));
+  const shouldUnset = isChecked(item);
+  setChecked(item, shouldUnset);
 }
 
 /**
