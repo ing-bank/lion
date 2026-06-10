@@ -52,7 +52,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
     let clock = null;
 
     const isMoreButtonMenuShown = el =>
-      getComputedStyle(el.querySelector('[data-more-button-menu]')).width !== '1px';
+      getComputedStyle(el.querySelector('[data-more-button-menu]')).width !== '0px';
 
     const getMoreButton = el => el.querySelector('[data-more-button]');
 
