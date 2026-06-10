@@ -293,7 +293,7 @@ const InteractiveListMixinImplementation = superclass =>
       }
 
       // @ts-ignore - focusableEl is safely used as HTMLElement here
-      if (!isInView(this._scrollTargetNode, focusableEl)) {
+      if (this.orientation === 'vertical' && !isInView(this._scrollTargetNode, focusableEl)) {
         focusableEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 

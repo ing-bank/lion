@@ -931,7 +931,7 @@ export class OverlayController extends EventTarget {
     this.contentNode.setAttribute('data-open', '');
 
     if (this.config.focusContentOnOpen) {
-      this.contentNode.focus();
+      this.contentNode.focus({ preventScroll: true });
     }
 
     /** @type {function} */
