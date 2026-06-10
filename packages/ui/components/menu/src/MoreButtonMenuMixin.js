@@ -18,8 +18,8 @@ const styles = css`
   /** N.B. this is a simplified version of sr-only. when we move to overlayctrl, we should build this into overlayctrl */
   [data-more-button-menu] {
     overflow: hidden;
-    height: 1px;
-    width: 1px;
+    height: 0;
+    width: 0;
   }
 
   [role='list']:has(> [data-more-button-wrapper]) > [role='listitem'] > :is(button, a) {
@@ -133,7 +133,7 @@ export const MoreButtonMenuMixin = superclass =>
           ':scope > [role="listitem"] > :is(a, button)',
         );
 
-        firstInteractiveItem?.focus();
+        firstInteractiveItem?.focus({ preventScroll: true });
         moreButtonMenu.setAttribute('data-open', '');
       });
     }
