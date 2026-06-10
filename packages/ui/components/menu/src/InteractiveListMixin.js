@@ -820,7 +820,10 @@ const InteractiveListMixinImplementation = superclass =>
     __syncCurrentPageWithLocationHref(location) {
       this.listItems.forEach(item => {
         if (/** @type {HTMLAnchorElement} */ (item).href) {
-          if (location.href.includes(/** @type {HTMLAnchorElement} */ (item).href)) {
+          const pathname = location.pathname.endsWith('/')
+            ? location.pathname.substring(0, location.pathname.length - 1)
+            : location.pathname;
+          if (pathname === /** @type {HTMLAnchorElement} */ (item).href) {
             setChecked(item);
           } else {
             setChecked(item, true);
