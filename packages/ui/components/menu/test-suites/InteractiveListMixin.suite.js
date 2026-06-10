@@ -323,7 +323,7 @@ export function runInteractiveListMixinSuite(customConfig) {
         el.querySelector('[data-more-button-wrapper]')?.style.display !== 'none';
 
       const isMoreButtonMenuShown = el =>
-        getComputedStyle(el.querySelector('[data-more-button-menu]')).width !== '1px';
+        getComputedStyle(el.querySelector('[data-more-button-menu]')).width !== '0px';
 
       const getMoreButton = el => el.querySelector('[data-more-button]');
 
