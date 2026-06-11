@@ -1,12 +1,5 @@
 import { LitElement } from 'lit';
-import {
-  expect,
-  html,
-  fixture as _fixture,
-  unsafeStatic,
-  defineCE,
-  aTimeout,
-} from '@open-wc/testing';
+import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
 import { sendMouse, resetMouse } from '@web/test-runner-commands';
 import { useFakeTimers } from 'sinon';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
@@ -349,7 +342,6 @@ export function runInteractiveListMixinSuite(customConfig) {
         const { x, y } = getCoordinates(getMoreButton(el));
         await sendMouse({ type: 'click', position: [x, y] });
         clock.tick(100);
-        await aTimeout(0);
       };
 
       const getDirectListItemsUnderMoreButtonMenu = el => [
@@ -483,7 +475,7 @@ export function runInteractiveListMixinSuite(customConfig) {
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
             ._activeMode="${'tabbable-disclosure'}" 
-            style="min-width: 170px; max-width: 170px;position:relative"            
+            style="min-width: 170px; max-width: 170px;"            
           > 
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
@@ -506,10 +498,8 @@ export function runInteractiveListMixinSuite(customConfig) {
         await waitResizeEventDebounce(el);
         expect(isMoreButtonMenuShown(el)).to.equal(false);
         await clickOnMoreButton(el);
-        await aTimeout(130);
         expect(isMoreButtonMenuShown(el)).to.equal(true);
         await clickOnMoreButton(el);
-        await aTimeout(130);
         expect(isMoreButtonMenuShown(el)).to.equal(false);
       });
 
