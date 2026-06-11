@@ -75,11 +75,13 @@ export const MoreButtonMenuMixin = superclass =>
       moreButton?.setAttribute('aria-expanded', 'false');
       const moreButtonMenu = document.createElement('div');
       moreButtonMenu.setAttribute('data-more-button-menu', '');
+      moreButtonMenu.setAttribute('tabindex', '-1');
       moreButtonWrapper.appendChild(moreButtonMenu);
       this._listNode.appendChild(moreButtonWrapper);
 
       const isElementDirectFocusableItemUnderMoreButtonMenu = (/** @type {Element} */ element) =>
-        this.listItems.includes(element) && moreButtonMenu.contains(element);
+        (this.listItems.includes(element) && moreButtonMenu.contains(element)) ||
+        element === moreButtonMenu;
 
       moreButtonMenu.addEventListener(
         'focusin',
@@ -113,31 +115,14 @@ export const MoreButtonMenuMixin = superclass =>
         }, 100);
       });
 
-      this.hasMoreButtonMenuAnyFocusedFirstLevelItems = false;
-
-      moreButton?.addEventListener('mousedown', () => {
-        this.hasMoreButtonMenuAnyFocusedFirstLevelItems = false;
-        const focusableFirstLevelItems = moreButtonMenu.querySelectorAll(
-          ':scope > [role="listitem"] > :is(a, button)',
-        );
-
-        // @ts-ignore Type 'NodeListOf<Element>' must have a '[Symbol.iterator]()' method that returns an iterator.
-        for (const focusableFirstLevelItem of focusableFirstLevelItems) {
-          if (this._getDeepActiveElement() === focusableFirstLevelItem) {
-            this.hasMoreButtonMenuAnyFocusedFirstLevelItems = true;
-          }
-        }
-      });
-
       moreButton?.addEventListener('click', () => {
-        if (this.hasMoreButtonMenuAnyFocusedFirstLevelItems) return;
-        /** @type {HTMLElement | null} */
-        const firstInteractiveItem = moreButtonMenu.querySelector(
-          ':scope > [role="listitem"] > :is(a, button)',
-        );
-
-        firstInteractiveItem?.focus({ preventScroll: true });
-        moreButtonMenu.setAttribute('data-open', '');
+        if (moreButtonMenu.getAttribute('data-open') !== null) {
+          moreButtonMenu.removeAttribute('data-open');
+        } else {
+          /** @type {HTMLElement | null} */
+          moreButtonMenu?.focus();
+          moreButtonMenu.setAttribute('data-open', '');
+        }
       });
     }
 
