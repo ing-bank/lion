@@ -116,11 +116,8 @@ export const MoreButtonMenuMixin = superclass =>
       });
 
       moreButton?.addEventListener('click', () => {
-        if (moreButtonMenu.getAttribute('data-open') !== null) {
-          moreButtonMenu.removeAttribute('data-open');
-        } else {
-          /** @type {HTMLElement | null} */
-          moreButtonMenu?.focus();
+        if (moreButtonMenu.getAttribute('data-open') === null) {
+          moreButtonMenu?.focus({ preventScroll: true });
           moreButtonMenu.setAttribute('data-open', '');
         }
       });
