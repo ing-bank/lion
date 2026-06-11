@@ -2,6 +2,7 @@ import { LitElement } from 'lit';
 import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
 import { sendMouse, resetMouse } from '@web/test-runner-commands';
 import { useFakeTimers } from 'sinon';
+import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
@@ -326,6 +327,7 @@ export function runInteractiveListMixinSuite(customConfig) {
         getComputedStyle(el.querySelector('[data-more-button-menu]')).width !== '0px';
 
       const getMoreButton = el => el.querySelector('[data-more-button]');
+      const getMoreButtonMenu = el => el.querySelector('[data-more-button-menu]');
 
       /**
        * @param {HTMLElement} element
@@ -465,6 +467,41 @@ export function runInteractiveListMixinSuite(customConfig) {
           item.textContent.trim(),
         );
         expect(labels).to.deep.equal(['Item 3', 'Item 4']);
+      });
+
+      it('should focus more button menu container when clicking on `More` button', async () => {
+        const el = await fixture(html`
+          <${tag} 
+            .itemWrap="${true}"
+            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
+            .config="${l1Config.openableConfig}"
+            .bar="${l1Config.isBar}"
+            ._activeMode="${'tabbable-disclosure'}" 
+            style="min-width: 170px; max-width: 170px;"            
+          >          
+            <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 1</a>
+            </div>
+            <div role="listitem" id="item2" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 2</a>
+            </div>
+            <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 3</a>
+            </div>
+            <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">
+              <a href="#">Item 4</a>
+            </div>
+            <div slot="more-button" style="min-width: 50px; max-width: 50px;">
+              <button>More</button>
+            </div>
+          </${tag}>
+        `);
+
+        await waitResizeEventDebounce(el);
+        await clickOnMoreButton(el);
+
+        expect(isMoreButtonMenuShown(el)).to.equal(true);
+        expect(getDeepActiveElement() === getMoreButtonMenu(el)).to.equal(true);
       });
 
       it('should open and then close More button menu when clicking 2 times on the More button', async () => {
