@@ -3,7 +3,7 @@ import { html } from 'lit';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // import { DisclosureMixin } from '@lion/ui/collapsible.js';
 import { InteractiveListMixin } from './InteractiveListMixin.js';
-
+import { isChecked, setChecked } from './utils/listItemInteractions.js';
 /**
  * @typedef {import('./InteractiveListMixin.js').LionItem} LionItem
  * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListHost} InteractiveList
@@ -242,6 +242,23 @@ const MultiLevelListMixinImplementation = superclass =>
           break;
         /* no default */
       }
+    }
+
+    /**
+     * @param {Location} location
+     */
+    _syncCurrentPageWithLocationHref(location) {
+      super._syncCurrentPageWithLocationHref(location);
+
+      this._subListMap.forEach(subList => {
+        subList.listItems.forEach(
+          /** @param {LionItem|HTMLElement} item */ item => {
+            if (isChecked(item)) {
+              setChecked(subList._invokerNode);
+            }
+          },
+        );
+      });
     }
 
     // /**
