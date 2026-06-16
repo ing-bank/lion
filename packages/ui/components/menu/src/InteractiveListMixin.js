@@ -556,7 +556,7 @@ const InteractiveListMixinImplementation = superclass =>
       // having hideVisually as hide mechanism (opening on focus, closing on blur).
       // N.B. this._listNode has `display:flex`. This means we need to add `text-wrap: nowrap;`
       // to avoid elems going over two lines, or give them a max-height based on measuring the height of one item.
-      // 2. N.B. hideVisually needs to be implementd in OverlayController.
+      // 2. N.B. hideVisually needs to be implemented in OverlayController.
       // 3. when the more menu opens a next level, MultiLevelListMixin will be applied to the host as well.
       // That means it knows when a child menu is open. If _subListMap of one of the items is open, we should hide more menu like this:
       // https://jsfiddle.net/a4ocktfp/19/
