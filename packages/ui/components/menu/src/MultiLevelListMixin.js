@@ -184,12 +184,12 @@ const MultiLevelListMixinImplementation = superclass =>
      * @param {*} ev
      */
     _onListKeyDown(ev) {
-      const targetFromSubList = Array.from(this._subListMap).find(
+      const targetFromsubList = Array.from(this._subListMap).find(
         // @ts-ignore - contains method on InteractiveListHost
         ([, s]) => s === ev.target || s.contains(ev.target),
       );
 
-      if (targetFromSubList) {
+      if (targetFromsubList) {
         return;
       }
 
