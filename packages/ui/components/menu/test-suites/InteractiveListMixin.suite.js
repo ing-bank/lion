@@ -171,7 +171,6 @@ export function runInteractiveListMixinSuite(customConfig) {
             ${item(2, 'option')}
           </${tag}>
         `);
-        console.debug('listItems', el.listItems);
         const item1 = el.listItems[1];
         expect(item1.getAttribute('aria-selected')).to.equal('false');
 
@@ -318,15 +317,27 @@ export function runInteractiveListMixinSuite(customConfig) {
     });
 
     describe('Overflow handling', () => {
+      /** @type {import('sinon').SinonFakeTimers | null} */
       let clock = null;
 
-      const isMoreButtonShown = el =>
-        el.querySelector('[data-more-button-wrapper]')?.style.display !== 'none';
+      /** @param {HTMLElement} el */
+      const isMoreButtonShown = el => {
+        const wrapper = /** @type {HTMLElement | null} */ (
+          el.querySelector('[data-more-button-wrapper]')
+        );
+        return wrapper?.style.display !== 'none';
+      };
 
-      const isMoreButtonMenuShown = el =>
-        getComputedStyle(el.querySelector('[data-more-button-menu]')).width !== '0px';
+      /** @param {HTMLElement} el */
+      const isMoreButtonMenuShown = el => {
+        const menu = el.querySelector('[data-more-button-menu]');
+        return menu ? getComputedStyle(menu).width !== '0px' : false;
+      };
 
-      const getMoreButton = el => el.querySelector('[data-more-button]');
+      /** @param {HTMLElement} el */
+      const getMoreButton = el =>
+        /** @type {HTMLElement | null} */ (el.querySelector('[data-more-button]'));
+      /** @param {HTMLElement} el */
       const getMoreButtonMenu = el => el.querySelector('[data-more-button-menu]');
 
       /**
@@ -340,24 +351,38 @@ export function runInteractiveListMixinSuite(customConfig) {
           y: Math.floor(y + window.pageYOffset + height / 2),
         };
       }
+      /** @param {HTMLElement} el */
       const clickOnMoreButton = async el => {
-        const { x, y } = getCoordinates(getMoreButton(el));
+        const moreButton = getMoreButton(el);
+        if (!moreButton) {
+          return;
+        }
+        const { x, y } = getCoordinates(moreButton);
         await sendMouse({ type: 'click', position: [x, y] });
-        clock.tick(100);
+        clock?.tick(100);
       };
 
+      /** @param {HTMLElement} el */
       const getDirectListItemsUnderMoreButtonMenu = el => [
-        ...el.querySelectorAll('[data-more-button-menu] > [role="listitem"]'),
+        ...Array.from(
+          el.querySelectorAll('[data-more-button-menu] > [role="listitem"]'),
+          item => /** @type {HTMLElement} */ (item),
+        ),
       ];
 
+      /** @param {HTMLElement} el */
       const getDirectListItemsUnderMainMenu = el => [
-        ...el.querySelectorAll('[slot="list"] > [role="listitem"]'),
+        ...Array.from(
+          el.querySelectorAll('[slot="list"] > [role="listitem"]'),
+          item => /** @type {HTMLElement} */ (item),
+        ),
       ];
 
+      /** @param {HTMLElement & { updateComplete: Promise<unknown> }} el */
       const waitResizeEventDebounce = async el => {
         await el.updateComplete;
         // wait for resize event debouncer
-        clock.tick(55);
+        clock?.tick(55);
       };
 
       beforeEach(() => {
@@ -366,7 +391,7 @@ export function runInteractiveListMixinSuite(customConfig) {
         });
       });
       afterEach(async () => {
-        clock.restore();
+        clock?.restore();
         await resetMouse();
       });
 
@@ -463,8 +488,8 @@ export function runInteractiveListMixinSuite(customConfig) {
         await clickOnMoreButton(el);
 
         expect(isMoreButtonMenuShown(el)).to.equal(true);
-        const labels = getDirectListItemsUnderMoreButtonMenu(el).map(item =>
-          item.textContent.trim(),
+        const labels = getDirectListItemsUnderMoreButtonMenu(el).map(
+          item => item.textContent?.trim() ?? '',
         );
         expect(labels).to.deep.equal(['Item 3', 'Item 4']);
       });
