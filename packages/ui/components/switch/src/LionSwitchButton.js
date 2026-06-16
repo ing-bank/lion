@@ -13,6 +13,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
         type: Boolean,
         reflect: true,
       },
+      readOnly: { type: Boolean, attribute: 'readonly', reflect: true },
     };
   }
 
@@ -76,7 +77,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     super();
     // inputNode = this, which always requires a value prop
     this.value = '';
-
+    this.readOnly = false;
     this.checked = false;
     this.__initialized = false;
     /** @protected */
@@ -105,7 +106,7 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
 
   /** @protected */
   _toggleChecked() {
-    if (this.disabled) {
+    if (this.disabled || this.readOnly) {
       return;
     }
     // Force IE11 to focus the component.
@@ -151,6 +152,9 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
     if (changedProperties.has('disabled')) {
       this.setAttribute('aria-disabled', `${this.disabled}`); // create mixin if we need it in more places
     }
+    if (changedProperties.has('readOnly')) {
+      this.setAttribute('aria-readonly', `${this.readOnly}`);
+    }
   }
 
   /**
@@ -166,7 +170,8 @@ export class LionSwitchButton extends DisabledWithTabIndexMixin(LitElement) {
       this.isConnected &&
       name === 'checked' &&
       this.checked !== oldValue &&
-      !this.disabled
+      !this.disabled &&
+      !this.readOnly
     ) {
       this.__checkedStateChange();
     }
