@@ -33,6 +33,7 @@ const config = {
     },
   },
   l2: {
+    isBar: false,
     openableConfig: {
       // We want disclosure behavior
       placementMode: 'custom',
@@ -49,20 +50,31 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
   const tag = unsafeStatic(tagString);
 
   describe('LionMenuHybrid', () => {
+    /** @type {import('sinon').SinonFakeTimers | null} */
     let clock = null;
 
-    const isMoreButtonMenuShown = el =>
-      getComputedStyle(el.querySelector('[data-more-button-menu]')).width !== '0px';
+    /** @param {LionMenuHybrid} el */
+    const isMoreButtonMenuShown = el => {
+      const menu = el.querySelector('[data-more-button-menu]');
+      return menu ? getComputedStyle(menu).width !== '0px' : false;
+    };
 
-    const getMoreButton = el => el.querySelector('[data-more-button]');
+    /** @param {LionMenuHybrid} el */
+    const getMoreButton = el =>
+      /** @type {HTMLElement | null} */ (el.querySelector('[data-more-button]'));
 
+    /** @param {LionMenuHybrid} el */
     const isAnyL2MenuShown = el =>
-      [...el.querySelectorAll('[level="2"]')].some(menu => menu.hasAttribute('opened'));
+      Array.from(el.querySelectorAll('[level="2"]')).some(menu => menu.hasAttribute('opened'));
 
+    /** @param {LionMenuHybrid} el */
     const focusLastVisibleItemInMainMenu = async el => {
-      el.querySelector('[data-more-button]')
-        .parentNode.previousElementSibling.querySelector('a')
-        .focus();
+      const moreButton = el.querySelector('[data-more-button]');
+      const previousElement = moreButton?.parentElement?.previousElementSibling;
+      const anchor = previousElement?.querySelector('a');
+      if (anchor instanceof HTMLElement) {
+        anchor.focus();
+      }
       await aTimeout(0);
     };
 
@@ -95,34 +107,41 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
      * We use native click in many of the tests here because
      * the source code uses the `mousedown`, `focusin`, `focusout`, `click`
      * events and otherwise we need to emit those events programmatically
+     * @param {LionMenuHybrid} el
      */
     const clickOnMoreButton = async el => {
-      const { x, y } = getCoordinates(getMoreButton(el));
+      const moreButton = getMoreButton(el);
+      if (!moreButton) {
+        return;
+      }
+      const { x, y } = getCoordinates(moreButton);
       await sendMouse({ type: 'click', position: [x, y] });
-      clock.tick(100);
+      clock?.tick(100);
       await aTimeout(0);
     };
 
+    /** @param {LionMenuHybrid} el */
     const waitResizeEventDebounce = async el => {
       await el.updateComplete;
       // wait for resize event debouncer
-      clock.tick(55);
+      clock?.tick(55);
     };
 
     /**
      * We need actual 100 ms timeout when More button menu is getting hidden,
      * `useFakeTimers` is not an option. Othewise Safari fails.
      * See more info in the description of `_createMoreButtonWrapper` method in `MoreButtonMenuMixin`
-     * @param {HTMLElement} el
      */
     const waitAfterMoreButtonMenuHides = async () => {
       await aTimeout(120);
     };
 
+    /** @param {LionMenuHybrid} el */
     const getDirectListItemsUnderMoreButtonMenu = el => [
-      ...el.querySelectorAll('[data-more-button-menu] > [role="listitem"]'),
+      ...Array.from(el.querySelectorAll('[data-more-button-menu] > [role="listitem"]')),
     ];
 
+    /** @returns {Promise<LionMenuHybrid>} */
     const getFixture = async () => {
       const el = await fixture(html`        
         <${tag} 
@@ -176,8 +195,9 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
         </style>    
       `);
 
-      await waitResizeEventDebounce(el);
-      return el;
+      const hybridEl = /** @type {LionMenuHybrid} */ (el);
+      await waitResizeEventDebounce(hybridEl);
+      return hybridEl;
     };
 
     beforeEach(() => {
@@ -186,7 +206,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       });
     });
     afterEach(async () => {
-      clock.restore();
+      clock?.restore();
       await resetMouse();
     });
 
@@ -207,7 +227,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       const el = await getFixture();
       expect(isAnyL2MenuShown(el)).to.be.false;
       await clickOnMoreButton(el);
-      el.querySelector('#item4 > button')?.click();
+      /** @type {HTMLButtonElement | null} */ (el.querySelector('#item4 > button'))?.click();
       await waitAfterMoreButtonMenuHides();
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.true;
@@ -262,7 +282,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       expect(isAnyL2MenuShown(el)).to.be.false;
 
       // click on the first L1 item that has L2 children
-      el.querySelector('#item1 > button')?.click();
+      /** @type {HTMLButtonElement | null} */ (el.querySelector('#item1 > button'))?.click();
       await aTimeout(0);
 
       expect(isMoreButtonMenuShown(el)).to.be.false;
@@ -300,7 +320,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       const el = await getFixture();
       expect(isAnyL2MenuShown(el)).to.be.false;
       // click on the first L1 item that has L2 children
-      el.querySelector('#item1 > button')?.click();
+      /** @type {HTMLButtonElement | null} */ (el.querySelector('#item1 > button'))?.click();
 
       // focus #item1.1
       await sendKeys({
@@ -509,6 +529,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       // the PARENT L1 item under the More button is focused, not the first one
       expect(
         el?.querySelector('#item4')?.contains(focusedElement) &&
+          focusedElement instanceof HTMLElement &&
           el.listItems.includes(focusedElement),
       ).to.be.true;
       // Focus #item3. It is the first item in the More button menu
@@ -542,7 +563,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       const el = await getFixture();
       await clickOnMoreButton(el);
       // Inside more button menu, click on L1 item that has L2
-      el.querySelector('#item4 > button')?.click();
+      /** @type {HTMLButtonElement | null} */ (el.querySelector('#item4 > button'))?.click();
       await waitAfterMoreButtonMenuHides();
       expect(isMoreButtonMenuShown(el)).to.be.false;
       expect(isAnyL2MenuShown(el)).to.be.true;
@@ -554,6 +575,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       // the PARENT L1 item under the More button is focused, not the first one
       expect(
         el?.querySelector('#item4')?.contains(focusedElement) &&
+          focusedElement instanceof HTMLElement &&
           el.listItems.includes(focusedElement),
       ).to.be.true;
     });
