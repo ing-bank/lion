@@ -381,6 +381,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         thirdOption.active = true;
         await aTimeout(1000);
 
+        // top should be offset 2x40px (sticky header elems) instead of 0px
         expect(el.scrollTop).to.equal(116);
       });
     });
