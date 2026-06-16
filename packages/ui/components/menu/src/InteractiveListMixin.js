@@ -588,7 +588,7 @@ const InteractiveListMixinImplementation = superclass =>
         }
       });
 
-      this.__syncCurrentPageWithLocationHref(window.location);
+      this._syncCurrentPageWithLocationHref(window.location);
     }
 
     /**
@@ -817,12 +817,12 @@ const InteractiveListMixinImplementation = superclass =>
     /**
      * @param {Location} location
      */
-    __syncCurrentPageWithLocationHref(location) {
+    _syncCurrentPageWithLocationHref(location) {
       this.listItems.forEach(item => {
         if (/** @type {HTMLAnchorElement} */ (item).href) {
-          const pathname = location.pathname.endsWith('/')
-            ? location.pathname.substring(0, location.pathname.length - 1)
-            : location.pathname;
+          const pathname = location.href.endsWith('/')
+            ? location.href.substring(0, location.href.length - 1)
+            : location.href;
           if (pathname === /** @type {HTMLAnchorElement} */ (item).href) {
             setChecked(item);
           } else {
@@ -834,7 +834,7 @@ const InteractiveListMixinImplementation = superclass =>
 
     /** @protected */
     _onPopState = () => {
-      this.__syncCurrentPageWithLocationHref(document.location);
+      this._syncCurrentPageWithLocationHref(document.location);
     };
   };
 // @ts-ignore
