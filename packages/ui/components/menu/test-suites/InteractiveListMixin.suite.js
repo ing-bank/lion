@@ -1,7 +1,7 @@
 import { LitElement } from 'lit';
 import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
 import { sendMouse, resetMouse } from '@web/test-runner-commands';
-import { useFakeTimers } from 'sinon';
+import sinon from 'sinon';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 
@@ -299,6 +299,17 @@ export function runInteractiveListMixinSuite(customConfig) {
       });
     });
 
+    it('sets aria-current="page" when the location href matches the item href', async () => {
+      const el = await fixture(html`
+        <${tag}>
+           <a href="${window.location.href}">Item 0</a>
+           <a href="#bar">Item 1</a>
+        </${tag}>
+      `);
+      const item0 = el.listItems[0];
+      expect(item0.getAttribute('aria-current')).to.equal('page');
+    });
+
     // Copy tests from ListboxMixin. Later, make this mixin a fundament of the ListboxMixin
 
     // orientation
@@ -386,7 +397,7 @@ export function runInteractiveListMixinSuite(customConfig) {
       };
 
       beforeEach(() => {
-        clock = useFakeTimers({
+        clock = sinon.useFakeTimers({
           shouldAdvanceTime: true,
         });
       });
