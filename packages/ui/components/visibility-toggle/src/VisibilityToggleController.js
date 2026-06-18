@@ -1,176 +1,50 @@
 import { overlays } from './singleton.js';
-import { deepContains } from './utils/deep-contains.js';
-import { overlayShadowDomStyle } from './overlayShadowDomStyle.js';
-import { _adoptStyleUtils } from './utils/adopt-styles.js';
-// import { getFocusableElements } from './utils/get-focusable-elements.js';
+import { deepContains, deepClosest } from './utils/deep-contains.js';
 import { isEqualConfig } from './utils/is-equal-config.js';
+import { createRestorable, restore } from './utils/create-restorable.js';
 
+import { closeOnOutsideClickHandler } from './features/closeOnOutsideClickHandler.js';
+import { closeOnOutsideEscHandler } from './features/closeOnOutsideEscHandler.js';
+import { closeOnEscHandler } from './features/closeOnEscHandler.js';
 import { trapFocusHandler } from './features/trapFocusHandler.js';
+import { placementHandler } from './features/placementHandler.js';
+import { backdropHandler } from './features/backdropHandler.js';
+import { focusHandler } from './features/focusHandler.js';
+import { a11yHandler } from './features/a11yHandler.js';
 
 /**
- * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
  * @typedef {import('@lion/ui/types/overlays.js').ViewportConfig} ViewportConfig
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
+ * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
  * @typedef {import('@popperjs/core').createPopper} Popper
  * @typedef {{ createPopper: Popper }} PopperModule
  */
 
-/**
- * From:
- * - wrappingDialogNodeL1: `<dialog role="none"/>`
- * - contentWrapperNodeL2: `<div id="content-wrapper-node"/>`
- * - contentNodeL3: `<div slot="my-content"/>`
- * To:
- * ```html
- * <dialog role="none">
- *   <div id="content-wrapper-node">
- *     <!-- this was the (slot for) original content node -->
- *     <slot name="my-content"></slot>
- *   </div>
- * </dialog>
- * ```
- *
- * `<slot name="my-content">` belonging to `<div slot="content"/>` will be wrapped with wrappingDialogNodeL1 and contentWrapperNodeL2
- * inside shadow dom. With the help of temp markers, `<slot name="my-content">`'s original position will be respected.
- *
- * @param {{
- *  wrappingDialogNodeL1: HTMLDialogElement|HTMLDivElement;
- *  contentWrapperNodeL2:Element;
- *  contentNodeL3: Element;
- * }} opts
- */
-function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNodeL3 }) {
-  // if contentWrapperNode is provided by the user,
-  // we assume it lives in shadow dom around a slot.
-  const hasLegacyMethodOfProvidingWrapperNode = Boolean(contentWrapperNodeL2.isConnected);
-  // We could be initialized via a directive (in offline dom). It's important that we know about the parents,
-  // as we cannot deal with single content nodes
-  const hasContentNodeAttachmentPoints = Boolean(contentNodeL3.parentNode);
-
-  if (!hasLegacyMethodOfProvidingWrapperNode && !hasContentNodeAttachmentPoints) {
-    throw new Error(
-      '[OverlayController] Could not find a render target, makes sure contentNode has a parent element (or contentWrapperNode is connected)',
-    );
-  }
-
-  /** @type {Node} */
-  let parentElement;
-  const tempMarker = document.createComment('overlay-insertion-marker');
-
-  if (hasLegacyMethodOfProvidingWrapperNode) {
-    // This is the case when contentWrapperNode (living in shadow dom, wrapping <slot name="my-content-outlet">) is already provided via controller.
-    parentElement = contentWrapperNodeL2.parentElement || contentWrapperNodeL2.getRootNode();
-    parentElement.insertBefore(tempMarker, contentWrapperNodeL2);
-    // Wrap...
-    wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
-  } else {
-    const contentIsProjected = contentNodeL3.assignedSlot;
-    if (contentIsProjected) {
-      parentElement =
-        contentNodeL3.assignedSlot.parentElement || contentNodeL3.assignedSlot.getRootNode();
-      parentElement.insertBefore(tempMarker, contentNodeL3.assignedSlot);
-      wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
-      // Important: we do not move around contentNodeL3, but the assigned slot
-      contentWrapperNodeL2.appendChild(contentNodeL3.assignedSlot);
-    } else {
-      parentElement = contentNodeL3.parentElement || contentNodeL3.getRootNode();
-      parentElement.insertBefore(tempMarker, contentNodeL3);
-      wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
-      contentWrapperNodeL2.appendChild(contentNodeL3);
-    }
-  }
-
-  /**
-   * From:
-   * ```html
-   * #shadow-root:
-   * <div>
-   *   <!-- tempMarker -->
-   *   <slot name="x"/>
-   * </div>
-   * ```
-   *
-   * To:
-   * ```html
-   * #shadow-root:
-   * <div>
-   *   <!-- tempMarker -->
-   *   <dialog role="none">
-   *     <div id="content-wrapper-node">
-   *       <slot name="x"/>
-   *     </div>
-   *   </dialog>
-   * </div>
-   * ```
-   */
-  parentElement.insertBefore(wrappingDialogNodeL1, tempMarker);
-
-  return function cleanup() {
-    if (hasLegacyMethodOfProvidingWrapperNode) {
-      parentElement?.insertBefore(contentWrapperNodeL2, tempMarker);
-    } else {
-      parentElement?.insertBefore(contentNodeL3, tempMarker);
-      if (parentElement.contains(contentWrapperNodeL2)) {
-        contentWrapperNodeL2.remove();
-      }
-    }
-    parentElement?.removeChild(tempMarker);
-
-    if (parentElement.contains(wrappingDialogNodeL1)) {
-      parentElement?.removeChild(wrappingDialogNodeL1);
-    }
-  };
-}
+const hasAnchorPositioningSupport = CSS.supports('anchor-name', '--my-anchor');
+const hasPopoverSupport = 'popover' in HTMLElement.prototype;
 
 /**
- * @returns {Promise<PopperModule>}
- */
-async function preloadPopper() {
-  // @ts-ignore [external]: import complains about untyped module, but we typecast it ourselves
-  return /** @type {* & Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
-}
-
-const childDialogsClosedInEventLoopWeakmap = new WeakMap();
-
-/**
- * @param {HTMLElement | null} el
- * @param {string} selector
- * @returns {HTMLElement | null}
- */
-function deepClosest(el, selector) {
-  // @ts-ignore - comparing HTMLElement to document/window for safety
-  return (
-    // @ts-ignore - type comparison check
-    (el && el !== document && el !== window && el.closest(selector)) ||
-    // @ts-ignore - host property on ShadowRoot
-    deepClosest(el.getRootNode().host, selector)
-  );
-}
-
-/**
- * OverlayController is the fundament for every single type of overlay. With the right
- * configuration, it can be used to build (modal) dialogs, tooltips, dropdowns, popovers,
+ * DisclosureController is the fundament for every single type of disclosure (with or without overlay content).
+ * With the right configuration, it can be used to build (modal) dialogs, tooltips, dropdowns, popovers,
  * bottom/top/left/right sheets etc.
- *
  */
-export class VisibilityToggleController extends EventTarget {
+export class VisibilityToggleControllerLean extends EventTarget {
   /**
    * @constructor
-   * @param {OverlayConfig} config initial config. Will be remembered as shared config
+   * @param {Partial<OverlayConfig>} config initial config. Will be remembered as shared config
    * when `.updateConfig()` is called.
    */
   constructor(config = {}, manager = overlays) {
     super();
+    // TODO: should we only do this in OverlayCtrl for backw. compat? It's not really needed for disclosure
     this.manager = manager;
     /** @private */
     this.__sharedConfig = config;
-
     /** @private */
     this.__activeElementRightBeforeHide = null;
-
-    /** @type {OverlayConfig} */
+    /** @type {Partial<OverlayConfig>} */
     this.config = {};
 
     /**
@@ -253,28 +127,504 @@ export class VisibilityToggleController extends EventTarget {
     /** @protected */
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
 
-    /** @private */
-    this.__originalAttrs = new Map();
-    /** @private */
-    this.__escKeyHandler = this.__escKeyHandler.bind(this);
     this.updateConfig(config);
-    /** @private */
-    this.__hasActiveBackdrop = true;
-    /** @private */
-    this.__cancelHandler = this.__cancelHandler.bind(this);
-    /**
-     * The property is used to skip `__escKeyHandler` handler for overlays that have been closed
-     * by `__escKeyHandlerCalled` previously.
-     * `__escKeyHandlerCalled` is set to `false` right before overlay show up
-     * `__escKeyHandlerCalled` is set to `true` when `__escKeyHandler` is called at least one time
-     * after each 'show' phase
-     * @private
-     */
-    this.__escKeyHandlerCalled = false;
   }
 
   __hasSetup = false;
 
+  /**
+   * Allows to dynamically change the overlay configuration. Needed in case the
+   * presentation of the overlay changes depending on screen size.
+   * Note that this method is the only allowed way to update a configuration of an
+   * OverlayController instance.
+   * @param { Partial<OverlayConfig> } cfgToAdd
+   */
+  updateConfig(cfgToAdd) {
+    /**
+     * @type {OverlayConfig}
+     * @private
+     */
+    const prevConfig = this.config;
+
+    /** @type {OverlayConfig} */
+    const newConfig = {
+      ...this._defaultConfig, // our basic ingredients
+      ...this.__sharedConfig, // the initial configured overlayController
+      ...cfgToAdd, // the added config
+      popperConfig: {
+        ...(this._defaultConfig.popperConfig || {}),
+        ...(this.__sharedConfig.popperConfig || {}),
+        ...(cfgToAdd.popperConfig || {}),
+        modifiers: [
+          ...(this._defaultConfig.popperConfig?.modifiers || []),
+          ...(this.__sharedConfig.popperConfig?.modifiers || []),
+          ...(cfgToAdd.popperConfig?.modifiers || []),
+        ],
+      },
+    };
+
+    const shouldUpdate = !this.__hasSetup || !isEqualConfig(prevConfig, newConfig);
+    if (!shouldUpdate) return;
+    // Teardown all previous configs
+
+    this.teardown();
+
+    this.config = newConfig;
+
+    /** @private */
+    this.#validateConfiguration(this.config);
+    /** @protected */
+    this._init();
+
+    if (!this.#isRegisteredOnManager()) {
+      this.manager.add(this);
+    }
+  }
+
+  #isRegisteredOnManager() {
+    return Boolean(this.manager?.list.find(ctrl => this === ctrl));
+  }
+
+  /**
+   * @param {OverlayConfig} newConfig
+   */
+  // eslint-disable-next-line class-methods-use-this
+  #validateConfiguration(newConfig) {
+    if (!newConfig.placementMode) {
+      throw new Error(
+        '[OverlayController] You need to provide a .placementMode ("global"|"local"|"none")',
+      );
+    }
+    if (!['global', 'local', 'none'].includes(newConfig.placementMode)) {
+      throw new Error(
+        `[OverlayController] "${newConfig.placementMode}" is not a valid .placementMode, use ("global"|"local"|"none")`,
+      );
+    }
+    if (!newConfig.contentNode) {
+      throw new Error('[OverlayController] You need to provide a .contentNode');
+    }
+    if (newConfig.isTooltip && !newConfig.handlesAccessibility) {
+      throw new Error(
+        '[OverlayController] .isTooltip only takes effect when .handlesAccessibility is enabled',
+      );
+    }
+  }
+
+  /** @type {{ invoker?: HTMLElement; content?: HTMLElement }} */
+  #proxies = {};
+
+  /**
+   * @protected
+   */
+  _init() {
+    if (!this.config.isActivated) return;
+
+    /** @type {(value:any) => void} */
+    let resolveInitComplete;
+    this.initComplete = new Promise(resolve => {
+      resolveInitComplete = resolve;
+    });
+
+    const attrsToStore = [
+      'aria-describedby',
+      'aria-labelledby',
+      'aria-expanded',
+      'aria-haspopup',
+      'aria-details',
+      'data-content',
+      'data-open',
+      'tabindex',
+      'style',
+      'class',
+      'role',
+      'id',
+    ];
+
+    this.#proxies.invoker = this.config.invokerNode
+      ? createRestorable(this.config.invokerNode, attrsToStore)
+      : undefined;
+    this.#proxies.content = createRestorable(this.config.contentNode, attrsToStore);
+
+    this._handleFeatures({ phase: 'init' });
+    this.#hideContent();
+
+    /** @private */
+    this.__elementToFocusAfterHide = undefined;
+
+    this.#proxies.content.setAttribute('data-content', '');
+
+    // Use event delegation to listen for clicks on close buttons...
+    // TODO: later allow for multiple invokers
+    this.#proxies.content.addEventListener('click', this.__hideOnCloseButtonClick);
+
+    this.__hasSetup = true;
+    // @ts-expect-error
+    resolveInitComplete(undefined);
+  }
+
+  __hideOnCloseButtonClick = (/** @type {{ target: any; }} */ ev) => {
+    const isOurCloseButton =
+      ev.target.hasAttribute('data-close') &&
+      deepClosest(ev.target, '[data-content]') === this.config.contentNode;
+    if (!isOurCloseButton) return;
+
+    this.hide();
+  };
+
+  #hideContent() {
+    const wrappingDialogNode = /** @type {HTMLDialogElement} */ (this.__wrappingDialogNode);
+    if ('HTMLDialogElement' in window && wrappingDialogNode instanceof HTMLDialogElement) {
+      wrappingDialogNode.close();
+    }
+    wrappingDialogNode.style.display = 'none';
+    this.config.contentNode?.removeAttribute('data-open');
+  }
+
+  #showContent() {
+    const wrappingDialogNode = /** @type {HTMLDialogElement} */ (this.__wrappingDialogNode);
+    if ('HTMLDialogElement' in window && wrappingDialogNode instanceof HTMLDialogElement) {
+      wrappingDialogNode.open = true;
+    }
+    wrappingDialogNode.style.display = '';
+    this.config.contentNode?.setAttribute('data-open', '');
+  }
+
+  get isShown() {
+    return Boolean(this.__wrappingDialogNode && this.__wrappingDialogNode.style.display !== 'none');
+  }
+
+  /**
+   * @event before-show right before the overlay shows. Used for animations and switching overlays
+   * @event show right after the overlay is shown
+   * @param {HTMLElement|undefined} elementToFocusAfterHide
+   */
+  async show(elementToFocusAfterHide = this.config.elementToFocusAfterHide) {
+    // Subsequent shows could happen, make sure we await it first.
+    // Otherwise it gets replaced before getting resolved, and places awaiting it will time out.
+    if (this._showComplete) {
+      await this._showComplete;
+    }
+    this._showComplete = new Promise(resolve => {
+      this._showResolve = resolve;
+    });
+
+    this.manager?.show(this);
+
+    if (this.isShown) {
+      /** @type {function} */
+      (this._showResolve)();
+      return;
+    }
+
+    const event = new CustomEvent('before-show', { cancelable: true });
+    this.dispatchEvent(event);
+    if (!event.defaultPrevented) {
+      this.#showContent();
+
+      this.__elementToFocusAfterHide = elementToFocusAfterHide;
+
+      this._keepBodySize({ phase: 'before-show' });
+      await this._handleFeatures({ phase: 'show' });
+      this._keepBodySize({ phase: 'show' });
+      // await this._handlePosition({ phase: 'show' });
+      this.dispatchEvent(new Event('show'));
+      await this.transitionShow({
+        backdropNode: this.backdropNode,
+        contentNode: this.config.contentNode,
+      });
+
+      if (this.config.focusContentOnOpen) {
+        this.config.contentNode.focus();
+      }
+    }
+
+    /** @type {function} */
+    (this._showResolve)();
+  }
+
+  /**
+   * @param {{ phase: OverlayPhase }} config
+   * @protected
+   */
+  _keepBodySize({ phase }) {
+    if (!this.config.preventsScroll) return;
+
+    this.manager.requestToKeepBodySize({ phase });
+  }
+
+  /**
+   * @event before-hide right before the overlay hides. Used for animations and switching overlays
+   * @event hide right after the overlay is hidden
+   */
+  async hide() {
+    // Function like a no-op for dynamic edge cases...
+    if (!this.config.isActivated) return;
+
+    this._hideComplete = new Promise(resolve => {
+      this._hideResolve = resolve;
+    });
+
+    if (this.#isRegisteredOnManager()) {
+      this.manager.hide(this);
+    }
+
+    if (!this.isShown) {
+      /** @type {function} */ (this._hideResolve)();
+      return;
+    }
+
+    this._handleFeatures({ phase: 'before-hide' });
+
+    const event = new CustomEvent('before-hide', { cancelable: true });
+    this.dispatchEvent(event);
+    if (!event.defaultPrevented) {
+      await this.transitionHide({
+        backdropNode: this.backdropNode,
+        contentNode: this.config.contentNode,
+      });
+
+      this.#hideContent();
+
+      this._handleFeatures({ phase: 'hide' });
+      this._keepBodySize({ phase: 'hide' });
+      this.dispatchEvent(new Event('hide'));
+    }
+    /** @type {function} */ (this._hideResolve)();
+  }
+
+  /**
+   * Method to be overriden by subclassers
+   *
+   * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} hideConfig
+   */
+  // @ts-ignore
+  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
+  async transitionHide(hideConfig) {}
+
+  /**
+   * N.B. this is an optional hook for when js libraries are used.
+   * We advise to use CSS animations instead, as this works fine with display:none these days
+   * To be overridden by subclassers
+   * @param {{backdropNode:HTMLElement; contentNode:HTMLElement}} showConfig
+   */
+  // @ts-ignore
+  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
+  async transitionShow(showConfig) {}
+
+  async toggle() {
+    return this.isShown ? this.hide() : this.show();
+  }
+
+  /**
+   * All features are handled here.
+   * @param {{ phase: OverlayPhase }} config
+   * @protected
+   */
+  async _handleFeatures({ phase }) {
+    // We catch all __handleFeature calls in this promise array, allowing ourselves to keep timing backwards compatible (and to use concurrency when dependencies need to be downloaded)
+    const promises = [];
+    if (this.config.handlesAccessibility) {
+      promises.push(this.__handleFeature('handlesAccessibility', a11yHandler, { phase }));
+    }
+    if (this.config.placementMode === 'none' && (phase === 'init' || phase === 'teardown')) {
+      // If we want just a collapsible (or want to provide styles ourselves), no need to create a complex dom structure.
+      // Doing this in teardown avoids unexpected "null pointers" in cleanup logic
+      this.__contentWrapperNode = this.config.contentNode;
+      this.__wrappingDialogNode = this.config.contentNode;
+    } else {
+      // N.B. initial popper load is async... we keep it sync for now,
+      // to keep things backward compatible.
+      promises.push(this.__handleFeature('placementMode', placementHandler, { phase }));
+    }
+
+    if (this.config.preventsScroll) {
+      this._handlePreventsScroll({ phase });
+    }
+    if (this.config.isBlocking) {
+      this._handleBlocking({ phase });
+    }
+    if (this.config.trapsKeyboardFocus) {
+      promises.push(this.__handleFeature('trapsKeyboardFocus', trapFocusHandler, { phase }));
+    }
+    if (this.config.hidesOnEsc) {
+      promises.push(this.__handleFeature('hidesOnEsc', closeOnEscHandler, { phase }));
+    }
+    if (this.config.hidesOnOutsideEsc) {
+      promises.push(this.__handleFeature('hidesOnOutsideEsc', closeOnOutsideEscHandler, { phase }));
+    }
+    if (this.config.hidesOnOutsideClick) {
+      promises.push(
+        this.__handleFeature('hidesOnOutsideClick', closeOnOutsideClickHandler, { phase }),
+      );
+    }
+
+    if (this.config.inheritsReferenceWidth) {
+      this._handleInheritsReferenceWidth();
+    }
+    if (this.config.visibilityTriggerFunction) {
+      this._handleVisibilityTriggers({ phase });
+    }
+    if (this.config.syncChildrenCloseState) {
+      this._handleSyncChildrenCloseState({ phase });
+    }
+    if (this.config.focusContentOnOpen) {
+      this._handleFocusContentOnOpen({ phase });
+    }
+
+    if (this.hasBackdrop) {
+      promises.push(this.__handleFeature('hasBackdrop', backdropHandler, { phase }));
+    }
+
+    // N.B. this is obliged, as we need to return focus no matter what...
+    promises.push(this.__handleFeature('elementToFocusAfterHide', focusHandler, { phase }));
+    await Promise.all(promises);
+  }
+
+  /**
+   * @param {{phase: OverlayPhase}} opts
+   * @returns {void}
+   */
+  _handleFocusContentOnOpen({ phase }) {
+    if (phase === 'init') {
+      this.config.contentNode?.setAttribute('tabindex', '-1');
+    } else if (phase === 'teardown') {
+      // TODO: capture initial attr, use Resettable mechanism of VisibilityToggleCtrl in whole Controller
+      this.config.contentNode?.removeAttribute('tabindex');
+    }
+  }
+
+  /**
+   * @param {{phase: OverlayPhase}} opts
+   * @returns {void}
+   */
+  _handleSyncChildrenCloseState({ phase }) {
+    if (phase !== 'hide') return;
+
+    const visibleChildren = this.manager.shownList.filter(
+      ctrl => ctrl !== this && deepContains(this.contentNode, ctrl.contentNode),
+    );
+    visibleChildren.forEach(ctrl => ctrl.hide());
+  }
+
+  /**
+   * @param {{ phase: OverlayPhase }} config
+   */
+  _handleVisibilityTriggers({ phase }) {
+    if (typeof this.config.visibilityTriggerFunction !== 'function') return;
+
+    // Here we initialize the __visibilityTriggerHandler of our invokerNode. It's important that we ONLY do this on init,
+    // otherwise we risk not being able to properly clean up listeners...
+    if (phase === 'init') {
+      this.__visibilityTriggerHandler = this.config.visibilityTriggerFunction({ controller: this });
+    }
+    // Here we run the appropriate lifecycle, if defined in our handler
+    this.__visibilityTriggerHandler[phase]?.();
+  }
+
+  /**
+   * @param {{ phase: OverlayPhase }} config
+   * @protected
+   */
+  _handlePreventsScroll({ phase }) {
+    switch (phase) {
+      case 'show':
+        this.manager.requestToPreventScroll();
+        break;
+      case 'hide':
+        this.manager.requestToEnableScroll();
+        break;
+      case 'teardown':
+        this.manager.requestToEnableScroll(this);
+        break;
+      /* no default */
+    }
+  }
+
+  /**
+   * @param {{ phase: OverlayPhase }} config
+   * @protected
+   */
+  _handleBlocking({ phase }) {
+    switch (phase) {
+      case 'show':
+        this.manager.requestToShowOnly(this);
+        break;
+      case 'hide':
+        this.manager.retractRequestToShowOnly(this);
+        break;
+      /* no default */
+    }
+  }
+
+  get hasActiveBackdrop() {
+    return this.config.hasBackdrop && this.isShown;
+  }
+
+  /** @type {Map<keyof OverlayConfig, any>} */
+  #handlers = new Map();
+
+  /**
+   * @param {keyof OverlayConfig} featureName
+   * @param {any} handler
+   * @param {{ phase: OverlayPhase }} config
+   */
+  async __handleFeature(featureName, handler, { phase }) {
+    if (phase === 'init') {
+      this.#handlers.set(
+        featureName,
+        handler({
+          controller: this,
+          invoker: this.#proxies.invoker,
+          content: this.#proxies.content,
+        }),
+      );
+    }
+
+    // Here we run the appropriate lifecycle, if defined in our handler
+    return this.#handlers.get(featureName)?.[phase]?.();
+  }
+
+  /** @protected */
+  _handleInheritsReferenceWidth() {
+    if (!this._referenceNode || this.config.placementMode !== 'local') {
+      return;
+    }
+    const referenceWidth = `${this._referenceNode.getBoundingClientRect().width}px`;
+    switch (this.config.inheritsReferenceWidth) {
+      case 'max':
+        this.contentWrapperNode.style.maxWidth = referenceWidth;
+        break;
+      case 'full':
+        this.contentWrapperNode.style.width = referenceWidth;
+        break;
+      case 'min':
+        this.contentWrapperNode.style.minWidth = referenceWidth;
+        this.contentWrapperNode.style.width = 'auto';
+        break;
+      /* no default */
+    }
+  }
+
+  teardown() {
+    if (!this.__hasSetup) return;
+    if (this.isShown) {
+      this._keepBodySize({ phase: 'teardown' });
+    }
+    this._handleFeatures({ phase: 'teardown' });
+    if (this.#isRegisteredOnManager()) {
+      this.manager.remove(this);
+    }
+    restore(this.config.contentNode);
+    if (this.config.invokerNode) {
+      restore(this.config.invokerNode);
+    }
+    this.config.contentNode?.removeEventListener('click', this.__hideOnCloseButtonClick);
+    this.#showContent();
+    this.__hasSetup = false;
+  }
+}
+
+export class VisibilityToggleController extends VisibilityToggleControllerLean {
   /**
    * The invokerNode
    * @type {HTMLElement | undefined}
@@ -293,7 +643,7 @@ export class VisibilityToggleController extends EventTarget {
 
   /**
    * Determines the connection point in DOM (body vs next to invoker).
-   * @type {'global' | 'local' | 'custom' | undefined}
+   * @type {'global' | 'local' | 'none' | undefined}
    */
   get placementMode() {
     return this.config?.placementMode;
@@ -510,1085 +860,15 @@ export class VisibilityToggleController extends EventTarget {
     return Number(this.contentWrapperNode?.style.zIndex);
   }
 
-  /**
-   * Allows to dynamically change the overlay configuration. Needed in case the
-   * presentation of the overlay changes depending on screen size.
-   * Note that this method is the only allowed way to update a configuration of an
-   * OverlayController instance.
-   * @param { OverlayConfig } cfgToAdd
-   */
-  updateConfig(cfgToAdd) {
-    /**
-     * @type {OverlayConfig}
-     * @private
-     */
-    const prevConfig = this.config;
-
-    /** @type {OverlayConfig} */
-    const newConfig = {
-      ...this._defaultConfig, // our basic ingredients
-      ...this.__sharedConfig, // the initial configured overlayController
-      ...cfgToAdd, // the added config
-      popperConfig: {
-        ...(this._defaultConfig.popperConfig || {}),
-        ...(this.__sharedConfig.popperConfig || {}),
-        ...(cfgToAdd.popperConfig || {}),
-        modifiers: [
-          ...(this._defaultConfig.popperConfig?.modifiers || []),
-          ...(this.__sharedConfig.popperConfig?.modifiers || []),
-          ...(cfgToAdd.popperConfig?.modifiers || []),
-        ],
-      },
-    };
-
-    const shouldUpdate = !this.__hasSetup || !isEqualConfig(prevConfig, newConfig);
-    if (!shouldUpdate) return;
-    // Teardown all previous configs
-
-    this.teardown();
-
-    this.config = newConfig;
-
-    /** @private */
-    this.__validateConfiguration(this.config);
-    /** @protected */
-    this._init();
-
-    if (!this.#isRegisteredOnManager()) {
-      this.manager.add(this);
-    }
-  }
-
-  #isRegisteredOnManager() {
-    return Boolean(this.manager.list.find(ctrl => this === ctrl));
-  }
-
-  /**
-   * @param {OverlayConfig} newConfig
-   * @private
-   */
-  // eslint-disable-next-line class-methods-use-this
-  __validateConfiguration(newConfig) {
-    if (!newConfig.placementMode) {
-      throw new Error(
-        '[OverlayController] You need to provide a .placementMode ("global"|"local")',
-      );
-    }
-    if (!['global', 'local', 'custom'].includes(newConfig.placementMode)) {
-      throw new Error(
-        `[OverlayController] "${newConfig.placementMode}" is not a valid .placementMode, use ("global"|"local")`,
-      );
-    }
-    if (!newConfig.contentNode) {
-      throw new Error('[OverlayController] You need to provide a .contentNode');
-    }
-    if (newConfig.isTooltip && !newConfig.handlesAccessibility) {
-      throw new Error(
-        '[OverlayController] .isTooltip only takes effect when .handlesAccessibility is enabled',
-      );
-    }
-  }
-
-  /**
-   * @protected
-   */
-  _init() {
-    if (!this.config.isActivated) return;
-
-    // TODO: should not be behind a flag when we are fully tearing down...
-    // TODO 2: When we move away from dialog (use popover to paint to top layer)
-    // and popper.js, (use popover and anchor positioning and popperjs as fallback, but we can put styles on contentNode),
-    // we dont need to create complex wrappers
-    // if (!this.__contentHasBeenInitialized) {
-    this.__initContentDomStructure();
-    // this.__contentHasBeenInitialized = true;
-    // }
-    this.__initVisibility();
-
-    // Reset all positioning styles (local, c.q. Popper) and classes (global)
-    if (this.contentWrapperNode !== this.contentNode) {
-      this.contentWrapperNode.removeAttribute('style');
-      this.contentWrapperNode.removeAttribute('class');
-    }
-
-    if (this.placementMode === 'local') {
-      // Lazily load Popper as soon as the first local overlay is used...
-      if (!VisibilityToggleController.popperModule) {
-        VisibilityToggleController.popperModule = preloadPopper();
-      }
-    }
-    this.__handleOverlayStyles({ phase: 'init' });
-    this._handleFeatures({ phase: 'init' });
-
-    /** @private */
-    this.__elementToFocusAfterHide = undefined;
-
-    this.contentNode.dataset.content = '';
-
-    // Use event delegation to listen for clicks on close buttons...
-    this.contentNode.addEventListener('click', this.#hideOnCloseButtonClick);
-
-    this.__hasSetup = true;
-  }
-
-  #hideOnCloseButtonClick = (/** @type {{ target: any; }} */ ev) => {
-    const isOurCloseButton =
-      ev.target.hasAttribute('data-close') &&
-      deepClosest(ev.target, '[data-content]') === this.contentNode;
-    if (!isOurCloseButton) return;
-
-    this.hide();
-  };
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @private
-   */
-  __handleOverlayStyles({ phase }) {
-    const rootNode = /** @type {ShadowRoot} */ (this.contentWrapperNode?.getRootNode());
-    if (phase === 'init') {
-      _adoptStyleUtils.adoptStyle(rootNode, overlayShadowDomStyle);
-    } else if (phase === 'teardown') {
-      _adoptStyleUtils.adoptStyle(rootNode, overlayShadowDomStyle, { teardown: true });
-    }
-  }
-
-  /**
-   * Here we arrange our content node via:
-   * 1. HTMLDialogElement: the content will always be painted to the browser's top layer
-   *   - no matter what context the contentNode lives in, the overlay will be painted correctly via the <dialog> element,
-   *     even if 'overflow:hidden' or a css transform is applied in its parent hierarchy.
-   *   - the dialog element will be unstyled, but will span the whole screen
-   *   - a backdrop element will be a child of the dialog element, so it leverages the capabilities of the parent
-   *     (filling the whole screen if wanted an always painted to top layer)
-   * 2. ContentWrapper: the content receives the right positioning styles in a clean/non conflicting way:
-   *  - local positioning: receive inline (position) styling that can never conflict with the already existing computed styles
-   *  - global positioning: receive flex (child) classes that position the content correctly relative to the viewport
-   *
-   * The resulting structure that will be created looks like this:
-   *
-   * ...
-   * <dialog role="none">
-   *   <div id="optional-backdrop"></div>
-   *   <div id="content-wrapper-node">
-   *     <!-- this was the (slot for) original content node -->
-   *     <slot name="content"></slot>
-   *   </div>
-   * </dialog>
-   * ...
-   *
-   * @private
-   */
-  __initContentDomStructure() {
-    if (this.placementMode !== 'custom') {
-      const wrappingDialogElement = document.createElement('dialog');
-      // We use a dialog for its visual capabilities: it renders to the top layer.
-      // A11y will depend on the type of overlay and is arranged on contentNode level.
-      // Also see: https://www.scottohara.me/blog/2019/03/05/open-dialog.html
-      //
-      // The role="dialog" is set on the contentNode (or another role), so role="none"
-      // is valid here, although AXE complains about this setup.
-      // For now we need to add `ignoredRules: ['aria-allowed-role']` in your AXE tests.
-      // see: https://lion.js.org/fundamentals/systems/overlays/rationale/#considerations
-      wrappingDialogElement.setAttribute('role', 'none');
-      wrappingDialogElement.setAttribute('data-overlay-outer-wrapper', '');
-      // N.B. position: fixed is needed to escape out of 'overflow: hidden'
-      // We give a high z-index for non-modal dialogs, so that we at least win from all siblings of our
-      // parent stacking context
-      // padding reset so we don't get a weird dialog visual square showing up
-      wrappingDialogElement.style.cssText = `display:none; z-index: ${this.config.zIndex}; padding: 0;`;
-      // @ts-ignore - 'custom' is a valid extension of placementMode
-      if (this.config.placementMode === 'custom') {
-        // The user should have full freedom to control the content node, so its wrapper nodes should remain neutral.
-        wrappingDialogElement.style.cssText += `position: static;`;
-      }
-      this.__wrappingDialogNode = wrappingDialogElement;
-
-      /**
-       * Based on the configuration of the developer, multiple scenarios are accounted for
-       * A. We already have a contentWrapperNode ()
-       */
-      if (!this.config?.contentWrapperNode) {
-        this.__contentWrapperNode = document.createElement('div');
-      }
-      this.contentWrapperNode.setAttribute('data-id', 'content-wrapper');
-      // 'hack' that makes sure popperjs (that is applied one level lower) works correctly in deeply nested shadow roots
-      this.contentWrapperNode.style.transform = 'translateZ(0px)';
-
-      this.__rearrangeNodesCleanup = rearrangeNodes({
-        wrappingDialogNodeL1: wrappingDialogElement,
-        contentWrapperNodeL2: this.contentWrapperNode,
-        contentNodeL3: this.contentNode,
-        // requireConnectedNodes: Boolean(this.config.requireConnectedNodes),
-      });
-      wrappingDialogElement.open = true;
-
-      if (this.isTooltip) {
-        // needed to prevent tooltip getting focus in Safari and Firefox
-        wrappingDialogElement.setAttribute('tabindex', '-1');
-      }
-      this.contentWrapperNode.style.zIndex = '1';
-      if (getComputedStyle(this.contentNode).position === 'absolute') {
-        // Having a _contWrapperNode and a contentNode with 'position:absolute' results in
-        // computed height of 0...
-        this.contentNode.style.position = 'static';
-      }
-
-      // Here we prevent any interference of the native <dialog> element with the keyboard behavior
-      // as defined by the OverlayController. This is needed until we can configure `closedby="none"`
-      // on the native dialog for all browsers: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/dialog#closedby
-      const hasClosedBySupport = HTMLDialogElement && 'closedBy' in HTMLDialogElement.prototype;
-      if (hasClosedBySupport) {
-        // @ts-ignore - closedBy is a newer property not in all TypeScript versions
-        wrappingDialogElement.closedBy = 'none';
-      } else {
-        wrappingDialogElement.addEventListener(
-          'keydown',
-          (/** @type {* & KeyboardEvent} */ event) => {
-            if (event.key === 'Escape') {
-              event.preventDefault();
-            }
-          },
-        );
-        wrappingDialogElement.addEventListener(
-          'keyup',
-          (/** @type {* & KeyboardEvent} */ event) => {
-            if (event.key === 'Escape') {
-              event.preventDefault();
-            }
-          },
-        );
-        wrappingDialogElement.addEventListener('cancel', event => {
-          event.stopPropagation();
-        });
-        wrappingDialogElement.addEventListener('close', event => {
-          event.stopPropagation();
-        });
-      }
-    } else {
-      // quick hack to make none-popper/global flows work...
-      this.__contentWrapperNode = this.contentNode;
-      this.__wrappingDialogNode = this.contentNode;
-    }
-  }
-
-  __initVisibility() {
-    // TODO: allow defaultOpen?
-    /** @type {HTMLDialogElement} */ (this.__wrappingDialogNode).style.display = 'none';
-  }
-
-  // Clean up the DOM structure, leaving it as we found it.
-  // TODO: __teardownContentDomStructure method... use Resettable (rename ro Restorable) found in VisibilitToggleCtrl
-  __teardownVisibility() {
-    // TODO: full structure. For now we just reset display prop...
-    /** @type {HTMLDialogElement} */ (this.__wrappingDialogNode).style.display = '';
-  }
-
-  /**
-   * Display local overlays on top of elements with no z-index that appear later in the DOM
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _handleZIndex({ phase }) {
-    if (this.placementMode !== 'local') {
-      return;
-    }
-
-    if (phase === 'setup') {
-      const zIndexNumber = Number(getComputedStyle(this.contentNode).zIndex);
-      if (zIndexNumber < 1 || Number.isNaN(zIndexNumber)) {
-        this.contentNode.style.zIndex = '1';
-      }
-    }
-  }
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @private
-   */
-  __setupTeardownAccessibility({ phase }) {
-    if (phase === 'init') {
-      this.__storeOriginalAttrs(this.contentNode, ['role', 'id']);
-      const isModal = this.trapsKeyboardFocus;
-
-      if (this.invokerNode) {
-        const attributesToStore = ['aria-labelledby', 'aria-describedby'];
-        if (!isModal) {
-          attributesToStore.push('aria-expanded');
-        }
-        this.__storeOriginalAttrs(this.invokerNode, attributesToStore);
-      }
-
-      if (!this.contentNode.id) {
-        this.contentNode.setAttribute('id', this._contentId);
-      }
-      if (this.isTooltip) {
-        if (this.invokerNode) {
-          this.invokerNode.setAttribute(
-            this.invokerRelation === 'label' ? 'aria-labelledby' : 'aria-describedby',
-            this._contentId,
-          );
-        }
-        this.contentNode.setAttribute('role', 'tooltip');
-      } else {
-        if (this.invokerNode && !isModal) {
-          this.invokerNode.setAttribute('aria-expanded', `${this.isShown}`);
-        }
-        if (this.isAlertDialog) {
-          this.contentNode.setAttribute('role', 'alertdialog');
-        } else if (!this.contentNode.getAttribute('role')) {
-          // N.B. if we did not explicitly set `isTooltip` or `isAlertDialog`, a role potentially already provided by a user (like 'listbox') takes precedence
-          this.contentNode.setAttribute('role', 'dialog');
-        }
-      }
-    } else if (phase === 'teardown') {
-      this.__restoreOriginalAttrs();
-    }
-  }
-
-  /**
-   * @param {HTMLElement} node
-   * @param {string[]} attrs
-   * @private
-   */
-  __storeOriginalAttrs(node, attrs) {
-    /** @type {Record<string, string | null>} */
-    const attrMap = {};
-    attrs.forEach(attrName => {
-      attrMap[attrName] = node.getAttribute(attrName);
-    });
-    this.__originalAttrs.set(node, attrMap);
-  }
-
-  /** @private */
-  __restoreOriginalAttrs() {
-    for (const [node, attrMap] of this.__originalAttrs) {
-      Object.entries(attrMap).forEach(([attrName, value]) => {
-        if (value !== null) {
-          node.setAttribute(attrName, value);
-        } else {
-          node.removeAttribute(attrName);
-        }
-      });
-    }
-    this.__originalAttrs.clear();
-  }
-
-  get isShown() {
-    return Boolean(this.__wrappingDialogNode?.style.display !== 'none');
-  }
-
-  /**
-   * @event before-show right before the overlay shows. Used for animations and switching overlays
-   * @event show right after the overlay is shown
-   * @param {HTMLElement} elementToFocusAfterHide
-   */
-  async show(elementToFocusAfterHide = this.elementToFocusAfterHide) {
-    // Subsequent shows could happen, make sure we await it first.
-    // Otherwise it gets replaced before getting resolved, and places awaiting it will time out.
-    if (this._showComplete) {
-      await this._showComplete;
-    }
-    this._showComplete = new Promise(resolve => {
-      this._showResolve = resolve;
-    });
-
-    if (this.manager) {
-      this.manager.show(this);
-    }
-
-    if (this.isShown) {
-      /** @type {function} */
-      (this._showResolve)();
-      return;
-    }
-
-    const event = new CustomEvent('before-show', { cancelable: true });
-    this.dispatchEvent(event);
-    if (!event.defaultPrevented) {
-      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
-        this.__wrappingDialogNode.open = true;
-      }
-
-      // @ts-ignore
-      this.__wrappingDialogNode.style.display = '';
-      this._keepBodySize({ phase: 'before-show' });
-      await this._handleFeatures({ phase: 'show' });
-      this._keepBodySize({ phase: 'show' });
-      await this._handlePosition({ phase: 'show' });
-      this.__elementToFocusAfterHide = elementToFocusAfterHide;
-      this.dispatchEvent(new Event('show'));
-      await this._transitionShow({
-        backdropNode: this.backdropNode,
-        contentNode: this.contentNode,
-      });
-    }
-
-    // a styling/debug hook for open state
-    this.contentNode.setAttribute('data-open', '');
-
-    if (this.config.focusContentOnOpen) {
-      this.contentNode.focus();
-    }
-
-    /** @type {function} */
-    (this._showResolve)();
-  }
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  async _handlePosition({ phase }) {
-    if (this.placementMode === 'global') {
-      const placementClass = `overlays__overlay-container--${this.viewportConfig.placement}`;
-
-      if (phase === 'show') {
-        this.contentWrapperNode.classList.add('overlays__overlay-container');
-        this.contentWrapperNode.classList.add(placementClass);
-        this.contentNode.classList.add('overlays__overlay');
-      } else if (phase === 'hide') {
-        this.contentWrapperNode.classList.remove('overlays__overlay-container');
-        this.contentWrapperNode.classList.remove(placementClass);
-        this.contentNode.classList.remove('overlays__overlay');
-      }
-    } else if (this.placementMode === 'local' && phase === 'show') {
-      /**
-       * Popper is weird about properly positioning the popper element when it is recreated so
-       * we just recreate the popper instance to make it behave like it should.
-       * Probably related to this issue: https://github.com/FezVrasta/popper.js/issues/796
-       * calling just the .update() function on the popper instance sadly does not resolve this.
-       * This is however necessary for initial placement.
-       */
-      await this.__createPopperInstance();
-      this._popper.forceUpdate();
-    }
-    // N.B. leave it up to the user if placementMode === 'custom'
-  }
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _keepBodySize({ phase }) {
-    if (!this.preventsScroll) return;
-
-    this.manager.requestToKeepBodySize({ phase });
-  }
-
-  /**
-   * @event before-hide right before the overlay hides. Used for animations and switching overlays
-   * @event hide right after the overlay is hidden
-   */
-  async hide() {
-    // Function like a no-op for dynamic edge cases...
-    if (!this.config.isActivated) return;
-
-    this._hideComplete = new Promise(resolve => {
-      this._hideResolve = resolve;
-    });
-
-    // save the current activeElement so we know if the user set focus to another element than the invoker of the dialog
-    // while the dialog was open.
-    // We need this in the _restoreFocus method to determine if we should focus this.elementToFocusAfterHide when the
-    // dialog is closed or keep focus on the element that the user deliberately gave focus
-    this.__activeElementRightBeforeHide = /** @type {ShadowRoot} */ (
-      this.contentNode.getRootNode()
-    ).activeElement;
-
-    if (this.manager && this.#isRegisteredOnManager()) {
-      this.manager.hide(this);
-    }
-
-    if (!this.isShown) {
-      /** @type {function} */ (this._hideResolve)();
-      return;
-    }
-
-    const event = new CustomEvent('before-hide', { cancelable: true });
-    this.dispatchEvent(event);
-    if (!event.defaultPrevented) {
-      await this._transitionHide({
-        backdropNode: this.backdropNode,
-        contentNode: this.contentNode,
-      });
-
-      if ('HTMLDialogElement' in window && this.__wrappingDialogNode instanceof HTMLDialogElement) {
-        this.__wrappingDialogNode.close();
-      }
-      // @ts-ignore
-      this.__wrappingDialogNode.style.display = 'none';
-      this._handleFeatures({ phase: 'hide' });
-      this._keepBodySize({ phase: 'hide' });
-      this.dispatchEvent(new Event('hide'));
-      this._restoreFocus();
-    }
-    /** @type {function} */ (this._hideResolve)();
-
-    this.contentNode.removeAttribute('data-open');
-  }
-
-  /**
-   * Method to be overriden by subclassers
-   *
-   * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} hideConfig
-   */
-  // @ts-ignore
-  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
-  async transitionHide(hideConfig) {}
-
-  /**
-   * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} hideConfig
-   * @protected
-   */
-  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
-  async _transitionHide({ backdropNode, contentNode }) {
-    // `this.transitionHide` is a hook for our users
-    await this.transitionHide({ backdropNode, contentNode });
-    this._handlePosition({ phase: 'hide' });
-    if (!backdropNode) {
-      return;
-    }
-    backdropNode.classList.remove(`overlays__backdrop--animation-in`);
-  }
-
-  /**
-   * To be overridden by subclassers
-   *
-   * @param {{backdropNode:HTMLElement; contentNode:HTMLElement}} showConfig
-   */
-  // @ts-ignore
-  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
-  async transitionShow(showConfig) {}
-
-  /**
-   * @param {{backdropNode:HTMLElement; contentNode:HTMLElement}} showConfig
-   */
-  // eslint-disable-next-line class-methods-use-this, no-empty-function, no-unused-vars
-  async _transitionShow(showConfig) {
-    // `this.transitionShow` is a hook for our users
-    await this.transitionShow({ backdropNode: this.backdropNode, contentNode: this.contentNode });
-
-    if (showConfig.backdropNode) {
-      showConfig.backdropNode.classList.add(`overlays__backdrop--animation-in`);
-    }
-  }
-
-  /** @protected */
-  _restoreFocus() {
-    // We only are allowed to move focus if we (still) 'own' the active element.
-    // Otherwise, we assume the 'outside world' has purposefully taken over
-    const weStillOwnActiveElement =
-      this.__activeElementRightBeforeHide instanceof HTMLElement &&
-      this.contentNode.contains(this.__activeElementRightBeforeHide);
-
-    if (!weStillOwnActiveElement) {
-      return;
-    }
-
-    if (this.elementToFocusAfterHide instanceof HTMLElement) {
-      this.elementToFocusAfterHide.focus();
-      this.elementToFocusAfterHide.scrollIntoView({ block: 'nearest' });
-    } else {
-      /** @type {HTMLElement} */ (this.__activeElementRightBeforeHide).blur();
-    }
-  }
-
-  async toggle() {
-    return this.isShown ? this.hide() : this.show();
-  }
-
-  /**
-   * All features are handled here.
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _handleFeatures({ phase }) {
-    this._handleZIndex({ phase });
-
-    if (this.preventsScroll) {
-      this._handlePreventsScroll({ phase });
-    }
-    if (this.isBlocking) {
-      this._handleBlocking({ phase });
-    }
-    if (this.hasBackdrop) {
-      this._handleBackdrop({ phase });
-    }
-    if (this.trapsKeyboardFocus) {
-      this._handleTrapsKeyboardFocus({ phase });
-    }
-    if (this.hidesOnEsc) {
-      this._handleHidesOnEsc({ phase });
-    }
-    if (this.hidesOnOutsideEsc) {
-      this._handleHidesOnOutsideEsc({ phase });
-    }
-    if (this.hidesOnOutsideClick) {
-      this._handleHidesOnOutsideClick({ phase });
-    }
-    if (this.handlesAccessibility) {
-      this._handleAccessibility({ phase });
-    }
-    if (this.inheritsReferenceWidth) {
-      this._handleInheritsReferenceWidth();
-    }
-    if (this.visibilityTriggerFunction) {
-      this._handleVisibilityTriggers({ phase });
-    }
-    if (this.config.syncChildrenCloseState) {
-      this._handleSyncChildrenCloseState({ phase });
-    }
-    if (this.config.focusContentOnOpen) {
-      this._handleFocusContentOnOpen({ phase });
-    }
-  }
-
-  /**
-   * @param {{phase: OverlayPhase}} opts
-   * @returns {void}
-   */
-  _handleFocusContentOnOpen({ phase }) {
-    if (phase === 'init') {
-      this.contentNode?.setAttribute('tabindex', '-1');
-    } else if (phase === 'teardown') {
-      // TODO: capture initial attr, use Resettable mechanism of VisibilityToggleCtrl in whole Controller
-      this.contentNode?.removeAttribute('tabindex');
-    }
-  }
-
-  /**
-   * @param {{phase: OverlayPhase}} opts
-   * @returns {void}
-   */
-  _handleSyncChildrenCloseState({ phase }) {
-    if (phase !== 'hide') return;
-
-    const visibleChildren = this.manager.shownList.filter(
-      ctrl => ctrl !== this && deepContains(this.contentNode, ctrl.contentNode),
-    );
-    visibleChildren.forEach(ctrl => ctrl.hide());
-  }
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   */
-  _handleVisibilityTriggers({ phase }) {
-    if (typeof this.visibilityTriggerFunction !== 'function') return;
-
-    // Here we initialize the __visibilityTriggerHandler of our invokerNode. It's important that we ONLY do this on init,
-    // otherwise we risk not being able to properly clean up listeners...
-    if (phase === 'init') {
-      this.__visibilityTriggerHandler = this.visibilityTriggerFunction({ controller: this });
-    }
-    // Here we run the appropriate lifecycle, if defined in our handler
-    this.__visibilityTriggerHandler[phase]?.();
-  }
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _handlePreventsScroll({ phase }) {
-    switch (phase) {
-      case 'show':
-        this.manager.requestToPreventScroll();
-        break;
-      case 'hide':
-        this.manager.requestToEnableScroll();
-        break;
-      case 'teardown':
-        this.manager.requestToEnableScroll(this);
-        break;
-      /* no default */
-    }
-  }
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _handleBlocking({ phase }) {
-    switch (phase) {
-      case 'show':
-        this.manager.requestToShowOnly(this);
-        break;
-      case 'hide':
-        this.manager.retractRequestToShowOnly(this);
-        break;
-      /* no default */
-    }
-  }
-
-  get hasActiveBackdrop() {
-    return this.__hasActiveBackdrop;
-  }
-
-  /**
-   * Sets up backdrop on the given overlay. If there was a backdrop on another element
-   * it is removed. Otherwise this is the first time displaying a backdrop, so a animation-in
-   * animation is played.
-   * @param {{ animation?: boolean, phase: OverlayPhase }} config
-   * @protected
-   */
-  _handleBackdrop({ phase }) {
-    // eslint-disable-next-line default-case
-    switch (phase) {
-      case 'init': {
-        if (!this.__backdropInitialized) {
-          if (!this.config?.backdropNode) {
-            this.__backdropNode = document.createElement('div');
-            // If backdropNode existed in config, styles are applied by implementing party
-            this.__backdropNode.classList.add(`overlays__backdrop`);
-          }
-          // @ts-ignore
-          this.__wrappingDialogNode.prepend(this.backdropNode);
-          this.__backdropInitialized = true;
-        }
-        break;
-      }
-      case 'show':
-        if (this.config.hasBackdrop) {
-          this.backdropNode.classList.add(`overlays__backdrop--visible`);
-        }
-        this.__hasActiveBackdrop = true;
-        break;
-      case 'hide':
-      case 'teardown':
-        this.backdropNode.classList.remove(`overlays__backdrop--visible`);
-        this.__hasActiveBackdrop = false;
-        break;
-    }
-  }
-
-  /** @type {Map<keyof OverlayConfig, any>} */
-  #handlers = new Map();
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _handleTrapsKeyboardFocus({ phase }) {
-    if (phase === 'init') {
-      this.#handlers.set(
-        'trapsKeyboardFocus',
-        trapFocusHandler({ config: this.config, controller: this }),
-      );
-    }
-    // Here we run the appropriate lifecycle, if defined in our handler
-    this.#handlers.get('trapsKeyboardFocus')?.[phase]?.();
-    // if (phase === 'init') {
-    //   this.contentNode.style.outline = 'none';
-    //   this.contentNode.tabIndex = -1;
-
-    //   const isContentShadowHost = Boolean(this.contentNode.shadowRoot);
-    //   if (isContentShadowHost) {
-    //     // eslint-disable-next-line no-console
-    //     console.warn(
-    //       '[overlays]: For best accessibility (compatibility with Safari + VoiceOver), provide a contentNode that is not a host for a shadow root',
-    //     );
-    //   }
-    // }
-    // if (phase === 'show') {
-    //   this.#handleShiftKeyPress();
-    //   this.#handleFocusInsideDialog();
-    //   // @ts-ignore - HTMLDialogElement methods
-    //   this.__wrappingDialogNode?.close();
-    //   // @ts-ignore - HTMLDialogElement methods
-    //   this.__wrappingDialogNode?.showModal();
-    //   /**
-    //    * At this moment `#handleFocusInsideDialog` should handle the focus.
-    //    * But for some reason Firefox on the testing setup does not
-    //    * focus the native `dialog` on showModal() and focuses the first
-    //    * focusable element inside the dialog instead. Hence here we focus
-    //    * contentNode explicitly
-    //    */
-    //   this.#getInitialElementToFocus().focus();
-    // }
-    // if (phase === 'hide') {
-    //   this.#stopHandlingShiftKeyPress();
-    // }
-  }
-
-  /**
-   * When the overlay is a modal dialog hidesOnEsc works out of the box, so we prevent that.
-   *
-   * There is currently a bug in chrome that makes the dialog close when pressing Esc the second time
-   * @private
-   */
-  // eslint-disable-next-line class-methods-use-this
-  __cancelHandler(/** @type {Event} */ ev) {
-    ev.preventDefault();
-  }
-
-  /**
-   * @param {KeyboardEvent} event
-   * @returns {void}
-   */
-  __escKeyHandler(event) {
-    if (
-      event.key !== 'Escape' ||
-      childDialogsClosedInEventLoopWeakmap.has(event) ||
-      (!this.isShown && this.__escKeyHandlerCalled)
-    ) {
-      return;
-    }
-
-    if (this.#hasPressedInside(event)) {
-      this.__escKeyHandlerCalled = true;
-      this.hide();
-      // We could do event.stopPropagation() here, but we don't want to hide info for
-      // the outside world about user interactions. Instead, we store the event in a WeakMap
-      // that will be garbage collected after the event loop.
-      childDialogsClosedInEventLoopWeakmap.set(event, this);
-    }
-  }
-
-  /**
-   * @param {KeyboardEvent} event
-   * @returns {boolean}
-   */
-  #hasPressedInside = event =>
-    event.composedPath().includes(/** @type {EventTarget} */ (this.__wrappingDialogNode)) ||
-    (this.invokerNode && event.composedPath().includes(this.invokerNode)) ||
-    deepContains(this.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
-
-  /**
-   * @param {KeyboardEvent} event
-   * @returns {void}
-   */
-  #outsideEscKeyHandler = event => {
-    if (event.key !== 'Escape') return;
-
-    if (this.#hasPressedInside(event)) return;
-    this.hide();
-  };
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _handleHidesOnEsc({ phase }) {
-    if (phase === 'init') {
-      // we remove previously added (if any) event listener to guarantee
-      // there is only one Escape handler added here.
-      // Note `init` phase triggered on every `updateConfig` call and that
-      // could happen multiple times during the component life cycle
-      this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
-      this.contentNode.addEventListener('keyup', this.__escKeyHandler);
-      if (this.invokerNode) {
-        this.invokerNode.addEventListener('keyup', this.__escKeyHandler);
-      }
-    }
-    if (phase === 'show') {
-      this.__escKeyHandlerCalled = false;
-    }
-    if (phase === 'teardown') {
-      this.contentNode.removeEventListener('keyup', this.__escKeyHandler);
-      if (this.invokerNode) {
-        this.invokerNode.removeEventListener('keyup', this.__escKeyHandler);
-      }
-    }
-  }
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _handleHidesOnOutsideEsc({ phase }) {
-    if (phase === 'init') {
-      document.removeEventListener('keyup', this.#outsideEscKeyHandler);
-      document.addEventListener('keyup', this.#outsideEscKeyHandler);
-    } else if (phase === 'teardown') {
-      document.removeEventListener('keyup', this.#outsideEscKeyHandler);
-    }
-  }
-
-  /** @protected */
-  _handleInheritsReferenceWidth() {
-    if (!this._referenceNode || this.placementMode === 'global') {
-      return;
-    }
-    const referenceWidth = `${this._referenceNode.getBoundingClientRect().width}px`;
-    switch (this.inheritsReferenceWidth) {
-      case 'max':
-        this.contentWrapperNode.style.maxWidth = referenceWidth;
-        break;
-      case 'full':
-        this.contentWrapperNode.style.width = referenceWidth;
-        break;
-      case 'min':
-        this.contentWrapperNode.style.minWidth = referenceWidth;
-        this.contentWrapperNode.style.width = 'auto';
-        break;
-      /* no default */
-    }
-  }
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _handleHidesOnOutsideClick({ phase }) {
-    const addOrRemoveListener = phase === 'show' ? 'addEventListener' : 'removeEventListener';
-
-    if (phase === 'show') {
-      /**
-       * We listen to click (more specifically mouseup and mousedown) events
-       * in their capture phase (see our tests about 3rd parties stopping event propagation).
-       * We define an outside click as follows:
-       * - both mousedown and mouseup occur outside of content or invoker
-       *
-       * This means we have the following flow:
-       * [1]. (optional) mousedown is triggered on content/invoker
-       * [2]. mouseup is triggered on document (logic will be scheduled to step 4)
-       * [3]. (optional) mouseup is triggered on content/invoker
-       * [4]. mouseup logic is executed on document (its logic is inside a timeout and is thus
-       * executed after 3)
-       * [5]. Reset all helper variables that were considered in step [4]
-       *
-       */
-
-      /** @type {boolean} */
-      let wasMouseDownInside = false;
-      /** @type {boolean} */
-      let wasMouseUpInside = false;
-
-      /** @type {EventListenerOrEventListenerObject} */
-      this.__onInsideMouseDown = () => {
-        // [1]. was mousedown inside content or invoker
-        wasMouseDownInside = true;
-      };
-
-      this.__onInsideMouseUp = () => {
-        // [3]. was mouseup inside content or invoker
-        wasMouseUpInside = true;
-      };
-
-      /** @type {EventListenerOrEventListenerObject} */
-      this.__onDocumentMouseUp = () => {
-        // [2]. The captured mouseup goes from top of the document to bottom. We add a timeout,
-        // so that [3] can be executed before [4]
-        setTimeout(() => {
-          // [4]. Keep open if step 1 (mousedown) or 3 (mouseup) was inside
-          if (!wasMouseDownInside && !wasMouseUpInside) {
-            this.hide();
-          }
-          // [5]. Reset...
-          wasMouseDownInside = false;
-          wasMouseUpInside = false;
-        });
-      };
-
-      /** @type {EventListenerOrEventListenerObject} */
-      this.__onWindowBlur = () => {
-        // When the current window loses the focus (clicking outside iframe) the overlay gets hidden
-        setTimeout(() => {
-          this.hide();
-        });
-      };
-    }
-
-    this.contentWrapperNode[addOrRemoveListener](
-      'mousedown',
-      /** @type {EventListenerOrEventListenerObject} */
-      (this.__onInsideMouseDown),
-      true,
-    );
-    this.contentWrapperNode[addOrRemoveListener](
-      'mouseup',
-      /** @type {EventListenerOrEventListenerObject} */
-      (this.__onInsideMouseUp),
-      true,
-    );
-    if (this.invokerNode) {
-      // An invoker click (usually resulting in toggle) should be left to a different part of
-      // the code
-      this.invokerNode[addOrRemoveListener](
-        'mousedown',
-        /** @type {EventListenerOrEventListenerObject} */
-        (this.__onInsideMouseDown),
-        true,
-      );
-      this.invokerNode[addOrRemoveListener](
-        'mouseup',
-        /** @type {EventListenerOrEventListenerObject} */
-        (this.__onInsideMouseUp),
-        true,
-      );
-    }
-    document.documentElement[addOrRemoveListener](
-      'mouseup',
-      /** @type {EventListenerOrEventListenerObject} */
-      (this.__onDocumentMouseUp),
-      true,
-    );
-    window[addOrRemoveListener](
-      'blur',
-      /** @type {EventListenerOrEventListenerObject} */
-      (this.__onWindowBlur),
-    );
-  }
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _handleAccessibility({ phase }) {
-    if (phase === 'init' || phase === 'teardown') {
-      this.__setupTeardownAccessibility({ phase });
-    }
-    const isModal = this.trapsKeyboardFocus;
-    if (this.invokerNode && !this.isTooltip && !isModal) {
-      this.invokerNode.setAttribute('aria-expanded', `${phase === 'show'}`);
-    }
-  }
-
-  teardown() {
-    if (!this.__hasSetup) return;
-    this.__handleOverlayStyles({ phase: 'teardown' });
-    if (this.isShown) {
-      this._keepBodySize({ phase: 'teardown' });
-    }
-    this._handleFeatures({ phase: 'teardown' });
-    if (this.#isRegisteredOnManager()) {
-      this.manager.remove(this);
-    }
-
-    this.contentNode?.removeEventListener('click', this.#hideOnCloseButtonClick);
-
-    // if (this.config._shouldTeardownDomStructure) {
-    this.__rearrangeNodesCleanup?.();
-    // }
-    this.__teardownVisibility();
-
-    this.__hasSetup = false;
-  }
-
-  /** @private */
-  async __createPopperInstance() {
-    if (this._popper) {
-      this._popper.destroy();
-      this._popper = undefined;
-    }
-
-    if (VisibilityToggleController.popperModule !== undefined) {
-      const { createPopper } = await VisibilityToggleController.popperModule;
-      this._popper = createPopper(this._referenceNode, this.contentWrapperNode, {
-        ...this.config?.popperConfig,
-      });
-    }
-  }
-
-  _hasDisabledInvoker() {
-    if (this.invokerNode) {
-      return (
-        /** @type {HTMLElement & { disabled: boolean }} */ (this.invokerNode).disabled ||
-        this.invokerNode.getAttribute('aria-disabled') === 'true'
-      );
-    }
-    return false;
-  }
+  // /**
+  //  * All features are handled here.
+  //  * @param {{ phase: OverlayPhase }} config
+  //  * @protected
+  //  */
+  // async _handleFeatures({ phase }) {
+  //   super._handleFeatures({ phase });
+  //   if (this.hasBackdrop) {
+  //     this.__handleFeature('hasBackdrop', backdropHandler, { phase });
+  //   }
+  // }
 }
-/** @type {Promise<PopperModule> | undefined} */
-VisibilityToggleController.popperModule = undefined;

@@ -1,6 +1,7 @@
 import { expect, fixtureSync } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
-import { OverlayController, overlays } from '@lion/ui/overlays.js';
+import { VisibilityToggleController as OverlayController } from '../src/VisibilityToggleController.js';
+import { overlays } from '../src/singleton.js';
 
 /**
  * @typedef {import('../types/OverlayConfig.js').OverlayConfig} OverlayConfig

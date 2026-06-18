@@ -2,6 +2,8 @@ import { browserDetection } from '@lion/ui/core.js';
 
 // See: https://github.com/ing-bank/lion/issues/1880
 
+// TODO: it must be possible to trim down designs as certain specs go hand in hand (aka we handle more edge cases than exist)
+
 /**
  * @typedef {import('lit').CSSResult|CSSStyleSheet} AdoptableStyle
  * @typedef {(renderRoot:DocumentOrShadowRoot, style: AdoptableStyle, opts?: {teardown?: boolean}) => void} AdoptStyleFn
