@@ -165,3 +165,18 @@ export function deepContains(el, targetEl, cache = {}) {
   cacheItem(containsTarget);
   return containsTarget;
 }
+
+/**
+ * @param {HTMLElement | null} el
+ * @param {string} selector
+ * @returns {HTMLElement | null}
+ */
+export function deepClosest(el, selector) {
+  // @ts-ignore - comparing HTMLElement to document/window for safety
+  return (
+    // @ts-ignore - type comparison check
+    (el && el !== document && el !== window && el.closest(selector)) ||
+    // @ts-ignore - host property on ShadowRoot
+    deepClosest(el.getRootNode().host, selector)
+  );
+}

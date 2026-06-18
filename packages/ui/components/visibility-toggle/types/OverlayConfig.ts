@@ -11,15 +11,7 @@ export type ViewportPlacement =
   | 'bottom-left'
   | 'left';
 
-export type OverlayPhase =
-  | 'setup'
-  | 'init'
-  | 'teardown'
-  | 'before-show'
-  | 'show'
-  | 'hide'
-  | 'add'
-  | 'remove';
+export type OverlayPhase = 'init' | 'teardown' | 'before-show' | 'show' | 'hide' | 'add' | 'remove';
 
 export interface ViewportConfig {
   placement: ViewportPlacement;
@@ -28,7 +20,7 @@ export interface OverlayConfig {
   // Positioning
 
   /** Determines the positioning anchore (viewport vs invokerNode/referenceNode). */
-  placementMode?: 'global' | 'local' | undefined;
+  placementMode?: 'global' | 'local' | 'none';
   /** Popper configuration. Will be used when placementMode is 'local' */
   popperConfig?: Partial<Options>;
   /** Viewport positioning configuration. Will be used when placementMode is 'global' */
@@ -47,7 +39,7 @@ export interface OverlayConfig {
   /** The element that is used to position the overlay content relative to. Usually, this is the same element as invokerNode. Should only be provided when invokerNode should not be positioned against */
   referenceNode?: HTMLElement | undefined;
   /** The most important element: the overlay itself */
-  contentNode?: HTMLElement;
+  contentNode: HTMLElement;
   /** The wrapper element of contentNode, used to supply inline positioning styles. When a Popper arrow is needed, it acts as parent of the arrow node. Will be automatically created for global and non projected contentNodes. Required when used in shadow dom mode or when Popper arrow is supplied. Essential for allowing webcomponents to style their projected contentNodes */
   contentWrapperNode?: HTMLElement;
   /** The element that is placed behind the contentNode. When not provided and `hasBackdrop` is true, a backdropNode will be automatically created */
