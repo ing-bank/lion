@@ -194,10 +194,10 @@ describe('formatDate', () => {
       'zh-Hans-HK': '10月12日星期六',
       'zh-Hans-MO': '10月12日星期六',
       'zh-Hans-SG': '10月12日星期六',
-      'zh-Hant': '10月12日 星期六',
+      'zh-Hant': '10月12日星期六', // '10月12日 星期六',
       'zh-Hant-HK': '10月12日星期六',
       'zh-Hant-MO': '10月12日星期六',
-      'zh-Hant-TW': '10月12日 星期六',
+      'zh-Hant-TW': '10月12日星期六', // '10月12日 星期六',
     };
 
     Object.keys(SUPPORTED_LOCALES).forEach(locale => {

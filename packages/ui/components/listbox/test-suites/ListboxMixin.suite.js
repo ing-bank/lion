@@ -17,7 +17,6 @@ import {
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { getListboxMembers } from '../../../exports/listbox-test-helpers.js';
-import { browserDetection } from '../../core/src/browserDetection.js';
 import { getCachedFixture } from '../../core/test-helpers/getCachedFixture.js';
 
 /**
@@ -382,13 +381,7 @@ export function runListboxMixinSuite(customConfig = {}) {
         thirdOption.active = true;
         await aTimeout(1000);
 
-        // top should be offset 2x40px (sticky header elems) instead of 0px
-        if (browserDetection.isChrome || browserDetection.isChromium) {
-          // TODO: find out why this is different in recent Chromium
-          expect(el.scrollTop).to.equal(160);
-        } else {
-          expect(el.scrollTop).to.equal(116);
-        }
+        expect(el.scrollTop).to.equal(116);
       });
     });
 
