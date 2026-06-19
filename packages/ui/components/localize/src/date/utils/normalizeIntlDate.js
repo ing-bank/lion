@@ -31,9 +31,8 @@ export function normalizeIntlDate(str, locale = '', { weekday, year, month, day 
       'zh-Hans-HK',
       'zh-Hans-MO',
       'zh-Hans-SG',
-      // Skip 'zh-Hant' and 'zh-Hant-TW', since webkit/firefox/chromium are aligned.
-      // 'zh-Hant',
-      // 'zh-Hant-TW',
+      'zh-Hant',
+      'zh-Hant-TW',
       'zh-Hant-HK',
       'zh-Hant-MO',
     ];
