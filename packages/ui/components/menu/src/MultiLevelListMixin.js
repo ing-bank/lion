@@ -184,12 +184,12 @@ const MultiLevelListMixinImplementation = superclass =>
      * @param {*} ev
      */
     _onListKeyDown(ev) {
-      const targetFromsubList = Array.from(this._subListMap).find(
+      const targetFromSubList = Array.from(this._subListMap).find(
         // @ts-ignore - contains method on InteractiveListHost
         ([, s]) => s === ev.target || s.contains(ev.target),
       );
 
-      if (targetFromsubList) {
+      if (targetFromSubList) {
         return;
       }
 
@@ -228,16 +228,20 @@ const MultiLevelListMixinImplementation = superclass =>
           if (this.orientation === 'horizontal' && parentListOfActiveItem) {
             // @ts-ignore - close method
             this.close();
-            // @ts-ignore - _onOverlayShow method
-            parentListOfActiveItem._onOverlayShow();
+            if (parentListOfActiveItem._onOverlayShow) {
+              // @ts-ignore - _onOverlayShow method
+              parentListOfActiveItem._onOverlayShow();
+            }
           }
           break;
         case 'ArrowLeft':
           if (this.orientation === 'vertical' && parentListOfActiveItem) {
             // @ts-ignore - close method
             this.close();
-            // @ts-ignore - _onOverlayShow method
-            parentListOfActiveItem._onOverlayShow();
+            if (parentListOfActiveItem._onOverlayShow) {
+              // @ts-ignore - _onOverlayShow method
+              parentListOfActiveItem._onOverlayShow();
+            }
           }
           break;
         /* no default */

@@ -129,7 +129,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
 
     /**
      * We need actual 100 ms timeout when More button menu is getting hidden,
-     * `useFakeTimers` is not an option. Othewise Safari fails.
+     * `useFakeTimers` is not an option. Otherwise Safari fails.
      * See more info in the description of `_createMoreButtonWrapper` method in `MoreButtonMenuMixin`
      */
     const waitAfterMoreButtonMenuHides = async () => {
