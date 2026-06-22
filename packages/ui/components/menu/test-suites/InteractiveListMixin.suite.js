@@ -1,9 +1,10 @@
 import { LitElement } from 'lit';
 import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
 import { sendMouse, resetMouse } from '@web/test-runner-commands';
-import { useFakeTimers } from 'sinon';
+import sinon from 'sinon';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
+import { mimicKeyPress } from '../test-helpers/mimicKeyPress.js';
 
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
@@ -226,7 +227,7 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('set checked state sets aria-checked attribute with role="menuitemcheckbox"', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tag} multiple-choice>
             ${item(1, 'menuitemcheckbox')}
             ${item(2, 'menuitemcheckbox')}
           </${tag}>
@@ -255,7 +256,7 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('can set checked state to "mixed" for role="menuitemcheckbox"', async () => {
         const el = await fixture(html`
-          <${tag}>
+          <${tag} multiple-choice>
             ${item(1, 'menuitemcheckbox')}
             ${item(2, 'menuitemcheckbox')}
           </${tag}>
@@ -271,7 +272,7 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('does not allow to set checkedIndex or activeIndex to be out of bound', async () => {
         const el = await fixture(html`
-          <${tag} has-no-default-selected autocomplete="list">
+          <${tag}>
             <div role="menuitem" id="item1">Item 1</div>
           </${tag}>
         `);
@@ -299,6 +300,17 @@ export function runInteractiveListMixinSuite(customConfig) {
       });
     });
 
+    it('sets aria-current="page" when the location href matches the item href', async () => {
+      const el = await fixture(html`
+        <${tag}>
+           <a href="${window.location.href}">Item 0</a>
+           <a href="#bar">Item 1</a>
+        </${tag}>
+      `);
+      const item0 = el.listItems[0];
+      expect(item0.getAttribute('aria-current')).to.equal('page');
+    });
+
     // Copy tests from ListboxMixin. Later, make this mixin a fundament of the ListboxMixin
 
     // orientation
@@ -307,6 +319,120 @@ export function runInteractiveListMixinSuite(customConfig) {
     // rotateKeyboardNavigation
     // noPreselect
     // _scrollTargetNode
+
+    describe('Interactions', () => {
+      describe('Keyboard navigation', () => {
+        it('navigates between items on [ArrowDown] [ArrowUp] keys', async () => {
+          const el = await fixture(html`
+            <${tag}>
+              <div role="listitem" id="item-0">
+                <button data-invoker>Item 0</button>
+              </div>
+              <div role="listitem" id="item-1">
+                <a href="#baz">Item 1</a>
+              </div>
+              <div role="listitem" id="item-2">
+                <a href="#foobar">Item 2</a>
+              </div>
+            </${tag}>
+          `);
+
+          const { _listNode } = el;
+
+          // Normalize
+          el.activeIndex = 0;
+
+          mimicKeyPress(_listNode, 'ArrowDown');
+          expect(el.activeIndex).to.be.equal(1);
+          mimicKeyPress(_listNode, 'ArrowDown');
+          expect(el.activeIndex).to.be.equal(2);
+          mimicKeyPress(_listNode, 'ArrowUp');
+          expect(el.activeIndex).to.be.equal(1);
+        });
+
+        it('navigates between items on [ArrowRight] [ArrowLeft] keys when orientation is "horizontal" and _activeMode="tabbable-disclosure"', async () => {
+          const el = await fixture(html`
+            <${tag} orientation="horizontal">
+              <div role="listitem" id="item-0">
+                <button data-invoker>Item 0</button>
+              </div>
+              <div role="listitem" id="item-1">
+                <a href="#baz">Item 1</a>
+              </div>
+              <div role="listitem" id="item-2">
+                <a href="#foobar">Item 2</a>
+              </div>
+            </${tag}>
+          `);
+          el._activeMode = 'tabbable-disclosure';
+          const { _listNode } = el;
+
+          // Normalize
+          el.activeIndex = 0;
+
+          mimicKeyPress(_listNode, 'ArrowRight');
+          expect(el.activeIndex).to.be.equal(1);
+          mimicKeyPress(_listNode, 'ArrowRight');
+          expect(el.activeIndex).to.be.equal(2);
+          mimicKeyPress(_listNode, 'ArrowLeft');
+          expect(el.activeIndex).to.be.equal(1);
+        });
+
+        it('stops navigation by default at end of option list', async () => {
+          const el = await fixture(html`
+            <${tag}>
+              <div role="listitem" id="item-0">
+                <button data-invoker>Item 0</button>
+              </div>
+              <div role="listitem" id="item-1">
+                <a href="#baz">Item 1</a>
+              </div>
+              <div role="listitem" id="item-2">
+                <a href="#foobar">Item 2</a>
+              </div>
+            </${tag}>
+          `);
+
+          const { _listNode } = el;
+
+          // Normalize
+          el.activeIndex = 0;
+
+          mimicKeyPress(_listNode, 'ArrowUp');
+          expect(el.activeIndex).to.be.equal(0);
+
+          el.activeIndex = 2;
+          mimicKeyPress(_listNode, 'ArrowDown');
+          expect(el.activeIndex).to.be.equal(2);
+        });
+
+        it('navigates to first and last option with [Home] and [End] keys', async () => {
+          const el = await fixture(html`
+            <${tag} orientation="horizontal">
+              <div role="listitem" id="item-0">
+                <button data-invoker>Item 0</button>
+              </div>
+              <div role="listitem" id="item-1">
+                <a href="#baz">Item 1</a>
+              </div>
+              <div role="listitem" id="item-2">
+                <a href="#foobar">Item 2</a>
+              </div>
+            </${tag}>
+          `);
+
+          const { _listNode } = el;
+
+          // Normalize
+          el.activeIndex = 2;
+
+          mimicKeyPress(_listNode, 'Home');
+          expect(el.activeIndex).to.equal(0);
+          mimicKeyPress(_listNode, 'End');
+          expect(el.activeIndex).to.equal(2);
+        });
+      });
+    });
 
     describe('Widget extensions', () => {
       it('can be extended to [role=listbox]', async () => {});
@@ -386,7 +512,7 @@ export function runInteractiveListMixinSuite(customConfig) {
       };
 
       beforeEach(() => {
-        clock = useFakeTimers({
+        clock = sinon.useFakeTimers({
           shouldAdvanceTime: true,
         });
       });
