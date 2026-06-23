@@ -5,68 +5,122 @@
 
 // N.B. Below logic is tested in LionTooltip
 
+// TODO: this is copied from menu system. Move them to common ancestor entrypoint (maybe a core entrypoint for all interactive controls)
+/**
+ * @param {HTMLElement|undefined} item
+ */
+export function isDisabled(item) {
+  return item && (item.hasAttribute('disabled') || item.getAttribute('aria-disabled') === 'true');
+}
+
 /**
  * Use for tooltips and [flyout menus](https://www.w3.org/WAI/tutorials/menus/flyout/).
  * Note that it handles both mouse hover and focus interaction.
  * Provide delayIn and delayOut when the content needs a small delay before being showed
- * @param {{ delayIn?: number, delayOut?: number  }} options
+ * @param {{ isHoverSupported?: boolean, longpressDuration?: number, delayIn?: number, delayOut?: number  }} options
  * @returns {Partial<OverlayConfig>}
  */
-export function withHoverInteraction({ delayIn = 0, delayOut = 300 }) {
+export function withHoverInteraction({
+  isHoverSupported = window.matchMedia('(hover: hover)').matches,
+  longpressDuration = 500,
+  delayOut = 300,
+  delayIn = 0,
+} = {}) {
   return {
     visibilityTriggerFunction: (
       /** @type {{ controller: OverlayController }} */ { controller },
     ) => {
       let isFocused = false;
       let isHovered = false;
+      let isTapping = false;
       /** @type {NodeJS.Timeout} */
-      let delayTimeout;
+      let pendingDelayTimeout;
+      /** @type {NodeJS.Timeout} */
+      let pendingLongpressTimeout;
 
       function resetActive() {
         isFocused = false;
         isHovered = false;
+        isTapping = false;
       }
 
       /**
-       * @param {Event} event
+       * @param {{ shouldOpen: boolean, openTimeout?: number, closeTimeout?: number }} cfg
        */
-      function handleOpenClosed(event) {
+      function openClose({ shouldOpen, openTimeout = 0, closeTimeout = 0 }) {
+        clearTimeout(pendingDelayTimeout);
+        if (shouldOpen && !isDisabled(controller.invokerNode)) {
+          pendingDelayTimeout = setTimeout(() => controller.show(), openTimeout);
+        } else {
+          pendingDelayTimeout = setTimeout(() => controller.hide(), closeTimeout);
+        }
+      }
+
+      /**
+       * @param {Event|PointerEvent} event
+       */
+      async function handleHoverAndFocus(event) {
+        const { type } = event;
+        isFocused = type === 'focusout' ? false : isFocused || type === 'focusin';
+        if (isHoverSupported) {
+          isHovered = type === 'mouseleave' ? false : isHovered || type === 'mouseenter';
+        }
+        const shouldOpen = isFocused || isHovered;
+        openClose({ shouldOpen, openTimeout: delayIn, closeTimeout: delayOut });
+      }
+
+      /**
+       * @param {PointerEvent} event
+       */
+      async function handleLongpress(event) {
+        clearTimeout(pendingLongpressTimeout);
+        if (event.pointerType !== 'touch') return;
         const { type } = event;
 
-        clearTimeout(delayTimeout);
-        isFocused = type === 'focusout' ? false : isFocused || type === 'focusin';
-        isHovered = type === 'mouseleave' ? false : isHovered || type === 'mouseenter';
-        const shouldOpen = isFocused || isHovered;
-
-        if (shouldOpen && !controller._hasDisabledInvoker()) {
-          delayTimeout = setTimeout(() => {
-            controller.show();
-          }, delayIn);
-        } else {
-          delayTimeout = setTimeout(() => {
-            controller.hide();
-          }, delayOut);
+        isTapping =
+          type === 'pointerup' || type === 'pointerleave' ? false : type === 'pointerdown';
+        if (isTapping) {
+          pendingLongpressTimeout = setTimeout(() => {
+            openClose({ shouldOpen: true });
+          }, longpressDuration);
         }
+        openClose({ shouldOpen: isTapping || isHovered });
       }
 
       return {
         init: () => {
           controller.addEventListener('hide', resetActive);
-          controller.contentNode?.addEventListener('mouseenter', handleOpenClosed);
-          controller.contentNode?.addEventListener('mouseleave', handleOpenClosed);
-          controller.invokerNode?.addEventListener('mouseenter', handleOpenClosed);
-          controller.invokerNode?.addEventListener('mouseleave', handleOpenClosed);
-          controller.invokerNode?.addEventListener('focusin', handleOpenClosed);
-          controller.invokerNode?.addEventListener('focusout', handleOpenClosed);
+
+          controller.invokerNode?.addEventListener('focusin', handleHoverAndFocus);
+          controller.invokerNode?.addEventListener('focusout', handleHoverAndFocus);
+
+          if (isHoverSupported) {
+            controller.contentNode?.addEventListener('mouseenter', handleHoverAndFocus);
+            controller.contentNode?.addEventListener('mouseleave', handleHoverAndFocus);
+            controller.invokerNode?.addEventListener('mouseenter', handleHoverAndFocus);
+            controller.invokerNode?.addEventListener('mouseleave', handleHoverAndFocus);
+          } else {
+            controller.invokerNode?.addEventListener('pointerdown', handleLongpress);
+            controller.invokerNode?.addEventListener('pointerup', handleLongpress);
+            controller.invokerNode?.addEventListener('pointerleave', handleLongpress);
+          }
         },
         teardown: () => {
           controller.removeEventListener('hide', resetActive);
-          controller.contentNode?.removeEventListener('mouseenter', handleOpenClosed);
-          controller.contentNode?.removeEventListener('mouseleave', handleOpenClosed);
-          controller.invokerNode?.removeEventListener('mouseenter', handleOpenClosed);
-          controller.invokerNode?.removeEventListener('mouseleave', handleOpenClosed);
-          controller.invokerNode?.removeEventListener('focusin', handleOpenClosed);
-          controller.invokerNode?.removeEventListener('focusout', handleOpenClosed);
+
+          controller.invokerNode?.removeEventListener('focusin', handleHoverAndFocus);
+          controller.invokerNode?.removeEventListener('focusout', handleHoverAndFocus);
+
+          if (isHoverSupported) {
+            controller.contentNode?.removeEventListener('mouseenter', handleHoverAndFocus);
+            controller.contentNode?.removeEventListener('mouseleave', handleHoverAndFocus);
+            controller.invokerNode?.removeEventListener('mouseenter', handleHoverAndFocus);
+            controller.invokerNode?.removeEventListener('mouseleave', handleHoverAndFocus);
+          } else {
+            controller.invokerNode?.removeEventListener('pointerdown', handleLongpress);
+            controller.invokerNode?.removeEventListener('pointerup', handleLongpress);
+            controller.invokerNode?.removeEventListener('pointerleave', handleLongpress);
+          }
         },
       };
     },
