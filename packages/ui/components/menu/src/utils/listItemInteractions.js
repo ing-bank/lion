@@ -4,10 +4,13 @@
  */
 
 /**
+<<<<<<< HEAD
  * @typedef {import('@lion/ui/checkbox-group.js').LionCheckboxIndeterminate} LionCheckboxIndeterminate
  */
 
 /**
+=======
+>>>>>>> 292a1c22b (wip)
  * @param {HTMLElement} item
  */
 export function isDisabled(item) {
@@ -38,11 +41,16 @@ export function toggleDisabled(item) {
  * @param {HTMLElement} item
  */
 export function isChecked(item) {
+<<<<<<< HEAD
   return item.hasAttribute('checked');
+=======
+  return item.hasAttribute('checked') || item.getAttribute('aria-selected') === 'true';
+>>>>>>> 292a1c22b (wip)
 }
 
 /**
  * @param {HTMLElement} item
+<<<<<<< HEAD
  * @param {Object} [options]
  * @param {boolean} [options.unset=false]
  * @param {'page'|'mixed'} [options.text] - optional text to set for aria-checked/aria-selected/aria-current (e.g. "mixed")
@@ -65,6 +73,15 @@ export function setChecked(item, unset = false) {
   if (!unset) {
     item.setAttribute('checked', '');
     item.setAttribute(`aria-${ariaAttr}`, text || 'true');
+=======
+ * @param {boolean} [shouldSet=false]
+ */
+export function setChecked(item, shouldSet = true) {
+  const ariaAttr = item.getAttribute('role') === 'option' ? 'selected' : 'checked';
+  if (shouldSet) {
+    item.setAttribute('checked', '');
+    item.setAttribute(`aria-${ariaAttr}`, 'true');
+>>>>>>> 292a1c22b (wip)
   } else {
     item.removeAttribute('checked');
     item.setAttribute(`aria-${ariaAttr}`, 'false');
@@ -75,8 +92,12 @@ export function setChecked(item, unset = false) {
  * @param {HTMLElement} item
  */
 export function toggleChecked(item) {
+<<<<<<< HEAD
   const shouldUnset = isChecked(item);
   setChecked(item, shouldUnset);
+=======
+  setChecked(item, !isChecked(item));
+>>>>>>> 292a1c22b (wip)
 }
 
 /**

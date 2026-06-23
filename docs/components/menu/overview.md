@@ -159,6 +159,7 @@ export const disclosureMenu = () => html`
         <button data-invoker>About</button>
         <lion-menu-overlay>
           <div role="listitem">
+<<<<<<< HEAD
             <a href="/about/overview">Overview</a>
           </div>
           <div role="listitem">
@@ -169,6 +170,18 @@ export const disclosureMenu = () => html`
           </div>
           <div role="listitem">
             <a href="/about/campus-tours">Campus Tours</a>
+=======
+            <a href="#mythical-page-content">Overview</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Administration</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Facts</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Campus Tours</a>
+>>>>>>> 292a1c22b (wip)
           </div>
         </lion-menu-overlay>
       </div>
@@ -176,6 +189,7 @@ export const disclosureMenu = () => html`
         <button data-invoker>Admissions</button>
         <lion-menu-overlay id="id_admissions_menu">
           <div role="listitem">
+<<<<<<< HEAD
             <a href="/admissions/apply">Apply</a>
           </div>
           <div role="listitem">
@@ -192,6 +206,24 @@ export const disclosureMenu = () => html`
           </div>
           <div role="listitem">
             <a href="/admissions/connect">Connect</a>
+=======
+            <a href="#mythical-page-content">Apply</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Tuition</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Sign Up</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Visit</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Photo Tour</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Connect</a>
+>>>>>>> 292a1c22b (wip)
           </div>
         </lion-menu-overlay>
       </div>
@@ -199,6 +231,7 @@ export const disclosureMenu = () => html`
         <button data-invoker>Academics</button>
         <lion-menu-overlay>
           <div role="listitem">
+<<<<<<< HEAD
             <a href="/academics/colleges-and-schools">Colleges & Schools</a>
           </div>
           <div role="listitem">
@@ -221,6 +254,30 @@ export const disclosureMenu = () => html`
           </div>
           <div role="listitem">
             <a href="/academics/transcripts">Transcripts</a>
+=======
+            <a href="#mythical-page-content">Colleges & Schools</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Programs of Study</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Honors Programs</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Online Courses</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Course Explorer</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Register for Class</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Academic Calendar</a>
+          </div>
+          <div role="listitem">
+            <a href="#mythical-page-content">Transcripts</a>
+>>>>>>> 292a1c22b (wip)
           </div>
         </lion-menu-overlay>
       </div>
@@ -238,6 +295,7 @@ export const disclosureMenuWithAnchorsOnL1 = () => html`
  <nav aria-label="Mythical University">
    <lion-menu bar ._activeMode="${'tabbable-disclosure'}">
     <div role="listitem">
+<<<<<<< HEAD
       <a href="/about">About</a>
       <button data-invoker aria-label="More About Pages">▼</button>
       <lion-menu-overlay>
@@ -252,16 +310,37 @@ export const disclosureMenuWithAnchorsOnL1 = () => html`
         </div>
         <div role="listitem">
           <a href="/about/campus-tours">Campus Tours</a>
+=======
+      <a href="#mythical-page-content">About</a>
+      <button data-invoker aria-label="More About Pages">▼</button>
+      <lion-menu-overlay>
+        <div role="listitem">
+          <a href="#mythical-page-content">Overview</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Administration</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Facts</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Campus Tours</a>
+>>>>>>> 292a1c22b (wip)
         </div>
       </lion-menu-overlay>
     </div>
     <div role="listitem">
+<<<<<<< HEAD
       <a href="/admissions">Admissions</a>
+=======
+      <a href="#mythical-page-content">Admissions</a>
+>>>>>>> 292a1c22b (wip)
       <button data-invoker aria-label="More Admissions Pages">
         ▼
       </button>
       <lion-menu-overlay id="id_admissions_menu">
         <div role="listitem">
+<<<<<<< HEAD
           <a href="/admissions/apply">Apply</a>
         </div>
         <div role="listitem">
@@ -278,10 +357,29 @@ export const disclosureMenuWithAnchorsOnL1 = () => html`
         </div>
         <div role="listitem">
           <a href="/admissions/connect">Connect</a>
+=======
+          <a href="#mythical-page-content">Apply</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Tuition</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Sign Up</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Visit</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Photo Tour</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Connect</a>
+>>>>>>> 292a1c22b (wip)
         </div>
       </lion-menu-overlay>
     </div>
     <div role="listitem">
+<<<<<<< HEAD
       <a href="/academics">Academics</a>
       <button data-invoker aria-label="More Academics Pages">▼</button>
       <lion-menu-overlay>
@@ -308,6 +406,34 @@ export const disclosureMenuWithAnchorsOnL1 = () => html`
         </div>
         <div role="listitem">
           <a href="/academics/transcripts">Transcripts</a>
+=======
+      <a href="#mythical-page-content">Academics</a>
+      <button data-invoker aria-label="More Academics Pages">▼</button>
+      <lion-menu-overlay>
+        <div role="listitem">
+          <a href="#mythical-page-content">Colleges & Schools</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Programs of Study</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Honors Programs</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Online Courses</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Course Explorer</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Register for Class</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Academic Calendar</a>
+        </div>
+        <div role="listitem">
+          <a href="#mythical-page-content">Transcripts</a>
+>>>>>>> 292a1c22b (wip)
         </div>
       </lion-menu-overlay>
     </div>

@@ -1,6 +1,7 @@
 export { OverlaysManager } from '../components/overlays/src/OverlaysManager.js';
 
-export { OverlayController } from '../components/overlays/src/OverlayController.js';
+// export { OverlayController } from '../components/overlays/src/OverlayController.js';
+export { VisibilityToggleController as OverlayController } from '../components/visibility-toggle/src/VisibilityToggleController.js';
 export { OverlayMixin } from '../components/overlays/src/OverlayMixin.js';
 export { ArrowMixin } from '../components/overlays/src/ArrowMixin.js';
 
@@ -8,6 +9,7 @@ export { withBottomSheetConfig } from '../components/overlays/src/configurations
 export { withModalDialogConfig } from '../components/overlays/src/configurations/withModalDialogConfig.js';
 export { withDropdownConfig } from '../components/overlays/src/configurations/withDropdownConfig.js';
 export { withTooltipConfig } from '../components/overlays/src/configurations/withTooltipConfig.js';
+export { withPopoverConfig } from '../components/overlays/src/configurations/withPopoverConfig.js';
 export { withClickInteraction } from '../components/overlays/src/configurations/visibility-trigger-partials/withClickInteraction.js';
 export { withHoverInteraction } from '../components/overlays/src/configurations/visibility-trigger-partials/withHoverInteraction.js';
 
@@ -20,7 +22,8 @@ export {
   setSiblingsInert,
 } from '../components/overlays/src/utils/inert-siblings.js';
 
-export { overlays } from '../components/overlays/src/singleton.js';
+// export { overlays } from '../components/overlays/src/singleton.js';
+export { overlays } from '../components/visibility-toggle/src/singleton.js';
 
 /**
  * @typedef {import('../components/overlays/types/OverlayConfig.js').OverlayConfig} OverlayConfig

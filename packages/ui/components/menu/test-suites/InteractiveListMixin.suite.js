@@ -1,10 +1,15 @@
 import { LitElement } from 'lit';
+<<<<<<< HEAD
 import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
 import { sendMouse, resetMouse } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import { mimicKeyPress } from '../test-helpers/mimicKeyPress.js';
+=======
+import { expect, html, fixture, unsafeStatic, defineCE } from '@open-wc/testing';
+import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
+>>>>>>> 292a1c22b (wip)
 
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
@@ -12,6 +17,7 @@ class InteractiveListClass extends InteractiveListMixin(LitElement) {}
  * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
  */
 
+<<<<<<< HEAD
 /** @type {InteractiveListItemRole[]} */
 const supportedRoles = [
   'menuitem',
@@ -46,6 +52,26 @@ const l1Config = {
   },
 };
 
+=======
+// TODO, consider tab as well? See https://open-ui.org/components/scoped-focusgroup.explainer/#supported-behaviors
+
+/** @type {InteractiveListItemRole[]} */
+const supportedRoles = [
+  'menuitemcheckbox',
+  'menuitemradio',
+  'menuitem',
+  'treeitem',
+  'checkbox',
+  'option',
+  'radio',
+];
+
+/**
+ * @typedef {Object} TestConfig
+ * @property {string} tagString
+ */
+
+>>>>>>> 292a1c22b (wip)
 /**
  * @param {TestConfig} [customConfig]
  */
@@ -144,6 +170,7 @@ export function runInteractiveListMixinSuite(customConfig) {
       });
     });
 
+<<<<<<< HEAD
     describe('Programmatic interaction', () => {
       // If we have the item line directly in the fixture the linting rule lit-a11y/role-has-required-aria-attrs
       // will fail. Inside our code we set the required aria attributes, but the linter doesn't know that.
@@ -311,6 +338,8 @@ export function runInteractiveListMixinSuite(customConfig) {
       expect(item0.getAttribute('aria-current')).to.equal('page');
     });
 
+=======
+>>>>>>> 292a1c22b (wip)
     // Copy tests from ListboxMixin. Later, make this mixin a fundament of the ListboxMixin
 
     // orientation
@@ -320,6 +349,7 @@ export function runInteractiveListMixinSuite(customConfig) {
     // noPreselect
     // _scrollTargetNode
 
+<<<<<<< HEAD
     describe('Interactions', () => {
       describe('Keyboard navigation', () => {
         it('navigates between items on [ArrowDown] [ArrowUp] keys', async () => {
@@ -434,6 +464,8 @@ export function runInteractiveListMixinSuite(customConfig) {
       });
     });
 
+=======
+>>>>>>> 292a1c22b (wip)
     describe('Widget extensions', () => {
       it('can be extended to [role=listbox]', async () => {});
       it('can be extended to [role=menu]', async () => {});
@@ -441,6 +473,7 @@ export function runInteractiveListMixinSuite(customConfig) {
       it('can be extended to [role=toolbar]', async () => {});
       it('can be extended to [role=tree]', async () => {});
     });
+<<<<<<< HEAD
 
     describe('Overflow handling', () => {
       /** @type {import('sinon').SinonFakeTimers | null} */
@@ -764,5 +797,7 @@ export function runInteractiveListMixinSuite(customConfig) {
         expect(isMoreButtonShown(el)).to.equal(true);
       });
     });
+=======
+>>>>>>> 292a1c22b (wip)
   });
 }

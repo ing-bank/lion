@@ -50,7 +50,9 @@
     "packages-node/*"
   ],
   "dependencies": {
-    "lit": "^3.3.2"
+    "@playwright/test": "^1.61.0",
+    "lit": "^3.3.2",
+    "playwright": "^1.61.0"
   },
   "devDependencies": {
     "@astrojs/lit": "^4.3.0",

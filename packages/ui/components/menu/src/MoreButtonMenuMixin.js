@@ -18,8 +18,13 @@ const styles = css`
   /** N.B. this is a simplified version of sr-only. when we move to overlayctrl, we should build this into overlayctrl */
   [data-more-button-menu] {
     overflow: hidden;
+<<<<<<< HEAD
     height: 0;
     width: 0;
+=======
+    height: 1px;
+    width: 1px;
+>>>>>>> 292a1c22b (wip)
   }
 
   [role='list']:has(> [data-more-button-wrapper]) > [role='listitem'] > :is(button, a) {
@@ -75,13 +80,20 @@ export const MoreButtonMenuMixin = superclass =>
       moreButton?.setAttribute('aria-expanded', 'false');
       const moreButtonMenu = document.createElement('div');
       moreButtonMenu.setAttribute('data-more-button-menu', '');
+<<<<<<< HEAD
       moreButtonMenu.setAttribute('tabindex', '-1');
+=======
+>>>>>>> 292a1c22b (wip)
       moreButtonWrapper.appendChild(moreButtonMenu);
       this._listNode.appendChild(moreButtonWrapper);
 
       const isElementDirectFocusableItemUnderMoreButtonMenu = (/** @type {Element} */ element) =>
+<<<<<<< HEAD
         (this.listItems.includes(element) && moreButtonMenu.contains(element)) ||
         element === moreButtonMenu;
+=======
+        this.listItems.includes(element) && moreButtonMenu.contains(element);
+>>>>>>> 292a1c22b (wip)
 
       moreButtonMenu.addEventListener(
         'focusin',
@@ -89,9 +101,12 @@ export const MoreButtonMenuMixin = superclass =>
           const target = /** @type {HTMLElement} */ (event?.target);
           if (!isElementDirectFocusableItemUnderMoreButtonMenu(target)) return;
 
+<<<<<<< HEAD
           // If applicable hide any other L2 menus
           this.querySelector('[level="2"]:has([data-open])')?._overlayCtrl?.hide();
 
+=======
+>>>>>>> 292a1c22b (wip)
           // A user did `Shift + Tab` from L2 menu to More menu
           if (target?.getAttribute('aria-expanded') === 'true') {
             // close L2 menu
@@ -115,12 +130,41 @@ export const MoreButtonMenuMixin = superclass =>
         }, 100);
       });
 
+<<<<<<< HEAD
       moreButton?.addEventListener('click', () => {
         if (moreButtonMenu.getAttribute('data-open') === null) {
           moreButtonMenu?.focus({ preventScroll: true });
           moreButtonMenu.setAttribute('data-open', '');
         }
       });
+=======
+      this.hasMoreButtonMenuAnyFocusedFirstLevelItems = false;
+
+      moreButton?.addEventListener('mousedown', () => {
+        this.hasMoreButtonMenuAnyFocusedFirstLevelItems = false;
+        const focusableFirstLevelItems = moreButtonMenu.querySelectorAll(
+          ':scope > [role="listitem"] > :is(a, button)',
+        );
+
+        // @ts-ignore Type 'NodeListOf<Element>' must have a '[Symbol.iterator]()' method that returns an iterator.
+        for (const focusableFirstLevelItem of focusableFirstLevelItems) {
+          if (this._getDeepActiveElement() === focusableFirstLevelItem) {
+            this.hasMoreButtonMenuAnyFocusedFirstLevelItems = true;
+          }
+        }
+      });
+
+      moreButton?.addEventListener('click', () => {
+        if (this.hasMoreButtonMenuAnyFocusedFirstLevelItems) return;
+        /** @type {HTMLElement | null} */
+        const firstInteractiveItem = moreButtonMenu.querySelector(
+          ':scope > [role="listitem"] > :is(a, button)',
+        );
+
+        firstInteractiveItem?.focus();
+        moreButtonMenu.setAttribute('data-open', '');
+      });
+>>>>>>> 292a1c22b (wip)
     }
 
     getMoreButtonSlotProjection() {
@@ -171,9 +215,12 @@ export const MoreButtonMenuMixin = superclass =>
       const previousNodes = [];
       let { previousSibling } = listItem;
       while (previousSibling) {
+<<<<<<< HEAD
         if (previousSibling.nodeType === Node.ELEMENT_NODE) {
           break;
         }
+=======
+>>>>>>> 292a1c22b (wip)
         previousNodes.unshift(previousSibling);
         if (isMarkerComment(previousSibling)) {
           break;
@@ -184,9 +231,12 @@ export const MoreButtonMenuMixin = superclass =>
       const nextNodes = [];
       let { nextSibling } = listItem;
       while (nextSibling) {
+<<<<<<< HEAD
         if (nextSibling.nodeType === Node.ELEMENT_NODE) {
           break;
         }
+=======
+>>>>>>> 292a1c22b (wip)
         nextNodes.push(nextSibling);
 
         if (isMarkerComment(nextSibling)) {

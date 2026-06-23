@@ -3,7 +3,11 @@ import { html } from 'lit';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 // import { DisclosureMixin } from '@lion/ui/collapsible.js';
 import { InteractiveListMixin } from './InteractiveListMixin.js';
+<<<<<<< HEAD
 import { isChecked, setChecked } from './utils/listItemInteractions.js';
+=======
+
+>>>>>>> 292a1c22b (wip)
 /**
  * @typedef {import('./InteractiveListMixin.js').LionItem} LionItem
  * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListHost} InteractiveList
@@ -184,12 +188,20 @@ const MultiLevelListMixinImplementation = superclass =>
      * @param {*} ev
      */
     _onListKeyDown(ev) {
+<<<<<<< HEAD
       const targetFromSubList = Array.from(this._subListMap).find(
+=======
+      const targetFromsubList = Array.from(this._subListMap).find(
+>>>>>>> 292a1c22b (wip)
         // @ts-ignore - contains method on InteractiveListHost
         ([, s]) => s === ev.target || s.contains(ev.target),
       );
 
+<<<<<<< HEAD
       if (targetFromSubList) {
+=======
+      if (targetFromsubList) {
+>>>>>>> 292a1c22b (wip)
         return;
       }
 
@@ -228,26 +240,37 @@ const MultiLevelListMixinImplementation = superclass =>
           if (this.orientation === 'horizontal' && parentListOfActiveItem) {
             // @ts-ignore - close method
             this.close();
+<<<<<<< HEAD
             if (parentListOfActiveItem._onOverlayShow) {
               // @ts-ignore - _onOverlayShow method
               parentListOfActiveItem._onOverlayShow();
             }
+=======
+            // @ts-ignore - _onOverlayShow method
+            parentListOfActiveItem._onOverlayShow();
+>>>>>>> 292a1c22b (wip)
           }
           break;
         case 'ArrowLeft':
           if (this.orientation === 'vertical' && parentListOfActiveItem) {
             // @ts-ignore - close method
             this.close();
+<<<<<<< HEAD
             if (parentListOfActiveItem._onOverlayShow) {
               // @ts-ignore - _onOverlayShow method
               parentListOfActiveItem._onOverlayShow();
             }
+=======
+            // @ts-ignore - _onOverlayShow method
+            parentListOfActiveItem._onOverlayShow();
+>>>>>>> 292a1c22b (wip)
           }
           break;
         /* no default */
       }
     }
 
+<<<<<<< HEAD
     /**
      * @param {Location} location
      */
@@ -265,6 +288,8 @@ const MultiLevelListMixinImplementation = superclass =>
       });
     }
 
+=======
+>>>>>>> 292a1c22b (wip)
     // /**
     //  * @enhance DisclosureMixin
     //  */

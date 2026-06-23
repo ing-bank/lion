@@ -127,7 +127,9 @@ export function adoptStyle(renderRoot, style, { teardown = false } = {}) {
     // eslint-disable-next-line no-param-reassign
     renderRoot.adoptedStyleSheets = [...(renderRoot.adoptedStyleSheets || []), sheet];
   } else if (renderRoot.adoptedStyleSheets.includes(sheet)) {
-    renderRoot.adoptedStyleSheets.splice(renderRoot.adoptedStyleSheets.indexOf(sheet), 1);
+    // @ts-ignore
+    // eslint-disable-next-line no-param-reassign
+    renderRoot.adoptedStyleSheets = renderRoot.adoptedStyleSheets.filter(s => s !== sheet);
   }
 }
 
