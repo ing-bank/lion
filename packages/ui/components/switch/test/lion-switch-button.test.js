@@ -78,6 +78,20 @@ describe('lion-switch-button', () => {
     expect(el.hasAttribute('checked')).to.be.true;
   });
 
+  it('can be readonly', async () => {
+    el.readOnly = true;
+    expect(el.checked).to.be.false;
+    el.click();
+    await el.updateComplete;
+    expect(el.checked).to.be.false;
+    expect(el.hasAttribute('checked')).to.be.false;
+    el.checked = true;
+    el.click();
+    await el.updateComplete;
+    expect(el.checked).to.be.true;
+    expect(el.hasAttribute('checked')).to.be.true;
+  });
+
   it('should dispatch "checked-changed" event when toggled', () => {
     const handlerSpy = sinon.spy();
     el.addEventListener('checked-changed', handlerSpy);
@@ -118,9 +132,25 @@ describe('lion-switch-button', () => {
     expect(handlerSpy.called).to.be.false;
   });
 
+  it('should not dispatch "checked-changed" event if readonly', () => {
+    const handlerSpy = sinon.spy();
+    el.readOnly = true;
+    el.addEventListener('checked-changed', handlerSpy);
+    el.click();
+    expect(handlerSpy.called).to.be.false;
+  });
+
   it('should not dispatch "checked-changed" event if disabled on update', () => {
     const handlerSpy = sinon.spy();
     el.disabled = true;
+    el.addEventListener('checked-changed', handlerSpy);
+    el.checked = !el.checked;
+    expect(handlerSpy.called).to.be.false;
+  });
+
+  it('should not dispatch "checked-changed" event if readonly on update', () => {
+    const handlerSpy = sinon.spy();
+    el.readOnly = true;
     el.addEventListener('checked-changed', handlerSpy);
     el.checked = !el.checked;
     expect(handlerSpy.called).to.be.false;
@@ -174,5 +204,13 @@ describe('lion-switch-button', () => {
     el.disabled = false;
     await el.updateComplete;
     expect(el.getAttribute('aria-disabled')).to.equal('false');
+  });
+  it('should manage "aria-readonly"', async () => {
+    el.readOnly = true;
+    await el.updateComplete;
+    expect(el.getAttribute('aria-readonly')).to.equal('true');
+    el.readOnly = false;
+    await el.updateComplete;
+    expect(el.getAttribute('aria-readonly')).to.equal('false');
   });
 });
