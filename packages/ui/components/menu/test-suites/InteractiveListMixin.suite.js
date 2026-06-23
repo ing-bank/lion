@@ -1,15 +1,10 @@
 import { LitElement } from 'lit';
-<<<<<<< HEAD
 import { expect, html, fixture as _fixture, unsafeStatic, defineCE } from '@open-wc/testing';
 import { sendMouse, resetMouse } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { getDeepActiveElement } from '@lion/ui/overlays.js';
 import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
 import { mimicKeyPress } from '../test-helpers/mimicKeyPress.js';
-=======
-import { expect, html, fixture, unsafeStatic, defineCE } from '@open-wc/testing';
-import { InteractiveListMixin } from '../src/InteractiveListMixin.js';
->>>>>>> 292a1c22b (wip)
 
 class InteractiveListClass extends InteractiveListMixin(LitElement) {}
 
@@ -17,7 +12,6 @@ class InteractiveListClass extends InteractiveListMixin(LitElement) {}
  * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListItemRole} InteractiveListItemRole
  */
 
-<<<<<<< HEAD
 /** @type {InteractiveListItemRole[]} */
 const supportedRoles = [
   'menuitem',
@@ -52,26 +46,6 @@ const l1Config = {
   },
 };
 
-=======
-// TODO, consider tab as well? See https://open-ui.org/components/scoped-focusgroup.explainer/#supported-behaviors
-
-/** @type {InteractiveListItemRole[]} */
-const supportedRoles = [
-  'menuitemcheckbox',
-  'menuitemradio',
-  'menuitem',
-  'treeitem',
-  'checkbox',
-  'option',
-  'radio',
-];
-
-/**
- * @typedef {Object} TestConfig
- * @property {string} tagString
- */
-
->>>>>>> 292a1c22b (wip)
 /**
  * @param {TestConfig} [customConfig]
  */
@@ -170,7 +144,6 @@ export function runInteractiveListMixinSuite(customConfig) {
       });
     });
 
-<<<<<<< HEAD
     describe('Programmatic interaction', () => {
       // If we have the item line directly in the fixture the linting rule lit-a11y/role-has-required-aria-attrs
       // will fail. Inside our code we set the required aria attributes, but the linter doesn't know that.
@@ -338,8 +311,6 @@ export function runInteractiveListMixinSuite(customConfig) {
       expect(item0.getAttribute('aria-current')).to.equal('page');
     });
 
-=======
->>>>>>> 292a1c22b (wip)
     // Copy tests from ListboxMixin. Later, make this mixin a fundament of the ListboxMixin
 
     // orientation
@@ -349,7 +320,6 @@ export function runInteractiveListMixinSuite(customConfig) {
     // noPreselect
     // _scrollTargetNode
 
-<<<<<<< HEAD
     describe('Interactions', () => {
       describe('Keyboard navigation', () => {
         it('navigates between items on [ArrowDown] [ArrowUp] keys', async () => {
@@ -464,8 +434,6 @@ export function runInteractiveListMixinSuite(customConfig) {
       });
     });
 
-=======
->>>>>>> 292a1c22b (wip)
     describe('Widget extensions', () => {
       it('can be extended to [role=listbox]', async () => {});
       it('can be extended to [role=menu]', async () => {});
@@ -473,7 +441,6 @@ export function runInteractiveListMixinSuite(customConfig) {
       it('can be extended to [role=toolbar]', async () => {});
       it('can be extended to [role=tree]', async () => {});
     });
-<<<<<<< HEAD
 
     describe('Overflow handling', () => {
       /** @type {import('sinon').SinonFakeTimers | null} */
@@ -556,7 +523,7 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should show no More button when all items fit', async () => {
         const el = await fixture(html`
-          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
+          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}"
             data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
@@ -579,13 +546,13 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should show  More button when not all items fit', async () => {
         const el = await fixture(html`
-          <${tag} 
+          <${tag}
             .itemWrap="${true}"
             ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
-            ._activeMode="${'tabbable-disclosure'}" 
-            style="min-width: 170px; max-width: 170px;"            
+            ._activeMode="${'tabbable-disclosure'}"
+            style="min-width: 170px; max-width: 170px;"
           >
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
@@ -617,14 +584,14 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should show 2 items when clicking on `More` button', async () => {
         const el = await fixture(html`
-          <${tag} 
+          <${tag}
             .itemWrap="${true}"
             ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
-            ._activeMode="${'tabbable-disclosure'}" 
-            style="min-width: 170px; max-width: 170px;"            
-          >          
+            ._activeMode="${'tabbable-disclosure'}"
+            style="min-width: 170px; max-width: 170px;"
+          >
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
@@ -655,14 +622,14 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should focus more button menu container when clicking on `More` button', async () => {
         const el = await fixture(html`
-          <${tag} 
+          <${tag}
             .itemWrap="${true}"
             ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
-            ._activeMode="${'tabbable-disclosure'}" 
-            style="min-width: 170px; max-width: 170px;"            
-          >          
+            ._activeMode="${'tabbable-disclosure'}"
+            style="min-width: 170px; max-width: 170px;"
+          >
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
@@ -690,14 +657,14 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should open and then close More button menu when clicking 2 times on the More button', async () => {
         const el = await fixture(html`
-          <${tag} 
+          <${tag}
             .itemWrap="${true}"
             ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
-            ._activeMode="${'tabbable-disclosure'}" 
-            style="min-width: 170px; max-width: 170px;"            
-          > 
+            ._activeMode="${'tabbable-disclosure'}"
+            style="min-width: 170px; max-width: 170px;"
+          >
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
@@ -726,7 +693,7 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should remove `More` button when making font smaller', async () => {
         const el = await fixture(html`
-          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}" 
+          <${tag} name="foo" ._activeMode="${'tabbable-disclosure'}" .itemWrap="${true}"
             data-has-full-width-flyout orientation="horizontal" style="min-width: 170px; max-width: 170px;">
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
@@ -759,14 +726,14 @@ export function runInteractiveListMixinSuite(customConfig) {
 
       it('should add `More` button when making font larger', async () => {
         const el = await fixture(html`
-          <${tag} 
+          <${tag}
             .itemWrap="${true}"
             ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
-            ._activeMode="${'tabbable-disclosure'}" 
-            style="min-width: 170px; max-width: 170px;"            
-          > 
+            ._activeMode="${'tabbable-disclosure'}"
+            style="min-width: 170px; max-width: 170px;"
+          >
             <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
               <a href="#">Item 1</a>
             </div>
@@ -797,7 +764,5 @@ export function runInteractiveListMixinSuite(customConfig) {
         expect(isMoreButtonShown(el)).to.equal(true);
       });
     });
-=======
->>>>>>> 292a1c22b (wip)
   });
 }

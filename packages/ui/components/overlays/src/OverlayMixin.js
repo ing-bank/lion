@@ -480,11 +480,7 @@ export const OverlayMixinImplementation = superclass => {
   for (const postProcessor of overlayMixinPostProcessors) {
     postProcessor(OverlayMixin);
   }
-<<<<<<< HEAD
   // @ts-ignore https://github.com/microsoft/TypeScript/issues/36821#issuecomment-588375051
   return OverlayMixin;
-=======
-  return /** @type {* & OverlayMixin} */ (OverlayMixin);
->>>>>>> 292a1c22b (wip)
 };
 export const OverlayMixin = dedupeMixin(OverlayMixinImplementation);

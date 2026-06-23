@@ -46,11 +46,8 @@ export declare class InteractiveListHost {
 
   protected _scrollTargetNode: HTMLElement;
 
-<<<<<<< HEAD
   protected _invokerNode: HTMLElement;
 
-=======
->>>>>>> 292a1c22b (wip)
   protected _listNode: HTMLElement;
 
   // private __setupListboxNode(): void;

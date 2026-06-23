@@ -1,9 +1,6 @@
 # @lion/ui
 
-<<<<<<< HEAD
-## 0.17.0-menu-system.0
-=======
-<<<<<<< HEAD
+
 ## 0.17.1
 
 ### Patch Changes
