@@ -22,7 +22,7 @@ export class LionTree extends MultiLevelListMixin(LitElement) {
     super.updated(changedProperties);
 
     if (changedProperties.has('level')) {
-      if (this.level > 0) {
+      if (this.level > 1) {
         this._listNode.setAttribute('role', 'group');
       }
       this.__setAriaLevelForListItems();
