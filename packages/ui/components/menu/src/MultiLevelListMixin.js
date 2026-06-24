@@ -37,8 +37,11 @@ const MultiLevelListMixinImplementation = superclass =>
      * @configure DisclosureMixin
      */
     get _invokerNode() {
-      // @ts-ignore - accessing static method and super property
-      return this.constructor._getFocusableInvokerEl(this.invokerNode) || super._invokerNode;
+      if (this.constructor._getFocusableInvokerEl && this.invokerNode) {
+        // @ts-ignore - accessing static method and super property
+        return this.constructor._getFocusableInvokerEl(this.invokerNode);
+      }
+      return super._invokerNode;
     }
 
     /**
@@ -84,6 +87,7 @@ const MultiLevelListMixinImplementation = superclass =>
       this.noPreselect = true;
       /**
        * @configure InteractiveListMixin
+       * @type {'activedescendant'|'roving-tabindex'|'tabbable-disclosure'}
        */
       this._activeMode = 'roving-tabindex';
       /**
@@ -164,6 +168,13 @@ const MultiLevelListMixinImplementation = superclass =>
         }
       });
     }
+
+    /**
+     * @enhance DisclosureMixin
+     * @param {Event} [ev]
+     */
+    // eslint-disable-next-line class-methods-use-this, no-unused-vars
+    close(ev) {}
 
     /**
      * @enhance DisclosureMixin
@@ -257,7 +268,7 @@ const MultiLevelListMixinImplementation = superclass =>
       this._subListMap.forEach(subList => {
         subList.listItems.forEach(
           /** @param {LionItem|HTMLElement} item */ item => {
-            if (isChecked(item)) {
+            if (isChecked(item) && subList._invokerNode) {
               setChecked(subList._invokerNode);
             }
           },

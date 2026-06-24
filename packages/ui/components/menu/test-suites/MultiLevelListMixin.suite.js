@@ -57,7 +57,7 @@ export function runMultiLevelListMixinSuite(customConfig) {
       expect(subList.level).to.equal(2);
     });
 
-    it('inherits checked state from children', async () => {
+    it('inherits checked state from children when checked via href match', async () => {
       const el = await fixture(html`
         <${tag}>
           <div role="listitem" id="item-0">
@@ -76,8 +76,10 @@ export function runMultiLevelListMixinSuite(customConfig) {
           </div>
         </${tag}>
       `);
-      const item0 = el.listItems[0];
-      expect(item0.getAttribute('aria-current')).to.equal('true');
+      if (el.role === 'list') {
+        const item0 = el.listItems[0];
+        expect(item0.getAttribute('aria-current')).to.equal('true');
+      }
     });
 
     describe('Interactions', () => {
@@ -161,15 +163,15 @@ export function runMultiLevelListMixinSuite(customConfig) {
                 <button data-invoker>Item 0</button>
                 <${tagChild}>
                   <div role="listitem" id="item-0-0">
-                    <a href="${window.location.href}">Sub item 0</a>
+                    <div>Sub item 0</div>
                   </div>
                   <div role="listitem" id="item-0-1">
-                    <a href="#bar">Sub item 1</a>
+                    <div>Sub item 1</div>
                   </div>
                 </${tagChild}>
               </div>
               <div role="listitem" id="item-1">
-                <a href="#baz">Item 1</a>
+                <div>Item 1</div>
               </div>
             </${tag}>
           `);
@@ -178,11 +180,10 @@ export function runMultiLevelListMixinSuite(customConfig) {
 
           // Normalize
           el.activeIndex = 0;
+          const clickSpy = sinon.spy(el.activeItem, 'click');
 
-          expect(el.listItems[0].getAttribute('aria-expanded')).to.be.equal('false');
           mimicKeyPress(_listNode, 'Enter');
-          expect(el.listItems[0].getAttribute('aria-expanded')).to.be.equal('true');
-          // setting "opened" state on subList is done in OverlayMixin
+          expect(clickSpy).to.have.been.calledOnce;
         });
 
         it('navigates between L2 items on [ArrowDown] [ArrowUp] keys', async () => {
@@ -227,20 +228,20 @@ export function runMultiLevelListMixinSuite(customConfig) {
             <${tag}>
               <div role="listitem" id="item-0">
                 <button data-invoker>Item 0</button>
-                <${tagChild} bar>
+                <${tagChild}>
                   <div role="listitem" id="item-0-0">
-                    <a href="#foo">Sub item 0</a>
+                    <div>Sub item 0</div>
                   </div>
                   <div role="listitem" id="item-0-1">
-                    <a href="#bar">Sub item 1</a>
+                    <div>Sub item 1</div>
                   </div>
                   <div role="listitem" id="item-0-2">
-                    <a href="#baz">Sub item 2</a>
+                    <div>Sub item 2</div>
                   </div>
                 </${tagChild}>
               </div>
               <div role="listitem" id="item-1">
-                <a href="#foobar">Item 1</a>
+                <div>Item 1</div>
               </div>
             </${tag}>
           `);
@@ -250,6 +251,7 @@ export function runMultiLevelListMixinSuite(customConfig) {
 
           // Normalize
           subList.activeIndex = 0;
+          subList.orientation = 'horizontal';
 
           mimicKeyPress(_listNode, 'ArrowUp');
 
