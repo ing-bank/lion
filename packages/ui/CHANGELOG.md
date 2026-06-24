@@ -1,5 +1,15 @@
 # @lion/ui
 
+## 0.18.0
+
+### Minor Changes
+
+- 94f3db8: Add readonly property to LionSwitchButton
+
+### Patch Changes
+
+- ff0edd8: avoid mutating adopted stylesheets for older browsers that don't support mutation
+
 ## 0.17.1
 
 ### Patch Changes
