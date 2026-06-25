@@ -398,14 +398,16 @@ export class LionInputAmountDropdown extends LionInputAmount {
 
   /**
    * Used for Required validation and computation of interaction states.
-   * We need to override this, because we prefill the input with the currency code, but for proper UX,
-   * we don't consider this as having interaction state `prefilled`
-   * @param {string} modelValue
+   * We only consider the amount part for emptiness checks.
+   * Missing, null, empty-string or NaN amount is considered empty.
    * @return {boolean}
    * @protected
    */
   _isEmpty(modelValue = this.modelValue) {
-    return super._isEmpty(modelValue) || this.currency === this.__initializedCurrencyCode;
+    const isNumberValue =
+      typeof modelValue?.amount === 'number' &&
+      (modelValue?.amount === 0 || Number.isNaN(modelValue?.amount));
+    return !modelValue?.amount && !isNumberValue;
   }
 
   /**
