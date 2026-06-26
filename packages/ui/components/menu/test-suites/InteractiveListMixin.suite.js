@@ -38,7 +38,7 @@ const l1Config = {
   hasFullWidthFlyout: true,
   openableConfig: {
     // We want disclosure behavior
-    placementMode: 'custom',
+    placementMode: 'none',
     // N.B. we don't have an invoker...
     isActivated: false,
     inheritsReferenceWidth: 'none',

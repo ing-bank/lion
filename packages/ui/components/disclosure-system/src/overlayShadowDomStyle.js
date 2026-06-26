@@ -121,18 +121,4 @@ export const overlayShadowDomStyle = css`
       animation: overlays-backdrop-fade-out 1ms;
     }
   }
-
-  dialog[data-overlay-outer-wrapper] {
-    background-image: none;
-    border-style: none;
-    padding: 0px;
-  }
-
-  /** 
-   * We don't want to use pseudo el ::backdrop.  
-   * We have our own, that creates more flexibility wrt scrolling etc.
-   */
-  dialog[data-overlay-outer-wrapper]::backdrop {
-    display: none;
-  }
 `;

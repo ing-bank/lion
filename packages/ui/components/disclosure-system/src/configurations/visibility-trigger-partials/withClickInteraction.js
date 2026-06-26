@@ -1,3 +1,5 @@
+import { isDisabled } from '@lion/ui/core.js';
+
 /**
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  * @typedef {import('@lion/ui/overlays.js').OverlayController} OverlayController
@@ -13,9 +15,7 @@ export function withClickInteraction() {
       /** @type {{ controller: OverlayController }} */ { controller },
     ) => {
       function handleOpenClosed() {
-        if (controller._hasDisabledInvoker()) {
-          return;
-        }
+        if (isDisabled(controller.invokerNode)) return;
         controller.toggle();
       }
 

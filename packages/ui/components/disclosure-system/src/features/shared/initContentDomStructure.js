@@ -1,17 +1,25 @@
-import { _adoptStyleUtils } from '../utils/adopt-styles.js';
-import { overlayShadowDomStyle as overlayViewportStyle } from '../overlayShadowDomStyle.js';
+import { css } from 'lit';
+import { _adoptStyleUtils } from '../../utils/adopt-styles.js';
 
 /**
- * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
- * @typedef {import('@lion/ui/overlays.js').OverlayConfig} OverlayConfig
  * @typedef {import('@lion/ui/overlays.js').OverlayController} OverlayController
- * @typedef {import('@popperjs/core').Options} PopperOptions
- * @typedef {import('@popperjs/core').Placement} Placement
- * @typedef {import('@popperjs/core').createPopper} Popper
- * @typedef {{ createPopper: Popper }} PopperModule
  */
 
-// TODO: split up local and global?
+export const dialogWrapperStyle = css`
+  dialog[data-overlay-outer-wrapper] {
+    background-image: none;
+    border-style: none;
+    padding: 0px;
+  }
+
+  /**
+   * We don't want to use pseudo el ::backdrop.
+   * We have our own, that creates more flexibility wrt scrolling etc.
+   */
+  dialog[data-overlay-outer-wrapper]::backdrop {
+    display: none;
+  }
+`;
 
 /**
  * From:
@@ -62,7 +70,7 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
     // Wrap...
     wrappingDialogNodeL1.appendChild(contentWrapperNodeL2);
   } else {
-    const contentIsProjected = contentNodeL3.assignedSlot;
+    const contentIsProjected = !!contentNodeL3.assignedSlot;
     if (contentIsProjected) {
       parentElement =
         contentNodeL3.assignedSlot.parentElement || contentNodeL3.assignedSlot.getRootNode();
@@ -146,10 +154,10 @@ function rearrangeNodes({ wrappingDialogNodeL1, contentWrapperNodeL2, contentNod
  *
  * @private
  *
- * @param {{controller: OverlayController}} cfg
+ * @param {{controller: OverlayController;}} cfg
  * @returns {() => void}
  */
-function initContentDomStructure({ controller }) {
+export function initContentDomStructure({ controller }) {
   let cleanup = () => {};
 
   const wrappingDialogElement = document.createElement('dialog');
@@ -168,8 +176,7 @@ function initContentDomStructure({ controller }) {
   // parent stacking context
   // padding reset so we don't get a weird dialog visual square showing up
   wrappingDialogElement.style.cssText = `display:none; z-index: ${controller.config.zIndex}; padding: 0;`;
-  // @ts-expect-error - 'custom' is a valid extension of placementMode
-  if (controller.config.placementMode === 'custom') {
+  if (controller.config.placementMode === 'none') {
     // The user should have full freedom to control the content node, so its wrapper nodes should remain neutral.
     wrappingDialogElement.style.cssText += 'position: static;';
   }
@@ -229,102 +236,13 @@ function initContentDomStructure({ controller }) {
     });
   }
 
-  return cleanup;
-}
+  const rootNode = /** @type {ShadowRoot} */ (controller.contentWrapperNode?.getRootNode());
+  _adoptStyleUtils.adoptStyle(rootNode, dialogWrapperStyle, { teardown: false });
 
-/**
- * @returns {Promise<PopperModule>}
- */
-async function preloadPopper() {
-  // @ts-expect-error [external]: import complains about untyped module, but we typecast it ourselves
-  return /** @type {* & Promise<PopperModule>} */ (import('@popperjs/core/dist/esm/popper.js'));
-}
-
-/** @type {Promise<PopperModule> | undefined} */
-let popperModulePromise;
-
-/**
- * @param {{ config: OverlayConfig, controller: OverlayController }} visibilityToggleContext
- */
-export function placementHandler({ controller }) {
-  const placementClass = `overlays__overlay-container--${controller.viewportConfig.placement}`;
-
-  /** @type {() => void} */
-  let cleanupContentDomStructure;
-  // N.B. for now, we store this on the controller for backward compatibility...
-  /** @type {Popper} */
-  // @ts-expect-error
-  controller._popper = undefined;
-
-  /** @type {ShadowRoot} */
-  let rootNode;
-
-  /** @private */
-  async function createPopperInstance() {
-    // @ts-expect-error
-    if (controller._popper) {
-      // @ts-expect-error
-      controller._popper.destroy();
-      // @ts-expect-error
-      controller._popper = undefined;
-    }
-
-    if (popperModulePromise !== undefined) {
-      const { createPopper } = await popperModulePromise;
-      // @ts-expect-error
-      controller._popper = createPopper(controller._referenceNode, controller.contentWrapperNode, {
-        ...controller.config?.popperConfig,
-      });
-    }
-  }
-
-  return {
-    init: () => {
-      cleanupContentDomStructure = initContentDomStructure({ controller });
-      rootNode = /** @type {ShadowRoot} */ (controller.contentWrapperNode?.getRootNode());
-      _adoptStyleUtils.adoptStyle(rootNode, overlayViewportStyle, { teardown: true });
-    },
-    show: async () => {
-      if (controller.placementMode === 'global') {
-        // TODO: move to init?
-        // TODO2: use data attributes for functional styling
-        controller.contentWrapperNode.classList.add('overlays__overlay-container');
-        controller.contentWrapperNode.classList.add(placementClass);
-        controller.contentNode.classList.add('overlays__overlay');
-      } else if (controller.config.placementMode === 'local') {
-        // Lazily load Popper as soon as the first local overlay is used...
-        // TODO: (provide option to) move to init?
-        if (!popperModulePromise) {
-          popperModulePromise = preloadPopper();
-        }
-
-        /**
-         * Popper is weird about properly positioning the popper element when it is recreated so
-         * we just recreate the popper instance to make it behave like it should.
-         * Probably related to this issue: https://github.com/FezVrasta/popper.js/issues/796
-         * calling just the .update() function on the popper instance sadly does not resolve this.
-         * This is however necessary for initial placement.
-         */
-        await createPopperInstance();
-        // @ts-expect-error
-        controller._popper.forceUpdate();
-      }
-    },
-    hide: () => {
-      if (controller.config.placementMode !== 'global') return;
-      controller.contentWrapperNode.classList.remove('overlays__overlay-container');
-      controller.contentWrapperNode.classList.remove(placementClass);
-      controller.contentNode.classList.remove('overlays__overlay');
-    },
-    teardown: () => {
-      _adoptStyleUtils.adoptStyle(rootNode, overlayViewportStyle, { teardown: true });
-
-      const shouldWeCleanupCustomStyles = controller.contentWrapperNode !== controller.contentNode;
-      if (!shouldWeCleanupCustomStyles) return;
-
-      cleanupContentDomStructure?.();
-      controller.contentWrapperNode.removeAttribute('style');
-      controller.contentWrapperNode.removeAttribute('class');
-    },
+  return () => {
+    cleanup();
+    controller.contentWrapperNode.removeAttribute('style');
+    controller.contentWrapperNode.removeAttribute('class');
+    _adoptStyleUtils.adoptStyle(rootNode, dialogWrapperStyle, { teardown: true });
   };
 }

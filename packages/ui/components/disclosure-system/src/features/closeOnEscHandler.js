@@ -19,8 +19,8 @@ export function closeOnEscHandler({ controller, invoker, content }) {
    */
   const hasPressedInside = event =>
     event.composedPath().includes(/** @type {EventTarget} */ (controller.__wrappingDialogNode)) ||
-    (invoker && event.composedPath().includes(invoker)) ||
-    deepContains(content, /** @type {HTMLElement|ShadowRoot} */ (event.target));
+    (controller.invokerNode && event.composedPath().includes(controller.invokerNode)) ||
+    deepContains(controller.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 
   /**
    * @param {KeyboardEvent} event
@@ -51,7 +51,7 @@ export function closeOnEscHandler({ controller, invoker, content }) {
       // there is only one Escape handler added here.
       // Note `init` phase triggered on every `updateConfig` call and that
       // could happen multiple times during the component life cycle
-      content.removeEventListener('keyup', escKeyHandler);
+      // content.removeEventListener('keyup', escKeyHandler);
       content.addEventListener('keyup', escKeyHandler);
       invoker?.addEventListener('keyup', escKeyHandler);
     },

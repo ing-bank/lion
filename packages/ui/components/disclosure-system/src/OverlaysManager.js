@@ -2,7 +2,7 @@ import { browserDetection } from '@lion/ui/core.js';
 
 /**
  * @typedef {import('lit').CSSResult} CSSResult
- * @typedef {import('./VisibilityToggleController.js').OverlayController} OverlayController
+ * @typedef {import('./DisclosureController.js').DisclosureController} OverlayController
  * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
  */
 

@@ -5,9 +5,10 @@ import { createRestorable, restore } from './utils/create-restorable.js';
 
 import { closeOnOutsideClickHandler } from './features/closeOnOutsideClickHandler.js';
 import { closeOnOutsideEscHandler } from './features/closeOnOutsideEscHandler.js';
+import { globalPlacementHandler } from './features/globalPlacementHandler.js';
+import { localPlacementHandler } from './features/localPlacementHandler.js';
 import { closeOnEscHandler } from './features/closeOnEscHandler.js';
 import { trapFocusHandler } from './features/trapFocusHandler.js';
-import { placementHandler } from './features/placementHandler.js';
 import { backdropHandler } from './features/backdropHandler.js';
 import { focusHandler } from './features/focusHandler.js';
 import { a11yHandler } from './features/a11yHandler.js';
@@ -30,7 +31,9 @@ const hasPopoverSupport = 'popover' in HTMLElement.prototype;
  * With the right configuration, it can be used to build (modal) dialogs, tooltips, dropdowns, popovers,
  * bottom/top/left/right sheets etc.
  */
-export class VisibilityToggleControllerLean extends EventTarget {
+export class DisclosureControllerLean extends EventTarget {
+  __hasSetup = false;
+
   /**
    * @constructor
    * @param {Partial<OverlayConfig>} config initial config. Will be remembered as shared config
@@ -38,6 +41,7 @@ export class VisibilityToggleControllerLean extends EventTarget {
    */
   constructor(config = {}, manager = overlays) {
     super();
+
     // TODO: should we only do this in OverlayCtrl for backw. compat? It's not really needed for disclosure
     this.manager = manager;
     /** @private */
@@ -129,8 +133,6 @@ export class VisibilityToggleControllerLean extends EventTarget {
 
     this.updateConfig(config);
   }
-
-  __hasSetup = false;
 
   /**
    * Allows to dynamically change the overlay configuration. Needed in case the
@@ -230,10 +232,12 @@ export class VisibilityToggleControllerLean extends EventTarget {
       'aria-labelledby',
       'aria-expanded',
       'aria-haspopup',
+      'popovertarget',
       'aria-details',
       'data-content',
       'data-open',
       'tabindex',
+      'popover',
       'style',
       'class',
       'role',
@@ -318,26 +322,30 @@ export class VisibilityToggleControllerLean extends EventTarget {
 
     const event = new CustomEvent('before-show', { cancelable: true });
     this.dispatchEvent(event);
+    const pendingPromises = [];
     if (!event.defaultPrevented) {
-      this.#showContent();
-
       this.__elementToFocusAfterHide = elementToFocusAfterHide;
 
       this._keepBodySize({ phase: 'before-show' });
-      await this._handleFeatures({ phase: 'show' });
-      this._keepBodySize({ phase: 'show' });
-      // await this._handlePosition({ phase: 'show' });
+      this.#showContent();
       this.dispatchEvent(new Event('show'));
-      await this.transitionShow({
+      // await
+      pendingPromises.push(this._handleFeatures({ phase: 'show' }));
+      this._keepBodySize({ phase: 'show' });
+
+      const transitionPromise = this.transitionShow({
         backdropNode: this.backdropNode,
         contentNode: this.config.contentNode,
       });
-
-      if (this.config.focusContentOnOpen) {
-        this.config.contentNode.focus();
-      }
+      pendingPromises.push(transitionPromise);
+      transitionPromise.then(() => {
+        if (this.config.focusContentOnOpen) {
+          this.config.contentNode.focus();
+        }
+      });
     }
 
+    await Promise.all(pendingPromises);
     /** @type {function} */
     (this._showResolve)();
   }
@@ -357,7 +365,7 @@ export class VisibilityToggleControllerLean extends EventTarget {
    * @event hide right after the overlay is hidden
    */
   async hide() {
-    // Function like a no-op for dynamic edge cases...
+    // Functions like a no-op for dynamic edge cases...
     if (!this.config.isActivated) return;
 
     this._hideComplete = new Promise(resolve => {
@@ -384,10 +392,9 @@ export class VisibilityToggleControllerLean extends EventTarget {
       });
 
       this.#hideContent();
-
+      this.dispatchEvent(new Event('hide'));
       this._handleFeatures({ phase: 'hide' });
       this._keepBodySize({ phase: 'hide' });
-      this.dispatchEvent(new Event('hide'));
     }
     /** @type {function} */ (this._hideResolve)();
   }
@@ -431,10 +438,14 @@ export class VisibilityToggleControllerLean extends EventTarget {
       // Doing this in teardown avoids unexpected "null pointers" in cleanup logic
       this.__contentWrapperNode = this.config.contentNode;
       this.__wrappingDialogNode = this.config.contentNode;
-    } else {
+    } else if (this.config.placementMode === 'local') {
       // N.B. initial popper load is async... we keep it sync for now,
       // to keep things backward compatible.
-      promises.push(this.__handleFeature('placementMode', placementHandler, { phase }));
+      promises.push(this.__handleFeature('placementModeLocal', localPlacementHandler, { phase }));
+    } else if (this.config.placementMode === 'global') {
+      // N.B. initial popper load is async... we keep it sync for now,
+      // to keep things backward compatible.
+      promises.push(this.__handleFeature('placementModeGlobal', globalPlacementHandler, { phase }));
     }
 
     if (this.config.preventsScroll) {
@@ -624,7 +635,7 @@ export class VisibilityToggleControllerLean extends EventTarget {
   }
 }
 
-export class VisibilityToggleController extends VisibilityToggleControllerLean {
+export class DisclosureController extends DisclosureControllerLean {
   /**
    * The invokerNode
    * @type {HTMLElement | undefined}

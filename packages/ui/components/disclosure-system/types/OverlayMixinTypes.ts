@@ -1,7 +1,7 @@
 import { Constructor } from '@open-wc/dedupe-mixin';
 import { LitElement } from 'lit';
 import { OverlayConfig } from './OverlayConfig.js';
-import { OverlayController } from '../src/VisibilityToggleController.js';
+import { OverlayController } from '../src/DisclosureController.js';
 
 export interface DefineOverlayConfig {
   /** The interactive element (usually a button) invoking the dialog or tooltip */

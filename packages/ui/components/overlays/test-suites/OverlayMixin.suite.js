@@ -325,6 +325,8 @@ export function runOverlayMixinSuite({ tagString, tag, suffix = '' }) {
       // @ts-ignore
       el.querySelector('[slot=content] button').click();
       await el._overlayCtrl._hideComplete;
+      await el.updateComplete;
+
       expect(el.opened).to.be.false;
     });
 

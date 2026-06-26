@@ -1,7 +1,7 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { expect, fixture, fixtureSync } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
-import { VisibilityToggleController as OverlayController } from '../src/VisibilityToggleController.js';
+import { DisclosureController as OverlayController } from '../src/DisclosureController.js';
 import { browserDetection } from '@lion/ui/core.js';
 import { normalizeTransformStyle } from '../test-helpers/normalizeTransformStyle.js';
 

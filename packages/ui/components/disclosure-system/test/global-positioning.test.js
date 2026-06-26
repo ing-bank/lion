@@ -1,6 +1,6 @@
 import { expect, fixtureSync } from '@open-wc/testing';
 import { html } from 'lit/static-html.js';
-import { VisibilityToggleController as OverlayController } from '../src/VisibilityToggleController.js';
+import { DisclosureController as OverlayController } from '../src/DisclosureController.js';
 import { overlays } from '../src/singleton.js';
 
 /**

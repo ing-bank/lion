@@ -193,7 +193,7 @@ describe('OverlayController', () => {
         const contentNode = /** @type {HTMLElement} */ (await fixture('<div>contentful</div>'));
         shadowHost.appendChild(contentNode);
         new OverlayController({
-          ...withLocalTestConfig(),
+          ...withGlobalTestConfig(),
           contentNode,
         });
         expect(spy.callCount).to.equal(1);

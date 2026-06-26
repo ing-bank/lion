@@ -25,7 +25,7 @@ const config = {
     hasFullWidthFlyout: true,
     openableConfig: {
       // We want disclosure behavior
-      placementMode: 'custom',
+      placementMode: 'none',
       // N.B. we don't have an invoker...
       isActivated: false,
       inheritsReferenceWidth: 'none',
@@ -36,7 +36,7 @@ const config = {
     isBar: false,
     openableConfig: {
       // We want disclosure behavior
-      placementMode: 'custom',
+      placementMode: 'none',
       hidesOnOutsideClick: true,
       hidesOnEscape: true,
       inheritsReferenceWidth: 'none',
@@ -143,23 +143,23 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
 
     /** @returns {Promise<LionMenuHybrid>} */
     const getFixture = async () => {
-      const el = await fixture(html`        
-        <${tag} 
+      const el = await fixture(html`
+        <${tag}
           .itemWrap="${true}"
           ?data-has-full-width-flyout="${config.l1.hasFullWidthFlyout}"
           .config="${config.l1.openableConfig}"
           .bar="${config.l1.isBar}"
-          ._activeMode="${'tabbable-disclosure'}" 
-          style="min-width: 170px; max-width: 170px; position:relative"            
+          ._activeMode="${'tabbable-disclosure'}"
+          style="min-width: 170px; max-width: 170px; position:relative"
         >
           <div role="listitem" id="item1" style="min-width: 50px; max-width: 50px;">
              <button data-invoker>
               Item 1
             </button>
-            <${tag} 
+            <${tag}
               .config="${config.l2.openableConfig}"
               .bar="${config.l2.isBar}"
-              ._activeMode="${'tabbable-disclosure'}"               
+              ._activeMode="${'tabbable-disclosure'}"
             >
               <div role="listitem" id="item1.1">
                 <a href="#">Item 1.1</a>
@@ -172,14 +172,14 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
           <div role="listitem" id="item3" style="min-width: 50px; max-width: 50px;">
             <a href="#">Item 3</a>
           </div>
-          <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">            
+          <div role="listitem" id="item4" style="min-width: 50px; max-width: 50px;">
             <button data-invoker>
               Item 4
             </button>
-            <${tag} 
+            <${tag}
               .config="${config.l2.openableConfig}"
               .bar="${config.l2.isBar}"
-              ._activeMode="${'tabbable-disclosure'}" 
+              ._activeMode="${'tabbable-disclosure'}"
             >
               <div role="listitem" id="item4.1">
                 <a href="#">Item 4.1</a>
@@ -192,7 +192,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
         </${tag}>
         <style>
           ${l2Style}
-        </style>    
+        </style>
       `);
 
       const hybridEl = /** @type {LionMenuHybrid} */ (el);
@@ -271,7 +271,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
         '
       },
       {
-        action: 'Click on More button',        
+        action: 'Click on More button',
         expectation: '
           L2 menu gets closed,
           More button menu is shown,
@@ -302,7 +302,7 @@ export function runLionMenuHybridSuite({ klass = LionMenuHybrid } = {}) {
       },
       {
         action: 'Hit Tab many times so that the focus goes through all L2 items,
-        then focus moves to the next L1 item in the *main* menu and finally reaches 
+        then focus moves to the next L1 item in the *main* menu and finally reaches
         the last visible L1 item in the main menu just before the More button',
         expectation: '
           L2 menu stays open,

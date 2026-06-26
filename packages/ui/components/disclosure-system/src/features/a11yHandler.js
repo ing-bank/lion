@@ -46,7 +46,6 @@ export function a11yHandler({ controller, invoker, content }) {
 
   return {
     init: () => {
-      // @ts-expect-error
       content.setAttribute('id', content.id || controller._contentId);
 
       if (isExpandable) {
@@ -54,7 +53,10 @@ export function a11yHandler({ controller, invoker, content }) {
       }
 
       if (!isDirectSibling) {
-        invoker?.setAttribute('aria-details', content.id);
+        const isContentInSameShadowRoot = invoker?.getRootNode() === content.getRootNode();
+        if (isContentInSameShadowRoot) {
+          invoker?.setAttribute('aria-details', content.id);
+        }
       }
 
       // TODO: add tests
@@ -72,7 +74,7 @@ export function a11yHandler({ controller, invoker, content }) {
           break;
         case 'tooltip':
           content.setAttribute('role', 'tooltip');
-          invoker.setAttribute(
+          invoker?.setAttribute(
             controller.invokerRelation === 'label' ? 'aria-labelledby' : 'aria-describedby',
             content.id,
           );

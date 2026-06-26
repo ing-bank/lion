@@ -15,8 +15,8 @@ export function closeOnOutsideEscHandler({ controller, invoker, content }) {
    */
   const hasPressedInside = event =>
     event.composedPath().includes(/** @type {EventTarget} */ (controller.__wrappingDialogNode)) ||
-    (invoker && event.composedPath().includes(invoker)) ||
-    deepContains(content, /** @type {HTMLElement|ShadowRoot} */ (event.target));
+    (controller.invokerNode && event.composedPath().includes(controller.invokerNode)) ||
+    deepContains(controller.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
 
   /**
    * @param {KeyboardEvent} event

@@ -1,17 +1,11 @@
+import { isDisabled } from '@lion/ui/core.js';
+
 /**
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  * @typedef {import('@lion/ui/overlays.js').OverlayController} OverlayController
  */
 
 // N.B. Below logic is tested in LionTooltip
-
-// TODO: this is copied from menu system. Move them to common ancestor entrypoint (maybe a core entrypoint for all interactive controls)
-/**
- * @param {HTMLElement|undefined} item
- */
-export function isDisabled(item) {
-  return item && (item.hasAttribute('disabled') || item.getAttribute('aria-disabled') === 'true');
-}
 
 /**
  * Use for tooltips and [flyout menus](https://www.w3.org/WAI/tutorials/menus/flyout/).
@@ -45,9 +39,9 @@ export function withHoverInteraction({
       }
 
       /**
-       * @param {{ shouldOpen: boolean, controller: OverlayController, openTimeout?: number, closeTimeout?: number }} cfg
+       * @param {{ shouldOpen: boolean, openTimeout?: number, closeTimeout?: number }} cfg
        */
-      function openClose({ shouldOpen, controller, openTimeout = 0, closeTimeout = 0 }) {
+      function openClose({ shouldOpen, openTimeout = 0, closeTimeout = 0 }) {
         clearTimeout(pendingDelayTimeout);
         if (shouldOpen && !isDisabled(controller.invokerNode)) {
           pendingDelayTimeout = setTimeout(() => controller.show(), openTimeout);
@@ -66,7 +60,7 @@ export function withHoverInteraction({
           isHovered = type === 'mouseleave' ? false : isHovered || type === 'mouseenter';
         }
         const shouldOpen = isFocused || isHovered;
-        openClose({ shouldOpen, controller, openTimeout: delayIn, closeTimeout: delayOut });
+        openClose({ shouldOpen, openTimeout: delayIn, closeTimeout: delayOut });
       }
 
       /**
@@ -81,10 +75,10 @@ export function withHoverInteraction({
           type === 'pointerup' || type === 'pointerleave' ? false : type === 'pointerdown';
         if (isTapping) {
           pendingLongpressTimeout = setTimeout(() => {
-            openClose({ shouldOpen: true, controller });
+            openClose({ shouldOpen: true });
           }, longpressDuration);
         }
-        openClose({ shouldOpen: isTapping || isHovered, controller });
+        openClose({ shouldOpen: isTapping || isHovered });
       }
 
       return {

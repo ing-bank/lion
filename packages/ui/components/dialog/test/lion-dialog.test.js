@@ -391,12 +391,18 @@ describe('lion-dialog', () => {
        */
       const getDialog = () =>
         wrapperElementShadowRoot?.querySelector('lion-dialog')?.shadowRoot?.querySelector('dialog');
+
+      const getCtrl = () =>
+        // @ts-expect-error [allow-protected-in-tests]
+        wrapperElementShadowRoot?.querySelector('lion-dialog')?._overlayCtrl;
+
       // @ts-ignore
       const isDialogVisible = () => getDialog()?.checkVisibility() === true;
       const isDialogRendered = () =>
         !!wrapperElement.shadowRoot?.querySelector('lion-dialog')?.shadowRoot?.childNodes.length;
       getInvokerButton()?.click();
       await waitUntil(isDialogVisible);
+      await getCtrl()?._showComplete;
       getCloseButton()?.click();
       await waitUntil(() => !isDialogVisible());
       getSecondButton()?.click();

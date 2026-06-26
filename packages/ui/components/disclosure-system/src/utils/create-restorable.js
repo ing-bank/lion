@@ -19,36 +19,11 @@ export function createRestorable(targetNode, allowedAttrs) {
       return Reflect.set(target, prop, value);
     },
     get(target, prop, receiver) {
-      // // @ts-expect-error
-      // if (typeof target[prop] === 'function') {
-      //   if (prop === 'addEventListener') {
-      //     console.debug('addEventListener', arguments);
-      //     listeners.push(arguments);
-      //     // return Reflect.apply(target[prop], target, arguments).bind(target);
-      //   } else if (prop === 'setAttribute' && !allowedAttrs.includes(arguments[1])) {
-      //     console.debug('setAttribute', arguments, target, prop, receiver);
-
-      //     throw new Error(
-      //       `Only attributes in the allowedAttrs (${allowedAttrs.join(', ')}) can be set on this element. Found: ${arguments[1]}`,
-      //     );
-      //   }
-
-      //   // @ts-expect-error
-      //   return target[prop].bind(targetNode);
-      // }
-      // // @ts-expect-error
-      // return target[prop];
-
-      // const value = Reflect.get(target, prop, receiver).bind(targetNode);
-
       // If the accessed property is a method, wrap it to capture arguments
       if (typeof target[prop] === 'function') {
-        // const x = target[prop].bind(targetNode);
         return function () {
           if (prop === 'addEventListener') {
-            // console.debug('addEventListener', arguments);
             listeners.push(arguments);
-            // return Reflect.apply(target[prop], target, arguments).bind(target);
           } else if (prop === 'setAttribute' && !allowedAttrs.includes(arguments[0])) {
             throw new Error(
               `Only attributes in the allowedAttrs (${allowedAttrs.join(', ')}) can be set on this element. Found: ${arguments[0]}`,

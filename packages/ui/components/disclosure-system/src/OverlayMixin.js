@@ -1,5 +1,7 @@
+import { DisclosureController as OverlayController } from './DisclosureController.js';
+
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
-import { VisibilityToggleController as OverlayController } from './VisibilityToggleController.js';
+// import { OverlayController } from './OverlayController.js';
 import { isEqualConfig } from './utils/is-equal-config.js';
 
 /**
@@ -37,6 +39,16 @@ export const OverlayMixinImplementation = superclass => {
       };
     }
 
+    // get opened() {
+    //   return this.__opened;
+    // }
+
+    // set opened(value) {
+    //   const oldValue = this.opened;
+    //   this.__opened = value;
+    //   this.requestUpdate('opened', oldValue);
+    // }
+
     #hasSetup = false;
 
     constructor() {
@@ -59,17 +71,6 @@ export const OverlayMixinImplementation = superclass => {
       this.open = this.open.bind(this);
       /** @type {EventListener} */
       this.close = this.close.bind(this);
-
-      // // By default, we go for disclosure behavior
-      // // TODO: in the future, bring disclosure behavior to a controller (and therefore directive).
-      // // Take inspiration from VisibilityToggleCtrl of portal elements
-      // /**
-      //  * Terminology aligned with https://open-ui.org/components/openable.explainer/
-      //  * @type {'disclosure'|'overlay'}
-      //  */
-      // this.openableMode = 'disclosure';
-
-      // allow hybrid disclosure/overlay components
     }
 
     get config() {
@@ -78,14 +79,9 @@ export const OverlayMixinImplementation = superclass => {
 
     /** @param {OverlayConfig} value */
     set config(value) {
-      // TODO: built-in in overlayCtrl now... delete here
-      const shouldUpdate = !isEqualConfig(this.config, value);
-
-      if (this._overlayCtrl && shouldUpdate) {
-        this._overlayCtrl.updateConfig(value);
-      }
+      this._overlayCtrl?.updateConfig(value);
       this.__config = value;
-      if (this._overlayCtrl && shouldUpdate) {
+      if (this._overlayCtrl) {
         this.__syncToOverlayController();
       }
     }
@@ -288,7 +284,7 @@ export const OverlayMixinImplementation = superclass => {
         if (slottedNode) {
           this.__invokerNode = ctor._getFocusableInvokerEl(slottedNode);
         } else {
-          // Look for preceeding sibling with [data-invoker] attribute, and try to find a focusable element in it (either itself or a child)
+          // Look for preceding sibling with [data-invoker] attribute, and try to find a focusable element in it (either itself or a child)
           this.__invokerNode =
             this.previousElementSibling?.hasAttribute('data-invoker') &&
             ctor._getFocusableInvokerEl(this.previousElementSibling);

@@ -198,7 +198,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           isBar: false,
           openableConfig: {
             // We want to do the absolute positioning ourselves, popper is not suited for this...
-            placementMode: 'custom',
+            placementMode: 'none',
             isActivated: false,
             hidesOnOutsideClick: false,
             inheritsReferenceWidth: 'none',
@@ -207,7 +207,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
         l2: {
           openableConfig: {
             // We want disclosure behavior
-            placementMode: 'custom',
+            placementMode: 'none',
             hidesOnOutsideClick: false,
             inheritsReferenceWidth: 'none',
           },
@@ -215,7 +215,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
         l3: {
           openableConfig: {
             // We want disclosure behavior
-            placementMode: 'custom',
+            placementMode: 'none',
             hidesOnOutsideClick: false,
             inheritsReferenceWidth: 'none',
           },
@@ -229,7 +229,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
         hasFullWidthFlyout: true,
         openableConfig: {
           // We want disclosure behavior
-          placementMode: 'custom',
+          placementMode: 'none',
           // N.B. we don't have an invoker...
           isActivated: false,
           inheritsReferenceWidth: 'none',
@@ -239,7 +239,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       l2: {
         openableConfig: {
           // We want disclosure behavior
-          placementMode: 'custom',
+          placementMode: 'none',
           hidesOnOutsideClick: true,
           hidesOnEscape: true,
           inheritsReferenceWidth: 'none',
@@ -249,7 +249,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
       l3: {
         openableConfig: {
           // We want disclosure behavior
-          placementMode: 'custom',
+          placementMode: 'none',
           inheritsReferenceWidth: 'none',
           focusContentOnOpen: true,
           // TODO: implement in OverlayController

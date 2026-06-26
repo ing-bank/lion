@@ -1,6 +1,6 @@
 - Redesign goals OverlayController
   - Simplicity
-    - One primitive to (controller to) rule them all
+    - One primitive (controller) to rule them all
       - Aligned api with all disclosure mechanisms (openables: <https://open-ui.org/components/openable.explainer/>)
       - Aligned with platform overlay primitives (popover, dialog and tooltip)
     - Controller will be elegantly aligned with host

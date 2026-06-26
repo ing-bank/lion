@@ -1,6 +1,6 @@
 /* eslint-disable no-new */
 /* eslint-disable lit-a11y/no-autofocus */
-import { VisibilityToggleController as OverlayController } from '../src/VisibilityToggleController.js';
+import { DisclosureController as OverlayController } from '../src/DisclosureController.js';
 
 import { overlays } from '../src/singleton.js';
 import { mimicClick } from '@lion/ui/overlays-test-helpers.js';
@@ -170,7 +170,7 @@ afterEach(() => {
   document.body.innerHTML = '';
 });
 
-describe('VisibilityToggleController', () => {
+describe('DisclosureController', () => {
   describe('Init', () => {
     it('adds OverlayController instance to OverlayManager', async () => {
       const ctrl = new OverlayController({
@@ -193,10 +193,10 @@ describe('VisibilityToggleController', () => {
         const contentNode = /** @type {HTMLElement} */ (await fixture('<div>contentful</div>'));
         shadowHost.appendChild(contentNode);
         new OverlayController({
-          ...withLocalTestConfig(),
+          ...withGlobalTestConfig(),
           contentNode,
         });
-        expect(spy.callCount).to.equal(1);
+        expect(spy.callCount).to.equal(2);
         cleanupShadowHost();
       });
     });
@@ -821,8 +821,16 @@ describe('VisibilityToggleController', () => {
           );
           const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
           await mimicEscapePress(childOverlay.contentNode);
-          await waitUntil(() => !parentOverlay.isShown);
-          await waitUntil(() => childOverlay.isShown);
+          // await childOverlay._showComplete;
+          // await parentOverlay._showComplete;
+          // await childOverlay._hideComplete;
+          // await parentOverlay._hideComplete;
+          if (!childOverlay.isShown) {
+            await waitUntil(() => childOverlay.isShown);
+          }
+          if (parentOverlay.isShown) {
+            await waitUntil(() => !parentOverlay.isShown);
+          }
           await childOverlay.teardown();
           await parentOverlay.teardown();
         });
