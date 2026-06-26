@@ -16,4 +16,7 @@ export default {
   selectTextDuplicateFileName: 'Файл с таким названием уже существует.',
   selectTextMultipleFile: 'Выберите файлы',
   selectTextSingleFile: 'Выберите файл',
+  statusLoading: 'Выполняется загрузка файлов, пожалуйста, подождите.',
+  statusSuccess: 'Файл {fileName} добавлен.',
+  statusRemoved: 'Файл {fileName} удален.',
 };
