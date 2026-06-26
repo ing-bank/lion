@@ -15,13 +15,13 @@ const { title } = Astro.props;
     <meta name="view-transition" content="same-origin" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lion - Fundamental White Label Web Components</title>
-    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
+    <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}favicon.svg` />
     <meta name="generator" content={Astro.generator} />
-    
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/styles.css`>
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/components.css`>
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/transitions.css`>
-    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/scroll-animations.css`>
+
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}styles/styles.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}styles/components.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}styles/transitions.css`>
+    <link rel="stylesheet" href=`${import.meta.env.BASE_URL}styles/scroll-animations.css`>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -45,7 +45,7 @@ const { title } = Astro.props;
 </head>
 <body>
     <div class="scroll-progress"></div>
-    
+
     <TopNav />
 
     <main data-pagefind-body>
@@ -56,14 +56,14 @@ const { title } = Astro.props;
         <div class="container">
             <div class="footer-row">
                 <div class="footer-brand">
-                    <img src=`${import.meta.env.BASE_URL}/lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
+                    <img src=`${import.meta.env.BASE_URL}lionui-text.svg` alt="lion ui" height="16" class="logo-text-svg">
                     <p class="copyright">&copy; 2025 Lion Project. MIT License.</p>
                 </div>
                 <div class="footer-links">
-                    <a href=`${import.meta.env.BASE_URL}/blog/`>Blog</a>
+                    <a href=`${import.meta.env.BASE_URL}blog/`>Blog</a>
                     <a href="https://github.com/ing-bank/lion/issues">Help</a>
                     <a href="https://github.com/ing-bank/lion">GitHub</a>
-                    <a href=`${import.meta.env.BASE_URL}/about/slack/`>Slack</a>
+                    <a href=`${import.meta.env.BASE_URL}about/slack/`>Slack</a>
                     <a href="https://github.com/ing-bank/lion/blob/master/CONTRIBUTING.md">Contribute</a>
                 </div>
             </div>
@@ -73,13 +73,13 @@ const { title } = Astro.props;
     <script>
         // Interactive Blueprint Script
         const groups = document.querySelectorAll('.blueprint-bg g');
-        
+
         groups.forEach(group => {
             group.addEventListener('mouseenter', () => {
                 const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
                 dimensions.forEach(el => el.style.opacity = '1');
             });
-            
+
             group.addEventListener('mouseleave', () => {
                 const dimensions = group.querySelectorAll('.dimension-line, .dimension-text, line[stroke-dasharray="2 2"], .angle-indicator');
                 dimensions.forEach(el => el.style.opacity = '0');
@@ -90,7 +90,7 @@ const { title } = Astro.props;
         document.addEventListener('mousemove', (e) => {
             const x = (window.innerWidth / 2 - e.pageX) / 50;
             const y = (window.innerHeight / 2 - e.pageY) / 50;
-            
+
             const svg = document.querySelector('.blueprint-bg svg');
             if(svg) {
                 svg.style.setProperty('--mouse-x', x + 'px');
@@ -105,15 +105,15 @@ const { title } = Astro.props;
             const progress = Math.min(scrollY / 500, 1); // Cap effect after 500px scroll
 
             const svg = document.querySelector('.blueprint-bg svg');
-            
+
             if (svg) {
                 // Rotate based on scroll
                 const rotateX = progress * 20; // Tilt back up to 20 degrees
                 const rotateY = progress * 5; // Slight twist
                 const scale = 1 - (progress * 0.1); // Zoom out slightly
-                
+
                 svg.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
-                
+
                 // Adjust layers depth dynamically for "explosion" effect
                 const backLayer = svg.querySelector('.layer-back');
                 const midLayers = svg.querySelectorAll('.layer-mid');
