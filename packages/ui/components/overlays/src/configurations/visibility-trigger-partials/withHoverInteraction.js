@@ -32,7 +32,6 @@ export function withHoverInteraction({
     ) => {
       let isFocused = false;
       let isHovered = false;
-      let isTapping = false;
       /** @type {NodeJS.Timeout} */
       let pendingDelayTimeout;
       /** @type {NodeJS.Timeout} */
@@ -41,7 +40,6 @@ export function withHoverInteraction({
       function resetActive() {
         isFocused = false;
         isHovered = false;
-        isTapping = false;
       }
 
       /**
@@ -62,9 +60,14 @@ export function withHoverInteraction({
       async function handleHoverAndFocus(event) {
         const { type } = event;
         isFocused = type === 'focusout' ? false : isFocused || type === 'focusin';
-        if (isHoverSupported) {
-          isHovered = type === 'mouseleave' ? false : isHovered || type === 'mouseenter';
-        }
+        isHovered = type === 'mouseleave' ? false : isHovered || type === 'mouseenter';
+        // On touch devices, only open on keyboard-triggered focus, not tap-triggered focus
+        if (
+          !isHoverSupported &&
+          type === 'focusin' &&
+          !controller.invokerNode?.matches(':focus-visible')
+        )
+          return;
         const shouldOpen = isFocused || isHovered;
         openClose({ shouldOpen, openTimeout: delayIn, closeTimeout: delayOut });
       }
@@ -77,14 +80,13 @@ export function withHoverInteraction({
         if (event.pointerType !== 'touch') return;
         const { type } = event;
 
-        isTapping =
-          type === 'pointerup' || type === 'pointerleave' ? false : type === 'pointerdown';
-        if (isTapping) {
+        if (type === 'pointerdown') {
           pendingLongpressTimeout = setTimeout(() => {
             openClose({ shouldOpen: true });
           }, longpressDuration);
+        } else {
+          openClose({ shouldOpen: false });
         }
-        openClose({ shouldOpen: isTapping || isHovered });
       }
 
       return {
