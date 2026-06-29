@@ -37,7 +37,7 @@ describe('withHoverInteraction (isHoverSupported: false)', () => {
     expect(ctrl.isShown).to.equal(true);
   });
 
-  it('stays hidden on brief touch — pointerup cancels the timer', () => {
+  it('stays hidden on brief touch: pointerup cancels the timer', () => {
     ctrl.invokerNode?.dispatchEvent(
       new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true }),
     );
@@ -56,7 +56,22 @@ describe('withHoverInteraction (isHoverSupported: false)', () => {
     expect(ctrl.isShown).to.equal(false);
   });
 
-  it('does not open on tap-triggered focusin (synthetic focusin is not :focus-visible)', () => {
+  it('auto-closes after longpressDuration once press ends', async () => {
+    ctrl.invokerNode?.dispatchEvent(
+      new PointerEvent('pointerdown', { pointerType: 'touch', bubbles: true }),
+    );
+    clock.runAll();
+    await Promise.resolve();
+    expect(ctrl.isShown).to.equal(true);
+
+    ctrl.invokerNode?.dispatchEvent(
+      new PointerEvent('pointerup', { pointerType: 'touch', bubbles: true }),
+    );
+    await clock.tickAsync(501);
+    expect(ctrl.isShown).to.equal(false);
+  });
+
+  it('does not open on tap-triggered focusin', () => {
     ctrl.invokerNode?.dispatchEvent(new Event('focusin', { bubbles: true }));
     clock.tick(300);
     expect(ctrl.isShown).to.equal(false);

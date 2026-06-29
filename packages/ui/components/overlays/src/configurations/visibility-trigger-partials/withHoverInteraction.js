@@ -36,10 +36,12 @@ export function withHoverInteraction({
       let pendingDelayTimeout;
       /** @type {NodeJS.Timeout} */
       let pendingLongpressTimeout;
+      let longpressCompleted = false;
 
       function resetActive() {
         isFocused = false;
         isHovered = false;
+        longpressCompleted = false;
       }
 
       /**
@@ -72,20 +74,28 @@ export function withHoverInteraction({
         openClose({ shouldOpen, openTimeout: delayIn, closeTimeout: delayOut });
       }
 
-      /**
-       * @param {PointerEvent} event
-       */
+      /** @param {Event} e */
+      function preventContextMenu(e) {
+        e.preventDefault();
+      }
+
+      /** @param {PointerEvent} event */
       async function handleLongpress(event) {
         clearTimeout(pendingLongpressTimeout);
         if (event.pointerType !== 'touch') return;
         const { type } = event;
 
         if (type === 'pointerdown') {
+          longpressCompleted = false;
           pendingLongpressTimeout = setTimeout(() => {
+            longpressCompleted = true;
             openClose({ shouldOpen: true });
           }, longpressDuration);
         } else {
-          openClose({ shouldOpen: false });
+          openClose({
+            shouldOpen: false,
+            closeTimeout: longpressCompleted ? longpressDuration : 0,
+          });
         }
       }
 
@@ -102,6 +112,7 @@ export function withHoverInteraction({
             controller.invokerNode?.addEventListener('mouseenter', handleHoverAndFocus);
             controller.invokerNode?.addEventListener('mouseleave', handleHoverAndFocus);
           } else {
+            controller.invokerNode?.addEventListener('contextmenu', preventContextMenu);
             controller.invokerNode?.addEventListener('pointerdown', handleLongpress);
             controller.invokerNode?.addEventListener('pointerup', handleLongpress);
             controller.invokerNode?.addEventListener('pointerleave', handleLongpress);
@@ -119,6 +130,7 @@ export function withHoverInteraction({
             controller.invokerNode?.removeEventListener('mouseenter', handleHoverAndFocus);
             controller.invokerNode?.removeEventListener('mouseleave', handleHoverAndFocus);
           } else {
+            controller.invokerNode?.removeEventListener('contextmenu', preventContextMenu);
             controller.invokerNode?.removeEventListener('pointerdown', handleLongpress);
             controller.invokerNode?.removeEventListener('pointerup', handleLongpress);
             controller.invokerNode?.removeEventListener('pointerleave', handleLongpress);
