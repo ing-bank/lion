@@ -112,6 +112,9 @@ export function withHoverInteraction({
             controller.invokerNode?.addEventListener('mouseenter', handleHoverAndFocus);
             controller.invokerNode?.addEventListener('mouseleave', handleHoverAndFocus);
           } else {
+            controller.invokerNode?.style.setProperty('-webkit-touch-callout', 'none');
+            controller.invokerNode?.style.setProperty('user-select', 'none');
+            controller.invokerNode?.style.setProperty('-webkit-user-select', 'none');
             controller.invokerNode?.addEventListener('contextmenu', preventContextMenu);
             controller.invokerNode?.addEventListener('pointerdown', handleLongpress);
             controller.invokerNode?.addEventListener('pointerup', handleLongpress);
@@ -130,6 +133,9 @@ export function withHoverInteraction({
             controller.invokerNode?.removeEventListener('mouseenter', handleHoverAndFocus);
             controller.invokerNode?.removeEventListener('mouseleave', handleHoverAndFocus);
           } else {
+            controller.invokerNode?.style.removeProperty('-webkit-touch-callout');
+            controller.invokerNode?.style.removeProperty('user-select');
+            controller.invokerNode?.style.removeProperty('-webkit-user-select');
             controller.invokerNode?.removeEventListener('contextmenu', preventContextMenu);
             controller.invokerNode?.removeEventListener('pointerdown', handleLongpress);
             controller.invokerNode?.removeEventListener('pointerup', handleLongpress);

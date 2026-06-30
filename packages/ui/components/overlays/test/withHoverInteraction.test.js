@@ -71,6 +71,17 @@ describe('withHoverInteraction (isHoverSupported: false)', () => {
     expect(ctrl.isShown).to.equal(false);
   });
 
+  it('disables text selection on the invoker on init and restores it on teardown', () => {
+    const { invokerNode } = ctrl;
+    const getUserSelect = () =>
+      invokerNode?.style.getPropertyValue('user-select') ||
+      invokerNode?.style.getPropertyValue('-webkit-user-select');
+    expect(getUserSelect()).to.equal('none');
+
+    ctrl.teardown();
+    expect(getUserSelect()).to.equal('');
+  });
+
   it('does not open on tap-triggered focusin', () => {
     ctrl.invokerNode?.dispatchEvent(new Event('focusin', { bubbles: true }));
     clock.tick(300);
