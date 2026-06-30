@@ -1,5 +1,11 @@
 # @lion/ui
 
+## 0.18.1
+
+### Patch Changes
+
+- f159668: Fixes toggleable readonly switch on label click
+
 ## 0.18.0
 
 ### Minor Changes
