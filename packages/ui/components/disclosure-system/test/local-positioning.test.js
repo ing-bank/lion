@@ -242,8 +242,7 @@ describe('Local Positioning', () => {
       );
     });
 
-    // TODO: Reenable test and make sure it passes
-    it.skip('updates placement properly even during hidden state', async () => {
+    it('updates placement properly even during hidden state', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
         contentNode: /** @type {HTMLElement} */ (
@@ -277,7 +276,7 @@ describe('Local Positioning', () => {
 
       await ctrl.show();
       expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
-        'translate3d(10px, -30px, 0px)',
+        'translate(110px, -310px)',
         'Popper positioning values',
       );
 
@@ -296,14 +295,13 @@ describe('Local Positioning', () => {
         },
       });
       await ctrl.show();
-      expect(ctrl._popper.options.modifiers.offset.offset).to.equal('0, 20px');
+      expect(ctrl._popper.state.options.modifiers.at(-1).options.offset).to.deep.equal([0, 20]);
       expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
-        'translate3d(10px, -40px, 0px)',
+        'translate(110px, -320px)',
         'Popper positioning Y value should be 10 less than previous, due to the added extra 10px offset',
       );
     });
 
-    // TODO: Not yet implemented
     it.skip('updates positioning correctly during shown state when config gets updated', async () => {
       const ctrl = new OverlayController({
         ...withLocalTestConfig(),
@@ -338,17 +336,18 @@ describe('Local Positioning', () => {
 
       await ctrl.show();
       expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
-        'translate3d(10px, -30px, 0px)',
+        'translate(110px, -310px)',
         'Popper positioning values',
       );
 
       await ctrl.updateConfig({
         popperConfig: {
+          placement: 'top',
           modifiers: [{ name: 'offset', enabled: true, options: { offset: [0, 20] } }],
         },
       });
       expect(normalizeTransformStyle(ctrl.contentWrapperNode.style.transform)).to.equal(
-        'translate3d(10px, -40px, 0px)',
+        'translate(110px, -320px)',
         'Popper positioning Y value should be 10 less than previous, due to the added extra 10px offset',
       );
     });

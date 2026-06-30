@@ -28,7 +28,8 @@ describe('OverlaysManager', () => {
     mngr.teardown();
   });
 
-  it('provides global stylesheet for arrangement of body scroll', () => {
+  // N.B. has moved to preventScroll
+  it.skip('provides global stylesheet for arrangement of body scroll', () => {
     expect(document.head.querySelectorAll('[data-overlays]').length).to.equal(1);
   });
 

@@ -233,7 +233,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           // N.B. we don't have an invoker...
           isActivated: false,
           inheritsReferenceWidth: 'none',
-          focusContentOnOpen: true,
+          elementToFocusOnShow: 'content',
         },
       },
       l2: {
@@ -243,7 +243,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           hidesOnOutsideClick: true,
           hidesOnEscape: true,
           inheritsReferenceWidth: 'none',
-          focusContentOnOpen: true,
+          elementToFocusOnShow: 'content',
         },
       },
       l3: {
@@ -251,7 +251,7 @@ export class LionNavigationBar extends ScopedElementsMixin(LitElement) {
           // We want disclosure behavior
           placementMode: 'none',
           inheritsReferenceWidth: 'none',
-          focusContentOnOpen: true,
+          elementToFocusOnShow: 'content',
           // TODO: implement in OverlayController
           hideVisually: true,
         },

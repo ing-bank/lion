@@ -1,3 +1,5 @@
+// N.B. when we move to Safari 17 as lowest supported, version, we can use https://developer.mozilla.org/en-US/docs/Web/API/Element/checkVisibility
+
 /**
  * @param {CSSStyleDeclaration} styles
  */

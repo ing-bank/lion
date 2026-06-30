@@ -114,4 +114,6 @@ export interface OverlayConfig {
   syncChildrenCloseState?: boolean;
 
   _shouldTeardownDomStructure?: boolean;
+
+  arrow: boolean | Element;
 }

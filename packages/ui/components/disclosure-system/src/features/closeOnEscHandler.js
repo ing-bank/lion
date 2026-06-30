@@ -1,9 +1,10 @@
+import { isFocusingInputField } from './shared/isFocusingInputField.js';
+import { hasPressedInside } from './shared/hasPressedInside.js';
+
 /**
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  * @typedef {import('@lion/ui/overlays.js').OverlayController} OverlayController
  */
-
-import { deepContains } from '../utils/deep-contains.js';
 
 const childDialogsClosedInEventLoopWeakmap = new WeakMap();
 
@@ -11,16 +12,7 @@ const childDialogsClosedInEventLoopWeakmap = new WeakMap();
  * @param {{ config: OverlayConfig, controller: OverlayController, invoker: HTMLElement, content: HTMLElement }} visibilityToggleContext
  */
 export function closeOnEscHandler({ controller, invoker, content }) {
-  let escKeyHandlerCalled = false;
-
-  /**
-   * @param {KeyboardEvent} event
-   * @returns {boolean}
-   */
-  const hasPressedInside = event =>
-    event.composedPath().includes(/** @type {EventTarget} */ (controller.__wrappingDialogNode)) ||
-    (controller.invokerNode && event.composedPath().includes(controller.invokerNode)) ||
-    deepContains(controller.contentNode, /** @type {HTMLElement|ShadowRoot} */ (event.target));
+  let isEscKeyHandlerCalled = false;
 
   /**
    * @param {KeyboardEvent} event
@@ -29,14 +21,15 @@ export function closeOnEscHandler({ controller, invoker, content }) {
   function escKeyHandler(event) {
     if (
       event.key !== 'Escape' ||
+      isFocusingInputField(event) ||
       childDialogsClosedInEventLoopWeakmap.has(event) ||
-      (!controller.isShown && escKeyHandlerCalled)
+      (!controller.opened && isEscKeyHandlerCalled)
     ) {
       return;
     }
 
-    if (hasPressedInside(event)) {
-      escKeyHandlerCalled = true;
+    if (hasPressedInside(event, { controller })) {
+      isEscKeyHandlerCalled = true;
       controller.hide();
       // We could do event.stopPropagation() here, but we don't want to hide info for
       // the outside world about user interactions. Instead, we store the event in a WeakMap
@@ -56,7 +49,7 @@ export function closeOnEscHandler({ controller, invoker, content }) {
       invoker?.addEventListener('keyup', escKeyHandler);
     },
     show: () => {
-      escKeyHandlerCalled = false;
+      isEscKeyHandlerCalled = false;
     },
     // N.B. events are automatically cleaned as content is a proxied element handling this in main controller
   };

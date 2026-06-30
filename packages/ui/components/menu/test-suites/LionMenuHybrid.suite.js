@@ -29,7 +29,7 @@ const config = {
       // N.B. we don't have an invoker...
       isActivated: false,
       inheritsReferenceWidth: 'none',
-      focusContentOnOpen: true,
+      elementToFocusOnShow: 'content',
     },
   },
   l2: {
@@ -40,7 +40,7 @@ const config = {
       hidesOnOutsideClick: true,
       hidesOnEscape: true,
       inheritsReferenceWidth: 'none',
-      focusContentOnOpen: true,
+      elementToFocusOnShow: 'content',
     },
   },
 };

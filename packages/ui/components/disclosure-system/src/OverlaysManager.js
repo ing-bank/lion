@@ -6,20 +6,10 @@ import { browserDetection } from '@lion/ui/core.js';
  * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
  */
 
-import { overlayDocumentStyle } from './overlayDocumentStyle.js';
-
 /**
  * `OverlaysManager` which manages overlays which are rendered into the body
  */
 export class OverlaysManager {
-  static __createGlobalStyleNode() {
-    const styleTag = document.createElement('style');
-    styleTag.setAttribute('data-overlays', '');
-    styleTag.textContent = /** @type {CSSResult} */ (overlayDocumentStyle).cssText;
-    document.head.appendChild(styleTag);
-    return styleTag;
-  }
-
   /**
    * no setter as .list is intended to be read-only
    * You can use .add or .remove to modify it
@@ -79,10 +69,6 @@ export class OverlaysManager {
     this.__forTesting = {
       bodySizeVars: this.__bodySizeVars,
     };
-
-    if (!OverlaysManager.__globalStyleNode) {
-      OverlaysManager.__globalStyleNode = OverlaysManager.__createGlobalStyleNode();
-    }
   }
 
   /**
@@ -152,13 +138,6 @@ export class OverlaysManager {
     this.__bodySizeVars.marginBottomInline = undefined;
     this.__bodySizeVars.marginRight = undefined;
     this.__bodySizeVars.marginBottom = undefined;
-
-    if (OverlaysManager.__globalStyleNode) {
-      document.head.removeChild(
-        /** @type {HTMLStyleElement} */ (OverlaysManager.__globalStyleNode),
-      );
-      OverlaysManager.__globalStyleNode = undefined;
-    }
   }
 
   /** Features right now only for Global Overlay Manager */

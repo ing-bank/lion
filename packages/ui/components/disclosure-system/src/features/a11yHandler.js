@@ -37,9 +37,7 @@ export function a11yHandler({ controller, invoker, content }) {
   const role = computeRole({ controller, content });
   const isExpandable = !isModal && invoker && !['tooltip'].includes(role);
 
-  // TODO: consider aria-details for content that is not a direct sibling...
   // See https://hidde.blog/popover-accessibility/
-
   const isDirectSibling =
     invoker?.nextElementSibling === content ||
     controller.__wrappingDialogNode?.nextElementSibling === content;
@@ -49,7 +47,7 @@ export function a11yHandler({ controller, invoker, content }) {
       content.setAttribute('id', content.id || controller._contentId);
 
       if (isExpandable) {
-        invoker?.setAttribute('aria-expanded', `${controller.isShown}`);
+        invoker?.setAttribute('aria-expanded', `${controller.opened}`);
       }
 
       if (!isDirectSibling) {

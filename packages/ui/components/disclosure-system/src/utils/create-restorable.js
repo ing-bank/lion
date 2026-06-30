@@ -48,9 +48,14 @@ export function createRestorable(targetNode, allowedAttrs) {
 }
 
 /**
- * @param {HTMLElement} targetNode
+ * @param {HTMLElement|HTMLElement[]} targetNode
  */
 export function restore(targetNode) {
+  if (Array.isArray(targetNode)) {
+    targetNode.forEach(restore);
+    return;
+  }
+
   const entry = attrsAndListenersWeakmap.get(targetNode);
   if (!entry) return;
 

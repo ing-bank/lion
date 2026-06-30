@@ -7,24 +7,30 @@ import { closeOnOutsideClickHandler } from './features/closeOnOutsideClickHandle
 import { closeOnOutsideEscHandler } from './features/closeOnOutsideEscHandler.js';
 import { globalPlacementHandler } from './features/globalPlacementHandler.js';
 import { localPlacementHandler } from './features/localPlacementHandler.js';
+import { preventScrollHandler } from './features/preventScrollHandler.js';
+import { anchorWidthHandler } from './features/anchorWidthHandler.js';
 import { closeOnEscHandler } from './features/closeOnEscHandler.js';
 import { trapFocusHandler } from './features/trapFocusHandler.js';
 import { backdropHandler } from './features/backdropHandler.js';
 import { focusHandler } from './features/focusHandler.js';
+import { arrowHandler } from './features/arrowHandler.js';
 import { a11yHandler } from './features/a11yHandler.js';
 
 /**
  * @typedef {import('@lion/ui/types/overlays.js').ViewportConfig} ViewportConfig
  * @typedef {import('@lion/ui/types/overlays.js').OverlayConfig} OverlayConfig
  * @typedef {import('@lion/ui/types/overlays.js').OverlayPhase} OverlayPhase
+ * @typedef {import('@lion/ui/overlays.js').OverlaysManager} OverlaysManager
  * @typedef {import('@popperjs/core').Options} PopperOptions
  * @typedef {import('@popperjs/core').Placement} Placement
  * @typedef {import('@popperjs/core').createPopper} Popper
  * @typedef {{ createPopper: Popper }} PopperModule
  */
 
+//
 const hasAnchorPositioningSupport = CSS.supports('anchor-name', '--my-anchor');
-const hasPopoverSupport = 'popover' in HTMLElement.prototype;
+// On server we assume popover support on the client... (we can correct later with hydration)
+const hasPopoverSupport = (window && 'popover' in HTMLElement.prototype) || true;
 
 /**
  * DisclosureController is the fundament for every single type of disclosure (with or without overlay content).
@@ -35,28 +41,30 @@ export class DisclosureControllerLean extends EventTarget {
   __hasSetup = false;
 
   /**
+   * @type {DisclosureControllerLean[]}
+   * @protected
+   */
+  static list = [];
+
+  /**
    * @constructor
    * @param {Partial<OverlayConfig>} config initial config. Will be remembered as shared config
+   * @param {OverlaysManager|undefined} manager the manager that will manage this controller. This is needed to allow for multiple managers, e.g. for nested overlays. Note that this is only used for features that require a manager, like preventing scroll and blocking other overlays. The manager is not used for rendering, as the rendering is done by the consumer of this controller. The manager is only used to keep track of the state of the overlay and to allow for features like preventing scroll and blocking other overlays.
    * when `.updateConfig()` is called.
    */
-  constructor(config = {}, manager = overlays) {
+  constructor(config = {}, manager) {
     super();
-
-    // TODO: should we only do this in OverlayCtrl for backw. compat? It's not really needed for disclosure
     this.manager = manager;
     /** @private */
     this.__sharedConfig = config;
-    /** @private */
-    this.__activeElementRightBeforeHide = null;
     /** @type {Partial<OverlayConfig>} */
     this.config = {};
-
     /**
      * @type {OverlayConfig}
      * @protected
      */
     this._defaultConfig = {
-      placementMode: undefined,
+      placementMode: 'none',
       contentNode: config.contentNode,
       contentWrapperNode: config.contentWrapperNode,
       invokerNode: config.invokerNode,
@@ -126,12 +134,14 @@ export class DisclosureControllerLean extends EventTarget {
       syncChildrenCloseState: false,
       // // In next major, we remove this prop. Now we disable it for backwards compatibility and enable it in the places we need it internally
       // _shouldTeardownDomStructure: false,
+      arrow: false,
     };
-
     /** @protected */
     this._contentId = `overlay-content--${Math.random().toString(36).slice(2, 10)}`;
-
     this.updateConfig(config);
+
+    // We keep our own list, in case manager is not provided
+    /** @type {typeof DisclosureControllerLean} */ (this.constructor).list.push(this);
   }
 
   /**
@@ -142,10 +152,7 @@ export class DisclosureControllerLean extends EventTarget {
    * @param { Partial<OverlayConfig> } cfgToAdd
    */
   updateConfig(cfgToAdd) {
-    /**
-     * @type {OverlayConfig}
-     * @private
-     */
+    /** @type {OverlayConfig} */
     const prevConfig = this.config;
 
     /** @type {OverlayConfig} */
@@ -167,20 +174,11 @@ export class DisclosureControllerLean extends EventTarget {
 
     const shouldUpdate = !this.__hasSetup || !isEqualConfig(prevConfig, newConfig);
     if (!shouldUpdate) return;
-    // Teardown all previous configs
 
     this.teardown();
-
     this.config = newConfig;
-
-    /** @private */
     this.#validateConfiguration(this.config);
-    /** @protected */
     this._init();
-
-    if (!this.#isRegisteredOnManager()) {
-      this.manager.add(this);
-    }
   }
 
   #isRegisteredOnManager() {
@@ -221,11 +219,9 @@ export class DisclosureControllerLean extends EventTarget {
   _init() {
     if (!this.config.isActivated) return;
 
-    /** @type {(value:any) => void} */
-    let resolveInitComplete;
-    this.initComplete = new Promise(resolve => {
-      resolveInitComplete = resolve;
-    });
+    if (!this.#isRegisteredOnManager()) {
+      this.manager?.add(this);
+    }
 
     const attrsToStore = [
       'aria-describedby',
@@ -254,7 +250,6 @@ export class DisclosureControllerLean extends EventTarget {
 
     /** @private */
     this.__elementToFocusAfterHide = undefined;
-
     this.#proxies.content.setAttribute('data-content', '');
 
     // Use event delegation to listen for clicks on close buttons...
@@ -262,8 +257,6 @@ export class DisclosureControllerLean extends EventTarget {
     this.#proxies.content.addEventListener('click', this.__hideOnCloseButtonClick);
 
     this.__hasSetup = true;
-    // @ts-expect-error
-    resolveInitComplete(undefined);
   }
 
   __hideOnCloseButtonClick = (/** @type {{ target: any; }} */ ev) => {
@@ -291,10 +284,14 @@ export class DisclosureControllerLean extends EventTarget {
     }
     wrappingDialogNode.style.display = '';
     this.config.contentNode?.setAttribute('data-open', '');
+    // TODO: while loading libs like popperjs, and for allowing animations without css + display:none (allow-discrete + @starting-style),
+    // consider setting visibility: hidden here. Most important: for predictable imperative code, sync code (isShown is dependent on display:none) works best
   }
 
-  get isShown() {
-    return Boolean(this.__wrappingDialogNode && this.__wrappingDialogNode.style.display !== 'none');
+  get opened() {
+    return Boolean(
+      this.__wrappingDialogNode && this.__wrappingDialogNode?.style.display !== 'none',
+    );
   }
 
   /**
@@ -314,7 +311,7 @@ export class DisclosureControllerLean extends EventTarget {
 
     this.manager?.show(this);
 
-    if (this.isShown) {
+    if (this.opened) {
       /** @type {function} */
       (this._showResolve)();
       return;
@@ -326,23 +323,16 @@ export class DisclosureControllerLean extends EventTarget {
     if (!event.defaultPrevented) {
       this.__elementToFocusAfterHide = elementToFocusAfterHide;
 
-      this._keepBodySize({ phase: 'before-show' });
+      pendingPromises.push(this._handleFeatures({ phase: 'before-show' }));
       this.#showContent();
       this.dispatchEvent(new Event('show'));
-      // await
       pendingPromises.push(this._handleFeatures({ phase: 'show' }));
-      this._keepBodySize({ phase: 'show' });
 
       const transitionPromise = this.transitionShow({
         backdropNode: this.backdropNode,
         contentNode: this.config.contentNode,
       });
       pendingPromises.push(transitionPromise);
-      transitionPromise.then(() => {
-        if (this.config.focusContentOnOpen) {
-          this.config.contentNode.focus();
-        }
-      });
     }
 
     await Promise.all(pendingPromises);
@@ -351,21 +341,12 @@ export class DisclosureControllerLean extends EventTarget {
   }
 
   /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
-  _keepBodySize({ phase }) {
-    if (!this.config.preventsScroll) return;
-
-    this.manager.requestToKeepBodySize({ phase });
-  }
-
-  /**
    * @event before-hide right before the overlay hides. Used for animations and switching overlays
    * @event hide right after the overlay is hidden
    */
   async hide() {
-    // Functions like a no-op for dynamic edge cases...
+    // Functions like a no-op for dynamic edge cases,
+    // like accordions with clickable headings on mobile that switch to regular content on desktop.
     if (!this.config.isActivated) return;
 
     this._hideComplete = new Promise(resolve => {
@@ -376,7 +357,7 @@ export class DisclosureControllerLean extends EventTarget {
       this.manager.hide(this);
     }
 
-    if (!this.isShown) {
+    if (!this.opened) {
       /** @type {function} */ (this._hideResolve)();
       return;
     }
@@ -394,14 +375,12 @@ export class DisclosureControllerLean extends EventTarget {
       this.#hideContent();
       this.dispatchEvent(new Event('hide'));
       this._handleFeatures({ phase: 'hide' });
-      this._keepBodySize({ phase: 'hide' });
     }
     /** @type {function} */ (this._hideResolve)();
   }
 
   /**
-   * Method to be overriden by subclassers
-   *
+   * Method to be overridden by subclassers
    * @param {{backdropNode:HTMLElement, contentNode:HTMLElement}} hideConfig
    */
   // @ts-ignore
@@ -435,21 +414,17 @@ export class DisclosureControllerLean extends EventTarget {
     }
     if (this.config.placementMode === 'none' && (phase === 'init' || phase === 'teardown')) {
       // If we want just a collapsible (or want to provide styles ourselves), no need to create a complex dom structure.
-      // Doing this in teardown avoids unexpected "null pointers" in cleanup logic
+      // Doing this in teardown avoids unexpected "null pointers" in cleanup logic (we provided contentWrapperNode as public prop)
       this.__contentWrapperNode = this.config.contentNode;
       this.__wrappingDialogNode = this.config.contentNode;
     } else if (this.config.placementMode === 'local') {
-      // N.B. initial popper load is async... we keep it sync for now,
-      // to keep things backward compatible.
       promises.push(this.__handleFeature('placementModeLocal', localPlacementHandler, { phase }));
     } else if (this.config.placementMode === 'global') {
-      // N.B. initial popper load is async... we keep it sync for now,
-      // to keep things backward compatible.
       promises.push(this.__handleFeature('placementModeGlobal', globalPlacementHandler, { phase }));
     }
 
     if (this.config.preventsScroll) {
-      this._handlePreventsScroll({ phase });
+      promises.push(this.__handleFeature('preventsScroll', preventScrollHandler, { phase }));
     }
     if (this.config.isBlocking) {
       this._handleBlocking({ phase });
@@ -470,7 +445,7 @@ export class DisclosureControllerLean extends EventTarget {
     }
 
     if (this.config.inheritsReferenceWidth) {
-      this._handleInheritsReferenceWidth();
+      promises.push(this.__handleFeature('inheritsReferenceWidth', anchorWidthHandler, { phase }));
     }
     if (this.config.visibilityTriggerFunction) {
       this._handleVisibilityTriggers({ phase });
@@ -478,10 +453,6 @@ export class DisclosureControllerLean extends EventTarget {
     if (this.config.syncChildrenCloseState) {
       this._handleSyncChildrenCloseState({ phase });
     }
-    if (this.config.focusContentOnOpen) {
-      this._handleFocusContentOnOpen({ phase });
-    }
-
     if (this.hasBackdrop) {
       promises.push(this.__handleFeature('hasBackdrop', backdropHandler, { phase }));
     }
@@ -495,23 +466,16 @@ export class DisclosureControllerLean extends EventTarget {
    * @param {{phase: OverlayPhase}} opts
    * @returns {void}
    */
-  _handleFocusContentOnOpen({ phase }) {
-    if (phase === 'init') {
-      this.config.contentNode?.setAttribute('tabindex', '-1');
-    } else if (phase === 'teardown') {
-      // TODO: capture initial attr, use Resettable mechanism of VisibilityToggleCtrl in whole Controller
-      this.config.contentNode?.removeAttribute('tabindex');
-    }
-  }
-
-  /**
-   * @param {{phase: OverlayPhase}} opts
-   * @returns {void}
-   */
   _handleSyncChildrenCloseState({ phase }) {
     if (phase !== 'hide') return;
 
-    const visibleChildren = this.manager.shownList.filter(
+    const shownList =
+      this.manager?.shownList ||
+      /** @type {typeof DisclosureControllerLean} */ (this.constructor).list.filter(
+        ctrl => ctrl.opened,
+      );
+
+    const visibleChildren = shownList.filter(
       ctrl => ctrl !== this && deepContains(this.contentNode, ctrl.contentNode),
     );
     visibleChildren.forEach(ctrl => ctrl.hide());
@@ -536,25 +500,6 @@ export class DisclosureControllerLean extends EventTarget {
    * @param {{ phase: OverlayPhase }} config
    * @protected
    */
-  _handlePreventsScroll({ phase }) {
-    switch (phase) {
-      case 'show':
-        this.manager.requestToPreventScroll();
-        break;
-      case 'hide':
-        this.manager.requestToEnableScroll();
-        break;
-      case 'teardown':
-        this.manager.requestToEnableScroll(this);
-        break;
-      /* no default */
-    }
-  }
-
-  /**
-   * @param {{ phase: OverlayPhase }} config
-   * @protected
-   */
   _handleBlocking({ phase }) {
     switch (phase) {
       case 'show':
@@ -565,10 +510,6 @@ export class DisclosureControllerLean extends EventTarget {
         break;
       /* no default */
     }
-  }
-
-  get hasActiveBackdrop() {
-    return this.config.hasBackdrop && this.isShown;
   }
 
   /** @type {Map<keyof OverlayConfig, any>} */
@@ -584,9 +525,10 @@ export class DisclosureControllerLean extends EventTarget {
       this.#handlers.set(
         featureName,
         handler({
-          controller: this,
           invoker: this.#proxies.invoker,
           content: this.#proxies.content,
+          manager: this.manager,
+          controller: this,
         }),
       );
     }
@@ -595,40 +537,13 @@ export class DisclosureControllerLean extends EventTarget {
     return this.#handlers.get(featureName)?.[phase]?.();
   }
 
-  /** @protected */
-  _handleInheritsReferenceWidth() {
-    if (!this._referenceNode || this.config.placementMode !== 'local') {
-      return;
-    }
-    const referenceWidth = `${this._referenceNode.getBoundingClientRect().width}px`;
-    switch (this.config.inheritsReferenceWidth) {
-      case 'max':
-        this.contentWrapperNode.style.maxWidth = referenceWidth;
-        break;
-      case 'full':
-        this.contentWrapperNode.style.width = referenceWidth;
-        break;
-      case 'min':
-        this.contentWrapperNode.style.minWidth = referenceWidth;
-        this.contentWrapperNode.style.width = 'auto';
-        break;
-      /* no default */
-    }
-  }
-
   teardown() {
     if (!this.__hasSetup) return;
-    if (this.isShown) {
-      this._keepBodySize({ phase: 'teardown' });
-    }
     this._handleFeatures({ phase: 'teardown' });
     if (this.#isRegisteredOnManager()) {
       this.manager.remove(this);
     }
-    restore(this.config.contentNode);
-    if (this.config.invokerNode) {
-      restore(this.config.invokerNode);
-    }
+    restore([this.config.contentNode, this.config.invokerNode]);
     this.config.contentNode?.removeEventListener('click', this.__hideOnCloseButtonClick);
     this.#showContent();
     this.__hasSetup = false;
@@ -636,6 +551,11 @@ export class DisclosureControllerLean extends EventTarget {
 }
 
 export class DisclosureController extends DisclosureControllerLean {
+  constructor(config, manager = overlays) {
+    super(config, manager);
+    this.arrowNode = undefined;
+  }
+
   /**
    * The invokerNode
    * @type {HTMLElement | undefined}
@@ -871,15 +791,11 @@ export class DisclosureController extends DisclosureControllerLean {
     return Number(this.contentWrapperNode?.style.zIndex);
   }
 
-  // /**
-  //  * All features are handled here.
-  //  * @param {{ phase: OverlayPhase }} config
-  //  * @protected
-  //  */
-  // async _handleFeatures({ phase }) {
-  //   super._handleFeatures({ phase });
-  //   if (this.hasBackdrop) {
-  //     this.__handleFeature('hasBackdrop', backdropHandler, { phase });
-  //   }
-  // }
+  get isShown() {
+    return this.opened;
+  }
+
+  get hasActiveBackdrop() {
+    return this.config.hasBackdrop && this.opened;
+  }
 }

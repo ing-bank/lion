@@ -39,7 +39,16 @@ export function focusHandler({ controller, content }) {
       activeElementRightBeforeHide = /** @type {ShadowRoot} */ (content.getRootNode())
         .activeElement;
     },
+    show: () => {
+      const { elementToFocusOnShow } = controller.config;
+      const el = elementToFocusOnShow === 'content' ? content : elementToFocusOnShow;
+      if (!(el instanceof HTMLElement)) return;
 
+      if (!el.hasAttribute('tabindex')) {
+        el.setAttribute('tabindex', '-1');
+      }
+      el.focus();
+    },
     hide: () => {
       const elementToFocusAfterHide =
         // @ts-ignore

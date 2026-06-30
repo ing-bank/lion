@@ -207,7 +207,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href=`${import.meta.env.BASE_URL}/favicon.svg` />
     <meta name="generator" content={Astro.generator} />
-    
+
     <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/styles.css`>
     <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/components.css`>
     <link rel="stylesheet" href=`${import.meta.env.BASE_URL}/styles/transitions.css`>
@@ -239,7 +239,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
 <body>
     <div class="scroll-progress"></div>
     <div class="grid-background"></div>
-    
+
     <TopNav activeNavItem={activeNavItem} />
 
     <main>
@@ -251,7 +251,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
                         <h3>{sectionName}</h3>
                         <ul>
                             {Array.from(componentsByCategory.entries()).map(([category, categoryItems]) => {
-                                const hasActiveItem = categoryItems.some(item => 
+                                const hasActiveItem = categoryItems.some(item =>
                                   currentPath.replace(/\/$/, '').toLowerCase().endsWith(item.href.replace(/\/$/, '').toLowerCase())
                                 );
                                 return (
@@ -315,7 +315,7 @@ if (items.length > 0 && componentsByCategory.size === 0) {
   document.querySelectorAll('.category-toggle').forEach(toggle => {
     const category = toggle.getAttribute('data-category');
     const submenu = document.querySelector(`.category-submenu[data-category="${category}"]`);
-    
+
     // Restore previous state from localStorage, or use current aria-expanded state
     const savedState = localStorage.getItem(`category-${category}`);
     if (savedState === 'collapsed') {
@@ -330,16 +330,17 @@ if (items.length > 0 && componentsByCategory.size === 0) {
         submenu?.classList.add('collapsed');
       }
     }
-    
+
     // Toggle handler
     toggle.addEventListener('click', (e) => {
       e.preventDefault();
       const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!isExpanded));
       submenu?.classList.toggle('collapsed');
-      
+
       // Persist state
       localStorage.setItem(`category-${category}`, !isExpanded ? 'expanded' : 'collapsed');
     });
   });
 </script>
+</html>

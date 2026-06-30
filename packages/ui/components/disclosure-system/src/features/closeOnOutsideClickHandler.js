@@ -3,6 +3,10 @@
  * @typedef {import('@lion/ui/overlays.js').OverlayController} OverlayController
  */
 
+export const _mockable = {
+  isInsideIframe: window && window.self !== window.top,
+};
+
 /**
  * @param {{ config: OverlayConfig, controller: OverlayController, invoker: HTMLElement }} visibilityToggleContext
  */
@@ -20,7 +24,6 @@ export function closeOnOutsideClickHandler({ controller, invoker }) {
    * [4]. mouseup logic is executed on document (its logic is inside a timeout and is thus
    * executed after 3)
    * [5]. Reset all helper variables that were considered in step [4]
-   *
    */
 
   /** @type {boolean} */
@@ -55,11 +58,10 @@ export function closeOnOutsideClickHandler({ controller, invoker }) {
   };
 
   /** @type {EventListenerOrEventListenerObject} */
-  const onWindowBlur = () => {
+  const onWindowBlurInIframe = () => {
+    if (!_mockable.isInsideIframe) return;
     // When the current window loses the focus (clicking outside iframe) the overlay gets hidden
-    setTimeout(() => {
-      controller.hide();
-    });
+    setTimeout(() => controller.hide());
   };
 
   return {
@@ -72,15 +74,14 @@ export function closeOnOutsideClickHandler({ controller, invoker }) {
       invoker?.addEventListener('mousedown', onInsideMouseDown, true);
       invoker?.addEventListener('mouseup', onInsideMouseUp, true);
       document.documentElement.addEventListener('mouseup', onDocumentMouseUp, true);
-      window.addEventListener('blur', onWindowBlur);
+      window.addEventListener('blur', onWindowBlurInIframe);
     },
     teardown: () => {
       controller.contentWrapperNode.removeEventListener('mousedown', onInsideMouseDown, true);
       controller.contentWrapperNode.removeEventListener('mouseup', onInsideMouseUp, true);
-      // invoker?.removeEventListener('mousedown', onInsideMouseDown, true);
-      // invoker?.removeEventListener('mouseup', onInsideMouseUp, true);
+      // N.B. invoker is automatically cleaned up by the overlay controller, so we don't need to remove its event listeners
       document.documentElement.removeEventListener('mouseup', onDocumentMouseUp, true);
-      window.removeEventListener('blur', onWindowBlur);
+      window.removeEventListener('blur', onWindowBlurInIframe);
     },
   };
 }

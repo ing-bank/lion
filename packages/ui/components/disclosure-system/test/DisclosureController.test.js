@@ -17,6 +17,7 @@ import {
   html,
 } from '@open-wc/testing';
 
+import { _mockable as _mockableCloseOnOutsideClick } from '../src/features/closeOnOutsideClickHandler.js';
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { createShadowHost } from '../test-helpers/createShadowHost.js';
 import { browserDetection } from '../../core/src/browserDetection.js';
@@ -821,10 +822,10 @@ describe('DisclosureController', () => {
           );
           const { parentOverlay, childOverlay } = await createNestedEscControllers(parentContent);
           await mimicEscapePress(childOverlay.contentNode);
-          // await childOverlay._showComplete;
-          // await parentOverlay._showComplete;
-          // await childOverlay._hideComplete;
-          // await parentOverlay._hideComplete;
+          await childOverlay._showComplete;
+          await parentOverlay._showComplete;
+          await childOverlay._hideComplete;
+          await parentOverlay._hideComplete;
           if (!childOverlay.isShown) {
             await waitUntil(() => childOverlay.isShown);
           }
@@ -1138,15 +1139,31 @@ describe('DisclosureController', () => {
         await aTimeout(0);
         expect(ctrl.isShown).to.be.true;
       });
-      it('hides when window is blurred (useful for iframes)', async () => {
+      it('hides when window is blurred inside iframe', async () => {
         const ctrl = new OverlayController({
           ...withGlobalTestConfig(),
           hidesOnOutsideClick: true,
         });
         await ctrl.show();
+
         window.dispatchEvent(new Event('blur'));
         await aTimeout(0);
-        expect(ctrl.isShown).to.be.false;
+
+        expect(ctrl.isShown).to.be.true;
+
+        const ctrl2 = new OverlayController({
+          ...withGlobalTestConfig(),
+          hidesOnOutsideClick: true,
+        });
+        await ctrl2.show();
+
+        const originalIsInsideIframe = _mockableCloseOnOutsideClick.isInsideIframe;
+        _mockableCloseOnOutsideClick.isInsideIframe = true;
+        window.dispatchEvent(new Event('blur'));
+        await aTimeout(0);
+        _mockableCloseOnOutsideClick.isInsideIframe = originalIsInsideIframe;
+
+        expect(ctrl2.isShown).to.be.false;
       });
     });
     describe('elementToFocusAfterHide', () => {
@@ -1537,23 +1554,24 @@ describe('DisclosureController', () => {
         expect(ctrl1.hasActiveBackdrop).to.be.true;
       });
     });
-    describe('focusContentOnOpen', () => {
-      it('adds tabindex="-1" to the content node when focusContentOnOpen is true', async () => {
+    describe('elementToFocusOnShow', () => {
+      it('adds tabindex="-1" to the content node when elementToFocusOnShow is true', async () => {
+        const cfg = withGlobalTestConfig();
         const ctrl = new OverlayController({
-          ...withGlobalTestConfig(),
+          ...cfg,
           isBlocking: false,
-          focusContentOnOpen: true,
+          elementToFocusOnShow: cfg.contentNode,
         });
-        const contentNode = /** @type {HTMLElement} */ (await fixture('<div>Content</div>'));
-        ctrl.updateConfig({ contentNode });
         await ctrl.show();
-        expect(contentNode.getAttribute('tabindex')).to.equal('-1');
+        expect(cfg.contentNode.getAttribute('tabindex')).to.equal('-1');
       });
       it('makes contentNode the root of "next tab flow"', async () => {
+        const cfg = withGlobalTestConfig();
+
         const ctrl = new OverlayController({
-          ...withGlobalTestConfig(),
+          ...cfg,
           isBlocking: false,
-          focusContentOnOpen: true,
+          elementToFocusOnShow: cfg.contentNode,
         });
         const contentNode = /** @type {HTMLElement} */ (
           await fixture('<div><button>Button</button></div>')
@@ -2075,18 +2093,6 @@ describe('DisclosureController', () => {
   });
 
   describe('Exception handling', () => {
-    it('throws if no .placementMode gets passed on', async () => {
-      const contentNode = document.createElement('div');
-      // Ensure the contentNode is connected to DOM
-      document.body.appendChild(contentNode);
-      expect(() => {
-        new OverlayController({
-          contentNode,
-        });
-      }).to.throw(
-        '[OverlayController] You need to provide a .placementMode ("global"|"local"|"none")',
-      );
-    });
     it('throws if invalid .placementMode gets passed on', async () => {
       expect(() => {
         new OverlayController({

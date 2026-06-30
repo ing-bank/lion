@@ -35,14 +35,13 @@ const fixture = /** @type {(arg: TemplateResult) => Promise<LionMenu>} */ (_fixt
 
 const l1Config = {
   isBar: true,
-  hasFullWidthFlyout: true,
   openableConfig: {
     // We want disclosure behavior
     placementMode: 'none',
     // N.B. we don't have an invoker...
     isActivated: false,
     inheritsReferenceWidth: 'none',
-    focusContentOnOpen: true,
+    elementToFocusOnShow: 'content',
   },
 };
 
@@ -548,7 +547,6 @@ export function runInteractiveListMixinSuite(customConfig) {
         const el = await fixture(html`
           <${tag}
             .itemWrap="${true}"
-            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
             ._activeMode="${'tabbable-disclosure'}"
@@ -586,7 +584,6 @@ export function runInteractiveListMixinSuite(customConfig) {
         const el = await fixture(html`
           <${tag}
             .itemWrap="${true}"
-            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
             ._activeMode="${'tabbable-disclosure'}"
@@ -624,7 +621,6 @@ export function runInteractiveListMixinSuite(customConfig) {
         const el = await fixture(html`
           <${tag}
             .itemWrap="${true}"
-            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
             ._activeMode="${'tabbable-disclosure'}"
@@ -659,7 +655,6 @@ export function runInteractiveListMixinSuite(customConfig) {
         const el = await fixture(html`
           <${tag}
             .itemWrap="${true}"
-            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
             ._activeMode="${'tabbable-disclosure'}"
@@ -728,7 +723,6 @@ export function runInteractiveListMixinSuite(customConfig) {
         const el = await fixture(html`
           <${tag}
             .itemWrap="${true}"
-            ?data-has-full-width-flyout="${l1Config.hasFullWidthFlyout}"
             .config="${l1Config.openableConfig}"
             .bar="${l1Config.isBar}"
             ._activeMode="${'tabbable-disclosure'}"
