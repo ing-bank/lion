@@ -187,7 +187,7 @@ export class LionMenu extends MultiLevelListMixin(LitElement) {
     }
 
     if (!multiple) {
-      // Uncheck all
+      // Uncheck all within group
       listItemsWithinGroup.forEach(listItem => {
         setChecked(listItem, true);
       });
