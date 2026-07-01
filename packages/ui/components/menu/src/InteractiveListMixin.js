@@ -1,10 +1,9 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable import/no-extraneous-dependencies */
 import { html, css, LitElement } from 'lit';
-import { SlotMixin, DisabledMixin } from '@lion/ui/core.js';
+import { SlotMixin, DisabledMixin, uuid } from '@lion/ui/core.js';
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 import { MoreButtonMenuMixin } from './MoreButtonMenuMixin.js';
-import { uuid } from './utils/uuid.js';
 import { isInView } from './utils/isInView.js';
 import {
   isDisabled,
@@ -167,7 +166,7 @@ const InteractiveListMixinImplementation = superclass =>
         multipleChoice: { type: Boolean, attribute: 'multiple-choice' },
         // TODO: align with name of open-ui
         selectionFollowsFocus: { type: Boolean, attribute: 'selection-follows-focus' },
-        // TODO: align with name of open-ui => "wrap" in focsugroup
+        // TODO: align with name of open-ui => "wrap" in focusgroup
         rotateKeyboardNavigation: { type: Boolean, attribute: 'rotate-keyboard-navigation' },
         // TODO: align with name of open-ui
         noPreselect: { type: Boolean, attribute: 'no-preselect' },
@@ -556,7 +555,7 @@ const InteractiveListMixinImplementation = superclass =>
       // having hideVisually as hide mechanism (opening on focus, closing on blur).
       // N.B. this._listNode has `display:flex`. This means we need to add `text-wrap: nowrap;`
       // to avoid elems going over two lines, or give them a max-height based on measuring the height of one item.
-      // 2. N.B. hideVisually needs to be implementd in OverlayController.
+      // 2. N.B. hideVisually needs to be implemented in OverlayController.
       // 3. when the more menu opens a next level, MultiLevelListMixin will be applied to the host as well.
       // That means it knows when a child menu is open. If _subListMap of one of the items is open, we should hide more menu like this:
       // https://jsfiddle.net/a4ocktfp/19/
