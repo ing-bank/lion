@@ -246,7 +246,9 @@ export function runMultiLevelListMixinSuite(customConfig) {
             </${tag}>
           `);
           const subList = /** @type {MultiLevelListClass} */ (el.querySelector(tagChildString));
+          // @ts-ignore
           if (subList?.close) {
+            // @ts-ignore
             const closeSpy = sinon.spy(subList, 'close');
             const { _listNode } = subList;
 
@@ -282,7 +284,9 @@ export function runMultiLevelListMixinSuite(customConfig) {
             </${tag}>
           `);
           const subList = /** @type {MultiLevelListClass} */ (el.querySelector(tagChildString));
+          // @ts-ignore
           if (subList?.close) {
+            // @ts-ignore
             const closeSpy = sinon.spy(subList, 'close');
             const { _listNode } = subList;
 

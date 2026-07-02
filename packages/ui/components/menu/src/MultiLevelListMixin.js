@@ -7,6 +7,8 @@ import { isChecked, setChecked } from './utils/listItemInteractions.js';
 /**
  * @typedef {import('./InteractiveListMixin.js').LionItem} LionItem
  * @typedef {import('../types/InteractiveListMixinTypes.js').InteractiveListHost} InteractiveList
+ * @typedef {typeof import('../../overlays/types/OverlayMixinTypes.js').OverlayHost} OverlayHost
+ * @typedef {import('./LionMenuOverlay.js').LionMenuOverlay} LionMenuOverlay
  */
 
 /**
@@ -37,10 +39,12 @@ const MultiLevelListMixinImplementation = superclass =>
      * @configure DisclosureMixin
      */
     get _invokerNode() {
-      if (this.constructor._getFocusableInvokerEl && this.invokerNode) {
+      const ctor = /** @type {OverlayHost} */ (this.constructor);
+      if (ctor._getFocusableInvokerEl && this.invokerNode) {
         // @ts-ignore - accessing static method and super property
-        return this.constructor._getFocusableInvokerEl(this.invokerNode);
+        return ctor._getFocusableInvokerEl(this.invokerNode);
       }
+      // @ts-ignore
       return super._invokerNode;
     }
 
@@ -232,9 +236,12 @@ const MultiLevelListMixinImplementation = superclass =>
           if (this.orientation === 'horizontal' && parentListOfActiveItem) {
             // @ts-ignore - close method
             this.close();
-            if (parentListOfActiveItem._onOverlayShow) {
+            if (
+              /** @type {InteractiveList & LionMenuOverlay} */ (parentListOfActiveItem)
+                ._onOverlayShow
+            ) {
               // @ts-ignore - _onOverlayShow method
-              parentListOfActiveItem._onOverlayShow();
+              /** @type {OverlayHost} */ (parentListOfActiveItem)._onOverlayShow();
             }
           }
           break;
@@ -242,9 +249,12 @@ const MultiLevelListMixinImplementation = superclass =>
           if (this.orientation === 'vertical' && parentListOfActiveItem) {
             // @ts-ignore - close method
             this.close();
-            if (parentListOfActiveItem._onOverlayShow) {
+            if (
+              /** @type {InteractiveList & LionMenuOverlay} */ (parentListOfActiveItem)
+                ._onOverlayShow
+            ) {
               // @ts-ignore - _onOverlayShow method
-              parentListOfActiveItem._onOverlayShow();
+              /** @type {OverlayHost} */ (parentListOfActiveItem)._onOverlayShow();
             }
           }
           break;
@@ -261,7 +271,9 @@ const MultiLevelListMixinImplementation = superclass =>
       this._subListMap.forEach(subList => {
         subList.listItems.forEach(
           /** @param {LionItem|HTMLElement} item */ item => {
+            // @ts-ignore
             if (isChecked(item) && subList._invokerNode) {
+              // @ts-ignore
               setChecked(subList._invokerNode);
             }
           },
