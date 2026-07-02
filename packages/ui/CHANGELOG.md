@@ -1,5 +1,12 @@
 # @lion/ui
 
+## 0.18.2
+
+### Patch Changes
+
+- 5752f6a: fix: [input-amount-dropdown] lion input amount dropdown not working with validators due to \_isEmpty implementation
+- 86d3807: [tooltip]: support longpress on mobile
+
 ## 0.18.1
 
 ### Patch Changes
