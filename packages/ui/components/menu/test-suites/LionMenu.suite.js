@@ -3,7 +3,6 @@ import { defineCE, expect, fixture as _fixture, html, unsafeStatic } from '@open
 import { LionMenu } from '../src/LionMenu.js';
 
 /**
- * @typedef {import('../src/LionMenu.js').LionMenu} LionMenu
  * @typedef {import('lit').TemplateResult} TemplateResult
  *
  * @typedef {Object} TestConfig
