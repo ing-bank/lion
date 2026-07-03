@@ -2,9 +2,9 @@
 
 import { dedupeMixin } from '@open-wc/dedupe-mixin';
 
-import { ValidateMixin } from './validate/ValidateMixin.js';
 import { FormControlMixin } from './FormControlMixin.js';
 import { Unparseable } from './validate/Unparseable.js';
+import { ValidateMixin } from './validate/ValidateMixin.js';
 
 /**
  * @typedef {import('../types/FormControlMixinTypes.js').ModelValueEventDetails} ModelValueEventDetails
@@ -89,7 +89,12 @@ const FormatMixinImplementation = superclass =>
     requestUpdate(name, oldValue, options) {
       super.requestUpdate(name, oldValue, options);
 
-      if (name === 'modelValue' && this.modelValue !== oldValue) {
+      const didModelValueChange = () =>
+        options?.hasChanged
+          ? options.hasChanged(this.modelValue, oldValue)
+          : this.modelValue !== oldValue;
+
+      if (name === 'modelValue' && didModelValueChange()) {
         this._onModelValueChanged({ modelValue: this.modelValue }, { modelValue: oldValue });
       }
       if (name === 'serializedValue' && this.serializedValue !== oldValue) {
