@@ -1,14 +1,31 @@
-import { html, css } from 'lit';
-import { ref, createRef } from 'lit/directives/ref.js';
+import { css, html } from 'lit';
 import { ifDefined } from 'lit/directives/if-defined.js';
+import { createRef, ref } from 'lit/directives/ref.js';
 
 import { LionInputAmount } from '@lion/ui/input-amount.js';
 import { currencyUtil } from './currencyUtil.js';
-import { parseAmount } from './parsers.js';
 import { formatAmount } from './formatters.js';
+import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
+import { parseAmount } from './parsers.js';
 import { deserializer, serializer } from './serializers.js';
 import { CurrencyAndAmount } from './validators.js';
-import { localizeNamespaceLoader } from './localizeNamespaceLoader.js';
+
+/**
+ * @param {import('../types/index.js').AmountDropdownModelValue | undefined} newValue
+ * @param {import('../types/index.js').AmountDropdownModelValue | undefined} oldValue
+ * @returns {boolean}
+ */
+const hasChangedAmountDropdownModelValue = (newValue, oldValue) => {
+  if (newValue === oldValue) {
+    return false;
+  }
+
+  if (!newValue || !oldValue || typeof newValue !== 'object' || typeof oldValue !== 'object') {
+    return newValue !== oldValue;
+  }
+
+  return newValue.currency !== oldValue.currency || !Object.is(newValue.amount, oldValue.amount);
+};
 
 /**
  * Note: one could consider to implement LionInputAmountDropdown as a
@@ -57,6 +74,7 @@ export class LionInputAmountDropdown extends LionInputAmount {
    * @type {any}
    */
   static properties = {
+    modelValue: { type: Object, hasChanged: hasChangedAmountDropdownModelValue },
     preferredCurrencies: { type: Array },
     allowedCurrencies: { type: Array },
     __dropdownSlot: { type: String },
