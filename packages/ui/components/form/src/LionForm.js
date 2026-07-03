@@ -1,4 +1,5 @@
 import { LionFieldset } from '@lion/ui/fieldset.js';
+import { html } from 'lit';
 
 /**
  * @typedef {import('../../form-core/types/registration/FormRegistrarMixinTypes.js').FormRegistrarHost} FormRegistrarHost
@@ -16,12 +17,25 @@ const throwFormNodeError = () => {
  * @customElement lion-form
  */
 export class LionForm extends LionFieldset {
+  static get properties() {
+    return {
+      ...super.properties,
+      reverseGroupTwo: { type: Boolean, attribute: 'reverse-group-two', reflect: true },
+    };
+  }
+
   constructor() {
     super();
     /** @protected */
     this._submit = this._submit.bind(this);
     /** @protected */
     this._reset = this._reset.bind(this);
+
+    /**
+     * The flag for inverting the order of group two (input group and feedback) in the default render result.
+     * @type {boolean}
+     */
+    this.reverseGroupTwo = false;
   }
 
   connectedCallback() {
@@ -49,6 +63,16 @@ export class LionForm extends LionFieldset {
     } else {
       throwFormNodeError();
     }
+  }
+
+  /**
+   * @override
+   */
+  _groupTwoTemplate() {
+    if (this.reverseGroupTwo) {
+      return html` ${this._feedbackTemplate()} ${this._inputGroupTemplate()}`;
+    }
+    return super._groupTwoTemplate();
   }
 
   /**

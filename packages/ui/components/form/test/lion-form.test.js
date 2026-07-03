@@ -1,25 +1,25 @@
-import { LionField, Required } from '@lion/ui/form-core.js';
-import '@lion/ui/define/lion-validation-feedback.js';
-import { LionFieldset } from '@lion/ui/fieldset.js';
 import '@lion/ui/define/lion-checkbox-group.js';
-import '@lion/ui/define/lion-radio-group.js';
-import '@lion/ui/define/lion-fieldset.js';
 import '@lion/ui/define/lion-checkbox.js';
+import '@lion/ui/define/lion-field.js';
+import '@lion/ui/define/lion-fieldset.js';
+import '@lion/ui/define/lion-form.js';
 import '@lion/ui/define/lion-listbox.js';
 import '@lion/ui/define/lion-option.js';
-import '@lion/ui/define/lion-field.js';
+import '@lion/ui/define/lion-radio-group.js';
 import '@lion/ui/define/lion-radio.js';
-import '@lion/ui/define/lion-form.js';
-import { spy } from 'sinon';
+import '@lion/ui/define/lion-validation-feedback.js';
+import { LionFieldset } from '@lion/ui/fieldset.js';
+import { LionField, Required } from '@lion/ui/form-core.js';
 import {
   fixture as _fixture,
-  unsafeStatic,
   aTimeout,
   defineCE,
-  oneEvent,
   expect,
   html,
+  oneEvent,
+  unsafeStatic,
 } from '@open-wc/testing';
+import { spy } from 'sinon';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 
@@ -373,5 +373,20 @@ describe('<lion-form>', () => {
     const radioEl = radioGroupEl.formElements[0];
     button.click();
     expect(isActiveElement(radioEl._focusableNode)).to.be.true;
+  });
+
+  it('sets feedback slot above input group when reverseGroupTwo is true', async () => {
+    const el = await fixture(html`
+      <lion-form reverse-group-two>
+        <form>
+          <${childTag} name="firstName" .modelValue=${'Foo'}></${childTag}>
+        </form>
+      </lion-form>
+    `);
+    const groupTwo = el?.shadowRoot?.querySelector('.form-field__group-two');
+    const feedback = groupTwo?.querySelector('.form-field__feedback');
+    const inputGroup = groupTwo?.querySelector('.input-group');
+    expect(groupTwo?.children[0]).to.equal(feedback);
+    expect(groupTwo?.children[1]).to.equal(inputGroup);
   });
 });
