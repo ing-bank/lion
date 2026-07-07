@@ -152,7 +152,6 @@ export function runFormatMixinSuite(customConfig) {
   describe('FormatMixin', async () => {
     /** @type {{_$litStatic$: any}} */
     let tag;
-    /** @type {{_$litStatic$: any}} */
     /** @type {FormatClass} */
     let fooFormat;
 
