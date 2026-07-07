@@ -144,6 +144,16 @@ export class LionInputRange extends LocalizeMixin(LionInput) {
     if (changedProperties.has('step')) {
       this._inputNode.step = `${this.step}`;
     }
+
+    if (changedProperties.has('modelValue')) {
+      if (this.minLabel && this.modelValue === this.min) {
+        this._inputNode.setAttribute('aria-valuetext', `${this.minLabel}`);
+      } else if (this.maxLabel && this.modelValue === this.max) {
+        this._inputNode.setAttribute('aria-valuetext', `${this.maxLabel}`);
+      } else {
+        this._inputNode.removeAttribute('aria-valuetext');
+      }
+    }
   }
 
   /** @param {import('lit').PropertyValues } changedProperties */
