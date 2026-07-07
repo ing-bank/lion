@@ -153,7 +153,6 @@ export function runFormatMixinSuite(customConfig) {
     /** @type {{_$litStatic$: any}} */
     let tag;
     /** @type {{_$litStatic$: any}} */
-    // let complexTag;
     /** @type {FormatClass} */
     let fooFormat;
 
@@ -162,7 +161,6 @@ export function runFormatMixinSuite(customConfig) {
         cfg.tagString = defineCE(FormatClass);
       }
       tag = unsafeStatic(cfg.tagString);
-      // complexTag = unsafeStatic(defineCE(ComplexFormatClass));
 
       fooFormat = await fixture(html`
         <${tag}
