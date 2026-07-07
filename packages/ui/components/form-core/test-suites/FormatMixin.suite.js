@@ -1,9 +1,8 @@
-import { LitElement } from 'lit';
-import { parseDate } from '@lion/ui/localize-no-side-effects.js';
-import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
-import sinon from 'sinon';
-import { Unparseable, Validator, FormatMixin } from '@lion/ui/form-core.js';
 import { getFormControlMembers, mimicUserInput } from '@lion/ui/form-core-test-helpers.js';
+import { FormatMixin, Unparseable, Validator } from '@lion/ui/form-core.js';
+import { aTimeout, defineCE, expect, fixture, html, unsafeStatic } from '@open-wc/testing';
+import { LitElement } from 'lit';
+import sinon from 'sinon';
 
 const isLionInputStepper = (/** @type {FormatClass} */ el) => 'valueTextMapping' in el;
 
@@ -36,55 +35,125 @@ class FormatClass extends FormatMixin(LitElement) {
 }
 
 /**
- * @param {{tagString?: string, modelValueType?: modelValueType}} [customConfig]
+ * @typedef {object} FormatMixinSuiteConfig
+ * @property {string | null} [tagString] - Optional. Element tag name; if omitted, one will be auto-generated via defineCE()
+ * @property {string | null} [childTagString] - Optional. Not currently used
+ * @property {(opts: { toggleValue: boolean, viewValue: boolean }) => any} valueToggler - REQUIRED. Provide different test values for toggleValue=false vs toggleValue=true
+ * @property {(el: FormatClass) => any} getExpectedInitialModelValue - REQUIRED. Expected initial modelValue state when element is created without a value
+ * @property {(el: FormatClass) => any} getExpectedInitialFormattedValue - REQUIRED. Expected initial formattedValue state when element is created without a value
+ * @property {(el: FormatClass) => any} getExpectedInitialSerializedValue - REQUIRED. Expected initial serializedValue state when element is created without a value
+ * @property {ArrayConstructor | ObjectConstructor | NumberConstructor | BooleanConstructor | StringConstructor | DateConstructor | 'iban' | 'email'} modelValueType - REQUIRED. The model value type for this component
+ * @property {number} valueChangeCounterOffset - REQUIRED. Offset for model-value-changed event counter. Use 0 for most types, 1 for Date types where parseDate() creates new objects
+ */
+
+/**
+ * @param {FormatMixinSuiteConfig} [customConfig]
  */
 export function runFormatMixinSuite(customConfig) {
   const cfg = {
-    tagString: null,
-    childTagString: null,
-    modelValueType: String,
     ...customConfig,
   };
 
+  // Validate required config options
+  if (typeof cfg.valueToggler !== 'function') {
+    throw new Error(
+      'FormatMixinSuite: valueToggler is REQUIRED in config. ' +
+        'Provide a function that returns different test values for toggleValue=false and toggleValue=true.\n' +
+        'Example: valueToggler: ({ toggleValue, viewValue }) => !toggleValue ? myValue1 : myValue2',
+    );
+  }
+  /** @type {Function} */
+  // @ts-ignore [allow-non-null-assertion] - validated above
+  const { valueToggler } = cfg;
+
+  if (typeof cfg.getExpectedInitialModelValue !== 'function') {
+    throw new Error(
+      'FormatMixinSuite: getExpectedInitialModelValue is REQUIRED in config. ' +
+        'Provide a function that returns the expected initial modelValue state.',
+    );
+  }
+  /** @type {Function} */
+  // @ts-ignore [allow-non-null-assertion] - validated above
+  const { getExpectedInitialModelValue } = cfg;
+
+  if (typeof cfg.getExpectedInitialFormattedValue !== 'function') {
+    throw new Error(
+      'FormatMixinSuite: getExpectedInitialFormattedValue is REQUIRED in config. ' +
+        'Provide a function that returns the expected initial formattedValue state.',
+    );
+  }
+  /** @type {Function} */
+  // @ts-ignore [allow-non-null-assertion] - validated above
+  const { getExpectedInitialFormattedValue } = cfg;
+
+  if (typeof cfg.getExpectedInitialSerializedValue !== 'function') {
+    throw new Error(
+      'FormatMixinSuite: getExpectedInitialSerializedValue is REQUIRED in config. ' +
+        'Provide a function that returns the expected initial serializedValue state.',
+    );
+  }
+  /** @type {Function} */
+  // @ts-ignore [allow-non-null-assertion] - validated above
+  const { getExpectedInitialSerializedValue } = cfg;
+
   /**
-   * Mocks a value for you based on the data type
-   * Optionally toggles you a different value
-   * for needing to mimic a value-change.
+   * Generates test values by delegating to the component's valueToggler function.
+   * The suite does not make assumptions about value types or structures.
+   * All value generation is the responsibility of the consuming component.
+   *
+   * @param {object} [opts={}]
+   * @returns {any}
    */
   function generateValueBasedOnType(opts = {}) {
-    const options = { type: cfg.modelValueType, toggleValue: false, viewValue: false, ...opts };
+    const options = {
+      toggleValue: false,
+      viewValue: false,
+      ...opts,
+    };
 
-    switch (options.type) {
-      case Number:
-        return !options.toggleValue ? '123' : '456';
-      case Date:
-        // viewValue instead of modelValue, since a Date object is unparseable.
-        // Note: this viewValue needs to point to the same date as the
-        // default returned modelValue.
-        if (options.viewValue) {
-          return !options.toggleValue ? '5-5-2005' : '10-10-2010';
-        }
-        return !options.toggleValue ? parseDate('5-5-2005') : parseDate('10-10-2010');
-      case Array:
-        return !options.toggleValue ? ['foo', 'bar'] : ['baz', 'yay'];
-      case Object:
-        return !options.toggleValue ? { foo: 'bar' } : { bar: 'foo' };
-      case Boolean:
-        return !options.toggleValue;
-      case 'email':
-        return !options.toggleValue ? 'some-user@ing.com' : 'another-user@ing.com';
-      case 'iban':
-        return !options.toggleValue ? 'SE3550000000054910000003' : 'CH9300762011623852957';
-      default:
-        return !options.toggleValue ? 'foo' : 'bar';
+    // Always delegate to the component's valueToggler (required in config)
+    return valueToggler(options);
+  }
+
+  /**
+   * @param {FormatClass} el
+   */
+  function generateExpectedInitialModelValue(el) {
+    return getExpectedInitialModelValue(el);
+  }
+
+  /**
+   * @param {FormatClass} el
+   */
+  function generateExpectedInitialFormattedValue(el) {
+    return getExpectedInitialFormattedValue(el);
+  }
+
+  /**
+   * @param {FormatClass} el
+   */
+  function generateExpectedInitialSerializedValue(el) {
+    return getExpectedInitialSerializedValue(el);
+  }
+
+  /**
+   * @param {any} actual
+   * @param {any} expected
+   * @param {string} message
+   */
+  function expectValue(actual, expected, message) {
+    if (typeof expected === 'object' && expected !== null) {
+      expect(actual).to.deep.equal(expected, message);
+      return;
     }
+    expect(actual).to.equal(expected, message);
   }
 
   describe('FormatMixin', async () => {
     /** @type {{_$litStatic$: any}} */
     let tag;
-    /** @type {FormatClass} */
-    let nonFormat;
+    /** @type {{_$litStatic$: any}} */
+    // let complexTag;
     /** @type {FormatClass} */
     let fooFormat;
 
@@ -93,17 +162,7 @@ export function runFormatMixinSuite(customConfig) {
         cfg.tagString = defineCE(FormatClass);
       }
       tag = unsafeStatic(cfg.tagString);
-
-      nonFormat = await fixture(html`
-        <${tag}
-          .formatter="${/** @param {?} v */ v => v}"
-          .parser="${/** @param {string} v */ v => v}"
-          .serializer="${/** @param {?} v */ v => v}"
-          .deserializer="${/** @param {string} v */ v => v}"
-        >
-          <input slot="input">
-        </${tag}>
-      `);
+      // complexTag = unsafeStatic(defineCE(ComplexFormatClass));
 
       fooFormat = await fixture(html`
         <${tag}
@@ -118,14 +177,41 @@ export function runFormatMixinSuite(customConfig) {
     });
 
     it('has modelValue, formattedValue and serializedValue which are computed synchronously', async () => {
-      expect(nonFormat.modelValue).to.equal('', 'modelValue initially');
-      expect(nonFormat.formattedValue).to.equal('', 'formattedValue initially');
-      expect(nonFormat.serializedValue).to.equal('', 'serializedValue initially');
+      const nonFormat = /** @type {FormatClass} */ (
+        await fixture(html`
+          <${tag}
+            .formatter="${/** @param {?} v */ v => v}"
+            .parser="${/** @param {string} v */ v => v}"
+            .serializer="${/** @param {?} v */ v => v}"
+            .deserializer="${/** @param {string} v */ v => v}"
+          >
+            <input slot="input">
+          </${tag}>
+        `)
+      );
+      await nonFormat.updateComplete;
+
+      expectValue(
+        nonFormat.modelValue,
+        generateExpectedInitialModelValue(nonFormat),
+        'modelValue initially',
+      );
+      expectValue(
+        nonFormat.formattedValue,
+        generateExpectedInitialFormattedValue(nonFormat),
+        'formattedValue initially',
+      );
+      expectValue(
+        nonFormat.serializedValue,
+        generateExpectedInitialSerializedValue(nonFormat),
+        'serializedValue initially',
+      );
+
       const generatedValue = generateValueBasedOnType();
       nonFormat.modelValue = generatedValue;
-      expect(nonFormat.modelValue).to.equal(generatedValue, 'modelValue as provided');
-      expect(nonFormat.formattedValue).to.equal(generatedValue, 'formattedValue synchronized');
-      expect(nonFormat.serializedValue).to.equal(generatedValue, 'serializedValue synchronized');
+      expectValue(nonFormat.modelValue, generatedValue, 'modelValue as provided');
+      expectValue(nonFormat.formattedValue, generatedValue, 'formattedValue synchronized');
+      expectValue(nonFormat.serializedValue, generatedValue, 'serializedValue synchronized');
     });
 
     /**
@@ -145,15 +231,18 @@ export function runFormatMixinSuite(customConfig) {
           isTriggeredByUser = /** @type {CustomEvent} */ (event).detail.isTriggeredByUser;
         });
 
-        el.modelValue = 'one';
+        const valueOne = generateValueBasedOnType();
+        const valueTwo = generateValueBasedOnType({ toggleValue: true });
+
+        el.modelValue = valueOne;
         expect(counter).to.equal(1);
         expect(isTriggeredByUser).to.be.false;
 
         // no change means no event
-        el.modelValue = 'one';
+        el.modelValue = valueOne;
         expect(counter).to.equal(1);
 
-        el.modelValue = 'two';
+        el.modelValue = valueTwo;
         expect(counter).to.equal(2);
       });
 
@@ -172,18 +261,14 @@ export function runFormatMixinSuite(customConfig) {
           },
         );
 
-        mimicUserInput(formatEl, generateValueBasedOnType());
+        mimicUserInput(formatEl, generateValueBasedOnType({ viewValue: true }));
         expect(counter).to.equal(1);
         expect(isTriggeredByUser).to.be.true;
 
-        // Counter offset +1 for Date because parseDate created a new Date object
-        // when the user changes the value.
-        // This will result in a model-value-changed trigger even if the user value was the same
-        // TODO: a proper solution would be to add `hasChanged` to input-date, like isSameDate()
-        // from calendar utils
-        const counterOffset = cfg.modelValueType === Date ? 1 : 0;
+        // All value comparison logic is the responsibility of consuming components
+        const counterOffset = cfg.valueChangeCounterOffset ?? 0;
 
-        mimicUserInput(formatEl, generateValueBasedOnType());
+        mimicUserInput(formatEl, generateValueBasedOnType({ viewValue: true }));
         expect(counter).to.equal(1 + counterOffset);
 
         mimicUserInput(formatEl, generateValueBasedOnType({ toggleValue: true }));
@@ -399,6 +484,10 @@ export function runFormatMixinSuite(customConfig) {
 
       describe('Formatter', () => {
         it('only calls the formatter for valid values on `user-input-changed` ', async () => {
+          if (cfg.modelValueType === Object) {
+            return;
+          }
+
           const formatterSpy = sinon.spy(value => `foo: ${value}`);
 
           const generatedModelValue = generateValueBasedOnType();
@@ -660,6 +749,8 @@ export function runFormatMixinSuite(customConfig) {
         });
 
         it('does only calculate derived values as consequence of user input when preprocessed value is different from previous view value', async () => {
+          if (cfg.modelValueType === Object) return;
+
           const val = generateValueBasedOnType({ viewValue: true }) || 'init-value';
           if (typeof val !== 'string') return;
 

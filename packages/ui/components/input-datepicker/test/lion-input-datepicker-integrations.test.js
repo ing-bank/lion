@@ -1,7 +1,8 @@
 import {
-  runInteractionStateMixinSuite,
   runFormatMixinSuite,
+  runInteractionStateMixinSuite,
 } from '@lion/ui/form-core-test-suites.js';
+import { parseDate } from '@lion/ui/localize-no-side-effects.js';
 
 import '@lion/ui/define/lion-input-datepicker.js';
 
@@ -15,5 +16,15 @@ describe('<lion-input-datepicker> integrations', () => {
   runFormatMixinSuite({
     tagString,
     modelValueType: Date,
+    valueToggler: ({ toggleValue, viewValue }) => {
+      if (viewValue) {
+        return !toggleValue ? '01/01/2020' : '02/02/2021';
+      }
+      return !toggleValue ? parseDate('01/01/2020') : parseDate('02/02/2021');
+    },
+    getExpectedInitialModelValue: () => '',
+    getExpectedInitialFormattedValue: () => '',
+    getExpectedInitialSerializedValue: () => '',
+    valueChangeCounterOffset: 1,
   });
 });

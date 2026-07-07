@@ -1,14 +1,14 @@
 import { LionInputAmountDropdown } from '@lion/ui/input-amount-dropdown.js';
-import sinon from 'sinon';
 import {
-  fixtureSync as _fixtureSync,
   fixture as _fixture,
-  unsafeStatic,
+  fixtureSync as _fixtureSync,
   aTimeout,
   defineCE,
   expect,
   html,
+  unsafeStatic,
 } from '@open-wc/testing';
+import sinon from 'sinon';
 
 import { isActiveElement } from '../../core/test-helpers/isActiveElement.js';
 import { mimicUserChangingDropdown } from '../test-helpers/mimicUserChangingDropdown.js';
@@ -98,6 +98,62 @@ export function runInputAmountDropdownSuite({ klass } = { klass: LionInputAmount
       );
       expect(el.dirty).to.be.false;
       expect(el.prefilled).to.be.true;
+    });
+
+    it('does not fire model-value-changed for semantically equal modelValue objects', async () => {
+      const el = await fixture(
+        html` <${tag} .modelValue="${{ currency: 'EUR', amount: 123 }}"></${tag}> `,
+      );
+
+      const spy = sinon.spy();
+      el.addEventListener('model-value-changed', spy);
+
+      el.modelValue = { currency: 'EUR', amount: 123 };
+      await el.updateComplete;
+
+      expect(spy.callCount).to.equal(0);
+    });
+
+    it('does fire model-value-changed when amount is updated', async () => {
+      const el = await fixture(
+        html` <${tag} .modelValue="${{ currency: 'EUR', amount: 126 }}"></${tag}> `,
+      );
+
+      const spy = sinon.spy();
+      el.addEventListener('model-value-changed', spy);
+
+      el.modelValue = { currency: 'EUR', amount: 123 };
+      await el.updateComplete;
+
+      expect(spy.callCount).to.equal(1);
+    });
+
+    it('does fire model-value-changed when currency is updated', async () => {
+      const el = await fixture(
+        html` <${tag} .modelValue="${{ currency: 'GBP', amount: 123 }}"></${tag}> `,
+      );
+
+      const spy = sinon.spy();
+      el.addEventListener('model-value-changed', spy);
+
+      el.modelValue = { currency: 'EUR', amount: 123 };
+      await el.updateComplete;
+
+      expect(spy.callCount).to.equal(1);
+    });
+
+    it('does fire model-value-changed when currency & amount are updated', async () => {
+      const el = await fixture(
+        html` <${tag} .modelValue="${{ currency: 'GBP', amount: 100 }}"></${tag}> `,
+      );
+
+      const spy = sinon.spy();
+      el.addEventListener('model-value-changed', spy);
+
+      el.modelValue = { currency: 'EUR', amount: 123 };
+      await el.updateComplete;
+
+      expect(spy.callCount).to.equal(1);
     });
 
     describe('Dropdown display', () => {

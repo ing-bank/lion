@@ -1,8 +1,8 @@
-import { defineCE } from '@open-wc/testing';
 import {
-  runInteractionStateMixinSuite,
   runFormatMixinSuite,
+  runInteractionStateMixinSuite,
 } from '@lion/ui/form-core-test-suites.js';
+import { defineCE } from '@open-wc/testing';
 import { LionInputStepper } from '../src/LionInputStepper.js';
 
 export const runInputStepperIntegrationSuite = (klass = LionInputStepper) => {
@@ -15,5 +15,15 @@ export const runInputStepperIntegrationSuite = (klass = LionInputStepper) => {
   runFormatMixinSuite({
     tagString,
     modelValueType: Number,
+    valueToggler: ({ toggleValue, viewValue }) => {
+      if (viewValue) {
+        return !toggleValue ? '10' : '20';
+      }
+      return !toggleValue ? 10 : 20;
+    },
+    getExpectedInitialModelValue: () => '',
+    getExpectedInitialFormattedValue: () => '',
+    getExpectedInitialSerializedValue: () => '',
+    valueChangeCounterOffset: 0,
   });
 };
