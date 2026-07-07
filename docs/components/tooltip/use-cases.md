@@ -147,6 +147,28 @@ Modifier explanations:
 - flip: enables flipping behavior on the primary axis (e.g. if top placement, flipping to bottom if there is not enough space on the top). The padding property defines the margin with the boundariesElement, which is usually the viewport.
 - offset: enables an offset between the content node and the invoker node. First argument is horizontal margin, second argument is vertical margin.
 
+## Mobile: longpress
+
+On desktop the tooltip is triggered by hover and focus, as usual. On touch devices where hover is unavailable, the same tooltip instead responds to a long-press on the invoker (default 500ms). No extra configuration is needed. The tooltip auto-detects which interaction model to use via the `(hover: hover)` CSS media query.
+
+> To test the touch path on desktop: enable Chrome DevTools device emulation, pick a phone preset, **reload the page**, then press-and-hold the invoker for 500ms. Tap or hover will no longer trigger it.
+
+```js preview-story
+export const longpress = () => html`
+  <style>
+    .demo-tooltip-invoker {
+      margin: 50px;
+    }
+  </style>
+  <lion-tooltip has-arrow>
+    <button slot="invoker" class="demo-tooltip-invoker">
+      Hover (desktop) / long-press 500ms (touch)
+    </button>
+    <div slot="content">Tooltip content</div>
+  </lion-tooltip>
+`;
+```
+
 ## Arrow
 
 By default, the arrow is disabled for our tooltip. Via the `has-arrow` property it can be enabled.
