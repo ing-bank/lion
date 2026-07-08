@@ -59,7 +59,7 @@
   "devDependencies": {
     "@astrojs/lit": "^4.3.0",
     "@astrojs/mdx": "^5.0.0",
-    "@babel/core": "^7.25.8",
+    "@babel/core": "^7.29.6",
     "@bundled-es-modules/fetch-mock": "^6.5.2",
     "@changesets/cli": "^2.30.0",
     "@custom-elements-manifest/analyzer": "^0.10.10",
