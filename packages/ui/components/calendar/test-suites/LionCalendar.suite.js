@@ -19,44 +19,55 @@ export function LionCalendarSuite({ klass = LionCalendar } = {}) {
     describe('Public API', () => {
       it('should fire keyboard press events on keyup and not on keydown', async () => {
         /**
-         * This is a test for a corner case where `keydown`, `keyup` and `focus` events from different
-         * elements are involeved at the same time. Here is the setup. There is a button that has a keyup handler.
-         * When clicking on the button we open a dialog with the lion-calendar component.
-         * When a user selects a date, we close the dialog, listening by the `user-selected-date-changed`
-         * event from lion-calendar. And we do **not** expect the keyup handler from the dialog invoker button
-         * gets triggered on the date select. However if pressing Enter when selecting the date is handled by
-         * `keydown` event inside `lion-calendar`, then next we close the dialog on `user-selected-date-changed`,
-         * the browser focuses automatically previously focused element which is the invoker button and
-         * then the keupevent is fired. And since the currently focused element is the invoker button,
-         * its keyup handler is triggered. And that is not we expect.
-         * To fix it we make sure we trigger the `user-selected-date-changed` event on keyup.
-         * Then when we close the dialog the invoker button does not get triggered on the keyup event from
-         * initiated by the lion-calendar component
+         * This test covers a corner case where `keydown`, `keyup`, and `focus` events happen across different elements.
+         *
+         * Setup:
+         * - There is a dialog invoker button that has a keyup handler.
+         * - The dialog invoker button opens the dialog on click.
+         * - The dialog contains lion-calendar.
+         * - When a date is selected, the dialog closes.
+         *
+         * Expected behavior:
+         * - The dialog invoker button's `keyup` handler should not run when a date is selected in the calendar.
+         *
+         * The problem:
+         * - Pressing Enter on a date is handled by `keydown` inside `lion-calendar`.
+         * - The dialog then closes on `user-selected-date-changed` event.
+         * - Focus returns to the previously focused element (the dialog invoker button).
+         * - The keyup event then fires on the now-focused dialog invoker button, triggering its keyup
+         *     handler unexpectedly.
+         *
+         * Fix being verified:
+         * - Fire `user-selected-date-changed` on `keyup` instead of `keydown`.
+         * - This prevents the dialog invoker button from receiving and handling that `keyup` after the dialog closes.
          */
 
+        let el;
         const keyUpSpy = sinon.spy();
-        const el = await fixture(html`
-        <div>
-          <button @keyup="${keyUpSpy}">Open Dialog</button>
-          <dialog>
-            <${tagCalendar} .selectedDate="${new Date('2000/10/12')}"></${tagCalendar}>
-          </dialog>
-        </div>
-      `);
+        const getDialogEl = () => el.querySelector('dialog');
+        const openDialogButtonClickHandler = () => getDialogEl()?.showModal();
+        const userSelectedDateChangedHandler = () => getDialogEl()?.close();
+
+        el = await fixture(html`
+          <div>
+            <button 
+              @keyup="${keyUpSpy}" 
+              @click="${openDialogButtonClickHandler}"
+            >
+              Open Dialog
+            </button>
+            <dialog>
+              <${tagCalendar} 
+                .selectedDate="${new Date('2000/10/12')}" 
+                @user-selected-date-changed="${userSelectedDateChangedHandler}">
+              </${tagCalendar}>
+            </dialog>
+          </div>
+        `);
 
         const openDialogButton = el.querySelector('button');
-        const dialog = el.querySelector('dialog');
         const calendarEl = el.querySelector(tagCalendar);
         await calendarEl?.updateComplete;
-        openDialogButton?.addEventListener('click', () => {
-          dialog?.showModal();
-        });
-        openDialogButton?.addEventListener('keyup', () => {
-          dialog?.showModal();
-        });
-        calendarEl?.addEventListener('user-selected-date-changed', () => {
-          dialog?.close();
-        });
 
         openDialogButton?.focus();
         openDialogButton?.click();
