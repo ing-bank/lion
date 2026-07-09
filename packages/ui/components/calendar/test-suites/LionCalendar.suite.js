@@ -33,7 +33,7 @@ export function LionCalendarSuite({ klass = LionCalendar } = {}) {
          * The problem:
          * - Pressing Enter on a date is handled by `keydown` inside `lion-calendar`.
          * - The dialog then closes on `user-selected-date-changed` event.
-         * - Focus returns to the previously focused element (the dialog invoker button).
+         * - The browser automatically returns focus to the previously focused element (the dialog invoker button).
          * - The keyup event then fires on the now-focused dialog invoker button, triggering its keyup
          *     handler unexpectedly.
          *
