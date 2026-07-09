@@ -16,4 +16,5 @@ export default {
   selectTextDuplicateFileName: 'Файл с таким названием уже существует.',
   selectTextMultipleFile: 'Выберите файлы',
   selectTextSingleFile: 'Выберите файл',
+  maxFileCountExceeded: 'Количество загруженных файлов не может превышать {maxFileCount}.',
 };

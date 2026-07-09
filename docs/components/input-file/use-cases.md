@@ -173,6 +173,24 @@ export const sizeValidator = () => {
 };
 ```
 
+### Maximum File Count
+
+```js preview-story
+export const fileCountValidator = () => {
+  return html`
+    <lion-input-file
+      label="Passport"
+      max-file-size="1024000"
+      accept=".jpg,.svg,.xml,image/svg+xml"
+      .validators=${[
+        new MaxFileCount(2, { getMessage: () => 'You must not select more than 2 files' }),
+      ]}
+    >
+    </lion-input-file>
+  `;
+};
+```
+
 ### Multiple file upload
 
 When file has to be uploaded as soon as it is selected by the user. Use `file-list-changed` event to get the newly added files, upload it to your server and set the response back to component via `uploadResponse` property for each file.

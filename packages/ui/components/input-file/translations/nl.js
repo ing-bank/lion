@@ -17,4 +17,5 @@ export default {
   selectTextDuplicateFileName: 'Er bestaat al een bestand met dezelfde bestandsnaam.',
   selectTextMultipleFile: 'Selecteer bestanden',
   selectTextSingleFile: 'Selecteer bestand',
+  maxFileCountExceeded: 'Het aantal geüploade bestanden mag niet meer dan {maxFileCount} zijn.',
 };
