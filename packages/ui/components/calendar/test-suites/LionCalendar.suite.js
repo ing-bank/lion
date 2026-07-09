@@ -69,7 +69,6 @@ export function LionCalendarSuite({ klass = LionCalendar } = {}) {
         const calendarEl = el.querySelector(tagCalendar);
         await calendarEl?.updateComplete;
 
-        openDialogButton?.focus();
         openDialogButton?.click();
         const getSelectedDateEl = () =>
           calendarEl?.shadowRoot?.querySelector('.calendar__day-button[selected]');
