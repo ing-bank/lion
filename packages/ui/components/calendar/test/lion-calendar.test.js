@@ -6,6 +6,7 @@ import sinon from 'sinon';
 import '@lion/ui/define/lion-calendar.js';
 import { isSameDate } from '@lion/ui/calendar.js';
 import { CalendarObject, DayObject } from '@lion/ui/calendar-test-helpers.js';
+import { LionCalendarSuite } from '../test-suites/LionCalendar.suite.js';
 
 /**
  * @typedef {import('../src/LionCalendar.js').LionCalendar} LionCalendar
@@ -1659,4 +1660,8 @@ describe('<lion-calendar>', () => {
       expect(el).not.to.be.displayed;
     });
   });
+});
+
+describe.skip('lion-calendar suite', () => {
+  LionCalendarSuite();
 });
