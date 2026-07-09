@@ -298,7 +298,7 @@ export class LionCalendar extends LocalizeMixin(LitElement) {
       this.__contentWrapperElement.addEventListener('click', this.__boundClickDateDelegation);
       this.__contentWrapperElement.addEventListener('focus', this.__boundFocusDateDelegation);
       this.__contentWrapperElement.addEventListener('blur', this.__boundBlurDateDelegation);
-      this.__contentWrapperElement.addEventListener('keyup', this.__boundKeyboardNavigationEvent);
+      this.__contentWrapperElement.addEventListener('keydown', this.__boundKeyboardNavigationEvent);
       this.__eventsAdded = true;
     }
   }

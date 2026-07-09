@@ -1669,7 +1669,7 @@ describe('<lion-calendar>', () => {
     });
   });
 
-  describe.skip('Run suite', () => {
+  describe('Run suite', () => {
     LionCalendarSuite();
   });
 });
