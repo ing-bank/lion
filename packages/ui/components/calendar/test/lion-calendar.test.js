@@ -1660,8 +1660,8 @@ describe('<lion-calendar>', () => {
       expect(el).not.to.be.displayed;
     });
   });
-});
 
-describe.skip('lion-calendar suite', () => {
-  LionCalendarSuite();
+  describe.skip('Run suite', () => {
+    LionCalendarSuite();
+  });
 });
