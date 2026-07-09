@@ -87,7 +87,7 @@
     "@types/mocha": "^10.0.9",
     "@web/dev-server-legacy": "^2.1.1",
     "@web/test-runner": "^0.19.0",
-    "@web/test-runner-browserstack": "^0.7.2",
+    "@web/test-runner-browserstack": "^1.0.0",
     "@web/test-runner-commands": "^0.9.0",
     "@web/test-runner-playwright": "^0.11.0",
     "@webcomponents/scoped-custom-element-registry": "^0.0.10",
