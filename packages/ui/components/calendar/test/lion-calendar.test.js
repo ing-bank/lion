@@ -1143,7 +1143,6 @@ describe('<lion-calendar>', () => {
           const el = await fixture(html`
             <lion-calendar .selectedDate="${new Date('2001/01/02')}"></lion-calendar>
           `);
-          await el.updateComplete;
           focusSelectedDate(el);
 
           const elObj = new CalendarObject(el);
@@ -1184,7 +1183,6 @@ describe('<lion-calendar>', () => {
             const el = await fixture(html`
               <lion-calendar .selectedDate="${new Date('2001/01/02')}"></lion-calendar>
             `);
-            await el.updateComplete;
             const elObj = new CalendarObject(el);
 
             focusSelectedDate(el);
@@ -1197,7 +1195,6 @@ describe('<lion-calendar>', () => {
             const el = await fixture(html`
               <lion-calendar .selectedDate="${new Date('2001/01/02')}"></lion-calendar>
             `);
-            await el.updateComplete;
             const elObj = new CalendarObject(el);
 
             focusSelectedDate(el);
@@ -1211,7 +1208,6 @@ describe('<lion-calendar>', () => {
             const el = await fixture(html`
               <lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>
             `);
-            await el.updateComplete;
             const elObj = new CalendarObject(el);
 
             focusSelectedDate(el);
@@ -1225,7 +1221,6 @@ describe('<lion-calendar>', () => {
             const el = await fixture(html`
               <lion-calendar .selectedDate="${new Date('2000/12/12')}"></lion-calendar>
             `);
-            await el.updateComplete;
             const elObj = new CalendarObject(el);
 
             focusSelectedDate(el);
